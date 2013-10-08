@@ -1,6 +1,6 @@
 country:
   default: ''
-first_day: '0'
+first_day: 0
 timezone:
   default: ''
   user:

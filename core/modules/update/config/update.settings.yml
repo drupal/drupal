@@ -1,10 +1,10 @@
 check:
-  disabled_extensions: '0'
-  interval_days: '1'
+  disabled_extensions: false
+  interval_days: 1
 fetch:
   url: ''
-  max_attempts: '2'
-  timeout: '5'
+  max_attempts: 2
+  timeout: 5
 notification:
-  emails: []
+  emails: {  }
   threshold: '0'

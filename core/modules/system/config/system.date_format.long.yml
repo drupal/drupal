@@ -1,9 +1,9 @@
 id: long
 uuid: 500ad047-44b4-429f-9b00-d54df9cbaa8c
 label: 'Default long date'
-status: '1'
+status: true
 langcode: en
-locked: '0'
+locked: false
 locales: {  }
 pattern:
   php: 'l, F j, Y - H:i'

@@ -2,21 +2,21 @@ base_field: nid
 base_table: node
 core: '8'
 description: 'A list of all content, by letter.'
-status: '0'
+status: false
 display:
   default:
     id: default
     display_title: Master
     display_plugin: default
-    position: '1'
+    position: 1
     display_options:
       query:
         type: views_query
         options:
-          query_comment: '0'
-          disable_sql_rewrite: '0'
-          distinct: '0'
-          slave: '0'
+          query_comment: false
+          disable_sql_rewrite: false
+          distinct: false
+          slave: false
           query_tags: {  }
       use_ajax: '1'
       access:
@@ -29,26 +29,26 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: '0'
+          reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
-          expose_sort_order: '1'
+          expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
         type: mini
         options:
-          items_per_page: '36'
-          offset: '0'
-          id: '0'
-          total_pages: ''
+          items_per_page: 36
+          offset: 0
+          id: 0
+          total_pages: 0
           expose:
             items_per_page: '0'
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
-            items_per_page_options_all: '0'
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: '0'
+            offset: false
             offset_label: Offset
           tags:
             previous: ‹‹
@@ -64,46 +64,46 @@ display:
           group_type: group
           admin_label: ''
           label: Title
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           provider: node
         name:
           id: name
@@ -115,46 +115,46 @@ display:
           plugin_id: user_name
           group_type: group
           admin_label: ''
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           overwrite_anonymous: '0'
           anonymous_text: ''
           format_username: '1'
@@ -169,46 +169,46 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           custom_date_format: ''
           timezone: ''
           provider: views
@@ -219,33 +219,33 @@ display:
           field: title
           default_action: default
           exception:
-            title_enable: '1'
+            title_enable: true
           default_argument_type: fixed
           default_argument_options:
             argument: a
           summary:
             format: default_summary
-          specify_validation: '1'
-          glossary: '1'
-          limit: '1'
+          specify_validation: true
+          glossary: true
+          limit: 1
           case: upper
           path_case: lower
-          transform_dash: '0'
+          transform_dash: false
           plugin_id: string
           relationship: none
           group_type: group
           admin_label: ''
-          title_enable: '0'
+          title_enable: false
           title: ''
-          breadcrumb_enable: '0'
+          breadcrumb_enable: false
           breadcrumb: ''
-          default_argument_skip_url: '0'
+          default_argument_skip_url: false
           summary_options: {  }
           validate:
             type: none
             fail: 'not found'
           validate_options: {  }
-          break_phrase: '0'
+          break_phrase: false
           provider: views
       relationships:
         uid:
@@ -256,7 +256,7 @@ display:
           relationship: none
           group_type: group
           admin_label: author
-          required: '0'
+          required: false
           provider: views
       style:
         type: table
@@ -268,30 +268,30 @@ display:
           default: title
           info:
             title:
-              sortable: '1'
+              sortable: true
               separator: ''
             name:
-              sortable: '1'
+              sortable: true
               separator: ''
             changed:
-              sortable: '1'
+              sortable: true
               separator: ''
-          override: '1'
-          sticky: '0'
+          override: true
+          sticky: false
           grouping: {  }
           row_class: ''
-          default_row_class: '1'
-          row_class_special: '1'
-          uses_fields: '0'
+          default_row_class: true
+          row_class_special: true
+          uses_fields: false
           order: asc
           summary: ''
-          empty_table: '0'
+          empty_table: false
       row:
         type: fields
         options:
           inline: {  }
           separator: ''
-          hide_empty: '0'
+          hide_empty: false
           default_field_elements: '1'
       header: {  }
       footer: {  }
@@ -301,7 +301,7 @@ display:
     id: page_1
     display_title: Page
     display_plugin: page
-    position: '2'
+    position: 2
     display_options:
       query:
         type: views_query
@@ -310,12 +310,12 @@ display:
       menu:
         type: normal
         title: Glossary
-        weight: '0'
+        weight: 0
   attachment_1:
     id: attachment_1
     display_title: Attachment
     display_plugin: attachment
-    position: '3'
+    position: 3
     display_options:
       query:
         type: views_query
@@ -323,10 +323,10 @@ display:
       pager:
         type: none
         options:
-          offset: '0'
+          offset: 0
           items_per_page: '0'
       defaults:
-        arguments: '0'
+        arguments: false
       arguments:
         title:
           id: title
@@ -334,7 +334,7 @@ display:
           field: title
           default_action: summary
           exception:
-            title_enable: '1'
+            title_enable: true
           default_argument_type: fixed
           default_argument_options:
             argument: a
@@ -342,33 +342,33 @@ display:
             format: unformatted_summary
           summary_options:
             items_per_page: '25'
-            inline: '1'
+            inline: true
             separator: ' | '
-          specify_validation: '1'
-          glossary: '1'
-          limit: '1'
+          specify_validation: true
+          glossary: true
+          limit: 1
           case: upper
           path_case: lower
-          transform_dash: '0'
+          transform_dash: false
           plugin_id: string
           relationship: none
           group_type: group
           admin_label: ''
-          title_enable: '0'
+          title_enable: false
           title: ''
-          breadcrumb_enable: '0'
+          breadcrumb_enable: false
           breadcrumb: ''
-          default_argument_skip_url: '0'
+          default_argument_skip_url: false
           validate:
             type: none
             fail: 'not found'
           validate_options: {  }
-          break_phrase: '0'
+          break_phrase: false
           provider: views
       displays:
         default: default
         page_1: page_1
-      inherit_arguments: '0'
+      inherit_arguments: false
 label: Glossary
 module: node
 id: glossary

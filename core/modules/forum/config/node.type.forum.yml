@@ -3,17 +3,17 @@ uuid: c14b392d-0889-46bd-889e-a239e8b6cd89
 name: 'Forum topic'
 description: 'A <em>forum topic</em> starts a new discussion thread within a forum.'
 help: ''
-has_title: '1'
+has_title: true
 title_label: Subject
 settings:
   node:
-    preview: '1'
+    preview: 1
     options:
       status: status
       # Not promoted to front page.
       promote: '0'
       sticky: '0'
       revision: '0'
-    submitted: '1'
-status: '1'
+    submitted: true
+status: true
 langcode: en

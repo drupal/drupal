@@ -1,8 +1,8 @@
 id: und
 uuid: 87e4ef47-819b-4d89-aa4b-757f9ce5a3b2
 label: 'Not specified'
-direction: '0'
-weight: '1'
+direction: false
+weight: 1
 locked: true
 status: true
 langcode: en

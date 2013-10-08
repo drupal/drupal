@@ -1,8 +1,8 @@
 id: en
 uuid: fe61d3d1-e8d5-47a7-a21c-2841f4be3c09
 label: English
-direction: '0'
-weight: '0'
+direction: false
+weight: 0
 locked: false
 status: true
 langcode: en

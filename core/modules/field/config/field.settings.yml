@@ -1,2 +1,2 @@
-language_fallback: '1'
+language_fallback: true
 purge_batch_size: 10

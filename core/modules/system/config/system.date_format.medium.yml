@@ -1,9 +1,9 @@
 id: medium
 uuid: 17a8d708-e3b1-432d-9d36-542a97346a60
 label: 'Default medium date'
-status: '1'
+status: true
 langcode: en
-locked: '0'
+locked: false
 locales: {  }
 pattern:
   php: 'D, m/d/Y - H:i'

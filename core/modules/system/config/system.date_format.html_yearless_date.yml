@@ -1,9 +1,9 @@
 id: html_yearless_date
 uuid: 623ab5ae-ebba-42cc-b100-a4ca10c77b2e
 label: 'HTML Yearless date'
-status: '1'
+status: true
 langcode: en
-locked: '1'
+locked: true
 locales: {  }
 pattern:
   php: m-d

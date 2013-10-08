@@ -1,9 +1,9 @@
 id: html_datetime
 uuid: bfd7db46-607f-477f-9047-713c312dbb02
 label: 'HTML Datetime'
-status: '1'
+status: true
 langcode: en
-locked: '1'
+locked: true
 locales: {  }
 pattern:
   php: 'Y-m-d\TH:i:sO'

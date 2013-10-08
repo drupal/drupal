@@ -1,88 +1,88 @@
 id: views-ui
 module: views_ui
-label: Views ui
+label: 'Views ui'
 langcode: en
 paths:
-  - admin/structure/views/view/*
+  - 'admin/structure/views/view/*'
 tips:
   views-ui-active-display:
     id: views-ui-active-display
     plugin: text
-    label: Active display
-    body: This is the active display in the view. When there are multiple displays, one link for each display is shown and you can switch displays simply by clicking on the display link.
-    weight: "2"
+    label: 'Active display'
+    body: 'This is the active display in the view. When there are multiple displays, one link for each display is shown and you can switch displays simply by clicking on the display link.'
+    weight: 2
     attributes:
-      data-class: views-display-top li.active
+      data-class: 'views-display-top li.active'
   views-ui-displays:
     id: views-ui-displays
     plugin: text
-    label: Displays in this view
-    body: A view can consist of multiple displays. A display is a way of outputting the results E.g. as a page or in a block. The available displays in your view are show here.
-    weight: "1"
+    label: 'Displays in this view'
+    body: 'A view can consist of multiple displays. A display is a way of outputting the results E.g. as a page or in a block. The available displays in your view are show here.'
+    weight: 1
     attributes:
       data-id: views-display-top
   views-ui-fields:
     id: views-ui-fields
     plugin: text
     label: Fields
-    body: This section shows the fields output for each result. Depending on the format selected for the view, you may not see anything listed here. If the format of your view uses fields, you can click on each field displayed to configure it.
-    weight: "5"
+    body: 'This section shows the fields output for each result. Depending on the format selected for the view, you may not see anything listed here. If the format of your view uses fields, you can click on each field displayed to configure it.'
+    weight: 5
     attributes:
       data-class: views-ui-display-tab-bucket.fields
   views-ui-filter:
     id: views-ui-filter
     plugin: text
-    label: Filter your view
-    body: This section displays the filters you have active in your view. A filter is used to limit the results available in the output. E.g. to only show content that was <em>published</em>, you would add a filter for <em>Published</em> and select <em>Yes</em>.
-    weight: "6"
+    label: 'Filter your view'
+    body: 'This section displays the filters you have active in your view. A filter is used to limit the results available in the output. E.g. to only show content that was <em>published</em>, you would add a filter for <em>Published</em> and select <em>Yes</em>.'
+    weight: 6
     attributes:
       data-class: views-ui-display-tab-bucket.filter-criteria
   views-ui-filter-operations:
     id: views-ui-filter-operations
     plugin: text
-    label: Filter actions
-    body: Use this drop-button to add and re-arrange filters
-    weight: "7"
+    label: 'Filter actions'
+    body: 'Use this drop-button to add and re-arrange filters'
+    weight: 7
     attributes:
-      data-class: views-ui-display-tab-bucket.filter-criteria .dropbutton-widget
+      data-class: 'views-ui-display-tab-bucket.filter-criteria .dropbutton-widget'
   views-ui-format:
     id: views-ui-format
     plugin: text
-    label: Output format
-    body: Use this section to manage the format of the output results. You can choose different ways in which the matching results are output. E.g. Choose <em>Content</em> to output each item completely, using your configured display settings. Other options include <em>Fields</em> which allows you to output only specific fields on each matching result. Additional formats can be added by installing additional modules to <em>extend</em> Drupal's base functionality.
-    weight: "4"
+    label: 'Output format'
+    body: 'Use this section to manage the format of the output results. You can choose different ways in which the matching results are output. E.g. Choose <em>Content</em> to output each item completely, using your configured display settings. Other options include <em>Fields</em> which allows you to output only specific fields on each matching result. Additional formats can be added by installing additional modules to <em>extend</em> Drupal''s base functionality.'
+    weight: 4
     attributes:
       data-class: views-ui-display-tab-bucket.format
   views-ui-preview:
     id: views-ui-preview
     plugin: text
     label: Preview
-    body: Use this button to show a preview of the view output
-    weight: "10"
+    body: 'Use this button to show a preview of the view output'
+    weight: 10
     attributes:
       data-id: preview-submit
   views-ui-sorts:
     id: views-ui-sorts
     plugin: text
-    label: Sort Criteria
-    body: This section shows the enabled sorting criteria for the view. Sorting criteria are used to control the order in which the results are output. Clicking on any of the active sorting criteria shown in this section enables you to configure it.
-    weight: "8"
+    label: 'Sort Criteria'
+    body: 'This section shows the enabled sorting criteria for the view. Sorting criteria are used to control the order in which the results are output. Clicking on any of the active sorting criteria shown in this section enables you to configure it.'
+    weight: 8
     attributes:
       data-class: views-ui-display-tab-bucket.sort-criteria
   views-ui-sorts-operations:
     id: views-ui-sorts-operations
     plugin: text
-    label: Sort actions
-    body: Use this drop-button to add and re-arrange the sorting criteria.
-    weight: "9"
+    label: 'Sort actions'
+    body: 'Use this drop-button to add and re-arrange the sorting criteria.'
+    weight: 9
     attributes:
-      data-class: views-ui-display-tab-bucket.sort-criteria .dropbutton-widget
+      data-class: 'views-ui-display-tab-bucket.sort-criteria .dropbutton-widget'
   views-ui-view-admin:
     id: views-ui-view-admin
     plugin: text
-    label: View administration
-    body: Use this drop-button to perform administrative tasks on the view, including adding a description and creating a clone. Click the drop button to view the available options.
-    weight: "3"
+    label: 'View administration'
+    body: 'Use this drop-button to perform administrative tasks on the view, including adding a description and creating a clone. Click the drop button to view the available options.'
+    weight: 3
     location: left
     attributes:
       data-id: views-display-extra-actions

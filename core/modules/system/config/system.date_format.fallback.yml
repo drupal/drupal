@@ -1,9 +1,9 @@
 id: fallback
 uuid: cf0ad071-ded7-4750-b008-8c74f200ff8d
 label: 'Fallback date format'
-status: '1'
+status: true
 langcode: en
-locked: '1'
+locked: true
 locales: {  }
 pattern:
   php: 'D, m/d/Y - H:i'

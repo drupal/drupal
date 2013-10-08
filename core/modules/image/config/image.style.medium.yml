@@ -4,9 +4,9 @@ effects:
   bddf0d06-42f9-4c75-a700-a33cafa25ea0:
     id: image_scale
     data:
-      width: '220'
-      height: '220'
-      upscale: '1'
-    weight: '0'
+      width: 220
+      height: 220
+      upscale: true
+    weight: 0
     uuid: bddf0d06-42f9-4c75-a700-a33cafa25ea0
 langcode: en

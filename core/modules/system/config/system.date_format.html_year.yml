@@ -1,9 +1,9 @@
 id: html_year
 uuid: a43b8034-a2f2-4507-9400-bed7d389265f
 label: 'HTML Year'
-status: '1'
+status: true
 langcode: en
-locked: '1'
+locked: true
 locales: {  }
 pattern:
   php: Y

@@ -1,18 +1,18 @@
 admin_role: ''
 anonymous: Anonymous
-verify_mail: '1'
+verify_mail: true
 notify:
-  cancel_confirm: '1'
-  password_reset: '1'
-  status_activated: '1'
-  status_blocked: '0'
-  status_cancelled: '0'
-  register_admin_created: '1'
-  register_no_approval_required: '1'
-  register_pending_approval: '1'
+  cancel_confirm: true
+  password_reset: true
+  status_activated: true
+  status_blocked: false
+  status_cancelled: false
+  register_admin_created: true
+  register_no_approval_required: true
+  register_pending_approval: true
 register: visitors
-signatures: '0'
+signatures: false
 cancel_method: user_cancel_block
-password_reset_timeout: '86400'
-password_strength: '1'
+password_reset_timeout: 86400
+password_strength: true
 langcode: en

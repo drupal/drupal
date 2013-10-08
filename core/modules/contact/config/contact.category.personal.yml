@@ -1,5 +1,5 @@
 id: personal
 label: 'Personal contact form'
-recipients: []
+recipients: {  }
 reply: ''
-weight: '0'
+weight: 0

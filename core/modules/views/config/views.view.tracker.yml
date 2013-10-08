@@ -2,21 +2,21 @@ base_field: nid
 base_table: node
 core: '8'
 description: 'Shows all new activity on the system.'
-status: '0'
+status: false
 display:
   default:
     id: default
     display_title: Master
     display_plugin: default
-    position: '1'
+    position: 1
     display_options:
       query:
         type: views_query
         options:
-          query_comment: '0'
-          disable_sql_rewrite: '0'
-          distinct: '0'
-          slave: '0'
+          query_comment: false
+          disable_sql_rewrite: false
+          distinct: false
+          slave: false
           query_tags: {  }
       title: 'Recent posts'
       access:
@@ -29,26 +29,26 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: '0'
+          reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
-          expose_sort_order: '1'
+          expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
         type: mini
         options:
-          items_per_page: '25'
-          offset: '0'
-          id: '0'
-          total_pages: ''
+          items_per_page: 25
+          offset: 0
+          id: 0
+          total_pages: 0
           expose:
             items_per_page: '0'
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
-            items_per_page_options_all: '0'
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: '0'
+            offset: false
             offset_label: Offset
           tags:
             previous: ‹‹
@@ -62,7 +62,7 @@ display:
           relationship: none
           group_type: group
           admin_label: author
-          required: '0'
+          required: false
           provider: views
       fields:
         type:
@@ -74,46 +74,46 @@ display:
           group_type: group
           admin_label: ''
           label: Type
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           link_to_node: '0'
           machine_name: '0'
           provider: node
@@ -126,46 +126,46 @@ display:
           group_type: group
           admin_label: ''
           label: Title
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           link_to_node: '1'
           provider: node
         name:
@@ -177,46 +177,46 @@ display:
           plugin_id: user_name
           group_type: group
           admin_label: ''
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           link_to_user: '1'
           overwrite_anonymous: '0'
           anonymous_text: ''
@@ -231,51 +231,51 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
-          set_precision: '0'
-          precision: '0'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          set_precision: false
+          precision: 0
           decimal: .
           separator: ','
-          format_plural: '0'
+          format_plural: false
           format_plural_singular: '1'
           format_plural_plural: '@count'
           prefix: ''
@@ -290,46 +290,46 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           date_format: small
           custom_date_format: ''
           timezone: ''
@@ -345,98 +345,98 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           provider: history
         new_comments:
           id: new_comments
           table: node
           field: new_comments
           label: ''
-          hide_empty: '1'
+          hide_empty: true
           suffix: ' new'
           link_to_comment: '1'
           plugin_id: node_new_comments
           relationship: none
           group_type: group
           admin_label: ''
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          empty_zero: false
+          hide_alter_empty: true
           set_precision: '0'
           precision: '0'
           decimal: .
@@ -456,7 +456,7 @@ display:
           group_type: group
           admin_label: ''
           order: ASC
-          exposed: '0'
+          exposed: false
           expose:
             label: ''
           granularity: second
@@ -467,22 +467,22 @@ display:
           table: node_field_data
           field: uid_touch
           exception:
-            title_enable: '1'
-          title_enable: '1'
+            title_enable: true
+          title_enable: true
           title: 'Recent posts for %1'
           default_argument_type: fixed
           summary:
             format: default_summary
-          specify_validation: '1'
+          specify_validation: true
           plugin_id: argument_comment_user_uid
           relationship: none
           group_type: group
           admin_label: ''
           default_action: ignore
-          breadcrumb_enable: '0'
+          breadcrumb_enable: false
           breadcrumb: ''
           default_argument_options: {  }
-          default_argument_skip_url: '0'
+          default_argument_skip_url: false
           summary_options: {  }
           validate:
             type: none
@@ -514,40 +514,40 @@ display:
           default: last_comment_timestamp
           info:
             type:
-              sortable: '1'
+              sortable: true
               separator: ''
             title:
-              sortable: '1'
+              sortable: true
               separator: '&nbsp;'
             name:
-              sortable: '1'
+              sortable: true
               separator: ''
             comment_count:
-              sortable: '1'
+              sortable: true
               separator: '<br />'
             last_comment_timestamp:
-              sortable: '1'
+              sortable: true
               separator: '&nbsp;'
             timestamp:
               separator: ''
             new_comments:
               separator: ''
-          override: '1'
+          override: true
           order: desc
           grouping: {  }
           row_class: ''
-          default_row_class: '1'
-          row_class_special: '1'
-          uses_fields: '0'
-          sticky: '0'
+          default_row_class: true
+          row_class_special: true
+          uses_fields: false
+          sticky: false
           summary: ''
-          empty_table: '0'
+          empty_table: false
       row:
         type: fields
         options:
           inline: {  }
           separator: ''
-          hide_empty: '0'
+          hide_empty: false
           default_field_elements: '1'
       header: {  }
       footer: {  }
@@ -556,7 +556,7 @@ display:
     id: page_1
     display_title: Page
     display_plugin: page
-    position: '2'
+    position: 2
     display_options:
       query:
         type: views_query

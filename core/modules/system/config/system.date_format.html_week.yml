@@ -1,9 +1,9 @@
 id: html_week
 uuid: d14737ae-d1e0-436b-9225-37113d4c8c7c
 label: 'HTML Week'
-status: '1'
+status: true
 langcode: en
-locked: '1'
+locked: true
 locales: {  }
 pattern:
   php: Y-\WW

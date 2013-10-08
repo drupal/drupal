@@ -2,21 +2,21 @@ base_field: nid
 base_table: node
 core: '8'
 description: 'A list of months that link to content for that month.'
-status: '0'
+status: false
 display:
   default:
     id: default
     display_title: Master
     display_plugin: default
-    position: '1'
+    position: 1
     display_options:
       query:
         type: views_query
         options:
-          query_comment: '0'
-          disable_sql_rewrite: '0'
-          distinct: '0'
-          slave: '0'
+          query_comment: false
+          disable_sql_rewrite: false
+          distinct: false
+          slave: false
           query_tags: {  }
       title: 'Monthly archive'
       access:
@@ -29,26 +29,26 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: '0'
+          reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
-          expose_sort_order: '1'
+          expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
         type: mini
         options:
-          items_per_page: '10'
-          offset: '0'
-          id: '0'
-          total_pages: ''
+          items_per_page: 10
+          offset: 0
+          id: 0
+          total_pages: 0
           expose:
             items_per_page: '0'
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
-            items_per_page_options_all: '0'
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: '0'
+            offset: false
             offset_label: Offset
           tags:
             previous: ‹‹
@@ -63,7 +63,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          exposed: '0'
+          exposed: false
           expose:
             label: ''
           granularity: second
@@ -75,17 +75,17 @@ display:
           field: created_year_month
           default_action: summary
           exception:
-            title_enable: '1'
-          title_enable: '1'
+            title_enable: true
+          title_enable: true
           title: '%1'
           default_argument_type: fixed
           summary:
             sort_order: desc
             format: default_summary
           summary_options:
-            override: '1'
-            items_per_page: '30'
-          specify_validation: '1'
+            override: true
+            items_per_page: 30
+          specify_validation: true
           plugin_id: date_year_month
           provider: views
       filters:
@@ -104,9 +104,9 @@ display:
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: '1'
-          row_class_special: '1'
-          uses_fields: '0'
+          default_row_class: true
+          row_class_special: true
+          uses_fields: false
       row:
         type: 'entity:node'
         options:
@@ -122,7 +122,7 @@ display:
     id: page_1
     display_title: Page
     display_plugin: page
-    position: '2'
+    position: 2
     display_options:
       query:
         type: views_query
@@ -132,13 +132,13 @@ display:
     id: block_1
     display_title: Block
     display_plugin: block
-    position: '3'
+    position: 3
     display_options:
       query:
         type: views_query
         options: {  }
       defaults:
-        arguments: '0'
+        arguments: false
       arguments:
         created_year_month:
           id: created_year_month
@@ -146,15 +146,15 @@ display:
           field: created_year_month
           default_action: summary
           exception:
-            title_enable: '1'
-          title_enable: '1'
+            title_enable: true
+          title_enable: true
           title: '%1'
           default_argument_type: fixed
           summary:
             format: default_summary
           summary_options:
-            items_per_page: '30'
-          specify_validation: '1'
+            items_per_page: 30
+          specify_validation: true
           plugin_id: date_year_month
           provider: views
 label: Archive

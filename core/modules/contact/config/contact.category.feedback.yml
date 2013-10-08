@@ -1,6 +1,6 @@
 id: feedback
 label: 'Website feedback'
-recipients: []
+recipients: {  }
 reply: ''
-weight: '0'
+weight: 0
 langcode: en
