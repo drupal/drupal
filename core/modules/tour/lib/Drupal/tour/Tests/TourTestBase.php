@@ -51,6 +51,8 @@ class TourTestBase extends WebTestBase {
     }
     else {
       // Check for corresponding page elements.
+      $total = 0;
+      $modals = 0;
       foreach ($tips as $tip) {
         if (!empty($tip['data-id'])) {
           $elements = \PHPUnit_Util_XML::cssSelect('#' . $tip['data-id'], TRUE, $this->content, TRUE);
@@ -60,7 +62,13 @@ class TourTestBase extends WebTestBase {
           $elements = \PHPUnit_Util_XML::cssSelect('.' . $tip['data-class'], TRUE, $this->content, TRUE);
           $this->assertFalse(empty($elements), format_string('Found corresponding page element for tour tip with class .%data-class', array('%data-class' => $tip['data-class'])));
         }
+        else {
+          // It's a modal.
+          $modals++;
+        }
+        $total++;
       }
+      $this->pass(format_string('Total %total Tips tested of which %modals modal(s).', array('%total' => $total, '%modals' => $modals)));
     }
   }
 
