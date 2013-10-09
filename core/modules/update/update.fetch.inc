@@ -5,8 +5,8 @@
  * Code required only when fetching information about available updates.
  */
 
-use Guzzle\Http\Exception\RequestException;
 use Drupal\Component\Utility\Crypt;
+use Drupal\update\UpdateFetcher;
 
 /**
  * Page callback: Checks for updates and displays the update status report.
@@ -148,21 +148,13 @@ function _update_process_fetch_task($project) {
 
   $success = FALSE;
   $available = array();
-  $site_key = Crypt::hmacBase64($base_url, drupal_get_private_key());
-  $url = _update_build_fetch_url($project, $site_key);
-  $fetch_url_base = _update_get_fetch_url_base($project);
+  $site_key = Crypt::hmacBase64($base_url, \Drupal::service('private_key')->get());
+  $update_fetcher = new UpdateFetcher(\Drupal::service('config.factory'), \Drupal::service('http_default_client'));
+  $fetch_url_base = $update_fetcher->getFetchBaseUrl($project);
   $project_name = $project['name'];
 
   if (empty($fail[$fetch_url_base]) || $fail[$fetch_url_base] < $max_fetch_attempts) {
-    try {
-      $data = \Drupal::httpClient()
-        ->get($url, array('Accept' => 'text/xml'))
-        ->send()
-        ->getBody(TRUE);
-    }
-    catch (RequestException $exception) {
-      watchdog_exception('update', $exception);
-    }
+    $data = $update_fetcher->fetchProjectData($project, $site_key);
   }
 
   if (!empty($data)) {
@@ -255,78 +247,6 @@ function _update_create_fetch_task($project) {
     \Drupal::keyValue('update_fetch_task')->set($project['name'], $project);
     $fetch_tasks[$project['name']] = REQUEST_TIME;
   }
-}
-
-/**
- * Generates the URL to fetch information about project updates.
- *
- * This figures out the right URL to use, based on the project's .info.yml file
- * and the global defaults. Appends optional query arguments when the site is
- * configured to report usage stats.
- *
- * @param $project
- *   The array of project information from update_get_projects().
- * @param $site_key
- *   (optional) The anonymous site key hash. Defaults to an empty string.
- *
- * @return
- *   The URL for fetching information about updates to the specified project.
- *
- * @see update_fetch_data()
- * @see _update_process_fetch_task()
- * @see update_get_projects()
- */
-function _update_build_fetch_url($project, $site_key = '') {
-  $name = $project['name'];
-  $url = _update_get_fetch_url_base($project);
-  $url .= '/' . $name . '/' . \Drupal::CORE_COMPATIBILITY;
-
-  // Only append usage infomation if we have a site key and the project is
-  // enabled. We do not want to record usage statistics for disabled projects.
-  if (!empty($site_key) && (strpos($project['project_type'], 'disabled') === FALSE)) {
-    // Append the site key.
-    $url .= (strpos($url, '?') !== FALSE) ? '&' : '?';
-    $url .= 'site_key=';
-    $url .= rawurlencode($site_key);
-
-    // Append the version.
-    if (!empty($project['info']['version'])) {
-      $url .= '&version=';
-      $url .= rawurlencode($project['info']['version']);
-    }
-
-    // Append the list of modules or themes enabled.
-    $list = array_keys($project['includes']);
-    $url .= '&list=';
-    $url .= rawurlencode(implode(',', $list));
-  }
-  return $url;
-}
-
-/**
- * Returns the base of the URL to fetch available update data for a project.
- *
- * @param $project
- *   The array of project information from update_get_projects().
- *
- * @return
- *   The base of the URL used for fetching available update data. This does
- *   not include the path elements to specify a particular project, version,
- *   site_key, etc.
- *
- * @see _update_build_fetch_url()
- */
-function _update_get_fetch_url_base($project) {
-  if (isset($project['info']['project status url'])) {
-    $url = $project['info']['project status url'];
-  }
-  else {
-    $url = \Drupal::config('update.settings')->get('fetch.url');
-    if (empty($url)) {
-      $url = UPDATE_DEFAULT_URL;
-    }
-  }
-  return $url;
 }
 
 /**

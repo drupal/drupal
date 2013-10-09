@@ -11,11 +11,6 @@
  * ability to install contributed modules and themes via an user interface.
  */
 
-/**
- * URL to check for updates, if a given project doesn't define its own.
- */
-const UPDATE_DEFAULT_URL = 'http://updates.drupal.org/release-history';
-
 // These are internally used constants for this code, do not modify.
 
 /**
