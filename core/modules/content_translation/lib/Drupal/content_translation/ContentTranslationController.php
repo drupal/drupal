@@ -43,13 +43,6 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function removeTranslation(EntityInterface $entity, $langcode) {
-    $entity->removeTranslation($langcode);
-  }
-
-  /**
    * Implements ContentTranslationControllerInterface::retranslate().
    */
   public function retranslate(EntityInterface $entity, $langcode = NULL) {

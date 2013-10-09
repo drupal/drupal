@@ -140,16 +140,6 @@ interface ContentTranslationControllerInterface {
   public function getSourceLangcode(array $form_state);
 
   /**
-   * Removes the translation values from the given entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity whose values should be removed.
-   * @param string $langcode
-   *   The language code identifying the translation being deleted.
-   */
-  public function removeTranslation(EntityInterface $entity, $langcode);
-
-  /**
    * Marks translations as outdated.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity

@@ -265,7 +265,7 @@ function content_translation_delete_confirm_submit(array $form, array &$form_sta
   $controller = content_translation_controller($entity->entityType());
 
   // Remove the translated values.
-  $controller->removeTranslation($entity, $language->id);
+  $entity->removeTranslation($language->id);
   $entity->save();
 
   // Remove any existing path alias for the removed translation.
