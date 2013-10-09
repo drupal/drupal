@@ -11,7 +11,6 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Join;
-use Drupal\Component\Annotation\Plugin;
 use Drupal\views\Views;
 
 /**
@@ -65,6 +64,16 @@ abstract class RelationshipPluginBase extends HandlerBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -83,8 +92,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
   }
 
   /**
-   * Default options form that provides the label widget that all fields
-   * should have.
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -101,7 +109,7 @@ abstract class RelationshipPluginBase extends HandlerBase {
   }
 
   /**
-   * Called to implement a relationship in a query.
+   * {@inheritdoc}
    */
   public function query() {
     // Figure out what base table this relationship brings to the party.
@@ -142,13 +150,6 @@ abstract class RelationshipPluginBase extends HandlerBase {
       $access_tag = $table_data['table']['base']['access query tag'];
       $this->query->addTag($access_tag);
     }
-  }
-
-  /**
-   * You can't groupby a relationship.
-   */
-  public function usesGroupBy() {
-    return FALSE;
   }
 
 }

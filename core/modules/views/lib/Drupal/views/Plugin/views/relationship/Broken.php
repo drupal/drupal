@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\relationship;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * A special handler to take the place of missing or broken handlers.
  *
@@ -18,6 +16,9 @@ use Drupal\Component\Annotation\PluginID;
  */
 class Broken extends RelationshipPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminLabel($short = FALSE) {
     $args = array(
       '@module' => $this->definition['original_configuration']['provider'],
@@ -25,9 +26,26 @@ class Broken extends RelationshipPluginBase {
     return $this->isOptional() ? t('Optional handler is missing (Module: @module) …', $args) : t('Broken/missing handler (Module: @module) …', $args);
   }
 
-  public function defineOptions() { return array(); }
-  public function ensureMyTable() { /* No table to ensure! */ }
-  public function query() { /* No query to run */ }
+  /**
+   * {@inheritdoc}
+   */
+  protected function defineOptions() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function ensureMyTable() {
+    // No table to ensure.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function query() {
+    // No query to run.
+  }
 
   /**
    * {@inheritdoc}
@@ -67,8 +85,10 @@ class Broken extends RelationshipPluginBase {
   }
 
   /**
-   * Determine if the handler is considered 'broken'
+   * {@inheritdoc}
    */
-  public function broken() { return TRUE; }
+  public function broken() {
+    return TRUE;
+  }
 
 }
