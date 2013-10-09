@@ -63,6 +63,7 @@ class ContentTranslationRouteSubscriber implements EventSubscriberInterface {
             '_permission' => 'translate any entity',
           ),
           array(
+            '_access_mode' => 'ANY',
             'parameters' => array(
               'entity' => array(
                 'type' => 'entity:' . $entity_type,
@@ -86,6 +87,7 @@ class ContentTranslationRouteSubscriber implements EventSubscriberInterface {
             '_access_content_translation_manage' => 'create',
           ),
           array(
+            '_access_mode' => 'ANY',
             'parameters' => array(
               'entity' => array(
                 'type' => 'entity:' . $entity_type,
@@ -107,6 +109,7 @@ class ContentTranslationRouteSubscriber implements EventSubscriberInterface {
             '_access_content_translation_manage' => 'update',
           ),
           array(
+            '_access_mode' => 'ANY',
             'parameters' => array(
               'entity' => array(
                 'type' => 'entity:' . $entity_type,
@@ -133,6 +136,7 @@ class ContentTranslationRouteSubscriber implements EventSubscriberInterface {
                 'type' => 'entity:' . $entity_type,
               ),
             ),
+            '_access_mode' => 'ANY',
           )
         );
         $collection->add("content_translation.delete_$entity_type", $route);

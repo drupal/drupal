@@ -19,8 +19,6 @@ search.view:
     _content: '\Drupal\search\Controller\SearchController::searchView'
     plugin_id: NULL
     keys: ''
-  options:
-    _access_mode: 'ALL'
   requirements:
     keys: '.+'
     _permission: 'search content'

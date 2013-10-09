@@ -64,10 +64,7 @@ class SearchRouteSubscriber implements EventSubscriberInterface {
         '_search_plugin_view_access' => $plugin_id,
         '_permission' => 'search content',
       );
-      $options = array(
-        '_access_mode' => 'ALL',
-      );
-      $route = new Route($path, $defaults, $requirements, $options);
+      $route = new Route($path, $defaults, $requirements);
       $collection->add('search.view_' . $plugin_id, $route);
     }
   }

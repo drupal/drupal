@@ -39,8 +39,6 @@ filter.admin_disable:
   path: '/admin/config/content/formats/manage/{filter_format}/disable'
   defaults:
     _entity_form: 'filter_format.disable'
-  options:
-     _access_mode: 'ALL'
   requirements:
     _filter_disable_format_access: 'TRUE'
     _permission: 'administer filters'

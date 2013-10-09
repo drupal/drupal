@@ -48,9 +48,6 @@ class RouteSubscriber implements EventSubscriberInterface {
         array(
           '_access_theme' => 'TRUE',
           '_permission' => 'administer blocks',
-        ),
-        array(
-          '_access_mode' => 'ALL',
         )
       );
       $collection->add("block.admin_display_$key", $route);

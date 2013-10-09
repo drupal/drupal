@@ -92,6 +92,8 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
         // The HTTP method is a requirement for this route.
         '_method' => $method,
         '_permission' => "restful $lower_method $this->pluginId",
+      ), array(
+        '_access_mode' => 'ANY',
       ));
 
       switch ($method) {

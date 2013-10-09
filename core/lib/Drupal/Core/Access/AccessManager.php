@@ -227,7 +227,7 @@ class AccessManager extends ContainerAware {
   public function check(Route $route, Request $request) {
     $checks = $route->getOption('_access_checks') ?: array();
 
-    $conjunction = $route->getOption('_access_mode') ?: 'ANY';
+    $conjunction = $route->getOption('_access_mode') ?: 'ALL';
 
     if ($conjunction == 'ALL') {
       return $this->checkAll($checks, $route, $request);
