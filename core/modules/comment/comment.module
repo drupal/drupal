@@ -902,7 +902,7 @@ function comment_links(CommentInterface $comment, EntityInterface $entity, $fiel
  * Constructs render array from an array of loaded comments.
  *
  * @param $comments
- *   An array of comments as returned by comment_load_multiple().
+ *   An array of comments as returned by entity_load_multiple().
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  * @param $langcode
@@ -1135,7 +1135,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
       $mode = $instance->getFieldSetting('default_mode');
       $comments_per_page = $instance->getFieldSetting('per_page');
       if ($node->get($field_name)->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
-        $comments = comment_load_multiple($cids);
+        $comments = entity_load_multiple('comment', $cids);
         comment_prepare_thread($comments);
         $build = comment_view_multiple($comments);
         $return .= drupal_render($build);
@@ -1218,6 +1218,8 @@ function comment_user_predelete($account) {
 
 /**
  * Loads comment entities from the database.
+ *
+ * @deprecated Use entity_load_multiple('comment', $cids) instead.
  *
  * @param array $cids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.

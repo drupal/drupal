@@ -62,7 +62,7 @@ class Rss extends RowPluginBase {
       $cids[] = $row->cid;
     }
 
-    $this->comments = comment_load_multiple($cids);
+    $this->comments = entity_load_multiple('comment', $cids);
     foreach ($this->comments as $comment) {
       $comment->depth = count(explode('.', $comment->thread->value)) - 1;
     }
