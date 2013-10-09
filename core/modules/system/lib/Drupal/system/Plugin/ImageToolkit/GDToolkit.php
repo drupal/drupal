@@ -8,8 +8,6 @@
 namespace Drupal\system\Plugin\ImageToolkit;
 
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\system\Annotation\ImageToolkit;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 

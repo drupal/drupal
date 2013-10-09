@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\Annotation\ImageToolkit.
+ * Contains \Drupal\Core\ImageToolkit\Annotation\ImageToolkit.
  */
 
-namespace Drupal\system\Annotation;
+namespace Drupal\Core\ImageToolkit\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 

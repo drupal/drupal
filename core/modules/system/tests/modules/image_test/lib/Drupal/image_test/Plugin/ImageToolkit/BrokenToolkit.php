@@ -7,9 +7,6 @@
 
 namespace Drupal\image_test\Plugin\ImageToolkit;
 
-use Drupal\system\Annotation\ImageToolkit;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Defines a Test toolkit for image manipulation within Drupal.
  *
