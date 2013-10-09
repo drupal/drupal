@@ -1129,6 +1129,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
   $form['actions']['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save and continue'),
+    '#button_type' => 'primary',
     '#limit_validation_errors' => array(
       array('driver'),
       array(isset($form_state['input']['driver']) ? $form_state['input']['driver'] : current($drivers_keys)),
@@ -1434,6 +1435,7 @@ function install_select_profile_form($form, &$form_state, $install_state) {
   $form['actions']['submit'] =  array(
     '#type' => 'submit',
     '#value' => t('Save and continue'),
+    '#button_type' => 'primary',
   );
   return $form;
 }
@@ -1630,6 +1632,7 @@ function install_select_language_form($form, &$form_state, $files = array()) {
   $form['actions']['submit'] =  array(
     '#type' => 'submit',
     '#value' => t('Save and continue'),
+    '#button_type' => 'primary',
   );
   return $form;
 }
@@ -2520,6 +2523,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#type' => 'submit',
     '#value' => t('Save and continue'),
     '#weight' => 15,
+    '#button_type' => 'primary',
   );
 
   return $form;
