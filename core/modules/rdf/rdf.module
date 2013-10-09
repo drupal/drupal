@@ -332,7 +332,7 @@ function rdf_preprocess_node(&$variables) {
       // In full node view, the number of comments is not displayed by
       // node.html.twig so it is expressed in RDFa in the <head> tag of the HTML
       // page.
-      if ($variables['page'] && user_access('access comments')) {
+      if ($variables['page'] && \Drupal::currentUser()->hasPermission('access comments')) {
         $element = array(
           '#tag' => 'meta',
           '#attributes' => array(
