@@ -7,11 +7,14 @@
 
 namespace Drupal\overlay\Controller;
 
+use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\user\UserDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -20,19 +23,54 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * @todo keeping the controllerInterface since we should be injecting
  * something to take care of the overlay_render_region() call.
  */
-class OverlayController implements ContainerInjectionInterface {
+class OverlayController extends ControllerBase implements ContainerInjectionInterface {
+
+  /**
+   * The userdata service.
+   *
+   * @var \Drupal\user\UserDataInterface
+   */
+  protected $userData;
+
+  /**
+   * The CSRF token generator.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $csrfGenerator;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $account;
+
+  /**
+   * Constructs a OverlayController instance.
+   *
+   * @param \Drupal\user\UserDataInterface $user_data
+   *   The userdata service.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_generator
+   *   The CSRF token generator.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
+   */
+  public function __construct(UserDataInterface $user_data, CsrfTokenGenerator $csrf_generator, AccountInterface $account) {
+    $this->userData = $user_data;
+    $this->csrfGenerator = $csrf_generator;
+    $this->account = $account;
+  }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static();
-  }
-
-  /**
-   * Constructs a OverlayController object.
-   */
-  public function __construct() {
+    return new static(
+      $container->get('user.data'),
+      $container->get('csrf_token'),
+      $container->get('current_user')
+    );
   }
 
   /**
@@ -50,28 +88,30 @@ class OverlayController implements ContainerInjectionInterface {
   public function regionRender($region) {
     return new Response(overlay_render_region($region));
   }
-   /**
+
+  /**
    * Dismisses the overlay accessibility message for this user.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
+   *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when a non valid token was specified.
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   Redirects to the user's edit page.
    *
+   * @return \Drupal\Core\Controller\ControllerBase
+   *   Redirects to the user's edit page.
    */
   public function overlayMessage(Request $request) {
-    $account = $request->attributes->get('_account');
-
-    // @todo Integrate CSRF link token directly into routing system: http://drupal.org/node/1798296.
+    // @todo Integrate CSRF link token directly into routing system:
+    //   http://drupal.org/node/1798296.
     $token = $request->attributes->get('token');
-    if (!isset($token) || !drupal_valid_token($token, 'overlay')) {
+    if (!isset($token) || !$this->csrfGenerator->validate($token, 'overlay')) {
       throw new AccessDeniedHttpException();
     }
-    $request->attributes->get('user.data')->set('overlay', $account->id(), 'message_dismissed', 1);
-    drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
+    $this->userData->set('overlay', $this->account->id(), 'message_dismissed', 1);
+    drupal_set_message($this->t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
     // Destination is normally given. Go to the user profile as a fallback.
-    return new RedirectResponse(url('user/' . $account->id() . '/edit', array('absolute' => TRUE)));
+    return $this->redirect('user_edit', array('user' => $this->account->id()));
   }
+
 }
