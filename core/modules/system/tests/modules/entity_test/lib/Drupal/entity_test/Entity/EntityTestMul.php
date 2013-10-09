@@ -33,7 +33,8 @@ use Drupal\Core\Annotation\Translation;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
- *     "bundle" = "type"
+ *     "bundle" = "type",
+ *     "label" = "name"
  *   },
  *   menu_base_path = "entity_test_mul/manage/%entity_test_mul",
  *   route_base_path = "entity_test_mul/structure/{bundle}"

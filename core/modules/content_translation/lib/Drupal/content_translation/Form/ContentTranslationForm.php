@@ -6,8 +6,8 @@
 
 namespace Drupal\content_translation\Form;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Temporary form controller for content_translation module.
@@ -19,7 +19,8 @@ class ContentTranslationForm {
    *
    * @todo Remove content_translation_delete_confirm().
    */
-  public function deleteTranslation(EntityInterface $entity, $language) {
+  public function deleteTranslation(Request $request, $language) {
+    $entity = $request->attributes->get($request->attributes->get('_entity_type'));
     module_load_include('pages.inc', 'content_translation');
     $language = language_load($language);
     return drupal_get_form('content_translation_delete_confirm', $entity, $language);

@@ -68,7 +68,7 @@ function content_translation_overview(EntityInterface $entity) {
         // Existing translation in the translation set: display status.
         $source = isset($entity->translation[$langcode]['source']) ? $entity->translation[$langcode]['source'] : '';
         $is_original = $langcode == $original;
-        $label = $entity->label($langcode);
+        $label = $entity->getTranslation($langcode)->label();
         $link = isset($links->links[$langcode]['href']) ? $links->links[$langcode] : array('href' => $path, 'language' => $language);
         $row_title = l($label, $link['href'], $link);
 

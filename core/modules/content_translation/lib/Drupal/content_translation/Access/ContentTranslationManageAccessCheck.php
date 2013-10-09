@@ -46,10 +46,10 @@ class ContentTranslationManageAccessCheck implements StaticAccessCheckInterface 
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    if ($entity = $request->attributes->get('entity')) {
+    $entity_type = $request->attributes->get('_entity_type');
+    if ($entity = $request->attributes->get($entity_type)) {
       $route_requirements = $route->getRequirements();
       $operation = $route_requirements['_access_content_translation_manage'];
-      $entity_type = $entity->entityType();
       $controller_class = $this->entityManager->getControllerClass($entity_type, 'translation');
       $controller = new $controller_class($entity_type, $entity->entityInfo());
 

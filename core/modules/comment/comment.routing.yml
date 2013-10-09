@@ -19,6 +19,7 @@ comment.admin_approval:
 comment.edit_page:
   path: '/comment/{comment}/edit'
   defaults:
+    _title: 'Edit'
     _entity_form: 'comment.default'
   requirements:
     _entity_access: 'comment.update'
@@ -26,6 +27,7 @@ comment.edit_page:
 comment.approve:
   path: '/comment/{comment}/approve'
   defaults:
+    _title: 'Approve'
     _content: '\Drupal\comment\Controller\CommentController::commentApprove'
     entity_type: 'comment'
   requirements:
@@ -34,6 +36,7 @@ comment.approve:
 comment.permalink:
   path: '/comment/{comment}'
   defaults:
+    _title: 'Comment permalink'
     _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
   requirements:
     _entity_access: 'comment.view'
@@ -41,6 +44,7 @@ comment.permalink:
 comment.confirm_delete:
   path: '/comment/{comment}/delete'
   defaults:
+    _title: 'Delete'
     _entity_form: 'comment.delete'
   requirements:
     _entity_access: 'comment.delete'

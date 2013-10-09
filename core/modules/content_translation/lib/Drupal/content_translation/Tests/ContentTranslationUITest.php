@@ -35,6 +35,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    */
   function testTranslationUI() {
     $this->assertBasicTranslation();
+    $this->doTestTranslationOverview();
     $this->assertOutdatedStatus();
     $this->assertPublishedStatus();
     $this->assertAuthoringInfo();
@@ -94,6 +95,21 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
         $value = is_array($value) ? $value[0]['value'] : $value;
         $message = format_string('%property correctly stored with language %language.', array('%property' => $property, '%language' => $langcode));
         $this->assertEqual($stored_value, $value, $message);
+      }
+    }
+  }
+
+  /**
+   * Tests that the translation overview shows the correct values.
+   */
+  protected function doTestTranslationOverview() {
+    $entity = entity_load($this->entityType, $this->entityId, TRUE);
+    $path = $this->controller->getBasePath($entity) . '/translations';
+    $this->drupalGet($path);
+
+    foreach ($this->langcodes as $langcode) {
+      if ($entity->hasTranslation($langcode)) {
+        $this->assertText($entity->getTranslation($langcode)->label(), format_string('Label correctly shown for %language translation', array('%language' => $langcode)));
       }
     }
   }

@@ -1,14 +1,14 @@
 comment.permalink_tab:
-  route_name: comment_permalink
+  route_name: comment.permalink
   title: 'View comment'
   tab_root_id: comment.permalink_tab
 comment.edit_page_tab:
-  route_name: comment_edit_page
+  route_name: comment.edit_page
   title: 'Edit'
   tab_root_id: comment.permalink_tab
   weight: 0
 comment.confirm_delete_tab:
-  route_name: comment_confirm_delete
+  route_name: comment.confirm_delete
   title: 'Delete'
   tab_root_id: comment.permalink_tab
   weight: 10

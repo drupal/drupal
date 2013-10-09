@@ -45,9 +45,9 @@ class ContentTranslationOverviewAccess implements StaticAccessCheckInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    if ($entity = $request->attributes->get('entity')) {
+    $entity_type = $request->attributes->get('_entity_type');
+    if ($entity = $request->attributes->get($entity_type)) {
       // Get entity base info.
-      $entity_type = $entity->entityType();
       $bundle = $entity->bundle();
 
       // Get account details from request.
