@@ -1391,7 +1391,7 @@ function user_view($account, $view_mode = 'full', $langcode = NULL) {
  *   An array in the format expected by drupal_render().
  */
 function user_view_multiple($accounts, $view_mode = 'full', $langcode = NULL) {
-  return entity_view($accounts, $view_mode, $langcode);
+  return entity_view_multiple($accounts, $view_mode, $langcode);
 }
 
 /**
