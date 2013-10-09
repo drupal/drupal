@@ -33,12 +33,6 @@ function content_translation_overview(EntityInterface $entity) {
   $rows = array();
 
   if (language_multilingual()) {
-    // If we have a view path defined for the current entity get the switch
-    // links based on it.
-    if ($path) {
-      $links = _content_translation_get_switch_links($path);
-    }
-
     // Determine whether the current entity is translatable.
     $translatable = FALSE;
     foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
@@ -74,7 +68,6 @@ function content_translation_overview(EntityInterface $entity) {
         // Existing translation in the translation set: display status.
         $source = isset($entity->translation[$langcode]['source']) ? $entity->translation[$langcode]['source'] : '';
         $is_original = $langcode == $original;
-        $translation = $translations[$langcode];
         $label = $entity->label($langcode);
         $link = isset($links->links[$langcode]['href']) ? $links->links[$langcode] : array('href' => $path, 'language' => $language);
         $row_title = l($label, $link['href'], $link);
@@ -202,7 +195,6 @@ function content_translation_add_page(EntityInterface $entity, Language $source 
   $form_state['langcode'] = $target->id;
   $form_state['content_translation']['source'] = $source;
   $form_state['content_translation']['target'] = $target;
-  $controller = content_translation_controller($entity->entityType());
   $form_state['content_translation']['translation_form'] = !$entity->access('update');
   return \Drupal::entityManager()->getForm($entity, $operation, $form_state);
 }
@@ -253,7 +245,6 @@ function content_translation_prepare_translation(EntityInterface $entity, Langua
  * @deprecated Use \Drupal\content_translation\Form\ContentTranslationForm::deleteTranslation()
  */
 function content_translation_delete_confirm(array $form, array $form_state, EntityInterface $entity, Language $language) {
-  $langcode = $language->id;
   $controller = content_translation_controller($entity->entityType());
 
   return confirm_form(

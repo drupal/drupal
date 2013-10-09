@@ -165,7 +165,6 @@ class ViewEditFormController extends ViewFormControllerBase {
         '#type' => 'container',
         '#id' => 'edit-display-settings',
       );
-      $display_title = $this->getDisplayLabel($view, $display_id, FALSE);
 
       // Add a text that the display is disabled.
       if ($view->getExecutable()->displayHandlers->has($display_id)) {
@@ -330,7 +329,6 @@ class ViewEditFormController extends ViewFormControllerBase {
     // If the plugin doesn't exist, display an error message instead of an edit
     // page.
     if (empty($display)) {
-      $title = isset($display->display['display_title']) ? $display->display['display_title'] : $this->t('Invalid');
       // @TODO: Improved UX for the case where a plugin is missing.
       $build['#markup'] = $this->t("Error: Display @display refers to a plugin named '@plugin', but that plugin is not available.", array('@display' => $display->display['id'], '@plugin' => $display->display['display_plugin']));
     }
@@ -899,7 +897,6 @@ class ViewEditFormController extends ViewFormControllerBase {
     $build['#name'] = $build['#title'] = $types[$type]['title'];
 
     $rearrange_url = "admin/structure/views/nojs/rearrange/{$view->id()}/{$display['id']}/$type";
-    $rearrange_text = $this->t('Rearrange');
     $class = 'icon compact rearrange';
 
     // Different types now have different rearrange forms, so we use this switch
@@ -909,7 +906,6 @@ class ViewEditFormController extends ViewFormControllerBase {
         // The rearrange form for filters contains the and/or UI, so override
         // the used path.
         $rearrange_url = "admin/structure/views/nojs/rearrange-filter/{$view->id()}/{$display['id']}";
-        $rearrange_text = $this->t('And/Or, Rearrange');
         // TODO: Add another class to have another symbol for filter rearrange.
         $class = 'icon compact rearrange';
         break;

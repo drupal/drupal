@@ -216,12 +216,9 @@ function image_file_download($uri) {
   // Private file access for image style derivatives.
   if (strpos($path, 'styles/') === 0) {
     $args = explode('/', $path);
-    // Discard the first part of the path (styles).
-    array_shift($args);
-    // Get the style name from the second part.
-    $style_name = array_shift($args);
-    // Remove the scheme from the path.
-    array_shift($args);
+
+    // Discard "styles", style name, and scheme from the path
+    $args = array_slice($args, 3);
 
     // Then the remaining parts are the path to the image.
     $original_uri = file_uri_scheme($uri) . '://' . implode('/', $args);

@@ -295,7 +295,7 @@ function options_extract_allowed_values($string, $field_type, $generate_keys) {
 
   $generated_keys = $explicit_keys = FALSE;
   foreach ($list as $position => $text) {
-    $value = $key = FALSE;
+    $key = FALSE;
 
     // Check for an explicit key.
     $matches = array();

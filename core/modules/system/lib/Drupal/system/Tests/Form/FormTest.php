@@ -238,7 +238,7 @@ class FormTest extends WebTestBase {
    */
   function testRequiredTextfieldNoTitle() {
     $form = $form_state = array();
-    $form = form_test_validate_required_form_no_title($form, $form_state);
+    form_test_validate_required_form_no_title($form, $form_state);
 
     // Attempt to submit the form with no required field set.
     $edit = array();
@@ -528,7 +528,7 @@ class FormTest extends WebTestBase {
 
     // Ensure that the returned values match the form's default values in both
     // cases.
-    foreach ($returned_values as $type => $values) {
+    foreach ($returned_values as $values) {
       $this->assertFormValuesDefault($values, $form);
     }
   }

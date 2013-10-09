@@ -69,7 +69,6 @@ class EntityRevisionsTest extends WebTestBase {
     $entity->field_test_text->value = 'bar';
     $entity->save();
 
-    $entities = array();
     $names = array();
     $texts = array();
     $revision_ids = array();

@@ -327,7 +327,6 @@ class PoHeader {
       for ($i = 2; $i < count($element_stack); $i++) {
         $op = $element_stack[$i];
         if (!empty($precedence[$op])) {
-          $f = "";
           if ($op == ":") {
             $f = $element_stack[$i - 2] . "):" . $element_stack[$i - 1] . ")";
           }

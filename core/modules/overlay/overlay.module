@@ -460,7 +460,6 @@ function overlay_get_mode() {
  * @see \Drupal\overlay\EventSubscriber\OverlaySubscriber::onRequest()
  */
 function overlay_set_mode($mode = NULL) {
-  global $base_path;
   // We're not using drupal_static() here since the static cache is reset in
   // drupal_flush_all_caches(); this could lead to the loss of the overlay when
   // submitting the admin/modules form, for instance.

@@ -15,7 +15,7 @@ function database_test_query_alter(AlterableInterface $query) {
 
   if ($query->hasTag('database_test_alter_add_join')) {
     $people_alias = $query->join('test', 'people', "test_task.pid = %alias.id");
-    $name_field = $query->addField($people_alias, 'name', 'name');
+    $query->addField($people_alias, 'name', 'name');
     $query->condition($people_alias . '.id', 2);
   }
 
