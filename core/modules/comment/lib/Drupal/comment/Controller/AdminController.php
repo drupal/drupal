@@ -10,7 +10,7 @@ namespace Drupal\comment\Controller;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\comment\CommentManager;
+use Drupal\comment\CommentManagerInterface;
 use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -29,7 +29,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
   /**
    * The comment manager service.
    *
-   * @var \Drupal\comment\CommentManager
+   * @var \Drupal\comment\CommentManagerInterface
    */
   protected $commentManager;
 
@@ -48,10 +48,10 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
    *
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
-   * @param \Drupal\comment\CommentManager $comment_manager
+   * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
    */
-  public function __construct(FieldInfo $field_info, CommentManager $comment_manager) {
+  public function __construct(FieldInfo $field_info, CommentManagerInterface $comment_manager) {
     $this->fieldInfo = $field_info;
     $this->commentManager = $comment_manager;
   }

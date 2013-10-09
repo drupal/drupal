@@ -8,7 +8,7 @@
 namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\CommentManager;
+use Drupal\comment\CommentManagerInterface;
 use Drupal\field\FieldInfo;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
@@ -61,7 +61,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
   /**
    * The comment manager service.
    *
-   * @var \Drupal\comment\CommentManager
+   * @var \Drupal\comment\CommentManagerInterface
    */
   protected $commentManager;
 
@@ -76,10 +76,10 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
    *   The current user service.
    * @param \Drupal\field\FieldInfo $field_info
    *   Field Info service.
-   * @param \Drupal\comment\CommentManager $comment_manager
+   * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
    */
-  public function __construct(HttpKernelInterface $httpKernel, CsrfTokenGenerator $csrf_token, AccountInterface $current_user, FieldInfo $field_info, CommentManager $comment_manager) {
+  public function __construct(HttpKernelInterface $httpKernel, CsrfTokenGenerator $csrf_token, AccountInterface $current_user, FieldInfo $field_info, CommentManagerInterface $comment_manager) {
     $this->httpKernel = $httpKernel;
     $this->csrfToken = $csrf_token;
     $this->currentUser = $current_user;

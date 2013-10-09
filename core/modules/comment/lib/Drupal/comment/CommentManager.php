@@ -14,7 +14,7 @@ use Drupal\Core\Entity\EntityManager;
 /**
  * Comment manager contains common functions to manage comment fields.
  */
-class CommentManager {
+class CommentManager implements CommentManagerInterface {
 
   /**
    * The field info service.
@@ -44,13 +44,7 @@ class CommentManager {
   }
 
   /**
-   * Utility function to return URI of the comment's parent entity.
-   *
-   * @param \Drupal\comment\CommentInterface $comment
-   *   The comment entity.
-   *
-   * @return array
-   *   An array returned by \Drupal\Core\Entity\EntityInterface::uri().
+   * {@inheritdoc}
    */
   public function getParentEntityUri(CommentInterface $comment) {
     return $this->entityManager
@@ -60,19 +54,7 @@ class CommentManager {
   }
 
   /**
-   * Utility function to return an array of comment fields.
-   *
-   * @param string $entity_type
-   *   The entity type to return fields which are attached on.
-   *
-   * @return array
-   *   An array of comment field map definitions, keyed by field name. Each
-   *   value is an array with two entries:
-   *   - type: The field type.
-   *   - bundles: The bundles in which the field appears, as an array with entity
-   *     types as keys and the array of bundle names as values.
-   *
-   * @see field_info_field_map()
+   * {@inheritdoc}
    */
   public function getFields($entity_type = NULL) {
     $map = $this->getAllFields();
@@ -83,7 +65,7 @@ class CommentManager {
   }
 
   /**
-   * Utility function to return all comment fields.
+   * {@inheritdoc}
    */
   public function getAllFields() {
     $map = $this->fieldInfo->getFieldMap();
@@ -100,20 +82,7 @@ class CommentManager {
   }
 
   /**
-   * Utility method to add the default comment field to an entity.
-   *
-   * Attaches a comment field named 'comment' to the given entity type and
-   * bundle. Largely replicates the default behaviour in Drupal 7 and earlier.
-   *
-   * @param string $entity_type
-   *   The entity type to attach the default comment field to.
-   * @param string $bundle
-   *   The bundle to attach the default comment field instance to.
-   * @param string $field_name
-   *   (optional) Field name to use for the comment field. Defaults to 'comment'.
-   * @param int $default_value
-   *   (optional) Default value, one of COMMENT_HIDDEN, COMMENT_OPEN,
-   *   COMMENT_CLOSED. Defaults to COMMENT_OPEN.
+   * {@inheritdoc}
    */
   public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = COMMENT_OPEN) {
     // Make sure the field doesn't already exist.
@@ -170,12 +139,7 @@ class CommentManager {
   }
 
   /**
-   * Creates a comment_body field instance.
-   *
-   * @param string $entity_type
-   *   The type of the entity to which the comment field attached.
-   * @param string $field_name
-   *   Name of the comment field to add comment_body field.
+   * {@inheritdoc}
    */
   public function addBodyField($entity_type, $field_name) {
     // Create the field if needed.
@@ -224,13 +188,7 @@ class CommentManager {
   }
 
   /**
-   * Builds human readable page title for field_ui management screens.
-   *
-   * @param string $field_name
-   *   The comment field for which the overview is to be displayed.
-   *
-   * @return string
-   *   The human readable field name.
+   * {@inheritdoc}
    */
   public function getFieldUIPageTitle($field_name) {
     list($entity_type, $field) = explode('__', $field_name, 2);
