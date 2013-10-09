@@ -212,12 +212,18 @@ class PreviewTest extends UITestBase {
    *   The expected number of rows in the preview.
    */
   protected function clickPreviewLinkAJAX($url, $row_count) {
+    $content = $this->content;
+    $drupal_settings = $this->drupalSettings;
     $ajax_settings = array(
-      'url' => $url,
       'wrapper' => 'views-preview-wrapper',
       'method' => 'replaceWith',
     );
-    $result = $this->drupalPostAjaxForm(NULL, array(), NULL, NULL, array(), array(), NULL, $ajax_settings);
+    $url = $this->getAbsoluteUrl($url);
+    $post = array('js' => 'true') + $this->getAjaxPageStatePostData();
+    $result = drupal_json_decode($this->drupalPost($url, 'application/vnd.drupal-ajax', $post));
+    if (!empty($result)) {
+      $this->drupalProcessAjaxResponse($content, $result, $ajax_settings, $drupal_settings);
+    }
     $this->assertPreviewAJAX($result, $row_count);
   }
 
