@@ -120,7 +120,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
       ->select('users')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
     $query->fields('users', array('uid'));
-    $user_account = $this->request->attributes->get('_account');
+    $user_account = $this->currentUser();
     if ($user_account->hasPermission('administer users')) {
       // Administrators can also search in the otherwise private email field, and
       // they don't need to be restricted to only active users.

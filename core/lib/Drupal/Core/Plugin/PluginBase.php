@@ -23,6 +23,25 @@ abstract class PluginBase extends ComponentPluginBase {
   protected $translationManager;
 
   /**
+   * Current user object.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Gets the current active user.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   */
+  protected function currentUser() {
+    if (!$this->currentUser) {
+      $this->currentUser = \Drupal::currentUser();
+    }
+    return $this->currentUser;
+  }
+
+  /**
    * Translates a string to the current language or to a given language.
    *
    * See the t() documentation for details.
