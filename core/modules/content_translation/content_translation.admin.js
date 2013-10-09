@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -6,52 +6,60 @@
  * Forces applicable options to be checked as translatable.
  */
 Drupal.behaviors.contentTranslationDependentOptions = {
-  attach: function (context, settings) {
-    var $options = settings.contentTranslationDependentOptions;
-    var $collections = [];
+  attach: function (context) {
+    var $context = $(context);
+    var options = drupalSettings.contentTranslationDependentOptions;
+    var $fields, dependent_columns;
+
+    function fieldsChangeHandler ($fields, dependent_columns) {
+      return function (e) {
+        Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependent_columns, $(e.target));
+      };
+    }
 
     // We're given a generic name to look for so we find all inputs containing
     // that name and copy over the input values that require all columns to be
     // translatable.
-    if ($options.dependent_selectors) {
-      $.each($options.dependent_selectors, function($field, $dependent_columns) {
-        $collections.push({ elements : $(context).find('input[name^="' + $field + '"]'), dependent_columns : $dependent_columns });
-      });
+    if (options.dependent_selectors) {
+      for (var field in options.dependent_selectors) {
+        if (options.dependent_selectors.hasOwnProperty(field)) {
+          $fields = $context.find('input[name^="' + field + '"]');
+          dependent_columns = options.dependent_selectors[field];
+
+          $fields.on('change', fieldsChangeHandler($fields, dependent_columns));
+          Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependent_columns);
+        }
+      }
+    }
+  },
+  check: function ($fields, dependent_columns, $changed) {
+    var $element = $changed;
+    var column;
+
+    function filterFieldsList (index, field) {
+      return $(field).val() === column;
     }
 
-    $.each($collections, function($index, $collection) {
-      var $fields = $collection.elements;
-      var $dependent_columns = $collection.dependent_columns;
-
-      $fields.change(function() {
-        Drupal.behaviors.contentTranslationDependentOptions.check($fields, $dependent_columns, $(this));
-      });
-
-      // Run the check function on first trigger of this behavior.
-      Drupal.behaviors.contentTranslationDependentOptions.check($fields, $dependent_columns, false);
-    });
-  },
-  check: function($fields, $dependent_columns, $changed) {
     // A field that has many different translatable parts can also define one
     // or more columns that require all columns to be translatable.
-    $.each($dependent_columns, function($index, $column) {
-      var $element = $changed;
+    for (var index in dependent_columns) {
+      if (dependent_columns.hasOwnProperty(index)) {
+        column = dependent_columns[index];
 
-      if(!$element) {
-        $fields.each(function() {
-          if($(this).val() === $column) {
-            $element = $(this);
-            return false;
-          }
-        });
-      }
+        if (!$changed) {
+          $element = $fields.filter(filterFieldsList);
+        }
 
-      if($element.is('input[value="' + $column + '"]:checked')) {
-        $fields.prop('checked', true).not($element).prop('disabled', true);
-      } else {
-        $fields.prop('disabled', false);
+        if ($element.is('input[value="' + column + '"]:checked')) {
+          $fields.prop('checked', true)
+            .not($element).prop('disabled', true);
+        }
+        else {
+          $fields.prop('disabled', false);
+        }
+
       }
-    });
+    }
   }
 };
 
@@ -89,7 +97,8 @@ Drupal.behaviors.contentTranslation = {
       else {
         $settings.hide();
       }
-    }).on('click', 'table .field-settings .translatable :input', function (e) {
+    })
+    .on('click', 'table .field-settings .translatable :input', function (e) {
       var $target = $(e.target);
       var $fieldSettings = $target.closest('.field-settings');
       var $columnSettings = $fieldSettings.nextUntil('.field-settings, .bundle-settings');
@@ -103,4 +112,4 @@ Drupal.behaviors.contentTranslation = {
   }
 };
 
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

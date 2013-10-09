@@ -12,9 +12,12 @@
 Drupal.behaviors.ViewsAjaxView = {};
 Drupal.behaviors.ViewsAjaxView.attach = function() {
   if (drupalSettings && drupalSettings.views && drupalSettings.views.ajaxViews) {
-    $.each(drupalSettings.views.ajaxViews, function(i, settings) {
-      Drupal.views.instances[i] = new Drupal.views.ajaxView(settings);
-    });
+    var ajaxViews = drupalSettings.views.ajaxViews;
+    for (var i in ajaxViews) {
+      if (ajaxViews.hasOwnProperty(i)) {
+        Drupal.views.instances[i] = new Drupal.views.ajaxView(ajaxViews[i]);
+      }
+    }
   }
 };
 

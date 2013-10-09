@@ -75,9 +75,8 @@ Drupal.behaviors.password = {
       };
 
       // Monitor input events.
-      $.each([passwordInput, confirmInput], function () {
-        this.bind('input', passwordCheck);
-      });
+      passwordInput.on('input', passwordCheck);
+      confirmInput.on('input', passwordCheck);
     });
   }
 };
