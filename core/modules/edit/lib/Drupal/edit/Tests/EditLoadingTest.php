@@ -72,7 +72,7 @@ class EditLoadingTest extends WebTestBase {
   /**
    * Test the loading of Edit when a user doesn't have access to it.
    */
-  function testUserWithoutPermission() {
+  public function testUserWithoutPermission() {
     $this->drupalLogin($this->author_user);
     $this->drupalGet('node/1');
 
@@ -129,7 +129,7 @@ class EditLoadingTest extends WebTestBase {
    *
    * Also ensures lazy loading of in-place editors works.
    */
-  function testUserWithPermission() {
+  public function testUserWithPermission() {
     $this->drupalLogin($this->editor_user);
     $this->drupalGet('node/1');
 
@@ -302,6 +302,48 @@ class EditLoadingTest extends WebTestBase {
 
     // Check that the data- attribute is not added.
     $this->assertNoRaw('data-edit-id="node/1/edit_test_pseudo_field/und/default"');
+  }
+
+  /**
+   * Tests Edit on a node that was concurrently edited on the full node form.
+   */
+  public function testConcurrentEdit() {
+    $this->drupalLogin($this->editor_user);
+
+    $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
+    $response = $this->drupalPost('edit/form/' . 'node/1/body/und/full', 'application/vnd.drupal-ajax', $post);
+    $ajax_commands = drupal_json_decode($response);
+
+    // Prepare form values for submission. drupalPostAJAX() is not suitable for
+    // handling pages with JSON responses, so we need our own solution here.
+    $form_tokens_found = preg_match('/\sname="form_token" value="([^"]+)"/', $ajax_commands[0]['data'], $token_match) && preg_match('/\sname="form_build_id" value="([^"]+)"/', $ajax_commands[0]['data'], $build_id_match);
+    $this->assertTrue($form_tokens_found, 'Form tokens found in output.');
+
+    if ($form_tokens_found) {
+      $post = array(
+        'form_id' => 'edit_field_form',
+        'form_token' => $token_match[1],
+        'form_build_id' => $build_id_match[1],
+        'body[0][summary]' => '',
+        'body[0][value]' => '<p>Fine thanks.</p>',
+        'body[0][format]' => 'filtered_html',
+        'op' => t('Save'),
+      );
+
+      // Save the node on the regular node edit form.
+      $this->drupalPostForm('node/1/edit', array(), t('Save'));
+      // Ensure different save timestamps for field editing.
+      sleep(2);
+
+      // Submit field form and check response. Should throw a validation error
+      // because the node was changed in the meantime.
+      $response = $this->drupalPost('edit/form/' . 'node/1/body/und/full', 'application/vnd.drupal-ajax', $post);
+      $this->assertResponse(200);
+      $ajax_commands = drupal_json_decode($response);
+      $this->assertIdentical(2, count($ajax_commands), 'The field form HTTP request results in two AJAX commands.');
+      $this->assertIdentical('editFieldFormValidationErrors', $ajax_commands[1]['command'], 'The second AJAX command is an editFieldFormValidationErrors command.');
+      $this->assertTrue(strpos($ajax_commands[1]['data'], t('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.')), 'Error message returned to user.');
+    }
   }
 
 }

@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\user\TempStoreFactory;
+use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Builds and process a form for editing a single entity field.
@@ -88,6 +89,14 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
     // Add the field form.
     field_attach_form($form_state['entity'], $form, $form_state, $form_state['langcode'], array('field_name' =>  $form_state['field_name']));
 
+    // Add a dummy changed timestamp field to attach form errors to.
+    if ($entity instanceof EntityChangedInterface) {
+      $form['changed_field'] = array(
+        '#type' => 'hidden',
+        '#value' => $entity->getChangedTime(),
+      );
+    }
+
     // Add a submit button. Give it a class for easy JavaScript targeting.
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
@@ -139,6 +148,16 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
   public function validateForm(array &$form, array &$form_state) {
     $entity = $this->buildEntity($form, $form_state);
     field_attach_form_validate($entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
+
+    // Do validation on the changed field as well and assign the error to the
+    // dummy form element we added for this. We don't know the name of this
+    // field on the entity, so we need to find it and validate it ourselves.
+    if ($changed_field_name = $this->getChangedFieldName($entity)) {
+      $changed_field_errors = $entity->$changed_field_name->validate();
+      if (count($changed_field_errors)) {
+        form_set_error('changed_field', $changed_field_errors[0]->getMessage());
+      }
+    }
   }
 
   /**
@@ -210,6 +229,24 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
     if (isset($widget_element[0]['value']['#type']) && $widget_element[0]['value']['#type'] == 'textarea') {
       $lines = count(explode("\n", $widget_element[0]['value']['#default_value']));
       $widget_element[0]['value']['#rows'] = $lines + 1;
+    }
+  }
+
+  /**
+   * Finds the field name for the field carrying the changed timestamp, if any.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity.
+   *
+   * @return string|null
+   *   The name of the field found or NULL if not found.
+   */
+  protected function getChangedFieldName(EntityInterface $entity) {
+    foreach ($entity as $field_name => $field) {
+      $definition = $field->getDefinition();
+      if (isset($definition['property_constraints']['value']['EntityChanged'])) {
+        return $field_name;
+      }
     }
   }
 
