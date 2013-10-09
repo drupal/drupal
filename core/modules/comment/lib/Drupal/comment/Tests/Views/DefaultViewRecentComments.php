@@ -151,7 +151,6 @@ class DefaultViewRecentComments extends ViewTestBase {
       'comment_entity_id' => 'entity_id',
       'comment_subject' => 'subject',
       'comment_changed' => 'changed',
-      'comment_changed' => 'created',
       'cid' => 'cid'
     );
     $expected_result = array();
@@ -159,7 +158,6 @@ class DefaultViewRecentComments extends ViewTestBase {
       $expected_result[$key]['entity_id'] = $comment->entity_id->value;
       $expected_result[$key]['subject'] = $comment->subject->value;
       $expected_result[$key]['changed'] = $comment->changed->value;
-      $expected_result[$key]['created'] = $comment->created->value;
       $expected_result[$key]['cid'] = $comment->id();
     }
     $this->assertIdenticalResultset($view, $expected_result, $map);
