@@ -602,6 +602,9 @@ function file_valid_uri($uri) {
  *   is reported.
  * - If file already exists in $destination either the call will error out,
  *   replace the file or rename the file based on the $replace parameter.
+ * - If the $source and $destination are equal, the behavior depends on the
+ *   $replace parameter. FILE_EXIST_REPLACE will error out. FILE_EXIST_RENAME
+ *   will rename the file until the $destination is unique.
  * - Provides a fallback using realpaths if the move fails using stream
  *   wrappers. This can occur because PHP's copy() function does not properly
  *   support streams if safe_mode or open_basedir are enabled. See
