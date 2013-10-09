@@ -50,9 +50,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->createFieldWithInstance('', $entity_type);
     $cardinality = $this->field->getFieldCardinality();
 
-    // Configure the instance so that we test hook_field_load() (see
-    // field_test_field_load() in field_test.module).
-    $this->instance->settings['test_hook_field_load'] = TRUE;
+    // Configure the instance so that we test
+    // \Drupal\field_test\Plugin\field\field_type\TestItem::getCacheData().
+    $this->instance->settings['test_cached_data'] = TRUE;
     $this->instance->save();
 
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
@@ -79,7 +79,9 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     for ($delta = 0; $delta < $cardinality; $delta++) {
       // The field value loaded matches the one inserted or updated.
       $this->assertEqual($entity->{$this->field_name}[$delta]->value , $values[$current_revision][$delta]['value'], format_string('Current revision: expected value %delta was found.', array('%delta' => $delta)));
-      // The value added in hook_field_load() is found.
+      // The value added in
+      // \Drupal\field_test\Plugin\field\field_type\TestItem::getCacheData() is
+      // found.
       $this->assertEqual($entity->{$this->field_name}[$delta]->additional_key, 'additional_value', format_string('Current revision: extra information for value %delta was found', array('%delta' => $delta)));
     }
 
@@ -131,10 +133,10 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
           'field_name' => $field_names[$i],
           'entity_type' => $entity_type,
           'bundle' => $bundles[$bundle],
+          // Configure the instance so that we test
+          // \Drupal\field_test\Plugin\field\field_type\TestItem::getCacheData().
           'settings' => array(
-            // Configure the instance so that we test hook_field_load()
-            // (see field_test_field_load() in field_test.module).
-            'test_hook_field_load' => TRUE,
+            'test_cached_data' => TRUE,
           ),
         ))->save();
       }

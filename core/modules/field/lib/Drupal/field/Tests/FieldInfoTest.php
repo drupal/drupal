@@ -23,7 +23,7 @@ class FieldInfoTest extends FieldUnitTestBase {
   function testFieldInfo() {
     // Test that field_test module's fields, widgets, and formatters show up.
 
-    $field_test_info = field_test_field_info();
+    $field_test_info = $this->getExpectedFieldTypeDefinition();
     $info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
@@ -283,7 +283,7 @@ class FieldInfoTest extends FieldUnitTestBase {
    * Test that the field_info settings convenience functions work.
    */
   function testSettingsInfo() {
-    $info = field_test_field_info();
+    $info = $this->getExpectedFieldTypeDefinition();
     foreach ($info as $type => $data) {
       $field_type_manager = \Drupal::service('plugin.manager.entity.field.field_type');
       $this->assertIdentical($field_type_manager->getDefaultSettings($type), $data['settings'], format_string("field settings service returns %type's field settings", array('%type' => $type)));
@@ -326,5 +326,51 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Test if hook_field_widget_info_alter is beïng called.
     $this->assertTrue(in_array('test_field', $widget_definition['field_types']), "The 'test_field_widget_multiple' widget is enabled for the 'test_field' field type in field_test_field_widget_info_alter().");
   }
+
+  /**
+   * Returns field info definition.
+   */
+  protected function getExpectedFieldTypeDefinition() {
+    return array(
+      'test_field' => array(
+        'label' => t('Test field'),
+        'description' => t('Dummy field type used for tests.'),
+        'settings' => array(
+          'test_field_setting' => 'dummy test string',
+          'changeable' => 'a changeable field setting',
+          'unchangeable' => 'an unchangeable field setting',
+        ),
+        'instance_settings' => array(
+          'test_instance_setting' => 'dummy test string',
+          'test_cached_data' => FALSE,
+        ),
+        'default_widget' => 'test_field_widget',
+        'default_formatter' => 'field_test_default',
+        'class' => 'Drupal\field_test\Plugin\field\field_type\TestItem',
+      ),
+      'shape' => array(
+        'label' => t('Shape'),
+        'description' => t('Another dummy field type.'),
+        'settings' => array(
+          'foreign_key_name' => 'shape',
+        ),
+        'instance_settings' => array(),
+        'default_widget' => 'test_field_widget',
+        'default_formatter' => 'field_test_default',
+        'class' => 'Drupal\field_test\Plugin\field\field_type\ShapeItem',
+      ),
+      'hidden_test_field' => array(
+        'no_ui' => TRUE,
+        'label' => t('Hidden from UI test field'),
+        'description' => t('Dummy hidden field type used for tests.'),
+        'settings' => array(),
+        'instance_settings' => array(),
+        'default_widget' => 'test_field_widget',
+        'default_formatter' => 'field_test_default',
+        'class' => 'Drupal\field_test\Plugin\field\field_type\HiddenTestItem',
+      ),
+    );
+  }
+
 
 }
