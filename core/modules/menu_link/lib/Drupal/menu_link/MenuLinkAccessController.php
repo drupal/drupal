@@ -38,11 +38,4 @@ class MenuLinkAccessController extends EntityAccessController {
     return $access;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('administer menu');
-  }
-
 }

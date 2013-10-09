@@ -33,8 +33,8 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *     },
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\image\ImageStyleListController",
- *     "access" = "Drupal\image\ImageStyleAccessController"
  *   },
+ *   admin_permission = "administer image styles",
  *   config_prefix = "image.style",
  *   entity_keys = {
  *     "id" = "name",

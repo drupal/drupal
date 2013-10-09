@@ -354,7 +354,7 @@ class EntityManager extends PluginManagerBase {
         $this->controllers[$controller_type][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
       }
       else {
-        $this->controllers[$controller_type][$entity_type] = new $class($entity_type);
+        $this->controllers[$controller_type][$entity_type] = new $class($entity_type, $this->getDefinition($entity_type));
       }
     }
     return $this->controllers[$controller_type][$entity_type];

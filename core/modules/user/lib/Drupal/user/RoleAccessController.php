@@ -27,15 +27,8 @@ class RoleAccessController extends EntityAccessController {
         }
 
       default:
-        return user_access('administer permissions', $account);
+        return parent::checkAccess($entity, $operation, $langcode, $account);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('administer permissions', $account);
   }
 
 }

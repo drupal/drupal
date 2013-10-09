@@ -33,6 +33,13 @@ class EntityAccessController implements EntityAccessControllerInterface {
   protected $entityType;
 
   /**
+   * The entity info array.
+   *
+   * @var array
+   */
+  protected $entityInfo;
+
+  /**
    * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -44,9 +51,12 @@ class EntityAccessController implements EntityAccessControllerInterface {
    *
    * @param string $entity_type
    *   The entity type of the access controller instance.
+   * @param array $entity_info
+   *   An array of entity info for the entity type.
    */
-  public function __construct($entity_type) {
+  public function __construct($entity_type, array $entity_info) {
     $this->entityType = $entity_type;
+    $this->entityInfo = $entity_info;
   }
 
   /**
@@ -127,7 +137,12 @@ class EntityAccessController implements EntityAccessControllerInterface {
    *   could not be determined.
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    return NULL;
+    if (!empty($this->entityInfo['admin_permission'])) {
+      return $account->hasPermission($this->entityInfo['admin_permission']);
+    }
+    else {
+      return NULL;
+    }
   }
 
   /**
@@ -243,7 +258,12 @@ class EntityAccessController implements EntityAccessControllerInterface {
    *   could not be determined.
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return NULL;
+    if (!empty($this->entityInfo['admin_permission'])) {
+      return $account->hasPermission($this->entityInfo['admin_permission']);
+    }
+    else {
+      return NULL;
+    }
   }
 
   /**

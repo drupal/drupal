@@ -22,7 +22,6 @@ use Drupal\taxonomy\VocabularyInterface;
  *   module = "taxonomy",
  *   controllers = {
  *     "storage" = "Drupal\taxonomy\VocabularyStorageController",
- *     "access" = "Drupal\taxonomy\VocabularyAccessController",
  *     "list" = "Drupal\taxonomy\VocabularyListController",
  *     "form" = {
  *       "default" = "Drupal\taxonomy\VocabularyFormController",
@@ -30,6 +29,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *       "delete" = "Drupal\taxonomy\Form\VocabularyDeleteForm"
  *     }
  *   },
+ *   admin_permission = "administer taxonomy",
  *   config_prefix = "taxonomy.vocabulary",
  *   bundle_of = "taxonomy_term",
  *   entity_keys = {

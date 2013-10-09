@@ -22,7 +22,6 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *   module = "custom_block",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
- *     "access" = "Drupal\custom_block\CustomBlockTypeAccessController",
  *     "form" = {
  *       "default" = "Drupal\custom_block\CustomBlockTypeFormController",
  *       "add" = "Drupal\custom_block\CustomBlockTypeFormController",
@@ -31,6 +30,7 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *     },
  *     "list" = "Drupal\custom_block\CustomBlockTypeListController"
  *   },
+ *   admin_permission = "administer blocks",
  *   config_prefix = "custom_block.type",
  *   bundle_of = "custom_block",
  *   entity_keys = {

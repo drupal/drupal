@@ -32,11 +32,13 @@ class BlockAccessController extends EntityAccessController implements EntityCont
    *
    * @param string $entity_type
    *   The entity type of the access controller instance.
+   * @param array $entity_info
+   *   An array of entity info for the entity type.
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
    *   The alias manager.
    */
-  public function __construct($entity_type, AliasManagerInterface $alias_manager) {
-    parent::__construct($entity_type);
+  public function __construct($entity_type, array $entity_info, AliasManagerInterface $alias_manager) {
+    parent::__construct($entity_type, $entity_info);
     $this->aliasManager = $alias_manager;
   }
 
@@ -46,6 +48,7 @@ class BlockAccessController extends EntityAccessController implements EntityCont
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
       $entity_type,
+      $entity_info,
       $container->get('path.alias_manager')
     );
   }

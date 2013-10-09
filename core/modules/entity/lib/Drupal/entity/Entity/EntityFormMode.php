@@ -35,7 +35,6 @@ use Drupal\entity\EntityFormModeInterface;
  *   module = "entity",
  *   controllers = {
  *     "list" = "Drupal\entity\EntityFormModeListController",
- *     "access" = "Drupal\entity\EntityDisplayModeAccessController",
  *     "form" = {
  *       "add" = "Drupal\entity\Form\EntityFormModeAddForm",
  *       "edit" = "Drupal\entity\Form\EntityDisplayModeEditForm",
@@ -43,6 +42,7 @@ use Drupal\entity\EntityFormModeInterface;
  *     },
  *     "storage" = "Drupal\entity\EntityDisplayModeStorageController"
  *   },
+ *   admin_permission = "administer display modes",
  *   config_prefix = "entity.form_mode",
  *   entity_keys = {
  *     "id" = "id",

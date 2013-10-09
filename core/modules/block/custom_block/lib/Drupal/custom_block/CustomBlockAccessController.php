@@ -23,16 +23,7 @@ class CustomBlockAccessController extends EntityAccessController {
     if ($operation === 'view') {
       return TRUE;
     }
-    elseif (in_array($operation, array('update', 'delete'))) {
-      return user_access('administer blocks', $account);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('administer blocks', $account);
+    return parent::checkAccess($entity, $operation, $langcode, $account);
   }
 
 }

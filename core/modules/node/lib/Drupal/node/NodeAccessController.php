@@ -35,11 +35,13 @@ class NodeAccessController extends EntityAccessController implements NodeAccessC
    *
    * @param string $entity_type
    *   The entity type of the access controller instance.
+   * @param array $entity_info
+   *   An array of entity info for the entity type.
    * @param \Drupal\node\NodeGrantDatabaseStorageInterface $grant_storage
    *   The node grant storage.
    */
-  public function __construct($entity_type, NodeGrantDatabaseStorageInterface $grant_storage) {
-    parent::__construct($entity_type);
+  public function __construct($entity_type, array $entity_info, NodeGrantDatabaseStorageInterface $grant_storage) {
+    parent::__construct($entity_type, $entity_info);
     $this->grantStorage = $grant_storage;
   }
 
@@ -49,6 +51,7 @@ class NodeAccessController extends EntityAccessController implements NodeAccessC
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
       $entity_type,
+      $entity_info,
       $container->get('node.grant_storage')
     );
   }

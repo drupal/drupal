@@ -30,6 +30,7 @@ use Drupal\Core\Annotation\Translation;
  *     },
  *     "list" = "Drupal\node\NodeTypeListController",
  *   },
+ *   admin_permission = "administer content types",
  *   config_prefix = "node.type",
  *   bundle_of = "node",
  *   entity_keys = {

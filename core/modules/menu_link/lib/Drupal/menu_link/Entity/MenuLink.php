@@ -33,6 +33,7 @@ use Drupal\Core\Entity\Entity;
  *       "default" = "Drupal\menu_link\MenuLinkFormController"
  *     }
  *   },
+ *   admin_permission = "administer menu",
  *   static_cache = FALSE,
  *   base_table = "menu_links",
  *   uri_callback = "menu_link_uri",

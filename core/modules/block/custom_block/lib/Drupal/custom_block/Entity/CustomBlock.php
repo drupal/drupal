@@ -34,6 +34,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *     },
  *     "translation" = "Drupal\custom_block\CustomBlockTranslationController"
  *   },
+ *   admin_permission = "administer blocks",
  *   base_table = "custom_block",
  *   revision_table = "custom_block_revision",
  *   route_base_path = "admin/structure/block/custom-blocks/manage/{bundle}",

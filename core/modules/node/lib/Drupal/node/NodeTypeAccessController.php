@@ -25,14 +25,7 @@ class NodeTypeAccessController extends EntityAccessController {
     if ($operation == 'delete' && $entity->isLocked()) {
       return FALSE;
     }
-    return user_access('administer content types', $account);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('administer content types', $account);
+    return parent::checkAccess($entity, $operation, $langcode, $account);
   }
 
 }

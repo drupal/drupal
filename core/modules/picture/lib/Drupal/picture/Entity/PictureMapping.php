@@ -21,7 +21,6 @@ use Drupal\picture\PictureMappingInterface;
  *   module = "picture",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
- *     "access" = "Drupal\picture\PictureMappingAccessController",
  *     "list" = "Drupal\picture\PictureMappingListController",
  *     "form" = {
  *       "edit" = "Drupal\picture\PictureMappingFormController",
@@ -31,6 +30,7 @@ use Drupal\picture\PictureMappingInterface;
  *     }
  *   },
  *   list_path = "admin/config/media/picturemapping",
+ *   admin_permission = "administer pictures",
  *   config_prefix = "picture.mappings",
  *   entity_keys = {
  *     "id" = "id",

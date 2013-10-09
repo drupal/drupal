@@ -30,6 +30,7 @@ use Drupal\user\UserInterface;
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationController"
  *   },
+ *   admin_permission = "administer user",
  *   base_table = "users",
  *   uri_callback = "user_uri",
  *   route_base_path = "admin/config/people/accounts",

@@ -31,6 +31,7 @@ use Drupal\language\LanguageInterface;
  *       "delete" = "Drupal\language\Form\LanguageDeleteForm"
  *     }
  *   },
+ *   admin_permission = "administer languages",
  *   config_prefix = "language.entity",
  *   entity_keys = {
  *     "id" = "id",

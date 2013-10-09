@@ -75,6 +75,18 @@ class EntityType extends Plugin {
   );
 
   /**
+   * The name of the default administrative permission.
+   *
+   * The default \Drupal\Core\Entity\EntityAccessController class checks this
+   * permission for all operations in its checkAccess() method. Entities with
+   * more complex permissions can extend this class to do their own access
+   * checks.
+   *
+   * @var string (optional)
+   */
+  public $admin_permission;
+
+  /**
    * Boolean indicating whether fields can be attached to entities of this type.
    *
    * @var bool (optional)
