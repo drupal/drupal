@@ -920,17 +920,17 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::getOriginalID().
+   * {@inheritdoc}
    */
-  public function getOriginalID() {
-    return $this->storage->getOriginalID();
+  public function getOriginalId() {
+    return $this->storage->getOriginalId();
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::setOriginalID().
+   * {@inheritdoc}
    */
-  public function setOriginalID($id) {
-    return $this->storage->setOriginalID($id);
+  public function setOriginalId($id) {
+    return $this->storage->setOriginalId($id);
   }
 
   /**

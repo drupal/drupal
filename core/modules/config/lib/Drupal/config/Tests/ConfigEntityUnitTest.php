@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -21,6 +22,13 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
    */
   public static $modules = array('config_test');
 
+  /**
+   * The config_test entity storage controller.
+   *
+   * @var \Drupal\config_test\ConfigTestStorageController
+   */
+  protected $storage;
+
   public static function getInfo() {
     return array(
       'name' => 'Configuration entity methods',
@@ -30,31 +38,39 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->storage = $this->container->get('entity.manager')->getStorageController('config_test');
+  }
+
+  /**
    * Tests storage controller methods.
    */
   public function testStorageControllerMethods() {
-    $controller = $this->container->get('entity.manager')->getStorageController('config_test');
     $info = entity_get_info('config_test');
 
     $expected = $info['config_prefix'] . '.';
-    $this->assertIdentical($controller->getConfigPrefix(), $expected);
+    $this->assertIdentical($this->storage->getConfigPrefix(), $expected);
 
     // Test the static extractID() method.
     $expected_id = 'test_id';
     $config_name = $info['config_prefix'] . '.' . $expected_id;
-    $this->assertIdentical($controller::getIDFromConfigName($config_name, $info['config_prefix']), $expected_id);
+    $storage = $this->storage;
+    $this->assertIdentical($storage::getIDFromConfigName($config_name, $info['config_prefix']), $expected_id);
 
     // Create three entities, two with the same style.
     $style = $this->randomName(8);
     for ($i = 0; $i < 2; $i++) {
-      $entity = $controller->create(array(
+      $entity = $this->storage->create(array(
         'id' => $this->randomName(),
         'label' => $this->randomString(),
         'style' => $style,
       ));
       $entity->save();
     }
-    $entity = $controller->create(array(
+    $entity = $this->storage->create(array(
       'id' => $this->randomName(),
       'label' => $this->randomString(),
       // Use a different length for the entity to ensure uniqueness.
@@ -62,12 +78,22 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
     ));
     $entity->save();
 
-    $entities = $controller->loadByProperties();
+    $entities = $this->storage->loadByProperties();
     $this->assertEqual(count($entities), 3, 'Three entities are loaded when no properties are specified.');
 
-    $entities = $controller->loadByProperties(array('style' => $style));
+    $entities = $this->storage->loadByProperties(array('style' => $style));
     $this->assertEqual(count($entities), 2, 'Two entities are loaded when the style property is specified.');
     $this->assertEqual(reset($entities)->get('style'), $style, 'The loaded entities have the style value specified.');
+  }
+
+  /**
+   * Tests getOriginalId() and setOriginalId().
+   */
+  protected function testGetOriginalId() {
+    $entity = $this->storage->create(array());
+    $id = $this->randomName();
+    $this->assertIdentical(spl_object_hash($entity->setOriginalId($id)), spl_object_hash($entity));
+    $this->assertIdentical($entity->getOriginalId(), $id);
   }
 
 }

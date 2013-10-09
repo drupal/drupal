@@ -25,7 +25,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    *
    * @var string
    */
-  protected $originalID;
+  protected $originalId;
 
   /**
    * The enabled/disabled status of the configuration entity.
@@ -44,22 +44,24 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     // Configuration entity IDs are strings, and '0' is a valid ID.
     $original_id = $this->id();
     if ($original_id !== NULL && $original_id !== '') {
-      $this->setOriginalID($original_id);
+      $this->setOriginalId($original_id);
     }
   }
 
   /**
-   * Implements ConfigEntityInterface::getOriginalID().
+   * {@inheritdoc}
    */
-  public function getOriginalID() {
-    return $this->originalID;
+  public function getOriginalId() {
+    return $this->originalId;
   }
 
   /**
-   * Implements ConfigEntityInterface::setOriginalID().
+   * {@inheritdoc}
    */
-  public function setOriginalID($id) {
-    $this->originalID = $id;
+  public function setOriginalId($id) {
+    $this->originalId = $id;
+
+    return $this;
   }
 
   /**
@@ -122,7 +124,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public function createDuplicate() {
     $duplicate = parent::createDuplicate();
     // Prevent the new duplicate from being misinterpreted as a rename.
-    $duplicate->setOriginalID(NULL);
+    $duplicate->setOriginalId(NULL);
     return $duplicate;
   }
 

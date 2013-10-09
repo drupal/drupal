@@ -20,7 +20,7 @@ interface ConfigEntityInterface extends EntityInterface {
    * @return string|null
    *   The original ID, if any.
    */
-  public function getOriginalID();
+  public function getOriginalId();
 
   /**
    * Sets the original ID.
@@ -28,9 +28,9 @@ interface ConfigEntityInterface extends EntityInterface {
    * @param string $id
    *   The new ID to set as original ID.
    *
-   * @return void
+   * @return self
    */
-  public function setOriginalID($id);
+  public function setOriginalId($id);
 
   /**
    * Enables the configuration entity.
