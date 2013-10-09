@@ -2,19 +2,18 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\join\Subquery.
+ * Contains \Drupal\views\Plugin\views\join\Subquery.
  */
 
 namespace Drupal\views\Plugin\views\join;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Join handler for relationships that join with a subquery as the left field.
- * eg:
+ * E.g:
  *  LEFT JOIN node node_term_data ON ([YOUR SUBQUERY HERE]) = node_term_data.nid
  *
- * join definition
- *   same as Join class above, except:
+ * Join definition:
+ *   same as \Drupal\views\Plugin\views\join\JoinPluginBase, except:
  *   - left_query: The subquery to use in the left side of the join clause.
  *
  * @PluginID("subquery")
@@ -31,16 +30,14 @@ class Subquery extends JoinPluginBase {
   }
 
   /**
-   * Build the SQL for the join this object represents.
+   * Builds the SQL for the join this object represents.
    *
-   * @param $select_query
-   *   An implementation of SelectQueryInterface.
-   * @param $table
+   * @param \Drupal\Core\Database\Query\SelectInterface $select_query
+   *   The select query object.
+   * @param string $table
    *   The base table to join.
-   * @param $view_query
-   *   The source query, implementation of views_plugin_query.
-   * @return
-   *
+   * @param \Drupal\views\Plugin\views\query\QueryPluginBase $view_query
+   *   The source views query.
    */
   public function buildJoin($select_query, $table, $view_query) {
     if (empty($this->configuration['table formula'])) {

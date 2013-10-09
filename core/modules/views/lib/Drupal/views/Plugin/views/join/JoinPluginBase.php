@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\join\JoinPluginBase.
+ * Contains \Drupal\views\Plugin\views\join\JoinPluginBase.
  */
 
 namespace Drupal\views\Plugin\views\join;
@@ -30,7 +30,7 @@ use Drupal\Core\Plugin\PluginBase;
  * );
  * $join = Views::pluginManager('join')->createInstance('standard', $configuration);
  *
- * Here is how you do complex joins:
+ * To do complex joins:
  *
  * @code
  * class JoinComplex extends JoinPluginBase {
@@ -45,8 +45,6 @@ use Drupal\Core\Plugin\PluginBase;
 
 /**
  * Represents a join and creates the SQL necessary to implement the join.
- *
- * @todo It might make sense to create an interface for joins.
  *
  * Extensions of this class can be used to create more interesting joins.
  */
@@ -173,16 +171,16 @@ class JoinPluginBase extends PluginBase {
   }
 
   /**
-   * Build the SQL for the join this object represents.
+   * Builds the SQL for the join this object represents.
    *
    * When possible, try to use table alias instead of table names.
    *
    * @param $select_query
-   *   An implementation of SelectQueryInterface.
+   *   An select query object.
    * @param $table
    *   The base table to join.
-   * @param $view_query
-   *   The source query, implementation of views_plugin_query.
+   * @param \Drupal\views\Plugin\views\query\QueryPluginBase $view_query
+   *   The source views query.
    */
   public function buildJoin($select_query, $table, $view_query) {
     if (empty($this->configuration['table formula'])) {
