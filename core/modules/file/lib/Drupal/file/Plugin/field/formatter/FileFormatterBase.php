@@ -22,7 +22,7 @@ abstract class FileFormatterBase extends FormatterBase {
     $fids = array();
     foreach ($entities_items as $items) {
       foreach ($items as $item) {
-        if ($this->isDisplayed($item) && !empty($item->target_id)) {
+        if ($item->isDisplayed() && !empty($item->target_id)) {
           // Load the files from the files table.
           $fids[] = $item->target_id;
         }
@@ -41,24 +41,5 @@ abstract class FileFormatterBase extends FormatterBase {
         }
       }
     }
-  }
-
-  /**
-   * Determines whether a file should be displayed when outputting field content.
-   *
-   * @param $item
-   *   A field item array.
-   * @param $field
-   *   A field array.
-   *
-   * @return
-   *   Boolean TRUE if the file will be displayed, FALSE if the file is hidden.
-   */
-  protected function isDisplayed($item) {
-    $settings = $this->getFieldSettings();
-    if (!empty($settings['display_field'])) {
-      return (bool) $item->display;
-    }
-    return TRUE;
   }
 }

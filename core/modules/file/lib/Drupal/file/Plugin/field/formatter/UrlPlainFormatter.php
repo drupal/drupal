@@ -31,7 +31,7 @@ class UrlPlainFormatter extends FileFormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      if ($item->display && $item->entity) {
+      if ($item->isDisplayed() && $item->entity) {
         $elements[$delta] = array('#markup' => empty($item->entity) ? '' : file_create_url($item->entity->getFileUri()));
       }
     }

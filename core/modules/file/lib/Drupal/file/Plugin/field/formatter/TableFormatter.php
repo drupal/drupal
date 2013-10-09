@@ -34,7 +34,7 @@ class TableFormatter extends FileFormatterBase {
       // Display all values in a single element.
       $elements[0] = array(
         '#theme' => 'file_formatter_table',
-        '#items' => $items->getValue(TRUE),
+        '#items' => $items,
       );
     }
 

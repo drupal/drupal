@@ -523,15 +523,15 @@ function theme_file_formatter_table($variables) {
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
   foreach ($variables['items'] as $delta => $item) {
-    if ($item['display'] && $item['entity']) {
+    if ($item->isDisplayed() && $item->entity) {
       $rows[] = array(
         array(
           'data' => array(
             '#theme' => 'file_link',
-            '#file' => $item['entity'],
+            '#file' => $item->entity,
           ),
         ),
-        format_size($item['entity']->getSize()),
+        format_size($item->entity->getSize()),
       );
     }
   }

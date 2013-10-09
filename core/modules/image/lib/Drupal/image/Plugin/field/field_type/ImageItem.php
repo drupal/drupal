@@ -318,4 +318,12 @@ class ImageItem extends FileItem {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isDisplayed() {
+    // Image items do not have per-item visibility settings.
+    return TRUE;
+  }
+
 }

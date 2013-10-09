@@ -311,4 +311,17 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
     return $validators;
   }
 
+  /**
+   * Determines whether an item should be displayed when rendering the field.
+   *
+   * @return bool
+   *   TRUE if the item should be displayed, FALSE if not.
+   */
+  public function isDisplayed() {
+    if ($this->getFieldSetting('display_field')) {
+      return (bool) $this->display;
+    }
+    return TRUE;
+  }
+
 }
