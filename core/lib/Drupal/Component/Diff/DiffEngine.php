@@ -10,6 +10,8 @@
 
 define('USE_ASSERTS', FALSE);
 
+use Drupal\Component\Utility\Settings;
+
 /**
  * @todo document
  * @private
@@ -1096,8 +1098,8 @@ class DrupalDiffFormatter extends DiffFormatter {
   );
 
   function DrupalDiffFormatter() {
-    $this->leading_context_lines = variable_get('diff_context_lines_leading', 2);
-    $this->trailing_context_lines = variable_get('diff_context_lines_trailing', 2);
+    $this->leading_context_lines = Settings::getSingleton()->get('diff_context_lines_leading', 2);
+    $this->trailing_context_lines = Settings::getSingleton()->get('diff_context_lines_trailing', 2);
   }
 
   function _start_diff() {
