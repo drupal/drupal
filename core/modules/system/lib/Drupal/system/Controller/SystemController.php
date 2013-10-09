@@ -135,7 +135,7 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
    */
   public function compactPage($mode) {
     user_cookie_save(array('admin_compact_mode' => ($mode == 'on')));
-    return $this->redirect('front');
+    return $this->redirect('<front>');
   }
 
   /**

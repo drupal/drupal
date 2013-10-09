@@ -114,7 +114,13 @@ class AdminTest extends WebTestBase {
    * Test compact mode.
    */
   function testCompactMode() {
+    // The front page defaults to 'user', which redirects to 'user/{user}'. We
+    // cannot use '<front>', since this does not match the redirected url.
+    $frontpage_url = 'user/' . $this->admin_user->id();
+
     $this->drupalGet('admin/compact/on');
+    $this->assertResponse(200, 'A valid page is returned after turning on compact mode.');
+    $this->assertUrl($frontpage_url, array(), 'The user is redirected to the front page after turning on compact mode.');
     $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode turns on.');
     $this->drupalGet('admin/compact/on');
     $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode remains on after a repeat call.');
@@ -122,6 +128,8 @@ class AdminTest extends WebTestBase {
     $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode persists on new requests.');
 
     $this->drupalGet('admin/compact/off');
+    $this->assertResponse(200, 'A valid page is returned after turning off compact mode.');
+    $this->assertUrl($frontpage_url, array(), 'The user is redirected to the front page after turning off compact mode.');
     $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', 'Compact mode turns off.');
     $this->drupalGet('admin/compact/off');
     $this->assertEqual($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'deleted', 'Compact mode remains off after a repeat call.');
