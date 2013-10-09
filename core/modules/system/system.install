@@ -1765,7 +1765,7 @@ function system_update_8032() {
  */
 function system_update_8033() {
   update_variables_to_config('system.menu', array(
-    'active_menus_default' => 'active_menus_default'
+    'menu_default_active_menus' => 'active_menus_default'
   ));
 }
 

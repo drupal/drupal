@@ -209,12 +209,16 @@ function menu_menu_predelete(Menu $menu) {
   menu_delete_links($menu->id());
 
   // Remove menu from active menus variable.
-  $active_menus = variable_get('menu_default_active_menus', array_keys(menu_get_menus()));
-  foreach ($active_menus as $i => $menu_name) {
-    if ($menu->id() == $menu_name) {
-      unset($active_menus[$i]);
-      variable_set('menu_default_active_menus', $active_menus);
-    }
+  $config = \Drupal::config('system.menu');
+  $active_menus = $config->get('active_menus_default') ?: array_keys(menu_get_menus());
+  if (in_array($menu->id(), $active_menus)) {
+    $active_menus = array_diff($active_menus, array($menu->id()));
+    // Prevent the gap left by the removed menu from causing array indices to
+    // be saved.
+    $active_menus = array_values($active_menus);
+    $config
+      ->set('active_menus_default', $active_menus)
+      ->save();
   }
 }
 
