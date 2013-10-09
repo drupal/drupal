@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Url;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\Language;
@@ -2554,7 +2555,7 @@ function template_preprocess_html(&$variables) {
   if (theme_get_setting('features.favicon')) {
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
-    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
+    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => Url::stripDangerousProtocols($favicon), 'type' => $type));
   }
 
   $site_config = \Drupal::config('system.site');
@@ -2837,7 +2838,7 @@ function template_preprocess_maintenance_page(&$variables) {
   if (theme_get_setting('features.favicon')) {
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
-    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
+    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => Url::stripDangerousProtocols($favicon), 'type' => $type));
   }
 
   // Get all region content set with drupal_add_region_content().

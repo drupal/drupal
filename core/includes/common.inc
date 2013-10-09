@@ -729,8 +729,8 @@ function drupal_strip_dangerous_protocols($uri) {
  *   value within a $attributes array passed to Drupal\Core\Template\Attribute,
  *   because Drupal\Core\Template\Attribute expects those values to be
  *   plain-text strings. To pass a filtered URI to
- *   Drupal\Core\Template\Attribute, call drupal_strip_dangerous_protocols()
- *   instead.
+ *   Drupal\Core\Template\Attribute, call
+ *   \Drupal\Component\Utility\Url::stripDangerousProtocols() instead.
  *
  * @see \Drupal\Component\Utility\Url::stripDangerousProtocols()
  * @see \Drupal\Component\Utility\String::checkPlain()

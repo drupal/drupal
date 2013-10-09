@@ -1785,8 +1785,8 @@ function system_update_8034() {
  * Move filter_allowed_protocols variable to config.
  *
  * This config is provided now by the system module because it is used by
- * drupal_strip_dangerous_protocols() and must to be available before the filter
- * module be installed.
+ * \Drupal\Component\Utility\Url::stripDangerousProtocols() and must to be
+ * available before the filter module be installed.
  *
  * @ingroup config_upgrade
  */

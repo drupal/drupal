@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Url;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Database\Database;
@@ -4534,7 +4535,7 @@ function form_pre_render_color($element) {
 function theme_form($variables) {
   $element = $variables['element'];
   if (isset($element['#action'])) {
-    $element['#attributes']['action'] = drupal_strip_dangerous_protocols($element['#action']);
+    $element['#attributes']['action'] = Url::stripDangerousProtocols($element['#action']);
   }
   element_set_attributes($element, array('method', 'id'));
   if (empty($element['#attributes']['accept-charset'])) {
