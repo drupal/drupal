@@ -68,7 +68,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $tags = array();
     foreach ($items as $item) {
-      $tags[$item->target_id] = isset($item->taxonomy_term) ? $item->taxonomy_term : entity_load('taxonomy_term', $item->target_id);
+      $tags[] = isset($item->entity) ? $item->entity : entity_load('taxonomy_term', $item->target_id);
     }
     $element += array(
       '#type' => 'textfield',
