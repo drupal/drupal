@@ -16,7 +16,7 @@ filters:
   filter_htmlcorrector:
     id: filter_htmlcorrector
     module: filter
-    status: rue
+    status: true
     weight: 10
     settings: {  }
 langcode: en
