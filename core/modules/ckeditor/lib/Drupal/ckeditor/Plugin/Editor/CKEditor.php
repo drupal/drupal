@@ -171,7 +171,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     // Build a fake Editor object, which we'll use to generate JavaScript
     // settings for this fake Editor instance.
     $fake_editor = entity_create('editor', array(
-      'format' => '',
+      'format' => $editor->id(),
       'editor' => 'ckeditor',
       'settings' => array(
         // Single toolbar row that contains all existing buttons.
