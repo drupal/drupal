@@ -117,7 +117,7 @@ class BlockUiTest extends WebTestBase {
     );
 
     $this->drupalGet('admin/structure/block');
-    $elements = $this->xpath('//details[@id="edit-block-test"]//ul[contains(@class, :ul_class)]/li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $elements = $this->xpath('//details[@id="edit-category-block-test"]//ul[contains(@class, :ul_class)]/li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
     $this->assertTrue(!empty($elements), 'The test block appears in the category for its module.');
 
     // Trigger the custom category addition in block_test_block_alter().
@@ -125,7 +125,7 @@ class BlockUiTest extends WebTestBase {
     $this->container->get('plugin.manager.block')->clearCachedDefinitions();
 
     $this->drupalGet('admin/structure/block');
-    $elements = $this->xpath('//details[@id="edit-custom-category"]//ul[contains(@class, :ul_class)]/li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $elements = $this->xpath('//details[@id="edit-category-custom-category"]//ul[contains(@class, :ul_class)]/li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
     $this->assertTrue(!empty($elements), 'The test block appears in a custom category controlled by block_test_block_alter().');
   }
 

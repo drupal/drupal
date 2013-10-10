@@ -66,7 +66,7 @@ class DisplayBlockTest extends ViewTestBase {
     // Test that the block was given a default category corresponding to its
     // base table.
     $arguments = array(
-      ':id' => 'edit-views-test-data',
+      ':id' => 'edit-category-views-test-data',
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-1',
       ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_1/stark'),
       ':text' => $edit['label'],
@@ -95,14 +95,14 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalPostForm(NULL, array(), t('Save'));
 
     // Test that the blocks are listed under the correct categories.
-    $category_id = drupal_html_id('edit-' . String::checkPlain($category));
+    $category_id = drupal_html_id('edit-category-' . String::checkPlain($category));
     $arguments[':id'] = $category_id;
     $this->drupalGet('admin/structure/block');
     $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
     $this->assertTrue(!empty($elements), 'The test block appears in the custom category.');
 
     $arguments = array(
-      ':id' => 'edit-views-test-data',
+      ':id' => 'edit-category-views-test-data',
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-2',
       ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_2/stark'),
       ':text' => $edit['label'],
