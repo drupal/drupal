@@ -748,6 +748,9 @@ abstract class TestBase {
       }
     }
     else {
+      if (defined("$class::SORT_METHODS")) {
+        sort($class_methods);
+      }
       foreach ($class_methods as $method) {
         // If the current method starts with "test", run it - it's a test.
         if (strtolower(substr($method, 0, 4)) == 'test') {
