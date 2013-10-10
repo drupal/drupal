@@ -44,12 +44,6 @@ function locale_uninstall() {
   \Drupal::state()->delete('system.javascript_parsed');
   \Drupal::state()->delete('locale.translation.plurals');
   \Drupal::state()->delete('locale.translation.javascript');
-
-  // Remove all node type language variables. Node module might have been
-  // enabled, but may be disabled, so use a wildcard delete.
-  db_delete('variable')
-    ->condition('name', db_like('language_content_type_') . '%', 'LIKE')
-    ->execute();
 }
 
 /**

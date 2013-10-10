@@ -35,8 +35,6 @@ function language_uninstall() {
 
   // Clear variables.
   variable_del('language_types');
-  variable_del('language_content_type_default');
-  variable_del('language_content_type_negotiation');
 
   foreach (language_types_get_all() as $type) {
     variable_del("language_negotiation_$type");
