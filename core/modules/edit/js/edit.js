@@ -385,8 +385,9 @@ function initializeEntityContextualLink (contextualLink) {
     });
     fieldsAvailableQueue = _.difference(fieldsAvailableQueue, fields);
 
-    // Set up contextual link view after loading any missing in-place editors.
-    loadMissingEditors(function () {
+    // Initialization should only be called once. Use Underscore's once method
+    // to get a one-time use version of the function.
+    var initContextualLink = _.once(function () {
       var $links = $(contextualLink.el).find('.contextual-links');
       var contextualLinkView = new Drupal.edit.ContextualLinkView($.extend({
         el: $('<li class="quick-edit"><a href=""></a></li>').prependTo($links),
@@ -395,6 +396,9 @@ function initializeEntityContextualLink (contextualLink) {
       }, options));
       entityModel.set('contextualLinkView', contextualLinkView);
     });
+
+    // Set up ContextualLinkView after loading any missing in-place editors.
+    loadMissingEditors(initContextualLink);
 
     return true;
   }
