@@ -1,4 +1,5 @@
 id: node.field_tags
+uuid: 60db47f4-54fb-4c86-a439-5769fbda4bd1
 name: field_tags
 entity_type: node
 type: taxonomy_term_reference

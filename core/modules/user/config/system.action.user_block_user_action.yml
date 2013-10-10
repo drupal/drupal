@@ -1,4 +1,5 @@
 id: user_block_user_action
+uuid: 0e67a49a-8d5b-468c-9702-2eeb1441f45a
 label: 'Block the selected user(s)'
 status: '1'
 langcode: en

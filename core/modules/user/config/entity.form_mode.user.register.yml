@@ -1,4 +1,5 @@
 id: user.register
+uuid: 1d8bdf42-c908-43b6-a802-bb350d80a248
 label: Register
-status: '1'
+status: true
 targetEntityType: user

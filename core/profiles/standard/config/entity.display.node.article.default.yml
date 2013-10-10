@@ -1,4 +1,5 @@
 id: node.article.default
+uuid: 3ca9876e-7b93-48bd-8f00-b4ce293ad554
 targetEntityType: node
 bundle: article
 mode: default

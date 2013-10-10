@@ -1,6 +1,7 @@
 id: comment_unpublish_action
+uuid: 64c41e18-26c2-4e54-9747-71018ea27877
 label: 'Unpublish comment'
-status: '1'
+status: true
 langcode: en
 type: comment
 plugin: comment_unpublish_action

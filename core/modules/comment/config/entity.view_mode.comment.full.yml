@@ -1,5 +1,6 @@
 id: comment.full
+uuid: 06ab5b16-e197-4242-b72c-4453793fabba
 label: Full comment
-status: '0'
-cache: '1'
+status: false
+cache: true
 targetEntityType: comment

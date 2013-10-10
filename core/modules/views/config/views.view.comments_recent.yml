@@ -462,4 +462,5 @@ label: 'Recent comments'
 module: comment
 id: comments_recent
 tag: default
+uuid: 67212880-6a63-453b-a902-2d13580f7d1c
 langcode: en

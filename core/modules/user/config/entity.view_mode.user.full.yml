@@ -1,5 +1,6 @@
 id: user.full
+uuid: 021fa7ab-8e19-4ab7-8c4e-b68edcfacb52
 label: User account
-status: '0'
-cache: '1'
+status: false
+cache: true
 targetEntityType: user

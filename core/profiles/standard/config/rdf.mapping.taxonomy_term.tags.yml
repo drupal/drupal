@@ -1,4 +1,5 @@
 id: taxonomy_term.tags
+uuid: 0ed6d2c7-f443-4a2b-b900-e4cfaae93489
 targetEntityType: taxonomy_term
 bundle: tags
 types:

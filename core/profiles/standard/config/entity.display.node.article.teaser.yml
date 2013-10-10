@@ -1,4 +1,5 @@
 id: node.article.teaser
+uuid: 7156f406-c67c-4d1f-bd35-53dbf20ee7e4
 targetEntityType: node
 bundle: article
 mode: teaser

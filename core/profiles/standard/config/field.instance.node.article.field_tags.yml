@@ -1,5 +1,7 @@
 id: node.article.field_tags
+uuid: 09fed4e4-c628-468a-9607-7dcd01f55a59
 field_name: field_tags
+field_uuid: 60db47f4-54fb-4c86-a439-5769fbda4bd1
 entity_type: node
 bundle: article
 label: Tags

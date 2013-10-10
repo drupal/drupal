@@ -1,5 +1,6 @@
 id: custom_block.full
+uuid: 96f20030-6465-43ed-9e00-f2a16f52ef6e
 label: Full
-status: '0'
-cache: '1'
+status: false
+cache: true
 targetEntityType: custom_block

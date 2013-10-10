@@ -1,4 +1,5 @@
 id: node.forum
+uuid: 49f5dc24-84b2-4949-a109-9b7b96990b21
 targetEntityType: node
 bundle: forum
 types:

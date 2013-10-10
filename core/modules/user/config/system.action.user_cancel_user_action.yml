@@ -1,4 +1,5 @@
 id: user_cancel_user_action
+uuid: 73748b91-e690-455e-b949-73fdd60742a8
 label: 'Cancel the selected user account(s)'
 status: '1'
 langcode: en

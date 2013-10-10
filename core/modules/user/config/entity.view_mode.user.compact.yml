@@ -1,5 +1,6 @@
 id: user.compact
+uuid: a5572673-f233-4576-9739-5f4dcfd1e7fe
 label: Compact
-status: '1'
-cache: '1'
+status: true
+cache: true
 targetEntityType: user

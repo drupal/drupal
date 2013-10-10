@@ -1,6 +1,7 @@
 id: comment_publish_action
+uuid: 890a554f-f083-400c-8d18-2412f2daa140
 label: 'Publish comment'
-status: '1'
+status: true
 langcode: en
 type: comment
 plugin: comment_publish_action

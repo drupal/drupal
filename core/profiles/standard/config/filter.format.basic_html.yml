@@ -1,5 +1,6 @@
 format: basic_html
 name: 'Basic HTML'
+uuid: c4b4acfb-5731-47ad-b500-dbaffaa37647
 status: true
 weight: 0
 roles:
@@ -9,28 +10,28 @@ filters:
   filter_html:
     id: filter_html
     module: filter
-    status: '1'
-    weight: '-10'
+    status: true
+    weight: -10
     settings:
       allowed_html: '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <h4> <h5> <h6> <p> <span> <img>'
-      filter_html_help: '0'
-      filter_html_nofollow: '0'
+      filter_html_help: false
+      filter_html_nofollow: false
   filter_caption:
     id: filter_caption
     module: filter
-    status: '1'
-    weight: '8'
+    status: 1
+    weight: 8
     settings: {  }
   filter_html_image_secure:
     id: filter_html_image_secure
     module: filter
-    status: '1'
-    weight: '9'
+    status: true
+    weight: 9
     settings: {  }
   filter_htmlcorrector:
     id: filter_htmlcorrector
     module: filter
-    status: '1'
-    weight: '10'
+    status: true
+    weight: 10
     settings: {  }
 langcode: en

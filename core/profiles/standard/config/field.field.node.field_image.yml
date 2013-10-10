@@ -1,4 +1,5 @@
 id: node.field_image
+uuid: 748beaea-5074-4ff2-b51c-28a643d37c3a
 name: field_image
 entity_type: node
 type: image

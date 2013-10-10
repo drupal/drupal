@@ -1,5 +1,6 @@
 format: full_html
 name: 'Full HTML'
+uuid: 3d5d6be5-ac96-4a1b-bc00-c8725edead3c
 status: true
 weight: 1
 roles:
@@ -9,13 +10,13 @@ filters:
   filter_caption:
     id: filter_caption
     module: filter
-    status: '1'
-    weight: '9'
+    status: true
+    weight: 9
     settings: {  }
   filter_htmlcorrector:
     id: filter_htmlcorrector
     module: filter
-    status: '1'
-    weight: '10'
+    status: rue
+    weight: 10
     settings: {  }
 langcode: en

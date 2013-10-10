@@ -1,4 +1,5 @@
 id: node.article
+uuid: 5e1bfb0e-f6b4-4e06-a521-33e959bdb6a9
 targetEntityType: node
 bundle: article
 types:

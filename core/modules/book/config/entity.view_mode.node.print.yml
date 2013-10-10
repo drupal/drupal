@@ -1,5 +1,6 @@
 id: node.print
+uuid: 58ded254-7114-4e5b-a50d-1351c48807d8
 label: Print
-status: '0'
-cache: '1'
+status: false
+cache: true
 targetEntityType: node

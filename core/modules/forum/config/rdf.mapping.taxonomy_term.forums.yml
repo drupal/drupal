@@ -1,4 +1,5 @@
 id: taxonomy_term.forums
+uuid: c1c3d577-5517-4a43-a334-52884bb3b638
 targetEntityType: taxonomy_term
 bundle: forums
 types:

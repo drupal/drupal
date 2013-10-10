@@ -1,4 +1,5 @@
 id: user.user
+uuid: 7609b39d-7a70-46e6-a410-16388fbb40b1
 targetEntityType: user
 bundle: user
 types:

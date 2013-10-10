@@ -229,4 +229,5 @@ label: Frontpage
 module: node
 id: frontpage
 tag: default
+uuid: 5c8da842-af9f-4a6e-bd00-af738b26ec3c
 langcode: en

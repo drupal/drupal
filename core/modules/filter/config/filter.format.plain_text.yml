@@ -4,6 +4,7 @@
 # - may be modified by installation profiles to have other properties.
 format: plain_text
 name: 'Plain text'
+uuid: 7dd77dca-6a80-4538-b10d-133fa66d42f0
 status: true
 weight: 10
 roles:
