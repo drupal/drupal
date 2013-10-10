@@ -287,7 +287,7 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
  *   TRUE to reset the internal cache and load from the database; FALSE
  *   (default) to load from the internal cache, if set.
  *
- * @return object
+ * @return \Drupal\user\UserInterface
  *   A fully-loaded user object upon successful user load, or NULL if the user
  *   cannot be loaded.
  *
@@ -1476,26 +1476,32 @@ function user_user_role_insert(RoleInterface $role) {
     return;
   }
 
-  $action = entity_create('action', array(
-    'id' => 'user_add_role_action.' . $role->id(),
-    'type' => 'user',
-    'label' => t('Add the @label role to the selected users', array('@label' => $role->label())),
-    'configuration' => array(
-      'rid' => $role->id(),
-    ),
-    'plugin' => 'user_add_role_action',
-  ));
-  $action->save();
-  $action = entity_create('action', array(
-    'id' => 'user_remove_role_action.' . $role->id(),
-    'type' => 'user',
-    'label' => t('Remove the @label role from the selected users', array('@label' => $role->label())),
-    'configuration' => array(
-      'rid' => $role->id(),
-    ),
-    'plugin' => 'user_remove_role_action',
-  ));
-  $action->save();
+  $add_id = 'user_add_role_action.' . $role->id();
+  if (!entity_load('action', $add_id)) {
+    $action = entity_create('action', array(
+      'id' => $add_id,
+      'type' => 'user',
+      'label' => t('Add the @label role to the selected users', array('@label' => $role->label())),
+      'configuration' => array(
+        'rid' => $role->id(),
+      ),
+      'plugin' => 'user_add_role_action',
+    ));
+    $action->save();
+  }
+  $remove_id = 'user_remove_role_action.' . $role->id();
+  if (!entity_load('action', $remove_id)) {
+    $action = entity_create('action', array(
+      'id' => $remove_id,
+      'type' => 'user',
+      'label' => t('Remove the @label role from the selected users', array('@label' => $role->label())),
+      'configuration' => array(
+        'rid' => $role->id(),
+      ),
+      'plugin' => 'user_remove_role_action',
+    ));
+    $action->save();
+  }
 }
 
 /**
