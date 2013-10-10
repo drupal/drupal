@@ -94,6 +94,7 @@ class DialogTest extends AjaxTestBase {
     $close_expected_response = array(
       'command' => 'closeDialog',
       'selector' => '#ajax-test-dialog-wrapper-1',
+      'persist' => FALSE,
     );
 
     // Check that requesting a modal dialog without JS goes to a page.

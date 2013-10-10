@@ -118,6 +118,9 @@
     var $dialog = $(response.selector);
     if ($dialog.length) {
       Drupal.dialog($dialog).close();
+      if (!response.persist) {
+        $dialog.remove();
+      }
     }
   };
 

@@ -360,6 +360,7 @@ class AjaxCommandsTest extends UnitTestCase {
     $expected = array(
       'command' => 'closeDialog',
       'selector' => '#drupal-modal',
+      'persist' => FALSE,
     );
 
     $this->assertEquals($command->render(), $expected, "CloseModalDialogCommand::render() didn't return the expected array.");
@@ -369,13 +370,14 @@ class AjaxCommandsTest extends UnitTestCase {
    * Tests that CloseDialogCommand objects can be constructed and rendered.
    */
   public function testCloseDialogCommand() {
-    $command = new CloseDialogCommand('#some-dialog');
+    $command = new CloseDialogCommand('#some-dialog', TRUE);
     $expected = array(
       'command' => 'closeDialog',
       'selector' => '#some-dialog',
+      'persist' => TRUE,
     );
 
-    $this->assertEquals($command->render(), $expected, "CloseDialogCommand::render() with a selector didn't return the expected array.");
+    $this->assertEquals($command->render(), $expected, "CloseDialogCommand::render() with a selector and persistence enabled didn't return the expected array.");
   }
 
   /**

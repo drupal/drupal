@@ -14,6 +14,12 @@ drupalSettings.dialog = {
   autoResize: true,
   maxHeight: '95%',
   dialogClass: '',
+  // When using this API directly (when generating dialogs on the client side),
+  // you may want to override this method and do
+  // @code
+  // jQuery(event.target).remove()
+  // @endcode
+  // as well, to remove the dialog on closing.
   close: function (event) {
     Drupal.detachBehaviors(event.target, null, 'unload');
   }

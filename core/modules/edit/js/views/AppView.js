@@ -368,7 +368,11 @@ Drupal.edit.AppView = Backbone.View.extend({
         create: function () {
           $(this).parent().find('.ui-dialog-titlebar-close').remove();
         },
-        beforeClose: false
+        beforeClose: false,
+        close: function (event) {
+          // Automatically destroy the DOM element that was used for the dialog.
+          $(event.target).remove();
+        }
       });
       this.model.set('activeModal', discardDialog);
 
