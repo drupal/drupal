@@ -18,33 +18,6 @@ function forum_install() {
   $locked['forum'] = 'forum';
   \Drupal::state()->set('node.type.locked', $locked);
 
-  // Create the forum vocabulary if it does not exist.
-  // @todo Change Forum module so forum.settings can contain the vocabulary's
-  //   machine name.
-  $config = \Drupal::config('forum.settings');
-  // If the module was disabled only, the current config may contain a valid
-  // vocabulary ID already.
-  $vocabulary = entity_load('taxonomy_vocabulary', $config->get('vocabulary'));
-  if (!$vocabulary) {
-    // If the module was installed and uninstalled previously, the vocabulary
-    // with machine name 'forums' might still exist.
-    $vocabulary = entity_load('taxonomy_vocabulary', 'forums');
-    if (!$vocabulary) {
-      // Otherwise, installing from scratch; create the vocabulary.
-      $vocabulary = entity_create('taxonomy_vocabulary', array(
-        'name' => t('Forums'),
-        'vid' => 'forums',
-        'langcode' => language_default()->id,
-        'description' => t('Forum navigation vocabulary'),
-        'hierarchy' => 1,
-        'module' => 'forum',
-        'weight' => -10,
-      ));
-      $vocabulary->save();
-    }
-    $config->set('vocabulary', $vocabulary->id())->save();
-  }
-
   // Create the 'taxonomy_forums' field if it doesn't already exist. If forum
   // is being enabled at the same time as taxonomy after both modules have been
   // enabled, the field might exist but still be marked inactive.
@@ -56,7 +29,7 @@ function forum_install() {
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $vocabulary->id(),
+            'vocabulary' => 'forums',
             'parent' => 0,
           ),
         ),
@@ -69,7 +42,7 @@ function forum_install() {
       'langcode' => language_default()->id,
       'description' => '',
       'parent' => array(0),
-      'vid' => $vocabulary->id(),
+      'vid' => 'forums',
       'forum_container' => 0,
     ));
     $term->save();
@@ -78,7 +51,7 @@ function forum_install() {
     entity_create('field_instance', array(
       'field_name' => 'taxonomy_forums',
       'entity_type' => 'node',
-      'label' => $vocabulary->name,
+      'label' => 'Forums',
       'bundle' => 'forum',
       'required' => TRUE,
     ))->save();

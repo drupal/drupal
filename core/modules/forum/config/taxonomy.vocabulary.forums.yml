@@ -1,0 +1,8 @@
+vid: forums
+uuid: c1341fb5-045a-4af4-9b06-6db165364a5f
+name: Forums
+description: 'Forum navigation vocabulary'
+hierarchy: 1
+weight: -10
+status: true
+langcode: en
