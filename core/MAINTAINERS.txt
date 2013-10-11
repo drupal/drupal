@@ -214,7 +214,8 @@ Aggregator module
 - Paris Liakos 'rootatwc' http://drupal.org/user/1011436
 
 Block module
-- John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095
+- Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
+- Ben Dougherty 'benjy' http://drupal.org/user/1852732
 
 Book module
 - Peter Wolanin 'pwolanin' http://drupal.org/user/49851
