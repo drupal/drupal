@@ -106,6 +106,6 @@ class EntityReferenceAdminTest extends WebTestBase {
     ), t('Save settings'));
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', 'Test label', 'Field was created and appears in the overview page.');
+    $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', 'Test label', 'Field was created and appears in the overview page.');
   }
 }
