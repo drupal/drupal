@@ -54,16 +54,16 @@ class FieldHelpTest extends WebTestBase {
     // Visit the Help page and make sure no warnings or notices are thrown.
     $this->drupalGet('admin/help/field');
 
-    // Enable the Options, Telephone and E-mail modules.
-    \Drupal::moduleHandler()->install(array('options', 'telephone', 'email'));
+    // Enable the Options, E-mail and Field API Test modules.
+    \Drupal::moduleHandler()->install(array('options', 'email', 'field_test'));
     \Drupal::service('plugin.manager.field.widget')->clearCachedDefinitions();
     \Drupal::service('plugin.manager.entity.field.field_type')->clearCachedDefinitions();
 
     $this->drupalGet('admin/help/field');
     $this->assertLink('Options', 0, 'Options module is listed on the Field help page.');
     $this->assertLink('E-mail', 0, 'E-mail module is listed on the Field help page.');
-    $this->assertText('Telephone', 'Modules with field types that do not implement hook_help are listed.');
-    $this->assertNoLink('Telephone', 'Modules with field types that do not implement hook_help are not linked.');
+    $this->assertText('Field API Test', 'Modules with field types that do not implement hook_help are listed.');
+    $this->assertNoLink('Field API Test', 'Modules with field types that do not implement hook_help are not linked.');
     $this->assertNoLink('Link', 'Modules that have not been installed, are not listed.');
   }
 }
