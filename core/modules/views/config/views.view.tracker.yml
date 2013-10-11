@@ -1,7 +1,7 @@
 base_field: nid
 base_table: node
 core: '8'
-description: 'Shows all new activity on the system.'
+description: 'New activity on the system.'
 status: false
 display:
   default:

@@ -1,7 +1,7 @@
 base_field: cid
 base_table: comment
 core: '8'
-description: 'A block and a page with recent comments.'
+description: 'Recent comments.'
 status: false
 display:
   default:

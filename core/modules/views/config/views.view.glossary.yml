@@ -1,7 +1,7 @@
 base_field: nid
 base_table: node
 core: '8'
-description: 'A list of all content, by letter.'
+description: 'All content, by letter.'
 status: false
 display:
   default:

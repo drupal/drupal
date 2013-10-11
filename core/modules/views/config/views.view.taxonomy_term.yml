@@ -1,7 +1,7 @@
 base_field: nid
 base_table: node
 core: '8'
-description: 'Customize the default taxonomy/term display.'
+description: 'Content belonging to a certain taxonomy term.'
 status: false
 display:
   default:
