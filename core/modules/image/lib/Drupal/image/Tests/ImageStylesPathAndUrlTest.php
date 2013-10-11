@@ -148,6 +148,16 @@ class ImageStylesPathAndUrlTest extends WebTestBase {
     $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $generate_url));
     $this->assertResponse(403, 'Image was inaccessible at the URL wih a missing token.');
 
+    // Check that the generated URL is the same when we pass in a relative path
+    // rather than a URI. We need to temporarily switch the default scheme to
+    // match the desired scheme before testing this, then switch it back to the
+    // "temporary" scheme used throughout this test afterwards.
+    \Drupal::config('system.file')->set('default_scheme', $scheme)->save();
+    $relative_path = file_uri_target($original_uri);
+    $generate_url_from_relative_path = $this->style->buildUrl($relative_path, $clean_url);
+    $this->assertEqual($generate_url, $generate_url_from_relative_path);
+    \Drupal::config('system.file')->set('default_scheme', 'temporary')->save();
+
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);
     $this->assertResponse(200, 'Image was generated at the URL.');
