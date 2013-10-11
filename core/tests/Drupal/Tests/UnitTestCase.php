@@ -79,12 +79,12 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
    * @param array $configs
    *   An associative array of configuration settings whose keys are configuration
    *   object names and whose values are key => value arrays for the configuration
-   *   object in question.
+   *   object in question. Defaults to an empty array.
    *
    * @return \PHPUnit_Framework_MockObject_MockBuilder
    *   A MockBuilder object for the ConfigFactory with the desired return values.
    */
-  public function getConfigFactoryStub($configs) {
+  public function getConfigFactoryStub(array $configs = array()) {
     $config_map = array();
     // Construct the desired configuration object stubs, each with its own
     // desired return map.

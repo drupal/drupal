@@ -818,7 +818,7 @@ function locale_form_language_admin_edit_form_alter(&$form, &$form_state) {
  * Form submission handler for language_admin_edit_form().
  */
 function locale_form_language_admin_edit_form_alter_submit($form, $form_state) {
-  variable_set('locale_translate_english', $form_state['values']['locale_translate_english']);
+  \Drupal::config('locale.settings')->set('translate_english', intval($form_state['values']['locale_translate_english']))->save();
 }
 
 /**
@@ -828,7 +828,7 @@ function locale_form_language_admin_edit_form_alter_submit($form, $form_state) {
  *   Returns TRUE if content should be translated to English, FALSE otherwise.
  */
 function locale_translate_english() {
-  return variable_get('locale_translate_english', FALSE);
+  return \Drupal::config('locale.settings')->get('translate_english');
 }
 
 /**

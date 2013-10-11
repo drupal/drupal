@@ -8,6 +8,7 @@
 namespace Drupal\locale;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Lock\LockBackendAbstract;
@@ -30,6 +31,13 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    * @var \Drupal\locale\StringStorageInterface
    */
   protected $storage;
+
+  /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
 
   /**
    * Cached translations
@@ -63,11 +71,14 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    *   The cache backend.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
    */
-  public function __construct(StringStorageInterface $storage, CacheBackendInterface $cache, LockBackendInterface $lock) {
+  public function __construct(StringStorageInterface $storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactory $config_factory) {
     $this->storage = $storage;
     $this->cache = $cache;
     $this->lock = $lock;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -75,7 +86,8 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    */
   public function getStringTranslation($langcode, $string, $context) {
     // If the language is not suitable for locale module, just return.
-    if ($langcode == Language::LANGCODE_SYSTEM || ($langcode == 'en' && !variable_get('locale_translate_english', FALSE))) {
+    $translate_english = $this->configFactory->get('locale.settings')->get('translate_english');
+    if ($langcode == Language::LANGCODE_SYSTEM || ($langcode == 'en' && !$translate_english)) {
       return FALSE;
     }
     // Strings are cached by langcode, context and roles, using instances of the
