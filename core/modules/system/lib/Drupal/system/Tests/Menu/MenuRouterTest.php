@@ -387,9 +387,12 @@ class MenuRouterTest extends WebTestBase {
 
     foreach ($test_data as $case_no => $override) {
       $this->menuItemTitlesCasesHelper($case_no);
-      variable_set('locale_custom_strings_en', array('' => $override));
+      $this->addCustomTranslations('en', array('' => $override));
+      $this->writeCustomTranslations();
+
       $this->menuItemTitlesCasesHelper($case_no, TRUE);
-      variable_set('locale_custom_strings_en', array());
+      $this->addCustomTranslations('en', array());
+      $this->writeCustomTranslations();
     }
   }
 

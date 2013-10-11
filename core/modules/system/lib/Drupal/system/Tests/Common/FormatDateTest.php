@@ -47,16 +47,16 @@ class FormatDateTest extends WebTestBase {
     $formats['long']->setPattern('l, j. F Y - G:i')->save();
     $formats['medium']->setPattern('j. F Y - G:i')->save();
     $formats['short']->setPattern('Y M j - g:ia')->save();
+    $this->refreshVariables();
 
-    variable_set('locale_custom_strings_' . self::LANGCODE, array(
+    $this->settingsSet('locale_custom_strings_' . self::LANGCODE, array(
       '' => array('Sunday' => 'domingo'),
       'Long month name' => array('March' => 'marzo'),
     ));
 
     $language = new Language(array('id' => static::LANGCODE));
     language_save($language);
-
-    $this->refreshVariables();
+    $this->resetAll();
   }
 
   /**

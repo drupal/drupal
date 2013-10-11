@@ -150,9 +150,10 @@ class PageTitleTest extends WebTestBase {
     $this->assertEqual('Test dynamic title', (string) $result[0]);
 
     // Set some custom translated strings.
-    variable_set('locale_custom_strings_en', array('' => array(
+    $this->addCustomTranslations('en', array('' => array(
       'Static title' => 'Static title translated'
     )));
+    $this->writeCustomTranslations();
 
     // Ensure that the title got translated.
     $this->drupalGet('test-page-static-title');

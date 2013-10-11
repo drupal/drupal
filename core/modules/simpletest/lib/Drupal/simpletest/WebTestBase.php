@@ -178,6 +178,13 @@ abstract class WebTestBase extends TestBase {
   protected $curlCookies = array();
 
   /**
+   * An array of custom translations suitable for drupal_rewrite_settings().
+   *
+   * @var array
+   */
+  protected $customTranslations;
+
+  /**
    * Constructor for \Drupal\simpletest\WebTestBase.
    */
   function __construct($test_id = NULL) {
@@ -915,6 +922,44 @@ abstract class WebTestBase extends TestBase {
     foreach ($original_globals as $variable_name => $value) {
       $GLOBALS[$variable_name] = $value;
     }
+  }
+
+  /**
+   * Sets custom translations to the settings object and queues them to writing.
+   *
+   * In order for those custom translations to persist (being written in test
+   * site's settings.php) make sure to also call self::writeCustomTranslations()
+   *
+   * @param string $langcode
+   *   The langcode to add translations for.
+   * @param array $values
+   *   Array of values containing the untranslated string and its translation.
+   *   For example:
+   *   @code
+   *   array(
+   *     '' => array('Sunday' => 'domingo'),
+   *     'Long month name' => array('March' => 'marzo'),
+   *   );
+   *   @endcode
+   */
+  protected function addCustomTranslations($langcode, array $values) {
+    $this->settingsSet('locale_custom_strings_' . $langcode, $values);
+    foreach ($values as $key => $translations) {
+      foreach ($translations as $label => $value) {
+        $this->customTranslations['locale_custom_strings_' . $langcode][$key][$label] = (object) array(
+          'value' => $value,
+          'required' => TRUE,
+        );
+      }
+    }
+  }
+
+  /**
+   * Writes custom translations to test site's settings.php.
+   */
+  protected function writeCustomTranslations() {
+    $this->writeSettings(array('settings' => $this->customTranslations));
+    $this->customTranslations = array();
   }
 
   /**

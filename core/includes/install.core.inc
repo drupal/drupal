@@ -1505,7 +1505,8 @@ function install_translations_directory() {
 function install_register_translation_service(ContainerBuilder $container) {
   $container->register('string_translator.file_translation', 'Drupal\Core\StringTranslation\Translator\FileTranslation')
     ->addArgument(install_translations_directory());
-  $container->register('string_translator.custom_strings', 'Drupal\Core\StringTranslation\Translator\CustomStrings');
+  $container->register('string_translator.custom_strings', 'Drupal\Core\StringTranslation\Translator\CustomStrings')
+    ->addArgument(settings());
   $container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
     ->addMethodCall('addTranslator', array(new Reference('string_translator.file_translation')))
     ->addMethodCall('addTranslator', array(new Reference('string_translator.custom_strings')));

@@ -68,8 +68,10 @@ class CacheDecoratorLanguageTest extends WebTestBase {
       foreach ($this->mockBlockExpectedDefinitions as $plugin_id => $definition) {
         $custom_strings[$definition['label']] = $langcode . ' ' . $definition['label'];
       }
-      variable_set('locale_custom_strings_' . $langcode, array('' => $custom_strings));
+      $this->addCustomTranslations($langcode, array('' => $custom_strings));
     }
+    // Write test settings.php with new translations.
+    $this->writeCustomTranslations();
   }
 
   /**
@@ -111,7 +113,8 @@ class CacheDecoratorLanguageTest extends WebTestBase {
     foreach ($this->mockBlockExpectedDefinitions as $plugin_id => $definition) {
       $custom_strings[$definition['label']] = $definition['label'] . ' de';
     }
-    variable_set('locale_custom_strings_de', array('' => $custom_strings));
+    $this->addCustomTranslations('de', array('' => $custom_strings));
+    $this->writeCustomTranslations();
     $this->drupalGet('de/plugin_definition_test');
     foreach ($this->mockBlockExpectedDefinitions as $plugin_id => $definition) {
       // Find our provided translations.

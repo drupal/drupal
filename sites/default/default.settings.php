@@ -473,6 +473,23 @@ $settings['update_free_access'] = FALSE;
 # $settings['session_write_interval'] = 180;
 
 /**
+ * String overrides:
+ *
+ * To override specific strings on your site with or without enabling the Locale
+ * module, add an entry to this list. This functionality allows you to change
+ * a small number of your site's default English language interface strings.
+ *
+ * Remove the leading hash signs to enable.
+ *
+ * The "en" part of the variable name, is dynamic and can be any langcode of
+ * any enabled language. (eg locale_custom_strings_de for german).
+ */
+# $settings['locale_custom_strings_en'][''] = array(
+#   'forum'      => 'Discussion board',
+#   '@count min' => '@count minutes',
+# );
+
+/**
  * A custom theme for the offline page:
  *
  * This applies when the site is explicitly set to maintenance mode through the
@@ -599,20 +616,6 @@ ini_set('session.cookie_lifetime', 2000000);
  */
 # $conf['system.performance']['css']['gzip'] = FALSE;
 # $conf['system.performance']['js']['gzip'] = FALSE;
-
-/**
- * String overrides:
- *
- * To override specific strings on your site with or without enabling the Locale
- * module, add an entry to this list. This functionality allows you to change
- * a small number of your site's default English language interface strings.
- *
- * Remove the leading hash signs to enable.
- */
-# $conf['locale_custom_strings_en'][''] = array(
-#   'forum'      => 'Discussion board',
-#   '@count min' => '@count minutes',
-# );
 
 /**
  * Fast 404 pages:
