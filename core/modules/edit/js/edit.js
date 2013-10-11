@@ -390,7 +390,7 @@ function initializeEntityContextualLink (contextualLink) {
     var initContextualLink = _.once(function () {
       var $links = $(contextualLink.el).find('.contextual-links');
       var contextualLinkView = new Drupal.edit.ContextualLinkView($.extend({
-        el: $('<li class="quick-edit"><a href=""></a></li>').prependTo($links),
+        el: $('<li class="quick-edit"><a href="" role="button" aria-pressed="false"></a></li>').prependTo($links),
         model: entityModel,
         appModel: Drupal.edit.app.model
       }, options));

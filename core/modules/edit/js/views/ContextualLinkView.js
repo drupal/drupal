@@ -45,6 +45,8 @@ Drupal.edit.ContextualLinkView = Backbone.View.extend({
    * {@inheritdoc}
    */
   render: function (entityModel, isActive) {
+    this.$el.find('a').attr('aria-pressed', isActive);
+
     // Hides the contextual links if an in-place editor is active.
     this.$el.closest('.contextual').toggle(!isActive);
 
