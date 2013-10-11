@@ -372,3 +372,6 @@ system.localize_date_format:
     _title: 'Localize date formats'
   requirements:
     _permission: 'administer site configuration'
+
+system.update:
+  path: '/core/update.php'
