@@ -14,7 +14,7 @@ var options = $.extend(
       'module.toolbar.narrow': '',
       'module.toolbar.standard': '',
       'module.toolbar.wide': ''
-    },
+    }
   },
   drupalSettings.toolbar,
   // Merge strings on top of drupalSettings so that they are not mutable.
