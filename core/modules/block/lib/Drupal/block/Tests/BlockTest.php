@@ -178,7 +178,7 @@ class BlockTest extends BlockTestBase {
     $title = $this->randomName(8);
     $machine_name = strtolower($this->randomName(8));
     // Enable a standard block.
-    $default_theme = variable_get('theme_default', 'stark');
+    $default_theme = \Drupal::config('system.theme')->get('default') ?: 'stark';
     $edit = array(
       'machine_name' => $machine_name,
       'region' => 'sidebar_first',

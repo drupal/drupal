@@ -394,7 +394,7 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalPostForm('admin/structure/menu/manage/main', $edit, t('Save'));
 
     // Make sure menu shows up with new name in block addition.
-    $default_theme = variable_get('theme_default', 'stark');
+    $default_theme = \Drupal::config('system.theme')->get('default') ?: 'stark';
     $this->drupalget('admin/structure/block/list/' . $default_theme);
     $this->assertText($edit['label']);
   }
