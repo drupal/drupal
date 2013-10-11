@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Tests\edit\Access\EditEntityFieldAccessCheckTest.
+ * Contains \Drupal\edit\Tests\Access\EditEntityFieldAccessCheckTest.
  */
 
-namespace Drupal\edit\Tests\edit\Access {
+namespace Drupal\edit\Tests\Access {
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -107,7 +107,6 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->method('access')
       ->will($this->returnValue(FALSE));
 
-    $empty_field = NULL;
     $field_with_access = $this->getMockBuilder('Drupal\field\Entity\Field')
       ->disableOriginalConstructor()
       ->getMock();
@@ -125,7 +124,7 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $data[] = array($editable_entity, $field_with_access, AccessCheckInterface::ALLOW);
     $data[] = array($non_editable_entity, $field_with_access, AccessCheckInterface::DENY);
     $data[] = array($editable_entity, $field_without_access, AccessCheckInterface::DENY);
-    $data[] = array($editable_entity, $empty_field, AccessCheckInterface::DENY);
+    $data[] = array($non_editable_entity, $field_without_access, AccessCheckInterface::DENY);
 
     return $data;
   }
@@ -146,12 +145,13 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
     $request = new Request();
 
-    $this->fieldInfo->expects($this->any())
-      ->method('getField')
+    $entity_with_field = clone $entity;
+    $entity_with_field->expects($this->any())
+      ->method('get')
       ->will($this->returnValue($field));
 
     // Prepare the request to be valid.
-    $request->attributes->set('entity', $entity);
+    $request->attributes->set('entity', $entity_with_field);
     $request->attributes->set('entity_type', 'test_entity');
     $request->attributes->set('field_name', 'example');
     $request->attributes->set('langcode', Language::LANGCODE_NOT_SPECIFIED);
@@ -325,13 +325,6 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
 namespace {
 
   use Drupal\Core\Language\Language;
-  use Drupal\field\FieldInterface;
-
-  if (!function_exists('field_access')) {
-    function field_access($op, FieldInterface $field, $entity_type, $entity = NULL, $account = NULL) {
-      return $field->access();
-    }
-  }
 
   if (!function_exists('field_valid_language')) {
     function field_valid_language($langcode, $default = TRUE) {

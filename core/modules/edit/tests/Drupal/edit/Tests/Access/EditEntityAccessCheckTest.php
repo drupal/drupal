@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Tests\edit\Access\EditEntityAccessCheckTest.
+ * Contains \Drupal\edit\Tests\Access\EditEntityAccessCheckTest.
  */
 
-namespace Drupal\edit\Tests\edit\Access;
+namespace Drupal\edit\Tests\Access;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
