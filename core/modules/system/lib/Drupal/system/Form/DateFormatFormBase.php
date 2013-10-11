@@ -9,6 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\Core\Datetime\Date;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -42,19 +43,29 @@ abstract class DateFormatFormBase extends EntityFormController {
   protected $dateService;
 
   /**
+   * The date format storage controller.
+   *
+   * @var \Drupal\Core\Config\Entity\ConfigStorageController
+   */
+  protected $dateFormatStorage;
+
+  /**
    * Constructs a new date format form.
    *
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
    * @param \Drupal\Core\Datetime\Date $date_service
    *   The date service.
+   * @param \Drupal\Core\Config\Entity\ConfigStorageController $date_format_storage
+   *   The date format storage controller.
    */
-  public function __construct(QueryFactory $query_factory, Date $date_service) {
+  public function __construct(QueryFactory $query_factory, Date $date_service, ConfigStorageController $date_format_storage) {
     $date = new DrupalDateTime();
     $this->patternType = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
 
     $this->queryFactory = $query_factory;
     $this->dateService = $date_service;
+    $this->dateFormatStorage = $date_format_storage;
   }
 
   /**
@@ -63,7 +74,8 @@ abstract class DateFormatFormBase extends EntityFormController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query'),
-      $container->get('date')
+      $container->get('date'),
+      $container->get('entity.manager')->getStorageController('date_format')
     );
   }
 
@@ -183,16 +195,12 @@ abstract class DateFormatFormBase extends EntityFormController {
     // The machine name field should already check to see if the requested
     // machine name is available. Regardless of machine_name or human readable
     // name, check to see if the provided pattern exists.
-    $format = trim($form_state['values']['date_format_pattern']);
-    $formats = $this->queryFactory
-      ->get($this->entity->entityType())
-      ->condition('pattern.' . $this->patternType, $format)
-      ->execute();
-
-    // Exclude the current format.
-    unset($formats[$this->entity->id()]);
-    if (!empty($formats)) {
-      form_set_error('date_format_pattern', t('This format already exists. Enter a unique format string.'));
+    $pattern = trim($form_state['values']['date_format_pattern']);
+    foreach ($this->dateFormatStorage->loadMultiple() as $format) {
+      if ($format->getPattern() == $pattern) {
+        form_set_error('date_format_pattern', t('This format already exists. Enter a unique format string.'));
+        continue;
+      }
     }
   }
 

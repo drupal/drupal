@@ -110,7 +110,7 @@ class ConfigEntityQueryTest extends DrupalUnitTestBase {
 
     $array['level1']['level2'] = 3;
     $entity = entity_create('config_query_test', array(
-      'label' => $this->randomName() . '_test_contains_' . $this->randomName(),
+      'label' => $this->randomName() . '_TEST_contains_' . $this->randomName(),
       'id' => '5',
       'number' => 53,
       'array' => $array,
@@ -459,6 +459,22 @@ class ConfigEntityQueryTest extends DrupalUnitTestBase {
       ->condition('*.level1.level2', 41)
       ->execute();
     $this->assertResults(array());
+  }
+
+  /**
+   * Tests case sensitivity.
+   */
+  public function testCaseSensitivity() {
+    // Filter by label with a known containing case-sensitive word.
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('label', 'TEST', 'CONTAINS')
+      ->execute();
+    $this->assertResults(array('3', '4', '5'));
+
+    $this->queryResults = $this->factory->get('config_query_test')
+      ->condition('label', 'test', 'CONTAINS')
+      ->execute();
+    $this->assertResults(array('3', '4', '5'));
   }
 
   /**

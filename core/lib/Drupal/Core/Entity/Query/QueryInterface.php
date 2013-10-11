@@ -46,9 +46,9 @@ interface QueryInterface extends AlterableInterface {
    * @endcode
    *
    * @param $value
-   *   The value for $field. In most cases, this is a scalar. For more complex
-   *   options, it is an array. The meaning of each element in the array is
-   *   dependent on $operator.
+   *   The value for $field. In most cases, this is a scalar and it's treated as
+   *   case-insensitive. For more complex options, it is an array. The meaning
+   *   of each element in the array is dependent on $operator.
    * @param $operator
    *   Possible values:
    *   - '=', '<>', '>', '>=', '<', '<=', 'STARTS_WITH', 'CONTAINS',
