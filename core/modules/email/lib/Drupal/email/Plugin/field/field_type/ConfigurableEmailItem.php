@@ -7,8 +7,6 @@
 
 namespace Drupal\email\Plugin\field\field_type;
 
-use Drupal\Core\Entity\Annotation\FieldType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Plugin\DataType\EmailItem;
 use Drupal\field\FieldInterface;
 

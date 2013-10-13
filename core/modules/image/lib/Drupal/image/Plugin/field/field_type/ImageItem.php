@@ -7,8 +7,6 @@
 
 namespace Drupal\image\Plugin\field\field_type;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\field\FieldInterface;
 use Drupal\file\Plugin\field\field_type\FileItem;
 

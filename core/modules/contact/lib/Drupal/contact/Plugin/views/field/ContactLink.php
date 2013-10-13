@@ -8,7 +8,6 @@
 namespace Drupal\contact\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Component\Annotation\PluginID;
 use Drupal\user\Plugin\views\field\Link;
 use Drupal\views\ResultRow;
 

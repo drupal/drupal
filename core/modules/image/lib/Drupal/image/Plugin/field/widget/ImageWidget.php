@@ -7,8 +7,6 @@
 
 namespace Drupal\image\Plugin\field\widget;
 
-use Drupal\field\Annotation\FieldWidget;
-use Drupal\Core\Annotation\Translation;
 use Drupal\file\Plugin\field\widget\FileWidget;
 use Drupal\Core\Entity\Field\FieldItemListInterface;
 

@@ -7,8 +7,6 @@
 namespace Drupal\datetime\Plugin\field\widget;
 
 use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\field\Annotation\FieldWidget;
-use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInstanceInterface;

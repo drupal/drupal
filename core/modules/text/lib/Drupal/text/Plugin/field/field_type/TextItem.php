@@ -7,8 +7,6 @@
 
 namespace Drupal\text\Plugin\field\field_type;
 
-use Drupal\Core\Entity\Annotation\FieldType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\field\FieldInterface;
 
 /**

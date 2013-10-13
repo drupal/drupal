@@ -7,8 +7,6 @@
 
 namespace Drupal\comment\Plugin\field\field_type;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\field\FieldInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 

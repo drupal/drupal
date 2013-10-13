@@ -7,8 +7,6 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\Field\PrepareCacheInterface;
-use Drupal\Core\Language\Language;
 use Drupal\entity\Entity\EntityDisplay;
 use Drupal\field\Field;
 

@@ -7,7 +7,6 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\TypedData\TypedDataManager;

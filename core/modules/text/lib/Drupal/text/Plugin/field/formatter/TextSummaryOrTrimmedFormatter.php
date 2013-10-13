@@ -7,9 +7,6 @@
  */
 namespace Drupal\text\Plugin\field\formatter;
 
-use Drupal\field\Annotation\FieldFormatter;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Plugin implementation of the 'text_summary_or_trimmed' formatter.
  *

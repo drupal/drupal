@@ -12,8 +12,6 @@
 
 namespace Drupal\link\Plugin\field\formatter;
 
-use Drupal\field\Annotation\FieldFormatter;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**

@@ -7,9 +7,7 @@
 
 namespace Drupal\datetime\Plugin\field\field_type;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\Core\Entity\Field\PrepareCacheInterface;
 use Drupal\field\FieldInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;

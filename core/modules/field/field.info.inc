@@ -5,10 +5,7 @@
  * Field Info API, providing information about available fields and field types.
  */
 
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Language\Language;
 use Drupal\field\Field;
-use Drupal\field\FieldInstanceInterface;
 
 /**
  * @defgroup field_info Field Info API

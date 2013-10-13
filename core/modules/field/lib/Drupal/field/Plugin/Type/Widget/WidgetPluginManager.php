@@ -8,16 +8,11 @@
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\Plugin\Discovery\CacheDecorator;
-use Drupal\Core\Plugin\Discovery\AlterDecorator;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 /**
  * Plugin type manager for field widgets.

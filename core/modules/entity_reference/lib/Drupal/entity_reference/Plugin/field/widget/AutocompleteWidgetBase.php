@@ -7,8 +7,6 @@
 
 namespace Drupal\entity_reference\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;

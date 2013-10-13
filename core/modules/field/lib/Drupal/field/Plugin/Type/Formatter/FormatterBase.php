@@ -9,7 +9,6 @@ namespace Drupal\field\Plugin\Type\Formatter;
 
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
 
 /**

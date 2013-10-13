@@ -7,8 +7,6 @@
 
 namespace Drupal\datetime\Plugin\field\formatter;
 
-use Drupal\field\Annotation\FieldFormatter;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageControllerInterface;

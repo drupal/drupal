@@ -7,8 +7,6 @@
  */
 namespace Drupal\field_test\Plugin\field\formatter;
 
-use Drupal\field\Annotation\FieldFormatter;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 

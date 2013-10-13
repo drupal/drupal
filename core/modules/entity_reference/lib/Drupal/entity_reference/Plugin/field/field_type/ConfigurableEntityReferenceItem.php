@@ -7,11 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\field\field_type;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Annotation\FieldType;
-use Drupal\Core\Entity\Field\Type\EntityReferenceItem;
 use Drupal\field\Plugin\Type\FieldType\ConfigEntityReferenceItemBase;
-use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
 use Drupal\field\FieldInterface;
 

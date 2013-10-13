@@ -7,8 +7,6 @@
 
 namespace Drupal\entity_reference\Plugin\field\formatter;
 
-use Drupal\field\Annotation\FieldFormatter;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\entity_reference\RecursiveRenderingException;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;

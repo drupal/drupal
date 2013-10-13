@@ -7,8 +7,6 @@
 
 namespace Drupal\telephone\Plugin\field\field_type;
 
-use Drupal\Core\Entity\Annotation\FieldType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 use Drupal\field\FieldInterface;
 

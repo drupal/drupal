@@ -8,8 +8,6 @@
 namespace Drupal\comment\Plugin\field\widget;
 
 use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\Core\Annotation\Translation;
-use Drupal\field\Annotation\FieldWidget;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
