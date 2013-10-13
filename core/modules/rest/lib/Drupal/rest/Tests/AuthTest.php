@@ -50,6 +50,9 @@ class AuthTest extends RESTTestBase {
     $this->assertResponse('401', 'HTTP response code is 401 when the request is not authenticated and the user is anonymous.');
     $this->assertText('A fatal error occurred: No authentication credentials provided.');
 
+    // Ensure that cURL settings/headers aren't carried over to next request.
+    unset($this->curlHandle);
+
     // Create a user account that has the required permissions to read
     // resources via the REST API, but the request is authenticated
     // with session cookies.
@@ -62,6 +65,9 @@ class AuthTest extends RESTTestBase {
     // not enabled and should not work.
     $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse('401', 'HTTP response code is 401 when the request is authenticated but not authorized.');
+
+    // Ensure that cURL settings/headers aren't carried over to next request.
+    unset($this->curlHandle);
 
     // Now read it with the Basic authentication which is enabled and should
     // work.
