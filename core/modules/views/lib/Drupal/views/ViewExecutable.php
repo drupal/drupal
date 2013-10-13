@@ -1550,7 +1550,7 @@ class ViewExecutable {
     }
 
     if (!$account) {
-      $account = $GLOBALS['user'];
+      $account = \Drupal::currentUser();
     }
 
     // We can't use choose_display() here because that function

@@ -269,8 +269,6 @@ abstract class CachePluginBase extends PluginBase {
    *   The generated cache ID.
    */
   public function generateResultsKey() {
-    global $user;
-
     if (!isset($this->resultsKey)) {
       $build_info = $this->view->build_info;
 
@@ -283,6 +281,7 @@ abstract class CachePluginBase extends PluginBase {
           $build_info[$index] = (string)$query;
         }
       }
+      $user = \Drupal::currentUser();
       $key_data = array(
         'build_info' => $build_info,
         'roles' => $user->getRoles(),
@@ -310,8 +309,8 @@ abstract class CachePluginBase extends PluginBase {
    *   The generated cache ID.
    */
   public function generateOutputKey() {
-    global $user;
     if (!isset($this->outputKey)) {
+      $user = \Drupal::currentUser();
       $key_data = array(
         'result' => $this->view->result,
         'roles' => $user->getRoles(),

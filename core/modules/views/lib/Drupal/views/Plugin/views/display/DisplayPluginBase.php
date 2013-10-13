@@ -2541,8 +2541,7 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   public function access($account = NULL) {
     if (!isset($account)) {
-      global $user;
-      $account = $user;
+      $account = \Drupal::currentUser();
     }
 
     // Full override.
