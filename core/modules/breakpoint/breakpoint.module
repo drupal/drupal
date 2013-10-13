@@ -41,7 +41,7 @@ function breakpoint_help($path, $arg) {
  *
  * @see _breakpoint_theme_enabled()
  *
- * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
+ * @todo: This should be removed if https://drupal.org/node/1813110 is resolved.
  */
 function breakpoint_themes_enabled($theme_list) {
   _breakpoint_theme_enabled($theme_list);
@@ -55,7 +55,7 @@ function breakpoint_themes_enabled($theme_list) {
  *
  * @see _breakpoint_delete_breakpoints()
  *
- * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
+ * @todo: This should be removed if https://drupal.org/node/1813110 is resolved.
  */
 function breakpoint_themes_disabled($theme_list) {
   _breakpoint_delete_breakpoints($theme_list, Breakpoint::SOURCE_TYPE_THEME);
@@ -69,7 +69,7 @@ function breakpoint_themes_disabled($theme_list) {
  *
  * @see _breakpoint_modules_enabled()
  *
- * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
+ * @todo: This should be removed if https://drupal.org/node/1813110 is resolved.
  */
 function breakpoint_modules_installed($modules) {
   _breakpoint_modules_installed($modules);
@@ -83,7 +83,7 @@ function breakpoint_modules_installed($modules) {
  *
  * @see _breakpoint_delete_breakpoints()
  *
- * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
+ * @todo: This should be removed if https://drupal.org/node/1813110 is resolved.
  */
 function breakpoint_modules_uninstalled($modules) {
   _breakpoint_delete_breakpoints($modules, Breakpoint::SOURCE_TYPE_MODULE);
