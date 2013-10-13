@@ -92,6 +92,7 @@ function aggregator_theme() {
  */
 function aggregator_menu() {
   $items['admin/config/services/aggregator'] = array(
+    'title' => 'Feed aggregator',
     'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
     'route_name' => 'aggregator.admin_overview',
     'weight' => 10,
