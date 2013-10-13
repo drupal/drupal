@@ -19,17 +19,6 @@ function taxonomy_term_page(Term $term) {
   // Assign the term name as the page title.
   drupal_set_title($term->label());
 
-  // @todo This overrides any other possible breadcrumb and is a pure hard-coded
-  //   presumption. Make this behavior configurable per vocabulary or term.
-  $breadcrumb = array();
-  $current = $term;
-  while ($parents = taxonomy_term_load_parents($current->id())) {
-    $current = array_shift($parents);
-    $breadcrumb[] = l($current->label(), 'taxonomy/term/' . $current->id());
-  }
-  $breadcrumb[] = l(t('Home'), NULL);
-  $breadcrumb = array_reverse($breadcrumb);
-  drupal_set_breadcrumb($breadcrumb);
   drupal_add_feed('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
 
   foreach ($term->uriRelationships() as $rel) {

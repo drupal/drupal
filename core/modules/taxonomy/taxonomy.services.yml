@@ -1,0 +1,5 @@
+services:
+  taxonomy_term.breadcrumb:
+    class: Drupal\taxonomy\TermBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 1002 }
