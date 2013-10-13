@@ -2106,7 +2106,8 @@ function _menu_get_legacy_tasks($router_item, &$data, &$root_path) {
           // MENU_IS_LOCAL_ACTION before checking.
           if (($item['type'] & MENU_IS_LOCAL_ACTION) == MENU_IS_LOCAL_ACTION) {
             // The item is an action, display it as such.
-            $actions_current[$link['href']] = array(
+            $key = isset($link['route_name']) ? $link['route_name'] : $link['href'];
+            $actions_current[$key] = array(
               '#theme' => 'menu_local_action',
               '#link' => $link,
               '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
@@ -2334,8 +2335,7 @@ function menu_get_local_actions() {
   $links = menu_local_tasks();
   $route_name = Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
   $manager = \Drupal::service('plugin.manager.menu.local_action');
-  $links['actions'] += $manager->getActionsForRoute($route_name);
-  return $links['actions'];
+  return $manager->getActionsForRoute($route_name) + $links['actions'];
 }
 
 /**
