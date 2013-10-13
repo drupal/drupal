@@ -244,13 +244,6 @@ class EntityType extends Plugin {
   public $route_base_path;
 
   /**
-   * The prefix for the bundles of this entity type.
-   *
-   * @var string (optional)
-   */
-  public $bundle_prefix;
-
-  /**
    * The base menu router path to which the entity admin user interface responds.
    *
    * It can be used to generate UI links and to attach additional router items
