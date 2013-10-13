@@ -43,7 +43,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
   function testConfigTranslation() {
     // Add custom language.
     $langcode = 'xx';
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form', 'administer contact forms'));
     $this->drupalLogin($admin_user);
     $name = $this->randomName(16);
     $edit = array(
@@ -164,6 +164,10 @@ class LocaleConfigTranslationTest extends WebTestBase {
     // upcasting will already work.
     $this->drupalGet($langcode . '/contact/feedback');
     $this->assertText($category_label);
+
+    // Check if the UI does not show the translated String.
+    $this->drupalGet('admin/structure/contact/manage/feedback');
+    $this->assertFieldById('edit-label', 'Website feedback', 'Translation is not loaded for Edit Form.');
   }
 
 }
