@@ -201,8 +201,6 @@ class FieldInfo {
     foreach (config_get_storage_names_with_prefix('field.instance.') as $config_id) {
       $instance_config = $this->config->get($config_id)->get();
       $field_uuid = $instance_config['field_uuid'];
-      // Filter out instances of inactive fields, and instances on unknown
-      // entity types.
       if (isset($fields[$field_uuid])) {
         $field = $fields[$field_uuid];
         $map[$instance_config['entity_type']][$field['name']]['bundles'][] = $instance_config['bundle'];
