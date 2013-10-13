@@ -19,6 +19,9 @@ use Drupal\views\ResultRow;
  */
 class Language extends User {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_user'])) {
       $uid = $this->getValue($values, 'uid');

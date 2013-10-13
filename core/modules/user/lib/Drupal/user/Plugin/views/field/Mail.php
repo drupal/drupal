@@ -39,6 +39,9 @@ class Mail extends User {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function renderLink($data, ResultRow $values) {
     parent::renderLink($data, $values);
 

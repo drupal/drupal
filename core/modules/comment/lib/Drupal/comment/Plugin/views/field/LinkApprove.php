@@ -24,6 +24,17 @@ class LinkApprove extends Link {
     return user_access('administer comments');
   }
 
+  /**
+   * Prepares the link pointing for approving the comment.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $data
+   *   The comment entity.
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from a single row of a view's query result.
+   *
+   * @return string
+   *   Returns a string for the link text.
+   */
   protected function renderLink($data, ResultRow $values) {
     $status = $this->getValue($values, 'status');
 

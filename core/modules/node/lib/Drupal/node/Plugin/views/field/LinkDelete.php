@@ -21,7 +21,15 @@ use Drupal\views\ResultRow;
 class LinkDelete extends Link {
 
   /**
-   * Renders the link.
+   * Prepares the link to delete a node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node entity this field belongs to.
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from the view's result set.
+   *
+   * @return string
+   *   Returns a string for the link text.
    */
   protected function renderLink($node, ResultRow $values) {
     // Ensure user has access to delete this node.

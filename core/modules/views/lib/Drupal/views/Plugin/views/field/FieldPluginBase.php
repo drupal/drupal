@@ -384,12 +384,12 @@ abstract class FieldPluginBase extends HandlerBase {
    * This api exists so that other modules can easy set the values of the field
    * without having the need to change the render method as well.
    *
-   * @param $values
+   * @param \Drupal\views\ResultRow $values
    *   An object containing all retrieved values.
-   * @param $field
+   * @param string $field
    *   Optional name of the field where the value is stored.
    */
-  public function getValue($values, $field = NULL) {
+  public function getValue(ResultRow $values, $field = NULL) {
     $alias = isset($field) ? $this->aliases[$field] : $this->field_alias;
     if (isset($values->{$alias})) {
       return $values->{$alias};
@@ -1096,7 +1096,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * Renders the field.
    *
    * @param \Drupal\views\ResultRow $values
-   *   The values retrieved from the database.
+   *   The values retrieved from a single row of a view's query result.
    */
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
@@ -1110,7 +1110,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * text-replacement rendering is necessary.
    *
    * @param \Drupal\views\ResultRow $values
-   *   The values retrieved from the database.
+   *   The values retrieved from a single row of a view's query result.
    */
   public function advancedRender(ResultRow $values) {
     if ($this->allowAdvancedRender() && method_exists($this, 'render_item')) {
@@ -1591,8 +1591,14 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Call out to the theme() function, which probably just calls render() but
    * allows sites to override output fairly easily.
+   *
+   * @param \Drupal\views\ResultRow $values
+   *   Holds single row of a view's result set.
+   *
+   * @return string|false
+   *   Returns rendered output of the given theme implementation.
    */
-  function theme($values) {
+  function theme(ResultRow $values) {
     return theme($this->themeFunctions(),
       array(
         'view' => $this->view,

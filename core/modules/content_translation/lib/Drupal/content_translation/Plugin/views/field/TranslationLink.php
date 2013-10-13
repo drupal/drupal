@@ -54,11 +54,11 @@ class TranslationLink extends FieldPluginBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being rendered.
-   * @param \stdClass $values
+   * @param \Drupal\views\ResultRow $values
    *   The current row of the views result.
    *
    * @return string
-   *   The acutal rendered text (without the link) of this field.
+   *   The actual rendered text (without the link) of this field.
    */
   protected function renderLink(EntityInterface $entity, ResultRow $values) {
     if (content_translation_translate_access($entity)) {

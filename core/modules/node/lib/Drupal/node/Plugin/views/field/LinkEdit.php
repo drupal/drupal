@@ -21,7 +21,15 @@ use Drupal\views\ResultRow;
 class LinkEdit extends Link {
 
   /**
-   * Renders the link.
+   * Prepares the link to the node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node entity this field belongs to.
+   * @param ResultRow $values
+   *   The values retrieved from the view's result set.
+   *
+   * @return string
+   *   Returns a string for the link text.
    */
   protected function renderLink($node, ResultRow $values) {
     // Ensure user has access to edit this node.

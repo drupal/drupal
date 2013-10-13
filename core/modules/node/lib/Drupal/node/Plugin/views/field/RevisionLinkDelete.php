@@ -24,6 +24,17 @@ class RevisionLinkDelete extends RevisionLink {
     return user_access('delete revisions') || user_access('administer nodes');
   }
 
+  /**
+   * Prepares the link to delete a node revision.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $data
+   *   The node revision entity this field belongs to.
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from the view's result set.
+   *
+   * @return string
+   *   Returns a string for the link text.
+   */
   protected function renderLink($data, ResultRow $values) {
     list($node, $vid) = $this->get_revision_entity($values, 'delete');
     if (!isset($vid)) {

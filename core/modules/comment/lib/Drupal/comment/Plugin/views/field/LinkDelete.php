@@ -24,6 +24,17 @@ class LinkDelete extends Link {
     return user_access('administer comments');
   }
 
+  /**
+   * Prepares the link for deleting the comment.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $data
+   *   The comment entity.
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from a single row of a view's query result.
+   *
+   * @return string
+   *   Returns a string for the link text.
+   */
   protected function renderLink($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
     $comment = $this->getEntity($values);

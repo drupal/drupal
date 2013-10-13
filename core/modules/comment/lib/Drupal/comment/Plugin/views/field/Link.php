@@ -90,6 +90,17 @@ class Link extends FieldPluginBase {
     return $this->renderLink($comment, $values);
   }
 
+  /**
+   * Prepares the link pointing to the comment or its node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $data
+   *   The comment entity.
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from a single row of a view's query result.
+   *
+   * @return string
+   *   Returns a string for the link text.
+   */
   protected function renderLink($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $comment = $data;

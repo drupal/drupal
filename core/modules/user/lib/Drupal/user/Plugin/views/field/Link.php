@@ -68,7 +68,7 @@ class Link extends FieldPluginBase {
    * Alters the field to render a link.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   * @param \stdClass $values
+   * @param \Drupal\views\ResultRow $values
    *   The current row of the views result.
    *
    * @return string

@@ -68,6 +68,9 @@ class ContextualLinks extends FieldPluginBase {
    *
    * Renders the contextual fields.
    *
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from a single row of a view's query result.
+   *
    * @see contextual_preprocess()
    * @see contextual_contextual_links_view_alter()
    */

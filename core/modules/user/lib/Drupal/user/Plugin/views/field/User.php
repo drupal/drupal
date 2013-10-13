@@ -52,6 +52,17 @@ class User extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
+  /**
+   * Prepares a link to the user.
+   *
+   * @param string $data
+   *   The XSS safe string for the link text.
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from a single row of a view's query result.
+   *
+   * @return string
+   *   Returns a string for the link text.
+   */
   protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_user']) && user_access('access user profiles') && ($entity = $this->getEntity($values)) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;

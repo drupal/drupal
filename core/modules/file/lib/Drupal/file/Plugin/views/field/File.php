@@ -53,9 +53,15 @@ class File extends FieldPluginBase {
   }
 
   /**
-   * Render whatever the data is as a link to the file.
+   * Prepares link to the file.
    *
-   * Data should be made XSS safe prior to calling this function.
+   * @param string $data
+   *   The XSS safe string for the link text.
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from a single row of a view's query result.
+   *
+   * @return string
+   *   Returns a string for the link text.
    */
   protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_file']) && $data !== NULL && $data !== '') {

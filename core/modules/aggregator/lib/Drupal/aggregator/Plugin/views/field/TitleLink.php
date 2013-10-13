@@ -68,11 +68,11 @@ class TitleLink extends FieldPluginBase {
    *
    * @param string $data
    *   The XSS safe string for the link text.
-   * @param object $values
-   *   The values retrieved from the database.
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from a single row of a view's query result.
    *
-   * @return data
-   *   Returns string for the link text.
+   * @return string
+   *   Returns a string for the link text.
    */
   protected function renderLink($data, ResultRow $values) {
     $link = $this->getValue($values, 'link');
