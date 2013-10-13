@@ -344,9 +344,12 @@ system.modules_uninstall_confirm:
     _permission: 'administer modules'
 
 system.timezone:
-  path: '/system/timezone'
+  path: '/system/timezone/{abbreviation}/{offset}/{is_daylight_saving_time}'
   defaults:
     _controller: '\Drupal\system\Controller\TimezoneController::getTimezone'
+    abbreviation: ''
+    offset: -1
+    is_daylight_saving_time: NULL
   requirements:
     _access: 'TRUE'
 
