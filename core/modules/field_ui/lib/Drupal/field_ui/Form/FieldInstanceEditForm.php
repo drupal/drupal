@@ -69,10 +69,11 @@ class FieldInstanceEditForm extends FormBase {
     $field = $this->instance->getField();
     $bundles = entity_get_bundles();
 
-    drupal_set_title($this->t('%instance settings for %bundle', array(
+    $form_title = $this->t('%instance settings for %bundle', array(
       '%instance' => $this->instance->getFieldLabel(),
       '%bundle' => $bundles[$entity_type][$bundle]['label'],
-    )), PASS_THROUGH);
+    ));
+    $form['#title'] = $form_title;
 
     $form['#field'] = $field;
     // Create an arbitrary entity object (used by the 'default value' widget).
