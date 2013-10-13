@@ -861,7 +861,7 @@ function comment_links(CommentInterface $comment, EntityInterface $entity, $fiel
   }
 
   // Add translations link for translation-enabled comment bundles.
-  if (module_exists('content_translation') && content_translation_translate_access($comment)) {
+  if (\Drupal::moduleHandler()->moduleExists('content_translation') && content_translation_translate_access($comment)) {
     $links['comment-translations'] = array(
       'title' => t('translate'),
       'href' => 'comment/' . $comment->id() . '/translations',

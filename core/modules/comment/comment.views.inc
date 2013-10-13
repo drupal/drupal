@@ -141,7 +141,7 @@ function comment_views_data() {
     ),
   );
 
-  if (module_exists('language')) {
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
     $data['comment']['langcode'] = array(
       'title' => t('Language'),
       'help' => t('The language the comment is in.'),
