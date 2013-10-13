@@ -7,6 +7,7 @@
 
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\NestedArray;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Denotes that a block is not enabled in any region and should not be shown.
@@ -135,7 +136,6 @@ function block_menu() {
       'route_name' => "block.admin_display_$key",
     );
     $items["admin/structure/block/demo/$key"] = array(
-      'title' => check_plain($theme->info['name']),
       'route_name' => 'block.admin_demo',
       'type' => MENU_CALLBACK,
       'theme callback' => '_block_custom_theme',
@@ -150,7 +150,6 @@ function block_menu() {
  *
  * Path:
  * - admin/structure/block/list/% (for each theme)
- * - admin/structure/block/demo/% (for each theme)
  *
  * @param $theme
  *   Either the name of a theme or a full theme object.
@@ -193,9 +192,7 @@ function block_page_build(&$page) {
 
   // Fetch a list of regions for the current theme.
   $all_regions = system_region_list($theme);
-
-  $item = menu_get_item();
-  if ($item['path'] != 'admin/structure/block/demo/' . $theme) {
+  if (\Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME) != 'block.admin_demo') {
     // Load all region content assigned via blocks.
     foreach (array_keys($all_regions) as $region) {
       // Assign blocks to region.

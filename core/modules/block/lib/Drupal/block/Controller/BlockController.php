@@ -7,17 +7,34 @@
 
 namespace Drupal\block\Controller;
 
+use Drupal\Component\Utility\String;
+use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
- * Controller routines for block routes.
+ * Controller routines for admin block routes.
  */
-class BlockController {
+class BlockController extends ControllerBase {
 
   /**
-   * @todo Remove block_admin_demo().
+   * Returns a block theme demo page.
+   *
+   * @param string $theme
+   *   The name of the theme.
+   *
+   * @return array
+   *   A render array containing the CSS and title for the block region demo.
    */
   public function demo($theme) {
-    module_load_include('admin.inc', 'block');
-    return block_admin_demo($theme);
+    $themes = list_themes();
+    return array(
+      '#title' => String::checkPlain($themes[$theme]->info['name']),
+      '#attached' => array(
+        'library' => array(
+          array('block', 'drupal.block.admin'),
+        ),
+      ),
+    );
   }
 
 }

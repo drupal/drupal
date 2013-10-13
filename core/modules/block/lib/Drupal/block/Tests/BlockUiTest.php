@@ -68,6 +68,17 @@ class BlockUiTest extends WebTestBase {
   }
 
   /**
+   * Test block demo page exists and functions correctly.
+   */
+  public function testBlockDemoUiPage() {
+    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
+    $this->drupalGet('admin/structure/block');
+    $this->clickLink(t('Demonstrate block regions (@theme)', array('@theme' => 'Stark')));
+    $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', array(':title' => 'Highlighted'));
+    $this->assertTrue(!empty($elements), 'Block demo regions are shown.');
+  }
+
+  /**
    * Test block admin page exists and functions correctly.
    */
   function testBlockAdminUiPage() {
