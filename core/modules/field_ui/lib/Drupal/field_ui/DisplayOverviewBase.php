@@ -355,6 +355,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
             '#markup' => '<div class="field-plugin-summary">' . implode('<br />', $summary) . '</div>',
             '#cell_attributes' => array('class' => array('field-plugin-summary-cell')),
           );
+        }
+        if ($plugin->getSettings()) {
           $field_row['settings_edit'] = $base_button + array(
             '#type' => 'image_button',
             '#name' => $field_id . '_settings_edit',

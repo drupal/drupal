@@ -93,6 +93,17 @@ class ManageDisplayTest extends FieldUiTestBase {
     // Confirm that the settings are updated on the settings form.
     $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
     $this->assertFieldByName($fieldname, 'foo');
+
+    // Test the empty setting formatter.
+    $edit = array('fields[field_test][type]' => 'field_empty_setting');
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertNoText('Default empty setting now has a value.');
+    $this->assertFieldById('edit-fields-field-test-settings-edit');
+    $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
+    $fieldname = 'fields[field_test][settings_edit_form][settings][field_empty_setting]';
+    $edit = array($fieldname => 'non empty setting');
+    $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
+    $this->assertText('Default empty setting now has a value.');
   }
 
   /**
