@@ -177,8 +177,8 @@ class ForumController implements ContainerInjectionInterface {
       '#sortby' => $this->config->get('topics.order'),
       '#forums_per_page' => $this->config->get('topics.page_limit'),
     );
-    // @todo Make this a library - see https://drupal.org/node/2028113.
-    $build['#attached']['css'][] = drupal_get_path('module', 'forum') . '/css/forum.module.css';
+    $build['#attached']['library'][] = array('forum', 'forum.index');
+
     return $build;
   }
 

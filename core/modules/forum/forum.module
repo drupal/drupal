@@ -885,3 +885,20 @@ function template_preprocess_forum_submitted(&$variables) {
 function theme_forum_form(array $variables) {
   return drupal_render_children($variables['form']);
 }
+
+/**
+ * Implements hook_library_info().
+ *
+ * Forum specific libraries.
+ */
+function forum_library_info() {
+  $libraries['forum.index'] = array(
+    'title' => 'Forum index',
+    'version' => \Drupal::VERSION,
+    'css' => array(
+      drupal_get_path('module', 'forum') . '/css/forum.module.css' => array(),
+    ),
+  );
+
+  return $libraries;
+}
