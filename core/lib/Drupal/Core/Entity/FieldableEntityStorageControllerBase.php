@@ -303,4 +303,43 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
    */
   public function onFieldPurge(FieldInterface $field) { }
 
+  /**
+   * Checks translation statuses and invoke the related hooks if needed.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being saved.
+   */
+  protected function invokeTranslationHooks(ContentEntityInterface $entity) {
+    $translations = $entity->getTranslationLanguages(FALSE);
+    $original_translations = $entity->original->getTranslationLanguages(FALSE);
+    $all_translations = array_keys($translations + $original_translations);
+
+    // Notify modules of translation insertion/deletion.
+    foreach ($all_translations as $langcode) {
+      if (isset($translations[$langcode]) && !isset($original_translations[$langcode])) {
+        $this->invokeHook('translation_insert', $entity->getTranslation($langcode));
+      }
+      elseif (!isset($translations[$langcode]) && isset($original_translations[$langcode])) {
+        $this->invokeHook('translation_delete', $entity->getTranslation($langcode));
+      }
+    }
+  }
+
+  /**
+   * Invokes a method on the Field objects within an entity.
+   *
+   * @param string $method
+   *   The method name.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
+   */
+  protected function invokeFieldMethod($method, ContentEntityInterface $entity) {
+    foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
+      $translation = $entity->getTranslation($langcode);
+      foreach ($translation as $field) {
+        $field->$method();
+      }
+    }
+  }
+
 }

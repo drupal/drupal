@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\field\Entity\Field;
@@ -163,7 +163,7 @@ class Tables implements TablesInterface {
           $column = 'value';
         }
         $table = $this->ensureFieldTable($index_prefix, $field, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
-        $sql_column = DatabaseStorageController::_fieldColumnName($field, $column);
+        $sql_column = FieldableDatabaseStorageController::_fieldColumnName($field, $column);
       }
       // This is an entity property (non-configurable field).
       else {
@@ -251,7 +251,7 @@ class Tables implements TablesInterface {
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field) {
     $field_name = $field->getFieldName();
     if (!isset($this->fieldTables[$index_prefix . $field_name])) {
-      $table = $this->sqlQuery->getMetaData('age') == EntityStorageControllerInterface::FIELD_LOAD_CURRENT ? DatabaseStorageController::_fieldTableName($field) : DatabaseStorageController::_fieldRevisionTableName($field);
+      $table = $this->sqlQuery->getMetaData('age') == EntityStorageControllerInterface::FIELD_LOAD_CURRENT ? FieldableDatabaseStorageController::_fieldTableName($field) : FieldableDatabaseStorageController::_fieldRevisionTableName($field);
       if ($field->getFieldCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }

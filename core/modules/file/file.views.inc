@@ -7,7 +7,7 @@
  * @ingroup views_module_handlers
  */
 
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\field\FieldInterface;
 
 /**
@@ -498,7 +498,7 @@ function file_field_views_data_views_data_alter(array &$data, FieldInterface $fi
     'id' => 'entity_reverse',
     'field_name' => $field_name,
     'entity_type' => $entity_type,
-    'field table' => DatabaseStorageController::_fieldTableName($field),
+    'field table' => FieldableDatabaseStorageController::_fieldTableName($field),
     'field field' => $field_name . '_target_id',
     'base' => $entity_info['base_table'],
     'base field' => $entity_info['entity_keys']['id'],

@@ -14,7 +14,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\field\FieldInfo;
 use Drupal\user\UserDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 
 /**
  * Controller class for users.
@@ -22,7 +22,7 @@ use Drupal\Core\Entity\DatabaseStorageControllerNG;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for user objects.
  */
-class UserStorageController extends DatabaseStorageControllerNG implements UserStorageControllerInterface {
+class UserStorageController extends FieldableDatabaseStorageController implements UserStorageControllerInterface {
 
   /**
    * Provides the password hashing service object.

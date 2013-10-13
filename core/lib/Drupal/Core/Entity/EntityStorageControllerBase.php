@@ -137,23 +137,6 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function invokeFieldMethod($method, EntityInterface $entity) {
-    // Only act on content entities.
-    if (!($entity instanceof ContentEntityInterface)) {
-      return;
-    }
-
-    foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
-      $translation = $entity->getTranslation($langcode);
-      foreach ($translation as $field) {
-        $field->$method();
-      }
-    }
-  }
-
-  /**
    * Invokes a hook on behalf of the entity.
    *
    * @param string $hook
@@ -167,32 +150,6 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
     module_invoke_all($this->entityType . '_' . $hook, $entity);
     // Invoke the respective entity-level hook.
     module_invoke_all('entity_' . $hook, $entity, $this->entityType);
-  }
-
-  /**
-   * Checks translation statuses and invoke the related hooks if needed.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being saved.
-   */
-  protected function invokeTranslationHooks(EntityInterface $entity) {
-    // Only act on content entities.
-    if (!($entity instanceof ContentEntityInterface)) {
-      return;
-    }
-    $translations = $entity->getTranslationLanguages(FALSE);
-    $original_translations = $entity->original->getTranslationLanguages(FALSE);
-    $all_translations = array_keys($translations + $original_translations);
-
-    // Notify modules of translation insertion/deletion.
-    foreach ($all_translations as $langcode) {
-      if (isset($translations[$langcode]) && !isset($original_translations[$langcode])) {
-        $this->invokeHook('translation_insert', $entity->getTranslation($langcode));
-      }
-      elseif (!isset($translations[$langcode]) && isset($original_translations[$langcode])) {
-        $this->invokeHook('translation_delete', $entity->getTranslation($langcode));
-      }
-    }
   }
 
 }

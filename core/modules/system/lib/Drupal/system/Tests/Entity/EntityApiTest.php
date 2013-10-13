@@ -91,6 +91,16 @@ class EntityApiTest extends EntityUnitTestBase {
 
     $all = entity_load_multiple($entity_type);
     $this->assertTrue(empty($all), format_string('%entity_type: Deleted all entities.', array('%entity_type' => $entity_type)));
+
+    // Verify that all data got deleted.
+    $definition = \Drupal::entityManager()->getDefinition($entity_type);
+    $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition['base_table'] . '}')->fetchField(), 'Base table was emptied');
+    if (isset($definition['data_table'])) {
+      $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition['data_table'] . '}')->fetchField(), 'Data table was emptied');
+    }
+    if (isset($definition['revision_table'])) {
+      $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition['revision_table'] . '}')->fetchField(), 'Data table was emptied');
+    }
   }
 
    /**

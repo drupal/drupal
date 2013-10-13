@@ -7,16 +7,16 @@
 
 namespace Drupal\custom_block;
 
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
  * Controller class for custom blocks.
  *
- * This extends the Drupal\Core\Entity\DatabaseStorageControllerNG class,
+ * This extends the Drupal\Core\Entity\DatabaseStorageController class,
  * adding required special handling for custom block entities.
  */
-class CustomBlockStorageController extends DatabaseStorageControllerNG {
+class CustomBlockStorageController extends FieldableDatabaseStorageController {
 
   /**
    * Overrides \Drupal\Core\Entity\DatabaseStorageController::attachLoad().

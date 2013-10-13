@@ -7,7 +7,7 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityInterface;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for node entities.
  */
-class NodeStorageController extends DatabaseStorageControllerNG {
+class NodeStorageController extends FieldableDatabaseStorageController {
 
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::create().
@@ -30,7 +30,7 @@ class NodeStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageControllerNG::attachLoad().
+   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);

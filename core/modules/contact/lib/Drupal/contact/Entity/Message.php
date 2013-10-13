@@ -18,7 +18,7 @@ use Drupal\contact\MessageInterface;
  *   label = @Translation("Contact message"),
  *   module = "contact",
  *   controllers = {
- *     "storage" = "Drupal\Core\Entity\DatabaseStorageControllerNG",
+ *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "render" = "Drupal\contact\MessageRenderController",
  *     "form" = {
  *       "default" = "Drupal\contact\MessageFormController"

@@ -5,7 +5,7 @@
  * Install, update, and uninstall functions for the Field module.
  */
 
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\field\Entity\Field;
 
 /**
@@ -48,7 +48,7 @@ function _update_8003_field_create_field(array &$field_config) {
 
   // Create storage for the field. This requires a field entity, but cannot use
   // the regular entity_create() function here.
-  $schema = DatabaseStorageController::_fieldSqlSchema(new Field($field_config), $field_config['schema']);
+  $schema = FieldableDatabaseStorageController::_fieldSqlSchema(new Field($field_config), $field_config['schema']);
   foreach ($schema as $name => $table) {
     db_create_table($name, $table);
   }
@@ -118,8 +118,8 @@ function _update_8006_field_write_data_sql($entity_type, $bundle, $entity_id, $r
   $field_config = \Drupal::config("field.field.$entity_type.$field_name");
   $field = new Field($field_config);
 
-  $table_name = DatabaseStorageController::_fieldTableName($field);
-  $revision_name = DatabaseStorageController::_fieldRevisionTableName($field);
+  $table_name = FieldableDatabaseStorageController::_fieldTableName($field);
+  $revision_name = FieldableDatabaseStorageController::_fieldRevisionTableName($field);
 
   db_delete($table_name)
     ->condition('entity_id', $entity_id)
@@ -140,7 +140,7 @@ function _update_8006_field_write_data_sql($entity_type, $bundle, $entity_id, $r
         'langcode' => $langcode,
       );
       foreach ($item as $column => $value) {
-        $record[DatabaseStorageController::_fieldColumnName($field_name, $column)] = $value;
+        $record[FieldableDatabaseStorageController::_fieldColumnName($field_name, $column)] = $value;
       }
 
       $records[] = $record;
@@ -367,8 +367,8 @@ function field_update_8003() {
       $field = new Field($config);
       // Additionally, rename the data tables for deleted fields.
       $tables = array(
-        "field_deleted_data_{$record['id']}" => 'old_' . DatabaseStorageController::_fieldTableName($field),
-        "field_deleted_revision_{$record['id']}" => 'old_' . DatabaseStorageController::_fieldRevisionTableName($field),
+        "field_deleted_data_{$record['id']}" => 'old_' . FieldableDatabaseStorageController::_fieldTableName($field),
+        "field_deleted_revision_{$record['id']}" => 'old_' . FieldableDatabaseStorageController::_fieldRevisionTableName($field),
       );
       foreach ($tables as $table_old => $table_new) {
         if (db_table_exists($table_old)) {
@@ -516,7 +516,7 @@ function field_update_8006(&$sandbox) {
   $tables = array(
     array(
       'old_table' => 'field_data_' . $field_config['name'],
-      'new_table' => DatabaseStorageController::_fieldTableName($field),
+      'new_table' => FieldableDatabaseStorageController::_fieldTableName($field),
       'primary_key' => array(
         'entity_id',
         'deleted',
@@ -526,7 +526,7 @@ function field_update_8006(&$sandbox) {
     ),
     array(
       'old_table' => 'field_revision_' . $field_config['name'],
-      'new_table' => DatabaseStorageController::_fieldRevisionTableName($field),
+      'new_table' => FieldableDatabaseStorageController::_fieldRevisionTableName($field),
       'primary_key' => array(
         'entity_id',
         'revision_id',

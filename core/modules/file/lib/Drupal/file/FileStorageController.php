@@ -7,12 +7,12 @@
 
 namespace Drupal\file;
 
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 
 /**
  * File storage controller for files.
  */
-class FileStorageController extends DatabaseStorageControllerNG implements FileStorageControllerInterface {
+class FileStorageController extends FieldableDatabaseStorageController implements FileStorageControllerInterface {
 
   /**
    * {@inheritdoc}

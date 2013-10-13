@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 /**
  * Defines a common interface for menu link entity controller classes.
  */
-interface MenuLinkStorageControllerInterface extends EntityStorageControllerInterface {
+interface MenuLinkStorageControllerInterface {
 
   /**
    * Sets an internal flag that allows us to prevent the reparenting operations

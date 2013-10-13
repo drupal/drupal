@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_test;
 
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 
 /**
  * Defines the controller class for the test entity.
@@ -15,7 +15,7 @@ use Drupal\Core\Entity\DatabaseStorageControllerNG;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for test entities.
  */
-class EntityTestStorageController extends DatabaseStorageControllerNG {
+class EntityTestStorageController extends FieldableDatabaseStorageController {
 
   /**
    * {@inheritdoc}

@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -17,7 +17,7 @@ use Drupal\Core\Entity\EntityInterface;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for feed entities.
  */
-class FeedStorageController extends DatabaseStorageControllerNG implements FeedStorageControllerInterface {
+class FeedStorageController extends FieldableDatabaseStorageController implements FeedStorageControllerInterface {
 
   /**
    * Overrides Drupal\Core\Entity\DataBaseStorageController::attachLoad().

@@ -9,12 +9,12 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 
 /**
  * Defines a Controller class for taxonomy terms.
  */
-class TermStorageController extends DatabaseStorageControllerNG implements TermStorageControllerInterface {
+class TermStorageController extends FieldableDatabaseStorageController implements TermStorageControllerInterface {
 
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::create().

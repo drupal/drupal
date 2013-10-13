@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Upgrade;
 
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\field\Entity\Field;
 
 /**
@@ -278,7 +278,7 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
 
     // Check that pre-existing deleted field table is renamed correctly.
     $field_entity = new Field($deleted_field);
-    $table_name = DatabaseStorageController::_fieldTableName($field_entity);
+    $table_name = FieldableDatabaseStorageController::_fieldTableName($field_entity);
     $this->assertEqual("field_deleted_data_" . substr(hash('sha256', $deleted_field['uuid']), 0, 10), $table_name);
     $this->assertTrue(db_table_exists($table_name));
 

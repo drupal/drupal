@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Plugin\views\field;
 
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Language\Language;
@@ -303,7 +303,7 @@ class Field extends FieldPluginBase {
 
     $this->ensureMyTable();
     $field = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
-    $column = DatabaseStorageController::_fieldColumnName($field, $this->options['click_sort_column']);
+    $column = FieldableDatabaseStorageController::_fieldColumnName($field, $this->options['click_sort_column']);
     if (!isset($this->aliases[$column])) {
       // Column is not in query; add a sort on it (without adding the column).
       $this->aliases[$column] = $this->tableAlias . '.' . $column;

@@ -8,7 +8,7 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\Core\Entity\EntityChangedInterface;
  * This extends the Drupal\Core\Entity\DatabaseStorageController class, adding
  * required special handling for comment entities.
  */
-class CommentStorageController extends DatabaseStorageControllerNG implements CommentStorageControllerInterface {
+class CommentStorageController extends FieldableDatabaseStorageController implements CommentStorageControllerInterface {
 
   /**
    * The thread for which a lock was acquired.

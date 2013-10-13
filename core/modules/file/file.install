@@ -5,7 +5,7 @@
  * Install, update and uninstall functions for File module.
  */
 
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\field\Entity\Field;
 
 /**
@@ -271,10 +271,10 @@ function file_update_8003() {
     if (in_array($field_config->get('type'), array('file', 'image'))) {
       $field = new Field($field_config->get());
 
-      if (db_table_exists(DatabaseStorageController::_fieldTableName($field))) {
+      if (db_table_exists(FieldableDatabaseStorageController::_fieldTableName($field))) {
         $tables = array(
-          DatabaseStorageController::_fieldTableName($field),
-          DatabaseStorageController::_fieldRevisionTableName($field),
+          FieldableDatabaseStorageController::_fieldTableName($field),
+          FieldableDatabaseStorageController::_fieldRevisionTableName($field),
         );
 
         foreach ($tables as $table_name) {

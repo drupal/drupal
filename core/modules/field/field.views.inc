@@ -8,7 +8,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\field\FieldInterface;
 
@@ -70,7 +70,7 @@ function field_views_data_alter(&$data) {
 function _field_views_is_sql_entity_type(FieldInterface $field) {
   $entity_manager = \Drupal::entityManager();
   try {
-    if ($entity_manager->getStorageController($field->entity_type) instanceof DatabaseStorageController) {
+    if ($entity_manager->getStorageController($field->entity_type) instanceof FieldableDatabaseStorageController) {
       return TRUE;
     }
   }
@@ -148,13 +148,13 @@ function field_views_field_default_views_data(FieldInterface $field) {
   // Description of the field tables.
   $field_tables = array(
     EntityStorageControllerInterface::FIELD_LOAD_CURRENT => array(
-      'table' => DatabaseStorageController::_fieldTableName($field),
+      'table' => FieldableDatabaseStorageController::_fieldTableName($field),
       'alias' => "{$entity_type}__{$field_name}",
     ),
   );
   if ($supports_revisions) {
     $field_tables[EntityStorageControllerInterface::FIELD_LOAD_REVISION] = array(
-      'table' => DatabaseStorageController::_fieldRevisionTableName($field),
+      'table' => FieldableDatabaseStorageController::_fieldRevisionTableName($field),
       'alias' => "{$entity_type}_revision__{$field_name}",
     );
   }
@@ -185,7 +185,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
   // Build the list of additional fields to add to queries.
   $add_fields = array('delta', 'langcode', 'bundle');
   foreach (array_keys($field_columns) as $column) {
-    $add_fields[] = DatabaseStorageController::_fieldColumnName($field, $column);
+    $add_fields[] = FieldableDatabaseStorageController::_fieldColumnName($field, $column);
   }
   // Determine the label to use for the field. We don't have a label available
   // at the field level, so we just go through all instances and take the one
@@ -309,10 +309,10 @@ function field_views_field_default_views_data(FieldInterface $field) {
       else {
         $group = t('@group (historical data)', array('@group' => $group_name));
       }
-      $column_real_name = DatabaseStorageController::_fieldColumnName($field, $column);
+      $column_real_name = FieldableDatabaseStorageController::_fieldColumnName($field, $column);
 
       // Load all the fields from the table by default.
-      $field_sql_schema = DatabaseStorageController::_fieldSqlSchema($field);
+      $field_sql_schema = FieldableDatabaseStorageController::_fieldSqlSchema($field);
       $additional_fields = array_keys($field_sql_schema[$table]['fields']);
 
       $data[$table_alias][$column_real_name] = array(
