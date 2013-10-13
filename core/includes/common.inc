@@ -2724,10 +2724,7 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
  */
 function drupal_process_states(&$elements) {
   $elements['#attached']['library'][] = array('system', 'drupal.states');
-  $elements['#attached']['js'][] = array(
-    'type' => 'setting',
-    'data' => array('states' => array('#' . $elements['#id'] => $elements['#states'])),
-  );
+  $elements['#attributes']['data-drupal-states'] = JSON::encode($elements['#states']);
 }
 
 /**
@@ -3856,6 +3853,11 @@ function drupal_render(&$elements) {
     return '';
   }
 
+  // Add any JavaScript state information associated with the element.
+  if (!empty($elements['#states'])) {
+    drupal_process_states($elements);
+  }
+
   // Get the children of the element, sorted by weight.
   $children = element_children($elements, TRUE);
 
@@ -3899,11 +3901,6 @@ function drupal_render(&$elements) {
   // #children to be a single string as #children.
   if (!$theme_is_implemented && isset($elements['#markup'])) {
     $elements['#children'] = $elements['#markup'] . $elements['#children'];
-  }
-
-  // Add any JavaScript state information associated with the element.
-  if (!empty($elements['#states'])) {
-    drupal_process_states($elements);
   }
 
   // Add additional libraries, CSS, JavaScript an other custom

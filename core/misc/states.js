@@ -18,17 +18,17 @@ var states = Drupal.states = {
  */
 Drupal.behaviors.states = {
   attach: function (context, settings) {
-    var $context = $(context);
-    for (var selector in settings.states) {
-      if (settings.states.hasOwnProperty(selector)) {
-        for (var state in settings.states[selector]) {
-          if (settings.states[selector].hasOwnProperty(state)) {
-            new states.Dependent({
-              element: $context.find(selector),
-              state: states.State.sanitize(state),
-              constraints: settings.states[selector][state]
-            });
-          }
+    var $states = $(context).find('[data-drupal-states]');
+    var config, state;
+    for (var i = 0, il = $states.length; i < il; i += 1) {
+      config = JSON.parse($states[i].getAttribute('data-drupal-states'));
+      for (state in config) {
+        if (config.hasOwnProperty(state)) {
+          new states.Dependent({
+            element: $($states[i]),
+            state: states.State.sanitize(state),
+            constraints: config[state]
+          });
         }
       }
     }
