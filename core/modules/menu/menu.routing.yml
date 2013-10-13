@@ -24,6 +24,7 @@ menu.link_add:
   path: '/admin/structure/menu/manage/{menu}/add'
   defaults:
     _content: '\Drupal\menu\Controller\MenuController::addLink'
+    _title: 'Add menu link'
   requirements:
     _entity_create_access: 'menu_link'
 

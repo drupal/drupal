@@ -70,7 +70,7 @@ class MenuFormController extends EntityFormController {
     $menu = $this->entity;
 
     if ($this->operation == 'edit') {
-      drupal_set_title(t('Edit menu %label', array('%label' => $menu->label())), PASS_THROUGH);
+      $form['#title'] = $this->t('Edit menu %label', array('%label' => $menu->label()));
     }
 
     $form['label'] = array(

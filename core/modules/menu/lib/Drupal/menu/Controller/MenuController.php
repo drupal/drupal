@@ -88,8 +88,6 @@ class MenuController implements ContainerInjectionInterface {
    *   Returns the menu link submission form.
    */
   public function addLink(MenuInterface $menu) {
-    // @todo Remove this when https://drupal.org/node/1981644 is in.
-    drupal_set_title(t('Add menu link'));
     $menu_link = $this->menuLinkStorage->create(array(
       'mlid' => 0,
       'plid' => 0,
