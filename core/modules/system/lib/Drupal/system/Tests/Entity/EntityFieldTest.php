@@ -356,8 +356,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
     // @todo: Make this work without having to create entity objects.
     $entity = entity_create($entity_type, array());
     $definitions = $entity->getPropertyDefinitions();
-    $this->assertEqual($definitions['name']['type'], 'string_field', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']['type'], 'entity_reference_field', $entity_type .': User field found.');
+    $this->assertEqual($definitions['name']['type'], 'field_item:string', $entity_type .': Name field found.');
+    $this->assertEqual($definitions['user_id']['type'], 'field_item:entity_reference', $entity_type .': User field found.');
     $this->assertEqual($definitions['field_test_text']['type'], 'field_item:text', $entity_type .': Test-text-field field found.');
 
     // Test introspecting an entity object.
@@ -365,8 +365,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $entity = entity_create($entity_type, array());
 
     $definitions = $entity->getPropertyDefinitions();
-    $this->assertEqual($definitions['name']['type'], 'string_field', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']['type'], 'entity_reference_field', $entity_type .': User field found.');
+    $this->assertEqual($definitions['name']['type'], 'field_item:string', $entity_type .': Name field found.');
+    $this->assertEqual($definitions['user_id']['type'], 'field_item:entity_reference', $entity_type .': User field found.');
     $this->assertEqual($definitions['field_test_text']['type'], 'field_item:text', $entity_type .': Test-text-field field found.');
 
     $name_properties = $entity->name->getPropertyDefinitions();
@@ -537,7 +537,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $entity->save();
     // Create a reference field item and let it reference the entity.
     $definition = array(
-      'type' => 'entity_reference_field',
+      'type' => 'field_item:entity_reference',
       'settings' => array(
         'target_type' => 'entity_test',
       ),
@@ -564,7 +564,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Test bundle validation.
     $definition = array(
-      'type' => 'entity_reference_field',
+      'type' => 'field_item:entity_reference',
       'settings' => array(
         'target_type' => 'node',
         'target_bundle' => 'article',

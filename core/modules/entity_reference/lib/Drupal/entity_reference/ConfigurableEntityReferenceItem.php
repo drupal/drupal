@@ -2,39 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\entity_reference\Plugin\field\field_type\ConfigurableEntityReferenceItem.
+ * Contains \Drupal\entity_reference\ConfigurableEntityReferenceItem.
  */
 
-namespace Drupal\entity_reference\Plugin\field\field_type;
+namespace Drupal\entity_reference;
 
 use Drupal\field\Plugin\Type\FieldType\ConfigEntityReferenceItemBase;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
 use Drupal\field\FieldInterface;
 
 /**
- * Plugin implementation of the 'entity_reference' field type.
+ * Alternative plugin implementation of the 'entity_reference' field type.
  *
- * @FieldType(
- *   id = "entity_reference",
- *   label = @Translation("Entity Reference"),
- *   description = @Translation("This field references another entity."),
- *   settings = {
- *     "target_type" = "node"
- *   },
- *   instance_settings = {
- *     "handler" = "default",
- *     "handler_settings" = { }
- *   },
- *   default_widget = "entity_reference_autocomplete",
- *   default_formatter = "entity_reference_label",
- *   constraints = {"ValidReference" = TRUE}
- * )
+ * Replaces the Core 'entity_reference' entity field type implementation, this
+ * supports configurable fields, auto-creation of referenced entities and more.
  *
- * Extends the Core 'entity_reference' entity field item with properties for
- * revision ids, labels (for autocreate) and access.
+ * @see entity_reference_field_info_alter().
  *
- * Required settings (below the definition's 'settings' key) are:
- *  - target_type: The entity type to reference.
  */
 class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase implements ConfigFieldItemInterface {
 
@@ -84,7 +68,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
     $entity = $this->get('entity')->getValue();
     $target_id = $this->get('target_id')->getValue();
 
-    if (empty($target_id) && !empty($entity) && $entity->isNew()) {
+    if (!$target_id && !empty($entity) && $entity->isNew()) {
       $entity->save();
       $this->set('target_id', $entity->id());
     }

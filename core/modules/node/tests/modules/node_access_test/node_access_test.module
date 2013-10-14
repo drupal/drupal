@@ -83,7 +83,7 @@ function node_access_test_permission() {
 function node_access_test_entity_field_info($entity_type) {
   if ($entity_type === 'node') {
     $info['definitions']['private'] = array(
-      'type' => 'boolean_field',
+      'type' => 'field_item:boolean',
       'label' => t('Private'),
       'computed' => TRUE,
       'list' => TRUE,

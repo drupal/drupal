@@ -8,6 +8,7 @@
 namespace Drupal\field_ui\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\Component\Utility\String;
 
 /**
  * Tests the functionality of the 'Manage fields' screen.
@@ -423,7 +424,7 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet($bundle_path);
-    $this->assertFalse($this->xpath('//select[@id="edit-add-new-field-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
+    $this->assertFalse($this->xpath('//select[@id="edit-fields-add-new-field-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
 
     // Create a field and an instance programmatically.
     $field_name = 'hidden_test_field';
@@ -447,13 +448,24 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Check that the newly added instance appears on the 'Manage Fields'
     // screen.
     $this->drupalGet($bundle_path);
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $instance['label'], 'Field was created and appears in the overview page.');
+    $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="hidden-test-field"]//td[1]', $instance['label'], 'Field was created and appears in the overview page.');
 
     // Check that the instance does not appear in the 're-use existing field' row
     // on other bundles.
     $bundle_path = 'admin/structure/types/manage/article/fields/';
     $this->drupalGet($bundle_path);
     $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value=:field_name]', array(':field_name' => $field_name)), "The 're-use existing field' select respects field types 'no_ui' property.");
+
+    // Check that non-configurable fields are not available.
+    $field_types = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
+    foreach ($field_types as $field_type => $definition) {
+      if ($definition['configurable'] && empty($definition['no_ui'])) {
+        $this->assertTrue($this->xpath('//select[@id="edit-fields-add-new-field-type"]//option[@value=:field_type]', array(':field_type' => $field_type)), String::format('Configurable field type @field_type is available.', array('@field_type' => $field_type)));
+      }
+      else {
+        $this->assertFalse($this->xpath('//select[@id="edit-fields-add-new-field-type"]//option[@value=:field_type]', array(':field_type' => $field_type)), String::format('Non-configurable field type @field_type is not available.', array('@field_type' => $field_type)));
+      }
+    }
   }
 
   /**

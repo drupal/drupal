@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem.
+ * Contains \Drupal\Core\Entity\Plugin\field\field_type\EntityReferenceItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Entity\Plugin\field\field_type;
 
 use Drupal\Core\TypedData\Annotation\DataType;
 use Drupal\Core\Annotation\Translation;
@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Field\FieldItemBase;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
- * Defines the 'entity_reference_item' entity field item.
+ * Defines the 'entity_reference' entity field type.
  *
  * Supported settings (below the definition's 'settings' key) are:
  * - target_type: The entity type to reference. Required.
@@ -21,11 +21,11 @@ use Drupal\Core\TypedData\TypedDataInterface;
  *   may be referenced. May be set to an single bundle, or to an array of
  *   allowed bundles.
  *
- * @DataType(
- *   id = "entity_reference_field",
- *   label = @Translation("Entity reference field item"),
+ * @FieldType(
+ *   id = "entity_reference",
+ *   label = @Translation("Entity reference"),
  *   description = @Translation("An entity field containing an entity reference."),
- *   list_class = "\Drupal\Core\Entity\Field\FieldItemList",
+ *   configurable = FALSE,
  *   constraints = {"ValidReference" = TRUE}
  * )
  */

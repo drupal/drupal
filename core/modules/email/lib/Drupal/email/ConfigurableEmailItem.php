@@ -2,26 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\email\Plugin\field\field_type\ConfigurableEmailItem.
+ * Contains \Drupal\email\ConfigurableEmailItem.
  */
 
-namespace Drupal\email\Plugin\field\field_type;
+namespace Drupal\email;
 
-use Drupal\Core\Entity\Plugin\DataType\EmailItem;
+use Drupal\Core\Entity\Plugin\field\field_type\EmailItem;
 use Drupal\field\FieldInterface;
+use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
 
 /**
- * Plugin implementation of the 'email' field type.
+ * Alternative plugin implementation for the 'email' entity field type.
  *
- * @FieldType(
- *   id = "email",
- *   label = @Translation("E-mail"),
- *   description = @Translation("This field stores an e-mail address in the database."),
- *   default_widget = "email_default",
- *   default_formatter = "email_mailto"
- * )
+ * Replaces the default implementation and supports configurable fields.
  */
-class ConfigurableEmailItem extends EmailItem {
+class ConfigurableEmailItem extends EmailItem implements ConfigFieldItemInterface {
 
   /**
    * Defines the max length for an email address
@@ -68,5 +63,20 @@ class ConfigurableEmailItem extends EmailItem {
 
     return $constraints;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, array &$form_state, $has_data) {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function instanceSettingsForm(array $form, array &$form_state) {
+    return array();
+  }
+
 
 }

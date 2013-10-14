@@ -24,14 +24,14 @@ use Drupal\field\Field;
  * @deprecated as of Drupal 8.0. Use
  *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
  *   or
- *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions()
+ *   \Drupal::service('plugin.manager.entity.field.field_type')->getConfigurableDefinitions().
  */
 function field_info_field_types($field_type = NULL) {
   if ($field_type) {
     return \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_type);
   }
   else {
-    return \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
+    return \Drupal::service('plugin.manager.entity.field.field_type')->getConfigurableDefinitions();
   }
 }
 

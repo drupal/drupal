@@ -2,23 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\path\Plugin\DataType\PathItem.
+ * Contains \Drupal\path\Plugin\field\field_type\PathItem.
  */
 
-namespace Drupal\path\Plugin\DataType;
+namespace Drupal\path\Plugin\field\field_type;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
 
 /**
- * Defines the 'path_field' entity field item.
+ * Defines the 'path' entity field type.
  *
- * @DataType(
- *   id = "path_field",
- *   label = @Translation("Path field item"),
+ * @FieldType(
+ *   id = "path",
+ *   label = @Translation("Path"),
  *   description = @Translation("An entity field containing a path alias and related data."),
- *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
+ *   configurable = FALSE
  * )
  */
 class PathItem extends FieldItemBase {

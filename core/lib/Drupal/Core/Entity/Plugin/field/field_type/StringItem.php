@@ -2,23 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\StringItem.
+ * Contains \Drupal\Core\Entity\Plugin\field\field_type\StringItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Entity\Plugin\field\field_type;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
 
 /**
- * Defines the 'string_field' entity field item.
+ * Defines the 'string' entity field type.
  *
- * @DataType(
- *   id = "string_field",
- *   label = @Translation("String field item"),
+ * @FieldType(
+ *   id = "string",
+ *   label = @Translation("String"),
  *   description = @Translation("An entity field containing a string value."),
- *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
+ *   configurable = FALSE
  * )
  */
 class StringItem extends FieldItemBase {

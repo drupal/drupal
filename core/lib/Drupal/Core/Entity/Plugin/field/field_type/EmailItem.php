@@ -2,27 +2,24 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\EmailItem.
+ * Contains \Drupal\Core\Entity\Plugin\field\field_type\EmailItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Entity\Plugin\field\field_type;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
-use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
 
 /**
- * Defines the 'email_field' entity field item.
+ * Defines the 'email' entity field type.
  *
- * @DataType(
- *   id = "email_field",
- *   label = @Translation("E-mail field item"),
+ * @FieldType(
+ *   id = "email",
+ *   label = @Translation("E-mail"),
  *   description = @Translation("An entity field containing an e-mail value."),
- *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
+ *   configurable = FALSE
  * )
  */
-class EmailItem extends LegacyConfigFieldItem {
+class EmailItem extends FieldItemBase {
 
   /**
    * Definitions of the contained properties.
@@ -54,4 +51,5 @@ class EmailItem extends LegacyConfigFieldItem {
   public function isEmpty() {
     return $this->value === NULL || $this->value === '';
   }
+
 }

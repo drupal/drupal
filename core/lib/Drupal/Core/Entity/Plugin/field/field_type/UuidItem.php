@@ -2,24 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\UuidItem.
+ * Contains \Drupal\Core\Entity\Plugin\field\field_type\UuidItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
-
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
+namespace Drupal\Core\Entity\Plugin\field\field_type;
 
 /**
- * Defines the 'uuid_field' entity field item.
+ * Defines the 'uuid' entity field type.
  *
  * The field uses a newly generated UUID as default value.
  *
- * @DataType(
- *   id = "uuid_field",
- *   label = @Translation("UUID field item"),
+ * @FieldType(
+ *   id = "uuid",
+ *   label = @Translation("UUID"),
  *   description = @Translation("An entity field containing a UUID."),
- *   list_class = "\Drupal\Core\Entity\Field\FieldItemList",
+ *   configurable = FALSE,
  *   constraints = {
  *     "ComplexData" = {
  *       "value" = {"Length" = {"max" = 128}}

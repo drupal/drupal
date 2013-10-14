@@ -99,19 +99,23 @@ function field_help($path, $arg) {
       $items = array();
       $info = system_get_info('module');
       $field_widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
-      $field_types = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
-      foreach (array_merge($field_types, $field_widgets) as $field_module) {
-        $modules[] = $field_module['provider'];
+      $field_types = \Drupal::service('plugin.manager.entity.field.field_type')->getConfigurableDefinitions();
+      foreach (array_merge($field_types, $field_widgets) as $plugin) {
+        $providers[] = $plugin['provider'];
       }
-      $modules = array_unique($modules);
-      sort($modules);
-      foreach ($modules as $module) {
-        $display = $info[$module]['name'];
-        if (\Drupal::moduleHandler()->implementsHook($module, 'help')) {
-          $items[] = l($display, 'admin/help/' . $module);
-        }
-        else {
-          $items[] = $display;
+      $providers = array_unique($providers);
+      sort($providers);
+      foreach ($providers as $provider) {
+        // Skip plugins provided by core components as they do not implement
+        // hook_help().
+        if (isset($info[$provider]['name'])) {
+          $display = $info[$provider]['name'];
+          if (\Drupal::moduleHandler()->implementsHook($provider, 'help')) {
+            $items[] = l($display, 'admin/help/' . $provider);
+          }
+          else {
+            $items[] = $display;
+          }
         }
       }
       $item_list = array(

@@ -19,7 +19,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
    *
    * @var string
    */
-  protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem';
+  protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\Plugin\field\field_type\EntityReferenceItem';
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()

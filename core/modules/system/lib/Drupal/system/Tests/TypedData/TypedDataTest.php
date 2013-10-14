@@ -548,7 +548,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Test validating property containers and make sure the NotNull and Null
     // constraints work with typed data containers.
     $definition = array(
-      'type' => 'integer_field',
+      'type' => 'field_item:integer',
       'constraints' => array(
         'NotNull' => array(),
       ),
@@ -569,7 +569,7 @@ class TypedDataTest extends DrupalUnitTestBase {
 
     // Test the Null constraint with typed data containers.
     $definition = array(
-      'type' => 'float_field',
+      'type' => 'field_item:float',
       'constraints' => array(
         'Null' => array(),
       ),
@@ -605,7 +605,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Test validating a list of a values and make sure property paths starting
     // with "0" are created.
     $definition = array(
-      'type' => 'integer_field',
+      'type' => 'field_item:integer',
       'list' => TRUE,
     );
     $violations = $this->typedData->create($definition, array(array('value' => 10)))->validate();

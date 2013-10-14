@@ -25,7 +25,6 @@ class FieldTypePluginManager extends DefaultPluginManager {
   protected $defaults = array(
     'settings' => array(),
     'instance_settings' => array(),
-    'list_class' => '\Drupal\field\Plugin\Type\FieldType\ConfigFieldItemList',
   );
 
   /**
@@ -49,6 +48,21 @@ class FieldTypePluginManager extends DefaultPluginManager {
     // @todo Remove once all core field types have been converted (see
     // http://drupal.org/node/2014671).
     $this->discovery = new LegacyFieldTypeDiscoveryDecorator($this->discovery, $module_handler);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    parent::processDefinition($definition, $plugin_id);
+    if (!isset($definition['list_class'])) {
+      if ($definition['configurable']) {
+        $definition['list_class'] = '\Drupal\field\Plugin\Type\FieldType\ConfigFieldItemList';
+      }
+      else {
+        $definition['list_class'] = '\Drupal\Core\Entity\Field\FieldItemList';
+      }
+    }
   }
 
   /**
@@ -79,6 +93,19 @@ class FieldTypePluginManager extends DefaultPluginManager {
   public function getDefaultInstanceSettings($type) {
     $info = $this->getDefinition($type);
     return isset($info['instance_settings']) ? $info['instance_settings'] : array();
+  }
+
+  /**
+   * Gets the definition of all field types that are configurable.
+   *
+   * @return array
+   *   An array of field type definitions.
+   */
+  public function getConfigurableDefinitions() {
+    $definitions = $this->getDefinitions();
+    return array_filter($definitions, function ($definition) {
+      return $definition['configurable'];
+    });
   }
 
 }

@@ -2,23 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\DateItem.
+ * Contains \Drupal\Core\Entity\Plugin\field\field_type\DateItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Entity\Plugin\field\field_type;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
 
 /**
- * Defines the 'date_field' entity field item.
+ * Defines the 'date' entity field type.
  *
- * @DataType(
- *   id = "date_field",
- *   label = @Translation("Date field item"),
+ * @FieldType(
+ *   id = "date",
+ *   label = @Translation("Date"),
  *   description = @Translation("An entity field containing a date value."),
- *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
+ *   configurable = FALSE
  * )
  */
 class DateItem extends FieldItemBase {

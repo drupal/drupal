@@ -2,23 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\IntegerItem.
+ * Contains \Drupal\Core\Entity\Plugin\field\field_type\IntegerItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Entity\Plugin\field\field_type;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
 
 /**
- * Defines the 'integer_field' entity field item.
+ * Defines the 'integer' entity field type.
  *
- * @DataType(
- *   id = "integer_field",
- *   label = @Translation("Integer field item"),
+ * @FieldType(
+ *   id = "integer",
+ *   label = @Translation("Integer"),
  *   description = @Translation("An entity field containing an integer value."),
- *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
+ *   configurable = FALSE
  * )
  */
 class IntegerItem extends FieldItemBase {

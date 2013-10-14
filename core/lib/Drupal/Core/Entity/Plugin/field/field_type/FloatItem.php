@@ -2,23 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\FloatItem.
+ * Contains \Drupal\Core\Entity\Plugin\field\field_type\FloatItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Entity\Plugin\field\field_type;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
 
 /**
- * Defines the 'float_field' entity field item.
+ * Defines the 'float' entity field type.
  *
- * @DataType(
- *   id = "float_field",
- *   label = @Translation("Float field item"),
+ * @FieldType(
+ *   id = "float",
+ *   label = @Translation("Float"),
  *   description = @Translation("An entity field containing an float value."),
- *   list_class = "\Drupal\Core\Entity\Field\Field"
+ *   configurable = FALSE
  * )
  */
 class FloatItem extends FieldItemBase {

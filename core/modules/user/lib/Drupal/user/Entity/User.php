@@ -59,6 +59,13 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
+  public function isNew() {
+    return !empty($this->enforceIsNew) || $this->id() === NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
 

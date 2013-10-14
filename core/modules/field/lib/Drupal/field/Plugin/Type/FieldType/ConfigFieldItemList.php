@@ -40,7 +40,15 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
     if (!isset($this->instance)) {
       $entity = $this->getEntity();
       $instances = FieldAPI::fieldInfo()->getBundleInstances($entity->entityType(), $entity->bundle());
-      $this->instance = $instances[$this->getName()];
+      if (isset($instances[$this->getName()])) {
+        $this->instance = $instances[$this->getName()];
+      }
+      else {
+        // For base fields, fall back to the parent implementation.
+        // @todo: Inject the field definition with
+        //   https://drupal.org/node/2047229.
+        return parent::getFieldDefinition();
+      }
     }
     return $this->instance;
   }

@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Plugin\field\field_type;
 
-use Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem;
+use Drupal\Core\Entity\Plugin\field\field_type\EntityReferenceItem;
 use Drupal\field\FieldInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
 

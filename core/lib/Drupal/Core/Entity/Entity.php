@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 

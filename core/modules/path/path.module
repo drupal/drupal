@@ -217,7 +217,7 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
 function path_entity_field_info($entity_type) {
   if ($entity_type === 'taxonomy_term' || $entity_type === 'node') {
     $info['definitions']['path'] = array(
-      'type' => 'path_field',
+      'type' => 'field_item:path',
       'label' => t('The path alias'),
       'computed' => TRUE,
       'list' => TRUE,

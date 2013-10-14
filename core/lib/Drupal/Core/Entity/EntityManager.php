@@ -471,8 +471,16 @@ class EntityManager extends PluginManagerBase {
       }
       else {
         $class = $this->factory->getPluginClass($entity_type, $this->getDefinition($entity_type));
+
+        $base_definitions = $class::baseFieldDefinitions($entity_type);
+        foreach ($base_definitions as &$base_definition) {
+          // Support old-style field types to avoid that all base field
+          // definitions need to be changed.
+          // @todo: Remove after https://drupal.org/node/2047229.
+          $base_definition['type'] = preg_replace('/(.+)_field/', 'field_item:$1', $base_definition['type']);
+        }
         $this->entityFieldInfo[$entity_type] = array(
-          'definitions' => $class::baseFieldDefinitions($entity_type),
+          'definitions' => $base_definitions,
           // Contains definitions of optional (per-bundle) fields.
           'optional' => array(),
           // An array keyed by bundle name containing the optional fields added

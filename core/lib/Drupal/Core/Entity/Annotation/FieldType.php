@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Annotation;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\TypedData\Annotation\DataType;
 
 /**
  * Defines a FieldType annotation object.
@@ -17,7 +17,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Annotation
  */
-class FieldType extends Plugin {
+class FieldType extends DataType {
 
   /**
    * The plugin ID.
@@ -103,8 +103,6 @@ class FieldType extends Plugin {
   /**
    * A boolean stating that fields of this type are configurable.
    *
-   * @todo: Make field module respect this.
-   *
    * @var boolean
    */
   public $configurable = TRUE;
@@ -112,10 +110,13 @@ class FieldType extends Plugin {
   /**
    * A boolean stating that fields of this type cannot be created through the UI.
    *
-   * If TRUE, fields of this type can only be created programmatically.
-   *
    * @var boolean
    */
   public $no_ui = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
+  public $list_class;
 
 }

@@ -2,23 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\UriItem.
+ * Contains \Drupal\Core\Entity\Plugin\field\field_type\UriItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Entity\Plugin\field\field_type;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
 
 /**
- * Defines the 'uri_field' entity field item.
+ * Defines the 'uri' entity field type.
  *
- * @DataType(
- *   id = "uri_field",
- *   label = @Translation("URI field item"),
+ * @FieldType(
+ *   id = "uri",
+ *   label = @Translation("URI"),
  *   description = @Translation("An entity field containing a URI."),
- *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
+ *   configurable = FALSE
  * )
  */
 class UriItem extends FieldItemBase {
