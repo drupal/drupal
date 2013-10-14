@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Image;
 
 use Drupal\Core\Image\ImageInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\Component\Utility\String;
 
 /**
  * Test the core GD image manipulation functions.
@@ -222,13 +223,13 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         // Load up a fresh image.
         $image = $image_factory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
         if (!$image) {
-          $this->fail(t('Could not load image %file.', array('%file' => $file)));
+          $this->fail(String::format('Could not load image %file.', array('%file' => $file)));
           continue 2;
         }
 
         // All images should be converted to truecolor when loaded.
         $image_truecolor = imageistruecolor($image->getResource());
-        $this->assertTrue($image_truecolor, format_string('Image %file after load is a truecolor image.', array('%file' => $file)));
+        $this->assertTrue($image_truecolor, String::format('Image %file after load is a truecolor image.', array('%file' => $file)));
 
         if ($image->getType() == IMAGETYPE_GIF) {
           if ($op == 'desaturate') {
@@ -259,8 +260,8 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
         $image->save($directory . '/' . $op . '.' . $image->getExtension());
 
-        $this->assertTrue($correct_dimensions_real, format_string('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
-        $this->assertTrue($correct_dimensions_object, format_string('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
+        $this->assertTrue($correct_dimensions_real, String::format('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
+        $this->assertTrue($correct_dimensions_object, String::format('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
 
         // JPEG colors will always be messed up due to compression.
         if ($image->getType() != IMAGETYPE_JPEG) {
@@ -287,7 +288,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
             }
             $color = $this->getPixelColor($image, $x, $y);
             $correct_colors = $this->colorsAreEqual($color, $corner);
-            $this->assertTrue($correct_colors, format_string('Image %file object after %action action has the correct color placement at corner %corner.', array('%file' => $file, '%action' => $op, '%corner' => $key)));
+            $this->assertTrue($correct_colors, String::format('Image %file object after %action action has the correct color placement at corner %corner.', array('%file' => $file, '%action' => $op, '%corner' => $key)));
           }
         }
       }
