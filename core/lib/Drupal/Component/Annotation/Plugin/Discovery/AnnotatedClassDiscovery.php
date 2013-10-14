@@ -2,13 +2,14 @@
 
 /**
  * @file
- * Contains Drupal\Component\Plugin\Discovery\AnnotatedClassDiscovery.
+ * Contains \Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery.
  */
 
-namespace Drupal\Component\Plugin\Discovery;
+namespace Drupal\Component\Annotation\Plugin\Discovery;
 
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
-use Drupal\Component\Reflection\MockFileFinder;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 

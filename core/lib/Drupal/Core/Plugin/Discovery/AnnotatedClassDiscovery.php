@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Plugin\Discovery;
 
-use Drupal\Component\Plugin\Discovery\AnnotatedClassDiscovery as ComponentAnnotatedClassDiscovery;
+use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery as ComponentAnnotatedClassDiscovery;
 
 /**
  * Defines a discovery mechanism to find annotated plugins in PSR-0 namespaces.

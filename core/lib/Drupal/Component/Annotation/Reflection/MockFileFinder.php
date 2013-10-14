@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Reflection\MockFileFinder.
+ * Contains \Drupal\Component\Annotation\Reflection\MockFileFinder.
  */
 
-namespace Drupal\Component\Reflection;
+namespace Drupal\Component\Annotation\Reflection;
 
 use Doctrine\Common\Reflection\ClassFinderInterface;
 
