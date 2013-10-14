@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
@@ -123,6 +124,7 @@ class DeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterf
       $count = count($this->nodes);
       watchdog('content', 'Deleted @count posts.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));
+      Cache::invalidateTags(array('content' => TRUE));
     }
     $form_state['redirect'] = 'admin/content';
   }

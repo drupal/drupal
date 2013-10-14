@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -95,6 +96,7 @@ class NodeDeleteForm extends ContentEntityConfirmFormBase {
     watchdog('content', '@type: deleted %title.', array('@type' => $this->entity->bundle(), '%title' => $this->entity->label()));
     $node_type = $this->nodeTypeStorage->load($this->entity->bundle())->label();
     drupal_set_message(t('@type %title has been deleted.', array('@type' => $node_type, '%title' => $this->entity->label())));
+    Cache::invalidateTags(array('content' => TRUE));
     $form_state['redirect'] = '<front>';
   }
 
