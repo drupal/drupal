@@ -34,7 +34,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $query = db_select('test_task', 't');
     $people_alias = $query->join('test', 'p', 't.pid = p.id');
     $name_field = $query->addField($people_alias, 'name', 'name');
-    $task_field = $query->addField('t', 'task', 'task');
+    $query->addField('t', 'task', 'task');
     $priority_field = $query->addField('t', 'priority', 'priority');
 
     $query->orderBy($priority_field);
@@ -59,8 +59,8 @@ class SelectComplexTest extends DatabaseTestBase {
     $query = db_select('test', 'p');
     $people_alias = $query->leftJoin('test_task', 't', 't.pid = p.id');
     $name_field = $query->addField('p', 'name', 'name');
-    $task_field = $query->addField($people_alias, 'task', 'task');
-    $priority_field = $query->addField($people_alias, 'priority', 'priority');
+    $query->addField($people_alias, 'task', 'task');
+    $query->addField($people_alias, 'priority', 'priority');
 
     $query->orderBy($name_field);
     $result = $query->execute();
@@ -71,7 +71,6 @@ class SelectComplexTest extends DatabaseTestBase {
     foreach ($result as $record) {
       $num_records++;
       $this->assertTrue(strcmp($record->$name_field, $last_name) >= 0, 'Results returned in correct order.');
-      $last_priority = $record->$name_field;
     }
 
     $this->assertEqual($num_records, 8, 'Returned the correct number of rows.');
@@ -154,17 +153,12 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   function testRange() {
     $query = db_select('test');
-    $name_field = $query->addField('test', 'name');
-    $age_field = $query->addField('test', 'age', 'age');
+    $query->addField('test', 'name');
+    $query->addField('test', 'age', 'age');
     $query->range(0, 2);
     $result = $query->execute();
 
-    $num_records = 0;
-    foreach ($result as $record) {
-      $num_records++;
-    }
-
-    $this->assertEqual($num_records, 2, 'Returned the correct number of rows.');
+    $this->assertEqual($result->rowCount(), 2, 'Returned the correct number of rows.');
   }
 
   /**
@@ -172,16 +166,11 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   function testDistinct() {
     $query = db_select('test_task');
-    $task_field = $query->addField('test_task', 'task');
+    $query->addField('test_task', 'task');
     $query->distinct();
     $result = $query->execute();
 
-    $num_records = 0;
-    foreach ($result as $record) {
-      $num_records++;
-    }
-
-    $this->assertEqual($num_records, 6, 'Returned the correct number of rows.');
+    $this->assertEqual($result->rowCount(), 6, 'Returned the correct number of rows.');
   }
 
   /**
@@ -269,7 +258,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   function testCountQueryDistinct() {
     $query = db_select('test_task');
-    $task_field = $query->addField('test_task', 'task');
+    $query->addField('test_task', 'task');
     $query->distinct();
 
     $count = $query->countQuery()->execute()->fetchField();
@@ -282,7 +271,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   function testCountQueryGroupBy() {
     $query = db_select('test_task');
-    $pid_field = $query->addField('test_task', 'pid');
+    $query->addField('test_task', 'pid');
     $query->groupBy('pid');
 
     $count = $query->countQuery()->execute()->fetchField();
@@ -292,7 +281,7 @@ class SelectComplexTest extends DatabaseTestBase {
     // Use a column alias as, without one, the query can succeed for the wrong
     // reason.
     $query = db_select('test_task');
-    $pid_field = $query->addField('test_task', 'pid', 'pid_alias');
+    $query->addField('test_task', 'pid', 'pid_alias');
     $query->addExpression('COUNT(test_task.task)', 'count');
     $query->groupBy('pid_alias');
     $query->orderBy('pid_alias', 'asc');
