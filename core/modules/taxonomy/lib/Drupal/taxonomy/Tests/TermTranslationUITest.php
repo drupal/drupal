@@ -90,9 +90,9 @@ class TermTranslationUITest extends ContentTranslationUITest {
     // Make sure that no row was inserted for taxonomy vocabularies, which do
     // not have translations enabled.
     $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
-    $this->assertEqual(2, count($rows));
-    $this->assertEqual('taxonomy_term', $rows[0]->entity_type);
-    $this->assertEqual('taxonomy_term', $rows[1]->entity_type);
+    foreach ($rows as $row) {
+      $this->assertEqual('taxonomy_term', $row->entity_type);
+    }
   }
 
   /**

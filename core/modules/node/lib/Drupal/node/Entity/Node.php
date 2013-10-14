@@ -359,6 +359,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       'property_constraints' => array(
         'value' => array('Length' => array('max' => 255)),
       ),
+      'translatable' => TRUE,
     );
     $properties['uid'] = array(
       'label' => t('User ID'),

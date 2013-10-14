@@ -16,11 +16,6 @@ use Drupal\content_translation\Tests\ContentTranslationUITest;
 class NodeTranslationUITest extends ContentTranslationUITest {
 
   /**
-   * The title of the test node.
-   */
-  protected $title;
-
-  /**
    * Modules to enable.
    *
    * @var array
@@ -38,7 +33,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   function setUp() {
     $this->entityType = 'node';
     $this->bundle = 'article';
-    $this->title = $this->randomName();
     parent::setUp();
     $this->drupalPlaceBlock('system_help_block', array('region' => 'content'));
   }
@@ -62,8 +56,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
-    // Node title is not translatable yet, hence we use a fixed value.
-    return array('title' => $this->title) + parent::getNewEntityValues($langcode);
+    return array('title' => $this->randomName()) + parent::getNewEntityValues($langcode);
   }
 
   /**

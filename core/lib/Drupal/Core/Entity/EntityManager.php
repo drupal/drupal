@@ -489,13 +489,23 @@ class EntityManager extends PluginManagerBase {
         $hooks = array('entity_field_info', $entity_type . '_field_info');
         $this->moduleHandler->alter($hooks, $this->entityFieldInfo[$entity_type], $entity_type);
 
-        // Enforce fields to be multiple by default.
-        foreach ($this->entityFieldInfo[$entity_type]['definitions'] as &$definition) {
-          $definition['list'] = TRUE;
+        // Enforce fields to be multiple and untranslatable by default.
+        $entity_info = $this->getDefinition($entity_type);
+        $keys = array_intersect_key(array_filter($entity_info['entity_keys']), array_flip(array('id', 'revision', 'uuid', 'bundle')));
+        $untranslatable_fields = array_flip(array('langcode') + $keys);
+        foreach (array('definitions', 'optional') as $key) {
+          foreach ($this->entityFieldInfo[$entity_type][$key] as $name => &$definition) {
+            $definition['list'] = TRUE;
+            // Ensure ids and langcode fields are never made translatable.
+            if (isset($untranslatable_fields[$name]) && !empty($definition['translatable'])) {
+              throw new \LogicException(format_string('The @field field cannot be translatable.', array('@field' => $definition['label'])));
+            }
+            if (!isset($definition['translatable'])) {
+              $definition['translatable'] = FALSE;
+            }
+          }
         }
-        foreach ($this->entityFieldInfo[$entity_type]['optional'] as &$definition) {
-          $definition['list'] = TRUE;
-        }
+
         $this->cache->set($cid, $this->entityFieldInfo[$entity_type], CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE, 'entity_field_info' => TRUE));
       }
     }

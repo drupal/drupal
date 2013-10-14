@@ -20,7 +20,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'comment', 'field_ui');
+  public static $modules = array('language', 'content_translation', 'node', 'comment', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -114,6 +114,17 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertFieldChecked('edit-language-configuration-content-translation');
+
+    // Test that the title field of nodes is available in the settings form.
+    $edit = array(
+      'entity_types[node]' => TRUE,
+      'settings[node][article][settings][language][langcode]' => 'current_interface',
+      'settings[node][article][settings][language][language_show]' => TRUE,
+      'settings[node][article][translatable]' => TRUE,
+      'settings[node][article][fields][title]' => TRUE
+    );
+    $this->assertSettings('node', NULL, TRUE, $edit);
+
   }
 
   /**

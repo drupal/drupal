@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
+use Drupal\field\Field as FieldService;
 
 /**
  * Returns a form element to configure field synchronization.
@@ -73,6 +74,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
   $form['#attached']['js'][] = array('data' => drupal_get_path('module', 'content_translation') . '/content_translation.admin.js', 'type' => 'file');
 
   $dependent_options_settings = array();
+  $entity_manager = Drupal::entityManager();
   foreach ($form['#labels'] as $entity_type => $label) {
     $entity_info = entity_get_info($entity_type);
     foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
@@ -84,30 +86,50 @@ function _content_translation_form_language_content_settings_form_alter(array &$
       // Only show the checkbox to enable translation if the bundles in the
       // entity might have fields and if there are fields to translate.
       if (!empty($entity_info['fieldable'])) {
-        $instances = field_info_instances($entity_type, $bundle);
-        if ($instances) {
+        $fields = $entity_manager->getFieldDefinitions($entity_type, $bundle);
+        if ($fields) {
           $form['settings'][$entity_type][$bundle]['translatable'] = array(
             '#type' => 'checkbox',
             '#title' => $bundle,
             '#default_value' => content_translation_enabled($entity_type, $bundle),
           );
 
-          // @todo Exploit field definitions once all core entities and field
-          // types are migrated to the Entity Field API.
-          foreach ($instances as $field_name => $instance) {
-            $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
-              '#label' => $instance->getFieldLabel(),
-              '#type' => 'checkbox',
-              '#title' => $instance->getFieldLabel(),
-              '#default_value' => $instance->isFieldTranslatable(),
-            );
-            $column_element = content_translation_field_sync_widget($instance);
-            if ($column_element) {
-              $form['settings'][$entity_type][$bundle]['columns'][$field_name] = $column_element;
+          $field_settings = content_translation_get_config($entity_type, $bundle, 'fields');
+          foreach ($fields as $field_name => $definition) {
+            $translatable = !empty($field_settings[$field_name]);
 
-              if (isset($column_element['#options']['file'])) {
-                $dependent_options_settings["settings[{$entity_type}][{$bundle}][columns][{$field_name}]"] = array('file');
+            // We special case Field API fields as they always natively support
+            // translation.
+            // @todo Remove this special casing as soon as configurable and
+            //   base field definitions are "unified".
+            if (!empty($definition['configurable']) && ($field = FieldService::fieldInfo()->getField($entity_type, $field_name))) {
+              $instance = FieldService::fieldInfo()->getInstance($entity_type, $bundle, $field_name);
+              $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
+                '#label' => $instance->getFieldLabel(),
+                '#type' => 'checkbox',
+                '#title' => $instance->getFieldLabel(),
+                '#default_value' => $translatable,
+              );
+              $column_element = content_translation_field_sync_widget($instance);
+              if ($column_element) {
+                $form['settings'][$entity_type][$bundle]['columns'][$field_name] = $column_element;
+
+                // @todo This should not concern only files.
+                if (isset($column_element['#options']['file'])) {
+                  $dependent_options_settings["settings[{$entity_type}][{$bundle}][columns][{$field_name}]"] = array('file');
+                }
               }
+            }
+            // Instead we need to rely on field definitions to determine whether
+            // fields support translation. Whether they are actually enabled is
+            // determined through our settings. As a consequence only fields
+            // that support translation can be enabled or disabled.
+            elseif (isset($field_settings[$field_name]) || !empty($definition['translatable'])) {
+              $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
+                '#label' => $definition['label'],
+                '#type' => 'checkbox',
+                '#default_value' => $translatable,
+              );
             }
           }
         }
@@ -326,11 +348,11 @@ function _content_translation_update_field_translatability($settings) {
         foreach ($bundle_settings['fields'] as $field_name => $translatable) {
           // If a field is enabled for translation for at least one instance we
           // need to mark it as translatable.
-          $fields[$entity_type][$field_name] = $translatable || !empty($fields[$entity_type][$field_name]);
+          if (FieldService::fieldInfo()->getField($entity_type, $field_name)) {
+            $fields[$entity_type][$field_name] = $translatable || !empty($fields[$entity_type][$field_name]);
+          }
         }
       }
-      // @todo Store non-configurable field settings to be able to alter their
-      //   definition afterwards.
     }
   }
 
