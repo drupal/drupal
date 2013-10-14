@@ -74,6 +74,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->addExistingField();
     $this->cardinalitySettings();
     $this->fieldListAdminPage();
+    $this->deleteFieldInstance();
   }
 
   /**
@@ -206,6 +207,17 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalGet($field_edit_path);
     $this->assertFieldByXPath("//select[@name='field[cardinality]']", FIELD_CARDINALITY_UNLIMITED);
     $this->assertFieldByXPath("//input[@name='field[cardinality_number]']", 1);
+  }
+
+  /**
+   * Tests deleting a field from the instance edit form.
+   */
+  protected function deleteFieldInstance() {
+    // Delete the field instance.
+    $instance_id = 'node.' . $this->type . '.' . $this->field_name;
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id);
+    $this->drupalPostForm(NULL, array(), t('Delete field'));
+    $this->assertResponse(200);
   }
 
   /**
