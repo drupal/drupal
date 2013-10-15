@@ -110,7 +110,6 @@ class CommentFormController extends ContentEntityFormController {
     if ($is_admin) {
       $author = $comment->name->value;
       $status = (isset($comment->status->value) ? $comment->status->value : COMMENT_NOT_PUBLISHED);
-      $date = (!empty($comment->date) ? $comment->date : DrupalDateTime::createFromTimestamp($comment->created->value));
       if (empty($form_state['comment_preview'])) {
         $form['#title'] = $this->t('Edit comment %title', array(
           '%title' => $comment->subject->value,
@@ -125,7 +124,11 @@ class CommentFormController extends ContentEntityFormController {
         $author = ($comment->name->value ? $comment->name->value : '');
       }
       $status = ($this->currentUser->hasPermission('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
-      $date = '';
+    }
+
+    $date = '';
+    if ($comment->id()) {
+      $date = !empty($comment->date) ? $comment->date : DrupalDateTime::createFromTimestamp($comment->created->value);
     }
 
     // Add the author name field depending on the current user.
