@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Access subscriber for controller requests.
+ * Allows manipulation of the response object when performing a redirect.
  */
 class RedirectResponseSubscriber implements EventSubscriberInterface {
 

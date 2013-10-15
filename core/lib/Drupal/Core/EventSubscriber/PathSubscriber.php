@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\EventSubscriber\PathSubscriber.
+ * Contains \Drupal\Core\EventSubscriber\PathSubscriber.
  */
 
 namespace Drupal\Core\EventSubscriber;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Access subscriber for controller requests.
+ * Provides a path subscriber that converts path aliases.
  */
 class PathSubscriber extends PathListenerBase implements EventSubscriberInterface {
 
