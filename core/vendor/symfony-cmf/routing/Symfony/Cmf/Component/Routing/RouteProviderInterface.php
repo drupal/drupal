@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -38,11 +48,11 @@ interface RouteProviderInterface
     public function getRouteCollectionForRequest(Request $request);
 
     /**
-     * Find the route using the provided route name (and parameters)
+     * Find the route using the provided route name.
      *
      * @param string $name       the route name to fetch
-     * @param array  $parameters the parameters as they are passed to the
-     *      UrlGeneratorInterface::generate call
+     * @param array  $parameters DEPRECATED the parameters as they are passed
+     *      to the UrlGeneratorInterface::generate call
      *
      * @return \Symfony\Component\Routing\Route
      *
@@ -52,19 +62,20 @@ interface RouteProviderInterface
     public function getRouteByName($name, $parameters = array());
 
     /**
-     * Find many routes by their names using the provided list of names
+     * Find many routes by their names using the provided list of names.
      *
      * Note that this method may not throw an exception if some of the routes
-     * are not found. It will just return the list of those routes it found.
+     * are not found or are not actually Route instances. It will just return the
+     * list of those Route instances it found.
      *
      * This method exists in order to allow performance optimizations. The
      * simple implementation could be to just repeatedly call
-     * $this->getRouteByName()
+     * $this->getRouteByName() while catching and ignoring eventual exceptions.
      *
      * @param array $names      the list of names to retrieve
-     * @param array $parameters the parameters as they are passed to the
-     *      UrlGeneratorInterface::generate call. (Only one array, not one for
-     *      each entry in $names.
+     * @param array $parameters DEPRECATED the parameters as they are passed to
+     *      the UrlGeneratorInterface::generate call. (Only one array, not one
+     *      for each entry in $names.
      *
      * @return \Symfony\Component\Routing\Route[] iterable thing with the keys
      *      the names of the $names argument.

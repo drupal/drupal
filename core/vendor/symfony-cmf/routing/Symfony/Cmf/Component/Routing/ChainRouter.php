@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing;
 
 use Symfony\Component\Routing\RouterInterface;
@@ -168,6 +178,7 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
                     if (null === $request) {
                         $request = Request::create($url);
                     }
+
                     return $router->matchRequest($request);
                 }
                 // every router implements the match method
@@ -217,9 +228,7 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
             try {
                 return $router->generate($name, $parameters, $absolute);
             } catch (RouteNotFoundException $e) {
-                $hint = ($router instanceof VersatileGeneratorInterface)
-                    ? $router->getRouteDebugMessage($name, $parameters)
-                    : "Route '$name' not found";
+                $hint = $this->getErrorMessage($name, $router, $parameters);
                 $debug[] = $hint;
                 if ($this->logger) {
                     $this->logger->info('Router '.get_class($router)." was unable to generate route. Reason: '$hint': ".$e->getMessage());
@@ -231,10 +240,26 @@ class ChainRouter implements RouterInterface, RequestMatcherInterface, WarmableI
             $debug = array_unique($debug);
             $info = implode(', ', $debug);
         } else {
-            $info = "No route '$name' found";
+            $info = $this->getErrorMessage($name);
         }
 
         throw new RouteNotFoundException(sprintf('None of the chained routers were able to generate route: %s', $info));
+    }
+
+    private function getErrorMessage($name, $router = null, $parameters = null)
+    {
+        if ($router instanceof VersatileGeneratorInterface) {
+            $displayName = $router->getRouteDebugMessage($name, $parameters);
+        } elseif (is_object($name)) {
+            $displayName = method_exists($name, '__toString')
+                ? (string) $name
+                : get_class($name)
+            ;
+        } else {
+            $displayName = (string) $name;
+        }
+
+        return "Route '$displayName' not found";
     }
 
     /**

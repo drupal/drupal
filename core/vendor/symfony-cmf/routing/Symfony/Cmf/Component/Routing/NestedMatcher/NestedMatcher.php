@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing\NestedMatcher;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
-use Symfony\Component\Routing\Route;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
 /**
@@ -55,17 +64,28 @@ class NestedMatcher implements RequestMatcherInterface
     /**
      * Constructs a new NestedMatcher
      *
-     * @param RouteProviderInterface $provider The Route Provider this matcher should use.
+     * @param RouteProviderInterface $provider The route provider this matcher
+     *                                         should use
+     * @param FinalMatcherInterface $final The Final Matcher to match the
+     *                                         routes
      */
-    public function __construct(RouteProviderInterface $provider)
-    {
-        $this->routeProvider = $provider;
+    public function __construct(
+        RouteProviderInterface $provider = null,
+        FinalMatcherInterface $final = null
+    ) {
+        if (null !== $provider) {
+            $this->setRouteProvider($provider);
+        }
+        if (null !== $final) {
+            $this->setFinalMatcher($final);
+        }
     }
 
     /**
      * Sets the route provider for the matching plan.
      *
-     * @param RouteProviderInterface $provider A route provider. It is responsible for its own configuration.
+     * @param RouteProviderInterface $provider A route provider. It is
+     *      responsible for its own configuration.
      *
      * @return NestedMatcher this object to have a fluent interface
      */
@@ -82,7 +102,8 @@ class NestedMatcher implements RequestMatcherInterface
      * Partial matchers will be run in the order in which they are added.
      *
      * @param RouteFilterInterface $filter
-     * @param int                  $priority (optional) The priority of the filter. Higher number filters will be used first. Default to 0.
+     * @param int                  $priority (optional) The priority of the
+     *      filter. Higher number filters will be used first. Default to 0.
      *
      * @return NestedMatcher this object to have a fluent interface
      */
@@ -101,7 +122,8 @@ class NestedMatcher implements RequestMatcherInterface
     /**
      * Sets the final matcher for the matching plan.
      *
-     * @param FinalMatcherInterface $final The final matcher that will have to pick the route that will be used.
+     * @param FinalMatcherInterface $final The final matcher that will have to
+     *      pick the route that will be used.
      *
      * @return NestedMatcher this object to have a fluent interface
      */
@@ -122,7 +144,7 @@ class NestedMatcher implements RequestMatcherInterface
             throw new ResourceNotFoundException();
         }
 
-        // Route Filters are expected to throw an exception themselves if they
+        // Route filters are expected to throw an exception themselves if they
         // end up filtering the list down to 0.
         foreach ($this->getRouteFilters() as $filter) {
             $collection = $filter->filter($collection, $request);

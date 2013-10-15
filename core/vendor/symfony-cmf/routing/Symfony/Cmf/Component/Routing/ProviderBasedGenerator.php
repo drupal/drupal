@@ -1,14 +1,25 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing;
 
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Route as SymfonyRoute;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Psr\Log\LoggerInterface;
-
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
+
+use Psr\Log\LoggerInterface;
 
 /**
  * A Generator that uses a RouteProvider rather than a RouteCollection
@@ -28,6 +39,7 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
     {
         $this->provider = $provider;
         $this->logger = $logger;
+        $this->context = new RequestContext();
     }
 
     /**
@@ -45,7 +57,9 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
         $compiledRoute = $route->compile();
         $hostTokens = $compiledRoute->getHostTokens();
 
-        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $name, $absolute, $hostTokens);
+        $debug_message = $this->getRouteDebugMessage($name);
+
+        return $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route->getRequirements(), $compiledRoute->getTokens(), $parameters, $debug_message, $absolute, $hostTokens);
     }
 
     /**
@@ -63,6 +77,14 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
      */
     public function getRouteDebugMessage($name, array $parameters = array())
     {
+        if (is_scalar($name)) {
+            return $name;
+        }
+
+        if (is_array($name)) {
+            return serialize($name);
+        }
+
         if ($name instanceof RouteObjectInterface) {
             return 'Route with key ' . $name->getRouteKey();
         }
@@ -71,7 +93,7 @@ class ProviderBasedGenerator extends UrlGenerator implements VersatileGeneratorI
             return 'Route with pattern ' . $name->getPattern();
         }
 
-        return $name;
+        return get_class($name);
     }
 
 }

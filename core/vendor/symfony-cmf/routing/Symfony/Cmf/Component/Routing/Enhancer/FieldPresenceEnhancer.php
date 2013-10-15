@@ -1,35 +1,53 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing\Enhancer;
 
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This enhancer can set a field to a fixed value if an other field is present.
+ * This enhancer sets a field to a fixed value. You can specify a source field
+ * name to only set the target field if the source is present.
  *
  * @author David Buchmann
  */
 class FieldPresenceEnhancer implements RouteEnhancerInterface
 {
     /**
-     * @var string field for the source class
+     * Field name for the source field that must exist. If null, the target
+     * field is always set if not already present.
+     *
+     * @var string|null
      */
     protected $source;
+
     /**
-     * @var string field to write hashmap lookup result into
+     * Field name to write the value into.
+     *
+     * @var string
      */
     protected $target;
+
     /**
-     * value to set the target field to
+     * Value to set the target field to.
      *
      * @var string
      */
     private $value;
 
     /**
-     * @param string $source the field name of the class
-     * @param string $target the field name to set from the map
-     * @param string $value  value to set target field to if source field exists
+     * @param null|string $source the field name of the class, null to disable the check
+     * @param string      $target the field name to set from the map
+     * @param string      $value  value to set target field to if source field exists
      */
     public function __construct($source, $target, $value)
     {
@@ -48,7 +66,7 @@ class FieldPresenceEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        if (! isset($defaults[$this->source])) {
+        if (null !== $this->source && !isset($defaults[$this->source])) {
             return $defaults;
         }
 
@@ -56,5 +74,4 @@ class FieldPresenceEnhancer implements RouteEnhancerInterface
 
         return $defaults;
     }
-
 }

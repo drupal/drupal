@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing;
 
 /**
@@ -50,13 +60,9 @@ interface RouteObjectInterface
      * If there is no specific content for this url (i.e. its an "application"
      * page), may return null.
      *
-     * To interoperate with the standard Symfony\Cmf\Bundle\ContentBundle\Document\StaticContent
-     * the instance MUST store the property in the field <code>routeContent</code>
-     * to have referrer resolution work.
-     *
      * @return object the document or entity this route entry points to
      */
-    public function getRouteContent();
+    public function getContent();
 
     /**
      * Get the route key.

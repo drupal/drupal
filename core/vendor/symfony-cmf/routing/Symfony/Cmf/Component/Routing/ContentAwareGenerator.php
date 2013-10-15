@@ -1,7 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing;
 
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
@@ -16,6 +27,14 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class ContentAwareGenerator extends ProviderBasedGenerator
 {
+    /**
+     * The locale to use when neither the parameters nor the request context
+     * indicate the locale to use.
+     *
+     * @var string
+     */
+    protected $defaultLocale = null;
+
     /**
      * The content repository used to find content by it's id
      * This can be used to specify a parameter content_id when generating urls
@@ -42,7 +61,7 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      * @param string $name       ignored
      * @param array  $parameters must either contain the field 'route' with a
      *      RouteObjectInterface or the field 'content_id' with a document
-     *      id to get the route for (implementing RouteAwareInterface)
+     *      id to get the route for (implementing RouteReferrersReadInterface)
      *
      * @throws RouteNotFoundException If there is no such route in the database
      */
@@ -103,8 +122,8 @@ class ContentAwareGenerator extends ProviderBasedGenerator
         }
         $locale = $this->getLocale($parameters);
         if (! $this->checkLocaleRequirement($route, $locale)) {
-            $content = $route->getRouteContent();
-            if ($content instanceof RouteAwareInterface) {
+            $content = $route->getContent();
+            if ($content instanceof RouteReferrersReadInterface) {
                 $routes = $content->getRoutes();
                 $contentRoute = $this->getRouteByLocale($routes, $locale);
                 if ($contentRoute) {
@@ -117,9 +136,10 @@ class ContentAwareGenerator extends ProviderBasedGenerator
     }
 
     /**
-     * Get the route based on the $name that is a RouteAwareInterface or a
-     * RouteAwareInterface content found in the content repository with the
-     * content_id specified in parameters.
+     * Get the route based on the $name that is an object implementing
+     * RouteReferrersReadInterface or a content found in the content repository
+     * with the content_id specified in parameters that is an instance of
+     * RouteReferrersReadInterface.
      *
      * Called in generate when there is no route given in the parameters.
      *
@@ -131,7 +151,8 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      * first route.
      *
      * @param mixed $name
-     * @param array $parameters which should contain a content field containing a RouteAwareInterface object
+     * @param array $parameters which should contain a content field containing
+     *      a RouteReferrersReadInterface object
      *
      * @return SymfonyRoute the route instance
      *
@@ -139,7 +160,7 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      */
     protected function getRouteByContent($name, &$parameters)
     {
-        if ($name instanceof RouteAwareInterface) {
+        if ($name instanceof RouteReferrersReadInterface) {
             $content = $name;
         } elseif (isset($parameters['content_id'])
             && null !== $this->contentRepository
@@ -148,12 +169,12 @@ class ContentAwareGenerator extends ProviderBasedGenerator
             if (empty($content)) {
                 throw new RouteNotFoundException('The content repository found nothing at id ' . $parameters['content_id']);
             }
-            if (!$content instanceof RouteAwareInterface) {
-                throw new RouteNotFoundException('Content repository did not return a RouteAwareInterface for id ' . $parameters['content_id']);
+            if (!$content instanceof RouteReferrersReadInterface) {
+                throw new RouteNotFoundException('Content repository did not return a RouteReferrersReadInterface instance for id ' . $parameters['content_id']);
             }
         } else {
             $hint = is_object($name) ? get_class($name) : gettype($name);
-            throw new RouteNotFoundException("The route name argument '$hint' is not RouteAwareInterface and there is no 'content_id' parameter");
+            throw new RouteNotFoundException("The route name argument '$hint' is not RouteReferrersReadInterface instance and there is no 'content_id' parameter");
         }
 
         $routes = $content->getRoutes();
@@ -171,7 +192,11 @@ class ContentAwareGenerator extends ProviderBasedGenerator
             return $route;
         }
 
-        // if none matched, continue and randomly return the first one
+        // if none matched, randomly return the first one
+        if ($routes instanceof Collection) {
+            return $routes->first();
+        }
+
         return reset($routes);
     }
 
@@ -216,8 +241,9 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      *
      * @param array $parameters the parameters determined by the route
      *
-     * @return string|null the locale following of the parameters or any other
-     *  information the router has available.
+     * @return string the locale following of the parameters or any other
+     *  information the router has available. defaultLocale if no other locale
+     *  can be determined.
      */
     protected function getLocale($parameters)
     {
@@ -225,7 +251,22 @@ class ContentAwareGenerator extends ProviderBasedGenerator
             return $parameters['_locale'];
         }
 
-        return null;
+        if ($this->getContext()->hasParameter('_locale')) {
+            return $this->getContext()->getParameter('_locale');
+        }
+
+        return $this->defaultLocale;
+    }
+
+    /**
+     * Overwrite the locale to be used by default if there is neither one in
+     * the parameters when building the route nor a request available (i.e. CLI).
+     *
+     * @param string $locale
+     */
+    public function setDefaultLocale($locale)
+    {
+        $this->defaultLocale = $locale;
     }
 
     /**
@@ -233,7 +274,7 @@ class ContentAwareGenerator extends ProviderBasedGenerator
      */
     public function supports($name)
     {
-        return ! $name || parent::supports($name) || $name instanceof RouteAwareInterface;
+        return ! $name || parent::supports($name) || $name instanceof RouteReferrersReadInterface;
     }
 
     /**
@@ -245,24 +286,29 @@ class ContentAwareGenerator extends ProviderBasedGenerator
             return 'Content id ' . $parameters['content_id'];
         }
 
-        if ($name instanceof RouteAwareInterface) {
-            return 'Route aware content ' . $name;
+        if ($name instanceof RouteReferrersReadInterface) {
+            return 'Route aware content ' . parent::getRouteDebugMessage($name, $parameters);
         }
 
         return parent::getRouteDebugMessage($name, $parameters);
     }
 
     /**
-     * Unset the _locale parameter if it is there and not needed
+     * If the _locale parameter is allowed by the requirements of the route
+     * and it is the default locale, remove it from the parameters so that we
+     * do not get an unneeded ?_locale= query string.
      *
-     * @param SymfonyRoute $route
-     * @param array $parameters
+     * @param SymfonyRoute $route      The route being generated.
+     * @param array        $parameters The parameters used, will be modified to
+     *                                 remove the _locale field if needed.
      */
-    protected  function unsetLocaleIfNotNeeded(SymfonyRoute $route, array &$parameters)
+    protected function unsetLocaleIfNotNeeded(SymfonyRoute $route, array &$parameters)
     {
         $locale = $this->getLocale($parameters);
         if (null !== $locale) {
-            if (preg_match('/'.$route->getRequirement('_locale').'/', $locale) && $locale == $route->getDefault('_locale')) {
+            if (preg_match('/'.$route->getRequirement('_locale').'/', $locale)
+                && $locale == $route->getDefault('_locale')
+            ) {
                 $compiledRoute = $route->compile();
                 if (!in_array('_locale', $compiledRoute->getVariables())) {
                     unset($parameters['_locale']);

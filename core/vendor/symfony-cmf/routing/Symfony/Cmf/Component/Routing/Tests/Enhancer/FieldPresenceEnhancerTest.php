@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing\Tests\Enhancer;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -42,9 +52,21 @@ class FieldPresenceEnhancerTest extends CmfUnitTestCase
         $this->assertEquals($defaults, $this->mapper->enhance($defaults, $this->request));
     }
 
-    public function testHasNoTemplate()
+    public function testHasNoSourceValue()
     {
         $defaults = array('foo' => 'bar');
         $this->assertEquals($defaults, $this->mapper->enhance($defaults, $this->request));
+    }
+
+    public function testHasNoSource()
+    {
+        $this->mapper = new FieldPresenceEnhancer(null, '_controller', 'cmf_content.controller:indexAction');
+
+        $defaults = array('foo' => 'bar');
+        $expected = array(
+            'foo' => 'bar',
+            '_controller' => 'cmf_content.controller:indexAction',
+        );
+        $this->assertEquals($expected, $this->mapper->enhance($defaults, $this->request));
     }
 }

@@ -1,4 +1,15 @@
 <?php
+
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing\Tests\Routing;
 
 use Symfony\Component\Routing\Route as SymfonyRoute;
@@ -13,10 +24,12 @@ class RouteMock extends SymfonyRoute implements RouteObjectInterface
     {
         $this->locale = $locale;
     }
-    public function getRouteContent()
+
+    public function getContent()
     {
         return null;
     }
+
     public function getDefaults()
     {
         $defaults = array();
@@ -26,6 +39,7 @@ class RouteMock extends SymfonyRoute implements RouteObjectInterface
 
         return $defaults;
     }
+
     public function getRequirement($key)
     {
         if (! $key == '_locale') {
@@ -34,6 +48,7 @@ class RouteMock extends SymfonyRoute implements RouteObjectInterface
 
         return $this->locale;
     }
+
     public function getRouteKey()
     {
         return null;

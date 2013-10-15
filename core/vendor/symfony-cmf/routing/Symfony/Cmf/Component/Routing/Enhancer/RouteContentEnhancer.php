@@ -1,14 +1,23 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing\Enhancer;
 
-use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
- * This enhancer sets the content to target field if the route provides content
+ * This enhancer sets the content to target field if the route provides content.
  *
  * Only works with RouteObjectInterface routes that can return a referenced
  * content.
@@ -56,9 +65,10 @@ class RouteContentEnhancer implements RouteEnhancerInterface
             // we can't determine the content
             return $defaults;
         }
+        /** @var $route RouteObjectInterface */
         $route = $defaults[$this->routefield];
 
-        $content = $route->getRouteContent();
+        $content = $route->getContent();
         if (! $content) {
             // we have no content
             return $defaults;

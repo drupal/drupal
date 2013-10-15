@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -13,8 +23,10 @@ use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Cmf\Component\Routing\Event\Events;
+use Symfony\Cmf\Component\Routing\Event\RouterMatchEvent;
 
 /**
  * A flexible router accepting matcher and generator through injection and
@@ -34,6 +46,11 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
      * @var UrlGeneratorInterface
      */
     protected $generator;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
 
     /**
      * @var RouteEnhancerInterface[]
@@ -64,15 +81,21 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
      * @param RequestMatcherInterface|UrlMatcherInterface $matcher
      * @param UrlGeneratorInterface                       $generator
      * @param string                                      $uriFilterRegexp
+     * @param EventDispatcherInterface|null               $eventDispatcher
      */
-    public function __construct(RequestContext $context, $matcher, UrlGeneratorInterface $generator, $uriFilterRegexp = '')
-    {
+    public function __construct(RequestContext $context,
+                                $matcher,
+                                UrlGeneratorInterface $generator,
+                                $uriFilterRegexp = '',
+                                EventDispatcherInterface $eventDispatcher = null
+    ) {
         $this->context = $context;
         if (! $matcher instanceof RequestMatcherInterface && ! $matcher instanceof UrlMatcherInterface) {
             throw new \InvalidArgumentException('Invalid $matcher');
         }
         $this->matcher = $matcher;
         $this->generator = $generator;
+        $this->eventDispatcher = $eventDispatcher;
         $this->uriFilterRegexp = $uriFilterRegexp;
 
         $this->generator->setContext($context);
@@ -167,6 +190,12 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
      */
     public function match($pathinfo)
     {
+        $request = Request::create($pathinfo);
+        if ($this->eventDispatcher) {
+            $event = new RouterMatchEvent();
+            $this->eventDispatcher->dispatch(Events::PRE_DYNAMIC_MATCH, $event);
+        }
+
         if (! empty($this->uriFilterRegexp) && ! preg_match($this->uriFilterRegexp, $pathinfo)) {
             throw new ResourceNotFoundException("$pathinfo does not match the '{$this->uriFilterRegexp}' pattern");
         }
@@ -178,7 +207,7 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
 
         $defaults = $matcher->match($pathinfo);
 
-        return $this->applyRouteEnhancers($defaults, Request::create($pathinfo));
+        return $this->applyRouteEnhancers($defaults, $request);
     }
 
     /**
@@ -198,6 +227,11 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
      */
     public function matchRequest(Request $request)
     {
+        if ($this->eventDispatcher) {
+            $event = new RouterMatchEvent($request);
+            $this->eventDispatcher->dispatch(Events::PRE_DYNAMIC_MATCH_REQUEST, $event);
+        }
+
         if (! empty($this->uriFilterRegexp)
             && ! preg_match($this->uriFilterRegexp, $request->getPathInfo())
         ) {
@@ -206,11 +240,10 @@ class DynamicRouter implements RouterInterface, RequestMatcherInterface, Chained
 
         $matcher = $this->getMatcher();
         if ($matcher instanceof UrlMatcherInterface) {
-            // the match method will enhance the route $defaults
-            return $this->match($request->getPathInfo());
+            $defaults = $matcher->match($request->getPathInfo());
+        } else {
+            $defaults = $matcher->matchRequest($request);
         }
-
-        $defaults = $matcher->matchRequest($request);
 
         return $this->applyRouteEnhancers($defaults, $request);
     }

@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -29,7 +39,7 @@ interface VersatileGeneratorInterface extends UrlGeneratorInterface
      *
      * @param mixed $name
      * @param array $parameters which should contain a content field containing
-     *                          a RouteAwareInterface object
+     *                          a RouteReferrersReadInterface object
      *
      * @return string
      */

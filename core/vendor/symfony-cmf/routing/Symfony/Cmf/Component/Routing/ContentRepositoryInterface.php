@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * This file is part of the Symfony CMF package.
+ *
+ * (c) 2011-2013 Symfony CMF
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace Symfony\Cmf\Component\Routing;
 
 /**
@@ -16,8 +26,8 @@ interface ContentRepositoryInterface
     /**
      * Return a content object by it's id or null if there is none.
      *
-     * If the returned content implements RouteAwareInterface, it will be used
-     * to get the route from it to generate an URL.
+     * If the returned content implements RouteReferrersReadInterface, it will
+     * be used to get the route from it to generate an URL.
      *
      * @param string $id id of the content object
      *
