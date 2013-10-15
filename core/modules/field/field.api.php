@@ -238,7 +238,7 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
   // Code here will only act on widgets of type WIDGET_TYPE.  For example,
   // hook_field_widget_mymodule_autocomplete_form_alter() will only act on
   // widgets of type 'mymodule_autocomplete'.
-  $element['#autocomplete_path'] = 'mymodule/autocomplete_path';
+  $element['#autocomplete_route_name'] = 'mymodule.autocomplete_route';
 }
 
 /**

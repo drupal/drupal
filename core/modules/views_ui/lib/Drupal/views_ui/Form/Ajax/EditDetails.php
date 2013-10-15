@@ -59,7 +59,7 @@ class EditDetails extends ViewsFormBase {
       '#title' => $this->t('View tag'),
       '#description' => $this->t('Optionally, enter a comma delimited list of tags for this view to use in filtering and sorting views on the administrative page.'),
       '#default_value' => $view->get('tag'),
-      '#autocomplete_path' => 'admin/views/ajax/autocomplete/tag',
+      '#autocomplete_route_name' => 'views_ui.autocomplete',
     );
     $form['details']['description'] = array(
       '#type' => 'textfield',
