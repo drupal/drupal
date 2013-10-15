@@ -56,7 +56,6 @@ class Rss extends RowPluginBase {
 
   public function preRender($result) {
     $cids = array();
-    $nids = array();
 
     foreach ($result as $row) {
       $cids[] = $row->cid;
