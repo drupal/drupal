@@ -121,8 +121,6 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * Most block plugins should not override this method. To add validation
    * for a specific block type, override BlockBase::blockValdiate().
    *
-   * @todo Add inline documentation to this method.
-   *
    * @see \Drupal\block\BlockBase::blockValidate()
    */
   public function validateConfigurationForm(array &$form, array &$form_state) {
@@ -140,11 +138,10 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * Most block plugins should not override this method. To add submission
    * handling for a specific block type, override BlockBase::blockSubmit().
    *
-   * @todo Add inline documentation to this method.
-   *
    * @see \Drupal\block\BlockBase::blockSubmit()
    */
   public function submitConfigurationForm(array &$form, array &$form_state) {
+    // Process the block's submission handling if no errors occurred only.
     if (!form_get_errors()) {
       $this->configuration['label'] = $form_state['values']['label'];
       $this->configuration['label_display'] = $form_state['values']['label_display'];

@@ -299,9 +299,11 @@ class BlockFormController extends EntityFormController {
       form_set_value($form['id'], $form_state['values']['theme'] . '.' . $form_state['values']['machine_name'], $form_state);
     }
     if (!empty($form['machine_name']['#disabled'])) {
+      // Get machine name from original value (without prepended theme name).
       $config_id = explode('.', $form_state['values']['machine_name']);
       $form_state['values']['machine_name'] = array_pop($config_id);
     }
+    // Remove empty lines from the role visibility list.
     $form_state['values']['visibility']['role']['roles'] = array_filter($form_state['values']['visibility']['role']['roles']);
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for validation.
@@ -331,6 +333,8 @@ class BlockFormController extends EntityFormController {
     $entity->save();
 
     drupal_set_message($this->t('The block configuration has been saved.'));
+    // Invalidate the content cache and redirect to the block listing,
+    // because we need to remove cached block contents for each cache backend.
     Cache::invalidateTags(array('content' => TRUE));
     $form_state['redirect'] = array('admin/structure/block/list/' . $form_state['values']['theme'], array(
       'query' => array('block-placement' => drupal_html_class($this->entity->id())),
