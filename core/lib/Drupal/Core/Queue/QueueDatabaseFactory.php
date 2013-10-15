@@ -39,7 +39,7 @@ class QueueDatabaseFactory {
    * @param \Drupal\Core\Database\Connection $connection
    *   The connection to run against.
    *
-   * @return \Drupal\Core\QueueStore\DatabaseStorage
+   * @return \Drupal\Core\Queue\DatabaseQueue
    *   A key/value store implementation for the given $collection.
    */
   public function get($name) {
