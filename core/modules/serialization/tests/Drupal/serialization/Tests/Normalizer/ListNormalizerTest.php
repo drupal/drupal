@@ -18,13 +18,14 @@ use Drupal\Core\TypedData\Plugin\DataType\Integer;
  * @see \Drupal\serialization\Normalizer\ListNormalizer
  *
  * @group Drupal
+ * @group Serialization
  */
 class ListNormalizerTest extends UnitTestCase {
 
   /**
-   * The TypedDataNormalizer instance.
+   * The ListNormalizer instance.
    *
-   * @var \Drupal\serialization\Normalizer\TypedDataNormalizer
+   * @var \Drupal\serialization\Normalizer\ListNormalizer
    */
   protected $normalizer;
 
@@ -44,13 +45,14 @@ class ListNormalizerTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'TypedDataNormalizer',
-      'description' => 'Tests the TypedDataNormalizer class.',
+      'name' => 'ListNormalizer',
+      'description' => 'Tests the ListNormalizer class.',
       'group' => 'Serialization',
     );
   }
 
   public function setUp() {
+    // Mock the TypedDataManager to return a TypedDataInterface mock.
     $typed_data = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
     $typed_data_manager = $this->getMockBuilder('Drupal\Core\TypedData\TypedDataManager')
       ->disableOriginalConstructor()
@@ -60,6 +62,8 @@ class ListNormalizerTest extends UnitTestCase {
       ->method('getPropertyInstance')
       ->will($this->returnValue($typed_data));
 
+    // Set up a mock container as ItemList() will call for the 'typed_data'
+    // service.
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
       ->setMethods(array('get'))
       ->getMock();
