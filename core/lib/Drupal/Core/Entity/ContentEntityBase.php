@@ -775,7 +775,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
-   * Implements the magic method for setting object properties.
+   * Implements the magic method for getting object properties.
    *
    * @todo: A lot of code still uses non-fields (e.g. $entity->content in render
    *   controllers) by reference. Clean that up.
