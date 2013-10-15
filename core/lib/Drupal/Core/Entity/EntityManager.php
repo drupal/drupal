@@ -610,4 +610,19 @@ class EntityManager extends PluginManagerBase {
     return $this->bundleInfo;
   }
 
+  /**
+   * Builds a list of entity type labels suitable for a Form API options list.
+   *
+   * @return array
+   *   An array of entity type labels, keyed by entity type name.
+   */
+  public function getEntityTypeLabels() {
+    $options = array();
+    foreach ($this->getDefinitions() as $entity_type => $definition) {
+      $options[$entity_type] = $definition['label'];
+    }
+
+    return $options;
+  }
+
 }

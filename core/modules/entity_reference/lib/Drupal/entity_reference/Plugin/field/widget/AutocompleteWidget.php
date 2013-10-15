@@ -61,10 +61,15 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
     $value = '';
     if (!empty($element['#value'])) {
       // Take "label (entity id)', match the id from parenthesis.
-      if (preg_match("/.+\((\d+)\)/", $element['#value'], $matches)) {
+      // @todo: Lookup the entity type's ID data type and use it here.
+      // https://drupal.org/node/2107249
+      if ($this->isContentReferenced() && preg_match("/.+\((\d+)\)/", $element['#value'], $matches)) {
         $value = $matches[1];
       }
-      else {
+      elseif (preg_match("/.+\(([\w.]+)\)/", $element['#value'], $matches)) {
+        $value = $matches[1];
+      }
+      if (!$value) {
         // Try to get a match from the input string when the user didn't use the
         // autocomplete but filled in a value manually.
         $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($this->fieldDefinition);

@@ -7,7 +7,6 @@
 
 namespace Drupal\entity_reference\Tests;
 
-use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Language\Language;
@@ -24,6 +23,20 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
    * @var array
    */
   public static $modules = array('entity_reference', 'taxonomy', 'options');
+
+  /**
+   * The taxonomy vocabulary to test with.
+   *
+   * @var \Drupal\taxonomy\VocabularyInterface
+   */
+  protected $vocabulary;
+
+  /**
+   * The taxonomy term to test with.
+   *
+   * @var \Drupal\taxonomy\TermInterface
+   */
+  protected $term;
 
   public static function getInfo() {
     return array(
@@ -42,48 +55,49 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $this->installSchema('taxonomy', 'taxonomy_term_data');
     $this->installSchema('taxonomy', 'taxonomy_term_hierarchy');
 
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
-    $vocabulary->save();
+    $this->vocabulary->save();
 
     $this->term = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vid' => $vocabulary->id(),
+      'vid' => $this->vocabulary->id(),
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $this->term->save();
 
     // Use the util to create an instance.
-    entity_reference_create_instance('entity_test', 'entity_test', 'field_test_taxonomy', 'Test entity reference', 'taxonomy_term');
+    entity_reference_create_instance('entity_test', 'entity_test', 'field_test_taxonomy_term', 'Test content entity reference', 'taxonomy_term');
+    entity_reference_create_instance('entity_test', 'entity_test', 'field_test_taxonomy_vocabulary', 'Test config entity reference', 'taxonomy_vocabulary');
   }
 
   /**
-   * Tests using entity fields of the entity reference field type.
+   * Tests the entity reference field type for referencing content entities.
    */
-  public function testEntityReferenceItem() {
+  public function testContentEntityReferenceItem() {
     $tid = $this->term->id();
 
     // Just being able to create the entity like this verifies a lot of code.
     $entity = entity_create('entity_test', array());
-    $entity->field_test_taxonomy->target_id = $tid;
+    $entity->field_test_taxonomy_term->target_id = $tid;
     $entity->name->value = $this->randomName();
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
-    $this->assertTrue($entity->field_test_taxonomy instanceof FieldItemListInterface, 'Field implements interface.');
-    $this->assertTrue($entity->field_test_taxonomy[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->field_test_taxonomy->target_id, $tid);
-    $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $this->term->name->value);
-    $this->assertEqual($entity->field_test_taxonomy->entity->id(), $tid);
-    $this->assertEqual($entity->field_test_taxonomy->entity->uuid(), $this->term->uuid());
+    $this->assertTrue($entity->field_test_taxonomy_term instanceof FieldItemListInterface, 'Field implements interface.');
+    $this->assertTrue($entity->field_test_taxonomy_term[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertEqual($entity->field_test_taxonomy_term->target_id, $tid);
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->name->value, $this->term->name->value);
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $tid);
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->uuid(), $this->term->uuid());
 
     // Change the name of the term via the reference.
     $new_name = $this->randomName();
-    $entity->field_test_taxonomy->entity->name = $new_name;
-    $entity->field_test_taxonomy->entity->save();
+    $entity->field_test_taxonomy_term->entity->name = $new_name;
+    $entity->field_test_taxonomy_term->entity->save();
     // Verify it is the correct name.
     $term = entity_load('taxonomy_term', $tid);
     $this->assertEqual($term->name->value, $new_name);
@@ -96,9 +110,9 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     ));
     $term2->save();
 
-    $entity->field_test_taxonomy->target_id = $term2->id();
-    $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->id());
-    $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $term2->name->value);
+    $entity->field_test_taxonomy_term->target_id = $term2->id();
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->id(), $term2->id());
+    $this->assertEqual($entity->field_test_taxonomy_term->entity->name->value, $term2->name->value);
 
     // Delete terms so we have nothing to reference and try again
     $term->delete();
@@ -108,30 +122,50 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
   }
 
   /**
-   * Tests foreign key support.
+   * Tests the entity reference field type for referencing config entities.
    */
-  public function testEntityReferenceFieldSchema() {
-    $field = field_info_field('entity_test', 'field_test_taxonomy');
-    $foreign_key_column_name = 'target_id';
+  public function testConfigEntityReferenceItem() {
+    $referenced_entity_id = $this->vocabulary->id();
 
-    // Grab the SQL schema and verify that the 'foreign keys' are present.
-    $schemas = FieldableDatabaseStorageController::_fieldSqlSchema($field);
-    $schema = $schemas[FieldableDatabaseStorageController::_fieldTableName($field)];
-    $this->assertEqual(count($schema['foreign keys']), 1, 'There is 1 foreign key in the schema.');
+    // Just being able to create the entity like this verifies a lot of code.
+    $entity = entity_create('entity_test', array());
+    $entity->field_test_taxonomy_vocabulary->target_id = $referenced_entity_id;
+    $entity->name->value = $this->randomName();
+    $entity->save();
 
-    $foreign_key = reset($schema['foreign keys']);
-    $foreign_key_column = FieldableDatabaseStorageController::_fieldColumnName($field, $foreign_key_column_name);
-    $this->assertEqual($foreign_key['table'], 'taxonomy_term_data', 'Foreign key table name preserved in the schema.');
-    $this->assertEqual($foreign_key['columns'][$foreign_key_column], 'tid', 'Foreign key column name preserved in the schema.');
+    $entity = entity_load('entity_test', $entity->id());
+    $this->assertTrue($entity->field_test_taxonomy_vocabulary instanceof FieldItemListInterface, 'Field implements interface.');
+    $this->assertTrue($entity->field_test_taxonomy_vocabulary[0] instanceof FieldItemInterface, 'Field item implements interface.');
+    $this->assertEqual($entity->field_test_taxonomy_vocabulary->target_id, $referenced_entity_id);
+    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->name, $this->vocabulary->name);
+    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->id(), $referenced_entity_id);
+    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->uuid(), $this->vocabulary->uuid());
 
-    // Create a field that references a config entity type and check that no
-    // foreign key is present.
-    $field_name = 'field_test_vocabulary';
-    entity_reference_create_instance('entity_test', 'entity_test', $field_name, 'Test vocabulary reference', 'taxonomy_vocabulary');
-    $field = field_info_field('entity_test', $field_name);
+    // Change the name of the term via the reference.
+    $new_name = $this->randomName();
+    $entity->field_test_taxonomy_vocabulary->entity->name = $new_name;
+    $entity->field_test_taxonomy_vocabulary->entity->save();
+    // Verify it is the correct name.
+    $term = entity_load('taxonomy_vocabulary', $referenced_entity_id);
+    $this->assertEqual($term->name, $new_name);
 
-    $schemas = FieldableDatabaseStorageController::_fieldSqlSchema($field);
-    $schema = $schemas[FieldableDatabaseStorageController::_fieldTableName($field)];
-    $this->assertFalse(isset($schema['foreign keys']), 'There is no foreign key in the schema.');
+    // Make sure the computed term reflects updates to the term id.
+    $vocabulary2 = entity_create('taxonomy_vocabulary', array(
+      'name' => $this->randomName(),
+      'vid' => drupal_strtolower($this->randomName()),
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+    ));
+    $vocabulary2->save();
+
+    $entity->field_test_taxonomy_vocabulary->target_id = $vocabulary2->id();
+    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->id(), $vocabulary2->id());
+    $this->assertEqual($entity->field_test_taxonomy_vocabulary->entity->name, $vocabulary2->name);
+
+    // Delete terms so we have nothing to reference and try again
+    $this->vocabulary->delete();
+    $vocabulary2->delete();
+    $entity = entity_create('entity_test', array('name' => $this->randomName()));
+    $entity->save();
   }
+
 }

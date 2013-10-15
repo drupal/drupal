@@ -10,7 +10,6 @@ namespace Drupal\Core\Entity\Plugin\field\field_type;
 use Drupal\Core\TypedData\Annotation\DataType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Defines the 'entity_reference' entity field type.
@@ -44,19 +43,32 @@ class EntityReferenceItem extends FieldItemBase {
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
+    $target_type = $this->definition['settings']['target_type'];
+
     // Definitions vary by entity type and bundle, so key them accordingly.
-    $key = $this->definition['settings']['target_type'] . ':';
+    $key = $target_type . ':';
     $key .= isset($this->definition['settings']['target_bundle']) ? $this->definition['settings']['target_bundle'] : '';
 
     if (!isset(static::$propertyDefinitions[$key])) {
-      static::$propertyDefinitions[$key]['target_id'] = array(
-        // @todo: Lookup the entity type's ID data type and use it here.
-        'type' => 'integer',
-        'label' => t('Entity ID'),
-        'constraints' => array(
-          'Range' => array('min' => 0),
-        ),
-      );
+      $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
+      if (is_subclass_of($target_type_info['class'], '\Drupal\Core\Entity\ContentEntityInterface')) {
+        static::$propertyDefinitions[$key]['target_id'] = array(
+          // @todo: Lookup the entity type's ID data type and use it here.
+          // https://drupal.org/node/2107249
+          'type' => 'integer',
+          'label' => t('Entity ID'),
+          'constraints' => array(
+            'Range' => array('min' => 0),
+          ),
+        );
+      }
+      else {
+        static::$propertyDefinitions[$key]['target_id'] = array(
+          'type' => 'string',
+          'label' => t('Entity ID'),
+        );
+      }
+
       static::$propertyDefinitions[$key]['entity'] = array(
         'type' => 'entity_reference',
         'constraints' => array(

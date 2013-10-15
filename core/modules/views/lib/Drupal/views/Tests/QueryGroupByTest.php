@@ -24,7 +24,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test', 'system', 'field');
+  public static $modules = array('entity_test', 'system', 'field', 'user');
 
   /**
    * The storage controller for the test entity type.

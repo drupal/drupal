@@ -102,50 +102,54 @@ class SelectionBase implements SelectionInterface {
       );
     }
 
-    // @todo Use Entity::getPropertyDefinitions() when all entity types are
-    // converted to the new Field API.
-    $fields = drupal_map_assoc(drupal_schema_fields_sql($entity_info['base_table']));
-    foreach (field_info_instances($target_type) as $bundle_instances) {
-      foreach ($bundle_instances as $instance_name => $instance) {
-        foreach ($instance->getField()->getColumns() as $column_name => $column_info) {
-          $fields[$instance_name . '.' . $column_name] = t('@label (@column)', array('@label' => $instance->getFieldLabel(), '@column' => $column_name));
+    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
+    if (is_subclass_of($target_type_info['class'], '\Drupal\Core\Entity\ContentEntityInterface')) {
+      // @todo Use Entity::getPropertyDefinitions() when all entity types are
+      // converted to the new Field API.
+      $fields = drupal_map_assoc(drupal_schema_fields_sql($entity_info['base_table']));
+      foreach (field_info_instances($target_type) as $bundle_instances) {
+        foreach ($bundle_instances as $instance_name => $instance) {
+          foreach ($instance->getField()->getColumns() as $column_name => $column_info) {
+            $fields[$instance_name . '.' . $column_name] = t('@label (@column)', array('@label' => $instance->getFieldLabel(), '@column' => $column_name));
+          }
+
         }
       }
-    }
 
-    $form['sort']['field'] = array(
-      '#type' => 'select',
-      '#title' => t('Sort by'),
-      '#options' => array(
-        '_none' => t('- None -'),
-      ) + $fields,
-      '#ajax' => TRUE,
-      '#limit_validation_errors' => array(),
-      '#default_value' => $selection_handler_settings['sort']['field'],
-    );
-
-    $form['sort']['settings'] = array(
-      '#type' => 'container',
-      '#attributes' => array('class' => array('entity_reference-settings')),
-      '#process' => array('_entity_reference_form_process_merge_parent'),
-    );
-
-    if ($selection_handler_settings['sort']['field'] != '_none') {
-      // Merge-in default values.
-      $selection_handler_settings['sort'] += array(
-        'direction' => 'ASC',
-      );
-
-      $form['sort']['settings']['direction'] = array(
+      $form['sort']['field'] = array(
         '#type' => 'select',
-        '#title' => t('Sort direction'),
-        '#required' => TRUE,
+        '#title' => t('Sort by'),
         '#options' => array(
-          'ASC' => t('Ascending'),
-          'DESC' => t('Descending'),
-        ),
-        '#default_value' => $selection_handler_settings['sort']['direction'],
+          '_none' => t('- None -'),
+        ) + $fields,
+        '#ajax' => TRUE,
+        '#limit_validation_errors' => array(),
+        '#default_value' => $selection_handler_settings['sort']['field'],
       );
+
+      $form['sort']['settings'] = array(
+        '#type' => 'container',
+        '#attributes' => array('class' => array('entity_reference-settings')),
+        '#process' => array('_entity_reference_form_process_merge_parent'),
+      );
+
+      if ($selection_handler_settings['sort']['field'] != '_none') {
+        // Merge-in default values.
+        $selection_handler_settings['sort'] += array(
+          'direction' => 'ASC',
+        );
+
+        $form['sort']['settings']['direction'] = array(
+          '#type' => 'select',
+          '#title' => t('Sort direction'),
+          '#required' => TRUE,
+          '#options' => array(
+            'ASC' => t('Ascending'),
+            'DESC' => t('Descending'),
+          ),
+          '#default_value' => $selection_handler_settings['sort']['direction'],
+        );
+      }
     }
 
     return $form;

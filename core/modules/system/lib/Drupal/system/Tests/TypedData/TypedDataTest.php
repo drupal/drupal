@@ -28,7 +28,7 @@ class TypedDataTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'field', 'file');
+  public static $modules = array('system', 'entity', 'field', 'file', 'user');
 
   public static function getInfo() {
     return array(

@@ -8,9 +8,9 @@
 namespace Drupal\field\Plugin\Type\FieldType;
 
 use Drupal\Core\Entity\Plugin\field\field_type\EntityReferenceItem;
-use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
-use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldInterface;
+use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
 
 /**
  * A common base class for configurable entity reference fields.
@@ -36,22 +36,29 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
+    $target_type = $this->definition['settings']['target_type'];
+
     // Definitions vary by entity type and bundle, so key them accordingly.
-    $key = $this->definition['settings']['target_type'] . ':';
+    $key = $target_type . ':';
     $key .= isset($this->definition['settings']['target_bundle']) ? $this->definition['settings']['target_bundle'] : '';
 
     if (!isset(static::$propertyDefinitions[$key])) {
       // Call the parent to define the target_id and entity properties.
       parent::getPropertyDefinitions();
 
-      static::$propertyDefinitions[$key]['revision_id'] = array(
-        // @todo: Lookup the entity type's ID data type and use it here.
-        'type' => 'integer',
-        'label' => t('Revision ID'),
-        'constraints' => array(
-          'Range' => array('min' => 0),
-        ),
-      );
+      // Only add the revision ID property if the target entity type supports
+      // revisions.
+      $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
+      if (!empty($target_type_info['entity_keys']['revision']) && !empty($target_type_info['revision_table'])) {
+        static::$propertyDefinitions[$key]['revision_id'] = array(
+          'type' => 'integer',
+          'label' => t('Revision ID'),
+          'constraints' => array(
+            'Range' => array('min' => 0),
+          ),
+        );
+      }
+
       static::$propertyDefinitions[$key]['label'] = array(
         'type' => 'string',
         'label' => t('Label (auto-create)'),
@@ -87,8 +94,8 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    */
   public function isEmpty() {
     // Avoid loading the entity by first checking the 'target_id'.
-    $target_id = $this->get('target_id')->getValue();
-    if (!empty($target_id) && is_numeric($target_id)) {
+    $target_id = $this->target_id;
+    if (!empty($target_id)) {
       return FALSE;
     }
     // Allow auto-create entities.

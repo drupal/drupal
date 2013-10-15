@@ -193,4 +193,15 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
     return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
   }
 
+  /**
+   * Checks whether a content entity is referenced.
+   *
+   * @return bool
+   */
+  protected function isContentReferenced() {
+    $target_type = $this->getFieldSetting('target_type');
+    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
+    return is_subclass_of($target_type_info['class'], '\Drupal\Core\Entity\ContentEntityInterface');
+  }
+
 }
