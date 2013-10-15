@@ -16,7 +16,7 @@ use Drupal\Core\StreamWrapper\LocalReadOnlyStream;
  */
 class DummyReadOnlyStreamWrapper extends LocalReadOnlyStream {
   function getDirectoryPath() {
-    return variable_get('stream_public_path', 'sites/default/files');
+    return 'sites/default/files';
   }
 
   /**
