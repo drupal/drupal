@@ -41,8 +41,8 @@ node.add:
 node.view:
   path: '/node/{node}'
   defaults:
-    _content: '\Drupal\node\Controller\NodeView::page'
-    _title_callback: '\Drupal\node\Controller\NodeView::pageTitle'
+    _content: '\Drupal\node\Controller\NodeController::page'
+    _title_callback: '\Drupal\node\Controller\NodeController::pageTitle'
   requirements:
     _entity_access: 'node.view'
 
@@ -64,8 +64,8 @@ node.revision_overview:
 node.revision_show:
   path: '/node/{node}/revisions/{node_revision}/view'
   defaults:
-    _title: 'Revisions'
     _content: '\Drupal\node\Controller\NodeController::revisionShow'
+    _title_callback: '\Drupal\node\Controller\NodeController::revisionPageTitle'
   requirements:
     _access_node_revision: 'view'
 

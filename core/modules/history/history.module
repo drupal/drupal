@@ -10,6 +10,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity\Entity\EntityDisplay;
 
 /**
  * Entities changed before this time are always shown as read.
@@ -126,6 +127,30 @@ function history_cron() {
   db_delete('history')
     ->condition('timestamp', HISTORY_READ_LIMIT, '<')
     ->execute();
+}
+
+/**
+ * Implements hook_node_view_alter().
+ */
+function history_node_view_alter(&$build, EntityInterface $node, EntityDisplay $display) {
+  // Update the history table, stating that this user viewed this node.
+  if (($display->originalMode === 'full') && \Drupal::currentUser()->isAuthenticated()) {
+    $build['#attached'] = array(
+      'js' => array(
+        // When the window's "load" event is triggered, mark the node as read.
+        // This still allows for Drupal behaviors (which are triggered on the
+        // "DOMContentReady" event) to add "new" and "updated" indicators.
+        array(
+          'data' => 'window.addEventListener("load",function(){Drupal.history.markAsRead(' . $node->id() . ');},false);',
+          'type' => 'inline',
+        ),
+      ),
+      'library' => array(
+        array('history', 'drupal.history'),
+      ),
+    );
+  }
+
 }
 
 /**

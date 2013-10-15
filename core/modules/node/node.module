@@ -564,54 +564,6 @@ function node_revision_delete($revision_id) {
 }
 
 /**
- * Page callback: Generates an array which displays a node detail page.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   A node entity.
- * @param $message
- *   (optional) A flag which sets a page title relevant to the revision being
- *   viewed.  Default is FALSE.
- *
- * @return
- *   A $page element suitable for use by drupal_render().
- *
- * @see node_menu()
- *
- * @deprecated Use \Drupal\node\Controller\NodeController::revisionShow()
- */
-function node_show(EntityInterface $node, $message = FALSE) {
-  // For markup consistency with other pages, use node_view_multiple() rather than node_view().
-  $page = array('nodes' => node_view_multiple(array($node->id() => $node), 'full'));
-
-  if ($message) {
-    $page['#title'] = t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime())));
-    // Don't use the render cache when a revision is displayed.
-    unset($page['nodes'][$node->id()]['#cache']);
-  }
-
-  // Update the history table, stating that this user viewed this node.
-  global $user;
-  if (\Drupal::moduleHandler()->moduleExists('history') && $user->isAuthenticated()) {
-    $page['#attached'] = array(
-      'js' => array(
-        // When the window's "load" event is triggered, mark the node as read.
-        // This still allows for Drupal behaviors (which are triggered on the
-        // "DOMContentReady" event) to add "new" and "updated" indicators.
-        array(
-          'data' => 'window.addEventListener("load",function(){Drupal.history.markAsRead(' . $node->id() . ');},false);',
-          'type' => 'inline',
-        ),
-      ),
-      'library' => array(
-        array('history', 'drupal.history'),
-      )
-    );
-  }
-
-  return $page;
-}
-
-/**
  * Checks whether the current page is the full page view of the passed-in node.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
@@ -1455,36 +1407,6 @@ function node_view(EntityInterface $node, $view_mode = 'full', $langcode = NULL)
  */
 function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
   return entity_view_multiple($nodes, $view_mode, $langcode);
-}
-
-/**
- * Page callback: Displays a single node.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node entity.
- *
- * @return
- *   A page array suitable for use by drupal_render().
- *
- * @see node_menu()
- *
- * @deprecated Use \Drupal\node\Controller\NodeController::viewPage()
- */
-function node_page_view(EntityInterface $node) {
-  foreach ($node->uriRelationships() as $rel) {
-    $uri = $node->uri($rel);
-    // Set the node path as the canonical URL to prevent duplicate content.
-    drupal_add_html_head_link(array('rel' => $rel, 'href' => url($uri['path'], $uri['options'])), TRUE);
-
-    if ($rel == 'canonical') {
-      // Set the non-aliased canonical path as a default shortlink.
-      drupal_add_html_head_link(array('rel' => 'shortlink', 'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE)))), TRUE);
-    }
-  }
-
-  $build = node_show($node);
-
-  return $build;
 }
 
 /**
