@@ -111,7 +111,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $values = array();
 
     // Post different authoring information for each translation.
-    foreach ($this->langcodes as $index => $langcode) {
+    foreach ($this->langcodes as $langcode) {
       $user = $this->drupalCreateUser();
       $values[$langcode] = array(
         'uid' => $user->id(),
@@ -180,7 +180,6 @@ class NodeTranslationUITest extends ContentTranslationUITest {
 
     // Create a node for each bundle.
     $enabledNode = $this->drupalCreateNode(array('type' => $this->bundle));
-    $disabledNode = $this->drupalCreateNode(array('type' => $disabledBundle));
 
     // Make sure that only a single row was inserted into the
     // {content_translation} table.
