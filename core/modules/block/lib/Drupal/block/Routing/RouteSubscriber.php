@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Listens to the dynamic route events.
+ * Provides dynamic routes for various block pages.
  */
 class RouteSubscriber implements EventSubscriberInterface {
 
@@ -27,7 +27,7 @@ class RouteSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Generate dynamic routes for various block pages.
+   * Generates dynamic routes for various block pages.
    *
    * @param \Drupal\Core\Routing\RouteBuildEvent $event
    *   The route building event.
