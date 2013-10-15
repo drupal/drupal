@@ -100,7 +100,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
    * @param array $access
    *   An array of access results of the fired access hook.
    *
-   * @return bool|NULL
+   * @return bool|null
    *   Returns FALSE if access should be denied, TRUE if access should be
    *   granted and NULL if no module denied access.
    */

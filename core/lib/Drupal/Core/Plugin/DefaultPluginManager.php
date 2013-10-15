@@ -196,7 +196,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   /**
    * Returns the cached plugin definitions of the decorated discovery class.
    *
-   * @return array|NULL
+   * @return array|null
    *   On success this will return an array of plugin definitions. On failure
    *   this should return NULL, indicating to other methods that this has not
    *   yet been defined. Success with no values should return as an empty array

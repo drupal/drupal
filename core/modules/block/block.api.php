@@ -83,7 +83,7 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\block\BlockP
  * @param string $langcode
  *   The language code to perform the access check operation on.
  *
- * @return bool|NULL
+ * @return bool|null
  *   FALSE denies access. TRUE allows access unless another module returns
  *   FALSE. If all modules return NULL, then default access rules from
  *   \Drupal\block\BlockAccessController::checkAccess() are used.

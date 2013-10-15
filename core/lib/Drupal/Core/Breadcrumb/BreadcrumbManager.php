@@ -36,7 +36,7 @@ class BreadcrumbManager implements BreadcrumbBuilderInterface {
    *
    * Set to NULL if the array needs to be re-calculated.
    *
-   * @var array|NULL
+   * @var array|null
    */
   protected $sortedBuilders;
 

@@ -365,7 +365,7 @@ function _drupal_rewrite_settings_is_array_index($type) {
  *
  * Makes the new settings global.
  *
- * @param array|NULL $ref
+ * @param array|null $ref
  *   A reference to a nested index in $GLOBALS.
  * @param array|object $variable
  *   The nested value of the setting being copied.

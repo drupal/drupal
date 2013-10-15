@@ -19,12 +19,12 @@ interface EditorSelectorInterface {
    *
    * @param string $formatter_type
    *   The field's formatter type name.
-   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $instance
    *   The field definition.
    * @param array $items
    *   The field's item values.
    *
-   * @return string|NULL
+   * @return string|null
    *   The editor to use, or NULL to not enable in-place editing.
    */
   public function getEditor($formatter_type, FieldDefinitionInterface $instance, array $items);

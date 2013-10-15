@@ -35,7 +35,7 @@ interface EntityResolverInterface {
    * @param string $entity_type
    *   The type of entity being resolved; e.g., 'node' or 'user'.
    *
-   * @return string|NULL
+   * @return string|null
    *   Returns the local entity ID, if found. Otherwise, returns NULL.
    */
   public function resolve(NormalizerInterface $normalizer, $data, $entity_type);

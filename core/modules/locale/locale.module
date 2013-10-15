@@ -596,7 +596,7 @@ function locale_js_alter(&$javascript) {
  *
  * @param array $files
  *   An array of local file paths.
- * @return string|NULL
+ * @return string|null
  *   The filepath to the translation file or NULL if no translation is
  *   applicable.
  */

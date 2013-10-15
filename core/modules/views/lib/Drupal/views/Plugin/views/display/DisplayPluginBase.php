@@ -2768,7 +2768,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Render the exposed form as block.
    *
-   * @return string|NULL
+   * @return string|null
    *  The rendered exposed form as string or NULL otherwise.
    */
   public function viewExposedFormBlocks() {

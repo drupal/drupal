@@ -39,7 +39,7 @@ class SelectionBase implements SelectionInterface {
   /**
    * The entity object, or NULL
    *
-   * @var NULL|EntityInterface
+   * @var \Drupal\Core\Entity\EntityInterface|null
    */
   protected $entity;
 

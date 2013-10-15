@@ -45,7 +45,7 @@ interface AccountInterface {
   /**
    * Returns the session ID.
    *
-   * @return string|NULL
+   * @return string|null
    *   The session ID or NULL if this user does not have an active session.
    */
   public function getSessionId();
@@ -53,7 +53,7 @@ interface AccountInterface {
   /**
    * Returns the secure session ID.
    *
-   * @return string|NULL
+   * @return string|null
    *   The session ID or NULL if this user does not have an active secure session.
    */
   public function getSecureSessionId();

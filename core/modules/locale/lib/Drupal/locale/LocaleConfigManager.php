@@ -301,7 +301,7 @@ class LocaleConfigManager extends TypedConfigManager {
    *
    * @param string $langcode
    *   The language code.
-   * @param string|NULL $name
+   * @param string|null $name
    *   Name of the original configuration. Set to NULL to get the name prefix
    *   for all $langcode overrides.
    *
