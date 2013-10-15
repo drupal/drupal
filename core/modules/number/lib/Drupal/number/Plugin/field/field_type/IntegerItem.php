@@ -14,7 +14,7 @@ use Drupal\field\FieldInterface;
  *
  * @FieldType(
  *   id = "number_integer",
- *   label = @Translation("Integer"),
+ *   label = @Translation("Number (integer)"),
  *   description = @Translation("This field stores a number in the database as an integer."),
  *   instance_settings = {
  *     "min" = "",
