@@ -52,7 +52,15 @@ class CommentInterfaceTest extends CommentTestBase {
     $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
+    // Comment as anonymous with preview required.
+    $this->drupalLogout();
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments', 'post comments', 'skip comment approval'));
+    $anonymous_comment = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
+    $this->assertTrue($this->commentExists($anonymous_comment), 'Comment found.');
+    $anonymous_comment->delete();
+
     // Check comment display.
+    $this->drupalLogin($this->web_user);
     $this->drupalGet('node/' . $this->node->id());
     $this->assertText($subject_text, 'Individual comment subject found.');
     $this->assertText($comment_text, 'Individual comment body found.');

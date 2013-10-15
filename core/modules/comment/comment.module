@@ -1368,11 +1368,11 @@ function comment_preview(CommentInterface $comment) {
       $account = $user;
     }
 
-    if ($account->id()) {
+    if (!empty($account) && $account->isAuthenticated()) {
       $comment->uid->target_id = $account->id();
       $comment->name->value = check_plain($account->getUsername());
     }
-    elseif (empty($comment->name->value)) {
+    else {
       $comment->name->value = \Drupal::config('user.settings')->get('anonymous');
     }
 
