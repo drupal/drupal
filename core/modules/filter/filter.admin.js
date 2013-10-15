@@ -15,21 +15,30 @@ Drupal.behaviors.filterStatus = {
       // Retrieve the tabledrag row belonging to this filter.
       var $row = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-weight')).closest('tr');
       // Retrieve the vertical tab belonging to this filter.
-      var tab = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-settings')).data('verticalTab');
+      var $filterSettings = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-settings'));
+      var filterSettingsTab = $filterSettings.data('verticalTab');
 
       // Bind click handler to this checkbox to conditionally show and hide the
       // filter's tableDrag row and vertical tab pane.
       $checkbox.bind('click.filterUpdate', function () {
         if ($checkbox.is(':checked')) {
           $row.show();
-          if (tab) {
-            tab.tabShow().updateSummary();
+          if (filterSettingsTab) {
+            filterSettingsTab.tabShow().updateSummary();
+          }
+          else {
+            // On very narrow viewports, Vertical Tabs are disabled.
+            $filterSettings.show();
           }
         }
         else {
           $row.hide();
-          if (tab) {
-            tab.tabHide().updateSummary();
+          if (filterSettingsTab) {
+            filterSettingsTab.tabHide().updateSummary();
+          }
+          else {
+            // On very narrow viewports, Vertical Tabs are disabled.
+            $filterSettings.hide();
           }
         }
         // Restripe table after toggling visibility of table row.
@@ -37,8 +46,8 @@ Drupal.behaviors.filterStatus = {
       });
 
       // Attach summary for configurable filters (only for screen-readers).
-      if (tab) {
-        tab.details.drupalSetSummary(function (tabContext) {
+      if (filterSettingsTab) {
+        filterSettingsTab.details.drupalSetSummary(function (tabContext) {
           return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
         });
       }
