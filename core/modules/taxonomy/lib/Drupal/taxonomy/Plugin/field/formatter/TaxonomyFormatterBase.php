@@ -61,7 +61,6 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
         // Rekey the items array if needed.
         if ($rekey) {
           $items->filterEmptyValues();
-          debug($items->getValue());
         }
       }
     }
