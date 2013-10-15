@@ -143,6 +143,9 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     $form['plugin_settings'] = array(
       '#type' => 'vertical_tabs',
       '#title' => t('CKEditor plugin settings'),
+      '#attributes' => array(
+        'id' => 'ckeditor-plugin-settings',
+      ),
     );
     $this->ckeditorPluginManager->injectPluginSettingsForm($form, $form_state, $editor);
     if (count(element_children($form['plugins'])) === 0) {

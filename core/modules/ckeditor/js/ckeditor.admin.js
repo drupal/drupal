@@ -516,4 +516,75 @@ function grantRowFocus (event) {
   }
 }
 
+/**
+ * Automatically shows/hides settings of buttons-only CKEditor plugins.
+ */
+Drupal.behaviors.ckeditorAdminButtonPluginSettings = {
+  attach: function (context) {
+    var $context = $(context);
+    var $ckeditorPluginSettings = $context.find('#ckeditor-plugin-settings').once('ckeditor-plugin-settings');
+    if ($ckeditorPluginSettings.length) {
+      // Hide all button-dependent plugin settings initially.
+      $ckeditorPluginSettings.find('[data-ckeditor-plugin-id]').each(function () {
+        var $this = $(this);
+        if ($this.data('verticalTab')) {
+          $this.data('verticalTab').tabHide();
+        }
+        else {
+          // On very narrow viewports, Vertical Tabs are disabled.
+          $this.hide();
+        }
+        $this.data('ckeditorButtonPluginSettingsActiveButtons', []);
+      });
+
+      // Whenever a button is added or removed, check if we should show or hide
+      // the corresponding plugin settings. (Note that upon initialization, each
+      // button that already is part of the toolbar still is considered "added",
+      // hence it also works correctly for buttons that were added previously.)
+      $context
+        .find('.ckeditor-toolbar-active')
+        .off('CKEditorToolbarChanged.ckeditorAdminPluginSettings')
+        .on('CKEditorToolbarChanged.ckeditorAdminPluginSettings', function (event, action, button) {
+          var $pluginSettings = $ckeditorPluginSettings
+            .find('[data-ckeditor-buttons~=' + button + ']');
+
+          // No settings for this button.
+          if ($pluginSettings.length === 0) {
+            return;
+          }
+
+          var verticalTab = $pluginSettings.data('verticalTab');
+          var activeButtons = $pluginSettings.data('ckeditorButtonPluginSettingsActiveButtons');
+          if (action === 'added') {
+            activeButtons.push(button);
+            // Show this plugin's settings if >=1 of its buttons are active.
+            if (verticalTab) {
+              verticalTab.tabShow();
+            }
+            else {
+              // On very narrow viewports, Vertical Tabs remain fieldsets.
+              $pluginSettings.show();
+            }
+
+          }
+          else {
+            // Remove this button from the list of active buttons.
+            activeButtons.splice(activeButtons.indexOf(button), 1);
+            // Show this plugin's settings 0 of its buttons are active.
+            if (activeButtons.length === 0) {
+              if (verticalTab) {
+                verticalTab.tabHide();
+              }
+              else {
+                // On very narrow viewports, Vertical Tabs are disabled.
+                $pluginSettings.hide();
+              }
+            }
+          }
+          $pluginSettings.data('ckeditorButtonPluginSettingsActiveButtons', activeButtons);
+        });
+    }
+  }
+};
+
 })(jQuery, Drupal, drupalSettings, CKEDITOR, _);

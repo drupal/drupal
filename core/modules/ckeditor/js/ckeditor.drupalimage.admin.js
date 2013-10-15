@@ -3,36 +3,6 @@
 "use strict";
 
 /**
- * Shows the "drupalimage" plugin settings only when the button is enabled.
- */
-Drupal.behaviors.ckeditorDrupalImageSettings = {
-  attach: function (context) {
-    var $context = $(context);
-    var $drupalImageVerticalTab = $('#edit-editor-settings-plugins-drupalimage').data('verticalTab');
-
-    // Hide if the "DrupalImage" button is disabled.
-    if ($('.ckeditor-toolbar-disabled li[data-button-name="DrupalImage"]').length === 1) {
-      $drupalImageVerticalTab.tabHide();
-    }
-
-    // React to added/removed toolbar buttons.
-    $context
-      .find('.ckeditor-toolbar-active')
-      .on('CKEditorToolbarChanged.ckeditorDrupalImageSettings', function (e, action, button) {
-        if (button === 'DrupalImage') {
-          if (action === 'added') {
-            $drupalImageVerticalTab.tabShow();
-          }
-          else {
-            $drupalImageVerticalTab.tabHide();
-          }
-        }
-      });
-  }
-
-};
-
-/**
  * Provides the summary for the "drupalimage" plugin settings vertical tab.
  */
 Drupal.behaviors.ckeditorDrupalImageSettingsSummary = {
