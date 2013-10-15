@@ -260,9 +260,8 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
  *
  * When this function is called during Drupal's initial installation process,
  * the name of the profile that's about to be installed is stored in the global
- * installation state. At all other times, the standard Drupal systems variable
- * table contains the name of the current profile, and we can call
- * variable_get() to determine what one is active.
+ * installation state. At all other times, the "install_profile" setting will be
+ * available in settings.php.
  *
  * @return $profile
  *   The name of the installation profile.
