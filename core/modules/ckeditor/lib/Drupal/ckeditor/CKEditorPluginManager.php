@@ -150,7 +150,19 @@ class CKEditorPluginManager extends DefaultPluginManager {
           '#type' => 'details',
           '#title' => $definitions[$plugin_id]['label'],
           '#group' => 'editor][settings][plugin_settings',
+          '#attributes' => array(
+            'data-ckeditor-plugin-id' => $plugin_id,
+          ),
         );
+        // Provide enough metadata for the drupal.ckeditor.admin library to
+        // allow it to automatically show/hide the vertical tab containing the
+        // settings for this plugin. Only do this if it's a CKEditor plugin that
+        // just provides buttons, don't do this if it's a contextually enabled
+        // CKEditor plugin. After all, in the latter case, we can't know when
+        // its settings should be shown!
+        if ($plugin instanceof CKEditorPluginButtonsInterface and !$plugin instanceof CKEditorPluginContextualInterface) {
+          $form['plugins'][$plugin_id]['#attributes']['data-ckeditor-buttons'] = implode(' ', array_keys($plugin->getButtons()));
+        }
         $form['plugins'][$plugin_id] += $plugin->settingsForm($plugin_settings_form, $form_state, $editor);
       }
     }
