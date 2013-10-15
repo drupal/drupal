@@ -13,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Event subscriber for routes.
+ * Provides dynamic routes for theme administration.
  */
 class RouteSubscriber implements EventSubscriberInterface {
 
