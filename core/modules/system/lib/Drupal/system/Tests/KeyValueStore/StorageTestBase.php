@@ -157,6 +157,9 @@ abstract class StorageTestBase extends UnitTestBase {
     // Verify that a non-existing key returns NULL as value.
     $this->assertNull($stores[0]->get('foo'));
 
+    // Verify that a non-existing key with a default returns the default.
+    $this->assertIdentical($stores[0]->get('foo', 'bar'), 'bar');
+
     // Verify that a FALSE value can be stored.
     $stores[0]->set('foo', FALSE);
     $this->assertIdentical($stores[0]->get('foo'), FALSE);

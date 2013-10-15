@@ -22,8 +22,8 @@ class MemoryStorage extends StorageBase {
   /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().
    */
-  public function get($key) {
-    return array_key_exists($key, $this->data) ? $this->data[$key] : NULL;
+  public function get($key, $default = NULL) {
+    return array_key_exists($key, $this->data) ? $this->data[$key] : $default;
   }
 
   /**

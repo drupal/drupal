@@ -25,11 +25,13 @@ interface KeyValueStoreInterface {
    *
    * @param string $key
    *   The key of the data to retrieve.
+   * @param mixed $default
+   *   The default value to use if the key is not found.
    *
    * @return mixed
-   *   The stored value, or NULL if no value exists.
+   *   The stored value, or the default value if no value exists.
    */
-  public function get($key);
+  public function get($key, $default = NULL);
 
   /**
    * Returns the stored key/value pairs for a given set of keys.
