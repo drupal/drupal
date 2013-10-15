@@ -213,7 +213,7 @@ function comment_admin_overview_submit($form, &$form_state) {
     entity_delete_multiple('comment', $cids);
   }
   else {
-    foreach ($cids as $cid => $value) {
+    foreach ($cids as $value) {
       $comment = comment_load($value);
 
       if ($operation == 'unpublish') {
