@@ -229,6 +229,10 @@ function content_translation_menu() {
  * Implements hook_menu_alter().
  */
 function content_translation_menu_alter(array &$items) {
+  // Clarify where translation settings are located.
+  $items['admin/config/regional/content-language']['title'] = 'Content language and translation';
+  $items['admin/config/regional/content-language']['description'] = 'Configure language and translation support for content.';
+
   // Check that the declared menu base paths are actually valid.
   foreach (entity_get_info() as $entity_type => $info) {
     if (content_translation_enabled($entity_type)) {
