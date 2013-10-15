@@ -293,7 +293,7 @@ function locale_requirements($phase) {
       // Determine the status of the translation updates per language.
       $status = locale_translation_get_status();
       if ($status) {
-        foreach ($status as $project_id => $project) {
+        foreach ($status as $project) {
           foreach ($project as $langcode => $project_info) {
             if (empty($project_info->type)) {
               $untranslated[$langcode] = $languages[$langcode]->name;
@@ -503,7 +503,7 @@ function locale_update_8004() {
       // Rename the negotiation and language switch callback keys.
       $negotiation = update_variable_get('language_negotiation_' . $type, NULL);
       if (!empty($negotiation)) {
-        foreach ($negotiation as $method_id => &$method) {
+        foreach ($negotiation as &$method) {
           if (isset($method['callbacks']['language'])) {
             $method['callbacks']['negotiation'] = $method['callbacks']['language'];
             unset($method['callbacks']['language']);
