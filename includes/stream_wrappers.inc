@@ -788,8 +788,6 @@ class DrupalPublicStreamWrapper extends DrupalLocalStreamWrapper {
  *
  * Provides support for storing privately accessible files with the Drupal file
  * interface.
- *
- * Extends DrupalPublicStreamWrapper.
  */
 class DrupalPrivateStreamWrapper extends DrupalLocalStreamWrapper {
   /**
