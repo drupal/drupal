@@ -49,7 +49,6 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     // Add HTML to ensure that sanitation of some fields tested directly.
     $comment->subject->value = '<blink>Blinking Comment</blink>';
-    $instance = field_info_instance('comment', 'body', 'comment_body');
 
     // Generate and test sanitized tokens.
     $tests = array();
