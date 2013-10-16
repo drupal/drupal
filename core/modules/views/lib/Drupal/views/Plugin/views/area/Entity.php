@@ -46,7 +46,7 @@ class Entity extends TokenizeAreaPluginBase {
     $options['tokenize']['default'] = TRUE;
 
     $options['entity_id'] = array('default' => '');
-    $options['view_mode'] = array('default' => '');
+    $options['view_mode'] = array('default' => 'default');
 
     return $options;
   }
@@ -79,7 +79,7 @@ class Entity extends TokenizeAreaPluginBase {
    *   All view modes of the entity type.
    */
   protected function buildViewModeOptions() {
-    $options = array();
+    $options = array('default' => t('Default'));
     $view_modes = entity_get_view_modes($this->entityType);
     foreach ($view_modes as $mode => $settings) {
       $options[$mode] = $settings['label'];

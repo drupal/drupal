@@ -111,6 +111,15 @@ class AreaEntityTest extends ViewTestBase {
     $result = $this->xpath('//div[@class = "view-header"]');
     $this->assertTrue(strpos(trim((string) $result[0]), $entities[0]->label()) !== FALSE, 'The rendered entity appears in the header of the view.');
     $this->assertTrue(strpos(trim((string) $result[0]), 'test') !== FALSE, 'The rendered entity appeared in the right view mode.');
+
+    // Test the available view mode options.
+    $form = array();
+    $form_state = array();
+    $form_state['type'] = 'header';
+    $view->display_handler->getHandler('header', 'entity_entity_test_render')->buildOptionsForm($form, $form_state);
+    $this->assertTrue(isset($form['view_mode']['#options']['full']), 'Ensure that the full view mode is available.');
+    $this->assertTrue(isset($form['view_mode']['#options']['test']), 'Ensure that the test view mode is available.');
+    $this->assertTrue(isset($form['view_mode']['#options']['default']), 'Ensure that the default view mode is available.');
   }
 
 }
