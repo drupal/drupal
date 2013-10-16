@@ -490,7 +490,7 @@ function file_field_views_data_views_data_alter(array &$data, FieldInterface $fi
   $field_name = $field->getFieldName();
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type;
 
-  list($label,) = field_views_field_label($entity_type, $field_name);
+  list($label) = field_views_field_label($entity_type, $field_name);
 
   $data['file_managed'][$pseudo_field_name]['relationship'] = array(
     'title' => t('@entity using @field', array('@entity' => $entity_info['label'], '@field' => $label)),
