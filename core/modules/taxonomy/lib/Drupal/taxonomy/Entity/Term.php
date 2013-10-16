@@ -157,9 +157,7 @@ class Term extends ContentEntityBase implements TermInterface {
         foreach ($children as $child) {
           // If the term has multiple parents, we don't delete it.
           $parents = taxonomy_term_load_parents($child->id());
-          // Because the parent has already been deleted, the parent count might
-          // be 0.
-          if (count($parents) <= 1) {
+          if (empty($parents)) {
             $orphans[] = $child->id();
           }
         }

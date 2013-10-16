@@ -33,6 +33,27 @@ class TermUnitTest extends TaxonomyTestBase {
   }
 
   /**
+   * Deleting a parent of a term with multiple parents does not delete the term.
+   */
+  function testMultipleParentDelete() {
+    $vocabulary = $this->createVocabulary();
+    $parent_term1 = $this->createTerm($vocabulary);
+    $parent_term2 = $this->createTerm($vocabulary);
+    $child_term = $this->createTerm($vocabulary);
+    $child_term->parent = array($parent_term1->id(), $parent_term2->id());
+    $child_term->save();
+    $child_term_id = $child_term->id();
+
+    $parent_term1->delete();
+    $child_term = entity_load('taxonomy_term', $child_term_id, TRUE);
+    $this->assertTrue(!empty($child_term), 'Child term is not deleted if only one of its parents is removed.');
+
+    $parent_term2->delete();
+    $child_term = entity_load('taxonomy_term', $child_term_id, TRUE);
+    $this->assertTrue(empty($child_term), 'Child term is deleted if all of its parents are removed.');
+  }
+
+  /**
    * Test a taxonomy with terms that have multiple parents of different depths.
    */
   function testTaxonomyVocabularyTree() {
