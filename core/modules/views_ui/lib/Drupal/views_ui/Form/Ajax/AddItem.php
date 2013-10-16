@@ -56,7 +56,7 @@ class AddItem extends ViewsFormBase {
     $form = array(
       'options' => array(
         '#theme_wrappers' => array('container'),
-        '#attributes' => array('class' => array('scroll')),
+        '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
       ),
     );
 
@@ -169,15 +169,18 @@ class AddItem extends ViewsFormBase {
       '#type' => 'item',
       '#markup' => '<span class="views-ui-view-title">' . $this->t('Selected:') . '</span> ' . '<div class="views-selected-options"></div>',
       '#theme_wrappers' => array('form_element', 'views_ui_container'),
-      '#attributes' => array('class' => array('container-inline', 'views-add-form-selected')),
+      '#attributes' => array(
+        'class' => array('container-inline', 'views-add-form-selected'),
+        'data-drupal-views-offset' => 'bottom',
+      ),
     );
     $view->getStandardButtons($form, $form_state, 'views_ui_add_item_form', $this->t('Add and configure @types', array('@types' => $ltitle)));
 
     // Remove the default submit function.
-    $form['buttons']['submit']['#submit'] = array_filter($form['buttons']['submit']['#submit'], function($var) {
+    $form['actions']['submit']['#submit'] = array_filter($form['actions']['submit']['#submit'], function($var) {
       return !(is_array($var) && isset($var[1]) && $var[1] == 'standardSubmit');
     });
-    $form['buttons']['submit']['#submit'][] = array($view, 'submitItemAdd');
+    $form['actions']['submit']['#submit'][] = array($view, 'submitItemAdd');
 
     return $form;
   }

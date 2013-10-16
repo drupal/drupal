@@ -1079,6 +1079,7 @@ function system_library_info() {
     'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/dialog.js' => array('group' => JS_LIBRARY),
+      'core/misc/dialog.position.js' => array('group' => JS_LIBRARY),
     ),
     'css' => array(
       'core/misc/dialog.theme.css' => array('weight' => 1),
@@ -1086,9 +1087,10 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
-      array('system', 'drupal.debounce'),
       array('system', 'drupalSettings'),
-      array('system', 'jquery.ui.dialog')
+      array('system', 'drupal.debounce'),
+      array('system', 'drupal.displace'),
+      array('system', 'jquery.ui.dialog'),
     ),
   );
 

@@ -191,13 +191,13 @@ function views_ui_library_info() {
     'version' => \Drupal::VERSION,
     'js' => array(
       $path . 'ajax.js' => array('group' => JS_DEFAULT),
+      $path . 'dialog.views.js' => array('group' => JS_DEFAULT),
       $path . 'views-admin.js' => array('group' => JS_DEFAULT),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
-      array('system', 'drupal.debounce'),
       array('system', 'jquery.once'),
       array('system', 'jquery.form'),
       array('system', 'drupal.ajax'),

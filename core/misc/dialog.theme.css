@@ -38,43 +38,6 @@
   padding: 0;
 }
 
-.ui-dialog .ui-dialog-buttonpane button {
-  background: #fefefe;
-  background-image: -webkit-linear-gradient(top, #fefefe, #e0e0e0);
-  background-image: -moz-linear-gradient(top, #fefefe, #e0e0e0);
-  background-image: -o-linear-gradient(top, #fefefe, #e0e0e0);
-  background-image: linear-gradient(to bottom, #fefefe, #e0e0e0);
-  border: 1px solid #c8c8c8;
-  border-radius: 3px;
-  text-decoration: none;
-  padding: 6px 17px 6px 17px;
-}
-.ui-dialog .ui-dialog-buttonpane button:hover,
-.ui-dialog .ui-dialog-buttonpane button:focus {
-  background: #fefefe;
-  background-image: -webkit-linear-gradient(top, #fefefe, #eaeaea);
-  background-image: -moz-linear-gradient(top, #fefefe, #eaeaea);
-  background-image: -o-linear-gradient(top, #fefefe, #eaeaea);
-  background-image: linear-gradient(to bottom, #fefefe, #eaeaea);
-  -webkit-box-shadow: 1px 1px 3px rgba(50, 50, 50, 0.1);
-  box-shadow: 1px 1px 3px rgba(50, 50, 50, 0.1);
-  color: #2e2e2e;
-  text-decoration: none;
-}
-.ui-dialog .ui-dialog-buttonpane button:active {
-  border: 1px solid #c8c8c8;
-  background: #fefefe;
-  background-image: -webkit-linear-gradient(top, #eaeaea, #fefefe);
-  background-image: -moz-linear-gradient(top, #eaeaea, #fefefe);
-  background-image: -o-linear-gradient(top, #eaeaea, #fefefe);
-  background-image: linear-gradient(to bottom, #eaeaea, #fefefe);
-  -webkit-box-shadow: 1px 1px 3px rgba(50, 50, 50, 0.1);
-  box-shadow: 1px 1px 3px rgba(50, 50, 50, 0.1);
-  color: #2e2e2e;
-  text-decoration: none;
-  text-shadow: none;
-}
-
 /* Form action buttons are moved in dialogs. Remove empty space. */
 .ui-dialog .ui-dialog-content .form-actions {
   padding: 0;

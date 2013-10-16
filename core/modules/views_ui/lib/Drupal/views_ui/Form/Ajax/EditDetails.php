@@ -40,7 +40,7 @@ class EditDetails extends ViewsFormBase {
 
     $form['details'] = array(
       '#theme_wrappers' => array('container'),
-      '#attributes' => array('class' => array('scroll')),
+      '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
     );
     $form['details']['label'] = array(
       '#type' => 'textfield',

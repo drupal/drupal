@@ -352,7 +352,7 @@ function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
   // @todo Move this to a separate function if it's needed on any forms that
   // don't have the display dropdown.
   $form['override'] = array(
-    '#prefix' => '<div class="views-override clearfix container-inline">',
+    '#prefix' => '<div class="views-override clearfix container-inline" data-drupal-views-offset="top">',
     '#suffix' => '</div>',
     '#weight' => -1000,
     '#tree' => TRUE,
@@ -402,20 +402,20 @@ function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
 }
 
 /**
- * Create the URL for one of our standard AJAX forms based upon known
+ * Create the menu path for one of our standard AJAX forms based upon known
  * information about the form.
  */
-function views_ui_build_form_url($form_state) {
+function views_ui_build_form_path($form_state) {
   $ajax = empty($form_state['ajax']) ? 'nojs' : 'ajax';
   $name = $form_state['view']->id();
-  $url = "admin/structure/views/$ajax/$form_state[form_key]/$name/$form_state[display_id]";
+  $path = "admin/structure/views/$ajax/$form_state[form_key]/$name/$form_state[display_id]";
   if (isset($form_state['type'])) {
-    $url .= '/' . $form_state['type'];
+    $path .= '/' . $form_state['type'];
   }
   if (isset($form_state['id'])) {
-    $url .= '/' . $form_state['id'];
+    $path .= '/' . $form_state['id'];
   }
-  return $url;
+  return $path;
 }
 
 /**

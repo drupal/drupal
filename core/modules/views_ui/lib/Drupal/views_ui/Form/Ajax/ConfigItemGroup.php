@@ -60,7 +60,7 @@ class ConfigItemGroup extends ViewsFormBase {
       'options' => array(
         '#tree' => TRUE,
         '#theme_wrappers' => array('container'),
-        '#attributes' => array('class' => array('scroll')),
+        '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
       ),
     );
     $executable = $view->getExecutable();

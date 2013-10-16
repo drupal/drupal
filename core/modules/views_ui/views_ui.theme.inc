@@ -276,7 +276,7 @@ function theme_views_ui_rearrange_filter_form(&$variables) {
   }
 
   $output = drupal_render($form['override']);
-  $output .= '<div class="scroll">';
+  $output .= '<div class="scroll" data-drupal-views-scroll>';
   if ($grouping) {
     $output .= drupal_render($form['filter_groups']['operator']);
   }
@@ -315,7 +315,7 @@ function theme_views_ui_rearrange_filter_form(&$variables) {
 
   // When JavaScript is enabled, the button for adding a new group should be
   // hidden, since it will be replaced by a link on the client side.
-  $form['buttons']['add_group']['#attributes']['class'][] = 'js-hide';
+  $form['actions']['add_group']['#attributes']['class'][] = 'js-hide';
 
   // Render the rest of the form and return.
   $output .= drupal_render_children($form);

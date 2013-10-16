@@ -209,35 +209,6 @@
 
 /* @end */
 
-/* @group Modal dialog box */
-
-.views-ui-dialog {
-  /* We need this so the button is visible. */
-  overflow: visible;
-  position: fixed;
-}
-
-.views-ui-dialog .ui-dialog-titlebar-close {
-  border: 1px solid transparent;
-  display: block;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  right: 0;
-  top: 2px;
-  /* Make sure this is in front of the modal backdrop. */
-  z-index: 1002;
-}
-
-.views-ui-dialog .ui-dialog-titlebar {
-  padding: 0;
-  margin: 0;
-}
-
-.views-ui-dialog .ui-dialog-title {
-  display: none;
-}
-
 .views-ui-dialog #views-ajax-popup {
   padding: 0;
   overflow: hidden;
@@ -253,8 +224,8 @@
 }
 
 .views-ui-dialog .scroll {
-  max-height: 400px;
   overflow: auto;
+  padding: 1em;
 }
 
 #views-filterable-options-controls {

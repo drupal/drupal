@@ -6,7 +6,7 @@
  */
 
 use Drupal\views\Ajax\HighlightCommand;
-use Drupal\views\Ajax\SetFormCommand;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\AjaxResponse;
 
 /**
@@ -52,10 +52,12 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
     $display .= $output;
 
     $title = empty($form_state['title']) ? '' : $form_state['title'];
+    $options = array(
+      'dialogClass' => 'views-ui-dialog',
+      'width' => '50%',
+    );
 
-    $url = empty($form_state['url']) ? url(current_path(), array('absolute' => TRUE)) : $form_state['url'];
-
-    $response->addCommand(new SetFormCommand($display, $title, $url));
+    $response->addCommand(new OpenModalDialogCommand($title, $display, $options));
 
     if (!empty($form_state['#section'])) {
       $response->addCommand(new HighlightCommand('.' . drupal_clean_css_identifier($form_state['#section'])));

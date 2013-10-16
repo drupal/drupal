@@ -267,9 +267,8 @@ class ViewUI implements ViewStorageInterface {
    * docblock outdated?
    */
   public function getStandardButtons(&$form, &$form_state, $form_id, $name = NULL) {
-    $form['buttons'] = array(
-      '#prefix' => '<div class="clearfix"><div class="form-buttons">',
-      '#suffix' => '</div></div>',
+    $form['actions'] = array(
+      '#type' => 'actions',
     );
 
     if (empty($name)) {
@@ -280,12 +279,18 @@ class ViewUI implements ViewStorageInterface {
       $names = array(t('Apply'), t('Apply and continue'));
     }
 
+    // Views provides its own custom handling of AJAX form submissions. Usually
+    // this happens at the same path, but custom paths may be specified in
+    // $form_state.
+    $form_path = empty($form_state['path']) ? current_path() : $form_state['path'];
+
     // Forms that are purely informational set an ok_button flag, so we know not
     // to create an "Apply" button for them.
     if (empty($form_state['ok_button'])) {
-      $form['buttons']['submit'] = array(
+      $form['actions']['submit'] = array(
         '#type' => 'submit',
         '#value' => $name,
+        '#id' => 'edit-submit-' . drupal_html_id($form_id),
         // The regular submit handler ($form_id . '_submit') does not apply if
         // we're updating the default display. It does apply if we're updating
         // the current display. Since we have no way of knowing at this point
@@ -293,6 +298,9 @@ class ViewUI implements ViewStorageInterface {
         // take care of running the regular submit handler as appropriate.
         '#submit' => array(array($this, 'standardSubmit')),
         '#button_type' => 'primary',
+        '#ajax' => array(
+          'path' => $form_path,
+        ),
       );
       // Form API button click detection requires the button's #value to be the
       // same between the form build of the initial page request, and the
@@ -304,25 +312,28 @@ class ViewUI implements ViewStorageInterface {
       // extending button click detection code to support any of the possible
       // button labels.
       if (isset($names)) {
-        $form['buttons']['submit']['#values'] = $names;
-        $form['buttons']['submit']['#process'] = array_merge(array('views_ui_form_button_was_clicked'), element_info_property($form['buttons']['submit']['#type'], '#process', array()));
+        $form['actions']['submit']['#values'] = $names;
+        $form['actions']['submit']['#process'] = array_merge(array('views_ui_form_button_was_clicked'), element_info_property($form['actions']['submit']['#type'], '#process', array()));
       }
       // If a validation handler exists for the form, assign it to this button.
       if (isset($form_state['build_info']['callback_object'])) {
-        $form['buttons']['submit']['#validate'][] = array($form_state['build_info']['callback_object'], 'validateForm');
+        $form['actions']['submit']['#validate'][] = array($form_state['build_info']['callback_object'], 'validateForm');
       }
       if (function_exists($form_id . '_validate')) {
-        $form['buttons']['submit']['#validate'][] = $form_id . '_validate';
+        $form['actions']['submit']['#validate'][] = $form_id . '_validate';
       }
     }
 
     // Create a "Cancel" button. For purely informational forms, label it "OK".
     $cancel_submit = function_exists($form_id . '_cancel') ? $form_id . '_cancel' : array($this, 'standardCancel');
-    $form['buttons']['cancel'] = array(
+    $form['actions']['cancel'] = array(
       '#type' => 'submit',
       '#value' => empty($form_state['ok_button']) ? t('Cancel') : t('Ok'),
       '#submit' => array($cancel_submit),
       '#validate' => array(),
+      '#ajax' => array(
+        'path' => $form_path,
+      ),
       '#limit_validation_errors' => array(),
     );
 
@@ -330,9 +341,6 @@ class ViewUI implements ViewStorageInterface {
     // We used to set these items on the form, but now we want them on the $form_state:
     if (isset($form['#title'])) {
       $form_state['title'] = $form['#title'];
-    }
-    if (isset($form['#url'])) {
-      $form_state['url'] = $form['#url'];
     }
     if (isset($form['#section'])) {
       $form_state['#section'] = $form['#section'];

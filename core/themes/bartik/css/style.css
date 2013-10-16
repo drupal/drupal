@@ -1992,22 +1992,6 @@ div.admin-panel .description {
   background-color: #F9F9F9;
 }
 
-.views-ui-dialog .ui-dialog-titlebar-close,
-.views-ui-dialog #views-ajax-title,
-.views-ui-dialog .views-override,
-.views-ui-dialog .form-buttons {
-  background-color: #f6f6f6;
-}
-
-.views-ui-dialog a {
-  color: #0071b3;
-}
-
-.views-ui-dialog a:hover,
-.views-ui-dialog a:focus {
-  color: #018fe2;
-}
-
 /* @end */
 
 .views-display-column .details-wrapper {

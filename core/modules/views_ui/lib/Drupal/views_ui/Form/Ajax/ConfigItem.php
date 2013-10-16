@@ -60,7 +60,7 @@ class ConfigItem extends ViewsFormBase {
       'options' => array(
         '#tree' => TRUE,
         '#theme_wrappers' => array('container'),
-        '#attributes' => array('class' => array('scroll')),
+        '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
       ),
     );
     $executable = $view->getExecutable();
@@ -168,11 +168,14 @@ class ConfigItem extends ViewsFormBase {
 
       $view->getStandardButtons($form, $form_state, 'views_ui_config_item_form', $name);
       // Add a 'remove' button.
-      $form['buttons']['remove'] = array(
+      $form['actions']['remove'] = array(
         '#type' => 'submit',
         '#value' => $this->t('Remove'),
         '#submit' => array(array($this, 'remove')),
         '#limit_validation_errors' => array(array('override')),
+        '#ajax' => array(
+          'path' => current_path(),
+        ),
       );
     }
 

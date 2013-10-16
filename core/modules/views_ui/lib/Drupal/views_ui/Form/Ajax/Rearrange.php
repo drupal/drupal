@@ -80,7 +80,7 @@ class Rearrange extends ViewsFormBase {
         array('order', 'sibling', 'weight'),
       ),
       '#tree' => TRUE,
-      '#prefix' => '<div class="scroll">',
+      '#prefix' => '<div class="scroll" data-drupal-views-scroll>',
       '#suffix' => '</div>',
     );
 

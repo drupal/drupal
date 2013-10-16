@@ -204,7 +204,7 @@ class RearrangeFilter extends ViewsFormBase {
     }
 
     $view->getStandardButtons($form, $form_state, 'views_ui_rearrange_filter_form');
-    $form['buttons']['add_group'] = array(
+    $form['actions']['add_group'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Create new filter group'),
       '#id' => 'views-add-group',

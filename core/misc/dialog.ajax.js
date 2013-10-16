@@ -24,9 +24,10 @@
       if ($dialog.length) {
         // Remove and replace the dialog buttons with those from the new form.
         if ($dialog.dialog('option', 'drupalAutoButtons')) {
-          var buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
-          $dialog.dialog('option', 'buttons', buttons);
+          // Trigger an event to detect/sync changes to buttons.
+          $dialog.trigger('dialogButtonsChange');
         }
+
         // Refocus the first input element after validation errors.
         if ($context.find('form').length) {
           $context.find('input:first').focus();
@@ -61,7 +62,7 @@
           'text': $originalButton.html() || $originalButton.attr('value'),
           'class': $originalButton.attr('class'),
           'click': function (e) {
-            $originalButton.trigger('click');
+            $originalButton.trigger('mousedown').trigger('click').trigger('mouseup');
             e.preventDefault();
           }
         });
@@ -98,6 +99,12 @@
       response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
     }
 
+    // Bind dialogButtonsChange
+    $dialog.on('dialogButtonsChange', function() {
+      var buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
+      $dialog.dialog('option', 'buttons', buttons);
+    });
+
     // Open the dialog itself.
     response.dialogOptions = response.dialogOptions || {};
     var dialog = Drupal.dialog($dialog, response.dialogOptions);
@@ -107,6 +114,9 @@
     else {
       dialog.show();
     }
+
+    // Add the standard Drupal class for buttons for style consistency.
+    $dialog.parent().find('.ui-dialog-buttonset').addClass('form-actions');
   };
 
   /**
@@ -122,6 +132,9 @@
         $dialog.remove();
       }
     }
+
+    // Unbind dialogButtonsChange
+    $dialog.off('dialogButtonsChange');
   };
 
   /**

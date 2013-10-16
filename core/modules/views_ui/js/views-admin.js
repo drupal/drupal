@@ -2,7 +2,7 @@
  * @file
  * Some basic behaviors and utility functions for Views UI.
  */
-(function ($, Drupal, drupalSettings, debounce) {
+(function ($, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -162,11 +162,14 @@ $.extend(Drupal.viewsUi.FormFieldFiller.prototype, {
 
 Drupal.behaviors.addItemForm = {
   attach: function (context) {
+    var $context = $(context);
+    var $form = $context;
     // The add item form may have an id of views-ui-add-item-form--n.
-    var $form = $(context).find('form[id^="views-ui-add-item-form"]').first();
-    // Make sure we don't add more than one event handler to the same form.
-    $form = $form.once('views-ui-add-item-form');
-    if ($form.length) {
+    if (!$context.is('form[id^="views-ui-add-item-form"]')) {
+      $form = $context.find('form[id^="views-ui-add-item-form"]');
+    }
+    if ($form.once('views-ui-add-item-form').length) {
+      // If we we have an unprocessed views-ui-add-item-form, let's instantiate.
       new Drupal.viewsUi.AddItemForm($form);
     }
   }
@@ -186,7 +189,7 @@ Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
   var label = $.trim($target.next().text());
   // Add/remove the checked item to the list.
   if ($target.is(':checked')) {
-    this.$selected_div.show();
+    this.$selected_div.show().css('display', 'block');
     this.checkedItems.push(label);
   }
   else {
@@ -212,8 +215,9 @@ Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
  */
 Drupal.viewsUi.AddItemForm.prototype.refreshCheckedItems = function () {
   // Perhaps we should precache the text div, too.
-  this.$selected_div.find('.views-selected-options').html(this.checkedItems.join(', '));
-  Drupal.viewsUi.resizeModal('', true);
+  this.$selected_div.find('.views-selected-options')
+    .html(this.checkedItems.join(', '))
+    .trigger('dialogContentResize');
 };
 
 /**
@@ -279,11 +283,14 @@ Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
 
 Drupal.behaviors.viewsUiSearchOptions = {
   attach: function (context) {
+    var $context = $(context);
+    var $form = $context;
     // The add item form may have an id of views-ui-add-item-form--n.
-    var $form = $(context).find('form[id^="views-ui-add-item-form"]').first();
+    if (!$context.is('form[id^="views-ui-add-item-form"]')) {
+      $form = $context.find('form[id^="views-ui-add-item-form"]');
+    }
     // Make sure we don't add more than one event handler to the same form.
-    $form = $form.once('views-ui-filter-options');
-    if ($form.length) {
+    if ($form.once('views-ui-filter-options').length) {
       new Drupal.viewsUi.OptionsSearch($form);
     }
   }
@@ -868,7 +875,8 @@ Drupal.behaviors.viewsUiOverrideSelect = {
   attach: function (context) {
     $(context).find('#edit-override-dropdown').once('views-ui-override-button-text', function () {
       // Closures! :(
-      var $submit = $('#edit-submit');
+      var $context = $(context);
+      var $submit = $context.find('[id^=edit-submit]');
       var old_value = $submit.val();
 
       $submit.once('views-ui-override-button-text')
@@ -888,103 +896,13 @@ Drupal.behaviors.viewsUiOverrideSelect = {
         else {
           $submit.val(Drupal.t('Apply (this display)'));
         }
+        var $dialog = $context.closest('.ui-dialog-content');
+        $dialog.trigger('dialogButtonsChange');
       })
         .trigger('change');
     });
 
   }
-};
-
-Drupal.viewsUi.resizeModal = function (e, no_shrink) {
-  var $modal = $('.views-ui-dialog');
-  var $window = $(window);
-  var windowWidth = $window.width();
-  var $scroll = $modal.find('.scroll');
-  if ($modal.size() === 0 || $modal.css('display') === 'none') {
-    return;
-  }
-
-  var maxWidth = parseInt(windowWidth * 0.85, 10); // 85% of window
-  var minWidth = parseInt(windowWidth * 0.6, 10); // 60% of window
-
-  // Set the modal to the minwidth so that our width calculation of
-  // children works.
-  $modal.css('width', minWidth);
-  var width = minWidth;
-
-  // Don't let the window get more than 80% of the display high.
-  var maxHeight = parseInt($window.height() * 0.8, 10);
-  var minHeight = 200;
-  if (no_shrink) {
-    minHeight = $modal.height();
-  }
-
-  if (minHeight > maxHeight) {
-    minHeight = maxHeight;
-  }
-
-  var height = 0;
-
-  // Calculate the height of the 'scroll' region.
-  var scrollHeight = 0;
-
-  scrollHeight += parseInt($scroll.css('padding-top'), 10);
-  scrollHeight += parseInt($scroll.css('padding-bottom'), 10);
-
-  $scroll.children().each(function () {
-    var w = $(this).innerWidth();
-    if (w > width) {
-      width = w;
-    }
-    scrollHeight += $(this).outerHeight(true);
-  });
-
-  // Now, calculate what the difference between the scroll and the modal
-  // will be.
-
-  var difference = 0;
-  difference += parseInt($scroll.css('padding-top'), 10);
-  difference += parseInt($scroll.css('padding-bottom'), 10);
-  difference += $('.views-override').outerHeight(true);
-  difference += $('.views-messages').outerHeight(true);
-  difference += $('#views-ajax-title').outerHeight(true);
-  difference += $('.views-add-form-selected').outerHeight(true);
-  difference += $('.form-buttons', $modal).outerHeight(true);
-
-  height = scrollHeight + difference;
-
-  if (height > maxHeight) {
-    height = maxHeight;
-    scrollHeight = maxHeight - difference;
-  }
-  else if (height < minHeight) {
-    height = minHeight;
-    scrollHeight = minHeight - difference;
-  }
-
-  if (width > maxWidth) {
-    width = maxWidth;
-  }
-
-  // Get where we should move content to
-  var top = ($(window).height() / 2) - (height / 2);
-  var left = ($(window).width() / 2) - (width / 2);
-
-  $modal.css({
-    'top': top + 'px',
-    'left': left + 'px',
-    'width': width + 'px',
-    'height': height + 'px'
-  });
-
-  // Ensure inner popup height matches.
-  $(drupalSettings.views.ajax.popup).css('height', height + 'px');
-
-  $scroll.css({
-    'height': scrollHeight + 'px',
-    'max-height': scrollHeight + 'px'
-  });
-
 };
 
 Drupal.behaviors.viewsUiHandlerRemoveLink = {
@@ -1010,6 +928,4 @@ Drupal.behaviors.viewsUiHandlerRemoveLink = {
   }
 };
 
-$(window).on('resize scroll', debounce(Drupal.viewsUi.resizeModal, 100));
-
-})(jQuery, Drupal, drupalSettings, Drupal.debounce);
+})(jQuery, Drupal, drupalSettings);

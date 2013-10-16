@@ -401,15 +401,6 @@ td.group-title {
   padding-right: 10px;
 }
 
-/* This keeps the collapsible details of options from crashing into the bottom
- * of the edit option columns. Because the edit option columns are floated, the collapsible
- * details need to be floated as well so that the margin above the details interacts with
- * the float edit option columns.
- */
-#edit-options details {
-  width: 100%;
-}
-
 #edit-options-more {
   clear: both;
 }
@@ -783,28 +774,6 @@ ul#views-display-menu-tabs li.add ul.action-list li{
  * The contents of the popup dialog on the views edit form.
  */
 
-.views-ui-dialog {
-  font-size: small;
-  padding: 0;
-}
-
-.views-ui-dialog .ui-dialog-titlebar-close {
-  background: url("../images/close.png") no-repeat scroll 6px 3px #f3f4ee;
-  border-color: #aaa;
-  border-radius: 0 10px 12px 0;
-  border-style: solid;
-  border-width: 1px 1px 1px 0;
-  box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.1);
-  height: 22px;
-  right: -28px;
-  top: 0;
-  width: 26px;
-}
-
-.views-ui-dialog .ui-dialog-titlebar-close span {
-  display: none;
-}
-
 .views-filterable-options .form-type-checkbox {
   border: 1px solid #ccc;
   padding: 5px 8px;
@@ -847,6 +816,10 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   width: 200px;
 }
 
+.views-ui-dialog .ui-dialog-content {
+  padding: 0;
+}
+
 .views-ui-dialog .views-filterable-options {
   margin-bottom: 10px;
 }
@@ -869,8 +842,24 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   background-color: #f3f4ee;
 }
 
+.views-ui-dialog.views-ui-dialog-scroll .ui-dialog-titlebar {
+  border: none;
+}
+
 .views-ui-dialog .views-override {
-  padding: 0 13px 8px;
+  padding: 8px 13px;
+}
+
+.views-ui-dialog [data-drupal-views-offset] {
+  border: 1px solid #ccc;
+}
+
+.views-ui-dialog [data-drupal-views-offset="top"] {
+  border-width: 0 0 1px;
+}
+
+.views-ui-dialog [data-drupal-views-offset="bottom"] {
+  border-width: 1px 0 0;
 }
 
 .views-ui-dialog .views-override > * {
@@ -902,25 +891,9 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   content: "\00A0\003E";
 }
 
-.views-ui-dialog .scroll {
-  border: 1px solid #ccc;
-  border-width: 1px 0;
-  padding: 8px 13px;
-}
-
 .views-ui-dialog details .item-list {
   padding-left: 2em;
 }
-
-.views-ui-dialog .form-buttons {
-  background-color: #f3f4ee;
-  padding: 8px 13px;
-}
-.views-ui-dialog .form-buttons input {
-  margin-bottom: 0;
-  margin-right: 0;
-}
-
 /* @end */
 
 /* @group Configure filter criteria */

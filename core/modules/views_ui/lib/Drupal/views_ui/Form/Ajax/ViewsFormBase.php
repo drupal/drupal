@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\Ajax;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -144,11 +145,11 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       $form_state = $reflection->newInstanceArgs(array_slice($top, 3, 2))->getFormState($view, $top[2], $form_state['ajax']);
 
       $form_state['input'] = array();
-      $form_url = views_ui_build_form_url($form_state);
+      $form_path = views_ui_build_form_path($form_state);
       if (!$form_state['ajax']) {
-        return new RedirectResponse(url($form_url, array('absolute' => TRUE)));
+        return new RedirectResponse(url($form_path, array('absolute' => TRUE)));
       }
-      $form_state['url'] = url($form_url);
+      $form_state['path'] = url($form_path);
       $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
     }
     elseif (!$form_state['ajax']) {
@@ -157,7 +158,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     }
     else {
       $response = new AjaxResponse();
-      $response->addCommand(new Ajax\DismissFormCommand());
+      $response->addCommand(new CloseModalDialogCommand());
       $response->addCommand(new Ajax\ShowButtonsCommand());
       $response->addCommand(new Ajax\TriggerPreviewCommand());
       if (!empty($form_state['#page_title'])) {
