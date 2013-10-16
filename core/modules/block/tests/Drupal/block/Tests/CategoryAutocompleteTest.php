@@ -63,9 +63,9 @@ class CategoryAutocompleteTest extends UnitTestCase {
   public function testAutocompleteSuggestions($string, $suggestions) {
     $suggestions = array_map(function ($suggestion) {
       return String::checkPlain($suggestion);
-    }, $suggestions);
+    }, MapArray::copyValuesToKeys($suggestions));
     $result = $this->autocompleteController->autocomplete(new Request(array('q' => $string)));
-    $this->assertSame(MapArray::copyValuesToKeys($suggestions), json_decode($result->getContent(), TRUE));
+    $this->assertSame($suggestions, json_decode($result->getContent(), TRUE));
   }
 
   /**
