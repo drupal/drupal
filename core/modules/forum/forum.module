@@ -149,7 +149,7 @@ function forum_menu() {
  * Implements hook_menu_local_tasks().
  */
 function forum_menu_local_tasks(&$data, $route_name) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // Add action link to 'node/add/forum' on 'forum' sub-pages.
   if (in_array($route_name, array('forum.index', 'forum.page'))) {
@@ -682,7 +682,7 @@ function template_preprocess_forums(&$variables) {
  *   - tid: Taxonomy term ID of the current forum.
  */
 function template_preprocess_forum_list(&$variables) {
-  global $user;
+  $user = \Drupal::currentUser();
   $row = 0;
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {

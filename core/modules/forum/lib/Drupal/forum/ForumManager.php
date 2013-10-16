@@ -139,7 +139,8 @@ class ForumManager implements ForumManagerInterface {
     $forum_per_page = $config->get('topics.page_limit');
     $sortby = $config->get('topics.order');
 
-    global $user, $forum_topic_list_header;
+    global $forum_topic_list_header;
+    $user = \Drupal::currentUser();
 
     $forum_topic_list_header = array(
       array('data' => $this->t('Topic'), 'field' => 'f.title'),
@@ -326,7 +327,7 @@ class ForumManager implements ForumManagerInterface {
    *   previously viewed the node; otherwise HISTORY_READ_LIMIT.
    */
   protected function lastVisit($nid) {
-    global $user;
+    $user = \Drupal::currentUser();
 
     if (empty($this->history[$nid])) {
       $result = $this->connection->select('history', 'h')
