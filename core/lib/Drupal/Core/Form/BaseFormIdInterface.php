@@ -18,8 +18,8 @@ interface BaseFormIdInterface extends FormInterface {
   /**
    * Returns a string identifying the base form.
    *
-   * @return string|false
-   *   The string identifying the base form or FALSE if this is not a base form.
+   * @return string|null
+   *   The string identifying the base form or NULL if this is not a base form.
    */
   public function getBaseFormID();
 

@@ -509,4 +509,17 @@ class BookTest extends WebTestBase {
     $this->assertFieldByName("table[book-admin-{$node2->id()}][weight]", 2);
     $this->assertFieldByName("table[book-admin-{$node2->id()}][plid]", $plid);
   }
+
+  /**
+   * Tests outline of a book.
+   */
+  public function testBookOutline() {
+    // Create new book.
+    $this->drupalLogin($this->book_author);
+    $book = $this->createBookNode('new');
+
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('node/' . $book->id() . '/outline');
+    $this->assertRaw(t('Book outline'));
+  }
 }

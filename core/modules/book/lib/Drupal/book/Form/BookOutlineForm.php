@@ -7,14 +7,14 @@
 
 namespace Drupal\book\Form;
 
-use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\book\BookManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays the book outline form.
  */
-class BookOutlineForm extends EntityFormControllerNG {
+class BookOutlineForm extends ContentEntityFormController {
 
   /**
    * The book being displayed.
@@ -51,7 +51,7 @@ class BookOutlineForm extends EntityFormControllerNG {
    * {@inheritdoc}
    */
   public function getBaseFormID() {
-    return FALSE;
+    return NULL;
   }
 
   /**

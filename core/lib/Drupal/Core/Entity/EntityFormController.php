@@ -64,7 +64,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     // twice otherwise.
     $base_form_id = $this->entity->entityType() . '_form';
     if ($base_form_id == $this->getFormId()) {
-      $base_form_id = '';
+      $base_form_id = NULL;
     }
     return $base_form_id;
   }
