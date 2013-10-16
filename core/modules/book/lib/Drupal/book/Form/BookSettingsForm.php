@@ -17,7 +17,7 @@ class BookSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'book_admin_settings';
   }
 

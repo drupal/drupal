@@ -55,7 +55,7 @@ class CronForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_cron_settings';
   }
 

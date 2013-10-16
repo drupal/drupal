@@ -23,9 +23,9 @@ class FormController implements FormInterface {
   protected $condition;
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'condition_node_type_test_form';
   }
 

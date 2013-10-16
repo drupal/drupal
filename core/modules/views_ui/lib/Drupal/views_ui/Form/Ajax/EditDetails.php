@@ -25,7 +25,7 @@ class EditDetails extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_edit_details_form';
   }
 

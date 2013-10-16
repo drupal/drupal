@@ -58,7 +58,7 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_theme_settings';
   }
 

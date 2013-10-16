@@ -22,7 +22,7 @@ class EditorImageDialog extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'editor_image_dialog';
   }
 

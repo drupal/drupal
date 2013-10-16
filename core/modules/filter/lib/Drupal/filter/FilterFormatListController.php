@@ -69,7 +69,7 @@ class FilterFormatListController extends DraggableListController implements Enti
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'filter_admin_overview';
   }
 

@@ -17,7 +17,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'form_test_confirm_test_form';
   }
 

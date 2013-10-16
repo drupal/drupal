@@ -506,7 +506,7 @@ function entity_form_state_defaults(EntityInterface $entity, $operation = 'defau
  */
 function entity_form_submit(EntityInterface $entity, $operation = 'default', &$form_state = array()) {
   $form_state += entity_form_state_defaults($entity, $operation);
-  $form_id = $form_state['build_info']['callback_object']->getFormID();
+  $form_id = $form_state['build_info']['callback_object']->getFormId();
   drupal_form_submit($form_id, $form_state);
 }
 

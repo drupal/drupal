@@ -71,7 +71,7 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'language_content_settings_form';
   }
 

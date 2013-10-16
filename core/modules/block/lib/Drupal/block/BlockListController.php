@@ -127,9 +127,9 @@ class BlockListController extends ConfigEntityListController implements FormInte
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'block_admin_display_form';
   }
 

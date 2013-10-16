@@ -84,7 +84,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'user_multiple_cancel_confirm';
   }
 

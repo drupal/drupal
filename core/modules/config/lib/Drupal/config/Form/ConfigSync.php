@@ -122,7 +122,7 @@ class ConfigSync extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'config_admin_import_form';
   }
 

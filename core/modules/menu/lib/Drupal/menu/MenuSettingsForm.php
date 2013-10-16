@@ -15,9 +15,9 @@ use Drupal\Core\Form\ConfigFormBase;
 class MenuSettingsForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'menu_configure';
   }
 

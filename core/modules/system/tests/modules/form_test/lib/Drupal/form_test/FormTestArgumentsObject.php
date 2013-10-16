@@ -18,7 +18,7 @@ class FormTestArgumentsObject extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'form_test_form_test_arguments_object';
   }
 

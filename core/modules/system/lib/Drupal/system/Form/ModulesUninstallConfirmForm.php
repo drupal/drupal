@@ -96,7 +96,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ContainerIn
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_modules_uninstall_confirm_form';
   }
 

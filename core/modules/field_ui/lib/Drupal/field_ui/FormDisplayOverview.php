@@ -31,7 +31,7 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'field_ui_form_display_overview_form';
   }
 

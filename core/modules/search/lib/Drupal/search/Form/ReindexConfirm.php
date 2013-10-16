@@ -15,9 +15,9 @@ use Drupal\Core\Form\ConfirmFormBase;
 class ReindexConfirm extends ConfirmFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'search_reindex_confirm';
   }
 

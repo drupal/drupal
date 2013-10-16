@@ -18,7 +18,7 @@ class FileSystemForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_file_system_settings';
   }
 

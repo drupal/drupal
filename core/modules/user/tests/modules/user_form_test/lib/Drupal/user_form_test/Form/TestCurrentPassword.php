@@ -18,7 +18,7 @@ class TestCurrentPassword extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'user_form_test_current_password';
   }
 

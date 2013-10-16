@@ -58,7 +58,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'image_effect_delete_form';
   }
 

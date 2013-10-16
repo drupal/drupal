@@ -17,7 +17,7 @@ class FormTestAutocompleteForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'form_test_autocomplete';
   }
 

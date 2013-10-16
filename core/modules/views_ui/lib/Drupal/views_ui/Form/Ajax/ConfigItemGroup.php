@@ -43,7 +43,7 @@ class ConfigItemGroup extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_config_item_group_form';
   }
 

@@ -131,7 +131,7 @@ function _drupal_form_id($form_arg, &$form_state) {
     if ($form_arg instanceof BaseFormIdInterface) {
       $form_state['build_info']['base_form_id'] = $form_arg->getBaseFormID();
     }
-    return $form_arg->getFormID();
+    return $form_arg->getFormId();
   }
 
   // Otherwise, the $form_arg is the form ID.

@@ -57,7 +57,7 @@ class BreakLockForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_break_lock_confirm';
   }
 

@@ -51,9 +51,9 @@ class DeleteForm extends ConfirmFormBase implements ContainerInjectionInterface 
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'path_alias_delete';
   }
 

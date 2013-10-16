@@ -17,7 +17,7 @@ class AjaxTestForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'ajax_test_form';
   }
 

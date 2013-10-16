@@ -25,7 +25,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'forum_confirm_delete';
   }
 

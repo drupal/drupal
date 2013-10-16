@@ -46,7 +46,7 @@ class BanDelete extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'ban_ip_delete_form';
   }
 

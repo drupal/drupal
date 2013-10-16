@@ -35,7 +35,7 @@ class TranslatableForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'content_translation_translatable_form';
   }
 

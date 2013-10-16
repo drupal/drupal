@@ -54,7 +54,7 @@ class PerformanceForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_performance_settings';
   }
 

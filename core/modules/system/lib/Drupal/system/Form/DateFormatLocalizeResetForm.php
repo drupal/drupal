@@ -53,7 +53,7 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ContainerIn
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_date_format_localize_reset_form';
   }
 

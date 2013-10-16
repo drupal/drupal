@@ -17,7 +17,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_admin_settings_advanced';
   }
 

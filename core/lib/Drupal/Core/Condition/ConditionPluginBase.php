@@ -15,9 +15,9 @@ use Drupal\Core\Executable\ExecutablePluginBase;
 abstract class ConditionPluginBase extends ExecutablePluginBase implements ConditionInterface {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     $definition = $this->getPluginDefinition();
     return implode('_', array($definition['module'], $definition['id'], 'condition'));
   }

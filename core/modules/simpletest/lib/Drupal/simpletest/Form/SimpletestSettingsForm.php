@@ -17,7 +17,7 @@ class SimpletestSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'simpletest_settings_form';
   }
 

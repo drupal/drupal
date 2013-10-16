@@ -383,7 +383,7 @@ class EntityManager extends PluginManagerBase {
    */
   public function getForm(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
     $form_state += entity_form_state_defaults($entity, $operation);
-    $form_id = $form_state['build_info']['callback_object']->getFormID();
+    $form_id = $form_state['build_info']['callback_object']->getFormId();
     return drupal_build_form($form_id, $form_state);
   }
 

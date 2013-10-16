@@ -73,7 +73,7 @@ class CategoryAdminForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'aggregator_form_category';
   }
 

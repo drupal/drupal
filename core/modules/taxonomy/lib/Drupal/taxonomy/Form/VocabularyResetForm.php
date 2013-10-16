@@ -42,7 +42,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'taxonomy_vocabulary_confirm_reset_alphabetical';
   }
 

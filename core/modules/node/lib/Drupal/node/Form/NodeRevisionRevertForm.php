@@ -54,7 +54,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase implements ContainerInjecti
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'node_revision_revert_confirm';
   }
 

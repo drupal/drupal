@@ -84,7 +84,7 @@ class OpmlFeedAdd extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'aggregator_opml_add';
   }
 

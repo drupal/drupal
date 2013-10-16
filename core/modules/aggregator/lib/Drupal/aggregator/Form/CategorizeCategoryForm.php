@@ -15,7 +15,7 @@ class CategorizeCategoryForm extends AggregatorCategorizeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'aggregator_page_category_form';
   }
 

@@ -14,9 +14,9 @@ use Drupal\Core\Form\ConfigFormBase;
 class LocaleSettingsForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'locale_translate_settings';
   }
 

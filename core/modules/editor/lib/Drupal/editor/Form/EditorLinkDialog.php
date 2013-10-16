@@ -22,7 +22,7 @@ class EditorLinkDialog extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'editor_link_dialog';
   }
 

@@ -56,7 +56,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectio
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'comment_multiple_delete_confirm';
   }
 

@@ -17,7 +17,7 @@ class ConfigExportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'config_export_form';
   }
 

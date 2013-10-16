@@ -42,7 +42,7 @@ class BanAdmin extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'ban_ip_form';
   }
 

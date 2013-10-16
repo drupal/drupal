@@ -72,7 +72,7 @@ class BookAdminEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'book_admin_edit';
   }
 

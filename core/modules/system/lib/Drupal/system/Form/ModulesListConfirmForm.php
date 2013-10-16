@@ -96,7 +96,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ContainerInjecti
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_modules_confirm_form';
   }
 

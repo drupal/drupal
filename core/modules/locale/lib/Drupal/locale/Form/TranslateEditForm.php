@@ -18,7 +18,7 @@ class TranslateEditForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'locale_translate_edit_form';
   }
 

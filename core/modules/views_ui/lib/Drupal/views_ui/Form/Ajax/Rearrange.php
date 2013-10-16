@@ -40,7 +40,7 @@ class Rearrange extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_rearrange_form';
   }
 

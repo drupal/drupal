@@ -17,7 +17,7 @@ class ForumSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'forum_admin_settings';
   }
 

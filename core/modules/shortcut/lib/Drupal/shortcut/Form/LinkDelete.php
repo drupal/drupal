@@ -25,7 +25,7 @@ class LinkDelete extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'shortcut_link_delete';
   }
 

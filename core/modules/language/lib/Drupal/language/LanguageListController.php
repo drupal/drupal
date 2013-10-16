@@ -34,7 +34,7 @@ class LanguageListController extends DraggableListController {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'language_admin_overview_form';
   }
 

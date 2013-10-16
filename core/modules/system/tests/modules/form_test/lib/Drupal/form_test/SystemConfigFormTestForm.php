@@ -17,7 +17,7 @@ class SystemConfigFormTestForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'form_test_system_config_test_form';
   }
 

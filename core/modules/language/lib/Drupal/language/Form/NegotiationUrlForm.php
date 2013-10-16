@@ -15,9 +15,9 @@ use Drupal\Core\Form\ConfigFormBase;
 class NegotiationUrlForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'language_negotiation_configure_url_form';
   }
 

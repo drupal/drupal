@@ -59,7 +59,7 @@ class UserPasswordForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'user_pass';
   }
 

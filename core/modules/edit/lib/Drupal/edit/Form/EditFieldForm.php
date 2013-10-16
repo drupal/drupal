@@ -72,7 +72,7 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'edit_field_form';
   }
 

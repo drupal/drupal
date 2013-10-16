@@ -78,7 +78,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'language_delete_form';
   }
 

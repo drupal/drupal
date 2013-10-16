@@ -15,7 +15,7 @@ class ConfirmFormArrayPathTestForm extends ConfirmFormTestForm {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'form_test_confirm_array_path_test_form';
   }
 

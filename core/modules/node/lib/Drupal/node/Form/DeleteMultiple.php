@@ -68,7 +68,7 @@ class DeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterf
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'node_multiple_delete_confirm';
   }
 

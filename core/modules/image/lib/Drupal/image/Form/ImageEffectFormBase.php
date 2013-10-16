@@ -36,7 +36,7 @@ abstract class ImageEffectFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'image_effect_form';
   }
 

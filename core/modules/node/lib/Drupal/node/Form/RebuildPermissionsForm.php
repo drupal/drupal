@@ -14,7 +14,7 @@ class RebuildPermissionsForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'node_configure_rebuild_confirm';
   }
 

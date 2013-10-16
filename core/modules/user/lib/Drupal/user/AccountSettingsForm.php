@@ -52,9 +52,9 @@ class AccountSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'user_admin_settings';
   }
 

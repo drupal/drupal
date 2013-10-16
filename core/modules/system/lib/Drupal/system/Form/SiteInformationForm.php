@@ -55,7 +55,7 @@ class SiteInformationForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_site_information_settings';
   }
 

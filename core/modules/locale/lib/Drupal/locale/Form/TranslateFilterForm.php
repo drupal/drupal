@@ -15,7 +15,7 @@ class TranslateFilterForm extends TranslateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'locale_translate_filter_form';
   }
 

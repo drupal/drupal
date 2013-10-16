@@ -23,7 +23,7 @@ class VocabularyListController extends DraggableListController {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'taxonomy_overview_vocabularies';
   }
 

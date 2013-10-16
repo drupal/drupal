@@ -38,7 +38,7 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'language_negotiation_configure_browser_delete_form';
   }
 

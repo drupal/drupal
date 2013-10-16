@@ -18,7 +18,7 @@ interface FormInterface {
    * @return string
    *   The unique string identifying the form.
    */
-  public function getFormID();
+  public function getFormId();
 
   /**
    * Form constructor.

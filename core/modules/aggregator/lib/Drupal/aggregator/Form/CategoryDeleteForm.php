@@ -94,7 +94,7 @@ class CategoryDeleteForm extends ConfirmFormBase implements ContainerInjectionIn
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'aggregator_category_delete';
   }
 

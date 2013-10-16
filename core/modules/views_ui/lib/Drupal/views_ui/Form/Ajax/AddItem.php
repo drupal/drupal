@@ -41,7 +41,7 @@ class AddItem extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_add_item_form';
   }
 

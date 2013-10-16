@@ -26,7 +26,7 @@ class Analyze extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_analyze_view_form';
   }
 

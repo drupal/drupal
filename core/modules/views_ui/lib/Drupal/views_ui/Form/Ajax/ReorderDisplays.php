@@ -24,7 +24,7 @@ class ReorderDisplays extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_reorder_displays_form';
   }
 

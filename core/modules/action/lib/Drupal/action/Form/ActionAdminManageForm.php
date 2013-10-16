@@ -46,7 +46,7 @@ class ActionAdminManageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'action_admin_manage';
   }
 

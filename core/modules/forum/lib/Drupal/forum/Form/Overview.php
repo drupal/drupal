@@ -52,7 +52,7 @@ class Overview extends OverviewTerms {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'forum_overview';
   }
 

@@ -26,7 +26,7 @@ class RearrangeFilter extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_ui_rearrange_filter_form';
   }
 

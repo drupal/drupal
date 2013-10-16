@@ -18,7 +18,7 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'taxonomy_vocabulary_confirm_delete';
   }
 

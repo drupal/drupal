@@ -57,7 +57,7 @@ class UserLoginForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'user_login_form';
   }
 

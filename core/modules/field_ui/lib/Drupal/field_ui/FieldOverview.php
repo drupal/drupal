@@ -77,7 +77,7 @@ class FieldOverview extends OverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'field_ui_field_overview_form';
   }
 

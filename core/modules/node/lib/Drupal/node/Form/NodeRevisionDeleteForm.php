@@ -78,7 +78,7 @@ class NodeRevisionDeleteForm extends ConfirmFormBase implements ContainerInjecti
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'node_revision_delete_confirm';
   }
 

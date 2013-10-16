@@ -63,7 +63,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // $js may already have been converted to a Boolean.
     $ajax = is_string($js) ? $js === 'ajax' : $js;
     return array(
-      'form_id' => $this->getFormID(),
+      'form_id' => $this->getFormId(),
       'form_key' => $this->getFormKey(),
       'ajax' => $ajax,
       'display_id' => $display_id,

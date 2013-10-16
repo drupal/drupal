@@ -16,7 +16,7 @@ class FileTestForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return '_file_test_form';
   }
 

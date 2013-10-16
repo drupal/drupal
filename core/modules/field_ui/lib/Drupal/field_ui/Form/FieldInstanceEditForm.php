@@ -54,7 +54,7 @@ class FieldInstanceEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'field_ui_field_instance_edit_form';
   }
 

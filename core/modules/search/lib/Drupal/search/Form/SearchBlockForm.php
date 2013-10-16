@@ -26,7 +26,7 @@ class SearchBlockForm extends FormBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'search_block_form';
   }
 

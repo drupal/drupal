@@ -15,9 +15,9 @@ use Drupal\Core\Form\ConfigFormBase;
 class UpdateSettingsForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'update_settings';
   }
 

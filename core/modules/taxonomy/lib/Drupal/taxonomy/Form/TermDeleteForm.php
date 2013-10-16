@@ -46,7 +46,7 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'taxonomy_term_confirm_delete';
   }
 

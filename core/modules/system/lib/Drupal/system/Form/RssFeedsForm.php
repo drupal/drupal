@@ -17,7 +17,7 @@ class RssFeedsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'system_rss_feeds_settings';
   }
 

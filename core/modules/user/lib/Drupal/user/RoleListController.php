@@ -18,7 +18,7 @@ class RoleListController extends DraggableListController {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'user_admin_roles_form';
   }
 

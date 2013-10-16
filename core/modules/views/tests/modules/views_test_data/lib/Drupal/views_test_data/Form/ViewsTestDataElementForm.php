@@ -16,7 +16,7 @@ class ViewsTestDataElementForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'views_test_data_element_form';
   }
 
