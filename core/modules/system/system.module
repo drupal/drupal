@@ -2221,7 +2221,7 @@ function system_page_build(&$page) {
  */
 function system_custom_theme() {
   if (drupal_container()->isScopeActive('request')) {
-    $request = drupal_container()->get('request');
+    $request = \Drupal::request();
     $path = $request->attributes->get('_system_path');
     if (user_access('view the administration theme') && path_is_admin($path)) {
       return \Drupal::config('system.theme')->get('admin');

@@ -111,8 +111,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
    * Assert that a inbound path is altered to an expected value.
    *
    * @param $original
-   *   A string with the aliased or un-normal path that is run through
-   *   drupal_container()->get('path.alias_manager')->getSystemPath().
+   *   The original path before it has been altered by inbound URL processing.
    * @param $final
    *   A string with the expected result after url().
    * @return
@@ -120,7 +119,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
    */
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
-    $result = drupal_container()->get('path.alias_manager')->getSystemPath($original);
+    $result = $this->container->get('path.alias_manager')->getSystemPath($original);
     $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 }

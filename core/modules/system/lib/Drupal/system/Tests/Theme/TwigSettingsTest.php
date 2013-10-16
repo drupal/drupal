@@ -39,13 +39,13 @@ class TwigSettingsTest extends WebTestBase {
     $this->rebuildContainer();
 
     // Check isAutoReload() via the Twig service container.
-    $this->assertTrue(drupal_container()->get('twig')->isAutoReload(), 'Automatic reloading of Twig templates enabled.');
+    $this->assertTrue($this->container->get('twig')->isAutoReload(), 'Automatic reloading of Twig templates enabled.');
 
     // Disable auto reload and check the service container again.
     $this->settingsSet('twig_auto_reload', FALSE);
     $this->rebuildContainer();
 
-    $this->assertFalse(drupal_container()->get('twig')->isAutoReload(), 'Automatic reloading of Twig templates disabled.');
+    $this->assertFalse($this->container->get('twig')->isAutoReload(), 'Automatic reloading of Twig templates disabled.');
   }
 
   /**
@@ -57,19 +57,19 @@ class TwigSettingsTest extends WebTestBase {
     $this->rebuildContainer();
 
     // Check isDebug() via the Twig service container.
-    $this->assertTrue(drupal_container()->get('twig')->isDebug(), 'Twig debug enabled.');
-    $this->assertTrue(drupal_container()->get('twig')->isAutoReload(), 'Twig automatic reloading is enabled when debug is enabled.');
+    $this->assertTrue($this->container->get('twig')->isDebug(), 'Twig debug enabled.');
+    $this->assertTrue($this->container->get('twig')->isAutoReload(), 'Twig automatic reloading is enabled when debug is enabled.');
 
     // Override auto reload when debug is enabled.
     $this->settingsSet('twig_auto_reload', FALSE);
     $this->rebuildContainer();
-    $this->assertFalse(drupal_container()->get('twig')->isAutoReload(), 'Twig automatic reloading can be disabled when debug is enabled.');
+    $this->assertFalse($this->container->get('twig')->isAutoReload(), 'Twig automatic reloading can be disabled when debug is enabled.');
 
     // Disable debug and check the service container again.
     $this->settingsSet('twig_debug', FALSE);
     $this->rebuildContainer();
 
-    $this->assertFalse(drupal_container()->get('twig')->isDebug(), 'Twig debug disabled.');
+    $this->assertFalse($this->container->get('twig')->isDebug(), 'Twig debug disabled.');
   }
 
   /**
@@ -94,7 +94,7 @@ class TwigSettingsTest extends WebTestBase {
     // Get the template filename and the cache filename for
     // theme_test.template_test.html.twig.
     $template_filename = $templates['theme_test_template_test']['path'] . '/' . $templates['theme_test_template_test']['template'] . $extension;
-    $cache_filename = drupal_container()->get('twig')->getCacheFilename($template_filename);
+    $cache_filename = $this->container->get('twig')->getCacheFilename($template_filename);
 
     // Navigate to the page and make sure the template gets cached.
     $this->drupalGet('theme-test/template-test');
@@ -105,7 +105,7 @@ class TwigSettingsTest extends WebTestBase {
     $this->rebuildContainer();
 
     // This should return false after rebuilding the service container.
-    $new_cache_filename = drupal_container()->get('twig')->getCacheFilename($template_filename);
+    $new_cache_filename = $this->container->get('twig')->getCacheFilename($template_filename);
     $this->assertFalse($new_cache_filename, 'Twig environment does not return cache filename after caching is disabled.');
   }
 
