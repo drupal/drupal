@@ -211,8 +211,8 @@ class ViewTestData {
       ),
     );
     $data['views_test_data']['status'] = array(
-      'title' => t('Status'),
-      'help' => t('The status of this record'),
+      'title' => 'Status',
+      'help' => 'The status of this record',
       'field' => array(
         'id' => 'boolean',
       ),
