@@ -17,7 +17,7 @@
 <div class="locale checked">
   <p>
   {% if last_checked %}
-    {{ 'Last checked: @time ago'|t({'@time': time}) }}
+    {% trans %} Last checked: {{ time }} ago {% endtrans %}
   {% else %}
     {{ 'Last checked: never'|t }}
   {% endif %}

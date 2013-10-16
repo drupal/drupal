@@ -17,7 +17,7 @@
 #}
 {% if title %}
   <h4 class="label">
-    {{ '!title!required'|t({ '!title': title, '!required': required }) }}
+    {% trans %}{{ title|passthrough }}{{ required|passthrough }}{% endtrans %}
   </h4>
 {% endif %}
 {{ content }}
