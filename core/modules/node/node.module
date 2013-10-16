@@ -279,7 +279,7 @@ function node_mark($nid, $timestamp) {
   global $user;
   $cache = &drupal_static(__FUNCTION__, array());
 
-  if ($user->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
+  if ($user->isAnonymous() || !module_exists('history')) {
     return MARK_READ;
   }
   if (!isset($cache[$nid])) {
@@ -443,7 +443,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
  */
 function node_field_extra_fields() {
   $extra = array();
-  $module_language_enabled = \Drupal::moduleHandler()->moduleExists('language');
+  $module_language_enabled = module_exists('language');
   $description = t('Node module element');
 
   foreach (node_type_get_types() as $bundle) {

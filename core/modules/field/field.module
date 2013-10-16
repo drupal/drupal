@@ -176,7 +176,7 @@ function field_system_info_alter(&$info, $file, $type) {
         }
       }
       if ($non_deleted) {
-        if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
+        if (module_exists('field_ui')) {
           $explanation = t('Field type(s) in use - see <a href="@fields-page">Field list</a>', array('@fields-page' => url('admin/reports/fields')));
         }
         else {

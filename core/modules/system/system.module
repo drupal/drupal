@@ -103,7 +103,7 @@ function system_help($path, $arg) {
       return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
     case 'admin/modules':
       $output = '<p>' . t('Download additional <a href="@modules">contributed modules</a> to extend Drupal\'s functionality.', array('@modules' => 'http://drupal.org/project/modules')) . '</p>';
-      if (\Drupal::moduleHandler()->moduleExists('update')) {
+      if (module_exists('update')) {
         if (update_manager_access()) {
           $output .= '<p>' . t('Regularly review and install <a href="@updates">available updates</a> to maintain a secure and current site. Always run the <a href="@update-php">update script</a> each time a module is updated.', array('@update-php' => $base_url . '/core/update.php', '@updates' => url('admin/reports/updates'))) . '</p>';
         }
@@ -886,7 +886,7 @@ function system_menu() {
   );
 
   // Localize date formats.
-  if (\Drupal::moduleHandler()->moduleExists('language')) {
+  if (module_exists('language')) {
     $items['admin/config/regional/date-time/locale'] = array(
       'title' => 'Localize',
       'description' => 'Configure date formats for each locale',

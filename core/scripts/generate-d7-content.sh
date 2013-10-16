@@ -171,7 +171,7 @@ for ($i = 0; $i < 36; $i++) {
   else if ($i < 24) {
     $node->type = 'story';
   }
-  else if (\Drupal::moduleHandler()->moduleExists('blog')) {
+  else if (module_exists('blog')) {
     $node->type = 'blog';
   }
   $node->sticky = 0;

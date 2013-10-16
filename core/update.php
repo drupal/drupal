@@ -203,7 +203,7 @@ function update_results_page() {
 
   update_task_list();
   // Report end result.
-  if (\Drupal::moduleHandler()->moduleExists('dblog') && user_access('access site reports')) {
+  if (module_exists('dblog') && user_access('access site reports')) {
     $log_message = ' All errors have been <a href="' . base_path() . '?q=admin/reports/dblog">logged</a>.';
   }
   else {
@@ -217,7 +217,7 @@ function update_results_page() {
     $last = reset($_SESSION['updates_remaining']);
     list($module, $version) = array_pop($last);
     $output = '<p class="error">The update process was aborted prematurely while running <strong>update #' . $version . ' in ' . $module . '.module</strong>.' . $log_message;
-    if (\Drupal::moduleHandler()->moduleExists('dblog')) {
+    if (module_exists('dblog')) {
       $output .= ' You may need to check the <code>watchdog</code> database table manually.';
     }
     $output .= '</p>';

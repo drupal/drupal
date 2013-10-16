@@ -43,7 +43,7 @@ use Drupal\field\FieldUpdateForbiddenException;
  */
 function hook_field_extra_fields() {
   $extra = array();
-  $module_language_enabled = \Drupal::moduleHandler()->moduleExists('language');
+  $module_language_enabled = module_exists('language');
   $description = t('Node module element');
 
   foreach (node_type_get_types() as $bundle) {
