@@ -33,7 +33,7 @@ class ArchiverManager extends DefaultPluginManager {
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Archiver', $namespaces);
     $this->alterInfo($module_handler, 'archiver_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'archiver_info');
+    $this->setCacheBackend($cache_backend, $language_manager, 'archiver_info_plugins');
   }
 
   /**

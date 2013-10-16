@@ -34,7 +34,7 @@ class TipPluginManager extends DefaultPluginManager {
     parent::__construct('Plugin/tour/tip', $namespaces, 'Drupal\tour\Annotation\Tip');
 
     $this->alterInfo($module_handler, 'tour_tips_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'tour');
+    $this->setCacheBackend($cache_backend, $language_manager, 'tour_plugins');
   }
 
 }

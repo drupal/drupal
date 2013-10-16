@@ -34,7 +34,7 @@ class SelectionPluginManager extends DefaultPluginManager {
     $this->factory = new ReflectionFactory($this);
 
     $this->alterInfo($module_handler, 'entity_reference_selection');
-    $this->setCacheBackend($cache_backend, $language_manager, 'entity_reference_selection');
+    $this->setCacheBackend($cache_backend, $language_manager, 'entity_reference_selection_plugins');
   }
 
   /**

@@ -24,7 +24,7 @@ class ImageEffectManager extends DefaultPluginManager {
     parent::__construct('Plugin/ImageEffect', $namespaces, 'Drupal\image\Annotation\ImageEffect');
 
     $this->alterInfo($module_handler, 'image_effect_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'image_effect');
+    $this->setCacheBackend($cache_backend, $language_manager, 'image_effect_plugins');
   }
 
 }

@@ -51,7 +51,7 @@ class WidgetPluginManager extends DefaultPluginManager {
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LanguageManager $language_manager, FieldTypePluginManager $field_type_manager) {
     parent::__construct('Plugin/field/widget', $namespaces, 'Drupal\field\Annotation\FieldWidget');
 
-    $this->setCacheBackend($cache_backend, $language_manager, 'field_widget_types');
+    $this->setCacheBackend($cache_backend, $language_manager, 'field_widget_types_plugins');
     $this->alterInfo($module_handler, 'field_widget_info');
 
     $this->factory = new WidgetFactory($this);

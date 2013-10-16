@@ -50,7 +50,7 @@ class ConstraintManager extends DefaultPluginManager {
     parent::__construct('Plugin/Validation/Constraint', $namespaces);
     $this->discovery = new StaticDiscoveryDecorator($this->discovery, array($this, 'registerDefinitions'));
     $this->alterInfo($module_handler, 'validation_constraint');
-    $this->setCacheBackend($cache_backend, $language_manager, 'validation_constraint');
+    $this->setCacheBackend($cache_backend, $language_manager, 'validation_constraint_plugins');
   }
 
   /**

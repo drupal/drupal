@@ -33,7 +33,7 @@ class EditorManager extends DefaultPluginManager {
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Editor', $namespaces, 'Drupal\editor\Annotation\Editor');
     $this->alterInfo($module_handler, 'editor_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'editor');
+    $this->setCacheBackend($cache_backend, $language_manager, 'editor_plugins');
   }
 
   /**

@@ -46,7 +46,7 @@ class TypedDataManager extends DefaultPluginManager {
 
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     $this->alterInfo($module_handler, 'data_type_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'typed_data:types');
+    $this->setCacheBackend($cache_backend, $language_manager, 'typed_data_types_plugins');
 
     parent::__construct('Plugin/DataType', $namespaces, 'Drupal\Core\TypedData\Annotation\DataType');
   }
