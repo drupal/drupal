@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Number;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Url;
 use Drupal\Core\Form\FormInterface;
@@ -4385,7 +4386,7 @@ function form_validate_number(&$element, &$form_state) {
     // #min is set).
     $offset = isset($element['#min']) ? $element['#min'] : 0.0;
 
-    if (!valid_number_step($value, $element['#step'], $offset)) {
+    if (!Number::validStep($value, $element['#step'], $offset)) {
       form_error($element, t('%name is not a valid number.', array('%name' => $name)));
     }
   }
