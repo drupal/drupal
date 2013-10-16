@@ -1718,39 +1718,149 @@ function install_check_localization_server($uri) {
 }
 
 /**
- * Gets the core release version for localization.
+ * Gets the core release version and release alternatives for localization.
  *
- * In case core has a development version we fall back to the latest stable
- * release. e.g. 8.2-dev falls back to 8.1. 8.0-dev falls back to 7.0. Fallback
+ * In case core is a development version or the translation file for the release
+ * is not available, fall back to the latest stable release. For example,
+ * 8.2-dev might fall back to 8.1 and 8.0-dev might fall back to 7.0. Fallback
  * is required because the localization server only provides translation files
  * for stable releases.
  *
+ * @param string $version
+ *   (optional) Version of core trying to find translation files for.
+ *
  * @return array
- *   Associative array containing 'core' and 'version' of the release.
+ *   Array of release data. Each array element is an associative array with:
+ *   - core: Core compatibility version (e.g., 8.x).
+ *   - version: Release version (e.g., 8.1).
  */
-function install_get_localization_release() {
-  if (strpos(\Drupal::VERSION, 'dev')) {
-    list($version, ) = explode('-', \Drupal::VERSION);
-    list($major, $minor) = explode('.', $version);
+function install_get_localization_release($version = \Drupal::VERSION) {
+  $releases = array();
+  $alternatives = array();
 
-    // Calculate the major and minor release numbers to fall back to.
-    // E.g. 8.0-dev falls back to 7.0 and 8.2-dev falls back to 8.1.
-    if ($minor == 0) {
-      $major--;
+  // The version string is broken up into:
+  // - major: Major version (e.g., "8").
+  // - minor: Minor version (e.g., "0").
+  // - extra: Extra version info (e.g., "alpha2").
+  // - extra_text: The text part of "extra" (e.g., "alpha").
+  // - extra_number: The number part of "extra" (e.g., "2").
+  $info = _install_get_version_info($version);
+
+  // Check if the version is a regular stable release (no 'rc', 'beta', 'alpha',
+  // 'dev', etc.)
+  if (!isset($info['extra_text'])) {
+    // First version alternative: the current version.
+    $alternatives[] = $version;
+    // Point-releases: previous minor release (e.g., 8.2 falls back to 8.1).
+    if ($info['minor'] > 0) {
+      $alternatives[]= $info['major'] . '.' . ($info['minor'] - 1);
     }
+    // Zero release: first release candidate (e.g., 8.0 falls back to 8.0-rc1).
     else {
-      $minor--;
+      $alternatives[] = $info['major'] . '.0-rc1';
     }
-    $release = "$major.$minor";
   }
   else {
-    $release = \Drupal::VERSION;
+    switch ($info['extra_text']) {
+      // Alpha release: current alpha or previous alpha release (e.g. 8.0-alpha2
+      // falls back to 8.0-alpha1).
+      case 'alpha':
+        $alternatives[] = $version;
+        if ($info['extra_number'] > 1) {
+          $alternatives[] = $info['major'] . '.0-alpha' . ($info['extra_number'] - 1);
+        }
+        break;
+
+      // Beta release: current beta or previous beta release (e.g. 8.0-beta2
+      // falls back to 8.0-beta1) or first alpha release.
+      case 'beta':
+        $alternatives[] = $version;
+        if ($info['extra_number'] > 1) {
+          $alternatives[] = $info['major'] . '.0-beta' . ($info['extra_number'] - 1);
+        }
+        else {
+          $alternatives[] = $info['major'] . '.0-alpha2';
+        }
+        break;
+
+      // Dev release: the previous point release (e.g., 8.2-dev falls back to
+      // 8.1) or any unstable release (e.g., 8.0-dev falls back to 8.0-rc1,
+      // 8.0-beta1 or 8.0-alpha2)
+      case 'dev':
+        if ($info['minor'] >= 1) {
+          $alternatives[] = $info['major'] . '.' . ($info['minor'] - 1);
+        }
+        else {
+          $alternatives[] = $info['major'] . '.0-rc1';
+          $alternatives[] = $info['major'] . '.0-beta1';
+          $alternatives[] = $info['major'] . '.0-alpha2';
+        }
+        break;
+
+      // Release candidate: the current or previous release candidate (e.g.,
+      // 8.0-rc2 falls back to 8.0-rc1) or the first beta release.
+      case 'rc':
+        $alternatives[] =  $version;
+        if ($info['extra_number'] >= 2) {
+          $alternatives[] = $info['major'] . '.0-rc' . ($info['extra_number'] - 1);
+        }
+        else {
+          $alternatives[] = $info['major'] . '.0-beta1';
+        }
+        break;
+    }
   }
 
-  return array(
-    'core' => "$major.x",
-    'version' => $release,
-  );
+  // All releases may a fallback to the previous major release (e.g., 8.1 falls
+  // back to 7.0, 8.x-dev falls back to 7.0). This will probably only be used
+  // for early dev releases or languages with an inactive translation team.
+  $alternatives[] = $info['major'] - 1 . '.0';
+
+  foreach ($alternatives as $alternative) {
+    list($core) = explode('.', $alternative);
+    $releases[] = array(
+      'core' => $core . '.x',
+      'version' => $alternative,
+    );
+  }
+
+  return $releases;
+}
+
+/**
+ * Extracts version information from a drupal core version string.
+ *
+ * @param string $version
+ *   Version info string (e.g., 8.0, 8.1, 8.0-dev, 8.0-unstable1, 8.0-alpha2,
+ *   8.0-beta3, and 8.0-rc4).
+ *
+ *
+ * @return array
+ *   Associative array of version info:
+ *   - major: Major version (e.g., "8").
+ *   - minor: Minor version (e.g., "0").
+ *   - extra: Extra version info (e.g., "alpha2").
+ *   - extra_text: The text part of "extra" (e.g., "alpha").
+ *   - extra_number: The number part of "extra" (e.g., "2").
+ */
+function _install_get_version_info($version) {
+  preg_match('/
+    (
+      (?P<major>[0-9]+)    # Major release number.
+      \.          # .
+      (?P<minor>[0-9]+)    # Minor release number.
+    )             #
+    (             #
+      -           # - separator for "extra" version information.
+      (?P<extra>   #
+        (?P<extra_text>[a-z]+)  # Release extra text (e.g., "alpha").
+        (?P<extra_number>[0-9]*)  # Release extra number (no separator between text and number).
+      )           #
+      |           # OR no "extra" information.
+    )
+    /sx', $version, $matches);
+
+  return $matches;
 }
 
 /**
@@ -1895,7 +2005,7 @@ function install_import_translations(&$install_state) {
     language_delete('en');
 
     // Set up a batch to import translations for the newly added language.
-    _install_prepare_import();
+    _install_prepare_import($langcode);
     module_load_include('fetch.inc', 'locale');
     if ($batch = locale_translation_batch_fetch_build(array(), array($langcode))) {
       return $batch;
@@ -1905,23 +2015,41 @@ function install_import_translations(&$install_state) {
 
 /**
  * Tells the translation import process that Drupal core is installed.
+ *
+ * @param string $langcode
+ *   Language code used for the translation.
  */
-function _install_prepare_import() {
+function _install_prepare_import($langcode) {
+  $matches = array();
   global $install_state;
 
-  $release = install_get_localization_release();
-  db_insert('locale_project')
-    ->fields(array(
-      'name' => 'drupal',
-      'project_type' => 'module',
-      'core' => $release['core'],
-      'version' => $release['version'],
-      'server_pattern' => $install_state['server_pattern'],
-      'status' => 1,
-    ))
-    ->execute();
-  module_load_include('compare.inc', 'locale');
-  locale_translation_check_projects_local(array('drupal'), array($install_state['parameters']['langcode']));
+  // Get the translation files located in the translations directory.
+  $files = locale_translate_get_interface_translation_files(array('drupal'), array($langcode));
+  // We pick the first file which matches the installation language.
+  $file = reset($files);
+  $filename = $file->filename;
+  preg_match('/drupal-([0-9a-z\.-]+)\.' . $langcode . '\.po/', $filename, $matches);
+  // Get the version information.
+  if ($version = $matches[1]) {
+    $info = _install_get_version_info($version);
+    // Picking the first file does not necessarily result in the right file. So
+    // we check if at least the major version number is available.
+    if ($info['major']) {
+      $core = $info['major'] . '.x';
+      db_insert('locale_project')
+        ->fields(array(
+          'name' => 'drupal',
+          'project_type' => 'module',
+          'core' => $core,
+          'version' => $version,
+          'server_pattern' => $install_state['server_pattern'],
+          'status' => 1,
+        ))
+        ->execute();
+      module_load_include('compare.inc', 'locale');
+      locale_translation_check_projects_local(array('drupal'), array($install_state['parameters']['langcode']));
+    }
+  }
 }
 
 /**
@@ -2095,6 +2223,7 @@ function install_check_translations($install_state) {
   $files_directory = conf_path() . '/files';
   $translations_directory = conf_path() . '/files/translations';
   $translations_directory_exists = FALSE;
+  $translation_available = FALSE;
   $online = FALSE;
 
   // First attempt to create or make writable the files directory.
@@ -2110,28 +2239,35 @@ function install_check_translations($install_state) {
   }
 
   // Build URLs for the translation file and the translation server.
-  $release = install_get_localization_release();
+  $releases = install_get_localization_release();
   $langcode = $install_state['parameters']['langcode'];
-  $variables = array(
-    '%project' => 'drupal',
-    '%version' => $release['version'],
-    '%core' => $release['core'],
-    '%language' => $langcode,
-  );
-  $translation_url = strtr($install_state['server_pattern'], $variables);
-  $elements = parse_url($translation_url);
+  $translation_urls = array();
+  foreach ($releases as $release) {
+    $variables = array(
+      '%project' => 'drupal',
+      '%version' => $release['version'],
+      '%core' => $release['core'],
+      '%language' => $langcode,
+    );
+    $translation_urls[] = strtr($install_state['server_pattern'], $variables);
+  }
+  $elements = parse_url(reset($translation_urls));
   $server_url = $elements['scheme'] . '://' . $elements['host'];
 
   // Build the language name for display.
   $languages = LanguageManager::getStandardLanguageList();
   $language = isset($languages[$langcode]) ? $languages[$langcode][0] : $langcode;
 
-  // Check if the desirered translation file is available and if the translation
-  // server can be reached, or in other words if we have an internet connection.
-  if ($translation_available = install_check_localization_server($translation_url)) {
-    $online = TRUE;
+  // Check if any of the desired translation files are available or if the
+  // translation server can be reached. In other words, check if we are online
+  // and have an internet connection.
+  foreach ($translation_urls as $translation_url) {
+    if ($translation_available = install_check_localization_server($translation_url)) {
+      $online = TRUE;
+      break;
+    }
   }
-  else {
+  if (!$translation_available) {
     if (install_check_localization_server($server_url)) {
       $online = TRUE;
     }

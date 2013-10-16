@@ -59,6 +59,10 @@ class FileTranslation extends StaticTranslation {
   /**
    * Finds installer translations either for a specific or all languages.
    *
+   * Filenames must match the pattern:
+   *  - 'drupal-[number].*.[langcode].po
+   *  - 'drupal-[number].*.*.po
+   *
    * @param string $langcode
    *   (optional) The language code corresponding to the language for which we
    *   want to find translation files. If omitted, information on all available
@@ -71,7 +75,7 @@ class FileTranslation extends StaticTranslation {
    * @see file_scan_directory()
    */
   public function findTranslationFiles($langcode = NULL) {
-    $files = file_scan_directory($this->directory, '!drupal-\d+\.\d+\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
+    $files = file_scan_directory($this->directory, '!drupal-\d+\.[^\.]+\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!', array('recurse' => FALSE));
     return $files;
   }
 
