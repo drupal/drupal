@@ -40,7 +40,7 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
     $block = entity_create('block', array(
       'plugin' => 'system_menu_block:admin',
       'region' => 'footer',
-      'id' => \Drupal::config('system.theme')->get('default') . '.machinename',
+      'id' => 'machinename',
     ));
 
     $variables = array();

@@ -126,23 +126,12 @@ class Block extends ConfigEntityBase implements BlockInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function get($property_name) {
-    // The theme is stored in the entity ID.
-    $value = parent::get($property_name);
-    if ($property_name == 'theme' && !$value) {
-      list($value) = explode('.', $this->id());
-    }
-    return $value;
-  }
-
-  /**
    * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::getExportProperties();
    */
   public function getExportProperties() {
     $properties = parent::getExportProperties();
     $names = array(
+      'theme',
       'region',
       'weight',
       'plugin',

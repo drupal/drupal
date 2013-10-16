@@ -43,7 +43,7 @@ class BlockUpgradePathTest extends UpgradePathTestBase {
     // Confirm that the custom block has been created, and title matches input.
     $settings = array(
       'settings[label]' => $this->randomName(255),
-      'machine_name' => strtolower($this->randomName(8)),
+      'id' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
     $this->drupalPostForm('admin/structure/block/add/system_powered_by_block/' . \Drupal::config('system.theme')->get('default'), $settings, t('Save block'));
@@ -52,7 +52,7 @@ class BlockUpgradePathTest extends UpgradePathTestBase {
     // Try to add a block with a title over 255 characters.
     $settings = array(
       'settings[label]' => $this->randomName(256),
-      'machine_name' => strtolower($this->randomName(8)),
+      'id' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
     $this->drupalPostForm('admin/structure/block/add/system_powered_by_block/' . \Drupal::config('system.theme')->get('default'), $settings, t('Save block'));

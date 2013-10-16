@@ -408,7 +408,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->drupalGet('admin/config/regional/language/detection');
 
     // Enable the language switcher block.
-    $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array('machine_name' => 'test_language_block'));
+    $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array('id' => 'test_language_block'));
 
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.

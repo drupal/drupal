@@ -61,7 +61,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     ));
 
     // Enable the recent content block with two items.
-    $block = $this->drupalPlaceBlock('node_recent_block', array('machine_name' => 'test_block', 'block_count' => 2));
+    $block = $this->drupalPlaceBlock('node_recent_block', array('id' => 'test_block', 'block_count' => 2));
 
     // Test that block is not visible without nodes.
     $this->drupalGet('');

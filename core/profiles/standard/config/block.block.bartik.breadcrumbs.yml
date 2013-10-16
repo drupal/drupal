@@ -1,4 +1,5 @@
-id: bartik.breadcrumbs
+id: bartik_breadcrumbs
+theme: bartik
 uuid: a29e843f-d19c-4528-ab02-2fc335e12b1e
 weight: '-5'
 status: '0'

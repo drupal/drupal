@@ -1,4 +1,5 @@
-id: stark.tools
+id: stark_tools
+theme: stark
 weight: '0'
 status: '1'
 langcode: en

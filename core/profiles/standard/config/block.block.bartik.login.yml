@@ -1,4 +1,5 @@
-id: bartik.login
+id: bartik_login
+theme: bartik
 uuid: 961f4152-3e91-4c9f-9114-20a5375675d0
 weight: '0'
 status: '1'

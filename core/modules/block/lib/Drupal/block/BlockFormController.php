@@ -93,14 +93,10 @@ class BlockFormController extends EntityFormController {
   public function form(array $form, array &$form_state) {
     $entity = $this->entity;
     $form['#tree'] = TRUE;
-    $form['id'] = array(
-      '#type' => 'value',
-      '#value' => $entity->id(),
-    );
     $form['settings'] = $entity->getPlugin()->buildConfigurationForm(array(), $form_state);
 
     // If creating a new block, calculate a safe default machine name.
-    $form['machine_name'] = array(
+    $form['id'] = array(
       '#type' => 'machine_name',
       '#maxlength' => 64,
       '#description' => $this->t('A unique name for this block instance. Must be alpha-numeric and underscore separated.'),
@@ -294,15 +290,6 @@ class BlockFormController extends EntityFormController {
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
-    $entity = $this->entity;
-    if ($entity->isNew()) {
-      form_set_value($form['id'], $form_state['values']['theme'] . '.' . $form_state['values']['machine_name'], $form_state);
-    }
-    if (!empty($form['machine_name']['#disabled'])) {
-      // Get machine name from original value (without prepended theme name).
-      $config_id = explode('.', $form_state['values']['machine_name']);
-      $form_state['values']['machine_name'] = array_pop($config_id);
-    }
     // Remove empty lines from the role visibility list.
     $form_state['values']['visibility']['role']['roles'] = array_filter($form_state['values']['visibility']['role']['roles']);
     // The Block Entity form puts all block plugin form elements in the
@@ -311,7 +298,7 @@ class BlockFormController extends EntityFormController {
       'values' => &$form_state['values']['settings']
     );
     // Call the plugin validate handler.
-    $entity->getPlugin()->validateConfigurationForm($form, $settings);
+    $this->entity->getPlugin()->validateConfigurationForm($form, $settings);
   }
 
   /**

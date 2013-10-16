@@ -353,7 +353,7 @@ abstract class WebTestBase extends TestBase {
    *   @endcode
    *   The following defaults are provided:
    *   - label: Random string.
-   *   - machine_name: Random string.
+   *   - id: Random string.
    *   - region: 'sidebar_first'.
    *   - theme: The default theme.
    *   - visibility: Empty array.
@@ -368,20 +368,18 @@ abstract class WebTestBase extends TestBase {
     $settings += array(
       'plugin' => $plugin_id,
       'region' => 'sidebar_first',
-      'machine_name' => strtolower($this->randomName(8)),
+      'id' => strtolower($this->randomName(8)),
       'theme' => \Drupal::config('system.theme')->get('default'),
       'label' => $this->randomName(8),
       'visibility' => array(),
       'weight' => 0,
     );
-    foreach (array('region', 'machine_name', 'theme', 'plugin', 'visibility', 'weight') as $key) {
+    foreach (array('region', 'id', 'theme', 'plugin', 'visibility', 'weight') as $key) {
       $values[$key] = $settings[$key];
       // Remove extra values that do not belong in the settings array.
       unset($settings[$key]);
     }
     $values['settings'] = $settings;
-    // Build the ID out of the theme and machine_name.
-    $values['id'] = $values['theme'] . '.' . $values['machine_name'];
     $block = entity_create('block', $values);
     $block->save();
     return $block;

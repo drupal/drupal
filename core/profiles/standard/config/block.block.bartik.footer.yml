@@ -1,4 +1,5 @@
-id: bartik.footer
+id: bartik_footer
+theme: bartik
 uuid: a6c75fc2-5ca1-403e-ab37-557c7244e8c0
 weight: '0'
 status: '1'

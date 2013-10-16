@@ -1,4 +1,5 @@
-id: bartik.search
+id: bartik_search
+theme: bartik
 uuid: 51f70058-a370-4410-9000-a65488d00e6c
 weight: '-1'
 status: '1'

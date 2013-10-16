@@ -40,7 +40,7 @@ class BlockHtmlIdTest extends WebTestBase {
 
     // Enable our test blocks.
     $this->drupalPlaceBlock('system_menu_block:tools');
-    $this->drupalPlaceBlock('test_html_id', array('machine_name' => 'test_id_block'));
+    $this->drupalPlaceBlock('test_html_id', array('id' => 'test_id_block'));
   }
 
   /**

@@ -149,7 +149,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
 
     // Place the block.
     $instance = array(
-      'machine_name' => drupal_strtolower($edit['info']),
+      'id' => drupal_strtolower($edit['info']),
       'settings[label]' => $edit['info'],
       'region' => 'sidebar_first',
     );

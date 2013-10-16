@@ -1,4 +1,5 @@
-id: bartik.powered
+id: bartik_powered
+theme: bartik
 uuid: 37cff101-27dc-478d-9d00-b58b9d884039
 weight: '10'
 status: '1'

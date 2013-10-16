@@ -186,7 +186,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
           $destination = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . $theme;
           $this->assertUrl(url($destination, array('absolute' => TRUE)));
           $this->drupalPostForm(NULL, array(), t('Save block'));
-          $this->assertUrl(url("admin/structure/block/list/$theme", array('absolute' => TRUE, 'query' => array('block-placement' => drupal_html_class($theme . '.' . $edit['info'])))));
+          $this->assertUrl(url("admin/structure/block/list/$theme", array('absolute' => TRUE, 'query' => array('block-placement' => drupal_html_class($edit['info'])))));
         }
         else {
           $this->fail('Could not load created block.');

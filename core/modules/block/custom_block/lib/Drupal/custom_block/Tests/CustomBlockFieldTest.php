@@ -104,7 +104,7 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
     $url = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
     // Place the block.
     $instance = array(
-      'machine_name' => drupal_strtolower($edit['info']),
+      'id' => drupal_strtolower($edit['info']),
       'settings[label]' => $edit['info'],
       'region' => 'sidebar_first',
     );

@@ -268,9 +268,7 @@ abstract class ViewTestBase extends WebTestBase {
    *   The result from the xpath query.
    */
   protected function findBlockInstance(Block $block) {
-    $config_id = explode('.', $block->id());
-    $machine_name = array_pop($config_id);
-    return $this->xpath('//div[@id = :id]', array(':id' => 'block-' . $machine_name));
+    return $this->xpath('//div[@id = :id]', array(':id' => 'block-' . $block->id()));
   }
 
   /**

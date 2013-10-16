@@ -1,4 +1,5 @@
-id: stark.test_block
+id: test_block
+theme: stark
 weight: ''
 status: '1'
 langcode: en

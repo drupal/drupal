@@ -1,4 +1,5 @@
-id: bartik.content
+id: bartik_content
+theme: bartik
 uuid: 2cab5a0c-de08-4b5c-9700-f0243a6fb000
 weight: '0'
 status: '1'

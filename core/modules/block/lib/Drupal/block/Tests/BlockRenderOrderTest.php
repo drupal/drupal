@@ -45,17 +45,17 @@ class BlockRenderOrderTest extends WebTestBase {
     // Enable test blocks and place them in the same region.
     $region = 'header';
     $test_blocks = array(
-      'stark.powered' => array(
+      'stark_powered' => array(
         'weight' => '-3',
-        'machine_name' => 'powered',
+        'id' => 'stark_powered',
       ),
-      'stark.by' => array(
+      'stark_by' => array(
         'weight' => '3',
-        'machine_name' => 'by',
+        'id' => 'stark_by',
       ),
-      'stark.drupal' => array(
+      'stark_drupal' => array(
         'weight' => '3',
-        'machine_name' => 'drupal',
+        'id' => 'stark_drupal',
       ),
     );
 
@@ -65,7 +65,7 @@ class BlockRenderOrderTest extends WebTestBase {
         'label' => 'Test Block',
         'region' => $region,
         'weight' => $test_block['weight'],
-        'machine_name' => $test_block['machine_name'],
+        'id' => $test_block['id'],
       ));
     }
 
@@ -74,14 +74,13 @@ class BlockRenderOrderTest extends WebTestBase {
 
     $controller = $this->container->get('entity.manager')->getStorageController('block');
     foreach ($controller->loadMultiple() as $return_block) {
-      $settings = $return_block->get('settings');
       $id = $return_block->get('id');
       if ($return_block_weight = $return_block->get('weight')) {
         $this->assertTrue($test_blocks[$id]['weight'] == $return_block_weight, 'Block weight is set as "' . $return_block_weight  . '" for ' . $id . ' block.');
-        $position[$id] = strpos($test_content, 'block-' . $test_blocks[$id]['machine_name']);
+        $position[$id] = strpos($test_content, drupal_html_class('block-' . $test_blocks[$id]['id']));
       }
     }
-    $this->assertTrue($position['stark.powered'] < $position['stark.by'], 'Blocks with different weight are rendered in the correct order.');
-    $this->assertTrue($position['stark.drupal'] < $position['stark.by'], 'Blocks with identical weight are rendered in reverse alphabetical order.');
+    $this->assertTrue($position['stark_powered'] < $position['stark_by'], 'Blocks with different weight are rendered in the correct order.');
+    $this->assertTrue($position['stark_drupal'] < $position['stark_by'], 'Blocks with identical weight are rendered in reverse alphabetical order.');
   }
 }

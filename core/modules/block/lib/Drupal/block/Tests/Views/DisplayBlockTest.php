@@ -184,11 +184,11 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertTrue(empty($elements), 'The label field is not found for Views blocks.');
     // Test that that machine name field is hidden from display and has been
     // saved as expected from the default value.
-    $this->assertNoFieldById('edit-machine-name', 'stark.views_block__test_view_block_1', 'The machine name is hidden on the views block form.');
+    $this->assertNoFieldById('edit-machine-name', 'views_block__test_view_block_1', 'The machine name is hidden on the views block form.');
     // Save the block.
     $this->drupalPostForm(NULL, array(), t('Save block'));
     $storage = $this->container->get('entity.manager')->getStorageController('block');
-    $block = $storage->load('stark.views_block__test_view_block_block_1');
+    $block = $storage->load('views_block__test_view_block_block_1');
     // This will only return a result if our new block has been created with the
     // expected machine name.
     $this->assertTrue(!empty($block), 'The expected block was loaded.');
@@ -196,7 +196,7 @@ class DisplayBlockTest extends ViewTestBase {
     for ($i = 2; $i <= 3; $i++) {
       // Place the same block again and make sure we have a new ID.
       $this->drupalPostForm('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme, array(), t('Save block'));
-      $block = $storage->load('stark.views_block__test_view_block_block_1_' . $i);
+      $block = $storage->load('views_block__test_view_block_block_1_' . $i);
       // This will only return a result if our new block has been created with the
       // expected machine name.
       $this->assertTrue(!empty($block), 'The expected block was loaded.');
@@ -209,14 +209,14 @@ class DisplayBlockTest extends ViewTestBase {
 
     $this->drupalPostForm('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme, $edit, t('Save block'));
 
-    $block = $storage->load('stark.views_block__test_view_block_block_1_4');
+    $block = $storage->load('views_block__test_view_block_block_1_4');
     $config = $block->getPlugin()->getConfiguration();
     $this->assertEqual(10, $config['items_per_page'], "'Items per page' is properly saved.");
 
     $edit['settings[override][items_per_page]'] = 5;
-    $this->drupalPostForm('admin/structure/block/manage/stark.views_block__test_view_block_block_1_4', $edit, t('Save block'));
+    $this->drupalPostForm('admin/structure/block/manage/views_block__test_view_block_block_1_4', $edit, t('Save block'));
 
-    $block = $storage->load('stark.views_block__test_view_block_block_1_4');
+    $block = $storage->load('views_block__test_view_block_block_1_4');
 
     $config = $block->getPlugin()->getConfiguration();
     $this->assertEqual(5, $config['items_per_page'], "'Items per page' is properly saved.");

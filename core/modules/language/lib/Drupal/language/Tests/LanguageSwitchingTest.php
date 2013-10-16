@@ -43,7 +43,7 @@ class LanguageSwitchingTest extends WebTestBase {
    */
   function testLanguageBlock() {
     // Enable the language switching block.
-    $block = $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array('machine_name' => 'test_language_block'));
+    $block = $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array('id' => 'test_language_block'));
 
     // Add language.
     $edit = array(

@@ -66,40 +66,10 @@ abstract class BlockTestBase extends WebTestBase {
       'sidebar_second',
       'footer',
     );
-
+    $block_storage = $this->container->get('entity.manager')->getStorageController('block');
+    $blocks = $block_storage->loadByProperties(array('theme' => \Drupal::config('system.theme')->get('default')));
+    foreach ($blocks as $block) {
+      $block->delete();
+    }
   }
-
-  /**
-   * Moves a block to a given region via the UI and confirms the result.
-   *
-   * @param array $block
-   *   An array of information about the block, including the following keys:
-   *   - module: The module providing the block.
-   *   - title: The title of the block.
-   *   - delta: The block's delta key.
-   * @param string $region
-   *   The machine name of the theme region to move the block to, for example
-   *   'header' or 'sidebar_first'.
-   */
-  function moveBlockToRegion(array $block, $region) {
-    // Set the created block to a specific region.
-    $edit = array();
-    $edit['blocks[0][region]'] = $region;
-    $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
-
-    // Confirm that the block was moved to the proper region.
-    $this->assertText(t('The block settings have been updated.'), format_string('Block successfully moved to %region_name region.', array( '%region_name' => $region)));
-
-    // Confirm that the block is being displayed.
-    $this->drupalGet('');
-    $this->assertText(t($block['title']), 'Block successfully being displayed on the page.');
-
-    // Confirm that the custom block was found at the proper region.
-    $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', array(
-     ':region-class' => 'region region-' . drupal_html_class($region),
-     ':block-id' => 'block-' . strtr(strtolower($block['machine_name']), '-', '_'),
-    ));
-    $this->assertFieldByXPath($xpath, NULL, t('Block found in %region_name region.', array('%region_name' => drupal_html_class($region))));
-  }
-
 }

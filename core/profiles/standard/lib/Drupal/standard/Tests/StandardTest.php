@@ -40,7 +40,7 @@ class StandardTest extends WebTestBase {
     $this->drupalGet('admin/structure/block/add/system_menu_block:main/bartik');
     $this->drupalPostForm(NULL, array(
       'region' => 'sidebar_first',
-      'machine_name' => 'main_navigation',
+      'id' => 'main_navigation',
     ), t('Save block'));
     // Verify admin user can see the block.
     $this->drupalGet('');
@@ -51,7 +51,7 @@ class StandardTest extends WebTestBase {
     $this->drupalGet('admin/structure/block');
     $elements = $this->xpath('//div[@role=:role and @id=:id]', array(
       ':role' => 'complementary',
-      ':id' => 'block-help',
+      ':id' => 'block-bartik-help',
     ));
 
     $this->assertEqual(count($elements), 1, 'Found complementary role on help block.');
@@ -59,7 +59,7 @@ class StandardTest extends WebTestBase {
     $this->drupalGet('');
     $elements = $this->xpath('//div[@role=:role and @id=:id]', array(
       ':role' => 'complementary',
-      ':id' => 'block-powered',
+      ':id' => 'block-bartik-powered',
     ));
     $this->assertEqual(count($elements), 1, 'Found complementary role on powered by block.');
 

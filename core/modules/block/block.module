@@ -279,14 +279,12 @@ function _block_get_renderable_region($list = array()) {
       }
     }
     else {
-      $key_components = explode('.', $key);
-      $id = array_pop($key_components);
       $build[$key] = array(
         '#block' => $block,
         '#weight' => $block->get('weight'),
         '#pre_render' => array('_block_get_renderable_block'),
         '#cache' => array(
-          'keys' => array($id, $settings['module']),
+          'keys' => array($key, $settings['module']),
           'granularity' => $settings['cache'],
           'bin' => 'block',
           'tags' => array('content' => TRUE),
@@ -383,9 +381,15 @@ function block_theme_initialize($theme) {
     $regions = system_region_list($theme, REGIONS_VISIBLE);
     $default_theme_blocks = entity_load_multiple_by_properties('block', array('theme' => $default_theme));
     foreach ($default_theme_blocks as $default_theme_block_id => $default_theme_block) {
-      list(, $machine_name) = explode('.', $default_theme_block_id);
+      if (strpos($default_theme_block_id, $default_theme . '_') === 0) {
+        $id = str_replace($default_theme, $theme, $default_theme_block_id);
+      }
+      else {
+        $id = $theme . '_' . $default_theme_block_id;
+      }
       $block = $default_theme_block->createDuplicate();
-      $block->set('id', $theme . '.' . $machine_name);
+      $block->set('id', $id);
+      $block->set('theme', $theme);
       // If the region isn't supported by the theme, assign the block to the
       // theme's default region.
       if (!isset($regions[$block->get('region')])) {
@@ -559,9 +563,7 @@ function template_preprocess_block(&$variables) {
 
   // Create a valid HTML ID and make sure it is unique.
   if ($id = $variables['elements']['#block']->id()) {
-    $config_id = explode('.', $id);
-    $machine_name = array_pop($config_id);
-    $variables['attributes']['id'] = drupal_html_id('block-' . $machine_name);
+    $variables['attributes']['id'] = drupal_html_id('block-' . $id);
   }
 }
 

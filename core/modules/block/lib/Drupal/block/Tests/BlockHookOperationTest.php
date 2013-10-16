@@ -48,13 +48,13 @@ class BlockHookOperationTest extends WebTestBase {
   public function testBlockOperationAlter() {
     // Add a test block, any block will do.
     // Set the machine name so the test_operation link can be built later.
-    $block_machine_name = Unicode::strtolower($this->randomName(16));
-    $this->drupalPlaceBlock('system_powered_by_block', array('machine_name' => $block_machine_name));
+    $block_id = Unicode::strtolower($this->randomName(16));
+    $this->drupalPlaceBlock('system_powered_by_block', array('id' => $block_id));
 
     // Get the Block listing.
     $this->drupalGet('admin/structure/block');
 
-    $test_operation_link = 'admin/structure/block/manage/stark.' . $block_machine_name . '/test_operation';
+    $test_operation_link = 'admin/structure/block/manage/' . $block_id . '/test_operation';
     // Test if the test_operation link is on the page.
     $this->assertLinkByHref($test_operation_link);
   }

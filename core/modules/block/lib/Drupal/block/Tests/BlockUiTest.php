@@ -51,14 +51,14 @@ class BlockUiTest extends WebTestBase {
         'label' => 'Tools',
         'tr' => '5',
         'plugin_id' => 'system_menu_block:tools',
-        'settings' => array('region' => 'sidebar_second', 'machine_name' => 'tools'),
+        'settings' => array('region' => 'sidebar_second', 'id' => 'tools'),
         'test_weight' => '-1',
       ),
       array(
         'label' => 'Powered by Drupal',
         'tr' => '12',
         'plugin_id' => 'system_powered_by_block',
-        'settings' => array('region' => 'footer', 'machine_name' => 'powered'),
+        'settings' => array('region' => 'footer', 'id' => 'powered'),
         'test_weight' => '0',
       ),
     );
@@ -92,24 +92,24 @@ class BlockUiTest extends WebTestBase {
       $element = $this->xpath('//*[@id="blocks"]/tbody/tr[' . $values['tr'] . ']/td[1]/text()');
       $this->assertTrue((string)$element[0] == $values['label'], 'The "' . $values['label'] . '" block title is set inside the ' . $values['settings']['region'] . ' region.');
       // Look for a test block region select form element.
-      $this->assertField('blocks[stark.' . $values['settings']['machine_name'] . '][region]', 'The block "' . $values['label'] . '" has a region assignment field.');
+      $this->assertField('blocks[' . $values['settings']['id'] . '][region]', 'The block "' . $values['label'] . '" has a region assignment field.');
       // Move the test block to the header region.
-      $edit['blocks[stark.' . $values['settings']['machine_name'] . '][region]'] = 'header';
+      $edit['blocks[' . $values['settings']['id'] . '][region]'] = 'header';
       // Look for a test block weight select form element.
-      $this->assertField('blocks[stark.' . $values['settings']['machine_name'] . '][weight]', 'The block "' . $values['label'] . '" has a weight assignment field.');
+      $this->assertField('blocks[' . $values['settings']['id'] . '][weight]', 'The block "' . $values['label'] . '" has a weight assignment field.');
       // Change the test block's weight.
-      $edit['blocks[stark.' . $values['settings']['machine_name'] . '][weight]'] = $values['test_weight'];
+      $edit['blocks[' . $values['settings']['id'] . '][weight]'] = $values['test_weight'];
     }
     $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
     foreach ($this->testBlocks as $values) {
       // Check if the region and weight settings changes have persisted.
       $this->assertOptionSelected(
-        'edit-blocks-stark' . $values['settings']['machine_name']  . '-region',
+        'edit-blocks-' . $values['settings']['id']  . '-region',
         'header',
         'The block "' . $values['label'] . '" has the correct region assignment (header).'
       );
       $this->assertOptionSelected(
-        'edit-blocks-stark' . $values['settings']['machine_name']  . '-weight',
+        'edit-blocks-' . $values['settings']['id']  . '-weight',
         $values['test_weight'],
         'The block "' . $values['label'] . '" has the correct weight assignment (' . $values['test_weight'] . ').'
       );
@@ -146,17 +146,17 @@ class BlockUiTest extends WebTestBase {
   public function testMachineNameSuggestion() {
     $url = 'admin/structure/block/add/test_block_instantiation/stark';
     $this->drupalGet($url);
-    $this->assertFieldByName('machine_name', 'displaymessage', 'Block form uses raw machine name suggestion when no instance already exists.');
+    $this->assertFieldByName('id', 'displaymessage', 'Block form uses raw machine name suggestion when no instance already exists.');
     $this->drupalPostForm($url, array(), 'Save block');
 
     // Now, check to make sure the form starts by autoincrementing correctly.
     $this->drupalGet($url);
-    $this->assertFieldByName('machine_name', 'displaymessage_2', 'Block form appends _2 to plugin-suggested machine name when an instance already exists.');
+    $this->assertFieldByName('id', 'displaymessage_2', 'Block form appends _2 to plugin-suggested machine name when an instance already exists.');
     $this->drupalPostForm($url, array(), 'Save block');
 
     // And verify that it continues working beyond just the first two.
     $this->drupalGet($url);
-    $this->assertFieldByName('machine_name', 'displaymessage_3', 'Block form appends _3 to plugin-suggested machine name when two instances already exist.');
+    $this->assertFieldByName('id', 'displaymessage_3', 'Block form appends _3 to plugin-suggested machine name when two instances already exist.');
   }
 
 }
