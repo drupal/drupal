@@ -35,7 +35,7 @@ else {
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 simpletest_classloader_register();
 
-if (!module_exists('simpletest')) {
+if (!\Drupal::moduleHandler()->moduleExists('simpletest')) {
   simpletest_script_print_error("The simpletest module must be enabled before this script can run.");
   exit;
 }

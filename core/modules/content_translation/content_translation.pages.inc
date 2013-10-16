@@ -23,7 +23,7 @@ function content_translation_overview(EntityInterface $entity) {
   $languages = language_list();
   $original = $entity->getUntranslated()->language()->id;
   $translations = $entity->getTranslationLanguages();
-  $field_ui = module_exists('field_ui') && user_access('administer ' . $entity->entityType() . ' fields');
+  $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') && user_access('administer ' . $entity->entityType() . ' fields');
 
   $path = $controller->getViewPath($entity);
   $base_path = $controller->getBasePath($entity);
@@ -270,7 +270,7 @@ function content_translation_delete_confirm_submit(array $form, array &$form_sta
 
   // Remove any existing path alias for the removed translation.
   // @todo This should be taken care of by the Path module.
-  if (module_exists('path')) {
+  if (\Drupal::moduleHandler()->moduleExists('path')) {
     $conditions = array('source' => $controller->getViewPath($entity), 'langcode' => $language->id);
     \Drupal::service('path.crud')->delete($conditions);
   }

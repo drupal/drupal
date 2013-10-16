@@ -2819,7 +2819,7 @@ function menu_get_router() {
  * @todo This function should be removed/refactored.
  */
 function _menu_navigation_links_rebuild($menu) {
-  if (!module_exists('menu_link')) {
+  if (!\Drupal::moduleHandler()->moduleExists('menu_link')) {
     // The Menu link module may not be available during install, so rebuild
     // when possible.
     return;

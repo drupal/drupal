@@ -45,7 +45,7 @@ function menu_help($path, $arg) {
     case 'admin/structure/menu/add':
       return '<p>' . t('You can enable the newly-created block for this menu on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
   }
-  if ($path == 'admin/structure/menu' && module_exists('block')) {
+  if ($path == 'admin/structure/menu' && \Drupal::moduleHandler()->moduleExists('block')) {
     return '<p>' . t('Each menu has a corresponding block that is managed on the <a href="@blocks">Blocks administration page</a>.', array('@blocks' => url('admin/structure/block'))) . '</p>';
   }
 }

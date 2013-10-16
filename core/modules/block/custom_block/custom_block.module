@@ -172,7 +172,7 @@ function custom_block_load($id) {
  */
 function custom_block_entity_info_alter(&$types) {
   // Add a translation handler for fields if the language module is enabled.
-  if (module_exists('language')) {
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
     $types['custom_block']['translation']['custom_block'] = TRUE;
   }
 }

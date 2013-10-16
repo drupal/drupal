@@ -505,7 +505,7 @@ function system_requirements($phase) {
 
   if ($phase == 'runtime') {
     // Check for update status module.
-    if (!module_exists('update')) {
+    if (!\Drupal::moduleHandler()->moduleExists('update')) {
       $requirements['update status'] = array(
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,

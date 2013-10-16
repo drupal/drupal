@@ -273,7 +273,7 @@ function language_negotiation_configure_form_submit($form, &$form_state) {
 
   // Clear block definitions cache since the available blocks and their names
   // may have been changed based on the configurable types.
-  if (module_exists('block')) {
+  if (\Drupal::moduleHandler()->moduleExists('block')) {
     // If there is an active language switcher for a language type that has been
     // made not configurable, deactivate it first.
     $non_configurable = array_keys(array_diff($customized, array_filter($customized)));
