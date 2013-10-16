@@ -578,9 +578,9 @@ class FormTest extends FieldTestBase {
   }
 
   /**
-   * Tests the Hidden widget.
+   * Tests hiding a field in a form.
    */
-  function testFieldFormHiddenWidget() {
+  function testHiddenField() {
     $entity_type = 'entity_test_rev';
     $field = $this->field_single;
     $field['entity_type'] = $entity_type;
@@ -592,18 +592,15 @@ class FormTest extends FieldTestBase {
     entity_create('field_entity', $field)->save();
     $this->instance = entity_create('field_instance', $this->instance);
     $this->instance->save();
-    entity_get_form_display($this->instance->entity_type, $this->instance->bundle, 'default')
-      ->setComponent($this->instance->getFieldName(), array(
-        'type' => 'hidden',
-      ))
-      ->save();
+    // We explicitly do not assign a widget in a form display, so the field
+    // stays hidden in forms.
 
     // Display the entity creation form.
     $this->drupalGet($entity_type . '/add');
 
     // Create an entity and test that the default value is assigned correctly to
     // the field that uses the hidden widget.
-    $this->assertNoField("{$field_name}[0][value]", 'The hidden widget is not displayed');
+    $this->assertNoField("{$field_name}[0][value]", 'The field does not appear in the form');
     $this->drupalPostForm(NULL, array('user_id' => 1, 'name' => $this->randomName()), t('Save'));
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
@@ -634,11 +631,9 @@ class FormTest extends FieldTestBase {
     $entity = entity_load($entity_type, $id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
-    // Update the form display and switch to the Hidden widget again.
+    // Set the field back to hidden.
     entity_get_form_display($entity_type, $this->instance->bundle, 'default')
-      ->setComponent($this->instance->getFieldName(), array(
-        'type' => 'hidden',
-      ))
+      ->removeComponent($this->instance->getFieldName())
       ->save();
 
     // Create a new revision.

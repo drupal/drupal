@@ -244,14 +244,6 @@ function _field_generate_entity_field_definition(FieldInterface $field, FieldIns
 }
 
 /**
- * Implements hook_field_widget_info_alter().
- */
-function field_field_widget_info_alter(&$info) {
-  // Add the Hidden widget to all field types.
-  $info['hidden']['field_types'] = array_keys(\Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions());
-}
-
-/**
  * Implements hook_entity_bundle_create().
  */
 function field_entity_bundle_create($entity_type, $bundle) {

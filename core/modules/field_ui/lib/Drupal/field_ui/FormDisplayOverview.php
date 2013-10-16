@@ -85,6 +85,13 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
+  protected function getPluginOptions($field_type) {
+    return parent::getPluginOptions($field_type) + array('hidden' => '- ' . t('Hidden') . ' -');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getDefaultPlugin($field_type) {
     return $this->fieldTypes[$field_type]['default_widget'];
   }
