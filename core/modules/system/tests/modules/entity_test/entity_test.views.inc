@@ -55,7 +55,7 @@ function entity_test_views_data() {
     ),
   );
 
-  if (module_exists('langcode')) {
+  if (\Drupal::moduleHandler()->moduleExists('langcode')) {
     $data['entity_test']['langcode'] = array(
       'title' => t('Language'),
       'help' => t('The {language}.langcode of the original variant of this test entity.'),

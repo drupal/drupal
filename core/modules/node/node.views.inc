@@ -648,7 +648,7 @@ function node_row_node_view_preprocess_node(&$variables) {
  */
 function node_views_wizard() {
   // @todo: figure this piece out.
-  if (module_exists('statistics')) {
+  if (\Drupal::moduleHandler()->moduleExists('statistics')) {
     $plugins['node']['available_sorts']['node_counter-totalcount:DESC'] = t('Number of hits');
   }
 

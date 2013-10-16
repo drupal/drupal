@@ -21,7 +21,7 @@ function path_admin_overview($keys = NULL) {
   // Enable language column if language.module is enabled or if we have any
   // alias with a language.
   $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE langcode <> :langcode', 0, 1, array(':langcode' => Language::LANGCODE_NOT_SPECIFIED))->fetchField();
-  $multilanguage = (module_exists('language') || $alias_exists);
+  $multilanguage = (\Drupal::moduleHandler()->moduleExists('language') || $alias_exists);
 
   $header = array();
   $header[] = array('data' => t('Alias'), 'field' => 'alias', 'sort' => 'asc');
@@ -157,7 +157,7 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
   );
 
   // A hidden value unless language.module is enabled.
-  if (module_exists('language')) {
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
     $languages = language_list();
     foreach ($languages as $langcode => $language) {
       $language_options[$langcode] = $language->name;

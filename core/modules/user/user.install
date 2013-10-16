@@ -608,7 +608,7 @@ function user_update_8011() {
 
   // User pictures can only be migrated to the new user picture image field
   // if Image module is installed.
-  if (!module_exists('image')) {
+  if (!\Drupal::moduleHandler()->moduleExists('image')) {
     $old_schema = \Drupal::moduleHandler()->install(array('image'));
     if ($old_schema['image'] == SCHEMA_UNINSTALLED) {
       // Install image.module with schema version 8002 as a previous version

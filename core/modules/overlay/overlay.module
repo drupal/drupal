@@ -501,7 +501,7 @@ function overlay_overlay_parent_initialize() {
   }
   drupal_add_js(array('overlay' => array('paths' => $paths)), 'setting');
   $path_prefixes = array();
-  if (module_exists('language')) {
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
     language_negotiation_include();
     if (\Drupal::config('language.negotiation')->get('url.source') == LANGUAGE_NEGOTIATION_URL_PREFIX) {
       // Skip the empty string indicating the default language. We always accept

@@ -37,7 +37,7 @@ function help_help($path, $arg) {
       $output .= '<li>' . t('<strong>Enable additional functionality</strong> Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.', array('@modules' => url('admin/modules'), '@download_modules' => 'http://drupal.org/project/modules')) . '</li>';
       $output .= '<li>' . t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.', array('@themes' => url('admin/appearance'), '@download_themes' => 'http://drupal.org/project/themes')) . '</li>';
       // Display a link to the create content page if Node module is enabled.
-      if (module_exists('node')) {
+      if (\Drupal::moduleHandler()->moduleExists('node')) {
         $output .= '<li>' . t('<strong>Start posting content</strong> Finally, you can <a href="@content">add new content</a> for your website.', array('@content' => url('node/add'))) . '</li>';
       }
       $output .= '</ol>';

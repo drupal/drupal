@@ -2428,7 +2428,7 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
 
     // Fill in master language list based on current configuration.
     $default = language_default();
-    if (language_multilingual() || module_exists('language')) {
+    if (language_multilingual() || \Drupal::moduleHandler()->moduleExists('language')) {
       // Use language module configuration if available.
       $language_entities = config_get_storage_names_with_prefix('language.entity');
 

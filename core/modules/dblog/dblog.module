@@ -61,7 +61,7 @@ function dblog_menu() {
     'route_name' => 'dblog.event',
   );
 
-  if (module_exists('search')) {
+  if (\Drupal::moduleHandler()->moduleExists('search')) {
     $items['admin/reports/search'] = array(
       'title' => 'Top search phrases',
       'description' => 'View most popular search phrases.',
