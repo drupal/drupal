@@ -38,6 +38,7 @@ class UrlTest extends UnitTestCase {
       array(array(' &#//+%20@۞' => 'a'), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', 'Key was properly encoded.'),
       array(array('a' => '1', 'b' => '2', 'c' => '3'), 'a=1&b=2&c=3', 'Multiple values were properly concatenated.'),
       array(array('a' => array('b' => '2', 'c' => '3'), 'd' => 'foo'), 'a[b]=2&a[c]=3&d=foo', 'Nested array was properly encoded.'),
+      array(array('foo' => NULL), 'foo', 'Simple parameters are properly added.'),
     );
   }
 
@@ -59,6 +60,8 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Data provider for testValidAbsolute().
+   *
+   * @return array
    */
   public function providerTestValidAbsoluteData() {
     $urls = array(
@@ -103,6 +106,8 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Provides data for testInvalidAbsolute().
+   *
+   * @return array
    */
   public function providerTestInvalidAbsolute() {
     $data = array(
@@ -131,6 +136,8 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Provides data for testValidRelative().
+   *
+   * @return array
    */
   public function providerTestValidRelativeData() {
     $data = array(
@@ -162,6 +169,8 @@ class UrlTest extends UnitTestCase {
 
   /**
    * Provides data for testInvalidRelative().
+   *
+   * @return array
    */
   public function providerTestInvalidRelativeData() {
     $data = array(
@@ -186,6 +195,234 @@ class UrlTest extends UnitTestCase {
     $test_url = $prefix . $url;
     $valid_url = Url::isValid($test_url);
     $this->assertFalse($valid_url, String::format('@url is NOT a valid URL.', array('@url' => $test_url)));
+  }
+
+  /**
+   * Tests query filtering.
+   *
+   * @param array $query
+   *   The array of query parameters.
+   * @param array $exclude
+   *   A list of $query array keys to remove. Use "parent[child]" to exclude
+   *   nested items.
+   * @param array $expected
+   *   An array containing query parameters.
+   *
+   * @dataProvider providerTestFilterQueryParameters
+   *
+   * @see \Drupal\Component\Utility\Url::filterQueryParameters().
+   */
+  public function testFilterQueryParameters($query, $exclude, $expected) {
+    $filtered = Url::filterQueryParameters($query, $exclude);
+    $this->assertEquals($expected, $filtered, 'The query was not properly filtered.');
+  }
+
+  /**
+   * Provides data to self::testFilterQueryParameters().
+   *
+   * @return array
+   */
+  public static function providerTestFilterQueryParameters() {
+    return array(
+      // Test without an exclude filter.
+      array(
+        'query' => array('a' => array('b' => 'c')),
+        'exclude' => array(),
+        'expected' => array('a' => array('b' => 'c')),
+      ),
+      // Exclude the 'b' element.
+      array(
+        'query' => array('a' => array('b' => 'c', 'd' => 'e')),
+        'exclude' => array('a[b]'),
+        'expected' => array('a' => array('d' => 'e')),
+      ),
+    );
+  }
+
+  /**
+   * Tests url parsing.
+   *
+   * @param string $url
+   *   URL to test.
+   * @param array $expected
+   *   Associative array with expected parameters.
+   *
+   * @dataProvider providerTestParse
+   *
+   * @see \Drupal\Component\Utility\Url::parse()
+   */
+  public function testParse($url, $expected) {
+    $parsed = Url::parse($url);
+    $this->assertEquals($expected, $parsed, 'The url was not properly parsed.');
+  }
+
+  /**
+   * Provides data for self::testParse().
+   *
+   * @return array
+   */
+  public static function providerTestParse() {
+    return array(
+      array(
+        'http://www.example.com/my/path',
+        array(
+          'path' => 'http://www.example.com/my/path',
+          'query' => array(),
+          'fragment' => '',
+        ),
+      ),
+      array(
+        'http://www.example.com/my/path?destination=home#footer',
+        array(
+          'path' => 'http://www.example.com/my/path',
+          'query' => array(
+            'destination' => 'home',
+          ),
+          'fragment' => 'footer',
+        ),
+      ),
+      array(
+        '/my/path?destination=home#footer',
+        array(
+          'path' => '/my/path',
+          'query' => array(
+            'destination' => 'home',
+          ),
+          'fragment' => 'footer',
+        ),
+      ),
+    );
+  }
+
+  /**
+   * Tests path encoding.
+   *
+   * @param string $path
+   *   A path to encode.
+   * @param string $expected
+   *   The expected encoded path.
+   *
+   * @see \Drupal\Component\Utility\Url::encodePath().
+   *
+   * @dataProvider providerTestEncodePath
+   */
+  public function testEncodePath($path, $expected) {
+    $encoded = Url::encodePath($path);
+    $this->assertEquals($expected, $encoded);
+  }
+
+  /**
+   * Provides data for self::testEncodePath().
+   *
+   * @return array
+   */
+  public static function providerTestEncodePath() {
+    return array(
+      array('unencoded path with spaces', 'unencoded%20path%20with%20spaces'),
+      array('slashes/should/be/preserved', 'slashes/should/be/preserved'),
+    );
+  }
+
+  /**
+   * Tests external versus internal paths.
+   *
+   * @param string $path
+   *   URL or path to test.
+   * @param bool $expected
+   *   Expected result.
+   *
+   * @see \Drupal\Component\Utility\Url::isExternal()
+   *
+   * @dataProvider providerTestIsExternal
+   */
+  public function testIsExternal($path, $expected) {
+    $isExternal = Url::isExternal($path);
+    $this->assertEquals($expected, $isExternal);
+  }
+
+  /**
+   * Provides data for self::testIsExternal().
+   *
+   * @return array
+   */
+  public static function providerTestIsExternal() {
+    return array(
+      array('/internal/path', FALSE),
+      array('https://example.com/external/path', TRUE),
+      array('javascript://fake-external-path', FALSE),
+    );
+  }
+
+  /**
+   * Tests bad protocol filtering and escaping.
+   *
+   * @param string $uri
+   *    Protocol URI.
+   * @param string $expected
+   *    Expected escaped value.
+   * @param array $protocols
+   *    Protocols to allow.
+   *
+   * @dataProvider providerTestFilterBadProtocol
+   */
+  public function testFilterBadProtocol($uri, $expected, $protocols) {
+    Url::setAllowedProtocols($protocols);
+    $filtered = Url::filterBadProtocol($uri);
+    $this->assertEquals($expected, $filtered);
+  }
+
+  /**
+   * Provides data for self::testTestFilterBadProtocol().
+   *
+   * @return array
+   */
+  public static function providerTestFilterBadProtocol() {
+    return array(
+      array('javascript://example.com?foo&bar', '//example.com?foo&amp;bar', array('http', 'https')),
+      // Test custom protocols.
+      array('http://example.com?foo&bar', '//example.com?foo&amp;bar', array('https')),
+      // Valid protocol.
+      array('http://example.com?foo&bar', 'http://example.com?foo&amp;bar', array('https', 'http')),
+      // Colon not part of the URL scheme.
+      array('/test:8888?foo&bar', '/test:8888?foo&amp;bar', array('http')),
+    );
+  }
+
+  /**
+   * Tests dangerous url protocol filtering.
+   *
+   * @param string $uri
+   *    Protocol URI.
+   * @param string $expected
+   *    Expected escaped value.
+   * @param array $protocols
+   *    Protocols to allow.
+   *
+   * @see \Drupal\Component\Utility\Url::stripDangerousProtocols()
+   *
+   * @dataProvider providerTestStripDangerousProtocols
+   */
+  public function testStripDangerousProtocols($uri, $expected, $protocols) {
+    Url::setAllowedProtocols($protocols);
+    $stripped = Url::stripDangerousProtocols($uri);
+    $this->assertEquals($expected, $stripped);
+  }
+
+  /**
+   * Provides data for self::testStripDangerousProtocols().
+   *
+   * @return array
+   */
+  public static function providerTestStripDangerousProtocols() {
+    return array(
+      array('javascript://example.com', '//example.com', array('http', 'https')),
+      // Test custom protocols.
+      array('http://example.com', '//example.com', array('https')),
+      // Valid protocol.
+      array('http://example.com', 'http://example.com', array('https', 'http')),
+      // Colon not part of the URL scheme.
+      array('/test:8888', '/test:8888', array('http')),
+    );
   }
 
   /**
