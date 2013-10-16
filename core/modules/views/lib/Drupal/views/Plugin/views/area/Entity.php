@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\area;
 
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Provides an area handler which renders an entity in a certain view mode.
@@ -89,7 +88,7 @@ class Entity extends TokenizeAreaPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   * {@inheritdoc}
    */
   public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {

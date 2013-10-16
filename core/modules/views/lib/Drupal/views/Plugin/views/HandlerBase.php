@@ -274,11 +274,6 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Validate the options form.
-   */
-  public function validateOptionsForm(&$form, &$form_state) { }
-
-  /**
    * Build the options form.
    */
   public function buildOptionsForm(&$form, &$form_state) {
@@ -321,12 +316,6 @@ abstract class HandlerBase extends PluginBase {
     // @todo Do we really want to keep this hook.
     \Drupal::moduleHandler()->alter('views_handler_options', $this->options, $this->view);
   }
-
-  /**
-   * Perform any necessary changes to the form values prior to storage.
-   * There is no need for this function to actually store the data.
-   */
-  public function submitOptionsForm(&$form, &$form_state) { }
 
   /**
    * Provides the handler some groupby.
@@ -493,7 +482,14 @@ abstract class HandlerBase extends PluginBase {
    * This gives all the handlers some time to set up before any handler has
    * been fully run.
    */
-  public function preQuery() { }
+  public function preQuery() {
+  }
+
+  /**
+   * Don't run a query by default.
+   */
+  public function query() {
+  }
 
   /**
    * Run after the view is executed, before the result is cached.
@@ -556,7 +552,7 @@ abstract class HandlerBase extends PluginBase {
   }
 
   /**
-   * Provide text for the administrative summary
+   * Provide text for the administrative summary.
    */
   public function adminSummary() { }
 
@@ -629,10 +625,12 @@ abstract class HandlerBase extends PluginBase {
   public function validate() { return array(); }
 
   /**
-   * Determine if the handler is considered 'broken', meaning it's a
+   * Determines if the handler is considered 'broken', meaning it's a
    * a placeholder used when a handler can't be found.
    */
-  public function broken() { }
+  public function broken() {
+    return FALSE;
+  }
 
   /**
    * Creates cross-database SQL date formatting.

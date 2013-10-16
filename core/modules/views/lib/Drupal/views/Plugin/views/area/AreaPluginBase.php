@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\area;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
 
 /**
@@ -47,6 +46,16 @@ abstract class AreaPluginBase extends HandlerBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -59,15 +68,14 @@ abstract class AreaPluginBase extends HandlerBase {
   }
 
   /**
-   * Provide extra data to the administration form
+   * {@inheritdoc}
    */
   public function adminSummary() {
     return $this->adminLabel();
   }
 
   /**
-   * Default options form that provides the label widget that all fields
-   * should have.
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -80,11 +88,6 @@ abstract class AreaPluginBase extends HandlerBase {
       );
     }
   }
-
-  /**
-   * Don't run a query
-   */
-  public function query() { }
 
   /**
    * Performs any operations needed before full rendering.
@@ -117,13 +120,6 @@ abstract class AreaPluginBase extends HandlerBase {
    */
   public function isEmpty() {
     return empty($this->options['empty']);
-  }
-
-  /**
-   * Area handlers shouldn't have groupby.
-   */
-  public function usesGroupBy() {
-    return FALSE;
   }
 
 }

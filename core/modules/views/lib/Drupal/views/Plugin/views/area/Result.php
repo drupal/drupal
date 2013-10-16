@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\views\Plugin\views\style\DefaultSummary;
@@ -21,6 +20,9 @@ use Drupal\views\Plugin\views\style\DefaultSummary;
  */
 class Result extends AreaPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -32,6 +34,9 @@ class Result extends AreaPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
     $item_list = array(
@@ -67,7 +72,7 @@ class Result extends AreaPluginBase {
   }
 
   /**
-   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   * {@inheritdoc}
    */
   public function render($empty = FALSE) {
     // Must have options and does not work on summaries.

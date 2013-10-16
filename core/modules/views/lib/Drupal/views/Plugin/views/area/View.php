@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\area\View.
+ * Contains \Drupal\views\Plugin\views\area\View.
  */
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\PluginID;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Views area handlers. Insert a view inside of an area.
@@ -26,6 +27,43 @@ class View extends AreaPluginBase {
   protected $isEmpty;
 
   /**
+    * The view storage controller.
+    *
+    * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+    */
+   protected $viewStorage;
+
+   /**
+    * Constructs a View object.
+    *
+    * @param array $configuration
+    *   A configuration array containing information about the plugin instance.
+    * @param string $plugin_id
+    *   The plugin_id for the plugin instance.
+    * @param array $plugin_definition
+    *   The plugin implementation definition.
+    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $view_storage
+    *   The view storage controller.
+    */
+   public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityStorageControllerInterface $view_storage) {
+     parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+     $this->viewStorage = $view_storage;
+   }
+
+   /**
+    * {@inheritdoc}
+    */
+   public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+       return new static(
+           $configuration,
+           $plugin_id,
+           $plugin_definition,
+       $container->get('entity.manager')->getStorageController('view')
+       );
+   }
+
+  /**
    * {@inheritdoc}
    */
   protected function defineOptions() {
@@ -37,8 +75,7 @@ class View extends AreaPluginBase {
   }
 
   /**
-   * Default options form that provides the label widget that all fields
-   * should have.
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -64,13 +101,14 @@ class View extends AreaPluginBase {
   }
 
   /**
-   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   * {@inheritdoc}
    */
   public function render($empty = FALSE) {
     if (!empty($this->options['view_to_insert'])) {
       list($view_name, $display_id) = explode(':', $this->options['view_to_insert']);
 
-      $view = views_get_view($view_name);
+      $view = $this->viewStorage->load($view_name);
+
       if (empty($view) || !$view->access($display_id)) {
         return array();
       }

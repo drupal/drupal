@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Views area title override handler.
  *
@@ -19,7 +17,7 @@ use Drupal\Component\Annotation\PluginID;
 class Title extends AreaPluginBase {
 
   /**
-   * Overrides Drupal\views\Plugin\views\AreaPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -28,7 +26,7 @@ class Title extends AreaPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\AreaPluginBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -45,7 +43,7 @@ class Title extends AreaPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\AreaPluginBase::preRender().
+   * {@inheritdoc}
    */
   public function preRender(array $results) {
     parent::preRender($results);
@@ -58,7 +56,7 @@ class Title extends AreaPluginBase {
   }
 
   /**
-   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   * {@inheritdoc}
    */
   public function render($empty = FALSE) {
     // Do nothing for this handler by returning an empty render array.

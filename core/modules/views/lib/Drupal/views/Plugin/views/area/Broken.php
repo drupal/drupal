@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\area;
 
-use Drupal\Component\Annotation\PluginID;
-use Drupal\views\ViewExecutable;
-
 /**
  * A special handler to take the place of missing or broken handlers.
  *
@@ -19,6 +16,9 @@ use Drupal\views\ViewExecutable;
  */
 class Broken extends AreaPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminLabel($short = FALSE) {
     $args = array(
       '@module' => $this->definition['original_configuration']['provider'],
@@ -26,11 +26,22 @@ class Broken extends AreaPluginBase {
     return $this->isOptional() ? t('Optional handler is missing (Module: @module) …', $args) : t('Broken/missing handler (Module: @module) …', $args);
   }
 
-  public function defineOptions() { return array(); }
-  public function ensureMyTable() { /* No table to ensure! */ }
-  public function query($group_by = FALSE) { /* No query to run */ }
   /**
-   * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
+   * {@inheritdoc}
+   */
+  public function defineOptions() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function ensureMyTable() {
+    // No table to ensure.
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function render($empty = FALSE) {
     // Simply render nothing by returning an empty render array.
@@ -75,7 +86,7 @@ class Broken extends AreaPluginBase {
   }
 
   /**
-   * Determine if the handler is considered 'broken'
+   * {@inheritdoc}
    */
   public function broken() {
     return TRUE;

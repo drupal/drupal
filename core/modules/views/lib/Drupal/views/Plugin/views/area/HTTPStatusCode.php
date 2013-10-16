@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\area;
 
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Alter the HTTP response status code used by the view.
