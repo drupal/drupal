@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity\Field;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\AccessibleInterface;
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\TypedData\ListInterface;
 
 /**

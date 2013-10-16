@@ -710,7 +710,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  *
  * @param string $operation
  *   The operation to be performed. See
- *   \Drupal\Core\TypedData\AccessibleInterface::access() for possible values.
+ *   \Drupal\Core\Access\AccessibleInterface::access() for possible values.
  * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
  *   The field definition.
  * @param \Drupal\Core\Session\AccountInterface $account

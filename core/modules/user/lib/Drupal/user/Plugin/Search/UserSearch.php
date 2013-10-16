@@ -12,7 +12,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\AccessibleInterface;
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\search\Annotation\SearchPlugin;
 use Drupal\search\Plugin\SearchPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;

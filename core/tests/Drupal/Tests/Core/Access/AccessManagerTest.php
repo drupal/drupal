@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
-use Drupal\Core\Access\AccessInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Access\DefaultAccessCheck;
 use Drupal\system\Tests\Routing\MockRouteProvider;

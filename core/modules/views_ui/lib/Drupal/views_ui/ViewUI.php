@@ -892,7 +892,7 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
+   * {@inheritdoc}
    */
   public function access($operation = 'view', AccountInterface $account = NULL) {
     return $this->storage->access($operation, $account);

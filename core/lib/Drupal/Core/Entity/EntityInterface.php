@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\TypedData\AccessibleInterface;
+use Drupal\Core\Access\AccessibleInterface;
 
 /**
  * Defines a common interface for all entity objects.

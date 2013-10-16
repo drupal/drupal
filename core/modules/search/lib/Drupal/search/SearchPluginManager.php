@@ -114,7 +114,7 @@ class SearchPluginManager extends DefaultPluginManager {
       return FALSE;
     }
     // Plugins that implement AccessibleInterface can deny access.
-    if (is_subclass_of($definition['class'], '\Drupal\Core\TypedData\AccessibleInterface')) {
+    if (is_subclass_of($definition['class'], '\Drupal\Core\Access\AccessibleInterface')) {
       return $this->createInstance($plugin_id)->access('view', $account);
     }
     return TRUE;

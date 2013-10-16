@@ -20,7 +20,7 @@ use Drupal\Component\Annotation\Plugin;
  * or more data properties. Typed data objects for complex data types have to
  * implement the \Drupal\Core\TypedData\ComplexDataInterface. Further interface
  * that may be implemented are:
- *  - \Drupal\Core\TypedData\AccessibleInterface
+ *  - \Drupal\Core\Access\AccessibleInterface
  *  - \Drupal\Core\TypedData\TranslatableInterface
  *
  * Furthermore, lists of data items are represented by objects implementing the

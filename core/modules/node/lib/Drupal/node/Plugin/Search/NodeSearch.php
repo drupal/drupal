@@ -18,7 +18,7 @@ use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\AccessibleInterface;
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\search\Annotation\SearchPlugin;
 use Drupal\search\Plugin\SearchPluginBase;

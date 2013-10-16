@@ -9,7 +9,7 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\AccessibleInterface;
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Entity\EntityAccessController;
 
 /**
