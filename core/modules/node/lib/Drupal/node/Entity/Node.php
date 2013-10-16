@@ -125,6 +125,12 @@ class Node extends ContentEntityBase implements NodeInterface {
     if ($this->isDefaultRevision()) {
       \Drupal::entityManager()->getAccessController('node')->writeGrants($this, $update);
     }
+
+    // Reindex the node when it is updated. The node is automatically indexed
+    // when it is added, simply by being added to the node table.
+    if ($update) {
+      node_reindex_node_search($this->id());
+    }
   }
 
   /**
@@ -133,9 +139,10 @@ class Node extends ContentEntityBase implements NodeInterface {
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
     parent::preDelete($storage_controller, $entities);
 
-    if (module_exists('search')) {
+    // Assure that all nodes deleted are removed from the search index.
+    if (\Drupal::moduleHandler()->moduleExists('search')) {
       foreach ($entities as $entity) {
-        search_reindex($entity->nid->value, 'node');
+        search_reindex($entity->nid->value, 'node_search');
       }
     }
   }

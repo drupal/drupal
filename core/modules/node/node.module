@@ -2123,15 +2123,6 @@ function node_reindex_node_search($nid) {
 }
 
 /**
- * Implements hook_node_update().
- */
-function node_node_update(EntityInterface $node) {
-  // Reindex the node when it is updated. The node is automatically indexed
-  // when it is added, simply by being added to the node table.
-  node_reindex_node_search($node->id());
-}
-
-/**
  * Implements hook_comment_insert().
  */
 function node_comment_insert($comment) {
