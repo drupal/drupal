@@ -7,9 +7,8 @@
 
 namespace Drupal\Component\Plugin;
 
-use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Plugin\Exception\UnknownPluginException;
 use Drupal\Component\Utility\MapArray;
-use Drupal\Component\Utility\String;
 
 /**
  * Provides a default plugin bag for a plugin type.
@@ -76,7 +75,7 @@ class DefaultPluginBag extends PluginBag {
   protected function initializePlugin($instance_id) {
     $configuration = isset($this->configurations[$instance_id]) ? $this->configurations[$instance_id] : array();
     if (!isset($configuration[$this->pluginKey])) {
-      throw new PluginException(String::format("Unknown plugin ID '@instance'.", array('@instance' => $instance_id)));
+      throw new UnknownPluginException($instance_id);
     }
     $this->pluginInstances[$instance_id] = $this->manager->createInstance($configuration[$this->pluginKey], $configuration);
     $this->addInstanceID($instance_id);

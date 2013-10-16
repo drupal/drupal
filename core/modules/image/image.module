@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Component\Plugin\Exception\UnknownPluginException;
 use Drupal\field\Entity\Field;
 use Drupal\field\Entity\FieldInstance;
 use Drupal\file\Entity\File;
@@ -72,8 +73,14 @@ function image_help($path, $arg) {
       $effect = \Drupal::service('plugin.manager.image.effect')->getDefinition($arg[7]);
       return isset($effect['description']) ? ('<p>' . $effect['description'] . '</p>') : NULL;
     case 'admin/config/media/image-styles/manage/%/effects/%':
-      $effect = entity_load('image_style', $arg[5])->getEffect($arg[7])->getPluginDefinition();
-      return isset($effect['description']) ? ('<p>' . $effect['description'] . '</p>') : NULL;
+      try {
+        $effect = entity_load('image_style', $arg[5])->getEffect($arg[7]);
+      }
+      catch (UnknownPluginException $e) {
+        return NULL;
+      }
+      $effect_definition = $effect->getPluginDefinition();
+      return isset($effect_definition['description']) ? ('<p>' . $effect_definition['description'] . '</p>') : NULL;
   }
 }
 

@@ -315,8 +315,9 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    */
   function testEditEffect() {
     // Add a scale effect.
+    $style_name = 'test_style_effect_edit';
     $this->drupalGet('admin/config/media/image-styles/add');
-    $this->drupalPostForm(NULL, array('label' => 'Test style effect edit', 'name' => 'test_style_effect_edit'), t('Create new style'));
+    $this->drupalPostForm(NULL, array('label' => 'Test style effect edit', 'name' => $style_name), t('Create new style'));
     $this->drupalPostForm(NULL, array('new' => 'image_scale_and_crop'), t('Add'));
     $this->drupalPostForm(NULL, array('data[width]' => '300', 'data[height]' => '200'), t('Add effect'));
     $this->assertText(t('Scale and crop 300x200'));
@@ -344,6 +345,11 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
     $this->assertText(t('Scale 24x19'));
     $this->assertText(t('Scale 12x19'));
+
+    // Try to edit a nonexistent effect.
+    $uuid = $this->container->get('uuid');
+    $this->drupalGet('admin/config/media/image-styles/manage/' . $style_name . '/effects/' . $uuid->generate());
+    $this->assertResponse(404);
   }
 
   /**
