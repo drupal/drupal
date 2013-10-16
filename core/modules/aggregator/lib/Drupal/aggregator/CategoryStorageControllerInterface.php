@@ -66,5 +66,26 @@ interface CategoryStorageControllerInterface {
    */
   public function isUnique($title, $cid = NULL);
 
+  /**
+   * Loads aggregator categories for an aggregator item.
+   *
+   * @param int $item_id
+   *   The aggregator item ID.
+   *
+   * @return array
+   *   An array of objects containing item ID, category ID and title.
+   */
+  public function loadByItem($item_id);
+
+  /**
+   * Updates the categories for an aggregator item.
+   *
+   * @param int $iid
+   *   The aggregator item ID.
+   * @param array $cids
+   *   The category IDs.
+   */
+  public function updateItem($iid, array $cids);
+
 }
 

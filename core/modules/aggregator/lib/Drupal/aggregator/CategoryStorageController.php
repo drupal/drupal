@@ -98,4 +98,31 @@ class CategoryStorageController implements CategoryStorageControllerInterface {
     return (empty($rows));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function loadByItem($item_id) {
+    return $this->database->query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = :iid', array(':iid' => $item_id));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateItem($iid, array $cids) {
+    // Remove all existing category items.
+    $this->database->delete('aggregator_category_item')
+      ->condition('iid', $iid)
+      ->execute();
+
+    // Insert new category items.
+    if (!empty($cids)) {
+      $insert = $this->database->insert('aggregator_category_item')
+        ->fields(array('iid', 'cid'));
+      foreach ($cids as $cid) {
+        $insert->values(array('iid' => $iid, 'cid' => $cid));
+      }
+      $insert->execute();
+    }
+  }
+
 }

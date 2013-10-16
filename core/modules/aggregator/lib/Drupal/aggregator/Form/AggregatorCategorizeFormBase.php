@@ -7,10 +7,10 @@
 
 namespace Drupal\aggregator\Form;
 
+use Drupal\aggregator\CategoryStorageControllerInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\aggregator\ItemStorageControllerInterface;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityRenderControllerInterface;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,18 +35,18 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
   protected $config;
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection;
-   */
-  protected $database;
-
-  /**
    * The aggregator item storage controller.
    *
    * @var \Drupal\aggregator\ItemStorageControllerInterface
    */
   protected $aggregatorItemStorage;
+
+  /**
+   * The aggregator category storage controller.
+   *
+   * @var \Drupal\aggregator\CategoryStorageControllerInterface
+   */
+  protected $categoryStorage;
 
   /**
    * The feed to use.
@@ -60,16 +60,16 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
    *
    * @param \Drupal\Core\Entity\EntityRenderControllerInterface $aggregator_item_renderer
    *   The item render controller.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
    * @param \Drupal\aggregator\ItemStorageControllerInterface $aggregator_item_storage
    *   The aggregator item storage controller.
+   * @param \Drupal\aggregator\CategoryStorageControllerInterface $category_storage
+   *   The category storage controller.
    */
-  public function __construct(EntityRenderControllerInterface $aggregator_item_renderer, Connection $database, ItemStorageControllerInterface $aggregator_item_storage) {
+  public function __construct(EntityRenderControllerInterface $aggregator_item_renderer, ItemStorageControllerInterface $aggregator_item_storage, CategoryStorageControllerInterface $category_storage) {
     $this->aggregatorItemRenderer = $aggregator_item_renderer;
-    $this->database = $database;
     $this->config = $this->config('aggregator.settings');
     $this->aggregatorItemStorage = $aggregator_item_storage;
+    $this->categoryStorage = $category_storage;
   }
 
   /**
@@ -78,8 +78,8 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.entity')->getRenderController('aggregator_item'),
-      $container->get('database'),
-      $container->get('plugin.manager.entity')->getStorageController('aggregator_item')
+      $container->get('plugin.manager.entity')->getStorageController('aggregator_item'),
+      $container->get('aggregator.category.storage')
     );
   }
 
@@ -100,7 +100,7 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
     );
     if ($items && ($form_items = $this->aggregatorItemRenderer->viewMultiple($items, 'default'))) {
       foreach (element_children($form_items) as $iid) {
-        $categories_result = $this->database->query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = :iid', array(':iid' => $iid));
+        $categories_result = $this->categoryStorage->loadByItem($iid);
 
         $selected = array();
         foreach ($categories_result as $category) {
@@ -140,25 +140,8 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     if (!empty($form_state['values']['categories'])) {
-      foreach ($form_state['values']['categories'] as $iid => $selection) {
-        $this->database->delete('aggregator_category_item')
-          ->condition('iid', $iid)
-          ->execute();
-        $insert = $this->database->insert('aggregator_category_item')
-          ->fields(array('iid', 'cid'));
-        $has_values = FALSE;
-        foreach ($selection as $cid) {
-          if ($cid && $iid) {
-            $has_values = TRUE;
-            $insert->values(array(
-              'iid' => $iid,
-              'cid' => $cid,
-            ));
-          }
-        }
-        if ($has_values) {
-          $insert->execute();
-        }
+      foreach ($form_state['values']['categories'] as $iid => $cids) {
+        $this->categoryStorage->updateItem($iid, $cids);
       }
     }
     drupal_set_message($this->t('The categories have been saved.'));
