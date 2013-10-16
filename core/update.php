@@ -342,7 +342,7 @@ function update_access_denied_page() {
  *   TRUE if the current user should be granted access, or FALSE otherwise.
  */
 function update_access_allowed() {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // Allow the global variable in settings.php to override the access check.
   if (settings()->get('update_free_access')) {
