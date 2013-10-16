@@ -6,30 +6,31 @@
 #language-content-settings-form table .bundle {
   width: 24%;
 }
-
 #language-content-settings-form table td.bundle {
   font-weight: bold;
 }
-
-#language-content-settings-form table .field,
-#language-content-settings-form table .column {
+#language-content-settings-form table .field {
+  padding-left: 3em; /* LTR */
   width: 24%;
-  padding-left: 3em;
 }
-
+[dir="rtl"] #language-content-settings-form table .field {
+  padding-right: 3em;
+  padding-left: 1em;
+}
 #language-content-settings-form table .column {
-  padding-left: 5em;
+  padding-left: 5em; /* LTR */
 }
-
+[dir="rtl"] #language-content-settings-form table .column {
+  padding-right: 5em;
+  padding-left: 1em;
+}
 #language-content-settings-form table .field label,
 #language-content-settings-form table .column label {
   font-weight: normal;
 }
-
 #language-content-settings-form table .translatable {
   width: 1%;
 }
-
 #language-content-settings-form table .operations {
   width: 75%;
 }
