@@ -20,7 +20,11 @@ function overlay_help($path, $arg) {
     case 'admin/help#overlay':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Overlay module makes the administration pages on your site display in a JavaScript overlay of the page you were viewing when you clicked the administrative link, instead of replacing the page in your browser window. Use the close link on the overlay to return to the page you were viewing when you clicked the link. For more information, see the online handbook entry for <a href="@overlay">Overlay module</a>.', array('@overlay' => 'http://drupal.org/documentation/modules/overlay')) . '</p>';
+      $output .= '<p>' . t('The Overlay module uses JavaScript to open administration pages in an overlay of the page you were viewing when you clicked the administrative link, instead of replacing the page in your browser window. This ensures that you return to the page you were viewing once you close the overlay, even if you have visited several administration pages. For more information, see the <a href="!overlay">online documentation for the Overlay module</a>.', array('!overlay' => 'https://drupal.org/documentation/modules/overlay')) . '</p>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Disabling the overlay for individual users') . '</dt>';
+      $output .= '<dd>' . t('Users can individually disable the overlay functionality on their <em>Profile page</em>.') . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }
