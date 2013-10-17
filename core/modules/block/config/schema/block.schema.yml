@@ -1,6 +1,6 @@
 # Schema for the configuration files of the Block module.
 
-block.block.*.*:
+block.block.*:
   type: mapping
   label: 'Block'
   mapping:
@@ -10,6 +10,9 @@ block.block.*.*:
     uuid:
       type: string
       label: 'UUID'
+    theme:
+      type: string
+      label: 'Theme'
     region:
       type: string
       label: 'Region'
