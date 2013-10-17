@@ -39,7 +39,7 @@ class AuthTest extends RESTTestBase {
     $entity_type = 'entity_test';
 
     // Enable a test resource through GET method and basic HTTP authentication.
-    $this->enableService('entity:' . $entity_type, 'GET', NULL, array('http_basic'));
+    $this->enableService('entity:' . $entity_type, 'GET', NULL, array('basic_auth'));
 
     // Create an entity programmatically.
     $entity = $this->entityCreate($entity_type);

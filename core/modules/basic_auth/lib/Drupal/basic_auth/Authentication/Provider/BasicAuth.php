@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\basic_auth\Authentication\Provider\HttpBasic.
+ * Contains \Drupal\basic_auth\Authentication\Provider\BasicAuth.
  */
 
 namespace Drupal\basic_auth\Authentication\Provider;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 /**
  * HTTP Basic authentication provider.
  */
-class HttpBasic implements AuthenticationProviderInterface {
+class BasicAuth implements AuthenticationProviderInterface {
 
   /**
    * The config factory.

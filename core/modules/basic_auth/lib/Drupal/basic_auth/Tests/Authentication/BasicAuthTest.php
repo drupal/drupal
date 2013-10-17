@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\basic_auth\Tests\Authentication\HttpBasicTest.
+ * Contains \Drupal\basic_auth\Tests\Authentication\BasicAuthTest.
  */
 
 namespace Drupal\basic_auth\Tests\Authentication;
 
-use Drupal\Core\Authentication\Provider\HttpBasic;
+use Drupal\Core\Authentication\Provider\BasicAuth;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Test for http basic authentication.
  */
-class HttpBasicTest extends WebTestBase {
+class BasicAuthTest extends WebTestBase {
 
   /**
    * Modules enabled for all tests.
@@ -25,8 +25,8 @@ class HttpBasicTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name' => 'HttpBasic authentication',
-      'description' => 'Tests for HttpBasic authentication provider.',
+      'name' => 'BasicAuth authentication',
+      'description' => 'Tests for BasicAuth authentication provider.',
       'group' => 'Authentication',
     );
   }
@@ -34,7 +34,7 @@ class HttpBasicTest extends WebTestBase {
   /**
    * Test http basic authentication.
    */
-  public function testHttpBasic() {
+  public function testBasicAuth() {
     $account = $this->drupalCreateUser();
 
     $this->basicAuthGet('router_test/test11', $account->getUsername(), $account->pass_raw);
@@ -48,7 +48,7 @@ class HttpBasicTest extends WebTestBase {
     $this->curlClose();
 
     $this->drupalGet('router_test/test11');
-    $this->assertResponse('401', 'Not authenticated on the route that allows only http_basic. Prompt to authenticate received.');
+    $this->assertResponse('401', 'Not authenticated on the route that allows only basic_auth. Prompt to authenticate received.');
 
     $this->drupalGet('admin');
     $this->assertResponse('403', 'No authentication prompt for routes not explicitly defining authentication providers.');

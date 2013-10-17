@@ -54,7 +54,7 @@ interface AuthenticationProviderInterface {
    * Handles an exception.
    *
    * In case exception has happened we allow authentication providers react.
-   * Used in \Drupal\Core\Authentication\Provider\HttpBasic to set up headers to
+   * Used in \Drupal\Core\Authentication\Provider\BasicAuth to set up headers to
    * prompt login.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event

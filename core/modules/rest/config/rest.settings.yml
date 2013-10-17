@@ -23,4 +23,4 @@ resources:
 #     entity:node:
 #       POST:
 #         supported_auth:
-#           - http_basic
+#           - basic_auth

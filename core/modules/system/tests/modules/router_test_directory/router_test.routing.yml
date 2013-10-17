@@ -66,7 +66,7 @@ router_test.10:
 router_test.11:
   path: '/router_test/test11'
   options:
-    _auth: [ 'http_basic' ]
+    _auth: [ 'basic_auth' ]
   requirements:
     _user_is_logged_in: 'TRUE'
   defaults:
