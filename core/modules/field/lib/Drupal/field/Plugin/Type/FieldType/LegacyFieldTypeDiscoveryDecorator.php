@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\Plugin\Type\Widget\LegacyFieldTypeDiscoveryDecorator.
+ * Contains \Drupal\field\Plugin\Type\FieldType\LegacyFieldTypeDiscoveryDecorator.
  */
 
 namespace Drupal\field\Plugin\Type\FieldType;
