@@ -169,6 +169,8 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
   /**
    * Returns an overview of the entity types a comment field is attached to.
    *
+   * @param string $commented_entity_type
+   *   The entity type to which the comment field is attached.
    * @param string $field_name
    *   The comment field for which the overview is to be displayed.
    *
@@ -176,17 +178,14 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
    *   A renderable array containing the list of entity types and bundle
    *   combinations on which the comment field is in use.
    */
-  public function bundleInfo($field_name) {
+  public function bundleInfo($commented_entity_type, $field_name) {
     // Add a link to manage entity fields if the Field UI module is enabled.
     $field_ui_enabled = $this->moduleHandler()->moduleExists('field_ui');
 
-    // @todo Provide dynamic routing to get entity type and field name.
-    //   https://drupal.org/node/2098011.
-    list($entity_type, $field) = explode('__', $field_name, 2);
-    $field_info = $this->fieldInfo->getField($entity_type, $field);
+    $field_info = $this->fieldInfo->getField($commented_entity_type, $field_name);
 
-    $entity_type_info = $this->entityManager()->getDefinition($entity_type);
-    $entity_bundle_info = $this->entityManager()->getBundleInfo($entity_type);
+    $entity_type_info = $this->entityManager()->getDefinition($commented_entity_type);
+    $entity_bundle_info = $this->entityManager()->getBundleInfo($commented_entity_type);
 
     $build['usage'] = array(
       '#theme' => 'item_list',
@@ -196,7 +195,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
     // Loop over all of bundles to which this comment field is attached.
     foreach ($field_info->getBundles() as $bundle) {
       // Add the current instance to the list of bundles.
-      if ($field_ui_enabled && ($route_info = $this->entityManager()->getAdminRouteInfo($entity_type, $bundle))) {
+      if ($field_ui_enabled && ($route_info = $this->entityManager()->getAdminRouteInfo($commented_entity_type, $bundle))) {
         // Add a link to configure the fields on the given bundle and entity
         // type combination.
         $build['usage']['#items'][] = $this->l($entity_bundle_info[$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);
@@ -214,14 +213,16 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
   /**
    * Route title callback.
    *
+   * @param string $commented_entity_type
+   *   The entity type to which the comment field is attached.
    * @param string $field_name
    *   The comment field for which the overview is to be displayed.
    *
    * @return string
    *   The human readable field name.
    */
-  public function bundleTitle($field_name) {
-    return $this->commentManager->getFieldUIPageTitle($field_name);
+  public function bundleTitle($commented_entity_type, $field_name) {
+    return $this->commentManager->getFieldUIPageTitle($commented_entity_type, $field_name);
   }
 
 }

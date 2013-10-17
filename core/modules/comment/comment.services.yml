@@ -8,3 +8,9 @@ services:
   comment.manager:
     class: Drupal\comment\CommentManager
     arguments: ['@field.info', '@entity.manager']
+
+  comment.route_enhancer:
+      class: Drupal\comment\Routing\CommentBundleEnhancer
+      arguments: ['@entity.manager']
+      tags:
+        - { name: route_enhancer}

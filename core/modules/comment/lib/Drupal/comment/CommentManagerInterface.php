@@ -76,12 +76,14 @@ interface CommentManagerInterface {
   /**
    * Builds human readable page title for field_ui management screens.
    *
+   * @param string $commented_entity_type
+   *   The entity type to which the comment field is attached.
    * @param string $field_name
    *   The comment field for which the overview is to be displayed.
    *
    * @return string
    *   The human readable field name.
    */
-  public function getFieldUIPageTitle($field_name);
+  public function getFieldUIPageTitle($commented_entity_type, $field_name);
 
 }

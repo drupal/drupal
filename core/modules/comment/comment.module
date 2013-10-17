@@ -913,7 +913,8 @@ function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_stat
  */
 function comment_form_field_ui_field_overview_form_alter(&$form, $form_state) {
   if ($form['#entity_type'] == 'comment') {
-    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($form['#bundle']);
+    $request = \Drupal::request();
+    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($request->attributes->get('commented_entity_type'), $request->attributes->get('field_name'));
   }
 }
 
@@ -922,7 +923,8 @@ function comment_form_field_ui_field_overview_form_alter(&$form, $form_state) {
  */
 function comment_form_field_ui_form_display_overview_form_alter(&$form, $form_state) {
   if ($form['#entity_type'] == 'comment') {
-    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($form['#bundle']);
+    $request = \Drupal::request();
+    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($request->attributes->get('commented_entity_type'), $request->attributes->get('field_name'));
   }
 }
 
@@ -931,7 +933,8 @@ function comment_form_field_ui_form_display_overview_form_alter(&$form, $form_st
  */
 function comment_form_field_ui_display_overview_form_alter(&$form, $form_state) {
   if ($form['#entity_type'] == 'comment') {
-    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($form['#bundle']);
+    $request = \Drupal::request();
+    $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($request->attributes->get('commented_entity_type'), $request->attributes->get('field_name'));
   }
 }
 

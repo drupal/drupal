@@ -190,12 +190,11 @@ class CommentManager implements CommentManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldUIPageTitle($field_name) {
-    list($entity_type, $field) = explode('__', $field_name, 2);
-    $field_info = $this->fieldInfo->getField($entity_type, $field);
+  public function getFieldUIPageTitle($commented_entity_type, $field_name) {
+    $field_info = $this->fieldInfo->getField($commented_entity_type, $field_name);
     $bundles = $field_info->getBundles();
     $sample_bundle = reset($bundles);
-    $sample_instance = $this->fieldInfo->getInstance($entity_type, $sample_bundle, $field);
+    $sample_instance = $this->fieldInfo->getInstance($commented_entity_type, $sample_bundle, $field_name);
     return String::checkPlain($sample_instance->label);
   }
 
