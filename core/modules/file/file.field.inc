@@ -452,20 +452,21 @@ function theme_file_upload_help($variables) {
   if (strlen($description)) {
     $descriptions[] = _filter_htmlcorrector($description);
   }
-  if (isset($upload_validators['file_validate_size'])) {
-    $descriptions[] = t('Files must be less than !size.', array('!size' => '<strong>' . format_size($upload_validators['file_validate_size'][0]) . '</strong>'));
-  }
-  if (isset($upload_validators['file_validate_extensions'])) {
-    $descriptions[] = t('Allowed file types: !extensions.', array('!extensions' => '<strong>' . check_plain($upload_validators['file_validate_extensions'][0]) . '</strong>'));
-  }
   if (isset($cardinality)) {
     if ($cardinality == -1) {
       $descriptions[] = t('Unlimited number of files can be uploaded to this field.');
     }
     else {
-      $descriptions[] = format_plural($cardinality, 'This field can store only one file.', 'This field can store at most @count files.');
+      $descriptions[] = format_plural($cardinality, 'One file only.', 'Maximum @count files.');
     }
   }
+  if (isset($upload_validators['file_validate_size'])) {
+    $descriptions[] = t('!size limit.', array('!size' => format_size($upload_validators['file_validate_size'][0])));
+  }
+  if (isset($upload_validators['file_validate_extensions'])) {
+    $descriptions[] = t('Allowed types: !extensions.', array('!extensions' => check_plain($upload_validators['file_validate_extensions'][0])));
+  }
+
   if (isset($upload_validators['file_validate_image_resolution'])) {
     $max = $upload_validators['file_validate_image_resolution'][0];
     $min = $upload_validators['file_validate_image_resolution'][1];
@@ -483,7 +484,7 @@ function theme_file_upload_help($variables) {
     }
   }
 
-  return implode('<br />', $descriptions);
+  return implode(' ', $descriptions);
 }
 
 /**

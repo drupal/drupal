@@ -165,8 +165,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $instance = $this->createImageField($field_name, 'article', array(), $instance_settings, $widget_settings);
 
     $this->drupalGet('node/add/article');
-    $this->assertText(t('Files must be less than 50 KB.'), 'Image widget max file size is displayed on article form.');
-    $this->assertText(t('Allowed file types: ' . $test_image_extension . '.'), 'Image widget allowed file types displayed on article form.');
+    $this->assertText(t('50 KB limit.'), 'Image widget max file size is displayed on article form.');
+    $this->assertText(t('Allowed types: ' . $test_image_extension . '.'), 'Image widget allowed file types displayed on article form.');
     $this->assertText(t('Images must be between 10x10 and 100x100 pixels.'), 'Image widget allowed resolution displayed on article form.');
 
     // We have to create the article first and then edit it because the alt
