@@ -49,13 +49,13 @@ function hook_hook_info() {
 /**
  * Define administrative paths.
  *
- * Modules may specify whether or not the paths they define in hook_menu() are
+ * Modules may specify whether or not the routing paths they define are
  * to be considered administrative. Other modules may use this information to
  * display those pages differently (e.g. in a modal overlay, or in a different
  * theme).
  *
  * To change the administrative status of menu items defined in another module's
- * hook_menu(), modules should implement hook_admin_paths_alter().
+ * routing paths, modules should implement hook_admin_paths_alter().
  *
  * @return
  *   An associative array. For each item, the key is the path in question, in
@@ -63,7 +63,6 @@ function hook_hook_info() {
  *   be TRUE (for paths considered administrative) or FALSE (for non-
  *   administrative paths).
  *
- * @see hook_menu()
  * @see drupal_match_path()
  * @see hook_admin_paths_alter()
  */
@@ -491,50 +490,22 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
 }
 
 /**
- * Define menu items and page callbacks.
+ * Define links for menus.
  *
- * This hook enables modules to register paths in order to define how URL
- * requests are handled. Paths may be registered for URL handling only, or they
- * can register a link to be placed in a menu (usually the Tools menu). A
- * path and its associated information is commonly called a "menu router item".
- * This hook is rarely called (for example, when modules are enabled), and
- * its results are cached in the database.
- *
- * hook_menu() implementations return an associative array whose keys define
- * paths and whose values are an associative array of properties for each
- * path. (The complete list of properties is in the return value section below.)
- *
- * @section sec_render_tabs Rendering Menu Items As Tabs
- * You can also make groups of menu items to be rendered (by default) as tabs
- * on a page. To do that, first create one menu item of type MENU_NORMAL_ITEM,
- * with your chosen path, such as 'foo'. Then duplicate that menu item, using a
- * subdirectory path, such as 'foo/tab1', and changing the type to
- * MENU_DEFAULT_LOCAL_TASK to make it the default tab for the group. Then add
- * the additional tab items, with paths such as "foo/tab2" etc., with type
- * MENU_LOCAL_TASK. Example:
+ * @section sec_menu_link Creating Menu Items
+ * Menu item example of type MENU_NORMAL_ITEM:
  * @code
  * // Make "Foo settings" appear on the admin Config page
  * $items['admin/config/system/foo'] = array(
  *   'title' => 'Foo settings',
  *   'type' => MENU_NORMAL_ITEM,
- *   // Page callback, etc. need to be added here.
- * );
- * // Make "Tab 1" the main tab on the "Foo settings" page
- * $items['admin/config/system/foo/tab1'] = array(
- *   'title' => 'Tab 1',
- *   'type' => MENU_DEFAULT_LOCAL_TASK,
- *   // Access callback, page callback, and theme callback will be inherited
- *   // from 'admin/config/system/foo', if not specified here to override.
- * );
- * // Make an additional tab called "Tab 2" on "Foo settings"
- * $items['admin/config/system/foo/tab2'] = array(
- *   'title' => 'Tab 2',
- *   'type' => MENU_LOCAL_TASK,
- *   // Page callback and theme callback will be inherited from
- *   // 'admin/config/system/foo', if not specified here to override.
- *   // Need to add access callback or access arguments.
+ *   'route_name' => 'foo.settings'
  * );
  * @endcode
+ *
+ * @todo The section that used to be here about path argument substitution has
+ *   been removed, but is still referred to in the return section. It needs to
+ *   be added back in, or a corrected version of it.
  *
  * @return
  *   An array of menu items. Each menu item has a key corresponding to the
@@ -550,67 +521,6 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     t(). If you require only the raw string to be output, set this to FALSE.
  *   - description arguments: Arguments to send to t() or your custom callback,
  *     with path component substitution as described above.
- *   - "page callback": The function to call to display a web page when the user
- *     visits the path. If omitted, the parent menu item's callback will be used
- *     instead.
- *   - "page arguments": An array of arguments to pass to the page callback
- *     function, with path component substitution as described above.
- *   - "access callback": A function returning TRUE if the user has access
- *     rights to this menu item, and FALSE if not. It can also be a boolean
- *     constant instead of a function, and you can also use numeric values
- *     (will be cast to boolean). Defaults to user_access() unless a value is
- *     inherited from the parent menu item; only MENU_DEFAULT_LOCAL_TASK items
- *     can inherit access callbacks. To use the user_access() default callback,
- *     you must specify the permission to check as 'access arguments' (see
- *     below).
- *   - "access arguments": An array of arguments to pass to the access callback
- *     function, with path component substitution as described above. If the
- *     access callback is inherited (see above), the access arguments will be
- *     inherited with it, unless overridden in the child menu item.
- *   - "theme callback": (optional) A function returning the machine-readable
- *     name of the theme that will be used to render the page. If not provided,
- *     the value will be inherited from a parent menu item. If there is no
- *     theme callback, or if the function does not return the name of a current
- *     active theme on the site, the theme for this page will be determined by
- *     either hook_custom_theme() or the default theme instead. As a general
- *     rule, the use of theme callback functions should be limited to pages
- *     whose functionality is very closely tied to a particular theme, since
- *     they can only be overridden by modules which specifically target those
- *     pages in hook_menu_alter(). Modules implementing more generic theme
- *     switching functionality (for example, a module which allows the theme to
- *     be set dynamically based on the current user's role) should use
- *     hook_custom_theme() instead.
- *   - "theme arguments": An array of arguments to pass to the theme callback
- *     function, with path component substitution as described above.
- *   - "file": A file that will be included before the page callback is called;
- *     this allows page callback functions to be in separate files. The file
- *     should be relative to the implementing module's directory unless
- *     otherwise specified by the "file path" option. Does not apply to other
- *     callbacks (only page callback).
- *   - "file path": The path to the directory containing the file specified in
- *     "file". This defaults to the path to the module implementing the hook.
- *   - "load arguments": An array of arguments to be passed to each of the
- *     wildcard object loaders in the path, after the path argument itself.
- *     For example, if a module registers path node/%node/revisions/%/view
- *     with load arguments set to array(3), the '%node' in the path indicates
- *     that the loader function node_load() will be called with the second
- *     path component as the first argument. The 3 in the load arguments
- *     indicates that the fourth path component will also be passed to
- *     node_load() (numbering of path components starts at zero). So, if path
- *     node/12/revisions/29/view is requested, node_load(12, 29) will be called.
- *     There are also two "magic" values that can be used in load arguments.
- *     "%index" indicates the index of the wildcard path component. "%map"
- *     indicates the path components as an array. For example, if a module
- *     registers for several paths of the form 'user/%user_category/edit/*', all
- *     of them can use the same load function user_category_load(), by setting
- *     the load arguments to array('%map', '%index'). For instance, if the user
- *     is editing category 'foo' by requesting path 'user/32/edit/foo', the load
- *     function user_category_load() will be called with 32 as its first
- *     argument, the array ('user', 32, 'edit', 'foo') as the map argument,
- *     and 1 as the index argument (because %user_category is the second path
- *     component and numbering starts at zero). user_category_load() can then
- *     use these values to extract the information that 'foo' is the category
- *     being requested.
  *   - "weight": An integer that determines the relative position of items in
  *     the menu; higher-weighted items sink. Defaults to 0. Menu items with the
  *     same weight are ordered alphabetically.
@@ -620,63 +530,32 @@ function hook_menu_get_item_alter(&$router_item, $path, $original_map) {
  *     this menu item (as a result of other properties), then the menu link is
  *     always expanded, equivalent to its 'always expanded' checkbox being set
  *     in the UI.
- *   - "context": (optional) Defines the context a tab may appear in. By
- *     default, all tabs are only displayed as local tasks when being rendered
- *     in a page context. All tabs that should be accessible as contextual links
- *     in page region containers outside of the parent menu item's primary page
- *     context should be registered using one of the following contexts:
- *     - MENU_CONTEXT_PAGE: (default) The tab is displayed as local task for the
- *       page context only.
- *     - MENU_CONTEXT_INLINE: The tab is displayed as contextual link outside of
- *       the primary page context only.
- *     Contexts can be combined. For example, to display a tab both on a page
- *     and inline, a menu router item may specify:
- *     @code
- *       'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
- *     @endcode
- *   - "tab_parent": For local task menu items, the path of the task's parent
- *     item; defaults to the same path without the last component (e.g., the
- *     default parent for 'admin/people/create' is 'admin/people').
- *   - "tab_root": For local task menu items, the path of the closest non-tab
- *     item; same default as "tab_parent".
  *   - "position": Position of the block ('left' or 'right') on the system
  *     administration page for this item.
  *   - "type": A bitmask of flags describing properties of the menu item.
  *     Many shortcut bitmasks are provided as constants in menu.inc:
  *     - MENU_NORMAL_ITEM: Normal menu items show up in the menu tree and can be
  *       moved/hidden by the administrator.
- *     - MENU_CALLBACK: Callbacks simply register a path so that the correct
- *       information is generated when the path is accessed.
  *     - MENU_SUGGESTED_ITEM: Modules may "suggest" menu items that the
  *       administrator may enable.
- *     - MENU_LOCAL_ACTION: Local actions are menu items that describe actions
- *       on the parent item such as adding a new user or block, and are
- *       rendered in the action-links list in your theme.
- *     - MENU_LOCAL_TASK: Local tasks are menu items that describe different
- *       displays of data, and are generally rendered as tabs.
- *     - MENU_DEFAULT_LOCAL_TASK: Every set of local tasks should provide one
- *       "default" task, which should display the same page as the parent item.
  *     If the "type" element is omitted, MENU_NORMAL_ITEM is assumed.
  *   - "options": An array of options to be passed to l() when generating a link
- *     from this menu item. Note that the "options" parameter has no effect on
- *     MENU_LOCAL_TASK, MENU_DEFAULT_LOCAL_TASK, and MENU_LOCAL_ACTION items.
+ *     from this menu item.
  *
  * For a detailed usage example, see page_example.module.
  * For comprehensive documentation on the menu system, see
  * http://drupal.org/node/102338.
+ *
+ * @see menu
  */
 function hook_menu() {
   $items['example'] = array(
     'title' => 'Example Page',
-    'page callback' => 'example_page',
-    'access arguments' => array('access content'),
-    'type' => MENU_SUGGESTED_ITEM,
+    'route_name' => 'example.page',
   );
   $items['example/feed'] = array(
     'title' => 'Example RSS feed',
-    'page callback' => 'example_feed',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
+    'route_name' => 'example.feed',
   );
 
   return $items;

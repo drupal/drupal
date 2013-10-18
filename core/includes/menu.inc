@@ -19,17 +19,38 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
 
 /**
- * @defgroup menu Menu system
+ * @defgroup menu Menu and routing system
  * @{
  * Define the navigation menus, and route page requests to code based on URLs.
  *
- * The Drupal menu system drives both the navigation system from a user
- * perspective and the callback system that Drupal uses to respond to URLs
- * passed from the browser. For this reason, a good understanding of the
- * menu system is fundamental to the creation of complex modules. As a note,
- * this is related to, but separate from menu.module, which allows menus
- * (which in this context are hierarchical lists of links) to be customized from
- * the Drupal administrative interface.
+ * The Drupal routing system defines how Drupal responds to URLs passed to the
+ * browser. The menu system, which depends on the routing system, is used for
+ * navigation. The Menu module allows menus to be created in the user interface
+ * as hierarchical lists of links.
+ *
+ * @section registering_paths Registering router paths
+ * To register a path, you need to add lines similar to this in a
+ * module.routing.yml file:
+ * @code
+ * block.admin_display:
+ *   path: '/admin/structure/block'
+ *   defaults:
+ *     _content: '\Drupal\block\Controller\BlockListController::listing'
+ *   requirements:
+ *     _permission: 'administer blocks'
+ * @endcode
+ * @todo Add more information here, especially about controllers and what all
+ *   the stuff in the routing.yml file means.
+ *
+ * @section Defining menu links
+ * Once you have a route defined, you can use hook_menu() to define links
+ * for your module's paths in the main Navigation menu or other menus. See
+ * the hook_menu() documentation for more details.
+ *
+ * @todo The rest of this topic has not been reviewed or updated for Drupal 8.x
+ *   and is not correct!
+ * @todo It is quite likely that hook_menu() will be replaced with a different
+ *   hook, configuration system, or plugin system before the 8.0 release.
  *
  * Drupal's menu system follows a simple hierarchy defined by paths.
  * Implementations of hook_menu() define menu items and assign them to
