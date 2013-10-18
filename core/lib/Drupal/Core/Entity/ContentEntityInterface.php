@@ -55,4 +55,15 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
    */
   public static function baseFieldDefinitions($entity_type);
 
+  /**
+   * Returns whether the entity has a field with the given name.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return bool
+   *   TRUE if the entity has a field with the given name. FALSE otherwise.
+   */
+  public function hasField($field_name);
+
 }

@@ -537,7 +537,7 @@ function user_validate_current_pass(&$form, &$form_state) {
     // This validation only works for required textfields (like mail) or
     // form values like password_confirm that have their own validation
     // that prevent them from being empty if they are changed.
-    $current_value = $account->getPropertyDefinition($key) ? $account->get($key)->value : $account->$key;
+    $current_value = $account->hasField($key) ? $account->get($key)->value : $account->$key;
     if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $current_value)) {
       $current_pass_failed = empty($form_state['values']['current_pass']) || !\Drupal::service('password')->check($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {

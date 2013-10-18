@@ -70,7 +70,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
       // avoid the cost of calling $entity->getProperties() by iterating the
       // intersection as follows.
       foreach ($displays[$entity->bundle()]->getComponents() as $name => $options) {
-        if ($entity->getPropertyDefinition($name)) {
+        if ($entity->hasField($name)) {
           foreach ($entity->get($name) as $item) {
             $item->_attributes = array();
           }

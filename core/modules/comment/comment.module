@@ -478,7 +478,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
   $fields = \Drupal::service('comment.manager')->getFields('node');
   foreach ($fields as $field_name => $detail) {
     // Skip fields that entity does not have.
-    if (!$entity->getPropertyDefinition($field_name)) {
+    if (!$entity->hasField($field_name)) {
       continue;
     }
     $links = array();
@@ -1022,12 +1022,12 @@ function comment_entity_insert(EntityInterface $entity) {
     ));
     foreach ($fields as $field_name => $detail) {
       // Skip fields that entity does not have.
-      if (!$entity->getPropertyDefinition($field_name)) {
+      if (!$entity->hasField($field_name)) {
         continue;
       }
       // There is at least one comment field, the query needs to be executed.
       // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
-      if ($entity->getPropertyDefinition('uid')) {
+      if ($entity->hasField('uid')) {
         $last_comment_uid = $entity->get('uid')->value;
       }
       else {
@@ -1105,7 +1105,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
   if ($index_comments) {
     foreach (\Drupal::service('comment.manager')->getFields('node') as $field_name => $info) {
       // Skip fields that entity does not have.
-      if (!$node->getPropertyDefinition($field_name)) {
+      if (!$node->hasField($field_name)) {
         continue;
       }
       $instance = \Drupal::service('field.info')->getInstance('node', $node->getType(), $field_name);
@@ -1142,7 +1142,7 @@ function comment_node_search_result(EntityInterface $node) {
   $open = FALSE;
   foreach ($comment_fields as $field_name => $info) {
     // Skip fields that entity does not have.
-    if (!$node->getPropertyDefinition($field_name)) {
+    if (!$node->hasField($field_name)) {
       continue;
     }
     // Do not make a string if comments are hidden.
@@ -1570,7 +1570,7 @@ function template_preprocess_comment(&$variables) {
   }
   else {
     // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
-    if ($commented_entity->getPropertyDefinition('uid') && $comment->uid->target_id == $commented_entity->get('uid')->value) {
+    if ($commented_entity->hasField('uid') && $comment->uid->target_id == $commented_entity->get('uid')->value) {
       $variables['attributes']['class'][] = 'by-' . $commented_entity->entityType() . '-author';
     }
   }

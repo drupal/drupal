@@ -554,7 +554,7 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
   // Add a dummy field item attribute on field_test_text if it exists.
   if ($entity_type == 'entity_test_render') {
     foreach ($entities as $entity) {
-      if ($entity->getPropertyDefinition('field_test_text')) {
+      if ($entity->hasField('field_test_text')) {
         foreach ($entity->get('field_test_text') as $item) {
           $item->_attributes += array('data-field-item-attr' => 'foobar');
         }

@@ -108,7 +108,7 @@ class CommentStorageController extends FieldableDatabaseStorageController implem
           // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
           // Get the user ID from the entity if it's set, or default to the
           // currently logged in user.
-          'last_comment_uid' => $entity->getPropertyDefinition('uid') ? $entity->get('uid')->value : \Drupal::currentUser()->id(),
+          'last_comment_uid' => $entity->hasField('uid') ? $entity->get('uid')->value : \Drupal::currentUser()->id(),
         ))
         ->condition('entity_id', $comment->entity_id->value)
         ->condition('entity_type', $comment->entity_type->value)
