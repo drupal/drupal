@@ -7,14 +7,12 @@
 
 namespace Drupal\action;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Action\ActionManager;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use \Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\action\Form\ActionAdminManageForm;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -124,7 +122,7 @@ class ActionListController extends ConfigEntityListController implements EntityC
     if (!$this->hasConfigurableActions) {
       unset($build['action_table']['#header']['operations']);
     }
-    $build['action_admin_manage_form'] = drupal_get_form(new ActionAdminManageForm($this->actionManager));
+    $build['action_admin_manage_form'] = drupal_get_form('Drupal\action\Form\ActionAdminManageForm');
     return $build;
   }
 

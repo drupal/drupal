@@ -124,6 +124,16 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
  *   The unique string identifying the desired form.
  */
 function _drupal_form_id($form_arg, &$form_state) {
+  // If the $form_arg is the name of a class, instantiate it.
+  if (is_string($form_arg) && class_exists($form_arg)) {
+    if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($form_arg))) {
+      $form_arg = $form_arg::create(\Drupal::getContainer());
+    }
+    else {
+      $form_arg = new $form_arg();
+    }
+  }
+
   // If the $form_arg implements \Drupal\Core\Form\FormInterface, add that as
   // the callback object and determine the form ID.
   if (is_object($form_arg) && $form_arg instanceof FormInterface) {

@@ -5,8 +5,6 @@
  * Admin page callbacks for the Comment module.
  */
 
-use Drupal\comment\Form\ConfirmDeleteMultiple;
-
 /**
  * Page callback: Presents an administrative comment listing.
  *
@@ -24,7 +22,7 @@ function comment_admin($type = 'new') {
   $edit = $request->request->all();
 
   if (isset($edit['operation']) && ($edit['operation'] == 'delete') && isset($edit['comments']) && $edit['comments']) {
-    return drupal_get_form(ConfirmDeleteMultiple::create(\Drupal::getContainer()), $request);
+    return drupal_get_form('Drupal\comment\Form\ConfirmDeleteMultiple');
   }
   else {
     return drupal_get_form('comment_admin_overview', $type);

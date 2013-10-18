@@ -7,21 +7,12 @@
 
 namespace Drupal\search\Form;
 
-use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds the search form for the search block.
  */
-class SearchBlockForm extends FormBase implements FormInterface {
-
-  /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
+class SearchBlockForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -33,10 +24,7 @@ class SearchBlockForm extends FormBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    // Save the request variable for use in the submit method.
-    $this->request = $request;
-
+  public function buildForm(array $form, array &$form_state) {
     $form['search_block_form'] = array(
       '#type' => 'search',
       '#title' => $this->t('Search'),
@@ -58,8 +46,9 @@ class SearchBlockForm extends FormBase implements FormInterface {
     // The search form relies on control of the redirect destination for its
     // functionality, so we override any static destination set in the request.
     // See http://drupal.org/node/292565.
-    if ($this->request->query->has('destination')) {
-      $this->request->query->remove('destination');
+    $request = $this->getRequest();
+    if ($request->query->has('destination')) {
+      $request->query->remove('destination');
     }
 
     // Check to see if the form was submitted empty.

@@ -7,8 +7,6 @@
 namespace Drupal\locale\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\locale\Form\TranslateEditForm;
-use Drupal\locale\Form\TranslateFilterForm;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -51,8 +49,8 @@ class LocaleController extends ControllerBase {
    */
   public function translatePage() {
     return array(
-      'filter' => drupal_get_form(TranslateFilterForm::create($this->container())),
-      'form' => drupal_get_form(TranslateEditForm::create($this->container())),
+      'filter' => drupal_get_form('Drupal\locale\Form\TranslateFilterForm'),
+      'form' => drupal_get_form('Drupal\locale\Form\TranslateEditForm'),
     );
   }
 

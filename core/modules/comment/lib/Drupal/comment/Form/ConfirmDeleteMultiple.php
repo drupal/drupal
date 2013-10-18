@@ -13,7 +13,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides the comment multiple delete confirmation form.
@@ -83,7 +82,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectio
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state) {
     $edit = $form_state['input'];
 
     $form['comments'] = array(
