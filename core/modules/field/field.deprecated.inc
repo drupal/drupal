@@ -22,16 +22,16 @@ use Drupal\field\Field;
  *   keyed by field type name.
  *
  * @deprecated as of Drupal 8.0. Use
- *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
+ *   \Drupal::service('plugin.manager.field.field_type')->getDefinition()
  *   or
- *   \Drupal::service('plugin.manager.entity.field.field_type')->getConfigurableDefinitions().
+ *   \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions().
  */
 function field_info_field_types($field_type = NULL) {
   if ($field_type) {
-    return \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_type);
+    return \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_type);
   }
   else {
-    return \Drupal::service('plugin.manager.entity.field.field_type')->getConfigurableDefinitions();
+    return \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions();
   }
 }
 
@@ -46,10 +46,10 @@ function field_info_field_types($field_type = NULL) {
  *   are not defined.
  *
  * @deprecated as of Drupal 8.0. Use
- *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings()
+ *   \Drupal::service('plugin.manager.field.field_type')->getDefaultSettings()
  */
 function field_info_field_settings($type) {
-  return \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings($type);
+  return \Drupal::service('plugin.manager.field.field_type')->getDefaultSettings($type);
 }
 
 /**
@@ -63,10 +63,10 @@ function field_info_field_settings($type) {
  *   settings are not defined.
  *
  * @deprecated as of Drupal 8.0. Use
- *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultInstanceSettings()
+ *   \Drupal::service('plugin.manager.field.field_type')->getDefaultInstanceSettings()
  */
 function field_info_instance_settings($type) {
-  return \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultInstanceSettings($type);
+  return \Drupal::service('plugin.manager.field.field_type')->getDefaultInstanceSettings($type);
 }
 
 /**

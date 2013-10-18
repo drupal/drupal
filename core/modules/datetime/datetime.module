@@ -171,7 +171,7 @@ function datetime_datelist_widget_validate(&$element, &$form_state) {
  * Sets a default value for an empty date field.
  *
  * Callback for $instance['default_value_function'], as implemented by
- * Drupal\datetime\Plugin\field\widget\DateTimeDatepicker.
+ * Drupal\datetime\Plugin\Field\FieldWidget\DateTimeDatepicker.
  *
  * @param $entity_type
  *

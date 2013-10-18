@@ -75,7 +75,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     // applied on write.
     $config = \Drupal::config('field.instance.' . $instance->id())->get();
 
-    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($this->field_definition['type']);
+    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->field_definition['type']);
 
     // Check that default values are set.
     $this->assertEqual($config['required'], FALSE, 'Required defaults to false.');

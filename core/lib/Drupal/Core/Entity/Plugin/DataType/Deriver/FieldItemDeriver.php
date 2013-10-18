@@ -56,7 +56,7 @@ class FieldItemDeriver implements ContainerDerivativeInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $base_plugin_id,
-      $container->get('plugin.manager.entity.field.field_type')
+      $container->get('plugin.manager.field.field_type')
     );
   }
 

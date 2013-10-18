@@ -153,10 +153,10 @@ function hook_field_info_alter(&$info) {
  * which widget to use.
  *
  * Widgets are Plugins managed by the
- * Drupal\field\Plugin\Type\Widget\WidgetPluginManager class. A widget is
+ * Drupal\Core\Field\WidgetPluginManager class. A widget is
  * implemented by providing a class that implements
- * Drupal\field\Plugin\Type\Widget\WidgetInterface (in most cases, by
- * subclassing Drupal\field\Plugin\Type\Widget\WidgetBase), and provides the
+ * Drupal\Core\Field\WidgetInterface (in most cases, by
+ * subclassing Drupal\Core\Field\WidgetBase), and provides the
  * proper annotation block.
  *
  * Widgets are @link forms_api_reference.html Form API @endlink
@@ -204,7 +204,7 @@ function hook_field_widget_info_alter(array &$info) {
  *   - default: A boolean indicating whether the form is being shown as a dummy
  *     form to set default values.
  *
- * @see \Drupal\field\Plugin\Type\Widget\WidgetBase::formSingleElement()
+ * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
  * @see hook_field_widget_WIDGET_TYPE_form_alter()
  */
 function hook_field_widget_form_alter(&$element, &$form_state, $context) {
@@ -231,7 +231,7 @@ function hook_field_widget_form_alter(&$element, &$form_state, $context) {
  *   An associative array. See hook_field_widget_form_alter() for the structure
  *   and content of the array.
  *
- * @see \Drupal\field\Plugin\Type\Widget\WidgetBase::formSingleElement()
+ * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
  * @see hook_field_widget_form_alter()
  */
 function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $context) {
@@ -258,10 +258,10 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, &$form_state, $cont
  * choose which formatter to use.
  *
  * Formatters are Plugins managed by the
- * Drupal\field\Plugin\Type\Formatter\FormatterPluginManager class. A formatter
+ * Drupal\Core\Field\FormatterPluginManager class. A formatter
  * is implemented by providing a class that implements
- * Drupal\field\Plugin\Type\Formatter\FormatterInterface (in most cases, by
- * subclassing Drupal\field\Plugin\Type\Formatter\FormatterBase), and provides
+ * Drupal\Core\Field\FormatterInterface (in most cases, by
+ * subclassing Drupal\Core\Field\FormatterBase), and provides
  * the proper annotation block.
  *
  * @see field

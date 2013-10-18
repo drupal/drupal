@@ -24,7 +24,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Test that field_test module's fields, widgets, and formatters show up.
 
     $field_test_info = $this->getExpectedFieldTypeDefinition();
-    $info = \Drupal::service('plugin.manager.entity.field.field_type')->getConfigurableDefinitions();
+    $info = \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
         $this->assertEqual($info[$t_key][$key], $val, format_string('Field type %t_key key %key is %value', array('%t_key' => $t_key, '%key' => $key, '%value' => print_r($val, TRUE))));
@@ -132,7 +132,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     $field = field_info_field('entity_test', $field_definition['name']);
 
     // Check that all expected settings are in place.
-    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_definition['type']);
+    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_definition['type']);
     $this->assertEqual($field->settings, $field_type['settings'], 'All expected default field settings are present.');
   }
 
@@ -166,7 +166,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     $instance = field_info_instance($instance_definition['entity_type'], $instance_definition['field_name'], $instance_definition['bundle']);
 
     // Check that all expected instance settings are in place.
-    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_definition['type']);
+    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_definition['type']);
     $this->assertEqual($instance->settings, $field_type['instance_settings'] , 'All expected instance settings are present.');
   }
 
@@ -285,7 +285,7 @@ class FieldInfoTest extends FieldUnitTestBase {
   function testSettingsInfo() {
     $info = $this->getExpectedFieldTypeDefinition();
     foreach ($info as $type => $data) {
-      $field_type_manager = \Drupal::service('plugin.manager.entity.field.field_type');
+      $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
       $this->assertIdentical($field_type_manager->getDefaultSettings($type), $data['settings'], format_string("field settings service returns %type's field settings", array('%type' => $type)));
       $this->assertIdentical($field_type_manager->getDefaultInstanceSettings($type), $data['instance_settings'], format_string("field instance settings service returns %type's field instance settings", array('%type' => $type)));
     }

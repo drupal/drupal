@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\field\Plugin\Type\Formatter\FormatterPluginManager;
+use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -81,7 +81,7 @@ class Field extends FieldPluginBase {
   /**
    * The field formatter plugin manager.
    *
-   * @var \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
+   * @var \Drupal\Core\Field\FormatterPluginManager
    */
   protected $formatterPluginManager;
 
@@ -96,7 +96,7 @@ class Field extends FieldPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The field formatter plugin manager.
-   * @param \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager $formatter_plugin_manager
+   * @param \Drupal\Core\Field\FormatterPluginManager $formatter_plugin_manager
    *   The field formatter plugin manager.
    */
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager, FormatterPluginManager $formatter_plugin_manager) {
@@ -316,7 +316,7 @@ class Field extends FieldPluginBase {
 
     // defineOptions runs before init/construct, so no $this->field_info
     $field = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
-    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->getFieldType());
+    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getFieldType());
     $column_names = array_keys($field->getColumns());
     $default_column = '';
     // Try to determine a sensible default.

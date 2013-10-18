@@ -59,7 +59,7 @@ interface SelectionInterface {
    * @return integer|null
    *   Value of a matching entity ID, or NULL if none.
    *
-   * @see \Drupal\entity_reference\Plugin\field\widget::elementValidate()
+   * @see \Drupal\entity_reference\Plugin\Field\FieldWidget::elementValidate()
    */
   public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE);
 

@@ -1,17 +1,5 @@
 services:
-  plugin.manager.field.widget:
-    class: Drupal\field\Plugin\Type\Widget\WidgetPluginManager
-    arguments: ['@container.namespaces', '@cache.field', '@module_handler', '@language_manager', '@plugin.manager.entity.field.field_type']
-  plugin.manager.field.formatter:
-    class: Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
-    arguments: ['@container.namespaces', '@cache.field', '@module_handler', '@language_manager', '@plugin.manager.entity.field.field_type']
   field.info:
     class: Drupal\field\FieldInfo
-    arguments: ['@cache.field', '@config.factory', '@module_handler', '@plugin.manager.entity.field.field_type']
-  cache.field:
-    class: Drupal\Core\Cache\CacheBackendInterface
-    tags:
-      - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
-    arguments: [field]
+    arguments: ['@cache.field', '@config.factory', '@module_handler', '@plugin.manager.field.field_type']
+

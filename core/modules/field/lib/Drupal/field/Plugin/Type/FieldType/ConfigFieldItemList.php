@@ -132,7 +132,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
    * @param array $form_state
    *   The form state of the (entire) configuration form.
    *
-   * @return \Drupal\field\Plugin\Type\Widget\WidgetInterface
+   * @return \Drupal\Core\Field\WidgetInterface
    *   A Widget object.
    */
   protected function defaultValueWidget(array &$form_state) {

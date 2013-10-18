@@ -10,7 +10,7 @@ namespace Drupal\edit;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
-use Drupal\field\Plugin\Type\Formatter\FormatterPluginManager;
+use Drupal\Core\Field\FormatterPluginManager;
 
 /**
  * Selects an in-place editor (an Editor plugin) for a field.
@@ -27,7 +27,7 @@ class EditorSelector implements EditorSelectorInterface {
   /**
    * The manager for formatter plugins.
    *
-   * @var \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager.
+   * @var \Drupal\Core\Field\FormatterPluginManager.
    */
   protected $formatterManager;
 
@@ -43,7 +43,7 @@ class EditorSelector implements EditorSelectorInterface {
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface
    *   The manager for editor plugins.
-   * @param \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
+   * @param \Drupal\Core\Field\FormatterPluginManager
    *   The manager for formatter plugins.
    */
   public function __construct(PluginManagerInterface $editor_manager, FormatterPluginManager $formatter_manager) {

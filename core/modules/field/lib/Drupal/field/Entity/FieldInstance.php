@@ -419,7 +419,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * Prepares the instance definition for saving.
    */
   protected function prepareSave() {
-    $field_type_info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($this->field->type);
+    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->field->type);
 
     // Set the default instance settings.
     $this->settings += $field_type_info['instance_settings'];

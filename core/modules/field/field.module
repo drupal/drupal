@@ -99,7 +99,7 @@ function field_help($path, $arg) {
       $items = array();
       $info = system_get_info('module');
       $field_widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
-      $field_types = \Drupal::service('plugin.manager.entity.field.field_type')->getConfigurableDefinitions();
+      $field_types = \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions();
       foreach (array_merge($field_types, $field_widgets) as $plugin) {
         $providers[] = $plugin['provider'];
       }
@@ -341,7 +341,7 @@ function field_sync_field_status() {
   // modules.
   $changed = array();
   $modules = $module_handler->getModuleList();
-  $field_types = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
+  $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
   // Set fields with missing field type modules to inactive.
   foreach ($fields as $uuid => &$field) {
     // Associate field types.

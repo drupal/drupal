@@ -119,7 +119,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
   $data = array();
 
   // Check the field type is available.
-  if (!\Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->getFieldType())) {
+  if (!\Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getFieldType())) {
     return $data;
   }
   // Check the field has instances.

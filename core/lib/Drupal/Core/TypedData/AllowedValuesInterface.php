@@ -24,7 +24,7 @@ use Drupal\Core\Session\AccountInterface;
  * as structured options arrays that can be used in an Options widget such as a
  * select box or checkboxes.
  *
- * @see \Drupal\options\Plugin\field\widget\OptionsWidgetBase
+ * @see \Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase
  */
 interface AllowedValuesInterface {
 

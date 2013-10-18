@@ -62,7 +62,7 @@ class CrudTest extends FieldUnitTestBase {
     $this->assertEqual($field_config['cardinality'], 1, 'Cardinality defaults to 1.');
 
     // Ensure that default settings are present.
-    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_definition['type']);
+    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field_definition['type']);
     $this->assertEqual($field_config['settings'], $field_type['settings'], 'Default field settings have been written.');
 
     // Guarantee that the name is unique.

@@ -78,7 +78,7 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
 
     // Check that providing no options results in default values being used.
     $form_display->setComponent($field_name);
-    $field_type_info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
+    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->type);
     $default_widget = $field_type_info['default_widget'];
     $widget_settings = \Drupal::service('plugin.manager.field.widget')->getDefinition($default_widget);
     $expected = array(

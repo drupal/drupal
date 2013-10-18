@@ -80,7 +80,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    * since we cannot extend it.
    */
   public static function schema(FieldInterface $field) {
-    $definition = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
+    $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($field->type);
     $module = $definition['provider'];
     module_load_install($module);
     $callback = "{$module}_field_schema";
