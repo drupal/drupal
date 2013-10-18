@@ -7,8 +7,7 @@
 
 namespace Drupal\Core\Access;
 
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 
 /**
  * An access check service determines access rules for particular routes.
@@ -16,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  * This interface is specifically for routes that know exactly which requirement
  * keys they should react to for a route.
  */
-interface StaticAccessCheckInterface extends AccessInterface {
+interface StaticAccessCheckInterface extends RoutingAccessInterface {
 
   /**
    * Declares the route requirement keys this access checker applies to.

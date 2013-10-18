@@ -8,11 +8,12 @@
 namespace Drupal\Core\Access;
 
 use Symfony\Component\Routing\Route;
+use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 
 /**
  * An access check service determines access rules for particular routes.
  */
-interface AccessCheckInterface extends AccessInterface {
+interface AccessCheckInterface extends RoutingAccessInterface {
 
   /**
    * Declares whether the access check applies to a specific route or not.
