@@ -90,7 +90,6 @@ function _content_translation_form_language_content_settings_form_alter(array &$
         if ($fields) {
           $form['settings'][$entity_type][$bundle]['translatable'] = array(
             '#type' => 'checkbox',
-            '#title' => $bundle,
             '#default_value' => content_translation_enabled($entity_type, $bundle),
           );
 
@@ -107,7 +106,6 @@ function _content_translation_form_language_content_settings_form_alter(array &$
               $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
                 '#label' => $instance->getFieldLabel(),
                 '#type' => 'checkbox',
-                '#title' => $instance->getFieldLabel(),
                 '#default_value' => $translatable,
               );
               $column_element = content_translation_field_sync_widget($instance);
