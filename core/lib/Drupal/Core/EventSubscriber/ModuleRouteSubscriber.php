@@ -8,14 +8,13 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Routing\RouteBuildEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\Core\Routing\RoutingEvents;
+use Drupal\Core\Routing\RouteSubscriberBase;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * A route subscriber to remove routes that depend on modules being enabled.
  */
-class ModuleRouteSubscriber implements EventSubscriberInterface {
+class ModuleRouteSubscriber extends RouteSubscriberBase {
 
   /**
    * The module handler.
@@ -37,20 +36,7 @@ class ModuleRouteSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
-    $events[RoutingEvents::ALTER] = 'removeRoutes';
-    return $events;
-  }
-
-  /**
-   * Removes any routes that have an unmet module dependency.
-   *
-   * @param \Drupal\Core\Routing\RouteBuildEvent $event
-   *   The route building event.
-   */
-  public function removeRoutes(RouteBuildEvent $event) {
-    $collection = $event->getRouteCollection();
-
+  protected function alterRoutes(RouteCollection $collection, $module) {
     foreach ($collection as $name => $route) {
       if ($route->hasRequirement('_module_dependencies')) {
         $modules = $route->getRequirement('_module_dependencies');

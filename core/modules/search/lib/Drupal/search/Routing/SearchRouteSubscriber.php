@@ -2,21 +2,20 @@
 
 /**
  * @file
- * Contains Drupal\search\Routing\SearchRouteSubscriber
+ * Contains \Drupal\search\Routing\SearchRouteSubscriber.
  */
 
 namespace Drupal\search\Routing;
 
-use Drupal\Core\Routing\RouteBuildEvent;
-use Drupal\Core\Routing\RoutingEvents;
+use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\search\SearchPluginManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides dynamic routes for search.
  */
-class SearchRouteSubscriber implements EventSubscriberInterface {
+class SearchRouteSubscriber extends RouteSubscriberBase {
 
   /**
    * The search plugin manager.
@@ -38,20 +37,7 @@ class SearchRouteSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
-    $events[RoutingEvents::DYNAMIC] = 'routes';
-    return $events;
-  }
-
-  /**
-   * Adds routes for search.
-   *
-   * @param \Drupal\Core\Routing\RouteBuildEvent $event
-   *   The route building event.
-   */
-  public function routes(RouteBuildEvent $event) {
-    $collection = $event->getRouteCollection();
-
+  protected function routes(RouteCollection $collection) {
     foreach ($this->searchManager->getActiveDefinitions() as $plugin_id => $search_info) {
       $path = 'search/' . $search_info['path'] . '/{keys}';
       $defaults = array(

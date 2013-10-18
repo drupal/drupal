@@ -7,32 +7,19 @@
 
 namespace Drupal\system\Routing;
 
-use Drupal\Core\Routing\RouteBuildEvent;
-use Drupal\Core\Routing\RoutingEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Drupal\Core\Routing\RouteSubscriberBase;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides dynamic routes for theme administration.
  */
-class RouteSubscriber implements EventSubscriberInterface {
+class RouteSubscriber extends RouteSubscriberBase {
 
   /**
-   * Implements EventSubscriberInterface::getSubscribedEvents().
+   * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
-    $events[RoutingEvents::DYNAMIC] = 'createSystemThemeRoutes';
-    return $events;
-  }
-
-  /**
-   * Adds dynamic system theme routes.
-   *
-   * @param \Drupal\Core\Routing\RouteBuildEvent $event
-   *   The route building event.
-   */
-  public function createSystemThemeRoutes(RouteBuildEvent $event) {
-    $collection = $event->getRouteCollection();
+  protected function routes(RouteCollection $collection) {
     foreach (list_themes() as $theme) {
       if (!empty($theme->status)) {
         $route = new Route('admin/appearance/settings/' . $theme->name, array(

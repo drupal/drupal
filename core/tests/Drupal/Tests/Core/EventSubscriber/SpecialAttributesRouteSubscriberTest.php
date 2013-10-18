@@ -84,7 +84,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests the onRouteBuilding method for valid variables.
+   * Tests the onAlterRoutes method for valid variables.
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check.
@@ -95,11 +95,11 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
     $route_collection = new RouteCollection();
     $route_collection->add('test', $route);
     $event = new RouteBuildEvent($route_collection, 'test');
-    $this->assertTrue($this->specialAttributesRouteSubscriber->onRouteBuilding($event));
+    $this->assertTrue($this->specialAttributesRouteSubscriber->onAlterRoutes($event));
   }
 
   /**
-   * Tests the onRouteBuilding method for invalid variables.
+   * Tests the onAlterRoutes method for invalid variables.
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check.
@@ -110,7 +110,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
     $route_collection = new RouteCollection();
     $route_collection->add('test', $route);
     $event = new RouteBuildEvent($route_collection, 'test');
-    $this->assertFalse($this->specialAttributesRouteSubscriber->onRouteBuilding($event));
+    $this->assertFalse($this->specialAttributesRouteSubscriber->onAlterRoutes($event));
   }
 
 }

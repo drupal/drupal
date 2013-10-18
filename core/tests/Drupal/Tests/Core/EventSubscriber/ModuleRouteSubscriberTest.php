@@ -69,7 +69,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
 
     $event = new RouteBuildEvent($collection, 'test');
     $route_subscriber = new ModuleRouteSubscriber($this->moduleHandler);
-    $route_subscriber->removeRoutes($event);
+    $route_subscriber->onAlterRoutes($event);
 
     if ($removed) {
       $this->assertNull($collection->get($route_name));

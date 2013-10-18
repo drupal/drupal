@@ -75,9 +75,9 @@ class RouteSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests the dynamicRoutes method.
+   * Tests the onDynamicRoutes method.
    *
-   * @see \Drupal\views\EventSubscriber\RouteSubscriber::dynamicRoutes()
+   * @see \Drupal\views\EventSubscriber\RouteSubscriber::onDynamicRoutes()
    */
   public function testDynamicRoutes() {
     $collection = new RouteCollection();
@@ -92,7 +92,7 @@ class RouteSubscriberTest extends UnitTestCase {
       ->method('collectRoutes')
       ->will($this->returnValue(array('test_id.page_2' => 'views.test_id.page_2')));
 
-    $this->assertNull($this->routeSubscriber->dynamicRoutes($route_event));
+    $this->assertNull($this->routeSubscriber->onDynamicRoutes($route_event));
 
     $this->state->expects($this->once())
       ->method('set')
@@ -101,11 +101,11 @@ class RouteSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Tests the alterRoutes method.
+   * Tests the onAlterRoutes method.
    *
-   * @see \Drupal\views\EventSubscriber\RouteSubscriber::alterRoutes()
+   * @see \Drupal\views\EventSubscriber\RouteSubscriber::onAlterRoutes()
    */
-  public function testAlterRoutes() {
+  public function testOnAlterRoutes() {
     $collection = new RouteCollection();
     $collection->add('test_route', new Route('test_route', array('_controller' => 'Drupal\Tests\Core\Controller\TestController')));
     $route_2 = new Route('test_route/example', array('_controller' => 'Drupal\Tests\Core\Controller\TestController'));
@@ -130,12 +130,12 @@ class RouteSubscriberTest extends UnitTestCase {
       ->method('collectRoutes')
       ->will($this->returnValue(array('test_id.page_2' => 'views.test_id.page_2')));
 
-    $this->assertNull($this->routeSubscriber->alterRoutes($route_event));
+    $this->assertNull($this->routeSubscriber->onAlterRoutes($route_event));
 
     // Ensure that after the alterRoutes the collectRoutes method is just called
     // once (not for page_1 anymore).
 
-    $this->assertNull($this->routeSubscriber->dynamicRoutes($route_event));
+    $this->assertNull($this->routeSubscriber->onDynamicRoutes($route_event));
 
     $this->state->expects($this->once())
       ->method('set')

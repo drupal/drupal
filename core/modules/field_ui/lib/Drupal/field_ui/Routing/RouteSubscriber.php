@@ -7,16 +7,15 @@
 
 namespace Drupal\field_ui\Routing;
 
-use Drupal\Core\Routing\RouteBuildEvent;
-use Drupal\Core\Routing\RoutingEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Routing\Route;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Routing\RouteSubscriberBase;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Subscriber for Field UI routes.
  */
-class RouteSubscriber implements EventSubscriberInterface {
+class RouteSubscriber extends RouteSubscriberBase {
 
   /**
    * The entity type manager
@@ -38,16 +37,7 @@ class RouteSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
-    $events[RoutingEvents::DYNAMIC] = 'routes';
-    return $events;
-  }
-
-  /**
-   * Adds routes for the Field UI.
-   */
-  public function routes(RouteBuildEvent $event) {
-    $collection = $event->getRouteCollection();
+  protected function routes(RouteCollection $collection) {
     foreach ($this->manager->getDefinitions() as $entity_type => $entity_info) {
       $defaults = array();
       if ($entity_info['fieldable'] && isset($entity_info['route_base_path'])) {

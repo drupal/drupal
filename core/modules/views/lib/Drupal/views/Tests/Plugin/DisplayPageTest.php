@@ -95,7 +95,7 @@ class DisplayPageTest extends ViewUnitTestBase {
   public function testPageRouterItems() {
     $subscriber = new RouteSubscriber($this->container->get('entity.manager'), $this->container->get('state'));
     $collection = new RouteCollection();
-    $subscriber->dynamicRoutes(new RouteBuildEvent($collection, 'dynamic_routes'));
+    $subscriber->onDynamicRoutes(new RouteBuildEvent($collection, 'dynamic_routes'));
 
     // Check the controller defaults.
     foreach ($collection as $id => $route) {

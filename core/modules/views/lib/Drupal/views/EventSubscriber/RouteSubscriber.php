@@ -8,15 +8,13 @@
 namespace Drupal\views\EventSubscriber;
 
 use Drupal\Component\Utility\MapArray;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
-use Drupal\Core\Routing\RouteBuildEvent;
-use Drupal\Core\Routing\RoutingEvents;
+use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Builds up the routes of all views.
@@ -27,7 +25,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  */
-class RouteSubscriber implements EventSubscriberInterface, DestructableInterface {
+class RouteSubscriber extends RouteSubscriberBase implements DestructableInterface {
 
   /**
    * Stores a list of view,display IDs which haven't be used in the alter event.
@@ -78,15 +76,6 @@ class RouteSubscriber implements EventSubscriberInterface, DestructableInterface
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function getSubscribedEvents() {
-    $events[RoutingEvents::DYNAMIC] = 'dynamicRoutes';
-    $events[RoutingEvents::ALTER] = 'alterRoutes';
-    return $events;
-  }
-
-  /**
    * Gets all the views and display IDs using a route.
    */
   protected function getViewsDisplayIDsWithRoute() {
@@ -106,14 +95,9 @@ class RouteSubscriber implements EventSubscriberInterface, DestructableInterface
   }
 
   /**
-   * Adds routes defined by all views.
-   *
-   * @param \Drupal\Core\Routing\RouteBuildEvent $event
-   *   The route building event.
+   * {@inheritdoc}
    */
-  public function dynamicRoutes(RouteBuildEvent $event) {
-    $collection = $event->getRouteCollection();
-
+  protected function routes(RouteCollection $collection) {
     foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
       list($view_id, $display_id) = explode('.', $pair);
       $view = $this->viewStorageController->load($view_id);
@@ -134,12 +118,9 @@ class RouteSubscriber implements EventSubscriberInterface, DestructableInterface
   }
 
   /**
-   * Alters existing routes.
-   *
-   * @param \Drupal\Core\Routing\RouteBuildEvent $event
-   *   The route building event.
+   * {@inheritdoc}
    */
-  public function alterRoutes(RouteBuildEvent $event) {
+  protected function alterRoutes(RouteCollection $collection, $module) {
     foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
       list($view_id, $display_id) = explode('.', $pair);
       $view = $this->viewStorageController->load($view_id);
@@ -149,7 +130,7 @@ class RouteSubscriber implements EventSubscriberInterface, DestructableInterface
           if ($display instanceof DisplayRouterInterface) {
             // If the display returns TRUE a route item was found, so it does not
             // have to be added.
-            $view_route_names = $display->alterRoutes($event->getRouteCollection());
+            $view_route_names = $display->alterRoutes($collection);
             $this->viewRouteNames += $view_route_names;
             foreach ($view_route_names as $id_display => $route_name) {
               unset($this->viewsDisplayPairs[$id_display]);

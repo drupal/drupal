@@ -1,22 +1,21 @@
 <?php
 
 /**
- * Definition of \Drupal\rest\EventSubscriber\RouteSubscriber.
+ * @file
+ * Contains \Drupal\rest\EventSubscriber\RouteSubscriber.
  */
 
 namespace Drupal\rest\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Routing\RouteBuildEvent;
-use Drupal\Core\Routing\RoutingEvents;
+use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
-
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Subscriber for REST-style routes.
  */
-class RouteSubscriber implements EventSubscriberInterface {
+class RouteSubscriber extends RouteSubscriberBase {
 
   /**
    * The plugin manager for REST plugins.
@@ -46,14 +45,9 @@ class RouteSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Adds routes to enabled REST resources.
-   *
-   * @param \Drupal\Core\Routing\RouteBuildEvent $event
-   *   The route building event.
+   * {@inheritdoc}
    */
-  public function dynamicRoutes(RouteBuildEvent $event) {
-
-    $collection = $event->getRouteCollection();
+  protected function routes(RouteCollection $collection) {
     $enabled_resources = $this->config->get('rest.settings')->load()->get('resources');
 
     // Iterate over all enabled resource plugins.
@@ -88,12 +82,4 @@ class RouteSubscriber implements EventSubscriberInterface {
     }
   }
 
-  /**
-   * Implements EventSubscriberInterface::getSubscribedEvents().
-   */
-  static function getSubscribedEvents() {
-    $events[RoutingEvents::DYNAMIC] = 'dynamicRoutes';
-    return $events;
-  }
 }
-
