@@ -8,9 +8,6 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\field\Plugin\PluginSettingsBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -21,7 +18,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * The field definition.
    *
-   * @var \Drupal\Core\Entity\Field\FieldDefinitionInterface
+   * @var \Drupal\Core\Field\FieldDefinitionInterface
    */
   protected $fieldDefinition;
 
@@ -39,7 +36,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    *   The plugin_id for the widget.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The definition of the field to which the widget is associated.
    * @param array $settings
    *   The widget settings.
@@ -403,7 +400,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * Sorts submitted field values according to drag-n-drop reordering.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values.
    */
   protected function sortItems(FieldItemListInterface $items) {

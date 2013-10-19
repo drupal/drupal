@@ -7,8 +7,8 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Entity\Field\FieldItemInterface;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**

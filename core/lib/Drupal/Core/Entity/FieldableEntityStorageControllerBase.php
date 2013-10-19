@@ -7,10 +7,10 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\Field\PrepareCacheInterface;
+use Drupal\Core\Field\PrepareCacheInterface;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
-use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemListInterface;
+use Drupal\Core\Field\ConfigFieldItemListInterface;
 use Symfony\Component\DependencyInjection\Container;
 
 abstract class FieldableEntityStorageControllerBase extends EntityStorageControllerBase implements FieldableEntityStorageControllerInterface {

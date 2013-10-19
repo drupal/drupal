@@ -17,14 +17,14 @@ use Drupal\Core\TypedData\TranslatableInterface;
  * API, while extending them with content entity-specific additions. I.e., a
  * content entity implements the ComplexDataInterface among others, thus is
  * complex data containing fields as its data properties. The contained fields
- * have to implement \Drupal\Core\Entity\Field\FieldItemListInterface,
+ * have to implement \Drupal\Core\Field\FieldItemListInterface,
  * which builds upon typed data interfaces as well.
  *
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  *
  * @see \Drupal\Core\TypedData\TypedDataManager
- * @see \Drupal\Core\Entity\Field\FieldItemListInterface
+ * @see \Drupal\Core\Field\FieldItemListInterface
  */
 interface ContentEntityInterface extends EntityInterface, RevisionableInterface, TranslatableInterface, ComplexDataInterface {
 

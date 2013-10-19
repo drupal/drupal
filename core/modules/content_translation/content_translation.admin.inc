@@ -6,14 +6,14 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\Field as FieldService;
 
 /**
  * Returns a form element to configure field synchronization.
  *
- * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   A field definition object.
  *
  * @return array

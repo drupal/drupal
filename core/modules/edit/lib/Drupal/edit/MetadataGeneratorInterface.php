@@ -8,7 +8,7 @@
 namespace Drupal\edit;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Interface for generating in-place editing metadata.
@@ -33,7 +33,7 @@ interface MetadataGeneratorInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being edited.
-   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition of the field being edited.
    * @param string $langcode
    *   The name of the language for which the field is being edited.

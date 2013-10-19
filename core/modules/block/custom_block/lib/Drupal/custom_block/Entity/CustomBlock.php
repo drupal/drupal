@@ -59,14 +59,14 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
   /**
    * The block ID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $id;
 
   /**
    * The block revision ID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $revision_id;
 
@@ -77,42 +77,42 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
    * has been specified. Only default revisions are saved to the block_custom
    * table.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $isDefaultRevision = TRUE;
 
   /**
    * The block UUID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $uuid;
 
   /**
    * The custom block type (bundle).
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $type;
 
   /**
    * The block language code.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $langcode;
 
   /**
    * The block description.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $info;
 
   /**
    * The block revision log message.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $log;
 

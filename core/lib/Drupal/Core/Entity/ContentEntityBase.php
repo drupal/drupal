@@ -383,7 +383,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   /**
    * Gets a translated field.
    *
-   * @return \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @return \Drupal\Core\Field\FieldItemListInterface
    */
   protected function getTranslatedField($property_name, $langcode) {
     if ($this->translations[$this->activeLangcode]['status'] == static::TRANSLATION_REMOVED) {

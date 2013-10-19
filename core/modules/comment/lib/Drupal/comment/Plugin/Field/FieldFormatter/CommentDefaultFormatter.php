@@ -9,9 +9,9 @@ namespace Drupal\comment\Plugin\Field\FieldFormatter;
 
 use Drupal\comment\CommentStorageControllerInterface;
 use Drupal\Core\Entity\EntityRenderControllerInterface;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -75,7 +75,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    *   The plugin_id for the formatter.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The definition of the field to which the formatter is associated.
    * @param array $settings
    *   The formatter settings.

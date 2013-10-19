@@ -33,7 +33,7 @@ function email_help($path, $arg) {
 function email_field_info_alter(&$info) {
   $info['email']['configurable'] = TRUE;
   $info['email']['class'] = '\Drupal\email\ConfigurableEmailItem';
-  $info['email']['list_class'] = '\Drupal\field\Plugin\Type\FieldType\ConfigFieldItemList';
+  $info['email']['list_class'] = '\Drupal\Core\Field\ConfigFieldItemList';
   $info['email']['default_widget'] = 'email_default';
   if (\Drupal::moduleHandler()->moduleExists('text')) {
     $info['email']['default_formatter'] = 'text_plain';

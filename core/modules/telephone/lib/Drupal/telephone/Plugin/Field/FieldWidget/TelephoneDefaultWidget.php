@@ -7,7 +7,7 @@
 
 namespace Drupal\telephone\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 
 /**

@@ -44,35 +44,35 @@ class EntityTest extends ContentEntityBase {
   /**
    * The entity ID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $id;
 
   /**
    * The entity UUID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $uuid;
 
   /**
    * The bundle of the test entity.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $type;
 
   /**
    * The name of the test entity.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $name;
 
   /**
    * The associated user.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $user_id;
 

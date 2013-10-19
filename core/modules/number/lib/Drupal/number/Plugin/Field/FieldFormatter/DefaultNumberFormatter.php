@@ -8,7 +8,7 @@
 namespace Drupal\number\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Parent plugin for decimal and integer formatters

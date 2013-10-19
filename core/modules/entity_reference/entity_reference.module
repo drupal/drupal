@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInterface;
 
 /**
@@ -18,7 +18,7 @@ function entity_reference_field_info_alter(&$info) {
   // Make the entity reference field configurable.
   $info['entity_reference']['configurable'] = TRUE;
   $info['entity_reference']['class'] = '\Drupal\entity_reference\ConfigurableEntityReferenceItem';
-  $info['entity_reference']['list_class'] = '\Drupal\field\Plugin\Type\FieldType\ConfigFieldItemList';
+  $info['entity_reference']['list_class'] = '\Drupal\Core\Field\ConfigFieldItemList';
   $info['entity_reference']['settings']['target_type'] = \Drupal::moduleHandler()->moduleExists('node') ? 'node' : 'user';
   $info['entity_reference']['instance_settings']['handler'] = 'default';
   $info['entity_reference']['instance_settings']['handler_settings'] = array();
@@ -31,7 +31,7 @@ function entity_reference_field_info_alter(&$info) {
  *
  * Set the "target_type" property definition for entity reference fields.
  *
- * @see \Drupal\Core\Entity\Plugin\field\field_type\EntityReferenceItem::getPropertyDefinitions()
+ * @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::getPropertyDefinitions()
  *
  * @param array $info
  *   The property info array as returned by hook_entity_field_info().

@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\entity_reference\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 
 /**

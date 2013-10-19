@@ -199,7 +199,7 @@ function hook_field_widget_info_alter(array &$info) {
  *     a full form structure, or a sub-element of a larger form.
  *   - widget: The widget plugin instance.
  *   - items: The field values, as a
- *     \Drupal\Core\Entity\Field\FieldItemListInterface object.
+ *     \Drupal\Core\Field\FieldItemListInterface object.
  *   - delta: The order of this item in the array of subelements (0, 1, 2, etc).
  *   - default: A boolean indicating whether the form is being shown as a dummy
  *     form to set default values.

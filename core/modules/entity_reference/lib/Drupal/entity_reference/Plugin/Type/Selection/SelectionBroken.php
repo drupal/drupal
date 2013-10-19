@@ -8,7 +8,7 @@
 namespace Drupal\entity_reference\Plugin\Type\Selection;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * A null implementation of SelectionInterface.

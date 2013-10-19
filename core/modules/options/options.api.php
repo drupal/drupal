@@ -19,7 +19,7 @@
  * @param array $context
  *   An associative array containing:
  *   - field_definition: The field definition
- *     (\Drupal\Core\Entity\Field\FieldDefinitionInterface).
+ *     (\Drupal\Core\Field\FieldDefinitionInterface).
  *   - entity: The entity object the field is attached to
  *     (\Drupal\Core\Entity\EntityInterface).
  *

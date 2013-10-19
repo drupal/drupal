@@ -7,9 +7,6 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\field\Plugin\PluginSettingsInterface;
-
 /**
  * Base interface definition for "Field widget" plugins.
  *
@@ -27,7 +24,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * TRUE), the 'default value', if any, is pre-populated. Also allows other
    * modules to alter the form element by implementing their own hooks.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   An array of the field values. When creating a new entity this may be NULL
    *   or an empty array to use default values.
    * @param array $form
@@ -46,7 +43,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
   /**
    * Extracts field values from submitted form values.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values. This parameter is altered by reference to receive the
    *   incoming form values.
    * @param array $form
@@ -60,7 +57,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
   /**
    * Reports field-level validation errors against actual form elements.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values.
    * @param array $form
    *   The form structure where field elements are attached to. This might be a

@@ -12,7 +12,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'link_separate' formatter.

@@ -9,7 +9,7 @@ namespace Drupal\edit;
 
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\edit\EditPluginInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Defines a base editor implementation.

@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'image' formatter.

@@ -711,11 +711,11 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  * @param string $operation
  *   The operation to be performed. See
  *   \Drupal\Core\Access\AccessibleInterface::access() for possible values.
- * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
  *   The field definition.
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account to check.
- * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+ * @param \Drupal\Core\Field\FieldItemListInterface $items
  *   (optional) The entity field object on which the operation is to be
  *   performed.
  *
@@ -723,7 +723,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  *   TRUE if access should be allowed, FALSE if access should be denied and NULL
  *   if the implementation has no opinion.
  */
-function hook_entity_field_access($operation, \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Entity\Field\FieldItemListInterface $items = NULL) {
+function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Field\FieldItemListInterface $items = NULL) {
   if ($field_definition->getFieldName() == 'field_of_interest' && $operation == 'edit') {
     return user_access('update field of interest', $account);
   }
@@ -743,11 +743,11 @@ function hook_entity_field_access($operation, \Drupal\Core\Entity\Field\FieldDef
  *   Context array on the performed operation with the following keys:
  *   - operation: The operation to be performed (string).
  *   - field_definition: The field definition object
- *     (\Drupal\Core\Entity\Field\FieldDefinitionInterface)
+ *     (\Drupal\Core\Field\FieldDefinitionInterface)
  *   - account: The user account to check access for
  *     (Drupal\user\Entity\User).
  *   - items: (optional) The entity field items
- *     (\Drupal\Core\Entity\Field\FieldItemListInterface).
+ *     (\Drupal\Core\Field\FieldItemListInterface).
  */
 function hook_entity_field_access_alter(array &$grants, array $context) {
   $field_definition = $context['field_definition'];

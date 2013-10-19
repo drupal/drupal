@@ -147,7 +147,6 @@ class TypedDataManager extends DefaultPluginManager {
    * @see \Drupal\Core\TypedData\Plugin\DataType\Date
    * @see \Drupal\Core\TypedData\Plugin\DataType\Uri
    * @see \Drupal\Core\TypedData\Plugin\DataType\Binary
-   * @see \Drupal\Core\Entity\Field\EntityWrapper
    */
   public function create(array $definition, $value = NULL, $name = NULL, $parent = NULL) {
     $wrapper = $this->createInstance($definition['type'], $definition, $name, $parent);

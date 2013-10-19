@@ -8,7 +8,7 @@
 namespace Drupal\image\Plugin\Field\FieldWidget;
 
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'image_image' widget.

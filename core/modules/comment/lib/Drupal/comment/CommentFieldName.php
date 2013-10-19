@@ -7,7 +7,7 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Entity\Plugin\field\field_type\StringItem;
+use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 
 /**
  * The field item for the 'fieldname' field.

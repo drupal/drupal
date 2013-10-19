@@ -8,7 +8,7 @@
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'datetime_plain' formatter.

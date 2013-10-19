@@ -87,7 +87,7 @@ interface EntityDisplayBaseInterface extends ConfigEntityInterface {
    * @param string $field_name
    *   The field name.
    *
-   * @return \Drupal\field\Plugin\PluginSettingsInterface|null
+   * @return \Drupal\Core\Field\PluginSettingsInterface|null
    *   A widget or formatter plugin or NULL if the field does not exist.
    */
   public function getRenderer($field_name);

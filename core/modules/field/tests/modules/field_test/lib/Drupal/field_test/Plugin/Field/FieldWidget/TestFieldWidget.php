@@ -7,7 +7,7 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 

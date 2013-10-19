@@ -20,7 +20,7 @@ use Drupal\field\Entity\Field;
  *   - 'type': The field type.
  *   - 'module': The name of the module providing the field type.
  *   - 'schema': The field schema, in the same format as
- *     \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemListInterface::schema().
+ *     \Drupal\Core\Field\ConfigFieldItemListInterface::schema().
  *
  * @ingroup update_api
  */

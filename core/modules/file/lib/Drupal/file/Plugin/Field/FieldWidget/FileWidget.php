@@ -8,7 +8,7 @@
 namespace Drupal\file\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\WidgetBase;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'file_generic' widget.

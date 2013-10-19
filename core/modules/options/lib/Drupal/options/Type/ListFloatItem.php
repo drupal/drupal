@@ -7,7 +7,7 @@
 
 namespace Drupal\options\Type;
 
-use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
+use Drupal\Core\Field\Plugin\Field\FieldType\LegacyConfigFieldItem;
 
 /**
  * Defines the 'list_float' entity field item.

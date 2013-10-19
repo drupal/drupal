@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldUpdateForbiddenException;
 
@@ -231,7 +231,7 @@ function options_field_entity_delete(FieldInterface $field) {
  * The strings are not safe for output. Keys and values of the array should be
  * sanitized through field_filter_xss() before being displayed.
  *
- * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
  *   The field definition.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.

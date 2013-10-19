@@ -9,7 +9,7 @@ namespace Drupal\text\Plugin\Field\FieldWidget;
 
 use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
 use Symfony\Component\Validator\ConstraintViolationInterface;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.

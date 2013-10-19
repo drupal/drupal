@@ -975,7 +975,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
 /**
  * Implements hook_entity_load().
  *
- * @see \Drupal\comment\Plugin\field\field_type\CommentItem::getPropertyDefinitions()
+ * @see \Drupal\comment\Plugin\Field\FieldType\CommentItem::getPropertyDefinitions()
  */
 function comment_entity_load($entities, $entity_type) {
   if (!\Drupal::service('comment.manager')->getFields($entity_type)) {

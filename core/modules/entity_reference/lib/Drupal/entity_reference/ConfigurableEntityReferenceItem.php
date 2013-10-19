@@ -8,8 +8,8 @@
 namespace Drupal\entity_reference;
 
 use Drupal\field\FieldInterface;
-use Drupal\field\Plugin\Type\FieldType\ConfigEntityReferenceItemBase;
-use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
+use Drupal\Core\Field\ConfigEntityReferenceItemBase;
+use Drupal\Core\Field\ConfigFieldItemInterface;
 
 /**
  * Alternative plugin implementation of the 'entity_reference' field type.

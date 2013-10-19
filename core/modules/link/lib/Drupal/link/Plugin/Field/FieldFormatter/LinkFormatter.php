@@ -8,8 +8,8 @@
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Url;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\Core\Entity\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FormatterBase;
 
 /**
@@ -157,7 +157,7 @@ class LinkFormatter extends FormatterBase {
   /**
    * Builds the link information for a link field item.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemInterface $item
+   * @param \Drupal\Core\Field\FieldItemInterface $item
    *   The link field item being rendered.
    *
    * @return array

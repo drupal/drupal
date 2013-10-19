@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Type;
 
-use Drupal\field\Plugin\Type\FieldType\ConfigEntityReferenceItemBase;
+use Drupal\Core\Field\ConfigEntityReferenceItemBase;
 
 /**
  * Defines the 'taxonomy_term_reference' entity field item.

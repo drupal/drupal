@@ -7,9 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Field\WidgetBaseInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Interface definition for field widget plugins.
@@ -73,7 +71,7 @@ interface WidgetInterface extends WidgetBaseInterface {
    * definition and set them as ad-hoc $element['#custom'] properties, for later
    * use by its element callbacks.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   Array of default values for this field.
    * @param int $delta
    *   The order of this item in the array of subelements (0, 1, 2, etc).

@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Language\Language;
-use Drupal\comment\Plugin\field\field_type\CommentItem;
+use Drupal\comment\Plugin\Field\FieldType\CommentItem;
 use Drupal\field\Entity\Field;
 
 /**

@@ -8,12 +8,12 @@
 namespace Drupal\text\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\Core\Entity\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
- * Tests for \Drupal\text\Plugin\field\field_type\TextWithSummaryItem.
+ * Tests for \Drupal\text\Plugin\Field\FieldType\TextWithSummaryItem.
  */
 class TextWithSummaryItemTest extends FieldUnitTestBase {
 

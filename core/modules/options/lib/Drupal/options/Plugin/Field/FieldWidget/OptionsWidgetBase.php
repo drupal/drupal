@@ -7,9 +7,9 @@
 
 namespace Drupal\options\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\Core\Entity\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\WidgetBase;
 
 /**
@@ -114,7 +114,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Returns the array of options for the widget.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemInterface $item
+   * @param \Drupal\Core\Field\FieldItemInterface $item
    *   The field item.
    *
    * @return array
@@ -163,7 +163,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Determines selected options from the incoming field values.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values.
    * @param int $delta
    *   (optional) The delta of the item to get options for. Defaults to 0.

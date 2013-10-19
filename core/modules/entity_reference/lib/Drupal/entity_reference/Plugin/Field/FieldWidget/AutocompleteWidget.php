@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\entity_reference\Plugin\Field\FieldWidget\AutocompleteWidgetBase;
 
 /**

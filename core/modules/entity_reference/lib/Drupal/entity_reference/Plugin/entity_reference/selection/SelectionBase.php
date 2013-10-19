@@ -11,7 +11,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
@@ -32,7 +32,7 @@ class SelectionBase implements SelectionInterface {
   /**
    * The field definition.
    *
-   * @var \Drupal\Core\Entity\Field\FieldDefinitionInterface
+   * @var \Drupal\Core\Field\FieldDefinitionInterface
    */
   protected $fieldDefinition;
 

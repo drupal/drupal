@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'taxonomy_term_reference_link' formatter.

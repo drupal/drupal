@@ -7,8 +7,8 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\Core\Entity\Field\FieldItemInterface;
-use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Tests the new entity API for the shape field type.

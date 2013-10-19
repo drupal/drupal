@@ -7,7 +7,7 @@
 
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\file\FileInterface;
@@ -991,7 +991,7 @@ function taxonomy_field_is_empty($item, $field_type) {
 /**
  * Returns the set of valid terms for a taxonomy field.
  *
- * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+ * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
  *   The field definition.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object the field is attached to.

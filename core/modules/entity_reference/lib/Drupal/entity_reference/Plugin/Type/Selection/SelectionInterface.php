@@ -8,7 +8,7 @@
 namespace Drupal\entity_reference\Plugin\Type\Selection;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Interface definition for Entity Reference selection plugins.
@@ -74,7 +74,7 @@ interface SelectionInterface {
   /**
    * Generates the settings form for this selection.
    *
-   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The definition of the field to which the selection is associated.
    *
    * @return array

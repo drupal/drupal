@@ -7,11 +7,11 @@
 
 namespace Drupal\Tests\Core\Entity;
 
-use Drupal\Core\Entity\Field\FieldDefinition;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests \Drupal\Core\Entity\Field\FieldDefinition.
+ * Tests \Drupal\Core\Field\FieldDefinition.
  *
  * @group Entity
  */

@@ -7,9 +7,6 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\field\Plugin\PluginSettingsInterface;
-
 /**
  * Interface definition for field widget plugins.
  */
@@ -60,7 +57,7 @@ interface FormatterInterface extends PluginSettingsInterface {
    * parameter by reference.
    *
    * @param array $entities_items
-   *   Array of field values (Drupal\Core\Entity\Field\FieldItemListInterface),
+   *   Array of field values (Drupal\Core\Field\FieldItemListInterface),
    *   keyed by entity ID.
    */
   public function prepareView(array $entities_items);
@@ -68,7 +65,7 @@ interface FormatterInterface extends PluginSettingsInterface {
   /**
    * Builds a renderable array for one field on one entity instance.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values to be rendered.
    *
    * @return array
@@ -79,7 +76,7 @@ interface FormatterInterface extends PluginSettingsInterface {
   /**
    * Builds a renderable array for a field value.
    *
-   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values to be rendered.
    *
    * @return array

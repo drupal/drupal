@@ -346,7 +346,7 @@ class FieldInfoTest extends FieldUnitTestBase {
         ),
         'default_widget' => 'test_field_widget',
         'default_formatter' => 'field_test_default',
-        'class' => 'Drupal\field_test\Plugin\field\field_type\TestItem',
+        'class' => 'Drupal\field_test\Plugin\Field\FieldType\TestItem',
       ),
       'shape' => array(
         'label' => t('Shape'),
@@ -357,7 +357,7 @@ class FieldInfoTest extends FieldUnitTestBase {
         'instance_settings' => array(),
         'default_widget' => 'test_field_widget',
         'default_formatter' => 'field_test_default',
-        'class' => 'Drupal\field_test\Plugin\field\field_type\ShapeItem',
+        'class' => 'Drupal\field_test\Plugin\Field\FieldType\ShapeItem',
       ),
       'hidden_test_field' => array(
         'no_ui' => TRUE,
@@ -367,7 +367,7 @@ class FieldInfoTest extends FieldUnitTestBase {
         'instance_settings' => array(),
         'default_widget' => 'test_field_widget',
         'default_formatter' => 'field_test_default',
-        'class' => 'Drupal\field_test\Plugin\field\field_type\HiddenTestItem',
+        'class' => 'Drupal\field_test\Plugin\Field\FieldType\HiddenTestItem',
       ),
     );
   }

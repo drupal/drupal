@@ -59,42 +59,42 @@ class Term extends ContentEntityBase implements TermInterface {
   /**
    * The taxonomy term ID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $tid;
 
   /**
    * The term UUID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $uuid;
 
   /**
    * The taxonomy vocabulary ID this term belongs to.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $vid;
 
   /**
    * Name of the term.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $name;
 
   /**
    * Description of the term.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $description;
 
   /**
    * The text format name for the term's description.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $format;
 
@@ -104,7 +104,7 @@ class Term extends ContentEntityBase implements TermInterface {
    * This property stores the weight of this term in relation to other terms of
    * the same vocabulary.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $weight;
 
@@ -118,7 +118,7 @@ class Term extends ContentEntityBase implements TermInterface {
    * term does not have any parents. When omitting this variable during an
    * update, the existing hierarchy for the term remains unchanged.
    *
-   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
+   * @var \Drupal\Core\Field\FieldItemListInterface
    */
   public $parent;
 
