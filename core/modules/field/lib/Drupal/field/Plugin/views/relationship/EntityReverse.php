@@ -7,11 +7,12 @@
 
 namespace Drupal\field\Plugin\views\relationship;
 
-use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\ViewsHandlerManager;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
-use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A relationship handlers which reverse entity references.
@@ -21,6 +22,29 @@ use Drupal\views\Views;
  * @PluginID("entity_reverse")
  */
 class EntityReverse extends RelationshipPluginBase  {
+
+  /**
+   * Constructs an EntityReverse object.
+   *
+   * @param \Drupal\views\Plugin\ViewsHandlerManager $join_manager
+   *   The views plugin join manager.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ViewsHandlerManager $join_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->joinManager = $join_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.views.join')
+    );
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\relationship\RelationshipPluginBase::init().
@@ -62,7 +86,7 @@ class EntityReverse extends RelationshipPluginBase  {
     else {
       $id = 'standard';
     }
-    $first_join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $first);
+    $first_join = $this->joinManager->createInstance($id, $first);
 
 
     $this->first_alias = $this->query->addTable($this->definition['field table'], $this->relationship, $first_join);
@@ -87,7 +111,7 @@ class EntityReverse extends RelationshipPluginBase  {
     else {
       $id = 'standard';
     }
-    $second_join = drupal_container()->get('plugin.manager.views.join')->createInstance($id, $second);
+    $second_join = $this->joinManager->createInstance($id, $second);
     $second_join->adjusted = TRUE;
 
     // use a short alias for this:

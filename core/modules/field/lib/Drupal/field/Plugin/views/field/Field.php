@@ -7,17 +7,17 @@
 
 namespace Drupal\field\Plugin\views\field;
 
-use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Field\FormatterPluginManager;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\PluginID;
-use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -86,6 +86,13 @@ class Field extends FieldPluginBase {
   protected $formatterPluginManager;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a \Drupal\field\Plugin\views\field\Field object.
    *
    * @param array $configuration
@@ -98,12 +105,15 @@ class Field extends FieldPluginBase {
    *   The field formatter plugin manager.
    * @param \Drupal\Core\Field\FormatterPluginManager $formatter_plugin_manager
    *   The field formatter plugin manager.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager, FormatterPluginManager $formatter_plugin_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager, FormatterPluginManager $formatter_plugin_manager, LanguageManager $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityManager = $entity_manager;
     $this->formatterPluginManager = $formatter_plugin_manager;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -115,7 +125,8 @@ class Field extends FieldPluginBase {
       $plugin_id,
       $plugin_definition,
       $container->get('entity.manager'),
-      $container->get('plugin.manager.field.formatter')
+      $container->get('plugin.manager.field.formatter'),
+      $container->get('language_manager')
     );
   }
 
@@ -243,9 +254,11 @@ class Field extends FieldPluginBase {
         // By the same reason as field_language the field might be Language::LANGCODE_NOT_SPECIFIED in reality so allow it as well.
         // @see this::field_langcode()
         $default_langcode = language_default()->id;
-        $langcode = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-                                array(drupal_container()->get(Language::TYPE_CONTENT)->id, $default_langcode),
-                                $this->view->display_handler->options['field_langcode']);
+        $langcode = str_replace(
+          array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
+          array($this->languageManager->getLanguage(Language::TYPE_CONTENT)),
+          $this->view->display_handler->options['field_langcode']
+        );
         $placeholder = $this->placeholder();
         $langcode_fallback_candidates = array($langcode);
         if (field_language_fallback_enabled()) {
@@ -441,7 +454,7 @@ class Field extends FieldPluginBase {
     // Get the currently selected formatter.
     $format = $this->options['type'];
 
-    $settings = $this->options['settings'] + \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($format);
+    $settings = $this->options['settings'] + $this->formatterPluginManager->getDefaultSettings($format);
 
     $options = array(
       'field_definition' => $field,
@@ -456,7 +469,7 @@ class Field extends FieldPluginBase {
 
     // Get the settings form.
     $settings_form = array('#value' => array());
-    if ($formatter = drupal_container()->get('plugin.manager.field.formatter')->getInstance($options)) {
+    if ($formatter = $this->formatterPluginManager->getInstance($options)) {
       $settings_form = $formatter->settingsForm($form, $form_state);
     }
     $form['settings'] = $settings_form;
@@ -847,9 +860,11 @@ class Field extends FieldPluginBase {
   function field_langcode(EntityInterface $entity) {
     if (field_is_translatable($entity->entityType(), $this->field_info)) {
       $default_langcode = language_default()->id;
-      $langcode = str_replace(array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-                              array(drupal_container()->get(Language::TYPE_CONTENT)->id, $default_langcode),
-                              $this->view->display_handler->options['field_language']);
+      $langcode = str_replace(
+        array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
+        array($this->languageManager->getLanguage(Language::TYPE_CONTENT)),
+        $this->view->display_handler->options['field_language']
+      );
 
       // Give the Field Language API a chance to fallback to a different language
       // (or Language::LANGCODE_NOT_SPECIFIED), in case the field has no data for the selected language.
