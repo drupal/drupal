@@ -1,6 +1,6 @@
 id: node.search_result
 uuid: 095d7357-de7d-4acc-953a-585cd106e89b
 label: Search result
-status: '0'
-cache: '1'
+status: false
+cache: true
 targetEntityType: node

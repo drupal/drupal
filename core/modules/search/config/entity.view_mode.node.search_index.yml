@@ -1,6 +1,6 @@
 id: node.search_index
 uuid: 17b34a6b-401f-421a-8100-f1879cbc565a
 label: Search index
-status: '0'
-cache: '1'
+status: false
+cache: true
 targetEntityType: node
