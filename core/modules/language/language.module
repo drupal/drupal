@@ -450,7 +450,7 @@ function language_get_default_langcode($entity_type, $bundle) {
       break;
 
     case 'authors_default':
-      global $user;
+      $user = \Drupal::currentUser();
       $language_code = $user->getPreferredLangcode();
       if (!empty($language_code)) {
         $default_value = $language_code;

@@ -195,7 +195,7 @@ function language_from_browser($languages) {
  */
 function language_from_user($languages) {
   // User preference (only for authenticated users).
-  global $user;
+  $user = \Drupal::currentUser();
 
   if ($user->id()) {
     $langcode = $user->getPreferredLangcode();
@@ -224,7 +224,7 @@ function language_from_user($languages) {
  */
 function language_from_user_admin(array $languages, Request $request = NULL) {
   // User preference (only for authenticated users).
-  global $user;
+  $user = \Drupal::currentUser();
 
   if ($user->id()) {
     $request_path = $request ? urldecode(trim($request->getPathInfo(), '/')) : _current_path();
@@ -254,7 +254,7 @@ function language_from_session($languages) {
   // Request parameter: we need to update the session parameter only if we have
   // an authenticated user.
   if (isset($_GET[$param]) && isset($languages[$langcode = $_GET[$param]])) {
-    global $user;
+    $user = \Drupal::currentUser();
     if ($user->id()) {
       $_SESSION[$param] = $langcode;
     }
@@ -492,7 +492,7 @@ function language_url_rewrite_session(&$path, &$options) {
   // The following values are not supposed to change during a single page
   // request processing.
   if (!isset($query_rewrite)) {
-    global $user;
+    $user = \Drupal::currentUser();
     if (!$user->id()) {
       $languages = language_list();
       $query_param = check_plain(\Drupal::config('language.negotiation')->get('session.parameter'));
