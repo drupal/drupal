@@ -114,7 +114,7 @@ body,
 }
 #header,
 #footer-wrapper,
-#skip-link,
+.skip-link,
 ul.contextual-links,
 ul.links,
 ul.primary,
@@ -315,17 +315,18 @@ ul.tips {
 }
 
 /* ------------------ Header ------------------ */
-#skip-link {
+.skip-link,
+.skip-link.visually-hidden.focusable {
   left: 50%;
   margin-left: -5.25em;
   margin-top: 0;
-  position: absolute;
+  position: absolute !important;
   width: auto;
   z-index: 50;
 }
-#skip-link a,
-#skip-link a:link,
-#skip-link a:visited {
+.skip-link,
+.skip-link:link,
+.skip-link:visited {
   background: #444;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
@@ -336,9 +337,9 @@ ul.tips {
   text-decoration: none;
   border-radius: 0 0 10px 10px;
 }
-#skip-link a:hover,
-#skip-link a:active,
-#skip-link a:focus {
+.skip-link:hover,
+.skip-link:active,
+.skip-link:focus {
   outline: 0;
 }
 #logo {

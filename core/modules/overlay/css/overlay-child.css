@@ -63,7 +63,7 @@ html[dir="rtl"] {
 #overlay-title:focus {
   outline: 0;
 }
-.overlay #skip-link a {
+.overlay .skip-link {
   color: #fff; /* This is white to contrast with the dark background behind it. */
 }
 

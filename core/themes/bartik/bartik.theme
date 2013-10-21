@@ -13,6 +13,22 @@ use Drupal\Core\Template\RenderWrapper;
  * Adds body classes if certain regions have content.
  */
 function bartik_preprocess_html(&$variables) {
+  // Add information about the number of sidebars.
+  if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
+    $variables['attributes']['class'][] = 'two-sidebars';
+  }
+  elseif (!empty($variables['page']['sidebar_first'])) {
+    $variables['attributes']['class'][] = 'one-sidebar';
+    $variables['attributes']['class'][] = 'sidebar-first';
+  }
+  elseif (!empty($variables['page']['sidebar_second'])) {
+    $variables['attributes']['class'][] = 'one-sidebar';
+    $variables['attributes']['class'][] = 'sidebar-second';
+  }
+  else {
+    $variables['attributes']['class'][] = 'no-sidebars';
+  }
+
   if (!empty($variables['page']['featured'])) {
     $variables['attributes']['class'][] = 'featured';
   }
