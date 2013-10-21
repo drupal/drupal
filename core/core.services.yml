@@ -425,6 +425,11 @@ services:
     class: Drupal\Core\Theme\ThemeAccessCheck
     tags:
       - { name: access_check }
+  access_check.custom:
+    class: Drupal\Core\Access\CustomAccessCheck
+    arguments: ['@controller_resolver']
+    tags:
+      - { name: access_check }
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
     tags:

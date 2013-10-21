@@ -1,8 +1,4 @@
 services:
-  access_check.toolbar_subtree:
-    class: Drupal\toolbar\Access\SubtreeAccess
-    tags:
-      - { name: access_check }
   cache.toolbar:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
