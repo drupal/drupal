@@ -7,19 +7,19 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests drupal_render().
  */
-class RenderTest extends WebTestBase {
+class RenderTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('common_test');
+  public static $modules = array('system', 'common_test');
 
   public static function getInfo() {
     return array(
@@ -327,10 +327,10 @@ class RenderTest extends WebTestBase {
    */
   function testDrupalRenderChildrenAttached() {
     // The cache system is turned off for POST requests.
-    $request_method = $_SERVER['REQUEST_METHOD'];
-    $_SERVER['REQUEST_METHOD'] = 'GET';
+    $request_method = \Drupal::request()->getMethod();
+    \Drupal::request()->setMethod('GET');
 
-    // Create an element with a child and subchild.  Each element loads a
+    // Create an element with a child and subchild. Each element loads a
     // different JavaScript file using #attached.
     $parent_js = drupal_get_path('module', 'user') . '/user.js';
     $child_js = drupal_get_path('module', 'forum') . '/forum.js';
@@ -369,7 +369,8 @@ class RenderTest extends WebTestBase {
     $this->assertTrue(strpos($scripts, $child_js), 'The child #attached JavaScript was included when loading from cache.');
     $this->assertTrue(strpos($scripts, $subchild_js), 'The subchild #attached JavaScript was included when loading from cache.');
 
-    $_SERVER['REQUEST_METHOD'] = $request_method;
+    // Restore the previous request method.
+    \Drupal::request()->setMethod($request_method);
   }
 
   /**
@@ -391,164 +392,13 @@ class RenderTest extends WebTestBase {
   }
 
   /**
-   * Tests rendering form elements without passing through form_builder().
-   */
-  function testDrupalRenderFormElements() {
-    // Define a series of form elements.
-    $element = array(
-      '#type' => 'button',
-      '#value' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'submit'));
-
-    $element = array(
-      '#type' => 'textfield',
-      '#title' => $this->randomName(),
-      '#value' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'text'));
-
-    $element = array(
-      '#type' => 'password',
-      '#title' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'password'));
-
-    $element = array(
-      '#type' => 'textarea',
-      '#title' => $this->randomName(),
-      '#value' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//textarea');
-
-    $element = array(
-      '#type' => 'radio',
-      '#title' => $this->randomName(),
-      '#value' => FALSE,
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'radio'));
-
-    $element = array(
-      '#type' => 'checkbox',
-      '#title' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'checkbox'));
-
-    $element = array(
-      '#type' => 'select',
-      '#title' => $this->randomName(),
-      '#options' => array(
-        0 => $this->randomName(),
-        1 => $this->randomName(),
-      ),
-    );
-    $this->assertRenderedElement($element, '//select');
-
-    $element = array(
-      '#type' => 'file',
-      '#title' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'file'));
-
-    $element = array(
-      '#type' => 'item',
-      '#title' => $this->randomName(),
-      '#markup' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//div[contains(@class, :class) and contains(., :markup)]/label[contains(., :label)]', array(
-      ':class' => 'form-type-item',
-      ':markup' => $element['#markup'],
-      ':label' => $element['#title'],
-    ));
-
-    $element = array(
-      '#type' => 'hidden',
-      '#title' => $this->randomName(),
-      '#value' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//input[@type=:type]', array(':type' => 'hidden'));
-
-    $element = array(
-      '#type' => 'link',
-      '#title' => $this->randomName(),
-      '#href' => $this->randomName(),
-      '#options' => array(
-        'absolute' => TRUE,
-      ),
-    );
-    $this->assertRenderedElement($element, '//a[@href=:href and contains(., :title)]', array(
-      ':href' => url($element['#href'], array('absolute' => TRUE)),
-      ':title' => $element['#title'],
-    ));
-
-    $element = array(
-      '#type' => 'details',
-      '#title' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//details/summary[contains(., :title)]', array(
-      ':title' => $element['#title'],
-    ));
-
-    $element = array(
-      '#type' => 'details',
-      '#title' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//details');
-
-    $element['item'] = array(
-      '#type' => 'item',
-      '#title' => $this->randomName(),
-      '#markup' => $this->randomName(),
-    );
-    $this->assertRenderedElement($element, '//details/div/div[contains(@class, :class) and contains(., :markup)]', array(
-      ':class' => 'form-type-item',
-      ':markup' => $element['item']['#markup'],
-    ));
-  }
-
-  /**
-   * Tests rendering elements with invalid keys.
-   */
-  function testDrupalRenderInvalidKeys() {
-    $error = array(
-      '%type' => 'User error',
-      '!message' => '"child" is an invalid render array key',
-      '%function' => 'element_children()',
-    );
-    $message = t('%type: !message in %function (line ', $error);
-
-    \Drupal::config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_ALL)->save();
-    $this->drupalGet('common-test/drupal-render-invalid-keys');
-    $this->assertResponse(200, 'Received expected HTTP status code.');
-    $this->assertRaw($message, format_string('Found error message: !message.', array('!message' => $message)));
-  }
-
-  /**
-   * Tests that elements are rendered properly.
-   */
-  protected function assertRenderedElement(array $element, $xpath, array $xpath_args = array()) {
-    $original_element = $element;
-    $this->drupalSetContent(drupal_render($element));
-    $this->verbose('<pre>' .  check_plain(var_export($original_element, TRUE)) . '</pre>'
-      . '<pre>' .  check_plain(var_export($element, TRUE)) . '</pre>'
-      . '<hr />' . $this->drupalGetContent()
-    );
-
-    // @see \Drupal\simpletest\WebTestBase::xpath()
-    $xpath = $this->buildXPathQuery($xpath, $xpath_args);
-    $element += array('#value' => NULL);
-    $this->assertFieldByXPath($xpath, $element['#value'], format_string('#type @type was properly rendered.', array(
-      '@type' => var_export($element['#type'], TRUE),
-    )));
-  }
-
-  /**
    * Tests caching of an empty render item.
    */
   function testDrupalRenderCache() {
-    // Force a request via GET.
-    $request_method = $_SERVER['REQUEST_METHOD'];
-    $_SERVER['REQUEST_METHOD'] = 'GET';
+    // The cache system is turned off for POST requests.
+    $request_method = \Drupal::request()->getMethod();
+    \Drupal::request()->setMethod('GET');
+
     // Create an empty element.
     $test_element = array(
       '#cache' => array(
@@ -587,6 +437,6 @@ class RenderTest extends WebTestBase {
     $this->assertEqual($expected_tags, $actual_tags, 'Cache tags were collected from the element and its subchild.');
 
     // Restore the previous request method.
-    $_SERVER['REQUEST_METHOD'] = $request_method;
+    \Drupal::request()->setMethod($request_method);
   }
 }
