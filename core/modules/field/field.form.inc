@@ -54,7 +54,7 @@ function theme_field_multiple_value_form($variables) {
     usort($items, '_field_sort_items_value_helper');
 
     // Add the items as table rows.
-    foreach ($items as $key => $item) {
+    foreach ($items as $item) {
       $item['_weight']['#attributes']['class'] = array($order_class);
       $delta_element = drupal_render($item['_weight']);
       $cells = array(
