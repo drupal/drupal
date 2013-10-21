@@ -196,6 +196,30 @@ abstract class TestBase {
   }
 
   /**
+   * Provides meta information about this test case, such as test name.
+   *
+   * @return array
+   *   An array of untranslated strings with the following keys:
+   *   - name: An overview of what is tested by the class; for example, "User
+   *     access rules".
+   *   - description: One sentence describing the test, starting with a verb.
+   *   - group: The human-readable name of the module ("Node", "Statistics"), or
+   *     the human-readable name of the Drupal facility tested (e.g. "Form API"
+   *     or "XML-RPC").
+   */
+  public static function getInfo() {
+    // PHP does not allow us to declare this method as abstract public static,
+    // so we simply throw an exception here if this has not been implemented by
+    // a child class.
+    throw new \RuntimeException("Sub-class must implement the getInfo method!");
+  }
+
+  /**
+   * Performs setup tasks before each individual test method is run.
+   */
+  abstract protected function setUp();
+
+  /**
    * Checks the matching requirements for Test.
    *
    * @return
@@ -1018,6 +1042,8 @@ abstract class TestBase {
   }
 
   /**
+   * Performs cleanup tasks after each individual test method has been run.
+   *
    * Deletes created files, database tables, and reverts environment changes.
    *
    * This method needs to be invoked for both unit and integration tests.

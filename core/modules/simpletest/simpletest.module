@@ -480,8 +480,23 @@ function simpletest_test_get_all() {
       foreach ($classes as $class) {
         // Test classes need to implement getInfo() to be valid.
         if (class_exists($class) && method_exists($class, 'getInfo')) {
-          $info = call_user_func(array($class, 'getInfo'));
-
+          $reflectionClass = new ReflectionClass($class);
+          // Skip abstract classes and interfaces.
+          if ($reflectionClass->isInstantiable()) {
+            $reflectionMethod = new ReflectionMethod($class, 'getInfo');
+            $declaringClass = $reflectionMethod->getDeclaringClass()->getName();
+            // Avoid testing intermediate classes which do not implement the
+            // method.
+            if ($class == $declaringClass) {
+              $info = call_user_func(array($class, 'getInfo'));
+            }
+            else {
+              continue;
+            }
+          }
+          else {
+            continue;
+          }
           // If this test class requires a non-existing module, skip it.
           if (!empty($info['dependencies'])) {
             foreach ($info['dependencies'] as $module) {
