@@ -146,21 +146,6 @@ function block_menu() {
 }
 
 /**
- * Access callback: Only enabled themes can be accessed.
- *
- * Path:
- * - admin/structure/block/list/% (for each theme)
- *
- * @param $theme
- *   Either the name of a theme or a full theme object.
- *
- * @see block_menu()
- */
-function _block_themes_access($theme) {
-  return user_access('administer blocks') && drupal_theme_access($theme);
-}
-
-/**
  * Theme callback: Uses the theme specified in the parameter.
  *
  * @param $theme
