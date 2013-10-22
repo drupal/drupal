@@ -2,6 +2,7 @@ name: 'HAL'
 type: module
 description: 'Serializes entities using Hypertext Application Language.'
 package: Web services
+version: VERSION
 core: 8.x
 dependencies:
   - rest

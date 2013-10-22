@@ -11,6 +11,7 @@
 name: 'Test theme'
 type: theme
 description: 'Theme for testing the theme system'
+version: VERSION
 core: 8.x
 hidden: true
 stylesheets-remove:

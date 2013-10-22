@@ -2,6 +2,7 @@ name: 'Breakpoint theme test'
 type: module
 description: 'Test breakpoints provided by themes'
 package: Other
+version: VERSION
 core: 8.x
 hidden: true
 dependencies:
