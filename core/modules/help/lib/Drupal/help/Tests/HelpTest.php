@@ -70,7 +70,7 @@ class HelpTest extends WebTestBase {
     $this->assertRaw(drupal_get_path('module', 'help') . '/css/help.module.css', 'The help.module.css file is present in the HTML.');
 
     // Verify that introductory help text exists, goes for 100% module coverage.
-    $this->assertRaw(t('For more information, refer to the specific topics listed in the next section or to the <a href="@drupal">online Drupal handbooks</a>.', array('@drupal' => 'http://drupal.org/documentation')), 'Help intro text correctly appears.');
+    $this->assertRaw(t('For more information, refer to the subjects listed in the Help Topics section or to the <a href="!docs">online documentation</a> and <a href="!support">support</a> pages at <a href="!drupal">drupal.org</a>.', array('!docs' => 'https://drupal.org/documentation', '!support' => 'https://drupal.org/support', '!drupal' => 'https://drupal.org')), 'Help intro text correctly appears.');
 
     // Verify that help topics text appears.
     $this->assertRaw('<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>', 'Help topics text correctly appears.');

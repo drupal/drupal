@@ -33,24 +33,24 @@ function help_help($path, $arg) {
       $output = '<h2>' . t('Getting Started') . '</h2>';
       $output .= '<p>' . t('Follow these steps to set up and start using your website:') . '</p>';
       $output .= '<ol>';
-      $output .= '<li>' . t('<strong>Configure your website</strong> Once logged in, visit the <a href="@admin">administration section</a>, where you can <a href="@config">customize and configure</a> all aspects of your website.', array('@admin' => url('admin'), '@config' => url('admin/config'))) . '</li>';
-      $output .= '<li>' . t('<strong>Enable additional functionality</strong> Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.', array('@modules' => url('admin/modules'), '@download_modules' => 'http://drupal.org/project/modules')) . '</li>';
-      $output .= '<li>' . t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.', array('@themes' => url('admin/appearance'), '@download_themes' => 'http://drupal.org/project/themes')) . '</li>';
+      $output .= '<li>' . t('<strong>Configure your website</strong> Once logged in, visit the <a href="!admin">Administration page</a>, where you may <a href="!config">customize and configure</a> all aspects of your website.', array('!admin' => \Drupal::url('system.admin'), '!config' => \Drupal::url('system.admin_config'))) . '</li>';
+      $output .= '<li>' . t('<strong>Enable additional functionality</strong> Next, visit the <a href="!modules">Extend page</a> and enable modules that suit your specific needs. You can find additional modules at the <a href="!download_modules">Drupal.org modules page</a>.', array('!modules' => \Drupal::url('system.modules_list'), '!download_modules' => 'https://drupal.org/project/modules')) . '</li>';
+      $output .= '<li>' . t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href="!themes">Appearance page</a>. You may choose from one of the included themes or download additional themes from the <a href="!download_themes">Drupal.org themes page</a>.', array('!themes' => \Drupal::url('system.themes_page'), '!download_themes' => 'https://drupal.org/project/themes')) . '</li>';
       // Display a link to the create content page if Node module is enabled.
       if (\Drupal::moduleHandler()->moduleExists('node')) {
-        $output .= '<li>' . t('<strong>Start posting content</strong> Finally, you can <a href="@content">add new content</a> for your website.', array('@content' => url('node/add'))) . '</li>';
+        $output .= '<li>' . t('<strong>Start posting content</strong> Finally, you may <a href="!content">add new content</a> to your website.', array('!content' => \Drupal::url('node.add_page'))) . '</li>';
       }
       $output .= '</ol>';
-      $output .= '<p>' . t('For more information, refer to the specific topics listed in the next section or to the <a href="@handbook">online Drupal handbooks</a>. You may also post at the <a href="@forum">Drupal forum</a> or view the wide range of <a href="@support">other support options</a> available.', array('@help' => url('admin/help'), '@handbook' => 'http://drupal.org/documentation', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support')) . '</p>';
+      $output .= '<p>' . t('For more information, refer to the subjects listed in the Help Topics section or to the <a href="!docs">online documentation</a> and <a href="!support">support</a> pages at <a href="!drupal">drupal.org</a>.', array('!docs' => 'https://drupal.org/documentation', '!support' => 'https://drupal.org/support', '!drupal' => 'https://drupal.org')) . '</p>';
       return $output;
     case 'admin/help#help':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Help module provides <a href="@help-page">Help reference pages</a> and context-sensitive advice to guide you through the use and configuration of modules. It is a starting point for the online <a href="@handbook">Drupal handbooks</a>. The handbooks contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the online handbook entry for the <a href="@help">Help module</a>.', array('@help' => 'http://drupal.org/documentation/modules/help/', '@handbook' => 'http://drupal.org/documentation', '@help-page' => url('admin/help'))) . '</p>';
+      $output .= '<p>' . t('The Help module provides <a href="!help-page">Help reference pages</a> and context-sensitive advice to guide you through the use and configuration of modules. It is a starting point for <a href="!handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href="!help">online documentation for the Help module</a>.', array('!help' => 'https://drupal.org/documentation/modules/help/', '!handbook' => 'https://drupal.org/documentation', '!help-page' => \Drupal::url('help.main'))) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Providing a help reference') . '</dt>';
-      $output .= '<dd>' . t('The Help module displays explanations for using each module listed on the main <a href="@help">Help reference page</a>.', array('@help' => url('admin/help'))) . '</dd>';
+      $output .= '<dd>' . t('The Help module displays explanations for using each module listed on the main <a href="!help">Help reference page</a>.', array('!help' => \Drupal::url('help.main'))) . '</dd>';
       $output .= '<dt>' . t('Providing context-sensitive help') . '</dt>';
       $output .= '<dd>' . t('The Help module displays context-sensitive advice and explanations on various pages.') . '</dd>';
       $output .= '</dl>';
