@@ -72,17 +72,17 @@ CSS
 Database system
 - Larry Garfield 'Crell' http://drupal.org/user/26398
 
-  - MySQL driver
-    - Larry Garfield 'Crell' http://drupal.org/user/26398
-    - David Strauss 'David Strauss' http://drupal.org/user/93254
+  MySQL DB driver
+  - Larry Garfield 'Crell' http://drupal.org/user/26398
+  - David Strauss 'David Strauss' http://drupal.org/user/93254
 
-  - PostgreSQL driver
-    - Damien Tournoud 'DamZ' http://drupal.org/user/22211
-    - Josh Waihi 'fiasco' http://drupal.org/user/188162
+  PostgreSQL DB driver
+  - Damien Tournoud 'DamZ' http://drupal.org/user/22211
+  - Josh Waihi 'fiasco' http://drupal.org/user/188162
 
-  - Sqlite driver
-    - Damien Tournoud 'DamZ' http://drupal.org/user/22211
-    - Károly Négyesi 'chx' http://drupal.org/user/9446
+  Sqlite DB driver
+  - Damien Tournoud 'DamZ' http://drupal.org/user/22211
+  - Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Database update system
 - ?
