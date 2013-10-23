@@ -36,6 +36,12 @@ if (ini_get('safe_mode')) {
   exit;
 }
 
+// Exit early if the PHP option open_basedir is enabled to avoid fatal errors.
+if (ini_get('open_basedir')) {
+  print 'Your PHP installation has open_basedir enabled. Drupal currently requires the open_basedir option to be turned off. See the <a href="http://www.php.net/manual/en/ini.core.php#ini.open-basedir">PHP manual</a> for details of how to do this. This issue is currently <a href="https://drupal.org/node/2110863">under discussion at drupal.org</a>.';
+  exit;
+}
+
 // Start the installer.
 require_once __DIR__ . '/includes/install.core.inc';
 install_drupal();
