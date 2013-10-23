@@ -92,12 +92,13 @@ class AttributeTest extends UnitTestCase {
   public function testPrint() {
     $attribute = new Attribute(array('class' => array('example-class'), 'id' => 'example-id', 'enabled' => TRUE));
 
-    $html = '<div' . (string) $attribute . '></div>';
-    $this->assertSelectEquals('div.example-class', '', 1, $html);
-    $this->assertSelectEquals('div.example-class2', '', 0, $html);
+    $content = $this->randomName();
+    $html = '<div' . (string) $attribute . '>' . $content . '</div>';
+    $this->assertSelectEquals('div.example-class', $content, 1, $html);
+    $this->assertSelectEquals('div.example-class2', $content, 0, $html);
 
-    $this->assertSelectEquals('div#example-id', '', 1, $html);
-    $this->assertSelectEquals('div#example-id2', '', 0, $html);
+    $this->assertSelectEquals('div#example-id', $content, 1, $html);
+    $this->assertSelectEquals('div#example-id2', $content, 0, $html);
 
     $this->assertTrue(strpos($html, 'enabled') !== FALSE);
   }
