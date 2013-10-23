@@ -148,11 +148,8 @@ class CommentFormController extends ContentEntityFormController {
     elseif ($this->currentUser->isAuthenticated()) {
       $form['author']['name']['#type'] = 'item';
       $form['author']['name']['#value'] = $form['author']['name']['#default_value'];
-      $username = array(
-        '#theme' => 'username',
-        '#account' => $this->currentUser,
-      );
-      $form['author']['name']['#markup'] = drupal_render($username);
+      $form['author']['name']['#theme'] = 'username';
+      $form['author']['name']['#account'] = $this->currentUser;
     }
 
     // Add author e-mail and homepage fields depending on the current user.

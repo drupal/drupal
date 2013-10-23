@@ -121,10 +121,6 @@ function comment_admin_overview($form, &$form_state, $arg) {
     $entity_uri = $entity->uri();
     // Remove the first node title from the node_titles array and attach to
     // the comment.
-    $username = array(
-      '#theme' => 'username',
-      '#account' => comment_prepare_author($comment),
-    );
     $body = '';
     if (!empty($comment->comment_body->value)) {
       $body = $comment->comment_body->value;
@@ -139,7 +135,12 @@ function comment_admin_overview($form, &$form_state, $arg) {
           '#options' => array('attributes' => array('title' => truncate_utf8($body, 128)), 'fragment' => 'comment-' . $comment->id()),
         ),
       ),
-      'author' => drupal_render($username),
+      'author' => array(
+        'data' => array(
+          '#theme' => 'username',
+          '#account' => comment_prepare_author($comment),
+        ),
+      ),
       'posted_in' => array(
         'data' => array(
           '#type' => 'link',
