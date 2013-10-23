@@ -48,7 +48,7 @@ abstract class AccountFormController extends ContentEntityFormController {
    */
   public function form(array $form, array &$form_state) {
     $account = $this->entity;
-    global $user;
+    $user = $this->currentUser();
     $config = \Drupal::config('user.settings');
 
     $language_interface = language(Language::TYPE_INTERFACE);
