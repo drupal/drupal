@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\DateTimeTest.
+ * Contains \Drupal\system\Tests\System\DateTimeTest.
  */
 
 namespace Drupal\system\Tests\System;
@@ -95,6 +95,13 @@ class DateTimeTest extends WebTestBase {
     $this->assertText(t('Custom date format added.'), 'Date format added confirmation message appears.');
     $this->assertText($date_format_id, 'Custom date format appears in the date format list.');
     $this->assertText(t('Delete'), 'Delete link for custom date format appears.');
+
+    // Edit the custom date format and re-save without editing the format.
+    $this->drupalGet('admin/config/regional/date-time');
+    $this->clickLink(t('Edit'));
+    $this->drupalPostForm(NULL, NULL, t('Save format'));
+    $this->assertUrl('admin/config/regional/date-time', array('absolute' => TRUE), 'Correct page redirection.');
+    $this->assertText(t('Custom date format updated.'), 'Custom date format successfully updated.');
 
     // Edit custom date format.
     $this->drupalGet('admin/config/regional/date-time');
