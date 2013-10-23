@@ -23,6 +23,7 @@ config.export:
   path: '/admin/config/development/configuration/export'
   defaults:
     _form: '\Drupal\config\Form\ConfigExportForm'
+    _title: 'Export'
   requirements:
     _permission: 'export configuration'
 
@@ -30,6 +31,7 @@ config.import:
   path: '/admin/config/development/configuration/import'
   defaults:
     _form: '\Drupal\config\Form\ConfigImportForm'
+    _title: 'Import'
   requirements:
     _permission: 'import configuration'
 
@@ -37,5 +39,6 @@ config.sync:
   path: '/admin/config/development/configuration/sync'
   defaults:
     _form: '\Drupal\config\Form\ConfigSync'
+    _title: 'Synchronize'
   requirements:
     _permission: 'synchronize configuration'
