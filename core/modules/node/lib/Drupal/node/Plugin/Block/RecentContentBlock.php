@@ -10,6 +10,7 @@ namespace Drupal\node\Plugin\Block;
 use Drupal\block\BlockBase;
 use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides a 'Recent content' block.
@@ -31,10 +32,10 @@ class RecentContentBlock extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::access().
+   * {@inheritdoc}
    */
-  public function access() {
-    return user_access('access content');
+  public function access(AccountInterface $account) {
+    return $account->hasPermission('access content');
   }
 
   /**

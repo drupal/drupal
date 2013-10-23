@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\ViewExecutableFactory;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Base class for Views block plugins.
@@ -79,7 +80,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function access() {
+  public function access(AccountInterface $account) {
     return $this->view->access($this->displayID);
   }
 

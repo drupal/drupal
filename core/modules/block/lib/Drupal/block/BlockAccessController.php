@@ -67,7 +67,7 @@ class BlockAccessController extends EntityAccessController implements EntityCont
     }
 
     // If the plugin denies access, then deny access.
-    if (!$entity->getPlugin()->access()) {
+    if (!$entity->getPlugin()->access($account)) {
       return FALSE;
     }
 

@@ -8,6 +8,7 @@
 namespace Drupal\forum\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides a base class for Forum blocks.
@@ -28,10 +29,10 @@ abstract class ForumBlockBase extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::access().
+   * {@inheritdoc}
    */
-  public function access() {
-    return user_access('access content');
+  public function access(AccountInterface $account) {
+    return $account->hasPermission('access content');
   }
 
   /**

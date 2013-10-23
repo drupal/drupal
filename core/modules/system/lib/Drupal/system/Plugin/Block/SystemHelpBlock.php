@@ -12,6 +12,7 @@ use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -76,9 +77,9 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::access().
+   * {@inheritdoc}
    */
-  public function access() {
+  public function access(AccountInterface $account) {
     $this->help = $this->getActiveHelp($this->request);
     return (bool) $this->help;
   }

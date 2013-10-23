@@ -10,6 +10,7 @@ namespace Drupal\language\Plugin\Block;
 use Drupal\block\BlockBase;
 use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides a 'Language switcher' block.
@@ -23,9 +24,9 @@ use Drupal\Core\Annotation\Translation;
 class LanguageBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::access().
+   * {@inheritdoc}
    */
-  function access() {
+  function access(AccountInterface $account) {
     return language_multilingual();
   }
 

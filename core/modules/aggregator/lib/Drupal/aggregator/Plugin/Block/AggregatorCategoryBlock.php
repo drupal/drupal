@@ -13,6 +13,7 @@ use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -83,11 +84,11 @@ class AggregatorCategoryBlock extends BlockBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::access().
+   * {@inheritdoc}
    */
-  public function access() {
+  public function access(AccountInterface $account) {
     // Only grant access to users with the 'access news feeds' permission.
-    return user_access('access news feeds');
+    return $account->hasPermission('access news feeds');
   }
 
   /**

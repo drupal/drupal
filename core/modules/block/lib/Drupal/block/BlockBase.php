@@ -11,6 +11,7 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines a base block implementation that most blocks plugins will extend.
@@ -66,7 +67,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function access() {
+  public function access(AccountInterface $account) {
     // By default, the block is visible unless user-configured rules indicate
     // that it should be hidden.
     return TRUE;
