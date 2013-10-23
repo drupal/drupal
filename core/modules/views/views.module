@@ -197,57 +197,6 @@ function views_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Returns a list of plugins and metadata about them.
- *
- * @return array
- *   An array keyed by PLUGIN_TYPE:PLUGIN_NAME, like 'display:page' or
- *   'pager:full', containing an array with the following keys:
- *   - title: The plugin's title.
- *   - type: The plugin type.
- *   - module: The module providing the plugin.
- *   - views: An array of enabled Views that are currently using this plugin,
- *     keyed by machine name.
- */
-function views_plugin_list() {
-  $plugin_data = views_get_plugin_definitions();
-  $plugins = array();
-  foreach (views_get_enabled_views() as $view) {
-    foreach ($view->get('display') as $display) {
-      foreach ($plugin_data as $type => $info) {
-        if ($type == 'display' && isset($display['display_plugin'])) {
-          $name = $display['display_plugin'];
-        }
-        elseif (isset($display['display_options']["{$type}_plugin"])) {
-          $name = $display['display_options']["{$type}_plugin"];
-        }
-        elseif (isset($display['display_options'][$type]['type'])) {
-          $name = $display['display_options'][$type]['type'];
-        }
-        else {
-          continue;
-        }
-
-        // Key first by the plugin type, then the name.
-        $key = $type . ':' . $name;
-        // Add info for this plugin.
-        if (!isset($plugins[$key])) {
-          $plugins[$key] = array(
-            'type' => $type,
-            'title' => check_plain($info[$name]['title']),
-            'provider' => check_plain($info[$name]['provider']),
-            'views' => array(),
-          );
-        }
-
-        // Add this view to the list for this plugin.
-        $plugins[$key]['views'][$view->id()] = $view->id();
-      }
-    }
-  }
-  return $plugins;
-}
-
-/**
  * A theme preprocess function to automatically allow view-based node
  * templates if called from a view.
  *
@@ -879,28 +828,11 @@ function views_library_info() {
  *
  * @return
  *   A keyed array of in the form of 'base_table' => 'Description'.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::fetchPluginNames().
  */
 function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
-  $definitions = Views::pluginManager($type)->getDefinitions();
-  $plugins = array();
-
-  foreach ($definitions as $id => $plugin) {
-    // Skip plugins that don't conform to our key, if they have one.
-    if ($key && isset($plugin['display_types']) && !in_array($key, $plugin['display_types'])) {
-      continue;
-    }
-
-    if (empty($plugin['no_ui']) && (empty($base) || empty($plugin['base']) || array_intersect($base, $plugin['base']))) {
-      $plugins[$id] = $plugin['title'];
-    }
-  }
-
-  if (!empty($plugins)) {
-    asort($plugins);
-    return $plugins;
-  }
-
-  return $plugins;
+  return Views::fetchPluginNames($type, $key, $base);
 }
 
 /**
@@ -908,23 +840,38 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
  *
  * @return array
  *   An array of plugin definitions for all types.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getPluginDefinitions().
  */
 function views_get_plugin_definitions() {
-  $plugins = array();
-  foreach (ViewExecutable::getPluginTypes() as $plugin_type) {
-    $plugins[$plugin_type] = Views::pluginManager($plugin_type)->getDefinitions();
-  }
+  return Views::getPluginDefinitions();
+}
 
-  return $plugins;
+/**
+ * Returns a list of plugins and metadata about them.
+ *
+ * @return array
+ *   An array keyed by PLUGIN_TYPE:PLUGIN_NAME, like 'display:page' or
+ *   'pager:full', containing an array with the following keys:
+ *   - title: The plugin's title.
+ *   - type: The plugin type.
+ *   - module: The module providing the plugin.
+ *   - views: An array of enabled Views that are currently using this plugin,
+ *     keyed by machine name.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::pluginList().
+ */
+function views_plugin_list() {
+  return Views::pluginList();
 }
 
 /**
  * Get enabled display extenders.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getEnabledDisplayExtenders().
  */
 function views_get_enabled_display_extenders() {
-  $enabled = array_filter((array) \Drupal::config('views.settings')->get('display_extenders'));
-
-  return drupal_map_assoc($enabled);
+  return Views::getEnabledDisplayExtenders();
 }
 
 /**
@@ -942,64 +889,38 @@ function views_get_enabled_display_extenders() {
  *   array($view, $display_id),
  * );
  * @endcode
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getApplicableViews().
  */
 function views_get_applicable_views($type) {
-  // Get all display plugins which provides the type.
-  $display_plugins = Views::pluginManager('display')->getDefinitions();
-  $ids = array();
-  foreach ($display_plugins as $id => $definition) {
-    if (!empty($definition[$type])) {
-      $ids[$id] = $id;
-    }
-  }
-
-  $entity_ids = \Drupal::service('entity.query')->get('view')
-    ->condition('status', TRUE)
-    ->condition("display.*.display_plugin", $ids, 'IN')
-    ->execute();
-
-  $result = array();
-  foreach (\Drupal::entityManager()->getStorageController('view')->loadMultiple($entity_ids) as $view) {
-    // Check each display to see if it meets the criteria and is enabled.
-    $executable = $view->getExecutable();
-    $executable->initDisplay();
-    foreach ($executable->displayHandlers as $id => $handler) {
-      if (!empty($handler->definition[$type]) && $handler->isEnabled()) {
-        $result[] = array($executable, $id);
-      }
-    }
-  }
-
-  return $result;
+  return Views::getApplicableViews($type);
 }
 
 /**
  * Returns an array of all views as fully loaded $view objects.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getAllViews().
  */
 function views_get_all_views() {
-  return \Drupal::entityManager()->getStorageController('view')->loadMultiple();
+  return Views::getAllViews();
 }
 
 /**
  * Returns an array of all enabled views, as fully loaded $view objects.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getEnabledViews().
  */
 function views_get_enabled_views() {
-  $query = \Drupal::entityQuery('view')
-    ->condition('status', TRUE)
-    ->execute();
-
-  return entity_load_multiple('view', $query);
+  return Views::getEnabledViews();
 }
 
 /**
  * Returns an array of all disabled views, as fully loaded $view objects.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getDisabledViews().
  */
 function views_get_disabled_views() {
-  $query = \Drupal::entityQuery('view')
-    ->condition('status', FALSE)
-    ->execute();
-
-  return entity_load_multiple('view', $query);
+  return Views::getDisabledViews();
 }
 
 /**
@@ -1026,61 +947,11 @@ function views_get_disabled_views() {
  * @return array
  *  an associative array for use in select.
  *  - key: view name and display id separated by ':', or the view name only
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getViewsAsOptions().
  */
 function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclude_view = NULL, $optgroup = FALSE, $sort = FALSE) {
-
-  // Filter the big views array.
-  switch ($filter) {
-    case 'all':
-    case 'disabled':
-    case 'enabled':
-      $func = "views_get_{$filter}_views";
-      $views = $func();
-      break;
-    default:
-      return array();
-  }
-
-  // Prepare exclude view strings for comparison.
-  if (empty($exclude_view)) {
-    $exclude_view_name = '';
-    $exclude_view_display = '';
-  }
-  elseif (is_object($exclude_view)) {
-    $exclude_view_name = $exclude_view->storage->id();
-    $exclude_view_display = $exclude_view->current_display;
-  }
-  else {
-    // Append a ':' to the $exclude_view string so we always have more than one
-    // item to explode.
-    list($exclude_view_name, $exclude_view_display) = explode(':', "$exclude_view:");
-  }
-
-  $options = array();
-  foreach ($views as $view) {
-    $id = $view->id();
-    // Return only views.
-    if ($views_only && $id != $exclude_view_name) {
-      $options[$id] = $view->label();
-    }
-    // Return views with display ids.
-    else {
-      foreach ($view->get('display') as $display_id => $display) {
-        if (!($id == $exclude_view_name && $display_id == $exclude_view_display)) {
-          if ($optgroup) {
-            $options[$id][$id . ':' . $display['id']] = t('@view : @display', array('@view' => $id, '@display' => $display['id']));
-          }
-          else {
-            $options[$id . ':' . $display['id']] = t('View: @view - Display: @display', array('@view' => $id, '@display' => $display['id']));
-          }
-        }
-      }
-    }
-  }
-  if ($sort) {
-    ksort($options);
-  }
-  return $options;
+  return Views::getViewsAsOptions($views_only, $filter, $exclude_view, $optgroup, $sort);
 }
 
 /**
