@@ -171,17 +171,17 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
         $entry = entity_create('aggregator_item', array('langcode' => $feed->language()->id));
       }
       if ($item['timestamp']) {
-        $entry->timestamp->value = $item['timestamp'];
+        $entry->setPostedTime($item['timestamp']);
       }
 
       // Make sure the item title and author fit in the 255 varchar column.
-      $entry->title->value = truncate_utf8($item['title'], 255, TRUE, TRUE);
-      $entry->author->value = truncate_utf8($item['author'], 255, TRUE, TRUE);
+      $entry->setTitle(truncate_utf8($item['title'], 255, TRUE, TRUE));
+      $entry->setAuthor(truncate_utf8($item['author'], 255, TRUE, TRUE));
 
-      $entry->fid->value = $feed->id();
-      $entry->link->value = $item['link'];
-      $entry->description->value = $item['description'];
-      $entry->guid->value = $item['guid'];
+      $entry->setFeedId($feed->id());
+      $entry->setLink($item['link']);
+      $entry->setDescription($item['description']);
+      $entry->setGuid($item['guid']);
       $entry->save();
     }
   }

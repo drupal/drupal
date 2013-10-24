@@ -63,21 +63,22 @@ function aggregator_load_feed_items($type, $data = NULL, $limit = 20) {
 function template_preprocess_aggregator_item(&$variables) {
   $item = $variables['aggregator_item'];
 
-  $variables['feed_url'] = check_url($item->link->value);
-  $variables['feed_title'] = check_plain($item->title->value);
-  $variables['content'] = aggregator_filter_xss($item->description->value);
+  $variables['feed_url'] = check_url($item->getLink());
+  $variables['feed_title'] = check_plain($item->getTitle());
+  $variables['content'] = aggregator_filter_xss($item->getDescription());
 
   $variables['source_url'] = '';
   $variables['source_title'] = '';
-  if (isset($item->ftitle) && isset($item->fid->value)) {
-    $variables['source_url'] = url("aggregator/sources/$item->fid->value");
+  $fid = $item->getFeedId();
+  if (isset($item->ftitle) && $fid !== NULL) {
+    $variables['source_url'] = url('aggregator/sources/' . $fid);
     $variables['source_title'] = check_plain($item->ftitle);
   }
-  if (date('Ymd', $item->timestamp->value) == date('Ymd')) {
-    $variables['source_date'] = t('%ago ago', array('%ago' => format_interval(REQUEST_TIME - $item->timestamp->value)));
+  if (date('Ymd', $item->getPostedTime()) == date('Ymd')) {
+    $variables['source_date'] = t('%ago ago', array('%ago' => format_interval(REQUEST_TIME - $item->getPostedTime())));
   }
   else {
-    $variables['source_date'] = format_date($item->timestamp->value, 'medium');
+    $variables['source_date'] = format_date($item->getPostedTime(), 'medium');
   }
 
   $variables['categories'] = array();
@@ -185,18 +186,18 @@ function template_preprocess_aggregator_summary_items(&$variables) {
 function template_preprocess_aggregator_summary_item(&$variables) {
   $item = $variables['aggregator_item'];
 
-  $variables['url'] = l(check_plain($item->label()), check_url(url($item->link->value, array('absolute' => TRUE))), array(
+  $variables['url'] = l(check_plain($item->label()), check_url(url($item->getLink(), array('absolute' => TRUE))), array(
     'attributes' => array(
-      'class' => array('feed-item-url',),
+      'class' => array('feed-item-url'),
     ),
   ));
   $variables['age'] = array(
     '#theme' => 'datetime',
     '#attributes' => array(
-      'datetime' => format_date($item->timestamp->value, 'html_datetime', '', 'UTC'),
-      'class' => array('feed-item-age'),
+      'datetime' => format_date($item->getPostedTime(), 'html_datetime', '', 'UTC'),
+      'class' => array('feed-item-age',),
     ),
-    '#text' => t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->timestamp->value))),
+    '#text' => t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->getPostedTime()))),
     '#html' => TRUE,
   );
 }

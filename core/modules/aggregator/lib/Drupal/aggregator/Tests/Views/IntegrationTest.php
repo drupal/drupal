@@ -101,13 +101,13 @@ class IntegrationTest extends ViewUnitTestBase {
     // Ensure that the rendering of the linked title works as expected.
     foreach ($view->result as $row) {
       $iid = $view->field['iid']->getValue($row);
-      $expected_link = l($items[$iid]->title->value, $items[$iid]->link->value, array('absolute' => TRUE));
+      $expected_link = l($items[$iid]->getTitle(), $items[$iid]->getLink(), array('absolute' => TRUE));
       $this->assertEqual($view->field['title']->advancedRender($row), $expected_link, 'Ensure the right link is generated');
 
-      $expected_author = aggregator_filter_xss($items[$iid]->author->value);
+      $expected_author = aggregator_filter_xss($items[$iid]->getAuthor());
       $this->assertEqual($view->field['author']->advancedRender($row), $expected_author, 'Ensure the author got filtered');
 
-      $expected_description = aggregator_filter_xss($items[$iid]->description->value);
+      $expected_description = aggregator_filter_xss($items[$iid]->getDescription());
       $this->assertEqual($view->field['description']->advancedRender($row), $expected_description, 'Ensure the author got filtered');
     }
   }

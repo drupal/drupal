@@ -50,7 +50,7 @@ class ItemStorageController extends FieldableDatabaseStorageController implement
    * {@inheritdoc}
    */
   public function saveCategories(Item $item) {
-    $result = $this->database->query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $item->fid->value));
+    $result = $this->database->query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $item->getFeedId()));
     foreach ($result as $category) {
       $this->database->merge('aggregator_category_item')
         ->key(array(
