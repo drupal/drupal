@@ -7,6 +7,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
@@ -43,6 +44,13 @@ class CommentRenderController extends EntityRenderController implements EntityCo
   protected $moduleHandler;
 
   /**
+   * The CSRF token manager service.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $csrfToken;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
@@ -50,7 +58,8 @@ class CommentRenderController extends EntityRenderController implements EntityCo
       $entity_type,
       $container->get('entity.manager'),
       $container->get('field.info'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('csrf_token')
     );
   }
 
@@ -65,12 +74,15 @@ class CommentRenderController extends EntityRenderController implements EntityCo
    *   The field info service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   *   The CSRF token manager service.
    */
-  public function __construct($entity_type, EntityManager $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler) {
+  public function __construct($entity_type, EntityManager $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
     parent::__construct($entity_type);
     $this->entityManager = $entity_manager;
     $this->fieldInfo = $field_info;
     $this->moduleHandler = $module_handler;
+    $this->csrfToken = $csrf_token;
   }
 
   /**
@@ -124,13 +136,7 @@ class CommentRenderController extends EntityRenderController implements EntityCo
         '#attributes' => array('class' => array('links', 'inline')),
       );
       if (empty($entity->in_preview)) {
-        $entity->content['links'][$this->entityType] = array(
-          '#theme' => 'links__comment__comment',
-          // The "entity" property is specified to be present, so no need to
-          // check.
-          '#links' => comment_links($entity, $commented_entity, $entity->field_name->value),
-          '#attributes' => array('class' => array('links', 'inline')),
-        );
+        $entity->content['links'][$this->entityType] = $this->buildLinks($entity, $commented_entity);
       }
 
       if (!isset($entity->content['#attached'])) {
@@ -141,6 +147,81 @@ class CommentRenderController extends EntityRenderController implements EntityCo
         $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-new-indicator');
       }
     }
+  }
+
+  /**
+   * Build the default links (reply, edit, delete …) for a comment.
+   *
+   * @param \Drupal\comment\Entity\CommentInterface $entity
+   *   The comment object.
+   * @param \Drupal\Core\Entity\EntityInterface $commented_entity
+   *   The entity to which the comment is attached.
+   *
+   * @return array
+   *   An array that can be processed by drupal_pre_render_links().
+   */
+  protected function buildLinks(CommentInterface $entity, EntityInterface $commented_entity) {
+    $links = array();
+    $status = $commented_entity->get($entity->field_name->value)->status;
+
+    if ($status == COMMENT_OPEN) {
+      if ($entity->access('delete')) {
+        $links['comment-delete'] = array(
+          'title' => t('delete'),
+          'href' => "comment/{$entity->id()}/delete",
+          'html' => TRUE,
+        );
+      }
+
+      if ($entity->access('update')) {
+        $links['comment-edit'] = array(
+          'title' => t('edit'),
+          'href' => "comment/{$entity->id()}/edit",
+          'html' => TRUE,
+        );
+      }
+      if ($entity->access('create')) {
+        $links['comment-reply'] = array(
+          'title' => t('reply'),
+          'href' => "comment/reply/{$entity->entity_type->value}/{$entity->entity_id->value}/{$entity->field_name->value}/{$entity->id()}",
+          'html' => TRUE,
+        );
+      }
+      if ($entity->status->value == COMMENT_NOT_PUBLISHED && $entity->access('approve')) {
+        $links['comment-approve'] = array(
+          'title' => t('approve'),
+          'href' => "comment/{$entity->id()}/approve",
+          'html' => TRUE,
+          'query' => array('token' => $this->csrfToken->get("comment/{$entity->id()}/approve")),
+        );
+      }
+      if (empty($links)) {
+        $comment_post_forbidden = array(
+          '#theme' => 'comment_post_forbidden',
+          '#commented_entity' => $commented_entity,
+          '#field_name' => $entity->field_name->value,
+        );
+        $links['comment-forbidden']['title'] = drupal_render($comment_post_forbidden);
+        $links['comment-forbidden']['html'] = TRUE;
+      }
+    }
+
+    // Add translations link for translation-enabled comment bundles.
+    if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($entity)) {
+      $links['comment-translations'] = array(
+        'title' => t('translate'),
+        'href' => 'comment/' . $entity->id() . '/translations',
+        'html' => TRUE,
+      );
+    }
+
+    return array(
+      '#theme' => 'links__comment__comment',
+      // The "entity" property is specified to be present, so no need to
+      // check.
+      '#links' => $links,
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
   }
 
   /**
