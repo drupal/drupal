@@ -2439,6 +2439,21 @@ function drupal_merge_js_settings($settings_items) {
 }
 
 /**
+ * Merges two #attached arrays.
+ *
+ * @param array $a
+ *   An #attached array.
+ * @param array $b
+ *   Another #attached array.
+ *
+ * @return array
+ *   The merged #attached array.
+ */
+function drupal_merge_attached(array $a, array $b) {
+  return NestedArray::mergeDeep($a, $b);
+}
+
+/**
  * #pre_render callback to add the elements needed for JavaScript tags to be rendered.
  *
  * This function evaluates the aggregation enabled/disabled condition on a group
@@ -3580,7 +3595,7 @@ function drupal_pre_render_link($element) {
  * properties of the parent are used.
  */
 function drupal_pre_render_links($element) {
-  $element += array('#links' => array());
+  $element += array('#links' => array(), '#attached' => array());
   foreach (element_children($element) as $key) {
     $child = &$element[$key];
     // If the child has links which have not been printed yet and the user has
@@ -3590,6 +3605,10 @@ function drupal_pre_render_links($element) {
       // Mark the child as having been printed already (so that its links
       // cannot be mistakenly rendered twice).
       $child['#printed'] = TRUE;
+    }
+    // Merge attachments.
+    if (isset($child['#attached'])) {
+      $element['#attached'] = drupal_merge_attached($element['#attached'], $child['#attached']);
     }
   }
   return $element;
@@ -4139,12 +4158,7 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
 
   // Collect all #attached for this element.
   if (isset($elements['#attached'])) {
-    foreach ($elements['#attached'] as $key => $value) {
-      if (!isset($attached[$key])) {
-        $attached[$key] = array();
-      }
-      $attached[$key] = array_merge($attached[$key], $value);
-    }
+    $attached = drupal_merge_attached($attached, $elements['#attached']);
   }
   if ($children = element_children($elements)) {
     foreach ($children as $child) {
