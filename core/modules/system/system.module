@@ -620,17 +620,6 @@ function system_menu() {
     'weight' => 9,
     'menu_name' => 'admin',
   );
-  $items['admin/tasks'] = array(
-    'title' => 'Tasks',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -20,
-  );
-  $items['admin/index'] = array(
-    'title' => 'Index',
-    'route_name' => 'system.admin_index',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -18,
-  );
 
   // Menu items that are basically just menu blocks.
   $items['admin/structure'] = array(
@@ -648,34 +637,6 @@ function system_menu() {
     'position' => 'left',
     'weight' => -6,
   );
-  $items['admin/appearance/list'] = array(
-    'title' => 'List',
-    'description' => 'Select and configure your theme',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/appearance/settings'] = array(
-    'title' => 'Settings',
-    'description' => 'Configure default and theme specific settings.',
-    'route_name' => 'system.theme_settings',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 100,
-  );
-  // Theme configuration local tasks.
-  $items['admin/appearance/settings/global'] = array(
-    'title' => 'Global settings',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
-  foreach (list_themes(TRUE) as $theme) {
-    if (!empty($theme->status)) {
-      $items['admin/appearance/settings/' . $theme->name] = array(
-        'title' => $theme->info['name'],
-        'route_name' => 'system.theme_settings_' . $theme->name,
-        'type' => MENU_LOCAL_TASK,
-      );
-    }
-  }
 
   // Modules.
   $items['admin/modules'] = array(
@@ -683,26 +644,6 @@ function system_menu() {
     'description' => 'Add and enable modules to extend site functionality.',
     'route_name' => 'system.modules_list',
     'weight' => -2,
-  );
-  $items['admin/modules/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/modules/list/confirm'] = array(
-    'title' => 'List',
-    'route_name' => 'system.modules_list_confirm',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-  $items['admin/modules/uninstall'] = array(
-    'title' => 'Uninstall',
-    'route_name' => 'system.modules_uninstall',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 20,
-  );
-  $items['admin/modules/uninstall/confirm'] = array(
-    'title' => 'Uninstall',
-    'route_name' => 'system.modules_uninstall_confirm',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
   // Configuration.
@@ -806,11 +747,6 @@ function system_menu() {
     'description' => 'Allow users to edit a configured date format.',
     'route_name' => 'system.date_format_edit',
   );
-  $items['admin/config/regional/date-time/formats/manage/%/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
 
   // Search settings.
   $items['admin/config/search'] = array(
@@ -890,7 +826,6 @@ function system_menu() {
     $items['admin/config/regional/date-time/locale'] = array(
       'title' => 'Localize',
       'description' => 'Configure date formats for each locale',
-      'type' => MENU_LOCAL_TASK,
       'weight' => -8,
       'route_name' => 'system.date_format_language_overview',
     );

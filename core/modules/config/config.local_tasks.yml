@@ -1,0 +1,15 @@
+config.sync:
+  route_name: config.sync
+  tab_root_id: config.sync
+  title: 'Synchronize'
+  weight: 0
+config.export:
+  route_name: config.export
+  tab_root_id: config.sync
+  title: Export
+  weight: 1
+config.import:
+  route_name: config.import
+  title: Import
+  tab_root_id: config.sync
+  weight: 2

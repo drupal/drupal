@@ -119,11 +119,6 @@ function shortcut_menu() {
     'title' => 'Delete shortcut',
     'route_name' => 'shortcut.link_delete',
   );
-  $items['user/%user/shortcuts'] = array(
-    'title' => 'Shortcuts',
-    'route_name' => 'shortcut.overview',
-    'type' => MENU_LOCAL_TASK,
-  );
 
   return $items;
 }

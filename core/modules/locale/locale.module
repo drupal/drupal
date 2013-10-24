@@ -176,28 +176,7 @@ function locale_menu() {
     'route_name' => 'locale.translate_page',
     'weight' => -5,
   );
-  $items['admin/config/regional/translate/translate'] = array(
-    'title' => 'Translate',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/config/regional/translate/import'] = array(
-    'title' => 'Import',
-    'route_name' => 'locale.translate_import',
-    'weight' => 20,
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/config/regional/translate/export'] = array(
-    'title' => 'Export',
-    'route_name' => 'locale.translate_export',
-    'weight' => 30,
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/config/regional/translate/settings'] = array(
-    'title' => 'Settings',
-    'route_name' => 'locale.settings',
-    'weight' => 100,
-    'type' => MENU_LOCAL_TASK,
-  );
+
   $items['admin/reports/translations'] = array(
     'title' => 'Available translation updates',
     'route_name' => 'locale.translate_status',

@@ -119,17 +119,6 @@ function forum_menu() {
     'description' => 'Control forum hierarchy settings.',
     'route_name' => 'forum.overview',
   );
-  $items['admin/structure/forum/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/structure/forum/settings'] = array(
-    'title' => 'Settings',
-    'weight' => 100,
-    'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/structure/forum',
-    'route_name' => 'forum.settings',
-  );
   $items['admin/structure/forum/edit/container/%taxonomy_term'] = array(
     'title' => 'Edit container',
     'route_name' => 'forum.edit_container',

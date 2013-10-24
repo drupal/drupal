@@ -1,0 +1,4 @@
+shortcut.overview:
+  route_name: shortcut.overview
+  tab_root_id: user.view
+  title: 'Shortcuts'

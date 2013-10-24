@@ -19,7 +19,3 @@ services:
     class: Drupal\system\PathProcessor\PathProcessorFiles
     tags:
       - { name: path_processor_inbound, priority: 200 }
-  system.route_subscriber:
-    class: Drupal\system\Routing\RouteSubscriber
-    tags:
-      - { name: event_subscriber }

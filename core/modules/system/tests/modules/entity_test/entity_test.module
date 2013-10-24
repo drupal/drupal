@@ -259,11 +259,6 @@ function entity_test_menu() {
       'title arguments' => array('@type' => $entity_type),
       'route_name' => "entity_test.edit_$entity_type",
     );
-
-    $items[$entity_type . '/manage/%' . $entity_type . '/edit'] = array(
-      'title' => 'Edit',
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-    );
   }
 
   return $items;

@@ -2,6 +2,7 @@ user.register:
   path: '/user/register'
   defaults:
     _entity_form: 'user.register'
+    _title: 'Create new account'
   requirements:
     _access_user_register: 'TRUE'
 
@@ -108,6 +109,7 @@ user.pass:
   path: '/user/password'
   defaults:
     _form: '\Drupal\user\Form\UserPasswordForm'
+    _title: 'Request new password'
   requirements:
     _access: 'TRUE'
 
@@ -124,13 +126,13 @@ user.view:
     _entity_view: 'user.full'
     _title_callback: 'Drupal\user\Controller\UserController::userTitle'
   requirements:
-    user: \d+
     _entity_access: 'user.view'
 
 user.login:
   path: '/user/login'
   defaults:
     _form: '\Drupal\user\Form\UserLoginForm'
+    _title: 'Log in'
   requirements:
     _access: 'TRUE'
 

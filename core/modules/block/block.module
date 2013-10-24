@@ -99,15 +99,10 @@ function block_permission() {
  * @todo Clarify the documentation for the per-plugin block admin links.
  */
 function block_menu() {
-  $default_theme = \Drupal::config('system.theme')->get('default');
   $items['admin/structure/block'] = array(
     'title' => 'Block layout',
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
     'route_name' => 'block.admin_display',
-  );
-  $items['admin/structure/block/list'] = array(
-    'title' => 'Block layout',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/structure/block/manage/%block'] = array(
     'title' => 'Configure block',
@@ -116,7 +111,7 @@ function block_menu() {
   $items['admin/structure/block/manage/%block/configure'] = array(
     'title' => 'Configure block',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'context' => MENU_CONTEXT_INLINE,
   );
   $items['admin/structure/block/add/%/%'] = array(
     'title' => 'Place block',
@@ -126,15 +121,9 @@ function block_menu() {
   // Block administration is tied to the theme and plugin definition so
   // that the plugin can appropriately attach to this URL structure.
   // @todo D8: Use dynamic % arguments instead of static, hard-coded theme names
-  //   and plugin IDs to decouple the routes from these dependencies and allow
-  //   hook_menu_local_tasks() to check for the untranslated tab_parent path.
+  //   and plugin IDs to decouple the routes from these dependencies.
   // @see http://drupal.org/node/1067408
   foreach (list_themes() as $key => $theme) {
-    $items["admin/structure/block/list/$key"] = array(
-      'title' => check_plain($theme->info['name']),
-      'type' => $key == $default_theme ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-      'route_name' => "block.admin_display_$key",
-    );
     $items["admin/structure/block/demo/$key"] = array(
       'route_name' => 'block.admin_demo',
       'type' => MENU_CALLBACK,

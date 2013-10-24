@@ -1,0 +1,19 @@
+system.date_format_language_overview:
+  title: 'Localize'
+  route_name: system.date_format_language_overview
+  tab_root_id: system.date_format_list
+  weight: -8
+
+language.admin_overview:
+  title: 'List'
+  route_name: language.admin_overview
+  tab_root_id: language.admin_overview
+language.negotiation:
+  title: 'Detection and selection'
+  route_name: language.negotiation
+  tab_root_id: language.admin_overview
+
+language.edit:
+  title: 'Edit'
+  route_name: language.edit
+  tab_root_id: language.edit

@@ -5,6 +5,7 @@
  * Allows entities to be translated into different languages.
  */
 
+use Drupal\content_translation\Plugin\Derivative\ContentTranslationLocalTasks;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFormControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -274,6 +275,15 @@ function content_translation_menu_alter(array &$items) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function content_translation_local_tasks_alter(&$local_tasks) {
+  // Alters in tab_root_id onto the content translation local task.
+  $derivative = ContentTranslationLocalTasks::create(\Drupal::getContainer(), 'content_translation.local_tasks');
+  $derivative->alterLocalTasks($local_tasks);
 }
 
 /**

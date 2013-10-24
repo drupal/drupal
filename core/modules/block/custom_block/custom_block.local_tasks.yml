@@ -1,0 +1,29 @@
+custom_block.list:
+  title: 'Custom block library'
+  route_name: custom_block.list
+  tab_root_id: block.admin_display
+custom_block.list_sub:
+  title: Blocks
+  route_name: custom_block.list
+  tab_root_id: block.admin_display
+  tab_parent_id: custom_block.list
+custom_block.type_list:
+  title: Types
+  route_name: custom_block.type_list
+  tab_root_id: block.admin_display
+  tab_parent_id: custom_block.list
+
+custom_block.edit:
+  title: Edit
+  route_name: custom_block.edit
+  tab_root_id: custom_block.edit
+custom_block.delete:
+  title: Delete
+  route_name: custom_block.delete
+  tab_root_id: custom_block.edit
+
+# Default tab for custom block type editing.
+custom_block.type_edit:
+  title: 'Edit'
+  route_name: custom_block.type_edit
+  tab_root_id: custom_block.type_edit

@@ -324,6 +324,13 @@ system.theme_settings:
   requirements:
     _permission: 'administer themes'
 
+system.theme_settings_theme:
+  path: '/admin/appearance/settings/{theme}'
+  defaults:
+    _form: '\Drupal\system\Form\ThemeSettingsForm'
+  requirements:
+    _permission: 'administer themes'
+
 '<front>':
   path: '/'
   requirements:

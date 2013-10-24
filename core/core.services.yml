@@ -388,7 +388,7 @@ services:
     class: Drupal\Core\EventSubscriber\ViewSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@content_negotiation']
+    arguments: ['@content_negotiation', '@title_resolver']
   private_key:
     class: Drupal\Core\PrivateKey
     arguments: ['@state']

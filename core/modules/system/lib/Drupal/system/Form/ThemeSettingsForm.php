@@ -65,25 +65,25 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    *
-   * @param string $theme_name
+   * @param string $theme
    *   The theme name.
    */
-  public function buildForm(array $form, array &$form_state, $theme_name = '') {
+  public function buildForm(array $form, array &$form_state, $theme = '') {
     $form = parent::buildForm($form, $form_state);
 
     $themes = list_themes();
 
     // Deny access if the theme is disabled or not found.
-    if (!empty($theme_name) && (empty($themes[$theme_name]) || !$themes[$theme_name]->status)) {
+    if (!empty($theme) && (empty($themes[$theme]) || !$themes[$theme]->status)) {
       throw new NotFoundHttpException();
     }
 
     // Default settings are defined in theme_get_setting() in includes/theme.inc
-    if ($theme_name) {
-      $var = 'theme_' . $theme_name . '_settings';
-      $config_key = $theme_name . '.settings';
+    if ($theme) {
+      $var = 'theme_' . $theme . '_settings';
+      $config_key = $theme . '.settings';
       $themes = list_themes();
-      $features = $themes[$theme_name]->info['features'];
+      $features = $themes[$theme]->info['features'];
     }
     else {
       $var = 'theme_settings';
@@ -129,8 +129,8 @@ class ThemeSettingsForm extends ConfigFormBase {
       '#description' => t('Enable or disable the display of certain page elements.'),
     );
     foreach ($toggles as $name => $title) {
-      if ((!$theme_name) || in_array($name, $features)) {
-        $form['theme_settings']['toggle_' . $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('features.' . $name, $theme_name));
+      if ((!$theme) || in_array($name, $features)) {
+        $form['theme_settings']['toggle_' . $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('features.' . $name, $theme));
         // Disable checkboxes for features not supported in the current configuration.
         if (isset($disabled['toggle_' . $name])) {
           $form['theme_settings']['toggle_' . $name]['#disabled'] = TRUE;
@@ -145,7 +145,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     // Logo settings, only available when file.module is enabled.
-    if ((!$theme_name) || in_array('logo', $features) && $this->moduleHandler->moduleExists('file')) {
+    if ((!$theme) || in_array('logo', $features) && $this->moduleHandler->moduleExists('file')) {
       $form['logo'] = array(
         '#type' => 'details',
         '#title' => t('Logo image settings'),
@@ -160,7 +160,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       $form['logo']['default_logo'] = array(
         '#type' => 'checkbox',
         '#title' => t('Use the default logo supplied by the theme'),
-        '#default_value' => theme_get_setting('logo.use_default', $theme_name),
+        '#default_value' => theme_get_setting('logo.use_default', $theme),
         '#tree' => FALSE,
       );
       $form['logo']['settings'] = array(
@@ -175,7 +175,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       $form['logo']['settings']['logo_path'] = array(
         '#type' => 'textfield',
         '#title' => t('Path to custom logo'),
-        '#default_value' => theme_get_setting('logo.path', $theme_name),
+        '#default_value' => theme_get_setting('logo.path', $theme),
       );
       $form['logo']['settings']['logo_upload'] = array(
         '#type' => 'file',
@@ -185,7 +185,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       );
     }
 
-    if ((!$theme_name) || in_array('favicon', $features) && $this->moduleHandler->moduleExists('file')) {
+    if ((!$theme) || in_array('favicon', $features) && $this->moduleHandler->moduleExists('file')) {
       $form['favicon'] = array(
         '#type' => 'details',
         '#title' => t('Shortcut icon settings'),
@@ -201,7 +201,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       $form['favicon']['default_favicon'] = array(
         '#type' => 'checkbox',
         '#title' => t('Use the default shortcut icon supplied by the theme'),
-        '#default_value' => theme_get_setting('favicon.use_default', $theme_name),
+        '#default_value' => theme_get_setting('favicon.use_default', $theme),
       );
       $form['favicon']['settings'] = array(
         '#type' => 'container',
@@ -215,7 +215,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       $form['favicon']['settings']['favicon_path'] = array(
         '#type' => 'textfield',
         '#title' => t('Path to custom icon'),
-        '#default_value' => theme_get_setting('favicon.path', $theme_name),
+        '#default_value' => theme_get_setting('favicon.path', $theme),
       );
       $form['favicon']['settings']['favicon_upload'] = array(
         '#type' => 'file',
@@ -243,8 +243,8 @@ class ThemeSettingsForm extends ConfigFormBase {
         if ($original_path && isset($friendly_path)) {
           $local_file = strtr($original_path, array('public:/' => PublicStream::basePath()));
         }
-        elseif ($theme_name) {
-          $local_file = drupal_get_path('theme', $theme_name) . '/' . $default;
+        elseif ($theme) {
+          $local_file = drupal_get_path('theme', $theme) . '/' . $default;
         }
         else {
           $local_file = path_to_theme() . '/' . $default;
@@ -258,32 +258,32 @@ class ThemeSettingsForm extends ConfigFormBase {
       }
     }
 
-    if ($theme_name) {
+    if ($theme) {
       // Call engine-specific settings.
-      $function = $themes[$theme_name]->prefix . '_engine_settings';
+      $function = $themes[$theme]->prefix . '_engine_settings';
       if (function_exists($function)) {
         $form['engine_specific'] = array(
           '#type' => 'details',
           '#title' => t('Theme-engine-specific settings'),
-          '#description' => t('These settings only exist for the themes based on the %engine theme engine.', array('%engine' => $themes[$theme_name]->prefix)),
+          '#description' => t('These settings only exist for the themes based on the %engine theme engine.', array('%engine' => $themes[$theme]->prefix)),
         );
         $function($form, $form_state);
       }
 
       // Create a list which includes the current theme and all its base themes.
-      if (isset($themes[$theme_name]->base_themes)) {
-        $theme_keys = array_keys($themes[$theme_name]->base_themes);
-        $theme_keys[] = $theme_name;
+      if (isset($themes[$theme]->base_themes)) {
+        $theme_keys = array_keys($themes[$theme]->base_themes);
+        $theme_keys[] = $theme;
       }
       else {
-        $theme_keys = array($theme_name);
+        $theme_keys = array($theme);
       }
 
       // Save the name of the current theme (if any), so that we can temporarily
       // override the current theme and allow theme_get_setting() to work
       // without having to pass the theme name to it.
       $default_theme = !empty($GLOBALS['theme_key']) ? $GLOBALS['theme_key'] : NULL;
-      $GLOBALS['theme_key'] = $theme_name;
+      $GLOBALS['theme_key'] = $theme;
 
       // Process the theme and all its base themes.
       foreach ($theme_keys as $theme) {

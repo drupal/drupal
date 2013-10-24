@@ -1,14 +1,15 @@
+config.sync:
+  path: '/admin/config/development/configuration'
+  defaults:
+    _form: '\Drupal\config\Form\ConfigSync'
+    _title: 'Synchronize'
+  requirements:
+    _permission: 'synchronize configuration'
+
 config.diff:
   path: '/admin/config/development/configuration/sync/diff/{config_file}'
   defaults:
     _content: '\Drupal\config\Controller\ConfigController::diff'
-  requirements:
-    _permission: 'synchronize configuration'
-
-config_management:
-  path: '/admin/config/development/configuration'
-  defaults:
-    _form: '\Drupal\config\Form\ConfigSync'
   requirements:
     _permission: 'synchronize configuration'
 
@@ -34,11 +35,3 @@ config.import:
     _title: 'Import'
   requirements:
     _permission: 'import configuration'
-
-config.sync:
-  path: '/admin/config/development/configuration/sync'
-  defaults:
-    _form: '\Drupal\config\Form\ConfigSync'
-    _title: 'Synchronize'
-  requirements:
-    _permission: 'synchronize configuration'

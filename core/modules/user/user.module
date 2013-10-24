@@ -738,27 +738,6 @@ function user_menu() {
     'menu_name' => 'account',
   );
 
-  $items['user/login'] = array(
-    'title' => 'Log in',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  // Other authentication methods may add pages below user/login/.
-  $items['user/login/default'] = array(
-    'title' => 'Username and password',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
-  $items['user/register'] = array(
-    'title' => 'Create new account',
-    'type' => MENU_LOCAL_TASK,
-    'route_name' => 'user.register',
-  );
-
-  $items['user/password'] = array(
-    'title' => 'Request new password',
-    'route_name' => 'user.pass',
-    'type' => MENU_LOCAL_TASK,
-  );
   // Since menu_get_ancestors() does not support multiple placeholders in a row,
   // this MENU_CALLBACK cannot be removed yet.
   $items['user/reset/%/%/%'] = array(
@@ -836,21 +815,12 @@ function user_menu() {
     'title arguments' => array(1),
     'route_name' => 'user.view',
   );
-  $items['user/%user/view'] = array(
-    'title' => 'View',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
   $items['user/%user/cancel'] = array(
     'route_name' => 'user.cancel',
   );
   $items['user/%user/cancel/confirm/%/%'] = array(
     'title' => 'Confirm account cancellation',
     'route_name' => 'user.cancel_confirm',
-  );
-  $items['user/%user/edit'] = array(
-    'title' => 'Edit',
-    'route_name' => 'user.edit',
-    'type' => MENU_LOCAL_TASK,
   );
   return $items;
 }

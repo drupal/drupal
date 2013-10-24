@@ -1503,6 +1503,7 @@ function theme_enable($theme_list) {
 
   \Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
+  \Drupal::cache('cache')->deleteTags(array('local_task' => 1));
   drupal_theme_rebuild();
 
   // Invoke hook_themes_enabled() after the themes have been enabled.
@@ -1539,6 +1540,7 @@ function theme_disable($theme_list) {
   list_themes(TRUE);
   \Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
+  \Drupal::cache('cache')->deleteTags(array('local_task' => 1));
   drupal_theme_rebuild();
 
   // Invoke hook_themes_disabled after the themes have been disabled.

@@ -1,0 +1,9 @@
+taxonomy.term_page:
+  title: 'View'
+  route_name: taxonomy.term_page
+  tab_root_id: taxonomy.term_page
+
+taxonomy.term_edit:
+  title: 'Edit'
+  route_name: taxonomy.term_edit
+  tab_root_id: taxonomy.term_page

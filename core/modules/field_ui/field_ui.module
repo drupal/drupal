@@ -60,10 +60,6 @@ function field_ui_menu() {
     'route_name' => 'field_ui.list',
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/reports/fields/list'] = array(
-    'title' => 'Entities',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
 
   // Create tabs for all possible bundles.
   foreach (entity_get_info() as $entity_type => $entity_info) {

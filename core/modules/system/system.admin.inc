@@ -213,7 +213,9 @@ function system_theme_default() {
       // implementations, and doing the variable_set() before the theme_enable()
       // could result in a race condition where the theme is default but not
       // enabled.
+      \Drupal::service('router.builder')->rebuild();
       menu_router_rebuild();
+      \Drupal::cache('cache')->deleteTags(array('local_task' => 1));
 
       // The status message depends on whether an admin theme is currently in use:
       // a value of 0 means the admin theme is set to be the default theme.

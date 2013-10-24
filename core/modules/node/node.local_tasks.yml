@@ -1,0 +1,18 @@
+node.view:
+  route_name: node.view
+  tab_root_id: node.view
+  title: 'View'
+node.page_edit:
+  route_name: node.page_edit
+  tab_root_id: node.view
+  title: Edit
+node.delete_confirm:
+  route_name: node.delete_confirm
+  tab_root_id: node.view
+  title: Delete
+  weight: 10
+node.revision_overview:
+  route_name: node.revision_overview
+  tab_root_id: node.view
+  title: 'Revisions'
+  weight: 20

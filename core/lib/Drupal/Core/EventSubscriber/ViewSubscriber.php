@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Controller\TitleResolverInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -27,8 +29,24 @@ class ViewSubscriber implements EventSubscriberInterface {
 
   protected $negotiation;
 
-  public function __construct(ContentNegotiation $negotiation) {
+  /**
+   * The title resolver.
+   *
+   * @var \Drupal\Core\Controller\TitleResolverInterface
+   */
+  protected $titleResolver;
+
+  /**
+   * Constructs a new ViewSubscriber.
+   *
+   * @param \Drupal\Core\ContentNegotiation $negotiation
+   *   The content negotiation.
+   * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
+   *   The title resolver.
+   */
+  public function __construct(ContentNegotiation $negotiation, TitleResolverInterface $title_resolver) {
     $this->negotiation = $negotiation;
+    $this->titleResolver = $title_resolver;
   }
 
   /**
@@ -154,6 +172,13 @@ class ViewSubscriber implements EventSubscriberInterface {
    */
   public function onHtml(GetResponseForControllerResultEvent $event) {
     $page_callback_result = $event->getControllerResult();
+    $request = $event->getRequest();
+
+    // If no title was returned fall back to one defined in the route.
+    if (!isset($page_callback_result['#title'])) {
+      $page_callback_result['#title'] = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
+    }
+
     return new Response(drupal_render_page($page_callback_result));
   }
 

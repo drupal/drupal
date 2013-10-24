@@ -255,15 +255,11 @@ function taxonomy_menu() {
     'title arguments' => array(2),
     'route_name' => 'taxonomy.term_page',
   );
-  $items['taxonomy/term/%taxonomy_term/view'] = array(
-    'title' => 'View',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit',
     'route_name' => 'taxonomy.term_edit',
     'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'context' => MENU_CONTEXT_INLINE,
     'weight' => 10,
   );
   $items['taxonomy/term/%taxonomy_term/delete'] = array(

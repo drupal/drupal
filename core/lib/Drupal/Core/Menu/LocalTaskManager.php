@@ -115,7 +115,7 @@ class LocalTaskManager extends DefaultPluginManager {
     $this->routeProvider = $route_provider;
     $this->accessManager = $access_manager;
     $this->alterInfo($module_handler, 'local_tasks');
-    $this->setCacheBackend($cache, $language_manager, 'local_task_plugins', array('local_task' => TRUE));
+    $this->setCacheBackend($cache, $language_manager, 'local_task_plugins', array('local_task' => 1));
   }
 
   /**
@@ -200,7 +200,7 @@ class LocalTaskManager extends DefaultPluginManager {
           'parents' => $parents,
           'children' => $children,
         );
-        $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $data, CacheBackendInterface::CACHE_PERMANENT, array('local_task'));
+        $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $data, CacheBackendInterface::CACHE_PERMANENT, $this->cacheTags);
       }
       // Create a plugin instance for each element of the hierarchy.
       foreach ($tab_root_ids as $root_id) {

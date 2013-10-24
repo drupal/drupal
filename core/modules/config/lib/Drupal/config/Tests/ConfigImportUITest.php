@@ -41,7 +41,7 @@ class ConfigImportUITest extends WebTestBase {
     $storage = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
 
-    $this->drupalGet('admin/config/development/configuration/sync');
+    $this->drupalGet('admin/config/development/configuration');
     $this->assertText('There are no configuration changes.');
     $this->assertNoFieldById('edit-submit', t('Import all'));
 
@@ -65,7 +65,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertIdentical($staging->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
 
     // Verify that both appear as ready to import.
-    $this->drupalGet('admin/config/development/configuration/sync');
+    $this->drupalGet('admin/config/development/configuration');
     $this->assertText($name);
     $this->assertText($dynamic_name);
     $this->assertFieldById('edit-submit', t('Import all'));
@@ -98,7 +98,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->prepareSiteNameUpdate($new_site_name);
 
     // Verify that there are configuration differences to import.
-    $this->drupalGet('admin/config/development/configuration/sync');
+    $this->drupalGet('admin/config/development/configuration');
     $this->assertNoText(t('There are no configuration changes.'));
 
     // Acquire a fake-lock on the import mechanism.

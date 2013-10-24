@@ -28,6 +28,14 @@ block.admin_display:
   requirements:
     _permission: 'administer blocks'
 
+block.admin_display_theme:
+  path: 'admin/structure/block/list/{theme}'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockListController::listing'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+
 block.admin_add:
   path: '/admin/structure/block/add/{plugin_id}/{theme}'
   defaults:

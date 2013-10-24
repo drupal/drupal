@@ -1,0 +1,4 @@
+field_ui.list:
+  title: Entities
+  route_name: field_ui.list
+  tab_root_id: field_ui.list

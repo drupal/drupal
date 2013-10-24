@@ -156,18 +156,6 @@ function update_menu() {
     'route_name' => 'update.status',
     'weight' => -50,
   );
-  $items['admin/reports/updates/list'] = array(
-    'title' => 'List',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/reports/updates/settings'] = array(
-    'title' => 'Settings',
-    'route_name' => 'update.settings',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 50,
-  );
 
   // We want action links for updating projects at a few different locations:
   // both the module and theme administration pages, and on the available
@@ -185,12 +173,6 @@ function update_menu() {
       'route_name' => "update.{$context}_install",
       'weight' => 25,
       'type' => MENU_LOCAL_ACTION,
-    );
-    $items[$path . '/update'] = array(
-      'route_name' => "update.{$context}_update",
-      'weight' => 10,
-      'title' => 'Update',
-      'type' => MENU_LOCAL_TASK,
     );
   }
   // Customize the titles of the action links depending on where they appear.

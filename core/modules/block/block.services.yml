@@ -9,7 +9,3 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [block]
-  block.route_subscriber:
-    class: Drupal\block\Routing\RouteSubscriber
-    tags:
-      - { name: event_subscriber}

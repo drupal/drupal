@@ -73,51 +73,6 @@ function language_menu() {
     'route_name' => 'language.admin_overview',
     'weight' => -10,
   );
-  $items['admin/config/regional/language/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/config/regional/language/add'] = array(
-    'route_name' => 'language.add',
-    'type' => MENU_SIBLING_LOCAL_TASK,
-  );
-  $items['admin/config/regional/language/edit/%language'] = array(
-    'title' => 'Edit language',
-    'route_name' => 'language.edit',
-  );
-  $items['admin/config/regional/language/edit/%language/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-   );
-
-  // Language negotiation.
-  $items['admin/config/regional/language/detection'] = array(
-    'title' => 'Detection and selection',
-    'route_name' => 'language.negotiation',
-    'weight' => 10,
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/config/regional/language/detection/url'] = array(
-    'title' => 'URL language detection configuration',
-    'route_name' => 'language.negotiation_url',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-  $items['admin/config/regional/language/detection/session'] = array(
-    'title' => 'Session language detection configuration',
-    'route_name' => 'language.negotiation_session',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-  $items['admin/config/regional/language/detection/browser'] = array(
-    'title' => 'Browser language detection configuration',
-    'route_name' => 'language.negotiation_browser',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-  $items['admin/config/regional/language/detection/selected'] = array(
-    'title' => 'Selected language detection configuration',
-    'route_name' => 'language.negotiation_selected',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
 
   // Content language settings.
   $items['admin/config/regional/content-language'] = array(

@@ -25,20 +25,6 @@ function views_ui_menu() {
     'route_name' => 'views_ui.list',
   );
 
-  // @todo - remove all items of type MENU_VISIBLE_IN_BREADCRUMB
-  // when there is a route-aware breadcrumb builder.
-  $items['admin/structure/views/settings'] = array(
-    'title' => 'Settings',
-    'route_name' => 'views_ui.settings_basic',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-
-  $items['admin/structure/views/settings/advanced'] = array(
-    'title' => 'Advanced',
-    'route_name' => 'views_ui.settings_advanced',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-
   // The primary Edit View page. Secondary tabs for each Display are added in
   // views_ui_menu_local_tasks_alter().
   $items['admin/structure/views/view/%'] = array(
@@ -47,33 +33,7 @@ function views_ui_menu() {
   $items['admin/structure/views/view/%/edit'] = array(
     'title' => 'Edit view',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-  );
-  $items['admin/structure/views/view/%/preview/%'] = array(
-    'route_name' => 'views_ui.preview',
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-
-  // Additional pages for acting on a View.
-
-  $items['admin/structure/views/view/%/break-lock'] = array(
-    'title' => 'Break lock',
-    'route_name' => 'views_ui.break_lock',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-
-  // NoJS/AJAX callbacks that can use the default Views AJAX form system.
-  $items['admin/structure/views/nojs/%/%'] = array(
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-
-  // A page in the Reports section to show usage of fields in all views
-  $items['admin/reports/fields/views-fields'] = array(
-    'title' => 'Used in views',
-    'description' => 'Overview of fields used in all views.',
-    'route_name' => 'views_ui.reports_fields',
-    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_INLINE,
   );
 
   // A page in the Reports section to show usage of plugins in all views.

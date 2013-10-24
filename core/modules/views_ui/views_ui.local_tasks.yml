@@ -20,3 +20,8 @@ views_ui.list_tab:
   route_name: views_ui.list
   title: List
   tab_root_id: views_ui.list_tab
+
+views_ui.reports_fields:
+  route_name: views_ui.reports_fields
+  title: 'Used in views'
+  tab_root_id: field_ui.list

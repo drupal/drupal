@@ -53,26 +53,6 @@ function action_menu() {
     'description' => 'Manage the actions defined for your site.',
     'route_name' => 'action.admin',
   );
-  $items['admin/config/system/actions/manage'] = array(
-    'title' => 'Manage actions',
-    'description' => 'Manage the actions defined for your site.',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/config/system/actions/add'] = array(
-    'title' => 'Create an advanced action',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'route_name' => 'action.admin_add',
-  );
-  $items['admin/config/system/actions/configure'] = array(
-    'title' => 'Configure an advanced action',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'route_name' => 'action.admin_configure',
-  );
-  $items['admin/config/system/actions/configure/%/delete'] = array(
-    'title' => 'Delete action',
-    'description' => 'Delete an action.',
-    'route_name' => 'action.delete',
-  );
   return $items;
 }
 

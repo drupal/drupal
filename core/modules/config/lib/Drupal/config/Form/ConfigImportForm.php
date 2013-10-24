@@ -96,7 +96,7 @@ class ConfigImportForm extends FormBase {
         }
         $archiver->extractList($files, config_get_config_directory(CONFIG_STAGING_DIRECTORY));
         drupal_set_message($this->t('Your configuration files were successfully uploaded, ready for import.'));
-        $form_state['redirect'] = 'admin/config/development/configuration/sync';
+        $form_state['redirect'] = 'admin/config/development/configuration';
       }
       catch (\Exception $e) {
         form_set_error('import_tarball', $this->t('Could not extract the contents of the tar file. The error message is <em>@message</em>', array('@message' => $e->getMessage())));

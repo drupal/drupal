@@ -1,0 +1,27 @@
+update.status:
+  route_name: update.status
+  tab_root_id: system.admin_reports
+  title: List
+update.settings:
+  route_name: update.settings
+  tab_root_id: system.admin_reports
+  tab_parent_id: update.status
+  title: Settings
+  weight: 50
+update.report_install:
+  route_name: update.report_install
+  tab_root_id: system.admin_reports
+  title: Update
+  weight: 10
+
+update.module_install:
+  route_name: update.module_install
+  tab_root_id: system.modules_list
+  title: Update
+  weight: 10
+
+update.theme_install:
+  route_name: update.theme_install
+  tab_root_id: system.themes_page
+  title: Update
+  weight: 10

@@ -171,27 +171,10 @@ function book_menu() {
     'description' => "Manage your site's book outlines.",
     'route_name' => 'book.admin',
   );
-  $items['admin/structure/book/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/structure/book/settings'] = array(
-    'title' => 'Settings',
-    'route_name' => 'book.settings',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 100,
-  );
   $items['book'] = array(
     'title' => 'Books',
     'route_name' => 'book.render',
     'type' => MENU_SUGGESTED_ITEM,
-  );
-  $items['node/%node/outline'] = array(
-    'title' => 'Outline',
-    'route_name' => 'book.outline',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
   );
   $items['node/%node/outline/remove'] = array(
     'title' => 'Remove from outline',

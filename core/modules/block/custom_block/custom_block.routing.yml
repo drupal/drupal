@@ -33,7 +33,6 @@ custom_block.edit:
     _entity_form: 'custom_block.edit'
   requirements:
     _entity_access: 'custom_block.update'
-    custom_block: \d+
 
 custom_block.delete:
   path: '/block/{custom_block}/delete'

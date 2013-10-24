@@ -8,6 +8,7 @@
 namespace Drupal\custom_block\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 
 /**
  * Retrieves block plugin definitions for all custom blocks.
