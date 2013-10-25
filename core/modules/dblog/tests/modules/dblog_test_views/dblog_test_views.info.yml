@@ -1,4 +1,5 @@
 name: 'Dblog test views'
+type: module
 description: 'Provides default views for views dblog tests.'
 package: Testing
 version: VERSION

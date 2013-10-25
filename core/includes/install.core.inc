@@ -464,6 +464,8 @@ function install_begin_request(&$install_state) {
     $container->register('asset.js.collection_renderer', 'Drupal\Core\Asset\JsCollectionRenderer')
       ->addArgument(new Reference('state'));
 
+    // Register the info parser.
+    $container->register('info_parser', 'Drupal\Core\Extension\InfoParser');
   }
   // Set the request in the kernel to the new created Request above
   // so it is available to the rest of the installation process.

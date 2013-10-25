@@ -11,7 +11,6 @@ use Drupal\Component\Utility\Url;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
@@ -4600,54 +4599,19 @@ function element_set_attributes(array &$element, array $map) {
 /**
  * Parses Drupal module and theme .info.yml files.
  *
- * Info files are NOT for placing arbitrary theme and module-specific settings.
- * Use Config::get() and Config::set()->save() for that. Info files are
- * formatted as YAML. If the 'version' key is set to 'VERSION' in any info file,
- * then the value will be substituted with the current version of Drupal core.
- *
- * Information stored in a module .info.yml file:
- * - name: The real name of the module for display purposes.
- * - description: A brief description of the module.
- * - dependencies: An array of shortnames of other modules this module requires.
- * - package: The name of the package of modules this module belongs to.
- *
- * See forum.info.yml for an example of a module .info.yml file.
- *
- * Information stored in a theme .info.yml file:
- * - name: The real name of the theme for display purposes.
- * - description: Brief description.
- * - screenshot: Path to screenshot relative to the theme's .info.yml file.
- * - engine: Theme engine; typically twig.
- * - base theme: Name of a base theme, if applicable.
- * - regions: Listed regions.
- * - features: Features available.
- * - stylesheets: Theme stylesheets.
- * - scripts: Theme scripts.
- *
- * See bartik.info.yml for an example of a theme .info.yml file.
- *
  * @param string $filename
  *   The file we are parsing. Accepts file with relative or absolute path.
  *
  * @return array
  *   The info array.
+ *
+ * @see \Drupal\Core\Extension\InfoParser::parse().
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal::service('info_parser')->parse()
+ *   instead.
  */
 function drupal_parse_info_file($filename) {
-  static $info = array();
-
-  if (!isset($info[$filename])) {
-    if (!file_exists($filename)) {
-      $info[$filename] = array();
-    }
-    else {
-      $parser = new Parser();
-      $info[$filename] = $parser->parse(file_get_contents($filename));
-      if (isset($info[$filename]['version']) && $info[$filename]['version'] === 'VERSION') {
-        $info[$filename]['version'] = \Drupal::VERSION;
-      }
-    }
-  }
-  return $info[$filename];
+  return \Drupal::service('info_parser')->parse($filename);
 }
 
 /**

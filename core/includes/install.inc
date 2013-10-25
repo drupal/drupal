@@ -1076,7 +1076,7 @@ function install_profile_info($profile, $langcode = 'en') {
       'php' => DRUPAL_MINIMUM_PHP,
     );
     $profile_file = drupal_get_path('profile', $profile) . "/$profile.info.yml";
-    $info = drupal_parse_info_file($profile_file);
+    $info = \Drupal::service('info_parser')->parse($profile_file);
     $info += $defaults;
     $info['dependencies'] = array_unique(array_merge(
       drupal_required_modules(),

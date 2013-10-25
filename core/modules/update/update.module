@@ -624,7 +624,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
   $files = file_scan_directory("$directory/$project", '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', array('key' => 'name', 'min_depth' => 0));
   foreach ($files as $file) {
     // Get the .info.yml file for the module or theme this file belongs to.
-    $info = drupal_parse_info_file($file->uri);
+    $info = \Drupal::service('info_parser')->parse($file->uri);
 
     // If the module or theme is incompatible with Drupal core, set an error.
     if (empty($info['core']) || $info['core'] != \Drupal::CORE_COMPATIBILITY) {

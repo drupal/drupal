@@ -137,12 +137,9 @@ class Updater {
    */
   public static function getProjectTitle($directory) {
     $info_file = self::findInfoFile($directory);
-    $info = drupal_parse_info_file($info_file);
+    $info = \Drupal::service('info_parser')->parse($info_file);
     if (empty($info)) {
       throw new UpdaterException(t('Unable to parse info file: %info_file.', array('%info_file' => $info_file)));
-    }
-    if (empty($info['name'])) {
-      throw new UpdaterException(t("The info file (%info_file) does not define a 'name' attribute.", array('%info_file' => $info_file)));
     }
     return $info['name'];
   }

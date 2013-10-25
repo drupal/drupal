@@ -292,7 +292,7 @@ function drupal_required_modules() {
   $required[] = drupal_get_profile();
 
   foreach ($files as $name => $file) {
-    $info = drupal_parse_info_file($file->uri);
+    $info = \Drupal::service('info_parser')->parse($file->uri);
     if (!empty($info) && !empty($info['required']) && $info['required']) {
       $required[] = $name;
     }

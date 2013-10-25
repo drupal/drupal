@@ -201,7 +201,8 @@ class ProjectInfo {
    * Filters the project .info.yml data to only save attributes we need.
    *
    * @param array $info
-   *   Array of .info.yml file data as returned by drupal_parse_info_file().
+   *   Array of .info.yml file data as returned by
+   *   \Drupal\Core\Extension\InfoParser.
    * @param $additional_whitelist
    *   (optional) Array of additional elements to be collected from the .info.yml
    *   file. Defaults to array().

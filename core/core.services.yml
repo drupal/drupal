@@ -650,3 +650,5 @@ services:
     class: Drupal\Core\Asset\JsCollectionGrouper
   asset.js.dumper:
     class: Drupal\Core\Asset\AssetDumper
+  info_parser:
+    class: Drupal\Core\Extension\InfoParser

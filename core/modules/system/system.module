@@ -2402,7 +2402,7 @@ function _system_rebuild_module_data() {
     $modules[$key]->filename = $module->uri;
 
     // Look for the info file.
-    $module->info = drupal_parse_info_file(dirname($module->uri) . '/' . $module->name . '.info.yml');
+    $module->info = \Drupal::service('info_parser')->parse(dirname($module->uri) . '/' . $module->name . '.info.yml');
 
     // Skip modules/profiles that don't provide info or have the wrong type.
     if (empty($module->info) || !isset($module->info['type']) || !in_array($module->info['type'], array('module', 'profile'))) {
@@ -2526,7 +2526,7 @@ function _system_rebuild_theme_data() {
   // Read info files for each theme
   foreach ($themes as $key => $theme) {
     $themes[$key]->filename = $theme->uri;
-    $themes[$key]->info = drupal_parse_info_file($theme->uri) + $defaults;
+    $themes[$key]->info = \Drupal::service('info_parser')->parse($theme->uri) + $defaults;
 
     // Skip this extension if its type is not theme.
     if (!isset($themes[$key]->info['type']) || $themes[$key]->info['type'] != 'theme') {

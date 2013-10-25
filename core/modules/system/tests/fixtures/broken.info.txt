@@ -1,0 +1,9 @@
+# info.yml for testing broken YAML parsing exception handling.
+name: File
+type: module
+description: 'Defines a file field type.'
+package: Core
+version: VERSION
+core: 8.x
+dependencies::;;
+  - field

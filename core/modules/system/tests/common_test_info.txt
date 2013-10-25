@@ -1,3 +1,0 @@
-simple_string: A simple string
-version: "VERSION"
-double_colon: dummyClassName::

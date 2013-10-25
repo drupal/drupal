@@ -19,7 +19,7 @@ use Drupal\Core\Access\AccessManager;
  *
  * The list of modules gets populated by module.info.yml files, which contain
  * each module's name, description, and information about which modules it
- * requires. See drupal_parse_info_file() for info on module.info.yml
+ * requires. See \Drupal\Core\Extension\InfoParser for info on module.info.yml
  * descriptors.
  */
 class ModulesListForm extends FormBase {

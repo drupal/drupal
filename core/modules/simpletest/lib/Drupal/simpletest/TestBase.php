@@ -970,6 +970,9 @@ abstract class TestBase {
      // @todo Remove this once this class has no calls to t() and format_plural()
     $this->container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager');
 
+    // Register info parser.
+    $this->container->register('info_parser', 'Drupal\Core\Extension\InfoParser');
+
     \Drupal::setContainer($this->container);
 
     // Unset globals.
