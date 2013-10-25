@@ -1918,3 +1918,12 @@ details.fieldset-no-legend {
 .js .form-actions .dropbutton-multiple.open .dropbutton-action:hover {
   background-color: #50a0e9;
 }
+
+/* Language Admin UI */
+.page-admin-config-regional-language-detection .table-language-group {
+  margin-bottom: 3em;
+}
+.page-admin-config-regional-language-detection .form-actions {
+  margin-top: -2em;
+}
+
