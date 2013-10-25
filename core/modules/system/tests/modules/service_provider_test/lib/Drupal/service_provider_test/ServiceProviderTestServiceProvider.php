@@ -8,17 +8,9 @@
 namespace Drupal\service_provider_test;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 
-class ServiceProviderTestServiceProvider implements ServiceProviderInterface, ServiceModifierInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container) {
-
-  }
+class ServiceProviderTestServiceProvider implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}

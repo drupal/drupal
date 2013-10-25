@@ -9,19 +9,11 @@ namespace Drupal\language_test;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
-use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 
 /**
  * Defines the LanguageTest service provider.
  */
-class LanguageTestServiceProvider implements ServiceProviderInterface, ServiceModifierInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container) {
-
-  }
+class LanguageTestServiceProvider implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}

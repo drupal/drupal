@@ -11,6 +11,7 @@ use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\CoreServiceProvider;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -515,7 +516,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $yaml_loader->load($filename);
     }
     foreach ($this->serviceProviders as $provider) {
-      $provider->register($container);
+      if ($provider instanceof ServiceProviderInterface) {
+        $provider->register($container);
+      }
     }
 
     // Identify all services whose instances should be persisted when rebuilding
