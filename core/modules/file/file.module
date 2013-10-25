@@ -1538,7 +1538,6 @@ function theme_file_managed_file($variables) {
  * This function is assigned as a #pre_render callback in file_element_info().
  *
  * @see file_managed_file_process()
- * @see form_builder()
  */
 function file_managed_file_pre_render($element) {
   // If we already have a file, we don't want to show the upload controls.

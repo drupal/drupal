@@ -547,4 +547,14 @@ class Drupal {
     return static::$container->get('transliteration');
   }
 
+  /**
+   * Returns the form builder service.
+   *
+   * @return \Drupal\Core\Form\FormBuilderInterface
+   *   The form builder.
+   */
+  public static function formBuilder() {
+    return static::$container->get('form_builder');
+  }
+
 }

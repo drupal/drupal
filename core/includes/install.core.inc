@@ -13,6 +13,7 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -454,6 +455,16 @@ function install_begin_request(&$install_state) {
     CoreServiceProvider::registerTwig($container);
 
     $container->register('url_generator', 'Drupal\Core\Routing\NullGenerator');
+
+    $container->register('form_builder', 'Drupal\Core\Form\FormBuilder')
+      ->addArgument(new Reference('module_handler'))
+      ->addArgument(new Reference('keyvalue.expirable'))
+      ->addArgument(new Reference('event_dispatcher'))
+      ->addArgument(new Reference('url_generator'))
+      ->addArgument(new Reference('string_translation'))
+      ->addArgument(new Reference('csrf_token', ContainerInterface::IGNORE_ON_INVALID_REFERENCE))
+      ->addArgument(new Reference('http_kernel', ContainerInterface::IGNORE_ON_INVALID_REFERENCE))
+      ->addMethodCall('setRequest', array(new Reference('request')));
 
     // Register UUID.
     CoreServiceProvider::registerUuid($container);

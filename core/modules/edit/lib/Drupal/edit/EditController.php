@@ -204,13 +204,16 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
       $this->tempStoreFactory->get('edit')->set($entity->uuid(), $entity);
     }
 
+    $form_object = EditFieldForm::create($this->container);
     $form_state = array(
       'langcode' => $langcode,
       'no_redirect' => TRUE,
-      'build_info' => array('args' => array($entity, $field_name)),
+      'build_info' => array(
+        'args' => array($entity, $field_name),
+        'callback_object' => $form_object,
+      ),
     );
-    $form_id = _drupal_form_id(EditFieldForm::create($this->container), $form_state);
-    $form = drupal_build_form($form_id, $form_state);
+    $form = drupal_build_form($form_object->getFormId(), $form_state);
 
     if (!empty($form_state['executed'])) {
       // The form submission saved the entity in tempstore. Return the
