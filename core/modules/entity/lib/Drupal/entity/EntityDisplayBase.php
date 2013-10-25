@@ -133,8 +133,8 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     $return = parent::save();
 
     // Reset the render cache for the target entity type.
-    if (\Drupal::entityManager()->hasController($this->targetEntityType, 'render')) {
-      \Drupal::entityManager()->getRenderController($this->targetEntityType)->resetCache();
+    if (\Drupal::entityManager()->hasController($this->targetEntityType, 'view_builder')) {
+      \Drupal::entityManager()->getViewBuilder($this->targetEntityType)->resetCache();
     }
 
     return $return;

@@ -25,7 +25,7 @@ use Drupal\Core\Language\Language;
  *   controllers = {
  *     "storage" = "Drupal\comment\CommentStorageController",
  *     "access" = "Drupal\comment\CommentAccessController",
- *     "render" = "Drupal\comment\CommentRenderController",
+ *     "view_builder" = "Drupal\comment\CommentViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\comment\CommentFormController",
  *       "delete" = "Drupal\comment\Form\DeleteForm"

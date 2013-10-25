@@ -271,7 +271,7 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
  */
 function comment_field_instance_update(FieldInstanceInterface $instance) {
   if ($instance->getFieldType() == 'comment') {
-    \Drupal::entityManager()->getRenderController($instance->entity_type)->resetCache();
+    \Drupal::entityManager()->getViewBuilder($instance->entity_type)->resetCache();
   }
 }
 
@@ -1255,7 +1255,7 @@ function comment_get_display_ordinal($cid, $instance) {
   else {
     // For threaded comments, the c.thread column is used for ordering. We can
     // use the sorting code for comparison, but must remove the trailing slash.
-    // See CommentRenderController.
+    // See CommentViewBuilder.
     $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) -1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) -1))');
   }
 
@@ -1372,7 +1372,7 @@ function comment_preprocess_block(&$variables) {
  *   A user account, for use with theme_username() or the user_picture template.
  */
 function comment_prepare_author(CommentInterface $comment) {
-  // The account has been pre-loaded by CommentRenderController::buildContent().
+  // The account has been pre-loaded by CommentViewBuilder::buildContent().
   $account = $comment->uid->entity;
   if (empty($account->uid->value)) {
     $account = entity_create('user', array('uid' => 0, 'name' => $comment->name->value, 'homepage' => $comment->homepage->value));

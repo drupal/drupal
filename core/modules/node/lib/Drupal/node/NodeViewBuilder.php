@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Definition of Drupal\node\NodeRenderController.
+ * Definition of Drupal\node\NodeViewBuilder.
  */
 
 namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\entity\Entity\EntityDisplay;
 
 /**
  * Render controller for nodes.
  */
-class NodeRenderController extends EntityRenderController {
+class NodeViewBuilder extends EntityViewBuilder {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
+   * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     $return = array();
@@ -78,7 +78,7 @@ class NodeRenderController extends EntityRenderController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityRenderController::alterBuild().
+   * {@inheritdoc}
    */
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);

@@ -28,7 +28,7 @@ use Drupal\Core\Entity\Entity;
  *   controllers = {
  *     "storage" = "Drupal\menu_link\MenuLinkStorageController",
  *     "access" = "Drupal\menu_link\MenuLinkAccessController",
- *     "render" = "Drupal\Core\Entity\EntityRenderController",
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\menu_link\MenuLinkFormController"
  *     }

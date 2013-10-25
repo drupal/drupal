@@ -49,7 +49,7 @@ class CommentFormController extends ContentEntityFormController {
   }
 
   /**
-   * Constructs a new CommentRenderController.
+   * Constructs a new CommentFormController.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager service.
@@ -410,6 +410,6 @@ class CommentFormController extends ContentEntityFormController {
     // Clear the block and page caches so that anonymous users see the comment
     // they have posted.
     Cache::invalidateTags(array('content' => TRUE));
-    $this->entityManager->getRenderController($entity->entityType())->resetCache(array($entity->id()));
+    $this->entityManager->getViewBuilder($entity->entityType())->resetCache(array($entity->id()));
   }
 }

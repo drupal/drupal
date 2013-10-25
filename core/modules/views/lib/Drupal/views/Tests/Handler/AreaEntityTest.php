@@ -53,7 +53,7 @@ class AreaEntityTest extends ViewTestBase {
     $entity_info = $this->container->get('entity.manager')->getDefinitions();
 
     $expected_entities = array_filter($entity_info, function($info) {
-      return !empty($info['controllers']['render']);
+      return !empty($info['controllers']['view_builder']);
     });
 
     // Test that all expected entity types have data.
@@ -64,7 +64,7 @@ class AreaEntityTest extends ViewTestBase {
     }
 
     $expected_entities = array_filter($entity_info, function($info) {
-      return empty($info['controllers']['render']);
+      return empty($info['controllers']['view_builder']);
     });
 
     // Test that no configuration entity types have data.
@@ -81,8 +81,8 @@ class AreaEntityTest extends ViewTestBase {
     $entities = array();
     for ($i = 0; $i < 2; $i++) {
       $random_label = $this->randomName();
-      $data = array('bundle' => 'entity_test_render', 'name' => $random_label);
-      $entity_test = $this->container->get('entity.manager')->getStorageController('entity_test_render')->create($data);
+      $data = array('bundle' => 'entity_test', 'name' => $random_label);
+      $entity_test = $this->container->get('entity.manager')->getStorageController('entity_test')->create($data);
       $entity_test->save();
       $entities[] = $entity_test;
     }
@@ -101,9 +101,9 @@ class AreaEntityTest extends ViewTestBase {
 
     // Change the view mode of the area handler.
     $view = views_get_view('test_entity_area');
-    $item = $view->getItem('default', 'header', 'entity_entity_test_render');
+    $item = $view->getItem('default', 'header', 'entity_entity_test');
     $item['view_mode'] = 'test';
-    $view->setItem('default', 'header', 'entity_entity_test_render', $item);
+    $view->setItem('default', 'header', 'entity_entity_test', $item);
 
     $preview = $view->preview('default', array($entities[1]->id()));
     $this->drupalSetContent(drupal_render($preview));
@@ -116,7 +116,7 @@ class AreaEntityTest extends ViewTestBase {
     $form = array();
     $form_state = array();
     $form_state['type'] = 'header';
-    $view->display_handler->getHandler('header', 'entity_entity_test_render')->buildOptionsForm($form, $form_state);
+    $view->display_handler->getHandler('header', 'entity_entity_test')->buildOptionsForm($form, $form_state);
     $this->assertTrue(isset($form['view_mode']['#options']['full']), 'Ensure that the full view mode is available.');
     $this->assertTrue(isset($form['view_mode']['#options']['test']), 'Ensure that the test view mode is available.');
     $this->assertTrue(isset($form['view_mode']['#options']['default']), 'Ensure that the default view mode is available.');

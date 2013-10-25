@@ -169,7 +169,7 @@ function user_label($entity_type, $entity) {
 /**
  * Populates $entity->account for each prepared entity.
  *
- * Called by Drupal\Core\Entity\EntityRenderControllerInterface::buildContent()
+ * Called by Drupal\Core\Entity\EntityViewBuilderInterface::buildContent()
  * implementations.
  *
  * @param array $entities
@@ -1786,7 +1786,7 @@ function user_form_process_password_confirm($element) {
  * Implements hook_node_load().
  *
  * @todo Deprecated by $node->author, attached in
- *   \Drupal\node\NodeRenderController::buildContent(). Update code that
+ *   \Drupal\node\NodeViewBuilder::buildContent(). Update code that
  *   depends on these properties.
  */
 function user_node_load($nodes, $types) {

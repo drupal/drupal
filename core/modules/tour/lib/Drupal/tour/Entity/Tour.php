@@ -22,7 +22,7 @@ use Drupal\tour\TourInterface;
  *   module = "tour",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
- *     "render" = "Drupal\tour\TourRenderController"
+ *     "view_builder" = "Drupal\tour\TourViewBuilder"
  *   },
  *   config_prefix = "tour.tour",
  *   entity_keys = {

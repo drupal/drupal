@@ -226,7 +226,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
       ->execute();
 
     $node_storage = $this->entityManager->getStorageController('node');
-    $node_render = $this->entityManager->getRenderController('node');
+    $node_render = $this->entityManager->getViewBuilder('node');
 
     foreach ($find as $item) {
       // Render the node.
@@ -323,7 +323,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
     $this->state->set('node.cron_last', $node->getChangedTime());
 
     $languages = $node->getTranslationLanguages();
-    $node_render = $this->entityManager->getRenderController('node');
+    $node_render = $this->entityManager->getViewBuilder('node');
 
     foreach ($languages as $language) {
       // Render the node.

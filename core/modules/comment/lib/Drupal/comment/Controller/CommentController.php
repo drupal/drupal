@@ -275,7 +275,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
           return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
         }
         // Display the parent comment.
-        $build['comment_parent'] = $this->entityManager()->getRenderController('comment')->view($comment);
+        $build['comment_parent'] = $this->entityManager()->getViewBuilder('comment')->view($comment);
       }
 
       // The comment is in response to a entity.
@@ -284,7 +284,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
         // redirect loop.
         $entity->{$field_name}->status = COMMENT_HIDDEN;
         // Render array of the entity full view mode.
-        $build['commented_entity'] = $this->entityManager()->getRenderController($entity->entityType())->view($entity, 'full');
+        $build['commented_entity'] = $this->entityManager()->getViewBuilder($entity->entityType())->view($entity, 'full');
         unset($build['commented_entity']['#cache']);
         $entity->{$field_name}->status = $status;
       }

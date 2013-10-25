@@ -26,11 +26,11 @@ class BookExport {
   protected $nodeStorage;
 
   /**
-   * The node render controller.
+   * The node view builder.
    *
-   * @var \Drupal\Core\Entity\EntityRenderControllerInterface
+   * @var \Drupal\Core\Entity\EntityViewBuilderInterface
    */
-  protected $nodeRender;
+  protected $viewBuilder;
 
   /**
    * Constructs a BookExport object.
@@ -40,7 +40,7 @@ class BookExport {
    */
   public function __construct(EntityManager $entityManager) {
     $this->nodeStorage = $entityManager->getStorageController('node');
-    $this->nodeRender = $entityManager->getRenderController('node');
+    $this->viewBuilder = $entityManager->getViewBuilder('node');
   }
 
   /**
@@ -125,7 +125,7 @@ class BookExport {
    * @see \Drupal\book\BookExport::exportTraverse()
    */
   protected function bookNodeExport(NodeInterface $node, $children = '') {
-    $build = $this->nodeRender->view($node, 'print', NULL);
+    $build = $this->viewBuilder->view($node, 'print', NULL);
     unset($build['#theme']);
 
     // @todo Rendering should happen in the template using render().

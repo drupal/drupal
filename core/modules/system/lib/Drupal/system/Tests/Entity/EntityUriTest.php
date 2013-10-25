@@ -30,10 +30,10 @@ class EntityUriTest extends EntityUnitTestBase {
    */
   function testDefaultUri() {
     // Create a test entity.
-    $entity = entity_create('entity_test', array('name' => 'test', 'user_id' => 1));
+    $entity = entity_create('entity_test_no_label', array('name' => 'test', 'user_id' => 1));
     $entity->save();
     $uri = $entity->uri();
-    $expected_path = 'entity/entity_test/' . $entity->id();
+    $expected_path = 'entity/entity_test_no_label/' . $entity->id();
     $this->assertEqual(url($uri['path'], $uri['options']), url($expected_path), 'Entity without URI callback returns expected URI.');
   }
 

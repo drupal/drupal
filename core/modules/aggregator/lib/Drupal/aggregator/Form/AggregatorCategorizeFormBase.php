@@ -11,7 +11,7 @@ use Drupal\aggregator\CategoryStorageControllerInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\aggregator\ItemStorageControllerInterface;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Entity\EntityRenderControllerInterface;
+use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,9 +21,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class AggregatorCategorizeFormBase extends FormBase {
 
   /**
-   * The aggregator item render controller.
+   * The aggregator item view builder.
    *
-   * @var \Drupal\Core\Entity\EntityRenderControllerInterface
+   * @var \Drupal\Core\Entity\EntityViewBuilderInterface
    */
   protected $aggregatorItemRenderer;
 
@@ -58,26 +58,23 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
   /**
    * Constructs a \Drupal\aggregator\Controller\AggregatorController object.
    *
-   * @param \Drupal\Core\Entity\EntityRenderControllerInterface $aggregator_item_renderer
-   *   The item render controller.
+   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $aggregator_item_renderer
+   *   The item view builder.
    * @param \Drupal\aggregator\ItemStorageControllerInterface $aggregator_item_storage
    *   The aggregator item storage controller.
    * @param \Drupal\aggregator\CategoryStorageControllerInterface $category_storage
    *   The category storage controller.
    */
-  public function __construct(EntityRenderControllerInterface $aggregator_item_renderer, ItemStorageControllerInterface $aggregator_item_storage, CategoryStorageControllerInterface $category_storage) {
+  public function __construct(EntityViewBuilderInterface $aggregator_item_renderer, ItemStorageControllerInterface $aggregator_item_storage, CategoryStorageControllerInterface $category_storage) {
     $this->aggregatorItemRenderer = $aggregator_item_renderer;
     $this->config = $this->config('aggregator.settings');
     $this->aggregatorItemStorage = $aggregator_item_storage;
     $this->categoryStorage = $category_storage;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getRenderController('aggregator_item'),
+      $container->get('plugin.manager.entity')->getViewBuilder('aggregator_item'),
       $container->get('plugin.manager.entity')->getStorageController('aggregator_item'),
       $container->get('aggregator.category.storage')
     );

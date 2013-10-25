@@ -23,7 +23,7 @@ use Drupal\aggregator\FeedInterface;
  *   module = "aggregator",
  *   controllers = {
  *     "storage" = "Drupal\aggregator\FeedStorageController",
- *     "render" = "Drupal\aggregator\FeedRenderController",
+ *     "view_builder" = "Drupal\aggregator\FeedViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\aggregator\FeedFormController",
  *       "delete" = "Drupal\aggregator\Form\FeedDeleteForm",

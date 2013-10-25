@@ -139,7 +139,7 @@ class NodeController extends ControllerBase {
    *   An array suitable for drupal_render().
    */
   protected function buildPage(NodeInterface $node) {
-    return array('nodes' => $this->entityManager()->getRenderController('node')->view($node));
+    return array('nodes' => $this->entityManager()->getViewBuilder('node')->view($node));
   }
 
 }

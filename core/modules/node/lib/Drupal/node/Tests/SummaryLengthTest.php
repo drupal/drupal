@@ -35,7 +35,7 @@ class SummaryLengthTest extends NodeTestBase {
     $web_user = $this->drupalCreateUser(array('access content', 'administer content types'));
     $this->loggedInUser = $web_user;
 
-    $controller = $this->container->get('entity.manager')->getRenderController('node');
+    $controller = $this->container->get('entity.manager')->getViewBuilder('node');
     // Render the node as a teaser.
     $content = $controller->view($node, 'teaser');
     $this->assertTrue(strlen($content['body'][0]['#markup']) < 600, 'Teaser is less than 600 characters long.');

@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\tour\TourRenderController.
+ * Contains \Drupal\tour\TourViewBuilder.
  */
 
 namespace Drupal\tour;
 
-use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a Tour render controller.
+ * Provides a Tour view builder.
  */
-class TourRenderController extends EntityRenderController {
+class TourViewBuilder extends EntityViewBuilder {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityRenderController::viewMultiple().
+   * {@inheritdoc}
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     $build = array();

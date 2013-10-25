@@ -35,7 +35,7 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
     $this->createTestField();
 
     // Add the mapping.
-    $mapping = rdf_get_mapping('entity_test_render', 'entity_test_render');
+    $mapping = rdf_get_mapping('entity_test', 'entity_test');
     $mapping->setFieldMapping($this->fieldName, array(
       'properties' => array('schema:interactionCount'),
       'datatype_callback' => array(
@@ -45,7 +45,7 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
 
     // Set up test values.
     $this->test_value = $this->randomName();
-    $this->entity = entity_create('entity_test_render', array());
+    $this->entity = entity_create('entity_test', array());
     $this->entity->{$this->fieldName}->value = $this->test_value;
     $this->entity->save();
 

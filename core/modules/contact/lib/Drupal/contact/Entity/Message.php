@@ -19,7 +19,7 @@ use Drupal\contact\MessageInterface;
  *   module = "contact",
  *   controllers = {
  *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
- *     "render" = "Drupal\contact\MessageRenderController",
+ *     "view_builder" = "Drupal\contact\MessageViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\contact\MessageFormController"
  *     }

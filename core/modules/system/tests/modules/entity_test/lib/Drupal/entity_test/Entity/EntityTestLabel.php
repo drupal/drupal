@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   module = "entity_test",
  *   controllers = {
  *     "storage" = "Drupal\entity_test\EntityTestStorageController",
- *     "render" = "Drupal\entity_test\EntityTestRenderController"
+ *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder"
  *   },
  *   base_table = "entity_test",
  *   render_cache = FALSE,

@@ -23,7 +23,7 @@ use Drupal\node\NodeInterface;
  *   module = "node",
  *   controllers = {
  *     "storage" = "Drupal\node\NodeStorageController",
- *     "render" = "Drupal\node\NodeRenderController",
+ *     "view_builder" = "Drupal\node\NodeViewBuilder",
  *     "access" = "Drupal\node\NodeAccessController",
  *     "form" = {
  *       "default" = "Drupal\node\NodeFormController",

@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\entity_test\EntityTestRenderController.
+ * Contains \Drupal\entity_test\EntityTestViewBuilder.
  */
 
 namespace Drupal\entity_test;
 
-use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Entity\EntityViewBuilder;
 
 /**
- * Defines an entity render controller for a test entity.
+ * Defines an entity view builder for a test entity.
  *
  * @see \Drupal\entity_test\Entity\EntityTestRender
  */
-class EntityTestRenderController extends EntityRenderController {
+class EntityTestViewBuilder extends EntityViewBuilder {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
+   * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     parent::buildContent($entities, $displays, $view_mode, $langcode);

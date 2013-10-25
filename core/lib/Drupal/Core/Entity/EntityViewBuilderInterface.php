@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\EntityRenderControllerInterface.
+ * Contains \Drupal\Core\Entity\EntityViewBuilderInterface.
  */
 
 namespace Drupal\Core\Entity;
@@ -10,7 +10,7 @@ namespace Drupal\Core\Entity;
 /**
  * Defines a common interface for entity view controller classes.
  */
-interface EntityRenderControllerInterface {
+interface EntityViewBuilderInterface {
 
   /**
    * Build the structured $content property on the entity.

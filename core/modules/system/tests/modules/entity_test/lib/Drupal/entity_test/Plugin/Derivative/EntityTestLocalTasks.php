@@ -20,7 +20,6 @@ class EntityTestLocalTasks extends DerivativeBase {
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     $this->derivatives = array();
     $types = entity_test_entity_types();
-    $types[] = 'entity_test_render';
 
     foreach($types as $entity_type) {
       $this->derivatives[$entity_type] = array();

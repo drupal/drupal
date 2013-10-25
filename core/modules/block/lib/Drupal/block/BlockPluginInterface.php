@@ -44,7 +44,7 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
    * @return array
    *   A renderable array representing the content of the block.
    *
-   * @see \Drupal\block\BlockRenderController
+   * @see \Drupal\block\BlockViewBuilder
    */
   public function build();
 

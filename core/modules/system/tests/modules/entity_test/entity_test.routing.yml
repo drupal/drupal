@@ -1,24 +1,24 @@
 entity_test.render:
-  path: '/entity-test-render/{entity_test_render}'
+  path: '/entity_test/{entity_test}'
   defaults:
-    _entity_view: 'entity_test_render.full'
+    _entity_view: 'entity_test.full'
   requirements:
     _access: 'TRUE'
 
 entity_test.render_options:
-  path: '/entity-test-render-converter/{foo}'
+  path: '/entity_test_converter/{foo}'
   options:
     parameters:
       foo:
-        type: 'entity:entity_test_render'
+        type: 'entity:entity_test'
   defaults:
-    _entity_view: 'entity_test_render.full'
+    _entity_view: 'entity_test.full'
   requirements:
     _access: 'TRUE'
 
 entity_test.render_no_view_mode:
-  path: '/entity-test-render-no-view-mode/{entity_test_render}'
+  path: '/entity_test_no_view_mode/{entity_test}'
   defaults:
-    _entity_view: 'entity_test_render'
+    _entity_view: 'entity_test'
   requirements:
     _access: 'TRUE'

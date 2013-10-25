@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\EntityRenderController.
+ * Contains \Drupal\Core\Entity\EntityViewBuilder.
  */
 
 namespace Drupal\Core\Entity;
@@ -13,7 +13,7 @@ use Drupal\Core\Language\Language;
 /**
  * Base class for entity view controllers.
  */
-class EntityRenderController implements EntityRenderControllerInterface {
+class EntityViewBuilder implements EntityViewBuilderInterface {
 
   /**
    * The type of entities for which this controller is instantiated.
@@ -56,7 +56,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityRenderControllerInterface::buildContent().
+   * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     field_attach_prepare_view($this->entityType, $entities, $displays, $langcode);
@@ -148,7 +148,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) { }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityRenderControllerInterface::view().
+   * {@inheritdoc}
    */
   public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
     $buildList = $this->viewMultiple(array($entity), $view_mode, $langcode);
@@ -156,7 +156,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityRenderControllerInterface::viewMultiple().
+   * {@inheritdoc}
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     if (!isset($langcode)) {

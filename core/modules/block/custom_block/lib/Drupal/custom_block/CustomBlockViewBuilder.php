@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Contains \Drupal\custom_block\CustomBlockRenderController.
+ * Contains \Drupal\custom_block\CustomBlockViewBuilder.
  */
 
 namespace Drupal\custom_block;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\entity\Entity\EntityDisplay;
 
 /**
  * Render controller for custom blocks.
  */
-class CustomBlockRenderController extends EntityRenderController {
+class CustomBlockViewBuilder extends EntityViewBuilder {
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityRenderController::alterBuild().
+   * {@inheritdoc}
    */
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);

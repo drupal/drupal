@@ -2,28 +2,28 @@
 
 /**
  * @file
- * Contains \Drupal\block\BlockRenderController.
+ * Contains \Drupal\block\BlockViewBuilder.
  */
 
 namespace Drupal\block;
 
-use Drupal\Core\Entity\EntityRenderControllerInterface;
+use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a Block render controller.
+ * Provides a Block view builder.
  */
-class BlockRenderController implements EntityRenderControllerInterface {
+class BlockViewBuilder implements EntityViewBuilderInterface {
 
   /**
-   * Implements \Drupal\Core\Entity\EntityRenderControllerInterface::buildContent().
+   * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     return array();
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityRenderControllerInterface::view().
+   * {@inheritdoc}
    */
   public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
     $build = $this->viewMultiple(array($entity), $view_mode, $langcode);
@@ -31,7 +31,7 @@ class BlockRenderController implements EntityRenderControllerInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityRenderControllerInterface::viewMultiple().
+   * {@inheritdoc}
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     $build = array();

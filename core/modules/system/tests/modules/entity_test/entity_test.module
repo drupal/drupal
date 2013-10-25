@@ -245,7 +245,6 @@ function entity_test_permission() {
 function entity_test_menu() {
   $items = array();
   $types = entity_test_entity_types();
-  $types[] = 'entity_test_render';
 
   foreach($types as $entity_type) {
     $items[$entity_type . '/add'] = array(
@@ -322,21 +321,6 @@ function entity_test_edit(EntityInterface $entity) {
  */
 function entity_test_load($id, $reset = FALSE) {
   return entity_load('entity_test', $id, $reset);
-}
-
-/**
- * Loads a test entity.
- *
- * @param int $id
- *   A test entity ID.
- * @param bool $reset
- *   A boolean indicating that the internal cache should be reset.
- *
- * @return \Drupal\entity_test\Entity\EntityRenderTest
- *   The loaded entity object, or NULL if the entity cannot be loaded.
- */
-function entity_test_render_load($id, $reset = FALSE) {
-  return entity_load('entity_test_render', $id, $reset);
 }
 
 /**
@@ -547,9 +531,9 @@ function _entity_test_record_hooks($hook, $data) {
  */
 function entity_test_entity_prepare_view($entity_type, array $entities, array $displays) {
   // Add a dummy field item attribute on field_test_text if it exists.
-  if ($entity_type == 'entity_test_render') {
+  if ($entity_type == 'entity_test') {
     foreach ($entities as $entity) {
-      if ($entity->hasField('field_test_text')) {
+      if ($entity->hasField('field_test_text') && $displays[$entity->bundle()]->getComponent('field_test_text')) {
         foreach ($entity->get('field_test_text') as $item) {
           $item->_attributes += array('data-field-item-attr' => 'foobar');
         }

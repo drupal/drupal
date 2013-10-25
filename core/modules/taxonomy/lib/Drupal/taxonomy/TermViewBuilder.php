@@ -2,22 +2,22 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\TermRenderController.
+ * Definition of Drupal\taxonomy\TermViewBuilder.
  */
 
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\entity\Entity\EntityDisplay;
 
 /**
  * Render controller for taxonomy terms.
  */
-class TermRenderController extends EntityRenderController {
+class TermViewBuilder extends EntityViewBuilder {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
+   * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     parent::buildContent($entities, $displays, $view_mode, $langcode);
@@ -36,7 +36,7 @@ class TermRenderController extends EntityRenderController {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityRenderController::getBuildDefaults().
+   * {@inheritdoc}
    */
   protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
     $return = parent::getBuildDefaults($entity, $view_mode, $langcode);
@@ -49,7 +49,7 @@ class TermRenderController extends EntityRenderController {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityRenderController::alterBuild().
+   * {@inheritdoc}
    */
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);

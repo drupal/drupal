@@ -146,7 +146,7 @@ class EntityDisplayModeListController extends ConfigEntityListController {
    *   doesn't has the correct controller.
    */
   protected function isValidEntity($entity_type) {
-    return isset($this->entityInfoComplete[$entity_type]['controllers']['render']);
+    return isset($this->entityInfoComplete[$entity_type]['controllers']['view_builder']);
   }
 
 }

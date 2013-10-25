@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Tests basic comment functionality against the entity_test_render entity type.
+ * Tests basic comment functionality against the entity_test entity type.
  */
 class CommentNonNodeTest extends WebTestBase {
 
@@ -36,10 +36,10 @@ class CommentNonNodeTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    // Create a bundle for entity_test_render.
-    entity_test_create_bundle('entity_test_render', 'Entity Test Render', 'entity_test_render');
-    // Create comment field on entity_test_render bundle.
-    $this->container->get('comment.manager')->addDefaultField('entity_test_render', 'entity_test_render');
+    // Create a bundle for entity_test.
+    entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');
+    // Create comment field on entity_test bundle.
+    $this->container->get('comment.manager')->addDefaultField('entity_test', 'entity_test');
 
     // Create test user.
     $this->admin_user = $this->drupalCreateUser(array(
@@ -65,8 +65,8 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Create a test entity.
     $random_label = $this->randomName();
-    $data = array('type' => 'entity_test_render', 'name' => $random_label);
-    $this->entity = entity_create('entity_test_render', $data);
+    $data = array('type' => 'entity_test', 'name' => $random_label);
+    $this->entity = entity_create('entity_test', $data);
     $this->entity->save();
   }
 
@@ -87,13 +87,13 @@ class CommentNonNodeTest extends WebTestBase {
     $edit = array();
     $edit['comment_body[0][value]'] = $comment;
 
-    $instance = $this->container->get('field.info')->getInstance('entity_test_render', 'entity_test_render', 'comment');
+    $instance = $this->container->get('field.info')->getInstance('entity_test', 'entity_test', 'comment');
     $preview_mode = $instance->getFieldSetting('preview');
     $subject_mode = $instance->getFieldSetting('subject');
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {
-      $this->drupalGet('comment/reply/entity_test_render/' . $entity->id() . '/comment');
+      $this->drupalGet('comment/reply/entity_test/' . $entity->id() . '/comment');
     }
 
     if ($subject_mode == TRUE) {
@@ -225,15 +225,15 @@ class CommentNonNodeTest extends WebTestBase {
    */
   function testCommentFunctionality() {
     $limited_user = $this->drupalCreateUser(array(
-      'administer entity_test_render fields'
+      'administer entity_test fields'
     ));
     $this->drupalLogin($limited_user);
     // Test that default field exists.
-    $this->drupalGet('admin/structure/entity-test-render/manage/entity_test_render/fields');
+    $this->drupalGet('admin/structure/entity-test/manage/entity_test/fields');
     $this->assertText(t('Comment settings'));
-    $this->assertLinkByHref('admin/structure/entity-test-render/manage/entity_test_render/fields/entity_test_render.entity_test_render.comment');
+    $this->assertLinkByHref('admin/structure/entity-test/manage/entity_test/fields/entity_test.entity_test.comment');
     // Test widget hidden option is not visible when there's no comments.
-    $this->drupalGet('admin/structure/entity-test-render/manage/entity_test_render/entity-test-render/fields/entity_test_render.entity_test_render.comment');
+    $this->drupalGet('admin/structure/entity-test/manage/entity_test/entity-test/fields/entity_test.entity_test.comment');
     $this->assertNoField('edit-default-value-input-comment-und-0-status-0');
 
     $this->drupalLogin($this->admin_user);
@@ -243,7 +243,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertTrue($this->commentExists($comment1), 'Comment on test entity exists.');
 
     // Assert the breadcrumb is valid.
-    $this->drupalGet('comment/reply/entity_test_render/' . $this->entity->id() . '/comment');
+    $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertLink($this->entity->label());
 
     // Unpublish the comment.
@@ -289,12 +289,12 @@ class CommentNonNodeTest extends WebTestBase {
     ));
 
     // Attempt to view comments while disallowed.
-    $this->drupalGet('entity-test-render/' . $this->entity->id());
+    $this->drupalGet('entity-test/' . $this->entity->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertNoLink('Add new comment', 'Link to add comment was found.');
 
     // Attempt to view test entity comment form while disallowed.
-    $this->drupalGet('comment/reply/entity_test_render/' . $this->entity->id() . '/comment');
+    $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
     $this->assertNoFieldByName('subject', '', 'Subject field not found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
@@ -307,8 +307,8 @@ class CommentNonNodeTest extends WebTestBase {
     ));
     // We've changed role permissions, so need to reset render cache.
     // @todo Revisit after https://drupal.org/node/2099105
-    \Drupal::entityManager()->getRenderController('entity_test_render')->resetCache(array($this->entity->id()));
-    $this->drupalGet('entity-test-render/' . $this->entity->id());
+    \Drupal::entityManager()->getViewBuilder('entity_test')->resetCache(array($this->entity->id()));
+    $this->drupalGet('entity_test/' . $this->entity->id());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
     $this->assertLink('Log in', 0, 'Link to log in was found.');
     $this->assertLink('register', 0, 'Link to register was found.');
@@ -326,37 +326,37 @@ class CommentNonNodeTest extends WebTestBase {
     ));
     // We've changed role permissions, so need to reset render cache.
     // @todo Revisit after https://drupal.org/node/2099105
-    \Drupal::entityManager()->getRenderController('entity_test_render')->resetCache(array($this->entity->id()));
-    $this->drupalGet('entity-test-render/' . $this->entity->id());
+    \Drupal::entityManager()->getViewBuilder('entity_test')->resetCache(array($this->entity->id()));
+    $this->drupalGet('entity_test/' . $this->entity->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertFieldByName('subject', '', 'Subject field found.');
     $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
 
-    $this->drupalGet('comment/reply/entity_test_render/' . $this->entity->id() . '/comment/' . $comment1->id());
+    $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment/' . $comment1->id());
     $this->assertText('You are not authorized to view comments');
     $this->assertNoText($comment1->subject->value, 'Comment not displayed.');
 
     // Test comment field widget changes.
     $limited_user = $this->drupalCreateUser(array(
-      'administer entity_test_render fields',
+      'administer entity_test fields',
       'view test entity',
       'administer entity_test content',
     ));
     $this->drupalLogin($limited_user);
-    $this->drupalGet('admin/structure/entity-test-render/manage/entity_test_render/fields/entity_test_render.entity_test_render.comment');
+    $this->drupalGet('admin/structure/entity-test/manage/entity_test/fields/entity_test.entity_test.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-2');
     // Test comment option change in field settings.
     $edit = array('default_value_input[comment][0][status]' => COMMENT_CLOSED);
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
-    $this->drupalGet('admin/structure/entity-test-render/manage/entity_test_render/fields/entity_test_render.entity_test_render.comment');
+    $this->drupalGet('admin/structure/entity-test/manage/entity_test/fields/entity_test.entity_test.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-2');
 
     // Add a new comment field.
-    $this->drupalGet('admin/structure/entity-test-render/manage/entity_test_render/fields');
+    $this->drupalGet('admin/structure/entity-test/manage/entity_test/fields');
     $edit = array(
       'fields[_add_new_field][label]' => 'Foobar',
       'fields[_add_new_field][field_name]' => 'foobar',
@@ -369,15 +369,15 @@ class CommentNonNodeTest extends WebTestBase {
 
     // Test the new entity commenting inherits default.
     $random_label = $this->randomName();
-    $data = array('bundle' => 'entity_test_render', 'name' => $random_label);
-    $new_entity = entity_create('entity_test_render', $data);
+    $data = array('bundle' => 'entity_test', 'name' => $random_label);
+    $new_entity = entity_create('entity_test', $data);
     $new_entity->save();
-    $this->drupalGet('entity_test_render/manage/' . $new_entity->id());
+    $this->drupalGet('entity_test/manage/' . $new_entity->id());
     $this->assertNoFieldChecked('edit-field-foobar-0-status-1');
     $this->assertFieldChecked('edit-field-foobar-0-status-2');
     $this->assertNoField('edit-field-foobar-0-status-0');
 
-    $this->drupalGet('comment/reply/entity_test_render/comment/' . $new_entity->id());
+    $this->drupalGet('comment/reply/entity_test/comment/' . $new_entity->id());
     $this->assertNoFieldByName('subject', '', 'Subject field found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field found.');
   }

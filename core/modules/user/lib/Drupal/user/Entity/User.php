@@ -22,7 +22,7 @@ use Drupal\user\UserInterface;
  *   controllers = {
  *     "storage" = "Drupal\user\UserStorageController",
  *     "access" = "Drupal\user\UserAccessController",
- *     "render" = "Drupal\Core\Entity\EntityRenderController",
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\user\ProfileFormController",
  *       "cancel" = "Drupal\user\Form\UserCancelForm",

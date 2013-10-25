@@ -307,16 +307,16 @@ class EntityManager extends PluginManagerBase {
   }
 
   /**
-   * Creates a new render controller instance.
+   * Creates a new view builder instance.
    *
    * @param string $entity_type
-   *   The entity type for this render controller.
+   *   The entity type for this view builder.
    *
-   * @return \Drupal\Core\Entity\EntityRenderControllerInterface.
-   *   A render controller instance.
+   * @return \Drupal\Core\Entity\EntityViewBuilderInterface.
+   *   A view builder instance.
    */
-  public function getRenderController($entity_type) {
-    return $this->getController($entity_type, 'render');
+  public function getViewBuilder($entity_type) {
+    return $this->getController($entity_type, 'view_builder');
   }
 
   /**

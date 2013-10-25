@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains Drupal\contact\MessageRenderController.
+ * Contains Drupal\contact\MessageViewBuilder.
  */
 
 namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Entity\EntityViewBuilder;
 
 /**
  * Render controller for contact messages.
  */
-class MessageRenderController extends EntityRenderController {
+class MessageViewBuilder extends EntityViewBuilder {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
+   * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     parent::buildContent($entities, $displays, $view_mode, $langcode);
@@ -35,7 +35,7 @@ class MessageRenderController extends EntityRenderController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityRenderController::view().
+   * {@inheritdoc}
    */
   public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
     $build = parent::view($entity, $view_mode, $langcode);

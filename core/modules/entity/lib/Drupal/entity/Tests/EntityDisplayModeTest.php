@@ -40,14 +40,14 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertResponse(200);
 
-    $this->drupalGet('admin/structure/display-modes/view/add/entity_test');
+    $this->drupalGet('admin/structure/display-modes/view/add/entity_test_mul');
     $this->assertResponse(404);
 
     $this->drupalGet('admin/structure/display-modes/view/add');
-    $this->assertNoLink(t('Test entity'), 'An entity type with no render controller cannot have view modes.');
+    $this->assertNoLink(t('Test entity - data table'), 'An entity type with no view builder cannot have view modes.');
 
     // Test adding a view mode.
-    $this->clickLink(t('Test render entity'));
+    $this->clickLink(t('Test entity'));
     $edit = array(
       'id' => strtolower($this->randomName()),
       'label' => $this->randomString(),
@@ -56,7 +56,7 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->assertRaw(t('Saved the %label view mode.', array('%label' => $edit['label'])));
 
     // Test editing the view mode.
-    $this->drupalGet('admin/structure/display-modes/view/manage/entity_test_render.' . $edit['id']);
+    $this->drupalGet('admin/structure/display-modes/view/manage/entity_test.' . $edit['id']);
 
     // Test deleting the view mode.
     $this->drupalPostForm(NULL, NULL, t('Delete'));

@@ -32,8 +32,8 @@ class EntityViewControllerTest extends UnitTestCase{
    */
   public function testView() {
 
-    // Mock a render controller.
-    $render_controller = $this->getMockBuilder('Drupal\entity_test\EntityTestRenderController')
+    // Mock a view builder.
+    $render_controller = $this->getMockBuilder('Drupal\entity_test\EntityTestViewBuilder')
       ->disableOriginalConstructor()
       ->getMock();
     $render_controller->expects($this->any())
@@ -45,11 +45,11 @@ class EntityViewControllerTest extends UnitTestCase{
       ->disableOriginalConstructor()
       ->getMock();
     $entity_manager->expects($this->any())
-      ->method('getRenderController')
+      ->method('getViewBuilder')
       ->will($this->returnValue($render_controller));
 
-    // Mock an 'entity_test_render' entity.
-    $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTestRender')
+    // Mock an 'entity_test' entity.
+    $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
       ->disableOriginalConstructor()
       ->getMock();
 

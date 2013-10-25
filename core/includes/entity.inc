@@ -52,8 +52,8 @@ function entity_info_cache_clear() {
 function entity_render_cache_clear() {
   $entity_manager = Drupal::entityManager();
   foreach ($entity_manager->getDefinitions() as $entity_type => $info) {
-    if ($entity_manager->hasController($entity_type, 'render')) {
-      $entity_manager->getRenderController($entity_type)->resetCache();
+    if ($entity_manager->hasController($entity_type, 'view_builder')) {
+      $entity_manager->getViewBuilder($entity_type)->resetCache();
     }
   }
 }
@@ -435,7 +435,7 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  * @return \Drupal\Core\Entity\EntityAccessControllerInterface
  *   An entity access controller instance.
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManager::getRenderController().
+ * @deprecated Use \Drupal\Core\Entity\EntityManager::getAccessController().
  */
 function entity_access_controller($entity_type) {
   return \Drupal::entityManager()
@@ -552,22 +552,6 @@ function entity_list_controller($entity_type) {
 }
 
 /**
- * Returns an entity render controller for a given entity type.
- *
- * @param string $entity_type
- *   The type of the entity.
- *
- * @return \Drupal\Core\Entity\EntityRenderControllerInterface
- *   An entity render controller.
- *
- * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
- */
-function entity_render_controller($entity_type) {
-  return \Drupal::entityManager()
-    ->getRenderController($entity_type);
-}
-
-/**
  * Returns the render array for an entity.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -585,7 +569,7 @@ function entity_render_controller($entity_type) {
  *   A render array for the entity.
  */
 function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $reset = FALSE) {
-  $render_controller = \Drupal::entityManager()->getRenderController($entity->entityType());
+  $render_controller = \Drupal::entityManager()->getViewBuilder($entity->entityType());
   if ($reset) {
     $render_controller->resetCache(array($entity->id()));
   }
@@ -611,7 +595,7 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $res
  *   entities array passed in $entities.
  */
 function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $reset = FALSE) {
-  $render_controller = \Drupal::entityManager()->getRenderController(reset($entities)->entityType());
+  $render_controller = \Drupal::entityManager()->getViewBuilder(reset($entities)->entityType());
   if ($reset) {
     $render_controller->resetCache(array_keys($entities));
   }

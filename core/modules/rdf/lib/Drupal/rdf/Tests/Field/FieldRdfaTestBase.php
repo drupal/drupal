@@ -60,7 +60,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
   protected function assertFormatterRdfa($formatter, $property, $value, $object_type = 'literal') {
     // The field formatter will be rendered inside the entity. Set the field
     // formatter in the entity display options before rendering the entity.
-    entity_get_display('entity_test_render', 'entity_test_render', 'default')
+    entity_get_display('entity_test', 'entity_test', 'default')
       ->setComponent($this->fieldName, array('type' => $formatter))
       ->save();
     $build = entity_view($this->entity, 'default');
@@ -80,13 +80,13 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
   protected function createTestField() {
     entity_create('field_entity', array(
       'name' => $this->fieldName,
-      'entity_type' => 'entity_test_render',
+      'entity_type' => 'entity_test',
       'type' => $this->fieldType,
     ))->save();
     entity_create('field_instance', array(
-      'entity_type' => 'entity_test_render',
+      'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
-      'bundle' => 'entity_test_render',
+      'bundle' => 'entity_test',
     ))->save();
   }
 

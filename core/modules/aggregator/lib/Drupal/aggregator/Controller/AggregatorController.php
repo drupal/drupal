@@ -85,7 +85,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    */
   public function viewFeed(FeedInterface $aggregator_feed) {
     $entity_manager = $this->entityManager();
-    $feed_source = $entity_manager->getRenderController('aggregator_feed')
+    $feed_source = $entity_manager->getViewBuilder('aggregator_feed')
       ->view($aggregator_feed, 'default');
     // Load aggregator feed item for the particular feed id.
     $items = $entity_manager->getStorageController('aggregator_item')->loadByFeed($aggregator_feed->id());
@@ -131,7 +131,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
     );
     $build['feed_source'] = is_array($feed_source) ? $feed_source : array('#markup' => $feed_source);
     if ($items) {
-      $build['items'] = $this->entityManager()->getRenderController('aggregator_item')
+      $build['items'] = $this->entityManager()->getViewBuilder('aggregator_item')
         ->viewMultiple($items, 'default');
       $build['pager'] = array('#theme' => 'pager');
     }
@@ -274,7 +274,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
       if ($aggregator_summary_items) {
         $items = $entity_manager->getStorageController('aggregator_item')->loadByCategory($category->cid);
         if ($items) {
-          $summary_items = $entity_manager->getRenderController('aggregator_item')->viewMultiple($items, 'summary');
+          $summary_items = $entity_manager->getViewBuilder('aggregator_item')->viewMultiple($items, 'summary');
         }
       }
       $category->url = $this->urlGenerator()->generateFromPath('aggregator/categories/' . $category->cid);
@@ -326,7 +326,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
         $items = $entity_manager->getStorageController('aggregator_item')
           ->loadByFeed($feed->id());
         if ($items) {
-          $summary_items = $entity_manager->getRenderController('aggregator_item')
+          $summary_items = $entity_manager->getViewBuilder('aggregator_item')
             ->viewMultiple($items, 'summary');
         }
       }

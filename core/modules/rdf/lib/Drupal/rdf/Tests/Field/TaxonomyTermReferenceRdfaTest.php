@@ -60,7 +60,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
 
     entity_create('field_entity', array(
       'name' => $this->fieldName,
-      'entity_type' => 'entity_test_render',
+      'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(
@@ -73,9 +73,9 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
       ),
     ))->save();
     entity_create('field_instance', array(
-      'entity_type' => 'entity_test_render',
+      'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
-      'bundle' => 'entity_test_render',
+      'bundle' => 'entity_test',
     ))->save();
 
     $this->term = entity_create('taxonomy_term', array(
@@ -86,13 +86,13 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
     $this->term->save();
 
     // Add the mapping.
-    $mapping = rdf_get_mapping('entity_test_render', 'entity_test_render');
+    $mapping = rdf_get_mapping('entity_test', 'entity_test');
     $mapping->setFieldMapping($this->fieldName, array(
       'properties' => array('schema:about'),
     ))->save();
 
     // Set up test values.
-    $this->entity = entity_create('entity_test_render', array());
+    $this->entity = entity_create('entity_test', array());
     $this->entity->{$this->fieldName}->target_id = $this->term->id();
     $this->entity->save();
     $this->uri = $this->getAbsoluteUri($this->entity);

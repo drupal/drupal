@@ -21,7 +21,6 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   protected function routes(RouteCollection $collection) {
     $types = entity_test_entity_types();
-    $types[] = 'entity_test_render';
 
     foreach ($types as $entity_type) {
       $route = new Route(

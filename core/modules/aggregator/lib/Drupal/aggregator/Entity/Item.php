@@ -22,7 +22,7 @@ use Drupal\aggregator\ItemInterface;
  *   module = "aggregator",
  *   controllers = {
  *     "storage" = "Drupal\aggregator\ItemStorageController",
- *     "render" = "Drupal\aggregator\ItemRenderController"
+ *     "view_builder" = "Drupal\aggregator\ItemViewBuilder"
  *   },
  *   base_table = "aggregator_item",
  *   fieldable = TRUE,
