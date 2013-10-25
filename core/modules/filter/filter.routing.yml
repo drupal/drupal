@@ -25,6 +25,7 @@ filter.format_add:
   path: '/admin/config/content/formats/add'
   defaults:
     _entity_form: filter_format.add
+    _title: 'Add text format'
   requirements:
     _permission: 'administer filters'
 

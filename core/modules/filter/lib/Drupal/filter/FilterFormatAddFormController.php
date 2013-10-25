@@ -16,7 +16,6 @@ class FilterFormatAddFormController extends FilterFormatFormControllerBase {
    * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
-    drupal_set_title('Add text format');
     return parent::form($form, $form_state);
   }
 
