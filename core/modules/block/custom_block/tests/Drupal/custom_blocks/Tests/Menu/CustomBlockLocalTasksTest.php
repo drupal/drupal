@@ -27,8 +27,8 @@ class CustomBlockLocalTasksTest extends LocalTaskIntegrationTest {
 
   public function setUp() {
     $this->moduleList = array(
-      'block' => 'core/modules/block/block.info.yml',
-      'custom_block' => 'core/modules/block/custom_block/custom_block.info.yml',
+      'block' => 'core/modules/block/block.module',
+      'custom_block' => 'core/modules/block/custom_block/custom_block.module',
     );
     parent::setUp();
   }

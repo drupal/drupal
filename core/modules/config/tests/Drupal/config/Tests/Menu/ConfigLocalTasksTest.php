@@ -26,7 +26,7 @@ class ConfigLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array('config' => 'core/modules/config/config.info.yml');
+    $this->moduleList = array('config' => 'core/modules/config/config.module');
     parent::setUp();
   }
 

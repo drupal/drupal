@@ -27,8 +27,8 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
 
   public function setUp() {
     $this->moduleList = array(
-      'content_translation' => 'core/modules/content_translation/content_translation.info.yml',
-      'node' => 'core/modules/node/node.info.yml',
+      'content_translation' => 'core/modules/content_translation/content_translation.module',
+      'node' => 'core/modules/node/node.module',
     );
     parent::setUp();
 

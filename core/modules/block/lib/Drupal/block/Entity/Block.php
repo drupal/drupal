@@ -71,7 +71,7 @@ class Block extends ConfigEntityBase implements BlockInterface {
    *
    * @var string
    */
-  protected $region = BLOCK_REGION_NONE;
+  protected $region = self::BLOCK_REGION_NONE;
 
   /**
    * The block weight.
@@ -163,7 +163,7 @@ class Block extends ConfigEntityBase implements BlockInterface {
       return $status;
     }
     // Sort by weight, unless disabled.
-    if ($a->get('region') != BLOCK_REGION_NONE) {
+    if ($a->get('region') != static::BLOCK_REGION_NONE) {
       $weight = $a->get('weight') - $b->get('weight');
       if ($weight) {
         return $weight;

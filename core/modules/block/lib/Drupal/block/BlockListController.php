@@ -155,7 +155,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     $form['#attributes']['class'][] = 'clearfix';
 
     // Add a last region for disabled blocks.
-    $block_regions_with_disabled = $this->regions + array(BLOCK_REGION_NONE => BLOCK_REGION_NONE);
+    $block_regions_with_disabled = $this->regions + array(BlockInterface::BLOCK_REGION_NONE => BlockInterface::BLOCK_REGION_NONE);
     $form['block_regions'] = array(
       '#type' => 'value',
       '#value' => $block_regions_with_disabled,
@@ -219,7 +219,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
         ),
       );
       $form['blocks'][$region]['title'] = array(
-        '#markup' => $region != BLOCK_REGION_NONE ? $title : t('Disabled'),
+        '#markup' => $region != BlockInterface::BLOCK_REGION_NONE ? $title : t('Disabled'),
         '#wrapper_attributes' => array(
           'colspan' => 5,
         ),
@@ -263,7 +263,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
           $form['blocks'][$entity_id]['region-theme']['region'] = array(
             '#type' => 'select',
             '#default_value' => $region,
-            '#empty_value' => BLOCK_REGION_NONE,
+            '#empty_value' => BlockInterface::BLOCK_REGION_NONE,
             '#title' => t('Region for @block block', array('@block' => $info['admin_label'])),
             '#title_display' => 'invisible',
             '#options' => $this->regions,
@@ -404,7 +404,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     foreach ($entities as $entity_id => $entity) {
       $entity->set('weight', $form_state['values']['blocks'][$entity_id]['weight']);
       $entity->set('region', $form_state['values']['blocks'][$entity_id]['region']);
-      if ($entity->get('region') == BLOCK_REGION_NONE) {
+      if ($entity->get('region') == BlockInterface::BLOCK_REGION_NONE) {
         $entity->disable();
       }
       else {

@@ -120,15 +120,15 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
    *   Returns the local task ID of the parent task, otherwise return FALSE.
    */
   protected function getTaskFromRoute($route_name, &$local_tasks) {
-    $local_task = FALSE;
+    $parent_local_task = FALSE;
     foreach ($local_tasks as $plugin_id => $local_task) {
       if ($local_task['route_name'] == $route_name) {
-        $local_task = $plugin_id;
+        $parent_local_task = $plugin_id;
         break;
       }
     }
 
-    return $local_task;
+    return $parent_local_task;
   }
 
   /**

@@ -26,7 +26,7 @@ class AggregatorLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array('aggregator' => 'core/modules/aggregator/aggregator.info.yml');
+    $this->moduleList = array('aggregator' => 'core/modules/aggregator/aggregator.module');
     parent::setUp();
   }
 

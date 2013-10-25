@@ -27,8 +27,8 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTest {
 
   public function setUp() {
     $this->moduleList = array(
-      'shortcut' => 'core/modules/shortcut/shortcut.info.yml',
-      'user' => 'core/modules/user/user.info.yml',
+      'shortcut' => 'core/modules/shortcut/shortcut.module',
+      'user' => 'core/modules/user/user.module',
     );
     parent::setUp();
   }

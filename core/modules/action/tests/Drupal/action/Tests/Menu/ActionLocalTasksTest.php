@@ -26,7 +26,7 @@ class ActionLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array('action' => 'core/modules/action/action.info.yml');
+    $this->moduleList = array('action' => 'core/modules/action/action.module');
     parent::setUp();
   }
 

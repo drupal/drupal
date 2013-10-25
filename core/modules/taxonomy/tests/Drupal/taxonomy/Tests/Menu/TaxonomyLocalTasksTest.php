@@ -26,7 +26,7 @@ class TaxonomyLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array('taxonomy' => 'core/modules/taxonomy/taxonomy.info.yml');
+    $this->moduleList = array('taxonomy' => 'core/modules/taxonomy/taxonomy.module');
     parent::setUp();
   }
 

@@ -27,7 +27,7 @@ class LanguageLocalTasks extends LocalTaskIntegrationTest {
 
   public function setUp() {
     $this->moduleList = array(
-      'language' => 'core/modules/language/language.info.yml',
+      'language' => 'core/modules/language/language.module',
     );
     parent::setUp();
   }

@@ -27,7 +27,7 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTest {
 
   public function setUp() {
     $this->moduleList = array(
-      'locale' => 'core/modules/locale/locale.info.yml',
+      'locale' => 'core/modules/locale/locale.module',
     );
     parent::setUp();
   }
