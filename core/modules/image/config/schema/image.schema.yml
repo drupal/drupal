@@ -83,3 +83,9 @@ image.settings:
     preview_image:
       type: string
       label: 'Preview image'
+    allow_insecure_derivatives:
+      type: boolean
+      label: 'Allow insecure image derivatives'
+    suppress_itok_output:
+      type: boolean
+      label: 'Suppress the itok query string for image derivatives'
