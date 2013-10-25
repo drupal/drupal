@@ -142,6 +142,8 @@ abstract class DateFormatFormBase extends EntityFormController {
       '#default_value' => $this->entity->id(),
       '#machine_name' => array(
         'exists' => array($this, 'exists'),
+        'replace_pattern' =>'([^a-z0-9_]+)|(^custom$)',
+        'error' => 'The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".',
       ),
     );
 
