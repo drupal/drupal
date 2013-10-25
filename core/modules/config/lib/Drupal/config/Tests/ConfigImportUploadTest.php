@@ -36,13 +36,13 @@ class ConfigImportUploadTest extends WebTestBase {
    */
   function testImport() {
     // Verify access to the config upload form.
-    $this->drupalGet('admin/config/development/configuration/import');
+    $this->drupalGet('admin/config/development/configuration/full/import');
     $this->assertResponse(200);
 
     // Attempt to upload a non-tar file.
     $text_file = current($this->drupalGetTestFiles('text'));
     $edit = array('files[import_tarball]' => drupal_realpath($text_file->uri));
-    $this->drupalPostForm('admin/config/development/configuration/import', $edit, t('Upload'));
+    $this->drupalPostForm('admin/config/development/configuration/full/import', $edit, t('Upload'));
     $this->assertText(t('Could not extract the contents of the tar file'));
   }
 

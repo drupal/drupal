@@ -44,9 +44,11 @@ class ConfigLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function getConfigAdminRoutes() {
     return array(
-      array('config.sync', array(array('config.sync', 'config.export', 'config.import'))),
-      array('config.export', array(array('config.sync', 'config.export', 'config.import'))),
-      array('config.import', array(array('config.sync', 'config.export', 'config.import'))),
+      array('config.sync', array(array('config.sync', 'config.full', 'config.single'))),
+      array('config.export_full', array(array('config.sync', 'config.full', 'config.single'), array('config.export_full', 'config.import_full'))),
+      array('config.import_full', array(array('config.sync', 'config.full', 'config.single'), array('config.export_full', 'config.import_full'))),
+      array('config.export_single', array(array('config.sync', 'config.full', 'config.single'), array('config.export_single', 'config.import_single'))),
+      array('config.import_single', array(array('config.sync', 'config.full', 'config.single'), array('config.export_single', 'config.import_single'))),
     );
   }
 

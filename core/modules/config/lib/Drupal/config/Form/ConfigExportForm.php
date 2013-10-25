@@ -39,7 +39,7 @@ class ConfigExportForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $form_state['redirect'] = 'admin/config/development/configuration/export-download';
+    $form_state['redirect'] = 'admin/config/development/configuration/full/export-download';
   }
 
 }

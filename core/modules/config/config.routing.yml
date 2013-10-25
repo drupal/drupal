@@ -13,25 +13,43 @@ config.diff:
   requirements:
     _permission: 'synchronize configuration'
 
-config_export_download:
-  path: '/admin/config/development/configuration/export-download'
+config.export_download:
+  path: '/admin/config/development/configuration/full/export-download'
   defaults:
     _controller: '\Drupal\config\Controller\ConfigController::downloadExport'
   requirements:
     _permission: 'export configuration'
 
-config.export:
-  path: '/admin/config/development/configuration/export'
+config.export_full:
+  path: '/admin/config/development/configuration/full/export'
   defaults:
     _form: '\Drupal\config\Form\ConfigExportForm'
     _title: 'Export'
   requirements:
     _permission: 'export configuration'
 
-config.import:
-  path: '/admin/config/development/configuration/import'
+config.import_full:
+  path: '/admin/config/development/configuration/full/import'
   defaults:
     _form: '\Drupal\config\Form\ConfigImportForm'
     _title: 'Import'
   requirements:
     _permission: 'import configuration'
+
+config.import_single:
+  path: '/admin/config/development/configuration/single/import'
+  defaults:
+    _title: 'Single import'
+    _form: '\Drupal\config\Form\ConfigSingleImportForm'
+  requirements:
+    _permission: 'import configuration'
+
+config.export_single:
+  path: '/admin/config/development/configuration/single/export/{config_type}/{config_name}'
+  defaults:
+    _title: 'Single export'
+    _form: '\Drupal\config\Form\ConfigSingleExportForm'
+    config_type: NULL
+    config_name: NULL
+  requirements:
+    _permission: 'export configuration'

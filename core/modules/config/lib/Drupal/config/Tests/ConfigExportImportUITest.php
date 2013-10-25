@@ -75,7 +75,7 @@ class ConfigExportImportUITest extends WebTestBase {
     \Drupal::config('system.site')
       ->set('slogan', $this->slogan)
       ->save();
-    $this->drupalPostForm('admin/config/development/configuration/export', array(), 'Export');
+    $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
     $this->tarball = $this->drupalGetContent();
   }
 
@@ -105,7 +105,7 @@ class ConfigExportImportUITest extends WebTestBase {
    */
   protected function doImport($filename) {
     $this->assertNotEqual($this->slogan, \Drupal::config('system.site')->get('slogan'));
-    $this->drupalPostForm('admin/config/development/configuration/import', array('files[import_tarball]' => $filename), 'Upload');
+    $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
     $this->drupalPostForm(NULL, array(), 'Import all');
     $this->assertEqual($this->slogan, \Drupal::config('system.site')->get('slogan'));
   }

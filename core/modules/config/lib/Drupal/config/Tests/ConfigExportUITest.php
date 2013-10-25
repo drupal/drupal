@@ -44,11 +44,11 @@ class ConfigExportUITest extends WebTestBase {
    */
   function testExport() {
     // Verify the export page with export submit button is available.
-    $this->drupalGet('admin/config/development/configuration/export');
+    $this->drupalGet('admin/config/development/configuration/full/export');
     $this->assertFieldById('edit-submit', t('Export'));
 
     // Submit the export form and verify response.
-    $this->drupalPostForm('admin/config/development/configuration/export', array(), t('Export'));
+    $this->drupalPostForm('admin/config/development/configuration/full/export', array(), t('Export'));
     $this->assertResponse(200, 'User can access the download callback.');
 
     // Get the archived binary file provided to user for download.

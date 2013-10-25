@@ -2,14 +2,37 @@ config.sync:
   route_name: config.sync
   tab_root_id: config.sync
   title: 'Synchronize'
-  weight: 0
-config.export:
-  route_name: config.export
+
+config.full:
+  route_name: config.import_full
+  title: 'Full Import/Export'
   tab_root_id: config.sync
+
+config.single:
+  route_name: config.import_single
+  title: 'Single Import/Export'
+  tab_root_id: config.sync
+
+config.export_full:
+  route_name: config.export_full
   title: Export
-  weight: 1
-config.import:
-  route_name: config.import
+  tab_root_id: config.sync
+  tab_parent_id: config.full
+
+config.import_full:
+  route_name: config.import_full
   title: Import
   tab_root_id: config.sync
-  weight: 2
+  tab_parent_id: config.full
+
+config.export_single:
+  route_name: config.export_single
+  title: Export
+  tab_root_id: config.sync
+  tab_parent_id: config.single
+
+config.import_single:
+  route_name: config.import_single
+  title: Import
+  tab_root_id: config.sync
+  tab_parent_id: config.single

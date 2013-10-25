@@ -114,10 +114,10 @@ class FieldInstanceStorageController extends ConfigStorageController {
   public function loadByProperties(array $conditions = array()) {
     // Include instances of inactive fields if specified in the
     // $conditions parameters.
-    $include_inactive = $conditions['include_inactive'];
+    $include_inactive = isset($conditions['include_inactive']) ? $conditions['include_inactive'] : FALSE;
     unset($conditions['include_inactive']);
     // Include deleted instances if specified in the $conditions parameters.
-    $include_deleted = $conditions['include_deleted'];
+    $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
     // Get instances stored in configuration.
