@@ -1627,8 +1627,16 @@ function install_select_language_form($form, &$form_state, $files = array()) {
 
   if (empty($files)) {
     $form['help'] = array(
+      '#type' => 'container',
+      '#states' => array(
+        'invisible' => array(
+          'select[name="langcode"]' => array('value' => 'en'),
+        ),
+      ),
+    );
+    $form['help']['text'] = array(
       '#markup' => '<p>Translations will be downloaded from the <a href="http://localize.drupal.org">Drupal Translation website</a>. ' .
-      'If you do not want this, select <em>English</em> and continue the installation. For more information, see the <a href="http://drupal.org/documentation/install">online handbook</a>.</p>',
+      'If you do not want this, select <em>English</em>.</p>',
     );
   }
   $form['actions'] = array('#type' => 'actions');
