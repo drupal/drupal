@@ -17,8 +17,8 @@ class ContainerDerivativeDiscoveryDecorator extends DerivativeDiscoveryDecorator
   protected function getDerivativeFetcher($base_plugin_id, array $base_definition) {
     if (!isset($this->derivativeFetchers[$base_plugin_id])) {
       $this->derivativeFetchers[$base_plugin_id] = FALSE;
-      if (isset($base_definition['derivative'])) {
-        $class = $base_definition['derivative'];
+      $class = $this->getDerivativeClass($base_definition);
+      if ($class) {
         // If the derivative class provides a factory method, pass the container
         // to it.
         if (is_subclass_of($class, 'Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface')) {
