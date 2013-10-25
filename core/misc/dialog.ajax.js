@@ -28,10 +28,8 @@
           $dialog.trigger('dialogButtonsChange');
         }
 
-        // Refocus the first input element after validation errors.
-        if ($context.find('form').length) {
-          $context.find('input:first').focus();
-        }
+        // Force focus on the modal when the behavior is run.
+        $dialog.dialog('widget').trigger('focus');
       }
     },
 
