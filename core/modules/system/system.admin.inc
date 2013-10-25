@@ -511,6 +511,13 @@ function theme_status_report($variables) {
     else {
       $severity = $severities[REQUIREMENT_INFO];
     }
+    // hook_requirements does not require value to be set. Set to null if not:
+    if (isset($requirement['value'])) {
+      $value = $requirement['value'];
+    }
+    else {
+      $value = NULL;
+    }
 
     $severity['icon'] = '<div title="' . $severity['title'] . '"><span class="visually-hidden">' . $severity['title'] . '</span></div>';
 
@@ -518,7 +525,7 @@ function theme_status_report($variables) {
     $output .= '<tr class="' . $severity['class'] . '">';
     $output .= '<td class="status-icon">' . $severity['icon'] . '</td>';
     $output .= '<td class="status-title">' . $requirement['title'] . '</td>';
-    $output .= '<td class="status-value">' . $requirement['value'];
+    $output .= '<td class="status-value">' . $value;
     if (!empty($requirement['description'])) {
       $output .= '<div class="description">' . $requirement['description'] . '</div>';
     }
