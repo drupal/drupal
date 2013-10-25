@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\Component\Utility\String;
 
 /**
  * Returns a listing of all defined URL aliases.
@@ -113,8 +114,8 @@ function path_admin_overview($keys = NULL) {
  */
 function path_admin_edit($path = array()) {
   if ($path) {
-    drupal_set_title($path['alias']);
     $output = drupal_get_form('path_admin_form', $path);
+    $output['#title'] = String::checkPlain($path['alias']);
   }
   else {
     $output = drupal_get_form('path_admin_form');
