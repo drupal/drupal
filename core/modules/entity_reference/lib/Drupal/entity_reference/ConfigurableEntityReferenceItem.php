@@ -171,7 +171,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
    * @param array $form_state
    *   The form state of the (entire) configuration form.
    */
-  public static function instanceSettingsFormValidate($form, &$form_state) {
+  public static function instanceSettingsFormValidate(array $form, array &$form_state) {
     if (isset($form_state['values']['instance'])) {
       unset($form_state['values']['instance']['settings']['handler_submit']);
       $form_state['instance']->settings = $form_state['values']['instance']['settings'];
