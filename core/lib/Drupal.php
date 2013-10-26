@@ -244,14 +244,14 @@ class Drupal {
   /**
    * Returns a queue for the given queue name.
    *
-   * The following variables can be set by variable_set or $conf overrides:
-   * - queue_class_$name: The class to be used for the queue $name.
-   * - queue_default_class: The class to use when queue_class_$name is not
-   *   defined. Defaults to \Drupal\Core\Queue\System, a reliable backend using
-   *   SQL.
-   * - queue_default_reliable_class: The class to use when queue_class_$name is
-   *   not defined and the queue_default_class is not reliable. Defaults to
-   *   \Drupal\Core\Queue\System.
+   * The following values can be set in your settings.php file's $settings
+   * array to define which services are used for queues:
+   * - queue_reliable_service_$name: The container service to use for the
+   *   reliable queue $name.
+   * - queue_service_$name: The container service to use for the
+   *   queue $name.
+   * - queue_default: The container service to use by default for queues
+   *   without overrides. This defaults to 'queue.database'.
    *
    * @param string $name
    *   The name of the queue to work with.

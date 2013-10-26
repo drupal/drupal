@@ -112,7 +112,7 @@ function hook_admin_paths_alter(&$paths) {
 function hook_cron() {
   // Short-running operation example, not using a queue:
   // Delete all expired records since the last cron run.
-  $expires = \Drupal::state()->get('mymodule.cron_last_run') ?: REQUEST_TIME;
+  $expires = \Drupal::state()->get('mymodule.cron_last_run', REQUEST_TIME);
   db_delete('mymodule_table')
     ->condition('expires', $expires, '>=')
     ->execute();
@@ -816,12 +816,15 @@ function hook_page_alter(&$page) {
  */
 function hook_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
+    $upload_enabled_types = \Drupal::config('mymodule.settings')->get('upload_enabled_types');
     $form['workflow']['upload_' . $form['type']['#value']] = array(
       '#type' => 'radios',
       '#title' => t('Attachments'),
-      '#default_value' => variable_get('upload_' . $form['type']['#value'], 1),
+      '#default_value' => in_array($form['type']['#value'], $upload_enabled_types) ? 1 : 0,
       '#options' => array(t('Disabled'), t('Enabled')),
     );
+    // Add a custom submit handler to save the array of types back to the config file.
+    $form['actions']['submit']['#submit'][] = 'mymodule_upload_enabled_types_submit';
   }
 }
 
@@ -1666,7 +1669,7 @@ function hook_module_preinstall($module) {
  */
 function hook_modules_installed($modules) {
   if (in_array('lousy_module', $modules)) {
-    variable_set('lousy_module_conflicting_variable', FALSE);
+    \Drupal::state()->set('mymodule.lousy_module_compatibility', TRUE);
   }
 }
 
@@ -1697,10 +1700,8 @@ function hook_module_preuninstall($module) {
  * @see hook_modules_disabled()
  */
 function hook_modules_uninstalled($modules) {
-  foreach ($modules as $module) {
-    db_delete('mymodule_table')
-      ->condition('module', $module)
-      ->execute();
+  if (in_array('lousy_module', $modules)) {
+    \Drupal::state()->delete('mymodule.lousy_module_compatibility');
   }
   mymodule_cache_rebuild();
 }
@@ -1804,19 +1805,13 @@ function hook_stream_wrappers_alter(&$wrappers) {
  * @see file_download()
  */
 function hook_file_download($uri) {
-  // Check if the file is controlled by the current module.
-  if (!file_prepare_directory($uri)) {
-    $uri = FALSE;
-  }
-  if (strpos(file_uri_target($uri), variable_get('user_picture_path', 'pictures') . '/picture-') === 0) {
-    if (!user_access('access user profiles')) {
-      // Access to the file is denied.
-      return -1;
-    }
-    else {
-      $image = \Drupal::service('image.factory')->get($uri);
-      return array('Content-Type' => $image->getMimeType());
-    }
+  // Check to see if this is a config download.
+  $scheme = file_uri_scheme($uri);
+  $target = file_uri_target($uri);
+  if ($scheme == 'temporary' && $target == 'config.tar.gz') {
+    return array(
+      'Content-disposition' => 'attachment; filename="config.tar.gz"',
+    );
   }
 }
 
@@ -2187,17 +2182,10 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  * @see hook_modules_installed()
  */
 function hook_install() {
-  // Populate the default {node_access} record.
-  db_insert('node_access')
-    ->fields(array(
-      'nid' => 0,
-      'gid' => 0,
-      'realm' => 'all',
-      'grant_view' => 1,
-      'grant_update' => 0,
-      'grant_delete' => 0,
-    ))
-    ->execute();
+  // Create the styles directory and ensure it's writable.
+  $directory = file_default_scheme() . '://styles';
+  $mode = isset($GLOBALS['install_state']['mode']) ? $GLOBALS['install_state']['mode'] : NULL;
+  file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS, $mode);
 }
 
 /**
@@ -2399,7 +2387,7 @@ function hook_update_last_removed() {
  * Remove any information that the module sets.
  *
  * The information that the module should remove includes:
- * - variables that the module has set using variable_set()
+ * - state that the module has set using \Drupal::state()
  * - modifications to existing tables
  *
  * The module should not remove its entry from the module configuration.
@@ -2424,7 +2412,8 @@ function hook_update_last_removed() {
  * @see hook_modules_uninstalled()
  */
 function hook_uninstall() {
-  variable_del('upload_file_types');
+  // Remove the styles directory and generated images.
+  file_unmanaged_delete_recursive(file_default_scheme() . '://styles');
 }
 
 /**
@@ -2468,11 +2457,10 @@ function hook_uninstall() {
  * access to this information.
  *
  * Remember that a user installing Drupal interactively will be able to reload
- * an installation page multiple times, so you should use variable_set() and
- * variable_get() if you are collecting any data that you need to store and
- * inspect later. It is important to remove any temporary variables using
- * variable_del() before your last task has completed and control is handed
- * back to the installer.
+ * an installation page multiple times, so you should use \Drupal::state() to
+ * store any data that you may need later in the installation process. Any
+ * temporary state must be removed using \Drupal::state()->delete() before
+ * your last task has completed and control is handed back to the installer.
  *
  * @param array $install_state
  *   An array of information about the current installation state.
@@ -2531,7 +2519,7 @@ function hook_install_tasks(&$install_state) {
   // Here, we define a variable to allow tasks to indicate that a particular,
   // processor-intensive batch process needs to be triggered later on in the
   // installation.
-  $myprofile_needs_batch_processing = variable_get('myprofile_needs_batch_processing', FALSE);
+  $myprofile_needs_batch_processing = \Drupal::state()->get('myprofile.needs_batch_processing', FALSE);
   $tasks = array(
     // This is an example of a task that defines a form which the user who is
     // installing the site will be asked to fill out. To implement this task,
@@ -2539,9 +2527,9 @@ function hook_install_tasks(&$install_state) {
     // as a normal form API callback function, with associated validation and
     // submit handlers. In the submit handler, in addition to saving whatever
     // other data you have collected from the user, you might also call
-    // variable_set('myprofile_needs_batch_processing', TRUE) if the user has
-    // entered data which requires that batch processing will need to occur
-    // later on.
+    // \Drupal::state()->set('myprofile.needs_batch_processing', TRUE) if the
+    // user has entered data which requires that batch processing will need to
+    // occur later on.
     'myprofile_data_import_form' => array(
       'display_name' => t('Data import options'),
       'type' => 'form',
@@ -2561,7 +2549,7 @@ function hook_install_tasks(&$install_state) {
     // implement this task, your profile would define a function named
     // myprofile_batch_processing() which returns a batch API array definition
     // that the installer will use to execute your batch operations. Due to the
-    // 'myprofile_needs_batch_processing' variable used here, this task will be
+    // 'myprofile.needs_batch_processing' variable used here, this task will be
     // hidden and skipped unless your profile set it to TRUE in one of the
     // previous tasks.
     'myprofile_batch_processing' => array(
@@ -2575,13 +2563,14 @@ function hook_install_tasks(&$install_state) {
     // function named myprofile_final_site_setup(), in which additional,
     // automated site setup operations would be performed. Since this is the
     // last task defined by your profile, you should also use this function to
-    // call variable_del('myprofile_needs_batch_processing') and clean up the
-    // variable that was used above. If you want the user to pass to the final
-    // Drupal installation tasks uninterrupted, return no output from this
-    // function. Otherwise, return themed output that the user will see (for
-    // example, a confirmation page explaining that your profile's tasks are
-    // complete, with a link to reload the current page and therefore pass on
-    // to the final Drupal installation tasks when the user is ready to do so).
+    // call \Drupal::state()->delete('myprofile.needs_batch_processing') and
+    // clean up the state that was used above. If you want the user to pass
+    // to the final Drupal installation tasks uninterrupted, return no output
+    // from this function. Otherwise, return themed output that the user will
+    // see (for example, a confirmation page explaining that your profile's
+    // tasks are complete, with a link to reload the current page and therefore
+    // pass on to the final Drupal installation tasks when the user is ready to
+    // do so).
     'myprofile_final_site_setup' => array(
     ),
   );
@@ -3114,12 +3103,10 @@ function hook_filetransfer_info() {
  * @see hook_filetransfer_info()
  */
 function hook_filetransfer_info_alter(&$filetransfer_info) {
-  if (variable_get('paranoia', FALSE)) {
-    // Remove the FTP option entirely.
-    unset($filetransfer_info['ftp']);
-    // Make sure the SSH option is listed first.
-    $filetransfer_info['ssh']['weight'] = -10;
-  }
+  // Remove the FTP option entirely.
+  unset($filetransfer_info['ftp']);
+  // Make sure the SSH option is listed first.
+  $filetransfer_info['ssh']['weight'] = -10;
 }
 
 /**

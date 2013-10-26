@@ -372,7 +372,7 @@ function hook_node_grants_alter(&$grants, $account, $op) {
   // array for roles specified in our variable setting.
 
   // Get our list of banned roles.
-  $restricted = variable_get('example_restricted_roles', array());
+  $restricted = \Drupal::config('example.settings')->get('restricted_roles');
 
   if ($op != 'view' && !empty($restricted)) {
     // Now check the roles for this account against the restrictions.
@@ -890,7 +890,7 @@ function hook_node_view_alter(&$build, \Drupal\Core\Entity\EntityInterface $node
  */
 function hook_ranking() {
   // If voting is disabled, we can avoid returning the array, no hard feelings.
-  if (variable_get('vote_node_enabled', TRUE)) {
+  if (\Drupal::config('vote.settings')->get('node_enabled')) {
     return array(
       'vote_average' => array(
         'title' => t('Average vote'),
@@ -901,7 +901,7 @@ function hook_ranking() {
         // always 0, should be 0.
         'score' => 'vote_node_data.average / CAST(%f AS DECIMAL)',
         // Pass in the highest possible voting score as a decimal argument.
-        'arguments' => array(variable_get('vote_score_max', 5)),
+        'arguments' => array(\Drupal::config('vote.settings').get('score_max')),
       ),
     );
   }

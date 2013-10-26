@@ -61,7 +61,7 @@ function pager_find_page($element = 0) {
  *   // First find the total number of items and initialize the pager.
  *   $where = "status = 1";
  *   $total = mymodule_select("SELECT COUNT(*) FROM data " . $where)->result();
- *   $num_per_page = variable_get('mymodule_num_per_page', 10);
+ *   $num_per_page = \Drupal::config('mymodule.settings')->get('num_per_page');
  *   $page = pager_default_initialize($total, $num_per_page);
  *
  *   // Next, retrieve and display the items for the current page.
@@ -85,7 +85,7 @@ function pager_find_page($element = 0) {
  *   // parameter corresponds to an actual page of results that will exist
  *   // within the set.
  *   $page = pager_find_page();
- *   $num_per_page = variable_get('mymodule_num_per_page', 10);
+ *   $num_per_page = \Drupal::config('mymodule.settings')->get('num_per_page');
  *   $offset = $num_per_page * $page;
  *   $result = mymodule_remote_search($keywords, $offset, $num_per_page);
  *
