@@ -1,14 +1,14 @@
 search.settings:
   path: '/admin/config/search/settings'
   defaults:
-    _form: 'Drupal\search\Form\SearchSettingsForm'
+    _form: '\Drupal\search\Form\SearchSettingsForm'
   requirements:
     _permission: 'administer search'
 
 search.reindex_confirm:
   path: '/admin/config/search/settings/reindex'
   defaults:
-    _form: 'Drupal\search\Form\ReindexConfirm'
+    _form: '\Drupal\search\Form\ReindexConfirm'
   requirements:
     _permission: 'administer search'
 
@@ -16,7 +16,7 @@ search.view:
   path: '/search/{plugin_id}'
   defaults:
     _title: 'Search'
-    _content: '\Drupal\search\Controller\SearchController::searchView'
+    _content: '\Drupal\search\Controller\SearchController::view'
     plugin_id: NULL
     keys: ''
   requirements:

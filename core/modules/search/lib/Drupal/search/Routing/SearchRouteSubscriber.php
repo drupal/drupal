@@ -41,7 +41,7 @@ class SearchRouteSubscriber extends RouteSubscriberBase {
     foreach ($this->searchManager->getActiveDefinitions() as $plugin_id => $search_info) {
       $path = 'search/' . $search_info['path'] . '/{keys}';
       $defaults = array(
-        '_content' => 'Drupal\search\Controller\SearchController::searchViewPlugin',
+        '_content' => 'Drupal\search\Controller\SearchController::view',
         'plugin_id' => $plugin_id,
         'keys' => '',
       );

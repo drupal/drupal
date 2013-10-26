@@ -207,21 +207,6 @@ function search_get_default_plugin_info() {
 }
 
 /**
- * Access callback: Determines access for a search page.
- *
- * @param string $plugin_id
- *   The name of a search plugin (e.g., 'node_search').
- *
- * @return bool
- *   TRUE if a user has access to the search page; FALSE otherwise.
- *
- * @see search_menu()
- */
-function _search_menu_access($plugin_id) {
-  return \Drupal::service('access_manager')->checkNamedRoute('search.view_' . $plugin_id);
-}
-
-/**
  * Clears either a part of, or the entire search index.
  *
  * @param $sid
@@ -653,60 +638,6 @@ function search_mark_for_reindex($type, $sid) {
  * local task (tab) under the /search page (e.g. /search/mymodule) so that users
  * can easily find it.
  */
-
-/**
- * Form constructor for the search form.
- *
- * @param \Drupal\search\Plugin\SearchInterface $plugin
- *   A search plugin instance to render the form for.
- * @param $action
- *   Form action. Defaults to "search/$path", where $path is the search path
- *   associated with the plugin in its definition. This will be run through
- *   url().
- * @param $prompt
- *   Label for the keywords field. Defaults to t('Enter your keywords') if
- *   NULL. Supply '' to omit.
- *
- * @see search_form_validate()
- * @see search_form_submit()
- *
- * @ingroup forms
- */
-function search_form($form, &$form_state, SearchInterface $plugin, $action = '', $prompt = NULL) {
-
-  $plugin_info = $plugin->getPluginDefinition();
-
-  if (!$action) {
-    $action = 'search/' . $plugin_info['path'];
-  }
-  if (!isset($prompt)) {
-    $prompt = t('Enter your keywords');
-  }
-
-  $form['#action'] = url($action);
-  // Record the $action for later use in redirecting.
-  $form_state['action'] = $action;
-  $form['plugin_id'] = array('#type' => 'value', '#value' => $plugin->getPluginId());
-  $form['basic'] = array('#type' => 'container', '#attributes' => array('class' => array('container-inline')));
-  $form['basic']['keys'] = array(
-    '#type' => 'search',
-    '#title' => $prompt,
-    '#default_value' => $plugin->getKeywords(),
-    '#size' => $prompt ? 40 : 20,
-    '#maxlength' => 255,
-  );
-  // processed_keys is used to coordinate keyword passing between other forms
-  // that hook into the basic search form.
-  $form['basic']['processed_keys'] = array('#type' => 'value', '#value' => '');
-  $form['basic']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  // Make sure the default validate and submit handlers are added.
-  $form['#validate'][] = 'search_form_validate';
-  $form['#submit'][] = 'search_form_submit';
-  // Allow the plugin to add to or alter the search form.
-  $plugin->searchFormAlter($form, $form_state);
-
-  return $form;
-}
 
 /**
  * Form constructor for the search block's search box.
