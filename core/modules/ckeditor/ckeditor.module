@@ -76,9 +76,11 @@ function ckeditor_library_info() {
       array('system', 'jquery.ui.sortable'),
       array('system', 'jquery.ui.draggable'),
       array('system', 'jquery.ui.touch-punch'),
+      array('system', 'backbone'),
+      array('system', 'drupal.dialog'),
+      array('system', 'drupal.announce'),
       array('ckeditor', 'ckeditor'),
       array('editor', 'drupal.editor.admin'),
-      array('system', 'underscore'),
       // Depend on Vertical Tabs, so that Vertical Tabs' JavaScript is executed
       // first, which ensures its behavior runs first.
       array('system', 'drupal.vertical-tabs'),

@@ -6,30 +6,179 @@
  * "moono".
  */
 
-.ckeditor-toolbar-active {
+
+
+.ckeditor-toolbar {
   border: 1px solid #b6b6b6;
-  padding: 6px 8px 2px;
+  padding: 0.1667em 0.1667em 0.08em;
   box-shadow: 0 1px 0 white inset;
   background: #cfd1cf;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(whiteSmoke), to(#cfd1cf));
+  background-image: -webkit-linear-gradient(top, whiteSmoke, #cfd1cf);
   background-image: -moz-linear-gradient(top, whiteSmoke, #cfd1cf);
-  background-image: -o-linear-gradient(top, whiteSmoke, #cfd1cf);
-  background-image: -ms-linear-gradient(top, whiteSmoke, #cfd1cf);
   background-image: linear-gradient(top, whiteSmoke, #cfd1cf);
-  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#fff5f5f5', endColorstr='#ffcfd1cf');
   margin: 5px 0;
-  overflow: nowrap;
+  /* Disallow any user selections in the drag-and-drop toolbar config UI. */
+  -webkit-user-select: none;
+  -moz-user-select:    none;
+  -ms-user-select:     none;
+  user-select:         none;
 }
-.ckeditor-toolbar-active > ul {
-  clear: left; /* LTR */
+.ckeditor-toolbar-active {
+  margin-top: 0.25em;
+}
+.ckeditor-toolbar-disabled {
+  margin-bottom: 0.5em;
+}
+.ckeditor-toolbar ul,
+.ckeditor-toolbar-disabled ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ckeditor-row {
+  padding: 2px 0px 3px;
+  border-radius: 3px;
+}
+.ckeditor-group-names-are-visible .ckeditor-row {
+  border: 1px solid whitesmoke;
+}
+.ckeditor-row + .ckeditor-row {
+  margin-top: 0.25em;
+}
+.ckeditor-toolbar-group,
+.ckeditor-toolbar-group-placeholder,
+.ckeditor-add-new-group {
+  display: inline-block;
   float: left; /* LTR */
 }
-[dir="rtl"] .ckeditor-toolbar-active > ul {
-  clear: right;
+[dir="rtl"] .ckeditor-toolbar-group,
+[dir="rtl"] .ckeditor-toolbar-group-placeholder,
+[dir="rtl"] .ckeditor-add-new-group {
+  display: inline-block;
   float: right;
+}
+.ckeditor-toolbar-groups {
+  min-height: 2em;
+}
+.ckeditor-toolbar-group {
+  margin: 0 0.3333em;
+  cursor: move;
+}
+.ckeditor-group-names-are-visible .ckeditor-toolbar-group,
+.ckeditor-add-new-group {
+  border: 1px dotted #a6a6a6;
+  border-radius: 3px;
+  padding: 0.2em 0.4em;
+}
+.ckeditor-toolbar-group.placeholder,
+.ckeditor-toolbar-group.placeholder .ckeditor-toolbar-group-name {
+  cursor: not-allowed;
+}
+.ckeditor-toolbar-group.placeholder .ckeditor-toolbar-group-name {
+  font-style: italic;
+}
+.ckeditor-toolbar-group-name {
+  display: none;
+  font-size: 1em;
+  font-weight: normal;
+  margin: 0.25em 0;
+}
+.ckeditor-group-names-are-visible .ckeditor-toolbar-group-name {
+  display: block;
+  cursor: pointer;
+}
+.ckeditor-toolbar-active .placeholder,
+.ckeditor-toolbar-active .ckeditor-add-new-group {
+  display: none;
+}
+.ckeditor-group-names-are-visible .placeholder,
+.ckeditor-group-names-are-visible .ckeditor-add-new-group {
+  display: block;
+}
+.ckeditor-toolbar-group-buttons {
+  float: left; /* LTR */
+}
+[dir="rtl"] .ckeditor-toolbar-group-buttons {
+  float: right;
+}
+.ckeditor-groupnames-toggle {
+  cursor: pointer;
+  float: right; /* LTR */
+}
+[dir="rtl"] .ckeditor-groupnames-toggle {
+  float: left;
+}
+.ckeditor-toolbar .ckeditor-toolbar-group > li {
+  border: 1px solid white;
+  border-radius: 5px;
+  background-image: -webkit-linear-gradient(transparent 60%, rgba(0, 0, 0, 0.1));
+  background-image: -moz-linear-gradient(transparent 60%, rgba(0, 0, 0, 0.1));
+  background-image: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.1));
+  margin: 3px 6px;
+  padding: 3px;
 }
 #ckeditor-button-description {
   margin-bottom: 1em;
+}
+.ckeditor-toolbar-disabled .ckeditor-toolbar-available,
+.ckeditor-toolbar-disabled .ckeditor-toolbar-dividers {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ckeditor-toolbar-disabled .ckeditor-toolbar-available {
+  float: left;
+  width: 80%;
+}
+.ckeditor-toolbar-disabled .ckeditor-toolbar-dividers {
+  float: right;
+  width: 20%;
+}
+.ckeditor-toolbar-disabled .ckeditor-buttons li a,
+.ckeditor-toolbar .ckeditor-buttons,
+.ckeditor-add-new-group button {
+  border: 1px solid #a6a6a6;
+  border-bottom-color: #979797;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+}
+.ckeditor-toolbar-disabled .ckeditor-buttons {
+  border: 0;
+}
+.ckeditor-toolbar-disabled .ckeditor-buttons li {
+  margin: 2px;
+}
+.ckeditor-buttons {
+  min-height: 26px;
+  min-width: 26px;
+}
+.ckeditor-buttons li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  float: left; /* LTR */
+}
+[dir="rtl"] .ckeditor-buttons li {
+  float: right;
+}
+.ckeditor-buttons li a,
+.ckeditor-add-new-group button {
+  background: #e4e4e4;
+  background-image: -moz-linear-gradient(top, white, #e4e4e4);
+  background-image: -webkit-linear-gradient(top, white, #e4e4e4);
+  background-image: linear-gradient(top, white, #e4e4e4);
+  color: #474747;
+}
+.ckeditor-buttons li a {
+  border: 0;
+  cursor: move;
+  display: block;
+  height: 18px;
+  padding: 4px 6px;
+  position: relative;
+  text-decoration: none;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  white-space: nowrap;
 }
 .ckeditor-toolbar-dividers {
   float: right; /* LTR */
@@ -37,120 +186,72 @@
 [dir="rtl"] .ckeditor-toolbar-dividers {
   float: left;
 }
-.ckeditor-toolbar-disabled ul.ckeditor-buttons {
-  border: 0;
-}
-.ckeditor-toolbar-disabled ul.ckeditor-buttons li {
-  margin: 2px;
-}
-.ckeditor-toolbar-disabled ul.ckeditor-buttons li a,
-ul.ckeditor-buttons {
-  border: 1px solid #a6a6a6;
-  border-bottom-color: #979797;
-  border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 0 2px rgba(255, 255, 255, .15) inset, 0 1px 0 rgba(255, 255, 255, .15) inset;
-}
-
-ul.ckeditor-buttons {
-  min-height: 26px;
-  min-width: 26px;
-  list-style: none;
-  padding: 0;
-  margin: 0 6px 5px 0;
-  border: 1px solid #a6a6a6;
-  border-bottom-color: #979797;
-  border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 0 2px rgba(255, 255, 255, .15) inset, 0 1px 0 rgba(255, 255, 255, .15) inset;
-}
-ul.ckeditor-buttons li {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-  float: left; /* LTR */
-}
-[dir="rtl"] ul.ckeditor-buttons li {
-  float: right;
-}
-ul.ckeditor-buttons li a {
-  position: relative;
-  display: block;
-  height: 18px;
-  padding: 4px 6px;
-  cursor: move;
-  border: 0;
-  white-space: nowrap;
-  text-decoration: none;
-  text-shadow: 0 1px 0 rgba(255,255,255,.5);
-  color: #474747;
-  background: #e4e4e4;
-  background-image: -webkit-gradient(linear,left top,left bottom,from(white),to(#e4e4e4));
-  background-image: -moz-linear-gradient(top,white,#e4e4e4);
-  background-image: -webkit-linear-gradient(top,white,#e4e4e4);
-  background-image: -o-linear-gradient(top,white,#e4e4e4);
-  background-image: -ms-linear-gradient(top,white,#e4e4e4);
-  background-image: linear-gradient(top,white,#e4e4e4);
-  filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0,startColorstr='#ffffffff',endColorstr='#ffe4e4e4');
-}
-ul.ckeditor-buttons li .cke-icon-only {
+.ckeditor-buttons li .cke-icon-only {
   text-indent: -9999px;
   width: 16px;
+  /* Firefox includes the offscreen text in the focus indicator, resulting in a
+     far too wide focus indicator. This fixes that. */
+  overflow: hidden;
 }
-ul.ckeditor-buttons li a:focus,
-ul.ckeditor-multiple-buttons li a:focus {
+.ckeditor-buttons li a:focus,
+.ckeditor-buttons li a:active,
+.ckeditor-multiple-buttons li a:focus {
   z-index: 11; /* Ensure focused buttons show their outline on all sides. */
-  outline: 1px dotted #333;
 }
-ul.ckeditor-buttons li:first-child a {
+.ckeditor-buttons li:first-child a {
   border-top-left-radius: 2px; /* LTR */
   border-bottom-left-radius: 2px; /* LTR */
 }
-[dir="rtl"] ul.ckeditor-buttons li:first-child a {
+[dir="rtl"] .ckeditor-buttons li:first-child a {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
 }
-ul.ckeditor-buttons li:last-child a {
+.ckeditor-buttons li:last-child a {
   border-top-right-radius: 2px; /* LTR */
   border-bottom-right-radius: 2px; /* LTR */
 }
-[dir="rtl"] ul.ckeditor-buttons li:last-child a {
+[dir="rtl"] .ckeditor-buttons li:last-child a {
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
 }
-ul.ckeditor-buttons li.ckeditor-button-placeholder a {
-  background: #333;
-  opacity: 0.3;
+.ckeditor-button-placeholder,
+.ckeditor-toolbar-group-placeholder {
+  background: #9dcae7;
 }
-ul.ckeditor-multiple-buttons {
+.ckeditor-toolbar-group-placeholder {
+  border-radius: 4px;
+}
+.ckeditor-multiple-buttons {
   padding: 1px 2px;
   margin: 5px;
   list-style: none;
   float: left; /* LTR */
 }
-[dir="rtl"] ul.ckeditor-multiple-buttons {
+[dir="rtl"] .ckeditor-multiple-buttons {
   float: right;
 }
-ul.ckeditor-multiple-buttons li {
+.ckeditor-multiple-buttons li {
   display: inline-block;
   float: left; /* LTR */
   margin: 0;
   padding: 0;
 }
-[dir="rtl"] ul.ckeditor-multiple-buttons li {
+[dir="rtl"] .ckeditor-multiple-buttons li {
   float: right;
 }
-ul.ckeditor-multiple-buttons li a {
+.ckeditor-multiple-buttons li a {
   cursor: move;
   display: inline-block;
   height: 18px;
   margin: 0;
   padding: 2px 0;
 }
-ul.ckeditor-buttons li.ckeditor-group-button-separator,
-ul.ckeditor-multiple-buttons li.ckeditor-group-button-separator {
+.ckeditor-buttons .ckeditor-group-button-separator,
+.ckeditor-multiple-buttons .ckeditor-group-button-separator {
   margin: -1px -3px -2px;
 }
-ul.ckeditor-buttons li.ckeditor-group-button-separator a,
-ul.ckeditor-multiple-buttons li.ckeditor-group-button-separator a {
+.ckeditor-buttons .ckeditor-group-button-separator a,
+.ckeditor-multiple-buttons .ckeditor-group-button-separator a {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAdCAMAAABG4xbVAAAAhFBMVEUAAACmpqampqampqb////l5eX////5+fmmpqatra2urq6vr6+1tbW2tra4uLi6urq8vLzb29ve3t7i4uLl5eXn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz+/v7qIQO+AAAACHRSTlMATVmAi8XM29MuWToAAABjSURBVBiVrc5BCoAwDETRMKhtRBduev9LKm1xjItWRBBE6Nt9QkIwOTcUzk0Imi8aoMssxbgoTHMtqsFMLta0vPh2N49HyfdelPg6k9uvX/a+Bmggt1qJRNzQFVgjEnkUZDoBmH57VSypjg4AAAAASUVORK5CYII=) no-repeat center center;
   width: 13px;
   padding: 0;
@@ -161,6 +262,7 @@ ul.ckeditor-multiple-buttons li.ckeditor-group-button-separator a {
 ul.ckeditor-buttons li.ckeditor-button-separator a {
   background: #e4e4e4;
   background-image: -webkit-linear-gradient(#e4e4e4, #b4b4b4);
+  background-image: -moz-linear-gradient(#e4e4e4, #b4b4b4);
   background-image: linear-gradient(#e4e4e4, #b4b4b4);
   height: 24px;
   margin: 1px 0 0;
@@ -169,7 +271,7 @@ ul.ckeditor-buttons li.ckeditor-button-separator a {
   width: 1px;
   z-index: 10;
 }
-ul.ckeditor-multiple-buttons li.ckeditor-button-separator a {
+.ckeditor-multiple-buttons .ckeditor-button-separator a {
   width: 2px;
   padding: 0;
   height: 26px;
@@ -177,12 +279,12 @@ ul.ckeditor-multiple-buttons li.ckeditor-button-separator a {
 }
 .ckeditor-separator {
   background-color: silver;
-  background-color: rgba(0, 0, 0, .2);
+  background-color: rgba(0, 0, 0, 0.2);
   margin: 5px 0;
   height: 18px;
   width: 1px;
   display: block;
-  box-shadow: 1px 0 1px rgba(255, 255, 255, .5)
+  box-shadow: 1px 0 1px rgba(255, 255, 255, 0.5)
 }
 .ckeditor-button-arrow {
   width: 0;
@@ -193,7 +295,6 @@ ul.ckeditor-multiple-buttons li.ckeditor-button-separator a {
   display: inline-block;
   margin: 0 4px 2px;
 }
-
 .ckeditor-row-controls {
   float: right; /* LTR */
   font-size: 18px;

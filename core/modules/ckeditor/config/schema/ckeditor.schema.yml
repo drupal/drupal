@@ -8,15 +8,25 @@ editor.settings.ckeditor:
       type: mapping
       label: 'Toolbar configuration'
       mapping:
-        buttons:
+        rows:
           type: sequence
           label: 'Rows'
           sequence:
             - type: sequence
-              label: 'Buttons'
+              label: 'Button groups'
               sequence:
-                - type: string
-                  label: 'Button'
+                - type: mapping
+                  label: 'Button group'
+                  mapping:
+                    name:
+                      type: string
+                      label: 'Button group name'
+                    items:
+                      type: sequence
+                      label: 'Buttons'
+                      sequence:
+                        - type: string
+                          label: 'Button'
     plugins:
       type: sequence
       label: 'Plugins'

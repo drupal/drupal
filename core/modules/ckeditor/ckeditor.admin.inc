@@ -30,18 +30,29 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
       $buttons[$button_name] = $button;
     }
   }
+  $button_groups = array();
   $variables['active_buttons'] = array();
-  foreach ($editor->settings['toolbar']['buttons'] as $row_number => $row) {
-    foreach ($row as $button_name) {
-      if (isset($buttons[$button_name])) {
-        $variables['active_buttons'][$row_number][] = $buttons[$button_name];
-        if (empty($buttons[$button_name]['multiple'])) {
-          unset($buttons[$button_name]);
+  foreach ($editor->settings['toolbar']['rows'] as $row_number => $row) {
+    $button_groups[$row_number] = array();
+    foreach ($row as $group) {
+      foreach ($group['items'] as $button_name) {
+        if (isset($buttons[$button_name])) {
+          // Save a reference to the button's configured toolbar group.
+          $buttons[$button_name]['group'] = $group['name'];
+          $variables['active_buttons'][$row_number][] = $buttons[$button_name];
+          if (empty($buttons[$button_name]['multiple'])) {
+            unset($buttons[$button_name]);
+          }
+          // Create a list of all the toolbar button groups.
+          if (!in_array($group['name'], $button_groups[$row_number])) {
+            array_push($button_groups[$row_number], $group['name']);
+          }
         }
       }
     }
   }
   $variables['disabled_buttons'] = array_diff_key($buttons, $variables['multiple_buttons']);
+  $variables['button_groups'] = $button_groups;
 }
 
 /**
@@ -66,7 +77,7 @@ function theme_ckeditor_settings_toolbar($variables) {
         '#uri' => $button['image' . $rtl],
         '#title' => $button['label'],
       );
-      $value = '<a href="#" class="cke_button" role="button" title="' . $button['label'] . '" aria-label="' . $button['label'] . '"><span class="cke_button_icon">' . drupal_render($image) . '</span></a>';
+      $value = '<a href="#" role="button" title="' . $button['label'] . '" aria-label="' . $button['label'] . '"><span class="cke_button_icon">' . drupal_render($image) . '</span></a>';
     }
     else {
       $value = '?';
@@ -80,8 +91,13 @@ function theme_ckeditor_settings_toolbar($variables) {
     // Build the button item.
     $button_item = array(
       'value' => $value,
-      'data-button-name' => $button['name'],
+      'data-drupal-ckeditor-button-name' => $button['name'],
+      'class' => array('ckeditor-button'),
     );
+    // If this button has group information, add it to the attributes.
+    if (!empty($button['group'])) {
+      $button_item['group'] = $button['group'];
+    }
     if (!empty($button['attributes'])) {
       $button_item = array_merge($button_item, $button['attributes']);
     }
@@ -110,11 +126,25 @@ function theme_ckeditor_settings_toolbar($variables) {
   $print_buttons = function($buttons) {
     $output = '';
     foreach ($buttons as $button) {
+      unset($button['group']);
       $value = $button['value'];
       unset($button['value']);
       $attributes = (string) new Attribute($button);
       $output .= '<li' . $attributes . '>' . $value . '</li>';
     }
+    return $output;
+  };
+
+  $print_button_group = function($buttons, $group_name, $print_buttons) {
+    $group = drupal_html_class($group_name);
+
+    $output = '';
+    $output .= "<li class=\"ckeditor-toolbar-group\" role=\"presentation\" data-drupal-ckeditor-type=\"group\" data-drupal-ckeditor-toolbar-group-name=\"{$group_name}\" tabindex=\"0\">";
+    $output .= "<h3 class=\"ckeditor-toolbar-group-name\" id=\"ckeditor-toolbar-group-aria-label-for-{$group}\">{$group_name}</h3>";
+    $output .= "<ul class=\"ckeditor-buttons ckeditor-toolbar-group-buttons\" role=\"toolbar\" data-drupal-ckeditor-button-sorting=\"target\" aria-labelledby=\"ckeditor-toolbar-group-aria-label-for-{$group}\">";
+    $output .= $print_buttons($buttons);
+    $output .= "</ul></li>";
+
     return $output;
   };
 
@@ -125,42 +155,44 @@ function theme_ckeditor_settings_toolbar($variables) {
   $output .= '<legend id="ckeditor-button-configuration">' . t('Toolbar configuration') . '</legend>';
   $output .= '<div class="fieldset-wrapper">';
 
-  // aria-live region for outputing aural information about the state of the
-  // configuration.
-  $output .= '<div id="ckeditor-button-configuration-aria-live" class="visually-hidden" aria-live="polite"></div>';
-
-  $output .= '<div id="ckeditor-button-description" class="fieldset-description">' . t('Move a button into the <em>Active toolbar</em> to enable it, or into the list of <em>Available buttons</em> to disable it. Use dividers to create button groups. Buttons may be moved with the mouse or keyboard arrow keys.') . '</div>';
+  $output .= '<div id="ckeditor-button-description" class="fieldset-description">' . t('Move a button into the <em>Active toolbar</em> to enable it, or into the list of <em>Available buttons</em> to disable it. Buttons may be moved with the mouse or keyboard arrow keys. Toolbar group names are provided to support screen reader users. Empty toolbar groups will be removed upon save.') . '</div>';
 
   $output .= '<div class="ckeditor-toolbar-disabled clearfix">';
-  $output .= '<div class="ckeditor-toolbar-dividers">';
-  $output .= '<label id="ckeditor-multiple-label">' . t('Dividers') . '</label>';
-  $output .= '<ul class="ckeditor-multiple-buttons" role="form" aria-labelledby="ckeditor-multiple-label">';
-  $output .= $print_buttons($multiple_buttons);
-  $output .= '</ul>';
-  $output .= '</div>';
-  $output .= '<label id="ckeditor-available-buttons">' . t('Available buttons') . '</label>';
-  $output .= '<ul class="ckeditor-buttons" role="form" aria-labelledby="ckeditor-available-buttons">';
+  // Available buttons.
+  $output .= '<div class="ckeditor-toolbar-available">';
+  $output .= '<label for="ckeditor-available-buttons">' . t('Available buttons') . '</label>';
+  $output .= '<ul id="ckeditor-available-buttons" class="ckeditor-buttons" role="form" data-drupal-ckeditor-button-sorting="source">';
   $output .= $print_buttons($disabled_buttons);
   $output .= '</ul>';
   $output .= '</div>';
-
-  $output .= '<label id="ckeditor-active-toolbar">' . t('Active toolbar') . '</label>';
-
-  $output .= '<div data-toolbar="active" class="ckeditor-toolbar-active clearfix">';
-  foreach ($active_buttons as $button_row) {
-    $output .= '<ul class="ckeditor-buttons" role="form" aria-labelledby="ckeditor-active-toolbar">';
-    $output .= $print_buttons($button_row);
+  // Dividers.
+  $output .= '<div class="ckeditor-toolbar-dividers">';
+  $output .= '<label for="ckeditor-multiple-buttons">' . t('Button divider') . '</label>';
+  $output .= '<ul id="ckeditor-multiple-buttons" class="ckeditor-multiple-buttons" role="form" data-drupal-ckeditor-button-sorting="dividers">';
+  $output .= $print_buttons($multiple_buttons);
+  $output .= '</ul>';
+  $output .= '</div>';
+  $output .= '</div>';
+  // Active toolbar.
+  $output .= '<div class="clearfix"><label id="ckeditor-active-toolbar">' . t('Active toolbar') . '</label></div>';
+  $output .= '<div data-toolbar="active" role="form" class="ckeditor-toolbar ckeditor-toolbar-active clearfix">';
+  $output .= '<ul class="ckeditor-active-toolbar-configuration" role="presentation" aria-label="' . t('CKEditor toolbar and button configuration.') . '">';
+  foreach ($active_buttons as $row_number => $button_row) {
+    $output .= '<li class="ckeditor-row" role="group" aria-labelledby="ckeditor-active-toolbar">';
+    $output .= '<ul class="ckeditor-toolbar-groups clearfix">';
+    foreach ($variables['button_groups'][$row_number] as $group_name) {
+      $buttons = array_filter($button_row, function ($button) use ($group_name) {
+        return $button['group'] === $group_name;
+      });
+      $output .= $print_button_group($buttons, $group_name, $print_buttons);
+    }
     $output .= '</ul>';
+    $output .= '</li>';
   }
   if (empty($active_buttons)) {
     $output .= '<ul class="ckeditor-buttons">';
     $output .= '</ul>';
   }
-
-  $output .= '<div class="ckeditor-row-controls">';
-  $output .= '<a href="#" role="button" aria-label="' . t('Remove last button row') . '" class="ckeditor-row-remove" title="' . t('Remove row') . '">-</a>';
-  $output .= '<a href="#" role="button" aria-label="' . t('Add additional button row') . '" class="ckeditor-row-add" title="' . t('Add row') . '">+</a>';
-  $output .= '</div>';
 
   $output .= '</div>';
 

@@ -77,11 +77,17 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
     // text editor uses the filter_caption filter and the DrupalImage button is
     // enabled.
     if (isset($filters['filter_caption']) && $filters['filter_caption']->status) {
-      foreach ($editor->settings['toolbar']['buttons'] as $row) {
-        if (in_array('DrupalImage', $row)) {
-          return TRUE;
+      $enabled = FALSE;
+      foreach ($editor->settings['toolbar']['rows'] as $row) {
+        foreach ($row as $group) {
+          foreach ($group['items'] as $button) {
+            if ($button === 'DrupalImage') {
+              $enabled = TRUE;
+            }
+          }
         }
       }
+      return $enabled;
     }
 
     return FALSE;

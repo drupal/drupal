@@ -65,7 +65,14 @@ class CKEditorPluginManager extends DefaultPluginManager {
    */
   public function getEnabledPluginFiles(Editor $editor, $include_internal_plugins = FALSE) {
     $plugins = array_keys($this->getDefinitions());
-    $toolbar_buttons = array_unique(NestedArray::mergeDeepArray($editor->settings['toolbar']['buttons']));
+    // Flatten each row.
+    $toolbar_rows = array();
+    foreach ($editor->settings['toolbar']['rows'] as $row_number => $row) {
+      $toolbar_rows[] = array_reduce($editor->settings['toolbar']['rows'][$row_number], function (&$result, $button_group) {
+        return array_merge($result, $button_group['items']);
+      }, array());
+    }
+    $toolbar_buttons = array_unique(NestedArray::mergeDeepArray($toolbar_rows));
     $enabled_plugins = array();
     $additional_plugins = array();
 

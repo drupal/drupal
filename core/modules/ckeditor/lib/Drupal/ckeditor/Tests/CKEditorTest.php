@@ -109,12 +109,11 @@ class CKEditorTest extends DrupalUnitTestBase {
     $this->container->get('plugin.manager.editor')->clearCachedDefinitions();
     $this->ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
-    $editor->settings['toolbar']['buttons'][0][] = 'Strike';
-    $editor->settings['toolbar']['buttons'][1][] = 'Format';
+    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Strike';
+    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Format';
     $editor->save();
-    $expected_config['toolbar'][count($expected_config['toolbar'])-2]['items'][] = 'Strike';
-    $expected_config['toolbar'][]['items'][] = 'Format';
-    $expected_config['toolbar'][] = '/';
+    $expected_config['toolbar'][0]['items'][] = 'Strike';
+    $expected_config['toolbar'][0]['items'][] = 'Format';
     $expected_config['format_tags'] = 'p;h4;h5;h6';
     $expected_config['extraPlugins'] .= ',llama_contextual,llama_contextual_and_button';
     $expected_config['drupalExternalPlugins']['llama_contextual'] = file_create_url('core/modules/ckeditor/tests/modules/js/llama_contextual.js');
@@ -208,17 +207,20 @@ class CKEditorTest extends DrupalUnitTestBase {
     $this->assertIdentical($expected, $this->ckeditor->buildToolbarJSSetting($editor), '"toolbar" configuration part of JS settings built correctly for default toolbar.');
 
     // Customize the configuration.
-    $editor->settings['toolbar']['buttons'][0][] = 'Strike';
+    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Strike';
     $editor->save();
-    $expected[count($expected)-2]['items'][] = 'Strike';
+    $expected[0]['items'][] = 'Strike';
     $this->assertIdentical($expected, $this->ckeditor->buildToolbarJSSetting($editor), '"toolbar" configuration part of JS settings built correctly for customized toolbar.');
 
     // Enable the editor_test module, customize further.
     $this->enableModules(array('ckeditor_test'));
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
-    $editor->settings['toolbar']['buttons'][0][] = 'Llama';
+    // Override the label of a toolbar component.
+    $editor->settings['toolbar']['rows'][0][0]['name'] = 'JunkScience';
+    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Llama';
     $editor->save();
-    $expected[count($expected)-2]['items'][] = 'Llama';
+    $expected[0]['name'] = 'JunkScience';
+    $expected[0]['items'][] = 'Llama';
     $this->assertIdentical($expected, $this->ckeditor->buildToolbarJSSetting($editor), '"toolbar" configuration part of JS settings built correctly for customized toolbar with contrib module-provided CKEditor plugin.');
   }
 
@@ -253,7 +255,7 @@ class CKEditorTest extends DrupalUnitTestBase {
     $this->assertIdentical($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for default toolbar.');
 
     // Format dropdown/button enabled: new setting should be present.
-    $editor->settings['toolbar']['buttons'][0][] = 'Format';
+    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Format';
     $expected['format_tags'] = 'p;h4;h5;h6';
     $this->assertIdentical($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for customized toolbar.');
   }
@@ -266,7 +268,7 @@ class CKEditorTest extends DrupalUnitTestBase {
     $stylescombo_plugin = $this->container->get('plugin.manager.ckeditor.plugin')->createInstance('stylescombo');
 
     // Styles dropdown/button enabled: new setting should be present.
-    $editor->settings['toolbar']['buttons'][0][] = 'Styles';
+    $editor->settings['toolbar']['rows'][0][0]['items'][] = 'Styles';
     $editor->settings['plugins']['stylescombo']['styles'] = '';
     $editor->save();
     $expected['stylesSet'] = array();
@@ -367,12 +369,27 @@ class CKEditorTest extends DrupalUnitTestBase {
 
   protected function getDefaultToolbarConfig() {
     return array(
-      0 => array('items' => array('Bold', 'Italic')),
-      1 => array('items' => array('DrupalLink', 'DrupalUnlink')),
-      2 => array('items' => array('BulletedList', 'NumberedList')),
-      3 => array('items' => array('Blockquote', 'DrupalImage')),
-      4 => array('items' => array('Source')),
-      5 => '/'
+      array(
+        'name' => t('Formatting'),
+        'items' => array('Bold', 'Italic',),
+      ),
+      array(
+        'name' => t('Links'),
+        'items' => array('DrupalLink', 'DrupalUnlink',),
+      ),
+      array(
+        'name' => t('Lists'),
+        'items' => array('BulletedList', 'NumberedList',),
+      ),
+      array(
+        'name' => t('Media'),
+        'items' => array('Blockquote', 'DrupalImage',),
+      ),
+      array(
+        'name' => t('Tools'),
+        'items' => array('Source',),
+      ),
+      '/',
     );
   }
 

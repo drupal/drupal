@@ -77,13 +77,29 @@ class CKEditorAdminTest extends WebTestBase {
     // Ensure the CKEditor editor returns the expected default settings.
     $expected_default_settings = array(
       'toolbar' => array(
-        'buttons' => array(
+        'rows' => array(
+          // Button groups
           array(
-            'Bold', 'Italic',
-            '|', 'DrupalLink', 'DrupalUnlink',
-            '|', 'BulletedList', 'NumberedList',
-            '|', 'Blockquote', 'DrupalImage',
-            '|', 'Source',
+            array(
+              'name' => t('Formatting'),
+              'items' => array('Bold', 'Italic',),
+            ),
+            array(
+              'name' => t('Links'),
+              'items' => array('DrupalLink', 'DrupalUnlink',),
+            ),
+            array(
+              'name' => t('Lists'),
+              'items' => array('BulletedList', 'NumberedList',),
+            ),
+            array(
+              'name' => t('Media'),
+              'items' => array('Blockquote', 'DrupalImage',),
+            ),
+            array(
+              'name' => t('Tools'),
+              'items' => array('Source',),
+            ),
           ),
         ),
       ),
@@ -98,8 +114,8 @@ class CKEditorAdminTest extends WebTestBase {
 
     // Ensure the toolbar buttons configuration value is initialized to the
     // expected default value.
-    $expected_buttons_value = json_encode($expected_default_settings['toolbar']['buttons']);
-    $this->assertFieldByName('editor[settings][toolbar][buttons]', $expected_buttons_value);
+    $expected_buttons_value = json_encode($expected_default_settings['toolbar']['rows']);
+    $this->assertFieldByName('editor[settings][toolbar][button_groups]', $expected_buttons_value);
 
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
@@ -131,12 +147,13 @@ class CKEditorAdminTest extends WebTestBase {
     // done via drag and drop, but here we can only emulate the end result of
     // that interaction). Test multiple toolbar rows and a divider within a row.
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
-    $expected_settings['toolbar']['buttons'] = array(
-      array('Undo', '|', 'Redo'),
-      array('JustifyCenter'),
+    $expected_settings['toolbar']['rows'][0][] = array(
+      'name' => 'Action history',
+      'items' => array('Undo', '|', 'Redo'),
+      array('JustifyCenter')
     );
     $edit = array(
-      'editor[settings][toolbar][buttons]' => json_encode($expected_settings['toolbar']['buttons']),
+      'editor[settings][toolbar][button_groups]' => json_encode($expected_settings['toolbar']['rows']),
     );
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $editor = entity_load('editor', 'filtered_html');

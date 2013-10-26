@@ -55,7 +55,13 @@ class Internal extends CKEditorPluginBase {
     $config['allowedContent'] = $this->generateAllowedContentSetting($editor);
 
     // Add the format_tags setting, if its button is enabled.
-    $toolbar_buttons = array_unique(NestedArray::mergeDeepArray($editor->settings['toolbar']['buttons']));
+    $toolbar_rows = array();
+    foreach ($editor->settings['toolbar']['rows'] as $row_number => $row) {
+      $toolbar_rows[] = array_reduce($editor->settings['toolbar']['rows'][$row_number], function (&$result, $button_group) {
+        return array_merge($result, $button_group['items']);
+      }, array());
+    }
+    $toolbar_buttons = array_unique(NestedArray::mergeDeepArray($toolbar_rows));
     if (in_array('Format', $toolbar_buttons)) {
       $config['format_tags'] = $this->generateFormatTagsSetting($editor);
     }
@@ -220,17 +226,14 @@ class Internal extends CKEditorPluginBase {
         'label' => t('Maximize'),
         'image_alternative' => $button('maximize'),
       ),
-      // No plugin, separator "buttons" for toolbar builder UI use only.
-      '|' => array(
-        'label' => t('Group separator'),
-        'image_alternative' => '<a href="#" role="button" aria-label="' . t('Button group separator') . '" class="ckeditor-group-separator"></a>',
-        'attributes' => array('class' => array('ckeditor-group-button-separator')),
-        'multiple' => TRUE,
-      ),
+      // No plugin, separator "button" for toolbar builder UI use only.
       '-' => array(
         'label' => t('Separator'),
         'image_alternative' => '<a href="#" role="button" aria-label="' . t('Button separator') . '" class="ckeditor-separator"></a>',
-        'attributes' => array('class' => array('ckeditor-button-separator')),
+        'attributes' => array(
+          'class' => array('ckeditor-button-separator'),
+          'data-drupal-ckeditor-type' => 'separator',
+        ),
         'multiple' => TRUE,
       ),
     );

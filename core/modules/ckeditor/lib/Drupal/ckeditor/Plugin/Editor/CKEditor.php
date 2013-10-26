@@ -94,13 +94,29 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   public function getDefaultSettings() {
     return array(
       'toolbar' => array(
-        'buttons' => array(
+        'rows' => array(
+          // Button groups.
           array(
-            'Bold', 'Italic',
-            '|', 'DrupalLink', 'DrupalUnlink',
-            '|', 'BulletedList', 'NumberedList',
-            '|', 'Blockquote', 'DrupalImage',
-            '|', 'Source',
+            array(
+              'name' => t('Formatting'),
+              'items' => array('Bold', 'Italic',),
+            ),
+            array(
+              'name' => t('Links'),
+              'items' => array('DrupalLink', 'DrupalUnlink',),
+            ),
+            array(
+              'name' => t('Lists'),
+              'items' => array('BulletedList', 'NumberedList',),
+            ),
+            array(
+              'name' => t('Media'),
+              'items' => array('Blockquote', 'DrupalImage',),
+            ),
+            array(
+              'name' => t('Tools'),
+              'items' => array('Source',),
+            ),
           ),
         ),
       ),
@@ -132,10 +148,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       ),
       '#attributes' => array('class' => array('ckeditor-toolbar-configuration')),
     );
-    $form['toolbar']['buttons'] = array(
+
+    $form['toolbar']['button_groups'] = array(
       '#type' => 'textarea',
       '#title' => t('Toolbar buttons'),
-      '#default_value' => json_encode($editor->settings['toolbar']['buttons']),
+      '#default_value' => json_encode($editor->settings['toolbar']['rows']),
       '#attributes' => array('class' => array('ckeditor-toolbar-textarea')),
     );
 
@@ -177,8 +194,17 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       'format' => $editor->id(),
       'editor' => 'ckeditor',
       'settings' => array(
-        // Single toolbar row that contains all existing buttons.
-        'toolbar' => array('buttons' => array(0 => $all_buttons)),
+        // Single toolbar row, single button group, all existing buttons.
+        'toolbar' => array(
+         'rows' => array(
+           0 => array(
+             0 => array(
+               'name' => 'All existing buttons',
+               'items' => $all_buttons,
+             )
+           )
+         ),
+        ),
         'plugins' => $editor->settings['plugins'],
       ),
     ));
@@ -212,7 +238,10 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     // editor_form_filter_admin_format_submit().
     $toolbar_settings = &$form_state['values']['editor']['settings']['toolbar'];
 
-    $toolbar_settings['buttons'] = json_decode($toolbar_settings['buttons'], FALSE);
+    // The rows key is not built into the form structure, so decode the button
+    // groups data into this new key and remove the button_groups key.
+    $toolbar_settings['rows'] = json_decode($toolbar_settings['button_groups'], TRUE);
+    unset($toolbar_settings['button_groups']);
 
     // Remove the plugin settings' vertical tabs state; no need to save that.
     if (isset($form_state['values']['editor']['settings']['plugins'])) {
@@ -352,22 +381,12 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    */
   public function buildToolbarJSSetting(EditorEntity $editor) {
     $toolbar = array();
-    foreach ($editor->settings['toolbar']['buttons'] as $row) {
-      $button_group = array();
-      foreach ($row as $button_name) {
-        // Change the toolbar separators into groups.
-        if ($button_name === '|') {
-          $toolbar[] = $button_group;
-          $button_group = array();
-        }
-        else {
-          $button_group['items'][] = $button_name;
-        }
+    foreach ($editor->settings['toolbar']['rows'] as $row) {
+      foreach ($row as $group) {
+        $toolbar[] = $group;
       }
-      $toolbar[] = $button_group;
       $toolbar[] = '/';
     }
-
     return $toolbar;
   }
 

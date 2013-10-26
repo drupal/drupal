@@ -2,21 +2,32 @@ format: basic_html
 editor: ckeditor
 settings:
   toolbar:
-    buttons:
+    rows:
       -
-        - Bold
-        - Italic
-        - '|'
-        - DrupalLink
-        - DrupalUnlink
-        - '|'
-        - BulletedList
-        - NumberedList
-        - '|'
-        - Blockquote
-        - DrupalImage
-        - '|'
-        - Source
+        -
+          name: Formatting
+          items:
+            - Bold
+            - Italic
+        -
+          name: Linking
+          items:
+            - DrupalLink
+            - DrupalUnlink
+        -
+          name: Lists
+          items:
+            - BulletedList
+            - NumberedList
+        -
+          name: Media
+          items:
+            - Blockquote
+            - DrupalImage
+        -
+          name: Tools
+          items:
+            - Source
   plugins:
     stylescombo:
       styles: ''
@@ -29,4 +40,4 @@ image_upload:
     width: ''
     height: ''
 status: '1'
-langcode: und
+langcode: en

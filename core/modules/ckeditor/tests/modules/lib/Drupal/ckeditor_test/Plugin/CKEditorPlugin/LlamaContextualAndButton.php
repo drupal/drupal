@@ -31,9 +31,11 @@ class LlamaContextualAndButton extends Llama implements CKEditorPluginContextual
    */
   function isEnabled(Editor $editor) {
     // Automatically enable this plugin if the Strike button is enabled.
-    foreach ($editor->settings['toolbar']['buttons'] as $row) {
-      if (in_array('Strike', $row)) {
-        return TRUE;
+    foreach ($editor->settings['toolbar']['rows'] as $row) {
+      foreach ($row as $group) {
+        if (in_array('Strike', $group['items'])) {
+          return TRUE;
+        }
       }
     }
     return FALSE;
