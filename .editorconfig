@@ -9,9 +9,6 @@ root = true
 end_of_line = LF
 indent_style = space
 indent_size = 2
-
-# Not in the spec yet:
-# @see https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
