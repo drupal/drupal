@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
@@ -44,7 +45,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
         'target_type' => 'node',
       ),
       'type' => 'entity_reference',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
 
     entity_create('field_instance', array(

@@ -120,7 +120,8 @@ class Field extends ConfigEntityBase implements FieldInterface {
    * The field cardinality.
    *
    * The maximum number of values the field can hold. Possible values are
-   * positive integers or FIELD_CARDINALITY_UNLIMITED. Defaults to 1.
+   * positive integers or FieldDefinitionInterface::CARDINALITY_UNLIMITED.
+   * Defaults to 1.
    *
    * @var integer
    */
@@ -595,6 +596,14 @@ class Field extends ConfigEntityBase implements FieldInterface {
    */
   public function isFieldRequired() {
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldMultiple() {
+    $cardinality = $this->getFieldCardinality();
+    return ($cardinality == static::CARDINALITY_UNLIMITED) || ($cardinality > 1);
   }
 
   /**

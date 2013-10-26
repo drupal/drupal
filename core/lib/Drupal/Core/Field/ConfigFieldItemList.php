@@ -61,7 +61,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
     // form submitted values, this can only happen with 'multiple value'
     // widgets.
     $cardinality = $this->getFieldDefinition()->getFieldCardinality();
-    if ($cardinality != FIELD_CARDINALITY_UNLIMITED) {
+    if ($cardinality != FieldDefinitionInterface::CARDINALITY_UNLIMITED) {
       $constraints[] = \Drupal::typedData()
         ->getValidationConstraintManager()
         ->create('Count', array(

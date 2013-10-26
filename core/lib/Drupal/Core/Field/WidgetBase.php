@@ -146,7 +146,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
 
     // Determine the number of widgets to display.
     switch ($cardinality) {
-      case FIELD_CARDINALITY_UNLIMITED:
+      case FieldDefinitionInterface::CARDINALITY_UNLIMITED:
         $field_state = field_form_get_state($parents, $field_name, $form_state);
         $max = $field_state['items_count'];
         $is_multiple = TRUE;
@@ -200,6 +200,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         '#theme' => 'field_multiple_value_form',
         '#field_name' => $field_name,
         '#cardinality' => $cardinality,
+        '#cardinality_multiple' => $this->fieldDefinition->isFieldMultiple(),
         '#required' => $this->fieldDefinition->isFieldRequired(),
         '#title' => $title,
         '#description' => $description,
@@ -209,7 +210,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       );
 
       // Add 'add more' button, if not working with a programmed form.
-      if ($cardinality == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
+      if ($cardinality == FieldDefinitionInterface::CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
         $elements['add_more'] = array(
           '#type' => 'submit',
           '#name' => strtr($id_prefix, '-', '_') . '_add_more',
@@ -404,9 +405,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    *   The field values.
    */
   protected function sortItems(FieldItemListInterface $items) {
-    $cardinality = $this->fieldDefinition->getFieldCardinality();
-    $is_multiple = ($cardinality == FIELD_CARDINALITY_UNLIMITED) || ($cardinality > 1);
-    if ($is_multiple && isset($items[0]->_weight)) {
+    if ($this->fieldDefinition->isFieldMultiple() && isset($items[0]->_weight)) {
       $itemValues = $items->getValue(TRUE);
       usort($itemValues, function ($a, $b) {
         $a_weight = (is_array($a) ? $a['_weight'] : 0);

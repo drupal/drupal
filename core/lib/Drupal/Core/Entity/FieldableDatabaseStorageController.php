@@ -871,7 +871,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
           $delta_count[$row->entity_id][$row->langcode] = 0;
         }
 
-        if ($field->getFieldCardinality() == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getFieldCardinality()) {
+        if ($field->getFieldCardinality() == FieldInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getFieldCardinality()) {
           $item = array();
           // For each column declared by the field, populate the item from the
           // prefixed database column.
@@ -953,7 +953,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
           $query->values($record);
           $revision_query->values($record);
 
-          if ($field->getFieldCardinality() != FIELD_CARDINALITY_UNLIMITED && ++$delta_count == $field->getFieldCardinality()) {
+          if ($field->getFieldCardinality() != FieldInterface::CARDINALITY_UNLIMITED && ++$delta_count == $field->getFieldCardinality()) {
             break;
           }
         }

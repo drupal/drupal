@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+
 class FormTest extends FieldTestBase {
 
   /**
@@ -73,7 +75,7 @@ class FormTest extends FieldTestBase {
       'name' => 'field_unlimited',
       'entity_type' => 'entity_test',
       'type' => 'test_field',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     );
 
     $this->instance = array(

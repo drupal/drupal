@@ -7,6 +7,7 @@
 
 namespace Drupal\field_ui\Tests;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\String;
 
@@ -201,12 +202,12 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Set to unlimited.
     $edit = array(
-      'field[cardinality]' => FIELD_CARDINALITY_UNLIMITED,
+      'field[cardinality]' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     );
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='field[cardinality]']", FIELD_CARDINALITY_UNLIMITED);
+    $this->assertFieldByXPath("//select[@name='field[cardinality]']", FieldDefinitionInterface::CARDINALITY_UNLIMITED);
     $this->assertFieldByXPath("//input[@name='field[cardinality_number]']", 1);
   }
 

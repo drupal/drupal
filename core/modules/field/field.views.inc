@@ -377,7 +377,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
       }
 
       // Expose additional delta column for multiple value fields.
-      if ($field->getFieldCardinality() > 1 || $field->getFieldCardinality() == FIELD_CARDINALITY_UNLIMITED) {
+      if ($field->isFieldMultiple()) {
         $title_delta = t('@label (!name:delta)', array('@label' => $label, '!name' => $field_name));
         $title_short_delta = t('@label:delta', array('@label' => $label));
 

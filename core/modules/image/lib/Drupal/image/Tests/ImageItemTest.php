@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
@@ -52,7 +53,7 @@ class ImageItemTest extends FieldUnitTestBase {
       'name' => 'image_test',
       'entity_type' => 'entity_test',
       'type' => 'image',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
     entity_create('field_instance', array(
       'entity_type' => 'entity_test',

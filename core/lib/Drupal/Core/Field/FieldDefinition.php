@@ -189,6 +189,14 @@ class FieldDefinition implements FieldDefinitionInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function isFieldMultiple() {
+    $cardinality = $this->getFieldCardinality();
+    return ($cardinality == static::CARDINALITY_UNLIMITED) || ($cardinality > 1);
+  }
+
+  /**
    * Sets whether the field is required.
    *
    * @param bool $required

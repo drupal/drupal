@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
@@ -141,7 +142,7 @@ class Field extends FieldPluginBase {
     $this->limit_values = FALSE;
 
     $cardinality = $field->getFieldCardinality();
-    if ($cardinality > 1 || $cardinality == FIELD_CARDINALITY_UNLIMITED) {
+    if ($field->isFieldMultiple()) {
       $this->multiple = TRUE;
 
       // If "Display all values in the same row" is FALSE, then we always limit
@@ -500,7 +501,7 @@ class Field extends FieldPluginBase {
     // translating prefix and suffix separately.
     list($prefix, $suffix) = explode('@count', t('Display @count value(s)'));
 
-    if ($field->getFieldCardinality() == FIELD_CARDINALITY_UNLIMITED) {
+    if ($field->getFieldCardinality() == FieldDefinitionInterface::CARDINALITY_UNLIMITED) {
       $type = 'textfield';
       $options = NULL;
       $size = 5;

@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Field\FieldItemListInterface;
 
@@ -74,7 +75,7 @@ class FileWidget extends WidgetBase {
     // Determine the number of widgets to display.
     $cardinality = $this->fieldDefinition->getFieldCardinality();
     switch ($cardinality) {
-      case FIELD_CARDINALITY_UNLIMITED:
+      case FieldDefinitionInterface::CARDINALITY_UNLIMITED:
         $max = count($items);
         $is_multiple = TRUE;
         break;
@@ -121,7 +122,7 @@ class FileWidget extends WidgetBase {
     }
 
     $empty_single_allowed = ($cardinality == 1 && $delta == 0);
-    $empty_multiple_allowed = ($cardinality == FIELD_CARDINALITY_UNLIMITED || $delta < $cardinality) && empty($form_state['programmed']);
+    $empty_multiple_allowed = ($cardinality == FieldDefinitionInterface::CARDINALITY_UNLIMITED || $delta < $cardinality) && empty($form_state['programmed']);
 
     // Add one more empty row for new uploads except when this is a programmed
     // multiple form as it is not necessary.

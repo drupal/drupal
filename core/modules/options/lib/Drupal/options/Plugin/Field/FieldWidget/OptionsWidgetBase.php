@@ -58,8 +58,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
     // Prepare some properties for the child methods to build the actual form
     // element.
     $this->required = $element['#required'];
-    $cardinality = $this->fieldDefinition->getFieldCardinality();
-    $this->multiple = ($cardinality == FIELD_CARDINALITY_UNLIMITED) || ($cardinality > 1);
+    $this->multiple = $this->fieldDefinition->isFieldMultiple();
     $this->has_value = isset($items[0]->{$this->column});
 
     // Add our custom validator.

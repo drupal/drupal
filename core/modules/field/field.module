@@ -76,11 +76,6 @@ require_once __DIR__ . '/field.deprecated.inc';
  */
 
 /**
- * Value for field API indicating a field accepts an unlimited number of values.
- */
-const FIELD_CARDINALITY_UNLIMITED = -1;
-
-/**
  * Implements hook_help().
  */
 function field_help($path, $arg) {

@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests\Views;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\views\ViewExecutable;
 
@@ -51,7 +52,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
       'name' => 'field_name_3',
       'entity_type' => 'node',
       'type' => 'text',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     ));
     $field->save();
     // Setup a field that will have no value.
@@ -59,7 +60,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
       'name' => 'field_name_4',
       'entity_type' => 'node',
       'type' => 'text',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     ));
     $field->save();
 

@@ -587,6 +587,13 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
+  public function isFieldMultiple() {
+    return $this->field->isFieldMultiple();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFieldDefaultValue(EntityInterface $entity) {
     if (!empty($this->default_value_function)) {
       $function = $this->default_value_function;

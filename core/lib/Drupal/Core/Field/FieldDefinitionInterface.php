@@ -54,6 +54,11 @@ use Drupal\Core\Entity\EntityInterface;
 interface FieldDefinitionInterface {
 
   /**
+   * Value indicating a field accepts an unlimited number of values.
+   */
+  const CARDINALITY_UNLIMITED = -1;
+
+  /**
    * Returns the machine name of the field.
    *
    * This defines how the field data is accessed from the entity. For example,
@@ -151,7 +156,8 @@ interface FieldDefinitionInterface {
   /**
    * Returns the maximum number of items allowed for the field.
    *
-   * Possible values are positive integers or FIELD_CARDINALITY_UNLIMITED.
+   * Possible values are positive integers or
+   * FieldDefinitionInterface::CARDINALITY_UNLIMITED.
    *
    * @return integer
    *   The field cardinality.
@@ -168,6 +174,14 @@ interface FieldDefinitionInterface {
    *   TRUE if the field is required.
    */
   public function isFieldRequired();
+
+  /**
+   * Returns whether the field can contain multiple items.
+   *
+   * @return bool
+   *   TRUE if the field can contain multiple items, FALSE otherwise.
+   */
+  public function isFieldMultiple();
 
   /**
    * Returns the default value for the field in a newly created entity.

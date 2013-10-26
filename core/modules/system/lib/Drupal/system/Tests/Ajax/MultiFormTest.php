@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Ajax;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+
 /**
  * Tests Ajax-enabled forms functionality with multiple instances of the form.
  */
@@ -38,7 +40,7 @@ class MultiFormTest extends AjaxTestBase {
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'text',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
     entity_create('field_instance', array(
       'field_name' => $field_name,

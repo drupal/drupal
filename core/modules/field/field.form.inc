@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Returns HTML for an individual form element.
@@ -24,7 +25,7 @@ function theme_field_multiple_value_form($variables) {
   $element = $variables['element'];
   $output = '';
 
-  if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
+  if ($element['#cardinality_multiple']) {
     $form_required_marker = array('#theme' => 'form_required_marker');
     $required = !empty($element['#required']) ? drupal_render($form_required_marker) : '';
     $table_id = drupal_html_id($element['#field_name'] . '_values');
@@ -173,7 +174,7 @@ function field_add_more_js($form, $form_state) {
   $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
 
   // Ensure the widget allows adding additional items.
-  if ($element['#cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
+  if ($element['#cardinality'] != FieldDefinitionInterface::CARDINALITY_UNLIMITED) {
     return;
   }
 
