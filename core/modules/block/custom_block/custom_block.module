@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Allows the creaation of custom blocks through the user interface.
+ * Allows the creation of custom blocks through the user interface.
  */
 
 use Drupal\custom_block\Entity\CustomBlockType;
