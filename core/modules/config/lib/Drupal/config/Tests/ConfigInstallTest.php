@@ -52,10 +52,6 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $config = \Drupal::config($default_configuration_entity);
     $this->assertIdentical($config->isNew(), FALSE);
 
-    // Verify that configuration import callback was invoked for the dynamic
-    // configuration entity.
-    $this->assertTrue($GLOBALS['hook_config_import']);
-
     // Verify that config_test API hooks were invoked for the dynamic default
     // configuration entity.
     $this->assertFalse(isset($GLOBALS['hook_config_test']['load']));

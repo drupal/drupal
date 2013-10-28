@@ -30,32 +30,5 @@ class ExtensionInstallStorage extends InstallStorage {
     }
     return $this->folders;
   }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @throws \Drupal\Core\Config\StorageException
-   */
-  public function write($name, array $data) {
-    throw new StorageException('Write operation is not allowed for config extension install storage.');
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @throws \Drupal\Core\Config\StorageException
-   */
-  public function delete($name) {
-    throw new StorageException('Delete operation is not allowed for config extension install storage.');
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @throws \Drupal\Core\Config\StorageException
-   */
-  public function rename($name, $new_name) {
-    throw new StorageException('Rename operation is not allowed for config extension install storage.');
-  }
-
 }
+

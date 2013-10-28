@@ -3,11 +3,10 @@
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigException;
-use Drupal\Core\Config\ConfigInstaller;
 use Drupal\Core\Config\ExtensionInstallStorage;
+use Drupal\Core\Config\Context\FreeConfigContext;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Config\ExtensionInstallStorageComparer;
 use Symfony\Component\Yaml\Dumper;
 
 /**
@@ -37,8 +36,6 @@ use Symfony\Component\Yaml\Dumper;
  *   The name of the module or theme to install default configuration for.
  *
  * @see \Drupal\Core\Config\ExtensionInstallStorage
- * @see \Drupal\Core\Config\ExtensionInstallStorageComparer
- * @see \Drupal\Core\Config\ConfigInstaller
  */
 function config_install_default_config($type, $name) {
   // Get all default configuration owned by this extension.
@@ -66,20 +63,36 @@ function config_install_default_config($type, $name) {
     $config_to_install = array_merge($config_to_install, $other_module_config);
   }
   if (!empty($config_to_install)) {
-    $storage_comparer = new ExtensionInstallStorageComparer($source_storage, \Drupal::service('config.storage'));
-    $storage_comparer->setSourceNames($config_to_install);
-    // Only import new config. Changed config is from previous enables and
-    // should not be overwritten.
-    $storage_comparer->addChangelistCreate();
-    $installer = new ConfigInstaller(
-      $storage_comparer,
-      \Drupal::service('event_dispatcher'),
-      \Drupal::service('config.factory'),
-      \Drupal::entityManager(),
-      \Drupal::lock(),
-      \Drupal::service('uuid')
-    );
-    $installer->import();
+    $entity_manager = Drupal::service('entity.manager');
+    $config_factory = Drupal::service('config.factory');
+    $context = new FreeConfigContext(Drupal::service('event_dispatcher'), Drupal::service('uuid'));
+    $target_storage = Drupal::service('config.storage');
+    $config_factory->enterContext($context);
+    foreach ($config_to_install as $name) {
+      // Only import new config.
+      if ($target_storage->exists($name)) {
+        continue;
+      }
+
+      $new_config = new Config($name, $target_storage, $context);
+      $data = $source_storage->read($name);
+      if ($data !== FALSE) {
+        $new_config->setData($data);
+      }
+      if ($entity_type = config_get_entity_type_by_name($name)) {
+        $entity_manager
+          ->getStorageController($entity_type)
+          ->create($new_config->get())
+          ->save();
+      }
+      else {
+        $new_config->save();
+      }
+
+      // Reset static cache on the config factory.
+      $config_factory->reset($name);
+    }
+    $config_factory->leaveContext();
   }
 }
 
