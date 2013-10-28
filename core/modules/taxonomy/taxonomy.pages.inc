@@ -19,7 +19,7 @@ function taxonomy_term_page(Term $term) {
   // Assign the term name as the page title.
   drupal_set_title($term->label());
 
-  drupal_add_feed('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
+  $build['#attached']['drupal_add_feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
 
   foreach ($term->uriRelationships() as $rel) {
     $uri = $term->uri($rel);

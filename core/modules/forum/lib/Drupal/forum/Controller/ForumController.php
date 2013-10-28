@@ -117,10 +117,6 @@ class ForumController implements ContainerInjectionInterface {
     // Get forum details.
     $taxonomy_term->forums = $this->forumManager->getChildren($this->config->get('vocabulary'), $taxonomy_term->id());
     $taxonomy_term->parents = $this->forumManager->getParents($taxonomy_term->id());
-    if (empty($taxonomy_term->forum_container->value)) {
-      // Add RSS feed for forums.
-      drupal_add_feed('taxonomy/term/' . $taxonomy_term->id() . '/feed', 'RSS - ' . $taxonomy_term->label());
-    }
 
     if (empty($taxonomy_term->forum_container->value)) {
       $topics = $this->forumManager->getTopics($taxonomy_term->id());
@@ -178,6 +174,9 @@ class ForumController implements ContainerInjectionInterface {
       '#forums_per_page' => $this->config->get('topics.page_limit'),
     );
     $build['#attached']['library'][] = array('forum', 'forum.index');
+    if (empty($term->forum_container->value)) {
+      $build['#attached']['drupal_add_feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
+    }
 
     return $build;
   }

@@ -294,10 +294,10 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    *   The rendered list of items for the feed.
    */
   public function pageLast() {
-    drupal_add_feed('aggregator/rss', $this->config('system.site')->get('name') . ' ' . $this->t('aggregator'));
-
     $items = $this->entityManager()->getStorageController('aggregator_item')->loadAll();
-    return $this->buildPageList($items);
+    $build = $this->buildPageList($items);
+    $build['#attached']['drupal_add_feed'][] = array('aggregator/rss', $this->config('system.site')->get('name') . ' ' . $this->t('aggregator'));
+    return $build;
   }
 
   /**

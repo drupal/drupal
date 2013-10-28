@@ -44,7 +44,8 @@ class Rss extends StylePluginBase {
     $url = url($this->view->getUrl(NULL, $path), $url_options);
     if ($display->hasPath()) {
       if (empty($this->preview)) {
-        drupal_add_feed($url, $title);
+        $build['#attached']['drupal_add_feed'][] = array($url, $title);
+        drupal_render($build);
       }
     }
     else {

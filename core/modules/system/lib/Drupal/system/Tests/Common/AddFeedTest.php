@@ -71,8 +71,10 @@ class AddFeedTest extends WebTestBase {
     );
 
     foreach ($urls as $description => $feed_info) {
-      drupal_add_feed($feed_info['input_url'], $feed_info['title']);
+      $build['#attached']['drupal_add_feed'][] = array($feed_info['input_url'], $feed_info['title']);
     }
+
+    drupal_render($build);
 
     $this->drupalSetContent(drupal_get_html_head());
     foreach ($urls as $description => $feed_info) {
