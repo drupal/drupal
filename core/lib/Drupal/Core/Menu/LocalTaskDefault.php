@@ -75,7 +75,11 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
    */
   public function getTitle() {
     // Subclasses may pull in the request or specific attributes as parameters.
-    return $this->t($this->pluginDefinition['title']);
+    $options = array();
+    if (!empty($this->pluginDefinition['title_context'])) {
+      $options['context'] = $this->pluginDefinition['title_context'];
+    }
+    return $this->t($this->pluginDefinition['title'], array(), $options);
   }
 
   /**

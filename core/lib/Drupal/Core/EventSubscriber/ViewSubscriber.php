@@ -27,6 +27,11 @@ use Drupal\Core\ContentNegotiation;
  */
 class ViewSubscriber implements EventSubscriberInterface {
 
+  /**
+   * The content negotiation.
+   *
+   * @var \Drupal\Core\ContentNegotiation
+   */
   protected $negotiation;
 
   /**
@@ -91,8 +96,8 @@ class ViewSubscriber implements EventSubscriberInterface {
       }
 
       // If no title was returned fall back to one defined in the route.
-      if (!isset($page_result['#title']) && $request->attributes->has('_title')) {
-        $page_result['#title'] = $request->attributes->get('_title');
+      if (!isset($page_result['#title'])) {
+        $page_result['#title'] = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
       }
 
       $event->setResponse(new Response(drupal_render_page($page_result)));
@@ -109,8 +114,8 @@ class ViewSubscriber implements EventSubscriberInterface {
       }
 
       // If no title was returned fall back to one defined in the route.
-      if (!isset($page_result['#title']) && $request->attributes->has('_title')) {
-        $page_result['#title'] = $request->attributes->get('_title');
+      if (!isset($page_result['#title'])) {
+        $page_result['#title'] = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
       }
 
       $event->setResponse(new Response(drupal_render($page_result)));

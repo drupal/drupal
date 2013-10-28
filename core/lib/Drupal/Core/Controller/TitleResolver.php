@@ -57,8 +57,12 @@ class TitleResolver implements TitleResolverInterface {
       $route_title = call_user_func_array($callable, $arguments);
     }
     elseif ($title = $route->getDefault('_title')) {
+      $options = array();
+      if ($context = $route->getDefault('_title_context')) {
+        $options['context'] = $context;
+      }
       // Fall back to a static string from the route.
-      $route_title = $this->translationManager->translate($title);
+      $route_title = $this->translationManager->translate($title, array(), $options);
     }
     return $route_title;
   }

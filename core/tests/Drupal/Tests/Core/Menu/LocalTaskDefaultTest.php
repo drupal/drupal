@@ -253,18 +253,36 @@ class LocalTaskDefaultTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getTitle method.
+   * Tests the getTitle method without a translation context.
    *
    * @see \Drupal\Core\Menu\LocalTaskDefault::getTitle()
    */
   public function testGetTitle() {
     $this->pluginDefinition['title'] = 'Example';
     $this->stringTranslation->expects($this->once())
-      ->method('translate', $this->pluginDefinition['title'])
+      ->method('translate')
+      ->with($this->pluginDefinition['title'], array(), array())
       ->will($this->returnValue('Example translated'));
 
     $this->setupLocalTaskDefault();
     $this->assertEquals('Example translated', $this->localTaskBase->getTitle());
+  }
+
+  /**
+   * Tests the getTitle method with a translation context.
+   *
+   * @see \Drupal\Core\Menu\LocalTaskDefault::getTitle()
+   */
+  public function testGetTitleWithContext() {
+    $this->pluginDefinition['title'] = 'Example';
+    $this->pluginDefinition['title_context'] = 'context';
+    $this->stringTranslation->expects($this->once())
+      ->method('translate')
+      ->with($this->pluginDefinition['title'], array(), array('context' => 'context'))
+      ->will($this->returnValue('Example translated with context'));
+
+    $this->setupLocalTaskDefault();
+    $this->assertEquals('Example translated with context', $this->localTaskBase->getTitle());
   }
 
   /**

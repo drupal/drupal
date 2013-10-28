@@ -115,6 +115,9 @@ class CommentFormController extends ContentEntityFormController {
           '%title' => $comment->subject->value,
         ));
       }
+      else {
+        $form['#title'] = $this->t('Preview comment');
+      }
     }
     else {
       if ($this->currentUser->isAuthenticated()) {

@@ -239,6 +239,8 @@ system.date_format_localize_reset:
 system.modules_list:
   path: '/admin/modules'
   defaults:
+    _title: 'Extend'
+    _title_context: 'With components'
     _form: 'Drupal\system\Form\ModulesListForm'
   requirements:
     _permission: 'administer modules'
