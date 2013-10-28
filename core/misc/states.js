@@ -517,10 +517,10 @@ $(document).bind('state:disabled', function(e) {
 $(document).bind('state:required', function(e) {
   if (e.trigger) {
     if (e.value) {
-      $(e.target).closest('.form-item, .form-wrapper').find('label').append('<abbr class="form-required" title="' + Drupal.t('This field is required.') + '">*</abbr>');
+      $(e.target).attr({ 'required': 'required', 'aria-required': 'aria-required' }).closest('.form-item, .form-wrapper').find('label').append(Drupal.theme('requiredMarker'));
     }
     else {
-      $(e.target).closest('.form-item, .form-wrapper').find('label .form-required').remove();
+      $(e.target).removeAttr('required aria-required').closest('.form-item, .form-wrapper').find('label .form-required').remove();
     }
   }
 });
@@ -565,5 +565,11 @@ function invert (a, invertState) {
 function compare (a, b) {
   return (a === b) ? (typeof a === 'undefined' ? a : true) : (typeof a === 'undefined' || typeof b === 'undefined');
 }
+
+$.extend(Drupal.theme, {
+  requiredMarker: function () {
+    return '<abbr class="form-required" title="' + Drupal.t('This field is required.') + '">*</abbr>';
+  }
+});
 
 })(jQuery);

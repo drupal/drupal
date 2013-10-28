@@ -53,15 +53,22 @@ class LanguageAddForm extends LanguageFormBase {
       '#submit' => array(array($this, 'submitForm')),
     );
 
+    $custom_language_states_conditions = array(
+      'select#edit-predefined-langcode' => array('value' => 'custom'),
+    );
     $form['custom_language'] = array(
       '#type' => 'container',
       '#states' => array(
-        'visible' => array(
-          'select#edit-predefined-langcode' => array('value' => 'custom'),
-        ),
+        'visible' => $custom_language_states_conditions,
       ),
     );
     $this->commonForm($form['custom_language']);
+    $form['custom_language']['langcode']['#states'] = array(
+      'required' => $custom_language_states_conditions,
+    );
+    $form['custom_language']['name']['#states'] = array(
+      'required' => $custom_language_states_conditions,
+    );
     $form['custom_language']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Add custom language'),
