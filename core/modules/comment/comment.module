@@ -595,7 +595,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );
-    if ($view_mode == 'teaser' && \Drupal::moduleHandler()->moduleExists('history')) {
+    if ($view_mode == 'teaser' && \Drupal::moduleHandler()->moduleExists('history') && \Drupal::currentUser()->isAuthenticated()) {
       $entity->content['links']['#attached']['library'][] = array('comment', 'drupal.node-new-comments-link');
     }
   }
