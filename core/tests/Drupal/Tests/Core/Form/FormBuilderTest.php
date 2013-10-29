@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Tests the form builder.
@@ -101,8 +102,11 @@ class FormBuilderTest extends UnitTestCase {
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
       ->getMock();
+    $http_kernel = $this->getMockBuilder('Drupal\Core\HttpKernel')
+      ->disableOriginalConstructor()
+      ->getMock();
 
-    $this->formBuilder = new TestFormBuilder($this->moduleHandler, $key_value_expirable_factory, $event_dispatcher, $this->urlGenerator, $translation_manager, $this->csrfToken);
+    $this->formBuilder = new TestFormBuilder($this->moduleHandler, $key_value_expirable_factory, $event_dispatcher, $this->urlGenerator, $translation_manager, $this->csrfToken, $http_kernel);
     $this->formBuilder->setRequest(new Request());
 
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
@@ -476,6 +480,32 @@ class FormBuilderTest extends UnitTestCase {
   }
 
   /**
+   * Tests the sendResponse() method.
+   *
+   * @expectedException \Exception
+   */
+  public function testSendResponse() {
+    $form_id = 'test_form_id';
+    $expected_form = $this->getMockBuilder('Symfony\Component\HttpFoundation\Response')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $expected_form->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($expected_form));
+
+    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form_arg->expects($this->any())
+      ->method('buildForm')
+      ->will($this->returnValue($expected_form));
+
+    // Do an initial build of the form and track the build ID.
+    $form_state = array();
+    $form_state['build_info']['callback_object'] = $form_arg;
+    $form_state['build_info']['args'] = array();
+    $this->formBuilder->buildForm($form_id, $form_state);
+  }
+
+  /**
    * Asserts that the expected form structure is found in a form for a given key.
    *
    * @param array $expected_form
@@ -498,6 +528,15 @@ class FormBuilderTest extends UnitTestCase {
  * Provides a test form builder class.
  */
 class TestFormBuilder extends FormBuilder {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function sendResponse(Response $response) {
+    parent::sendResponse($response);
+    // Throw an exception instead of exiting.
+    throw new \Exception('exit');
+  }
 
   /**
    * @param \Drupal\Core\Session\AccountInterface $account
