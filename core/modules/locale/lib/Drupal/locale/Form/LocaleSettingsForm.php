@@ -44,7 +44,7 @@ class LocaleSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('translation.check_disabled_modules'),
     );
 
-    if ($directory =\Drupal::config('locale.settings')->get('translation.path')) {
+    if ($directory = $config->get('translation.path')) {
       $description = t('Translation files are stored locally in the  %path directory. You can change this directory on the <a href="@url">File system</a> configuration page.', array('%path' => $directory, '@url' => url('admin/config/media/file-system')));
     }
     else {
