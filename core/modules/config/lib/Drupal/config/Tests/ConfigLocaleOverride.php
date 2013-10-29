@@ -170,7 +170,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     )));
 
     $language = language_load('fr');
-    $language_config_context = config_context_enter('Drupal\language\LanguageConfigContext');
+    $language_config_context = config_context_enter('Drupal\Core\Config\Context\LanguageConfigContext');
     $language_config_context->setLanguage($language);
     $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'fr bar');
@@ -196,7 +196,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     // Enter an english context on top of the german context.
     $language = language_load('en');
     // Create a new language config context to stack on top of the existing one.
-    $en_language_config_context = config_context_enter('Drupal\language\LanguageConfigContext');
+    $en_language_config_context = config_context_enter('Drupal\Core\Config\Context\LanguageConfigContext');
     $en_language_config_context->setLanguage($language);
     $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');

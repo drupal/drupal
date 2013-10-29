@@ -141,7 +141,7 @@ system.date_format.*:
       label: 'Format string'
       mapping:
         php:
-          type: string
+          type: date_format
           label: 'PHP date format'
         intl:
           type: string

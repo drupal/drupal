@@ -53,6 +53,12 @@ text:
   label: 'Text'
   translatable: true
 
+# PHP Date format string that is translatable.
+date_format:
+  type: string
+  label: 'PHP date format'
+  translatable: true
+
 # Complex extended data types:
 
 # Mail text with subject and body parts.

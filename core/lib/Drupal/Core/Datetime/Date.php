@@ -110,13 +110,13 @@ class Date {
     $key = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
 
     // If we have a non-custom date format use the provided date format pattern.
-    if ($date_format = $this->dateFormat($type)) {
+    if ($date_format = $this->dateFormat($type, $langcode)) {
       $format = $date_format->getPattern($key);
     }
 
     // Fall back to medium if a format was not found.
     if (empty($format)) {
-      $format = $this->dateFormat('fallback')->getPattern($key);
+      $format = $this->dateFormat('fallback', $langcode)->getPattern($key);
     }
 
     // Call $date->format().
@@ -127,11 +127,27 @@ class Date {
     return Xss::filter($date->format($format, $settings));
   }
 
-  protected function dateFormat($format) {
-    if (!isset($this->dateFormats[$format])) {
-      $this->dateFormats[$format] = $this->dateFormatStorage->load($format);
+  /**
+   * Loads the given format pattern for the given langcode.
+   *
+   * @param string $format
+   *   The machine name of the date format.
+   * @param string $langcode
+   *   The langcode of the language to use.
+   *
+   * @return string
+   *   The pattern for the date format in the given language.
+   */
+  protected function dateFormat($format, $langcode) {
+    if (!isset($this->dateFormats[$format][$langcode])) {
+      // Enter a language specific context so the right date format is loaded.
+      $language_context = config_context_enter('Drupal\Core\Config\Context\LanguageConfigContext');
+      $language_context->setLanguage(new Language(array('id' => $langcode)));
+
+      $this->dateFormats[$format][$langcode] = $this->dateFormatStorage->load($format);
+      config_context_leave();
     }
-    return $this->dateFormats[$format];
+    return $this->dateFormats[$format][$langcode];
   }
 
   /**

@@ -89,6 +89,37 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->drupalGet($langcode);
     $this->assertText($site_name, 'The translated site name is displayed after translations refreshed.');
 
+    // Check default medium date format exists and create a translation for it.
+    $string = $this->storage->findString(array('source' => 'D, m/d/Y - H:i', 'context' => '', 'type' => 'configuration'));
+    $this->assertTrue($string, 'Configuration date formats have been created upon installation.');
+
+    // Translate using the UI so configuration is refreshed.
+    $search = array(
+      'string' => $string->source,
+      'langcode' => $langcode,
+      'translation' => 'all',
+    );
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $textareas = $this->xpath('//textarea');
+    $textarea = current($textareas);
+    $lid = (string) $textarea[0]['name'];
+    $edit = array(
+      $lid => 'D',
+    );
+    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
+
+    $wrapper = $this->container->get('locale.config.typed')->get('system.date_format.medium');
+
+    // Get translation and check we've only got the site name.
+    $translation = $wrapper->getTranslation($langcode);
+    $format = $translation->get('pattern')->get('php')->getValue();
+    $this->assertEqual($format, 'D', 'Got the right date format pattern after translation.');
+
+    // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should
+    // display "Tue".
+    $formatted_date = format_date(494015820, $type = 'medium', NULL, NULL, $langcode);
+    $this->assertEqual($formatted_date, 'Tue', 'Got the right formatted date using the date format translation pattern.');
+
     // Assert strings from image module config are not available.
     $string = $this->storage->findString(array('source' => 'Medium (220x220)', 'context' => '', 'type' => 'configuration'));
     $this->assertFalse($string, 'Configuration strings have been created upon installation.');

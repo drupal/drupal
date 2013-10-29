@@ -2,21 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\language\LanguageConfigContext.
+ * Contains \Drupal\Core\Config\Context\LanguageConfigContext.
  */
 
-namespace Drupal\language;
+namespace Drupal\Core\Config\Context;
 
 use Drupal\Core\Config\Context\ConfigContext;
 use Drupal\Core\Language\Language;
-
 
 /**
  * Defines a configuration context object for a language.
  *
  * This should be used when configuration objects need a context for a language
  * other than the current language.
- *
  */
 class LanguageConfigContext extends ConfigContext {
 
@@ -29,14 +27,15 @@ class LanguageConfigContext extends ConfigContext {
    * Creates the configuration context for language.
    *
    * @param \Drupal\Core\Language\Language $language
-   *   The language to add to the config context.
+   *   The language object to add to the config context.
    *
    * @return \Drupal\Core\Language\Language
-   *   The language config context object.
+   *   The config context language object.
    */
   public function setLanguage(Language $language) {
     $this->set(self::LANGUAGE_KEY, $language);
-    // Re-initialize since the language change changes the context fundamentally.
+    // Re-initialize since the language change changes the context
+    // fundamentally.
     $this->init();
     return $this;
   }
