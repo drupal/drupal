@@ -149,7 +149,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       if (!$form_state['ajax']) {
         return new RedirectResponse(url($form_path, array('absolute' => TRUE)));
       }
-      $form_state['path'] = url($form_path);
+      $form_state['path'] = $form_path;
       $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
     }
     elseif (!$form_state['ajax']) {

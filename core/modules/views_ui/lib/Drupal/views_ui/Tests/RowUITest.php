@@ -63,6 +63,12 @@ class RowUITest extends UITestBase {
     $row = $view->display_handler->getOption('row');
     $this->assertEqual($row['type'], 'test_row', 'Make sure that the test_row got saved as used row plugin.');
     $this->assertEqual($row['options']['test_option'], $random_name, 'Make sure that the custom settings field got saved as expected.');
+
+    // Change the row plugin to fields using ajax.
+    $this->drupalPostAjaxForm($row_plugin_url, array('row' => 'fields'), array('op' => 'Apply'), str_replace('/nojs/', '/ajax/', $row_plugin_url));
+    $this->drupalPostAjaxForm(NULL, array(), array('op' => 'Apply'));
+    $this->assertResponse(200);
+    $this->assertFieldByName('row', 'fields', 'Make sure that the fields got saved as used row plugin.');
   }
 
 }
