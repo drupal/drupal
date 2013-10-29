@@ -65,8 +65,8 @@ class NodeViewBuilder extends EntityViewBuilder {
       );
 
       // Add Language field text element to node render array.
-      if ($display->getComponent('language')) {
-        $entity->content['language'] = array(
+      if ($display->getComponent('langcode')) {
+        $entity->content['langcode'] = array(
           '#type' => 'item',
           '#title' => t('Language'),
           '#markup' => language_name($langcode),
