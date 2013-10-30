@@ -9,7 +9,7 @@ namespace Drupal\node\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,12 +51,12 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
   /**
    * Constructs a new NodeRevisionAccessCheck.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(EntityManager $entity_manager, Connection $connection) {
+  public function __construct(EntityManagerInterface $entity_manager, Connection $connection) {
     $this->nodeStorage = $entity_manager->getStorageController('node');
     $this->nodeAccess = $entity_manager->getAccessController('node');
     $this->connection = $connection;

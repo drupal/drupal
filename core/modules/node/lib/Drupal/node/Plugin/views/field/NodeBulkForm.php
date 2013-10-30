@@ -7,10 +7,10 @@
 
 namespace Drupal\node\Plugin\views\field;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\field\ActionBulkForm;
 use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\EntityManager;
 
 /**
  * Defines a node operations bulk form element.
@@ -22,7 +22,7 @@ class NodeBulkForm extends ActionBulkForm {
   /**
    * Constructs a new NodeBulkForm object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $manager);
 
     // Filter the actions to only include those for the 'node' entity type.

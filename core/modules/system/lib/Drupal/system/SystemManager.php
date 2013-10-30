@@ -7,7 +7,7 @@
 namespace Drupal\system;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -67,10 +67,10 @@ class SystemManager {
    *   The module handler.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, EntityManager $entity_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, EntityManagerInterface $entity_manager) {
     $this->moduleHandler = $module_handler;
     $this->database = $database;
     $this->menuLinkStorage = $entity_manager->getStorageController('menu_link');

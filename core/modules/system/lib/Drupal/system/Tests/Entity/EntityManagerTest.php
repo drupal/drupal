@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Entity;
 /**
  * Tests methods on the entity manager.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  */
 class EntityManagerTest extends EntityUnitTestBase {
 

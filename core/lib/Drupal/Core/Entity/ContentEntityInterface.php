@@ -48,10 +48,10 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
    *
    * @return array
    *   An array of entity field definitions as specified by
-   *   \Drupal\Core\Entity\EntityManager::getFieldDefinitions(), keyed by field
+   *   \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions(), keyed by field
    *   name.
    *
-   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitions()
+   * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
    */
   public static function baseFieldDefinitions($entity_type);
 

@@ -9,7 +9,7 @@ namespace Drupal\book;
 
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
@@ -42,14 +42,14 @@ class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * Constructs the BookBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
    */
-  public function __construct(EntityManager $entity_manager, AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(EntityManagerInterface $entity_manager, AccessManager $access_manager, AccountInterface $account) {
     $this->menuLinkStorage = $entity_manager->getStorageController('menu_link');
     $this->accessManager = $access_manager;
     $this->account = $account;

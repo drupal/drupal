@@ -9,7 +9,7 @@ namespace Drupal\language\Form;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,7 +21,7 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -32,10 +32,10 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
    *   The config factory.
    * @param \Drupal\Core\Config\Context\ContextInterface $context
    *   The configuration context to use.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(ConfigFactory $config_factory, ContextInterface $context, EntityManager $entity_manager) {
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context, EntityManagerInterface $entity_manager) {
     parent::__construct($config_factory, $context);
 
     $this->entityManager = $entity_manager;

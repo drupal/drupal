@@ -8,7 +8,7 @@
 namespace Drupal\entity\Form;
 
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -43,10 +43,10 @@ abstract class EntityDisplayModeFormBase extends EntityFormController {
    *
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(QueryFactory $query_factory, EntityManager $entity_manager) {
+  public function __construct(QueryFactory $query_factory, EntityManagerInterface $entity_manager) {
     $this->queryFactory = $query_factory;
     $this->entityManager = $entity_manager;
   }

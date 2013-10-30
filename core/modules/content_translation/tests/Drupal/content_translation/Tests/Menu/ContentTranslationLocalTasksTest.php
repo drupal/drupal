@@ -33,9 +33,7 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
     parent::setUp();
 
     // Entity manager stub for derivative building.
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $entity_manager->expects($this->any())
       ->method('getDefinitions')
       ->will($this->returnValue(array(

@@ -169,7 +169,7 @@ class Drupal {
   /**
    * Retrieves the entity manager service.
    *
-   * @return \Drupal\Core\Entity\EntityManager
+   * @return \Drupal\Core\Entity\EntityManagerInterface
    *   The entity manager service.
    */
   public static function entityManager() {

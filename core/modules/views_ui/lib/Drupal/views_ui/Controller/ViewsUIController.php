@@ -7,12 +7,12 @@
 
 namespace Drupal\views_ui\Controller;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewsData;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,7 +31,7 @@ class ViewsUIController implements ContainerInjectionInterface {
   /**
    * Stores the Entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -59,14 +59,14 @@ class ViewsUIController implements ContainerInjectionInterface {
   /**
    * Constructs a new \Drupal\views_ui\Controller\ViewsUIController object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The Entity manager.
    * @param \Drupal\views\ViewsData views_data
    *   The Views data cache object.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface
    *   The URL generator.
    */
-  public function __construct(EntityManager $entity_manager, ViewsData $views_data, UrlGeneratorInterface $url_generator, LinkGeneratorInterface $link_generator) {
+  public function __construct(EntityManagerInterface $entity_manager, ViewsData $views_data, UrlGeneratorInterface $url_generator, LinkGeneratorInterface $link_generator) {
     $this->entityManager = $entity_manager;
     $this->viewsData = $views_data;
     $this->urlGenerator = $url_generator;

@@ -8,7 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManager;
 use Drupal\entity\EntityDisplayBaseInterface;
 use Drupal\field\FieldInstanceInterface;
@@ -37,14 +37,14 @@ abstract class DisplayOverviewBase extends OverviewBase {
   /**
    * Constructs a new DisplayOverviewBase.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Field\FieldTypePluginManager $field_type_manager
    *   The field type manager.
    * @param \Drupal\Component\Plugin\PluginManagerBase $plugin_manager
    *   The widget or formatter plugin manager.
    */
-  public function __construct(EntityManager $entity_manager, FieldTypePluginManager $field_type_manager, PluginManagerBase $plugin_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManager $field_type_manager, PluginManagerBase $plugin_manager) {
     parent::__construct($entity_manager);
 
     $this->fieldTypes = $field_type_manager->getConfigurableDefinitions();

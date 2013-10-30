@@ -7,13 +7,13 @@
 
 namespace Drupal\entity_reference;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Entity\EntityManager;
 
 /**
  * Defines route controller for entity reference.
@@ -30,7 +30,7 @@ class EntityReferenceController implements ContainerInjectionInterface {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -39,10 +39,10 @@ class EntityReferenceController implements ContainerInjectionInterface {
    *
    * @param \Drupal\entity_reference\EntityReferenceAutocomplete $entity_reference_autcompletion
    *   The autocompletion helper for entity references.
-   * @param \Drupal\Core\Entity\EntityManager êntity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface êntity_manager
    *   The entity manager.
    */
-  public function __construct(EntityReferenceAutocomplete $entity_reference_autcompletion, EntityManager $entity_manager) {
+  public function __construct(EntityReferenceAutocomplete $entity_reference_autcompletion, EntityManagerInterface $entity_manager) {
     $this->entityReferenceAutocomplete = $entity_reference_autcompletion;
     $this->entityManager = $entity_manager;
   }

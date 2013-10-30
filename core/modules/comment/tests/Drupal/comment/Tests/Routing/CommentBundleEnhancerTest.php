@@ -73,17 +73,15 @@ class CommentBundleEnhancerTest extends UnitTestCase {
    * @dataProvider providerTestEnhancer
    */
   public function testEnhancer($bundle, $field_name, $commented_entity_type) {
-    $entityManager = $this->getMockBuilder('\Drupal\Core\Entity\EntityManager')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $entityManager->expects($this->any())
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
+    $entity_manager->expects($this->any())
       ->method('getBundleInfo')
       ->will($this->returnValue(array(
         'node__comment' => array(),
         // Test two sets of __.
         'node__comment_forum__schnitzel' => array(),
       )));
-    $route_enhancer = new CommentBundleEnhancer($entityManager);
+    $route_enhancer = new CommentBundleEnhancer($entity_manager);
 
     // Test the enhancer.
     $request = new Request();

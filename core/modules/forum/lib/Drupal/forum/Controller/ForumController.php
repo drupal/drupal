@@ -10,7 +10,7 @@ namespace Drupal\forum\Controller;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\forum\ForumManagerInterface;
 use Drupal\taxonomy\TermInterface;
@@ -33,7 +33,7 @@ class ForumController implements ContainerInjectionInterface {
   /**
    * Entity Manager Service.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -76,12 +76,12 @@ class ForumController implements ContainerInjectionInterface {
    *   Vocabulary storage controller.
    * @param \Drupal\taxonomy\TermStorageControllerInterface $term_storage_controller
    *   Term storage controller.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The translation manager service.
    */
-  public function __construct(Config $config, ForumManagerInterface $forum_manager, VocabularyStorageControllerInterface $vocabulary_storage_controller, TermStorageControllerInterface $term_storage_controller, EntityManager $entity_manager, TranslationInterface $translation_manager) {
+  public function __construct(Config $config, ForumManagerInterface $forum_manager, VocabularyStorageControllerInterface $vocabulary_storage_controller, TermStorageControllerInterface $term_storage_controller, EntityManagerInterface $entity_manager, TranslationInterface $translation_manager) {
     $this->config = $config;
     $this->forumManager = $forum_manager;
     $this->vocabularyStorageController = $vocabulary_storage_controller;

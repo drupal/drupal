@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference;
 
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\entity_reference\Plugin\Type\SelectionPluginManager;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -19,7 +19,7 @@ class EntityReferenceAutocomplete {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -33,12 +33,12 @@ class EntityReferenceAutocomplete {
   /**
    * Constructs a EntityReferenceAutocomplete object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\entity_reference\Plugin\Type\SelectionPluginManager $selection_manager
    *   The Entity reference selection handler plugin manager.
    */
-  public function __construct(EntityManager $entity_manager, SelectionPluginManager $selection_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, SelectionPluginManager $selection_manager) {
     $this->entityManager = $entity_manager;
     $this->selectionHandlerManager = $selection_manager;
   }

@@ -10,7 +10,7 @@ namespace Drupal\comment;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
@@ -26,7 +26,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
   /**
    * The entity manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -69,7 +69,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    *
    * @param string $entity_type
    *   The entity type.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
@@ -78,7 +78,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
    */
-  public function __construct($entity_type, EntityManager $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
+  public function __construct($entity_type, EntityManagerInterface $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
     parent::__construct($entity_type);
     $this->entityManager = $entity_manager;
     $this->fieldInfo = $field_info;

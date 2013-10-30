@@ -8,7 +8,7 @@
 namespace Drupal\config\Form;
 
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,7 +20,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -48,12 +48,12 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   /**
    * Constructs a new ConfigSingleImportForm.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config storage.
    */
-  public function __construct(EntityManager $entity_manager, StorageInterface $config_storage) {
+  public function __construct(EntityManagerInterface $entity_manager, StorageInterface $config_storage) {
     $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;
   }

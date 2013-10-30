@@ -10,7 +10,7 @@ namespace Drupal\block;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
@@ -59,7 +59,7 @@ class BlockFormController extends EntityFormController {
   /**
    * Constructs a BlockFormController object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
    *   The entity query factory.
@@ -68,7 +68,7 @@ class BlockFormController extends EntityFormController {
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
    */
-  public function __construct(EntityManager $entity_manager, QueryFactory $entity_query_factory, LanguageManager $language_manager, ConfigFactory $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, QueryFactory $entity_query_factory, LanguageManager $language_manager, ConfigFactory $config_factory) {
     $this->storageController = $entity_manager->getStorageController('block');
     $this->entityQueryFactory = $entity_query_factory;
     $this->languageManager = $language_manager;

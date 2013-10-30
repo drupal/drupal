@@ -19,13 +19,14 @@ use Drupal\Core\Language\Language;
  *
  * @return array
  *   An array containing the entity type's definition, as retrieved with
- *   \Drupal\Core\Entity\EntityManager. If $entity_type is NULL, an associative
- *   array of all entity type definitions keyed by entity type is returned.
+ *   \Drupal\Core\Entity\EntityManagerInterface. If $entity_type is NULL, an
+ *   associative array of all entity type definitions keyed by entity type is
+ *   returned.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  * @see hook_entity_info_alter()
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManager::getDefinitions() directly.
+ * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getDefinitions() directly.
  */
 function entity_get_info($entity_type = NULL) {
   if (empty($entity_type)) {
@@ -68,8 +69,8 @@ function entity_render_cache_clear() {
  * @return array
  *   The bundle info for a specific entity type, or all entity types.
  *
- * @see \Drupal\Core\Entity\EntityManager::getBundleInfo()
- * @see \Drupal\Core\Entity\EntityManager::getAllBundleInfo()
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getBundleInfo()
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getAllBundleInfo()
  */
 function entity_get_bundles($entity_type = NULL) {
   if (isset($entity_type)) {
@@ -195,7 +196,7 @@ function entity_get_view_modes($entity_type = NULL) {
  * @return \Drupal\Core\Entity\EntityInterface
  *   The entity object, or NULL if there is no entity with the given id.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  * @see \Drupal\Core\Entity\EntityStorageControllerInterface
  * @see \Drupal\Core\Entity\DatabaseStorageController
  * @see \Drupal\Core\Entity\Query\QueryInterface
@@ -220,7 +221,7 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  *   The entity object, or FALSE if there is no entity with the given revision
  *   id.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  * @see \Drupal\Core\Entity\EntityStorageControllerInterface
  * @see \Drupal\Core\Entity\DatabaseStorageController
  */
@@ -262,7 +263,7 @@ function entity_revision_delete($entity_type, $revision_id) {
  * @throws \Drupal\Core\Entity\EntityStorageException
  *   Thrown in case the requested entity type does not support UUIDs.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  */
 function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
   $entity_info = entity_get_info($entity_type);
@@ -307,7 +308,7 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * @return array
  *   An array of entity objects indexed by their ids.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  * @see \Drupal\Core\Entity\EntityStorageControllerInterface
  * @see \Drupal\Core\Entity\DatabaseStorageController
  * @see \Drupal\Core\Entity\Query\QueryInterface
@@ -397,7 +398,7 @@ function entity_create($entity_type, array $values) {
  *
  * @return \Drupal\Core\Entity\EntityStorageControllerInterface
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManager::getStorageController().
+ * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getStorageController().
  */
 function entity_get_controller($entity_type) {
   return \Drupal::entityManager()
@@ -435,7 +436,7 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  * @return \Drupal\Core\Entity\EntityAccessControllerInterface
  *   An entity access controller instance.
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManager::getAccessController().
+ * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getAccessController().
  */
 function entity_access_controller($entity_type) {
   return \Drupal::entityManager()
@@ -451,7 +452,7 @@ function entity_access_controller($entity_type) {
  * used. If a non-existing non-default operation is specified an exception will
  * be thrown.
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  *
  * @param $entity_type
  *   The type of the entity.
@@ -463,7 +464,7 @@ function entity_access_controller($entity_type) {
  * @return \Drupal\Core\Entity\EntityFormControllerInterface
  *   An entity form controller instance.
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
+ * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getFormController().
  */
 function entity_form_controller($entity_type, $operation = 'default') {
   return \Drupal::entityManager()
@@ -544,7 +545,7 @@ function entity_get_form(EntityInterface $entity, $operation = 'default', array 
  * @return \Drupal\Core\Entity\EntityListControllerInterface
  *   An entity list controller.
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
+ * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getFormController().
  */
 function entity_list_controller($entity_type) {
   return \Drupal::entityManager()

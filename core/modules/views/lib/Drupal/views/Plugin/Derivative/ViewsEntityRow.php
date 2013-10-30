@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\views\ViewsData;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -38,7 +38,7 @@ class ViewsEntityRow implements ContainerDerivativeInterface {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -54,12 +54,12 @@ class ViewsEntityRow implements ContainerDerivativeInterface {
    *
    * @param string $base_plugin_id
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\views\ViewsData $views_data
    *   The views data service.
    */
-  public function __construct($base_plugin_id, EntityManager $entity_manager, ViewsData $views_data) {
+  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, ViewsData $views_data) {
     $this->basePluginId = $base_plugin_id;
     $this->entityManager = $entity_manager;
     $this->viewsData = $views_data;

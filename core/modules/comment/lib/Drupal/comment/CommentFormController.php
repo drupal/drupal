@@ -12,7 +12,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityFormController;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\FieldInfo;
@@ -26,7 +26,7 @@ class CommentFormController extends ContentEntityFormController {
   /**
    * The entity manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -51,7 +51,7 @@ class CommentFormController extends ContentEntityFormController {
   /**
    * Constructs a new CommentFormController.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
@@ -59,7 +59,7 @@ class CommentFormController extends ContentEntityFormController {
    *   The current user.
    */
 
-  public function __construct(EntityManager $entity_manager, FieldInfo $field_info, AccountInterface $current_user) {
+  public function __construct(EntityManagerInterface $entity_manager, FieldInfo $field_info, AccountInterface $current_user) {
     $this->entityManager = $entity_manager;
     $this->fieldInfo = $field_info;
     $this->currentUser = $current_user;

@@ -25,7 +25,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
   /**
    * The entity manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 

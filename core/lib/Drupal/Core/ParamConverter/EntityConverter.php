@@ -7,9 +7,9 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-use Drupal\Core\Entity\EntityManager;
 
 /**
  * Parameter converter for upcasting entity ids to full objects.
@@ -19,17 +19,17 @@ class EntityConverter implements ParamConverterInterface {
   /**
    * Entity manager which performs the upcasting in the end.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
   /**
    * Constructs a new EntityConverter.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entityManager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
    *   The entity manager.
    */
-  public function __construct(EntityManager $entity_manager) {
+  public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
   }
 

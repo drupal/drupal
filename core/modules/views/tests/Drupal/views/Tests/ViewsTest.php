@@ -42,9 +42,7 @@ class ViewsTest extends UnitTestCase {
       ->with('test_view')
       ->will($this->returnValue($this->view));
 
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $entity_manager->expects($this->once())
       ->method('getStorageController')
       ->with('view')

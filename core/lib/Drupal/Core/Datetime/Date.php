@@ -9,7 +9,7 @@ namespace Drupal\Core\Datetime;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 
@@ -45,12 +45,12 @@ class Date {
   /**
    * Constructs a Date object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    */
-  public function __construct(EntityManager $entity_manager, LanguageManager $language_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, LanguageManager $language_manager) {
     $this->dateFormatStorage = $entity_manager->getStorageController('date_format');
     $this->languageManager = $language_manager;
   }

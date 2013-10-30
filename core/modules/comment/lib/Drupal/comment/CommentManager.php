@@ -8,8 +8,8 @@
 namespace Drupal\comment;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\field\FieldInfo;
-use Drupal\Core\Entity\EntityManager;
 
 /**
  * Comment manager contains common functions to manage comment fields.
@@ -26,7 +26,7 @@ class CommentManager implements CommentManagerInterface {
   /**
    * The entity manager service.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -35,10 +35,10 @@ class CommentManager implements CommentManagerInterface {
    *
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    */
-  public function __construct(FieldInfo $field_info, EntityManager $entity_manager) {
+  public function __construct(FieldInfo $field_info, EntityManagerInterface $entity_manager) {
     $this->fieldInfo = $field_info;
     $this->entityManager = $entity_manager;
   }

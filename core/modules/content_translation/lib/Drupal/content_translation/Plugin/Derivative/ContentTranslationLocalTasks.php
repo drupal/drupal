@@ -8,7 +8,7 @@
 namespace Drupal\content_translation\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,7 +21,7 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -44,12 +44,12 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
    *
    * @param string $base_plugin_id
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    */
-  public function __construct($base_plugin_id, EntityManager $entity_manager, RouteProviderInterface $route_provider) {
+  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, RouteProviderInterface $route_provider) {
     $this->entityManager = $entity_manager;
     $this->routeProvider = $route_provider;
     $this->basePluginId = $base_plugin_id;

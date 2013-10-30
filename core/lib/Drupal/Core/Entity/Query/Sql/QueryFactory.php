@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
 
@@ -57,7 +57,7 @@ class QueryFactory implements QueryFactoryInterface {
    * @return \Drupal\Core\Entity\Query\Sql\Query
    *   The factored query.
    */
-  public function get($entity_type, $conjunction, EntityManager $entity_manager) {
+  public function get($entity_type, $conjunction, EntityManagerInterface $entity_manager) {
     $class = QueryBase::getClass($this->namespaces, 'Query');
     return new $class($entity_type, $entity_manager, $conjunction, $this->connection, $this->namespaces);
   }
@@ -74,7 +74,7 @@ class QueryFactory implements QueryFactoryInterface {
    * @return \Drupal\Core\Entity\Query\Sql\QueryAggregate
    *   The factored aggregation query.
    */
-  public function getAggregate($entity_type, $conjunction, EntityManager $entity_manager) {
+  public function getAggregate($entity_type, $conjunction, EntityManagerInterface $entity_manager) {
     $class = QueryBase::getClass($this->namespaces, 'QueryAggregate');
     return new $class($entity_type, $entity_manager, $conjunction, $this->connection, $this->namespaces);
   }

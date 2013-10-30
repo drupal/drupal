@@ -33,7 +33,7 @@ abstract class ControllerBase {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -96,7 +96,7 @@ abstract class ControllerBase {
   /**
    * Retrieves the entity manager service.
    *
-   * @return \Drupal\Core\Entity\EntityManager
+   * @return \Drupal\Core\Entity\EntityManagerInterface
    *   The entity manager service.
    */
   protected function entityManager() {

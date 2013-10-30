@@ -8,7 +8,7 @@
 namespace Drupal\views_ui\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,7 +20,7 @@ class BreakLockForm extends EntityConfirmFormBase {
   /**
    * Stores the Entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -34,12 +34,12 @@ class BreakLockForm extends EntityConfirmFormBase {
   /**
    * Constructs a \Drupal\views_ui\Form\BreakLockForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The Entity manager.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
-  public function __construct(EntityManager $entity_manager, TempStoreFactory $temp_store_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, TempStoreFactory $temp_store_factory) {
     $this->entityManager = $entity_manager;
     $this->tempStore = $temp_store_factory->get('views');
   }

@@ -7,7 +7,7 @@
 
 namespace Drupal\views_ui\ParamConverter;
 
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -46,7 +46,7 @@ class ViewUIConverter extends EntityConverter implements ParamConverterInterface
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
-  public function __construct(EntityManager $entity_manager, TempStoreFactory $temp_store_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, TempStoreFactory $temp_store_factory) {
     parent::__construct($entity_manager);
 
     $this->tempStoreFactory = $temp_store_factory;

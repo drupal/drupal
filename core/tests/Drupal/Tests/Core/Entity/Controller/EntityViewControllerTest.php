@@ -41,9 +41,7 @@ class EntityViewControllerTest extends UnitTestCase{
       ->will($this->returnValue('Output from rendering the entity'));
 
     // Mock an entity manager.
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $entity_manager->expects($this->any())
       ->method('getViewBuilder')
       ->will($this->returnValue($render_controller));

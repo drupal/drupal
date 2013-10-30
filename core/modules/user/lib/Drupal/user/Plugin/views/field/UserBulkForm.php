@@ -7,9 +7,9 @@
 
 namespace Drupal\user\Plugin\views\field;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\field\ActionBulkForm;
 use Drupal\Component\Annotation\PluginID;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +23,7 @@ class UserBulkForm extends ActionBulkForm {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $manager);
 
     // Filter the actions to only include those for the 'user' entity type.

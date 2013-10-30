@@ -8,7 +8,7 @@
 namespace Drupal\config\Form;
 
 use Drupal\Component\Uuid\UuidInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -54,7 +54,7 @@ class ConfigSync extends FormBase {
   protected $eventDispatcher;
 
   /**
-   * @var \Drupal\Core\Entity\EntityManager;
+   * @var \Drupal\Core\Entity\EntityManagerInterface;
    */
   protected $entity_manager;
 
@@ -85,14 +85,14 @@ class ConfigSync extends FormBase {
    *   Event dispatcher.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   Entity manager.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    * The UUID Service.
    */
-  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, UrlGeneratorInterface $url_generator, UuidInterface $uuid_service) {
+  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManagerInterface $entity_manager, UrlGeneratorInterface $url_generator, UuidInterface $uuid_service) {
     $this->sourceStorage = $sourceStorage;
     $this->targetStorage = $targetStorage;
     $this->lock = $lock;

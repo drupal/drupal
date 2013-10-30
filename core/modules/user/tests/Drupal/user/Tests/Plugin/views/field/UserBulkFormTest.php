@@ -49,9 +49,7 @@ class UserBulkFormTest extends UnitTestCase {
       ->will($this->returnValue('node'));
     $actions[] = $action;
 
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
     $storage_controller = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
     $storage_controller->expects($this->any())
       ->method('loadMultiple')

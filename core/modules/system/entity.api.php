@@ -102,7 +102,7 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
  *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  * @see entity_get_info()
  */
 function hook_entity_info(&$entity_info) {
@@ -224,7 +224,7 @@ function hook_entity_bundle_delete($entity_type, $bundle) {
  *
  * Modules may implement this hook to alter the information that defines an
  * entity type. All properties that are available in
- * \Drupal\Core\Entity\EntityManager can be altered here.
+ * \Drupal\Core\Entity\EntityManagerInterface can be altered here.
  *
  * Do not use this hook to add information to entity types. Use
  * hook_entity_info() for that instead.
@@ -234,7 +234,7 @@ function hook_entity_bundle_delete($entity_type, $bundle) {
  *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  * @see entity_get_info()
  */
 function hook_entity_info_alter(&$entity_info) {
@@ -628,7 +628,7 @@ function hook_entity_form_display_alter(\Drupal\entity\Entity\EntityFormDisplay 
  *   An array of entity field information having the following optional entries:
  *   - definitions: An array of field definitions to add all entities of this
  *     type, keyed by field name. See
- *     \Drupal\Core\Entity\EntityManager::getFieldDefinitions() for a list of
+ *     \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions() for a list of
  *     supported keys in field definitions.
  *   - optional: An array of field definitions for optional entity fields, keyed
  *     by field name. Optional fields are fields that only exist for certain
@@ -637,7 +637,7 @@ function hook_entity_form_display_alter(\Drupal\entity\Entity\EntityFormDisplay 
  *     optional fields that entities of this bundle have.
  *
  * @see hook_entity_field_info_alter()
- * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitions()
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
  * @see \Drupal\Core\TypedData\TypedDataManager::create()
  */
 function hook_entity_field_info($entity_type) {

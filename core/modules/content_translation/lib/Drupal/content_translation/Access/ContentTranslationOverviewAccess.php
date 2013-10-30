@@ -8,7 +8,7 @@
 namespace Drupal\content_translation\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,17 +21,17 @@ class ContentTranslationOverviewAccess implements StaticAccessCheckInterface {
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
   /**
    * Constructs a ContentTranslationOverviewAccess object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
    *   The entity type manager.
    */
-  public function __construct(EntityManager $manager) {
+  public function __construct(EntityManagerInterface $manager) {
     $this->entityManager = $manager;
   }
 

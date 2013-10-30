@@ -48,9 +48,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    * Tests the appliesTo method for the access checker.
    */
   public function testAppliesTo() {
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
     $entity_access = new EntityCreateAccessCheck($entity_manager);
     $this->assertEquals($entity_access->appliesTo(), array('_entity_create_access'), 'Access checker returned the expected appliesTo() array.');
@@ -81,9 +79,7 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
    * @dataProvider providerTestAccess
    */
   public function testAccess($entity_bundle, $requirement, $access, $expected) {
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
     // Don't expect a call to the access controller when we have a bundle
     // argument requirement but no bundle is provided.

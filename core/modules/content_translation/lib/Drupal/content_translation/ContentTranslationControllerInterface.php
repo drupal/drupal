@@ -74,7 +74,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   }
  * @endcode
  *
- * @see \Drupal\Core\Entity\EntityManager
+ * @see \Drupal\Core\Entity\EntityManagerInterface
  */
 interface ContentTranslationControllerInterface {
 

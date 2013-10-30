@@ -60,9 +60,7 @@ class BlockFormControllerTest extends UnitTestCase {
       ->with('block', 'AND')
       ->will($this->returnValue($query));
 
-    $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
 
     $entity_manager->expects($this->any())
       ->method('getStorageController')

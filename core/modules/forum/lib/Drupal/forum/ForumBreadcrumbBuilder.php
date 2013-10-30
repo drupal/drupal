@@ -9,7 +9,7 @@ namespace Drupal\forum;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\forum\ForumManagerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -28,7 +28,7 @@ class ForumBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * Stores the Entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -42,14 +42,14 @@ class ForumBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * Constructs a new ForumBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityManager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Config\ConfigFactory $configFactory
    *   The configuration factory.
    * @param \Drupal\forum\ForumManagerInterface $forum_manager
    *   The forum manager service.
    */
-  public function __construct(EntityManager $entity_manager, ConfigFactory $configFactory, ForumManagerInterface $forum_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactory $configFactory, ForumManagerInterface $forum_manager) {
     $this->entityManager = $entity_manager;
     $this->config = $configFactory->get('forum.settings');
     $this->forumManager = $forum_manager;

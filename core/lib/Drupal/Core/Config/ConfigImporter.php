@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\Context\FreeConfigContext;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Component\Uuid\UuidInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -70,7 +70,7 @@ class ConfigImporter {
   /**
    * The plugin manager for entities.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -112,14 +112,14 @@ class ConfigImporter {
    *   The event dispatcher used to notify subscribers of config import events.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory that statically caches config objects.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager used to import config entities.
    * @param \Drupal\Core\Lock\LockBackendInterface
    *   The lock backend to ensure multiple imports do not occur at the same time.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, LockBackendInterface $lock, UuidInterface $uuid_service) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManagerInterface $entity_manager, LockBackendInterface $lock, UuidInterface $uuid_service) {
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
     $this->configFactory = $config_factory;

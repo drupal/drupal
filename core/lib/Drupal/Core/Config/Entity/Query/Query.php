@@ -8,7 +8,7 @@
 namespace Drupal\Core\Config\Entity\Query;
 
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryInterface;
 
@@ -20,7 +20,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Stores the entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -39,14 +39,14 @@ class Query extends QueryBase implements QueryInterface {
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager that stores all meta information.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The actual config storage which is used to list all config items.
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  function __construct($entity_type, $conjunction, EntityManager $entity_manager, StorageInterface $config_storage, array $namespaces) {
+  function __construct($entity_type, $conjunction, EntityManagerInterface $entity_manager, StorageInterface $config_storage, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
     $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;

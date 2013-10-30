@@ -9,7 +9,7 @@ namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Query\QueryInterface;
@@ -24,7 +24,7 @@ class Query extends QueryBase implements QueryInterface {
    *
    * @var array
    *
-   * @see \Drupal\Core\Entity\EntityManager
+   * @see \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityInfo;
 
@@ -63,7 +63,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Stores the entity manager used by the query.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -72,7 +72,7 @@ class Query extends QueryBase implements QueryInterface {
    *
    * @param string $entity_type
    *   The entity type.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager storing the entity info.
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
@@ -80,7 +80,7 @@ class Query extends QueryBase implements QueryInterface {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to run the query against.
    */
-  public function __construct($entity_type, EntityManager $entity_manager, $conjunction, Connection $connection, array $namespaces) {
+  public function __construct($entity_type, EntityManagerInterface $entity_manager, $conjunction, Connection $connection, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
     $this->entityManager = $entity_manager;
     $this->connection = $connection;

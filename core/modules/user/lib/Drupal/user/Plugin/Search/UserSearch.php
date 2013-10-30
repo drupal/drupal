@@ -9,7 +9,7 @@ namespace Drupal\user\Plugin\Search;
 
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
@@ -39,7 +39,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -77,7 +77,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
    *
    * @param Connection $database
    *   The database connection.
-   * @param EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param ModuleHandlerInterface $module_handler
    *   The module handler.
@@ -90,7 +90,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
    * @param array $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(Connection $database, EntityManager $entity_manager, ModuleHandlerInterface $module_handler, Request $request, array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(Connection $database, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, Request $request, array $configuration, $plugin_id, array $plugin_definition) {
     $this->database = $database;
     $this->entityManager = $entity_manager;
     $this->moduleHandler = $module_handler;

@@ -7,7 +7,7 @@
 
 namespace Drupal\book;
 
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -35,10 +35,10 @@ class BookExport {
   /**
    * Constructs a BookExport object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entityManager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
    *   The entity manager.
    */
-  public function __construct(EntityManager $entityManager) {
+  public function __construct(EntityManagerInterface $entityManager) {
     $this->nodeStorage = $entityManager->getStorageController('node');
     $this->viewBuilder = $entityManager->getViewBuilder('node');
   }

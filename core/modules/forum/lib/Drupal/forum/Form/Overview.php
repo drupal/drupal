@@ -7,9 +7,9 @@
 
 namespace Drupal\forum\Form;
 
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\taxonomy\Form\OverviewTerms;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -22,19 +22,19 @@ class Overview extends OverviewTerms {
   /**
    * Entity manager Service Object.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
   /**
    * Constructs a \Drupal\forum\Form\OverviewForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\Extension\ModuleHandlerInteface $module_handler
    *   The module handler service.
    */
-  public function __construct(EntityManager $entity_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler) {
     parent::__construct($module_handler);
     $this->entityManager = $entity_manager;
   }

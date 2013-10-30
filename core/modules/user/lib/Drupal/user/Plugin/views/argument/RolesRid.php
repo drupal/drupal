@@ -9,7 +9,7 @@ namespace Drupal\user\Plugin\views\argument;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\argument\ManyToOne;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -38,10 +38,10 @@ class RolesRid extends ManyToOne {
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->roleStorageController = $entity_manager->getStorageController('user_role');

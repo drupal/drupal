@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\field\FieldInfo;
 use Drupal\edit\MetadataGeneratorInterface;
@@ -57,7 +57,7 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -84,14 +84,14 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
    *   The in-place editing metadata generator.
    * @param \Drupal\edit\EditorSelectorInterface $editor_selector
    *   The in-place editor selector.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, EntityManager $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler) {
+  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, EntityManagerInterface $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->metadataGenerator = $metadata_generator;
     $this->editorSelector = $editor_selector;

@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Form;
 
 use Drupal\aggregator\CategoryStorageControllerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,7 +37,7 @@ class CategoryDeleteForm extends ConfirmFormBase implements ContainerInjectionIn
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -53,12 +53,12 @@ class CategoryDeleteForm extends ConfirmFormBase implements ContainerInjectionIn
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param CategoryStorageControllerInterface $category_storage_controller
    *   The category storage controller.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityManager $entity_manager, CategoryStorageControllerInterface $category_storage_controller) {
+  public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager, CategoryStorageControllerInterface $category_storage_controller) {
     $this->moduleHandler = $module_handler;
     $this->entityManager = $entity_manager;
     $this->categoryStorageController = $category_storage_controller;

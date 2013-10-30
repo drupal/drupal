@@ -7,7 +7,7 @@
 
 namespace Drupal\field_ui;
 
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\field_ui\OverviewBase;
@@ -36,14 +36,14 @@ class FieldOverview extends OverviewBase {
   /**
    * Constructs a new FieldOverview.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Field\FieldTypePluginManager $field_type_manager
    *   The field type manager
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke hooks on.
    */
-  public function __construct(EntityManager $entity_manager, FieldTypePluginManager $field_type_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManager $field_type_manager, ModuleHandlerInterface $module_handler) {
     parent::__construct($entity_manager);
     $this->fieldTypeManager = $field_type_manager;
     $this->moduleHandler = $module_handler;
