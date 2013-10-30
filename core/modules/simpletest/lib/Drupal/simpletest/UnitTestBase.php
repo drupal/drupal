@@ -67,9 +67,6 @@ abstract class UnitTestBase extends TestBase {
       return FALSE;
     }
 
-    // Set user agent to be consistent with WebTestBase.
-    $_SERVER['HTTP_USER_AGENT'] = $this->databasePrefix;
-
     $this->setup = TRUE;
   }
 }
