@@ -88,7 +88,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
 
     parent::setUp();
     // Build a minimal, partially mocked environment for unit tests.
-    $this->containerBuild(drupal_container());
+    $this->containerBuild(\Drupal::getContainer());
     // Make sure it survives kernel rebuilds.
     $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
 
@@ -156,7 +156,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     $container->set('keyvalue.memory', $this->keyValueFactory);
     if (!$container->has('keyvalue')) {
       // TestBase::setUp puts a completely empty container in
-      // drupal_container() which is somewhat the mirror of the empty
+      // $this->container which is somewhat the mirror of the empty
       // environment being set up. Unit tests need not to waste time with
       // getting a container set up for them. Drupal Unit Tests might just get
       // away with a simple container holding the absolute bare minimum. When

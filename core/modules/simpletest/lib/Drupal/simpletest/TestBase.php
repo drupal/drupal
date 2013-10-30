@@ -912,7 +912,7 @@ abstract class TestBase {
     $this->originalConf = $conf;
 
     // Backup statics and globals.
-    $this->originalContainer = clone drupal_container();
+    $this->originalContainer = clone \Drupal::getContainer();
     $this->originalLanguage = $language_interface;
     $this->originalConfigDirectories = $GLOBALS['config_directories'];
     if (isset($GLOBALS['theme_key'])) {
@@ -1065,6 +1065,15 @@ abstract class TestBase {
     // which means they may need to access its filesystem and database.
     drupal_static_reset();
 
+    if ($this->container->has('state') && $state = $this->container->get('state')) {
+      $captured_emails = $state->get('system.test_email_collector') ?: array();
+      $emailCount = count($captured_emails);
+      if ($emailCount) {
+        $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');
+        $this->pass($message, t('E-mail'));
+      }
+    }
+
     // Ensure that TestBase::changeDatabasePrefix() has run and TestBase::$setup
     // was not tricked into TRUE, since the following code would delete the
     // entire parent site otherwise.
@@ -1086,14 +1095,6 @@ abstract class TestBase {
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
     simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
-    if (($container = drupal_container()) && $container->has('keyvalue')) {
-      $captured_emails = \Drupal::state()->get('system.test_email_collector') ?: array();
-      $emailCount = count($captured_emails);
-      if ($emailCount) {
-        $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');
-        $this->pass($message, t('E-mail'));
-      }
-    }
 
     // Delete temporary files directory.
     file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10), array($this, 'filePreDeleteCallback'));
