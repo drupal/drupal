@@ -46,9 +46,21 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
    * Creates a "Basic page" block and verifies its consistency in the database.
    */
   public function testCustomBlockCreation() {
+    // Add a new view mode and verify if it is selected as expected.
+    $this->drupalLogin($this->drupalCreateUser(array('administer display modes')));
+    $this->drupalGet('admin/structure/display-modes/view/add/custom_block');
+    $edit = array(
+      'id' => 'test_view_mode',
+      'label' => 'Test View Mode',
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertRaw(t('Saved the %label view mode.', array('%label' => $edit['label'])));
+
+    $this->drupalLogin($this->adminUser);
+
     // Create a block.
     $edit = array();
-    $edit['info'] = $this->randomName(8);
+    $edit['info'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
@@ -57,6 +69,14 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
       '!block' => 'Basic block',
       '%name' => $edit["info"]
     )), 'Basic block created.');
+
+    // Change the view mode.
+    $view_mode['settings[custom_block][view_mode]'] = 'test_view_mode';
+    $this->drupalPostForm(NULL, $view_mode, t('Save block'));
+
+    // Go to the configure page and verify that the new view mode is correct.
+    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->assertFieldByXPath('//select[@name="settings[custom_block][view_mode]"]/option[@selected="selected"]/@value', 'test_view_mode', 'View mode changed to Test View Mode');
 
     // Check that the block exists in the database.
     $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info']));

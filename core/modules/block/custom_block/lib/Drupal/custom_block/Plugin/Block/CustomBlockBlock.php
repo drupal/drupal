@@ -113,6 +113,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
   public function blockSubmit($form, &$form_state) {
     // Invalidate the block cache to update custom block-based derivatives.
     if ($this->moduleHandler->moduleExists('block')) {
+      $this->configuration['view_mode'] = $form_state['values']['custom_block']['view_mode'];
       $this->blockManager->clearCachedDefinitions();
     }
   }
