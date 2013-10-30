@@ -30,23 +30,11 @@ main:after {
 
 @media all and (min-width: 480px) and (max-width: 959px) {
   .l-content {
-    width: 100%;
-  }
-  .sidebar-first .l-content,
-  .two-sidebars .l-content {
     width: 67%;
     float: right; /* LTR */
   }
-  [dir="rtl"] .sidebar-first .l-content,
-  [dir="rtl"] .two-sidebars .l-content {
+  [dir="rtl"] .l-content {
     float: left;
-  }
-  .sidebar-second .l-content {
-    width: 67%;
-    float: left; /* LTR */
-  }
-  [dir="rtl"] .sidebar-second .l-content {
-    float: right;
   }
 
   .l-sidebar-first {
@@ -58,57 +46,35 @@ main:after {
   }
 
   .l-sidebar-second {
-    width: 33%;
     float: right; /* LTR */
-  }
-  [dir="rtl"] .l-sidebar-second {
-    float: left;
-  }
-  .two-sidebars .l-sidebar-second {
     clear: both;
     width: 100%;
   }
-  [dir="rtl"] .two-sidebars .l-sidebar-second {
+  [dir="rtl"] .l-sidebar-second {
     float: right;
     clear: right;
   }
 
-  .two-sidebars .l-sidebar-second .block {
+  .l-sidebar-second .block {
     float: left; /* LTR */
     width: 33%;
   }
-  [dir="rtl"] .two-sidebars .l-sidebar-second .block {
+  [dir="rtl"] .l-sidebar-second .block {
     float: right;
   }
-  .two-sidebars .l-sidebar-second .block:nth-child(3n+1) {
+  .l-sidebar-second .block:nth-child(3n+1) {
     clear: both;
   }
 }
 
 @media all and (min-width: 960px) {
   .l-content {
-    width: 100%;
+    width: 60%;
     float: left; /* LTR */
+    left: 20%; /* LTR */
   }
   [dir="rtl"] .l-content {
     float: right;
-  }
-  .sidebar-first .l-content {
-    width: 80%;
-    left: 20%; /* LTR */
-  }
-  [dir="rtl"] .sidebar-first .l-content {
-    left: 0;
-    right: 20%;
-  }
-  .sidebar-second .l-content {
-    width: 80%;
-  }
-  .two-sidebars .l-content {
-    width: 60%;
-    left: 20%; /* LTR */
-  }
-  [dir="rtl"] .two-sidebars .l-content {
     left: 0;
     right: 20%;
   }
@@ -116,17 +82,10 @@ main:after {
   .l-sidebar-first {
     width: 20%;
     float: left; /* LTR */
-    left: -80%; /* LTR */
+    left: -60%; /* LTR */
   }
   [dir="rtl"] .l-sidebar-first {
     float: right;
-    left: 0;
-    right: -80%;
-  }
-  .two-sidebars .l-sidebar-first {
-    left: -60%; /* LTR */
-  }
-  [dir="rtl"] .two-sidebars .l-sidebar-first {
     left: 0;
     right: -60%;
   }
