@@ -154,7 +154,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
     );
 
     foreach ($test_cases as $accept_language => $expected_result) {
-      $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept_language;
+      \Drupal::request()->server->set('HTTP_ACCEPT_LANGUAGE', $accept_language);
       $result = language_from_browser($languages);
       $this->assertIdentical($result, $expected_result, format_string("Language selection '@accept-language' selects '@result', result = '@actual'", array('@accept-language' => $accept_language, '@result' => $expected_result, '@actual' => isset($result) ? $result : 'none')));
     }

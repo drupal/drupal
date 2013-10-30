@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\String;
 use \Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -81,7 +82,8 @@ function language_from_interface() {
  *   A valid language code on success, FALSE otherwise.
  */
 function language_from_browser($languages) {
-  if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+  $accept_language = \Drupal::request()->server->get('HTTP_ACCEPT_LANGUAGE');
+  if (empty($accept_language)) {
     return FALSE;
   }
 
@@ -93,7 +95,7 @@ function language_from_browser($languages) {
   //   language-range  = ( ( 1*8ALPHA *( "-" 1*8ALPHA ) ) | "*" )
   // Samples: "hu, en-us;q=0.66, en;q=0.33", "hu,en-us;q=0.5"
   $browser_langcodes = array();
-  if (preg_match_all('@(?<=[, ]|^)([a-zA-Z-]+|\*)(?:;q=([0-9.]+))?(?:$|\s*,\s*)@', trim($_SERVER['HTTP_ACCEPT_LANGUAGE']), $matches, PREG_SET_ORDER)) {
+  if (preg_match_all('@(?<=[, ]|^)([a-zA-Z-]+|\*)(?:;q=([0-9.]+))?(?:$|\s*,\s*)@', trim($accept_language), $matches, PREG_SET_ORDER)) {
     // Load custom mappings to support browsers that are sending non standard
     // language codes.
     $mappings = language_get_browser_drupal_langcode_mappings();
@@ -250,10 +252,11 @@ function language_from_user_admin(array $languages, Request $request = NULL) {
  */
 function language_from_session($languages) {
   $param = \Drupal::config('language.negotiation')->get('session.parameter');
+  $query = \Drupal::request()->query;
 
   // Request parameter: we need to update the session parameter only if we have
   // an authenticated user.
-  if (isset($_GET[$param]) && isset($languages[$langcode = $_GET[$param]])) {
+  if ($query->has($param) && isset($languages[$langcode = $query->get($param)])) {
     $user = \Drupal::currentUser();
     if ($user->id()) {
       $_SESSION[$param] = $langcode;
@@ -302,7 +305,7 @@ function language_from_url($languages, Request $request = NULL) {
 
     case LANGUAGE_NEGOTIATION_URL_DOMAIN:
       // Get only the host, not the port.
-      $http_host= $_SERVER['HTTP_HOST'];
+      $http_host= \Drupal::request()->server->get('HTTP_HOST');
       if (strpos($http_host, ':') !== FALSE) {
         $http_host_tmp = explode(':', $http_host);
         $http_host = current($http_host_tmp);
@@ -412,7 +415,7 @@ function language_switcher_session($type, $path) {
   $languages = language_list();
   $links = array();
 
-  $query = $_GET;
+  $query = \Drupal::request()->query->all();
 
   foreach ($languages as $language) {
     $langcode = $language->id;
@@ -495,8 +498,14 @@ function language_url_rewrite_session(&$path, &$options) {
     $user = \Drupal::currentUser();
     if (!$user->id()) {
       $languages = language_list();
-      $query_param = check_plain(\Drupal::config('language.negotiation')->get('session.parameter'));
-      $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;
+      $query_param = String::checkPlain(\Drupal::config('language.negotiation')->get('session.parameter'));
+      $query = \Drupal::request()->query;
+      if ($query->has($query_param)) {
+        $query_value = String::checkPlain(\Drupal::request()->query->get($query_param));
+      }
+      else {
+        return FALSE;
+      }
       $query_rewrite = isset($languages[$query_value]) && language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_SESSION);
     }
     else {

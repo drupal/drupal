@@ -20,7 +20,7 @@ class LanguageTestManager extends LanguageManager {
    */
   public function init() {
     if ($test_domain = \Drupal::state()->get('language_test.domain')) {
-      $_SERVER['HTTP_HOST'] = $test_domain;
+      \Drupal::request()->server->set('HTTP_HOST', $test_domain);
     }
     return parent::init();
   }
