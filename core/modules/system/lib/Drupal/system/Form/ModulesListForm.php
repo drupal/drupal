@@ -198,7 +198,7 @@ class ModulesListForm extends FormBase {
     // Generate link for module's configuration page, if it has one.
     $row['links']['configure'] = array();
     if ($module->status && isset($module->info['configure'])) {
-      if ($this->accessManager->checkNamedRoute($module->info['configure'])) {
+      if ($this->accessManager->checkNamedRoute($module->info['configure'], array(), \Drupal::currentUser())) {
         $item = menu_get_item(trim($this->url($module->info['configure']), '/'));
         $row['links']['configure'] = array(
           '#type' => 'link',

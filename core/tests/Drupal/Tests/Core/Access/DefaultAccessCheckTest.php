@@ -26,6 +26,13 @@ class DefaultAccessCheckTest extends UnitTestCase {
    */
   protected $accessChecker;
 
+  /**
+   * The mocked account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $account;
+
   public static function getInfo() {
     return array(
       'name' => 'DefaultAccessCheck access checker',
@@ -40,6 +47,7 @@ class DefaultAccessCheckTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->accessChecker = new DefaultAccessCheck();
   }
 
@@ -58,13 +66,13 @@ class DefaultAccessCheckTest extends UnitTestCase {
     $request = new Request(array());
 
     $route = new Route('/test-route', array(), array('_access' => 'NULL'));
-    $this->assertNull($this->accessChecker->access($route, $request));
+    $this->assertNull($this->accessChecker->access($route, $request, $this->account));
 
     $route = new Route('/test-route', array(), array('_access' => 'FALSE'));
-    $this->assertFalse($this->accessChecker->access($route, $request));
+    $this->assertFalse($this->accessChecker->access($route, $request, $this->account));
 
     $route = new Route('/test-route', array(), array('_access' => 'TRUE'));
-    $this->assertTrue($this->accessChecker->access($route, $request));
+    $this->assertTrue($this->accessChecker->access($route, $request, $this->account));
   }
 
 }

@@ -50,7 +50,8 @@ class EntityAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
     $access_check = new EntityAccessCheck();
     $request->attributes->set('node', $node);
-    $access = $access_check->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $access = $access_check->access($route, $request, $account);
     $this->assertSame(AccessCheckInterface::ALLOW, $access);
   }
 

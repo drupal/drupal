@@ -8,6 +8,7 @@
 namespace Drupal\tracker\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,12 +27,9 @@ class ViewOwnTrackerAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     // The user object from the User ID in the path.
     $user = $request->attributes->get('user');
-    // @todo - $account should be passed in.
-    // The \Drupal\Core\Session\AccountInterface $account trying to access this.
-    $account = \Drupal::currentUser();
     return $user && $account->isAuthenticated() && ($user->id() == $account->id());
   }
 }

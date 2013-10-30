@@ -8,6 +8,7 @@
 namespace Drupal\search\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\search\SearchPluginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -44,7 +45,7 @@ class SearchAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     return $this->searchManager->getActiveDefinitions() ? static::ALLOW : static::DENY;
   }
 

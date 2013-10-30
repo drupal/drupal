@@ -8,6 +8,7 @@
 namespace Drupal\router_test\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,7 +27,7 @@ class TestAccessCheck implements AccessCheckInterface {
   /**
    * Implements AccessCheckInterface::access().
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     // No opinion, so other access checks should decide if access should be
     // allowed or not.
     return static::DENY;

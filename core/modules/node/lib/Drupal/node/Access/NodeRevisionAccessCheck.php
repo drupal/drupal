@@ -72,7 +72,7 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     // If the route has a {node_revision} placeholder, load the node for that
     // revision. Otherwise, try to use a {node} placeholder.
     if ($request->attributes->has('node_revision')) {
@@ -84,7 +84,7 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
     else {
       return static::DENY;
     }
-    return $this->checkAccess($node, $route->getRequirement('_access_node_revision')) ? static::ALLOW : static::DENY;
+    return $this->checkAccess($node, $account, $route->getRequirement('_access_node_revision')) ? static::ALLOW : static::DENY;
   }
 
   /**
@@ -92,12 +92,11 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node to check.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   A user object representing the user for whom the operation is to be
+   *   performed.
    * @param string $op
    *   (optional) The specific operation being checked. Defaults to 'view.'
-   * @param \Drupal\Core\Session\AccountInterface|null $account
-   *   (optional) A user object representing the user for whom the operation is
-   *   to be performed. Determines access for a user other than the current user.
-   *   Defaults to NULL.
    * @param string|null $langcode
    *   (optional) Language code for the variant of the node. Different language
    *   variants might have different permissions associated. If NULL, the
@@ -106,7 +105,7 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
    * @return bool
    *   TRUE if the operation may be performed, FALSE otherwise.
    */
-  public function checkAccess(NodeInterface $node, $op = 'view', AccountInterface $account = NULL, $langcode = NULL) {
+  public function checkAccess(NodeInterface $node, AccountInterface $account, $op = 'view', $langcode = NULL) {
     $map = array(
       'view' => 'view all revisions',
       'update' => 'revert all revisions',
@@ -123,10 +122,6 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
       // If there was no node to check against, or the $op was not one of the
       // supported ones, we return access denied.
       return FALSE;
-    }
-
-    if (!isset($account)) {
-      $account = \Drupal::currentUser();
     }
 
     // If no language code was provided, default to the node revision's langcode.

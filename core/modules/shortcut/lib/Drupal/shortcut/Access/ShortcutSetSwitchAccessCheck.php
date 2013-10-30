@@ -8,6 +8,7 @@
 namespace Drupal\shortcut\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,21 +27,19 @@ class ShortcutSetSwitchAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
-    $user = \Drupal::currentUser();
-    $account = $request->attributes->get('account');
-
-    if ($user->hasPermission('administer shortcuts')) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
+    if ($account->hasPermission('administer shortcuts')) {
       // Administrators can switch anyone's shortcut set.
       return static::ALLOW;
     }
 
-    if (!$user->hasPermission('switch shortcut sets')) {
+    if (!$account->hasPermission('switch shortcut sets')) {
       // The user has no permission to switch anyone's shortcut set.
       return static::DENY;
     }
 
-    if (!isset($account) || $user->id() == $account->id()) {
+    $user = $request->attributes->get('account');
+    if (!isset($user) || $user->id() == $account->id()) {
       // Users with the 'switch shortcut sets' permission can switch their own
       // shortcuts sets.
       return static::ALLOW;

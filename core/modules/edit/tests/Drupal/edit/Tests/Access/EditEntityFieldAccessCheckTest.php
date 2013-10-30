@@ -164,7 +164,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
         )
       )));
 
-    $access = $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $access = $this->editAccessCheck->access($route, $request, $account);
     $this->assertSame($expected_result, $access);
   }
 
@@ -183,7 +184,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->with('non_valid')
       ->will($this->returnValue(NULL));
 
-    $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
   }
 
   /**
@@ -207,7 +209,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->with(1)
       ->will($this->returnValue(NULL));
 
-    $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
   }
 
   /**
@@ -226,7 +229,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
 
     $request->attributes->set('entity', $entity);
 
-    $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
   }
 
   /**
@@ -257,7 +261,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->with('entity_test', 'test_bundle', 'not_valid')
       ->will($this->returnValue(NULL));
 
-    $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
   }
 
   /**
@@ -285,7 +290,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->method('getInstance')
       ->will($this->returnValue($field));
 
-    $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
   }
 
   /**
@@ -314,7 +320,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->method('getInstance')
       ->will($this->returnValue($field));
 
-    $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
   }
 
 }

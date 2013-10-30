@@ -109,7 +109,7 @@ function contact_menu() {
  * @see contact_menu()
  */
 function _contact_personal_tab_access(UserInterface $account) {
-  return \Drupal::service('access_manager')->checkNamedRoute('contact.personal_page', array('user' => $account->id()));
+  return \Drupal::service('access_manager')->checkNamedRoute('contact.personal_page', array('user' => $account->id()), \Drupal::currentUser());
 }
 
 /**

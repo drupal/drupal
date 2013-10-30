@@ -8,6 +8,7 @@
 namespace Drupal\user\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,11 +27,9 @@ class PermissionAccessCheck implements StaticAccessCheckInterface {
   /**
    * Implements AccessCheckInterface::access().
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     $permission = $route->getRequirement('_permission');
-    // @todo Replace user_access() with a correctly injected and session-using
-    //   alternative.
-    // If user_access() fails, return NULL to give other checks a chance.
-    return user_access($permission) ? static::ALLOW : static::DENY;
+    // If the access check fails, return NULL to give other checks a chance.
+    return $account->hasPermission($permission) ? static::ALLOW : static::DENY;
   }
 }

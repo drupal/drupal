@@ -906,7 +906,10 @@ function theme_node_search_admin($variables) {
  * @see node_menu()
  */
 function _node_revision_access(EntityInterface $node, $op = 'view', $account = NULL, $langcode = NULL) {
-  return \Drupal::service('access_check.node.revision')->checkAccess($node, $op, $account, $langcode);
+  if ($account === NULL) {
+    $account = \Drupal::currentUser();
+  }
+  return \Drupal::service('access_check.node.revision')->checkAccess($node, $account, $op, $langcode);
 }
 
 /**
@@ -921,7 +924,7 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
  *   Use \Drupal::service('access_manager')->checkNamedRoute('node.add_page');
  */
 function _node_add_access() {
-  return \Drupal::service('access_manager')->checkNamedRoute('node.add_page');
+  return \Drupal::service('access_manager')->checkNamedRoute('node.add_page', array(), \Drupal::currentUser());
 }
 
 /**

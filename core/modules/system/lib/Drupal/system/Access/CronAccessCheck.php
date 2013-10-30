@@ -8,6 +8,7 @@
 namespace Drupal\system\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,7 +27,7 @@ class CronAccessCheck implements StaticAccessCheckInterface {
   /**
    * Implements AccessCheckInterface::access().
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     $key = $request->attributes->get('key');
     if ($key != \Drupal::state()->get('system.cron_key')) {
       watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);

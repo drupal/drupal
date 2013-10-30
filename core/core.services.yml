@@ -192,10 +192,11 @@ services:
     arguments: ['@container.namespaces']
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
-    arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager', '@access_manager']
+    arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager', '@access_manager', '@current_user']
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
-    arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager', '@access_manager']
+    arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager', '@access_manager', '@current_user']
+    scope: request
   request:
     class: Symfony\Component\HttpFoundation\Request
     # @TODO the synthetic setting must be uncommented whenever drupal_session_initialize()
@@ -348,6 +349,8 @@ services:
     arguments: ['@settings']
   route_enhancer.authentication:
     class: Drupal\Core\Routing\Enhancer\AuthenticationEnhancer
+    calls:
+      - [setContainer, ['@service_container']]
     tags:
       - { name: route_enhancer, priority: 1000 }
     arguments: ['@authentication']
@@ -410,6 +413,14 @@ services:
       - [setRequest, ['@?request']]
   access_subscriber:
     class: Drupal\Core\EventSubscriber\AccessSubscriber
+    arguments: ['@access_manager', '@current_user']
+    calls:
+      - [setCurrentUser, ['@?current_user']]
+    tags:
+      - { name: event_subscriber }
+    scope: request
+  access_route_subscriber:
+    class: Drupal\Core\EventSubscriber\AccessRouteSubscriber
     tags:
       - { name: event_subscriber }
     arguments: ['@access_manager']
@@ -631,6 +642,7 @@ services:
     factory_method: authenticate
     factory_service: authentication
     arguments: ['@request']
+    synchronized: true
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
     arguments: [ '@state' ]

@@ -8,6 +8,7 @@
 namespace Drupal\router_test\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -26,7 +27,7 @@ class DefinedTestAccessCheck implements AccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     if ($route->getRequirement('_test_access') === 'TRUE') {
       return static::ALLOW;
     }

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Access;
 
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -50,7 +51,7 @@ class CustomAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     $access_controller = $route->getRequirement('_custom_access');
 
     $controller = $this->controllerResolver->getControllerFromDefinition($access_controller);

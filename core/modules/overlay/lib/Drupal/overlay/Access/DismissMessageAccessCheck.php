@@ -8,6 +8,7 @@
 namespace Drupal\overlay\Access;
 
 use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,8 +27,7 @@ class DismissMessageAccessCheck implements AccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
-    $account = $request->attributes->get('_account');
+  public function access(Route $route, Request $request, AccountInterface $account) {
     if (!$account->hasPermission('access overlay')) {
       return static::DENY;
     }

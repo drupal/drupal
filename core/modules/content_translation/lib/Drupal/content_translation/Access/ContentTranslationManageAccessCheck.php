@@ -10,6 +10,7 @@ namespace Drupal\content_translation\Access;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Access\StaticAccessCheckInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -45,7 +46,7 @@ class ContentTranslationManageAccessCheck implements StaticAccessCheckInterface 
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     $entity_type = $request->attributes->get('_entity_type');
     if ($entity = $request->attributes->get($entity_type)) {
       $route_requirements = $route->getRequirements();

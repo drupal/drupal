@@ -8,6 +8,7 @@
 namespace Drupal\field_ui\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,7 +27,7 @@ class FormModeAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     if ($entity_type = $request->attributes->get('entity_type')) {
       $bundle = $request->attributes->get('bundle');
       $form_mode = $request->attributes->get('mode');
@@ -43,7 +44,7 @@ class FormModeAccessCheck implements StaticAccessCheckInterface {
 
       if ($visibility) {
         $permission = $route->getRequirement('_field_ui_form_mode_access');
-        return user_access($permission) ? static::ALLOW : static::DENY;
+        return $account->hasPermission($permission) ? static::ALLOW : static::DENY;
       }
     }
   }

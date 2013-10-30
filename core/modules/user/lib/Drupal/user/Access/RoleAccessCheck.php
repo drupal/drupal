@@ -8,6 +8,7 @@
 namespace Drupal\user\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -30,11 +31,9 @@ class RoleAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     // Requirements just allow strings, so this might be a comma separated list.
     $rid_string = $route->getRequirement('_role');
-
-    $account = $request->attributes->get('_account');
 
     $explode_and = array_filter(array_map('trim', explode('+', $rid_string)));
     if (count($explode_and) > 1) {

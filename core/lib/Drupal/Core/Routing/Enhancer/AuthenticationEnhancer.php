@@ -9,6 +9,7 @@ namespace Drupal\Core\Routing\Enhancer;
 
 use Drupal\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -20,7 +21,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  * all authentication mechanisms. Instead, we check if the used provider is
  * valid for the matched route and if not, force the user to anonymous.
  */
-class AuthenticationEnhancer implements RouteEnhancerInterface {
+class AuthenticationEnhancer extends ContainerAware implements RouteEnhancerInterface {
 
   /**
    * The authentication manager.
@@ -52,6 +53,9 @@ class AuthenticationEnhancer implements RouteEnhancerInterface {
       // force the user back to anonymous.
       if (!in_array($auth_provider_triggered, $auth_providers)) {
         $anonymous_user = drupal_anonymous_user();
+
+        $this->container->set('current_user', $anonymous_user, 'request');
+        // @todo Remove this in https://drupal.org/node/2073531
         $request->attributes->set('_account', $anonymous_user);
 
         // The global $user object is included for backward compatibility only

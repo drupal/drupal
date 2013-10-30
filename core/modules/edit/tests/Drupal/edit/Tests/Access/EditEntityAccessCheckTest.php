@@ -119,7 +119,8 @@ class EditEntityAccessCheckTest extends UnitTestCase {
     $request->attributes->set('entity', $entity);
     $request->attributes->set('entity_type', 'test_entity');
 
-    $access = $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $access = $this->editAccessCheck->access($route, $request, $account);
     $this->assertSame($expected_result, $access);
   }
 
@@ -138,7 +139,8 @@ class EditEntityAccessCheckTest extends UnitTestCase {
       ->with('non_valid')
       ->will($this->returnValue(NULL));
 
-    $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
   }
 
   /**
@@ -162,7 +164,8 @@ class EditEntityAccessCheckTest extends UnitTestCase {
       ->with(1)
       ->will($this->returnValue(NULL));
 
-    $this->editAccessCheck->access($route, $request);
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
   }
 
 }

@@ -118,7 +118,8 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     }
     $request->attributes->set('_raw_variables', $raw_variables);
 
-    $this->assertEquals($expected, $applies_check->access($route, $request));
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->assertEquals($expected, $applies_check->access($route, $request, $account));
   }
 
 }

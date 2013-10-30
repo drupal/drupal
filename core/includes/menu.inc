@@ -1018,7 +1018,7 @@ function menu_item_route_access(Route $route, $href, &$map) {
     }
   }
 
-  return \Drupal::service('access_manager')->check($route, $request);
+  return \Drupal::service('access_manager')->check($route, $request, \Drupal::currentUser());
 }
 
 /**

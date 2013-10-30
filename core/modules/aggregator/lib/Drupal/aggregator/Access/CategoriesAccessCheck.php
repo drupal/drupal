@@ -9,6 +9,7 @@ namespace Drupal\aggregator\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -44,10 +45,8 @@ class CategoriesAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
-    // @todo Replace user_access() with a correctly injected and session-using
-    // alternative.
-    return user_access('access news feeds') && (bool) $this->database->queryRange('SELECT 1 FROM {aggregator_category}', 0, 1)->fetchField() ? static::ALLOW : static::DENY;
+  public function access(Route $route, Request $request, AccountInterface $account) {
+    return $account->hasPermission('access news feeds') && (bool) $this->database->queryRange('SELECT 1 FROM {aggregator_category}', 0, 1)->fetchField() ? static::ALLOW : static::DENY;
   }
 
 }

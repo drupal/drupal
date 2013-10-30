@@ -10,6 +10,7 @@ namespace Drupal\Core\Access;
 use Drupal\Core\ParamConverter\ParamConverterManager;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
@@ -180,6 +181,8 @@ class AccessManager extends ContainerAware {
    *   The route to check access to.
    * @param array $parameters
    *   Optional array of values to substitute into the route path patern.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
    * @param \Symfony\Component\HttpFoundation\Request $route_request
    *   Optional incoming request object. If not provided, one will be built
    *   using the route information and the current request from the container.
@@ -187,18 +190,17 @@ class AccessManager extends ContainerAware {
    * @return bool
    *   Returns TRUE if the user has access to the route, otherwise FALSE.
    */
-  public function checkNamedRoute($route_name, array $parameters = array(), Request $route_request = NULL) {
+  public function checkNamedRoute($route_name, array $parameters = array(), AccountInterface $account, Request $route_request = NULL) {
     try {
       $route = $this->routeProvider->getRouteByName($route_name, $parameters);
       if (empty($route_request)) {
         // Create a request and copy the account from the current request.
         $route_request = RequestHelper::duplicate($this->request, $this->urlGenerator->generate($route_name, $parameters));
         $defaults = $parameters;
-        $defaults['_account'] = $this->request->attributes->get('_account');
         $defaults[RouteObjectInterface::ROUTE_OBJECT] = $route;
         $route_request->attributes->add($this->paramConverterManager->enhance($defaults, $route_request));
       }
-      return $this->check($route, $route_request);
+      return $this->check($route, $route_request, $account);
     }
     catch (RouteNotFoundException $e) {
       return FALSE;
@@ -217,23 +219,21 @@ class AccessManager extends ContainerAware {
    *   The route to check access to.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current account.
    *
    * @return bool
    *   Returns TRUE if the user has access to the route, otherwise FALSE.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   If any access check denies access or none explicitly approve.
    */
-  public function check(Route $route, Request $request) {
+  public function check(Route $route, Request $request, AccountInterface $account) {
     $checks = $route->getOption('_access_checks') ?: array();
-
     $conjunction = $route->getOption('_access_mode') ?: 'ALL';
 
     if ($conjunction == 'ALL') {
-      return $this->checkAll($checks, $route, $request);
+      return $this->checkAll($checks, $route, $request, $account);
     }
     else {
-      return $this->checkAny($checks, $route, $request);
+      return $this->checkAny($checks, $route, $request, $account);
     }
   }
 
@@ -246,11 +246,13 @@ class AccessManager extends ContainerAware {
    *   The route to check access to.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
    *
    * @return bool
    *  Returns TRUE if the user has access to the route, else FALSE.
    */
-  protected function checkAll(array $checks, Route $route, Request $request) {
+  protected function checkAll(array $checks, Route $route, Request $request, AccountInterface $account) {
     $access = FALSE;
 
     foreach ($checks as $service_id) {
@@ -258,7 +260,7 @@ class AccessManager extends ContainerAware {
         $this->loadCheck($service_id);
       }
 
-      $service_access = $this->checks[$service_id]->access($route, $request);
+      $service_access = $this->checks[$service_id]->access($route, $request, $account);
       if ($service_access === AccessInterface::ALLOW) {
         $access = TRUE;
       }
@@ -281,11 +283,13 @@ class AccessManager extends ContainerAware {
    *   The route to check access to.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
    *
    * @return bool
    *  Returns TRUE if the user has access to the route, else FALSE.
    */
-  protected function checkAny(array $checks, $route, $request) {
+  protected function checkAny(array $checks, $route, $request, AccountInterface $account) {
     // No checks == deny by default.
     $access = FALSE;
 
@@ -294,7 +298,7 @@ class AccessManager extends ContainerAware {
         $this->loadCheck($service_id);
       }
 
-      $service_access = $this->checks[$service_id]->access($route, $request);
+      $service_access = $this->checks[$service_id]->access($route, $request, $account);
       if ($service_access === AccessInterface::ALLOW) {
         $access = TRUE;
       }

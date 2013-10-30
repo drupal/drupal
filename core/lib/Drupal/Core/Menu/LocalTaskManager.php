@@ -18,6 +18,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -89,6 +90,13 @@ class LocalTaskManager extends DefaultPluginManager {
   protected $accessManager;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $account;
+
+  /**
    * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
@@ -105,8 +113,10 @@ class LocalTaskManager extends DefaultPluginManager {
    *   The language manager.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   The access manager.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, AccessManager $access_manager) {
+  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account) {
     $this->discovery = new YamlDiscovery('local_tasks', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
@@ -114,6 +124,7 @@ class LocalTaskManager extends DefaultPluginManager {
     $this->request = $request;
     $this->routeProvider = $route_provider;
     $this->accessManager = $access_manager;
+    $this->account = $account;
     $this->alterInfo($module_handler, 'local_tasks');
     $this->setCacheBackend($cache, $language_manager, 'local_task_plugins', array('local_task' => 1));
   }
@@ -265,7 +276,7 @@ class LocalTaskManager extends DefaultPluginManager {
         $route_parameters = $child->getRouteParameters($this->request);
 
         // Find out whether the user has access to the task.
-        $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters);
+        $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters, $this->account);
         if ($access) {
           $active = $this->isRouteActive($current_route_name, $route_name, $route_parameters);
 

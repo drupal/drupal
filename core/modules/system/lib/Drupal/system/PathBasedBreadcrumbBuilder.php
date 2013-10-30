@@ -131,7 +131,7 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
           // Note that the parameters don't really matter here since we're
           // passing in the request which already has the upcast attributes.
           $parameters = array();
-          $access = $this->accessManager->checkNamedRoute($route_name, $parameters, $route_request);
+          $access = $this->accessManager->checkNamedRoute($route_name, $parameters, \Drupal::currentUser(), $route_request);
           if ($access) {
             $title = $this->titleResolver->getTitle($route_request, $route_request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
           }

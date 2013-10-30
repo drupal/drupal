@@ -7,6 +7,7 @@
 
 namespace Drupal\search\Access;
 
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -25,8 +26,7 @@ class SearchPluginAccessCheck extends SearchAccessCheck {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
-    $account = \Drupal::currentUser();
+  public function access(Route $route, Request $request, AccountInterface $account) {
     $plugin_id = $route->getRequirement('_search_plugin_view_access');
     return $this->searchManager->pluginAccess($plugin_id, $account) ? static::ALLOW : static::DENY;
   }

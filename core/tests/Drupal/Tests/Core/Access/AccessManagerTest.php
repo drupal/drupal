@@ -70,6 +70,13 @@ class AccessManagerTest extends UnitTestCase {
    */
   protected $paramConverter;
 
+  /**
+   * The mocked account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $account;
+
   public static function getInfo() {
     return array(
       'name' => 'Access manager tests',
@@ -115,7 +122,9 @@ class AccessManagerTest extends UnitTestCase {
 
     $this->paramConverter = $this->getMock('\Drupal\Core\ParamConverter\ParamConverterManager');
 
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter);
+    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
+
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->account);
     $this->accessManager->setContainer($this->container);
   }
 
@@ -147,7 +156,7 @@ class AccessManagerTest extends UnitTestCase {
 
     // Check check without any access checker defined yet.
     foreach ($this->routeCollection->all() as $route) {
-      $this->assertFalse($this->accessManager->check($route, $request));
+      $this->assertFalse($this->accessManager->check($route, $request, $this->account));
     }
 
     $this->setupAccessChecker();
@@ -155,14 +164,14 @@ class AccessManagerTest extends UnitTestCase {
     // An access checker got setup, but the routes haven't been setup using
     // setChecks.
     foreach ($this->routeCollection->all() as $route) {
-      $this->assertFalse($this->accessManager->check($route, $request));
+      $this->assertFalse($this->accessManager->check($route, $request, $this->account));
     }
 
     $this->accessManager->setChecks($this->routeCollection);
 
-    $this->assertFalse($this->accessManager->check($this->routeCollection->get('test_route_1'), $request));
-    $this->assertTrue($this->accessManager->check($this->routeCollection->get('test_route_2'), $request));
-    $this->assertFalse($this->accessManager->check($this->routeCollection->get('test_route_3'), $request));
+    $this->assertFalse($this->accessManager->check($this->routeCollection->get('test_route_1'), $request, $this->account));
+    $this->assertTrue($this->accessManager->check($this->routeCollection->get('test_route_2'), $request, $this->account));
+    $this->assertFalse($this->accessManager->check($this->routeCollection->get('test_route_3'), $request, $this->account));
   }
 
   /**
@@ -329,7 +338,7 @@ class AccessManagerTest extends UnitTestCase {
     $route_collection->add($name, $route);
 
     $this->accessManager->setChecks($route_collection);
-    $this->assertSame($this->accessManager->check($route, $request), $expected_access);
+    $this->assertSame($this->accessManager->check($route, $request, $this->account), $expected_access);
   }
 
   /**
@@ -358,18 +367,17 @@ class AccessManagerTest extends UnitTestCase {
 
     // Tests the access with routes without parameters.
     $request = new Request();
-    $this->assertTrue($this->accessManager->checkNamedRoute('test_route_2', array(), $request));
-    $this->assertFalse($this->accessManager->checkNamedRoute('test_route_3', array(), $request));
+    $this->assertTrue($this->accessManager->checkNamedRoute('test_route_2', array(), $this->account, $request));
+    $this->assertFalse($this->accessManager->checkNamedRoute('test_route_3', array(), $this->account, $request));
 
     // Tests the access with routes with parameters with given request.
     $request = new Request();
     $request->attributes->set('value', 'example');
     $request->attributes->set('value2', 'example2');
-    $this->assertTrue($this->accessManager->checkNamedRoute('test_route_4', array(), $request));
+    $this->assertTrue($this->accessManager->checkNamedRoute('test_route_4', array(), $this->account, $request));
 
     // Tests the access with routes without given request.
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->accessManager->setRequest(new Request(array(), array(), array('_account' => $account)));
+    $this->accessManager->setRequest(new Request());
 
     $this->paramConverter->expects($this->at(0))
       ->method('enhance')
@@ -380,8 +388,8 @@ class AccessManagerTest extends UnitTestCase {
       ->will($this->returnValue(array()));
 
     // Tests the access with routes with parameters without given request.
-    $this->assertTrue($this->accessManager->checkNamedRoute('test_route_2', array()));
-    $this->assertTrue($this->accessManager->checkNamedRoute('test_route_4', array('value' => 'example')));
+    $this->assertTrue($this->accessManager->checkNamedRoute('test_route_2', array(), $this->account));
+    $this->assertTrue($this->accessManager->checkNamedRoute('test_route_4', array('value' => 'example'), $this->account));
   }
 
   /**
@@ -423,9 +431,9 @@ class AccessManagerTest extends UnitTestCase {
       ->with('/test-route-1/example')
       ->will($this->returnValue($subrequest));
 
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter);
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->account);
     $this->accessManager->setContainer($this->container);
-    $this->accessManager->setRequest(new Request(array(), array(), array('_account' => $account)));
+    $this->accessManager->setRequest(new Request());
 
     $access_check = $this->getMock('Drupal\Core\Access\AccessCheckInterface');
     $access_check->expects($this->any())
@@ -442,7 +450,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->accessManager->addCheckService('test_access');
     $this->accessManager->setChecks($this->routeCollection);
 
-    $this->assertFalse($this->accessManager->checkNamedRoute('test_route_1', array('value' => 'example')));
+    $this->assertFalse($this->accessManager->checkNamedRoute('test_route_1', array('value' => 'example'), $this->account));
   }
 
   /**
@@ -457,7 +465,7 @@ class AccessManagerTest extends UnitTestCase {
 
     $this->setupAccessChecker();
 
-    $this->assertFalse($this->accessManager->checkNamedRoute('test_route_1'), 'A non existing route lead to access.');
+    $this->assertFalse($this->accessManager->checkNamedRoute('test_route_1', array(), $this->account), 'A non existing route lead to access.');
   }
 
   /**
@@ -488,7 +496,7 @@ class AccessManagerTest extends UnitTestCase {
    * Adds a default access check service to the container and the access manager.
    */
   protected function setupAccessChecker() {
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter);
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->account);
     $this->accessManager->setContainer($this->container);
     $access_check = new DefaultAccessCheck();
     $this->container->register('test_access_default', $access_check);

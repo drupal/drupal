@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -50,7 +51,7 @@ class EntityCreateAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     list($entity_type, $bundle) = explode(':', $route->getRequirement($this->requirementsKey) . ':');
 
     // The bundle argument can contain request argument placeholders like
@@ -65,7 +66,7 @@ class EntityCreateAccessCheck implements StaticAccessCheckInterface {
         return static::DENY;
       }
     }
-    return $this->entityManager->getAccessController($entity_type)->createAccess($bundle) ? static::ALLOW : static::DENY;
+    return $this->entityManager->getAccessController($entity_type)->createAccess($bundle, $account) ? static::ALLOW : static::DENY;
   }
 
 }

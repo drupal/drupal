@@ -9,6 +9,7 @@ namespace Drupal\contact\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserDataInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,10 +56,8 @@ class ContactPageAccess implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     $contact_account = $request->attributes->get('user');
-    // @todo revisit after https://drupal.org/node/2048223
-    $user = \Drupal::currentUser();
 
     // Anonymous users cannot have contact forms.
     if ($contact_account->isAnonymous()) {
@@ -66,12 +65,12 @@ class ContactPageAccess implements StaticAccessCheckInterface {
     }
 
     // Users may not contact themselves.
-    if ($user->id() == $contact_account->id()) {
+    if ($account->id() == $contact_account->id()) {
       return static::DENY;
     }
 
     // User administrators should always have access to personal contact forms.
-    if ($user->hasPermission('administer users')) {
+    if ($account->hasPermission('administer users')) {
       return static::ALLOW;
     }
 
@@ -92,7 +91,7 @@ class ContactPageAccess implements StaticAccessCheckInterface {
       return static::DENY;
     }
 
-    return $user->hasPermission('access user contact forms') ? static::ALLOW : static::DENY;
+    return $account->hasPermission('access user contact forms') ? static::ALLOW : static::DENY;
   }
 
 }

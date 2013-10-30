@@ -2176,7 +2176,7 @@ function form_process_autocomplete($element, &$form_state) {
     $parameters = isset($element['#autocomplete_route_parameters']) ? $element['#autocomplete_route_parameters'] : array();
 
     $path = \Drupal::urlGenerator()->generate($element['#autocomplete_route_name'], $parameters);
-    $access = \Drupal::service('access_manager')->checkNamedRoute($element['#autocomplete_route_name'], $parameters);
+    $access = \Drupal::service('access_manager')->checkNamedRoute($element['#autocomplete_route_name'], $parameters, \Drupal::currentUser());
   }
   if ($access) {
     $element['#attributes']['class'][] = 'form-autocomplete';

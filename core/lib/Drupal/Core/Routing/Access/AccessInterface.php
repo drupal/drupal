@@ -8,6 +8,7 @@
 namespace Drupal\Core\Routing\Access;
 
 use Drupal\Core\Access\AccessInterface as GenericAccessInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -23,10 +24,12 @@ interface AccessInterface extends GenericAccessInterface {
    *   The route to check against.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
    *
    * @return bool|null
    *   self::ALLOW, self::DENY, or self::KILL.
    */
-  public function access(Route $route, Request $request);
+  public function access(Route $route, Request $request, AccountInterface $account);
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\user\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,8 +27,8 @@ class LoginStatusCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
-    return $GLOBALS['user']->isAuthenticated() ? static::ALLOW : static::DENY;
+  public function access(Route $route, Request $request, AccountInterface $account) {
+    return $account->isAuthenticated() ? static::ALLOW : static::DENY;
   }
 
 }

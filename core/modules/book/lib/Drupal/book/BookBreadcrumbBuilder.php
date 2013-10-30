@@ -10,6 +10,7 @@ namespace Drupal\book;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -32,16 +33,26 @@ class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
   protected $accessManager;
 
   /**
+   * The current user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $account;
+
+  /**
    * Constructs the BookBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   The access manager.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user account.
    */
-  public function __construct(EntityManager $entity_manager, AccessManager $access_manager) {
+  public function __construct(EntityManager $entity_manager, AccessManager $access_manager, AccountInterface $account) {
     $this->menuLinkStorage = $entity_manager->getStorageController('menu_link');
     $this->accessManager = $access_manager;
+    $this->account = $account;
   }
 
   /**
@@ -63,7 +74,7 @@ class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
         $depth = 1;
         while (!empty($book['p' . ($depth + 1)])) {
           if (!empty($menu_links[$book['p' . $depth]]) && ($menu_link = $menu_links[$book['p' . $depth]])) {
-            if ($this->accessManager->checkNamedRoute($menu_link->route_name, $menu_link->route_parameters)) {
+            if ($this->accessManager->checkNamedRoute($menu_link->route_name, $menu_link->route_parameters, $this->account)) {
               $links[] = $this->l($menu_link->label(), $menu_link->route_name, $menu_link->route_parameters, $menu_link->options);
             }
           }

@@ -84,14 +84,11 @@ class HandlerFilterUserNameTest extends ViewTestBase {
   public function testUserNameApi() {
     $view = views_get_view('test_user_name');
 
-    // Test all of the accounts with a single entry.
     $view->initHandlers();
-    foreach ($this->accounts as $account) {
-      $view->filter['uid']->value = array($account->id());
-    }
+    $view->filter['uid']->value = array($this->accounts[0]->id());
 
     $this->executeView($view);
-    $this->assertIdenticalResultset($view, array(array('uid' => $account->id())), $this->columnMap);
+    $this->assertIdenticalResultset($view, array(array('uid' => $this->accounts[0]->id())), $this->columnMap);
   }
 
   /**

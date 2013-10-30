@@ -8,6 +8,7 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -26,7 +27,7 @@ class ThemeAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     return $this->checkAccess($request->attributes->get('theme')) ? static::ALLOW : static::DENY;
   }
 

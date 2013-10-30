@@ -94,13 +94,14 @@ class CustomAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(array('parameter' => 'TRUE')));
 
     $route = new Route('/test-route', array(), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessDeny'));
-    $this->assertNull($this->accessChecker->access($route, $request));
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->assertNull($this->accessChecker->access($route, $request, $account));
 
     $route = new Route('/test-route', array(), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessAllow'));
-    $this->assertTrue($this->accessChecker->access($route, $request));
+    $this->assertTrue($this->accessChecker->access($route, $request, $account));
 
     $route = new Route('/test-route', array('parameter' => 'TRUE'), array('_custom_access' => '\Drupal\Tests\Core\Access\TestController::accessParameter'));
-    $this->assertTrue($this->accessChecker->access($route, $request));
+    $this->assertTrue($this->accessChecker->access($route, $request, $account));
   }
 
 }

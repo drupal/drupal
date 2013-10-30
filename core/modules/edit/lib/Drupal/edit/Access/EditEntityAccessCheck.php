@@ -8,6 +8,7 @@
 namespace Drupal\edit\Access;
 
 use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -47,20 +48,20 @@ class EditEntityAccessCheck implements StaticAccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(Route $route, Request $request) {
+  public function access(Route $route, Request $request, AccountInterface $account) {
     // @todo Request argument validation and object loading should happen
     //   elsewhere in the request processing pipeline:
     //   http://drupal.org/node/1798214.
     $this->validateAndUpcastRequestAttributes($request);
 
-    return $this->accessEditEntity($request->attributes->get('entity'))  ? static::ALLOW : static::DENY;
+    return $this->accessEditEntity($request->attributes->get('entity'), $account)  ? static::ALLOW : static::DENY;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function accessEditEntity(EntityInterface $entity) {
-    return $entity->access('update');
+  protected function accessEditEntity(EntityInterface $entity, $account) {
+    return $entity->access('update', $account);
   }
 
   /**
