@@ -37,3 +37,15 @@ function edit_test_entity_view_alter(&$build, EntityInterface $entity, EntityDis
     );
   }
 }
+
+/**
+ * Implements hook_edit_render_field().
+ */
+function edit_test_edit_render_field(Drupal\Core\Entity\EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
+  return array(
+    '#prefix' => '<div class="edit-test-wrapper">',
+    'field' => field_view_field($entity, $field_name),
+    '#suffix' => '</div>',
+  );
+}
+

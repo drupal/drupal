@@ -16,6 +16,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\field\FieldInfo;
 use Drupal\edit\MetadataGeneratorInterface;
 use Drupal\edit\EditorSelectorInterface;
@@ -68,6 +69,13 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
   protected $fieldInfo;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new EditController.
    *
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
@@ -80,13 +88,16 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
    *   The entity manager.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, EntityManager $entity_manager, FieldInfo $field_info) {
+  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, EntityManager $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->metadataGenerator = $metadata_generator;
     $this->editorSelector = $editor_selector;
     $this->entityManager = $entity_manager;
     $this->fieldInfo = $field_info;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -98,7 +109,8 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
       $container->get('edit.metadata.generator'),
       $container->get('edit.editor.selector'),
       $container->get('entity.manager'),
-      $container->get('field.info')
+      $container->get('field.info'),
+      $container->get('module_handler')
     );
   }
 
@@ -219,7 +231,25 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
       // The form submission saved the entity in tempstore. Return the
       // updated view of the field from the tempstore copy.
       $entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
-      $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
+
+      // Render the field. If the view mode ID is not an Entity Display view
+      // mode ID, then the field was rendered using a custom render pipeline,
+      // that is: not the Entity/Field API render pipeline.
+      // An example could be Views' render pipeline. In the example of Views,
+      // the view mode ID would probably contain the View's ID, display and the
+      // row index.
+      $entity_view_mode_ids = array_keys(entity_get_view_modes($entity->entityType()));
+      if (in_array($view_mode_id, $entity_view_mode_ids)) {
+        $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
+      }
+      else {
+        // Each part of a custom (non-Entity Display) view mode ID is separated
+        // by a dash; the first part must be the module name.
+        $mode_id_parts = explode('-', $view_mode_id, 2);
+        $module = reset($mode_id_parts);
+        $args = array($entity, $field_name, $view_mode_id, $langcode);
+        $output = $this->moduleHandler->invoke($module, 'edit_render_field', $args);
+      }
 
       $response->addCommand(new FieldFormSavedCommand(drupal_render($output)));
     }

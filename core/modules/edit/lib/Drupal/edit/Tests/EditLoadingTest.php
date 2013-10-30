@@ -294,7 +294,7 @@ class EditLoadingTest extends WebTestBase {
   /**
    * Tests that Edit doesn't make pseudo fields or computed fields editable.
    */
-  function testPseudoFields() {
+  public function testPseudoFields() {
     \Drupal::moduleHandler()->install(array('edit_test'));
 
     $this->drupalLogin($this->author_user);
@@ -302,6 +302,48 @@ class EditLoadingTest extends WebTestBase {
 
     // Check that the data- attribute is not added.
     $this->assertNoRaw('data-edit-id="node/1/edit_test_pseudo_field/und/default"');
+  }
+
+  /**
+   * Tests that Edit works with custom render pipelines.
+   */
+  public function testCustomPipeline() {
+    \Drupal::moduleHandler()->install(array('edit_test'));
+
+    $custom_render_url = 'edit/form/node/1/body/und/edit_test-custom-render-data';
+    $this->drupalLogin($this->editor_user);
+
+    // Request editing to render results with the custom render pipeline.
+    $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
+    $response = $this->drupalPost($custom_render_url, 'application/vnd.drupal-ajax', $post);
+    $ajax_commands = drupal_json_decode($response);
+
+    // Prepare form values for submission. drupalPostAJAX() is not suitable for
+    // handling pages with JSON responses, so we need our own solution here.
+    $form_tokens_found = preg_match('/\sname="form_token" value="([^"]+)"/', $ajax_commands[0]['data'], $token_match) && preg_match('/\sname="form_build_id" value="([^"]+)"/', $ajax_commands[0]['data'], $build_id_match);
+    $this->assertTrue($form_tokens_found, 'Form tokens found in output.');
+
+    if ($form_tokens_found) {
+      $post = array(
+        'form_id' => 'edit_field_form',
+        'form_token' => $token_match[1],
+        'form_build_id' => $build_id_match[1],
+        'body[0][summary]' => '',
+        'body[0][value]' => '<p>Fine thanks.</p>',
+        'body[0][format]' => 'filtered_html',
+        'op' => t('Save'),
+      );
+
+      // Submit field form and check response. Should render with the custom
+      // render pipeline.
+      $response = $this->drupalPost($custom_render_url, 'application/vnd.drupal-ajax', $post);
+      $this->assertResponse(200);
+      $ajax_commands = drupal_json_decode($response);
+      $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in one AJAX command.');
+      $this->assertIdentical('editFieldFormSaved', $ajax_commands[0]['command'], 'The first AJAX command is an editFieldFormSaved command.');
+      $this->assertTrue(strpos($ajax_commands[0]['data'], 'Fine thanks.'), 'Form value saved and printed back.');
+      $this->assertTrue(strpos($ajax_commands[0]['data'], '<div class="edit-test-wrapper">') !== FALSE, 'Custom render pipeline used to render the value.');
+    }
   }
 
   /**
