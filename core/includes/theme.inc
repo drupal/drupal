@@ -2244,6 +2244,8 @@ function template_preprocess_item_list(&$variables) {
  *   - title: The title of the list.
  *   - list_type: The type of HTML list (e.g. "ul", "ol").
  *   - attributes: The attributes applied to the list element.
+ *   - empty: A message to display when there are no items. Allowed value is a
+ *     string or render array.
  */
 function theme_item_list($variables) {
   $items = $variables['items'];
@@ -2276,6 +2278,9 @@ function theme_item_list($variables) {
       $output .= '<li' . new Attribute($attributes) . '>' . $item . '</li>';
     }
     $output .= "</$list_type>";
+  }
+  elseif (!empty($variables['empty'])) {
+    $output .= render($variables['empty']);
   }
 
   // Only output the list container and title, if there are any list items.
@@ -3040,7 +3045,7 @@ function drupal_common_theme() {
       'variables' => array('status' => MARK_NEW),
     ),
     'item_list' => array(
-      'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array()),
+      'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array(), 'empty' => NULL),
     ),
     'feed_icon' => array(
       'variables' => array('url' => NULL, 'title' => NULL),

@@ -25,15 +25,29 @@ class FunctionsTest extends WebTestBase {
    * Tests theme_item_list().
    */
   function testItemList() {
-    // Verify that empty variables produce no output.
+    // Verify that empty items produce no output.
     $variables = array();
     $expected = '';
     $this->assertThemeOutput('item_list', $variables, $expected, 'Empty %callback generates no output.');
 
+    // Verify that empty items with title produce no output.
     $variables = array();
     $variables['title'] = 'Some title';
     $expected = '';
     $this->assertThemeOutput('item_list', $variables, $expected, 'Empty %callback with title generates no output.');
+
+    // Verify that empty items produce the empty string.
+    $variables = array();
+    $variables['empty'] = 'No items found.';
+    $expected = '<div class="item-list">No items found.</div>';
+    $this->assertThemeOutput('item_list', $variables, $expected, 'Empty %callback generates empty string.');
+
+    // Verify that empty items produce the empty string with title.
+    $variables = array();
+    $variables['title'] = 'Some title';
+    $variables['empty'] = 'No items found.';
+    $expected = '<div class="item-list"><h3>Some title</h3>No items found.</div>';
+    $this->assertThemeOutput('item_list', $variables, $expected, 'Empty %callback generates empty string with title.');
 
     // Verify nested item lists.
     $variables = array();
