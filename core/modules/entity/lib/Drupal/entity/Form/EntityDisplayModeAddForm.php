@@ -24,7 +24,10 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    */
   public function buildForm(array $form, array &$form_state, $entity_type = NULL) {
     $this->entityType = $entity_type;
-    return parent::buildForm($form, $form_state);
+    $form = parent::buildForm($form, $form_state);
+    $definition = $this->entityManager->getDefinition($this->entityType);
+    $form['#title'] = $this->t('Add new %label @entity-type', array('%label' => $definition['label'], '@entity-type' => strtolower($this->entityInfo['label'])));
+    return $form;
   }
 
   /**
@@ -45,7 +48,6 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
       throw new NotFoundHttpException();
     }
 
-    drupal_set_title(t('Add new %label @entity-type', array('%label' => $definition['label'], '@entity-type' => strtolower($this->entityInfo['label']))), PASS_THROUGH);
     $this->entity->targetEntityType = $this->entityType;
   }
 

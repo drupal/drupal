@@ -16,6 +16,7 @@ entity.view_mode_add:
   path: '/admin/structure/display-modes/view/add'
   defaults:
     _content: '\Drupal\entity\Controller\EntityDisplayModeController::viewModeTypeSelection'
+    _title: 'Choose view mode entity type'
   requirements:
     _permission: 'administer display modes'
 
@@ -51,6 +52,7 @@ entity.form_mode_add:
   path: '/admin/structure/display-modes/form/add'
   defaults:
     _content: '\Drupal\entity\Controller\EntityDisplayModeController::formModeTypeSelection'
+    _title: 'Choose form mode entity type'
   requirements:
     _permission: 'administer display modes'
 

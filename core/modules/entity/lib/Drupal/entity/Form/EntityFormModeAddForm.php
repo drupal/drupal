@@ -23,7 +23,6 @@ class EntityFormModeAddForm extends EntityDisplayModeAddForm {
       throw new NotFoundHttpException();
     }
 
-    drupal_set_title(t('Add new %label @entity-type', array('%label' => $definition['label'], '@entity-type' => strtolower($this->entityInfo['label']))), PASS_THROUGH);
     $this->entity->targetEntityType = $this->entityType;
   }
 
