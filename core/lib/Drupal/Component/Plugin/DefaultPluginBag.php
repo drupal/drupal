@@ -78,7 +78,7 @@ class DefaultPluginBag extends PluginBag {
       throw new UnknownPluginException($instance_id);
     }
     $this->pluginInstances[$instance_id] = $this->manager->createInstance($configuration[$this->pluginKey], $configuration);
-    $this->addInstanceID($instance_id);
+    $this->addInstanceId($instance_id);
   }
 
   /**
@@ -152,8 +152,8 @@ class DefaultPluginBag extends PluginBag {
   /**
    * {@inheritdoc}
    */
-  public function removeInstanceID($instance_id) {
-    parent::removeInstanceID($instance_id);
+  public function removeInstanceId($instance_id) {
+    parent::removeInstanceId($instance_id);
     unset($this->originalOrder[$instance_id]);
     unset($this->configurations[$instance_id]);
   }

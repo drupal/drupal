@@ -340,7 +340,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    * {@inheritdoc}
    */
   public function deleteImageEffect(ImageEffectInterface $effect) {
-    $this->getEffects()->removeInstanceID($effect->getUuid());
+    $this->getEffects()->removeInstanceId($effect->getUuid());
     $this->save();
     return $this;
   }

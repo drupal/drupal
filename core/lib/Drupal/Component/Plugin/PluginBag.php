@@ -100,7 +100,7 @@ abstract class PluginBag implements \Iterator, \Countable {
    * @param string $id
    *   The ID of the plugin instance to add.
    */
-  public function addInstanceID($id) {
+  public function addInstanceId($id) {
     if (!isset($this->instanceIDs[$id])) {
       $this->instanceIDs[$id] = $id;
     }
@@ -112,7 +112,7 @@ abstract class PluginBag implements \Iterator, \Countable {
    * @return array
    *   An array of all available instance IDs.
    */
-  public function getInstanceIDs() {
+  public function getInstanceIds() {
     return $this->instanceIDs;
   }
 
@@ -122,7 +122,7 @@ abstract class PluginBag implements \Iterator, \Countable {
    * @param array $instance_ids
    *   An associative array of instance IDs.
    */
-  public function setInstanceIDs(array $instance_ids) {
+  public function setInstanceIds(array $instance_ids) {
     $this->instanceIDs = $instance_ids;
   }
 
@@ -132,7 +132,7 @@ abstract class PluginBag implements \Iterator, \Countable {
    * @param string $instance_id
    *   An image effect instance IDs.
    */
-  public function removeInstanceID($instance_id) {
+  public function removeInstanceId($instance_id) {
     unset($this->instanceIDs[$instance_id]);
     $this->remove($instance_id);
   }

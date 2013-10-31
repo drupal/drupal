@@ -44,7 +44,7 @@ class ImageEffectBag extends DefaultPluginBag {
     }
     $instance_id = $configuration['uuid'];
     $this->setConfiguration($instance_id, $configuration);
-    $this->addInstanceID($instance_id);
+    $this->addInstanceId($instance_id);
     return $instance_id;
   }
 

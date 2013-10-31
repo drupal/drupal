@@ -203,14 +203,14 @@ class DefaultPluginBagTest extends UnitTestCase {
     $config = $this->defaultPluginBag->getConfiguration();
     $this->assertSame($expected, array_keys($config), 'The order of the configuration is unchanged.');
 
-    $ids = $this->defaultPluginBag->getInstanceIDs();
+    $ids = $this->defaultPluginBag->getInstanceIds();
     $this->assertSame($expected, array_keys($ids), 'The order of the instances is unchanged.');
 
     $this->defaultPluginBag->sort();
     $config = $this->defaultPluginBag->getConfiguration();
     $this->assertSame($expected, array_keys($config), 'After sorting, the order of the configuration is unchanged.');
 
-    $ids = $this->defaultPluginBag->getInstanceIDs();
+    $ids = $this->defaultPluginBag->getInstanceIds();
     sort($expected);
     $this->assertSame($expected, array_keys($ids), 'After sorting, the order of the instances is also sorted.');
   }
