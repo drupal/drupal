@@ -323,7 +323,7 @@ class BookManager {
           ':nid' => $node->id(),
         ))->fetchField()) {
           // Update the bid for this page and all children.
-          $this->updateID($node->book);
+          $this->updateId($node->book);
         }
       }
 
@@ -362,7 +362,7 @@ class BookManager {
    * @param array $book_link
    *   A fully loaded menu link that is part of the book hierarchy.
    */
-  public function updateID($book_link) {
+  public function updateId($book_link) {
     $query = $this->connection->select('menu_links');
     $query->addField('menu_links', 'mlid');
     for ($i = 1; $i <= MENU_MAX_DEPTH && $book_link["p$i"]; $i++) {
