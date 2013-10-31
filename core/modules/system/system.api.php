@@ -1203,15 +1203,14 @@ function hook_permission() {
 }
 
 /**
- * Register a module (or theme's) theme implementations.
+ * Register a module or theme's theme implementations.
  *
- * The implementations declared by this hook have two purposes: either they
- * specify how a particular render array is to be rendered as HTML (this is
- * usually the case if the theme function is assigned to the render array's
- * #theme property), or they return the HTML that should be returned by an
- * invocation of theme().
- *
- * The following parameters are all optional.
+ * The implementations declared by this hook have several purposes:
+ * - They can specify how a particular render array is to be rendered as HTML.
+ *   This is usually the case if the theme function is assigned to the render
+ *   array's #theme property.
+ * - They can return HTML for default calls to theme().
+ * - They can return HTML for calls to theme() for a theme suggestion.
  *
  * @param array $existing
  *   An array of existing implementations that may be used for override
@@ -1236,28 +1235,28 @@ function hook_permission() {
  *   looked up.
  *
  * @return array
- *   An associative array of theme hook information. The keys on the outer
- *   array are the internal names of the hooks, and the values are arrays
- *   containing information about the hook. Each information array must contain
- *   either a 'variables' element or a 'render element' element, but not both.
- *   Use 'render element' if you are theming a single element or element tree
- *   composed of elements, such as a form array, a page array, or a single
- *   checkbox element. Use 'variables' if your theme implementation is
- *   intended to be called directly through theme() and has multiple arguments
- *   for the data and style; in this case, the variables not supplied by the
- *   calling function will be given default values and passed to the template
- *   or theme function. The returned theme information array can contain the
- *   following key/value pairs:
- *   - variables: (see above) Each array key is the name of the variable, and
- *     the value given is used as the default value if the function calling
- *     theme() does not supply it. Template implementations receive each array
- *     key as a variable in the template file (so they must be legal PHP
- *     variable names). Function implementations are passed the variables in a
- *     single $variables function argument.
- *   - render element: (see above) The name of the renderable element or element
- *     tree to pass to the theme function. This name is used as the name of the
- *     variable that holds the renderable element or tree in preprocess and
- *     process functions.
+ *   An associative array of information about theme implementations. The keys
+ *   on the outer array are known as "theme hooks". For simple theme
+ *   implementations for regular calls to theme(), the theme hook is the first
+ *   argument. For theme suggestions, instead of the array key being the base
+ *   theme hook, the key is a theme suggestion name with the format
+ *   'base_hook_name__sub_hook_name'. For render elements, the key is the
+ *   machine name of the render element. The array values are themselves arrays
+ *   containing information about the theme hook and its implementation. Each
+ *   information array must contain either a 'variables' element (for theme()
+ *   calls) or a 'render element' element (for render elements), but not both.
+ *   The following elements may be part of each information array:
+ *   - variables: Used for theme() call items only: an array of variables,
+ *     where the array keys are the names of the variables, and the array
+ *     values are the default values if they are not passed into theme().
+ *     Template implementations receive each array key as a variable in the
+ *     template file (so they must be legal PHP/Twig variable names). Function
+ *     implementations are passed the variables in a single $variables function
+ *     argument.
+ *   - render element: Used for render element items only: the name of the
+ *     renderable element or element tree to pass to the theme function. This
+ *     name is used as the name of the variable that holds the renderable
+ *     element or tree in preprocess and process functions.
  *   - file: The file the implementation resides in. This file will be included
  *     prior to the theme being rendered, to make sure that the function or
  *     preprocess function (as needed) is actually loaded; this makes it
@@ -1277,9 +1276,17 @@ function hook_permission() {
  *     registers the 'node' theme hook, 'theme_node' will be assigned to its
  *     function. If the chameleon theme registers the node hook, it will be
  *     assigned 'chameleon_node' as its function.
- *   - base hook: A string declaring the base theme hook if this theme
- *     implementation is actually implementing a suggestion for another theme
- *     hook.
+ *   - base hook: Used for theme() suggestions only: the base theme hook name.
+ *     Instead of this suggestion's implementation being used directly, the base
+ *     hook will be invoked with this implementation as its first suggestion.
+ *     The base hook's files will be included and the base hook's preprocess
+ *     functions will be called in place of any suggestion's preprocess
+ *     functions. If an implementation of hook_theme_suggestions_HOOK() (where
+ *     HOOK is the base hook) changes the suggestion order, a different
+ *     suggestion may be used in place of this suggestion. If after
+ *     hook_theme_suggestions_HOOK() this suggestion remains the first
+ *     suggestion, then this suggestion's function or template will be used to
+ *     generate the output for theme().
  *   - pattern: A regular expression pattern to be used to allow this theme
  *     implementation to have a dynamic name. The convention is to use __ to
  *     differentiate the dynamic portion of the theme. For example, to allow
