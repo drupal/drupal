@@ -10,6 +10,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Component\Utility\String;
 
 /**
  * Controller routines for help routes.
@@ -106,7 +107,7 @@ class HelpController implements ContainerInjectionInterface {
     $build = array();
     if ($this->moduleHandler->implementsHook($name, 'help')) {
       $info = system_get_info('module');
-      drupal_set_title($info[$name]['name']);
+      $build['#title'] = String::checkPlain($info[$name]['name']);
 
       $temp = $this->moduleHandler->invoke($name, 'help', array("admin/help#$name", drupal_help_arg()));
       if (empty($temp)) {
