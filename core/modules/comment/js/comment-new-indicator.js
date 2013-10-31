@@ -72,7 +72,7 @@ function processCommentNewIndicators($placeholders) {
         // If the URL points to the first new comment, then scroll to that
         // comment.
         if (window.location.hash === '#new') {
-          window.scrollTo(0, $comment.offset().top - Drupal.displace().top);
+          window.scrollTo(0, $comment.offset().top - Drupal.displace.offsets.top);
         }
       }
     }
