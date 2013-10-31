@@ -33,12 +33,12 @@ else {
 
 // Bootstrap to perform initial validation or other operations.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
-simpletest_classloader_register();
 
 if (!\Drupal::moduleHandler()->moduleExists('simpletest')) {
-  simpletest_script_print_error("The simpletest module must be enabled before this script can run.");
+  simpletest_script_print_error("The Testing (simpletest) module must be installed before this script can run.");
   exit;
 }
+simpletest_classloader_register();
 
 if ($args['clean']) {
   // Clean up left-over times and directories.
