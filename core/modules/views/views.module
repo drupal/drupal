@@ -1234,8 +1234,9 @@ function views_pre_render_views_form_views_form($element) {
   // Apply substitutions to the rendered output.
   $element['output']['#markup'] = str_replace($search, $replace, $element['output']['#markup']);
 
-  // Render and add remaining form fields.
-  $element['#children'] = drupal_render_children($element);
+  // Sort, render and add remaining form fields.
+  $children = element_children($element, TRUE);
+  $element['#children'] = drupal_render_children($element, $children);
   return $element;
 }
 

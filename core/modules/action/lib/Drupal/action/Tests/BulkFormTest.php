@@ -49,6 +49,10 @@ class BulkFormTest extends WebTestBase {
 
     $this->drupalGet('test_bulk_form');
 
+    // Test that the views edit header appears first.
+    $first_form_element = $this->xpath('//form/div/div[1][@id = :id]', array(':id' => 'edit-header'));
+    $this->assertTrue($first_form_element, 'The views form edit header appears first.');
+
     $this->assertFieldById('edit-action', NULL, 'The action select field appears.');
 
     // Make sure a checkbox appears on all rows.
