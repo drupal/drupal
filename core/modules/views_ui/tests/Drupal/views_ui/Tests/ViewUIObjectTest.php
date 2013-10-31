@@ -45,7 +45,8 @@ class ViewUIObjectTest extends UnitTestCase {
 
       // EntityInterface::isNew() is missing from the list of methods, because it
       // calls id(), which breaks the ->expect($this->once()) call. Call it later.
-      if ($reflection_method->getName() != 'isNew') {
+      // EntityInterface::isSyncing() is only called during syncing process.
+      if ($reflection_method->getName() != 'isNew' && $reflection_method->getName() != 'isSyncing') {
         if (count($reflection_method->getParameters()) == 0) {
           $method_args[$reflection_method->getName()] = array();
         }

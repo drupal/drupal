@@ -78,6 +78,7 @@ class NodeImportCreateTest extends DrupalUnitTestBase {
     // Check that the content type was created.
     $node_type = entity_load('node_type', $node_type_id);
     $this->assertTrue($node_type, 'Import node type from staging was created.');
+    $this->assertFalse(field_info_instance('node', 'body', $node_type_id));
   }
 
 }

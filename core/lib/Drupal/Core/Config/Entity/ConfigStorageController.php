@@ -484,6 +484,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
    */
   public function importCreate($name, Config $new_config, Config $old_config) {
     $entity = $this->create($new_config->get());
+    $entity->setSyncing(TRUE);
     $entity->save();
     return TRUE;
   }
@@ -504,6 +505,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
   public function importUpdate($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityInfo['config_prefix']);
     $entity = $this->load($id);
+    $entity->setSyncing(TRUE);
     $entity->original = clone $entity;
 
     foreach ($old_config->get() as $property => $value) {
@@ -534,6 +536,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
   public function importDelete($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityInfo['config_prefix']);
     $entity = $this->load($id);
+    $entity->setSyncing(TRUE);
     $entity->delete();
     return TRUE;
   }

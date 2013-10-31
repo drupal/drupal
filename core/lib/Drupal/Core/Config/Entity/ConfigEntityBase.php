@@ -35,6 +35,14 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public $status = TRUE;
 
   /**
+   * Whether the config is being created, updated or deleted through the
+   * import process.
+   *
+   * @var bool
+   */
+  private $isSyncing = FALSE;
+
+  /**
    * Overrides Entity::__construct().
    */
   public function __construct(array $values, $entity_type) {
@@ -90,21 +98,21 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::enable().
+   * {@inheritdoc}
    */
   public function enable() {
     return $this->setStatus(TRUE);
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::disable().
+   * {@inheritdoc}
    */
   public function disable() {
     return $this->setStatus(FALSE);
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::setStatus().
+   * {@inheritdoc}
    */
   public function setStatus($status) {
     $this->status = (bool) $status;
@@ -112,14 +120,28 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
-   * Implements \Drupal\Core\Config\Entity\ConfigEntityInterface::status().
+   * {@inheritdoc}
    */
   public function status() {
     return !empty($this->status);
   }
 
   /**
-   * Overrides Entity::createDuplicate().
+   * {@inheritdoc}
+   */
+  public function setSyncing($syncing) {
+    $this->isSyncing = $syncing;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSyncing() {
+    return $this->isSyncing;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function createDuplicate() {
     $duplicate = parent::createDuplicate();

@@ -60,6 +60,14 @@ interface ConfigEntityInterface extends EntityInterface {
   public function setStatus($status);
 
   /**
+   * Sets the status of the isSyncing flag.
+   *
+   * @param bool $status
+   *   The status of the sync flag.
+   */
+  public function setSyncing($status);
+
+  /**
    * Returns whether the configuration entity is enabled.
    *
    * Status implementations for configuration entities should follow these
@@ -74,6 +82,14 @@ interface ConfigEntityInterface extends EntityInterface {
    * @return bool
    */
   public function status();
+
+  /**
+   * Returns whether the configuration entity is created, updated or deleted
+   * through the import process.
+   *
+   * @return bool
+   */
+  public function isSyncing();
 
   /**
    * Returns the value of a property.
