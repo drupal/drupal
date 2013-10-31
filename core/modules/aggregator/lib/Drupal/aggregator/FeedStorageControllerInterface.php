@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
@@ -18,7 +18,7 @@ interface FeedStorageControllerInterface extends EntityStorageControllerInterfac
   /**
    * Loads the categories of a feed.
    *
-   * @param array $entities
+   * @param array $feeds
    *   A list of feed entities keyed by feed id. Each entity will get a
    *   categories property added.
    */
@@ -27,12 +27,12 @@ interface FeedStorageControllerInterface extends EntityStorageControllerInterfac
   /**
    * Saves the categories of a feed.
    *
-   * @param Feed $feed
+   * @param \Drupal\aggregator\Entity\FeedInterface $feed
    *   The feed entity.
    * @param array $categories
    *   The array of categories.
    */
-  public function saveCategories(Feed $feed, array $categories);
+  public function saveCategories(FeedInterface $feed, array $categories);
 
   /**
    * Deletes the categories of a feed.
@@ -41,5 +41,16 @@ interface FeedStorageControllerInterface extends EntityStorageControllerInterfac
    *   A list of feed entities keyed by feed id.
    */
   public function deleteCategories(array $feeds);
+
+  /**
+   * Provides a list of duplicate feeds.
+   *
+   * @param \Drupal\aggregator\Entity\FeedInterface $feed
+   *   The feed entity.
+   *
+   * @return
+   *   An array with the list of duplicated feeds.
+   */
+  public function getFeedDuplicates(FeedInterface $feed);
 
 }

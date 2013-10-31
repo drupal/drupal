@@ -87,5 +87,13 @@ interface CategoryStorageControllerInterface {
    */
   public function updateItem($iid, array $cids);
 
+  /**
+   * Loads all categories.
+   *
+   * @return array
+   *   An array keyed on cid listing all available categories.
+   */
+  public function loadAllKeyed();
+
 }
 

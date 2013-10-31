@@ -125,4 +125,11 @@ class CategoryStorageController implements CategoryStorageControllerInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function loadAllKeyed() {
+    return $this->database->query('SELECT c.cid, c.title FROM {aggregator_category} c ORDER BY title')->fetchAllKeyed();
+  }
+
 }

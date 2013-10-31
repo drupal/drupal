@@ -7,27 +7,20 @@
 
 namespace Drupal\aggregator\Form;
 
+use Drupal\aggregator\CategoryStorageControllerInterface;
 use Drupal\aggregator\FeedStorageControllerInterface;
 use Drupal\Component\Utility\Url;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Guzzle\Http\Exception\RequestException;
 use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Client;
+use Guzzle\Http\ClientInterface;
 
 /**
  * Imports feeds from OPML.
  */
 class OpmlFeedAdd extends FormBase {
-
-  /**
-   * The database connection object.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
 
   /**
    * The entity query factory object.
@@ -41,32 +34,39 @@ class OpmlFeedAdd extends FormBase {
    *
    * @var \Drupal\aggregator\FeedStorageControllerInterface
    */
-  protected $feedStorage;
+  protected $feedStorageController;
 
   /**
    * The HTTP client to fetch the feed data with.
    *
-   * @var \Guzzle\Http\Client
+   * @var \Guzzle\Http\ClientInterface
    */
   protected $httpClient;
 
   /**
+   * The category storage controller.
+   *
+   * @var \Drupal\aggregator\CategoryStorageControllerInterface
+   */
+  protected $categoryStorageController;
+
+  /**
    * Constructs a database object.
    *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database object.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query object.
    * @param \Drupal\aggregator\FeedStorageControllerInterface $feed_storage
    *   The feed storage.
-   * @param \Guzzle\Http\Client $http_client
+   * @param \Guzzle\Http\ClientInterface $http_client
    *   The Guzzle HTTP client.
+   * @param \Drupal\aggregator\CategoryStorageControllerInterface $category_storage_controller
+   *   The category storage controller.
    */
-  public function __construct(Connection $database, QueryFactory $query_factory, FeedStorageControllerInterface $feed_storage, Client $http_client) {
-    $this->database = $database;
+  public function __construct(QueryFactory $query_factory, FeedStorageControllerInterface $feed_storage, ClientInterface $http_client, CategoryStorageControllerInterface $category_storage_controller) {
     $this->queryFactory = $query_factory;
-    $this->feedStorage = $feed_storage;
+    $this->feedStorageController = $feed_storage;
     $this->httpClient = $http_client;
+    $this->categoryStorageController = $category_storage_controller;
   }
 
   /**
@@ -74,10 +74,10 @@ class OpmlFeedAdd extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database'),
       $container->get('entity.query'),
       $container->get('entity.manager')->getStorageController('aggregator_feed'),
-      $container->get('http_default_client')
+      $container->get('http_default_client'),
+      $container->get('aggregator.category.storage')
     );
   }
 
@@ -115,7 +115,7 @@ class OpmlFeedAdd extends FormBase {
     );
 
     // Handling of categories.
-    $options = array_map('check_plain', $this->database->query("SELECT cid, title FROM {aggregator_category} ORDER BY title")->fetchAllKeyed());
+    $options = array_map('check_plain', $this->categoryStorageController->loadAllKeyed());
     if ($options) {
       $form['category'] = array(
         '#type' => 'checkboxes',
@@ -192,7 +192,7 @@ class OpmlFeedAdd extends FormBase {
       $ids = $query
         ->condition($condition)
         ->execute();
-      $result = $this->feedStorage->loadMultiple($ids);
+      $result = $this->feedStorageController->loadMultiple($ids);
       foreach ($result as $old) {
         if (strcasecmp($old->label(), $feed['title']) == 0) {
           drupal_set_message($this->t('A feed named %title already exists.', array('%title' => $old->label())), 'warning');
@@ -204,7 +204,7 @@ class OpmlFeedAdd extends FormBase {
         }
       }
 
-      $new_feed = $this->feedStorage->create(array(
+      $new_feed = $this->feedStorageController->create(array(
         'title' => $feed['title'],
         'url' => $feed['url'],
         'refresh' => $form_state['values']['refresh'],
