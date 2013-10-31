@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -227,6 +228,46 @@ class FormBuilderTest extends UnitTestCase {
   }
 
   /**
+   * Tests the redirectForm() with redirect_route when a redirect is expected.
+   *
+   * @param array $form_state
+   *   An array of form state data to use for the redirect.
+   * @param string $result
+   *   The URL the redirect is targeting.
+   * @param int $status
+   *   (optional) The HTTP status code for the redirect.
+   *
+   * @dataProvider providerTestRedirectWithRouteWithResult
+   */
+  public function testRedirectWithRouteWithResult($form_state, $result, $status = 302) {
+    $this->urlGenerator->expects($this->once())
+      ->method('generateFromRoute')
+      ->will($this->returnValueMap(array(
+          array('test_route_a', array(), array('absolute' => TRUE), 'test-route'),
+          array('test_route_b', array('key' => 'value'), array('absolute' => TRUE), 'test-route/value'),
+        ))
+      );
+
+    $form_state += $this->formBuilder->getFormStateDefaults();
+    $redirect = $this->formBuilder->redirectForm($form_state);
+    $this->assertSame($result, $redirect->getTargetUrl());
+    $this->assertSame($status, $redirect->getStatusCode());
+  }
+
+  /**
+   * Tests the redirectForm() method with a response object.
+   */
+  public function testRedirectWithResponseObject() {
+    $redirect = new RedirectResponse('/example');
+    $form_state['redirect'] = $redirect;
+
+    $form_state += $this->formBuilder->getFormStateDefaults();
+    $result_redirect = $this->formBuilder->redirectForm($form_state);
+
+    $this->assertSame($redirect, $result_redirect);
+  }
+
+  /**
    * Tests the redirectForm() method when no redirect is expected.
    *
    * @param array $form_state
@@ -237,6 +278,8 @@ class FormBuilderTest extends UnitTestCase {
   public function testRedirectWithoutResult($form_state) {
     $this->urlGenerator->expects($this->never())
       ->method('generateFromPath');
+    $this->urlGenerator->expects($this->never())
+      ->method('generateFromRoute');
     $form_state += $this->formBuilder->getFormStateDefaults();
     $redirect = $this->formBuilder->redirectForm($form_state);
     $this->assertNull($redirect);
@@ -256,6 +299,19 @@ class FormBuilderTest extends UnitTestCase {
       array(array('redirect' => array('foo')), 'foo'),
       array(array('redirect' => array('bar', array('query' => array('foo' => 'baz')))), 'bar'),
       array(array('redirect' => array('baz', array(), 301)), 'baz', 301),
+    );
+  }
+
+  /**
+   * Provides test data for testing the redirectForm() method with a route name.
+   *
+   * @return array
+   *   Returns some test data.
+   */
+  public function providerTestRedirectWithRouteWithResult() {
+    return array(
+      array(array('redirect_route' => array('route_name' => 'test_route_a')), 'test-route'),
+      array(array('redirect_route' => array('route_name' => 'test_route_b', 'route_parameters' => array('key' => 'value'))), 'test-route/value'),
     );
   }
 

@@ -88,7 +88,10 @@ class ActionAdminManageForm extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     if ($form_state['values']['action']) {
-      $form_state['redirect'] = 'admin/config/system/actions/add/' . $form_state['values']['action'];
+      $form_state['redirect_route'] = array(
+        'route_name' => 'action.admin_add',
+        'route_parameters' => array('action_id' => $form_state['values']['action']),
+      );
     }
   }
 

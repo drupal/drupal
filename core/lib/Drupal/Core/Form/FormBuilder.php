@@ -923,6 +923,23 @@ class FormBuilder implements FormBuilderInterface {
     if (!empty($form_state['no_redirect'])) {
       return;
     }
+
+    // Allow using redirect responses directly if needed.
+    if (isset($form_state['redirect']) && $form_state['redirect'] instanceof RedirectResponse) {
+      return $form_state['redirect'];
+    }
+
+    // Check for a route-based redirection.
+    if (isset($form_state['redirect_route'])) {
+      $form_state['redirect_route'] += array(
+        'route_parameters' => array(),
+        'options' => array(),
+      );
+      $form_state['redirect_route']['options']['absolute'] = TRUE;
+      $url = $this->urlGenerator->generateFromRoute($form_state['redirect_route']['route_name'], $form_state['redirect_route']['route_parameters'], $form_state['redirect_route']['options']);
+      return new RedirectResponse($url);
+    }
+
     // Only invoke a redirection if redirect value was not set to FALSE.
     if (!isset($form_state['redirect']) || $form_state['redirect'] !== FALSE) {
       if (isset($form_state['redirect'])) {
