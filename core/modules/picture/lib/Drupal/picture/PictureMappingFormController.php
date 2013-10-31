@@ -29,20 +29,20 @@ class PictureMappingFormController extends EntityFormController {
    */
   public function form(array $form, array &$form_state) {
     if ($this->operation == 'duplicate') {
-      drupal_set_title(t('<em>Duplicate picture mapping</em> @label', array('@label' => $this->entity->label())), PASS_THROUGH);
+      $form['#title'] = $this->t('<em>Duplicate picture mapping</em> @label', array('@label' => $this->entity->label()));
       $this->entity = $this->entity->createDuplicate();
     }
     if ($this->operation == 'edit') {
-      drupal_set_title(t('<em>Edit picture mapping</em> @label', array('@label' => $this->entity->label())), PASS_THROUGH);
+      $form['#title'] = $this->t('<em>Edit picture mapping</em> @label', array('@label' => $this->entity->label()));
     }
 
     $picture_mapping = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Label'),
+      '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $picture_mapping->label(),
-      '#description' => t("Example: 'Hero image' or 'Author image'."),
+      '#description' => $this->t("Example: 'Hero image' or 'Author image'."),
       '#required' => TRUE,
     );
     $form['id'] = array(
@@ -56,14 +56,14 @@ class PictureMappingFormController extends EntityFormController {
     );
 
     if ((bool) $picture_mapping->id() && $this->operation != 'duplicate') {
-      $description = t('Select a breakpoint group from the enabled themes.') . ' ' . t("Warning: if you change the breakpoint group you lose all your selected mappings.");
+      $description = $this->t('Select a breakpoint group from the enabled themes.') . ' ' . $this->t("Warning: if you change the breakpoint group you lose all your selected mappings.");
     }
     else {
-      $description = t('Select a breakpoint group from the enabled themes.');
+      $description = $this->t('Select a breakpoint group from the enabled themes.');
     }
     $form['breakpointGroup'] = array(
       '#type' => 'select',
-      '#title' => t('Breakpoint group'),
+      '#title' => $this->t('Breakpoint group'),
       '#default_value' => !empty($picture_mapping->breakpointGroup) ? $picture_mapping->breakpointGroup->id() : '',
       '#options' => breakpoint_group_select_options(),
       '#required' => TRUE,
@@ -79,7 +79,7 @@ class PictureMappingFormController extends EntityFormController {
           '#title' => check_plain($label),
           '#options' => $image_styles,
           '#default_value' => $image_style,
-          '#description' => t('Select an image style for this breakpoint.'),
+          '#description' => $this->t('Select an image style for this breakpoint.'),
         );
       }
     }
@@ -96,7 +96,7 @@ class PictureMappingFormController extends EntityFormController {
     // Only includes a Save action for the entity, no direct Delete button.
     return array(
       'submit' => array(
-        '#value' => t('Save'),
+        '#value' => $this->t('Save'),
         '#validate' => array(
           array($this, 'validate'),
         ),
@@ -125,7 +125,7 @@ class PictureMappingFormController extends EntityFormController {
       }
       // Make sure at least one mapping is defined.
       elseif (!$picture_mapping->isNew() && !$picture_mapping->hasMappings()) {
-        form_set_error('mappings', t('Please select at least one mapping.'));
+        form_set_error('mappings', $this->t('Please select at least one mapping.'));
       }
     }
   }
@@ -138,7 +138,7 @@ class PictureMappingFormController extends EntityFormController {
     $picture_mapping->save();
 
     watchdog('picture', 'Picture mapping @label saved.', array('@label' => $picture_mapping->label()), WATCHDOG_NOTICE);
-    drupal_set_message(t('Picture mapping %label saved.', array('%label' => $picture_mapping->label())));
+    drupal_set_message($this->t('Picture mapping %label saved.', array('%label' => $picture_mapping->label())));
 
     // Redirect to edit form after creating a new mapping or after selecting
     // another breakpoint group.
