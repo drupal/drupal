@@ -2780,8 +2780,10 @@ function system_settings_form_submit($form, &$form_state) {
  * Helper function to sort requirements.
  */
 function _system_sort_requirements($a, $b) {
+  if (!is_array($a) || !is_array($b)) return false;
   if (!isset($a['weight'])) {
     if (!isset($b['weight'])) {
+      if(is_array($a['title']) || is_array($b['title'])) return false;
       return strcmp($a['title'], $b['title']);
     }
     return -$b['weight'];
