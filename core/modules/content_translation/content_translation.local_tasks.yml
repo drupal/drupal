@@ -1,4 +1,3 @@
 content_translation.local_tasks:
   derivative: 'Drupal\content_translation\Plugin\Derivative\ContentTranslationLocalTasks'
-  class: 'Drupal\content_translation\Plugin\ContentTranslationLocalTasks'
   weight: 100
