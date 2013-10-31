@@ -467,9 +467,21 @@ function theme_system_admin_index($variables) {
 /**
  * Returns HTML for the status report.
  *
+ * This theme function is dependent on install.inc being loaded, because
+ * that's where the constants are defined.
+ *
  * @param $variables
  *   An associative array containing:
- *   - requirements: An array of requirements.
+ *   - requirements: An array of requirements/status items. Each requirement
+ *     is an associative array containing the following elements:
+ *     - title: The name of the requirement.
+ *     - value: (optional) The current value (version, time, level, etc).
+ *     - description: (optional) The description of the requirement.
+ *     - severity: (optional) The requirement's result/severity level, one of:
+ *       - REQUIREMENT_INFO: Status information.
+ *       - REQUIREMENT_OK: The requirement is satisfied.
+ *       - REQUIREMENT_WARNING: The requirement failed with a warning.
+ *       - REQUIREMENT_ERROR: The requirement failed with an error.
  *
  * @ingroup themeable
  */
