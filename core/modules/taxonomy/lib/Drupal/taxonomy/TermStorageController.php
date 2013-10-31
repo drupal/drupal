@@ -82,4 +82,73 @@ class TermStorageController extends FieldableDatabaseStorageController implement
     $query->execute();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function loadParents($tid) {
+    $query = $this->database->select('taxonomy_term_data', 't');
+    $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
+    $query->addField('t', 'tid');
+    $query->condition('h.tid', $tid);
+    $query->addTag('term_access');
+    $query->orderBy('t.weight');
+    $query->orderBy('t.name');
+    return $query->execute()->fetchCol();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadChildren($tid, $vid = NULL) {
+    $query = $this->database->select('taxonomy_term_data', 't');
+    $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
+    $query->addField('t', 'tid');
+    $query->condition('h.parent', $tid);
+    if ($vid) {
+      $query->condition('t.vid', $vid);
+    }
+    $query->addTag('term_access');
+    $query->orderBy('t.weight');
+    $query->orderBy('t.name');
+    return $query->execute()->fetchCol();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadTree($vid) {
+    $query = $this->database->select('taxonomy_term_data', 't');
+    $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
+    return $query
+      ->addTag('term_access')
+      ->fields('t')
+      ->fields('h', array('parent'))
+      ->condition('t.vid', $vid)
+      ->orderBy('t.weight')
+      ->orderBy('t.name')
+      ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function nodeCount($vid) {
+    $query = $this->database->select('taxonomy_index', 'ti');
+    $query->addExpression('COUNT(DISTINCT ti.nid)');
+    $query->leftJoin('taxonomy_term_data', 'td', 'ti.tid = td.tid');
+    $query->condition('td.vid', $vid);
+    $query->addTag('vocabulary_node_count');
+    return $query->execute()->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetWeights($vid) {
+    $this->database->update('taxonomy_term_data')
+      ->fields(array('weight' => 0))
+      ->condition('vid', $vid)
+      ->execute();
+  }
+
 }

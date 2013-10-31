@@ -7,8 +7,8 @@
 
 namespace Drupal\taxonomy\Form;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\taxonomy\TermStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,17 +17,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class VocabularyResetForm extends EntityConfirmFormBase {
 
   /**
-   * The database connection object.
+   * The term storage.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @var \Drupal\taxonomy\TermStorageControllerInterface
    */
-  protected $connection;
+  protected $termStorage;
 
   /**
    * Constructs a new VocabularyResetForm object.
+   *
+   * @param \Drupal\taxonomy\TermStorageControllerInterface $term_storage
+   *   The term storage.
    */
-  public function __construct(Connection $connection) {
-    $this->connection = $connection;
+  public function __construct(TermStorageControllerInterface $term_storage) {
+    $this->termStorage = $term_storage;
   }
 
   /**
@@ -35,7 +38,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database')
+      $container->get('entity.manager')->getStorageController('taxonomy_term')
     );
   }
 
@@ -83,11 +86,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
-    $this->connection->update('taxonomy_term_data')
-      ->fields(array('weight' => 0))
-      ->condition('vid', $this->entity->id())
-      ->execute();
-
+    $this->termStorage->resetWeights($this->entity->id());
     drupal_set_message($this->t('Reset vocabulary %name to alphabetical order.', array('%name' => $this->entity->label())));
     watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
     $form_state['redirect'] = 'admin/structure/taxonomy/manage/' . $this->entity->id();

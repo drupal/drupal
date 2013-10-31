@@ -244,10 +244,12 @@ function forum_node_validate(EntityInterface $node, $form) {
           form_set_error('taxonomy_forums', t('Select a forum.'));
           continue;
         }
-        $used = db_query_range('SELECT 1 FROM {taxonomy_term_data} WHERE tid = :tid AND vid = :vid', 0, 1, array(
-          ':tid' => $term->id(),
-          ':vid' => $term->bundle(),
-        ))->fetchField();
+        $used = \Drupal::entityQuery('taxonomy_term')
+          ->condition('tid', $term->id())
+          ->condition('vid', $term->bundle())
+          ->range(0, 1)
+          ->count()
+          ->execute();
         if ($used && !empty($term->forum_container->value)) {
           form_set_error('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->label())));
         }

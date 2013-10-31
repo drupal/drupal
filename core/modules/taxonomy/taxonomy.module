@@ -526,14 +526,7 @@ function taxonomy_term_load_parents($tid) {
   $parents = &drupal_static(__FUNCTION__, array());
 
   if ($tid && !isset($parents[$tid])) {
-    $query = db_select('taxonomy_term_data', 't');
-    $query->join('taxonomy_term_hierarchy', 'h', 'h.parent = t.tid');
-    $query->addField('t', 'tid');
-    $query->condition('h.tid', $tid);
-    $query->addTag('term_access');
-    $query->orderBy('t.weight');
-    $query->orderBy('t.name');
-    $tids = $query->execute()->fetchCol();
+    $tids = \Drupal::entityManager()->getStorageController('taxonomy_term')->loadParents($tid);
     $parents[$tid] = entity_load_multiple('taxonomy_term', $tids);
   }
 
@@ -581,17 +574,7 @@ function taxonomy_term_load_children($tid, $vid = NULL) {
   $children = &drupal_static(__FUNCTION__, array());
 
   if ($tid && !isset($children[$tid])) {
-    $query = db_select('taxonomy_term_data', 't');
-    $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-    $query->addField('t', 'tid');
-    $query->condition('h.parent', $tid);
-    if ($vid) {
-      $query->condition('t.vid', $vid);
-    }
-    $query->addTag('term_access');
-    $query->orderBy('t.weight');
-    $query->orderBy('t.name');
-    $tids = $query->execute()->fetchCol();
+    $tids = \Drupal::entityManager()->getStorageController('taxonomy_term')->loadChildren($tid);
     $children[$tid] = entity_load_multiple('taxonomy_term', $tids);
   }
 
@@ -632,16 +615,7 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
     $parents[$vid] = array();
     $terms[$vid] = array();
 
-    $query = db_select('taxonomy_term_data', 't');
-    $query->join('taxonomy_term_hierarchy', 'h', 'h.tid = t.tid');
-    $result = $query
-      ->addTag('term_access')
-      ->fields('t')
-      ->fields('h', array('parent'))
-      ->condition('t.vid', $vid)
-      ->orderBy('t.weight')
-      ->orderBy('t.name')
-      ->execute();
+    $result = \Drupal::entityManager()->getStorageController('taxonomy_term')->loadTree($vid);
 
     foreach ($result as $term) {
       $children[$vid][$term->parent][] = $term->tid;
