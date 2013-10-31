@@ -9,6 +9,7 @@ namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityFormController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Utility\String;
 
 /**
  * Form controller for node type forms.
@@ -23,10 +24,10 @@ class NodeTypeFormController extends EntityFormController {
 
     $type = $this->entity;
     if ($this->operation == 'add') {
-      drupal_set_title(t('Add content type'));
+      $form['#title'] = String::checkPlain($this->t('Add content type'));
     }
     elseif ($this->operation == 'edit') {
-      drupal_set_title(t('Edit %label content type', array('%label' => $type->label())), PASS_THROUGH);
+      $form['#title'] = $this->t('Edit %label content type', array('%label' => $type->label()));
     }
 
     $node_settings = $type->getModuleSettings('node');

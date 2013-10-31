@@ -96,7 +96,6 @@ function node_add($node_type) {
     'type' => $type,
     'langcode' => $langcode ? $langcode : language_default()->id,
   ));
-  drupal_set_title(t('Create @name', array('@name' => $node_type->name)), PASS_THROUGH);
   return \Drupal::entityManager()->getForm($node);
 }
 

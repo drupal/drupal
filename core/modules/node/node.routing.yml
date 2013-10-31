@@ -35,6 +35,7 @@ node.add:
   path: '/node/add/{node_type}'
   defaults:
     _content: '\Drupal\node\Controller\NodeController::add'
+    _title_callback: '\Drupal\node\Controller\NodeController::addPageTitle'
   requirements:
     _node_add_access: 'node:{node_type}'
 

@@ -71,8 +71,8 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
   public function buildForm(array $form, array &$form_state) {
     $num_nodes = $this->database->query("SELECT COUNT(*) FROM {node} WHERE type = :type", array(':type' => $this->entity->id()))->fetchField();
     if ($num_nodes) {
-      drupal_set_title($this->getQuestion(), PASS_THROUGH);
       $caption = '<p>' . format_plural($num_nodes, '%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', '%type is used by @count pieces of content on your site. You may not remove %type until you have removed all of the %type content.', array('%type' => $this->entity->label())) . '</p>';
+      $form['#title'] = $this->getQuestion();
       $form['description'] = array('#markup' => $caption);
       return $form;
     }

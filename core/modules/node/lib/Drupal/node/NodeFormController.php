@@ -11,6 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
+use Drupal\Component\Utility\String;
 
 /**
  * Form controller for the node edit forms.
@@ -66,7 +67,7 @@ class NodeFormController extends ContentEntityFormController {
     $node = $this->entity;
 
     if ($this->operation == 'edit') {
-      drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label())), PASS_THROUGH);
+      $form['#title'] = $this->t('<em>Edit @type</em> @title', array('@type' => node_get_type_label($node), '@title' => $node->label()));
     }
 
     $user_config = \Drupal::config('user.settings');
@@ -74,6 +75,7 @@ class NodeFormController extends ContentEntityFormController {
     if (isset($form_state['node_preview'])) {
       $form['#prefix'] = $form_state['node_preview'];
       $node->in_preview = TRUE;
+      $form['#title'] = $this->t('Preview');
     }
     else {
       unset($node->in_preview);

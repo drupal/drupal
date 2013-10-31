@@ -971,8 +971,6 @@ function node_menu() {
     'route_name' => 'node.add_page',
   );
   $items['node/add/%node_type'] = array(
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(2),
     'description callback' => 'node_type_get_description',
     'description arguments' => array(2),
     'route_name' => 'node.add',
