@@ -7,6 +7,7 @@
 
 namespace Drupal\config_test;
 
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Component\Utility\String;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Route controller class for the config_test module.
  */
-class ConfigTestController {
+class ConfigTestController extends ControllerBase {
 
   /**
    * Presents the ConfigTest edit form.
@@ -27,8 +28,9 @@ class ConfigTestController {
    *   A form array as expected by drupal_render().
    */
   public function edit(ConfigTest $config_test) {
-    drupal_set_title(String::format('Edit %label', array('%label' => $config_test->label())), PASS_THROUGH);
-    return \Drupal::entityManager()->getForm($config_test);
+    $form = $this->entityManager()->getForm($config_test);
+    $form['#title'] = String::format('Edit %label', array('%label' => $config_test->label()));
+    return $form;
   }
 
   /**
