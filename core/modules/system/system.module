@@ -261,6 +261,7 @@ function system_element_info() {
     '#theme_wrappers' => array('form'),
   );
   $types['page'] = array(
+    '#post_render' => array('drupal_post_render_cache_tags_page_set'),
     '#show_messages' => TRUE,
     '#theme' => 'page',
     '#theme_wrappers' => array('html'),

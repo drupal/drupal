@@ -39,6 +39,17 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
+   * Set cache tag on on the returned render array.
+   */
+  function system_test_cache_tags_page() {
+    $build['main'] = array(
+      '#markup' => 'Cache tags page example',
+      '#cache' => array('tags' => array('system_test_cache_tags_page' => TRUE)),
+    );
+    return $build;
+  }
+
+  /**
    * @todo Remove system_test_authorize_init_page().
    */
   public function authorizeInit($page_title) {

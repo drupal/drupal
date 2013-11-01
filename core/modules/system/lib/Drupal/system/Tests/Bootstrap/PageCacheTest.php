@@ -9,6 +9,7 @@ namespace Drupal\system\Tests\Bootstrap;
 
 use Symfony\Component\Routing\RequestContext;
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Enables the page cache and tests it with various HTTP requests.
@@ -39,6 +40,29 @@ class PageCacheTest extends WebTestBase {
       ->set('name', 'Drupal')
       ->set('page.front', 'test-page')
       ->save();
+  }
+
+  /**
+   * Test that cache tags are properly persisted.
+   *
+   * Since tag based invalidation works, we know that our tag properly
+   * persisted.
+   */
+  function testPageCacheTags() {
+    $config = \Drupal::config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
+    $path = 'system-test/cache_tags_page';
+    $tags = array('system_test_cache_tags_page' => TRUE);
+    $this->drupalGet($path);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->drupalGet($path);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    Cache::invalidateTags($tags);
+    $this->drupalGet($path);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
   }
 
   /**

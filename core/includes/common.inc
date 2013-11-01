@@ -3182,7 +3182,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
         // because by the time it is read, the configuration might change.
         'page_compressed' => $page_compressed,
       ),
-      'tags' => array('content' => TRUE),
+      'tags' => array('content' => TRUE) + drupal_cache_tags_page_get(),
       'expire' => CacheBackendInterface::CACHE_PERMANENT,
       'created' => REQUEST_TIME,
     );
@@ -4216,6 +4216,38 @@ function drupal_render_collect_cache_tags($element, $tags = array()) {
   }
 
   return $tags;
+}
+
+/**
+ * A #post_render callback at the top level of the $page array. Collects the
+ * tags for use in page cache.
+ *
+ * @param string $children
+ *   An HTML string of rendered output.
+ * @param array $elements
+ *   A render array.
+ *
+ * @return string
+ *   The same $children that was passed in - no modifications.
+ */
+function drupal_post_render_cache_tags_page_set($children, array $elements) {
+  if (drupal_page_is_cacheable()) {
+    $tags = &drupal_static('system_cache_tags_page', array());
+    $tags = drupal_render_collect_cache_tags($elements);
+  }
+  return $children;
+}
+
+/**
+ * Return the cache tags that were stored during drupal_render_page().
+ *
+ * @return array
+ *   An array of cache tags.
+ *
+ * @see drupal_post_render_cache_tags_page_set()
+ */
+function drupal_cache_tags_page_get() {
+  return drupal_static('system_cache_tags_page', array());
 }
 
 /**

@@ -88,7 +88,7 @@ class NodeViewBuilder extends EntityViewBuilder {
 
     // The node 'submitted' info is not rendered in a standard way (renderable
     // array) so we have to add a cache tag manually.
-    $build['#cache']['tags']['user'][] = $entity->uid;
+    $build['#cache']['tags']['user'][] = $entity->getAuthorId();
   }
 
 }
