@@ -137,27 +137,12 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $this->namespaces = $namespaces;
     $this->translationManager = $translation_manager;
 
-    $this->doDiscovery($namespaces);
-    $this->factory = new DefaultFactory($this->discovery);
-    $this->container = $container;
-  }
-
-  protected function doDiscovery($namespaces) {
     $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addNamespaces(\Traversable $namespaces) {
-    reset($this->namespaces);
-    $iterator = new \AppendIterator;
-    $iterator->append(new \IteratorIterator($this->namespaces));
-    $iterator->append($namespaces);
-    $this->doDiscovery($iterator);
+    $this->factory = new DefaultFactory($this->discovery);
+    $this->container = $container;
   }
 
   /**
