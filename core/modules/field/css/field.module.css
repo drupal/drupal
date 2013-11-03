@@ -6,10 +6,12 @@
 .field-label-inline .field-label,
 .field-label-inline .field-items {
   float:left; /*LTR*/
+  padding-right: 0.5em;
 }
 [dir="rtl"] .field-label-inline .field-label,
 [dir="rtl"] .field-label-inline .field-items {
   float: right;
+  padding-left: 0.5em;
 }
 
 /* Form display */
