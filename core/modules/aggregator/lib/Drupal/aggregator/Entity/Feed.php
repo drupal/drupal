@@ -20,7 +20,6 @@ use Drupal\aggregator\FeedInterface;
  * @EntityType(
  *   id = "aggregator_feed",
  *   label = @Translation("Aggregator feed"),
- *   module = "aggregator",
  *   controllers = {
  *     "storage" = "Drupal\aggregator\FeedStorageController",
  *     "view_builder" = "Drupal\aggregator\FeedViewBuilder",

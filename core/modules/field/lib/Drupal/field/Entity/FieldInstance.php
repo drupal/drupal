@@ -18,7 +18,6 @@ use Drupal\field\FieldInstanceInterface;
  * @EntityType(
  *   id = "field_instance",
  *   label = @Translation("Field instance"),
- *   module = "field",
  *   controllers = {
  *     "storage" = "Drupal\field\FieldInstanceStorageController"
  *   },

@@ -18,7 +18,6 @@ use Drupal\config_test\ConfigTestInterface;
  * @EntityType(
  *   id = "config_test",
  *   label = @Translation("Test configuration"),
- *   module = "config_test",
  *   controllers = {
  *     "storage" = "Drupal\config_test\ConfigTestStorageController",
  *     "list" = "Drupal\config_test\ConfigTestListController",

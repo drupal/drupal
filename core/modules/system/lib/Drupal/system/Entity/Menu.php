@@ -18,7 +18,6 @@ use Drupal\system\MenuInterface;
  * @EntityType(
  *   id = "menu",
  *   label = @Translation("Menu"),
- *   module = "system",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\system\MenuAccessController"

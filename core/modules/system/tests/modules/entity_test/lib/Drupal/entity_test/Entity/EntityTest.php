@@ -18,7 +18,6 @@ use Drupal\Core\Language\Language;
  * @EntityType(
  *   id = "entity_test",
  *   label = @Translation("Test entity"),
- *   module = "entity_test",
  *   controllers = {
  *     "storage" = "Drupal\entity_test\EntityTestStorageController",
  *     "list" = "Drupal\entity_test\EntityTestListController",

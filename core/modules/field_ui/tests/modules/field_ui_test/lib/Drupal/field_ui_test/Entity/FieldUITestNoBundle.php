@@ -17,7 +17,6 @@ use Drupal\Core\Annotation\Translation;
  * @EntityType(
  *   id = "field_ui_test_no_bundle",
  *   label = @Translation("Test Field UI entity, no bundle"),
- *   module = "field_ui_test",
  *   controllers = {
  *     "storage" = "Drupal\Core\Entity\DatabaseStorageController"
  *   },

@@ -20,7 +20,6 @@ use Drupal\language\LanguageInterface;
  * @EntityType(
  *   id = "language_entity",
  *   label = @Translation("Language"),
- *   module = "language",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\language\LanguageListController",

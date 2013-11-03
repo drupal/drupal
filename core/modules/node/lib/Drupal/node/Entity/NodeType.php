@@ -19,7 +19,6 @@ use Drupal\Core\Annotation\Translation;
  * @EntityType(
  *   id = "node_type",
  *   label = @Translation("Content type"),
- *   module = "node",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\node\NodeTypeAccessController",

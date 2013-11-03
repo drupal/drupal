@@ -18,7 +18,6 @@ use Drupal\user\UserInterface;
  * @EntityType(
  *   id = "user",
  *   label = @Translation("User"),
- *   module = "user",
  *   controllers = {
  *     "storage" = "Drupal\user\UserStorageController",
  *     "access" = "Drupal\user\UserAccessController",

@@ -20,7 +20,6 @@ use Drupal\custom_block\CustomBlockInterface;
  *   id = "custom_block",
  *   label = @Translation("Custom Block"),
  *   bundle_label = @Translation("Custom Block type"),
- *   module = "custom_block",
  *   controllers = {
  *     "storage" = "Drupal\custom_block\CustomBlockStorageController",
  *     "access" = "Drupal\custom_block\CustomBlockAccessController",

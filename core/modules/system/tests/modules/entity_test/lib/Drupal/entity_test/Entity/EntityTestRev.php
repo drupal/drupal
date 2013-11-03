@@ -17,7 +17,6 @@ use Drupal\Core\Annotation\Translation;
  * @EntityType(
  *   id = "entity_test_rev",
  *   label = @Translation("Test entity - revisions"),
- *   module = "entity_test",
  *   controllers = {
  *     "storage" = "Drupal\entity_test\EntityTestStorageController",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",

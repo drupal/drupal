@@ -18,7 +18,6 @@ use Drupal\picture\PictureMappingInterface;
  * @EntityType(
  *   id = "picture_mapping",
  *   label = @Translation("Picture mapping"),
- *   module = "picture",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\picture\PictureMappingListController",

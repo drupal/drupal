@@ -164,7 +164,7 @@ function entity_module_preuninstall($module) {
   // Clean up all entity bundles (including field instances) of every entity
   // type provided by the module that is being uninstalled.
   foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
-    if ($entity_info['module'] == $module) {
+    if ($entity_info['provider'] == $module) {
       foreach (array_keys(entity_get_bundles($entity_type)) as $bundle) {
         entity_invoke_bundle_hook('delete', $entity_type, $bundle);
       }

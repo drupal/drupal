@@ -16,7 +16,6 @@ use Drupal\Core\Annotation\Translation;
  * @EntityType(
  *   id = "config_query_test",
  *   label = @Translation("Test configuration for query"),
- *   module = "config_test",
  *   controllers = {
  *     "storage" = "Drupal\config_test\ConfigTestStorageController",
  *     "list" = "Drupal\Core\Config\Entity\ConfigEntityListController",

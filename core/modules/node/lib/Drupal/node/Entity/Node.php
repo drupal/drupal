@@ -20,7 +20,6 @@ use Drupal\node\NodeInterface;
  *   id = "node",
  *   label = @Translation("Content"),
  *   bundle_label = @Translation("Content type"),
- *   module = "node",
  *   controllers = {
  *     "storage" = "Drupal\node\NodeStorageController",
  *     "view_builder" = "Drupal\node\NodeViewBuilder",

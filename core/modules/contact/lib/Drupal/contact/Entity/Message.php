@@ -16,7 +16,6 @@ use Drupal\contact\MessageInterface;
  * @EntityType(
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
- *   module = "contact",
  *   controllers = {
  *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "view_builder" = "Drupal\contact\MessageViewBuilder",

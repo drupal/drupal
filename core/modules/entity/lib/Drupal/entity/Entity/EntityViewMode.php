@@ -33,7 +33,6 @@ use Drupal\entity\EntityViewModeInterface;
  * @EntityType(
  *   id = "view_mode",
  *   label = @Translation("View mode"),
- *   module = "entity",
  *   controllers = {
  *     "list" = "Drupal\entity\EntityDisplayModeListController",
  *     "form" = {

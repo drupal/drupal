@@ -23,7 +23,6 @@ use Drupal\Core\Annotation\Translation;
  * @EntityType(
  *   id = "breakpoint",
  *   label = @Translation("Breakpoint"),
- *   module = "breakpoint",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },

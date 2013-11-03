@@ -19,7 +19,6 @@ use Drupal\rdf\RdfMappingInterface;
  * @EntityType(
  *   id = "rdf_mapping",
  *   label = @Translation("RDF mapping"),
- *   module = "rdf",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },

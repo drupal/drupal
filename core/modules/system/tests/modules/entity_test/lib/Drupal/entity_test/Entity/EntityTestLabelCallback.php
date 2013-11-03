@@ -16,7 +16,6 @@ use Drupal\Core\Annotation\Translation;
  * @EntityType(
  *   id = "entity_test_label_callback",
  *   label = @Translation("Entity test label callback"),
- *   module = "entity_test",
  *   controllers = {
  *     "storage" = "Drupal\entity_test\EntityTestStorageController"
  *   },

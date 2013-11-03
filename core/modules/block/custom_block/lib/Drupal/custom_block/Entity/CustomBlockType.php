@@ -19,7 +19,6 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  * @EntityType(
  *   id = "custom_block_type",
  *   label = @Translation("Custom block type"),
- *   module = "custom_block",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "form" = {

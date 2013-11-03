@@ -17,13 +17,6 @@ use Drupal\Component\Annotation\Plugin;
 class EntityType extends Plugin {
 
   /**
-   * The name of the module providing the type.
-   *
-   * @var string
-   */
-  public $module;
-
-  /**
    * The name of the entity type class.
    *
    * This is not provided manually, it will be added by the discovery mechanism.

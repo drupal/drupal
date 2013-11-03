@@ -19,7 +19,6 @@ use Drupal\entity\EntityDisplayInterface;
  * @EntityType(
  *   id = "entity_display",
  *   label = @Translation("Entity display"),
- *   module = "entity",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },

@@ -19,7 +19,6 @@ use Drupal\shortcut\ShortcutSetInterface;
  * @EntityType(
  *   id = "shortcut_set",
  *   label = @Translation("Shortcut set"),
- *   module = "shortcut",
  *   controllers = {
  *     "storage" = "Drupal\shortcut\ShortcutSetStorageController",
  *     "access" = "Drupal\shortcut\ShortcutSetAccessController",

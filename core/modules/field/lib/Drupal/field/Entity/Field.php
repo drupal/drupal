@@ -22,7 +22,6 @@ use Drupal\field\FieldInterface;
  * @EntityType(
  *   id = "field_entity",
  *   label = @Translation("Field"),
- *   module = "field",
  *   controllers = {
  *     "storage" = "Drupal\field\FieldStorageController"
  *   },

@@ -19,7 +19,6 @@ use Drupal\contact\CategoryInterface;
  * @EntityType(
  *   id = "contact_category",
  *   label = @Translation("Contact category"),
- *   module = "contact",
  *   controllers = {
  *     "storage" = "Drupal\contact\CategoryStorageController",
  *     "access" = "Drupal\contact\CategoryAccessController",

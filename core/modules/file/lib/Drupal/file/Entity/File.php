@@ -21,7 +21,6 @@ use Drupal\user\UserInterface;
  * @EntityType(
  *   id = "file",
  *   label = @Translation("File"),
- *   module = "file",
  *   controllers = {
  *     "storage" = "Drupal\file\FileStorageController",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder"

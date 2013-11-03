@@ -192,26 +192,6 @@ function config_context_leave() {
 }
 
 /**
- * Return a list of all config entity types provided by a module.
- *
- * @param string $module
- *   The name of the module possibly providing config entities.
- *
- * @return array
- *   An associative array containing the entity info for any config entities
- *   provided by the requested module, keyed by the entity type.
- */
-function config_get_module_config_entities($module) {
-  // While this is a lot of work to generate, it's not worth static caching
-  // since this function is only called at install/uninstall, and only
-  // once per module.
-  $info = entity_get_info();
-  return array_filter($info, function($entity_info) use ($module) {
-    return ($entity_info['module'] == $module) && is_subclass_of($entity_info['class'], 'Drupal\Core\Config\Entity\ConfigEntityInterface');
-  });
-}
-
-/**
  * Returns the entity type of a configuration object.
  *
  * @param string $name

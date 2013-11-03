@@ -19,7 +19,6 @@ use Drupal\aggregator\ItemInterface;
  * @EntityType(
  *   id = "aggregator_item",
  *   label = @Translation("Aggregator feed item"),
- *   module = "aggregator",
  *   controllers = {
  *     "storage" = "Drupal\aggregator\ItemStorageController",
  *     "view_builder" = "Drupal\aggregator\ItemViewBuilder"

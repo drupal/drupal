@@ -19,8 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Entity cache test"),
  *   controllers = {
  *     "storage" = "Drupal\Core\Entity\DatabaseStorageController",
- *   },
- *   module = "entity_cache_test_dependency"
+ *   }
  * )
  */
 class EntityCacheTest extends Entity {

@@ -21,7 +21,6 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  * @EntityType(
  *   id = "action",
  *   label = @Translation("Action"),
- *   module = "system",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *   },

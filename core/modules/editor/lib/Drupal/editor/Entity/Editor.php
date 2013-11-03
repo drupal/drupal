@@ -18,7 +18,6 @@ use Drupal\editor\EditorInterface;
  * @EntityType(
  *   id = "editor",
  *   label = @Translation("Editor"),
- *   module = "editor",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },

@@ -21,7 +21,6 @@ use Drupal\taxonomy\TermInterface;
  *   id = "taxonomy_term",
  *   label = @Translation("Taxonomy term"),
  *   bundle_label = @Translation("Vocabulary"),
- *   module = "taxonomy",
  *   controllers = {
  *     "storage" = "Drupal\taxonomy\TermStorageController",
  *     "view_builder" = "Drupal\taxonomy\TermViewBuilder",

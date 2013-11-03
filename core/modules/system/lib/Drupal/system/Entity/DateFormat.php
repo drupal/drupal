@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  * @EntityType(
  *   id = "date_format",
  *   label = @Translation("Date format"),
- *   module = "system",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\system\DateFormatAccessController",

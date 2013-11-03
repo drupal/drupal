@@ -21,7 +21,6 @@ use Drupal\Core\Language\Language;
  *   id = "comment",
  *   label = @Translation("Comment"),
  *   bundle_label = @Translation("Content type"),
- *   module = "comment",
  *   controllers = {
  *     "storage" = "Drupal\comment\CommentStorageController",
  *     "access" = "Drupal\comment\CommentAccessController",

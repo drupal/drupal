@@ -19,7 +19,6 @@ use Drupal\tour\TourInterface;
  * @EntityType(
  *   id = "tour",
  *   label = @Translation("Tour"),
- *   module = "tour",
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "view_builder" = "Drupal\tour\TourViewBuilder"
