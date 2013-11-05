@@ -6,4 +6,5 @@ version: VERSION
 core: 8.x
 dependencies:
   - filter
+  - file
 configure: filter.admin_overview
