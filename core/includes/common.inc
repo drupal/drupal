@@ -2715,7 +2715,12 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
  */
 function drupal_process_states(&$elements) {
   $elements['#attached']['library'][] = array('system', 'drupal.states');
-  $elements['#attributes']['data-drupal-states'] = JSON::encode($elements['#states']);
+  // Elements of '#type' => 'item' are not actual form input elements, but we
+  // still want to be able to show/hide them. Since there's no actual HTML input
+  // element available, setting #attributes does not make sense, but a wrapper
+  // is available, so setting #wrapper_attributes makes it work.
+  $key = ($elements['#type'] == 'item') ? '#wrapper_attributes' : '#attributes';
+  $elements[$key]['data-drupal-states'] = JSON::encode($elements['#states']);
 }
 
 /**
