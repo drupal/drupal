@@ -18,7 +18,7 @@ Drupal.behaviors.filterGuidelines = {
       .bind('change', function () {
         $(this).closest('.filter-wrapper')
           .find('.filter-guidelines-item').hide()
-          .siblings('.filter-guidelines-' + this.value).show();
+          .filter('.filter-guidelines-' + this.value).show();
       })
       .change();
   }

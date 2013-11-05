@@ -354,7 +354,8 @@ function editor_pre_render_format($element) {
   $format_ids = array_keys($element['format']['format']['#options']);
 
   // Early-return if no text editor is associated with any of the text formats.
-  if (count(entity_load_multiple('editor', $format_ids)) === 0) {
+  $editors = entity_load_multiple('editor', $format_ids);
+  if (count($editors) === 0) {
     return $element;
   }
 
@@ -377,6 +378,12 @@ function editor_pre_render_format($element) {
   else {
     $element['format']['format']['#attributes']['class'][] = 'editor';
     $element['format']['format']['#attributes']['data-editor-for'] = $field_id;
+  }
+
+  // Hide the text format's filters' guidelines of those text formats that have
+  // a text editor associated: they're rather useless when using a text editor.
+  foreach ($editors as $format_id => $editor) {
+    $element['format']['guidelines'][$format_id]['#access'] = FALSE;
   }
 
   // Attach Text Editor module's (this module) library.

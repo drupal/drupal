@@ -15,10 +15,11 @@
   border: 1px solid #ccc;
   border-top: 0;
   margin: 0;
-  padding: 0.5em 1.5em;
+  padding: 0.5em 0.666em;
+  overflow: hidden;
 }
 .filter-wrapper .form-item {
-  margin-top: 0;
+  margin: 0;
 }
 .filter-wrapper .form-item label {
   display: inline;
@@ -29,6 +30,9 @@
 }
 [dir="rtl"] .filter-help {
   float: left;
+}
+.filter-guidelines .filter-guidelines-item {
+  margin-top: 1em;
 }
 .filter-help p {
   margin: 0;

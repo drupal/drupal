@@ -769,7 +769,7 @@ function filter_process_format($element) {
   $element['format']['help'] = array(
     '#type' => 'container',
     '#attributes' => array('class' => array('filter-help')),
-    '#markup' => l(t('More information about text formats'), 'filter/tips', array('attributes' => array('target' => '_blank'))),
+    '#markup' => l(t('About text formats'), 'filter/tips', array('attributes' => array('target' => '_blank'))),
     '#weight' => 0,
   );
 
