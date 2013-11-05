@@ -9,6 +9,9 @@
  * Sighted users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html
  * for info.
  *
+ * Add an ARIA label to the contentinfo area so that assistive technology
+ * user agents will better describe this landmark.
+ *
  * Available variables:
  * - message_list: List of messages to be displayed, grouped by type.
  * - status_headings: List of all status types.
@@ -21,18 +24,24 @@
  */
 #}
 {% for type, messages in message_list %}
-  <div class="messages messages--{{ type }}">
-    {% if status_headings[type] %}
-      <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
+  <div class="messages messages--{{ type }}" role="contentinfo" aria-label="{{ status_headings[type] }}">
+    {% if type == 'error' %}
+      <div role="alert">
     {% endif %}
-    {% if messages|length > 1 %}
-      <ul class="messages__list">
-        {% for message in messages %}
-          <li class="messages__item">{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      {{ messages.0 }}
+      {% if status_headings[type] %}
+        <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
+      {% endif %}
+      {% if messages|length > 1 %}
+        <ul class="messages__list">
+          {% for message in messages %}
+            <li class="messages__item">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        {{ messages.0 }}
+      {% endif %}
+    {% if type == 'error' %}
+      </div>
     {% endif %}
   </div>
 {% endfor %}
