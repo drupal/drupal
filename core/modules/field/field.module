@@ -630,7 +630,7 @@ function template_preprocess_field(&$variables, $hook) {
   // label, it needs to supply a preprocess function that sets it to the
   // sanitized element title or whatever else is wanted in its place.
   $variables['label_hidden'] = ($element['#label_display'] == 'hidden');
-  $variables['label'] = $variables['label_hidden'] ? NULL : check_plain($element['#title']);
+  $variables['label'] = check_plain($element['#title']);
 
   // We want other preprocess functions and the theme implementation to have
   // fast access to the field item render arrays. The item render array keys

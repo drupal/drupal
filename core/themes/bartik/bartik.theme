@@ -178,10 +178,9 @@ function bartik_menu_tree__shortcut_default($variables) {
 function bartik_field__taxonomy_term_reference($variables) {
   $output = '';
 
-  // Render the label, if it's not hidden.
-  if (!$variables['label_hidden']) {
-    $output .= '<h3 class="field-label">' . $variables['label'] . ': </h3>';
-  }
+  // Render the label either as a visible list or make it visually hidden for accessibility.
+  $hidden_class = empty($variables['label_hidden']) ? '' : ' visually-hidden';
+  $output .= '<h3 class="field-label' . $hidden_class . '">' . $variables['label'] . ': </h3>';
 
   // Render the items.
   $output .= ($variables['element']['#label_display'] == 'inline') ? '<ul class="links inline">' : '<ul class="links">';
