@@ -1422,7 +1422,7 @@ Drupal.behaviors.ckeditorAdminButtonPluginSettings = {
     var $ckeditorPluginSettings = $context.find('#ckeditor-plugin-settings').once('ckeditor-plugin-settings');
     if ($ckeditorPluginSettings.length) {
       // Hide all button-dependent plugin settings initially.
-      $ckeditorPluginSettings.find('[data-ckeditor-plugin-id]').each(function () {
+      $ckeditorPluginSettings.find('[data-ckeditor-buttons]').each(function () {
         var $this = $(this);
         if ($this.data('verticalTab')) {
           $this.data('verticalTab').tabHide();
