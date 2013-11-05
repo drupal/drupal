@@ -639,8 +639,6 @@ function template_preprocess_node(&$variables) {
   $node = $variables['node'];
 
   $variables['date'] = format_date($node->getCreatedTime());
-  // @todo Change 'name' to 'author' and also convert to a render array pending
-  //   http://drupal.org/node/1941286.
   $username = array(
     '#theme' => 'username',
     '#account' => $node->getAuthor(),
