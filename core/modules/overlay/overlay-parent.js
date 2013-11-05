@@ -516,6 +516,13 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
 
   var $target = $(event.target);
 
+  // Close the overlay when the button contains the overlay-close class.
+  if ($target.is('button') && $target.hasClass('overlay-close')) {
+    // Clearing the overlay URL fragment will close the overlay.
+    $.bbq.removeState('overlay');
+    return;
+  }
+
   // Only continue if clicked target (or one of its parents) is a link.
   if (!$target.is('a')) {
     $target = $target.closest('a');
@@ -526,13 +533,6 @@ Drupal.overlay.eventhandlerOverrideLink = function (event) {
 
   // Never open links in the overlay that contain the overlay-exclude class.
   if ($target.hasClass('overlay-exclude')) {
-    return;
-  }
-
-  // Close the overlay when the link contains the overlay-close class.
-  if ($target.hasClass('overlay-close')) {
-    // Clearing the overlay URL fragment will close the overlay.
-    $.bbq.removeState('overlay');
     return;
   }
 

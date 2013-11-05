@@ -25,7 +25,7 @@
       <h1{{ title_attributes }}>{{ title }}</h1>
     </div>
     <div id="overlay-close-wrapper">
-      <a id="overlay-close" href="#" class="overlay-close" role="button" aria-controls="overlay-content"><span class="visually-hidden">{{ 'Close overlay'|t }}</span></a>
+      <button id="overlay-close" class="overlay-close" type="button" aria-controls="overlay-content"><span class="visually-hidden">{{ 'Close overlay'|t }}</span></button>
     </div>
     {% if tabs %}
       <h2 class="visually-hidden">{{ 'Primary tabs'|t }}</h2><ul id="overlay-tabs">{{ tabs }}</ul>

@@ -78,6 +78,7 @@ html[dir="rtl"] {
 #overlay-close,
 #overlay-close:hover {
   background: #ffffff url(../images/close.png) no-repeat;
+  border: 0;
   border-radius: 0 12px 12px 0; /* LTR */
   display: block;
   height: 26px;
@@ -90,6 +91,9 @@ html[dir="rtl"] {
 [dir="rtl"] #overlay-close,
 [dir="rtl"] #overlay-close:hover {
   border-radius: 12px 0 0 12px;
+}
+#overlay-close:focus, #overlay-close:active{
+  outline: 1px dotted;
 }
 
 /**
