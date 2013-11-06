@@ -53,7 +53,9 @@ function ckeditor_library_info() {
       $module_path . '/css/ckeditor.css' => array(),
     ),
     'dependencies' => array(
+      array('system', 'jquery'),
       array('system', 'drupal'),
+      array('system', 'drupal.debounce'),
       array('ckeditor', 'ckeditor'),
       array('editor', 'drupal.editor'),
     ),

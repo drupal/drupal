@@ -1,4 +1,4 @@
-(function (Drupal, CKEDITOR, $) {
+(function (Drupal, debounce, CKEDITOR, $) {
 
 "use strict";
 
@@ -31,9 +31,9 @@ Drupal.editors.ckeditor = {
   onChange: function (element, callback) {
     var editor = CKEDITOR.dom.element.get(element).getEditor();
     if (editor) {
-      editor.on('change', function () {
+      editor.on('change', debounce(function () {
         callback(editor.getData());
-      });
+      }, 400));
     }
     return !!editor;
   },
@@ -269,4 +269,4 @@ $(window).on('dialog:afterclose', function (e, dialog, $element) {
   }
 });
 
-})(Drupal, CKEDITOR, jQuery);
+})(Drupal, Drupal.debounce, CKEDITOR, jQuery);
