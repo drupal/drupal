@@ -52,11 +52,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
-
-    // @todo Remove drupal_set_title() in http://drupal.org/node/1981644
-    $title = $this->t('Edit style %name', array('%name' => $this->entity->label()));
-    drupal_set_title($title, PASS_THROUGH);
-
+    $form['#title'] = $this->t('Edit style %name', array('%name' => $this->entity->label()));
     $form['#tree'] = TRUE;
     $form['#attached']['css'][drupal_get_path('module', 'image') . '/css/image.admin.css'] = array();
 

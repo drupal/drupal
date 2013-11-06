@@ -167,7 +167,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Test the style overview form.
     // Change the name of the style and adjust the weights of effects.
     $style_name = strtolower($this->randomName(10));
-    $style_label = $this->randomString();
+    $style_label = $this->randomName();
     $weight = count($effect_edits);
     $edit = array(
       'name' => $style_name,
@@ -189,7 +189,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Check that the URL was updated.
     $this->drupalGet($style_path);
-    $this->assertResponse(200, format_string('Image style %original renamed to %new', array('%original' => $style->label(), '%new' => $style_name)));
+    $this->assertTitle(t('Edit style @name | Drupal', array('@name' => $style_label)));
+    $this->assertResponse(200, format_string('Image style %original renamed to %new', array('%original' => $style->id(), '%new' => $style_name)));
 
     // Check that the image was flushed after updating the style.
     // This is especially important when renaming the style. Make sure that
