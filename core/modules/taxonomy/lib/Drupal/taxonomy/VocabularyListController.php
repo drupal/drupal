@@ -61,7 +61,6 @@ class VocabularyListController extends DraggableListController {
    */
   public function buildHeader() {
     $header['label'] = t('Vocabulary name');
-    $header['weight'] = t('Weight');
     return $header + parent::buildHeader();
   }
 
