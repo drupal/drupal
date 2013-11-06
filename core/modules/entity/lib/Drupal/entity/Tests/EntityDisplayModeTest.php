@@ -40,11 +40,11 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertResponse(200);
 
-    $this->drupalGet('admin/structure/display-modes/view/add/entity_test_mul');
+    $this->drupalGet('admin/structure/display-modes/view/add/entity_test_mulrev');
     $this->assertResponse(404);
 
     $this->drupalGet('admin/structure/display-modes/view/add');
-    $this->assertNoLink(t('Test entity - data table'), 'An entity type with no view builder cannot have view modes.');
+    $this->assertNoLink(t('Test entity - revisions and data table'), 'An entity type with no view builder cannot have view modes.');
 
     // Test adding a view mode.
     $this->clickLink(t('Test entity'));

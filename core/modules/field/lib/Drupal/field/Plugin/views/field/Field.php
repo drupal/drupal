@@ -263,14 +263,7 @@ class Field extends FieldPluginBase {
           $this->view->display_handler->options['field_langcode']
         );
         $placeholder = $this->placeholder();
-        $langcode_fallback_candidates = array($langcode);
-        if (field_language_fallback_enabled()) {
-          require_once DRUPAL_ROOT . '/includes/language.inc';
-          $langcode_fallback_candidates = array_merge($langcode_fallback_candidates, language_fallback_get_candidates());
-        }
-        else {
-          $langcode_fallback_candidates[] = Language::LANGCODE_NOT_SPECIFIED;
-        }
+        $langcode_fallback_candidates = $this->languageManager->getFallbackCandidates($langcode, array('operation' => 'views_query', 'data' => $this));
         $this->query->addWhereExpression(0, "$column IN($placeholder) OR $column IS NULL", array($placeholder => $langcode_fallback_candidates));
       }
     }
@@ -870,11 +863,12 @@ class Field extends FieldPluginBase {
         $this->view->display_handler->options['field_language']
       );
 
-      // Give the Field Language API a chance to fallback to a different language
-      // (or Language::LANGCODE_NOT_SPECIFIED), in case the field has no data for the selected language.
-      // field_view_field() does this as well, but since the returned language code
-      // is used before calling it, the fallback needs to happen explicitly.
-      $langcode = field_language($entity, $this->field_info['field_name'], $langcode);
+      // Give the Entity Field API a chance to fallback to a different language
+      // (or Language::LANGCODE_NOT_SPECIFIED), in case the field has no data
+      // for the selected language. field_view_field() does this as well, but
+      // since the returned language code is used before calling it, the
+      // fallback needs to happen explicitly.
+      $langcode = $this->entityManager->getTranslationFromContext($entity, $langcode)->language()->id;
 
       return $langcode;
     }

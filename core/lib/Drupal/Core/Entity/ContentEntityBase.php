@@ -423,6 +423,12 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public function set($property_name, $value, $notify = TRUE) {
     $this->get($property_name)->setValue($value, FALSE);
+
+    if ($property_name == 'langcode') {
+      // Avoid using unset as this unnecessarily triggers magic methods later
+      // on.
+      $this->language = NULL;
+    }
   }
 
   /**
@@ -658,6 +664,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $translation->values = &$this->values;
     $translation->fields = &$this->fields;
     $translation->translations = &$this->translations;
+    $translation->enforceIsNew = &$this->enforceIsNew;
     $translation->translationInitialize = FALSE;
 
     return $translation;

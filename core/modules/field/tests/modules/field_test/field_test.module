@@ -63,15 +63,6 @@ function field_test_field_available_languages_alter(&$langcodes, $context) {
 }
 
 /**
- * Implements hook_field_language_alter().
- */
-function field_test_field_language_alter(&$display_langcode, $context) {
-  if (\Drupal::state()->get('field_test.language_fallback') ?: TRUE) {
-    field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
-  }
-}
-
-/**
  * Store and retrieve keyed data for later verification by unit tests.
  *
  * This function is a simple in-memory key-value store with the

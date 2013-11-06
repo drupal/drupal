@@ -120,19 +120,21 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
       $langcodes = _field_language_suggestion($available_langcodes, $options['langcode'], $field_name);
 
       foreach ($langcodes as $langcode) {
-        $items = $entity->getTranslation($langcode)->get($field_name);
-        $items->filterEmptyValues();
+        if ($entity->hasTranslation($langcode)) {
+          $items = $entity->getTranslation($langcode)->get($field_name);
+          $items->filterEmptyValues();
 
-        $result = $target->$method($items, $a, $b);
+          $result = $target->$method($items, $a, $b);
 
-        if (isset($result)) {
-          // For methods with array results, we merge results together.
-          // For methods with scalar results, we collect results in an array.
-          if (is_array($result)) {
-            $return = array_merge($return, $result);
-          }
-          else {
-            $return[] = $result;
+          if (isset($result)) {
+            // For methods with array results, we merge results together.
+            // For methods with scalar results, we collect results in an array.
+            if (is_array($result)) {
+              $return = array_merge($return, $result);
+            }
+            else {
+              $return[] = $result;
+            }
           }
         }
       }
@@ -223,10 +225,12 @@ function field_invoke_method_multiple($method, $target_function, array $entities
         $langcode = !empty($options['langcode'][$id]) ? $options['langcode'][$id] : $options['langcode'];
         $langcodes = _field_language_suggestion($available_langcodes, $langcode, $field_name);
         foreach ($langcodes as $langcode) {
-          // Group the items corresponding to the current field.
-          $items = $entity->getTranslation($langcode)->get($field_name);
-          $items->filterEmptyValues();
-          $grouped_items[$instance_uuid][$langcode][$id] = $items;
+          if ($entity->hasTranslation($langcode)) {
+            // Group the items corresponding to the current field.
+            $items = $entity->getTranslation($langcode)->get($field_name);
+            $items->filterEmptyValues();
+            $grouped_items[$instance_uuid][$langcode][$id] = $items;
+          }
         }
       }
     }

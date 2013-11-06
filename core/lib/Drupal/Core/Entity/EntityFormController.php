@@ -269,6 +269,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
    * {@inheritdoc}
    */
   public function validate(array $form, array &$form_state) {
+    $this->updateFormLangcode($form_state);
     // @todo Remove this.
     // Execute legacy global validation handlers.
     unset($form_state['validate_handlers']);
@@ -292,8 +293,6 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
   public function submit(array $form, array &$form_state) {
     // Remove button and internal Form API values from submitted values.
     form_state_values_clean($form_state);
-
-    $this->updateFormLangcode($form_state);
     $this->entity = $this->buildEntity($form, $form_state);
     return $this->entity;
   }
@@ -325,7 +324,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
   /**
    * {@inheritdoc}
    */
-  public function getFormLangcode(array $form_state) {
+  public function getFormLangcode(array &$form_state) {
     return $this->entity->language()->id;
   }
 

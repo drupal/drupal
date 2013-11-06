@@ -10,6 +10,7 @@ namespace Drupal\taxonomy;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\ContentEntityFormController;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base for controller for taxonomy term edit forms.
  */
 class TermFormController extends ContentEntityFormController {
-
-  /**
-   * The vocabulary storage.
-   *
-   * @var \Drupal\taxonomy\VocabularyStorageControllerInterface
-   */
-  protected $vocabStorage;
 
   /**
    * The config factory.
@@ -35,13 +29,13 @@ class TermFormController extends ContentEntityFormController {
   /**
    * Constructs a new TermFormController.
    *
-   * @param \Drupal\taxonomy\VocabularyStorageControllerInterface $vocab_storage
-   *   The vocabulary storage.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
    */
-  public function __construct(VocabularyStorageControllerInterface $vocab_storage, ConfigFactory $config_factory) {
-    $this->vocabStorage = $vocab_storage;
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactory $config_factory) {
+    parent::__construct($entity_manager);
     $this->configFactory = $config_factory;
   }
 
@@ -50,7 +44,7 @@ class TermFormController extends ContentEntityFormController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorageController('taxonomy_vocabulary'),
+      $container->get('entity.manager'),
       $container->get('config.factory')
     );
   }
@@ -60,7 +54,8 @@ class TermFormController extends ContentEntityFormController {
    */
   public function form(array $form, array &$form_state) {
     $term = $this->entity;
-    $vocabulary = $this->vocabStorage->load($term->bundle());
+    $vocab_storage = $this->entityManager->getStorageController('taxonomy_vocabulary');
+    $vocabulary = $vocab_storage->load($term->bundle());
 
     $parent = array_keys(taxonomy_term_load_parents($term->id()));
     $form_state['taxonomy']['parent'] = $parent;

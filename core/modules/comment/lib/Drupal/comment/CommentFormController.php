@@ -24,13 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentFormController extends ContentEntityFormController {
 
   /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * The field info service.
    *
    * @var \Drupal\field\FieldInfo
@@ -58,11 +51,26 @@ class CommentFormController extends ContentEntityFormController {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-
   public function __construct(EntityManagerInterface $entity_manager, FieldInfo $field_info, AccountInterface $current_user) {
-    $this->entityManager = $entity_manager;
+    parent::__construct($entity_manager);
     $this->fieldInfo = $field_info;
     $this->currentUser = $current_user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function init(array &$form_state) {
+    $comment = $this->entity;
+
+    // Make the comment inherit the current content language unless specifically
+    // set.
+    if ($comment->isNew()) {
+      $language_content = \Drupal::languageManager()->getLanguage(Language::TYPE_CONTENT);
+      $comment->langcode->value = $language_content->id;
+    }
+
+    parent::init($form_state);
   }
 
   /**
@@ -206,13 +214,6 @@ class CommentFormController extends ContentEntityFormController {
       '#type' => 'value',
       '#value' => ($comment->id() ? !$comment->uid->target_id : $this->currentUser->isAnonymous()),
     );
-
-    // Make the comment inherit the current content language unless specifically
-    // set.
-    if ($comment->isNew()) {
-      $language_content = language(Language::TYPE_CONTENT);
-      $comment->langcode->value = $language_content->id;
-    }
 
     // Add internal comment properties.
     $original = $comment->getUntranslated();

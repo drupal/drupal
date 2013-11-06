@@ -8,11 +8,7 @@
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\taxonomy\TermFormController;
-use Drupal\taxonomy\TermStorageControllerInterface;
-use Drupal\taxonomy\VocabularyStorageControllerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form controller for forum term edit forms.
@@ -32,47 +28,6 @@ class ForumFormController extends TermFormController {
    * @var string
    */
   protected $urlStub = 'forum';
-
-  /**
-   * The forum config.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
-
-  /**
-   * Term Storage Controller.
-   *
-   * @var \Drupal\taxonomy\TermStorageControllerInterface
-   */
-  protected $termStorage;
-
-  /**
-   * Constructs a new ForumFormController object.
-   *
-   * @param \Drupal\taxonomy\VocabularyStorageControllerInterface $vocab_storage
-   *   The vocabulary storage.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config factory service.
-   * @param \Drupal\taxonomy\TermStorageControllerInterface $term_storage
-   *   The term storage.
-   */
-  public function __construct(VocabularyStorageControllerInterface $vocab_storage, ConfigFactory $config_factory, TermStorageControllerInterface $term_storage) {
-    parent::__construct($vocab_storage, $config_factory);
-    $this->termStorage = $term_storage;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    $entity_manager = $container->get('entity.manager');
-    return new static(
-      $entity_manager->getStorageController('taxonomy_vocabulary'),
-      $container->get('config.factory'),
-      $entity_manager->getStorageController('taxonomy_term')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -121,8 +76,9 @@ class ForumFormController extends TermFormController {
    */
   public function save(array $form, array &$form_state) {
     $term = $this->entity;
+    $term_storage = $this->entityManager->getStorageController('taxonomy_term');
+    $status = $term_storage->save($term);
 
-    $status = $this->termStorage->save($term);
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new @type %term.', array('%term' => $term->label(), '@type' => $this->forumFormType)));

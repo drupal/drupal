@@ -153,7 +153,7 @@ class Language {
    * @param array $languages
    *   The array of language objects keyed by langcode.
    */
-  public static function sort($languages) {
+  public static function sort(&$languages) {
     uasort($languages, function ($a, $b) {
       $a_weight = isset($a->weight) ? $a->weight : 0;
       $b_weight = isset($b->weight) ? $b->weight : 0;

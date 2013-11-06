@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Language\Language;
 use Drupal\entity\Entity\EntityDisplay;
 use Drupal\field\Field;
 
@@ -857,4 +858,81 @@ function field_access($op, FieldInterface $field, $entity_type, $entity = NULL, 
 
   $items = $entity ? $entity->get($field->id()) : NULL;
   return $access_controller->fieldAccess($op, $field, $account, $items);
+}
+
+/**
+ * Ensures that a given language code is valid.
+ *
+ * Checks whether the given language code is one of the enabled language codes.
+ * Otherwise, it returns the current, global language code; or the site's
+ * default language code, if the additional parameter $default is TRUE.
+ *
+ * @param $langcode
+ *   The language code to validate.
+ * @param $default
+ *   Whether to return the default language code or the current language code in
+ *   case $langcode is invalid.
+ *
+ * @return
+ *   A valid language code.
+ *
+ * @deprecated This has been deprecated in favor of the Entity Field API.
+ */
+function field_valid_language($langcode, $default = TRUE) {
+  $languages = field_content_languages();
+  if (in_array($langcode, $languages)) {
+    return $langcode;
+  }
+  return $default ? language_default()->id : language(Language::TYPE_CONTENT)->id;
+}
+
+/**
+ * Returns the display language code for the fields attached to the given
+ * entity.
+ *
+ * The actual language code for each given field is determined based on the
+ * requested language code and the actual data available in the fields
+ * themselves.
+ * If there is no registered translation handler for the given entity type, the
+ * display language code to be used is just Language::LANGCODE_NOT_SPECIFIED, as
+ * no other language code is allowed by field_available_languages().
+ *
+ * If translation handlers are found, we let modules provide alternative display
+ * language codes for fields not having the requested language code available.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity to be displayed.
+ * @param $field_name
+ *   (optional) The name of the field to be displayed. Defaults to NULL. If
+ *   no value is specified, the display language codes for every field attached
+ *   to the given entity will be returned.
+ * @param $langcode
+ *   (optional) The language code $entity has to be displayed in. Defaults to
+ *   NULL. If no value is given the current language will be used.
+ *
+ * @return
+ *   A language code if a field name is specified, an array of language codes
+ *   keyed by field name otherwise.
+ *
+ * @see \Drupal\Core\Language\LanguageManager::getFallbackCandidates()
+ * @see \Drupal\Core\Entity\EntityInterface::getFieldLangcode()
+ *
+ * @deprecated This has been deprecated in favor of the Entity Field API.
+ */
+function field_language(EntityInterface $entity, $field_name = NULL, $langcode = NULL) {
+  $langcode = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode)->language()->id;
+  $definitions = $entity->getPropertyDefinitions();
+  $translatable = field_has_translation_handler($entity->entityType());
+  if (!isset($field_name)) {
+    $display_langcodes = array();
+    foreach ($definitions as $name => $definition) {
+      if (!empty($definition['configurable'])) {
+        $display_langcodes[$name] = $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
+      }
+    }
+    return $display_langcodes;
+  }
+  elseif (!empty($definitions[$field_name]['configurable'])) {
+    return $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
+  }
 }

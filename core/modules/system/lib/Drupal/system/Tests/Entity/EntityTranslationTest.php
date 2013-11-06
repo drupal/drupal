@@ -10,6 +10,7 @@ namespace Drupal\system\Tests\Entity;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
+use Drupal\Component\Utility\MapArray;
 
 /**
  * Tests entity translation.
@@ -83,6 +84,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
       $language = new Language(array(
         'id' => 'l' . $i,
         'name' => $this->randomString(),
+        'weight' => $i,
       ));
       $this->langcodes[$i] = $language->id;
       language_save($language);
@@ -491,6 +493,69 @@ class EntityTranslationTest extends EntityUnitTestBase {
     $field = $translation->get($this->field_name);
     $this->assertEqual($field->value, $this->field_name . '_' . $langcode2, 'Language-aware default values correctly populated.');
     $this->assertEqual($field->getLangcode(), $langcode2, 'Field object has the expected langcode.');
+  }
+
+  /**
+   * Tests language fallback applied to field and entity translations.
+   */
+  function testLanguageFallback() {
+    $current_langcode = $this->container->get('language_manager')->getLanguage(Language::TYPE_CONTENT)->id;
+    $this->langcodes[] = $current_langcode;
+
+    $values = array();
+    foreach ($this->langcodes as $langcode) {
+      $values[$langcode]['name'] = $this->randomName();
+      $values[$langcode]['user_id'] = mt_rand(0, 127);
+    }
+
+    $default_langcode = $this->langcodes[0];
+    $langcode = $this->langcodes[1];
+    $langcode2 = $this->langcodes[2];
+
+    $entity_type = 'entity_test_mul';
+    $controller = $this->entityManager->getStorageController($entity_type);
+    $entity = $controller->create(array('langcode' => $default_langcode) + $values[$default_langcode]);
+    $entity->save();
+
+    $entity->addTranslation($langcode, $values[$langcode]);
+    $entity->save();
+
+    // Check that retrieveing the current translation works as expected.
+    $entity = $this->reloadEntity($entity);
+    $translation = $this->entityManager->getTranslationFromContext($entity, $langcode2);
+    $this->assertEqual($translation->language()->id, $default_langcode, 'The current translation language matches the expected one.');
+
+    // Check that language fallback respects language weight by default.
+    $languages = language_list();
+    $languages[$langcode]->weight = -1;
+    language_save($languages[$langcode]);
+    $translation = $this->entityManager->getTranslationFromContext($entity, $langcode2);
+    $this->assertEqual($translation->language()->id, $langcode, 'The current translation language matches the expected one.');
+
+    // Check that the current translation is properly returned.
+    $translation = $this->entityManager->getTranslationFromContext($entity);
+    $this->assertEqual($langcode, $translation->language()->id, 'The current translation language matches the topmost language fallback candidate.');
+    $entity->addTranslation($current_langcode, $values[$current_langcode]);
+    $translation = $this->entityManager->getTranslationFromContext($entity);
+    $this->assertEqual($current_langcode, $translation->language()->id, 'The current translation language matches the current language.');
+
+    // Check that if the entity has no translation no fallback is applied.
+    $entity2 = $controller->create(array('langcode' => $default_langcode));
+    $translation = $this->entityManager->getTranslationFromContext($entity2, $default_langcode);
+    $this->assertIdentical($entity2, $translation, 'When the entity has no translation no fallback is applied.');
+
+    // Checks that entity translations are rendered properly.
+    $controller = $this->entityManager->getViewBuilder($entity_type);
+    $build = $controller->view($entity);
+    $this->assertEqual($build['label']['#markup'], $values[$current_langcode]['name'], 'By default the entity is rendered in the current language.');
+    $langcodes = MapArray::copyValuesToKeys($this->langcodes);
+    // We have no translation for the $langcode2 langauge, hence the expected
+    // result is the topmost existing translation, that is $langcode.
+    $langcodes[$langcode2] = $langcode;
+    foreach ($langcodes as $desired => $expected) {
+      $build = $controller->view($entity, 'full', $desired);
+      $this->assertEqual($build['label']['#markup'], $values[$expected]['name'], 'The entity is rendered in the expected language.');
+    }
   }
 
   /**

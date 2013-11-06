@@ -109,3 +109,22 @@ function language_test_store_language_negotiation() {
 function language_test_language_negotiation_method($languages) {
   return 'it';
 }
+
+/**
+ * Implements hook_language_fallback_candidates_alter().
+ */
+function language_test_language_fallback_candidates_alter(array &$candidates, array $context) {
+  if (Drupal::state()->get('language_test.fallback_alter.candidates')) {
+    unset($candidates[Language::LANGCODE_NOT_SPECIFIED]);
+  }
+}
+
+/**
+ * Implements hook_language_fallback_candidates_OPERATION_alter().
+ */
+function language_test_language_fallback_candidates_test_alter(array &$candidates, array $context) {
+  if (Drupal::state()->get('language_test.fallback_operation_alter.candidates')) {
+    $langcode = Language::LANGCODE_NOT_APPLICABLE;
+    $candidates[$langcode] = $langcode;
+  }
+}

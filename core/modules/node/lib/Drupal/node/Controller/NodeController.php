@@ -127,7 +127,7 @@ class NodeController extends ControllerBase {
    *   The page title.
    */
   public function pageTitle(NodeInterface $node) {
-    return String::checkPlain($node->label());
+    return String::checkPlain($this->entityManager()->getTranslationFromContext($node)->label());
   }
 
   /**

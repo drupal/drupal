@@ -72,7 +72,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::assertPublishedStatus().
    */
-  protected function assertPublishedStatus() {
+  protected function doTestPublishedStatus() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
     $path = $this->controller->getEditPath($entity);
     $languages = language_list();
@@ -104,7 +104,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::assertAuthoringInfo().
    */
-  protected function assertAuthoringInfo() {
+  protected function doTestAuthoringInfo() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
     $path = $this->controller->getEditPath($entity);
     $languages = language_list();
@@ -186,6 +186,49 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
     $this->assertEqual(1, count($rows));
     $this->assertEqual($enabledNode->id(), reset($rows)->entity_id);
+  }
+
+  /**
+   * Tests that translations are rendered properly.
+   */
+  function testTranslationRendering() {
+    $default_langcode = $this->langcodes[0];
+    $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
+    $this->entityId = $this->createEntity($values[$default_langcode], $default_langcode);
+    $node = \Drupal::entityManager()->getStorageController($this->entityType)->load($this->entityId);
+    $node->setPromoted(TRUE);
+
+    // Create translations.
+    foreach (array_diff($this->langcodes, array($default_langcode)) as $langcode) {
+      $values[$langcode] = $this->getNewEntityValues($langcode);
+      $translation = $node->addTranslation($langcode, $values[$langcode]);
+      $translation->setPromoted(TRUE);
+    }
+    $node->save();
+
+    // Test that the frontpage view displays the correct translations.
+    \Drupal::moduleHandler()->install(array('views'), TRUE);
+    $this->rebuildContainer();
+    $this->doTestTranslations('node', $values);
+
+    // Test that the node page displays the correct translations.
+    $this->doTestTranslations('node/' . $node->id(), $values);
+  }
+
+  /**
+   * Tests that the given path dsiplays the correct translation values.
+   *
+   * @param string $path
+   *   The path to be tested.
+   * @param array $values
+   *   The translation values to be found.
+   */
+  protected function doTestTranslations($path, array $values) {
+    $languages = language_list();
+    foreach ($this->langcodes as $langcode) {
+      $this->drupalGet($path, array('language' => $languages[$langcode]));
+      $this->assertText($values[$langcode]['title'], format_string('The %langcode node translation is correctly displayed.', array('%langcode' => $langcode)));
+    }
   }
 
 }
