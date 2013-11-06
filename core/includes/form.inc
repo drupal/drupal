@@ -3021,10 +3021,10 @@ function _form_set_attributes(&$element, $class = array()) {
  *     ->range(0, $limit)
  *     ->execute();
  *   foreach ($result as $row) {
- *     $context['results'][] = $row->id . ' : ' . String:checkPlain($row->title);
+ *     $context['results'][] = $row->id . ' : ' . String::checkPlain($row->title);
  *     $context['sandbox']['progress']++;
  *     $context['sandbox']['current_id'] = $row->id;
- *     $context['message'] = String:checkPlain($row->title);
+ *     $context['message'] = String::checkPlain($row->title);
  *   }
  *   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
  *     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
