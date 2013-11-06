@@ -19,7 +19,13 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *   description = @Translation("This field stores the ID of an image file as an integer value."),
  *   settings = {
  *     "uri_scheme" = "",
- *     "default_image" = "0",
+ *     "default_image" = {
+ *       "fid" = NULL,
+ *       "alt" = "",
+ *       "title" = "",
+ *       "width" = NULL,
+ *       "height" = NULL
+ *     },
  *     "column_groups" = {
  *       "file" = {
  *         "label" = @Translation("File"),
@@ -45,7 +51,13 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *     "title_field_required" = "0",
  *     "max_resolution" = "",
  *     "min_resolution" = "",
- *     "default_image" = "0"
+ *     "default_image" = {
+ *       "fid" = NULL,
+ *       "alt" = "",
+ *       "title" = "",
+ *       "width" = NULL,
+ *       "height" = NULL
+ *     }
  *   },
  *   default_widget = "image_image",
  *   default_formatter = "image",
@@ -153,13 +165,9 @@ class ImageItem extends FileItem {
       '#description' => t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
     );
 
-    $element['default_image'] = array(
-      '#title' => t('Default image'),
-      '#type' => 'managed_file',
-      '#description' => t('If no image is uploaded, this image will be shown on display.'),
-      '#default_value' => empty($settings['default_image']) ? array() : array($settings['default_image']),
-      '#upload_location' => $settings['uri_scheme'] . '://default_images/',
-    );
+    // Add default_image element.
+    static::defaultImageForm($element, $settings);
+    $element['default_image']['#description'] = t('If no image is uploaded, this image will be shown on display.');
 
     return $element;
   }
@@ -269,14 +277,9 @@ class ImageItem extends FileItem {
       ),
     );
 
-    // Add the default image to the instance.
-    $element['default_image'] = array(
-      '#title' => t('Default image'),
-      '#type' => 'managed_file',
-      '#description' => t("If no image is uploaded, this image will be shown on display and will override the field's default image."),
-      '#default_value' => empty($settings['default_image']) ? array() : array($settings['default_image']),
-      '#upload_location' => $settings['uri_scheme'] . '://default_images/',
-    );
+    // Add default_image element.
+    static::defaultImageForm($element, $settings);
+    $element['default_image']['#description'] = t("If no image is uploaded, this image will be shown on display and will override the field's default image.");
 
     return $element;
   }
@@ -314,6 +317,51 @@ class ImageItem extends FileItem {
     else {
       form_set_value($element, '', $form_state);
     }
+  }
+
+  /**
+   * Builds the default_image details element.
+   *
+   * @param array $element
+   *   The form associative array passed by reference.
+   * @param array $settings
+   *   The field settings array.
+   */
+  protected function defaultImageForm(array &$element, array $settings) {
+    $element['default_image'] = array(
+      '#type' => 'details',
+      '#title' => t('Default image'),
+      '#open' => TRUE,
+    );
+    $element['default_image']['fid'] = array(
+      '#type' => 'managed_file',
+      '#title' => t('Image'),
+      '#description' => t('Image to be shown if no image is uploaded.'),
+      '#default_value' => empty($settings['default_image']['fid']) ? array() : array($settings['default_image']['fid']),
+      '#upload_location' => $settings['uri_scheme'] . '://default_images/',
+    );
+    $element['default_image']['alt'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Alternate text'),
+      '#description' => t('This text will be used by screen readers, search engines, and when the image cannot be loaded.'),
+      '#default_value' => $settings['default_image']['alt'],
+      '#maxlength' => 512,
+    );
+    $element['default_image']['title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Title'),
+      '#description' => t('The title attribute is used as a tooltip when the mouse hovers over the image.'),
+      '#default_value' => $settings['default_image']['title'],
+      '#maxlength' => 1024,
+    );
+    $element['default_image']['width'] = array(
+      '#type' => 'value',
+      '#value' => $settings['default_image']['width'],
+    );
+    $element['default_image']['height'] = array(
+      '#type' => 'value',
+      '#value' => $settings['default_image']['height'],
+    );
   }
 
   /**

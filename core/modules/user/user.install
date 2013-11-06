@@ -272,7 +272,13 @@ function user_install_picture_field() {
     'indexes' => array('target_id' => array('target_id')),
     'settings' => array(
       'uri_scheme' => 'public',
-      'default_image' => FALSE,
+      'default_image' => array(
+        'fid' => NULL,
+        'alt' => '',
+        'title' => '',
+        'width' => NULL,
+        'height' => NULL,
+      ),
     ),
   );
   entity_create('field_entity', $field)->save();
@@ -292,7 +298,13 @@ function user_install_picture_field() {
       'title_field' => 0,
       'max_resolution' => '85x85',
       'min_resolution' => '',
-      'default_image' => 0,
+      'default_image' => array(
+        'fid' => NULL,
+        'alt' => '',
+        'title' => '',
+        'width' => NULL,
+        'height' => NULL,
+      ),
     ),
   );
   entity_create('field_instance', $instance)->save();
@@ -611,9 +623,9 @@ function user_update_8011() {
   if (!\Drupal::moduleHandler()->moduleExists('image')) {
     $old_schema = \Drupal::moduleHandler()->install(array('image'));
     if ($old_schema['image'] == SCHEMA_UNINSTALLED) {
-      // Install image.module with schema version 8002 as a previous version
+      // Install image.module with schema version 8003 as a previous version
       // would have to create tables that would be removed again.
-      update_set_schema('image', 8002);
+      update_set_schema('image', 8003);
       // Inlined version of image_install(), make sure that the styles
       // directory exists.
       $directory = update_variable_get('file_default_scheme', 'public') . '://styles';
@@ -720,7 +732,7 @@ function user_update_8011() {
       'title_field' => 0,
       'max_resolution' => update_variable_get('user_picture_dimensions', '85x85'),
       'min_resolution' => '',
-      'default_image' => !empty($default_image_fid) ? array($default_image_fid) : array(),
+      'default_image' => !empty($default_image_fid) ? $default_image_fid : 0,
     ),
   );
   _update_8003_field_create_instance($field, $instance);

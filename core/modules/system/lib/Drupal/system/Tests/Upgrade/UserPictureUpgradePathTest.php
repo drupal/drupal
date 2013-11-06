@@ -44,7 +44,7 @@ class UserPictureUpgradePathTest extends UpgradePathTestBase {
     $instance = field_info_instance('user', 'user_picture', 'user');
     // We explicitly avoid using the getFieldSetting() method here, since it
     // merges field and instance settings.
-    $file = entity_load('file', $instance->settings['default_image'][0]);
+    $file = entity_load('file', $instance->settings['default_image']['fid']);
     $this->assertTrue($file, 'Default user picture has been migrated.');
     $this->assertEqual($file->getFileUri(), 'public://user_pictures_dir/druplicon.png', 'File id matches the uri expected.');
     $this->assertEqual($file->getFilename(), 'druplicon.png');

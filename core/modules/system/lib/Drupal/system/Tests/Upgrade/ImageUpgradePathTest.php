@@ -145,4 +145,41 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
     }
     return $data;
   }
+
+  /**
+   * Tests if the field and instance setting 'default_image' has been
+   * successfully converted from an integer to an associative array.
+   */
+  public function testImageFieldDefaultImageUpgrade() {
+    // Perform upgrade.
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
+
+    // While this test is testing the upgrade path against a Drupal 7 'standard'
+    // profile installation we assume that node bundle 'article', having the
+    // 'field_image' image field, is installed too.
+    $cases = array('field.field.node.field_image', 'field.instance.node.article.field_image');
+    foreach ($cases as $case) {
+      $default_image = \Drupal::config($case)->get('settings.default_image');
+
+      // Check is was converted to an array.
+      $this->assertTrue(is_array($default_image));
+
+      // Check if 'default_image' contains a key named 'fid'. It might be an
+      // integer or NULL.
+      $this->assertTrue(array_key_exists('fid', $default_image));
+
+      // Check if 'alt' key exists and is a string.
+      $this->assertTrue(isset($default_image['alt']) && is_string($default_image['alt']));
+
+      // Check if 'title' key exists and is a string.
+      $this->assertTrue(isset($default_image['title']) && is_string($default_image['title']));
+
+      // Check if 'width' key exists. It might be an integer or NULL.
+      $this->assertTrue(array_key_exists('width', $default_image));
+
+      // Check if 'height' key exists. It might be an integer or NULL.
+      $this->assertTrue(array_key_exists('height', $default_image));
+    }
+  }
+
 }

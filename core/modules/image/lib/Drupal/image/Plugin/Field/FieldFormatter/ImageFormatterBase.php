@@ -25,18 +25,20 @@ abstract class ImageFormatterBase extends FileFormatterBase {
     foreach ($entities_items as $items) {
       if ($items->isEmpty()) {
         // Add the default image if one is found.
-        $fid = $this->getFieldSetting('default_image');
+        $default_image = $this->getFieldSetting('default_image');
         // If we are dealing with a configurable field, look in both
         // instance-level and field-level settings.
-        if (empty($fid) && $this->fieldDefinition instanceof FieldInstanceInterface) {
-          $fid = $this->fieldDefinition->getField()->getFieldSetting('default_image');
+        if (empty($default_image['fid']) && $this->fieldDefinition instanceof FieldInstanceInterface) {
+          $default_image = $this->fieldDefinition->getField()->getFieldSetting('default_image');
         }
 
-        if ($fid && ($file = file_load($fid))) {
+        if (!empty($default_image['fid']) && ($file = file_load($default_image['fid']))) {
           $items->setValue(array(array(
             'is_default' => TRUE,
-            'alt' => '',
-            'title' => '',
+            'alt' => $default_image['alt'],
+            'title' => $default_image['title'],
+            'width' => $default_image['width'],
+            'height' => $default_image['height'],
             'entity' => $file,
             'target_id' => $file->id(),
           )));

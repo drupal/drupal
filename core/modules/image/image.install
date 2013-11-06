@@ -59,6 +59,17 @@ function image_requirements($phase) {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function image_update_dependencies() {
+  // Convert image field and instance setting 'default_image' from integer to
+  // array only after fields and instances were converted to config.
+  $dependencies['image'][8003] = array('field' => 8006);
+
+  return $dependencies;
+}
+
+/**
  * Loads all effects for an image style from backend.
  *
  * @param array $style
@@ -236,4 +247,43 @@ function image_update_8002() {
   update_variables_to_config('image.settings', array(
     'image_style_preview_image' => 'preview_image',
   ));
+}
+
+/**
+ * Convert image field and instance setting 'default_image' from integer to
+ * array by adding alt, title, width, and height options.
+ */
+function image_update_8003() {
+  $image_factory = \Drupal::service('image.factory');
+  foreach (array('field', 'instance') as $type) {
+    $prefix = "field.$type";
+    foreach (config_get_storage_names_with_prefix($prefix) as $config_id) {
+      $config = \Drupal::config($config_id);
+      $is_image = ($type == 'field' && $config->get('type') == 'image') || ($type == 'instance' && $config->get('field_type') == 'image');
+      // Not dealing with an image field or image field instance?
+      if (!$is_image) {
+        continue;
+      }
+      $width = 0;
+      $height = 0;
+      if ($fid = (int) $config->get('settings.default_image')) {
+        $uri = db_query('SELECT fid FROM {file_managed} WHERE fid = :fid', array(':fid' => $fid))->fetchField();
+        if ($uri) {
+          $image = $image_factory->get($uri);
+          $width = $image->getWidth();
+          $height = $image->getHeight();
+        }
+      }
+      $default_image = array(
+        'fid' => $fid ?: NULL,
+        'alt' => '',
+        'title' => '',
+        'width' => $width ?: NULL,
+        'height' => $height ?: NULL,
+      );
+      $config
+        ->set('settings.default_image', $default_image)
+        ->save();
+    }
+  }
 }

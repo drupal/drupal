@@ -424,13 +424,30 @@ function image_entity_presave(EntityInterface $entity, $type) {
   elseif ($entity instanceof Field) {
     $field = $entity;
   }
-  if ($field && $field->type == 'image' && is_array($entity->settings['default_image'])) {
-    if (!empty($entity->settings['default_image'][0])) {
-      $entity->settings['default_image'] = $entity->settings['default_image'][0];
+  // Exit, if not saving an image field or image field instance entity.
+  if (!$field || $field->type != 'image') {
+    return;
+  }
+
+  if (!empty($entity->settings['default_image']['fid'][0])) {
+    $entity->settings['default_image']['fid'] = $entity->settings['default_image']['fid'][0];
+  }
+  if ($fid = $entity->settings['default_image']['fid']) {
+    $original_fid = isset($entity->original) ? $entity->original->settings['default_image']['fid'] : NULL;
+    if ($fid != $original_fid) {
+      $image = \Drupal::service('image.factory')->get(file_load($fid)->getFileUri());
+      $entity->settings['default_image']['width'] = $image->getWidth();
+      $entity->settings['default_image']['height'] = $image->getHeight();
     }
-    else {
-      $entity->settings['default_image'] = 0;
-    }
+  }
+  else {
+    $entity->settings['default_image'] = array(
+      'fid' => NULL,
+      'alt' => '',
+      'title' => '',
+      'width' => NULL,
+      'height' => NULL,
+    );
   }
 }
 
@@ -446,10 +463,11 @@ function image_field_entity_update(FieldInterface $field) {
   $prior_field = $field->original;
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid_new = (isset($field->settings['default_image']['fids']) ? $field->settings['default_image']['fids'] : $field->settings['default_image']);
-  $fid_old = (isset($prior_field->settings['default_image']['fids']) ? $prior_field->settings['default_image']['fids'] : $prior_field->settings['default_image']);
-  // Ensure sure that fid_new and old are arrays, because default_image might
-  // be the fallback value 0, see image_field_info().
+  $fid_new = isset($field->settings['default_image']['fid']['fids']) ? $field->settings['default_image']['fid']['fids'] : $field->settings['default_image']['fid'];
+  $fid_old = isset($prior_field->settings['default_image']['fid']['fids']) ? $prior_field->settings['default_image']['fid']['fids'] : $prior_field->settings['default_image']['fid'];
+  // Ensure that $fid_new and $fid_old are arrays, because the field setting
+  // 'default_image' key 'fid' might be the fallback value 0, see the annotation
+  // block of \Drupal\image\Plugin\Field\FieldType\ImageItem.
   $fid_old = (array) $fid_old;
   $fid_new = (array) $fid_new;
 
@@ -492,11 +510,11 @@ function image_field_instance_update(FieldInstanceInterface $field_instance) {
 
   // The value of a managed_file element can be an array if the #extended
   // property is set to TRUE.
-  $fid_new = $field_instance->settings['default_image'];
+  $fid_new = $field_instance->settings['default_image']['fid'];
   if (isset($fid_new['fids'])) {
     $fid_new = $fid_new['fids'];
   }
-  $fid_old = $prior_instance->settings['default_image'];
+  $fid_old = $prior_instance->settings['default_image']['fid'];
   if (isset($fid_old['fids'])) {
     $fid_old = $fid_old['fids'];
   }
@@ -534,7 +552,7 @@ function image_field_entity_delete(FieldInterface $field) {
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid = (isset($field->settings['default_image']['fids']) ? $field->settings['default_image']['fids'] : $field->settings['default_image']);
+  $fid = (isset($field->settings['default_image']['fid']['fids']) ? $field->settings['default_image']['fid']['fids'] : $field->settings['default_image']['fid']);
   if ($fid && ($file = file_load($fid[0]))) {
     file_usage()->delete($file, 'image', 'default_image', $field->uuid);
   }
@@ -552,7 +570,7 @@ function image_field_instance_delete(FieldInstanceInterface $field_instance) {
 
   // The value of a managed_file element can be an array if the #extended
   // property is set to TRUE.
-  $fid = $field_instance->settings['default_image'];
+  $fid = $field_instance->settings['default_image']['fid'];
   if (is_array($fid)) {
     $fid = $fid['fid'];
   }

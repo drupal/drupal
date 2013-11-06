@@ -19,6 +19,11 @@ settings:
   title_field: ''
   alt_field_required: 0
   title_field_required: 0
-  default_image: 0
+  default_image:
+    fid: null
+    alt: ''
+    title: ''
+    width: null
+    height: null
 status: 1
 langcode: und
