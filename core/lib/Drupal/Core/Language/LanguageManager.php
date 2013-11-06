@@ -7,8 +7,10 @@
 
 namespace Drupal\Core\Language;
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Utility\MapArray;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class responsible for initializing each language type.
@@ -28,6 +30,13 @@ class LanguageManager {
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected $state = NULL;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * An array of language objects keyed by language type.
@@ -57,10 +66,13 @@ class LanguageManager {
    * Constructs an LanguageManager object.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
-   *   The state keyvalue store.
+   *   (optional) The state keyvalue store. Defaults to NULL.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   (optional) The module handler service. Defaults to NULL.
    */
-  public function __construct(KeyValueStoreInterface $state = NULL) {
+  public function __construct(KeyValueStoreInterface $state = NULL, ModuleHandlerInterface $module_handler = NULL) {
     $this->state = $state;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -159,6 +171,53 @@ class LanguageManager {
       return FALSE;
     }
     return ($this->state->get('language_count') ?: 1) > 1;
+  }
+
+  /**
+   * Returns the language fallback candidates for a given context.
+   *
+   * @param string $langcode
+   *   (optional) The language of the current context. Defaults to NULL.
+   * @param array $context
+   *   (optional) An associative array of data that can be useful to determine
+   *   the fallback sequence. The following keys are used in core:
+   *   - langcode: The desired language.
+   *   - operation: The name of the operation indicating the context where
+   *     language fallback is being applied, e.g. 'entity_view'.
+   *   - data: An arbitrary data structure that makes sense in the provided
+   *     context, e.g. an entity.
+   *
+   * @return array
+   *   An array of language codes sorted by priority: first values should be
+   *   tried first.
+   */
+  public function getFallbackCandidates($langcode = NULL, array $context = array()) {
+    if ($this->isMultilingual()) {
+      // Get languages ordered by weight, add Language::LANGCODE_NOT_SPECIFIED at
+      // the end.
+      $candidates = array_keys(language_list());
+      $candidates[] = Language::LANGCODE_NOT_SPECIFIED;
+      $candidates = MapArray::copyValuesToKeys($candidates);
+
+      // The first candidate should always be the desired language if specified.
+      if (!empty($langcode)) {
+        $candidates = array($langcode => $langcode) + $candidates;
+      }
+
+      // Let other modules hook in and add/change candidates.
+      $type = 'language_fallback_candidates';
+      $types = array();
+      if (!empty($context['operation'])) {
+        $types[] = $type . '_' .  $context['operation'];
+      }
+      $types[] = $type;
+      $this->moduleHandler->alter($types, $candidates, $context);
+    }
+    else {
+      $candidates = array(Language::LANGCODE_DEFAULT);
+    }
+
+    return $candidates;
   }
 
   /**

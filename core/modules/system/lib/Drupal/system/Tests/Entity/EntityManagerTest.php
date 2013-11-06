@@ -34,7 +34,7 @@ class EntityManagerTest extends EntityUnitTestBase {
     $this->assertFalse($entity_manager->hasController('non_existent', 'non_existent'), 'A non existent entity type has no controller.');
 
     $this->assertFalse($entity_manager->hasController('entity_test', 'non_existent'), 'An existent entity type does not have a non existent controller.');
-    $this->assertFalse($entity_manager->hasController('entity_test_mul', 'view_builder'), 'The test entity does not have specified the view builder.');
+    $this->assertFalse($entity_manager->hasController('entity_test_mulrev', 'view_builder'), 'The test entity does not have specified the view builder.');
 
     $this->assertTrue($entity_manager->hasController('entity_test', 'storage'), 'The test entity has specified the controller class');
   }

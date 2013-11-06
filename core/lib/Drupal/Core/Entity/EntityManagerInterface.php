@@ -244,4 +244,27 @@ interface EntityManagerInterface extends PluginManagerInterface {
    */
   public function getBundleInfo($entity_type);
 
+  /**
+   * Returns the entity translation to be used in the given context.
+   *
+   * This will check whether a translation for the desired language is available
+   * and if not, it will fall back to the most appropriate translation based on
+   * the provided context.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity whose translation will be returned.
+   * @param string $langcode
+   *   (optional) The language of the current context. Defaults to the current
+   *   content language.
+   * @param array $context
+   *   (optional) An associative array of arbitrary data that can be useful to
+   *   determine the proper fallback sequence.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An entity object for the translated data.
+   *
+   * @see \Drupal\Core\Language\LanguageManager::getFallbackCandidates()
+   */
+  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = array());
+
 }

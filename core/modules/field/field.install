@@ -442,10 +442,7 @@ function field_update_8003() {
  * @ingroup config_upgrade
  */
 function field_update_8004() {
-  update_variable_set('field_language_fallback', TRUE);
-  update_variables_to_config('field.settings', array(
-    'field_language_fallback' => 'language_fallback',
-  ));
+  // Do nothing: the former update code has been moved to locale_update_8018().
 }
 
 /**

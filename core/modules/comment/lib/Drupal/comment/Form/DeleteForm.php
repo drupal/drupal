@@ -10,6 +10,7 @@ namespace Drupal\comment\Form;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,10 +28,13 @@ class DeleteForm extends ContentEntityConfirmFormBase {
   /**
    * Constructs a DeleteForm object.
    *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
    */
-  public function __construct(CommentManagerInterface $comment_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, CommentManagerInterface $comment_manager) {
+    parent::__construct($entity_manager);
     $this->commentManager = $comment_manager;
   }
 
@@ -39,6 +43,7 @@ class DeleteForm extends ContentEntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('entity.manager'),
       $container->get('comment.manager')
     );
   }

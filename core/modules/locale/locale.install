@@ -965,6 +965,15 @@ function locale_update_8017() {
 }
 
 /**
+ * Removes the field language fallback settings as it is no longer supported.
+ *
+ * @ingroup config_upgrade
+ */
+function locale_update_8018() {
+  update_variable_del('locale_field_language_fallback');
+}
+
+/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

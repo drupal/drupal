@@ -10,6 +10,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Language\Language;
@@ -17,8 +18,8 @@ use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -454,6 +455,39 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     }
 
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = array()) {
+    $translation = $entity;
+
+    if ($entity instanceof TranslatableInterface) {
+      if (empty($langcode)) {
+        $langcode = $this->languageManager->getLanguage(Language::TYPE_CONTENT)->id;
+      }
+
+      // Retrieve language fallback candidates to perform the entity language
+      // negotiation.
+      $context['data'] = $entity;
+      $context += array('operation' => 'entity_view');
+      $candidates = $this->languageManager->getFallbackCandidates($langcode, $context);
+
+      // Ensure the default language has the proper language code.
+      $default_language = $entity->getUntranslated()->language();
+      $candidates[$default_language->id] = Language::LANGCODE_DEFAULT;
+
+      // Return the most fitting entity translation.
+      foreach ($candidates as $candidate) {
+        if ($entity->hasTranslation($candidate)) {
+          $translation = $entity->getTranslation($candidate);
+          break;
+        }
+      }
+    }
+
+    return $translation;
   }
 
 }

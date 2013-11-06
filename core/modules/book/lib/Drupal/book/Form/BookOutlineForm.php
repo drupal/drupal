@@ -8,6 +8,7 @@
 namespace Drupal\book\Form;
 
 use Drupal\Core\Entity\ContentEntityFormController;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\book\BookManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -32,19 +33,25 @@ class BookOutlineForm extends ContentEntityFormController {
 
   /**
    * Constructs a BookOutlineForm object.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   * @param \Drupal\book\BookManager $book_manager
+   *   The BookManager service.
    */
-  public function __construct(BookManager $bookManager) {
-    $this->bookManager = $bookManager;
+  public function __construct(EntityManagerInterface $entity_manager, BookManager $book_manager) {
+    parent::__construct($entity_manager);
+    $this->bookManager = $book_manager;
   }
 
   /**
-   * This method lets us inject the services this class needs.
-   *
-   * Only inject services that are actually needed. Which services
-   * are needed will vary by the controller.
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('book.manager'));
+    return new static(
+      $container->get('entity.manager'),
+      $container->get('book.manager')
+    );
   }
 
   /**

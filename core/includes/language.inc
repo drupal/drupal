@@ -546,29 +546,5 @@ function language_url_split_prefix($path, $languages) {
 }
 
 /**
- * Returns the possible fallback languages ordered by language weight.
- *
- * @param
- *   (optional) The language type. Defaults to Language::TYPE_CONTENT.
- *
- * @return
- *   An array of language codes.
- */
-function language_fallback_get_candidates($type = Language::TYPE_CONTENT) {
-  $fallback_candidates = &drupal_static(__FUNCTION__);
-
-  if (!isset($fallback_candidates)) {
-    // Get languages ordered by weight, add Language::LANGCODE_NOT_SPECIFIED at the end.
-    $fallback_candidates = array_keys(language_list());
-    $fallback_candidates[] = Language::LANGCODE_NOT_SPECIFIED;
-
-    // Let other modules hook in and add/change candidates.
-    drupal_alter('language_fallback_candidates', $fallback_candidates);
-  }
-
-  return $fallback_candidates;
-}
-
-/**
  * @} End of "language_negotiation"
  */

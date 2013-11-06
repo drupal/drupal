@@ -58,5 +58,39 @@ function hook_language_delete($language) {
 }
 
 /**
+ * Allow modules to alter the language fallback candidates.
+ *
+ * @param array $candidates
+ *   An array of language codes whose order will determine the language fallback
+ *   order.
+ * @param array $context
+ *   A language fallback context.
+ *
+ * @see \Drupal\Core\Language\LanguageManager::getFallbackCandidates()
+ */
+function hook_language_fallback_candidates_alter(array &$candidates, array $context) {
+  $candidates = array_reverse($candidates);
+}
+
+/**
+ * Allow modules to alter the fallback candidates for specific operations.
+ *
+ * @param array $candidates
+ *   An array of language codes whose order will determine the language fallback
+ *   order.
+ * @param array $context
+ *   A language fallback context.
+ *
+ * @see \Drupal\Core\Language\LanguageManager::getFallbackCandidates()
+ */
+function hook_language_fallback_candidates_OPERATION_alter(array &$candidates, array $context) {
+  // We know that the current OPERATION deals with entities so no need to check
+  // here.
+  if ($context['data']->entityType() == 'node') {
+    $candidates = array_reverse($candidates);
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

@@ -26,7 +26,7 @@ interface EntityFormControllerInterface extends BaseFormIdInterface {
    * @return string
    *   The form language code.
    */
-  public function getFormLangcode(array $form_state);
+  public function getFormLangcode(array &$form_state);
 
   /**
    * Checks whether the current form language matches the entity one.

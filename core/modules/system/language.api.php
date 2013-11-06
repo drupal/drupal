@@ -152,17 +152,6 @@ function hook_language_negotiation_info_alter(array &$negotiation_info) {
 }
 
 /**
- * Perform alterations on the language fallback candidates.
- *
- * @param $fallback_candidates
- *   An array of language codes whose order will determine the language fallback
- *   order.
- */
-function hook_language_fallback_candidates_alter(array &$fallback_candidates) {
-  $fallback_candidates = array_reverse($fallback_candidates);
-}
-
-/**
  * @} End of "addtogroup hooks".
  */
 

@@ -91,7 +91,7 @@ interface EntityInterface extends AccessibleInterface {
    *
    * @param $langcode
    *   (optional) The language code of the language that should be used for
-   *   getting the label. If set to NULL, the entity's default language is
+   *   getting the label. If set to NULL, the entity's active language is
    *   used.
    *
    * @return

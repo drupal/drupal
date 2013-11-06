@@ -323,7 +323,12 @@ function content_translation_translate_access(EntityInterface $entity) {
  */
 function content_translation_view_access(EntityInterface $entity, $langcode, AccountInterface $account = NULL) {
   $entity_type = $entity->entityType();
-  return !empty($entity->translation[$langcode]['status']) || user_access('translate any entity', $account) || user_access("translate $entity_type entities", $account);
+  $info = $entity->entityInfo();
+  $permission = "translate $entity_type";
+  if (!empty($info['permission_granularity']) && $info['permission_granularity'] == 'bundle') {
+    $permission = "translate {$entity->bundle()} $entity_type";
+  }
+  return !empty($entity->translation[$langcode]['status']) || user_access('translate any entity', $account) || user_access($permission, $account);
 }
 
 /**
@@ -627,7 +632,10 @@ function content_translation_permission() {
  * Implements hook_form_alter().
  */
 function content_translation_form_alter(array &$form, array &$form_state) {
-  if (($form_controller = content_translation_form_controller($form_state)) && ($entity = $form_controller->getEntity()) && !$entity->isNew() && $entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
+  $form_controller = content_translation_form_controller($form_state);
+  $entity = $form_controller ? $form_controller->getEntity() : NULL;
+
+  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1) {
     $controller = content_translation_controller($entity->entityType());
     $controller->entityFormAlter($form, $form_state, $entity);
 
@@ -650,28 +658,16 @@ function content_translation_form_alter(array &$form, array &$form_state) {
 }
 
 /**
- * Implements hook_field_language_alter().
+ * Implements hook_language_fallback_candidates_OPERATION_alter().
  *
  * Performs language fallback for unaccessible translations.
  */
-function content_translation_field_language_alter(&$display_language, $context) {
-  $entity = $context['entity'];
-  $entity_type = $entity->entityType();
-
-  if ($entity instanceof ContentEntityInterface && isset($entity->translation[$context['langcode']]) && $entity->isTranslatable() && !content_translation_view_access($entity, $context['langcode'])) {
-    $instances = field_info_instances($entity_type, $entity->bundle());
-    // Avoid altering the real entity.
-    $entity = clone($entity);
-    $entity_langcode = $entity->getUntranslated()->language()->id;
-
-    foreach ($entity->translation as $langcode => $translation) {
-      if ($langcode == $context['langcode'] || !content_translation_view_access($entity, $langcode)) {
-        $entity->removeTranslation($langcode);
-      }
+function content_translation_language_fallback_candidates_entity_view_alter(&$candidates, $context) {
+  $entity = $context['data'];
+  foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+    if (!content_translation_view_access($entity, $langcode)) {
+      unset($candidates[$langcode]);
     }
-
-    // Find the new fallback values.
-    field_language_fallback($display_language, $entity, $context['langcode']);
   }
 }
 

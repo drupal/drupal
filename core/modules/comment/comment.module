@@ -896,7 +896,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
   $key = 'language_configuration';
   $comment_form_state = array(
     'content_translation' => array('key' => $key),
-    'language' => array($key => array('entity_type' => 'comment', 'bundle' => $form['#field']['name'])),
+    'language' => array($key => array('entity_type' => 'comment', 'bundle' => $form['#field']->name)),
     'values' => array($key => array('content_translation' => $form_state['values']['content_translation'])),
   );
   content_translation_language_configuration_element_submit($form, $comment_form_state);

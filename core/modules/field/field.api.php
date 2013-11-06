@@ -415,27 +415,6 @@ function hook_field_attach_view_alter(&$output, $context) {
 }
 
 /**
- * Perform alterations on field_language() values.
- *
- * This hook is invoked to alter the array of display language codes for the
- * given entity.
- *
- * @param $display_langcode
- *   A reference to an array of language codes keyed by field name.
- * @param $context
- *   An associative array containing:
- *   - entity: The entity with fields to render.
- *   - langcode: The language code $entity has to be displayed in.
- */
-function hook_field_language_alter(&$display_langcode, $context) {
-  // Do not apply core language fallback rules if they are disabled or if Locale
-  // is not registered as a translation handler.
-  if (field_language_fallback_enabled() && field_has_translation_handler($context['entity']->entityType())) {
-    field_language_fallback($display_langcode, $context['entity'], $context['langcode']);
-  }
-}
-
-/**
  * Alter field_available_languages() values.
  *
  * This hook is invoked from field_available_languages() to allow modules to

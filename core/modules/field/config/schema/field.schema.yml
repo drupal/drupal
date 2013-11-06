@@ -4,9 +4,6 @@ field.settings:
   type: mapping
   label: 'Field settings'
   mapping:
-    language_fallback:
-      type: boolean
-      label: 'Whether the field display falls back to global language fallback configuration'
     purge_batch_size:
       type: integer
       label: 'Maximum number of field data records to purge'
