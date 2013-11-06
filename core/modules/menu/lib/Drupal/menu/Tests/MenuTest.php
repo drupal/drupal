@@ -408,7 +408,7 @@ class MenuTest extends MenuWebTestBase {
     $block = $this->drupalPlaceBlock('system_menu_block:tools', array('label' => 'Tools', 'module' => 'system'));
     $this->drupalGet('test-page');
 
-    $id = 'block:admin/structure/block/manage:' . $block->id() . ':|menu:admin/structure/menu/manage:tools:';
+    $id = 'block:block=' . $block->id() . ':|menu:menu=tools:';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
 

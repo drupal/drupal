@@ -104,11 +104,6 @@ function block_menu() {
     'title' => 'Configure block',
     'route_name' => 'block.admin_edit',
   );
-  $items['admin/structure/block/manage/%block/configure'] = array(
-    'title' => 'Configure block',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-  );
   $items['admin/structure/block/add/%/%'] = array(
     'title' => 'Place block',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -268,7 +263,9 @@ function _block_get_renderable_region($list = array()) {
     // to perform contextual actions on the help block, and the links needlessly
     // draw attention on it.
     if (isset($build[$key]) && !in_array($block->get('plugin'), array('system_help_block', 'system_main_block'))) {
-      $build[$key]['#contextual_links']['block'] = array('admin/structure/block/manage', array($key));
+      $build[$key]['#contextual_links']['block'] = array(
+        'route_parameters' => array('block' => $key),
+      );
 
       // If there are any nested contextual links, move them to the top level.
       if (isset($build[$key]['content']['#contextual_links'])) {

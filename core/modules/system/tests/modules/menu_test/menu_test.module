@@ -126,7 +126,7 @@ function menu_test_menu() {
   $items['menu-test/hidden/menu/manage/%menu/list'] = array(
     'title' => 'List links',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'context' => MENU_CONTEXT_PAGE,
   );
   $items['menu-test/hidden/menu/manage/%menu/add'] = array(
     'title' => 'Add link',
@@ -137,7 +137,7 @@ function menu_test_menu() {
     'title' => 'Edit menu',
     'route_name' => 'menu_test.hidden_manage_edit',
     'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'context' => MENU_CONTEXT_PAGE,
   );
   $items['menu-test/hidden/menu/manage/%menu/delete'] = array(
     'title' => 'Delete menu',
@@ -161,11 +161,6 @@ function menu_test_menu() {
   $items['menu-test/hidden/block/manage/%/%'] = array(
     'title' => 'Configure block',
     'route_name' => 'menu_test.hidden_block_configure',
-  );
-  $items['menu-test/hidden/block/manage/%/%/configure'] = array(
-    'title' => 'Configure block',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
   );
   $items['menu-test/hidden/block/manage/%/%/delete'] = array(
     'title' => 'Delete block',

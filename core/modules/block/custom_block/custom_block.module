@@ -80,24 +80,6 @@ function custom_block_menu() {
     'route_name' => 'custom_block.add_page',
   );
 
-  // There has to be a base-item in order for contextual links to work.
-  $items['block/%custom_block'] = array(
-    'title' => 'Edit',
-    'route_name' => 'custom_block.edit',
-  );
-  $items['block/%custom_block/edit'] = array(
-    'title' => 'Edit',
-    'weight' => 0,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-  );
-  $items['block/%custom_block/delete'] = array(
-    'title' => 'Delete',
-    'weight' => 1,
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-    'route_name' => 'custom_block.delete',
-  );
   return $items;
 }
 

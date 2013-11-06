@@ -302,9 +302,9 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       }
 
       // Add context for contextual links.
-      // @see menu_contextual_links()
       if (!empty($menu['context'])) {
-        $items[$path]['context'] = MENU_CONTEXT_INLINE;
+        // @todo Make this work with the new contextual links system.
+        $items[$path]['context'] = TRUE;
       }
 
       // If this is a 'default' tab, check to see if we have to create the

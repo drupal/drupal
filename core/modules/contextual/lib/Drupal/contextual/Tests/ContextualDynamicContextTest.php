@@ -60,10 +60,10 @@ class ContextualDynamicContextTest extends WebTestBase {
     // Now, on the front page, all article nodes should have contextual links
     // placeholders, as should the view that contains them.
     $ids = array(
-      'node:node:' . $node1->id() . ':',
-      'node:node:' . $node2->id() . ':',
-      'node:node:' . $node3->id() . ':',
-      'views_ui:admin/structure/views/view:frontpage:location=page&name=frontpage&display_id=page_1',
+      'node:node=' . $node1->id() . ':',
+      'node:node=' . $node2->id() . ':',
+      'node:node=' . $node3->id() . ':',
+      'views_ui_edit:view=frontpage:location=page&name=frontpage&display_id=page_1',
     );
 
     // Editor user: can access contextual links and can edit articles.
@@ -77,9 +77,9 @@ class ContextualDynamicContextTest extends WebTestBase {
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertResponse(200);
     $json = drupal_json_decode($response);
-    $this->assertIdentical($json[$ids[0]], '<ul class="contextual-links"><li class="node-edit odd first last"><a href="' . base_path() . 'node/1/edit?destination=node">Edit</a></li></ul>');
+    $this->assertIdentical($json[$ids[0]], '<ul class="contextual-links"><li class="nodepage-edit odd first last"><a href="' . base_path() . 'node/1/edit?destination=node">Edit</a></li></ul>');
     $this->assertIdentical($json[$ids[1]], '');
-    $this->assertIdentical($json[$ids[2]], '<ul class="contextual-links"><li class="node-edit odd first last"><a href="' . base_path() . 'node/3/edit?destination=node">Edit</a></li></ul>');
+    $this->assertIdentical($json[$ids[2]], '<ul class="contextual-links"><li class="nodepage-edit odd first last"><a href="' . base_path() . 'node/3/edit?destination=node">Edit</a></li></ul>');
     $this->assertIdentical($json[$ids[3]], '');
 
     // Authenticated user: can access contextual links, cannot edit articles.

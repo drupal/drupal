@@ -677,45 +677,59 @@ function hook_local_task_alter(&$local_tasks) {
 /**
  * Alter contextual links before they are rendered.
  *
- * This hook is invoked by menu_contextual_links(). The system-determined
- * contextual links are passed in by reference. Additional links may be added
- * or existing links can be altered.
+ * This hook is invoked by
+ * \Drupal\Core\Menu\ContextualLinkManager::getContextualLinkPluginsByGroup().
+ * The system-determined contextual links are passed in by reference. Additional
+ * links may be added and existing links can be altered.
  *
- * Each contextual link must at least contain:
+ * Each contextual link contains the following entries:
  * - title: The localized title of the link.
- * - href: The system path to link to.
+ * - route_name: The route name of the link.
+ * - route_parameters: The route parameters of the link.
  * - localized_options: An array of options to pass to url().
+ * - (optional) weight: The weight of the link, which is used to sort the links.
  *
- * @param $links
- *   An associative array containing contextual links for the given $root_path,
+ *
+ * @param array $links
+ *   An associative array containing contextual links for the given $group,
  *   as described above. The array keys are used to build CSS class names for
  *   contextual links and must therefore be unique for each set of contextual
  *   links.
- * @param $router_item
- *   The menu router item belonging to the $root_path being requested.
- * @param $root_path
- *   The (parent) path that has been requested to build contextual links for.
- *   This is a normalized path, which means that an originally passed path of
- *   'node/123' became 'node/%'.
+ * @param string $group
+ *   The group of contextual links being rendered.
+ * @param array $route_parameters.
+ *   The route parameters passed to each route_name of the contextual links.
+ *   For example:
+ *   @code
+ *   array('node' => $node->id())
+ *   @endcode
  *
- * @see hook_contextual_links_view_alter()
- * @see menu_contextual_links()
- * @see hook_menu()
- * @see contextual_preprocess()
+ * @see \Drupal\Core\Menu\ContextualLinkManager
  */
-function hook_menu_contextual_links_alter(&$links, $router_item, $root_path) {
-  // Add a link to all contextual links for nodes.
-  if ($root_path == 'node/%') {
-    $links['foo'] = array(
-      'title' => t('Do fu'),
-      'href' => 'foo/do',
-      'localized_options' => array(
-        'query' => array(
-          'foo' => 'bar',
-        ),
-      ),
-    );
+function hook_contextual_links_alter(array &$links, $group, array $route_parameters) {
+  if ($group == 'menu') {
+    // Dynamically use the menu name for the title of the menu_edit contextual
+    // link.
+    $menu = \Drupal::entityManager()->getStorageController('menu')->load($route_parameters['menu']);
+    $links['menu_edit']['title'] = t('Edit menu: !label', array('!label' => $menu->label()));
   }
+}
+
+/**
+ * Alter the plugin definition of contextual links.
+ *
+ * @param array $contextual_links
+ *   An array of contextual_links plugin definitions, keyed by contextual link
+ *   ID. Each entry contains the following keys:
+ *     - title: The displayed title of the link
+ *     - route_name: The route_name of the contextual link to be displayed
+ *     - group: The group under which the contextual links should be added to.
+ *       Possible values are e.g. 'node' or 'menu'.
+ *
+ * @see \Drupal\Core\Menu\ContextualLinkManager
+ */
+function hook_contextual_links_plugins_alter(array &$contextual_links) {
+  $contextual_links['menu_edit']['title'] = 'Edit the menu';
 }
 
 /**

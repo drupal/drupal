@@ -1,0 +1,14 @@
+menu_test.hidden_manage:
+  title: 'List links'
+  group: menu_test_menu
+  route_name: menu_test.hidden_manage
+
+menu_test.hidden_manage_edit:
+  title: 'Edit menu'
+  group: menu_test_menu
+  route_name: menu_test.hidden_manage_edit
+
+menu_test.hidden_block_configure:
+  title: 'Configure block'
+  group: menu_test_block
+  route_name: menu_test.hidden_block_configure

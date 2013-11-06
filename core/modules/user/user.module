@@ -795,12 +795,6 @@ function user_menu() {
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/people/roles/manage/%user_role/delete'] = array(
-    'title' => 'Delete role',
-    'route_name' => 'user.role_delete',
-    'weight' => 10,
-    'context' => MENU_CONTEXT_INLINE,
-  );
 
   // Administration pages.
   $items['admin/config/people'] = array(

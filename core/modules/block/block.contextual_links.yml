@@ -1,0 +1,4 @@
+block_configure:
+  title: 'Configure block'
+  route_name: 'block.admin_edit'
+  group: 'block'

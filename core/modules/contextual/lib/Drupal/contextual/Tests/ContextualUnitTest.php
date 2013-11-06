@@ -26,75 +26,83 @@ class ContextualUnitTest extends DrupalUnitTestBase {
    */
   function _contextual_links_id_testcases() {
     // Test branch conditions:
-    // - one module.
+    // - one group.
     // - one dynamic path argument.
     // - no metadata.
     $tests[] = array(
       'links' => array(
         'node' => array(
-          'node',
-          array('14031991'),
-          array()
+          'route_parameters' => array(
+            'node' => '14031991',
+          ),
+          'metadata' => array()
         ),
       ),
-      'id' => 'node:node:14031991:',
+      'id' => 'node:node=14031991:',
     );
 
     // Test branch conditions:
-    // - one module.
+    // - one group.
     // - multiple dynamic path arguments.
     // - no metadata.
     $tests[] = array(
       'links' => array(
         'foo' => array(
-          'baz/in/ga',
-          array('bar', 'baz', 'qux'),
-          array()
+          'route_parameters'=> array(
+            'bar',
+            'key' => 'baz',
+            'qux',
+          ),
+          'metadata' => array(),
         ),
       ),
-      'id' => 'foo:baz/in/ga:bar/baz/qux:',
+      'id' => 'foo:0=bar&key=baz&1=qux:',
     );
 
     // Test branch conditions:
-    // - one module.
+    // - one group.
     // - one dynamic path argument.
     // - metadata.
     $tests[] = array(
       'links' => array(
-        'views_ui' => array(
-          'admin/structure/views/view',
-          array('frontpage'),
-          array(
+        'views_ui_edit' => array(
+          'route_parameters' => array(
+            'view' => 'frontpage'
+          ),
+          'metadata' => array(
             'location' => 'page',
             'display' => 'page_1',
-          )
+          ),
         ),
       ),
-      'id' => 'views_ui:admin/structure/views/view:frontpage:location=page&display=page_1',
+      'id' => 'views_ui_edit:view=frontpage:location=page&display=page_1',
     );
 
     // Test branch conditions:
-    // - multiple modules.
+    // - multiple groups.
     // - multiple dynamic path arguments.
     $tests[] = array(
       'links' => array(
         'node' => array(
-          'node',
-          array('14031991'),
-          array()
+          'route_parameters' => array(
+            'node' => '14031991',
+          ),
+          'metadata' => array(),
         ),
         'foo' => array(
-          'baz/in/ga',
-          array('bar', 'baz', 'qux'),
-          array()
+          'route_parameters' => array(
+            'bar',
+            'key' => 'baz',
+            'qux',
+          ),
+          'metadata' => array(),
         ),
         'edge' => array(
-          'edge',
-          array('20011988'),
-          array()
+          'route_parameters' => array('20011988'),
+          'metadata' => array(),
         ),
       ),
-      'id' => 'node:node:14031991:|foo:baz/in/ga:bar/baz/qux:|edge:edge:20011988:',
+      'id' => 'node:node=14031991:|foo:0=bar&key=baz&1=qux:|edge:0=20011988:',
     );
 
     return $tests;

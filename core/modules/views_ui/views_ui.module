@@ -30,11 +30,6 @@ function views_ui_menu() {
   $items['admin/structure/views/view/%'] = array(
     'route_name' => 'views_ui.edit',
   );
-  $items['admin/structure/views/view/%/edit'] = array(
-    'title' => 'Edit view',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-  );
 
   // A page in the Reports section to show usage of plugins in all views.
   $items['admin/reports/views-plugins'] = array(
@@ -277,9 +272,9 @@ function views_ui_views_plugins_display_alter(&$plugins) {
   // paths underneath "admin/structure/views/view/{$view->id()}" (i.e., paths
   // for editing and performing other contextual actions on the view).
   foreach ($plugins as &$display) {
-    $display['contextual links']['views_ui'] = array(
-      'parent path' => 'admin/structure/views/view',
-      'argument properties' => array('id'),
+    $display['contextual links']['views_ui_edit'] = array(
+      'route_name' => 'views_ui.edit',
+      'route_parameters_names' => array('view' => 'id'),
     );
   }
 }
@@ -296,9 +291,10 @@ function views_ui_contextual_links_view_alter(&$element, $items) {
   // Append the display ID to the Views UI edit links, so that clicking on the
   // contextual link takes you directly to the correct display tab on the edit
   // screen.
-  elseif (!empty($element['#links']['views-ui-edit'])) {
-    $display_id = $element['#contextual_links']['views_ui'][2]['display_id'];
-    $element['#links']['views-ui-edit']['href'] .= '/edit/' . $display_id;
+  elseif (!empty($element['#links']['views-uiedit'])) {
+    $display_id = $items['views_ui.edit']['metadata']['display_id'];
+    $element['#links']['views-uiedit']['route_parameters']['display_id'] = $display_id;
+    $element['#links']['views-uiedit']['route_name'] = 'views_ui.edit_display';
   }
 }
 

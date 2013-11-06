@@ -255,20 +255,6 @@ function taxonomy_menu() {
     'title arguments' => array(2),
     'route_name' => 'taxonomy.term_page',
   );
-  $items['taxonomy/term/%taxonomy_term/edit'] = array(
-    'title' => 'Edit',
-    'route_name' => 'taxonomy.term_edit',
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-    'weight' => 10,
-  );
-  $items['taxonomy/term/%taxonomy_term/delete'] = array(
-    'title' => 'Delete',
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-    'weight' => 20,
-    'route_name' => 'taxonomy.term_delete',
-  );
   $items['taxonomy/term/%taxonomy_term/feed'] = array(
     'title' => 'Taxonomy term',
     'title callback' => 'taxonomy_term_title',
@@ -290,13 +276,6 @@ function taxonomy_menu() {
     'title' => 'Edit',
     'route_name' => 'taxonomy.vocabulary_edit',
     'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/delete'] = array(
-    'title' => 'Delete',
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-    'weight' => 20,
-    'route_name' => 'taxonomy.vocabulary_delete',
   );
 
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/add'] = array(

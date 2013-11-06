@@ -1,0 +1,17 @@
+taxonomy.term_edit:
+  title: Edit
+  group: taxonomy_term
+  route_name: taxonomy.term_edit
+  weight: 10
+
+taxonomy.term_delete:
+  title: Delete
+  group: taxonomy_term
+  route_name: taxonomy.term_delete
+  weight: 20
+
+taxonomy.vocabulary_delete:
+  title: Delete
+  group: taxonomy_vocabulary
+  route_name: taxonomy.vocabulary_delete
+  weight: 20

@@ -180,7 +180,7 @@ function content_translation_menu() {
         'title' => 'Translate',
         'route_name' => "content_translation.translation_overview_$entity_type",
         'type' => MENU_LOCAL_TASK,
-        'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+        'context' => MENU_CONTEXT_PAGE,
         'weight' => 2,
       ) + $item;
 

@@ -230,7 +230,7 @@ class DisplayBlockTest extends ViewTestBase {
     $block = $this->drupalPlaceBlock('views_block:test_view_block-block_1');
     $this->drupalGet('test-page');
 
-    $id = 'block:admin/structure/block/manage:' . $block->id() . ':|views_ui:admin/structure/views/view:test_view_block:location=block&name=test_view_block&display_id=block_1';
+    $id = 'block:block=' . $block->id() . ':|views_ui_edit:view=test_view_block:location=block&name=test_view_block&display_id=block_1';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
 
@@ -240,7 +240,7 @@ class DisplayBlockTest extends ViewTestBase {
     $response = $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-page')));
     $this->assertResponse(200);
     $json = drupal_json_decode($response);
-    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure odd first"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '?destination=test-page">Configure block</a></li><li class="views-ui-edit even last"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1?destination=test-page">Edit view</a></li></ul>');
+    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure odd first"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '?destination=test-page">Configure block</a></li><li class="views-uiedit even last"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1?destination=test-page">Edit view</a></li></ul>');
   }
 
 }

@@ -1,4 +1,5 @@
 <?php
+use Drupal\Component\Utility\Url;
 
 /**
  * @file
@@ -237,27 +238,40 @@ function contextual_pre_render_placeholder($element) {
  *
  * @param $element
  *   A renderable array containing a #contextual_links property, which is a
- *   keyed array. Each key is the name of the implementing module, and each
- *   value is an array that forms the function arguments for
- *   menu_contextual_links(). For example:
+ *   keyed array. Each key is the name of the group of contextual links to
+ *   render (based on the 'group' key in the *.contextual_links.yml files for
+ *   all enabled modules). The value contains an associative array containing
+ *   the following keys:
+ *   - route_parameters: The route parameters passed to the url generator.
+ *   - metadata: Any additional data needed in order to alter the link.
  *   @code
  *     array('#contextual_links' => array(
- *       'block' => array('admin/structure/block/manage', array('system', 'menu-tools')),
- *       'menu' => array('admin/structure/menu/manage', array('tools')),
+ *       'block' => array(
+ *         'route_parameters' => array('block' => 'system.menu-tools'),
+ *       ),
+ *       'menu' => array(
+ *         'route_parameters' => array('menu' => 'tools'),
+ *       ),
  *     ))
  *   @endcode
  *
  * @return
  *   A renderable array representing contextual links.
  *
- * @see menu_contextual_links()
  * @see contextual_element_info()
  */
 function contextual_pre_render_links($element) {
   // Retrieve contextual menu links.
   $items = array();
-  foreach ($element['#contextual_links'] as $module => $args) {
-    $items += menu_contextual_links($module, $args[0], $args[1]);
+
+  /** @var $contextual_links_manager \Drupal\Core\Menu\ContextualLinkManager */
+  $contextual_links_manager = \Drupal::service('plugin.manager.menu.contextual_link');
+  foreach ($element['#contextual_links'] as $group => $args) {
+    $args += array(
+      'route_parameters' => array(),
+      'metadata' => array(),
+    );
+    $items += $contextual_links_manager->getContextualLinksArrayByGroup($group, $args['route_parameters'], $args['metadata']);
   }
 
   // Transform contextual links into parameters suitable for theme_links().
@@ -266,9 +280,9 @@ function contextual_pre_render_links($element) {
     $class = drupal_html_class($class);
     $links[$class] = array(
       'title' => $item['title'],
-      'href' => $item['href'],
+      'route_name' => isset($item['route_name']) ? $item['route_name'] : '',
+      'route_parameters' => isset($item['route_parameters']) ? $item['route_parameters'] : array(),
     );
-    // @todo theme_links() should *really* use the same parameters as l().
     $item['localized_options'] += array('query' => array());
     $item['localized_options']['query'] += drupal_get_destination();
     $links[$class] += $item['localized_options'];
@@ -293,7 +307,7 @@ function contextual_pre_render_links($element) {
  */
 function contextual_contextual_links_view_alter(&$element, $items) {
   if (isset($element['#contextual_links']['contextual'])) {
-    $encoded_links = $element['#contextual_links']['contextual'][2]['contextual-views-field-links'];
+    $encoded_links = $element['#contextual_links']['contextual']['metadata']['contextual-views-field-links'];
     $element['#links'] = drupal_json_decode(rawurldecode($encoded_links));
   }
 }
@@ -302,15 +316,14 @@ function contextual_contextual_links_view_alter(&$element, $items) {
  * Serializes #contextual_links property value array to a string.
  *
  * Examples:
- *  - node:node:1:
- *  - views_ui:admin/structure/views/view:frontpage:location=page&view_name=frontpage&view_display_id=page_1
- *  - menu:admin/structure/menu/manage:tools:|block:admin/structure/block/manage:bartik.tools:
+ *  - node:node=1:
+ *  - views_ui_edit:view=frontpage:location=page&view_name=frontpage&view_display_id=page_1
+ *  - menu:menu=tools:|block:block=bartik.tools:
  *
  * So, expressed in a pattern:
- *  <module name>:<parent path>:<path args>:<options>
+ *  <group>:<route parameters>:<metadata>
  *
- * The (dynamic) path args are joined with slashes. The options are encoded as a
- * query string.
+ * The route parameters and options are encoded as query strings.
  *
  * @param array $contextual_links
  *   The $element['#contextual_links'] value for some render element.
@@ -320,18 +333,13 @@ function contextual_contextual_links_view_alter(&$element, $items) {
  *   use in a data- attribute.
  */
 function _contextual_links_to_id($contextual_links) {
-  $id = '';
-  foreach ($contextual_links as $module => $args) {
-    $parent_path = $args[0];
-    $path_args = implode('/', $args[1]);
-    $metadata = drupal_http_build_query((isset($args[2])) ? $args[2] : array());
-
-    if (drupal_strlen($id) > 0) {
-      $id .= '|';
-    }
-    $id .= $module . ':' . $parent_path . ':' . $path_args . ':' . $metadata;
+  $ids = array();
+  foreach ($contextual_links as $group => $args) {
+    $route_parameters = Url::buildQuery($args['route_parameters']);
+    $metadata = Url::buildQuery((isset($args['metadata'])) ? $args['metadata'] : array());
+    $ids[] = "{$group}:{$route_parameters}:{$metadata}";
   }
-  return $id;
+  return implode('|', $ids);
 }
 
 /**
@@ -349,11 +357,14 @@ function _contextual_id_to_links($id) {
   $contextual_links = array();
   $contexts = explode('|', $id);
   foreach ($contexts as $context) {
-    list($module, $parent_path, $path_args, $metadata_raw) = explode(':', $context);
-    $path_args = explode('/', $path_args);
+    list($group, $route_parameters_raw, $metadata_raw) = explode(':', $context);
+    parse_str($route_parameters_raw, $route_parameters);
     $metadata = array();
     parse_str($metadata_raw, $metadata);
-    $contextual_links[$module] = array($parent_path, $path_args, $metadata);
+    $contextual_links[$group] = array(
+      'route_parameters' => $route_parameters,
+      'metadata' => $metadata,
+    );
   }
   return $contextual_links;
 }

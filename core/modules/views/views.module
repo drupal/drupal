@@ -552,11 +552,11 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
     $plugin['contextual_links_locations'][] = 'exposed_filter';
     $has_links = !empty($plugin['contextual links']) && !empty($plugin['contextual_links_locations']);
     if ($has_links && in_array($location, $plugin['contextual_links_locations'])) {
-      foreach ($plugin['contextual links'] as $module => $link) {
+      foreach ($plugin['contextual links'] as $group => $link) {
         $args = array();
         $valid = TRUE;
-        if (!empty($link['argument properties'])) {
-          foreach ($link['argument properties'] as $property) {
+        if (!empty($link['route_parameters_names'])) {
+          foreach ($link['route_parameters_names'] as $parameter_name => $property) {
             // If the plugin is trying to create an invalid contextual link
             // (for example, "path/to/{$view->storage->property}", where
             // $view->storage->{property} does not exist), we cannot construct
@@ -566,7 +566,7 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
               break;
             }
             else {
-              $args[] = $view->storage->{$property};
+              $args[$parameter_name] = $view->storage->{$property};
             }
           }
         }
@@ -574,14 +574,13 @@ function views_add_contextual_links(&$render_element, $location, ViewExecutable 
         // array.
         if ($valid) {
           $render_element['#views_contextual_links'] = TRUE;
-          $render_element['#contextual_links'][$module] = array(
-            $link['parent path'],
-            $args,
-            array(
+          $render_element['#contextual_links'][$group] = array(
+            'route_parameters' => $args,
+            'metadata' => array(
               'location' => $location,
               'name' => $view->storage->id(),
               'display_id' => $display_id,
-            )
+            ),
           );
         }
       }

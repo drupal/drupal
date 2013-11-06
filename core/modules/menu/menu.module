@@ -94,7 +94,7 @@ function menu_menu() {
   $items['admin/structure/menu/manage/%menu/edit'] = array(
     'title' => 'Edit menu',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+    'context' => MENU_CONTEXT_PAGE,
   );
   $items['admin/structure/menu/item/%menu_link/edit'] = array(
     'title' => 'Edit menu link',
@@ -338,7 +338,9 @@ function menu_block_view_system_menu_block_alter(array &$build, BlockPluginInter
   list(, $menu_name) = explode(':', $block->getPluginId());
   if (isset($menus[$menu_name]) && isset($build['content'])) {
     foreach (element_children($build['content']) as $key) {
-      $build['content']['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($build['content'][$key]['#original_link']['menu_name']));
+      $build['content']['#contextual_links']['menu'] = array(
+        'route_parameters' => array('menu' => $build['content'][$key]['#original_link']['menu_name']),
+      );
     }
   }
 }

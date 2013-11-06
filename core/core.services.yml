@@ -197,6 +197,9 @@ services:
     class: Drupal\Core\Menu\LocalTaskManager
     arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager', '@access_manager', '@current_user']
     scope: request
+  plugin.manager.menu.contextual_link:
+    class: Drupal\Core\Menu\ContextualLinkManager
+    arguments: ['@controller_resolver', '@module_handler', '@cache.cache', '@language_manager', '@access_manager', '@current_user']
   request:
     class: Symfony\Component\HttpFoundation\Request
     # @TODO the synthetic setting must be uncommented whenever drupal_session_initialize()

@@ -219,13 +219,13 @@ class DisplayTest extends UITestBase {
     $definitions = Views::pluginManager('display')->getDefinitions();
 
     $expected = array(
-      'parent path' => 'admin/structure/views/view',
-      'argument properties' => array('id'),
+      'route_name' => 'views_ui.edit',
+      'route_parameters_names' => array('view' => 'id'),
     );
 
     // Test the expected views_ui array exists on each definition.
     foreach ($definitions as $definition) {
-      $this->assertIdentical($definition['contextual links']['views_ui'], $expected, 'Expected views_ui array found in plugin definition.');
+      $this->assertIdentical($definition['contextual links']['views_ui_edit'], $expected, 'Expected views_ui array found in plugin definition.');
     }
   }
 
@@ -288,7 +288,7 @@ class DisplayTest extends UITestBase {
     $view->enable()->save();
 
     $this->drupalGet('test-display');
-    $id = 'views_ui:admin/structure/views/view:test_display:location=page&name=test_display&display_id=page_1';
+    $id = 'views_ui_edit:view=test_display:location=page&name=test_display&display_id=page_1';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
 
@@ -298,7 +298,7 @@ class DisplayTest extends UITestBase {
     $response = $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-display')));
     $this->assertResponse(200);
     $json = drupal_json_decode($response);
-    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="views-ui-edit odd first last"><a href="' . base_path() . 'admin/structure/views/view/test_display/edit/page_1?destination=test-display">Edit view</a></li></ul>');
+    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="views-uiedit odd first last"><a href="' . base_path() . 'admin/structure/views/view/test_display/edit/page_1?destination=test-display">Edit view</a></li></ul>');
   }
 
   /**

@@ -1,0 +1,9 @@
+views_ui.edit:
+  title: 'Edit view'
+  route_name: views_ui.edit
+  group: views_ui_edit
+
+views_ui.preview:
+  title: 'Preview view'
+  route_name: views_ui.preview
+  group: views_ui_preview

@@ -1693,8 +1693,12 @@ function theme_links($variables) {
         $class[] = 'last';
       }
 
+      $link += array(
+        'href' => NULL,
+      );
+
       // Handle links.
-      if (isset($link['href'])) {
+      if (isset($link['href']) || isset($link['route_name'])) {
         $is_current_path = ($link['href'] == current_path() || ($link['href'] == '<front>' && drupal_is_front_page()));
         $is_current_language = (empty($link['language']) || $link['language']->id == $language_url->id);
         if ($is_current_path && $is_current_language) {
@@ -1715,8 +1719,17 @@ function theme_links($variables) {
           $item = drupal_render($link_element);
         }
         else {
-          // Pass in $link as $options, they share the same keys.
-          $item = l($link['title'], $link['href'], $link);
+          // @todo theme_links() should *really* use the same parameters as l(),
+          //   and just take an array of '#type' => 'link' elements, see
+          //   https://drupal.org/node/2102777.
+          // Pass in $link as $options, as they share the same keys.
+          if (isset($link['href'])) {
+            $item = l($link['title'], $link['href'], $link);
+          }
+          else {
+            $link += array('route_parameters' => array());
+            $item = \Drupal::l($link['title'], $link['route_name'], $link['route_parameters'], $link);
+          }
         }
       }
       // Handle title-only text items.

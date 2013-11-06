@@ -1,0 +1,10 @@
+custom_block.block_edit:
+  title: 'Edit'
+  group: custom_block
+  route_name: 'custom_block.edit'
+
+custom_block.block_delete:
+  title: 'Delete'
+  group: custom_block
+  route_name: 'custom_block.delete'
+  weight: 1

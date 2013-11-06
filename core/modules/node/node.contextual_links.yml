@@ -1,0 +1,10 @@
+node.page_edit:
+  route_name: node.page_edit
+  group: node
+  title: Edit
+
+node.delete_confirm:
+  route_name: node.delete_confirm
+  group: node
+  title: Delete
+  weight: 10

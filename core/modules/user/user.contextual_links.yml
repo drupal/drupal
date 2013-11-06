@@ -1,0 +1,5 @@
+user.role_delete:
+  title: 'Delete role'
+  group: role
+  weight: 10
+  route_name: 'user.role_delete'

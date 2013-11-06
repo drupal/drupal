@@ -980,19 +980,6 @@ function node_menu() {
     // overridden by a menu link.
     'route_name' => 'node.view',
   );
-  $items['node/%node/edit'] = array(
-    'title' => 'Edit',
-    'route_name' => 'node.page_edit',
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-  );
-  $items['node/%node/delete'] = array(
-    'title' => 'Delete',
-    'route_name' => 'node.delete_confirm',
-    'weight' => 10,
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
-  );
   $items['node/%node/revisions/%node_revision/view'] = array(
     'title' => 'Revisions',
     'route_name' => 'node.revision_show',
