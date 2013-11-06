@@ -177,7 +177,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     $translation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
     $translation->expects($this->any())
       ->method('translate')
-      ->will($this->returnArgument(0));
+      ->will($this->returnCallback(function ($string, array $args = array()) { return strtr($string, $args); }));
     return $translation;
   }
 
