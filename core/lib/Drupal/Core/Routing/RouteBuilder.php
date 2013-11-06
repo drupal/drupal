@@ -8,7 +8,6 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Component\Discovery\YamlDiscovery;
-use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Routing\RouteCollection;
@@ -47,7 +46,14 @@ class RouteBuilder {
   protected $dispatcher;
 
   /**
-   * The extension handler for retieving the list of enabled modules.
+   * The yaml discovery used to find all the .routing.yml files.
+   *
+   * @var \Drupal\Component\Discovery\YamlDiscovery
+   */
+  protected $yamlDiscovery;
+
+  /**
+   * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
@@ -56,12 +62,14 @@ class RouteBuilder {
   /**
    * Construcs the RouteBuilder using the passed MatcherDumperInterface.
    *
-   * @param \Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface $dumper
+   * @param \Drupal\Core\Routing\MatcherDumperInterface $dumper
    *   The matcher dumper used to store the route information.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
-   * @param \Symfony\Component\EventDispatcherEventDispatcherInterface
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher to notify of routes.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
   public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler) {
     $this->dumper = $dumper;
@@ -72,6 +80,9 @@ class RouteBuilder {
 
   /**
    * Rebuilds the route info and dumps to dumper.
+   *
+   * @return bool
+   *   Returns TRUE if the rebuild succeeds, FALSE otherwise.
    */
   public function rebuild() {
     if (!$this->lock->acquire('router_rebuild')) {
@@ -79,10 +90,10 @@ class RouteBuilder {
       // We choose to block here since otherwise the routes might not be
       // available, resulting in a 404.
       $this->lock->wait('router_rebuild');
-      return;
+      return FALSE;
     }
 
-    $yaml_discovery = new YamlDiscovery('routing', $this->moduleHandler->getModuleDirectories());
+    $yaml_discovery = $this->getYamlDiscovery();
 
     foreach ($yaml_discovery->findAll() as $module => $routes) {
       $collection = new RouteCollection();
@@ -111,6 +122,20 @@ class RouteBuilder {
     $this->dumper->dump(array('route_set' => 'dynamic_routes'));
 
     $this->lock->release('router_rebuild');
+    return TRUE;
+  }
+
+  /**
+   * Returns the YAML discovery for getting all the .routing.yml files.
+   *
+   * @return \Drupal\Component\Discovery\YamlDiscovery
+   *   The yaml discovery.
+   */
+  protected function getYamlDiscovery() {
+    if (!isset($this->yamlDiscovery)) {
+      $this->yamlDiscovery = new YamlDiscovery('routing', $this->moduleHandler->getModuleDirectories());
+    }
+    return $this->yamlDiscovery;
   }
 
 }

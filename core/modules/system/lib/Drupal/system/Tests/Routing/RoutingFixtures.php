@@ -44,6 +44,44 @@ class RoutingFixtures {
   }
 
   /**
+   * Returns a static version of the routes.
+   */
+  public function staticSampleRouteCollection() {
+    $routes = array();
+    $routes['route_a'] = array(
+      'path' => '/path/one',
+      'requirements' => array(
+        '_method' => 'GET',
+      ),
+    );
+    $routes['route_b'] = array(
+      'path' => '/path/one',
+      'requirements' => array(
+        '_method' => 'PUT',
+      ),
+    );
+    $routes['route_c'] = array(
+      'path' => '/path/two',
+      'requirements' => array(
+        '_method' => 'GET',
+        '_format' => 'json'
+      ),
+    );
+    $routes['route_d'] = array(
+      'path' => '/path/three',
+    );
+    $routes['route_e'] = array(
+      'path' => '/path/two',
+      'requirements' => array(
+        '_method' => 'GET|HEAD',
+        '_format' => 'html'
+      ),
+    );
+
+    return $routes;
+  }
+
+  /**
    * Returns a standard set of routes for testing.
    *
    * @return \Symfony\Component\Routing\RouteCollection
