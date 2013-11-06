@@ -32,12 +32,12 @@ settings:
     stylescombo:
       styles: ''
 image_upload:
-  status: '1'
+  status: true
   scheme: public
   directory: inline-images
   max_size: ''
   max_dimensions:
-    width: ''
-    height: ''
-status: '1'
+    width: 0
+    height: 0
+status: true
 langcode: en

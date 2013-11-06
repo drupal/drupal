@@ -82,7 +82,7 @@ class EditorImageDialog extends FormBase {
 
     // If the editor has image uploads enabled, show a managed_file form item,
     // otherwise show a (file URL) text form item.
-    if ($editor->image_upload['status'] === '1') {
+    if ($editor->image_upload['status']) {
       $form['attributes']['src']['#access'] = FALSE;
       $form['attributes']['src']['#required'] = FALSE;
     }
