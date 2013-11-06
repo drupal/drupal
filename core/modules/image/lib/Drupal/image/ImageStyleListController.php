@@ -80,6 +80,21 @@ class ImageStyleListController extends ConfigEntityListController implements Ent
   /**
    * {@inheritdoc}
    */
+  public function getOperations(EntityInterface $entity) {
+    $uri = $entity->uri('edit-form');
+    $flush = array(
+      'title' => t('Flush'),
+      'href' => $uri['path'] . '/flush',
+      'options' => $uri['options'],
+      'weight' => 200,
+    );
+
+    return parent::getOperations($entity) + array('flush' => $flush);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function render() {
     $build = parent::render();
     $build['#empty'] = $this->t('There are currently no styles. <a href="!url">Add a new one</a>.', array(

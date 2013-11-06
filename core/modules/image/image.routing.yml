@@ -20,6 +20,14 @@ image.style_delete:
   requirements:
     _permission: 'administer image styles'
 
+image.style_flush:
+  path: '/admin/config/media/image-styles/manage/{image_style}/flush'
+  defaults:
+    _entity_form: 'image_style.flush'
+    _title: 'Flush'
+  requirements:
+    _permission: 'administer image styles'
+
 image.effect_delete:
   path: '/admin/config/media/image-styles/manage/{image_style}/effects/{image_effect}/delete'
   defaults:

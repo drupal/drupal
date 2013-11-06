@@ -354,6 +354,37 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
+   * Test flush user interface.
+   */
+  public function testFlushUserInterface() {
+    $admin_path = 'admin/config/media/image-styles';
+
+    // Create a new style.
+    $style_name = strtolower($this->randomName(10));
+    $style = entity_create('image_style', array('name' => $style_name, 'label' => $this->randomString()));
+    $style->save();
+
+    // Create an image to make sure it gets flushed.
+    $files = $this->drupalGetTestFiles('image');
+    $image_uri = $files[0]->uri;
+    $derivative_uri = $style->buildUri($image_uri);
+    $this->assertTrue($style->createDerivative($image_uri, $derivative_uri));
+    $this->assertEqual($this->getImageCount($style), 1);
+
+    // Go to image styles list page and check if the flush operation link
+    // exists.
+    $this->drupalGet($admin_path);
+    $flush_path = $admin_path . '/manage/' . $style_name . '/flush';
+    $this->assertLinkByHref($flush_path);
+
+    // Flush the image style derivatives using the user interface.
+    $this->drupalPostForm($flush_path, array(), t('Flush'));
+
+    // The derivative image file should have been deleted.
+    $this->assertEqual($this->getImageCount($style), 0);
+  }
+
+  /**
    * Tests image style configuration import that does a delete.
    */
   function testConfigImport() {
