@@ -5,8 +5,7 @@
  * Contains \Drupal\views_ui\Tests\ViewListControllerTest
  */
 
-namespace Drupal\views_ui\Tests {
-
+namespace Drupal\views_ui\Tests;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
@@ -118,6 +117,7 @@ class ViewListControllerTest extends UnitTestCase {
     $executable_factory = new ViewExecutableFactory();
     $container->set('views.executable', $executable_factory);
     $container->set('plugin.manager.views.display', $display_manager);
+    $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
 
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
@@ -139,15 +139,4 @@ class ViewListControllerTest extends UnitTestCase {
     $this->assertEquals($row['data']['path'], '/test_page', 'The path of the page display is not added.');
   }
 
-}
-
-}
-
-// @todo Remove this once t() is converted to a service.
-namespace {
-  if (!function_exists('t')) {
-    function t($string) {
-      return $string;
-    }
-  }
 }

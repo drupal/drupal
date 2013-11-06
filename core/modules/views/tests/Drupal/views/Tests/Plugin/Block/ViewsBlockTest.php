@@ -150,13 +150,7 @@ class ViewsBlockTest extends UnitTestCase {
 
 }
 
-// @todo Remove this once https://drupal.org/node/2018411 is in.
 namespace {
-  if (!function_exists('t')) {
-    function t($string) {
-      return $string;
-    }
-  }
   // @todo replace views_add_contextual_links()
   if (!function_exists('views_add_contextual_links')) {
     function views_add_contextual_links() {

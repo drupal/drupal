@@ -121,7 +121,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
     $operations = array();
     if ($entity->access('update')) {
       $operations['edit'] = array(
-        'title' => t('Edit'),
+        'title' => $this->t('Edit'),
         'href' => $uri['path'] . '/edit',
         'options' => $uri['options'],
         'weight' => 10,
@@ -129,7 +129,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
     }
     if ($entity->access('delete')) {
       $operations['delete'] = array(
-        'title' => t('Delete'),
+        'title' => $this->t('Delete'),
         'href' => $uri['path'] . '/delete',
         'options' => $uri['options'],
         'weight' => 100,
@@ -148,7 +148,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * @see \Drupal\Core\Entity\EntityListController::render()
    */
   public function buildHeader() {
-    $row['operations'] = t('Operations');
+    $row['operations'] = $this->t('Operations');
     return $row;
   }
 
@@ -203,7 +203,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
       '#theme' => 'table',
       '#header' => $this->buildHeader(),
       '#rows' => array(),
-      '#empty' => t('There is no @label yet.', array('@label' => $this->entityInfo['label'])),
+      '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityInfo['label'])),
     );
     foreach ($this->load() as $entity) {
       if ($row = $this->buildRow($entity)) {

@@ -104,7 +104,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
         'path' => implode(', ', $this->getDisplayPaths($view)),
         'operations' => $row['operations'],
       ),
-      'title' => t('Machine name: @name', array('@name' => $view->id())),
+      'title' => $this->t('Machine name: @name', array('@name' => $view->id())),
       'class' => array($view->status() ? 'views-ui-list-enabled' : 'views-ui-list-disabled'),
     );
   }
@@ -115,23 +115,23 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   public function buildHeader() {
     return array(
       'view_name' => array(
-        'data' => t('View name'),
+        'data' => $this->t('View name'),
         'class' => array('views-ui-name'),
       ),
       'description' => array(
-        'data' => t('Description'),
+        'data' => $this->t('Description'),
         'class' => array('views-ui-description'),
       ),
       'tag' => array(
-        'data' => t('Tag'),
+        'data' => $this->t('Tag'),
         'class' => array('views-ui-tag'),
       ),
       'path' => array(
-        'data' => t('Path'),
+        'data' => $this->t('Path'),
         'class' => array('views-ui-path'),
       ),
       'operations' => array(
-        'data' => t('Operations'),
+        'data' => $this->t('Operations'),
         'class' => array('views-ui-operations'),
       ),
     );
@@ -145,7 +145,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
     $uri = $entity->uri();
 
     $operations['clone'] = array(
-      'title' => t('Clone'),
+      'title' => $this->t('Clone'),
       'href' => $uri['path'] . '/clone',
       'options' => $uri['options'],
       'weight' => 15,
@@ -210,8 +210,8 @@ class ViewListController extends ConfigEntityListController implements EntityCon
       ),
     );
 
-    $list['enabled']['heading']['#markup'] = '<h2>' . t('Enabled') . '</h2>';
-    $list['disabled']['heading']['#markup'] = '<h2>' . t('Disabled') . '</h2>';
+    $list['enabled']['heading']['#markup'] = '<h2>' . $this->t('Enabled') . '</h2>';
+    $list['disabled']['heading']['#markup'] = '<h2>' . $this->t('Disabled') . '</h2>';
     foreach (array('enabled', 'disabled') as $status) {
       $list[$status]['#type'] = 'container';
       $list[$status]['#attributes'] = array('class' => array('views-list-section', $status));
@@ -229,8 +229,8 @@ class ViewListController extends ConfigEntityListController implements EntityCon
     }
     // @todo Use a placeholder for the entity label if this is abstracted to
     // other entity types.
-    $list['enabled']['table']['#empty'] = t('There are no enabled views.');
-    $list['disabled']['table']['#empty'] = t('There are no disabled views.');
+    $list['enabled']['table']['#empty'] = $this->t('There are no enabled views.');
+    $list['disabled']['table']['#empty'] = $this->t('There are no disabled views.');
 
     return $list;
   }
