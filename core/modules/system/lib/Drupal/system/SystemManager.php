@@ -169,7 +169,6 @@ class SystemManager {
     }
     else {
       $output = array(
-        '#type' => 'markup',
         '#markup' => t('You do not have any administrative items.'),
       );
     }

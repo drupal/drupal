@@ -21,7 +21,6 @@ class BatchTestController {
   public function testRedirect() {
     return array(
       'success' => array(
-        '#type' => 'markup',
         '#markup' => 'Redirection successful.',
       )
     );
@@ -91,7 +90,6 @@ class BatchTestController {
     drupal_form_submit('batch_test_chained_form', $form_state);
     return array(
       'success' => array(
-        '#type' => 'markup',
         '#markup' => 'Got out of a programmatic batched form.',
       )
     );
