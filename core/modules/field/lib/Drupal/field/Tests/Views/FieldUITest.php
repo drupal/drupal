@@ -28,6 +28,16 @@ class FieldUITest extends FieldTestBase {
    */
   public static $modules = array('views_ui');
 
+  /**
+   * A user with the 'administer views' permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $account;
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Field: Field handler UI',
@@ -37,15 +47,22 @@ class FieldUITest extends FieldTestBase {
   }
 
   /**
-   * Tests basic field handler settings in the UI.
+   * {@inheritdoc}
    */
-  public function testHandlerUI() {
-    $account = $this->drupalCreateUser(array('administer views'));
-    $this->drupalLogin($account);
+  public function setUp() {
+    parent::setUp();
+
+    $this->account = $this->drupalCreateUser(array('administer views'));
+    $this->drupalLogin($this->account);
 
     $this->setUpFields();
     $this->setUpInstances();
+  }
 
+  /**
+   * Tests basic field handler settings in the UI.
+   */
+  public function testHandlerUI() {
     $url = "admin/structure/views/nojs/config-item/test_view_fieldapi/default/field/field_name_0";
     $this->drupalGet($url);
 
@@ -74,6 +91,29 @@ class FieldUITest extends FieldTestBase {
     $view->initHandlers();
     $this->assertEqual($view->field['field_name_0']->options['type'], 'text_trimmed');
     $this->assertEqual($view->field['field_name_0']->options['settings']['trim_length'], $random_number);
+  }
+
+  /**
+   * Tests the basic field handler form when aggregation is enabled.
+   */
+  public function testHandlerUIAggregation() {
+    // Enable aggregation.
+    $edit = array('group_by' => '1');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view_fieldapi/default/group_by', $edit, t('Apply'));
+
+    $url = "admin/structure/views/nojs/config-item/test_view_fieldapi/default/field/field_name_0";
+    $this->drupalGet($url);
+    $this->assertResponse(200);
+
+    // Test the click sort column options.
+    // Tests the available formatter options.
+    $result = $this->xpath('//select[@id=:id]/option', array(':id' => 'edit-options-click-sort-column'));
+    $options = array_map(function($item) {
+      return (string) $item->attributes()->value[0];
+    }, $result);
+    sort($options, SORT_STRING);
+
+    $this->assertEqual($options, array('format', 'value'), 'The expected sort field options were found.');
   }
 
 }

@@ -7,9 +7,11 @@
 
 namespace Drupal\field\Plugin\views\field;
 
+use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\field\Field as FieldHelper;
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterPluginManager;
@@ -137,12 +139,12 @@ class Field extends FieldPluginBase {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->field_info = $field = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
+    $this->field_info = FieldHelper::fieldInfo()->getField($this->definition['entity_type'], $this->definition['field_name']);
     $this->multiple = FALSE;
     $this->limit_values = FALSE;
 
-    $cardinality = $field->getFieldCardinality();
-    if ($field->isFieldMultiple()) {
+    $cardinality = $this->field_info->getFieldCardinality();
+    if ($this->field_info->isFieldMultiple()) {
       $this->multiple = TRUE;
 
       // If "Display all values in the same row" is FALSE, then we always limit
@@ -606,9 +608,10 @@ class Field extends FieldPluginBase {
     parent::buildGroupByForm($form, $form_state);
     // With "field API" fields, the column target of the grouping function
     // and any additional grouping columns must be specified.
+
     $group_columns = array(
       'entity_id' => t('Entity ID'),
-    ) + drupal_map_assoc(array_keys($this->field_info['columns']), 'ucfirst');
+    ) + MapArray::copyValuesToKeys(array_keys($this->field_info->getColumns()), 'ucfirst');
 
     $form['group_column'] = array(
       '#type' => 'select',
@@ -618,7 +621,7 @@ class Field extends FieldPluginBase {
       '#options' => $group_columns,
     );
 
-    $options = drupal_map_assoc(array('bundle', 'language', 'entity_type'), 'ucfirst');
+    $options = MapArray::copyValuesToKeys(array('bundle', 'language', 'entity_type'), 'ucfirst');
 
     // Add on defined fields, noting that they're prefixed with the field name.
     $form['group_columns'] = array(
