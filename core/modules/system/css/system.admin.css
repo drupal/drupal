@@ -165,27 +165,26 @@ a.module-link {
   margin-top: 2px;
   float: left; /* LTR */
 }
+[dir="rtl"] a.module-link {
+  float: right;
+}
 a.module-link-help {
-  background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat; /* LTR */
+  background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat;
 }
 .no-svg a.module-link-help {
-  background: url(../../../misc/icons/787878/questionmark-disc.png) 0 50% no-repeat; /* LTR */
+  background: url(../../../misc/icons/787878/questionmark-disc.png) 0 50% no-repeat;
 }
 a.module-link-permissions {
-  background: url(../../../misc/icons/787878/key.svg) 0 50% no-repeat; /* LTR */
+  background: url(../../../misc/icons/787878/key.svg) 0 50% no-repeat;
 }
 .no-svg a.module-link-permissions {
-  background: url(../../../misc/icons/787878/key.png) 0 50% no-repeat; /* LTR */
+  background: url(../../../misc/icons/787878/key.png) 0 50% no-repeat;
 }
 a.module-link-configure {
-  background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat; /* LTR */
+  background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat;
 }
 .no-svg a.module-link-configure {
-  background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat; /* LTR */
-}
-.module-help {
-  margin-left: 1em; /* LTR */
-  float: right; /* LTR */
+  background: url(../../../misc/icons/787878/cog.png) 0 50% no-repeat;
 }
 
 /**

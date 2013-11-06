@@ -106,18 +106,14 @@ a.tabledrag-handle:hover {
   text-decoration: none;
 }
 a.tabledrag-handle .handle {
-  background: url(../../../misc/icons/787878/move.svg) no-repeat 6px 9px;
-  height: 13px;
-  margin: -0.4em 0.5em; /* LTR */
-  padding: 0.42em 0.5em; /* LTR */
-  width: 13px;
+  background: url(../../../misc/icons/787878/move.svg) no-repeat 6px 7px;
+  height: 14px;
+  margin: -0.4em 0.5em 0;
+  padding: 0.42em 0.5em;
+  width: 14px;
 }
 .no-svg a.tabledrag-handle .handle {
-  background: url(../../../misc/icons/787878/move.svg) no-repeat 6px 9px;
-}
-[dir="rtl"] a.tabledrag-handle .handle {
-  margin: -0.4em 0.5em;
-  padding: 0.42em 0.5em;
+  background-image: url(../../../misc/icons/787878/move.png);
 }
 .touch .draggable td {
   padding: 0 10px;
