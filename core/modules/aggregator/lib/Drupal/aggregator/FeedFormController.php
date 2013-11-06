@@ -9,7 +9,7 @@ namespace Drupal\aggregator;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityFormController;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\aggregator\CategoryStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,6 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Form controller for the aggregator feed edit forms.
  */
 class FeedFormController extends ContentEntityFormController {
+
+  /**
+   * The feed storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $feedStorageController;
 
   /**
    * The category storage controller.
@@ -29,13 +36,13 @@ class FeedFormController extends ContentEntityFormController {
   /**
    * Constructs a FeedForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $feed_storage
+   *   The feed storage.
    * @param \Drupal\aggregator\CategoryStorageControllerInterface $category_storage_controller
    *   The category storage controller.
    */
-  public function __construct(EntityManagerInterface $entity_manager, CategoryStorageControllerInterface $category_storage_controller) {
-    parent::__construct($entity_manager);
+  public function __construct(EntityStorageControllerInterface $feed_storage, CategoryStorageControllerInterface $category_storage_controller) {
+    $this->feedStorageController = $feed_storage;
     $this->categoryStorageController = $category_storage_controller;
   }
 
@@ -44,7 +51,7 @@ class FeedFormController extends ContentEntityFormController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
+      $container->get('plugin.manager.entity')->getStorageController('aggregator_feed'),
       $container->get('aggregator.category.storage')
     );
   }
@@ -118,8 +125,7 @@ class FeedFormController extends ContentEntityFormController {
   public function validate(array $form, array &$form_state) {
     $feed = $this->buildEntity($form, $form_state);
     // Check for duplicate titles.
-    $feed_storage_controller = $this->entityManager->getStorageController('aggregator_feed');
-    $result = $feed_storage_controller->getFeedDuplicates($feed);
+    $result = $this->feedStorageController->getFeedDuplicates($feed);
     foreach ($result as $item) {
       if (strcasecmp($item->title, $feed->label()) == 0) {
         form_set_error('title', $this->t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $feed->label())));

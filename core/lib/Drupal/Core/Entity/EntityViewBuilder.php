@@ -7,15 +7,13 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Language\Language;
 use Drupal\entity\Entity\EntityDisplay;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Base class for entity view controllers.
  */
-class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderInterface {
+class EntityViewBuilder implements EntityViewBuilderInterface {
 
   /**
    * The type of entities for which this controller is instantiated.
@@ -32,13 +30,6 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
    * @see entity_get_info()
    */
   protected $entityInfo;
-
-  /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
 
   /**
    * An array of view mode info for the type of entities for which this
@@ -58,28 +49,10 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
    */
   protected $cacheBin = 'cache';
 
-  /**
-   * Constructs a new EntityViewBuilder.
-   *
-   * @param string $entity_type
-   *   The entity type.
-   * @param array $entity_info
-   *   The entity information array.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
-   *   The entity manager service.
-   */
-  public function __construct($entity_type, array $entity_info, EntityManager $entity_manager) {
+  public function __construct($entity_type) {
     $this->entityType = $entity_type;
-    $this->entityInfo = $entity_info;
-    $this->entityManager = $entity_manager;
+    $this->entityInfo = entity_get_info($entity_type);
     $this->viewModesInfo = entity_get_view_modes($entity_type);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
-    return new static($entity_type, $entity_info, $container->get('entity.manager'));
   }
 
   /**
@@ -194,13 +167,8 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
     $view_modes = array();
     $displays = array();
     $context = array('langcode' => $langcode);
-    foreach ($entities as $key => $entity) {
+    foreach ($entities as $entity) {
       $bundle = $entity->bundle();
-
-      // Ensure that from now on we are dealing with the proper translation
-      // object.
-      $entity = $this->entityManager->getTranslationFromContext($entity, $langcode);
-      $entities[$key] = $entity;
 
       // Allow modules to change the view mode.
       $entity_view_mode = $view_mode;

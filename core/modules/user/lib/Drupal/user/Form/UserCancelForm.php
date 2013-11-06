@@ -9,7 +9,6 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,11 +42,8 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactory $config_factory) {
-    parent::__construct($entity_manager);
+  public function __construct(ConfigFactory $config_factory) {
     $this->configFactory = $config_factory;
   }
 
@@ -56,7 +52,6 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
       $container->get('config.factory')
     );
   }

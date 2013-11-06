@@ -109,7 +109,6 @@ class TranslationWebTest extends FieldTestBase {
     $field_name = $this->field->getFieldName();
 
     // Store the field translations.
-    ksort($available_langcodes);
     $entity->langcode->value = key($available_langcodes);
     foreach ($available_langcodes as $langcode => $value) {
       $entity->getTranslation($langcode)->{$field_name}->value = $value + 1;

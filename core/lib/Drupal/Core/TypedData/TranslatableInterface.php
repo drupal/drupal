@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\TypedData;
 
-use Drupal\Core\Language\LanguageManager;
-
 /**
  * Interface for translatable data.
  */
@@ -37,9 +35,10 @@ interface TranslatableInterface {
   /**
    * Gets a translation of the data.
    *
-   * The returned translation has to be of the same type than this typed data
-   * object. If the specified translation does not exist, a new one will be
-   * instantiated.
+   * The returned translation has to be implement the same typed data interfaces
+   * as this typed data object, excluding the TranslatableInterface. E.g., if
+   * this typed data object implements the ComplexDataInterface and
+   * AccessibleInterface, the translation object has to implement both as well.
    *
    * @param $langcode
    *   The language code of the translation to get or Language::LANGCODE_DEFAULT
@@ -49,6 +48,7 @@ interface TranslatableInterface {
    *   A typed data object for the translated data.
    */
   public function getTranslation($langcode);
+
 
   /**
    * Returns the translatable object referring to the original language.

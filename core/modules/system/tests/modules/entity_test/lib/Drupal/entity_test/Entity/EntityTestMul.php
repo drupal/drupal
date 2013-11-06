@@ -19,7 +19,6 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Test entity - data table"),
  *   controllers = {
  *     "storage" = "Drupal\entity_test\EntityTestStorageController",
- *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"

@@ -129,11 +129,11 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'body':
         case 'summary':
-          $translation = \Drupal::entityManager()->getTranslationFromContext($node, $langcode, array('operation' => 'node_tokens'));
-          if (($items = $translation->get('body')) && !$items->isEmpty()) {
+          if (($items = $node->getTranslation($langcode)->get('body')) && !$items->isEmpty()) {
             $item = $items[0];
             $instance = field_info_instance('node', 'body', $node->getType());
-            $field_langcode = $translation->language()->id;
+            $field_langcode = field_language($node, 'body', $langcode);
+
             // If the summary was requested and is not empty, use it.
             if ($name == 'summary' && !empty($item->summary)) {
               $output = $sanitize ? $item->summary_processed : $item->summary;

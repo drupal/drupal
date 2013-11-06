@@ -24,6 +24,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderInterface, EntityControllerInterface {
 
   /**
+   * The entity manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * The field info service.
    *
    * @var \Drupal\field\FieldInfo
@@ -50,7 +57,6 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
       $entity_type,
-      $entity_info,
       $container->get('entity.manager'),
       $container->get('field.info'),
       $container->get('module_handler'),
@@ -63,8 +69,6 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    *
    * @param string $entity_type
    *   The entity type.
-   * @param array $entity_info
-   *   The entity information array.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\field\FieldInfo $field_info
@@ -74,8 +78,9 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
    */
-  public function __construct($entity_type, array $entity_info, EntityManagerInterface $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
-    parent::__construct($entity_type, $entity_info, $entity_manager);
+  public function __construct($entity_type, EntityManagerInterface $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
+    parent::__construct($entity_type);
+    $this->entityManager = $entity_manager;
     $this->fieldInfo = $field_info;
     $this->moduleHandler = $module_handler;
     $this->csrfToken = $csrf_token;

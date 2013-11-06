@@ -8,7 +8,6 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Language\Language;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Entity form controller variant for content entity types.
@@ -16,32 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\Core\ContentEntityBase
  */
 class ContentEntityFormController extends EntityFormController {
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
-   * Constructs a ContentEntityFormController object.
-   *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -65,7 +38,6 @@ class ContentEntityFormController extends EntityFormController {
    * {@inheritdoc}
    */
   public function validate(array $form, array &$form_state) {
-    $this->updateFormLangcode($form_state);
     $entity = $this->buildEntity($form, $form_state);
     $entity_type = $entity->entityType();
     $entity_langcode = $entity->language()->id;
@@ -101,22 +73,53 @@ class ContentEntityFormController extends EntityFormController {
   protected function init(array &$form_state) {
     // Ensure we act on the translation object corresponding to the current form
     // language.
-    $langcode = $this->getFormLangcode($form_state);
-    $this->entity = $this->entity->getTranslation($langcode);
+    $this->entity = $this->getTranslatedEntity($form_state);
     parent::init($form_state);
+  }
+
+  /**
+   * Returns the translation object corresponding to the form language.
+   *
+   * @param array $form_state
+   *   A keyed array containing the current state of the form.
+   */
+  protected function getTranslatedEntity(array $form_state) {
+    $langcode = $this->getFormLangcode($form_state);
+    $translation = $this->entity->getTranslation($langcode);
+    // Ensure that the entity object is a BC entity if the original one is.
+    return $this->entity instanceof EntityBCDecorator ? $translation->getBCEntity() : $translation;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormLangcode(array &$form_state) {
-    if (empty($form_state['langcode'])) {
-      // Imply a 'view' operation to ensure users edit entities in the same
-      // language they are displayed. This allows to keep contextual editing
-      // working also for multilingual entities.
-      $form_state['langcode'] = $this->entityManager->getTranslationFromContext($this->entity)->language()->id;
+  public function getFormLangcode(array $form_state) {
+    $entity = $this->entity;
+    if (!empty($form_state['langcode'])) {
+      $langcode = $form_state['langcode'];
     }
-    return $form_state['langcode'];
+    else {
+      // If no form langcode was provided we default to the current content
+      // language and inspect existing translations to find a valid fallback,
+      // if any.
+      $translations = $entity->getTranslationLanguages();
+      $languageManager = \Drupal::languageManager();
+      $langcode = $languageManager->getLanguage(Language::TYPE_CONTENT)->id;
+      $fallback = $languageManager->isMultilingual() ? language_fallback_get_candidates() : array();
+      while (!empty($langcode) && !isset($translations[$langcode])) {
+        $langcode = array_shift($fallback);
+      }
+    }
+
+    // If the site is not multilingual or no translation for the given form
+    // language is available, fall back to the entity language.
+    if (!empty($langcode))  {
+      return $langcode;
+    }
+    else {
+      // If the entity is translatable, return the original language.
+      return $entity->getUntranslated()->language()->id;
+    }
   }
 
   /**
@@ -133,8 +136,8 @@ class ContentEntityFormController extends EntityFormController {
     $entity = clone $this->entity;
     $entity_type = $entity->entityType();
     $info = entity_get_info($entity_type);
+    // @todo Exploit the Field API to process the submitted entity fields.
 
-    // @todo Exploit the Entity Field API to process the submitted field values.
     // Copy top-level form values that are entity fields but not handled by
     // field API without changing existing entity fields that are not being
     // edited by this form. Values of fields handled by field API are copied
@@ -160,5 +163,4 @@ class ContentEntityFormController extends EntityFormController {
     }
     return $entity;
   }
-
 }

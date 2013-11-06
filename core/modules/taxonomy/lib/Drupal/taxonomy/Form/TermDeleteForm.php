@@ -8,7 +8,7 @@
 namespace Drupal\taxonomy\Form;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\taxonomy\VocabularyStorageControllerInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Cache\Cache;
 
@@ -16,6 +16,32 @@ use Drupal\Core\Cache\Cache;
  * Provides a deletion confirmation form for taxonomy term.
  */
 class TermDeleteForm extends ContentEntityConfirmFormBase {
+
+  /**
+   * The taxonomy vocabulary storage controller.
+   *
+   * @var \Drupal\taxonomy\VocabularyStorageControllerInterface
+   */
+  protected $vocabularyStorageController;
+
+  /**
+   * Constructs a new TermDelete object.
+   *
+   * @param \Drupal\taxonomy\VocabularyStorageControllerInterface $storage_controller
+   *   The Entity manager.
+   */
+  public function __construct(VocabularyStorageControllerInterface $storage_controller) {
+    $this->vocabularyStorageController = $storage_controller;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.manager')->getStorageController('taxonomy_vocabulary')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -59,8 +85,7 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
-    $storage_controller = $this->entityManager->getStorageController('taxonomy_vocabulary');
-    $vocabulary = $storage_controller->load($this->entity->bundle());
+    $vocabulary = $this->vocabularyStorageController->load($this->entity->bundle());
 
     // @todo Move to storage controller http://drupal.org/node/1988712
     taxonomy_check_vocabulary_hierarchy($vocabulary, array('tid' => $this->entity->id()));

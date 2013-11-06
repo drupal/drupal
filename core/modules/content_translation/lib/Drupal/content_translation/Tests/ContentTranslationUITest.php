@@ -34,18 +34,18 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    * Tests the basic translation UI.
    */
   function testTranslationUI() {
-    $this->doTestBasicTranslation();
+    $this->assertBasicTranslation();
     $this->doTestTranslationOverview();
-    $this->doTestOutdatedStatus();
-    $this->doTestPublishedStatus();
-    $this->doTestAuthoringInfo();
-    $this->doTestTranslationDeletion();
+    $this->assertOutdatedStatus();
+    $this->assertPublishedStatus();
+    $this->assertAuthoringInfo();
+    $this->assertTranslationDeletion();
   }
 
   /**
    * Tests the basic translation workflow.
    */
-  protected function doTestBasicTranslation() {
+  protected function assertBasicTranslation() {
     // Create a new test entity with original values in the default language.
     $default_langcode = $this->langcodes[0];
     $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
@@ -117,7 +117,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
   /**
    * Tests up-to-date status tracking.
    */
-  protected function doTestOutdatedStatus() {
+  protected function assertOutdatedStatus() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
     $langcode = 'fr';
     $default_langcode = $this->langcodes[0];
@@ -150,7 +150,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
   /**
    * Tests the translation publishing status.
    */
-  protected function doTestPublishedStatus() {
+  protected function assertPublishedStatus() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
     $path = $this->controller->getEditPath($entity);
 
@@ -172,7 +172,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
   /**
    * Tests the translation authoring information.
    */
-  protected function doTestAuthoringInfo() {
+  protected function assertAuthoringInfo() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
     $path = $this->controller->getEditPath($entity);
     $values = array();
@@ -194,8 +194,8 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
 
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
     foreach ($this->langcodes as $langcode) {
-      $this->assertEqual($entity->translation[$langcode]['uid'], $values[$langcode]['uid'], 'Translation author correctly stored.');
-      $this->assertEqual($entity->translation[$langcode]['created'], $values[$langcode]['created'], 'Translation date correctly stored.');
+      $this->assertEqual($entity->translation[$langcode]['uid'] == $values[$langcode]['uid'], 'Translation author correctly stored.');
+      $this->assertEqual($entity->translation[$langcode]['created'] == $values[$langcode]['created'], 'Translation date correctly stored.');
     }
 
     // Try to post non valid values and check that they are rejected.
@@ -207,14 +207,14 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     );
     $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity));
     $this->assertTrue($this->xpath('//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
-    $this->assertEqual($entity->translation[$langcode]['uid'], $values[$langcode]['uid'], 'Translation author correctly kept.');
-    $this->assertEqual($entity->translation[$langcode]['created'], $values[$langcode]['created'], 'Translation date correctly kept.');
+    $this->assertEqual($entity->translation[$langcode]['uid'] == $values[$langcode]['uid'], 'Translation author correctly kept.');
+    $this->assertEqual($entity->translation[$langcode]['created'] == $values[$langcode]['created'], 'Translation date correctly kept.');
   }
 
   /**
    * Tests translation deletion.
    */
-  protected function doTestTranslationDeletion() {
+  protected function assertTranslationDeletion() {
     // Confirm and delete a translation.
     $langcode = 'fr';
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
