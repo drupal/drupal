@@ -26,13 +26,23 @@ class DialogController {
   protected $httpKernel;
 
   /**
+   * The title resolver.
+   *
+   * @var \Drupal\Core\Controller\TitleResolver
+   */
+  protected $titleResolver;
+
+  /**
    * Constructs a new DialogController.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    *   The kernel.
+   * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
+   *   The title resolver.
    */
-  public function __construct(HttpKernelInterface $kernel) {
+  public function __construct(HttpKernelInterface $kernel, TitleResolverInterface $title_resolver) {
     $this->httpKernel = $kernel;
+    $this->titleResolver = $title_resolver;
   }
 
   /**
@@ -94,9 +104,11 @@ class DialogController {
     $subrequest = $this->forward($request);
     if ($subrequest->isOk()) {
       $content = $subrequest->getContent();
-      // @todo Remove use of drupal_get_title() when
-      //  http://drupal.org/node/1871596 is in.
-      $title = drupal_get_title();
+      if (!$title = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT))) {
+        // @todo Remove use of drupal_get_title() when
+        //  http://drupal.org/node/1871596 is in.
+        $title = drupal_get_title();
+      }
       $response = new AjaxResponse();
       // Fetch any modal options passed in from data-dialog-options.
       if (!($options = $request->request->get('dialogOptions'))) {

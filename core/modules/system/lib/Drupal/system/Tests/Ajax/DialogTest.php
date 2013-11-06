@@ -68,7 +68,7 @@ class DialogTest extends AjaxTestBase {
       'settings' => NULL,
       'dialogOptions' => array(
         'modal' => TRUE,
-        'title' => 'Home',
+        'title' => 'Add category',
       ),
     );
     $normal_expected_response = array(

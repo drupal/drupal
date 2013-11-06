@@ -949,11 +949,6 @@ function node_menu() {
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/structure/types/add'] = array(
-    'title' => 'Add content type',
-    'route_name' => 'node.type_add',
-    'type' => MENU_LOCAL_ACTION,
-  );
   $items['admin/structure/types/manage/%node_type'] = array(
     'title' => 'Edit content type',
     'title callback' => 'entity_page_label',

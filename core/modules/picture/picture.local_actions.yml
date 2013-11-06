@@ -1,0 +1,5 @@
+picture.mapping_page_add:
+  route_name: picture.mapping_page_add
+  title: 'Add picture mapping'
+  appears_on:
+    - picture.mapping_page

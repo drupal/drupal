@@ -92,13 +92,13 @@ class SystemHelpBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   protected function getActiveHelp(Request $request) {
     $output = '';
-    $router_path = menu_tab_root_path();
+    $router_path = $request->attributes->get('_system_path');
     // We will always have a path unless we are on a 403 or 404.
     if (!$router_path) {
       return '';
     }
 
-    $arg = drupal_help_arg(explode('/', $request->attributes->get('_system_path')));
+    $arg = drupal_help_arg(explode('/', $router_path));
 
     foreach ($this->moduleHandler->getImplementations('help') as $module) {
       $function = $module . '_help';

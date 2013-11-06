@@ -150,11 +150,6 @@ const MENU_CREATED_BY_ADMIN = 0x0040;
 const MENU_IS_LOCAL_TASK = 0x0080;
 
 /**
- * Internal menu flag -- menu item is a local action.
- */
-const MENU_IS_LOCAL_ACTION = 0x0100;
-
-/**
  * @} End of "defgroup menu_flags".
  */
 
@@ -212,20 +207,12 @@ define('MENU_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_VISIBLE_IN_BREADCRUMB);
 define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
- * Menu type -- An action specific to the parent, usually rendered as a link.
- *
- * Local actions are menu items that describe actions on the parent item such
- * as adding a new user, taxonomy term, etc.
- */
-define('MENU_LOCAL_ACTION', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB);
-
-/**
  * Menu type -- A task specific to the parent, which is never rendered.
  *
  * Sibling local tasks are not rendered themselves, but affect the active
  * trail and need their sibling tasks rendered as tabs.
  */
-define('MENU_SIBLING_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB);
+define('MENU_SIBLING_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
  * @} End of "defgroup menu_item_types".
@@ -2117,27 +2104,12 @@ function _menu_get_legacy_tasks($router_item, &$data, &$root_path) {
           $tab_count++;
         }
         else {
-          // Actions can be normal items too, so bitmask with
-          // MENU_IS_LOCAL_ACTION before checking.
-          if (($item['type'] & MENU_IS_LOCAL_ACTION) == MENU_IS_LOCAL_ACTION) {
-            // The item is an action, display it as such.
-            $key = isset($link['route_name']) ? $link['route_name'] : $link['href'];
-            $actions_current[$key] = array(
-              '#theme' => 'menu_local_action',
-              '#link' => $link,
-              '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
-            );
-            $action_count++;
-          }
-          else {
-            // Otherwise, it's a normal tab.
-            $tabs_current[$link['href']] = array(
-              '#theme' => 'menu_local_task',
-              '#link' => $link,
-              '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
-            );
-            $tab_count++;
-          }
+          $tabs_current[$link['href']] = array(
+            '#theme' => 'menu_local_task',
+            '#link' => $link,
+            '#weight' => isset($link['weight']) ? $link['weight'] : NULL,
+          );
+          $tab_count++;
         }
       }
     }
@@ -2158,10 +2130,6 @@ function _menu_get_legacy_tasks($router_item, &$data, &$root_path) {
     $next_parent = '';
     $count = 0;
     foreach ($children[$parent] as $item) {
-      // Skip local actions.
-      if ($item['type'] & MENU_IS_LOCAL_ACTION) {
-        continue;
-      }
       if ($item['access']) {
         $count++;
         $link = $item;

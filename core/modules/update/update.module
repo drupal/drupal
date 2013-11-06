@@ -157,30 +157,6 @@ function update_menu() {
     'weight' => -50,
   );
 
-  // We want action links for updating projects at a few different locations:
-  // both the module and theme administration pages, and on the available
-  // updates report itself. The menu items will be mostly identical, except the
-  // paths and titles, so we just define them in a loop. We pass in a string
-  // indicating what context we're entering the action from, so that can
-  // customize the appearance as needed.
-  $paths = array(
-    'report' => 'admin/reports/updates',
-    'module' => 'admin/modules',
-    'theme' => 'admin/appearance',
-  );
-  foreach ($paths as $context => $path) {
-    $items[$path . '/install'] = array(
-      'route_name' => "update.{$context}_install",
-      'weight' => 25,
-      'type' => MENU_LOCAL_ACTION,
-    );
-  }
-  // Customize the titles of the action links depending on where they appear.
-  // We use += array() to let the translation extractor find these menu titles.
-  $items['admin/reports/updates/install'] += array('title' => 'Install new module or theme');
-  $items['admin/modules/install'] += array('title' => 'Install new module');
-  $items['admin/appearance/install'] += array('title' => 'Install new theme');
-
   return $items;
 }
 

@@ -1,0 +1,5 @@
+path.admin_add:
+  route_name: path.admin_add
+  title: 'Add alias'
+  appears_on:
+    - path.admin_overview

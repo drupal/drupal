@@ -387,7 +387,7 @@ services:
     arguments: ['@http_kernel', '@controller_resolver', '@string_translation', '@title_resolver']
   controller.dialog:
     class: Drupal\Core\Controller\DialogController
-    arguments: ['@http_kernel']
+    arguments: ['@http_kernel', '@title_resolver']
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:

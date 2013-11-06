@@ -97,21 +97,6 @@ function aggregator_menu() {
     'route_name' => 'aggregator.admin_overview',
     'weight' => 10,
   );
-  $items['admin/config/services/aggregator/add/feed'] = array(
-    'title' => 'Add feed',
-    'route_name' => 'aggregator.feed_add',
-    'type' => MENU_LOCAL_ACTION,
-  );
-  $items['admin/config/services/aggregator/add/category'] = array(
-    'title' => 'Add category',
-    'type' => MENU_LOCAL_ACTION,
-    'route_name' => 'aggregator.category_add',
-  );
-  $items['admin/config/services/aggregator/add/opml'] = array(
-    'title' => 'Import OPML',
-    'type' => MENU_LOCAL_ACTION,
-    'route_name' => 'aggregator.opml_add',
-  );
   $items['admin/config/services/aggregator/remove/%aggregator_feed'] = array(
     'title' => 'Remove items',
     'route_name' => 'aggregator.feed_items_delete',

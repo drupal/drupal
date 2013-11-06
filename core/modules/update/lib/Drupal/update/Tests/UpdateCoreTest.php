@@ -242,4 +242,25 @@ class UpdateCoreTest extends UpdateTestBase {
     );
     \Drupal::config('update_test.settings')->set('system_info', $setting)->save();
   }
+
+  /**
+   * Ensures that the local actions appear.
+   */
+  public function testLocalActions() {
+    $admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer modules', 'administer software updates', 'administer themes'));
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('admin/modules');
+    $this->clickLink(t('Install new module'));
+    $this->assertUrl('admin/modules/install');
+
+    $this->drupalGet('admin/appearance');
+    $this->clickLink(t('Install new theme'));
+    $this->assertUrl('admin/theme/install');
+
+    $this->drupalGet('admin/reports/updates');
+    $this->clickLink(t('Install new module or theme'));
+    $this->assertUrl('admin/reports/updates/install');
+  }
+
 }

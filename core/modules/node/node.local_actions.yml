@@ -1,0 +1,5 @@
+node.type_add:
+  route_name: node.type_add
+  title: 'Add content type'
+  appears_on:
+    - node.overview_types

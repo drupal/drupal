@@ -3,3 +3,8 @@ shortcut_set_add_local_action:
   title: 'Add shortcut set'
   appears_on:
     - shortcut.set_admin
+shortcut.link_add:
+  route_name: shortcut.link_add
+  title: 'Add shortcut'
+  appears_on:
+    - shortcut.set_customize

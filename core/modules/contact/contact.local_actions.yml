@@ -1,0 +1,6 @@
+contact.category_add:
+  route_name: contact.category_add
+  title: 'Add category'
+  weight: 1
+  appears_on:
+    - contact.category_list

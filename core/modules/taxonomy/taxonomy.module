@@ -278,12 +278,6 @@ function taxonomy_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
-  $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/add'] = array(
-    'title' => 'Add term',
-    'route_name' => 'taxonomy.term_add',
-    'type' => MENU_LOCAL_ACTION,
-  );
-
   return $items;
 }
 

@@ -3,3 +3,8 @@ user_admin_create:
   title: 'Add user'
   appears_on:
     - user.admin_account
+user.role_add:
+  route_name: user.role_add
+  title: 'Add role'
+  appears_on:
+    - user.role_list

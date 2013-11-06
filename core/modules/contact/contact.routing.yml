@@ -17,6 +17,7 @@ contact.category_add:
   path: '/admin/structure/contact/add'
   defaults:
     _entity_form: contact_category.add
+    _title: 'Add category'
   requirements:
     _permission: 'administer contact forms'
 

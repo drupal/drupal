@@ -736,13 +736,6 @@ function system_menu() {
     'route_name' => 'system.date_format_list',
     'weight' => -9,
   );
-  $items['admin/config/regional/date-time/formats/add'] = array(
-    'title' => 'Add format',
-    'description' => 'Allow users to add additional date formats.',
-    'type' => MENU_LOCAL_ACTION,
-    'route_name' => 'system.date_format_add',
-    'weight' => -10,
-  );
   $items['admin/config/regional/date-time/formats/manage/%'] = array(
     'title' => 'Edit date format',
     'description' => 'Allow users to edit a configured date format.',

@@ -108,11 +108,6 @@ function menu_test_menu() {
     'title' => 'List menus',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['menu-test/hidden/menu/add'] = array(
-    'title' => 'Add menu',
-    'route_name' => 'menu_test.hidden_menu_add',
-    'type' => MENU_LOCAL_ACTION,
-  );
   $items['menu-test/hidden/menu/settings'] = array(
     'title' => 'Settings',
     'route_name' => 'menu_test.hidden_menu_settings',
@@ -127,11 +122,6 @@ function menu_test_menu() {
     'title' => 'List links',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE,
-  );
-  $items['menu-test/hidden/menu/manage/%menu/add'] = array(
-    'title' => 'Add link',
-    'route_name' => 'menu_test.hidden_manage_add',
-    'type' => MENU_LOCAL_ACTION,
   );
   $items['menu-test/hidden/menu/manage/%menu/edit'] = array(
     'title' => 'Edit menu',
@@ -152,11 +142,6 @@ function menu_test_menu() {
   $items['menu-test/hidden/block/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['menu-test/hidden/block/add'] = array(
-    'title' => 'Add block',
-    'route_name' => 'menu_test.hidden_block_add',
-    'type' => MENU_LOCAL_ACTION,
   );
   $items['menu-test/hidden/block/manage/%/%'] = array(
     'title' => 'Configure block',
@@ -298,22 +283,6 @@ function menu_test_menu() {
     'route_name' => 'menu_test.local_action1',
   );
 
-  $items['menu-test-local-action/hook_menu'] = array(
-    'title' => 'My hook_menu action',
-    'route_name' => 'menu_test.local_action2',
-    'weight' => -10,
-    'type' => MENU_LOCAL_ACTION,
-  );
-
-  $items['menu-test-local-action/dynamic-title'] = array(
-    'title' => 'My dynamic title action',
-    'title callback' => 'menu_test_local_action_dynamic_title',
-    'title arguments' => array(1),
-    'route_name' => 'menu_test.local_action4',
-    'weight' => -10,
-    'type' => MENU_LOCAL_ACTION,
-  );
-
   $items['menu-local-task-test/tasks'] = array(
     'title' => 'Local tasks',
     'route_name' => 'menu_test.local_task_test_tasks',
@@ -325,13 +294,6 @@ function menu_test_menu() {
   );
 
   return $items;
-}
-
-/**
- * Title callback: Set a dynamic title for a local action.
- */
-function menu_test_local_action_dynamic_title($arg) {
-  return t('My @arg action', array('@arg' => $arg));
 }
 
 /**

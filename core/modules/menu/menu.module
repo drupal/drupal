@@ -74,11 +74,6 @@ function menu_menu() {
     'title' => 'List menus',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/structure/menu/add'] = array(
-    'title' => 'Add menu',
-    'route_name' => 'menu.menu_add',
-    'type' => MENU_LOCAL_ACTION,
-  );
   $items['admin/structure/menu/settings'] = array(
     'title' => 'Settings',
     'route_name' => 'menu.settings',

@@ -11,3 +11,35 @@ menu_test.local_action5:
   appears_on:
     - menu_test.local_action1
 
+menu_test.local_action2:
+  route_name: menu_test.local_action2
+  title: 'My hook_menu action'
+  weight: -10
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.local_action4:
+  route_name: menu_test.local_action4
+  title: 'My dynamic title action'
+  weight: -20
+  class: '\Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalAction4'
+  appears_on:
+    - menu_test.local_action1
+
+menu_test.hidden_menu_add:
+  route_name: menu_test.hidden_menu_add
+  title: 'Add menu'
+  appears_on:
+    - menu_test.hidden_menu
+
+menu_test.hidden_manage_add:
+  route_name: menu_test.hidden_manage_add
+  title: 'Add link'
+  appears_on:
+    - menu_test.hidden_manage
+
+menu_test.hidden_block_add:
+  route_name: menu_test.hidden_block_add
+  title: 'Add block'
+  appears_on:
+    - menu_test.hidden_block

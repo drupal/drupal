@@ -3,3 +3,9 @@ taxonomy_add_vocabulary_local_action:
   title: 'Add vocabulary'
   appears_on:
     - taxonomy.vocabulary_list
+
+taxonomy.term_add:
+  route_name: taxonomy.term_add
+  title: 'Add term'
+  appears_on:
+    - taxonomy.overview_terms
