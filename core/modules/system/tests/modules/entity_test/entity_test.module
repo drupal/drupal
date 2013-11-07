@@ -62,9 +62,6 @@ function entity_test_entity_types($filter = NULL) {
  */
 function entity_test_entity_info_alter(&$info) {
   foreach (entity_test_entity_types() as $entity_type) {
-    // Ensure these test entity types use their base path as their edit path.
-    $info[$entity_type]['menu_edit_path'] = $info[$entity_type]['menu_base_path'];
-
     // Optionally specify a translation handler for testing translations.
     if (\Drupal::state()->get('entity_test.translation')) {
       $info[$entity_type]['translation'][$entity_type] = TRUE;

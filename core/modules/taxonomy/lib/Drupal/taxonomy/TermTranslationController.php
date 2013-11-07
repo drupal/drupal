@@ -36,7 +36,8 @@ class TermTranslationController extends ContentTranslationController {
       // We need a redirect here, otherwise we would get an access denied page,
       // since the current URL would be preserved and we would try to add a
       // translation for a language that already has a translation.
-      $form_state['redirect'] = $this->getEditPath($entity);
+      $uri = $entity->uri('edit-form');
+      $form_state['redirect'] = $uri['path'];
     }
   }
 

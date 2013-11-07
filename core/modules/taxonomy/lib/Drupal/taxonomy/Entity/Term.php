@@ -48,7 +48,6 @@ use Drupal\taxonomy\TermInterface;
  *     "canonical" = "/taxonomy/term/{taxonomy_term}",
  *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit"
  *   },
- *   menu_base_path = "taxonomy/term/%taxonomy_term",
  *   route_base_path = "admin/structure/taxonomy/manage/{bundle}",
  *   permission_granularity = "bundle"
  * )

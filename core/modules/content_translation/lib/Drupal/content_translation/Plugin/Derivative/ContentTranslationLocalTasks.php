@@ -72,7 +72,7 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     // Create tabs for all possible entity types.
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info['translatable'] && isset($entity_info['translation'])) {
+      if (!empty($entity_info['translatable'])) {
         // Find the route name for the translation overview.
         $translation_route_name = "content_translation.translation_overview_$entity_type";
         $translation_tab = $translation_route_name;
@@ -92,8 +92,8 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
    */
   public function alterLocalTasks(array &$local_tasks) {
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info['translatable'] && isset($entity_info['translation'])) {
-        $path = '/' . preg_replace('/%(.*)/', '{$1}', $entity_info['menu_base_path']);
+      if (!empty($entity_info['translatable']) && !empty($entity_info['links']['canonical'])) {
+        $path = $entity_info['links']['canonical'];
         if ($routes = $this->routeProvider->getRoutesByPattern($path)->all()) {
           // Find the route name for the entity page.
           $entity_route_name = key($routes);

@@ -32,8 +32,7 @@ use Drupal\Core\Language\Language;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "type"
- *   },
- *   menu_base_path = "entity-test/manage/%entity_test"
+ *   }
  * )
  */
 class EntityTestCache extends EntityTest {

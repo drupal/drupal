@@ -37,7 +37,6 @@ use Drupal\Core\Language\Language;
  *     "bundle" = "type",
  *     "label" = "name"
  *   },
- *   menu_base_path = "entity_test/manage/%entity_test",
  *   route_base_path = "admin/structure/entity-test/manage/{bundle}",
  *   links = {
  *     "canonical" = "/entity_test/{entity_test}",

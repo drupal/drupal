@@ -37,8 +37,10 @@ use Drupal\custom_block\CustomBlockInterface;
  *   base_table = "custom_block",
  *   revision_table = "custom_block_revision",
  *   route_base_path = "admin/structure/block/custom-blocks/manage/{bundle}",
- *   menu_base_path = "block/%custom_block",
- *   menu_edit_path = "block/%custom_block",
+ *   links = {
+ *     "canonical" = "/block/{custom_block}",
+ *     "edit-form" = "/block/{custom_block}"
+ *   },
  *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
@@ -172,19 +174,6 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
     unset($this->uuid);
     unset($this->type);
     unset($this->new);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'block/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      )
-    );
   }
 
   /**

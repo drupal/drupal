@@ -39,8 +39,9 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
    */
   protected function routes(RouteCollection $collection) {
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info['translatable'] && isset($entity_info['translation'])) {
-        $path = '/' . str_replace($entity_info['menu_path_wildcard'], '{' . $entity_type . '}', $entity_info['menu_base_path']) . '/translations';
+      if (!empty($entity_info['translatable']) && !empty($entity_info['links']['drupal:content-translation-overview'])) {
+        $path = $entity_info['links']['drupal:content-translation-overview'];
+
         $route = new Route(
          $path,
           array(

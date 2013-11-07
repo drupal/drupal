@@ -38,13 +38,10 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
       ->method('getDefinitions')
       ->will($this->returnValue(array(
         'node' => array(
-          'translatable' => true,
-          'translation' => array(
-            'content_translation' => array(
-              // things.
-            ),
+          'translatable' => TRUE,
+          'links' => array(
+            'canonical' => '/node/{node}',
           ),
-          'menu_base_path' => 'node/%node',
         ),
       )));
     \Drupal::getContainer()->set('entity.manager', $entity_manager);

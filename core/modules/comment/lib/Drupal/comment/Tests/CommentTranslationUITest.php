@@ -68,7 +68,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getTranslatorPermission().
    */
   protected function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), array('post comments', 'administer comments'));
+    return array_merge(parent::getTranslatorPermissions(), array('post comments', 'administer comments', 'access comments'));
   }
 
   /**
@@ -134,11 +134,11 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $languages = language_list();
 
     // Check that simple users cannot see unpublished field translations.
-    $path = $this->controller->getViewPath($entity);
+    $uri = $entity->uri();
     foreach ($this->langcodes as $index => $langcode) {
       $translation = $this->getTranslation($entity, $langcode);
       $value = $this->getValue($translation, 'comment_body', $langcode);
-      $this->drupalGet($path, array('language' => $languages[$langcode]));
+      $this->drupalGet($uri['path'], array('language' => $languages[$langcode]));
       if ($index > 0) {
         $this->assertNoRaw($value, 'Unpublished field translation is not shown.');
       }

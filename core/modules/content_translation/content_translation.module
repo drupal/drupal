@@ -78,40 +78,33 @@ function content_translation_language_types_info_alter(array &$language_types) {
 function content_translation_entity_info_alter(array &$entity_info) {
   // Provide defaults for translation info.
   foreach ($entity_info as $entity_type => &$info) {
-    if (empty($info['translatable'])) {
-      continue;
+    if (!empty($info['translatable'])) {
+      // Every fieldable entity type must have a translation controller class,
+      // no matter if it is enabled for translation or not. As a matter of fact
+      // we might need it to correctly switch field translatability when a field
+      // is shared accross different entities.
+      $info['controllers'] += array('translation' => 'Drupal\content_translation\ContentTranslationController');
+
+      if (!isset($info['translation']['content_translation'])) {
+        $info['translation']['content_translation'] = array();
+      }
+
+      if (!empty($info['links']['canonical'])) {
+        // Provide default links for the translation paths.
+        $info['links'] += array(
+          'drupal:content-translation-overview' => $info['links']['canonical'] . '/translations',
+        );
+
+        $parts = explode('/', trim($info['links']['canonical'], '/'));
+        $entity_position = array_search("{{$entity_type}}", $parts);
+        if ($entity_position !== FALSE) {
+          $info['translation']['content_translation'] += array(
+            'access_callback' => 'content_translation_translate_access',
+            'access_arguments' => array($entity_position),
+          );
+        }
+      }
     }
-
-    if (!isset($info['translation']['content_translation'])) {
-      $info['translation']['content_translation'] = array();
-    }
-
-    // Every fieldable entity type must have a translation controller class, no
-    // matter if it is enabled for translation or not. As a matter of fact we
-    // might need it to correctly switch field translatability when a field is
-    // shared accross different entities.
-    $info['controllers'] += array('translation' => 'Drupal\content_translation\ContentTranslationController');
-
-    // If no menu base path is provided we default to the usual
-    // "entity_type/%entity_type" pattern.
-    if (!isset($info['menu_base_path'])) {
-      $path = "$entity_type/%$entity_type";
-      $info['menu_base_path'] = $path;
-    }
-
-    $path = $info['menu_base_path'];
-
-    $info += array(
-      'menu_view_path' => $path,
-      'menu_edit_path' => "$path/edit",
-      'menu_path_wildcard' => "%$entity_type",
-    );
-
-    $entity_position = count(explode('/', $path)) - 1;
-    $info['translation']['content_translation'] += array(
-      'access_callback' => 'content_translation_translate_access',
-      'access_arguments' => array($entity_position),
-    );
   }
 }
 
@@ -156,6 +149,9 @@ function content_translation_entity_field_info_alter(&$info, $entity_type) {
 
 /**
  * Implements hook_menu().
+ *
+ * @todo Split this into route definition and menu link definition. See
+ *   https://drupal.org/node/1987882 and https://drupal.org/node/2047633.
  */
 function content_translation_menu() {
   $items = array();
@@ -164,7 +160,7 @@ function content_translation_menu() {
   foreach (entity_get_info() as $entity_type => $info) {
     // Provide the translation UI only for enabled types.
     if (content_translation_enabled($entity_type)) {
-      $path = $info['menu_base_path'];
+      $path = _content_translation_link_to_router_path($entity_type, $info['links']['canonical']);
       $entity_position = count(explode('/', $path)) - 1;
       $keys = array_flip(array('theme_callback', 'theme_arguments', 'access_callback', 'access_arguments', 'load_arguments'));
       $menu_info = array_intersect_key($info['translation']['content_translation'], $keys) + array('file' => 'content_translation.pages.inc');
@@ -228,6 +224,9 @@ function content_translation_menu() {
 
 /**
  * Implements hook_menu_alter().
+ *
+ * @todo Split this into route definition and menu link definition. See
+ *   https://drupal.org/node/1987882 and https://drupal.org/node/2047633.
  */
 function content_translation_menu_alter(array &$items) {
   // Clarify where translation settings are located.
@@ -237,7 +236,7 @@ function content_translation_menu_alter(array &$items) {
   // Check that the declared menu base paths are actually valid.
   foreach (entity_get_info() as $entity_type => $info) {
     if (content_translation_enabled($entity_type)) {
-      $path = $info['menu_base_path'];
+      $path = _content_translation_link_to_router_path($entity_type, $info['links']['canonical']);
 
       // If the base path is not defined we cannot provide the translation UI
       // for this entity type. In some cases the actual base path might not have
@@ -255,7 +254,7 @@ function content_translation_menu_alter(array &$items) {
       }
       else {
         $entity_position = count(explode('/', $path)) - 1;
-        $edit_path = $info['menu_edit_path'];
+        $edit_path = $path . '/edit';
 
         if (isset($items[$edit_path])) {
           // If the edit path is a default local task we need to find the parent
@@ -284,6 +283,24 @@ function content_translation_local_tasks_alter(&$local_tasks) {
   // Alters in tab_root_id onto the content translation local task.
   $derivative = ContentTranslationLocalTasks::create(\Drupal::getContainer(), 'content_translation.local_tasks');
   $derivative->alterLocalTasks($local_tasks);
+}
+
+/**
+ * Convert an entity canonical link to a router path.
+ *
+ * @param string $link
+ *   The entity link to be converted.
+ *
+ * @return string
+ *   The resulting router path. For instance "/node/{node}" is turned into
+ *   "node/%node".
+ *
+ * @todo Remove this and use the actual link values when all the Content
+ *   Translation code is adapted to the new routing system.
+ */
+function _content_translation_link_to_router_path($entity_type, $link) {
+  $path = preg_replace('|{([^}]+)}|', '%$1', trim($link, '/'));
+  return str_replace('%id', '%' . $entity_type, $path);
 }
 
 /**
@@ -482,9 +499,8 @@ function content_translation_set_config($entity_type, $bundle, $setting, $value)
  */
 function content_translation_enabled($entity_type, $bundle = NULL) {
   $enabled = FALSE;
-  $info = entity_get_info($entity_type);
 
-  if (!empty($info['translatable'])) {
+  if (content_translation_supported($entity_type)) {
     $bundles = !empty($bundle) ? array($bundle) : array_keys(entity_get_bundles($entity_type));
     foreach ($bundles as $bundle) {
       if (content_translation_get_config($entity_type, $bundle, 'enabled')) {
@@ -498,31 +514,17 @@ function content_translation_enabled($entity_type, $bundle = NULL) {
 }
 
 /**
- * Returns all the translatable entity types.
+ * Checks whether an entity type supports translation.
  *
- * @return array
- *   An array of entity types keyed by entity type.
+ * @param string $entity_type
+ *   The entity type.
+ *
+ * @return bool
+ *   TRUE if an entity type is supported, FALSE otherwise.
  */
-function content_translation_types_translatable() {
-  $entity_types = &drupal_static(__FUNCTION__, array());
-
-  foreach (entity_get_info() as $entity_type => $info) {
-    if (content_translation_enabled($entity_type)) {
-      // Lazy load router items.
-      if (!isset($items)) {
-        $items = menu_get_router();
-      }
-      // Check whether the required paths are defined. We need to strip out the
-      // menu loader and replace it with a plain "%" as router items have no
-      // menu loader in them.
-      $path = _content_translation_menu_strip_loaders($info['menu_base_path']);
-      if (!empty($items[$path]) && !empty($items[$path . '/translations'])) {
-        $entity_types[$entity_type] = $entity_type;
-      }
-    }
-  }
-
-  return $entity_types;
+function content_translation_supported($entity_type) {
+  $info = entity_get_info($entity_type);
+  return !empty($info['translatable']) && !empty($info['links']['drupal:content-translation-overview']);
 }
 
 /**

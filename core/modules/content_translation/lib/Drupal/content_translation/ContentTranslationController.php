@@ -54,27 +54,6 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Implements ContentTranslationControllerInterface::getBasePath().
-   */
-  public function getBasePath(EntityInterface $entity) {
-    return $this->getPathInstance($this->entityInfo['menu_base_path'], $entity->id());
-  }
-
-  /**
-   * Implements ContentTranslationControllerInterface::getEditPath().
-   */
-  public function getEditPath(EntityInterface $entity) {
-    return isset($this->entityInfo['menu_edit_path']) ? $this->getPathInstance($this->entityInfo['menu_edit_path'], $entity->id()) : FALSE;
-  }
-
-  /**
-   * Implements ContentTranslationControllerInterface::getViewPath().
-   */
-  public function getViewPath(EntityInterface $entity) {
-    return isset($this->entityInfo['menu_view_path']) ? $this->getPathInstance($this->entityInfo['menu_view_path'], $entity->id()) : FALSE;
-  }
-
-  /**
    * Implements ContentTranslationControllerInterface::getTranslationAccess().
    */
   public function getTranslationAccess(EntityInterface $entity, $op) {
@@ -446,7 +425,9 @@ class ContentTranslationController implements ContentTranslationControllerInterf
     $form_controller = content_translation_form_controller($form_state);
     $entity = $form_controller->getEntity();
     $source = $form_state['values']['source_langcode']['source'];
-    $path = $this->getBasePath($entity) . '/translations/add/' . $source . '/' . $form_controller->getFormLangcode($form_state);
+
+    $uri = $entity->uri('drupal:content-translation-overview');
+    $path = $uri['path'] . '/add/' . $source . '/' . $form_controller->getFormLangcode($form_state);
     $form_state['redirect'] = $path;
     $languages = language_list();
     drupal_set_message(t('Source language set to: %language', array('%language' => $languages[$source]->name)));
@@ -473,9 +454,9 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   function entityFormDeleteTranslation($form, &$form_state) {
     $form_controller = content_translation_form_controller($form_state);
     $entity = $form_controller->getEntity();
-    $base_path = $this->getBasePath($entity);
+    $uri = $entity->uri('drupal:content-translation-overview');
     $form_langcode = $form_controller->getFormLangcode($form_state);
-    $form_state['redirect'] = $base_path . '/translations/delete/' . $form_langcode;
+    $form_state['redirect'] = $uri['path'] . '/delete/' . $form_langcode;
   }
 
   /**
@@ -488,17 +469,4 @@ class ContentTranslationController implements ContentTranslationControllerInterf
     return $entity->label();
   }
 
-  /**
-   * Returns an instance of the given path.
-   *
-   * @param $path
-   *   An internal path containing the entity id wildcard.
-   *
-   * @return string
-   *   The instantiated path.
-   */
-  protected function getPathInstance($path, $entity_id) {
-    $wildcard = $this->entityInfo['menu_path_wildcard'];
-    return str_replace($wildcard, $entity_id, $path);
-  }
 }

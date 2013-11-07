@@ -37,7 +37,10 @@ use Drupal\Core\Annotation\Translation;
  *     "revision" = "revision_id",
  *     "bundle" = "type"
  *   },
- *   menu_base_path = "entity_test_mulrev/manage/%entity_test_mulrev"
+ *   links = {
+ *     "canonical" = "/entity_test_mulrev/manage/{entity_test_mulrev}",
+ *     "edit-form" = "/entity_test_mulrev/manage/{entity_test_mulrev}"
+ *   }
  * )
  */
 class EntityTestMulRev extends EntityTestRev {
