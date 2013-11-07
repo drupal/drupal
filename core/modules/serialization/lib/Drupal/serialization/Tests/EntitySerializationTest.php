@@ -34,7 +34,7 @@ class EntitySerializationTest extends NormalizerTestBase {
   protected $entity;
 
   /**
-   * The serializer serivce.
+   * The serializer service.
    *
    * @var \Symfony\Component\Serializer\Serializer.
    */
