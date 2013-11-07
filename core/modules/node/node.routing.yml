@@ -23,7 +23,7 @@ node.page_edit:
 node.add_page:
   path: '/node/add'
   defaults:
-    _title: 'Add page'
+    _title: 'Add content'
     _content: '\Drupal\node\Controller\NodeController::addPage'
   options:
     _access_mode: 'ANY'
