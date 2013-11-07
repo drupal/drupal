@@ -27,28 +27,24 @@ body.install-page {
   background: none;
 }
 @media all and (min-width: 48em) { /* 768px */
-  html, body {
-    height: 100%;
-    text-align: center;
-    white-space: nowrap;
-    margin: 0;
+  html {
+    display: table;
   }
-  body:before {
-    content: '';
-    display: inline-block;
-    height: 100%;
-    width: 0;
+  body {
+    display: table-cell;
+    padding: 1em 0;
     vertical-align: middle;
-    margin-right: -0.35em;
+  }
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
   }
   body.install-page #page {
-    display: inline-block;
-    vertical-align: middle;
-    text-align: left;
-    white-space: normal;
-    border-radius: 5px;
-    width: 75%;
+    margin: 0 auto;
     max-width: 770px;
+    width: 75%;
+    border-radius: 5px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
   body.install-page #content {
