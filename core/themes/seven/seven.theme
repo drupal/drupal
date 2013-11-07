@@ -191,7 +191,6 @@ function seven_form_node_form_alter(&$form, &$form_state) {
 
   $form['advanced']['#type'] = 'container';
   $form['meta'] = array (
-    '#type' => 'fieldset',
     '#attributes' => array('class' => array('entity-meta-header')),
     '#type' => 'container',
     '#group' => 'advanced',
