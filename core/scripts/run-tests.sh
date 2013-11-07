@@ -668,7 +668,10 @@ function simpletest_script_get_test_list() {
         }
         else {
           foreach ($matches[1] as $class_name) {
-            $test_list[] = $namespace . '\\' . $class_name;
+            $namespace_class = $namespace . '\\' . $class_name;
+            if (is_subclass_of($namespace_class, '\Drupal\simpletest\TestBase') || is_subclass_of($namespace_class, '\Drupal\Tests\UnitTestCase')) {
+              $test_list[] = $namespace_class;
+            }
           }
         }
       }
