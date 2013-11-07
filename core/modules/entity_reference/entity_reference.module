@@ -24,12 +24,14 @@ function entity_reference_field_info_alter(&$info) {
   $info['entity_reference']['instance_settings']['handler_settings'] = array();
   $info['entity_reference']['default_widget'] = 'entity_reference_autocomplete';
   $info['entity_reference']['default_formatter'] = 'entity_reference_label';
+  $info['entity_reference']['list_class'] = '\Drupal\entity_reference\Plugin\Field\FieldType\ConfigurableEntityReferenceFieldItemList';
 }
 
 /**
  * Implements hook_entity_field_info_alter().
  *
- * Set the "target_type" property definition for entity reference fields.
+ * Set the "target_type" and "list_class" property definition for entity
+ * reference fields.
  *
  * @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::getPropertyDefinitions()
  *

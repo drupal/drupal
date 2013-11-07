@@ -845,6 +845,7 @@ function taxonomy_field_info() {
           ),
         ),
       ),
+      'list_class' => '\Drupal\taxonomy\Plugin\Field\FieldType\TaxonomyTermReferenceFieldItemList',
     ),
   );
 }

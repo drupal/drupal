@@ -396,3 +396,35 @@ function taxonomy_update_8008() {
   );
   db_add_field('taxonomy_term_data', 'changed', $spec);
 }
+
+/**
+ * Convert numeric IDs to UUIDs to ensure config deployability.
+ */
+function taxonomy_update_8009() {
+  foreach (config_get_storage_names_with_prefix('field.instance.') as $instance_config_name) {
+    $instance_config = \Drupal::config($instance_config_name);
+    if ($instance_config->get('field_type') == 'taxonomy_term_reference') {
+      $default_value = $instance_config->get('default_value');
+      $ids = array();
+      // Load all referenced taxonomy_terms in default_value.
+      foreach ($default_value as $delta => $value) {
+        $ids[] = $value['tid'];
+      }
+      if ($ids) {
+        $entities = db_select('taxonomy_term_data', 't')
+          ->fields('t', array('tid', 'uuid'))
+          ->condition('t.tid', $ids)
+          ->execute()->fetchAllAssoc('tid');
+
+        // Convert IDs to UUIDs and save the new default_value.
+        foreach ($default_value as $delta => &$value) {
+          $value = array(
+            'target_uuid' => $entities[$value['tid']]->uuid,
+            'revision_id' => '',
+          );
+        }
+        $instance_config->set('default_value', $default_value)->save();
+      }
+    }
+  }
+}
