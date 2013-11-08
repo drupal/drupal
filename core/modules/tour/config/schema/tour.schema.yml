@@ -22,12 +22,12 @@ tour.tour.*:
     langcode:
       type: string
       label: 'Default language'
-    paths:
+    routes:
       type: sequence
-      label: 'Path settings'
+      label: 'Route settings'
       sequence:
-        - type: path
-          label: 'Path'
+        - type: route
+          label: 'Route'
     tips:
       type: sequence
       label: 'Tips'
@@ -68,5 +68,3 @@ tour.tip.text:
     body:
       type: text
       label: 'Body'
-
-
