@@ -397,4 +397,26 @@ class RouteProviderTest extends UnitTestBase {
     $this->assertEqual($routes['route_d']->getPath(), '/path/three');
   }
 
+  /**
+   * Ensures that the routing system is capable of extreme long patterns.
+   */
+  public function testGetRoutesByPatternWithLongPatterns() {
+    $connection = Database::getConnection();
+    $provider = new RouteProvider($connection, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, 'test_routes');
+    $collection = new RouteCollection();
+    $collection->add('long_pattern', new Route('/test/{v1}/test2/{v2}/test3/{v3}/{v4}/{v5}/{v6}/test4'));
+    $dumper->addRoutes($collection);
+    $dumper->dump();
+
+    $result = $provider->getRoutesByPattern('/test/1/test2/2/test3/3/4/5/6/test4');
+    $this->assertEqual($result->count(), 1);
+    // We can't compare the values of the routes directly, nor use
+    // spl_object_hash() because they are separate instances.
+    $this->assertEqual(serialize($result->get('long_pattern')), serialize($collection->get('long_pattern')), 'The right route was found.');
+  }
+
 }

@@ -181,7 +181,7 @@ class RouteProvider implements RouteProviderInterface {
   public function getCandidateOutlines(array $parts) {
     $number_parts = count($parts);
     $ancestors = array();
-    $length =  $number_parts - 1;
+    $length = $number_parts - 1;
     $end = (1 << $number_parts) - 1;
 
     // The highest possible mask is a 1 bit for every part of the path. We will
@@ -240,9 +240,9 @@ class RouteProvider implements RouteProviderInterface {
   protected function getRoutesByPath($path) {
     // Filter out each empty value, though allow '0' and 0, which would be
     // filtered out by empty().
-    $parts = array_slice(array_filter(explode('/', $path), function($value) {
+    $parts = array_values(array_filter(explode('/', $path), function($value) {
       return $value !== NULL && $value !== '';
-    }), 0, MatcherDumper::MAX_PARTS);
+    }));
 
     $ancestors = $this->getCandidateOutlines($parts);
 

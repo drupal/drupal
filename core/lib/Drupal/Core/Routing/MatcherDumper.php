@@ -17,11 +17,6 @@ use Drupal\Core\Database\Connection;
 class MatcherDumper implements MatcherDumperInterface {
 
   /**
-   * The maximum number of path elements for a route pattern;
-   */
-  const MAX_PARTS = 9;
-
-  /**
    * The database connection to which to dump route information.
    *
    * @var \Drupal\Core\Database\Connection
