@@ -33,9 +33,8 @@ class ShortcutSetController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function addShortcutLinkInline(ShortcutSetInterface $shortcut_set, Request $request) {
-    $token = $request->query->get('token');
     $link = $request->query->get('link');
-    if (isset($token) && drupal_valid_token($token, 'shortcut-add-link') && shortcut_valid_link($link)) {
+    if (shortcut_valid_link($link)) {
       $item = menu_get_item($link);
       $title = ($item && $item['title']) ? $item['title'] : $link;
       $link = array(

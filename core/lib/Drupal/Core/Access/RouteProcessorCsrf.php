@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\Core\Access\RouteProcessorCsrf.
+ */
+
+namespace Drupal\Core\Access;
+
+use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
+use Drupal\Core\Access\CsrfTokenGenerator;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
+
+/**
+ * Processes the inbound path by resolving it to the front page if empty.
+ */
+class RouteProcessorCsrf implements OutboundRouteProcessorInterface {
+
+  /**
+   * The CSRF token generator.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $csrfToken;
+
+  /**
+   * Constructs a RouteProcessorCsrf object.
+   *
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   *   The CSRF token generator.
+   */
+  function __construct(CsrfTokenGenerator $csrf_token) {
+    $this->csrfToken = $csrf_token;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processOutbound(Route $route, array &$parameters) {
+    if ($route->hasRequirement('_csrf_token')) {
+      // Adding this to the parameters means it will get merged into the query
+      // string when the route is compiled.
+      $parameters['token'] = $this->csrfToken->get($route->getRequirement('_csrf_token'));
+    }
+  }
+
+}
+

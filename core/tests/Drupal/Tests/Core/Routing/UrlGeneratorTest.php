@@ -8,20 +8,14 @@
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Component\Utility\Settings;
-use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\NullStorage;
-use Drupal\Core\Config\Context\ConfigContextFactory;
 use Drupal\Core\PathProcessor\PathProcessorAlias;
 use Drupal\Core\PathProcessor\PathProcessorManager;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Drupal\Core\Routing\UrlGenerator;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
-
-use Drupal\Tests\UnitTestCase;
-
-use Drupal\Core\Routing\UrlGenerator;
 
 /**
  * Basic tests for the Route.
@@ -44,7 +38,19 @@ class UrlGeneratorTest extends UnitTestCase {
    */
   protected $generatorMixedMode;
 
+  /**
+   * The alias manager.
+   *
+   * @var \Drupal\Core\Path\AliasManager|\PHPUnit_Framework_MockObject_MockObject
+   */
   protected $aliasManager;
+
+  /**
+   * The mock route processor manager.
+   *
+   * @var \Drupal\Core\RouteProcessor\RouteProcessorManager|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $routeProcessorManager;
 
   public static function getInfo() {
     return array(
@@ -121,14 +127,18 @@ class UrlGeneratorTest extends UnitTestCase {
     $processor_manager = new PathProcessorManager();
     $processor_manager->addOutbound($processor, 1000);
 
+    $this->routeProcessorManager = $this->getMockBuilder('Drupal\Core\RouteProcessor\RouteProcessorManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+
     $config_factory_stub = $this->getConfigFactoryStub(array('system.filter' => array('protocols' => array('http', 'https'))));
 
-    $generator = new UrlGenerator($provider, $processor_manager, $config_factory_stub, new Settings(array()));
+    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array()));
     $generator->setContext($context);
     $this->generator = $generator;
 
     // Second generator for mixed-mode sessions.
-    $generator = new UrlGenerator($provider, $processor_manager, $config_factory_stub, new Settings(array('mixed_mode_sessions' => TRUE)));
+    $generator = new UrlGenerator($provider, $processor_manager, $this->routeProcessorManager, $config_factory_stub, new Settings(array('mixed_mode_sessions' => TRUE)));
     $generator->setContext($context);
     $this->generatorMixedMode = $generator;
   }
@@ -163,6 +173,11 @@ class UrlGeneratorTest extends UnitTestCase {
     $url = $this->generator->generate('test_1');
     $this->assertEquals('/hello/world', $url);
 
+    $this->routeProcessorManager->expects($this->once())
+      ->method('processOutbound')
+      ->with($this->anything());
+
+
     // Check that the two generate methods return the same result.
     $url_from_route = $this->generator->generateFromRoute('test_1');
     $this->assertEquals($url_from_route, $url);
@@ -177,6 +192,9 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testGetPathFromRouteWithSubdirectory() {
     $this->generator->setBasePath('/test-base-path');
 
+    $this->routeProcessorManager->expects($this->never())
+      ->method('processOutbound');
+
     $path = $this->generator->getPathFromRoute('test_1');
     $this->assertEquals('test/one', $path);
   }
@@ -187,6 +205,10 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testAliasGenerationWithParameters() {
     $url = $this->generator->generate('test_2', array('narf' => '5'));
     $this->assertEquals('/goodbye/cruel/world', $url);
+
+    $this->routeProcessorManager->expects($this->exactly(3))
+      ->method('processOutbound')
+      ->with($this->anything());
 
     $options = array('fragment' => 'top');
     // Extra parameters should appear in the query string.
@@ -209,6 +231,9 @@ class UrlGeneratorTest extends UnitTestCase {
    * Tests URL generation from route with trailing start and end slashes.
    */
   public function testGetPathFromRouteTrailing() {
+    $this->routeProcessorManager->expects($this->never())
+      ->method('processOutbound');
+
     $path = $this->generator->getPathFromRoute('test_3');
     $this->assertEquals($path, 'test/two');
   }
@@ -219,6 +244,10 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testAbsoluteURLGeneration() {
     $url = $this->generator->generate('test_1', array(), TRUE);
     $this->assertEquals('http://localhost/hello/world', $url);
+
+    $this->routeProcessorManager->expects($this->once())
+      ->method('processOutbound')
+      ->with($this->anything());
 
     $options = array('absolute' => TRUE, 'fragment' => 'top');
     // Extra parameters should appear in the query string.
@@ -232,6 +261,10 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testUrlGenerationWithHttpsRequirement() {
     $url = $this->generator->generate('test_4', array(), TRUE);
     $this->assertEquals('https://localhost/test/four', $url);
+
+    $this->routeProcessorManager->expects($this->exactly(2))
+      ->method('processOutbound')
+      ->with($this->anything());
 
     $options = array('absolute' => TRUE, 'https' => TRUE);
     // Mixed-mode sessions are not enabled, so the https option is ignored.

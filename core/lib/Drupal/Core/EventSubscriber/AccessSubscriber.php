@@ -11,6 +11,7 @@ use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -59,13 +60,29 @@ class AccessSubscriber implements EventSubscriberInterface {
    */
   public function onKernelRequestAccessCheck(GetResponseEvent $event) {
     $request = $event->getRequest();
+
+    // The controller is being handled by the HTTP kernel, so add an attribute
+    // to tell us this is the controller request.
+    $request->attributes->set('_controller_request', TRUE);
+
     if (!$request->attributes->has(RouteObjectInterface::ROUTE_OBJECT)) {
       // If no Route is available it is likely a static resource and access is
       // handled elsewhere.
       return;
     }
 
-    $access = $this->accessManager->check($request->attributes->get(RouteObjectInterface::ROUTE_OBJECT), $request, $this->currentUser);
+    // Wrap this in a try/catch to ensure the '_controller_request' attribute
+    // can always be removed.
+    try {
+      $access = $this->accessManager->check($request->attributes->get(RouteObjectInterface::ROUTE_OBJECT), $request, $this->currentUser);
+    }
+    catch (\Exception $e) {
+      $request->attributes->remove('_controller_request');
+      throw $e;
+    }
+
+    $request->attributes->remove('_controller_request');
+
     if (!$access) {
       throw new AccessDeniedHttpException();
     }

@@ -451,14 +451,15 @@ function shortcut_preprocess_page(&$variables) {
     $link_mode = isset($mlid) ? "remove" : "add";
 
     if ($link_mode == "add") {
-      $query['token'] = drupal_get_token('shortcut-add-link');
       $link_text = shortcut_set_switch_access() ? t('Add to %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->label())) : t('Add to shortcuts');
-      $link_path = 'admin/config/user-interface/shortcut/manage/' . $shortcut_set->id() . '/add-link-inline';
+      $route_name = 'shortcut.link_add_inline';
+      $route_parameters = array('shortcut_set' => $shortcut_set->id());
     }
     else {
       $query['mlid'] = $mlid;
       $link_text = shortcut_set_switch_access() ? t('Remove from %shortcut_set shortcuts', array('%shortcut_set' => $shortcut_set->label())) : t('Remove from shortcuts');
-      $link_path = 'admin/config/user-interface/shortcut/link/' . $mlid . '/delete';
+      $route_name = 'shortcut.link_delete';
+      $route_parameters = array('menu_link' => $mlid);
     }
 
     if (theme_get_setting('shortcut_module_link')) {
@@ -471,7 +472,8 @@ function shortcut_preprocess_page(&$variables) {
         '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
         '#type' => 'link',
         '#title' => '<span class="icon">'. t('Add or remove shortcut') .'</span><span class="text">' . $link_text . '</span>',
-        '#href' => $link_path,
+        '#route_name' => $route_name,
+        '#route_parameters' => $route_parameters,
         '#options' => array('query' => $query, 'html' => TRUE),
         '#suffix' => '</div>',
       );

@@ -40,6 +40,7 @@ shortcut.link_add_inline:
     _controller: 'Drupal\shortcut\Controller\ShortcutSetController::addShortcutLinkInline'
   requirements:
     _entity_access: 'shortcut_set.update'
+    _csrf_token: 'shortcut-add-link'
 
 shortcut.set_customize:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}'

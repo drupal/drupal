@@ -8,6 +8,7 @@
 namespace Drupal\Core\PathProcessor;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 
 /**
  * Defines an interface for classes that process the outbound path.

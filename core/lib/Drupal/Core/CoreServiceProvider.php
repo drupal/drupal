@@ -14,6 +14,7 @@ use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterPathProcessorsPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterRouteProcessorsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
@@ -63,6 +64,7 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $container->addCompilerPass(new RegisterServicesForDestructionPass());
     // Add the compiler pass that will process the tagged services.
     $container->addCompilerPass(new RegisterPathProcessorsPass());
+    $container->addCompilerPass(new RegisterRouteProcessorsPass());
     $container->addCompilerPass(new ListCacheBinsPass());
     // Add the compiler pass for appending string translators.
     $container->addCompilerPass(new RegisterStringTranslatorsPass());

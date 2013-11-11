@@ -9,6 +9,7 @@ namespace Drupal\Core\Routing;
 
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Route;
 
 /**
  * No-op implementation of a Url Generator, needed for backward compatibility.

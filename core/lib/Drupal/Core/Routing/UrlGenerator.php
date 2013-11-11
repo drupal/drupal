@@ -19,6 +19,7 @@ use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Url;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
+use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
 
 /**
  * Generates URLs from route names and parameters.
@@ -38,6 +39,13 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface
    */
   protected $pathProcessor;
+
+  /**
+   * The route processor.
+   *
+   * @var \Drupal\Tests\Core\RouteProcessor\OutboundRouteProcessorInterface
+   */
+  protected $routeProcessor;
 
   /**
    * The base path to use for urls.
@@ -77,10 +85,11 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
    *   An optional logger for recording errors.
    */
-  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, ConfigFactory $config, Settings $settings, LoggerInterface $logger = NULL) {
+  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactory $config, Settings $settings, LoggerInterface $logger = NULL) {
     parent::__construct($provider, $logger);
 
     $this->pathProcessor = $path_processor;
+    $this->routeProcessor = $route_processor;
     $this->mixedModeSessions = $settings->get('mixed_mode_sessions', FALSE);
     $allowed_protocols = $config->get('system.filter')->get('protocols') ?: array('http', 'https');
     Url::setAllowedProtocols($allowed_protocols);
@@ -167,10 +176,13 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   public function generateFromRoute($name, $parameters = array(), $options = array()) {
     $absolute = !empty($options['absolute']);
     $route = $this->getRoute($name);
+    $this->processRoute($route, $parameters);
+
     // Symfony adds any parameters that are not path slugs as query strings.
     if (isset($options['query']) && is_array($options['query'])) {
       $parameters = (array) $parameters + $options['query'];
     }
+
     $path = $this->getInternalPathFromRoute($route, $parameters);
     $path = $this->processPath($path, $options);
     $fragment = '';
@@ -179,6 +191,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
         $fragment = '#' . $fragment;
       }
     }
+
     $base_url = $this->context->getBaseUrl();
     if (!$absolute || !$host = $this->context->getHost()) {
       return $base_url . $path . $fragment;
@@ -333,6 +346,19 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
     $path = '/' . $this->pathProcessor->processOutbound(trim($actual_path, '/'), $options, $this->request);
     $path .= $query_string;
     return $path;
+  }
+
+  /**
+   * Passes the route to the processor manager for altering before complation.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route object to process.
+   *
+   * @param array $parameters
+   *   An array of parameters to be passed to the route compiler.
+   */
+  protected function processRoute(SymfonyRoute $route, array &$parameters) {
+    $this->routeProcessor->processOutbound($route, $parameters);
   }
 
   /**

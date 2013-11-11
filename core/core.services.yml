@@ -264,7 +264,7 @@ services:
       - [setFinalMatcher, ['@router.matcher.final_matcher']]
   url_generator:
     class: Drupal\Core\Routing\UrlGenerator
-    arguments: ['@router.route_provider', '@path_processor_manager', '@config.factory', '@settings']
+    arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@config.factory', '@settings']
     calls:
       - [setRequest, ['@?request']]
       - [setContext, ['@?router.request_context']]
@@ -449,6 +449,11 @@ services:
     arguments: ['@controller_resolver']
     tags:
       - { name: access_check }
+  access_check.csrf:
+    class: Drupal\Core\Access\CsrfAccessCheck
+    tags:
+      - { name: access_check }
+    arguments: ['@csrf_token']
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
     tags:
@@ -507,6 +512,8 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: [['@exception_controller', execute]]
+  route_processor_manager:
+    class: Drupal\Core\RouteProcessor\RouteProcessorManager
   path_processor_manager:
     class: Drupal\Core\PathProcessor\PathProcessorManager
   path_processor_decode:
@@ -525,6 +532,11 @@ services:
       - { name: path_processor_inbound, priority: 100 }
       - { name: path_processor_outbound, priority: 300 }
     arguments: ['@path.alias_manager']
+  route_processer_csrf:
+    class: Drupal\Core\Access\RouteProcessorCsrf
+    tags:
+      - { name: route_processor_outbound }
+    arguments: ['@csrf_token']
   transliteration:
     class: Drupal\Core\Transliteration\PHPTransliteration
   flood:
