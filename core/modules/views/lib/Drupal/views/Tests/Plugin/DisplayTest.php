@@ -187,6 +187,7 @@ class DisplayTest extends PluginTestBase {
     // Test the renderMoreLink method directly. This could be directly unit
     // tested.
     $more_link = $view->display_handler->renderMoreLink();
+    $more_link = drupal_render($more_link);
     $this->drupalSetContent($more_link);
     $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
     $this->assertEqual($result[0]->attributes()->href, url('test_display_more'), 'The right more link is shown.');

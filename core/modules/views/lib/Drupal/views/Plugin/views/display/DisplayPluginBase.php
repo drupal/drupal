@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
@@ -2482,7 +2483,12 @@ abstract class DisplayPluginBase extends PluginBase {
         $theme = $this->view->buildThemeFunctions('views_more');
         $path = check_url(url($path, $url_options));
 
-        return theme($theme, array('more_url' => $path, 'link_text' => check_plain($this->useMoreText()), 'view' => $this->view));
+        return array(
+          '#theme' => $theme,
+          '#more_url' => $path,
+          '#link_text' => String::checkPlain($this->useMoreText()),
+          '#view' => $this->view,
+        );
       }
     }
   }
