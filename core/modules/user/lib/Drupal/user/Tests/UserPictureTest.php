@@ -15,11 +15,14 @@ use Drupal\simpletest\WebTestBase;
 class UserPictureTest extends WebTestBase {
 
   /**
-   * Modules to enable.
+   * The profile to install as a basis for testing.
    *
-   * @var array
+   * Using the standard profile to test user picture config provided by the
+   * standard profile.
+   *
+   * @var string
    */
-  public static $modules = array('image', 'comment');
+  protected $profile = 'standard';
 
   protected $user;
   protected $_directory_test;
@@ -41,12 +44,6 @@ class UserPictureTest extends WebTestBase {
       'post comments',
       'skip comment approval',
     ));
-    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
-    $this->container->get('comment.manager')->addDefaultField('node', 'article');
-
-    // @see standard.install
-    module_load_install('user');
-    user_install_picture_field();
   }
 
   /**
