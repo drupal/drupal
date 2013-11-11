@@ -71,7 +71,7 @@ class Config {
   protected $context;
 
   /**
-   * Whether the config object has already been loaded.
+   * Whether the configuration object has already been loaded.
    *
    * @var bool
    */
@@ -139,6 +139,9 @@ class Config {
   /**
    * Sets the name of this configuration object.
    *
+   * @param string $name
+   *  The name of the configuration object.
+   *
    * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
@@ -149,6 +152,9 @@ class Config {
 
   /**
    * Validates the configuration object name.
+   *
+   * @param string $name
+   *  The name of the configuration object.
    *
    * @throws \Drupal\Core\Config\ConfigNameException
    *
@@ -182,7 +188,7 @@ class Config {
    * Returns whether this configuration object is new.
    *
    * @return bool
-   *   TRUE if this config object does not exist in storage.
+   *   TRUE if this configuration object does not exist in storage.
    */
   public function isNew() {
     if (!$this->isLoaded) {
@@ -192,11 +198,11 @@ class Config {
   }
 
   /**
-   * Gets data from this config object.
+   * Gets data from this configuration object.
    *
    * @param string $key
    *   A string that maps to a key within the configuration data.
-   *   For instance in the following configuation array:
+   *   For instance in the following configuration array:
    *   @code
    *   array(
    *     'foo' => array(
@@ -317,11 +323,11 @@ class Config {
   }
 
   /**
-   * Sets value in this config object.
+   * Sets a value in this configuration object.
    *
    * @param string $key
-   *   Identifier to store value in config.
-   * @param string $value
+   *   Identifier to store value in configuration.
+   * @param mixed $value
    *   Value to associate with identifier.
    *
    * @return \Drupal\Core\Config\Config
@@ -346,7 +352,7 @@ class Config {
   }
 
   /**
-   * Unsets value in this config object.
+   * Unsets a value in this configuration object.
    *
    * @param string $key
    *   Name of the key whose value should be unset.
@@ -426,7 +432,7 @@ class Config {
   }
 
   /**
-   * Retrieve the storage used to load and save this configuration object.
+   * Retrieves the storage used to load and save this configuration object.
    *
    * @return \Drupal\Core\Config\StorageInterface
    *   The configuration storage object.
@@ -436,7 +442,10 @@ class Config {
   }
 
   /**
-   * Dispatch a config event.
+   * Dispatches a configuration event.
+   *
+   * @param string $config_event_name
+   *   The configuration event name.
    */
   protected function notify($config_event_name) {
     $this->context->notify($config_event_name, $this);
@@ -455,7 +464,7 @@ class Config {
     if (!$this->isLoaded) {
       $this->load();
     }
-    // Preserve integer keys so that config keys are not changed.
+    // Preserve integer keys so that configuration keys are not changed.
     $this->replaceData(NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE));
     return $this;
   }
