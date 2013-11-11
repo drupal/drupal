@@ -113,6 +113,9 @@ function hook_field_extra_fields_alter(&$info) {
 /**
  * Define Field API field types.
  *
+ * Along with this hook, you also need to implement other hooks. See
+ * @link field_types Field Types API @endlink for more information.
+ *
  * @return
  *   An array whose keys are field type names and whose values are arrays
  *   describing the field type, with the following key/value pairs:
