@@ -59,13 +59,12 @@ class Display extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $view = &$form_state['view'];
+    $view = $form_state['view'];
     $display_id = $form_state['display_id'];
     $section = $form_state['section'];
 
     $executable = $view->getExecutable();
     $executable->setDisplay($display_id);
-    $display = &$executable->display[$display_id];
 
     // Get form from the handler.
     $form['options'] = array(

@@ -34,7 +34,7 @@ class Analyze extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $view = &$form_state['view'];
+    $view = $form_state['view'];
 
     $form['#title'] = $this->t('View analysis');
     $form['#section'] = 'analyze';

@@ -50,7 +50,7 @@ class ConfigItemExtra extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $view = &$form_state['view'];
+    $view = $form_state['view'];
     $display_id = $form_state['display_id'];
     $type = $form_state['type'];
     $id = $form_state['id'];
@@ -81,7 +81,7 @@ class ConfigItemExtra extends ViewsFormBase {
 
         // Get form from the handler.
         $handler->buildExtraOptionsForm($form['options'], $form_state);
-        $form_state['handler'] = &$handler;
+        $form_state['handler'] = $handler;
       }
 
       $view->getStandardButtons($form, $form_state, 'views_ui_config_item_extra_form');

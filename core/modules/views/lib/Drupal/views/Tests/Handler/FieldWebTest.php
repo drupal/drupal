@@ -206,7 +206,7 @@ class FieldWebTest extends HandlerTestBase {
       // Get the expected start of the path string.
       $base = ($absolute ? $base_url . '/' : base_path()) . $script_path;
       $absolute_string = $absolute ? 'absolute' : NULL;
-      $alter =& $id_field->options['alter'];
+      $alter = &$id_field->options['alter'];
       $alter['path'] = 'node/123';
 
       $expected_result = url('node/123', array('absolute' => $absolute));

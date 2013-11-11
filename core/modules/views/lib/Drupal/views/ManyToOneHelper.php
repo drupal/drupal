@@ -125,8 +125,8 @@ class ManyToOneHelper {
 
     // shortcuts
     $options = $this->handler->options;
-    $view = &$this->handler->view;
-    $query = &$this->handler->query;
+    $view = $this->handler->view;
+    $query = $this->handler->query;
 
     if (!empty($options['require_value'])) {
       $join->type = 'INNER';

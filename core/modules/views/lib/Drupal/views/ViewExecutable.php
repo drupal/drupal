@@ -914,7 +914,7 @@ class ViewExecutable {
     // Iterate through each argument and process.
     foreach ($this->argument as $id => $arg) {
       $position++;
-      $argument = &$this->argument[$id];
+      $argument = $this->argument[$id];
 
       if ($argument->broken()) {
         continue;
@@ -2069,15 +2069,6 @@ class ViewExecutable {
     $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
 
     return isset($fields[$id]) ? $fields[$id] : NULL;
-  }
-
-  /**
-   * Sets the build array used by the view.
-   *
-   * @param array $element
-   */
-  public function setElement(&$element) {
-    $this->element =& $element;
   }
 
   /**

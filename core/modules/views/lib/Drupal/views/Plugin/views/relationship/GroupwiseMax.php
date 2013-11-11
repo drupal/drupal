@@ -242,7 +242,7 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     // Workaround until http://drupal.org/node/844910 is fixed:
     // Remove all fields from the SELECT except the base id.
-    $fields =& $subquery->getFields();
+    $fields = &$subquery->getFields();
     foreach (array_keys($fields) as $field_name) {
       // The base id for this subquery is stored in our definition.
       if ($field_name != $this->definition['field']) {
@@ -252,7 +252,7 @@ class GroupwiseMax extends RelationshipPluginBase {
 
     // Make every alias in the subquery safe within the outer query by
     // appending a namespace to it, '_inner' by default.
-    $tables =& $subquery->getTables();
+    $tables = &$subquery->getTables();
     foreach (array_keys($tables) as $table_name) {
       $tables[$table_name]['alias'] .= $this->subquery_namespace;
       // Namespace the join on every table.
@@ -266,13 +266,13 @@ class GroupwiseMax extends RelationshipPluginBase {
       $fields[$field_name]['alias'] .= $this->subquery_namespace;
     }
     // Namespace conditions.
-    $where =& $subquery->conditions();
+    $where = &$subquery->conditions();
     $this->alterSubqueryCondition($subquery, $where);
     // Not sure why, but our sort order clause doesn't have a table.
     // TODO: the call to add_item() above to add the sort handler is probably
     // wrong -- needs attention from someone who understands it.
     // In the meantime, this works, but with a leap of faith...
-    $orders =& $subquery->getOrderBy();
+    $orders = &$subquery->getOrderBy();
     foreach ($orders as $order_key => $order) {
       // But if we're using a whole view, we don't know what we have!
       if ($options['subquery_view']) {
@@ -314,7 +314,7 @@ class GroupwiseMax extends RelationshipPluginBase {
           $condition['field'] = $this->conditionNamespace($condition['field']);
         }
         elseif (is_object($condition['field'])) {
-          $sub_conditions =& $condition['field']->conditions();
+          $sub_conditions = &$condition['field']->conditions();
           $this->alterSubqueryCondition($query, $sub_conditions);
         }
       }

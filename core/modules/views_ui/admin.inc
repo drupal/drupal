@@ -343,7 +343,7 @@ function views_ui_pre_render_move_argument_options($form) {
  * the current display.
  */
 function views_ui_standard_display_dropdown(&$form, &$form_state, $section) {
-  $view = &$form_state['view'];
+  $view = $form_state['view'];
   $display_id = $form_state['display_id'];
   $executable = $view->getExecutable();
   $displays = $executable->displayHandlers;

@@ -430,7 +430,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
 
     // Clear out the content of title if it's not enabled.
-    $options =& $form_state['values']['options'];
+    $options = &$form_state['values']['options'];
     if (empty($options['title_enable'])) {
       $options['title'] = '';
     }

@@ -48,7 +48,7 @@ class Rearrange extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $view = &$form_state['view'];
+    $view = $form_state['view'];
     $display_id = $form_state['display_id'];
     $type = $form_state['type'];
 

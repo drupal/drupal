@@ -180,7 +180,7 @@ function template_preprocess_views_view_fields(&$variables) {
     $empty = $field->isValueEmpty($field_output, $field->options['empty_zero']);
     if (empty($field->options['exclude']) && (!$empty || (empty($field->options['hide_empty']) && empty($variables['options']['hide_empty'])))) {
       $object = new stdClass();
-      $object->handler = &$view->field[$id];
+      $object->handler = $view->field[$id];
       $object->inline = !empty($variables['options']['inline'][$id]);
 
       $object->element_type = $object->handler->elementType(TRUE, !$variables['options']['default_field_elements'], $object->inline);
@@ -958,11 +958,10 @@ function template_preprocess_views_view_list(&$variables) {
  *   An associative array containing:
  *   - view: A ViewExecutable object.
  *   - rows: The raw row data.
-*/
+ */
 function template_preprocess_views_view_rss(&$variables) {
-  $view = $variables['view'];
+  $view  = $variables['view'];
   $items = $variables['rows'];
-
   $style = $view->style_plugin;
 
   $config = \Drupal::config('system.site');

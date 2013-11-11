@@ -247,7 +247,7 @@ function views_preprocess_comment(&$variables) {
   // The view data is added to the comment in
   // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['comment']->view) && $variables['comment']->view->storage->id()) {
-    $variables['view'] = &$variables['comment']->view;
+    $variables['view'] = $variables['comment']->view;
   }
 }
 
@@ -1242,7 +1242,7 @@ function views_pre_render_views_form_views_form($element) {
 /**
  * Form builder for the exposed widgets form.
  *
- * Be sure that $view and $display are references.
+ * Be sure that $display is a reference.
  */
 function views_exposed_form($form, &$form_state) {
   // Don't show the form when batch operations are in progress.
@@ -1256,7 +1256,7 @@ function views_exposed_form($form, &$form_state) {
   // Make sure that we validate because this form might be submitted
   // multiple times per page.
   $form_state['must_validate'] = TRUE;
-  $view = &$form_state['view'];
+  $view = $form_state['view'];
   $display = &$form_state['display'];
 
   $form_state['input'] = $view->getExposedInput();
@@ -1401,8 +1401,8 @@ function views_exposed_form_cache($views_name, $display_name, $form_output = NUL
  */
 function views_query_views_alter(AlterableInterface $query) {
   $substitutions = $query->getMetaData('views_substitutions');
-  $tables =& $query->getTables();
-  $where =& $query->conditions();
+  $tables = &$query->getTables();
+  $where = &$query->conditions();
 
   // Replaces substitions in tables.
   foreach ($tables as $table_name => $table_metadata) {
@@ -1427,7 +1427,7 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
         $condition['field'] = str_replace(array_keys($substitutions), array_values($substitutions), $condition['field']);
       }
       elseif (is_object($condition['field'])) {
-        $sub_conditions =& $condition['field']->conditions();
+        $sub_conditions = &$condition['field']->conditions();
         _views_query_tag_alter_condition($query, $sub_conditions, $substitutions);
       }
       // $condition['value'] is a subquery so alter the subquery recursive.

@@ -353,9 +353,7 @@ abstract class HandlerBase extends PluginBase {
    * There is no need for this function to actually store the data.
    */
   public function submitGroupByForm(&$form, &$form_state) {
-    $item =& $form_state['handler']->options;
-
-    $item['group_type'] = $form_state['values']['options']['group_type'];
+    $form_state['handler']->options['group_type'] = $form_state['values']['options']['group_type'];
   }
 
   /**
