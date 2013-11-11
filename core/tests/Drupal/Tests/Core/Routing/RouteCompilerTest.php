@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Routing;
 
+use Drupal\Core\Routing\RouteCompiler;
 use Symfony\Component\Routing\Route;
 
 use Drupal\Tests\UnitTestCase;
@@ -18,11 +19,50 @@ use Drupal\Tests\UnitTestCase;
  */
 class RouteCompilerTest extends UnitTestCase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Routes',
       'description' => 'Confirm that route object is functioning properly.',
       'group' => 'Routing',
+    );
+  }
+
+  /**
+   * Tests RouteCompiler::getFit().
+   *
+   * @param string $path
+   *   A path whose fit will be calculated in the test.
+   * @param int $expected
+   *   The expected fit returned by RouteCompiler::getFit()
+   *
+   * @dataProvider providerTestGetFit
+   */
+  public function testGetFit($path, $expected) {
+    $route_compiler = new RouteCompiler();
+    $result = $route_compiler->getFit($path);
+    $this->assertSame($expected, $result);
+  }
+
+  /**
+   * Provides data for RouteCompilerTest::testGetFit()
+   *
+   * @return array
+   *   An array of arrays, where each inner array has the path whose fit is to
+   *   be calculated as the first value and the expected fit as the second
+   *   value.
+   */
+  public function providerTestGetFit() {
+    return array(
+      array('test', 1),
+      array('/testwithleadingslash', 1),
+      array('testwithtrailingslash/', 1),
+      array('/testwithslashes/', 1),
+      array('test/with/multiple/parts', 15),
+      array('test/with/{some}/slugs', 13),
+      array('test/very/long/path/that/drupal/7/could/not/have/handled', 2047),
     );
   }
 

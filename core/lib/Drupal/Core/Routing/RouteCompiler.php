@@ -17,11 +17,6 @@ use Symfony\Component\Routing\RouteCompiler as SymfonyRouteCompiler;
 class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterface {
 
   /**
-   * The maximum number of path elements for a route pattern;
-   */
-  const MAX_PARTS = 9;
-
-  /**
    * Utility constant to use for regular expressions against the path.
    */
   const REGEX_DELIMITER = '#';
@@ -93,7 +88,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    *   The fitness of the path, as an integer.
    */
   public static function getFit($path) {
-    $parts = explode('/', trim($path, '/'), static::MAX_PARTS);
+    $parts = explode('/', trim($path, '/'));
     $number_parts = count($parts);
     // We store the highest index of parts here to save some work in the fit
     // calculation loop.
