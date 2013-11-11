@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\Component\PhpStorage;
+
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
@@ -32,12 +34,12 @@ class PhpStorageFactory {
    *   An instantiated storage controller for the specified name.
    */
   static function get($name) {
-    global $conf;
-    if (isset($conf['php_storage'][$name])) {
-      $configuration = $conf['php_storage'][$name];
+    $conf = Settings::getSingleton()->get('php_storage');
+    if (isset($conf[$name])) {
+      $configuration = $conf[$name];
     }
-    elseif (isset($conf['php_storage']['default'])) {
-      $configuration = $conf['php_storage']['default'];
+    elseif (isset($conf['default'])) {
+      $configuration = $conf['default'];
     }
     else {
       $configuration = array(

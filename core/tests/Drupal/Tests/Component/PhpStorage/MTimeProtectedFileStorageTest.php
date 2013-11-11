@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Component\PhpStorage\PhpStorageFactory;
+use Drupal\Component\Utility\Settings;
 
 /**
  * Tests the directory mtime based PHP loader implementation.
@@ -33,7 +34,6 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
   }
 
   function setUp() {
-    global $conf;
     parent::setUp();
     $this->secret = $this->randomName();
     $conf['php_storage']['simpletest'] = array(
@@ -41,6 +41,7 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
       'directory' => sys_get_temp_dir() . '/php',
       'secret' => $this->secret,
     );
+    new Settings($conf);
   }
 
   /**

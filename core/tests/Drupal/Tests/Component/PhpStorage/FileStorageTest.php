@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\Component\PhpStorage;
 
+use Drupal\Component\Utility\Settings;
+
 /**
  * Tests the simple file storage.
  */
@@ -21,7 +23,6 @@ class FileStorageTest extends PhpStorageTestBase {
   }
 
   public function setUp() {
-    global $conf;
     parent::setUp();
     $dir_path = sys_get_temp_dir() . '/php';
     $conf['php_storage']['simpletest'] = array(
@@ -34,6 +35,7 @@ class FileStorageTest extends PhpStorageTestBase {
       // Let this read from the bin where the other instance is writing.
       'bin' => 'simpletest',
     );
+    new Settings($conf);
   }
 
   /**
