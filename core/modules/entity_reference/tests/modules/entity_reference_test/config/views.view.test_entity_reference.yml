@@ -6,7 +6,7 @@ id: test_entity_reference
 description: ''
 label: 'Entity reference'
 tag: ''
-status: '1'
+status: true
 display:
   default:
     display_plugin: default
@@ -35,27 +35,27 @@ display:
           field: title
           label: ''
           alter:
-            alter_text: '0'
-            make_link: '0'
-            absolute: '0'
-            trim: '0'
-            word_boundary: '0'
-            ellipsis: '0'
-            strip_tags: '0'
-            html: '0'
-          hide_empty: '0'
-          empty_zero: '0'
-          link_to_node: '1'
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          link_to_node: true
           provider: node
       filters:
         status:
-          value: '1'
+          value: true
           table: node_field_data
           field: status
           id: status
           expose:
-            operator: '0'
-          group: '1'
+            operator: 0
+          group: true
           provider: views
       sorts:
         created:
@@ -79,4 +79,4 @@ display:
       pager:
         type: none
         options:
-          offset: '0'
+          offset: 0
