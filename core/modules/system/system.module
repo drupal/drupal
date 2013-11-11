@@ -189,9 +189,6 @@ function system_theme() {
     'system_compact_link' => array(
       'variables' => array(),
     ),
-    'system_date_format_localize_form' => array(
-      'render element' => 'form',
-    ),
   ));
 }
 
@@ -814,26 +811,6 @@ function system_menu() {
     'theme callback' => '_system_batch_theme',
     'type' => MENU_CALLBACK,
   );
-
-  // Localize date formats.
-  if (\Drupal::moduleHandler()->moduleExists('language')) {
-    $items['admin/config/regional/date-time/locale'] = array(
-      'title' => 'Localize',
-      'description' => 'Configure date formats for each locale',
-      'weight' => -8,
-      'route_name' => 'system.date_format_language_overview',
-    );
-    $items['admin/config/regional/date-time/locale/%/edit'] = array(
-      'title' => 'Localize date formats',
-      'route_name' => 'system.localize_date_format',
-      'description' => 'Configure date formats for each locale',
-    );
-    $items['admin/config/regional/date-time/locale/%/reset'] = array(
-      'title' => 'Reset date formats',
-      'description' => 'Reset localized date formats to global defaults',
-      'route_name' => 'system.date_format_localize_reset',
-    );
-  }
 
   return $items;
 }

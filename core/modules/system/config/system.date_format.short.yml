@@ -4,7 +4,6 @@ label: 'Default short date'
 status: true
 langcode: en
 locked: false
-locales: {  }
 pattern:
   php: 'm/d/Y - H:i'
   intl: 'MM/dd/yyyy - kk:mm'

@@ -214,13 +214,6 @@ system.date_format_edit:
   requirements:
     _entity_access: 'date_format.update'
 
-system.date_format_language_overview:
-  path: '/admin/config/regional/date-time/locale'
-  defaults:
-    _controller: '\Drupal\system\Controller\DateFormatLanguageController::overviewPage'
-  requirements:
-    _permission: 'administer site configuration'
-
 system.date_format_delete:
   path: '/admin/config/regional/date-time/formats/manage/{date_format}/delete'
   defaults:
@@ -228,13 +221,6 @@ system.date_format_delete:
     _title: 'Delete date format'
   requirements:
     _entity_access: 'date_format.delete'
-
-system.date_format_localize_reset:
-  path: '/admin/config/regional/date-time/locale/{langcode}/reset'
-  defaults:
-    _form: '\Drupal\system\Form\DateFormatLocalizeResetForm'
-  requirements:
-    _permission: 'administer site configuration'
 
 system.modules_list:
   path: '/admin/modules'
@@ -376,14 +362,6 @@ system.batch_page:
     _controller: '\Drupal\system\Controller\BatchController::batchPage'
   requirements:
     _access: 'TRUE'
-
-system.localize_date_format:
-  path: '/admin/config/regional/date-time/locale/{langcode}/edit'
-  defaults:
-    _content: '\Drupal\system\Form\SystemForm::localizeDateFormat'
-    _title: 'Localize date formats'
-  requirements:
-    _permission: 'administer site configuration'
 
 system.update:
   path: '/core/update.php'

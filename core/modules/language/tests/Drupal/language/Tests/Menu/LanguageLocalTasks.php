@@ -60,14 +60,4 @@ class LanguageLocalTasks extends LocalTaskIntegrationTest {
     ));
   }
 
-  /**
-   * Tests language date format local tasks.
-   */
-  public function testLanguageDateLocalTasks() {
-    $this->assertLocalTasks('system.date_format_language_overview', array(
-      0 => array('system.date_format_language_overview'),
-    ));
-  }
-
-
 }

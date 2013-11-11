@@ -4,7 +4,6 @@ label: 'HTML Week'
 status: true
 langcode: en
 locked: true
-locales: {  }
 pattern:
   php: Y-\WW
   intl: 'Y-''W''WW'

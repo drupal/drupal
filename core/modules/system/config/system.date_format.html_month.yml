@@ -4,7 +4,6 @@ label: 'HTML Month'
 status: true
 langcode: en
 locked: true
-locales: {  }
 pattern:
   php: Y-m
   intl: Y-MM

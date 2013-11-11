@@ -4,7 +4,6 @@ label: 'HTML Time'
 status: true
 langcode: en
 locked: true
-locales: {  }
 pattern:
   php: 'H:i:s'
   intl: 'H:mm:ss'

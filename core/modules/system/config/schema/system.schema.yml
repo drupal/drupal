@@ -130,12 +130,6 @@ system.date_format.*:
     locked:
       type: boolean
       label: 'Locked'
-    locales:
-      type: sequence
-      label: 'Languages'
-      sequence:
-        - type: string
-          label: 'Language'
     pattern:
       type: mapping
       label: 'Format string'

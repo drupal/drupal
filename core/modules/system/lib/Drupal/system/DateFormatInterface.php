@@ -40,44 +40,6 @@ interface DateFormatInterface extends ConfigEntityInterface {
   public function setPattern($pattern, $type = DrupalDateTime::PHP);
 
   /**
-   * Adds a locale for this date format.
-   *
-   * @param string $locale
-   *   The locale to add for this format.
-   *
-   * @return self
-   *   Returns the date format.
-   */
-  public function addLocale($locale);
-
-  /**
-   * Sets the locales for this date format. This overwrites existing locales.
-   *
-   * @param array $locales
-   *   The array of locales to set for this format.
-   *
-   * @return self
-   *   Returns the date format.
-   */
-  public function setLocales(array $locales);
-
-  /**
-   * Returns an array of the locales for this date format.
-   *
-   * @return array
-   *   An array of locale names.
-   */
-  public function getLocales();
-
-  /**
-   * Determines if this data format has any locales.
-   *
-   * @return bool
-   *   TRUE if the date format has locales, FALSE otherwise.
-   */
-  public function hasLocales();
-
-  /**
    * Determines if this date format is locked.
    *
    * @return bool

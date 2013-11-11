@@ -125,28 +125,6 @@ class DateTimeTest extends WebTestBase {
   }
 
   /**
-   * Test if the date formats are stored properly.
-   */
-  function testDateFormatStorage() {
-    $date_format = entity_create('date_format', array(
-      'id' => 'test_short',
-      'label' => 'testDateFormatStorage Short Format',
-      'pattern' => array('php' => 'dmYHis'),
-    ));
-    $date_format->save();
-
-    $format = $date_format->getPattern();
-    $this->assertEqual('dmYHis', $format, 'Unlocalized date format resides in general config.');
-
-    $date_format->addLocale('en')->save();
-    $format = $date_format->getPattern();
-    $this->assertEqual('dmYHis', $format, 'Localized date format resides in general config too.');
-
-    $format = \Drupal::config('locale.config.en.system.date_format.test_short')->get('pattern.php');
-    $this->assertEqual('dmYHis', $format, 'Localized date format resides in localized config.');
-  }
-
-  /**
    * Test that date formats are sanitized.
    */
   function testDateFormatXSS() {
