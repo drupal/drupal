@@ -273,7 +273,7 @@ abstract class ControllerBase {
   }
 
   /**
-   * Returns a redirect response object for the specified
+   * Returns a redirect response object for the specified route.
    *
    * @param string $route_name
    *   The name of the route to which to redirect.
@@ -281,6 +281,7 @@ abstract class ControllerBase {
    *   Parameters for the route.
    * @param int $status
    *   The HTTP redirect status code for the redirect. The default is 302 Found.
+   *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response object that may be returned by the controller.
    */
