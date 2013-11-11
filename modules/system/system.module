@@ -2730,7 +2730,17 @@ function system_default_region($theme) {
 }
 
 /**
- * Add default buttons to a form and set its prefix.
+ * Sets up a form to save information automatically.
+ *
+ * This function adds a submit handler and a submit button to a form array. The
+ * submit function saves all the data in the form, using variable_set(), to
+ * variables named the same as the keys in the form array. Note that this means
+ * you should normally prefix your form array keys with your module name, so
+ * that they are unique when passed into variable_set().
+ *
+ * If you need to manipulate the data in a custom manner, you can either put
+ * your own submission handler in the form array before calling this function,
+ * or just use your own submission handler instead of calling this function.
  *
  * @param $form
  *   An associative array containing the structure of the form.
@@ -2739,6 +2749,7 @@ function system_default_region($theme) {
  *   The form structure.
  *
  * @see system_settings_form_submit()
+ *
  * @ingroup forms
  */
 function system_settings_form($form) {
@@ -2757,7 +2768,7 @@ function system_settings_form($form) {
 }
 
 /**
- * Execute the system_settings_form.
+ * Form submission handler for system_settings_form().
  *
  * If you want node type configure style handling of your checkboxes,
  * add an array_filter value to your form.
