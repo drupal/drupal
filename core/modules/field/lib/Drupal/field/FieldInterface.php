@@ -48,8 +48,7 @@ interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface
    * Returns the list of bundles where the field has instances.
    *
    * @return array
-   *   An array keyed by entity type names, whose values are arrays of bundle
-   *   names.
+   *   An array of bundle names.
    */
   public function getBundles();
 
