@@ -21,7 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *   id = "aggregator_category_block",
- *   admin_label = @Translation("Aggregator category")
+ *   admin_label = @Translation("Aggregator category"),
+ *   category = @Translation("Lists (Views)")
  * )
  */
 class AggregatorCategoryBlock extends BlockBase implements ContainerFactoryPluginInterface {

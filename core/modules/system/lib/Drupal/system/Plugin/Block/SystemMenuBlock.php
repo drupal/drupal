@@ -18,7 +18,7 @@ use Drupal\Core\Session\AccountInterface;
  * @Block(
  *   id = "system_menu_block",
  *   admin_label = @Translation("Menu"),
- *   category = @Translation("Menu"),
+ *   category = @Translation("Menus"),
  *   derivative = "Drupal\system\Plugin\Derivative\SystemMenuBlock"
  * )
  */

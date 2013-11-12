@@ -17,7 +17,8 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @Block(
  *   id = "user_new_block",
- *   admin_label = @Translation("Who's new")
+ *   admin_label = @Translation("Who's new"),
+ *   category = @Translation("Lists (Views)")
  * )
  */
 class UserNewBlock extends BlockBase {

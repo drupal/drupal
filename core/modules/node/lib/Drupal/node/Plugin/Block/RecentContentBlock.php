@@ -17,7 +17,8 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @Block(
  *   id = "node_recent_block",
- *   admin_label = @Translation("Recent content")
+ *   admin_label = @Translation("Recent content"),
+ *   category = @Translation("Lists (Views)")
  * )
  */
 class RecentContentBlock extends BlockBase {

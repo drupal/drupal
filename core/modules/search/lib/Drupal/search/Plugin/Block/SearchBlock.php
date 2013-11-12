@@ -17,7 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Block(
  *   id = "search_form_block",
- *   admin_label = @Translation("Search form")
+ *   admin_label = @Translation("Search form"),
+ *   category = @Translation("Forms")
  * )
  */
 class SearchBlock extends BlockBase {

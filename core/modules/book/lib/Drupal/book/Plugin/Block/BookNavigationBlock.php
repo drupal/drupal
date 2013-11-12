@@ -16,7 +16,8 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Block(
  *   id = "book_navigation",
- *   admin_label = @Translation("Book navigation")
+ *   admin_label = @Translation("Book navigation"),
+ *   category = @Translation("Menus")
  * )
  */
 class BookNavigationBlock extends BlockBase {

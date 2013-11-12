@@ -15,7 +15,8 @@ use Drupal\Core\Annotation\Translation;
  *
  * @Block(
  *   id = "forum_active_block",
- *   admin_label = @Translation("Active forum topics")
+ *   admin_label = @Translation("Active forum topics"),
+ *   category = @Translation("Lists (Views)")
  * )
  */
 class ActiveTopicsBlock extends ForumBlockBase {

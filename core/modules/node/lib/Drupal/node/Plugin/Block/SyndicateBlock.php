@@ -17,7 +17,8 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @Block(
  *   id = "node_syndicate_block",
- *   admin_label = @Translation("Syndicate")
+ *   admin_label = @Translation("Syndicate"),
+ *   category = @Translation("System")
  * )
  */
 class SyndicateBlock extends BlockBase {

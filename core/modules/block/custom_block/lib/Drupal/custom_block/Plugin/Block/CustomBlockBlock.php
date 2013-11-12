@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Block(
  *  id = "custom_block",
  *  admin_label = @Translation("Custom block"),
+ *  category = @Translation("Custom"),
  *  derivative = "Drupal\custom_block\Plugin\Derivative\CustomBlock"
  * )
  */

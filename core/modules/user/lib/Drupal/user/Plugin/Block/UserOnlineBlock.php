@@ -20,7 +20,8 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @Block(
  *   id = "user_online_block",
- *   admin_label = @Translation("Who's online")
+ *   admin_label = @Translation("Who's online"),
+ *   category = @Translation("Lists (Views)")
  * )
  */
 class UserOnlineBlock extends BlockBase {

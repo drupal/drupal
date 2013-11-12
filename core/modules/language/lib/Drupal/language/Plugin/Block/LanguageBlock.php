@@ -18,6 +18,7 @@ use Drupal\Core\Session\AccountInterface;
  * @Block(
  *   id = "language_block",
  *   admin_label = @Translation("Language switcher"),
+ *   category = @Translation("System"),
  *   derivative = "Drupal\language\Plugin\Derivative\LanguageBlock"
  * )
  */

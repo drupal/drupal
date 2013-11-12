@@ -66,7 +66,7 @@ class DisplayBlockTest extends ViewTestBase {
     // Test that the block was given a default category corresponding to its
     // base table.
     $arguments = array(
-      ':id' => 'edit-category-views-test-data',
+      ':id' => 'edit-category-lists-views',
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-1',
       ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_1/stark'),
       ':text' => $edit['label'],
@@ -81,7 +81,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     // Change the block category to a random string.
     $this->drupalGet('admin/structure/views/view/' . $edit['id'] . '/edit/block_1');
-    $label = t('Views test data');
+    $label = t('Lists (Views)');
     $link = $this->xpath('//a[@id="views-block-1-block-category" and normalize-space(text())=:label]', array(':label' => $label));
     $this->assertTrue(!empty($link));
     $this->clickLink($label);
@@ -102,7 +102,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertTrue(!empty($elements), 'The test block appears in the custom category.');
 
     $arguments = array(
-      ':id' => 'edit-category-views-test-data',
+      ':id' => 'edit-category-lists-views',
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-2',
       ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_2/stark'),
       ':text' => $edit['label'],

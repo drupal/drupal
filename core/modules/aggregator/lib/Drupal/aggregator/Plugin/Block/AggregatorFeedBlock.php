@@ -21,7 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *   id = "aggregator_feed_block",
- *   admin_label = @Translation("Aggregator feed")
+ *   admin_label = @Translation("Aggregator feed"),
+ *   category = @Translation("Lists (Views)")
  * )
  */
 class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInterface {

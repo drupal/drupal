@@ -47,7 +47,7 @@ class Block extends DisplayPluginBase {
     $options = parent::defineOptions();
 
     $options['block_description'] = array('default' => '', 'translatable' => TRUE);
-    $options['block_category'] = array('default' => 'Views', 'translatable' => TRUE);
+    $options['block_category'] = array('default' => 'Lists (Views)', 'translatable' => TRUE);
     $options['block_caching'] = array('default' => DRUPAL_NO_CACHE);
     $options['block_hide_empty'] = array('default' => FALSE);
 
@@ -363,17 +363,6 @@ class Block extends DisplayPluginBase {
       }
       return FALSE;
     }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function newDisplay() {
-    $base_tables = Views::viewsData()->fetchBaseTables();
-    $base_table = $this->view->storage->get('base_table');
-    if (isset($base_tables[$base_table]['title'])) {
-      $this->setOption('block_category', $base_tables[$base_table]['title']);
-    }
-  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::remove().

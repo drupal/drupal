@@ -15,7 +15,8 @@ use Drupal\block\BlockBase;
  *
  * @Block(
  *   id = "user_login_block",
- *   admin_label = @Translation("User login")
+ *   admin_label = @Translation("User login"),
+ *   category = @Translation("Forms")
  * )
  */
 class UserLoginBlock extends BlockBase {

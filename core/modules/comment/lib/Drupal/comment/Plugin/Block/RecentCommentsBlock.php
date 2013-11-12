@@ -16,8 +16,9 @@ use Drupal\Core\Session\AccountInterface;
  * Provides a 'Recent comments' block.
  *
  * @Block(
- *  id = "recent_comments",
- *  admin_label = @Translation("Recent comments")
+ *   id = "recent_comments",
+ *   admin_label = @Translation("Recent comments"),
+ *   category = @Translation("Lists (Views)")
  * )
  */
 class RecentCommentsBlock extends BlockBase {
