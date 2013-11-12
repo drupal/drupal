@@ -179,6 +179,12 @@ class ViewSubscriber implements EventSubscriberInterface {
     $page_callback_result = $event->getControllerResult();
     $request = $event->getRequest();
 
+    // Convert string content to a renderable array, so we can set a title.
+    if (!is_array($page_callback_result)) {
+      $page_callback_result = array(
+        '#markup' => $page_callback_result,
+      );
+    }
     // If no title was returned fall back to one defined in the route.
     if (!isset($page_callback_result['#title'])) {
       $page_callback_result['#title'] = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
