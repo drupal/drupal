@@ -532,7 +532,7 @@ services:
       - { name: path_processor_inbound, priority: 100 }
       - { name: path_processor_outbound, priority: 300 }
     arguments: ['@path.alias_manager']
-  route_processer_csrf:
+  route_processor_csrf:
     class: Drupal\Core\Access\RouteProcessorCsrf
     tags:
       - { name: route_processor_outbound }
