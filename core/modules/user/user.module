@@ -854,14 +854,12 @@ function user_menu_breadcrumb_alter(&$active_trail, $item) {
 }
 
 /**
- * Implements hook_menu_link_load().
+ * Implements hook_translated_menu_link_alter().
  */
-function user_menu_link_load($menu_links) {
+function user_translated_menu_link_alter(MenuLink &$menu_link) {
   // Hide the "User account" link for anonymous users.
-  foreach ($menu_links as $link) {
-    if ($link['link_path'] == 'user' && $link['module'] == 'system' && !$GLOBALS['user']->id()) {
-      $link['hidden'] = 1;
-    }
+  if ($menu_link->link_path == 'user' && $menu_link->module == 'system' && \Drupal::currentUser()->isAnonymous()) {
+    $menu_link->hidden = 1;
   }
 }
 
