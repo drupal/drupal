@@ -137,7 +137,7 @@ function file_usage() {
  * - If file already exists in $destination either the call will error out,
  *   replace the file or rename the file based on the $replace parameter.
  * - If the $source and $destination are equal, the behavior depends on the
- *   $replace parameter. FILE_EXIST_REPLACE will error out. FILE_EXIST_RENAME
+ *   $replace parameter. FILE_EXISTS_REPLACE will error out. FILE_EXISTS_RENAME
  *   will rename the file until the $destination is unique.
  * - Adds the new file to the files database. If the source file is a
  *   temporary file, the resulting file will also be a temporary file. See
