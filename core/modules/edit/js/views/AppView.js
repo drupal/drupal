@@ -413,36 +413,6 @@ Drupal.edit.AppView = Backbone.View.extend({
   },
 
   /**
-   *
-   */
-  enableEditor: function (fieldModel) {
-    // check if there's an active editor.
-    var activeEditor = this.model.get('activeEditor');
-
-    // Do nothing if the fieldModel is already the active editor.
-    if (fieldModel === activeEditor) {
-      return;
-    }
-    if (activeEditor) {
-      // If there is, check if the model is changed.
-      if (activeEditor.get('state') === 'changed') {
-        // Attempt to save the field.
-        activeEditor.set('state', 'saving');
-      }
-      // else, set it to a candidate.
-      else {
-        activeEditor.set('state', 'candidate');
-        // Set the new fieldModel to activating.
-        fieldModel.set('state', 'activating');
-      }
-    }
-    else {
-      // Set the new fieldModel to activating.
-      fieldModel.set('state', 'activating');
-    }
-  },
-
-  /**
    * Render an updated field (a field whose 'html' attribute changed).
    *
    * @param Drupal.edit.FieldModel fieldModel
