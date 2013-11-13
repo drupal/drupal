@@ -29,8 +29,8 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
 
     // Rerender whenever the entity state changes.
     this.model.on('change:isActive change:isDirty change:state', this.render, this);
-    // Also rerender whenever the highlighted or active in-place editor changes.
-    this.appModel.on('change:highlightedEditor change:activeEditor', this.render, this);
+    // Also rerender whenever a different field is highlighted or activated.
+    this.appModel.on('change:highlightedField change:activeField', this.render, this);
     // Rerender when a field of the entity changes state.
     this.model.get('fields').on('change:state', this.fieldStateChange, this);
 
@@ -179,7 +179,7 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
           break;
         case 1:
           // Position against a form container.
-          activeField = Drupal.edit.app.model.get('activeEditor');
+          activeField = Drupal.edit.app.model.get('activeField');
           of = activeField && activeField.editorView && activeField.editorView.$formContainer && activeField.editorView.$formContainer.find('.edit-form');
           break;
         case 2:
@@ -191,7 +191,7 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
           break;
         case 3:
           // Position against a highlighted field.
-          highlightedField = Drupal.edit.app.model.get('highlightedEditor');
+          highlightedField = Drupal.edit.app.model.get('highlightedField');
           of = highlightedField && highlightedField.editorView && highlightedField.editorView.getEditedElement();
           delay = 250;
           break;
@@ -365,11 +365,11 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
     var entityLabel = this.model.get('label');
 
     // Label of an active field, if it exists.
-    var activeEditor = Drupal.edit.app.model.get('activeEditor');
-    var activeFieldLabel = activeEditor && activeEditor.get('metadata').label;
+    var activeField = Drupal.edit.app.model.get('activeField');
+    var activeFieldLabel = activeField && activeField.get('metadata').label;
     // Label of a highlighted field, if it exists.
-    var highlightedEditor = Drupal.edit.app.model.get('highlightedEditor');
-    var highlightedFieldLabel = highlightedEditor && highlightedEditor.get('metadata').label;
+    var highlightedField = Drupal.edit.app.model.get('highlightedField');
+    var highlightedFieldLabel = highlightedField && highlightedField.get('metadata').label;
     // The label is constructed in a priority order.
     if (activeFieldLabel) {
       label = Drupal.theme('editEntityToolbarLabel', {

@@ -27,10 +27,10 @@ Drupal.edit.AppView = Backbone.View.extend({
   initialize: function (options) {
     // AppView's configuration for handling states.
     // @see Drupal.edit.FieldModel.states
-    this.activeEditorStates = ['activating', 'active'];
-    this.singleEditorStates = ['highlighted', 'activating', 'active'];
-    this.changedEditorStates = ['changed', 'saving', 'saved', 'invalid'];
-    this.fieldReadyStates = ['candidate', 'highlighted'];
+    this.activeFieldStates = ['activating', 'active'];
+    this.singleFieldStates = ['highlighted', 'activating', 'active'];
+    this.changedFieldStates = ['changed', 'saving', 'saved', 'invalid'];
+    this.readyFieldStates = ['candidate', 'highlighted'];
 
     options.entitiesCollection
       // Track app state.
@@ -134,7 +134,7 @@ Drupal.edit.AppView = Backbone.View.extend({
         accept = false;
         // Allow: activating/active -> candidate.
         // Necessary to stop editing a field.
-        if (_.indexOf(this.activeEditorStates, from) !== -1 && to === 'candidate') {
+        if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
           accept = true;
         }
         // Allow: changed/invalid -> candidate.
@@ -169,25 +169,25 @@ Drupal.edit.AppView = Backbone.View.extend({
       // If it's not against the general principle, then here are more
       // disallowed cases to check.
       if (accept) {
-        var activeEditor, activeEditorState;
-        // Ensure only one editor (field) at a time is active … but allow a user
+        var activeField, activeFieldState;
+        // Ensure only one field (editor) at a time is active … but allow a user
         // to hop from one field to the next, even if we still have to start
         // saving the field that is currently active: assume it will be valid,
         // to allow for a fluent UX. (If it turns out to be invalid, this block
         // of code also handles that.)
-        if ((this.fieldReadyStates.indexOf(from) !== -1 || from === 'invalid') && this.activeEditorStates.indexOf(to) !== -1) {
-          activeEditor = this.model.get('activeEditor');
-          if (activeEditor && activeEditor !== fieldModel) {
-            activeEditorState = activeEditor.get('state');
-            // Allow the state change. If the state of the active editor is:
+        if ((this.readyFieldStates.indexOf(from) !== -1 || from === 'invalid') && this.activeFieldStates.indexOf(to) !== -1) {
+          activeField = this.model.get('activeField');
+          if (activeField && activeField !== fieldModel) {
+            activeFieldState = activeField.get('state');
+            // Allow the state change. If the state of the active field is:
             // - 'activating' or 'active': change it to 'candidate'
             // - 'changed' or 'invalid': change it to 'saving'
             // - 'saving'or 'saved': don't do anything.
-            if (this.activeEditorStates.indexOf(activeEditorState) !== -1) {
-              activeEditor.set('state', 'candidate');
+            if (this.activeFieldStates.indexOf(activeFieldState) !== -1) {
+              activeField.set('state', 'candidate');
             }
-            else if (activeEditorState === 'changed' || activeEditorState === 'invalid') {
-              activeEditor.set('state', 'saving');
+            else if (activeFieldState === 'changed' || activeFieldState === 'invalid') {
+              activeField.set('state', 'saving');
             }
 
             // If the field that's being activated is in fact already in the
@@ -198,7 +198,7 @@ Drupal.edit.AppView = Backbone.View.extend({
             // change the active editor. All guarantees and assumptions for this
             // field still hold!
             if (from === 'invalid') {
-              this.model.set('activeEditor', fieldModel);
+              this.model.set('activeField', fieldModel);
               accept = false;
             }
             else {
@@ -210,7 +210,7 @@ Drupal.edit.AppView = Backbone.View.extend({
         }
         // Reject going from activating/active to candidate because of a
         // mouseleave.
-        else if (_.indexOf(this.activeEditorStates, from) !== -1 && to === 'candidate') {
+        else if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
           if (context && context.reason === 'mouseleave') {
             accept = false;
           }
@@ -391,24 +391,24 @@ Drupal.edit.AppView = Backbone.View.extend({
     var from = fieldModel.previous('state');
     var to = state;
 
-    // Keep track of the highlighted editor in the global state.
-    if (_.indexOf(this.singleEditorStates, to) !== -1 && this.model.get('highlightedEditor') !== fieldModel) {
-      this.model.set('highlightedEditor', fieldModel);
+    // Keep track of the highlighted field in the global state.
+    if (_.indexOf(this.singleFieldStates, to) !== -1 && this.model.get('highlightedField') !== fieldModel) {
+      this.model.set('highlightedField', fieldModel);
     }
-    else if (this.model.get('highlightedEditor') === fieldModel && to === 'candidate') {
-      this.model.set('highlightedEditor', null);
+    else if (this.model.get('highlightedField') === fieldModel && to === 'candidate') {
+      this.model.set('highlightedField', null);
     }
 
-    // Keep track of the active editor in the global state.
-    if (_.indexOf(this.activeEditorStates, to) !== -1 && this.model.get('activeEditor') !== fieldModel) {
-      this.model.set('activeEditor', fieldModel);
+    // Keep track of the active field in the global state.
+    if (_.indexOf(this.activeFieldStates, to) !== -1 && this.model.get('activeField') !== fieldModel) {
+      this.model.set('activeField', fieldModel);
     }
-    else if (this.model.get('activeEditor') === fieldModel && to === 'candidate') {
+    else if (this.model.get('activeField') === fieldModel && to === 'candidate') {
       // Discarded if it transitions from a changed state to 'candidate'.
       if (from === 'changed' || from === 'invalid') {
         fieldModel.editorView.revert();
       }
-      this.model.set('activeEditor', null);
+      this.model.set('activeField', null);
     }
   },
 

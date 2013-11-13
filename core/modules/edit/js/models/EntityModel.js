@@ -100,7 +100,7 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
         // committing.
         this.get('fields').chain()
           .filter(function (fieldModel) {
-            return _.intersection([fieldModel.get('state')], Drupal.edit.app.fieldReadyStates).length;
+            return _.intersection([fieldModel.get('state')], Drupal.edit.app.readyFieldStates).length;
           })
           .each(function (fieldModel) {
             fieldModel.trigger('change:state', fieldModel, fieldModel.get('state'), options);
@@ -117,7 +117,7 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
         // stored in TempStore.
         this.get('fields').chain()
           .filter(function (fieldModel) {
-            return _.intersection([fieldModel.get('state')], Drupal.edit.app.changedEditorStates).length;
+            return _.intersection([fieldModel.get('state')], Drupal.edit.app.changedFieldStates).length;
           })
           .each(function (fieldModel) {
             fieldModel.set('state', 'saving');
@@ -220,7 +220,7 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
         // A state change in reaction to another state change must be deferred.
         _.defer(function () {
           entityModel.set('state', 'opened', {
-            'accept-field-states': Drupal.edit.app.fieldReadyStates
+            'accept-field-states': Drupal.edit.app.readyFieldStates
           });
         });
         break;
@@ -279,7 +279,7 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
         // Attempt to save the entity. If the entity's fields are not yet all in
         // a ready state, the save will not be processed.
         var options = {
-          'accept-field-states': Drupal.edit.app.fieldReadyStates
+          'accept-field-states': Drupal.edit.app.readyFieldStates
         };
         if (entityModel.set('isCommitting', true, options)) {
           entityModel.save({
@@ -299,7 +299,7 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
         // A state change in reaction to another state change must be deferred.
         _.defer(function() {
           entityModel.set('state', 'closing', {
-            'accept-field-states': Drupal.edit.app.fieldReadyStates
+            'accept-field-states': Drupal.edit.app.readyFieldStates
           });
         });
         break;
