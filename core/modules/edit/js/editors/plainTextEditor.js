@@ -6,7 +6,7 @@
 
 "use strict";
 
-Drupal.edit.editors.direct = Drupal.edit.EditorView.extend({
+Drupal.edit.editors.plain_text = Drupal.edit.EditorView.extend({
 
   // Stores the textual DOM element that is being in-place edited.
   $textElement: null,

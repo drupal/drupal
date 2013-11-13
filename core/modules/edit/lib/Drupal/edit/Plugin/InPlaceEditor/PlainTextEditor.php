@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Plugin\InPlaceEditor\DirectEditor.
+ * Contains \Drupal\edit\Plugin\InPlaceEditor\PlainTextEditor.
  */
 
 namespace Drupal\edit\Plugin\InPlaceEditor;
@@ -12,13 +12,13 @@ use Drupal\edit\Annotation\InPlaceEditor;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
- * Defines the direct editor.
+ * Defines the plain text in-place editor.
  *
  * @InPlaceEditor(
- *   id = "direct"
+ *   id = "plain_text"
  * )
  */
-class DirectEditor extends EditorBase {
+class PlainTextEditor extends EditorBase {
 
   /**
    * {@inheritdoc}
@@ -41,13 +41,14 @@ class DirectEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\edit\EditPluginInterface::getAttachments().
+   * {@inheritdoc}
    */
   public function getAttachments() {
     return array(
       'library' => array(
-        array('edit', 'edit.editorWidget.direct'),
+        array('edit', 'edit.inPlaceEditor.plainText'),
       ),
     );
   }
+
 }

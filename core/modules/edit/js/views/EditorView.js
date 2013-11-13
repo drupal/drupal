@@ -8,7 +8,7 @@
  * Specific in-place editor implementations should subclass (extend) this View
  * and override whichever method they deem necessary to override.
  *
- * Look at Drupal.edit.editors.form and Drupal.edit.editors.direct for
+ * Look at Drupal.edit.editors.form and Drupal.edit.editors.plain_text for
  * examples.
  */
 Drupal.edit.EditorView = Backbone.View.extend({
@@ -24,7 +24,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
    * class' initialize()) first, like this:
    *   Drupal.edit.EditorView.prototype.initialize.call(this, options);
    *
-   * For an example, @see Drupal.edit.editors.direct.
+   * For an example, @see Drupal.edit.editors.plain_text.
    *
    * @param Object options
    *   An object with the following keys:
@@ -57,7 +57,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
    * e.g. using a WYSIWYG editor on a body field should happen on the DOM
    * element containing the text itself, not on the field wrapper.
    *
-   * For example, @see Drupal.edit.editors.direct.
+   * For example, @see Drupal.edit.editors.plain_text.
    *
    * @return jQuery
    *   A jQuery-wrapped DOM element.
@@ -204,7 +204,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
       // (hence "backstage" — since the editing doesn't happen in the form, it
       // happens "directly" in the content, the form is only used for saving).
       var $backstage = $(Drupal.theme('editBackstage', { id: backstageId })).appendTo('body');
-      // Direct forms are stuffed into the backstage container for this field.
+      // Hidden forms are stuffed into the backstage container for this field.
       var $form = $(form).appendTo($backstage);
       // Disable the browser's HTML5 validation; we only care about server-
       // side validation. (Not disabling this will actually cause problems

@@ -119,7 +119,7 @@ function edit_library_info() {
       array('system', 'drupal.dialog'),
     ),
   );
-  $libraries['edit.editorWidget.form'] = array(
+  $libraries['edit.inPlaceEditor.form'] = array(
     'title' => 'Form in-place editor',
     'version' => \Drupal::VERSION,
     'js' => array(
@@ -129,11 +129,11 @@ function edit_library_info() {
       array('edit', 'edit'),
     ),
   );
-  $libraries['edit.editorWidget.direct'] = array(
-    'title' => 'Direct in-place editor',
+  $libraries['edit.inPlaceEditor.plainText'] = array(
+    'title' => 'Plain text in-place editor',
     'version' => \Drupal::VERSION,
     'js' => array(
-      $path . '/js/editors/directEditor.js' => $options,
+      $path . '/js/editors/plainTextEditor.js' => $options,
     ),
     'dependencies' => array(
       array('edit', 'edit'),
@@ -164,12 +164,13 @@ function edit_library_info_alter(&$libraries, $module) {
  *
  * Edit extends the @FieldFormatter annotation with the following keys:
  * - edit: currently only contains one subkey 'editor' which indicates which
- *   in-place editor should be used. Possible values are 'form', 'direct' or
- *   'disabled'.
+ *   in-place editor should be used. Possible values are 'form', 'plain_text',
+ *   'disabled' or another in-place editor other than the ones Edit module
+ *   provides.
  */
 function edit_field_formatter_info_alter(&$info) {
   foreach ($info as $key => $settings) {
-    // Set in-place editor to form if none is supplied.
+    // Set in-place editor to 'form' if none is supplied.
     if (empty($settings['edit'])) {
       $info[$key]['edit'] = array('editor' => 'form');
     }

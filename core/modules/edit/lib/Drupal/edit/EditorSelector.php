@@ -70,7 +70,7 @@ class EditorSelector implements EditorSelectorInterface {
 
     // Check if the formatter defines an appropriate in-place editor. For
     // example, text formatters displaying untrimmed text can choose to use the
-    // 'direct' editor. If the formatter doesn't specify, fall back to the
+    // 'plain_text' editor. If the formatter doesn't specify, fall back to the
     // 'form' editor, since that can work for any field. Formatter definitions
     // can use 'disabled' to explicitly opt out of in-place editing.
     $formatter_info = $this->formatterManager->getDefinition($formatter_type);

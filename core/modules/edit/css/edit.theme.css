@@ -85,7 +85,7 @@
 }
 
 /**
- * Edit mode: type=direct.
+ * In-place editors that don't use a popup.
  */
 .edit-validation-errors .messages.error {
   box-shadow: 0 0 1px 1px red, 0 0 3px 3px rgba(153, 153, 153, .5);
@@ -93,7 +93,7 @@
 }
 
 /**
- * Edit mode: type=form.
+ * Styling specific to the 'form' in-place editor.
  */
 .edit-form {
   box-shadow: 0 0 30px 4px #4f4f4f;

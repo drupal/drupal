@@ -108,7 +108,7 @@ class MetadataGeneratorTest extends EditTestBase {
     $expected_1 = array(
       'access' => TRUE,
       'label' => 'Simple text field',
-      'editor' => 'direct',
+      'editor' => 'plain_text',
       'aria' => 'Entity entity_test 1, field Simple text field',
     );
     $this->assertEqual($expected_1, $metadata_1, 'The correct metadata is generated for the first field.');

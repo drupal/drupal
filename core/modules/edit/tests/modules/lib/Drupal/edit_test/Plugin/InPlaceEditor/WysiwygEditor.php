@@ -12,11 +12,11 @@ use Drupal\edit\Annotation\InPlaceEditor;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
- * Defines the wysiwyg editor.
+ * Defines the 'wysiwyg' in-place editor.
  *
  * @InPlaceEditor(
  *   id = "wysiwyg",
- *   alternativeTo = {"direct"}
+ *   alternativeTo = {"plain_text"}
  * )
  */
 class WysiwygEditor extends EditorBase {

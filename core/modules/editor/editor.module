@@ -111,8 +111,8 @@ function editor_library_info() {
     ),
   );
 
-  $libraries['edit.formattedTextEditor.editor'] = array(
-    'title' => 'Formatted text editor',
+  $libraries['edit.inPlaceEditor.formattedText'] = array(
+    'title' => 'Formatted text in-place editor',
     'version' => \Drupal::VERSION,
     'js' => array(
       $path . '/js/editor.formattedTextEditor.js' => array(

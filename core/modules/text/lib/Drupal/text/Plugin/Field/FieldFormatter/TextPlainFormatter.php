@@ -22,7 +22,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *     "text_with_summary"
  *   },
  *   edit = {
- *     "editor" = "direct"
+ *     "editor" = "plain_text"
  *   }
  * )
  */

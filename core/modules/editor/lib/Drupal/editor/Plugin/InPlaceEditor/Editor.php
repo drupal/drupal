@@ -14,11 +14,11 @@ use Drupal\edit\EditPluginInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
- * Defines the formatted text editor.
+ * Defines the formatted text in-place editor.
  *
  * @InPlaceEditor(
  *   id = "editor",
- *   alternativeTo = {"direct"}
+ *   alternativeTo = {"plain_text"}
  * )
  */
 class Editor extends PluginBase implements EditPluginInterface {
@@ -65,7 +65,7 @@ class Editor extends PluginBase implements EditPluginInterface {
   }
 
   /**
-   * Implements \Drupal\edit\EditPluginInterface::getAttachments().
+   * {@inheritdoc}
    */
   public function getAttachments() {
     $user = \Drupal::currentUser();
@@ -87,7 +87,7 @@ class Editor extends PluginBase implements EditPluginInterface {
     $attachments = $manager->getAttachments($formats);
 
     // Also include editor.module's formatted text editor.
-    $attachments['library'][] = array('editor', 'edit.formattedTextEditor.editor');
+    $attachments['library'][] = array('editor', 'edit.inPlaceEditor.formattedText');
 
     return $attachments;
   }

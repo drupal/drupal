@@ -76,7 +76,7 @@ class EditorSelectionTest extends EditTestBase {
     $items = array(array('value' => 'Hello, world!', 'format' => 'full_html'));
 
     // Editor selection without text processing, with cardinality 1.
-    $this->assertEqual('direct', $this->getSelectedEditor($items, $field_name), "Without text processing, cardinality 1, the 'direct' editor is selected.");
+    $this->assertEqual('plain_text', $this->getSelectedEditor($items, $field_name), "Without text processing, cardinality 1, the 'plain_text' editor is selected.");
 
     // Editor selection with text processing, cardinality 1.
     $this->field_text_instance->settings['text_processing'] = 1;
@@ -86,7 +86,7 @@ class EditorSelectionTest extends EditTestBase {
     // Editor selection without text processing, cardinality 1 (again).
     $this->field_text_instance->settings['text_processing'] = 0;
     $this->field_text_instance->save();
-    $this->assertEqual('direct', $this->getSelectedEditor($items, $field_name), "Without text processing again, cardinality 1, the 'direct' editor is selected.");
+    $this->assertEqual('plain_text', $this->getSelectedEditor($items, $field_name), "Without text processing again, cardinality 1, the 'plain_text' editor is selected.");
 
     // Editor selection without text processing, cardinality >1
     $this->field_text_field->cardinality = 2;
