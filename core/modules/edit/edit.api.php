@@ -36,10 +36,11 @@ function hook_edit_editor_alter(&$editors) {
  * following in-place editing in the exact way it was displayed originally),
  * implement this hook.
  *
- * Edit module integrates with HTML elements with data-edit-id attributes. For
- * example: data-edit-id="node/1/<field-name>/und/<module-name>-<custom-id>".
+ * Edit module integrates with HTML elements with data-edit-field-id attributes.
+ * For example:
+ *   data-edit-field-id="node/1/<field-name>/und/<module-name>-<custom-id>"
  * After the editing is complete, this hook is invoked on the module with
- * the custom render pipeline identifier (last part of data-edit-id) to
+ * the custom render pipeline identifier (last part of data-edit-field-id) to
  * re-render the field. Use the same logic used when rendering the field for
  * the original display.
  *

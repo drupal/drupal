@@ -38,8 +38,8 @@ Drupal.edit.FieldModel = Backbone.Model.extend({
     // purposes: so that EditorDecorationView.renderChanged() can react to it.
     inTempStore: false,
     // The full HTML representation of this field (with the element that has
-    // the data-edit-id as the outer element). Used to propagate changes from
-    // this field instance to other instances of the same field.
+    // the data-edit-field-id as the outer element). Used to propagate changes
+    // from this field instance to other instances of the same field.
     html: null
   },
 

@@ -52,7 +52,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
    *
    * For some single cardinality fields, it may be necessary or useful to
    * not in-place edit (and hence decorate) the DOM element with the
-   * data-edit-id attribute (which is the field's wrapper), but a specific
+   * data-edit-field-id attribute (which is the field's wrapper), but a specific
    * element within the field's wrapper.
    * e.g. using a WYSIWYG editor on a body field should happen on the DOM
    * element containing the text itself, not on the field wrapper.

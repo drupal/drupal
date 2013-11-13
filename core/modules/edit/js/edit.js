@@ -64,7 +64,7 @@ Drupal.behaviors.edit = {
     // immediately. New fields will be unable to be processed immediately, but
     // will instead be queued to have their metadata fetched, which occurs below
     // in fetchMissingMetaData().
-    $(context).find('[data-edit-id]').once('edit').each(function (index, fieldElement) {
+    $(context).find('[data-edit-field-id]').once('edit').each(function (index, fieldElement) {
       processField(fieldElement);
     });
 
@@ -119,9 +119,9 @@ Drupal.edit = {
  * processed.
  */
 $(document).on('drupalContextualLinkAdded', function (event, data) {
-  if (data.$region.is('[data-edit-entity]')) {
+  if (data.$region.is('[data-edit-entity-id]')) {
     var contextualLink = {
-      entityID: data.$region.attr('data-edit-entity'),
+      entityID: data.$region.attr('data-edit-entity-id'),
       el: data.$el[0],
       region: data.$region[0]
     };
@@ -169,11 +169,11 @@ function initEdit (bodyElement) {
  * Fetch the field's metadata; queue or initialize it (if EntityModel exists).
  *
  * @param DOM fieldElement
- *   A Drupal Field API field's DOM element with a data-edit-id attribute.
+ *   A Drupal Field API field's DOM element with a data-edit-field-id attribute.
  */
 function processField (fieldElement) {
   var metadata = Drupal.edit.metadata;
-  var fieldID = fieldElement.getAttribute('data-edit-id');
+  var fieldID = fieldElement.getAttribute('data-edit-field-id');
   var entityID = extractEntityID(fieldID);
 
   // Early-return if metadata for this field is missing.
@@ -428,7 +428,7 @@ function initializeEntityContextualLink (contextualLink) {
  *   The context within which to delete.
  */
 function deleteContainedModelsAndQueues($context) {
-  $context.find('[data-edit-entity]').addBack('[data-edit-entity]').each(function (index, entityElement) {
+  $context.find('[data-edit-entity-id]').addBack('[data-edit-entity-id]').each(function (index, entityElement) {
     // Delete entity model.
     // @todo change to findWhere() as soon as we have Backbone 1.0 in Drupal
     // core. @see https://drupal.org/node/1800022
@@ -450,7 +450,7 @@ function deleteContainedModelsAndQueues($context) {
     contextualLinksQueue = _.filter(contextualLinksQueue, hasOtherRegion);
   });
 
-  $context.find('[data-edit-id]').addBack('[data-edit-id]').each(function (index, fieldElement) {
+  $context.find('[data-edit-field-id]').addBack('[data-edit-field-id]').each(function (index, fieldElement) {
     // Delete field models.
     Drupal.edit.collections.fields.chain()
       .filter(function (fieldModel) { return fieldModel.get('el') === fieldElement; })

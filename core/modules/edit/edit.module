@@ -182,7 +182,7 @@ function edit_preprocess_field(&$variables) {
   // fields") and computed fields are not editable.
   $definition = $entity->getPropertyDefinition($element['#field_name']);
   if ($definition && empty($definition['computed'])) {
-    $variables['attributes']['data-edit-id'] = $entity->entityType() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
+    $variables['attributes']['data-edit-field-id'] = $entity->entityType() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
   }
 }
 
@@ -190,7 +190,7 @@ function edit_preprocess_field(&$variables) {
  * Implements hook_entity_view_alter().
  */
 function edit_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay $display) {
-  $build['#attributes']['data-edit-entity'] = $entity->entityType() . '/' . $entity->id();
+  $build['#attributes']['data-edit-entity-id'] = $entity->entityType() . '/' . $entity->id();
 }
 
 /**
