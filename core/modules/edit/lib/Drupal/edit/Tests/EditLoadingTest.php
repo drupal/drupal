@@ -76,9 +76,8 @@ class EditLoadingTest extends WebTestBase {
     $this->drupalLogin($this->author_user);
     $this->drupalGet('node/1');
 
-    // Settings, library and in-place editors.
+    // Library and in-place editors.
     $settings = $this->drupalGetSettings();
-    $this->assertFalse(isset($settings['edit']), 'Edit settings do not exist.');
     $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/edit/js/edit.js']), 'Edit library not loaded.');
     $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/edit/js/createjs/editingWidgets/formwidget.js']), "'form' in-place editor not loaded.");
 
@@ -133,9 +132,8 @@ class EditLoadingTest extends WebTestBase {
     $this->drupalLogin($this->editor_user);
     $this->drupalGet('node/1');
 
-    // Settings, library and in-place editors.
+    // Library and in-place editors.
     $settings = $this->drupalGetSettings();
-    $this->assertTrue(isset($settings['edit']), 'Edit settings exist.');
     $this->assertTrue(isset($settings['ajaxPageState']['js']['core/modules/edit/js/edit.js']), 'Edit library loaded.');
     $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/edit/js/createjs/editingWidgets/formwidget.js']), "'form' in-place editor not loaded.");
 

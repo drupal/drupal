@@ -2,7 +2,7 @@
  * @file
  * Provides utility functions for Edit.
  */
-(function ($, _, Drupal, drupalSettings) {
+(function ($, Drupal) {
 
 "use strict";
 
@@ -59,7 +59,7 @@ Drupal.edit.util.form = {
 
     // Create a Drupal.ajax instance to load the form.
     var formLoaderAjax = new Drupal.ajax(fieldID, $el, {
-      url: Drupal.edit.util.buildUrl(fieldID, drupalSettings.edit.fieldFormURL),
+      url: Drupal.edit.util.buildUrl(fieldID, Drupal.url('edit/form/!entity_type/!id/!field_name/!langcode/!view_mode')),
       event: 'edit-internal.edit',
       submit: {
         nocssjs : options.nocssjs,
@@ -120,4 +120,4 @@ Drupal.edit.util.form = {
   }
 };
 
-})(jQuery, _, Drupal, drupalSettings);
+})(jQuery, Drupal);

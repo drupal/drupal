@@ -59,13 +59,6 @@ function edit_page_build(&$page) {
     return;
   }
 
-  $page['#attached']['js'][] = array(
-    'type' => 'setting',
-    'data' => array('edit' => array(
-      'fieldFormURL' => url('edit/form/!entity_type/!id/!field_name/!langcode/!view_mode'),
-      'context' => 'body',
-    )),
-  );
   $page['#attached']['library'][] = array('edit', 'edit');
 }
 
@@ -111,6 +104,7 @@ function edit_library_info() {
       array('system', 'backbone'),
       array('system', 'jquery.form'),
       array('system', 'jquery.ui.position'),
+      array('system', 'drupal'),
       array('system', 'drupal.displace'),
       array('system', 'drupal.form'),
       array('system', 'drupal.ajax'),
