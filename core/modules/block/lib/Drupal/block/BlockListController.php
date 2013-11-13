@@ -175,6 +175,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
       '#type' => 'table',
       '#header' => array(
         t('Block'),
+        t('Category'),
         t('Region'),
         t('Weight'),
         t('Operations'),
@@ -188,10 +189,11 @@ class BlockListController extends ConfigEntityListController implements FormInte
     foreach ($entities as $entity_id => $entity) {
       $definition = $entity->getPlugin()->getPluginDefinition();
       $blocks[$entity->get('region')][$entity_id] = array(
-        'admin_label' => $definition['admin_label'],
+        'label' => $entity->label(),
         'entity_id' => $entity_id,
         'weight' => $entity->get('weight'),
         'entity' => $entity,
+        'category' => $definition['category'],
       );
     }
 
@@ -255,16 +257,19 @@ class BlockListController extends ConfigEntityListController implements FormInte
           }
 
           $form['blocks'][$entity_id]['info'] = array(
-            '#markup' => check_plain($info['admin_label']),
+            '#markup' => String::checkPlain($info['label']),
             '#wrapper_attributes' => array(
               'class' => array('block'),
             ),
+          );
+          $form['blocks'][$entity_id]['type'] = array(
+            '#markup' => $info['category'],
           );
           $form['blocks'][$entity_id]['region-theme']['region'] = array(
             '#type' => 'select',
             '#default_value' => $region,
             '#empty_value' => BlockInterface::BLOCK_REGION_NONE,
-            '#title' => t('Region for @block block', array('@block' => $info['admin_label'])),
+            '#title' => t('Region for @block block', array('@block' => $info['label'])),
             '#title_display' => 'invisible',
             '#options' => $this->regions,
             '#attributes' => array(
@@ -281,7 +286,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
             '#type' => 'weight',
             '#default_value' => $info['weight'],
             '#delta' => $weight_delta,
-            '#title' => t('Weight for @block block', array('@block' => $info['admin_label'])),
+            '#title' => t('Weight for @block block', array('@block' => $info['label'])),
             '#title_display' => 'invisible',
             '#attributes' => array(
               'class' => array('block-weight', 'block-weight-' . $region),

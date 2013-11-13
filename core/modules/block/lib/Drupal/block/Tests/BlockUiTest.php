@@ -24,6 +24,20 @@ class BlockUiTest extends WebTestBase {
   protected $regions;
 
   /**
+   * The submitted block values used by this test.
+   *
+   * @var array
+   */
+  protected $blockValues;
+
+  /**
+   * The block entities used by this test.
+   *
+   * @var \Drupal\block\BlockInterface[]
+   */
+  protected $blocks;
+
+  /**
    * An administrative user to configure the test environment.
    */
   protected $adminUser;
@@ -46,7 +60,7 @@ class BlockUiTest extends WebTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Enable some test blocks.
-    $this->testBlocks = array(
+    $this->blockValues = array(
       array(
         'label' => 'Tools',
         'tr' => '5',
@@ -62,8 +76,9 @@ class BlockUiTest extends WebTestBase {
         'test_weight' => '0',
       ),
     );
-    foreach ($this->testBlocks as $values) {
-      $this->drupalPlaceBlock($values['plugin_id'], $values['settings']);
+    $this->blocks = array();
+    foreach ($this->blockValues as $values) {
+      $this->blocks[] = $this->drupalPlaceBlock($values['plugin_id'], $values['settings']);
     }
   }
 
@@ -88,9 +103,11 @@ class BlockUiTest extends WebTestBase {
     $blocks_table = $this->xpath("//table[@id='blocks']");
     $this->assertTrue(!empty($blocks_table), 'The blocks table is being rendered.');
     // Look for test blocks in the table.
-    foreach ($this->testBlocks as $values) {
+    foreach ($this->blockValues as $delta => $values) {
+      $block = $this->blocks[$delta];
+      $label = $block->label();
       $element = $this->xpath('//*[@id="blocks"]/tbody/tr[' . $values['tr'] . ']/td[1]/text()');
-      $this->assertTrue((string)$element[0] == $values['label'], 'The "' . $values['label'] . '" block title is set inside the ' . $values['settings']['region'] . ' region.');
+      $this->assertTrue((string) $element[0] == $label, 'The "' . $label . '" block title is set inside the ' . $values['settings']['region'] . ' region.');
       // Look for a test block region select form element.
       $this->assertField('blocks[' . $values['settings']['id'] . '][region]', 'The block "' . $values['label'] . '" has a region assignment field.');
       // Move the test block to the header region.
@@ -101,17 +118,17 @@ class BlockUiTest extends WebTestBase {
       $edit['blocks[' . $values['settings']['id'] . '][weight]'] = $values['test_weight'];
     }
     $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
-    foreach ($this->testBlocks as $values) {
+    foreach ($this->blockValues as $values) {
       // Check if the region and weight settings changes have persisted.
       $this->assertOptionSelected(
         'edit-blocks-' . $values['settings']['id']  . '-region',
         'header',
-        'The block "' . $values['label'] . '" has the correct region assignment (header).'
+        'The block "' . $label . '" has the correct region assignment (header).'
       );
       $this->assertOptionSelected(
         'edit-blocks-' . $values['settings']['id']  . '-weight',
         $values['test_weight'],
-        'The block "' . $values['label'] . '" has the correct weight assignment (' . $values['test_weight'] . ').'
+        'The block "' . $label . '" has the correct weight assignment (' . $values['test_weight'] . ').'
       );
     }
   }

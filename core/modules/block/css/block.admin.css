@@ -58,6 +58,12 @@ a.block-demo-backlink:hover {
 #block-placed {
   background-color: #ffd;
 }
+#edit-settings-admin-label label {
+  display: inline;
+}
+#edit-settings-admin-label label:after {
+  content: ':';
+}
 
 /* Wide screens */
 @media

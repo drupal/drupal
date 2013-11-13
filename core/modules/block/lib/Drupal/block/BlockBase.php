@@ -90,6 +90,11 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
       '#value' => $definition['module'],
     );
 
+    $form['admin_label'] = array(
+      '#type' => 'item',
+      '#title' => t('Block description'),
+      '#markup' => $definition['admin_label'],
+    );
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Title'),

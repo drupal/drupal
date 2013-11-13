@@ -264,6 +264,9 @@ class BlockFormController extends EntityFormController {
       '#prefix' => '<div id="edit-block-region-wrapper">',
       '#suffix' => '</div>',
     );
+    $form['#attached']['css'] = array(
+      drupal_get_path('module', 'block') . '/css/block.admin.css',
+    );
     return $form;
   }
 

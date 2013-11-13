@@ -58,11 +58,17 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     $display_block->setConfigurationValue('display_message', 'My custom display message.');
     $expected_configuration['display_message'] = 'My custom display message.';
     $this->assertIdentical($display_block->getConfiguration(), $expected_configuration, 'The block configuration was updated correctly.');
+    $definition = $display_block->getPluginDefinition();
 
     $expected_form = array(
       'module' => array(
         '#type' => 'value',
         '#value' => 'block_test',
+      ),
+      'admin_label' => array(
+        '#type' => 'item',
+        '#title' => t('Block description'),
+        '#markup' => $definition['admin_label'],
       ),
       'label' => array(
         '#type' => 'textfield',
