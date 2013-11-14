@@ -25,7 +25,7 @@
  * Contextual trigger.
  */
 .contextual .trigger {
-  background-image: url("../../../misc/icons/787878/pencil.svg");
+  background-image: url("../../../misc/icons/bebebe/pencil.svg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 16px 16px;
@@ -37,5 +37,14 @@
 
 }
 .no-svg .contextual .trigger {
+  background-image: url("../../../misc/icons/bebebe/pencil.png");
+}
+
+.contextual .trigger:focus,
+.contextual .trigger:hover {
+  background-image: url("../../../misc/icons/787878/pencil.svg");
+}
+.no-svg .contextual .trigger:focus,
+.no-svg .contextual .trigger:hover {
   background-image: url("../../../misc/icons/787878/pencil.png");
 }
