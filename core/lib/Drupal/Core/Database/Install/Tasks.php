@@ -215,6 +215,7 @@ abstract class Tasks {
       '#title' => t('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
+      '#required' => TRUE,
       '#description' => t('The name of the database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
       '#states' => array(
         'required' => array(
@@ -228,6 +229,7 @@ abstract class Tasks {
       '#title' => t('Database username'),
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
+      '#required' => TRUE,
       '#states' => array(
         'required' => array(
           ':input[name=driver]' => array('value' => $this->pdoDriver),

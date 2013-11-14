@@ -517,7 +517,11 @@ $(document).bind('state:disabled', function(e) {
 $(document).bind('state:required', function(e) {
   if (e.trigger) {
     if (e.value) {
-      $(e.target).attr({ 'required': 'required', 'aria-required': 'aria-required' }).closest('.form-item, .form-wrapper').find('label').append(Drupal.theme('requiredMarker'));
+      var $label = $(e.target).attr({ 'required': 'required', 'aria-required': 'aria-required' }).closest('.form-item, .form-wrapper').find('label');
+      // Avoids duplicate required markers on initialization.
+      if (!$label.find('.form-required').length) {
+        $label.append(Drupal.theme('requiredMarker'));
+      }
     }
     else {
       $(e.target).removeAttr('required aria-required').closest('.form-item, .form-wrapper').find('label .form-required').remove();
