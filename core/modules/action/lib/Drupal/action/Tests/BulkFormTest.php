@@ -113,6 +113,21 @@ class BulkFormTest extends WebTestBase {
     $this->drupalGet('test_bulk_form');
     $this->assertNoOption('edit-action', 'node_make_sticky_action');
     $this->assertNoOption('edit-action', 'node_make_unsticky_action');
+
+    // Check the default title.
+    $this->drupalGet('test_bulk_form');
+    $result = $this->xpath('//label[@for="edit-action"]');
+    $this->assertEqual('With selection', (string) $result[0]);
+
+    // Setup up a different bulk form title.
+    $view = views_get_view('test_bulk_form');
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['fields']['action_bulk_form']['action_title'] = 'Test title';
+    $view->save();
+
+    $this->drupalGet('test_bulk_form');
+    $result = $this->xpath('//label[@for="edit-action"]');
+    $this->assertEqual('Test title', (string) $result[0]);
   }
 
 }

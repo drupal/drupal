@@ -1,0 +1,7 @@
+views.field.bulk_form:
+  type: views_field
+  label: 'Bulk form'
+  mapping:
+    action_title:
+      type: label
+      label: 'Action title'

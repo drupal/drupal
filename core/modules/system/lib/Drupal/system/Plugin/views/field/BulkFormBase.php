@@ -26,6 +26,30 @@ abstract class BulkFormBase extends FieldPluginBase {
   protected $actions = array();
 
   /**
+   * {@inheritdoc }
+   */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['action_title'] = array('default' => 'With selection', 'translatable' => TRUE);
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc }
+   */
+  public function buildOptionsForm(&$form, &$form_state) {
+    $form['action_title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Action title'),
+      '#default_value' => $this->options['action_title'],
+      '#description' => t('The title shown above the actions dropdown.'),
+    );
+
+    parent::buildOptionsForm($form, $form_state);
+  }
+
+
+  /**
    * Constructs a new BulkForm object.
    *
    * @param array $configuration
@@ -116,7 +140,7 @@ abstract class BulkFormBase extends FieldPluginBase {
       );
       $form['header'][$this->options['id']]['action'] = array(
         '#type' => 'select',
-        '#title' => t('With selection'),
+        '#title' => $this->options['action_title'],
         '#options' => $this->getBulkOptions(),
       );
 
