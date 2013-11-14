@@ -158,7 +158,12 @@ function shortcut_set_switch_submit($form, &$form_state) {
     else {
       drupal_set_message(t('%user is now using a new shortcut set called %set_name. You can edit it from this page.', $replacements));
     }
-    $form_state['redirect'] = 'admin/config/user-interface/shortcut/manage/' . $set->id();
+    $form_state['redirect_route'] = array(
+      'route_name' => 'shortcut.set_customize',
+      'route_parameters' => array(
+        'shortcut_set' => $set->id(),
+      ),
+    );
   }
   else {
     // Switch to a different shortcut set.
@@ -310,7 +315,12 @@ function shortcut_link_edit_submit($form, &$form_state) {
 
   menu_link_save($shortcut_link);
   $set_name = str_replace('shortcut-', '' , $shortcut_link['menu_name']);
-  $form_state['redirect'] = 'admin/config/user-interface/shortcut/manage/' . $set_name;
+  $form_state['redirect_route'] = array(
+    'route_name' => 'shortcut.set_customize',
+    'route_parameters' => array(
+      'shortcut_set' => $set_name,
+    ),
+  );
   drupal_set_message(t('The shortcut %link has been updated.', array('%link' => $shortcut_link['link_title'])));
 }
 
@@ -324,7 +334,12 @@ function shortcut_link_add_submit($form, &$form_state) {
   $shortcut_link['menu_name'] = $shortcut_set->id();
   shortcut_admin_add_link($shortcut_link, $shortcut_set);
   $shortcut_set->save();
-  $form_state['redirect'] = 'admin/config/user-interface/shortcut/manage/' . $shortcut_set->id();
+  $form_state['redirect_route'] = array(
+    'route_name' => 'shortcut.set_customize',
+    'route_parameters' => array(
+      'shortcut_set' => $shortcut_set->id(),
+    ),
+  );
   drupal_set_message(t('Added a shortcut for %title.', array('%title' => $shortcut_link['link_title'])));
 }
 

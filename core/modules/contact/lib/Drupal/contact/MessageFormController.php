@@ -212,7 +212,7 @@ class MessageFormController extends ContentEntityFormController {
       $form_state['redirect'] = array($uri['path'], $uri['options']);
     }
     else {
-      $form_state['redirect'] = '';
+      $form_state['redirect_route']['route_name'] = '<front>';
     }
   }
 }

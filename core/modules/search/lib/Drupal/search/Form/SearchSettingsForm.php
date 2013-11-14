@@ -273,7 +273,7 @@ class SearchSettingsForm extends ConfigFormBase {
    */
   public function searchAdminReindexSubmit(array $form, array &$form_state) {
     // send the user to the confirmation page
-    $form_state['redirect'] = 'admin/config/search/settings/reindex';
+    $form_state['redirect_route']['route_name'] = 'search.reindex_confirm';
   }
 
 }

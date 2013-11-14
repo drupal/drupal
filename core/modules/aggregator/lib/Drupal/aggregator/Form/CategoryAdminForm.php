@@ -144,7 +144,10 @@ class CategoryAdminForm extends FormBase {
     // Redirect to a confirm delete form.
     if ($form_state['values']['op'] == $this->t('Delete')) {
       $cid = $form_state['values']['cid'];
-      $form_state['redirect'] = 'admin/config/services/aggregator/delete/category/' . $cid;
+      $form_state['redirect_route'] = array(
+        'route_name' => 'aggregator.category_delete',
+        'route_parameters' => array('cid' => $cid),
+      );
       return;
     }
 
@@ -154,10 +157,13 @@ class CategoryAdminForm extends FormBase {
       $this->categoryStorageController->update((object) $form_state['values']);
       drupal_set_message($this->t('The category %category has been updated.', array('%category' => $title)));
       if (preg_match('/^\/admin/', $this->getRequest()->getPathInfo())) {
-        $form_state['redirect'] = 'admin/config/services/aggregator/';
+        $form_state['redirect_route']['route_name'] = 'aggregator.admin_overview';
       }
       else {
-        $form_state['redirect'] = 'aggregator/categories/' . $cid;
+        $form_state['redirect_route'] = array(
+          'route_name' => 'aggregator.category_view',
+          'route_parameters' => array('cid' => $cid),
+        );
       }
       $this->updateMenuLink('update', $link_path . $cid, $title);
       return;

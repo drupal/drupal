@@ -115,7 +115,7 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
       drupal_set_message($this->t('The %language (%langcode) language has been removed.', array('%language' => $this->entity->label(), '%langcode' => $this->entity->id())));
     }
 
-    $form_state['redirect'] = 'admin/config/regional/language';
+    $form_state['redirect_route']['route_name'] = 'language.admin_overview';
   }
 
 }

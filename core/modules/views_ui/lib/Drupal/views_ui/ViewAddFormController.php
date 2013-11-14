@@ -195,12 +195,15 @@ class ViewAddFormController extends ViewFormControllerBase {
     // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.
     catch (WizardException $e) {
       drupal_set_message($e->getMessage(), 'error');
-      $form_state['redirect'] = 'admin/structure/views';
+      $form_state['redirect_route']['route_name'] = 'views_ui.list';
       return;
     }
     $view->save();
 
-    $form_state['redirect'] = array('admin/structure/views/view/' . $view->id());
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit',
+      'route_parameters' => array('view' => $view->id()),
+    );
   }
 
   /**
@@ -212,7 +215,7 @@ class ViewAddFormController extends ViewFormControllerBase {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function cancel(array $form, array &$form_state) {
-    $form_state['redirect'] = 'admin/structure/views';
+    $form_state['redirect_route']['route_name'] = 'views_ui.list';
   }
 
 }

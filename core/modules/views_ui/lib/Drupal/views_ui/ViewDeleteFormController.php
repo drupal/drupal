@@ -44,7 +44,7 @@ class ViewDeleteFormController extends EntityConfirmFormBase {
     parent::submit($form, $form_state);
 
     $this->entity->delete();
-    $form_state['redirect'] = 'admin/structure/views';
+    $form_state['redirect_route']['route_name'] = 'views_ui.list';
   }
 
 }

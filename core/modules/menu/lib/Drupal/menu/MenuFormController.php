@@ -215,14 +215,24 @@ class MenuFormController extends EntityFormController {
       watchdog('menu', 'Menu %label has been added.', array('%label' => $menu->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
     }
 
-    $form_state['redirect'] = 'admin/structure/menu/manage/' . $menu->id();
+    $form_state['redirect_route'] = array(
+      'route_name' => 'menu.menu_edit',
+      'route_parameters' => array(
+        'menu' => $this->entity->id(),
+      ),
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete(array $form, array &$form_state) {
-    $form_state['redirect'] = 'admin/structure/menu/manage/' . $this->entity->id() . '/delete';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'menu.delete_menu',
+      'route_parameters' => array(
+        'menu' => $this->entity->id(),
+      ),
+    );
   }
 
   /**

@@ -266,7 +266,10 @@ class ViewEditFormController extends ViewFormControllerBase {
         $displays[$new_id] = $displays[$id];
         unset($displays[$id]);
         // Redirect the user to the renamed display to be sure that the page itself exists and doesn't throw errors.
-        $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $new_id;
+        $form_state['redirect_route'] = array(
+          'route_name' => 'views_ui.edit_display',
+          'route_parameters' => array('view' => $view->id(), 'display_id' => $id),
+        );
       }
     }
     $view->set('display', $displays);
@@ -316,7 +319,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     // Remove this view from cache so edits will be lost.
     $view = $this->entity;
     $this->tempStore->delete($view->id());
-    $form_state['redirect'] = 'admin/structure/views';
+    $form_state['redirect_route']['route_name'] = 'views_ui.list';
   }
 
   /**
@@ -563,7 +566,10 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->cacheSet();
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit_display',
+      'route_parameters' => array('view' => $view->id(), 'display_id' => $id),
+    );
   }
 
   /**
@@ -579,7 +585,10 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->cacheSet();
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit_display',
+      'route_parameters' => array('view' => $view->id(), 'display_id' => $id),
+    );
   }
 
   /**
@@ -594,7 +603,10 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->cacheSet();
 
     // Redirect to the top-level edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $id;
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit_display',
+      'route_parameters' => array('view' => $view->id(), 'display_id' => $id),
+    );
   }
 
   /**
@@ -612,7 +624,10 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     // Redirect to the top-level edit page. The first remaining display will
     // become the active display.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id();
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit',
+      'route_parameters' => array('view' => $view->id()),
+    );
   }
 
   /**
@@ -785,7 +800,10 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->cacheSet();
 
     // Redirect to the new display's edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $new_display_id;
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit_display',
+      'route_parameters' => array('view' => $view->id(), 'display_id' => $new_display_id),
+    );
   }
 
   /**
@@ -804,7 +822,10 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->cacheSet();
 
     // Redirect to the new display's edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $display_id;
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit_display',
+      'route_parameters' => array('view' => $view->id(), 'display_id' => $display_id),
+    );
   }
 
   /**
@@ -837,7 +858,10 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view->cacheSet();
 
     // Redirect to the new display's edit page.
-    $form_state['redirect'] = 'admin/structure/views/view/' . $view->id() . '/edit/' . $new_display_id;
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit_display',
+      'route_parameters' => array('view' => $view->id(), 'display_id' => $new_display_id),
+    );
   }
 
   /**

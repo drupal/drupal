@@ -43,7 +43,7 @@ class BlockDeleteForm extends EntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
     drupal_set_message($this->t('The block %name has been removed.', array('%name' => $this->entity->label())));
-    $form_state['redirect'] = 'admin/structure/block';
+    $form_state['redirect_route']['route_name'] = 'block.admin_display';
   }
 
 }

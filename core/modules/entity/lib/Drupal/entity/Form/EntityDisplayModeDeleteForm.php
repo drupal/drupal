@@ -56,8 +56,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
     drupal_set_message(t('Deleted the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => strtolower($entity_info['label']))));
     $this->entity->delete();
     entity_info_cache_clear();
-    $short_type = str_replace('_mode', '', $this->entity->entityType());
-    $form_state['redirect'] = "admin/structure/display-modes/$short_type";
+    $form_state['redirect_route']['route_name'] = 'entity.' . $this->entity->entityType() . '_list';
   }
 
 }

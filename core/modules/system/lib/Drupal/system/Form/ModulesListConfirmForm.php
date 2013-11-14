@@ -153,7 +153,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ContainerInjecti
       drupal_set_message($this->t('The configuration options have been saved.'));
     }
 
-    $form_state['redirect'] = 'admin/modules';
+    $form_state['redirect_route']['route_name'] = 'system.modules_list';
   }
 
 }

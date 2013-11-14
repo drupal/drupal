@@ -640,63 +640,6 @@ function search_mark_for_reindex($type, $sid) {
  */
 
 /**
- * Form constructor for the search block's search box.
- *
- * @param $form_id
- *   The unique string identifying the desired form.
- *
- * @see search_box_form_submit()
- *
- * @ingroup forms
- */
-function search_box($form, &$form_state, $form_id) {
-  $form[$form_id] = array(
-    '#type' => 'search',
-    '#title' => t('Search'),
-    '#title_display' => 'invisible',
-    '#size' => 15,
-    '#default_value' => '',
-    '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
-  );
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  $form['#submit'][] = 'search_box_form_submit';
-
-  return $form;
-}
-
-/**
- * Form submission handler for search_box().
- */
-function search_box_form_submit($form, &$form_state) {
-  // The search form relies on control of the redirect destination for its
-  // functionality, so we override any static destination set in the request.
-  // See http://drupal.org/node/292565.
-  if (isset($_GET['destination'])) {
-    unset($_GET['destination']);
-  }
-
-  // Check to see if the form was submitted empty.
-  // If it is empty, display an error message.
-  // (This method is used instead of setting #required to TRUE for this field
-  // because that results in a confusing error message.  It would say a plain
-  // "field is required" because the search keywords field has no title.
-  // The error message would also complain about a missing #title field.)
-  if ($form_state['values']['search_block_form'] == '') {
-    form_set_error('keys', t('Please enter some keywords.'));
-  }
-
-  $form_id = $form['form_id']['#value'];
-  $info = search_get_default_plugin_info();
-  if ($info) {
-    $form_state['redirect'] = 'search/' . $info['path'] . '/' . trim($form_state['values'][$form_id]);
-  }
-  else {
-    form_set_error(NULL, t('Search is currently disabled.'), 'error');
-  }
-}
-
-/**
  * Returns snippets from a piece of text, with certain keywords highlighted.
  *
  * Used for formatting search results.

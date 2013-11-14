@@ -201,7 +201,7 @@ abstract class DateFormatFormBase extends EntityFormController {
    * {@inheritdoc}
    */
   public function submit(array $form, array &$form_state) {
-    $form_state['redirect'] = 'admin/config/regional/date-time';
+    $form_state['redirect_route']['route_name'] = 'system.date_format_list';
     $form_state['values']['pattern'][$this->patternType] = trim($form_state['values']['date_format_pattern']);
 
     parent::submit($form, $form_state);

@@ -251,7 +251,7 @@ class SimpletestResultsForm extends FormBase {
     }
 
     if (!$classes) {
-      $form_state['redirect'] = 'admin/config/development/testing';
+      $form_state['redirect_route']['route_name'] = 'simpletest.test_form';
       return;
     }
 
@@ -264,7 +264,7 @@ class SimpletestResultsForm extends FormBase {
     // Submit the simpletest test form to rerun the tests.
     $simpletest_test_form = new SimpletestTestForm();
     $simpletest_test_form->submitForm($form_execute, $form_state_execute);
-    $form_state['redirect'] = $form_state_execute['redirect'];
+    $form_state['redirect_route'] = $form_state_execute['redirect_route'];
   }
 
   /**

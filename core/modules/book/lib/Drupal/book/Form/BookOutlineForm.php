@@ -101,7 +101,12 @@ class BookOutlineForm extends ContentEntityFormController {
    * @see book_remove_button_submit()
    */
   public function submit(array $form, array &$form_state) {
-    $form_state['redirect'] = 'node/' . $this->entity->id();
+    $form_state['redirect_route'] = array(
+      'route_name' => 'node.view',
+      'route_parameters' => array(
+        'node' => $this->entity->id(),
+      ),
+    );
     $book_link = $form_state['values']['book'];
     if (!$book_link['bid']) {
       drupal_set_message($this->t('No changes were made'));
@@ -114,7 +119,12 @@ class BookOutlineForm extends ContentEntityFormController {
       if ($this->entity->book['parent_mismatch']) {
         // This will usually only happen when JS is disabled.
         drupal_set_message($this->t('The post has been added to the selected book. You may now position it relative to other pages.'));
-        $form_state['redirect'] = 'node/' . $this->entity->id() . '/outline';
+        $form_state['redirect_route'] = array(
+          'route_name' => 'book.outline',
+          'route_parameters' => array(
+            'node' => $this->entity->id(),
+          ),
+        );
       }
       else {
         drupal_set_message($this->t('The book outline has been updated.'));
@@ -129,7 +139,12 @@ class BookOutlineForm extends ContentEntityFormController {
    * {@inheritdoc}
    */
   public function delete(array $form, array &$form_state) {
-    $form_state['redirect'] = 'node/' . $this->entity->id() . '/outline/remove';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'book.remove',
+      'route_parameters' => array(
+        'node' => $this->entity->id(),
+      ),
+    );
   }
 
 }

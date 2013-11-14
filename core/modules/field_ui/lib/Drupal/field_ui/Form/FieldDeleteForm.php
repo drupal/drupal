@@ -79,8 +79,12 @@ class FieldDeleteForm extends EntityConfirmFormBase {
       drupal_set_message($this->t('There was a problem removing the %field from the %type content type.', array('%field' => $this->entity->label(), '%type' => $bundle_label)), 'error');
     }
 
-    $admin_path = $this->entityManager->getAdminPath($this->entity->entity_type, $this->entity->bundle);
-    $form_state['redirect'] = "$admin_path/fields";
+    $form_state['redirect_route'] = array(
+      'route_name' => 'field_ui.overview_' . $this->entity->entity_type,
+      'route_parameters' => array(
+        'bundle' => $this->entity->bundle,
+      )
+    );
 
     // Fields are purged on cron. However field module prevents disabling modules
     // when field types they provided are used in a field until it is fully

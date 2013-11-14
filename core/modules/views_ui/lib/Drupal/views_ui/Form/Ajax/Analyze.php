@@ -58,7 +58,10 @@ class Analyze extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->id() . '/edit';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit',
+      'route_parameters' => array('view' => $form_state['view']->id()),
+    );
   }
 
 }

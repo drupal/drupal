@@ -72,7 +72,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     drupal_set_message($this->t('The ConfirmFormTestForm::submitForm() method was used for this form.'));
-    $form_state['redirect'] = '';
+    $form_state['redirect_route']['route_name'] = '<front>';
   }
 
 }

@@ -108,7 +108,7 @@ function batch_test_simple_form_submit($form, &$form_state) {
   $function = '_batch_test_' . $form_state['values']['batch'];
   batch_set($function());
 
-  $form_state['redirect'] = 'batch-test/redirect';
+  $form_state['redirect_route']['route_name'] = 'batch_test.redirect';
 }
 
 
@@ -158,7 +158,7 @@ function batch_test_multistep_form_submit($form, &$form_state) {
   }
 
   // This will only be effective on the last step.
-  $form_state['redirect'] = 'batch-test/redirect';
+  $form_state['redirect_route']['route_name'] = 'batch_test.redirect';
 }
 
 /**
@@ -208,7 +208,7 @@ function batch_test_chained_form_submit_1($form, &$form_state) {
   batch_set(_batch_test_batch_1());
 
   // This redirect should not be taken into account.
-  $form_state['redirect'] = 'should/be/discarded';
+  $form_state['redirect_route']['route_name'] = 'batch_test.redirect';
 }
 
 /**
@@ -224,7 +224,7 @@ function batch_test_chained_form_submit_2($form, &$form_state) {
   batch_set(_batch_test_batch_2());
 
   // This redirect should not be taken into account.
-  $form_state['redirect'] = 'should/be/discarded';
+  $form_state['redirect_route']['route_name'] = 'batch_test.redirect';
 }
 
 /**
@@ -239,7 +239,7 @@ function batch_test_chained_form_submit_3($form, &$form_state) {
   $form_state['values']['value']++;
 
   // This redirect should not be taken into account.
-  $form_state['redirect'] = 'should/be/discarded';
+  $form_state['redirect_route']['route_name'] = 'batch_test.redirect';
 }
 
 /**
@@ -255,7 +255,7 @@ function batch_test_chained_form_submit_4($form, &$form_state) {
   batch_set(_batch_test_batch_3());
 
   // This is the redirect that should prevail.
-  $form_state['redirect'] = 'batch-test/redirect';
+  $form_state['redirect_route']['route_name'] = 'batch_test.redirect';
 }
 
 /**

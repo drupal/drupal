@@ -126,7 +126,7 @@ class DeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterf
       drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));
       Cache::invalidateTags(array('content' => TRUE));
     }
-    $form_state['redirect'] = 'admin/content';
+    $form_state['redirect_route']['route_name'] = 'node.content_overview';
   }
 
 }

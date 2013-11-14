@@ -263,7 +263,7 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
       }
     }
 
-    $form_state['redirect'] = 'admin/config/content/formats';
+    $form_state['redirect_route']['route_name'] = 'filter.admin_overview';
 
     return $this->entity;
   }

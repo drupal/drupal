@@ -213,7 +213,7 @@ function ajax_test_dialog_form($form, &$form_state) {
  * Non-AJAX behavior of the dialog buttons.
  */
 function ajax_test_dialog_form_submit($form, &$form_state) {
-  $form_state['redirect'] = 'ajax-test/dialog-contents';
+  $form_state['redirect_route']['route_name'] = 'ajax_test.dialog_contents';
 }
 
 /**

@@ -452,7 +452,10 @@ class OverviewTerms extends FormBase {
    * Redirects to confirmation form for the reset action.
    */
   public function submitReset(array &$form, array &$form_state) {
-    $form_state['redirect'] = 'admin/structure/taxonomy/manage/' . $form_state['taxonomy']['vocabulary']->id() . '/reset';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'taxonomy.vocabulary_reset',
+      'route_parameters' => array('taxonomy_vocabulary' => $form_state['taxonomy']['vocabulary']->id()),
+    );
   }
 
 }

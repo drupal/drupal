@@ -44,7 +44,7 @@ class UserRoleDelete extends EntityConfirmFormBase {
     $this->entity->delete();
     watchdog('user', 'Role %name has been deleted.', array('%name' => $this->entity->label()));
     drupal_set_message($this->t('Role %name has been deleted.', array('%name' => $this->entity->label())));
-    $form_state['redirect'] = 'admin/people/roles';
+    $form_state['redirect_route']['route_name'] = 'user.role_list';
   }
 
 }

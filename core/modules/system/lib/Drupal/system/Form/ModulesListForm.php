@@ -392,7 +392,7 @@ class ModulesListForm extends FormBase {
       $this->keyValueExpirable->setWithExpire($account, $modules, 60);
 
       // Redirect to the confirmation form.
-      $form_state['redirect'] = 'admin/modules/list/confirm';
+      $form_state['redirect_route']['route_name'] = 'system.modules_list_confirm';
 
       // We can exit here because at least one modules has dependencies
       // which we have to prompt the user for in a confirmation form.

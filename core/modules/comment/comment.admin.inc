@@ -225,6 +225,6 @@ function comment_admin_overview_submit($form, &$form_state) {
     }
   }
   drupal_set_message(t('The update has been performed.'));
-  $form_state['redirect'] = 'admin/content/comment';
+  $form_state['redirect_route']['route_name'] = 'comment.admin';
   cache_invalidate_tags(array('content' => TRUE));
 }

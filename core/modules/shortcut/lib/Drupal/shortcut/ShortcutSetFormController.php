@@ -83,15 +83,24 @@ class ShortcutSetFormController extends EntityFormController {
     else {
       drupal_set_message(t('Updated set name to %set-name.', array('%set-name' => $entity->label())));
     }
-    $form_state['redirect'] = 'admin/config/user-interface/shortcut/manage/' . $entity->id();
+    $form_state['redirect_route'] = array(
+      'route_name' => 'shortcut.set_customize',
+      'route_parameters' => array(
+        'shortcut_set' => $this->entity->id(),
+      ),
+    );
   }
 
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $entity = $this->entity;
-    $form_state['redirect'] = 'admin/config/user-interface/shortcut/manage/' . $entity->id() . '/delete';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'shortcut.set_delete',
+      'route_parameters' => array(
+        'shortcut_set' => $this->entity->id(),
+      ),
+    );
   }
 
 }

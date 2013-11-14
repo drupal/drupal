@@ -334,8 +334,12 @@ function field_ui_entity_operation_alter(array &$operations, EntityInterface $en
  */
 function field_ui_form_node_type_form_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#parents'][0] === 'save_continue') {
-    $admin_path = \Drupal::entityManager()->getAdminPath('node', $form_state['values']['type']);
-    $form_state['redirect'] = "$admin_path/fields";
+    $form_state['redirect_route'] = array(
+      'route_name' => 'field_ui.overview_node',
+      'route_parameters' => array(
+        'bundle' => $form_state['values']['type'],
+      ),
+    );
   }
 }
 

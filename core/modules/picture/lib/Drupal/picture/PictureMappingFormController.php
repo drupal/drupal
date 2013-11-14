@@ -143,11 +143,15 @@ class PictureMappingFormController extends EntityFormController {
     // Redirect to edit form after creating a new mapping or after selecting
     // another breakpoint group.
     if (!$picture_mapping->hasMappings()) {
-      $uri = $picture_mapping->uri();
-      $form_state['redirect'] = $uri['path'];
+      $form_state['redirect_route'] = array(
+        'route_name' => 'picture.mapping_page_edit',
+        'route_parameters' => array(
+          'picture_mapping' => $picture_mapping->id(),
+        ),
+      );
     }
     else {
-      $form_state['redirect'] = 'admin/config/media/picturemapping';
+      $form_state['redirect_route']['route_name'] = 'picture.mapping_page';
     }
   }
 

@@ -50,7 +50,7 @@ class ImageStyleFlushForm extends EntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $this->entity->flush();
     drupal_set_message($this->t('The image style %name has been flushed.', array('%name' => $this->entity->label())));
-    $form_state['redirect'] = 'admin/config/media/image-styles';
+    $form_state['redirect_route']['route_name'] = 'image.style_list';
   }
 
 }

@@ -132,13 +132,16 @@ class VocabularyFormController extends EntityFormController {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
         watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l($this->t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
-        $form_state['redirect'] = 'admin/structure/taxonomy/manage/' . $vocabulary->id();
+        $form_state['redirect_route'] = array(
+          'route_name' => 'taxonomy.overview_terms',
+          'route_parameters' => array('taxonomy_vocabulary' => $vocabulary->id()),
+        );
         break;
 
       case SAVED_UPDATED:
         drupal_set_message($this->t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
         watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l($this->t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
-        $form_state['redirect'] = 'admin/structure/taxonomy';
+        $form_state['redirect_route']['route_name'] = 'taxonomy.vocabulary_list';
         break;
     }
 
@@ -151,7 +154,10 @@ class VocabularyFormController extends EntityFormController {
    */
   public function delete(array $form, array &$form_state) {
     $vocabulary = $this->getEntity($form_state);
-    $form_state['redirect'] = array('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/delete');
+    $form_state['redirect_route'] = array(
+      'route_name' => 'taxonomy.vocabulary_delete',
+      'route_parameters' => array('taxonomy_vocabulary' => $vocabulary->id()),
+    );
   }
 
 }

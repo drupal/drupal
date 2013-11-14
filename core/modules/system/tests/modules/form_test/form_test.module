@@ -647,7 +647,7 @@ function form_test_storage_form_submit($form, &$form_state) {
   if (isset($form_state['storage']['thing']['changed'])) {
     drupal_set_message("The thing has been changed.");
   }
-  $form_state['redirect'] = 'node';
+  $form_state['redirect_route']['route_name'] = '<front>';
 }
 
 /**

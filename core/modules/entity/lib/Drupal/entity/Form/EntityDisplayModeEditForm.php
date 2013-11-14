@@ -16,8 +16,13 @@ class EntityDisplayModeEditForm extends EntityDisplayModeFormBase {
    * {@inheritdoc}
    */
   public function delete(array $form, array &$form_state) {
-    $short_type = str_replace('_mode', '', $this->entity->entityType());
-    $form_state['redirect'] = "admin/structure/display-modes/$short_type/manage/" . $this->entity->id() . '/delete';
+    $entity_type = $this->entity->entityType();
+    $form_state['redirect_route'] = array(
+      'route_name' => 'entity.' . $entity_type . '_delete',
+      'route_parameters' => array(
+        $entity_type => $this->entity->id(),
+      ),
+    );
   }
 
 }

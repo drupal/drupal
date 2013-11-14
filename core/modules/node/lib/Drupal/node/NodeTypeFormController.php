@@ -236,14 +236,19 @@ class NodeTypeFormController extends EntityFormController {
       watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/structure/types'));
     }
 
-    $form_state['redirect'] = 'admin/structure/types';
+    $form_state['redirect_route']['route_name'] = 'node.overview_types';
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete(array $form, array &$form_state) {
-    $form_state['redirect'] = 'admin/structure/types/manage/' . $this->entity->id() . '/delete';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'node.type_delete_confirm',
+      'route_parameters' => array(
+        'node_type' => $this->entity->id(),
+      ),
+    );
   }
 
 }

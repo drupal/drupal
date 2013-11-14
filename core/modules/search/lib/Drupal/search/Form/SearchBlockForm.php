@@ -64,7 +64,12 @@ class SearchBlockForm extends FormBase {
     $form_id = $form['form_id']['#value'];
     $info = search_get_default_plugin_info();
     if ($info) {
-      $form_state['redirect'] = 'search/' . $info['path'] . '/' . trim($form_state['values'][$form_id]);
+      $form_state['redirect_route'] = array(
+        'route_name' => 'search.view_' . $info['id'],
+        'route_parameters' => array(
+          'keys' => trim($form_state['values'][$form_id]),
+        ),
+      );
     }
     else {
       form_set_error(NULL, $this->t('Search is currently disabled.'), 'error');

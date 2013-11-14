@@ -116,7 +116,7 @@ class RegisterFormController extends AccountFormController {
       _user_mail_notify('register_no_approval_required', $account);
       user_login_finalize($account);
       drupal_set_message($this->t('Registration successful. You are now logged in.'));
-      $form_state['redirect'] = '';
+      $form_state['redirect_route']['route_name'] = '<front>';
     }
     // No administrator approval required.
     elseif ($account->isActive() || $notify) {
@@ -131,7 +131,7 @@ class RegisterFormController extends AccountFormController {
           }
           else {
             drupal_set_message($this->t('A welcome message with further instructions has been sent to your e-mail address.'));
-            $form_state['redirect'] = '';
+            $form_state['redirect_route']['route_name'] = '<front>';
           }
         }
       }
@@ -140,7 +140,7 @@ class RegisterFormController extends AccountFormController {
     else {
       _user_mail_notify('register_pending_approval', $account);
       drupal_set_message($this->t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
-      $form_state['redirect'] = '';
+      $form_state['redirect_route']['route_name'] = '<front>';
     }
   }
 }

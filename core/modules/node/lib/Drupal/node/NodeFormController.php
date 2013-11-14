@@ -482,7 +482,17 @@ class NodeFormController extends ContentEntityFormController {
     if ($node->id()) {
       $form_state['values']['nid'] = $node->id();
       $form_state['nid'] = $node->id();
-      $form_state['redirect'] = node_access('view', $node) ? 'node/' . $node->id() : '<front>';
+      if ($node->access('view')) {
+        $form_state['redirect_route'] = array(
+          'route_name' => 'node.view',
+          'route_parameters' => array(
+            'node' => $node->id(),
+          ),
+        );
+      }
+      else {
+        $form_state['redirect_route']['route_name'] = '<front>';
+      }
     }
     else {
       // In the unlikely case something went wrong on save, the node will be
@@ -505,8 +515,15 @@ class NodeFormController extends ContentEntityFormController {
       $destination = drupal_get_destination();
       $query->remove('destination');
     }
-    $node = $this->entity;
-    $form_state['redirect'] = array('node/' . $node->id() . '/delete', array('query' => $destination));
+    $form_state['redirect_route'] = array(
+      'route_name' => 'node.delete_confirm',
+      'route_parameters' => array(
+        'node' => $this->entity->id(),
+      ),
+      'options' => array(
+        'query' => $destination,
+      ),
+    );
   }
 
 }

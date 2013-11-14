@@ -75,14 +75,17 @@ class RoleFormController extends EntityFormController {
       drupal_set_message($this->t('Role %label has been added.', array('%label' => $entity->label())));
       watchdog('user', 'Role %label has been added.', array('%label' => $entity->label()), WATCHDOG_NOTICE, l($this->t('Edit'), $uri['path']));
     }
-    $form_state['redirect'] = 'admin/people/roles';
+    $form_state['redirect_route']['route_name'] = 'user.role_list';
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete(array $form, array &$form_state) {
-    $form_state['redirect'] = 'admin/people/roles/manage/' . $this->entity->id() . '/delete';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'user.role_delete',
+      'route_parameters' => array('user_role' => $this->entity->id()),
+    );
   }
 
 }

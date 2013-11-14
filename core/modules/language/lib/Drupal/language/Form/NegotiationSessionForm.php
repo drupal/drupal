@@ -33,7 +33,7 @@ class NegotiationSessionForm extends ConfigFormBase {
       '#description' => t('Name of the request/session parameter used to determine the desired language.'),
     );
 
-    $form_state['redirect'] = 'admin/config/regional/language/detection';
+    $form_state['redirect_route']['route_name'] = 'language.negotiation';
 
     return parent::buildForm($form, $form_state);
   }

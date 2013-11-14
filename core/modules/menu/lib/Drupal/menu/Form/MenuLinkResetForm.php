@@ -53,7 +53,12 @@ class MenuLinkResetForm extends EntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $new_menu_link = $this->entity->reset();
     drupal_set_message(t('The menu link was reset to its default settings.'));
-    $form_state['redirect'] = 'admin/structure/menu/manage/' . $new_menu_link->menu_name;
+    $form_state['redirect_route'] = array(
+      'route_name' => 'menu.menu_edit',
+      'route_parameters' => array(
+        'menu' => $new_menu_link->menu_name,
+      ),
+    );
   }
 
 }

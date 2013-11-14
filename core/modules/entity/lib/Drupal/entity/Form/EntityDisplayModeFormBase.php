@@ -122,8 +122,7 @@ abstract class EntityDisplayModeFormBase extends EntityFormController {
     drupal_set_message(t('Saved the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => strtolower($this->entityInfo['label']))));
     $this->entity->save();
     entity_info_cache_clear();
-    $short_type = str_replace('_mode', '', $this->entity->entityType());
-    $form_state['redirect'] = "admin/structure/display-modes/$short_type";
+    $form_state['redirect_route']['route_name'] = 'entity.' . $this->entity->entityType() . '_list';
   }
 
 }

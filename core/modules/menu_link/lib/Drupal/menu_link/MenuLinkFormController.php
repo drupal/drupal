@@ -297,7 +297,12 @@ class MenuLinkFormController extends EntityFormController {
 
     if ($saved) {
       drupal_set_message(t('The menu link has been saved.'));
-      $form_state['redirect'] = 'admin/structure/menu/manage/' . $menu_link->menu_name;
+      $form_state['redirect_route'] = array(
+        'route_name' => 'menu.menu_edit',
+        'route_parameters' => array(
+          'menu' => $menu_link->menu_name,
+        ),
+      );
     }
     else {
       drupal_set_message(t('There was an error saving the menu link.'), 'error');
@@ -310,6 +315,11 @@ class MenuLinkFormController extends EntityFormController {
    */
   public function delete(array $form, array &$form_state) {
     $menu_link = $this->entity;
-    $form_state['redirect'] = 'admin/structure/menu/item/' . $menu_link->id() . '/delete';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'menu.link_delete',
+      'route_parameters' => array(
+        'menu' => $menu_link->id(),
+      ),
+    );
   }
 }

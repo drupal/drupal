@@ -237,7 +237,11 @@ class TermFormController extends ContentEntityFormController {
     if ($this->getRequest()->query->has('destination')) {
       $destination = drupal_get_destination();
     }
-    $form_state['redirect'] = array('taxonomy/term/' . $this->entity->id() . '/delete', array('query' => $destination));
+    $form_state['redirect_route'] = array(
+      'route_name' => 'taxonomy.term_delete',
+      'route_parameters' => array('taxonomy_term' => $this->entity->id()),
+      'options' => array('query' => $destination),
+    );
   }
 
 }

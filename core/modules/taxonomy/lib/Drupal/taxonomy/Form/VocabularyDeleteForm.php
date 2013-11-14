@@ -59,7 +59,7 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('Deleted vocabulary %name.', array('%name' => $this->entity->label())));
     watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
-    $form_state['redirect'] = 'admin/structure/taxonomy';
+    $form_state['redirect_route']['route_name'] = 'taxonomy.vocabulary_list';
     Cache::invalidateTags(array('content' => TRUE));
   }
 

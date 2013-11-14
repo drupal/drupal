@@ -121,14 +121,17 @@ class CategoryFormController extends EntityFormController {
         ->save();
     }
 
-    $form_state['redirect'] = 'admin/structure/contact';
+    $form_state['redirect_route']['route_name'] = 'contact.category_list';
   }
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $form_state['redirect'] = 'admin/structure/contact/manage/' . $this->entity->id() . '/delete';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'contact.category_delete',
+      'route_parameters' => array('contact_category' => $this->entity->id()),
+    );
   }
 
 }

@@ -213,7 +213,7 @@ class OpmlFeedAdd extends FormBase {
       $new_feed->save();
     }
 
-    $form_state['redirect'] = 'admin/config/services/aggregator';
+    $form_state['redirect_route']['route_name'] = 'aggregator.admin_overview';
   }
 
   /**

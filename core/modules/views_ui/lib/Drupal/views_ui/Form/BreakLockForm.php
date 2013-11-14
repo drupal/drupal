@@ -116,7 +116,10 @@ class BreakLockForm extends EntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->tempStore->delete($this->entity->id());
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->entity->id();
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit',
+      'route_parameters' => array('view' => $this->entity->id()),
+    );
     drupal_set_message($this->t('The lock has been broken and you may now edit this view.'));
   }
 

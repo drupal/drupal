@@ -419,6 +419,7 @@ class FormBuilder implements FormBuilderInterface {
       'rebuild',
       'rebuild_info',
       'redirect',
+      'redirect_route',
       'no_redirect',
       'temporary',
       // Internal properties defined by form processing.
@@ -640,7 +641,7 @@ class FormBuilder implements FormBuilderInterface {
             $batch['form_state'] = $form_state;
           }
           else {
-            $batch['form_state'] = array_intersect_key($form_state, array_flip(array('programmed', 'rebuild', 'storage', 'no_redirect', 'redirect')));
+            $batch['form_state'] = array_intersect_key($form_state, array_flip(array('programmed', 'rebuild', 'storage', 'no_redirect', 'redirect', 'redirect_route')));
           }
 
           $batch['progressive'] = !$form_state['programmed'];

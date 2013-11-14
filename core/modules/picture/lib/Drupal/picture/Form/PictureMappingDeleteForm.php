@@ -41,7 +41,7 @@ class PictureMappingDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     drupal_set_message(t('Picture mapping %label has been deleted.', array('%label' => $this->entity->label())));
     watchdog('picture', 'Picture mapping %label has been deleted.', array('%label' => $this->entity->label()), WATCHDOG_NOTICE);
-    $form_state['redirect'] = 'admin/config/media/picturemapping';
+    $form_state['redirect_route']['route_name'] = 'picture.mapping_page';
   }
 
 }

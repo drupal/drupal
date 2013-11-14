@@ -277,7 +277,10 @@ class ViewUI implements ViewStorageInterface {
       $this->cacheSet();
     }
 
-    $form_state['redirect'] = 'admin/structure/views/view/' . $this->id() . '/edit';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'views_ui.edit',
+      'route_parameters' => array('view' => $this->id()),
+    );
   }
 
   /**

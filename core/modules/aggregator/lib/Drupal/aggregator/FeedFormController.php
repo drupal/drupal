@@ -146,10 +146,13 @@ class FeedFormController extends ContentEntityFormController {
     if ($insert) {
       drupal_set_message($this->t('The feed %feed has been updated.', array('%feed' => $feed->label())));
       if (arg(0) == 'admin') {
-        $form_state['redirect'] = 'admin/config/services/aggregator';
+        $form_state['redirect_route']['route_name'] = 'aggregator.admin_overview';
       }
       else {
-        $form_state['redirect'] = 'aggregator/sources/' . $feed->id();
+        $form_state['redirect_route'] = array(
+          'route_name' => 'aggregator.feed_view',
+          'route_parameters' => array('aggregator_feed' => $feed->id()),
+        );
       }
     }
     else {
@@ -162,7 +165,10 @@ class FeedFormController extends ContentEntityFormController {
    * {@inheritdoc}
    */
   public function delete(array $form, array &$form_state) {
-    $form_state['redirect'] = 'admin/config/services/aggregator/delete/feed/' . $this->entity->id();
+    $form_state['redirect_route'] = array(
+      'route_name' => 'aggregator.feed_delete',
+      'route_parameters' => array('aggregator_feed' => $this->entity->id()),
+    );
   }
 
 }

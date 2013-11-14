@@ -45,10 +45,10 @@ class FeedDeleteForm extends ContentEntityConfirmFormBase {
     watchdog('aggregator', 'Feed %feed deleted.', array('%feed' => $this->entity->label()));
     drupal_set_message($this->t('The feed %feed has been deleted.', array('%feed' => $this->entity->label())));
     if (arg(0) == 'admin') {
-      $form_state['redirect'] = 'admin/config/services/aggregator';
+      $form_state['redirect_route']['route_name'] = 'aggregator.admin_overview';
     }
     else {
-      $form_state['redirect'] = 'aggregator/sources';
+      $form_state['redirect_route']['route_name'] = 'aggregator.sources';
     }
   }
 

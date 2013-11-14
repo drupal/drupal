@@ -53,7 +53,7 @@ class RebuildPermissionsForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     node_access_rebuild(TRUE);
-    $form_state['redirect'] = 'admin/reports/status';
+    $form_state['redirect_route']['route_name'] = 'system.status';
   }
 
 }

@@ -9,18 +9,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
-/**
- * Form submission handler for book_outline_form().
- *
- * Redirects to removal confirmation form.
- *
- * @see book_outline_form_submit()
- */
-function book_remove_button_submit($form, &$form_state) {
-  $form_state['redirect'] = 'node/' . $form['#node']->id() . '/outline/remove';
-}
-
 /**
  * Form constructor to confirm removal of a node from a book.
  *
@@ -59,5 +47,10 @@ function book_remove_form_submit($form, &$form_state) {
       ->execute();
     drupal_set_message(t('The post has been removed from the book.'));
   }
-  $form_state['redirect'] = 'node/' . $node->id();
+  $form_state['redirect_route'] = array(
+    'route_name' => 'node.view',
+    'route_parameters' => array(
+      'node' => $node->id(),
+    ),
+  );
 }

@@ -137,7 +137,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
     return;
   }
 
-  $form_state['redirect'] = 'admin/config/regional/translate';
+  $form_state['redirect_route']['route_name'] = 'locale.translate_page';
   return;
 }
 

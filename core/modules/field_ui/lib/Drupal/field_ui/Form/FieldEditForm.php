@@ -202,11 +202,17 @@ class FieldEditForm extends FormBase {
     try {
       $field->save();
       drupal_set_message($this->t('Updated field %label field settings.', array('%label' => $this->instance->label())));
-      $next_destination = FieldUI::getNextDestination($this->getRequest());
-      if (empty($next_destination)) {
-        $next_destination = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle) . '/fields';
+      if ($next_destination = FieldUI::getNextDestination($this->getRequest())) {
+        $form_state['redirect'] = $next_destination;
       }
-      $form_state['redirect'] = $next_destination;
+      else {
+        $form_state['redirect_route'] = array(
+          'route_name' => 'field_ui.overview_' . $this->instance->entity_type,
+          'route_parameters' => array(
+            'bundle' => $this->instance->bundle,
+          )
+        );
+      }
     }
     catch (\Exception $e) {
       drupal_set_message($this->t('Attempt to update field %label failed: %message.', array('%label' => $this->instance->label(), '%message' => $e->getMessage())), 'error');

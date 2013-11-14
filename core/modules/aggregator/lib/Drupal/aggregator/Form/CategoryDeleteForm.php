@@ -149,10 +149,10 @@ class CategoryDeleteForm extends ConfirmFormBase implements ContainerInjectionIn
     watchdog('aggregator', 'Category %category deleted.', array('%category' => $title));
     drupal_set_message($this->t('The category %category has been deleted.', array('%category' => $title)));
     if (preg_match('/^\/admin/', $this->getRequest()->getPathInfo())) {
-      $form_state['redirect'] = 'admin/config/services/aggregator/';
+      $form_state['redirect_route']['route_name'] = 'aggregator.admin_overview';
     }
     else {
-      $form_state['redirect'] = 'aggregator';
+      $form_state['redirect_route']['route_name'] = 'aggregator.page_last';
     }
     $this->updateMenuLink('delete', 'aggregator/categories/' . $cid, $title);
   }

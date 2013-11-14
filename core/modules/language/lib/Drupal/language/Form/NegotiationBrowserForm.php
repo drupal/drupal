@@ -178,7 +178,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
       $config->setData($mappings);
       $config->save();
     }
-    $form_state['redirect'] = 'admin/config/regional/language/detection';
+    $form_state['redirect_route']['route_name'] = 'language.negotiation';
 
     parent::submitForm($form, $form_state);
   }

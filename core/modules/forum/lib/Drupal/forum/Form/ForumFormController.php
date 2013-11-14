@@ -94,7 +94,7 @@ class ForumFormController extends TermFormController {
         break;
     }
 
-    $form_state['redirect'] = 'admin/structure/forum';
+    $form_state['redirect_route']['route_name'] = 'forum.overview';
     return $term;
   }
 
@@ -108,10 +108,14 @@ class ForumFormController extends TermFormController {
       $destination = drupal_get_destination();
       $request->query->remove('destination');
     }
-    $term = $this->getEntity($form_state);
-    $form_state['redirect'] = array(
-      'admin/structure/forum/delete/forum/' . $term->id(),
-      array('query' => $destination),
+    $form_state['redirect_route'] = array(
+      'route_name' => 'forum.delete',
+      'route_parameters' => array(
+        'taxonomy_term' => $this->entity->id(),
+      ),
+      'options' => array(
+        'query' => $destination,
+      ),
     );
   }
 

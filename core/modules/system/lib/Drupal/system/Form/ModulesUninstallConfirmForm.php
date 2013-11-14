@@ -137,7 +137,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ContainerIn
     $this->moduleHandler->uninstall($this->modules);
 
     drupal_set_message($this->t('The selected modules have been uninstalled.'));
-    $form_state['redirect'] = 'admin/modules/uninstall';
+    $form_state['redirect_route']['route_name'] = 'system.modules_uninstall';
   }
 
 }

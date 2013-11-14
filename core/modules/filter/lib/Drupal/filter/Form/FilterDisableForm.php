@@ -51,7 +51,7 @@ class FilterDisableForm extends EntityConfirmFormBase {
     $this->entity->disable()->save();
     drupal_set_message(t('Disabled text format %format.', array('%format' => $this->entity->label())));
 
-    $form_state['redirect'] = 'admin/config/content/formats';
+    $form_state['redirect_route']['route_name'] = 'filter.admin_overview';
   }
 
 }

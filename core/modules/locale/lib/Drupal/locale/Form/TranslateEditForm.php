@@ -231,7 +231,12 @@ class TranslateEditForm extends TranslateFormBase {
     // Keep the user on the current pager page.
     $page = $this->getRequest()->query->get('page');
     if (isset($page)) {
-      $form_state['redirect'] = array('admin/config/regional/translate', array('query' => array('page' => $page)));
+      $form_state['redirect_route'] = array(
+        'route_name' => 'locale.translate_page',
+        'options' => array(
+          'page' => $page,
+        ),
+      );
     }
 
     if ($updated) {

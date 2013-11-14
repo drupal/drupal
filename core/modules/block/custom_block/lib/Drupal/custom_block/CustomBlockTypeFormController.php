@@ -101,15 +101,19 @@ class CustomBlockTypeFormController extends EntityFormController {
       watchdog('custom_block', 'Custom block type %label has been added.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
     }
 
-    $form_state['redirect'] = 'admin/structure/block/custom-blocks/types';
+    $form_state['redirect_route']['route_name'] = 'custom_block.type_list';
   }
 
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::delete().
    */
   public function delete(array $form, array &$form_state) {
-    $block_type = $this->entity;
-    $form_state['redirect'] = 'admin/structure/block/custom-blocks/manage/' . $block_type->id() . '/delete';
+    $form_state['redirect_route'] = array(
+      'route_name' => 'custom_block.type_delete',
+      'route_parameters' => array(
+        'custom_block_type' => $this->entity->id(),
+      ),
+    );
   }
 
 }

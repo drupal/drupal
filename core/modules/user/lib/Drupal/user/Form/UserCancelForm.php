@@ -159,7 +159,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     if ($this->currentUser()->hasPermission('administer users') && empty($form_state['values']['user_cancel_confirm']) && $this->entity->id() != $this->currentUser()->id()) {
       user_cancel($form_state['values'], $this->entity->id(), $form_state['values']['user_cancel_method']);
 
-      $form_state['redirect'] = 'admin/people';
+      $form_state['redirect_route']['route_name'] = 'user.admin_account';
     }
     else {
       // Store cancelling method and whether to notify the user in
@@ -171,7 +171,10 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       drupal_set_message($this->t('A confirmation request to cancel your account has been sent to your e-mail address.'));
       watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>'), WATCHDOG_NOTICE);
 
-      $form_state['redirect'] = 'user/' . $this->entity->id();
+      $form_state['redirect_route'] = array(
+        'route_name' => 'user.view',
+        'route_parameters' => array('user' => $this->entity->id()),
+      );
     }
   }
 

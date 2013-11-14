@@ -69,7 +69,7 @@ class DeleteForm extends ConfirmFormBase {
     $this->taxonomyTerm->delete();
     drupal_set_message($this->t('The forum %label and all sub-forums have been deleted.', array('%label' => $this->taxonomyTerm->label())));
     watchdog('forum', 'forum: deleted %label and all its sub-forums.', array('%label' => $this->taxonomyTerm->label()), WATCHDOG_NOTICE);
-    $form_state['redirect'] = 'admin/structure/forum';
+    $form_state['redirect_route']['route_name'] = 'forum.overview';
   }
 
 }
