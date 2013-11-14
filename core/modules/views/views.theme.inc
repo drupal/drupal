@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
+use Drupal\views\Form\ViewsForm;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -134,7 +135,10 @@ function template_preprocess_views_view(&$variables) {
     $rows = $variables['rows'];
     $rows = drupal_render($rows);
     $output = !empty($rows) ? $rows : $variables['empty'];
-    $form = drupal_get_form(views_form_id($view), $view, $output);
+
+    $container = \Drupal::getContainer();
+    $form_object = new ViewsForm($container->get('controller_resolver'), $container->get('url_generator'), $container->get('request'), $view->storage->id(), $view->current_display);
+    $form = \Drupal::formBuilder()->getForm($form_object, $view, $output);
     // The form is requesting that all non-essential views elements be hidden,
     // usually because the rendered step is not a view result.
     if ($form['show_view_elements']['#value'] == FALSE) {
