@@ -49,7 +49,7 @@ use Drupal\entity\EntityFormModeInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "edit-form" = "admin/structure/display-modes/form/manage/{form_mode}"
+ *     "edit-form" = "entity.form_mode_edit"
  *   }
  * )
  */

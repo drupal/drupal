@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Defines a base entity class.
@@ -35,6 +36,13 @@ abstract class Entity implements EntityInterface {
    * @var bool
    */
   protected $enforceIsNew;
+
+  /**
+   * The route provider service.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
 
   /**
    * Constructs an Entity object.
@@ -144,10 +152,18 @@ abstract class Entity implements EntityInterface {
     // The links array might contain URI templates set in annotations.
     $link_templates = isset($entity_info['links']) ? $entity_info['links'] : array();
 
+    $template = NULL;
     if (isset($link_templates[$rel])) {
+      try {
+        $template = $this->routeProvider()->getRouteByName($link_templates[$rel])->getPath();
+      }
+      catch (RouteNotFoundException $e) {
+        // Fall back to a non-template-based URI.
+      }
+    }
+    if ($template) {
       // If there is a template for the given relationship type, do the
       // placeholder replacement and use that as the path.
-      $template = $link_templates[$rel];
       $replacements = $this->uriPlaceholderReplacements();
       $uri['path'] = str_replace(array_keys($replacements), array_values($replacements), $template);
 
@@ -367,6 +383,19 @@ abstract class Entity implements EntityInterface {
         \Drupal::entityManager()->getViewBuilder($entity_type)->resetCache(array_keys($entity_ids));
       }
     }
+  }
+
+  /**
+   * Wraps the route provider service.
+   *
+   * @return \Drupal\Core\Routing\RouteProviderInterface
+   *   The route provider.
+   */
+  protected function routeProvider() {
+    if (!$this->routeProvider) {
+      $this->routeProvider = \Drupal::service('router.route_provider');
+    }
+    return $this->routeProvider;
   }
 
 }

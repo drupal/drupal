@@ -54,6 +54,14 @@ class ConfigTestTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getTranslatePermission() {
+    // There is no valid translation permission.
+    return;
+  }
+
+  /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::::testTranslationUI().
    *
    * @todo Config entities are not translatable, but Content Translation module

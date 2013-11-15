@@ -38,7 +38,7 @@ use Drupal\Core\Annotation\Translation;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "edit-form" = "admin/structure/types/manage/{node_type}"
+ *     "edit-form" = "node.type_edit"
  *   }
  * )
  */

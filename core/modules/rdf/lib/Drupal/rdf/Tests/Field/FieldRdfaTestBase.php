@@ -46,6 +46,15 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
   public static $modules = array('rdf');
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $this->installSchema('system', array('router'));
+  }
+
+  /**
    * Helper function to test the formatter's RDFa.
    *
    * @param string $formatter

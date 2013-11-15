@@ -32,43 +32,19 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
     );
     parent::setUp();
 
-    // Entity manager stub for derivative building.
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $entity_manager->expects($this->any())
-      ->method('getDefinitions')
+    $content_translation_manager = $this->getMock('Drupal\content_translation\ContentTranslationManagerInterface');
+    $content_translation_manager->expects($this->any())
+      ->method('getSupportedEntityTypes')
       ->will($this->returnValue(array(
         'node' => array(
           'translatable' => TRUE,
           'links' => array(
-            'canonical' => '/node/{node}',
+            'canonical' => 'node.view',
+            'drupal:content-translation-overview' => 'content_translation.translation_overview_node',
           ),
         ),
       )));
-    \Drupal::getContainer()->set('entity.manager', $entity_manager);
-
-    // Route provider for injecting node.view into derivative lookup.
-    $collection = $this->getMockBuilder('Symfony\Component\Routing\RouteCollection')
-      ->disableOriginalConstructor()
-      ->setMethods(array('all'))
-      ->getMock();
-    $collection->expects($this->any())
-      ->method('all')
-      ->will($this->returnValue(array('node.view' => array())));
-    $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
-    $route_provider->expects($this->any())
-      ->method('getRoutesByPattern')
-      ->will($this->returnValue($collection));
-    \Drupal::getContainer()->set('router.route_provider', $route_provider);
-
-    // Stub for t().
-    $string_translation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
-    $string_translation->expects($this->any())
-      ->method('translate')
-      ->will($this->returnCallback(function($string) {return $string;}));
-    \Drupal::getContainer()->set('string_translation', $string_translation);
-
-    // Load the content_translation.module file in order to run the alter hook.
-    require_once DRUPAL_ROOT . '/core/modules/content_translation/content_translation.module';
+    \Drupal::getContainer()->set('content_translation.manager', $content_translation_manager);
   }
 
   /**

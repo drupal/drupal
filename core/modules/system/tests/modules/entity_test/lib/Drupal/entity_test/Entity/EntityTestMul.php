@@ -38,8 +38,8 @@ use Drupal\Core\Annotation\Translation;
  *   },
  *   route_base_path = "entity_test_mul/structure/{bundle}",
  *   links = {
- *     "canonical" = "/entity_test_mul/manage/{entity_test_mul}",
- *     "edit-form" = "/entity_test_mul/manage/{entity_test_mul}"
+ *     "canonical" = "entity_test.edit_entity_test_mul",
+ *     "edit-form" = "entity_test.edit_entity_test_mul"
  *   }
  * )
  */

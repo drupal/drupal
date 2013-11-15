@@ -38,8 +38,8 @@ use Drupal\custom_block\CustomBlockInterface;
  *   revision_table = "custom_block_revision",
  *   route_base_path = "admin/structure/block/custom-blocks/manage/{bundle}",
  *   links = {
- *     "canonical" = "/block/{custom_block}",
- *     "edit-form" = "/block/{custom_block}"
+ *     "canonical" = "custom_block.edit",
+ *     "edit-form" = "custom_block.edit"
  *   },
  *   fieldable = TRUE,
  *   translatable = TRUE,

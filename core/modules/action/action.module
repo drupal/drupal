@@ -64,5 +64,5 @@ function action_entity_info(&$entity_info) {
   $entity_info['action']['controllers']['form']['edit'] = 'Drupal\action\ActionEditFormController';
   $entity_info['action']['controllers']['form']['delete'] = 'Drupal\action\Form\ActionDeleteForm';
   $entity_info['action']['controllers']['list'] = 'Drupal\action\ActionListController';
-  $entity_info['action']['links']['edit-form'] = 'admin/config/system/actions/configure/{action}';
+  $entity_info['action']['links']['edit-form'] = 'action.admin_configure';
 }

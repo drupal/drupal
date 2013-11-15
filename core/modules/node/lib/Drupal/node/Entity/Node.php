@@ -52,9 +52,9 @@ use Drupal\node\NodeInterface;
  *   route_base_path = "admin/structure/types/manage/{bundle}",
  *   permission_granularity = "bundle",
  *   links = {
- *     "canonical" = "/node/{node}",
- *     "edit-form" = "/node/{node}/edit",
- *     "version-history" = "/node/{node}/revisions"
+ *     "canonical" = "node.view",
+ *     "edit-form" = "node.page_edit",
+ *     "version-history" = "node.revision_overview"
  *   }
  * )
  */

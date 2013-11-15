@@ -28,9 +28,6 @@ use Drupal\Core\Annotation\Translation;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
- *   },
- *   links = {
- *     "edit-form" = "admin/structure/config_test/manage/{config_query_test}"
  *   }
  * )
  *

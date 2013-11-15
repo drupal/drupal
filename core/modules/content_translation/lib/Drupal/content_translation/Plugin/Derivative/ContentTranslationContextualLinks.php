@@ -54,7 +54,7 @@ class ContentTranslationContextualLinks extends DerivativeBase implements Contai
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
       if ($entity_info['translatable'] && isset($entity_info['translation'])) {
         $this->derivatives[$entity_type]['title'] = t('Translate');
-        $this->derivatives[$entity_type]['route_name'] = "content_translation.translation_overview_$entity_type";
+        $this->derivatives[$entity_type]['route_name'] = $entity_info['links']['drupal:content-translation-overview'];
         $this->derivatives[$entity_type]['group'] = $entity_type;
       }
     }

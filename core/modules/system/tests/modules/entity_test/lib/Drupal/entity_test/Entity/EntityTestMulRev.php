@@ -38,8 +38,8 @@ use Drupal\Core\Annotation\Translation;
  *     "bundle" = "type"
  *   },
  *   links = {
- *     "canonical" = "/entity_test_mulrev/manage/{entity_test_mulrev}",
- *     "edit-form" = "/entity_test_mulrev/manage/{entity_test_mulrev}"
+ *     "canonical" = "entity_test.edit_entity_test_mulrev",
+ *     "edit-form" = "entity_test.edit_entity_test_mulrev"
  *   }
  * )
  */

@@ -90,19 +90,13 @@ function content_translation_entity_info_alter(array &$entity_info) {
       }
 
       if (!empty($info['links']['canonical'])) {
-        // Provide default links for the translation paths.
+        // Provide default route names for the translation paths.
         $info['links'] += array(
-          'drupal:content-translation-overview' => $info['links']['canonical'] . '/translations',
+          'drupal:content-translation-overview' => "content_translation.translation_overview_$entity_type",
         );
-
-        $parts = explode('/', trim($info['links']['canonical'], '/'));
-        $entity_position = array_search("{{$entity_type}}", $parts);
-        if ($entity_position !== FALSE) {
-          $info['translation']['content_translation'] += array(
-            'access_callback' => 'content_translation_translate_access',
-            'access_arguments' => array($entity_position),
-          );
-        }
+        $info['translation']['content_translation'] += array(
+          'access_callback' => 'content_translation_translate_access',
+        );
       }
     }
   }
@@ -162,7 +156,7 @@ function content_translation_menu() {
     if (content_translation_enabled($entity_type)) {
       $path = _content_translation_link_to_router_path($entity_type, $info['links']['canonical']);
       $entity_position = count(explode('/', $path)) - 1;
-      $keys = array_flip(array('theme_callback', 'theme_arguments', 'access_callback', 'access_arguments', 'load_arguments'));
+      $keys = array_flip(array('theme_callback', 'theme_arguments', 'load_arguments'));
       $menu_info = array_intersect_key($info['translation']['content_translation'], $keys) + array('file' => 'content_translation.pages.inc');
       $item = array();
 
@@ -174,7 +168,7 @@ function content_translation_menu() {
 
       $items["$path/translations"] = array(
         'title' => 'Translate',
-        'route_name' => "content_translation.translation_overview_$entity_type",
+        'route_name' => $info['links']['drupal:content-translation-overview'],
         'type' => MENU_LOCAL_TASK,
         'context' => MENU_CONTEXT_PAGE,
         'weight' => 2,
@@ -496,11 +490,13 @@ function content_translation_set_config($entity_type, $bundle, $setting, $value)
  * @returns
  *   TRUE if the specified bundle is translatable. If no bundle is provided
  *   returns TRUE if at least one of the entity bundles is translatable.
+ *
+ * @todo Move to \Drupal\content_translation\ContentTranslationManager.
  */
 function content_translation_enabled($entity_type, $bundle = NULL) {
   $enabled = FALSE;
 
-  if (content_translation_supported($entity_type)) {
+  if (\Drupal::service('content_translation.manager')->isSupported($entity_type)) {
     $bundles = !empty($bundle) ? array($bundle) : array_keys(entity_get_bundles($entity_type));
     foreach ($bundles as $bundle) {
       if (content_translation_get_config($entity_type, $bundle, 'enabled')) {
@@ -514,20 +510,6 @@ function content_translation_enabled($entity_type, $bundle = NULL) {
 }
 
 /**
- * Checks whether an entity type supports translation.
- *
- * @param string $entity_type
- *   The entity type.
- *
- * @return bool
- *   TRUE if an entity type is supported, FALSE otherwise.
- */
-function content_translation_supported($entity_type) {
-  $info = entity_get_info($entity_type);
-  return !empty($info['translatable']) && !empty($info['links']['drupal:content-translation-overview']);
-}
-
-/**
  * Content translation controller factory.
  *
  * @param string $entity_type
@@ -535,6 +517,8 @@ function content_translation_supported($entity_type) {
  *
  * @return \Drupal\content_translation\ContentTranslationControllerInterface
  *   An instance of the content translation controller interface.
+ *
+ * @todo Move to \Drupal\content_translation\ContentTranslationManager.
  */
 function content_translation_controller($entity_type) {
   $entity_info = entity_get_info($entity_type);
@@ -551,6 +535,8 @@ function content_translation_controller($entity_type) {
  * @return \Drupal\Core\Entity\EntityFormControllerInterface;
  *   An instance of the content translation form interface or FALSE if not an
  *   entity form.
+ *
+ * @todo Move to \Drupal\content_translation\ContentTranslationManager.
  */
 function content_translation_form_controller(array $form_state) {
   return isset($form_state['controller']) && $form_state['controller'] instanceof EntityFormControllerInterface ? $form_state['controller'] : FALSE;
@@ -570,6 +556,8 @@ function content_translation_form_controller(array $form_state) {
  *
  * @return
  *   TRUE if the current user is allowed to view the translation.
+ *
+ * @todo Move to \Drupal\content_translation\ContentTranslationManager.
  */
 function content_translation_access(EntityInterface $entity, $op) {
   return content_translation_controller($entity->entityType())->getTranslationAccess($entity, $op) ;

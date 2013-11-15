@@ -5,7 +5,7 @@ services:
 
   content_translation.subscriber:
     class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@content_translation.manager', '@router.route_provider']
     tags:
       - { name: event_subscriber }
 
@@ -20,3 +20,7 @@ services:
     arguments: ['@plugin.manager.entity']
     tags:
       - { name: access_check }
+
+  content_translation.manager:
+    class: Drupal\content_translation\ContentTranslationManager
+    arguments: ['@entity.manager']

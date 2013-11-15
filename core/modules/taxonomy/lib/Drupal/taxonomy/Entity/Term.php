@@ -45,8 +45,8 @@ use Drupal\taxonomy\TermInterface;
  *     "bundle" = "vid"
  *   },
  *   links = {
- *     "canonical" = "/taxonomy/term/{taxonomy_term}",
- *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit"
+ *     "canonical" = "taxonomy.term_page",
+ *     "edit-form" = "taxonomy.term_edit"
  *   },
  *   route_base_path = "admin/structure/taxonomy/manage/{bundle}",
  *   permission_granularity = "bundle"

@@ -8,29 +8,14 @@
 namespace Drupal\content_translation\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
-use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic local tasks for content translation.
  */
 class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDerivativeInterface {
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
 
   /**
    * The base plugin ID
@@ -40,19 +25,23 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
   protected $basePluginId;
 
   /**
+   * The content translation manager.
+   *
+   * @var \Drupal\content_translation\ContentTranslationManagerInterface
+   */
+  protected $contentTranslationManager;
+
+  /**
    * Constructs a new ContentTranslationLocalTasks.
    *
    * @param string $base_plugin_id
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider.
+   * @param \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager
+   *   The content translation manager.
    */
-  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, RouteProviderInterface $route_provider) {
-    $this->entityManager = $entity_manager;
-    $this->routeProvider = $route_provider;
+  public function __construct($base_plugin_id, ContentTranslationManagerInterface $content_translation_manager) {
     $this->basePluginId = $base_plugin_id;
+    $this->contentTranslationManager = $content_translation_manager;
   }
 
   /**
@@ -61,8 +50,7 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $base_plugin_id,
-      $container->get('entity.manager'),
-      $container->get('router.route_provider')
+      $container->get('content_translation.manager')
     );
   }
 
@@ -71,18 +59,15 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     // Create tabs for all possible entity types.
-    foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if (!empty($entity_info['translatable'])) {
-        // Find the route name for the translation overview.
-        $translation_route_name = "content_translation.translation_overview_$entity_type";
-        $translation_tab = $translation_route_name;
+    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type => $entity_info) {
+      // Find the route name for the translation overview.
+      $translation_route_name = $entity_info['links']['drupal:content-translation-overview'];
 
-        $this->derivatives[$translation_tab] = $base_plugin_definition + array(
-          'entity_type' => $entity_type,
-        );
-        $this->derivatives[$translation_tab]['title'] = 'Translate';
-        $this->derivatives[$translation_tab]['route_name'] = $translation_route_name;
-      }
+      $this->derivatives[$translation_route_name] = array(
+        'entity_type' => $entity_type,
+        'title' => 'Translate',
+        'route_name' => $translation_route_name,
+      ) + $base_plugin_definition;
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);
   }
@@ -91,20 +76,15 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
    * Alters the local tasks to find the proper tab_root_id for each task.
    */
   public function alterLocalTasks(array &$local_tasks) {
-    foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if (!empty($entity_info['translatable']) && !empty($entity_info['links']['canonical'])) {
-        $path = $entity_info['links']['canonical'];
-        if ($routes = $this->routeProvider->getRoutesByPattern($path)->all()) {
-          // Find the route name for the entity page.
-          $entity_route_name = key($routes);
+    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_info) {
+      // Find the route name for the entity page.
+      $entity_route_name = $entity_info['links']['canonical'];
 
-          // Find the route name for the translation overview.
-          $translation_route_name = "content_translation.translation_overview_$entity_type";
-          $translation_tab = $this->basePluginId . ':' . $translation_route_name;
+      // Find the route name for the translation overview.
+      $translation_route_name = $entity_info['links']['drupal:content-translation-overview'];
+      $translation_tab = $this->basePluginId . ':' . $translation_route_name;
 
-          $local_tasks[$translation_tab]['tab_root_id'] = $this->getTaskFromRoute($entity_route_name, $local_tasks);
-        }
-      }
+      $local_tasks[$translation_tab]['tab_root_id'] = $this->getTaskFromRoute($entity_route_name, $local_tasks);
     }
   }
 
@@ -131,14 +111,4 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
     return $parent_local_task;
   }
 
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   *
-   * @todo Move to derivative base. https://drupal.org/node/2112575
-   */
-  public function t($string, array $args = array(), array $options = array()) {
-    \Drupal::translation()->translate($string, $args, $options);
-  }
 }

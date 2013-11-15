@@ -267,9 +267,7 @@ class EntityType extends Plugin {
    *
    * @var array
    */
-  public $links = array(
-    'canonical' => '/entity/{entityType}/{id}',
-  );
+  public $links = array();
 
   /**
    * Specifies whether a module exposing permissions for the current entity type

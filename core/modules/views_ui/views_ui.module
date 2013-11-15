@@ -56,6 +56,7 @@ function views_ui_entity_info(&$entity_info) {
       'break_lock' => 'Drupal\views_ui\Form\BreakLockForm',
     ),
   );
+  $entity_info['view']['links']['edit-form'] = 'views_ui.edit';
 }
 
 /**

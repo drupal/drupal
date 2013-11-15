@@ -76,7 +76,7 @@ class ConfigEntityListTest extends WebTestBase {
     $actual_operations = $controller->getOperations($entity);
     // Sort the operations to normalize link order.
     uasort($actual_operations, 'drupal_sort_weight');
-    $this->assertIdentical($expected_operations, $actual_operations);
+    $this->assertIdentical($expected_operations, $actual_operations, 'The operations are identical.');
 
     // Test buildHeader() method.
     $expected_items = array(
@@ -149,7 +149,7 @@ class ConfigEntityListTest extends WebTestBase {
     $actual_operations = $controller->getOperations($entity);
     // Sort the operations to normalize link order.
     uasort($actual_operations, 'drupal_sort_weight');
-    $this->assertIdentical($expected_operations, $actual_operations);
+    $this->assertIdentical($expected_operations, $actual_operations, 'The operations are identical.');
   }
 
   /**

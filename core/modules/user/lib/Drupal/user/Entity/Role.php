@@ -35,7 +35,7 @@ use Drupal\user\RoleInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "edit-form" = "admin/people/roles/manage/{user_role}"
+ *     "edit-form" = "user.role_edit"
  *   }
  * )
  */

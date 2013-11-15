@@ -37,7 +37,7 @@ use Drupal\Core\Annotation\Translation;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "edit-form" = "admin/config/regional/date-time/formats/manage/{date_format}"
+ *     "edit-form" = "system.date_format_edit"
  *   }
  * )
  */

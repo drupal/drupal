@@ -41,8 +41,8 @@ use Drupal\user\UserInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "/user/{user}",
- *     "edit-form" = "/user/{user}/edit"
+ *     "canonical" = "user.view",
+ *     "edit-form" = "user.edit"
  *   }
  * )
  */

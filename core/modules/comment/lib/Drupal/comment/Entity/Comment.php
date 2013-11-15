@@ -47,8 +47,8 @@ use Drupal\Core\Language\Language;
  *     "bundle" = "field_id"
  *   },
  *   links = {
- *     "canonical" = "/comment/{comment}",
- *     "edit-form" = "/comment/{comment}/edit"
+ *     "canonical" = "comment.permalink",
+ *     "edit-form" = "comment.edit_page"
  *   }
  * )
  */
