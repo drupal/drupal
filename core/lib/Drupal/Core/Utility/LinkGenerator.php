@@ -87,6 +87,13 @@ class LinkGenerator implements LinkGeneratorInterface {
   /**
    * {@inheritdoc}
    */
+  public function getActive() {
+    return $this->active;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function generate($text, $route_name, array $parameters = array(), array $options = array()) {
     // Start building a structured representation of our link to be altered later.
     $variables = array(

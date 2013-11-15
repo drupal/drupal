@@ -63,7 +63,8 @@ class BanAdmin extends FormBase {
       $links = array();
       $links['delete'] = array(
         'title' => $this->t('delete'),
-        'href' => "admin/config/people/ban/delete/$ip->iid",
+        'route_name' => 'ban.delete',
+        'route_parameters' => array('ban_id' => $ip->iid),
       );
       $row[] = array(
         'data' => array(

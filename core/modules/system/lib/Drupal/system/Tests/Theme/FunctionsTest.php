@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for common theme functions.
  */
 class FunctionsTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('router_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Theme functions',
@@ -172,13 +180,19 @@ class FunctionsTest extends WebTestBase {
         'title' => 'Front page',
         'href' => '<front>',
       ),
+      'router-test' => array(
+        'title' => 'Test route',
+        'route_name' => 'router_test.1',
+        'route_parameters' => array(),
+      ),
     );
 
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
     $expected_links .= '<li class="a-link odd first"><a href="' . url('a/link') . '">' . check_plain('A <link>') . '</a></li>';
     $expected_links .= '<li class="plain-text even">' . check_plain('Plain "text"') . '</li>';
-    $expected_links .= '<li class="front-page odd last active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
+    $expected_links .= '<li class="front-page odd active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
+    $expected_links .= '<li class="router-test even last"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . check_plain('Test route') . '</a></li>';
     $expected_links .= '</ul>';
 
     // Verify that passing a string as heading works.
@@ -210,7 +224,8 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<ul id="somelinks">';
     $expected_links .= '<li class="a-link odd first"><a href="' . url('a/link') . '" class="a/class">' . check_plain('A <link>') . '</a></li>';
     $expected_links .= '<li class="plain-text even"><span class="a/class">' . check_plain('Plain "text"') . '</span></li>';
-    $expected_links .= '<li class="front-page odd last active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
+    $expected_links .= '<li class="front-page odd active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
+    $expected_links .= '<li class="router-test even last"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . check_plain('Test route') . '</a></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);

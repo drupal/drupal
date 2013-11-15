@@ -186,19 +186,23 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
       $links = array();
       $links['edit'] = array(
         'title' => $this->t('Edit'),
-        'href' => "admin/config/services/aggregator/edit/feed/$feed->fid",
+        'route_name' => 'aggregator.feed_edit',
+        'route_parameters' => array('aggregator_feed' => $feed->fid),
       );
       $links['delete'] = array(
         'title' => $this->t('Delete'),
-        'href' => "admin/config/services/aggregator/delete/feed/$feed->fid",
+        'route_name' => 'aggregator.feed_delete',
+        'route_parameters' => array('aggregator_feed' => $feed->fid),
       );
       $links['remove'] = array(
         'title' => $this->t('Remove items'),
-        'href' => "admin/config/services/aggregator/remove/$feed->fid",
+        'route_name' => 'aggregator.feed_items_delete',
+        'route_parameters' => array('aggregator_feed' => $feed->fid),
       );
       $links['update'] = array(
         'title' => $this->t('Update items'),
-        'href' => "admin/config/services/aggregator/update/$feed->fid",
+        'route_name' => 'aggregator.feed_refresh',
+        'route_parameters' => array('aggregator_feed' => $feed->fid),
         'query' => array('token' => drupal_get_token("aggregator/update/$feed->fid")),
       );
       $row[] = array(
@@ -228,11 +232,13 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
       $links = array();
       $links['edit'] = array(
         'title' => $this->t('Edit'),
-        'href' => "admin/config/services/aggregator/edit/category/$category->cid",
+        'route_name' => 'aggregator.category_admin_edit',
+        'route_parameters' => array('cid' => $category->cid),
       );
       $links['delete'] = array(
         'title' => $this->t('Delete'),
-        'href' => "admin/config/services/aggregator/delete/category/$category->cid",
+        'route_name' => 'aggregator.category_delete',
+        'route_parameters' => array('cid' => $category->cid),
       );
       $row[] = array(
         'data' => array(

@@ -71,4 +71,16 @@ interface LinkGeneratorInterface {
    */
   public function generate($text, $route_name, array $parameters = array(), array $options = array());
 
+  /**
+   * Returns information for the currently active route.
+   *
+   * @return array
+   *   An array of active route information, containing the following keys:
+   *     - route_name: The currently active route_name
+   *     - language: The current language
+   *     - parameters: An array of request parameters and any query string
+   *       parameters.
+   */
+  public function getActive();
+
 }

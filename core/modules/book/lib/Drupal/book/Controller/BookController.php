@@ -77,7 +77,8 @@ class BookController implements ContainerInjectionInterface {
       $links = array();
       $links['edit'] = array(
         'title' => t('Edit order and titles'),
-        'href' => 'admin/structure/book/' . $book['nid'],
+        'route_name' => 'book.admin_edit',
+        'route_parameters' => array('node' => $book['nid']),
       );
       $row[] = array(
         'data' => array(

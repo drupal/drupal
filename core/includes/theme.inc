@@ -19,6 +19,7 @@ use Drupal\Core\Template\RenderWrapper;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\MapArray;
 
 /**
  * @defgroup content_flags Content markers
@@ -1645,8 +1646,6 @@ function template_preprocess_status_messages(&$variables) {
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  */
 function theme_links($variables) {
-  $language_url = language(Language::TYPE_URL);
-
   $links = $variables['links'];
   $attributes = $variables['attributes'];
   $heading = $variables['heading'];
@@ -1678,8 +1677,17 @@ function theme_links($variables) {
 
     $num_links = count($links);
     $i = 0;
+    $active = \Drupal::linkGenerator()->getActive();
+    $language_url = \Drupal::languageManager()->getLanguage(Language::TYPE_URL);
+
     foreach ($links as $key => $link) {
       $i++;
+
+      $link += array(
+        'href' => NULL,
+        'route_name' => NULL,
+        'route_parameters' => NULL,
+      );
 
       $class = array();
       // Use the array key as class name.
@@ -1693,44 +1701,46 @@ function theme_links($variables) {
         $class[] = 'last';
       }
 
-      $link += array(
-        'href' => NULL,
+      $link_element = array(
+        '#type' => 'link',
+        '#title' => $link['title'],
+        '#options' => array_diff_key($link, MapArray::copyValuesToKeys(array('title', 'href', 'route_name', 'route_parameters'))),
+        '#href' => $link['href'],
+        '#route_name' => $link['route_name'],
+        '#route_parameters' => $link['route_parameters'],
       );
 
-      // Handle links.
-      if (isset($link['href']) || isset($link['route_name'])) {
+      // @todo Reconcile Views usage of 'ajax' as a boolean with the rest of
+      //   core's usage of it as an array.
+      if (isset($link['ajax']) && is_array($link['ajax'])) {
+        $link_element['#ajax'] = $link['ajax'];
+      }
+
+      // Handle links and ensure that the active class is added on the LIs.
+      if (isset($link['route_name'])) {
+        $variables = array(
+          'options' => array(),
+        );
+        if (!empty($link['language'])) {
+          $variables['options']['language'] = $link['language'];
+        }
+
+        if (($link['route_name'] == $active['route_name'])
+        // The language of an active link is equal to the current language.
+        && (empty($variables['options']['language']) || ($variables['options']['language']->id == $active['language']))
+        && ($link['route_parameters'] == $active['parameters'])) {
+          $class[] = 'active';
+        }
+
+        $item = drupal_render($link_element);
+      }
+      elseif (isset($link['href'])) {
         $is_current_path = ($link['href'] == current_path() || ($link['href'] == '<front>' && drupal_is_front_page()));
         $is_current_language = (empty($link['language']) || $link['language']->id == $language_url->id);
         if ($is_current_path && $is_current_language) {
           $class[] = 'active';
         }
-        // @todo Reconcile Views usage of 'ajax' as a boolean with the rest of
-        //   core's usage of it as an array.
-        if (isset($link['ajax']) && is_array($link['ajax'])) {
-          // To attach Ajax behavior, render a link element, rather than just
-          // call l().
-          $link_element = array(
-            '#type' => 'link',
-            '#title' => $link['title'],
-            '#href' => $link['href'],
-            '#ajax' => $link['ajax'],
-            '#options' => array_diff_key($link, drupal_map_assoc(array('title', 'href', 'ajax'))),
-          );
-          $item = drupal_render($link_element);
-        }
-        else {
-          // @todo theme_links() should *really* use the same parameters as l(),
-          //   and just take an array of '#type' => 'link' elements, see
-          //   https://drupal.org/node/2102777.
-          // Pass in $link as $options, as they share the same keys.
-          if (isset($link['href'])) {
-            $item = l($link['title'], $link['href'], $link);
-          }
-          else {
-            $link += array('route_parameters' => array());
-            $item = \Drupal::l($link['title'], $link['route_name'], $link['route_parameters'], $link);
-          }
-        }
+        $item = drupal_render($link_element);
       }
       // Handle title-only text items.
       else {

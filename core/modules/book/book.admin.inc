@@ -53,12 +53,14 @@ function theme_book_admin_table($variables) {
     if ($access) {
       $links['edit'] = array(
         'title' => t('Edit'),
-        'href' => "node/$nid/edit",
+        'route_name' => 'node.page_edit',
+        'route_parameters' => array('node' => $nid),
         'query' => $destination,
       );
       $links['delete'] = array(
         'title' => t('Delete'),
-        'href' => "node/$nid/delete",
+        'route_name' => 'node.delete_confirm',
+        'route_parameters' => array('node' => $nid),
         'query' => $destination,
       );
     }
