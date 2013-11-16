@@ -55,7 +55,7 @@ class TestContent extends ContainerAware implements ContainerInjectionInterface 
    *   The user name of the current logged in user.
    */
   public function test11() {
-    $account  = \Drupal::request()->attributes->get('_account');
+    $account = \Drupal::currentUser();
     return $account->getUsername();
   }
 

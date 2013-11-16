@@ -53,7 +53,6 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    */
   public function providerTestOnRouteBuildingInvalidVariables() {
     $routes = array();
-    $routes[] = array(new Route('/test/{_account}'));
     $routes[] = array(new Route('/test/{system_path}'));
     $routes[] = array(new Route('/test/{_maintenance}'));
     $routes[] = array(new Route('/test/{_legacy}'));

@@ -46,6 +46,9 @@ class CommentNodeAccessTest extends CommentTestBase {
       'node test view',
       'skip comment approval',
     ));
+
+    // Set the author of the created node to the web_user uid.
+    $this->node->setAuthorId($this->web_user->id())->save();
   }
 
   /**

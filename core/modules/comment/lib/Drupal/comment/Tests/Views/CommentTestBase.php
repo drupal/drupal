@@ -36,7 +36,7 @@ abstract class CommentTestBase extends ViewTestBase {
 
     // Add two users, create a node with the user1 as author and another node
     // with user2 as author. For the second node add a comment from user1.
-    $this->account = $this->drupalCreateUser();
+    $this->account = $this->drupalCreateUser(array('skip comment approval'));
     $this->account2 = $this->drupalCreateUser();
     $this->drupalLogin($this->account);
 

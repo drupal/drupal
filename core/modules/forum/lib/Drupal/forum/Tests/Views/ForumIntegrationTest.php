@@ -62,6 +62,9 @@ class ForumIntegrationTest extends ViewTestBase {
       $nodes[] = $node;
     }
 
+    $account = $this->drupalCreateUser(array('skip comment approval'));
+    $this->drupalLogin($account);
+
     $comments = array();
     foreach ($nodes as $index => $node) {
       for ($i = 0; $i <= $index; $i++) {

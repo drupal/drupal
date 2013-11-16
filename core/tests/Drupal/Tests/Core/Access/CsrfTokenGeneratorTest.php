@@ -49,7 +49,6 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
       ->will($this->returnValue($this->key));
 
     $this->generator = new CsrfTokenGenerator($private_key);
-    $this->generator->setRequest(new Request());
   }
 
   /**
@@ -79,18 +78,14 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
     $account->expects($this->once())
       ->method('isAnonymous')
       ->will($this->returnValue(TRUE));
-    $request = new Request();
-    $request->attributes->set('_account', $account);
-    $this->generator->setRequest($request);
+    $this->generator->setCurrentUser($account);
     $this->assertTrue($this->generator->validate($token, 'foo', TRUE));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $account->expects($this->once())
       ->method('isAnonymous')
       ->will($this->returnValue(FALSE));
-    $request = new Request();
-    $request->attributes->set('_account', $account);
-    $this->generator->setRequest($request);
+    $this->generator->setCurrentUser($account);
 
     $this->assertFalse($this->generator->validate($token, 'foo', TRUE));
   }

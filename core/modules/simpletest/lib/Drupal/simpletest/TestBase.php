@@ -1041,7 +1041,7 @@ abstract class TestBase {
     // different object, so we need to replace the instance on this test class.
     $this->container = \Drupal::getContainer();
     // The global $user is set in TestBase::prepareEnvironment().
-    $this->container->get('request')->attributes->set('_account', $GLOBALS['user']);
+    $this->container->set('current_user', $GLOBALS['user']);
   }
 
   /**

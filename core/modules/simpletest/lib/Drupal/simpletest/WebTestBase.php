@@ -277,7 +277,7 @@ abstract class WebTestBase extends TestBase {
         $settings['uid'] = $this->loggedInUser->id();
       }
       else {
-        global $user;
+        $user = \Drupal::currentUser() ?: $GLOBALS['user'];
         $settings['uid'] = $user->id();
       }
     }

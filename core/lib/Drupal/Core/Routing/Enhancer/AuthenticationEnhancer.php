@@ -55,8 +55,6 @@ class AuthenticationEnhancer extends ContainerAware implements RouteEnhancerInte
         $anonymous_user = drupal_anonymous_user();
 
         $this->container->set('current_user', $anonymous_user, 'request');
-        // @todo Remove this in https://drupal.org/node/2073531
-        $request->attributes->set('_account', $anonymous_user);
 
         // The global $user object is included for backward compatibility only
         // and should be considered deprecated.

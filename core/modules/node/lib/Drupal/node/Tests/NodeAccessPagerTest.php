@@ -55,6 +55,7 @@ class NodeAccessPagerTest extends WebTestBase {
         'comment_body' => array(
           array('value' => $this->randomName()),
         ),
+        'status' => COMMENT_PUBLISHED,
       ));
       $comment->save();
     }

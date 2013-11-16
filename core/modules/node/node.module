@@ -1735,11 +1735,9 @@ function node_access_view_all_nodes($account = NULL) {
  * @endcode
  */
 function node_query_node_access_alter(AlterableInterface $query) {
-  global $user;
-
   // Read meta-data from query, if provided.
   if (!$account = $query->getMetaData('account')) {
-    $account = $user;
+    $account = \Drupal::currentUser();
   }
   if (!$op = $query->getMetaData('op')) {
     $op = 'view';

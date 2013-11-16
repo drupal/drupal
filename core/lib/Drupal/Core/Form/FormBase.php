@@ -178,7 +178,7 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    *   The current user.
    */
   protected function currentUser() {
-    return $this->getRequest()->attributes->get('_account');
+    return \Drupal::currentUser();
   }
 
   /**

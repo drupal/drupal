@@ -1175,9 +1175,7 @@ function comment_load($cid, $reset = FALSE) {
  *   The number of new comments or FALSE if the user is not logged in.
  */
 function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestamp = 0) {
-  global $user;
-
-  if ($user->isAuthenticated() && \Drupal::moduleHandler()->moduleExists('history')) {
+  if (\Drupal::currentUser()->isAuthenticated() && \Drupal::moduleHandler()->moduleExists('history')) {
     // Retrieve the timestamp at which the current user last viewed this entity.
     if (!$timestamp) {
       if ($entity_type == 'node') {

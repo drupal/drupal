@@ -452,7 +452,7 @@ function user_access($string, AccountInterface $account = NULL) {
   if (!isset($account)) {
     // In the installer request session is not set, so we have to fall back
     // to the global $user. In all other cases the session key is preferred.
-    $account = \Drupal::request()->attributes->get('_account') ?: $user;
+    $account = \Drupal::currentUser() ?: $user;
   }
 
   return $account->hasPermission($string);
@@ -1265,7 +1265,7 @@ function user_cancel_methods() {
     'user_cancel_delete' => array(
       'title' => t('Delete the account and its content.'),
       'description' => t('Your account will be removed and all account information deleted. All of your content will also be deleted.'),
-      'access' => \Drupal::request()->attributes->get('_account')->hasPermission('administer users'),
+      'access' => \Drupal::currentUser()->hasPermission('administer users'),
     ),
   );
   // Allow modules to customize account cancellation methods.

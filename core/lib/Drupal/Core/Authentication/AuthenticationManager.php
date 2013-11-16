@@ -110,7 +110,6 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
 
     // Save the authenticated account and the provider that supplied it
     //  for later access.
-    $request->attributes->set('_account', $account);
     $request->attributes->set('_authentication_provider', $this->triggeredProviderId);
 
     // The global $user object is included for backward compatibility only and

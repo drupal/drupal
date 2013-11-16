@@ -23,9 +23,7 @@ interface SearchInterface extends PluginInspectionInterface {
    *   Array of parameters as am associative array. This is expected to
    *   be the query string from the current request.
    * @param array $attributes
-   *   Array of attributes, usually from the current request object. The search
-   *   plugin may use the '_account' attribute if present to personalize the
-   *   search, or use attributes from the current route variables.
+   *   Array of attributes, usually from the current request object.
    *
    * @return \Drupal\search\Plugin\SearchInterface
    *   A search plugin object for chaining.

@@ -46,6 +46,9 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     // Create searching user.
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
 
+    // Login with sufficient privileges.
+    $this->drupalLogin($this->searching_user);
+
     // Add a comment field.
     $this->container->get('comment.manager')->addDefaultField('node', 'article');
     // Create initial nodes.
@@ -53,9 +56,6 @@ class SearchCommentCountToggleTest extends SearchTestBase {
 
     $this->searchable_nodes['1 comment'] = $this->drupalCreateNode($node_params);
     $this->searchable_nodes['0 comments'] = $this->drupalCreateNode($node_params);
-
-    // Login with sufficient privileges.
-    $this->drupalLogin($this->searching_user);
 
     // Create a comment array
     $edit_comment = array();
