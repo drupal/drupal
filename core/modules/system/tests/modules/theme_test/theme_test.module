@@ -42,6 +42,9 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_function_template_override'] = array(
     'variables' => array(),
   );
+  $info['test_theme_not_existing_function'] = array(
+    'function' => 'test_theme_not_existing_function',
+  );
   return $items;
 }
 
@@ -75,13 +78,6 @@ function theme_test_menu() {
     'route_name' => 'theme_test.function_template_override',
   );
   return $items;
-}
-/**
- * Fake registry loading callback.
- */
-function _theme_test_load_registry() {
-  print 'registry initialized';
-  return array();
 }
 
 /**

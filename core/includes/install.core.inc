@@ -410,6 +410,13 @@ function install_begin_request(&$install_state) {
     // implementation here.
     $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
 
+    $container
+      ->register('theme.registry', 'Drupal\Core\Theme\Registry')
+      ->addArgument(new Reference('cache.cache'))
+      ->addArgument(new Reference('lock'))
+      ->addArgument(new Reference('module_handler'))
+      ->addTag('needs_destruction');
+
     // Register a module handler for managing enabled modules.
     $container
       ->register('module_handler', 'Drupal\Core\Extension\ModuleHandler');

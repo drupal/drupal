@@ -91,18 +91,15 @@ function _drupal_maintenance_theme() {
     $ancestor = $themes[$ancestor]->base_theme;
   }
   _drupal_theme_initialize($themes[$theme], array_reverse($base_theme), '_theme_load_offline_registry');
+  _drupal_theme_initialize($themes[$theme], array_reverse($base_theme));
+  // Prime the theme registry.
+  // @todo Remove global theme variables.
+  Drupal::service('theme.registry');
 
   // These CSS files are normally added by system_page_build(), except
   // system.maintenance.css. When the database is inactive, it's not called so
   // we add them here.
   drupal_add_library('system', 'normalize');
-}
-
-/**
- * Builds the registry when the site needs to bypass any database calls.
- */
-function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine = NULL) {
-  return _theme_build_registry($theme, $base_theme, $theme_engine);
 }
 
 /**

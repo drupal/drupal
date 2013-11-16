@@ -7,6 +7,7 @@
 
 namespace Drupal\theme_test\EventSubscriber;
 
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -14,7 +15,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Theme test subscriber for controller requests.
  */
-class ThemeTestSubscriber implements EventSubscriberInterface {
+class ThemeTestSubscriber extends ContainerAware implements EventSubscriberInterface {
+
+  /**
+   * The used container.
+   *
+   * @var \Symfony\Component\DependencyInjection\IntrospectableContainerInterface
+   */
+  protected $container;
 
   /**
    * Generates themed output early in a page request.
@@ -36,10 +44,18 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
       // returning output and theming the page as a whole.
       $GLOBALS['theme_test_output'] = theme('more_link', array('url' => 'user', 'title' => 'Themed output generated in a KernelEvents::REQUEST listener'));
     }
+  }
+
+  /**
+   * Ensures that the theme registry was not initialized.
+   */
+  public function onView(GetResponseEvent $event) {
+    $request = $event->getRequest();
+    $current_path = $request->attributes->get('_system_path');
     if (strpos($current_path, 'user/autocomplete') === 0) {
-      // Register a fake registry loading callback. If it gets called by
-      // theme_get_registry(), the registry has not been initialized yet.
-      _theme_registry_callback('_theme_test_load_registry', array());
+      if ($this->container->initialized('theme.registry')) {
+        throw new \Exception('registry initialized');
+      }
     }
   }
 
@@ -48,6 +64,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onRequest');
+    $events[KernelEvents::VIEW][] = array('onView', -1000);
     return $events;
   }
 

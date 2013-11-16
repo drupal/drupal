@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Theme\Registry;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
@@ -1756,54 +1757,21 @@ abstract class DisplayPluginBase extends PluginBase {
         }
 
         if (isset($GLOBALS['theme']) && $GLOBALS['theme'] == $this->theme) {
-          $this->theme_registry = theme_get_registry();
+          $this->theme_registry = \Drupal::service('theme.registry')->get();
           $theme_engine = $GLOBALS['theme_engine'];
         }
         else {
           $themes = list_themes();
           $theme = $themes[$this->theme];
 
-          // Find all our ancestor themes and put them in an array.
-          $base_theme = array();
-          $ancestor = $this->theme;
-          while ($ancestor && isset($themes[$ancestor]->base_theme)) {
-            $ancestor = $themes[$ancestor]->base_theme;
-            $base_theme[] = $themes[$ancestor];
-          }
-
-          // The base themes should be initialized in the right order.
-          $base_theme = array_reverse($base_theme);
-
-          // This code is copied directly from _drupal_theme_initialize()
+          // @see _drupal_theme_initialize()
           $theme_engine = NULL;
 
-          // Initialize the theme.
           if (isset($theme->engine)) {
-            // Include the engine.
-            include_once DRUPAL_ROOT . '/' . $theme->owner;
-
             $theme_engine = $theme->engine;
-            if (function_exists($theme_engine . '_init')) {
-              foreach ($base_theme as $base) {
-                call_user_func($theme_engine . '_init', $base);
-              }
-              call_user_func($theme_engine . '_init', $theme);
-            }
           }
-          else {
-            // include non-engine theme files
-            foreach ($base_theme as $base) {
-              // Include the theme file or the engine.
-              if (!empty($base->owner)) {
-                include_once DRUPAL_ROOT . '/' . $base->owner;
-              }
-            }
-            // and our theme gets one too.
-            if (!empty($theme->owner)) {
-              include_once DRUPAL_ROOT . '/' . $theme->owner;
-            }
-          }
-          $this->theme_registry = _theme_load_registry($theme, $base_theme, $theme_engine);
+          $cache_theme = \Drupal::service('cache.theme');
+          $this->theme_registry = new Registry($cache_theme, \Drupal::lock(), \Drupal::moduleHandler(), $theme->name);
         }
 
         // If there's a theme engine involved, we also need to know its extension
@@ -2071,15 +2039,9 @@ abstract class DisplayPluginBase extends PluginBase {
    * a templates rescan).
    */
   public function rescanThemes($form, &$form_state) {
-    drupal_theme_rebuild();
+    // Analyzes the data of the theme registry.
+    \Drupal::service('theme.registry')->reset();
 
-    // The 'Theme: Information' page is about to be shown again. That page
-    // analyzes the output of theme_get_registry(). However, this latter
-    // function uses an internal cache (which was initialized before we
-    // called drupal_theme_rebuild()) so it won't reflect the
-    // current state of our theme registry. The only way to clear that cache
-    // is to re-initialize the theme system:
-    unset($GLOBALS['theme']);
     drupal_theme_initialize();
 
     $form_state['rerender'] = TRUE;

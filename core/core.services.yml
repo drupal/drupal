@@ -641,6 +641,11 @@ services:
     class: Zend\Feed\Writer\Extension\Threading\Renderer\Entry
   feed.writer.wellformedwebrendererentry:
     class: Zend\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
+  theme.registry:
+    class: Drupal\Core\Theme\Registry
+    arguments: ['@cache.cache', '@lock', '@module_handler']
+    tags:
+      - { name: needs_destruction }
   authentication:
     class: Drupal\Core\Authentication\AuthenticationManager
   authentication.cookie:

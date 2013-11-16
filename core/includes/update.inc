@@ -458,6 +458,10 @@ function update_prepare_d8_bootstrap() {
   new Settings($settings);
   $kernel = new DrupalKernel('update', drupal_classloader(), FALSE);
   $kernel->boot();
+
+  // Clear the D7 caches, to ensure that for example the theme_registry does not
+  // take part in the upgrade process.
+  Drupal::cache('cache')->deleteAll();
 }
 
 /**

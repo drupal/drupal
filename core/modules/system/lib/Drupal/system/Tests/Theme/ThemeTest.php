@@ -250,15 +250,9 @@ class ThemeTest extends WebTestBase {
    * Tests drupal_find_theme_templates().
    */
   public function testFindThemeTemplates() {
-    $cache = array();
-
-    // Prime the theme cache.
-    foreach (\Drupal::moduleHandler()->getImplementations('theme') as $module) {
-      _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
-    }
-
-    $templates = drupal_find_theme_templates($cache, '.html.twig', drupal_get_path('theme', 'test_theme'));
-    $this->assertEqual($templates['node__1']['template'], 'node--1', 'Template node--1.html.twig was found in test_theme.');
+    $registry = $this->container->get('theme.registry')->get();
+    $templates = drupal_find_theme_templates($registry, '.html.twig', drupal_get_path('theme', 'test_theme'));
+    $this->assertEqual($templates['node__1']['template'], 'node--1', 'Template node--1.tpl.twig was found in test_theme.');
   }
 
   /**

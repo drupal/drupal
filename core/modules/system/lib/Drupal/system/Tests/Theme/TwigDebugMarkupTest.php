@@ -41,11 +41,7 @@ class TwigDebugMarkupTest extends WebTestBase {
     $this->rebuildContainer();
     $this->resetAll();
 
-    $cache = array();
-    // Prime the theme cache.
-    foreach (\Drupal::moduleHandler()->getImplementations('theme') as $module) {
-      _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
-    }
+    $cache = $this->container->get('theme.registry')->get();
     // Create array of Twig templates.
     $templates = drupal_find_theme_templates($cache, $extension, drupal_get_path('theme', 'test_theme'));
     $templates += drupal_find_theme_templates($cache, $extension, drupal_get_path('module', 'node'));
