@@ -1,0 +1,29 @@
+rdf_field_mapping:
+  type: mapping
+  label: 'RDF mapping'
+  mapping:
+    properties:
+      type: sequence
+      label: 'Properties'
+      sequence:
+        - type: string
+    datatype:
+      type: string
+      label: 'Data type'
+    datatype_callback:
+      type: mapping
+      label: 'Data type callback'
+      mapping:
+        callable:
+          type: string
+          label: 'Callable'
+        arguments:
+          type: mapping
+          label: 'Arguments'
+          mapping:
+            interaction_type:
+              type: string
+              label: 'Interaction type'
+    mapping_type:
+      type: string
+      label: 'Mapping type'
