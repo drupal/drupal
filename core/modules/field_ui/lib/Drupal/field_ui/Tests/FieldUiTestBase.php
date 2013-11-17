@@ -83,7 +83,7 @@ abstract class FieldUiTestBase extends WebTestBase {
     $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, 'Field was created and appears in the overview page.');
+    $this->assertFieldByXPath('//table[@id="field-overview"]//tr/td[1]', $label, 'Field was created and appears in the overview page.');
   }
 
   /**
@@ -109,7 +109,7 @@ abstract class FieldUiTestBase extends WebTestBase {
     $this->assertRaw(t('Saved %label configuration.', array('%label' => $label)), 'Redirected to "Manage fields" page.');
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//td[1]', $label, 'Field was created and appears in the overview page.');
+    $this->assertFieldByXPath('//table[@id="field-overview"]//tr/td[1]', $label, 'Field was created and appears in the overview page.');
   }
 
   /**
