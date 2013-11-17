@@ -214,6 +214,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       // Ensure that we don't override a route which is already controlled by
       // views.
       if (!$route->hasDefault('view_id') && ('/' . $view_path == $route_path)) {
+        $parameters = $route->compile()->getPathVariables();
+
         // @todo Figure out whether we need to merge some settings (like
         // requirements).
 
@@ -223,6 +225,24 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $view_id = $this->view->storage->id();
         $display_id = $this->display['id'];
         $route = $this->getRoute($view_id, $display_id);
+
+        $path = $route->getPath();
+        // Load the argument IDs from the view executable.
+        $view_arguments = (array) $this->view->argument;
+        $argument_ids = array_keys($view_arguments);
+
+        // Replace the path with the original parameter names and add a mapping.
+        $argument_map = array();
+        // We assume that the numeric ids of the parameters match the one from
+        // the view argument handlers.
+        foreach ($parameters as $position => $parameter_name) {
+          $path = str_replace('arg_' . $argument_ids[$position], $parameter_name, $path);
+          $argument_map['arg_' . $argument_ids[$position]] = $parameter_name;
+        }
+        // Set the corrected path and the mapping to the route object.
+        $route->setDefault('_view_argument_map', $argument_map);
+        $route->setPath($path);
+
         $collection->add($name, $route);
         $view_route_names[$view_id . '.' . $display_id] = $name;
       }

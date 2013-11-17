@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Routing;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\views\ViewExecutableFactory;
@@ -65,15 +66,37 @@ class ViewPageController implements ContainerInjectionInterface {
 
     $entity = $this->storageController->load($view_id);
     if (empty($entity)) {
-      throw new NotFoundHttpException(format_string('Page controller for view %id requested, but view was not found.', array('%id' => $view_id)));
+      throw new NotFoundHttpException(String::format('Page controller for view %id requested, but view was not found.', array('%id' => $view_id)));
     }
     $view = $this->executableFactory->get($entity);
     $view->setDisplay($display_id);
     $view->initHandlers();
 
     $args = array();
+    $map = $request->attributes->get('_view_argument_map', array());
     foreach (array_keys((array) $view->argument) as $argument_id) {
-      $arg = $request->attributes->get('arg_' . $argument_id);
+
+      // Allow parameters be pulled from the request.
+      // The map stores the actual name of the parameter in the request. Views
+      // which override existing controller, use for example 'node' instead of
+      // arg_nid as name.
+      $attribute = 'arg_' . $argument_id;
+      if (isset($map[$attribute])) {
+        $attribute = $map[$attribute];
+
+        // First try to get from the original values then on the not converted
+        // ones.
+        if ($request->attributes->has('_raw_variables')) {
+          $arg = $request->attributes->get('_raw_variables')->get($attribute);
+        }
+        else {
+          $arg = $request->attributes->get($attribute);
+        }
+      }
+      else {
+        $arg = $request->attributes->get($attribute);
+      }
+
       if (isset($arg)) {
         $args[] = $arg;
       }

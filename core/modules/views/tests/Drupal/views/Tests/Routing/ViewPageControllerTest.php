@@ -1,0 +1,265 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\views\Tests\Routing\ViewPageControllerTest.
+ */
+
+namespace Drupal\views\Tests\Routing;
+
+use Drupal\Tests\UnitTestCase;
+use Drupal\views\Routing\ViewPageController;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+
+/**
+ * Tests the page controller but not the actual execution/rendering of a view.
+ *
+ * @group Drupal
+ * @group Views
+ *
+ * @see \Drupal\views\Routing\ViewPageController
+ */
+class ViewPageControllerTest extends UnitTestCase {
+
+  /**
+   * The page controller of views.
+   *
+   * @var \Drupal\views\Routing\ViewPageController
+   */
+  public $pageController;
+
+  /**
+   * The mocked view storage controller.
+   *
+   * @var \Drupal\views\ViewStorageController|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $storageController;
+
+  /**
+   * The mocked view executable factory.
+   *
+   * @var \Drupal\views\ViewExecutableFactory|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $executableFactory;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'View page controller test',
+      'description' => 'Tests views page controller.',
+      'group' => 'Views'
+    );
+  }
+
+  protected function setUp() {
+    $this->storageController = $this->getMockBuilder('Drupal\views\ViewStorageController')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->pageController = new ViewPageController($this->storageController, $this->executableFactory);
+  }
+
+  /**
+   * Tests the page controller.
+   */
+  public function testPageController() {
+    $view = $this->getMock('Drupal\views\ViewStorageInterface');
+
+    $this->storageController->expects($this->once())
+      ->method('load')
+      ->with('test_page_view')
+      ->will($this->returnValue($view));
+
+    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $executable->expects($this->once())
+      ->method('setDisplay')
+      ->with('default');
+    $executable->expects($this->once())
+      ->method('initHandlers');
+    $executable->expects($this->once())
+      ->method('executeDisplay')
+      ->with('default', array())
+      ->will($this->returnValue(array('#markup' => 'example output')));
+
+    $this->executableFactory->staticExpects($this->any())
+      ->method('get')
+      ->with($view)
+      ->will($this->returnValue($executable));
+
+    $request = new Request();
+    $request->attributes->set('view_id', 'test_page_view');
+    $request->attributes->set('display_id', 'default');
+
+    $output = $this->pageController->handle($request);
+    $this->assertInternalType('array', $output);
+    $this->assertEquals(array('#markup' => 'example output'), $output);
+  }
+
+  /**
+   * Tests the page controller with arguments on a non overridden page view.
+   */
+  public function testHandleWithArgumentsWithoutOverridden() {
+    $view = $this->getMock('Drupal\views\ViewStorageInterface');
+
+    $this->storageController->expects($this->once())
+      ->method('load')
+      ->with('test_page_view')
+      ->will($this->returnValue($view));
+
+    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $executable->expects($this->once())
+      ->method('setDisplay')
+      ->with('page_1');
+    $executable->expects($this->once())
+      ->method('initHandlers');
+
+    // Manually setup a argument handler.
+    $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $executable->argument['test_id'] = $argument;
+
+    $executable->expects($this->once())
+      ->method('executeDisplay')
+      ->with('page_1', array('test-argument'));
+
+    $this->executableFactory->staticExpects($this->any())
+      ->method('get')
+      ->with($view)
+      ->will($this->returnValue($executable));
+
+    $request = new Request();
+    $request->attributes->set('view_id', 'test_page_view');
+    $request->attributes->set('display_id', 'page_1');
+    // Add the argument to the request.
+    $request->attributes->set('arg_test_id', 'test-argument');
+
+    $this->pageController->handle($request);
+  }
+
+  /**
+   * Tests the page controller with arguments of a overridden page view.
+   *
+   * Note: This test does not care about upcasting for now.
+   */
+  public function testHandleWithArgumentsOnOveriddenRoute() {
+    $view = $this->getMock('Drupal\views\ViewStorageInterface');
+
+    $this->storageController->expects($this->once())
+      ->method('load')
+      ->with('test_page_view')
+      ->will($this->returnValue($view));
+
+    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $executable->expects($this->once())
+      ->method('setDisplay')
+      ->with('page_1');
+    $executable->expects($this->once())
+      ->method('initHandlers');
+
+    // Manually setup a argument handler.
+    $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $executable->argument['test_id'] = $argument;
+
+    $executable->expects($this->once())
+      ->method('executeDisplay')
+      ->with('page_1', array('test-argument'));
+
+    $this->executableFactory->staticExpects($this->any())
+      ->method('get')
+      ->with($view)
+      ->will($this->returnValue($executable));
+
+    $request = new Request();
+    $request->attributes->set('view_id', 'test_page_view');
+    $request->attributes->set('display_id', 'page_1');
+    // Add the argument to the request.
+    $request->attributes->set('parameter', 'test-argument');
+    $request->attributes->set('_view_argument_map', array(
+      'arg_test_id' => 'parameter',
+    ));
+
+    $this->pageController->handle($request);
+  }
+
+  /**
+   * Tests the page controller with arguments of a overridden page view.
+   *
+   * This test care about upcasted values and ensures that the raw variables
+   * are pulled in.
+   */
+  public function testHandleWithArgumentsOnOveriddenRouteWithUpcasting() {
+    $view = $this->getMock('Drupal\views\ViewStorageInterface');
+
+    $this->storageController->expects($this->once())
+      ->method('load')
+      ->with('test_page_view')
+      ->will($this->returnValue($view));
+
+    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $executable->expects($this->once())
+      ->method('setDisplay')
+      ->with('page_1');
+    $executable->expects($this->once())
+      ->method('initHandlers');
+
+    // Manually setup a argument handler.
+    $argument = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $executable->argument['test_id'] = $argument;
+
+    $executable->expects($this->once())
+      ->method('executeDisplay')
+      ->with('page_1', array('example_id'));
+
+    $this->executableFactory->staticExpects($this->any())
+      ->method('get')
+      ->with($view)
+      ->will($this->returnValue($executable));
+
+    $request = new Request();
+    $request->attributes->set('view_id', 'test_page_view');
+    $request->attributes->set('display_id', 'page_1');
+    // Add the argument to the request.
+    $request->attributes->set('test_entity', $this->getMock('Drupal\Core\Entity\EntityInterface'));
+    $raw_variables = new ParameterBag(array('test_entity' => 'example_id'));
+    $request->attributes->set('_raw_variables', $raw_variables);
+
+    $request->attributes->set('_view_argument_map', array(
+      'arg_test_id' => 'test_entity',
+    ));
+
+    $this->pageController->handle($request);
+  }
+
+  /**
+   * Tests handle with a non existing view.
+   *
+   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   */
+  public function testHandleWithNotExistingView() {
+    // Pass in a non existent view.
+    $random_view_id = $this->randomName();
+
+    $request = new Request();
+    $request->attributes->set('view_id', $random_view_id);
+    $request->attributes->set('display_id', 'default');
+    $this->pageController->handle($request);
+  }
+
+}
