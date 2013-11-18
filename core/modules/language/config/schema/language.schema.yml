@@ -60,7 +60,7 @@ language.entity.*:
       type: label
       label: 'Language name'
     direction:
-      type: boolean
+      type: integer
       label: 'Direction'
     weight:
       type: integer
