@@ -1,0 +1,5 @@
+system.performance_settings:
+  title: 'Theme translation test'
+  base_route_name: system.performance_settings
+  names:
+    - system.site

@@ -237,6 +237,11 @@ Comment module
 Configuration module
 - ?
 
+Configuration translation module
+- Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
+- Tobias Stöckler 'tstoeckler' https://drupal.org/user/107158
+- Vijayachandran Mani 'vijaycs85' https://drupal.org/user/93488
+
 Contact module
 - ?
 

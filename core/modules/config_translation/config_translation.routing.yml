@@ -1,0 +1,14 @@
+config_translation.mapper_list:
+  path: '/admin/config/regional/config-translation'
+  defaults:
+    _title: 'Configuration translation'
+    _content: '\Drupal\config_translation\Controller\ConfigTranslationMapperList::render'
+  requirements:
+    _permission: 'translate configuration'
+
+config_translation.entity_list:
+  path: '/admin/config/regional/config-translation/{config_translation_mapper}'
+  defaults:
+    _content: '\Drupal\config_translation\Controller\ConfigTranslationListController::listing'
+  requirements:
+    _permission: 'translate configuration'

@@ -1,0 +1,6 @@
+user.account_settings:
+  title: 'Account settings'
+  base_route_name: user.account_settings
+  names:
+    - user.settings
+    - user.mail

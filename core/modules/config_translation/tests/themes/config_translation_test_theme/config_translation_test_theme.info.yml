@@ -1,0 +1,6 @@
+name: 'Configuration Translation Test Theme'
+type: theme
+description: 'Theme for testing the configuration translation mapper system'
+version: VERSION
+core: 8.x
+hidden: true

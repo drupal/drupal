@@ -1,0 +1,186 @@
+<?php
+
+/**
+ * @file
+ * Configuration Translation module.
+ */
+
+use Drupal\config_translation\Plugin\Derivative\ConfigTranslationLocalTasks;
+use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+
+/**
+ * Implements hook_help().
+ */
+function config_translation_help($path) {
+  switch ($path) {
+    case 'admin/help#config_translation':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Configuration Translation module allows configurations to be translated into different languages. Views, your site name, contact module categories, vocabularies, menus, blocks, and so on are all stored within the unified configuration system and can be translated with this module. Content, such as nodes, taxonomy terms, custom blocks, and so on are translatable with the Content Translation module in Drupal core, while the built-in user interface (such as registration forms, content submission and administration interfaces) are translated with the Interface Translation module. Use these three modules effectively together to translate your whole site to different languages.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Translating') . '</dt>';
+      $output .= '<dd>' . t('To translate configuration items, select the translate tab when viewing the configuration, select the language for which you wish to provide translations and then enter the content.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+
+    case 'admin/config/regional/config-translation':
+      $output = '<p>' . t('This page lists all configuration items on your site which have translatable text, like your site name, role names, etc.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function config_translation_menu() {
+  $items = array();
+  $items['admin/config/regional/config-translation'] = array(
+    'title' => 'Configuration translation',
+    'description' => 'Translate the configuration.',
+    'route_name' => 'config_translation.mapper_list',
+    'weight' => 30,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function config_translation_permission() {
+  return array(
+    'translate configuration' => array(
+      'title' => t('Translate user edited configuration'),
+      'description' => t('Translate any configuration not shipped with modules and themes.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function config_translation_theme() {
+  return array(
+    'config_translation_manage_form_element' => array(
+      'render element' => 'element',
+      'template' => 'config_translation_manage_form_element',
+    ),
+  );
+}
+
+/**
+ * Implements hook_config_translation_info().
+ */
+function config_translation_config_translation_info(&$info) {
+  $entity_manager = \Drupal::entityManager();
+  $route_provider = \Drupal::service('router.route_provider');
+
+  // If field UI is not enabled, the base routes of the type
+  // "field_ui.instance_edit_$entity_type" are not defined.
+  if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
+    // Add fields entity mappers to all fieldable entity types defined.
+    foreach ($entity_manager->getDefinitions() as $entity_type => $entity_info) {
+      $base_route = NULL;
+      try {
+        $base_route = $route_provider->getRouteByName('field_ui.instance_edit_' . $entity_type);
+      }
+      catch (RouteNotFoundException $e) {
+        // Ignore non-existent routes.
+      }
+
+      // Make sure entity type is fieldable and has a base route.
+      if ($entity_info['fieldable'] && !empty($base_route)) {
+        $info[$entity_type . '_fields'] = array(
+          'base_route_name' => 'field_ui.instance_edit_' . $entity_type,
+          'entity_type' => 'field_instance',
+          'title' => '!label field',
+          'class' => '\Drupal\config_translation\ConfigFieldInstanceMapper',
+          'base_entity_type' => $entity_type,
+          'list_controller' => '\Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListController',
+          'weight' => 10,
+        );
+      }
+    }
+  }
+
+  // Discover configuration entities automatically.
+  foreach ($entity_manager->getDefinitions() as $entity_type => $entity_info) {
+    // Determine base path for entities automatically if provided via the
+    // configuration entity.
+    if (
+      !in_array('Drupal\Core\Config\Entity\ConfigEntityInterface', class_implements($entity_info['class'])) ||
+      !isset($entity_info['links']['edit-form'])
+    ) {
+      // Do not record this entity mapper if the entity type does not
+      // provide a base route. We'll surely not be able to do anything with
+      // it anyway. Configuration entities with a dynamic base path, such as
+      // field instances, need special treatment. See above.
+      continue;
+    }
+
+    // Use the entity type as the plugin ID.
+    $info[$entity_type] = array(
+      'class' => '\Drupal\config_translation\ConfigEntityMapper',
+      'base_route_name' => $entity_info['links']['edit-form'],
+      'title' => '!label !entity_type',
+      'names' => array(),
+      'entity_type' => $entity_type,
+      'weight' => 10,
+    );
+
+    if ($entity_type == 'block') {
+      // Blocks placements need a specific list controller.
+      $info['block']['list_controller'] = '\Drupal\config_translation\Controller\ConfigTranslationBlockListController';
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function config_translation_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if (\Drupal::currentUser()->hasPermission('translate configuration')) {
+    $uri = $entity->uri();
+    $operations['translate'] = array(
+      'title' => t('Translate'),
+      'href' => $uri['path'] . '/translate',
+      'options' => $uri['options'],
+      'weight' => 50,
+    );
+  }
+}
+
+/**
+ * Implements hook_config_translation_type_info_alter().
+ */
+function config_translation_config_translation_type_info_alter(&$definitions) {
+  // Enhance the text and date type definitions with classes to generate proper
+  // form elements in ConfigTranslationFormBase. Other translatable types will
+  // appear as a one line textfield.
+  $definitions['text']['form_element_class'] = '\Drupal\config_translation\FormElement\Textarea';
+  $definitions['date_format']['form_element_class'] = '\Drupal\config_translation\FormElement\DateFormat';
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function config_translation_library_info() {
+  $libraries['drupal.config_translation.admin'] = array(
+    'title' => 'Configuration translation admin',
+    'version' => \Drupal::VERSION,
+    'css' => array(
+      drupal_get_path('module', 'config_translation') . '/css/config_translation.admin.css' => array(),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function config_translation_local_tasks_alter(&$local_tasks) {
+  // Alters in tab_root_ids onto the config translation local tasks.
+  $derivative = ConfigTranslationLocalTasks::create(\Drupal::getContainer(), 'config_translation.local_tasks');
+  $derivative->alterLocalTasks($local_tasks);
+}
