@@ -77,15 +77,23 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * All Gettext files are now imported in chunks, better for low resource
         environments.
     * Improved content language support:
-      * Freely orderable language selector in forms.
-      * Made it possible to assign language to taxonomy terms, vocabularies
-        and files.
-      * Node type specific default language assignment is much more versatile.
+      * Made it possible to assign language to taxonomy terms, vocabularies,
+        menu items, and files.
+      * Added a field translation based content translation module that applies
+        to all content entities.
+      * Removed the old node-copy based content translation module.
+      * Introduced language defaults configuration for each entity type and
+        subtype.
       * Added entity language variance support to search module.
       * Search indexing and query preprocessors now get language information.
       * Unified content translation permission granularity with content editing
         permissions.
-    * Better language based configuration
+      * Made the language selector freely orderable in entity forms.
+    * Better configuration language support
+      * Added language selectors to most configuration options (views, menus,
+        etc.)
+      * Added a configuration translation user interface that works with any
+        configuration with translatable values (blocks, views, fields, etc).
       * Added language options to block visibility.
     * Much improved language APIs for developers:
       * Added simple APIs and hooks to save/delete/update languages.
@@ -97,10 +105,13 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Made it possible for users to have a preferred language separate from
         their user entity language.
       * The text formatter from t() is now available as format_string().
-      * Added support for interface translation contexts in Drupal.t() and
-        Drupal.formatPlural() in JavaScript.
+      * Added support for interface translation contexts in Drupal.t(),
+        Drupal.formatPlural() as well as routing, tabs, actions, and contextual
+        links.
       * Removed textgroups support from interface translation in favor of
         native configuration language support.
+      * Added configuration schema system to support generating translation
+        forms for any configuration.
       * Reworked Gettext PO support to use pluggable read/write handlers.
       * Added language select form element in the Form API.
 - Added E-mail field type to core.

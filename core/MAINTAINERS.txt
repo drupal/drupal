@@ -237,13 +237,16 @@ Comment module
 Configuration module
 - ?
 
-Configuration translation module
+Configuration Translation module
 - Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
 - Tobias Stöckler 'tstoeckler' https://drupal.org/user/107158
 - Vijayachandran Mani 'vijaycs85' https://drupal.org/user/93488
 
 Contact module
 - ?
+
+Content Translation module
+- Francesco Placella 'plach' http://drupal.org/user/183211
 
 Contextual module
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
@@ -299,11 +302,15 @@ Help module
 Image module
 - Claudiu Cristea 'claudiu.cristea' https://drupal.org/user/56348
 
+Interface Translation (locale) module
+- Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
+
+Language module
+- Francesco Placella 'plach' http://drupal.org/user/183211
+- Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
+
 Link module
 - ?
-
-Locale module
-- Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
 
 Menu module
 - ?
@@ -386,9 +393,6 @@ Tour module
 
 Tracker module
 - David Strauss 'David Strauss' http://drupal.org/user/93254
-
-Translation module
-- Francesco Placella 'plach' http://drupal.org/user/183211
 
 Update module
 - Derek Wright 'dww' http://drupal.org/user/46549
