@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Entity\UserTest.
+ * Contains \Drupal\user\Tests\Plugin\Core\Entity\UserTest.
  */
 
-namespace Drupal\user\Tests\Entity;
+namespace Drupal\user\Tests\Plugin\Core\Entity;
 
 use Drupal\Tests\Core\Session\UserSessionTest;
 use Drupal\user\Entity\User;

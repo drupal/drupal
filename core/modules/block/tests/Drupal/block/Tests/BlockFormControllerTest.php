@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\block\BlockFormControllerTest.
+ * Contains \Drupal\block\Tests\BlockFormControllerTest.
  */
 
-namespace Drupal\Tests\block;
+namespace Drupal\block\Tests;
 
 use Drupal\block\BlockFormController;
 use Drupal\Tests\UnitTestCase;

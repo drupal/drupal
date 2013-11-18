@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\Core\Entity\Controller\EntityViewControllerTest.
  */
 
-namespace Drupal\Core\Tests\Entity\Controller;
+namespace Drupal\Tests\Core\Entity\Controller;
 
 use Drupal\Core\Entity\Controller\EntityViewController;
 use Drupal\Tests\UnitTestCase;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Batch\PercentagesTest.
+ * Contains \Drupal\Tests\Core\Batch\PercentagesTest.
  */
 
 namespace Drupal\Tests\Core\Batch;
@@ -18,7 +18,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @see \Drupal\Component\Batch\Batch
  */
-class BatchTest extends UnitTestCase {
+class PercentagesTest extends UnitTestCase {
   protected $testCases = array();
 
   public static function getInfo() {

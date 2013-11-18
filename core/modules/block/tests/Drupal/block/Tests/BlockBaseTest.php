@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\block\BlockBaseTest.
+ * Contains \Drupal\block\Tests\BlockBaseTest.
  */
 
-namespace Drupal\Tests\block;
+namespace Drupal\block\Tests;
 
 use Drupal\block_test\Plugin\Block\TestBlockInstantiation;
 use Drupal\Core\DependencyInjection\ContainerBuilder;

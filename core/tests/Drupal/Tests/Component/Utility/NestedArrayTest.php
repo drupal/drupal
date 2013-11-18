@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\NestedArrayTest.
+ * Contains \Drupal\Tests\Component\Utility\NestedArrayTest.
  */
 
-namespace Drupal\Tests\Core;
+namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Tests\UnitTestCase;

@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\Core\Controller\ExceptionControllerTest
  */
 
-namespace Drupal\system\Tests\System;
+namespace Drupal\Tests\Core\Controller;
 
 use Drupal\Core\ContentNegotiation;
 use Drupal\Core\Controller\ExceptionController;

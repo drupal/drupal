@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Tests\TaxonomyLocalTasksTest.
+ * Contains \Drupal\taxonomy\Tests\Menu\TaxonomyLocalTasksTest.
  */
 
-namespace Drupal\taxonomy\Tests;
+namespace Drupal\taxonomy\Tests\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
 
