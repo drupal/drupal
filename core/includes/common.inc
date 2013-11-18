@@ -3797,7 +3797,19 @@ function drupal_render_page($page) {
  *   - If this element has #prefix and/or #suffix defined, they are concatenated
  *     to #children.
  *   - If this element has #cache defined, the rendered output of this element
- *     is saved to drupal_render()'s internal cache.
+ *     is saved to drupal_render()'s internal cache. This includes the changes
+ *     made by #post_render.
+ *   - If this element (or any of its children) has an array of
+ *     #post_render_cache functions defined, they are called sequentially to
+ *     replace placeholders in the final #markup and extend #attached.
+ *     Placeholders must contain a unique token, to guarantee that e.g. samples
+ *     of placeholders are not replaced also. For this, a special element named
+ *     'render_cache_placeholder' is provided.
+ *     Note that these callbacks run always: when hitting the render cache, when
+ *     missing, or when render caching is not used at all. This is done to allow
+ *     any Drupal module to customize other render arrays without breaking the
+ *     render cache if it is enabled, and to not require it to use other logic
+ *     when render caching is disabled.
  *   - #printed is set to TRUE for this element to ensure that it is only
  *     rendered once.
  *   - The final value of #children for this element is returned as the rendered
@@ -3805,6 +3817,8 @@ function drupal_render_page($page) {
  *
  * @param array $elements
  *   The structured array describing the data to be rendered.
+ * @param bool $is_recursive_call
+ *   Whether this is a recursive call or not, for internal use.
  *
  * @return string
  *   The rendered HTML.
@@ -3814,7 +3828,7 @@ function drupal_render_page($page) {
  * @see drupal_process_states()
  * @see drupal_process_attached()
  */
-function drupal_render(&$elements) {
+function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // Early-return nothing if user does not have access.
   if (empty($elements) || (isset($elements['#access']) && !$elements['#access'])) {
     return '';
@@ -3825,11 +3839,19 @@ function drupal_render(&$elements) {
     return '';
   }
 
-  // Try to fetch the element's markup from cache and return.
+  // Try to fetch the prerendered element from cache, run any #post_render_cache
+  // callbacks and return the final markup.
   if (isset($elements['#cache'])) {
-    $cached_output = drupal_render_cache_get($elements);
-    if ($cached_output !== FALSE) {
-      return $cached_output;
+    $cached_element = drupal_render_cache_get($elements);
+    if ($cached_element !== FALSE) {
+      $elements = $cached_element;
+      // Only when we're not in a recursive drupal_render() call,
+      // #post_render_cache callbacks must be executed, to prevent breaking the
+      // render cache in case of nested elements with #cache set.
+      if (!$is_recursive_call) {
+        _drupal_render_process_post_render_cache($elements);
+      }
+      return $elements['#markup'];
     }
   }
 
@@ -3888,7 +3910,7 @@ function drupal_render(&$elements) {
   // process as drupal_render_children() but is inlined for speed.
   if ((!$theme_is_implemented || isset($elements['#render_children'])) && empty($elements['#children'])) {
     foreach ($children as $key) {
-      $elements['#children'] .= drupal_render($elements[$key]);
+      $elements['#children'] .= drupal_render($elements[$key], TRUE);
     }
   }
 
@@ -3948,17 +3970,40 @@ function drupal_render(&$elements) {
     }
   }
 
+  // We store the resulting output in $elements['#markup'], to be consistent
+  // with how render cached output gets stored. This ensures that
+  // #post_render_cache callbacks get the same data to work with, no matter if
+  // #cache is disabled, #cache is enabled, there is a cache hit or miss.
   $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
   $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
-  $output = $prefix . $elements['#children'] . $suffix;
+  $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
 
   // Cache the processed element if #cache is set.
   if (isset($elements['#cache'])) {
-    drupal_render_cache_set($output, $elements);
+    // Collect all #post_render_cache callbacks associated with this element.
+    $post_render_cache = drupal_render_collect_post_render_cache($elements);
+    if ($post_render_cache) {
+      $elements['#post_render_cache'] = $post_render_cache;
+    }
+
+    drupal_render_cache_set($elements['#markup'], $elements);
+  }
+
+  // Only when we're not in a recursive drupal_render() call,
+  // #post_render_cache callbacks must be executed, to prevent breaking the
+  // render cache in case of nested elements with #cache set.
+  //
+  // By running them here, we ensure that:
+  // - they run when #cache is disabled,
+  // - they run when #cache is enabled and there is a cache miss.
+  // Only the case of a cache hit when #cache is enabled, is not handled here,
+  // that is handled earlier in drupal_render().
+  if (!$is_recursive_call) {
+    _drupal_render_process_post_render_cache($elements);
   }
 
   $elements['#printed'] = TRUE;
-  return $output;
+  return $elements['#markup'];
 }
 
 /**
@@ -4074,32 +4119,33 @@ function show(&$element) {
 }
 
 /**
- * Gets the rendered output of a renderable element from the cache.
+ * Gets the cached, prerendered element of a renderable element from the cache.
  *
- * @param $elements
+ * @param array $elements
  *   A renderable array.
  *
- * @return
- *   A markup string containing the rendered content of the element, or FALSE
- *   if no cached copy of the element is available.
+ * @return array
+ *   A renderable array, with the original element and all its children pre-
+ *   rendered, or FALSE if no cached copy of the element is available.
  *
  * @see drupal_render()
  * @see drupal_render_cache_set()
  */
-function drupal_render_cache_get($elements) {
+function drupal_render_cache_get(array $elements) {
   if (!\Drupal::request()->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
 
   if (!empty($cid) && $cache = cache($bin)->get($cid)) {
+    $cached_element = $cache->data;
     // Add additional libraries, JavaScript, CSS and other data attached
     // to this element.
-    if (isset($cache->data['#attached'])) {
-      drupal_process_attached($cache->data);
+    if (isset($cached_element['#attached'])) {
+      drupal_process_attached($cached_element);
     }
-    // Return the rendered output.
-    return $cache->data['#markup'];
+    // Return the cached element.
+    return $cached_element;
   }
   return FALSE;
 }
@@ -4112,12 +4158,12 @@ function drupal_render_cache_get($elements) {
  *
  * @param $markup
  *   The rendered output string of $elements.
- * @param $elements
+ * @param array $elements
  *   A renderable array.
  *
  * @see drupal_render_cache_get()
  */
-function drupal_render_cache_set(&$markup, $elements) {
+function drupal_render_cache_set(&$markup, array $elements) {
   // Create the cache ID for the element.
   if (!\Drupal::request()->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
@@ -4129,16 +4175,192 @@ function drupal_render_cache_set(&$markup, $elements) {
   // $data['#real-value']) and return an include command instead. When the
   // ESI command is executed by the content accelerator, the real value can
   // be retrieved and used.
-  $data['#markup'] = &$markup;
+  $data['#markup'] = $markup;
+
   // Persist attached data associated with this element.
   $attached = drupal_render_collect_attached($elements, TRUE);
   if ($attached) {
     $data['#attached'] = $attached;
   }
+
+  // Persist #post_render_cache callbacks associated with this element.
+  if (isset($elements['#post_render_cache'])) {
+    $data['#post_render_cache'] = $elements['#post_render_cache'];
+  }
+
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CacheBackendInterface::CACHE_PERMANENT;
   $tags = drupal_render_collect_cache_tags($elements);
   cache($bin)->set($cid, $data, $expire, $tags);
+}
+
+/**
+ * Generates a render cache placeholder.
+ *
+ * This is used by drupal_pre_render_render_cache_placeholder() to generate
+ * placeholders, but should also be called by #post_render_cache callbacks that
+ * want to replace the placeholder with the final markup.
+ *
+ * @param callable $callback
+ *   The #post_render_cache callback that will replace the placeholder with its
+ *   eventual markup.
+ * @param array $context
+ *   An array providing context for the #post_render_cache callback.
+ * @param string $token
+ *   A unique token to uniquely identify the placeholder.
+ *
+ * @see drupal_render_cache_get()
+ */
+function drupal_render_cache_generate_placeholder($callback, array $context, $token) {
+  // Serialize the context into a HTML attribute; unserializing is unnecessary.
+  $context_attribute = '';
+  foreach ($context as $key => $value) {
+    $context_attribute .= $key . ':' . $value . ';';
+  }
+  return '<drupal:render-cache-placeholder callback="' . $callback .  '" context="' . $context_attribute . '" token="'. $token . '" />';;
+}
+
+/**
+ * Pre-render callback: Renders a render cache placeholder into #markup.
+ *
+ * @param $elements
+ *   A structured array whose keys form the arguments to l():
+ *   - #callback: The #post_render_cache callback that will replace the
+ *     placeholder with its eventual markup.
+ *   - #context: An array providing context for the #post_render_cache callback.
+ *
+ * @return
+ *   The passed-in element containing a render cache placeholder in '#markup'
+ *   and a callback with context, keyed by a generated unique token in
+ *   '#post_render_cache'.
+ *
+ * @see drupal_render_cache_generate_placeholder()
+ */
+function drupal_pre_render_render_cache_placeholder($element) {
+  $callback = $element['#callback'];
+  if (!is_callable($callback)) {
+    throw new Exception(t('#callback must be a callable function.'));
+  }
+  $context = $element['#context'];
+  if (!is_array($context)) {
+    throw new Exception(t('#context must be an array.'));
+  }
+  $token = \Drupal\Component\Utility\Crypt::randomStringHashed(55);
+
+  // Generate placeholder markup and store #post_render_cache callback.
+  $element['#markup'] = drupal_render_cache_generate_placeholder($callback, $context, $token);
+  $element['#post_render_cache'][$callback][$token] = $context;
+
+  return $element;
+}
+
+/**
+ * Processes #post_render_cache callbacks.
+ *
+ * #post_render_cache callbacks may modify:
+ * - #markup: to replace placeholders
+ * - #attached: to add libraries or JavaScript settings
+ *
+ * Note that in either of these cases, #post_render_cache callbacks are
+ * implicitly idempotent: a placeholder that has been replaced can't be replaced
+ * again, and duplicate attachments are ignored.
+ *
+ * @param array &$elements
+ *   The structured array describing the data being rendered.
+ *
+ * @see drupal_render()
+ * @see drupal_render_collect_post_render_cache
+ */
+function _drupal_render_process_post_render_cache(array &$elements) {
+  if (isset($elements['#post_render_cache'])) {
+    // Call all #post_render_cache callbacks, while passing the provided context
+    // and if keyed by a number, no token is passed, otherwise, the token string
+    // is passed to the callback as well. This token is used to uniquely
+    // identify the placeholder in the markup.
+    $modified_elements = $elements;
+    foreach ($elements['#post_render_cache'] as $callback => $options) {
+      foreach ($elements['#post_render_cache'][$callback] as $token => $context) {
+        // The advanced option, when setting #post_render_cache directly.
+        if (is_numeric($token)) {
+          $modified_elements = call_user_func_array($callback, array($modified_elements, $context));
+        }
+        // The simple option, when using the standard placeholders, and hence
+        // also when using #type => render_cache_placeholder.
+        else {
+          // Call #post_render_cache callback to generate the element that will
+          // fill in the placeholder.
+          $generated_element = call_user_func_array($callback, array($context));
+
+          // Update #attached based on the generated element.
+          if (isset($generated_element['#attached'])) {
+            if (!isset($modified_elements['#attached'])) {
+              $modified_elements['#attached'] = array();
+            }
+            $modified_elements['#attached'] = drupal_merge_attached($modified_elements['#attached'], drupal_render_collect_attached($generated_element, TRUE));
+          }
+
+          // Replace the placeholder with the rendered markup of the generated
+          // element.
+          $placeholder = drupal_render_cache_generate_placeholder($callback, $context, $token);
+          $modified_elements['#markup'] = str_replace($placeholder, drupal_render($generated_element), $modified_elements['#markup']);
+        }
+      }
+    }
+    // Only retain changes to the #markup and #attached properties, as would be
+    // the case when the render cache was actually being used.
+    $elements['#markup'] = $modified_elements['#markup'];
+    if (isset($modified_elements['#attached'])) {
+      $elements['#attached'] = $modified_elements['#attached'];
+    }
+
+    // Make sure that any attachments added in #post_render_cache callbacks are
+    // also executed.
+    if (isset($elements['#attached'])) {
+      drupal_process_attached($elements);
+    }
+  }
+}
+
+/**
+ * Collects #post_render_cache for an element and its children into a single
+ * array.
+ *
+ * When caching elements, it is necessary to collect all #post_render_cache
+ * callbacks into a single array, from both the element itself and all child
+ * elements. This allows drupal_render() to execute all of them when the element
+ * is retrieved from the render cache.
+ *
+ * @param array $elements
+ *   The element to collect #post_render_cache from.
+ * @param array $callbacks
+ *   Internal use only. The #post_render_callbacks array so far.
+ * @param bool $is_root_element
+ *   Internal use only. Whether the element being processed is the root or not.
+ *
+ * @return
+ *   The #post_render_cache array for this element and its descendants.
+ *
+ * @see drupal_render()
+ * @see _drupal_render_process_post_render_cache()
+ */
+function drupal_render_collect_post_render_cache(array $elements, array $callbacks = array(), $is_root_element = TRUE) {
+  // Collect all #post_render_cache for this element.
+  if (isset($elements['#post_render_cache'])) {
+    $callbacks = NestedArray::mergeDeep($callbacks, $elements['#post_render_cache']);
+  }
+
+  // Child elements that have #cache set will already have collected all their
+  // children's #post_render_cache callbacks, so no need to traverse further.
+  if (!$is_root_element && isset($elements['#cache'])) {
+    return $callbacks;
+  }
+  else if ($children = element_children($elements)) {
+    foreach ($children as $child) {
+      $callbacks = drupal_render_collect_post_render_cache($elements[$child], $callbacks, FALSE);
+    }
+  }
+
+  return $callbacks;
 }
 
 /**

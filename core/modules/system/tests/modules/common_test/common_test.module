@@ -197,3 +197,63 @@ function common_test_library_info() {
 function common_test_cron() {
   throw new Exception(t('Uncaught exception'));
 }
+
+/**
+ * #post_render_cache callback; modifies #markup, #attached and #context_test.
+ *
+ * @param array $element
+ *  A render array with the following keys:
+ *    - #markup
+ *    - #attached
+ * @param array $context
+ *  An array with the following keys:
+ *    - foo: contains a random string.
+ *
+ * @return array $element
+ *   The updated $element.
+ */
+function common_test_post_render_cache(array $element, array $context) {
+  // Override #markup.
+  $element['#markup'] = '<p>overridden</p>';
+
+  // Extend #attached.
+  $element['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array(
+      'common_test' => $context
+    ),
+  );
+
+  // Set new property.
+  $element['#context_test'] = $context;
+
+  return $element;
+}
+
+/**
+ * #post_render_cache callback; replaces placeholder, extends #attached.
+ *
+ * @param array $context
+ *  An array with the following keys:
+ *    - bar: contains a random string.
+ *
+ * @return array
+ *   A render array.
+ */
+function common_test_post_render_cache_placeholder(array $context) {
+  $element = array(
+    '#markup' => '<bar>' . $context['bar'] . '</bar>',
+    '#attached' => array(
+      'js' => array(
+        array(
+          'type' => 'setting',
+          'data' => array(
+            'common_test' => $context,
+          ),
+        ),
+      ),
+    ),
+  );
+
+  return $element;
+}
