@@ -786,10 +786,6 @@ function user_menu() {
     'title' => 'Edit role',
     'route_name' => 'user.role_edit',
   );
-  $items['admin/people/roles/manage/%user_role/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
 
   // Administration pages.
   $items['admin/config/people'] = array(

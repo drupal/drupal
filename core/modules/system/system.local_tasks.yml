@@ -61,3 +61,7 @@ system.date_format_list:
   route_name: system.date_format_list
   tab_root_id: system.date_format_list
   title: 'List'
+system.date_format_edit:
+  title: 'Edit'
+  route_name: system.date_format_edit
+  tab_root_id: system.date_format_edit

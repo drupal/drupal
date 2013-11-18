@@ -96,16 +96,6 @@ function shortcut_menu() {
     'title callback' => 'entity_page_label',
     'title arguments' => array(5),
   );
-  $items['admin/config/user-interface/shortcut/manage/%shortcut_set/links'] = array(
-    'title' => 'List links',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/config/user-interface/shortcut/manage/%shortcut_set/edit'] = array(
-    'title' => 'Edit set name',
-    'route_name' => 'shortcut.set_edit',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
-  );
   $items['admin/config/user-interface/shortcut/link/%menu_link'] = array(
     'title' => 'Edit shortcut',
     'route_name' => 'shortcut.link_edit',

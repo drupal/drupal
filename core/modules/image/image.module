@@ -105,10 +105,6 @@ function image_menu() {
     'description' => 'Configure an image style.',
     'route_name' => 'image.style_edit',
   );
-  $items['admin/config/media/image-styles/manage/%image_style/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
   $items['admin/config/media/image-styles/manage/%/effects/%'] = array(
     'title' => 'Edit image effect',
     'description' => 'Edit an existing effect within a style.',

@@ -1,0 +1,4 @@
+image.style_edit:
+  title: 'Edit'
+  route_name: image.style_edit
+  tab_root_id: image.style_edit

@@ -3,6 +3,11 @@ user.role_list_tab:
   title: 'Roles'
   tab_root_id: user.role_list_tab
 
+user.role_edit:
+  title: 'Edit'
+  route_name: user.role_edit
+  tab_root_id: user.role_edit
+
 user.account_settings_tab:
   route_name: user.account_settings
   title: 'Settings'

@@ -25,12 +25,6 @@ function views_ui_menu() {
     'route_name' => 'views_ui.list',
   );
 
-  // The primary Edit View page. Secondary tabs for each Display are added in
-  // views_ui_menu_local_tasks_alter().
-  $items['admin/structure/views/view/%'] = array(
-    'route_name' => 'views_ui.edit',
-  );
-
   // A page in the Reports section to show usage of plugins in all views.
   $items['admin/reports/views-plugins'] = array(
     'title' => 'Views plugins',

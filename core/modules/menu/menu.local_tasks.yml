@@ -1,0 +1,4 @@
+menu.menu_edit:
+  title: 'Edit menu'
+  route_name: menu.menu_edit
+  tab_root_id: menu.menu_edit

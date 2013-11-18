@@ -2,3 +2,13 @@ shortcut.overview:
   route_name: shortcut.overview
   tab_root_id: user.view
   title: 'Shortcuts'
+
+shortcut.set_customize:
+  title: 'List links'
+  route_name: shortcut.set_customize
+  tab_root_id: shortcut.set_customize
+shortcut.set_edit:
+  title: 'Edit set name'
+  route_name: shortcut.set_edit
+  tab_root_id: shortcut.set_customize
+  weight: 10

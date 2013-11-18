@@ -25,3 +25,8 @@ views_ui.reports_fields:
   route_name: views_ui.reports_fields
   title: 'Used in views'
   tab_root_id: field_ui.list
+
+views_ui.edit:
+  title: 'Edit'
+  route_name: views_ui.edit
+  tab_root_id: views_ui.edit
