@@ -1374,6 +1374,9 @@ function format_string($string, array $args = array()) {
  * @see \Drupal\Component\Utility\String::checkPlain()
  * @see drupal_validate_utf8()
  * @ingroup sanitization
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal\Component\Utility\String::checkPlain() directly instead.
  */
 function check_plain($text) {
   return String::checkPlain($text);
