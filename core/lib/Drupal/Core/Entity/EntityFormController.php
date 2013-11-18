@@ -176,6 +176,10 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
    * @see \Drupal\Core\Entity\EntityFormController::form()
    */
   public function processForm($element, $form_state, $form) {
+    // If the form is cached, process callbacks may not have a valid reference
+    // to the entity object, hence we must restore it.
+    $this->entity = $form_state['controller']->getEntity();
+
     // Assign the weights configured in the form display.
     foreach ($this->getFormDisplay($form_state)->getComponents() as $name => $options) {
       if (isset($element[$name])) {

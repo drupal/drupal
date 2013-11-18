@@ -125,12 +125,19 @@ abstract class ContentTranslationTestBase extends WebTestBase {
   }
 
   /**
+   * Returns an array of permissions needed for the administrator.
+   */
+  protected function getAdministratorPermissions() {
+    return array_merge($this->getEditorPermissions(), $this->getTranslatorPermissions(), array('administer content translation'));
+  }
+
+  /**
    * Creates and activates translator, editor and admin users.
    */
   protected function setupUsers() {
     $this->translator = $this->drupalCreateUser($this->getTranslatorPermissions(), 'translator');
     $this->editor = $this->drupalCreateUser($this->getEditorPermissions(), 'editor');
-    $this->administrator = $this->drupalCreateUser(array_merge($this->getEditorPermissions(), $this->getTranslatorPermissions()), 'administrator');
+    $this->administrator = $this->drupalCreateUser($this->getAdministratorPermissions(), 'administrator');
     $this->drupalLogin($this->translator);
   }
 

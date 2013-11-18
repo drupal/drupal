@@ -483,6 +483,17 @@ class EntityTranslationTest extends EntityUnitTestBase {
     $translation = $cloned->getTranslation($langcode);
     $this->assertNotIdentical($entity, $translation->getUntranslated(), 'A cloned entity object has no reference to the original one.');
 
+    // Check that untranslatable field references keep working after serializing
+    // and cloning the entity.
+    $entity = $this->reloadEntity($entity);
+    $type = $this->randomName();
+    $entity->getTranslation($langcode)->type->value = $type;
+    $entity = unserialize(serialize($entity));
+    $cloned = clone $entity;
+    $translation = $cloned->getTranslation($langcode);
+    $translation->type->value = strrev($type);
+    $this->assertEqual($cloned->type->value, $translation->type->value, 'Untranslatable field references keep working after serializing and cloning the entity.');
+
     // Check that per-language defaults are properly populated.
     $entity = $this->reloadEntity($entity);
     $instance_id = implode('.', array($entity->entityType(), $entity->bundle(), $this->field_name));

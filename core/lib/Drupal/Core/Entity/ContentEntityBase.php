@@ -904,9 +904,18 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     // Avoid deep-cloning when we are initializing a translation object, since
     // it will represent the same entity, only with a different active language.
     if (!$this->translationInitialize) {
-      foreach ($this->fields as $name => $properties) {
-        foreach ($properties as $langcode => $property) {
-          $this->fields[$name][$langcode] = clone $property;
+      $definitions = $this->getPropertyDefinitions();
+      foreach ($this->fields as $name => $values) {
+        $this->fields[$name] = array();
+        // Untranslatable fields may have multiple references for the same field
+        // object keyed by language. To avoid creating different field objects
+        // we retain just the original value, as references will be recreated
+        // later as needed.
+        if (empty($definitions[$name]['translatable']) && count($values) > 1) {
+          $values = array_intersect_key($values, array(Language::LANGCODE_DEFAULT => TRUE));
+        }
+        foreach ($values as $langcode => $items) {
+          $this->fields[$name][$langcode] = clone $items;
           $this->fields[$name][$langcode]->setContext($name, $this);
         }
       }

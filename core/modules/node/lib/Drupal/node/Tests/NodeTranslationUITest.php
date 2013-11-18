@@ -22,6 +22,13 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    */
   public static $modules = array('block', 'language', 'content_translation', 'node', 'datetime', 'field_ui');
 
+  /**
+   * The profile to install as a basis for testing.
+   *
+   * @var string
+   */
+  protected $profile = 'standard';
+
   public static function getInfo() {
     return array(
       'name' => 'Node translation UI',
@@ -34,15 +41,15 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->entityType = 'node';
     $this->bundle = 'article';
     parent::setUp();
-    $this->drupalPlaceBlock('system_help_block', array('region' => 'content'));
-  }
 
-  /**
-   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::setupBundle().
-   */
-  protected function setupBundle() {
-    parent::setupBundle();
-    $this->drupalCreateContentType(array('type' => $this->bundle, 'name' => $this->bundle));
+    // Ensure the help message is shown even with prefixed paths.
+    $this->drupalPlaceBlock('system_help_block', array('region' => 'content'));
+
+    // Display the language selector.
+    $this->drupalLogin($this->administrator);
+    $edit = array('language_configuration[language_show]' => TRUE);
+    $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
+    $this->drupalLogin($this->translator);
   }
 
   /**
@@ -53,10 +60,40 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getEditorPermissions() {
+    return array('administer nodes', 'create article content');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getAdministratorPermissions() {
+    return array_merge(parent::getAdministratorPermissions(), array('access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access'));
+  }
+
+  /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
     return array('title' => $this->randomName()) + parent::getNewEntityValues($langcode);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function createEntity($values, $langcode, $bundle_name = NULL) {
+    $this->drupalLogin($this->editor);
+    $edit = array(
+      'title' => $values['title'],
+      "{$this->fieldName}[0][value]" => $values[$this->fieldName][0]['value'],
+      'langcode' => $langcode,
+    );
+    $this->drupalPostForm('node/add/article', $edit,t('Save and publish'));
+    $this->drupalLogin($this->translator);
+    $node = $this->drupalGetNodeByTitle($values['title']);
+    return $node->id();
   }
 
   /**
@@ -136,11 +173,10 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * Tests translate link on content admin page.
    */
   function testTranslateLinkContentAdminPage() {
-    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->administrator);
 
     $page = $this->drupalCreateNode(array('type' => 'page'));
-    $article = $this->drupalCreateNode(array('type' => 'article'));
+    $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => $this->langcodes[0]));
 
     // Verify translation links.
     $this->drupalGet('admin/content');
@@ -153,8 +189,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * Tests field translation form.
    */
   function testFieldTranslationForm() {
-    $admin_user = $this->drupalCreateUser(array_merge($this->getTranslatorPermissions(), array('access administration pages', 'bypass node access', 'administer node fields')));
-    $this->drupalLogin($admin_user);
+    $this->drupalLogin($this->administrator);
 
     $article = $this->drupalCreateNode(array('type' => 'article', 'langcode' => 'en'));
 
