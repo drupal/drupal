@@ -38,21 +38,6 @@ function file_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function file_menu() {
-  $items = array();
-
-  $items['file/ajax'] = array(
-    'route_name' => 'file.ajax_upload',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_element_info().
  *
  * The managed file element may be used anywhere in Drupal.

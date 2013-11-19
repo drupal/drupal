@@ -1,5 +1,7 @@
 theme_test.function_template_override:
   path: '/theme-test/function-template-overridden'
+  options:
+    _custom_theme: 'test_theme'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::functionTemplateOverridden'
   requirements:
@@ -21,6 +23,18 @@ theme_test.template_test:
 
 theme_test.suggestion:
   path: '/theme-test/suggestion'
+  options:
+    _custom_theme: 'test_theme'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::testSuggestion'
+    _title: 'Suggestion'
+  requirements:
+    _access: 'TRUE'
+
+theme_test.priority:
+  path: '/theme-test/priority'
+  options:
+    _custom_theme: 'test_theme'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::testSuggestion'
     _title: 'Suggestion'
@@ -29,6 +43,8 @@ theme_test.suggestion:
 
 theme_test.alter:
   path: '/theme-test/alter'
+  options:
+    _custom_theme: 'test_theme'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::testAlter'
     _title: 'Suggestion'

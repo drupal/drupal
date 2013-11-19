@@ -490,7 +490,7 @@ menu_test.theme_callback:
 menu_test.no_theme_callback:
   path: '/menu-test/no-theme-callback'
   defaults:
-    _title: 'Page that displays different themes without using a theme callback.'
+    _title: 'Page that displays different themes without using a theme negotiation.'
     _content: '\Drupal\menu_test\Controller\MenuTestController::themePage'
     inherited: false
   requirements:
@@ -511,7 +511,7 @@ menu_test.exotic_path:
 menu_test.theme_callback_inheritance:
   path: '/menu-test/theme-callback/{inherited}/inheritance'
   defaults:
-    _title: 'Page that tests theme callback inheritance.'
+    _title: 'Page that tests theme negotiation inheritance.'
     _content: '\Drupal\menu_test\Controller\MenuTestController::themePage'
   requirements:
     _permission: 'access content'

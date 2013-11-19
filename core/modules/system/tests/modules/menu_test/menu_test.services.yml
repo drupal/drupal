@@ -3,3 +3,14 @@ services:
     class: Drupal\menu_test\EventSubscriber\MaintenanceModeSubscriber
     tags:
       - { name: event_subscriber }
+
+  menu_test.active_trail_subscriber:
+    class: Drupal\menu_test\EventSubscriber\ActiveTrailSubscriber
+    arguments: ['@state']
+    tags:
+      - { name: event_subscriber }
+
+  theme.negotiator.test_theme:
+    class: Drupal\menu_test\Theme\TestThemeNegotiator
+    tags:
+      - { name: theme_negotiator }

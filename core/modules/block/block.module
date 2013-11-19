@@ -109,39 +109,7 @@ function block_menu() {
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
     'route_name' => 'block.admin_add',
   );
-  // Block administration is tied to the theme and plugin definition so
-  // that the plugin can appropriately attach to this URL structure.
-  // @todo D8: Use dynamic % arguments instead of static, hard-coded theme names
-  //   and plugin IDs to decouple the routes from these dependencies.
-  // @see http://drupal.org/node/1067408
-  foreach (list_themes() as $key => $theme) {
-    $items["admin/structure/block/demo/$key"] = array(
-      'route_name' => 'block.admin_demo',
-      'type' => MENU_CALLBACK,
-      'theme callback' => '_block_custom_theme',
-      'theme arguments' => array($key),
-    );
-  }
   return $items;
-}
-
-/**
- * Theme callback: Uses the theme specified in the parameter.
- *
- * @param $theme
- *   The theme whose blocks are being configured. If not set, the default theme
- *   is assumed.
- *
- * @return
- *   The theme that should be used for the block configuration page, or NULL
- *   to indicate that the default theme should be used.
- *
- * @see block_menu()
- */
-function _block_custom_theme($theme = NULL) {
-  // We return exactly what was passed in, to guarantee that the page will
-  // always be displayed using the theme whose blocks are being configured.
-  return $theme;
 }
 
 /**

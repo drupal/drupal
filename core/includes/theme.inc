@@ -92,16 +92,14 @@ function drupal_theme_initialize() {
   }
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+
   $themes = list_themes();
 
-  // Only select the user selected theme if it is available in the
-  // list of themes that can be accessed.
-  $theme = !empty($user->theme) && drupal_theme_access($user->theme) ? $user->theme : \Drupal::config('system.theme')->get('default');
-
-  // Allow modules to override the theme. Validation has already been performed
-  // inside menu_get_custom_theme(), so we do not need to check it again here.
-  $custom_theme = menu_get_custom_theme();
-  $theme = !empty($custom_theme) ? $custom_theme : $theme;
+  // @todo Let the theme.negotiator listen to the kernel request event.
+  // Determine the active theme for the theme negotiator service. This includes
+  // the default theme as well as really specific ones like the ajax base theme.
+  $request = \Drupal::request();
+  $theme = \Drupal::service('theme.negotiator')->determineActiveTheme($request) ?: 'stark';
 
   // Store the identifier for retrieving theme settings with.
   $theme_key = $theme;
@@ -114,9 +112,6 @@ function drupal_theme_initialize() {
     $base_theme[] = $themes[$ancestor];
   }
   _drupal_theme_initialize($themes[$theme], array_reverse($base_theme));
-
-  // Themes can have alter functions, so reset the drupal_alter() cache.
-  drupal_static_reset('drupal_alter');
 }
 
 /**

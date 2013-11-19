@@ -613,12 +613,6 @@ function system_element_info() {
  * Implements hook_menu().
  */
 function system_menu() {
-  $items['system/ajax'] = array(
-    'title' => 'AHAH callback',
-    'route_name' => 'system.ajax',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  );
   $items['admin'] = array(
     'title' => 'Administration',
     'route_name' => 'system.admin',
@@ -812,13 +806,6 @@ function system_menu() {
     'route_name' => 'system.status',
   );
 
-  // Default page for batch operations.
-  $items['batch'] = array(
-    'route_name' => 'system.batch_page',
-    'theme callback' => '_system_batch_theme',
-    'type' => MENU_CALLBACK,
-  );
-
   return $items;
 }
 
@@ -868,21 +855,6 @@ function system_theme_suggestions_region(array $variables) {
     $suggestions[] = 'region__' . $variables['elements']['#region'];
   }
   return $suggestions;
-}
-
-/**
- * Theme callback for the default batch page.
- */
-function _system_batch_theme() {
-  // Retrieve the current state of the batch.
-  $batch = &batch_get();
-  if (!$batch && isset($_REQUEST['id'])) {
-    $batch = \Drupal::service('batch.storage')->load($_REQUEST['id']);
-  }
-  // Use the same theme as the page that started the batch.
-  if (!empty($batch['theme'])) {
-    return $batch['theme'];
-  }
 }
 
 /**
@@ -2128,19 +2100,6 @@ function system_page_build(&$page) {
   $page['#attached']['css'][$path . '/css/system.theme.css'] = array('weight' => CSS_SKIN - 10, 'every_page' => TRUE);
   if (path_is_admin(current_path())) {
     $page['#attached']['css'][$path . '/css/system.admin.css'] = array('weight' => CSS_COMPONENT - 10);
-  }
-}
-
-/**
- * Implements hook_custom_theme().
- */
-function system_custom_theme() {
-  if (drupal_container()->isScopeActive('request')) {
-    $request = \Drupal::request();
-    $path = $request->attributes->get('_system_path');
-    if (user_access('view the administration theme') && path_is_admin($path)) {
-      return \Drupal::config('system.theme')->get('admin');
-    }
   }
 }
 

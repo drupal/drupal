@@ -7,21 +7,6 @@ use Drupal\Component\Utility\Url;
  */
 
 /**
- * Implements hook_menu().
- */
-function contextual_menu() {
-  // @todo Remove this menu item in http://drupal.org/node/1954892 when theme
-  //   callbacks are replaced with something else.
-  $items['contextual/render'] = array(
-    'route_name' => 'contextual.render',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_toolbar().
  */
 function contextual_toolbar() {
