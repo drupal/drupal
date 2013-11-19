@@ -450,12 +450,13 @@ update_prepare_d8_bootstrap();
 
 // Determine if the current user has access to run update.php.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
-require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
-drupal_session_initialize();
 
 // A request object from the HTTPFoundation to tell us about the request.
 $request = Request::createFromGlobals();
 \Drupal::getContainer()->set('request', $request);
+
+require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
+drupal_session_initialize();
 
 // Ensure that URLs generated for the home and admin pages don't have 'update.php'
 // in them.

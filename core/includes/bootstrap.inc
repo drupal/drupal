@@ -1552,7 +1552,7 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
       $log_entry['referer'] = $request->headers->get('Referer', '');
       $log_entry['ip'] = $request->getClientIP();
     }
-    catch (\InvalidArgumentException $e) {
+    catch (DependencyInjectionRuntimeException $e) {
       // We are not in a request context.
     }
 
@@ -1718,9 +1718,18 @@ function drupal_set_title($title = NULL, $output = Title::CHECK_PLAIN) {
  *   The user session object.
  */
 function drupal_anonymous_user() {
+  try {
+    $request = \Drupal::request();
+    $hostname = $request->getClientIP();
+  }
+  catch (DependencyInjectionRuntimeException $e) {
+    // We are not in a request context.
+    $hostname = '';
+  }
+
   $values = array(
     'uid' => 0,
-    'hostname' => \Drupal::request()->getClientIP(),
+    'hostname' => $hostname,
     'roles' => array(DRUPAL_ANONYMOUS_RID),
   );
   return new UserSession($values);
@@ -1861,10 +1870,13 @@ function drupal_handle_request($test_only = FALSE) {
   // @todo Remove this once everything in the bootstrap has been
   //   converted to services in the DIC.
   $kernel->boot();
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
   // Create a request object from the HttpFoundation.
   $request = Request::createFromGlobals();
+  \Drupal::getContainer()->set('request', $request);
+
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
+
   $response = $kernel->handle($request)->prepare($request)->send();
 
   $kernel->terminate($request, $response);
@@ -1994,6 +2006,8 @@ function _drupal_bootstrap_kernel() {
   if (!\Drupal::getContainer()) {
     $kernel = new DrupalKernel('prod', drupal_classloader());
     $kernel->boot();
+    $request = Request::createFromGlobals();
+    \Drupal::getContainer()->set('request', $request);
   }
 }
 

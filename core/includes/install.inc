@@ -625,10 +625,19 @@ function drupal_install_system() {
   // Create tables.
   drupal_install_schema('system');
 
-  if (!drupal_container()->has('kernel')) {
-    // Immediately boot a kernel to have real services ready.
+  if (!\Drupal::getContainer()->has('kernel')) {
+    // Immediately boot a kernel to have real services ready. If there's already
+    // an initialized request object in the pre-kernel container, persist it in
+    // the post-kernel container.
+    if (\Drupal::getContainer()->initialized('request')) {
+      $request = \Drupal::request();
+    }
     $kernel = new DrupalKernel('install', drupal_classloader(), FALSE);
     $kernel->boot();
+    if (isset($request)) {
+      \Drupal::getContainer()->set('request', $request);
+    }
+
   }
 
   $system_path = drupal_get_path('module', 'system');

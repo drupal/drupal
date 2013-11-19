@@ -18,6 +18,7 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base class for Drupal tests.
@@ -973,6 +974,10 @@ abstract class TestBase {
     // Register info parser.
     $this->container->register('info_parser', 'Drupal\Core\Extension\InfoParser');
 
+    $request = Request::create('/');
+    $this->container->set('request', $request);
+    $this->container->set('current_user', $GLOBALS['user']);
+
     \Drupal::setContainer($this->container);
 
     // Unset globals.
@@ -1035,12 +1040,16 @@ abstract class TestBase {
    *   enabled modules to be immediately available in the same request.
    */
   protected function rebuildContainer() {
+    // Preserve the request object after the container rebuild.
+    $request = \Drupal::request();
+
     $this->kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
     $this->kernel->boot();
     // DrupalKernel replaces the container in \Drupal::getContainer() with a
     // different object, so we need to replace the instance on this test class.
     $this->container = \Drupal::getContainer();
     // The global $user is set in TestBase::prepareEnvironment().
+    $this->container->set('request', $request);
     $this->container->set('current_user', $GLOBALS['user']);
   }
 

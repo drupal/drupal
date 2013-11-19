@@ -9,6 +9,7 @@ namespace Drupal\Core\Ajax;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * JSON response object for AJAX requests.
@@ -46,17 +47,25 @@ class AjaxResponse extends JsonResponse {
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Sets the response's data to be the array of AJAX commands.
-   *
-   * @param Request $request
-   *   A request object.
-   *
-   * @return Response
-   *   The current response.
    */
   public function prepare(Request $request) {
-    $this->setData($this->ajaxRender($request));
-    return parent::prepare($request);
+    $this->prepareResponse($request);
+    return $this;
+  }
+
+  /**
+   * Sets the rendered AJAX right before the response is prepared.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function prepareResponse(Request $request) {
+    if ($this->data == '{}') {
+      $this->setData($this->ajaxRender($request));
+    }
   }
 
   /**

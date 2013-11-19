@@ -13,6 +13,7 @@ use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Symfony\Component\DependencyInjection\Reference;
 use Drupal\Core\Database\Database;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base test case class for Drupal unit tests.
@@ -188,7 +189,8 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       $definition = $container->getDefinition('path_processor_alias');
       $definition->clearTag('path_processor_inbound')->clearTag('path_processor_outbound');
     }
-
+    $request = Request::create('/');
+    $this->container->set('request', $request);
   }
 
   /**

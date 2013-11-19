@@ -39,6 +39,10 @@ if (!\Drupal::moduleHandler()->moduleExists('simpletest')) {
   exit;
 }
 simpletest_classloader_register();
+// We have to add a Request.
+$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+$container = \Drupal::getContainer();
+$container->set('request', $request);
 
 if ($args['clean']) {
   // Clean up left-over times and directories.
@@ -477,8 +481,11 @@ function simpletest_script_run_one_test($test_id, $test_class) {
   try {
     // Bootstrap Drupal.
     drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
-
     simpletest_classloader_register();
+    // We have to add a Request.
+    $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+    $container = \Drupal::getContainer();
+    $container->set('request', $request);
 
     // Override configuration according to command line parameters.
     $conf['simpletest.settings']['verbose'] = $args['verbose'];

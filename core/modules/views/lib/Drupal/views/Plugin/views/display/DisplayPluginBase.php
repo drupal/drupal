@@ -14,6 +14,7 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
+use Symfony\Component\DependencyInjection\Exception\RuntimeException as DependencyInjectionRuntimeException;
 
 /**
  * @defgroup views_display_plugins Views display plugins
@@ -886,8 +887,15 @@ abstract class DisplayPluginBase extends PluginBase {
         // If this is during form submission and there are temporary options
         // which can only appear if the view is in the edit cache, use those
         // options instead. This is used for AJAX multi-step stuff.
-        if (\Drupal::request()->request->get('form_id') && isset($this->view->temporary_options[$type][$id])) {
-          $info = $this->view->temporary_options[$type][$id];
+        // @todo Remove dependency on Request object
+        //   https://drupal.org/node/2059003.
+        try {
+          $request = \Drupal::request();
+          if ($request->request->get('form_id') && isset($this->view->temporary_options[$type][$id])) {
+            $info = $this->view->temporary_options[$type][$id];
+          }
+        }
+        catch (DependencyInjectionRuntimeException $e) {
         }
 
         if ($info['id'] != $id) {

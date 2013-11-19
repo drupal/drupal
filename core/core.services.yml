@@ -211,17 +211,12 @@ services:
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
     arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager', '@access_manager', '@current_user']
-    scope: request
   plugin.manager.menu.contextual_link:
     class: Drupal\Core\Menu\ContextualLinkManager
     arguments: ['@controller_resolver', '@module_handler', '@cache.cache', '@language_manager', '@access_manager', '@current_user']
   request:
     class: Symfony\Component\HttpFoundation\Request
-    # @TODO the synthetic setting must be uncommented whenever drupal_session_initialize()
-    # is run after there is a request and the following two lines should be removed.
-    factory_class: Symfony\Component\HttpFoundation\Request
-    factory_method: createFromGlobals
-    #synthetic: true
+    synthetic: true
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
@@ -365,6 +360,10 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@settings']
+  ajax_response_subscriber:
+    class: Drupal\Core\EventSubscriber\AjaxResponseSubscriber
+    tags:
+      - { name: event_subscriber }
   route_enhancer.authentication:
     class: Drupal\Core\Routing\Enhancer\AuthenticationEnhancer
     calls:
@@ -436,7 +435,6 @@ services:
       - [setCurrentUser, ['@?current_user']]
     tags:
       - { name: event_subscriber }
-    scope: request
   access_route_subscriber:
     class: Drupal\Core\EventSubscriber\AccessRouteSubscriber
     tags:
