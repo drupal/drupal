@@ -799,7 +799,7 @@ function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
 /**
  * Find all testcases recursively from a testsuite list.
  *
- * @param array $suite
+ * @param \SimpleXMLElement[] $suite
  *   The list of testcases contained in the PHPUnit XML.
  *
  * @return array
@@ -816,6 +816,8 @@ function simpletest_phpunit_find_testcases($suite) {
     }
     elseif (isset($testcase->testcase) && ((int) $testcase->attributes()->tests) > 0) {
       foreach ($testcase->testcase as $childtestcase) {
+        // Add the class attribute since the child test case will not have it.
+        $childtestcase->addAttribute('class', $suite->attributes()->name);
         $testcases[] = $childtestcase;
       }
     }

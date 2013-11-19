@@ -9,6 +9,7 @@ namespace Drupal\simpletest\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -32,10 +33,20 @@ class SimpletestResultsForm extends FormBase {
   protected $database;
 
   /**
+   * The form builder service.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('database'));
+    return new static(
+      $container->get('database'),
+      $container->get('form_builder')
+    );
   }
 
   /**
@@ -43,9 +54,12 @@ class SimpletestResultsForm extends FormBase {
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection service.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder service.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection $database, FormBuilderInterface $form_builder) {
     $this->database = $database;
+    $this->formBuilder = $form_builder;
     // Initialize image mapping property.
     $image_pass = array(
       '#theme' => 'image',
@@ -255,15 +269,13 @@ class SimpletestResultsForm extends FormBase {
       return;
     }
 
-    $form_execute = array();
     $form_state_execute = array('values' => array());
     foreach ($classes as $class) {
       $form_state_execute['values'][$class] = 1;
     }
 
     // Submit the simpletest test form to rerun the tests.
-    $simpletest_test_form = new SimpletestTestForm();
-    $simpletest_test_form->submitForm($form_execute, $form_state_execute);
+    $this->formBuilder->submitForm('Drupal\simpletest\Form\SimpletestTestForm', $form_state_execute);
     $form_state['redirect_route'] = $form_state_execute['redirect_route'];
   }
 
