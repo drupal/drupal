@@ -1,0 +1,12 @@
+id: theme.breakpoint_test_theme.mobile
+uuid: 3ae8bfe6-496b-478c-a811-17424038f49c
+name: mobile
+label: mobile
+mediaQuery: '(min-width: 0px)'
+source: breakpoint_test_theme
+sourceType: theme
+weight: 0
+multipliers:
+  1x: 1x
+status: true
+langcode: en

@@ -1,0 +1,12 @@
+id: theme.breakpoint_test_theme.wide
+uuid: 1561574d-99f8-48a6-b304-4e2b617673b2
+name: wide
+label: wide
+mediaQuery: '(min-width: 851px)'
+source: breakpoint_test_theme
+sourceType: theme
+weight: 2
+multipliers:
+  1x: 1x
+status: true
+langcode: en

@@ -62,14 +62,24 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
   public $label;
 
   /**
-   * The breakpoint group breakpoints.
+   * The breakpoint group breakpoint IDs.
    *
    * @var array
-   *   Array containing all breakpoints of this group.
+   *   Array containing all breakpoints IDs of this group.
    *
    * @see \Drupal\breakpoint\Entity\Breakpoint
    */
-  public $breakpoints = array();
+  protected $breakpoint_ids = array();
+
+  /**
+   * The breakpoint group breakpoints.
+   *
+   * @var array
+   *   Array containing all breakpoints objects of this group.
+   *
+   * @see \Drupal\breakpoint\Entity\Breakpoint
+   */
+  protected $breakpoints = array();
 
   /**
    * The breakpoint group source: theme or module name. Use 'user' for
@@ -97,7 +107,6 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
-    $this->loadAllBreakpoints();
   }
 
   /**
@@ -111,10 +120,7 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
     if (empty($this->id)) {
       $this->id = $this->sourceType . '.' . $this->source . '.' . $this->name;
     }
-    // Only save the keys, but return the full objects.
-    $this->breakpoints = array_keys($this->breakpoints);
     parent::save();
-    $this->loadAllBreakpoints();
   }
 
   /**
@@ -156,47 +162,70 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
         'mediaQuery' => $media_query,
         'source' => $this->name,
         'sourceType' => $this->sourceType,
-        'weight' => count($this->breakpoints),
+        'weight' => count($this->breakpoint_ids),
       ));
       $breakpoint->save();
     }
-    $this->breakpoints[$breakpoint->id()] = $breakpoint;
+    return $this->addBreakpoints(array($breakpoint));
   }
 
   /**
    * {@inheritdoc}
    */
   public function addBreakpoints($breakpoints) {
-    foreach ($breakpoints as $breakpoint_name) {
-      // Check if breakpoint exists, assume $breakpoint_name is a machine name.
-      $breakpoint = entity_load('breakpoint', $this->sourceType . '.' . $this->source . '.' . $breakpoint_name);
-      // If the breakpoint doesn't exist, assume $breakpoint_name is an id.
-      if (!$breakpoint) {
-        $breakpoint = entity_load('breakpoint', $breakpoint_name);
-      }
-      // If the breakpoint doesn't exists, do not add it.
-      if ($breakpoint) {
-        // Add breakpoint to group.
-        $this->breakpoints[$breakpoint->id()] = $breakpoint;
-      }
+    foreach ($breakpoints as $breakpoint) {
+      // Add breakpoint to group.
+      $this->breakpoints[$breakpoint->id()] = $breakpoint;
+      $this->breakpoint_ids[] = $breakpoint->id();
     }
+    return $this;
   }
 
   /**
-   * Loads all breakpoints, remove non-existing ones.
-   *
-   * @return array
-   *   Array containing breakpoints keyed by their id.
+   * {@inheritdoc}
    */
-  protected function loadAllBreakpoints() {
-    $breakpoints = $this->breakpoints;
-    $this->breakpoints = array();
-    foreach ($breakpoints as $breakpoint_id) {
-      $breakpoint = breakpoint_load($breakpoint_id);
-      if ($breakpoint) {
-        $this->breakpoints[$breakpoint_id] = $breakpoint;
+  public function getBreakpoints() {
+    if (empty($this->breakpoints)) {
+      foreach ($this->breakpoint_ids as $breakpoint_id) {
+        $breakpoint = breakpoint_load($breakpoint_id);
+        if ($breakpoint) {
+          $this->breakpoints[$breakpoint_id] = $breakpoint;
+        }
       }
     }
+    return $this->breakpoints;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getBreakpointById($id) {
+    $breakpoints = $this->getBreakpoints();
+    if (isset($breakpoints[$id])) {
+      return $breakpoints[$id];
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExportProperties() {
+    $names = array(
+      'id',
+      'uuid',
+      'name',
+      'label',
+      'breakpoint_ids',
+      'source',
+      'sourceType',
+      'status',
+      'langcode',
+    );
+    $properties = array();
+    foreach ($names as $name) {
+      $properties[$name] = $this->get($name);
+    }
+    return $properties;
+  }
 }

@@ -33,7 +33,6 @@ abstract class BreakpointGroupTestBase extends WebTestBase {
       'label',
       'id',
       'name',
-      'breakpoints',
       'sourceType',
     );
 
@@ -58,5 +57,8 @@ abstract class BreakpointGroupTestBase extends WebTestBase {
         $this->assertEqual($compare_set->{$property}, $group->{$property}, format_string('breakpoint_group_load: Proper %property: %property1 == %property2 for breakpoint group %group.', $t_args), 'Breakpoint API');
       }
     }
+
+    // Ensure that the breakpoint group has the expected breakpoints.
+    $this->assertEqual(array_keys($compare_set->getBreakpoints()), array_keys($group->getBreakpoints()));
   }
 }

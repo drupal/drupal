@@ -1,0 +1,12 @@
+id: theme.breakpoint_test_theme.test
+uuid: fcc25180-7e18-4149-8962-98d706faa59a
+name: test
+label: 'Test Theme'
+breakpoint_ids:
+  - theme.breakpoint_test_theme.mobile
+  - theme.breakpoint_test_theme.narrow
+  - theme.breakpoint_test_theme.wide
+source: breakpoint_test_theme
+sourceType: theme
+status: true
+langcode: en

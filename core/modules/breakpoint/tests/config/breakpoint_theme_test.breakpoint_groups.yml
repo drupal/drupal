@@ -1,6 +1,0 @@
-module_test:
-  label: Test Module
-  breakpoints:
-    - theme.breakpoint_test_theme.mobile
-    - theme.breakpoint_test_theme.narrow
-    - theme.breakpoint_test_theme.wide

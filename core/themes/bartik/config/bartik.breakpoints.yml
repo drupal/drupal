@@ -1,3 +1,0 @@
-mobile: '(min-width: 0px)'
-narrow: 'all and (min-width: 560px) and (max-width: 850px)'
-wide: 'all and (min-width: 851px)'

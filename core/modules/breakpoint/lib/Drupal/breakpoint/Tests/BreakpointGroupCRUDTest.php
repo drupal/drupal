@@ -50,8 +50,7 @@ class BreakpointGroupCRUDTest extends BreakpointGroupTestBase {
     $this->verifyBreakpointGroup($group);
 
     // Update the breakpoint group.
-    $group->breakpoints = array_keys($breakpoints);
-    $group->save();
+    $group->addBreakpoints($breakpoints)->save();
     $this->verifyBreakpointGroup($group);
 
     // Delete the breakpoint group.

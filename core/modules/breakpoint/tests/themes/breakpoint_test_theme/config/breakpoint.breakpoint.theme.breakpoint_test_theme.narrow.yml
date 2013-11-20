@@ -1,0 +1,12 @@
+id: theme.breakpoint_test_theme.narrow
+uuid: 1d791b4a-7ccf-4c93-a800-c2bc2594cc62
+name: narrow
+label: narrow
+mediaQuery: '(min-width: 560px)'
+source: breakpoint_test_theme
+sourceType: theme
+weight: 1
+multipliers:
+  1x: 1x
+status: true
+langcode: en

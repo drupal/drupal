@@ -34,20 +34,6 @@ function breakpoint_help($path, $arg) {
 }
 
 /**
- * Implements hook_themes_enabled().
- *
- * @param array $theme_list
- *   An array of theme names.
- *
- * @see _breakpoint_theme_enabled()
- *
- * @todo: This should be removed if https://drupal.org/node/1813110 is resolved.
- */
-function breakpoint_themes_enabled($theme_list) {
-  _breakpoint_theme_enabled($theme_list);
-}
-
-/**
  * Implements hook_themes_disabled().
  *
  * @param array $theme_list
@@ -62,20 +48,6 @@ function breakpoint_themes_disabled($theme_list) {
 }
 
 /**
- * Implements hook_modules_installed().
- *
- * @param array $modules
- *   An array of the modules that were enabled.
- *
- * @see _breakpoint_modules_enabled()
- *
- * @todo: This should be removed if https://drupal.org/node/1813110 is resolved.
- */
-function breakpoint_modules_installed($modules) {
-  _breakpoint_modules_installed($modules);
-}
-
-/**
  * Implements hook_modules_uninstalled().
  *
  * @param array $modules
@@ -87,91 +59,6 @@ function breakpoint_modules_installed($modules) {
  */
 function breakpoint_modules_uninstalled($modules) {
   _breakpoint_delete_breakpoints($modules, Breakpoint::SOURCE_TYPE_MODULE);
-}
-
-/**
- * Import breakpoints from all new enabled themes.
- *
- * @param array $theme_list
- *   An array of theme names.
- */
-function _breakpoint_theme_enabled($theme_list) {
-  $themes = list_themes();
-  foreach ($theme_list as $theme_key) {
-    $media_queries = breakpoint_get_theme_media_queries($theme_key);
-    _breakpoint_import_media_queries($theme_key, $themes[$theme_key]->info['name'], Breakpoint::SOURCE_TYPE_THEME, $media_queries);
-    // Import custom groups.
-    _breakpoint_import_breakpoint_groups($theme_key, Breakpoint::SOURCE_TYPE_THEME);
-  }
-}
-
-/**
- * Import breakpoints from all new installed modules.
- *
- * @param array $modules
- *   An array of the modules that were installed.
- */
-function _breakpoint_modules_installed($modules) {
-  foreach ($modules as $module) {
-    $media_queries = breakpoint_get_module_media_queries($module);
-    _breakpoint_import_media_queries($module, $module, Breakpoint::SOURCE_TYPE_MODULE, $media_queries);
-    // Import custom groups.
-    _breakpoint_import_breakpoint_groups($module, Breakpoint::SOURCE_TYPE_MODULE);
-  }
-}
-
-/**
- * Import media queries from a theme or module and create a default group.
- *
- * @param string $group_name
- *   Machine readable name of the breakpoint group.
- * @param string $label
- *   Human readable name of the breakpoint group.
- * @param string $source_type
- *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
- * @param array $media_queries
- *   An array of breakpoints in the form $breakpoint['name'] = 'media query'.
- */
-function _breakpoint_import_media_queries($group_name, $label, $source_type, $media_queries) {
-  if (!empty($media_queries)) {
-    // Create a new breakpoint group if it doesn't exist.
-    $breakpoint_group = _breakpoint_group_create_or_load($group_name, $label, $group_name, $source_type);
-
-    // Load all media queries, create a breakpoint for each one and add them
-    // to this breakpoint group.
-    foreach ($media_queries as $name => $media_query) {
-      $breakpoint_group->addBreakpointFromMediaQuery($name, $media_query);
-    }
-
-    $breakpoint_group->save();
-  }
-}
-
-/**
- * Import breakpoint groups from theme or module.
- *
- * @param string $source
- *   The theme or module name
- * @param string $source_type
- *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
- */
-function _breakpoint_import_breakpoint_groups($source, $source_type) {
-  $breakpoint_groups = \Drupal::config($source . '.breakpoint_groups');
-  if ($breakpoint_groups) {
-    foreach ($breakpoint_groups->get() as $group_name => $data) {
-      // Breakpoints is mandatory, extra check since this is coming from config.
-      if (isset($data['breakpoints']) && !empty($data['breakpoints'])) {
-        // Create a new breakpoint group if it doesn't exist.
-        $breakpoint_group = _breakpoint_group_create_or_load($group_name, isset($data['label']) ? $data['label'] : $group_name, $source, $source_type);
-        // Add the breakpoints.
-        $breakpoint_group->addBreakpoints($data['breakpoints']);
-        $breakpoint_group->save();
-      }
-      else {
-        throw new \Exception('Illegal config file detected.');
-      }
-    }
-  }
 }
 
 /**
@@ -246,65 +133,6 @@ function _breakpoint_delete_breakpoint_groups($group_id, $source_type) {
 }
 
 /**
- * Get a list of available breakpoints from a specified theme.
- *
- * @param string $theme_key
- *   The name of the theme.
- *
- * @return array
- *   An array of breakpoints in the form $breakpoint['name'] = 'media query'.
- */
-function breakpoint_get_theme_media_queries($theme_key) {
-  $themes = list_themes();
-  if (!isset($themes[$theme_key])) {
-    throw new \Exception('Illegal theme_key passed.');
-  }
-
-  $config = \Drupal::config($theme_key . '.breakpoints');
-  if ($config) {
-    return $config->get();
-  }
-  return array();
-}
-
-/**
- * Get a list of available breakpoints from a specified module.
- *
- * @param string $module
- *   The name of the module.
- *
- * @return array
- *   An array of breakpoints in the form $breakpoint['name'] = 'media query'.
- */
-function breakpoint_get_module_media_queries($module) {
-  if (!\Drupal::moduleHandler()->moduleExists($module)) {
-    throw new \Exception('Illegal module name passed.');
-  }
-
-  $config = \Drupal::config($module . '.breakpoints');
-  if ($config) {
-    return $config->get();
-  }
-  return array();
-}
-
-/**
- * Load one breakpoint group by its identifier.
- *
- * @param string $id
- *   The id of the breakpoint group to load.
- *
- * @return \Drupal\breakpoint\Entity\BreakpointGroup|null
- *   The breakpoint group, or NULL if there is no entity with the given id.
- *
- * @todo Remove this in a follow-up issue.
- * @see http://drupal.org/node/1798214
- */
-function breakpoint_group_load($id) {
-  return entity_load('breakpoint_group', $id);
-}
-
-/**
  * Load one breakpoint by its identifier.
  *
  * @param int $id
@@ -350,37 +178,4 @@ function breakpoint_select_options() {
   }
   asort($options);
   return $options;
-}
-
-/**
- * Helper function to easily create/load a breakpoint group.
- *
- * @param string $name
- *   Machine readable name of the breakpoint group.
- * @param string $label
- *   Human readable name of the breakpoint group.
- * @param string $source
- *   Machine readable name of the defining theme or module.
- * @param string $source_type
- *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
- *
- * @return \Drupal\breakpoint\Entity\BreakpointGroup
- *
- * @see _breakpoint_import_media_queries()
- * @see _breakpoint_import_breakpoint_groups()
- */
-function _breakpoint_group_create_or_load($name, $label, $source, $source_type) {
-  // Try loading the breakpoint group.
-  $breakpoint_group = entity_load('breakpoint_group', $source_type . '.' . $source . '.' . $name);
-  // Create a new breakpoint group if it doesn't exist.
-  if (!$breakpoint_group) {
-    // Build a new breakpoint group.
-    $breakpoint_group = entity_create('breakpoint_group', array(
-      'name' => $name,
-      'label' => $label,
-      'source' => $source,
-      'sourceType' => $source_type,
-    ));
-  }
-  return $breakpoint_group;
 }

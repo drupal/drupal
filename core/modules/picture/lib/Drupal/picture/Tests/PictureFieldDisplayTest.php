@@ -77,7 +77,7 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
         ),
       ));
       $breakpoint->save();
-      $breakpoint_group->breakpoints[$breakpoint->id()] = $breakpoint;
+      $breakpoint_group->addBreakpoints(array($breakpoint));
     }
     $breakpoint_group->save();
 

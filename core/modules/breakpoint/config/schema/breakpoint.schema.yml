@@ -1,16 +1,4 @@
 # Schema for the configuration files of the Breakpoint module.
-
-breakpoint.settings:
-  type: mapping
-  label: 'Breakpoint settings'
-  mapping:
-    multipliers:
-      type: sequence
-      label: 'Assigning resolution multipliers to breakpoints'
-      sequence:
-        - type: string
-          label: 'Multiplier'
-
 breakpoint.breakpoint.*.*.*:
   type: mapping
   label: 'Defines the Breakpoint entity'

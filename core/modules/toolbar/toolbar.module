@@ -192,7 +192,7 @@ function toolbar_pre_render($element) {
       function ($object) {
         return $object->mediaQuery;
       },
-      $breakpoints->breakpoints
+      $breakpoints->getBreakpoints()
     );
 
     $element['#attached']['js'][] = array(

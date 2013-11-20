@@ -1,0 +1,13 @@
+id: theme.breakpoint_test_theme.breakpoint_test_theme
+uuid: 94b96e6e-a032-4b29-8100-efd5bf854fd1
+name: breakpoint_test_theme
+label: 'Breakpoint test theme'
+breakpoint_ids:
+  - theme.breakpoint_test_theme.mobile
+  - theme.breakpoint_test_theme.narrow
+  - theme.breakpoint_test_theme.wide
+  - theme.breakpoint_test_theme.tv
+source: breakpoint_test_theme
+sourceType: theme
+status: true
+langcode: en

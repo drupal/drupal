@@ -1,0 +1,12 @@
+id: theme.breakpoint_test_theme.tv
+uuid: e0ffa737-0570-4891-9809-9bce925673ca
+name: tv
+label: tv
+mediaQuery: 'only screen and (min-width: 3456px)'
+source: breakpoint_test_theme
+sourceType: theme
+weight: 3
+multipliers:
+  1x: 1x
+status: true
+langcode: en

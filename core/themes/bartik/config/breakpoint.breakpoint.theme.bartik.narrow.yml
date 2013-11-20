@@ -1,0 +1,12 @@
+id: theme.bartik.narrow
+uuid: da7ce8eb-f006-4a2f-8557-87ac4f62d5cd
+name: narrow
+label: narrow
+mediaQuery: 'all and (min-width: 560px) and (max-width: 850px)'
+source: bartik
+sourceType: theme
+weight: 1
+multipliers:
+  1x: 1x
+status: true
+langcode: en

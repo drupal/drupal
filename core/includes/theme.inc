@@ -363,17 +363,11 @@ function list_themes($refresh = FALSE) {
     $list = array();
     // Extract from the database only when it is available.
     // Also check that the site is not in the middle of an install or update.
-    if (!defined('MAINTENANCE_MODE')) {
-      try {
-        $themes = system_list('theme');
-      }
-      catch (Exception $e) {
-        // If the database is not available, rebuild the theme data.
-        $themes = _system_rebuild_theme_data();
-      }
+    try {
+      $themes = system_list('theme');
     }
-    else {
-      // Scan the installation when the database should not be read.
+    catch (Exception $e) {
+      // If the database is not available, rebuild the theme data.
       $themes = _system_rebuild_theme_data();
     }
 
