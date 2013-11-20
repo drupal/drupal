@@ -258,6 +258,39 @@ function system_requirements($phase) {
     $requirements['settings.php']['title'] = $t('Configuration file');
   }
 
+  // Test the contents of the .htaccess files.
+  if ($phase == 'runtime') {
+    // Try to write the .htaccess files first, to prevent false alarms in case
+    // (for example) the /tmp directory was wiped.
+    file_ensure_htaccess();
+    $htaccess_files['public://.htaccess'] = array(
+      'title' => $t('Public files directory'),
+      'directory' => variable_get('file_public_path', conf_path() . '/files'),
+    );
+    if ($private_files_directory = variable_get('file_private_path')) {
+      $htaccess_files['private://.htaccess'] = array(
+        'title' => $t('Private files directory'),
+        'directory' => $private_files_directory,
+      );
+    }
+    $htaccess_files['temporary://.htaccess'] = array(
+      'title' => $t('Temporary files directory'),
+      'directory' => variable_get('file_temporary_path', file_directory_temp()),
+    );
+    foreach ($htaccess_files as $htaccess_file => $info) {
+      // Check for the string which was added to the recommended .htaccess file
+      // in the latest security update.
+      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
+        $requirements[$htaccess_file] = array(
+          'title' => $info['title'],
+          'value' => $t('Not fully protected'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => $t('See <a href="@url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', array('@url' => 'http://drupal.org/SA-CORE-2013-003', '%directory' => $info['directory'])),
+        );
+      }
+    }
+  }
+
   // Report cron status.
   if ($phase == 'runtime') {
     // Cron warning threshold defaults to two days.
@@ -516,7 +549,7 @@ function system_install() {
     ->execute();
 
   // Populate the cron key variable.
-  $cron_key = drupal_hash_base64(drupal_random_bytes(55));
+  $cron_key = drupal_random_key();
   variable_set('cron_key', $cron_key);
 }
 
@@ -1743,7 +1776,7 @@ function system_update_7000() {
  * Generate a cron key and save it in the variables table.
  */
 function system_update_7001() {
-  variable_set('cron_key', drupal_hash_base64(drupal_random_bytes(55)));
+  variable_set('cron_key', drupal_random_key());
 }
 
 /**

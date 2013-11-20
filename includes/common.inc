@@ -5042,7 +5042,7 @@ function drupal_json_output($var = NULL) {
  */
 function drupal_get_private_key() {
   if (!($key = variable_get('drupal_private_key', 0))) {
-    $key = drupal_hash_base64(drupal_random_bytes(55));
+    $key = drupal_random_key();
     variable_set('drupal_private_key', $key);
   }
   return $key;
@@ -5081,7 +5081,7 @@ function drupal_get_token($value = '') {
  */
 function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
   global $user;
-  return (($skip_anonymous && $user->uid == 0) || ($token == drupal_get_token($value)));
+  return (($skip_anonymous && $user->uid == 0) || ($token === drupal_get_token($value)));
 }
 
 function _drupal_bootstrap_full() {
@@ -5114,6 +5114,10 @@ function _drupal_bootstrap_full() {
   module_load_all();
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
+  // Ensure mt_rand is reseeded, to prevent random values from one page load
+  // being exploited to predict random values in subsequent page loads.
+  $seed = unpack("L", drupal_random_bytes(4));
+  mt_srand($seed[1]);
 
   $test_info = &$GLOBALS['drupal_test_info'];
   if (!empty($test_info['in_child_site'])) {

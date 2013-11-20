@@ -717,10 +717,14 @@ function user_password($length = 10) {
 
   // Loop the number of times specified by $length.
   for ($i = 0; $i < $length; $i++) {
+    do {
+      // Find a secure random number within the range needed.
+      $index = ord(drupal_random_bytes(1));
+    } while ($index > $len);
 
     // Each iteration, pick a random character from the
     // allowable string and append it to the password:
-    $pass .= $allowable_characters[mt_rand(0, $len)];
+    $pass .= $allowable_characters[$index];
   }
 
   return $pass;

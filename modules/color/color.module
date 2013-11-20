@@ -240,6 +240,7 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
       $form['palette'][$name] = array(
         '#type' => 'textfield',
         '#title' => check_plain($names[$name]),
+        '#value_callback' => 'color_palette_color_value',
         '#default_value' => $value,
         '#size' => 8,
       );
@@ -295,6 +296,52 @@ function theme_color_scheme_form($variables) {
 }
 
 /**
+ * Determines the value for a palette color field.
+ *
+ * @param $element
+ *   The form element whose value is being populated.
+ * @param $input
+ *   The incoming input to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
+ * @param $form_state
+ *   A keyed array containing the current state of the form.
+ *
+ * @return
+ *   The data that will appear in the $form_state['values'] collection for this
+ *   element. Return nothing to use the default.
+ */
+function color_palette_color_value($element, $input = FALSE, $form_state = array()) {
+  // If we suspect a possible cross-site request forgery attack, only accept
+  // hexadecimal CSS color strings from user input, to avoid problems when this
+  // value is used in the JavaScript preview.
+  if ($input !== FALSE) {
+    // Start with the provided value for this textfield, and validate that if
+    // necessary, falling back on the default value.
+    $value = form_type_textfield_value($element, $input, $form_state);
+    if (!$value || !isset($form_state['complete form']['#token']) || color_valid_hexadecimal_string($value) || drupal_valid_token($form_state['values']['form_token'], $form_state['complete form']['#token'])) {
+      return $value;
+    }
+    else {
+      return $element['#default_value'];
+    }
+  }
+}
+
+/**
+ * Determines if a hexadecimal CSS color string is valid.
+ *
+ * @param $color
+ *   The string to check.
+ *
+ * @return
+ *   TRUE if the string is a valid hexadecimal CSS color string, or FALSE if it
+ *   isn't.
+ */
+function color_valid_hexadecimal_string($color) {
+  return preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $color);
+}
+
+/**
  * Form validation handler for color_scheme_form().
  *
  * @see color_scheme_form_submit()
@@ -302,7 +349,7 @@ function theme_color_scheme_form($variables) {
 function color_scheme_form_validate($form, &$form_state) {
   // Only accept hexadecimal CSS color strings to avoid XSS upon use.
   foreach ($form_state['values']['palette'] as $key => $color) {
-    if (!preg_match('/^#([a-f0-9]{3}){1,2}$/iD', $color)) {
+    if (!color_valid_hexadecimal_string($color)) {
       form_set_error('palette][' . $key, t('%name must be a valid hexadecimal CSS color value.', array('%name' => $form['color']['palette'][$key]['#title'])));
     }
   }

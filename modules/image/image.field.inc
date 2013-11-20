@@ -351,7 +351,7 @@ function image_field_widget_form(&$form, &$form_state, $field, $instance, $langc
   if ($field['cardinality'] == 1) {
     // If there's only one field, return it as delta 0.
     if (empty($elements[0]['#default_value']['fid'])) {
-      $elements[0]['#description'] = theme('file_upload_help', array('description' => $instance['description'], 'upload_validators' => $elements[0]['#upload_validators']));
+      $elements[0]['#description'] = theme('file_upload_help', array('description' => field_filter_xss($instance['description']), 'upload_validators' => $elements[0]['#upload_validators']));
     }
   }
   else {

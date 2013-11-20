@@ -82,6 +82,10 @@ class FormsTestCase extends DrupalWebTestCase {
           $form_state['input'][$element] = $empty;
           $form_state['input']['form_id'] = $form_id;
           $form_state['method'] = 'post';
+
+          // The form token CSRF protection should not interfere with this test,
+          // so we bypass it by marking this test form as programmed.
+          $form_state['programmed'] = TRUE;
           drupal_prepare_form($form_id, $form, $form_state);
           drupal_process_form($form_id, $form, $form_state);
           $errors = form_get_errors();
@@ -614,6 +618,18 @@ class FormValidationTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, array(), 'Save');
     $this->assertNoFieldByName('name', 'Form element was hidden.');
     $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
+
+    // Verify that #validate handlers don't run if the CSRF token is invalid.
+    $this->drupalLogin($this->drupalCreateUser());
+    $this->drupalGet('form-test/validate');
+    $edit = array(
+      'name' => 'validate',
+      'form_token' => 'invalid token'
+    );
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertNoFieldByName('name', '#value changed by #validate', 'Form element #value was not altered.');
+    $this->assertNoText('Name value: value changed by form_set_value() in #validate', 'Form element value in $form_state was not altered.');
+    $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
   }
 
   /**
@@ -940,6 +956,10 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
 
     $form_state['input'] = $edit;
     $form_state['input']['form_id'] = $form_id;
+
+    // The form token CSRF protection should not interfere with this test,
+    // so we bypass it by marking this test form as programmed.
+    $form_state['programmed'] = TRUE;
 
     drupal_prepare_form($form_id, $form, $form_state);
 

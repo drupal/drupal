@@ -1,4 +1,8 @@
 
+Drupal 7.24, 2013-11-20
+----------------------
+- Fixed security issues (multiple vulnerabilities), see SA-CORE-2013-003.
+
 Drupal 7.23, 2013-08-07
 -----------------------
 - Fixed a fatal error on PostgreSQL databases when updating the Taxonomy module
