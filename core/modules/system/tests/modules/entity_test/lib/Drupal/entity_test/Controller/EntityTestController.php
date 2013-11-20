@@ -30,4 +30,11 @@ class EntityTestController {
     return entity_test_edit($entity);
   }
 
+  /**
+   * Returns an empty page.
+   */
+  public function testAdmin() {
+    return '';
+  }
+
 }

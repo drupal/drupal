@@ -8,7 +8,10 @@
 namespace Drupal\field_ui\Routing;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
+use Drupal\Core\Routing\RoutingEvents;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -25,13 +28,23 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected $manager;
 
   /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
    * Constructs a RouteSubscriber object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $manager
    *   The entity type manager.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
    */
-  public function __construct(EntityManagerInterface $manager) {
+  public function __construct(EntityManagerInterface $manager, RouteProviderInterface $route_provider) {
     $this->manager = $manager;
+    $this->routeProvider = $route_provider;
   }
 
   /**
@@ -40,8 +53,20 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected function routes(RouteCollection $collection) {
     foreach ($this->manager->getDefinitions() as $entity_type => $entity_info) {
       $defaults = array();
-      if ($entity_info['fieldable'] && isset($entity_info['route_base_path'])) {
-        $path = $entity_info['route_base_path'];
+      if ($entity_info['fieldable'] && isset($entity_info['links']['admin-form'])) {
+        // First try to get the route from the dynamic_routes collection.
+        if (!$entity_route = $collection->get($entity_info['links']['admin-form'])) {
+          // Then try to get the route from the route provider itself, checking
+          // all previous collections.
+          try {
+            $entity_route = $this->routeProvider->getRouteByName($entity_info['links']['admin-form']);
+          }
+          // If the route was not found, skip this entity type.
+          catch (RouteNotFoundException $e) {
+            continue;
+          }
+        }
+        $path = $entity_route->getPath();
 
         $route = new Route(
           "$path/fields/{field_instance}",
@@ -85,20 +110,19 @@ class RouteSubscriber extends RouteSubscriberBase {
             '_form' => '\Drupal\field_ui\FormDisplayOverview',
             '_title' => 'Manage form display',
           ) + $defaults,
-          array('_permission' => 'administer ' . $entity_type . ' form display')
+          array('_field_ui_form_mode_access' => 'administer ' . $entity_type . ' form display')
         );
         $collection->add("field_ui.form_display_overview_$entity_type", $route);
 
-        foreach (entity_get_form_modes($entity_type) as $form_mode => $form_mode_info) {
-          $route = new Route(
-            "$path/form-display/$form_mode",
-            array(
-              '_form' => '\Drupal\field_ui\FormDisplayOverview',
-              'mode' => $form_mode,
-            ) + $defaults,
-            array('_field_ui_form_mode_access' => 'administer ' . $entity_type . ' form display'));
-          $collection->add("field_ui.form_display_overview_$entity_type" . '_'. $form_mode, $route);
-        }
+        $route = new Route(
+          "$path/form-display/{form_mode_name}",
+          array(
+            '_form' => '\Drupal\field_ui\FormDisplayOverview',
+            'form_mode_name' => NULL,
+          ) + $defaults,
+          array('_field_ui_form_mode_access' => 'administer ' . $entity_type . ' form display')
+        );
+        $collection->add("field_ui.form_display_overview_form_mode_$entity_type", $route);
 
         $route = new Route(
           "$path/display",
@@ -106,22 +130,30 @@ class RouteSubscriber extends RouteSubscriberBase {
             '_form' => '\Drupal\field_ui\DisplayOverview',
             '_title' => 'Manage display',
           ) + $defaults,
-          array('_permission' => 'administer ' . $entity_type . ' display')
+          array('_field_ui_view_mode_access' => 'administer ' . $entity_type . ' display')
         );
         $collection->add("field_ui.display_overview_$entity_type", $route);
 
-        foreach (entity_get_view_modes($entity_type) as $view_mode => $view_mode_info) {
-          $route = new Route(
-            "$path/display/$view_mode",
-            array(
-              '_form' => '\Drupal\field_ui\DisplayOverview',
-              'mode' => $view_mode,
-            ) + $defaults,
-            array('_field_ui_view_mode_access' => 'administer ' . $entity_type . ' display'));
-          $collection->add("field_ui.display_overview_$entity_type" . '_' . $view_mode, $route);
-        }
+        $route = new Route(
+          "$path/display/{view_mode_name}",
+          array(
+            '_form' => '\Drupal\field_ui\DisplayOverview',
+            'view_mode_name' => NULL,
+          ) + $defaults,
+          array('_field_ui_view_mode_access' => 'administer ' . $entity_type . ' display')
+        );
+        $collection->add("field_ui.display_overview_view_mode_$entity_type", $route);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents() {
+    $events = parent::getSubscribedEvents();
+    $events[RoutingEvents::DYNAMIC] = array('onDynamicRoutes', -100);
+    return $events;
   }
 
 }

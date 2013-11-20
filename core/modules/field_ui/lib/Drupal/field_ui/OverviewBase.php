@@ -74,10 +74,16 @@ abstract class OverviewBase extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL) {
-    $entity_info = $this->entityManager->getDefinition($entity_type);
+    if (!isset($form_state['bundle'])) {
+      if (!$bundle) {
+        $entity_info = $this->entityManager->getDefinition($entity_type);
+        $bundle = $this->getRequest()->attributes->get('_raw_variables')->get($entity_info['bundle_entity_type']);
+      }
+      $form_state['bundle'] = $bundle;
+    }
 
     $this->entity_type = $entity_type;
-    $this->bundle = $bundle;
+    $this->bundle = $form_state['bundle'];
     $this->adminPath = $this->entityManager->getAdminPath($this->entity_type, $this->bundle);
 
     // When displaying the form, make sure the list of fields is up-to-date.

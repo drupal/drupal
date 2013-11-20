@@ -49,12 +49,13 @@ use Drupal\node\NodeInterface;
  *   bundle_keys = {
  *     "bundle" = "type"
  *   },
- *   route_base_path = "admin/structure/types/manage/{bundle}",
+ *   bundle_entity_type = "node_type",
  *   permission_granularity = "bundle",
  *   links = {
  *     "canonical" = "node.view",
  *     "edit-form" = "node.page_edit",
- *     "version-history" = "node.revision_overview"
+ *     "version-history" = "node.revision_overview",
+ *     "admin-form" = "node.type_edit"
  *   }
  * )
  */

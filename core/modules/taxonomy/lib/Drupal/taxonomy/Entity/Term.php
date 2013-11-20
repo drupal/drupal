@@ -44,11 +44,12 @@ use Drupal\taxonomy\TermInterface;
  *   bundle_keys = {
  *     "bundle" = "vid"
  *   },
+ *   bundle_entity_type = "taxonomy_vocabulary",
  *   links = {
  *     "canonical" = "taxonomy.term_page",
- *     "edit-form" = "taxonomy.term_edit"
+ *     "edit-form" = "taxonomy.term_edit",
+ *     "admin-form" = "taxonomy.overview_terms"
  *   },
- *   route_base_path = "admin/structure/taxonomy/manage/{bundle}",
  *   permission_granularity = "bundle"
  * )
  */

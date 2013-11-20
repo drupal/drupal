@@ -36,7 +36,6 @@ use Drupal\Core\Language\Language;
  *   fieldable = TRUE,
  *   translatable = TRUE,
  *   render_cache = FALSE,
- *   route_base_path = "admin/structure/comments/manage/{bundle}",
  *   entity_keys = {
  *     "id" = "cid",
  *     "bundle" = "field_id",
@@ -48,7 +47,8 @@ use Drupal\Core\Language\Language;
  *   },
  *   links = {
  *     "canonical" = "comment.permalink",
- *     "edit-form" = "comment.edit_page"
+ *     "edit-form" = "comment.edit_page",
+ *     "admin-form" = "comment.bundle"
  *   }
  * )
  */

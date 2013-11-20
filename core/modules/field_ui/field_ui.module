@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\EntityViewModeInterface;
+use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 
 /**
  * Implements hook_help().
@@ -61,94 +62,6 @@ function field_ui_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-  // Create tabs for all possible bundles.
-  foreach (entity_get_info() as $entity_type => $entity_info) {
-    if ($entity_info['fieldable'] && isset($entity_info['route_base_path'])) {
-      // Extract path information from the entity type.
-      $path = $entity_info['route_base_path'];
-      $default_path = preg_replace('/{' . DRUPAL_PHP_FUNCTION_PATTERN . '}/', '%', $path);
-      // This is the position of the %field_ui_instance placeholder in the
-      // items below.
-      $field_position = count(explode('/', $path)) + 1;
-
-      $items["$path/fields"] = array(
-        'title' => 'Manage fields',
-        'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.overview_$entity_type",
-        'weight' => 1,
-      );
-      $items["$path/fields/%"] = array(
-        'title callback' => 'entity_page_label',
-        'title arguments' => array($field_position),
-        'route_name' => "field_ui.instance_edit_$entity_type",
-      );
-      $items["$default_path/fields/%/edit"] = array(
-        'title' => 'Edit',
-        'type' => MENU_DEFAULT_LOCAL_TASK,
-      );
-      $items["$path/fields/%/field"] = array(
-        'title' => 'Field settings',
-        'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.field_edit_$entity_type",
-      );
-      $items["$path/fields/%/delete"] = array(
-        'title' => 'Delete',
-        'type' => MENU_VISIBLE_IN_BREADCRUMB,
-        'route_name' => "field_ui.delete_$entity_type",
-        'weight' => 10,
-      );
-
-      // 'Manage form display' tab.
-      $items["$path/form-display"] = array(
-        'title' => 'Manage form display',
-        'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.form_display_overview_$entity_type",
-        'weight' => 2,
-      );
-
-      // 'Manage display' tab.
-      $items["$path/display"] = array(
-        'title' => 'Manage display',
-        'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.display_overview_$entity_type",
-        'weight' => 3,
-      );
-
-      // View and form modes secondary tabs.
-      // The same base $path for the menu item (with a placeholder) can be
-      // used for all bundles of a given entity type; but depending on
-      // administrator settings, each bundle has a different set of view
-      // modes available for customisation. So we define menu items for all
-      // view modes, and use a route requirement to determine which ones are
-      // actually visible for a given bundle.
-      $items["$default_path/form-display/default"] = array(
-        'title' => t('Default'),
-        'type' => MENU_DEFAULT_LOCAL_TASK,
-      );
-      $items["$default_path/display/default"] = array(
-        'title' => t('Default'),
-        'type' => MENU_DEFAULT_LOCAL_TASK,
-      );
-      $weight = 0;
-      foreach (entity_get_form_modes($entity_type) as $form_mode => $form_mode_info) {
-        $items["$path/form-display/$form_mode"] = array(
-          'title' => $form_mode_info['label'],
-          'type' => MENU_LOCAL_TASK,
-          'weight' => $weight++,
-          'route_name' => "field_ui.form_display_overview_$entity_type" . '_' . $form_mode,
-        );
-      }
-      $weight = 0;
-      foreach (entity_get_view_modes($entity_type) as $view_mode => $view_mode_info) {
-        $items["$path/display/$view_mode"] = array(
-          'title' => $view_mode_info['label'],
-          'type' => MENU_LOCAL_TASK,
-          'weight' => $weight++,
-          'route_name' => "field_ui.display_overview_$entity_type" . '_' . $view_mode,
-        );
-      }
-    }
-  }
   return $items;
 }
 
@@ -334,12 +247,7 @@ function field_ui_entity_operation_alter(array &$operations, EntityInterface $en
  */
 function field_ui_form_node_type_form_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#parents'][0] === 'save_continue') {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'field_ui.overview_node',
-      'route_parameters' => array(
-        'bundle' => $form_state['values']['type'],
-      ),
-    );
+    $form_state['redirect_route'] = \Drupal::entityManager()->getAdminRouteInfo('node', $form_state['values']['type']);
   }
 }
 
@@ -462,3 +370,11 @@ function theme_field_ui_table($variables) {
   return drupal_render($table);
 }
 
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function field_ui_local_tasks_alter(&$local_tasks) {
+  $container = \Drupal::getContainer();
+  $local_task = FieldUiLocalTask::create($container, 'field_ui.fields');
+  $local_task->alterLocalTasks($local_tasks);
+}

@@ -229,11 +229,11 @@ class CommentNonNodeTest extends WebTestBase {
     ));
     $this->drupalLogin($limited_user);
     // Test that default field exists.
-    $this->drupalGet('admin/structure/entity-test/manage/entity_test/fields');
+    $this->drupalGet('entity_test/structure/entity_test/fields');
     $this->assertText(t('Comment settings'));
-    $this->assertLinkByHref('admin/structure/entity-test/manage/entity_test/fields/entity_test.entity_test.comment');
+    $this->assertLinkByHref('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     // Test widget hidden option is not visible when there's no comments.
-    $this->drupalGet('admin/structure/entity-test/manage/entity_test/entity-test/fields/entity_test.entity_test.comment');
+    $this->drupalGet('entity_test/structure/entity_test/entity-test/fields/entity_test.entity_test.comment');
     $this->assertNoField('edit-default-value-input-comment-und-0-status-0');
 
     $this->drupalLogin($this->admin_user);
@@ -343,20 +343,20 @@ class CommentNonNodeTest extends WebTestBase {
       'administer entity_test content',
     ));
     $this->drupalLogin($limited_user);
-    $this->drupalGet('admin/structure/entity-test/manage/entity_test/fields/entity_test.entity_test.comment');
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-2');
     // Test comment option change in field settings.
     $edit = array('default_value_input[comment][0][status]' => COMMENT_CLOSED);
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
-    $this->drupalGet('admin/structure/entity-test/manage/entity_test/fields/entity_test.entity_test.comment');
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-2');
 
     // Add a new comment field.
-    $this->drupalGet('admin/structure/entity-test/manage/entity_test/fields');
+    $this->drupalGet('entity_test/structure/entity_test/fields');
     $edit = array(
       'fields[_add_new_field][label]' => 'Foobar',
       'fields[_add_new_field][field_name]' => 'foobar',

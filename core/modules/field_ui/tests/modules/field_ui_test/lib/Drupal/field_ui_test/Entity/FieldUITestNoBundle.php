@@ -20,8 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   controllers = {
  *     "storage" = "Drupal\Core\Entity\DatabaseStorageController"
  *   },
- *   fieldable = TRUE,
- *   route_base_path = "field-ui-test-no-bundle/manage"
+ *   fieldable = TRUE
  * )
  */
 class FieldUITestNoBundle extends Entity {

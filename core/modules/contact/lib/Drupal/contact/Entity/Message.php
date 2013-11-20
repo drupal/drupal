@@ -26,10 +26,13 @@ use Drupal\contact\MessageInterface;
  *   entity_keys = {
  *     "bundle" = "category"
  *   },
- *   route_base_path = "admin/structure/contact/manage/{bundle}",
+ *   bundle_entity_type = "contact_category",
  *   fieldable = TRUE,
  *   bundle_keys = {
  *     "bundle" = "id"
+ *   },
+ *   links = {
+ *     "admin-form" = "contact.category_edit"
  *   }
  * )
  */

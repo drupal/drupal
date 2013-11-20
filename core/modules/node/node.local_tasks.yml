@@ -16,3 +16,7 @@ node.revision_overview:
   tab_root_id: node.view
   title: 'Revisions'
   weight: 20
+node.type_edit:
+  title: 'Edit'
+  route_name: node.type_edit
+  tab_root_id: node.type_edit

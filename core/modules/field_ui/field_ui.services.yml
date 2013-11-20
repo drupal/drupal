@@ -1,14 +1,16 @@
 services:
   field_ui.subscriber:
     class: Drupal\field_ui\Routing\RouteSubscriber
-    arguments: ['@entity.manager']
+    arguments: ['@entity.manager', '@router.route_provider']
     tags:
      - { name: event_subscriber }
   access_check.field_ui.view_mode:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
+    arguments: ['@entity.manager']
     tags:
      - { name: access_check }
   access_check.field_ui.form_mode:
     class: Drupal\field_ui\Access\FormModeAccessCheck
+    arguments: ['@entity.manager']
     tags:
      - { name: access_check }

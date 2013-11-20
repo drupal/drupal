@@ -36,10 +36,10 @@ use Drupal\Core\Annotation\Translation;
  *     "bundle" = "type",
  *     "label" = "name"
  *   },
- *   route_base_path = "entity_test_mul/structure/{bundle}",
  *   links = {
  *     "canonical" = "entity_test.edit_entity_test_mul",
- *     "edit-form" = "entity_test.edit_entity_test_mul"
+ *     "edit-form" = "entity_test.edit_entity_test_mul",
+ *     "admin-form" = "entity_test.admin_entity_test_mul"
  *   }
  * )
  */

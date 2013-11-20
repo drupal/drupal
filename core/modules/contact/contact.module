@@ -67,10 +67,6 @@ function contact_menu() {
     'title' => 'Edit contact category',
     'route_name' => 'contact.category_edit',
   );
-  $items['admin/structure/contact/manage/%contact_category/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
 
   $items['contact'] = array(
     'title' => 'Contact',

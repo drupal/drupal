@@ -39,6 +39,13 @@ class RouteSubscriber extends RouteSubscriberBase {
         ))
       );
       $collection->add("entity_test.edit_$entity_type", $route);
+
+      $route = new Route(
+        "$entity_type/structure/{bundle}",
+        array('_content' => '\Drupal\entity_test\Controller\EntityTestController::testAdmin'),
+        array('_permission' => 'administer entity_test content')
+      );
+      $collection->add("entity_test.admin_$entity_type", $route);
     }
   }
 

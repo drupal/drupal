@@ -164,6 +164,11 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *
    * @return string
    *   The administration path for an entity type bundle, if it exists.
+   *
+   * @deprecated since version 8.0
+   *   System paths should not be used - use route names and parameters.
+   *
+   * @see self::getAdminRouteInfo()
    */
   public function getAdminPath($entity_type, $bundle);
 

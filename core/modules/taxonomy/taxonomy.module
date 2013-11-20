@@ -240,14 +240,6 @@ function taxonomy_menu() {
     'description' => 'Manage tagging, categorization, and classification of your content.',
     'route_name' => 'taxonomy.vocabulary_list',
   );
-  $items['admin/structure/taxonomy/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/structure/taxonomy/add'] = array(
-    'route_name' => 'taxonomy.vocabulary_add',
-    'type' => MENU_SIBLING_LOCAL_TASK,
-  );
 
   $items['taxonomy/term/%taxonomy_term'] = array(
     'title' => 'Taxonomy term',

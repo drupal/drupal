@@ -193,12 +193,7 @@ class FieldInstanceEditForm extends FormBase {
       $form_state['redirect'] = $next_destination;
     }
     else {
-      $form_state['redirect_route'] = array(
-        'route_name' => 'field_ui.overview_' . $this->instance->entity_type,
-        'route_parameters' => array(
-          'bundle' => $this->instance->bundle,
-        )
-      );
+      $form_state['redirect_route'] = $this->entityManager->getAdminRouteInfo($this->instance->entity_type, $this->instance->bundle);
     }
   }
 
@@ -212,10 +207,11 @@ class FieldInstanceEditForm extends FormBase {
       $destination = drupal_get_destination();
       $request->query->remove('destination');
     }
+    $entity_info = $this->entityManager->getDefinition($this->instance->entity_type);
     $form_state['redirect_route'] = array(
       'route_name' => 'field_ui.delete_' . $this->instance->entity_type,
       'route_parameters' => array(
-        'bundle' => $this->instance->bundle,
+        $entity_info['bundle_entity_type'] => $this->instance->bundle,
         'field_instance' => $this->instance->id(),
       ),
       'options' => array(

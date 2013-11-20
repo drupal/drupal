@@ -206,12 +206,7 @@ class FieldEditForm extends FormBase {
         $form_state['redirect'] = $next_destination;
       }
       else {
-        $form_state['redirect_route'] = array(
-          'route_name' => 'field_ui.overview_' . $this->instance->entity_type,
-          'route_parameters' => array(
-            'bundle' => $this->instance->bundle,
-          )
-        );
+        $form_state['redirect_route'] = $this->entityManager->getAdminRouteInfo($this->instance->entity_type, $this->instance->bundle);
       }
     }
     catch (\Exception $e) {

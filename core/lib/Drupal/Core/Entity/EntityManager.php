@@ -301,9 +301,9 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $admin_path = '';
     $entity_info = $this->getDefinition($entity_type);
     // Check for an entity type's admin base path.
-    if (isset($entity_info['route_base_path'])) {
-      // Replace any dynamic 'bundle' portion of the path with the actual bundle.
-      $admin_path = str_replace('{bundle}', $bundle, $entity_info['route_base_path']);
+    if (isset($entity_info['links']['admin-form'])) {
+      $route_parameters[$entity_info['bundle_entity_type']] = $bundle;
+      $admin_path = \Drupal::urlGenerator()->getPathFromRoute($entity_info['links']['admin-form'], $route_parameters);
     }
 
     return $admin_path;
@@ -313,10 +313,11 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    * {@inheritdoc}
    */
   public function getAdminRouteInfo($entity_type, $bundle) {
+    $entity_info = $this->getDefinition($entity_type);
     return array(
       'route_name' => "field_ui.overview_$entity_type",
       'route_parameters' => array(
-        'bundle' => $bundle,
+        $entity_info['bundle_entity_type'] => $bundle,
       )
     );
   }

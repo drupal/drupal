@@ -36,10 +36,10 @@ use Drupal\custom_block\CustomBlockInterface;
  *   admin_permission = "administer blocks",
  *   base_table = "custom_block",
  *   revision_table = "custom_block_revision",
- *   route_base_path = "admin/structure/block/custom-blocks/manage/{bundle}",
  *   links = {
  *     "canonical" = "custom_block.edit",
- *     "edit-form" = "custom_block.edit"
+ *     "edit-form" = "custom_block.edit",
+ *     "admin-form" = "custom_block.type_edit"
  *   },
  *   fieldable = TRUE,
  *   translatable = TRUE,
@@ -52,7 +52,8 @@ use Drupal\custom_block\CustomBlockInterface;
  *   },
  *   bundle_keys = {
  *     "bundle" = "type"
- *   }
+ *   },
+ *   bundle_entity_type = "custom_block_type"
  * )
  */
 class CustomBlock extends ContentEntityBase implements CustomBlockInterface {

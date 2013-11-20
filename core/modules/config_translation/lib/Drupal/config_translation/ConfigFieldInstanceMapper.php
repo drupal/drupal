@@ -23,13 +23,10 @@ class ConfigFieldInstanceMapper extends ConfigEntityMapper {
    */
   public function getBaseRouteParameters() {
     $parameters = parent::getBaseRouteParameters();
-    // @todo All core content entity path placeholders can be fully filled in
-    //   with an additional {bundle} value in their paths, but a more
-    //   predictable solution would be ideal. See
-    //   https://drupal.org/node/2134871
+    $base_entity_info = $this->entityManager->getDefinition($this->pluginDefinition['base_entity_type']);
     // @todo Field instances have no method to return the bundle the instance is
     //   attached to. See https://drupal.org/node/2134861
-    $parameters['bundle'] = $this->entity->bundle;
+    $parameters[$base_entity_info['bundle_entity_type']] = $this->entity->bundle;
     return $parameters;
   }
 

@@ -1,0 +1,4 @@
+contact.category_edit:
+  title: 'Edit'
+  route_name: contact.category_edit
+  tab_root_id: contact.category_edit

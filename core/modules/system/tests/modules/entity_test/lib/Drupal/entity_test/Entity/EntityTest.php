@@ -37,10 +37,10 @@ use Drupal\Core\Language\Language;
  *     "bundle" = "type",
  *     "label" = "name"
  *   },
- *   route_base_path = "admin/structure/entity-test/manage/{bundle}",
  *   links = {
  *     "canonical" = "entity_test.render",
- *     "edit-form" = "entity_test.edit_entity_test"
+ *     "edit-form" = "entity_test.edit_entity_test",
+ *     "admin-form" = "entity_test.admin_entity_test"
  *   }
  * )
  */
