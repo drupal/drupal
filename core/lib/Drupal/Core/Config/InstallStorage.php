@@ -134,9 +134,10 @@ class InstallStorage extends FileStorage {
     foreach ($list as $name) {
       $directory = $this->getComponentFolder($type, $name);
       if (file_exists($directory)) {
-        $files = new \GlobIterator(DRUPAL_ROOT . '/' . $directory . '/*' . $extension);
-        foreach ($files as $file) {
-          $folders[$file->getBasename($extension)] = $directory;
+        $files = glob($directory . '/*' . $extension);
+        foreach ($files as $filename) {
+          $name = basename($filename, $extension);
+          $folders[$name] = $directory;
         }
       }
     }
