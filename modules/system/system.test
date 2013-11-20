@@ -2712,3 +2712,50 @@ class TokenScanTest extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Test case for drupal_valid_token().
+ */
+class SystemValidTokenTest extends DrupalUnitTestCase {
+
+  /**
+   * Flag to indicate whether PHP error reportings should be asserted.
+   *
+   * @var bool
+   */
+  protected $assertErrors = TRUE;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Token validation',
+      'description' => 'Test the security token validation.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Tests invalid invocations of drupal_valid_token() that must return FALSE.
+   */
+  public function testTokenValidation() {
+    // The following checks will throw PHP notices, so we disable error
+    // assertions.
+    $this->assertErrors = FALSE;
+    $this->assertFalse(drupal_valid_token(NULL, new stdClass()), 'Token NULL, value object returns FALSE.');
+    $this->assertFalse(drupal_valid_token(0, array()), 'Token 0, value array returns FALSE.');
+    $this->assertFalse(drupal_valid_token('', array()), "Token '', value array returns FALSE.");
+    $this->assertFalse('' === drupal_get_token(array()), 'Token generation does not return an empty string on invalid parameters.');
+    $this->assertErrors = TRUE;
+
+    $this->assertFalse(drupal_valid_token(TRUE, 'foo'), 'Token TRUE, value foo returns FALSE.');
+    $this->assertFalse(drupal_valid_token(0, 'foo'), 'Token 0, value foo returns FALSE.');
+  }
+
+  /**
+   * Overrides DrupalTestCase::errorHandler().
+   */
+  public function errorHandler($severity, $message, $file = NULL, $line = NULL) {
+    if ($this->assertErrors) {
+      return parent::errorHandler($severity, $message, $file, $line);
+    }
+    return TRUE;
+  }
+}

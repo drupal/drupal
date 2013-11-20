@@ -13,5 +13,5 @@ function openid_test_install() {
   // Generate a MAC key (Message Authentication Code) used for signing messages.
   // The variable is base64-encoded, because variables cannot contain non-UTF-8
   // data.
-  variable_set('openid_test_mac_key', base64_encode(_openid_get_bytes(20)));
+  variable_set('openid_test_mac_key', drupal_random_key(20));
 }

@@ -380,6 +380,9 @@ function _openid_parse_message($message) {
 
 /**
  * Return a nonce value - formatted per OpenID spec.
+ *
+ * NOTE: This nonce is not cryptographically secure and only suitable for use
+ * by the test framework.
  */
 function _openid_nonce() {
   // YYYY-MM-DDThh:mm:ssZ, plus some optional extra unique characters.
@@ -549,7 +552,7 @@ function _openid_dh_rand($stop) {
   }
 
   do {
-    $bytes = "\x00" . _openid_get_bytes($nbytes);
+    $bytes = "\x00" . drupal_random_bytes($nbytes);
     $n = _openid_dh_binary_to_long($bytes);
     // Keep looping if this value is in the low duplicated range.
   } while (_openid_math_cmp($n, $duplicate) < 0);
@@ -558,23 +561,7 @@ function _openid_dh_rand($stop) {
 }
 
 function _openid_get_bytes($num_bytes) {
-  $f = &drupal_static(__FUNCTION__);
-  $bytes = '';
-  if (!isset($f)) {
-    $f = @fopen(OPENID_RAND_SOURCE, "r");
-  }
-  if (!$f) {
-    // pseudorandom used
-    $bytes = '';
-    for ($i = 0; $i < $num_bytes; $i += 4) {
-      $bytes .= pack('L', mt_rand());
-    }
-    $bytes = substr($bytes, 0, $num_bytes);
-  }
-  else {
-    $bytes = fread($f, $num_bytes);
-  }
-  return $bytes;
+  return drupal_random_bytes($num_bytes);
 }
 
 function _openid_response($str = NULL) {

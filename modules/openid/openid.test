@@ -695,13 +695,6 @@ class OpenIDTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test _openid_get_bytes().
-   */
-  function testOpenidGetBytes() {
-    $this->assertEqual(strlen(_openid_get_bytes(20)), 20, '_openid_get_bytes() returned expected result.');
-  }
-
-  /**
    * Test _openid_signature().
    */
   function testOpenidSignature() {

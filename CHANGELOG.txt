@@ -1,6 +1,10 @@
 
-Drupal 7.24, xxxx-xx-xx (development version)
+Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+
+Drupal 7.24, 2013-11-20
+----------------------
+- Fixed security issues (multiple vulnerabilities), see SA-CORE-2013-003.
 
 Drupal 7.23, 2013-08-07
 -----------------------

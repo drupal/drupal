@@ -467,13 +467,13 @@ if (update_access_allowed()) {
     // update.php ops.
 
     case 'selection':
-      if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
+      if (isset($_GET['token']) && drupal_valid_token($_GET['token'], 'update')) {
         $output = update_selection_page();
         break;
       }
 
     case 'Apply pending updates':
-      if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
+      if (isset($_GET['token']) && drupal_valid_token($_GET['token'], 'update')) {
         // Generate absolute URLs for the batch processing (using $base_root),
         // since the batch API will pass them to url() which does not handle
         // update.php correctly by default.
