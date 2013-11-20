@@ -9,9 +9,6 @@ namespace Drupal\Component\Plugin;
 
 /**
  * Defines an object which stores multiple plugin instances to lazy load them.
- *
- * The \ArrayAccess implementation is only for backwards compatibility, it is
- * deprecated and should not be used by new code.
  */
 abstract class PluginBag implements \Iterator, \Countable {
 
@@ -30,7 +27,7 @@ abstract class PluginBag implements \Iterator, \Countable {
   protected $instanceIDs = array();
 
   /**
-   * Initializes a plugin and stores the result in $this->pluginInstances.
+   * Initializes and stores a plugin.
    *
    * @param string $instance_id
    *   The ID of the plugin instance to initialize.
@@ -85,7 +82,7 @@ abstract class PluginBag implements \Iterator, \Countable {
   /**
    * Removes an initialized plugin.
    *
-   * The plugin can still be used, it will be reinitialized.
+   * The plugin can still be used; it will be reinitialized.
    *
    * @param string $instance_id
    *   The ID of the plugin instance to remove.
@@ -95,7 +92,7 @@ abstract class PluginBag implements \Iterator, \Countable {
   }
 
   /**
-   * Adds an instance ID to the array of available instance IDs.
+   * Adds an instance ID to the available instance IDs.
    *
    * @param string $id
    *   The ID of the plugin instance to add.
@@ -117,7 +114,7 @@ abstract class PluginBag implements \Iterator, \Countable {
   }
 
   /**
-   * Sets the instance IDs property.
+   * Sets all instance IDs.
    *
    * @param array $instance_ids
    *   An associative array of instance IDs.
@@ -138,28 +135,28 @@ abstract class PluginBag implements \Iterator, \Countable {
   }
 
   /**
-   * Implements \Iterator::current().
+   * {@inheritdoc}
    */
   public function current() {
     return $this->get($this->key());
   }
 
   /**
-   * Implements \Iterator::next().
+   * {@inheritdoc}
    */
   public function next() {
     next($this->instanceIDs);
   }
 
   /**
-   * Implements \Iterator::key().
+   * {@inheritdoc}
    */
   public function key() {
     return key($this->instanceIDs);
   }
 
   /**
-   * Implements \Iterator::valid().
+   * {@inheritdoc}
    */
   public function valid() {
     $key = key($this->instanceIDs);
@@ -167,14 +164,14 @@ abstract class PluginBag implements \Iterator, \Countable {
   }
 
   /**
-   * Implements \Iterator::rewind().
+   * {@inheritdoc}
    */
   public function rewind() {
     reset($this->instanceIDs);
   }
 
   /**
-   * Implements \Countable::count().
+   * {@inheritdoc}
    */
   public function count() {
     return count($this->instanceIDs);
