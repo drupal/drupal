@@ -101,7 +101,7 @@ function drupal_get_form($form_id) {
       array_unshift($args_temp, $form_id);
 
       $form = call_user_func_array('drupal_retrieve_form', $args_temp);
-      $form_build_id = 'form-'. md5(uniqid(mt_rand(), TRUE));
+      $form_build_id = 'form-'. drupal_random_key();
       $form['#build_id'] = $form_build_id;
       drupal_prepare_form($form_id, $form, $form_state);
       // Store a copy of the unprocessed form for caching and indicate that it
@@ -196,7 +196,7 @@ function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NUL
 
   if (!isset($form_build_id)) {
     // We need a new build_id for the new version of the form.
-    $form_build_id = 'form-'. md5(uniqid(mt_rand(), TRUE));
+    $form_build_id = 'form-'. drupal_random_key();
   }
   $form['#build_id'] = $form_build_id;
   drupal_prepare_form($form_id, $form, $form_state);
@@ -590,6 +590,12 @@ function drupal_validate_form($form_id, $form, &$form_state) {
     if (!drupal_valid_token($form_state['values']['form_token'], $form['#token'])) {
       // Setting this error will cause the form to fail validation.
       form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+
+      // Stop here and don't run any further validation handlers, because they
+      // could invoke non-safe operations which opens the door for CSRF
+      // vulnerabilities.
+      $validated_forms[$form_id] = TRUE;
+      return;
     }
   }
 

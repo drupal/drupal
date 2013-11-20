@@ -122,6 +122,35 @@ function system_requirements($phase) {
     $requirements['settings.php']['title'] = $t('Configuration file');
   }
 
+  // Test the contents of the .htaccess files.
+  if ($phase == 'runtime') {
+    // Try to write the .htaccess files first, to prevent false alarms in case
+    // (for example) the /tmp directory was wiped.
+    file_create_htaccess(file_directory_path());
+    file_create_htaccess(file_directory_temp());
+    $htaccess_files['files_htaccess'] = array(
+      'title' => $t('Files directory'),
+      'directory' => file_directory_path(),
+    );
+    $htaccess_files['temporary_files_htaccess'] = array(
+      'title' => $t('Temporary files directory'),
+      'directory' => file_directory_temp(),
+    );
+    foreach ($htaccess_files as $key => $file_info) {
+      // Check for the string which was added to the recommended .htaccess file
+      // in the latest security update.
+      $htaccess_file = $file_info['directory'] . '/.htaccess';
+      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
+        $requirements[$key] = array(
+          'title' => $file_info['title'],
+          'value' => $t('Not fully protected'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => $t('See <a href="@url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', array('@url' => 'http://drupal.org/SA-CORE-2013-003', '%directory' => $file_info['directory'])),
+        );
+      }
+    }
+  }
+
   // Report cron status.
   if ($phase == 'runtime') {
     // Cron warning threshold defaults to two days.

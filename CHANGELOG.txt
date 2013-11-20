@@ -1,4 +1,8 @@
 
+Drupal 6.29, 2013-11-20
+----------------------
+- Fixed security issues (multiple vulnerabilities), see SA-CORE-2013-003.
+
 Drupal 6.28, 2013-01-16
 ----------------------
 - Fixed security issues (multiple vulnerabilities), see SA-CORE-2013-001.
