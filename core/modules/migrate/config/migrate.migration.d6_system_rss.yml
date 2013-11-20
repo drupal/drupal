@@ -1,0 +1,10 @@
+id: d6_system_rss
+source:
+    plugin: drupal6_variable
+    variables:
+        - feed_default_items
+process:
+    'items:limit': feed_default_items
+destination:
+    plugin: d8_config
+    config_name: system.rss
