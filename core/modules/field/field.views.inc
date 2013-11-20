@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide Views data and handlers for field.module.
- *
- * @ingroup views_module_handlers
+ * Provide Views data for field.module.
  */
 
 use Drupal\Component\Utility\NestedArray;

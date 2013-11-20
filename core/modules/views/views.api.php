@@ -839,11 +839,3 @@ function hook_views_plugins_wizard_alter(array &$plugins) {
 /**
  * @}
  */
-
-/**
- * @defgroup views_module_handlers Views module handlers
- * @{
- * Handlers exposed by various modules to Views.
- * @}
- */
-

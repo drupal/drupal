@@ -3,8 +3,6 @@
 /**
  * @file
  * Provide views data for contact.module.
- *
- * @ingroup views_module_handlers
  */
 
 /**

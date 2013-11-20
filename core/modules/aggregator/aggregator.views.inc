@@ -3,8 +3,6 @@
 /**
  * @file
  * Provides views data for aggregator.module.
- *
- * @ingroup views_module_handlers
  */
 
 /**

@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide views data and handlers for forum.module.
- *
- * @ingroup views_module_handlers
+ * Provide views data for forum.module.
  */
 
 /**

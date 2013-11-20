@@ -3,8 +3,6 @@
 /**
  * @file
  * Provide views data for tracker.module.
- *
- * @ingroup views_module_handlers
  */
 
 /**

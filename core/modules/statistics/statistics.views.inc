@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide views data and handlers for statistics.module.
- *
- * @ingroup views_module_handlers
+ * Provide views data for statistics.module.
  */
 
 /**

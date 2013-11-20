@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide views data and handlers for node.module.
- *
- * @ingroup views_module_handlers
+ * Provide views data for node.module.
  */
 
 use Drupal\views\Analyzer;

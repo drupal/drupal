@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide views data and handlers for taxonomy.module.
- *
- * @ingroup views_module_handlers
+ * Provide views data for taxonomy.module.
  */
 
 use Drupal\Core\Entity\FieldableDatabaseStorageController;

@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide views data and handlers that aren't tied to any other module.
- *
- * @ingroup views_module_handlers
+ * Provide views data that isn't tied to any other module.
  */
 
 /**

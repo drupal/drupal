@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provides views data and handlers for action.module.
- *
- * @ingroup views_module_handlers
+ * Provides views data for action.module.
  */
 
 /**

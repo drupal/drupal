@@ -2,9 +2,7 @@
 
 /**
  * @file
- * Provide views data and handlers for file.module.
- *
- * @ingroup views_module_handlers
+ * Provide views data for file.module.
  */
 
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
