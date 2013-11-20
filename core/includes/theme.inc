@@ -1268,8 +1268,14 @@ function template_preprocess_status_messages(&$variables) {
  *     is used as its CSS class. Each link should be itself an array, with the
  *     following elements:
  *     - title: The link text.
- *     - href: The link URL. If omitted, the 'title' is shown as a plain text
- *       item in the links list.
+ *     - route_name: (optional) The name of the route to link to. If omitted
+ *       (and if 'href' is omitted as well), the 'title' is shown as
+ *       a plain text item in the links list.
+ *     - route_parameters: (optional) An array of route parameters for the link.
+ *     - href: (optional) The link URL. It is preferred to use 'route_name' and
+ *       'route parameters' for internal links. Use 'href' for links to external
+ *       URLs. If omitted (and if 'route_name' is omitted as well), the 'title'
+ *       is shown as a plain text item in the links list.
  *     - html: (optional) Whether or not 'title' is HTML. If set, the title
  *       will not be passed through
  *       \Drupal\Component\Utility\String::checkPlain().
