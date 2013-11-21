@@ -91,9 +91,7 @@
 }
 .contextual-region .contextual .contextual-links a {
   background-color: #fff;
-  /* This is an unfortunately necessary use of !important to prevent white
-   * links on a white background or some similar illegible combination. */
-  color: #333 !important;
+  color: #333;
   display: block;
   font-family: sans-serif;
   font-size: small;

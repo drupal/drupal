@@ -953,17 +953,17 @@ ul.links {
 
 /* ------------------ Footer ------------------ */
 
-#footer-wrapper {
+#footer-wrapper .block .content {
   color: #c0c0c0;
   color: rgba(255, 255, 255, 0.65);
   font-size: 0.857em;
 }
-#footer-wrapper a {
+#footer-wrapper .block .content a {
   color: #fcfcfc;
   color: rgba(255, 255, 255, 0.8);
 }
-#footer-wrapper a:hover,
-#footer-wrapper a:focus {
+#footer-wrapper .block .content a:hover,
+#footer-wrapper .block .content a:focus {
   color: #fefefe;
   color: rgba(255, 255, 255, 0.95);
   text-decoration: underline;
