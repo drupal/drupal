@@ -138,7 +138,24 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       if ($status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
         // Only show the add comment form if the user has permission.
         if ($this->currentUser->hasPermission('post comments')) {
-          $output['comment_form'] = comment_add($entity, $field_name);
+          // All users in the "anonymous" role can use the same form: it is fine
+          // for this form to be stored in the render cache.
+          if ($this->currentUser->isAnonymous()) {
+            $output['comment_form'] = comment_add($entity, $field_name);
+          }
+          // All other users need a user-specific form, which would break the
+          // render cache: hence use a #post_render_cache callback.
+          else {
+            $output['comment_form'] = array(
+              '#type' => 'render_cache_placeholder',
+              '#callback' => 'comment_replace_form_placeholder',
+              '#context' => array(
+                'entity_type' => $entity->entityType(),
+                'entity_id' => $entity->id(),
+                'field_name' => $field_name
+              ),
+            );
+          }
         }
       }
 
