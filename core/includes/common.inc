@@ -399,14 +399,15 @@ function drupal_add_feed($url = NULL, $title = '') {
   if (isset($url)) {
     $stored_feed_links[$url] = theme('feed_icon', array('url' => $url, 'title' => $title));
 
-    drupal_add_html_head_link(array(
+    $build['#attached']['drupal_add_html_head_link'][][] = array(
       'rel' => 'alternate',
       'type' => 'application/rss+xml',
       'title' => $title,
       // Force the URL to be absolute, for consistency with other <link> tags
       // output by Drupal.
       'href' => url($url, array('absolute' => TRUE)),
-    ));
+    );
+    drupal_render($build);
   }
   return $stored_feed_links;
 }

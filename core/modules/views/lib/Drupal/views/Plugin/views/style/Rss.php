@@ -57,13 +57,13 @@ class Rss extends StylePluginBase {
         '#url' => $url,
         '#title' => $title,
       );
-      $this->view->feed_icon .= drupal_render($feed_icon);
-      drupal_add_html_head_link(array(
+      $feed_icon['#attached']['drupal_add_html_head_link'][][] = array(
         'rel' => 'alternate',
         'type' => 'application/rss+xml',
         'title' => $title,
-        'href' => $url
-      ));
+        'href' => $url,
+      );
+      $this->view->feed_icon .= drupal_render($feed_icon);
     }
   }
 

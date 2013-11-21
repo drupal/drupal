@@ -2221,7 +2221,12 @@ function template_preprocess_html(&$variables) {
   if (theme_get_setting('features.favicon')) {
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
-    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => Url::stripDangerousProtocols($favicon), 'type' => $type));
+    $build['#attached']['drupal_add_html_head_link'][][] = array(
+      'rel' => 'shortcut icon',
+      'href' => Url::stripDangerousProtocols($favicon),
+      'type' => $type,
+    );
+    drupal_render($build);
   }
 
   $site_config = \Drupal::config('system.site');
@@ -2504,7 +2509,12 @@ function template_preprocess_maintenance_page(&$variables) {
   if (theme_get_setting('features.favicon')) {
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
-    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => Url::stripDangerousProtocols($favicon), 'type' => $type));
+    $build['#attached']['drupal_add_html_head_link'][][] = array(
+      'rel' => 'shortcut icon',
+      'href' => Url::stripDangerousProtocols($favicon),
+      'type' => $type,
+    );
+    drupal_render($build);
   }
 
   // Get all region content set with drupal_add_region_content().
