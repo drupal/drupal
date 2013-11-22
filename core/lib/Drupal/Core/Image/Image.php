@@ -8,7 +8,6 @@
 namespace Drupal\Core\Image;
 
 use Drupal\Core\ImageToolkit\ImageToolkitInterface;
-use Drupal\Component\Utility\Image as ImageUtility;
 
 /**
  * Defines an image object to represent an image file.
@@ -284,73 +283,31 @@ class Image implements ImageInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Passes through calls that represent image toolkit operations onto the
+   * image toolkit.
+   *
+   * This is a temporary solution to keep patches reviewable. The __call()
+   * method will be replaced in https://drupal.org/node/2073759 with a new
+   * interface method ImageInterface::apply(). An image operation will be
+   * performed as in the next example:
+   * @code
+   * $image = new Image($path, $toolkit);
+   * $image->apply('scale', array('width' => 50, 'height' => 100));
+   * @endcode
+   * Also in https://drupal.org/node/2073759 operation arguments sent to toolkit
+   * will be moved to a keyed array, unifying the interface of toolkit
+   * operations.
+   *
+   * @todo Drop this in https://drupal.org/node/2073759 in favor of new apply().
    */
-  public function scale($width = NULL, $height = NULL, $upscale = FALSE) {
-    $dimensions = array(
-      'width' => $this->getWidth(),
-      'height' => $this->getHeight(),
-    );
-
-    // Scale the dimensions - if they don't change then just return success.
-    if (!ImageUtility::scaleDimensions($dimensions, $width, $height, $upscale)) {
-      return TRUE;
+  public function __call($method, $arguments) {
+    if (is_callable(array($this->toolkit, $method))) {
+      // @todo In https://drupal.org/node/2073759, call_user_func_array() will
+      //   be replaced by $this->toolkit->apply($name, $this, $arguments).
+      array_unshift($arguments, $this);
+      return call_user_func_array(array($this->toolkit, $method), $arguments);
     }
-
-    return $this->resize($dimensions['width'], $dimensions['height']);
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function scaleAndCrop($width, $height) {
-    $scale = max($width / $this->getWidth(), $height / $this->getHeight());
-    $x = ($this->getWidth() * $scale - $width) / 2;
-    $y = ($this->getHeight() * $scale - $height) / 2;
-
-    if ($this->resize($this->getWidth() * $scale, $this->getHeight() * $scale)) {
-      return $this->crop($x, $y, $width, $height);
-    }
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function crop($x, $y, $width, $height) {
-    $aspect = $this->getHeight() / $this->getWidth();
-    if (empty($height)) $height = $width * $aspect;
-    if (empty($width)) $width = $height / $aspect;
-
-    $width = (int) round($width);
-    $height = (int) round($height);
-
-    return $this->toolkit->crop($this, $x, $y, $width, $height);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function resize($width, $height) {
-    $width = (int) round($width);
-    $height = (int) round($height);
-
-    return $this->toolkit->resize($this, $width, $height);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function desaturate() {
-    return $this->toolkit->desaturate($this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function rotate($degrees, $background = NULL) {
-    return $this->toolkit->rotate($this, $degrees, $background);
+    throw new \BadMethodCallException();
   }
 
   /**

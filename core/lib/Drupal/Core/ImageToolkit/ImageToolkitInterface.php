@@ -156,6 +156,49 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
   public function save(ImageInterface $image, $destination);
 
   /**
+   * Scales an image while maintaining aspect ratio.
+   *
+   * The resulting image can be smaller for one or both target dimensions.
+   *
+   * @param \Drupal\Core\Image\ImageInterface $image
+   *   An image object.
+   * @param int $width
+   *   (optional) The target width, in pixels. This value is omitted then the
+   *   scaling will based only on the height value.
+   * @param int $height
+   *   (optional) The target height, in pixels. This value is omitted then the
+   *   scaling will based only on the width value.
+   * @param bool $upscale
+   *   (optional) Boolean indicating that files smaller than the dimensions will
+   *   be scaled up. This generally results in a low quality image.
+   *
+   * @return bool
+   *   TRUE on success, FALSE on failure.
+   */
+  public function scale(ImageInterface $image, $width = NULL, $height = NULL, $upscale = FALSE);
+
+  /**
+   * Scales an image to the exact width and height given.
+   *
+   * This function achieves the target aspect ratio by cropping the original
+   * image equally on both sides, or equally on the top and bottom. This
+   * function is useful to create uniform sized avatars from larger images.
+   *
+   * The resulting image always has the exact target dimensions.
+   *
+   * @param \Drupal\Core\Image\ImageInterface $image
+   *   An image object.
+   * @param int $width
+   *   The target width, in pixels.
+   * @param int $height
+   *   The target height, in pixels.
+   *
+   * @return bool
+   *   TRUE on success, FALSE on failure.
+   */
+  public function scaleAndCrop(ImageInterface $image, $width, $height);
+
+  /**
    * Gets details about an image.
    *
    * @param \Drupal\Core\Image\ImageInterface $image

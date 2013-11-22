@@ -106,6 +106,22 @@ class TestToolkit extends PluginBase implements ImageToolkitInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function scale(ImageInterface $image, $width = NULL, $height = NULL, $upscale = FALSE) {
+    $this->logCall('scale', array($image, $width, $height, $upscale));
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function scaleAndCrop(ImageInterface $image, $width, $height) {
+    $this->logCall('scaleAndCrop', array($image, $width, $height));
+    return TRUE;
+  }
+
+  /**
    * Stores the values passed to a toolkit call.
    *
    * @param string $op

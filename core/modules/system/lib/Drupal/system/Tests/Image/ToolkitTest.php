@@ -68,12 +68,12 @@ class ToolkitTest extends ToolkitTestBase {
   function testScale() {
 // TODO: need to test upscaling
     $this->assertTrue($this->image->scale(10, 10), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('resize'));
+    $this->assertToolkitOperationsCalled(array('scale'));
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
-    $this->assertEqual($calls['resize'][0][1], 10, 'Width was passed correctly');
-    $this->assertEqual($calls['resize'][0][2], 5, 'Height was based off aspect ratio and passed correctly');
+    $this->assertEqual($calls['scale'][0][1], 10, 'Width was passed correctly');
+    $this->assertEqual($calls['scale'][0][2], 10, 'Height was based off aspect ratio and passed correctly');
   }
 
   /**
@@ -81,15 +81,13 @@ class ToolkitTest extends ToolkitTestBase {
    */
   function testScaleAndCrop() {
     $this->assertTrue($this->image->scaleAndCrop(5, 10), 'Function returned the expected value.');
-    $this->assertToolkitOperationsCalled(array('resize', 'crop'));
+    $this->assertToolkitOperationsCalled(array('scaleAndCrop'));
 
     // Check the parameters.
     $calls = $this->imageTestGetAllCalls();
 
-    $this->assertEqual($calls['crop'][0][1], 7.5, 'X was computed and passed correctly');
-    $this->assertEqual($calls['crop'][0][2], 0, 'Y was computed and passed correctly');
-    $this->assertEqual($calls['crop'][0][3], 5, 'Width was computed and passed correctly');
-    $this->assertEqual($calls['crop'][0][4], 10, 'Height was computed and passed correctly');
+    $this->assertEqual($calls['scaleAndCrop'][0][1], 5, 'Width was computed and passed correctly');
+    $this->assertEqual($calls['scaleAndCrop'][0][2], 10, 'Height was computed and passed correctly');
   }
 
   /**

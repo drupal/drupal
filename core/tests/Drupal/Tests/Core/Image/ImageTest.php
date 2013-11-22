@@ -39,10 +39,8 @@ class ImageTest extends UnitTestCase {
 
   protected function setUp() {
     // Use the Druplicon image.
-    $source = __DIR__ . '/../../../../../misc/druplicon.png';
-    $this->toolkit = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\GDToolkit')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->source = __DIR__ . '/../../../../../misc/druplicon.png';
+    $this->toolkit = $this->getToolkitMock();
 
     $this->toolkit->expects($this->any())
       ->method('getPluginId')
@@ -58,7 +56,25 @@ class ImageTest extends UnitTestCase {
         'mime_type' => 'image/png',
       )));
 
-    $this->image = new Image($source, $this->toolkit);
+    $this->image = new Image($this->source, $this->toolkit);
+  }
+
+  /**
+   * Mocks a toolkit.
+   *
+   * @param array $stubs
+   *   (optional) Array containing methods to be replaced with stubs.
+   *
+   * @return PHPUnit_Framework_MockObject_MockObject
+   */
+  protected function getToolkitMock(array $stubs = array()) {
+    $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\GDToolkit');
+    if ($stubs && is_array($stubs)) {
+      $mock_builder->setMethods($stubs);
+    }
+    return $mock_builder
+      ->disableOriginalConstructor()
+      ->getMock();
   }
 
   /**
@@ -218,10 +234,13 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::scale().
    */
   public function testScaleWidth() {
-    $this->toolkit->expects($this->once())
+    $toolkit = $this->getToolkitMock(array('resize'));
+    $image = new Image($this->source, $toolkit);
+
+    $toolkit->expects($this->any())
       ->method('resize')
       ->will($this->returnArgument(2));
-    $height = $this->image->scale(44);
+    $height = $image->scale(44);
     $this->assertEquals($height, 50);
   }
 
@@ -229,11 +248,13 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::scale().
    */
   public function testScaleHeight() {
-    $this->toolkit->expects($this->once())
+    $toolkit = $this->getToolkitMock(array('resize'));
+    $image = new Image($this->source, $toolkit);
+
+    $toolkit->expects($this->any())
       ->method('resize')
       ->will($this->returnArgument(1));
-
-    $width = $this->image->scale(NULL, 50);
+    $width = $image->scale(NULL, 50);
     $this->assertEquals($width, 44);
   }
 
@@ -241,12 +262,15 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::scale().
    */
   public function testScaleSame() {
+    $toolkit = $this->getToolkitMock(array('resize'));
+    $image = new Image($this->source, $toolkit);
+
     // Dimensions are the same, resize should not be called.
-    $this->toolkit->expects($this->never())
+    $toolkit->expects($this->never())
       ->method('resize')
       ->will($this->returnArgument(1));
 
-    $width = $this->image->scale(88, 100);
+    $width = $image->scale(88, 100);
     $this->assertEquals($width, 88);
   }
 
@@ -254,15 +278,18 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::scaleAndCrop().
    */
   public function testScaleAndCropWidth() {
-    $this->toolkit->expects($this->once())
+    $toolkit = $this->getToolkitMock(array('resize', 'crop'));
+    $image = new Image($this->source, $toolkit);
+
+    $toolkit->expects($this->once())
       ->method('resize')
       ->will($this->returnValue(TRUE));
 
-    $this->toolkit->expects($this->once())
+    $toolkit->expects($this->once())
       ->method('crop')
       ->will($this->returnArgument(1));
 
-    $x = $this->image->scaleAndCrop(34, 50);
+    $x = $image->scaleAndCrop(34, 50);
     $this->assertEquals($x, 5);
   }
 
@@ -270,15 +297,18 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::scaleAndCrop().
    */
   public function testScaleAndCropHeight() {
-    $this->toolkit->expects($this->once())
+    $toolkit = $this->getToolkitMock(array('resize', 'crop'));
+    $image = new Image($this->source, $toolkit);
+
+    $toolkit->expects($this->once())
       ->method('resize')
       ->will($this->returnValue(TRUE));
 
-    $this->toolkit->expects($this->once())
+    $toolkit->expects($this->once())
       ->method('crop')
       ->will($this->returnArgument(2));
 
-    $y = $this->image->scaleAndCrop(44, 40);
+    $y = $image->scaleAndCrop(44, 40);
     $this->assertEquals($y, 5);
   }
 
@@ -286,38 +316,37 @@ class ImageTest extends UnitTestCase {
    * Tests \Drupal\Core\Image\Image::scaleAndCrop().
    */
   public function testScaleAndCropFails() {
-    $this->toolkit->expects($this->once())
+    $toolkit = $this->getToolkitMock(array('resize', 'crop'));
+    $image = new Image($this->source, $toolkit);
+
+    $toolkit->expects($this->once())
       ->method('resize')
       ->will($this->returnValue(FALSE));
 
-    $this->toolkit->expects($this->never())
+    $toolkit->expects($this->never())
       ->method('crop');
-    $this->image->scaleAndCrop(44, 40);
+    $image->scaleAndCrop(44, 40);
   }
 
   /**
    * Tests \Drupal\Core\Image\Image::crop().
+   *
+   * @todo Because \Drupal\Tests\Core\Image\ImageTest::testCropWidth() tests
+   *   image geometry conversions (like dimensions, coordinates, etc) and has
+   *   lost its scope in https://drupal.org/node/2103635, it was temporarily
+   *   removed. The test will be added back when implementing the dedicated
+   *   functionality from https://drupal.org/node/2108307.
    */
-  public function testCropWidth() {
-    $this->toolkit->expects($this->once())
-      ->method('crop')
-      ->will($this->returnArgument(4));
-    // Cropping with width only should preserve the aspect ratio.
-    $height = $this->image->crop(0, 0, 44, NULL);
-    $this->assertEquals($height, 50);
-  }
 
   /**
    * Tests \Drupal\Core\Image\Image::crop().
+   *
+   * @todo Because \Drupal\Tests\Core\Image\ImageTest::testCropHeight() tests
+   *   image geometry conversions (like dimensions, coordinates, etc) and has
+   *   lost its scope in https://drupal.org/node/2103635, it was temporarily
+   *   removed. The test will be added back when implementing the dedicated
+   *   functionality from https://drupal.org/node/2108307.
    */
-  public function testCropHeight() {
-    $this->toolkit->expects($this->once())
-      ->method('crop')
-      ->will($this->returnArgument(3));
-    // Cropping with height only should preserve the aspect ratio.
-    $width = $this->image->crop(0, 0, NULL, 50);
-    $this->assertEquals($width, 44);
-  }
 
   /**
    * Tests \Drupal\Core\Image\Image::crop().
@@ -332,18 +361,13 @@ class ImageTest extends UnitTestCase {
 
   /**
    * Tests \Drupal\Core\Image\Image::resize().
+   *
+   * @todo Because \Drupal\Tests\Core\Image\ImageTest::testResize() tests image
+   *   geometry conversions (like dimensions, coordinates, etc) and has lost its
+   *   scope in https://drupal.org/node/2103635, it was temporarily removed. The
+   *   test will be added back when implementing the dedicated functionality
+   *   from https://drupal.org/node/2108307.
    */
-  public function testResize() {
-    $this->toolkit->expects($this->exactly(2))
-      ->method('resize')
-      ->will($this->returnArgument(1));
-    // Resize with integer for width and height.
-    $this->image->resize(30, 40);
-    // Pass a float for width.
-    $width = $this->image->resize(30.4, 40);
-    // Ensure that the float was rounded to an integer first.
-    $this->assertEquals($width, 30);
-  }
 
   /**
    * Tests \Drupal\Core\Image\Image::desaturate().
