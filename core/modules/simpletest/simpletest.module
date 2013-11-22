@@ -419,6 +419,10 @@ function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALS
  * each module for files matching the PSR-0 standard. Once loaded the test list
  * is cached and stored in a static variable.
  *
+ * @param string $module
+ *   Name of a module. If set then only tests belonging to this module are
+ *   returned.
+ *
  * @return
  *   An array of tests keyed with the groups specified in each of the tests
  *   getInfo() method and then keyed by the test class. An example of the array
@@ -434,17 +438,20 @@ function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALS
  *     );
  *   @endcode
  */
-function simpletest_test_get_all() {
-  $groups = &drupal_static(__FUNCTION__);
+function simpletest_test_get_all($module = NULL) {
+  $all_groups = &drupal_static(__FUNCTION__);
+  $cid = "simpletest:$module";
 
-  if (!$groups) {
+  if (!isset($all_groups[$cid])) {
+    $all_groups[$cid] = array();
+    $groups = &$all_groups[$cid];
     // Make sure that namespaces for disabled modules are registered so that the
     // checks below will find them.
     simpletest_classloader_register();
 
     // Load test information from cache if available, otherwise retrieve the
     // information from each tests getInfo() method.
-    if ($cache = cache()->get('simpletest')) {
+    if ($cache = cache()->get($cid)) {
       $groups = $cache->data;
     }
     else {
@@ -453,6 +460,12 @@ function simpletest_test_get_all() {
       $module_data = system_rebuild_module_data();
       $all_data = $module_data + system_rebuild_theme_data();
       $all_data += drupal_system_listing('/\.profile$/', 'profiles', 'name');
+      // If module is set then we keep only that one module.
+      if (isset($module)) {
+        $all_data = array(
+          $module => $all_data[$module],
+        );
+      }
       foreach ($all_data as $name => $data) {
         // Build directory in which the test files would reside.
         $tests_dir = DRUPAL_ROOT . '/' . dirname($data->uri) . '/lib/Drupal/' . $name . '/Tests';
@@ -499,8 +512,8 @@ function simpletest_test_get_all() {
           }
           // If this test class requires a non-existing module, skip it.
           if (!empty($info['dependencies'])) {
-            foreach ($info['dependencies'] as $module) {
-              if (!isset($module_data[$module])) {
+            foreach ($info['dependencies'] as $dependency) {
+              if (!isset($dependency_data[$dependency])) {
                 continue 2;
               }
             }
@@ -518,10 +531,10 @@ function simpletest_test_get_all() {
 
       // Allow modules extending core tests to disable originals.
       drupal_alter('simpletest', $groups);
-      cache()->set('simpletest', $groups);
+      cache()->set($cid, $groups);
     }
   }
-  return $groups;
+  return $all_groups[$cid];
 }
 
 /**
@@ -722,17 +735,26 @@ function simpletest_library_info() {
 }
 
 /**
- * Get PHPUnit Classes
+ * Gets PHPUnit Classes.
  *
- * @param bool $name_only
- *  If TRUE, returns a flat array of class names only.
+ * @param string $module
+ *   Name of a module. If set then only tests belonging to this module is
+ *   returned.
+ *
+ * @return array
+ *   Returns an array of test classes.
  */
-function simpletest_phpunit_get_available_tests() {
+function simpletest_phpunit_get_available_tests($module = NULL) {
   // Try to load the class names array from cache.
-  if ($cache = \Drupal::cache()->get('simpletest_phpunit')) {
+  $cid = 'simpletest_phpunit:' . $module;
+  if ($cache = \Drupal::cache()->get($cid)) {
     $test_classes = $cache->data;
   }
   else {
+    if ($module) {
+      $prefix = 'Drupal\\' . $module . '\\';
+      $n = strlen($prefix);
+    }
     // If there was no cached data available we have to find the tests.
     // Load the PHPUnit configuration file, which tells us where to find the
     // tests.
@@ -750,13 +772,13 @@ function simpletest_phpunit_get_available_tests() {
       }
 
       $name = get_class($test);
-      if (!array_key_exists($name, $test_classes)) {
+      if (!array_key_exists($name, $test_classes) && (!$module || substr($name, 0, $n) == $prefix)) {
         $test_classes[$name] = $test->getInfo();
       }
     }
 
     // Since we have recalculated, we now need to store the new data into cache.
-    \Drupal::cache()->set('simpletest_phpunit', $test_classes);
+    \Drupal::cache()->set($cid, $test_classes);
   }
 
   return $test_classes;
