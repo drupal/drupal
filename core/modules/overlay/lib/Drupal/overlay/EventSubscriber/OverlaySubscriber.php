@@ -9,6 +9,7 @@ namespace Drupal\overlay\EventSubscriber;
 
 use Drupal\Core\ContentNegotiation;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Component\Utility\Url;
 use Drupal\user\UserData;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -106,6 +107,10 @@ class OverlaySubscriber implements EventSubscriberInterface {
         // If this page shouldn't be rendered inside the overlay, redirect to
         // the parent.
         elseif (!path_is_admin($current_path)) {
+          // Prevent open redirects by ensuring the current path is not an absolute URL.
+          if (Url::isExternal($current_path)) {
+            $current_path = '<front>';
+          }
           $response = overlay_close_dialog($current_path, array('query' => drupal_get_query_parameters(NULL, array('render'))));
           $event->setResponse($response);
         }
