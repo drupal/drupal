@@ -13,6 +13,19 @@ use Drupal\Core\Ajax\CloseDialogCommand;
 use Drupal\Core\Ajax\HtmlCommand;
 
 /**
+ * Implements hook_menu().
+ */
+function ajax_test_menu() {
+  $items['ajax-test/order'] = array(
+    'title' => 'AJAX commands order',
+    'route_name' => 'ajax_test.order',
+    'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
  * Implements hook_system_theme_info().
  */
 function ajax_test_system_theme_info() {

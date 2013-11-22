@@ -2331,7 +2331,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
       global $theme_key;
       // Provide the page with information about the theme that's used, so that
       // a later AJAX request can be rendered using the same theme.
-      // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
+      // @see ajax_base_page_theme()
       $setting['ajaxPageState']['theme'] = $theme_key;
       // Checks that the DB is available before filling theme_token.
       if (!defined('MAINTENANCE_MODE')) {
@@ -3148,6 +3148,7 @@ function _drupal_bootstrap_full($skip = FALSE) {
   // Let all modules take action before the menu system handles the request.
   // We do not want this while running update.php.
   if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
+    menu_set_custom_theme();
     drupal_theme_initialize();
   }
 }

@@ -165,21 +165,6 @@ services:
     calls:
       - [addSubscriber, ['@http_client_simpletest_subscriber']]
       - [setUserAgent, ['Drupal (+http://drupal.org/)']]
-  theme.negotiator:
-    class: Drupal\Core\Theme\ThemeNegotiator
-    arguments: ['@access_check.theme']
-    calls:
-      - [setRequest, ['@request']]
-  theme.negotiator.default:
-    class: Drupal\Core\Theme\DefaultNegotiator
-    arguments: ['@config.factory']
-    tags:
-      - { name: theme_negotiator, priority: -100 }
-  theme.negotiator.ajax_base_page:
-    class: Drupal\Core\Theme\AjaxBasePageNegotiator
-    arguments: ['@csrf_token', '@config.factory']
-    tags:
-      - { name: theme_negotiator, priority: 1000 }
   container.namespaces:
     class: ArrayObject
     arguments: [ '%container.namespaces%' ]

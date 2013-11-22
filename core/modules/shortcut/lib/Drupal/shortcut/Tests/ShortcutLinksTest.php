@@ -145,7 +145,6 @@ class ShortcutLinksTest extends ShortcutTestBase {
    */
   function testNoShortcutLink() {
     // Change to a theme that displays shortcuts.
-    theme_enable(array('seven'));
     \Drupal::config('system.theme')
       ->set('default', 'seven')
       ->save();
@@ -158,9 +157,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertNoRaw('add-shortcut', 'Add to shortcuts link was not shown on a page the user does not have access to.');
 
     // Verify that the testing mechanism works by verifying the shortcut
-    // link appears on admin/people.
-    $this->drupalGet('admin/people');
+    // link appears on admin/content/node.
+    $this->drupalGet('admin/content/node');
     $this->assertRaw('add-shortcut', 'Add to shortcuts link was shown on a page the user does have access to.');
   }
-
 }

@@ -19,8 +19,3 @@ services:
     class: Drupal\system\PathProcessor\PathProcessorFiles
     tags:
       - { name: path_processor_inbound, priority: 200 }
-  theme.negotiator.system.batch:
-    class: Drupal\system\Theme\BatchNegotiator
-    arguments: ['@batch.storage']
-    tags:
-      - { name: theme_negotiator, priority: 1000 }

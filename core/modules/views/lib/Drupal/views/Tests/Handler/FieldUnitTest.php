@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  */
 class FieldUnitTest extends ViewUnitTestBase {
 
-  public static $modules = array('user', 'field');
+  public static $modules = array('user');
 
   /**
    * Views used by this test.
@@ -36,12 +36,6 @@ class FieldUnitTest extends ViewUnitTestBase {
       'description' => 'Tests the generic field handler.',
       'group' => 'Views Handlers',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->installSchema('user', 'users');
   }
 
   /**

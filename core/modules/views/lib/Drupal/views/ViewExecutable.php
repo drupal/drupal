@@ -1302,6 +1302,8 @@ class ViewExecutable {
       return;
     }
 
+    drupal_theme_initialize();
+
     $exposed_form = $this->display_handler->getPlugin('exposed_form');
     $exposed_form->preRender($this->result);
 
@@ -1363,13 +1365,11 @@ class ViewExecutable {
       $module_handler->invokeAll('views_pre_render', array($this));
 
       // Let the themes play too, because pre render is a very themey thing.
-      if (isset($GLOBALS['base_theme_info']) && isset($GLOBALS['theme'])) {
-        foreach ($GLOBALS['base_theme_info'] as $base) {
-          $module_handler->invoke($base, 'views_pre_render', array($this));
-        }
-
-        $module_handler->invoke($GLOBALS['theme'], 'views_pre_render', array($this));
+      foreach ($GLOBALS['base_theme_info'] as $base) {
+        $module_handler->invoke($base, 'views_pre_render', array($this));
       }
+
+      $module_handler->invoke($GLOBALS['theme'], 'views_pre_render', array($this));
 
       $this->display_handler->output = $this->display_handler->render();
       if ($cache) {
@@ -1387,13 +1387,11 @@ class ViewExecutable {
     $module_handler->invokeAll('views_post_render', array($this, &$this->display_handler->output, $cache));
 
     // Let the themes play too, because post render is a very themey thing.
-    if (isset($GLOBALS['base_theme_info']) && isset($GLOBALS['theme'])) {
-      foreach ($GLOBALS['base_theme_info'] as $base) {
-        $module_handler->invoke($base, 'views_post_render', array($this));
-      }
-
-      $module_handler->invoke($GLOBALS['theme'], 'views_post_render', array($this));
+    foreach ($GLOBALS['base_theme_info'] as $base) {
+      $module_handler->invoke($base, 'views_post_render', array($this));
     }
+
+    $module_handler->invoke($GLOBALS['theme'], 'views_post_render', array($this));
 
     return $this->display_handler->output;
   }

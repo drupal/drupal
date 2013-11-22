@@ -81,6 +81,13 @@ function theme_test_menu() {
 }
 
 /**
+ * Custom theme callback.
+ */
+function _theme_custom_theme() {
+  return 'test_theme';
+}
+
+/**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */
 function theme_test_preprocess_html(&$variables) {

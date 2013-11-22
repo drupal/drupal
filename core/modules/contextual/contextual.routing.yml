@@ -2,7 +2,5 @@ contextual.render:
   path: '/contextual/render'
   defaults:
     _controller: '\Drupal\contextual\ContextualController::render'
-  options:
-    _theme: ajax_base_page
   requirements:
     _permission: 'access contextual links'
