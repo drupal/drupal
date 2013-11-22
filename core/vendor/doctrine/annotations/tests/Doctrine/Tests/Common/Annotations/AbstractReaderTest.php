@@ -2,18 +2,9 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Doctrine\Common\Annotations\DoctrineReader;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
-use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
+use Doctrine\Common\Annotations\Annotation;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
-
-use Doctrine\Tests\Common\Annotations\DummyAnnotation;
-use Doctrine\Tests\Common\Annotations\Name;
-use Doctrine\Tests\Common\Annotations\DummyId;
-use Doctrine\Tests\Common\Annotations\DummyJoinTable;
-use Doctrine\Tests\Common\Annotations\DummyJoinColumn;
-use Doctrine\Tests\Common\Annotations\DummyColumn;
-use Doctrine\Tests\Common\Annotations\DummyGeneratedValue;
 
 require_once __DIR__ . '/TopLevelAnnotation.php';
 
@@ -93,8 +84,16 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', $barAnnot[0]->annotation);
     }
 
+    public function testClassWithWithDanglingComma()
+    {
+        $reader = $this->getReader();
+        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClassWithDanglingComma'));
+
+        $this->assertCount(1, $annots);
+    }
+
      /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetPropertyMethod is not allowed to be declared on class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass. You may only use this annotation on these code elements: METHOD, PROPERTY
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
@@ -111,7 +110,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
      /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo. You may only use this annotation on these code elements: CLASS
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
@@ -121,7 +120,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
      /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetAnnotation is not allowed to be declared on property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$bar. You may only use this annotation on these code elements: ANNOTATION
      */
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
@@ -131,7 +130,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
      /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName(). You may only use this annotation on these code elements: CLASS
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
@@ -141,7 +140,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtClassDocBlock()
@@ -151,7 +150,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtPropertyDocBlock()
@@ -161,7 +160,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtMethodDocBlock()
@@ -171,7 +170,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Type Error] Attribute "string" of @AnnotationWithVarType declared on property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithVarType::$invalidProperty expects a(n) string, but got integer.
      */
     public function testClassWithPropertyInvalidVarTypeError()
@@ -183,7 +182,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Type Error] Attribute "annotation" of @AnnotationWithVarType declared on method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithVarType::invalidMethod() expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll, but got an instance of Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation.
      */
     public function testClassWithMethodInvalidVarTypeError()
@@ -195,7 +194,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in class Doctrine\Tests\Common\Annotations\DummyClassSyntaxError.
      */
     public function testClassSyntaxErrorContext()
@@ -205,7 +204,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in method Doctrine\Tests\Common\Annotations\DummyClassMethodSyntaxError::foo().
      */
     public function testMethodSyntaxErrorContext()
@@ -215,7 +214,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in property Doctrine\Tests\Common\Annotations\DummyClassPropertySyntaxError::$foo.
      */
     public function testPropertySyntaxErrorContext()
@@ -268,7 +267,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage The annotation "@NameFoo" in property Doctrine\Tests\Common\Annotations\TestAnnotationNotImportedClass::$field was never imported.
      */
     public function testImportDetectsNotImportedAnnotation()
@@ -278,7 +277,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage The annotation "@Foo\Bar\Name" in property Doctrine\Tests\Common\Annotations\TestNonExistentAnnotationClass::$field was never imported.
      */
     public function testImportDetectsNonExistentAnnotation()
@@ -305,7 +304,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage The class "Doctrine\Tests\Common\Annotations\Fixtures\NoAnnotation" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "Doctrine\Tests\Common\Annotations\Fixtures\NoAnnotation". If it is indeed no annotation, then you need to add @IgnoreAnnotation("NoAnnotation") to the _class_ doc comment of class Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageClass.
      */
     public function testErrorWhenInvalidAnnotationIsUsed()
@@ -462,15 +461,15 @@ class DummyClass2 {
 }
 
 /** @Annotation */
-class DummyId extends \Doctrine\Common\Annotations\Annotation {}
+class DummyId extends Annotation {}
 /** @Annotation */
-class DummyColumn extends \Doctrine\Common\Annotations\Annotation {
+class DummyColumn extends Annotation {
     public $type;
 }
 /** @Annotation */
-class DummyGeneratedValue extends \Doctrine\Common\Annotations\Annotation {}
+class DummyGeneratedValue extends Annotation {}
 /** @Annotation */
-class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation {
+class DummyAnnotation extends Annotation {
     public $dummyValue;
 }
 
@@ -478,20 +477,27 @@ class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation {
  * @api
  * @Annotation
  */
-class DummyAnnotationWithIgnoredAnnotation extends \Doctrine\Common\Annotations\Annotation {
+class DummyAnnotationWithIgnoredAnnotation extends Annotation {
     public $dummyValue;
 }
 
 /** @Annotation */
-class DummyJoinColumn extends \Doctrine\Common\Annotations\Annotation {
+class DummyJoinColumn extends Annotation {
     public $name;
     public $referencedColumnName;
 }
 /** @Annotation */
-class DummyJoinTable extends \Doctrine\Common\Annotations\Annotation {
+class DummyJoinTable extends Annotation {
     public $name;
     public $joinColumns;
     public $inverseJoinColumns;
+}
+
+/**
+ * @DummyAnnotation(dummyValue = "bar",)
+ */
+class DummyClassWithDanglingComma
+{
 }
 
 /**

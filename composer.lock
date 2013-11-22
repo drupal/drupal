@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "4c727150110aeae10efe10a92ff256f5",
+    "hash": "414745173d1e926721e1d7511a65dcec",
     "packages": [
         {
             "name": "doctrine/annotations",
-            "version": "v1.1.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "v1.1.2"
+                "reference": "463d926a8dcc49271cb7db5a08364a70ed6e3cd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/v1.1.2",
-                "reference": "v1.1.2",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/463d926a8dcc49271cb7db5a08364a70ed6e3cd3",
+                "reference": "463d926a8dcc49271cb7db5a08364a70ed6e3cd3",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,8 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -63,7 +64,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -74,7 +75,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2013-06-16 21:33:03"
+            "time": "2013-11-19 05:59:59"
         },
         {
             "name": "doctrine/cache",
@@ -2056,6 +2057,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "doctrine/common": 10,
+        "doctrine/annotations": 20,
         "kriswallsmith/assetic": 15,
         "symfony-cmf/routing": 15,
         "easyrdf/easyrdf": 10

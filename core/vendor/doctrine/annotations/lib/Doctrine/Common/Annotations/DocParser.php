@@ -19,11 +19,9 @@
 
 namespace Doctrine\Common\Annotations;
 
-use Closure;
 use ReflectionClass;
 use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 
 /**
@@ -582,7 +580,7 @@ final class DocParser
     }
 
     /**
-     * Annotation     ::= "@" AnnotationName ["(" [Values] ")"]
+     * Annotation     ::= "@" AnnotationName MethodCall
      * AnnotationName ::= QualifiedName | SimpleName
      * QualifiedName  ::= NameSpacePart "\" {NameSpacePart "\"}* SimpleName
      * NameSpacePart  ::= identifier | null | false | true
@@ -673,16 +671,7 @@ final class DocParser
             );
         }
 
-        $values = array();
-        if ($this->lexer->isNextToken(DocLexer::T_OPEN_PARENTHESIS)) {
-            $this->match(DocLexer::T_OPEN_PARENTHESIS);
-
-            if ( ! $this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
-                $values = $this->Values();
-            }
-
-            $this->match(DocLexer::T_CLOSE_PARENTHESIS);
-        }
+        $values = $this->MethodCall();
 
         if (isset(self::$annotationMetadata[$name]['enum'])) {
             // checks all declared attributes
@@ -736,6 +725,7 @@ final class DocParser
         }
 
         $instance = new $name();
+
         foreach ($values as $property => $value) {
             if (!isset(self::$annotationMetadata[$name]['properties'][$property])) {
                 if ('value' !== $property) {
@@ -755,7 +745,31 @@ final class DocParser
     }
 
     /**
-     * Values ::= Array | Value {"," Value}*
+     * MethodCall ::= ["(" [Values] ")"]
+     *
+     * @return array
+     */
+    private function MethodCall()
+    {
+        $values = array();
+
+        if ( ! $this->lexer->isNextToken(DocLexer::T_OPEN_PARENTHESIS)) {
+            return $values;
+        }
+
+        $this->match(DocLexer::T_OPEN_PARENTHESIS);
+
+        if ( ! $this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
+            $values = $this->Values();
+        }
+
+        $this->match(DocLexer::T_CLOSE_PARENTHESIS);
+
+        return $values;
+    }
+
+    /**
+     * Values ::= Array | Value {"," Value}* [","]
      *
      * @return array
      */
@@ -766,6 +780,7 @@ final class DocParser
         // Handle the case of a single array as value, i.e. @Foo({....})
         if ($this->lexer->isNextToken(DocLexer::T_OPEN_CURLY_BRACES)) {
             $values['value'] = $this->Value();
+
             return $values;
         }
 
@@ -773,6 +788,11 @@ final class DocParser
 
         while ($this->lexer->isNextToken(DocLexer::T_COMMA)) {
             $this->match(DocLexer::T_COMMA);
+
+            if ($this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
+                break;
+            }
+
             $token = $this->lexer->lookahead;
             $value = $this->Value();
 
@@ -812,12 +832,12 @@ final class DocParser
     {
         $identifier = $this->Identifier();
 
-        if (!defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
-
+        if ( ! defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
             list($className, $const) = explode('::', $identifier);
-            $alias = (false === $pos = strpos($className, '\\'))? $className : substr($className, 0, $pos);
 
+            $alias = (false === $pos = strpos($className, '\\')) ? $className : substr($className, 0, $pos);
             $found = false;
+
             switch (true) {
                 case !empty ($this->namespaces):
                     foreach ($this->namespaces as $ns) {
