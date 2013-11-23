@@ -138,12 +138,18 @@ Drupal.behaviors.contextual = {
       success: function (results) {
         for (var id in results) {
           if (results.hasOwnProperty(id)) {
-            // Update the placeholder to contain its rendered contextual links.
-            var $placeholder = $context.find('[data-contextual-id="' + id + '"]')
+            // Update the placeholders to contain its rendered contextual links.
+            // Usually there will only be one placeholder, but it's possible for
+            // multiple identical placeholders exist on the page (probably
+            // because the same content appears more than once).
+            var $placeholders = $context
+              .find('[data-contextual-id="' + id + '"]')
               .html(results[id]);
 
-            // Initialize the contextual link.
-            initContextual($placeholder);
+            // Initialize the contextual links.
+            for (var i = 0; i < $placeholders.length; i++) {
+              initContextual($placeholders.eq(i));
+            }
           }
         }
       }
