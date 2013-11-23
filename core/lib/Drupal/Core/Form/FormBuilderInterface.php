@@ -757,6 +757,21 @@ interface FormBuilderInterface {
   public function setValue($element, $value, &$form_state);
 
   /**
+   * Allows PHP array processing of multiple select options with the same value.
+   *
+   * Used for form select elements which need to validate HTML option groups
+   * and multiple options which may return the same value. Associative PHP
+   * arrays cannot handle these structures, since they share a common key.
+   *
+   * @param array $array
+   *   The form options array to process.
+   *
+   * @return array
+   *   An array with all hierarchical elements flattened to a single array.
+   */
+  public function flattenOptions(array $array);
+
+  /**
    * Sets the request object to use.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

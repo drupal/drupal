@@ -125,6 +125,13 @@ class FormBuilder implements FormBuilderInterface {
   protected $validatedForms = array();
 
   /**
+   * An array of options used for recursive flattening.
+   *
+   * @var array
+   */
+  protected $flattenedOptions = array();
+
+  /**
    * Constructs a new FormBuilder.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -1008,7 +1015,7 @@ class FormBuilder implements FormBuilderInterface {
 
         if (isset($elements['#options']) && isset($elements['#value'])) {
           if ($elements['#type'] == 'select') {
-            $options = form_options_flatten($elements['#options']);
+            $options = $this->flattenOptions($elements['#options']);
           }
           else {
             $options = $elements['#options'];
@@ -1649,6 +1656,37 @@ class FormBuilder implements FormBuilderInterface {
    */
   public function setValue($element, $value, &$form_state) {
     NestedArray::setValue($form_state['values'], $element['#parents'], $value, TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function flattenOptions(array $array) {
+    $this->flattenedOptions = array();
+    $this->doFlattenOptions($array);
+    return $this->flattenedOptions;
+  }
+
+  /**
+   * Iterates over an array building a flat array with duplicate keys removed.
+   *
+   * This function also handles cases where objects are passed as array values.
+   *
+   * @param array $array
+   *   The form options array to process.
+   */
+  protected function doFlattenOptions(array $array) {
+    foreach ($array as $key => $value) {
+      if (is_object($value)) {
+        $this->doFlattenOptions($value->option);
+      }
+      elseif (is_array($value)) {
+        $this->doFlattenOptions($value);
+      }
+      else {
+        $this->flattenedOptions[$key] = 1;
+      }
+    }
   }
 
   /**

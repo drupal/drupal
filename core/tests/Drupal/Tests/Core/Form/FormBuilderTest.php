@@ -471,11 +471,62 @@ class FormBuilderTest extends UnitTestCase {
 
     $form_state = array();
     $form_state['values']['test'] = $this->randomName();
+    $form_state['values']['options'] = array('foo');
+    $this->formBuilder->submitForm($form_arg, $form_state);
+    $errors = $this->formBuilder->getErrors();
+    $this->assertNull($errors);
+
+    $form_state = array();
+    $form_state['values']['test'] = $this->randomName();
+    $form_state['values']['options'] = array('foo', 'baz');
+    $this->formBuilder->submitForm($form_arg, $form_state);
+    $errors = $this->formBuilder->getErrors();
+    $this->assertNotEmpty($errors['options']);
+
+    $form_state = array();
+    $form_state['values']['test'] = $this->randomName();
     $form_state['values']['options'] = $this->randomName();
     $form_state['values']['op'] = 'Submit';
     $this->formBuilder->submitForm($form_arg, $form_state);
     $errors = $this->formBuilder->getErrors();
     $this->assertNotEmpty($errors['options']);
+  }
+
+  /**
+   * Tests the flattenOptions() method.
+   *
+   * @dataProvider providerTestFlattenOptions
+   */
+  public function testFlattenOptions($options) {
+    $expected_form = test_form_id();
+    $expected_form['select']['#required'] = TRUE;
+    $expected_form['select']['#options'] = $options;
+
+    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
+    $form_arg->expects($this->any())
+      ->method('buildForm')
+      ->will($this->returnValue($expected_form));
+
+    $form_state = array();
+    $form_state['values']['select'] = 'foo';
+    $this->formBuilder->submitForm($form_arg, $form_state);
+    $errors = $this->formBuilder->getErrors();
+    $this->assertNull($errors);
+  }
+
+  /**
+   * Provides test data for the flattenOptions() method.
+   *
+   * @return array
+   */
+  public function providerTestFlattenOptions() {
+    $object = new \stdClass();
+    $object->option = array('foo' => 'foo');
+    return array(
+      array(array('foo' => 'foo')),
+      array(array(array('foo' => 'foo'))),
+      array(array($object)),
+    );
   }
 
   /**
@@ -611,6 +662,11 @@ class TestFormBuilder extends FormBuilder {
     $types['value'] = array(
       '#input' => TRUE,
     );
+    $types['select'] = array(
+      '#input' => TRUE,
+      '#multiple' => FALSE,
+      '#empty_value' => '',
+    );
     $types['radios'] = array(
       '#input' => TRUE,
     );
@@ -706,6 +762,13 @@ namespace {
     $form['test'] = array(
       '#type' => 'textfield',
       '#title' => 'Test',
+    );
+    $form['select'] = array(
+      '#type' => 'select',
+      '#options' => array(
+        'foo' => 'foo',
+        'bar' => 'bar',
+      ),
     );
     $form['options'] = array(
       '#type' => 'radios',

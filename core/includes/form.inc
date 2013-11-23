@@ -735,34 +735,11 @@ function form_set_value($element, $value, &$form_state) {
  *
  * @return
  *   An array with all hierarchical elements flattened to a single array.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->flattenOptions()
  */
 function form_options_flatten($array) {
-  // Always reset static var when first entering the recursion.
-  drupal_static_reset('_form_options_flatten');
-  return _form_options_flatten($array);
-}
-
-/**
- * Iterates over an array and returns a flat array with duplicate keys removed.
- *
- * This function also handles cases where objects are passed as array values.
- */
-function _form_options_flatten($array) {
-  $return = &drupal_static(__FUNCTION__);
-
-  foreach ($array as $key => $value) {
-    if (is_object($value)) {
-      _form_options_flatten($value->option);
-    }
-    elseif (is_array($value)) {
-      _form_options_flatten($value);
-    }
-    else {
-      $return[$key] = 1;
-    }
-  }
-
-  return $return;
+  return \Drupal::formBuilder()->flattenOptions($array);
 }
 
 /**
