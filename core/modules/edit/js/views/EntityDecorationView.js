@@ -2,7 +2,8 @@
 
 "use strict";
 
-Drupal.edit.EntityView = Backbone.View.extend({
+Drupal.edit.EntityDecorationView = Backbone.View.extend({
+
   /**
    * {@inheritdoc}
    *
@@ -26,6 +27,7 @@ Drupal.edit.EntityView = Backbone.View.extend({
     this.setElement(null);
     Backbone.View.prototype.remove.call(this);
   }
+
 });
 
 }(jQuery, Backbone));

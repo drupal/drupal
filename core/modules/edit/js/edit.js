@@ -363,8 +363,8 @@ function initializeEntityContextualLink (contextualLink) {
     return false;
   }
   // The entity for the given contextual link contains at least one field that
-  // the current user may edit in-place; instantiate EntityModel, EntityView and
-  // ContextualLinkView.
+  // the current user may edit in-place; instantiate EntityModel,
+  // EntityDecorationView and ContextualLinkView.
   else if (hasFieldWithPermission(fieldIDs)) {
     var entityModel = new Drupal.edit.EntityModel({
       el: contextualLink.region,
@@ -372,12 +372,13 @@ function initializeEntityContextualLink (contextualLink) {
       label: Drupal.edit.metadata.get(contextualLink.entityID, 'label')
     });
     Drupal.edit.collections.entities.add(entityModel);
-    // Create an EntityView associated with the root DOM node of the entity.
-    var entityView = new Drupal.edit.EntityView({
+    // Create an EntityDecorationView associated with the root DOM node of the
+    // entity.
+    var entityDecorationView = new Drupal.edit.EntityDecorationView({
       el: contextualLink.region,
       model: entityModel
     });
-    entityModel.set('entityView', entityView);
+    entityModel.set('entityDecorationView', entityDecorationView);
 
     // Initialize all queued fields within this entity (creates FieldModels).
     _.each(fields, function (field) {
@@ -437,8 +438,8 @@ function deleteContainedModelsAndQueues($context) {
       var contextualLinkView = entityModels[0].get('contextualLinkView');
       contextualLinkView.undelegateEvents();
       contextualLinkView.remove();
-      // Remove the EntityView.
-      entityModels[0].get('entityView').remove();
+      // Remove the EntityDecorationView.
+      entityModels[0].get('entityDecorationView').remove();
       // Destroy the EntityModel; this will also destroy its FieldModels.
       entityModels[0].destroy();
     }

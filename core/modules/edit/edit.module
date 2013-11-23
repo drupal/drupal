@@ -84,7 +84,7 @@ function edit_library_info() {
       // Views.
       $path . '/js/views/AppView.js' => $options,
       $path . '/js/views/EditorDecorationView.js' => $options,
-      $path . '/js/views/EntityView.js' => $options,
+      $path . '/js/views/EntityDecorationView.js' => $options,
       $path . '/js/views/EntityToolbarView.js' => $options,
       $path . '/js/views/ContextualLinkView.js' => $options,
       $path . '/js/views/FieldToolbarView.js' => $options,
