@@ -7,9 +7,6 @@
 
 namespace Drupal\Tests\Component\Plugin;
 
-use Drupal\Component\Plugin\DefaultPluginBag;
-use Drupal\Tests\UnitTestCase;
-
 /**
  * Tests the default plugin bag.
  *
@@ -18,72 +15,17 @@ use Drupal\Tests\UnitTestCase;
  * @group Drupal
  * @group Drupal_Plugin
  */
-class DefaultPluginBagTest extends UnitTestCase {
+class DefaultPluginBagTest extends PluginBagTestBase {
 
   /**
-   * The mocked plugin manager.
-   *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Component\Plugin\PluginManagerInterface
+   * {@inheritdoc}
    */
-  protected $pluginManager;
-
-  /**
-   * The tested plugin bag.
-   *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Component\Plugin\DefaultPluginBag
-   */
-  protected $defaultPluginBag;
-
-  /**
-   * Stores all setup plugin instances.
-   *
-   * @var array
-   */
-  protected $pluginInstances;
-
-  /**
-   * Contains the plugin configuration.
-   *
-   * @var array
-   */
-  protected $config = array(
-    'banana' => array('id' => 'banana', 'key' => 'value'),
-    'cherry' => array('id' => 'cherry', 'key' => 'value'),
-    'apple' => array('id' => 'apple', 'key' => 'value'),
-  );
-
   public static function getInfo() {
     return array(
       'name' => 'Default plugin bag',
       'description' => 'Tests the default plugin bag.',
-      'group' => 'PHP Storage',
+      'group' => 'Plugin API',
     );
-  }
-
-  protected function setUp() {
-    $this->pluginManager = $this->getMock('Drupal\Component\Plugin\PluginManagerInterface');
-    $definitions = $this->getPluginDefinitions();
-    $this->pluginManager->expects($this->any())
-      ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
-
-    $this->pluginInstances = array();
-    $map = array();
-    foreach ($definitions as $plugin_id => $definition) {
-      // Create a mock plugin instance.
-      $mock = $this->getMock('Drupal\Component\Plugin\PluginInspectionInterface');
-      $mock->expects($this->any())
-        ->method('getPluginId')
-        ->will($this->returnValue($plugin_id));
-      $this->pluginInstances[$plugin_id] = $mock;
-
-      $map[] = array($plugin_id, $this->config[$plugin_id], $this->pluginInstances[$plugin_id]);
-    }
-    $this->pluginManager->expects($this->any())
-      ->method('createInstance')
-      ->will($this->returnValueMap($map));
-
-    $this->defaultPluginBag = new DefaultPluginBag($this->pluginManager, $this->config);
   }
 
   /**
@@ -92,6 +34,7 @@ class DefaultPluginBagTest extends UnitTestCase {
    * @see \Drupal\Component\Plugin\DefaultPluginBag::has()
    */
   public function testHas() {
+    $this->setupPluginBag();
     $definitions = $this->getPluginDefinitions();
 
     $this->assertFalse($this->defaultPluginBag->has($this->randomName()), 'Nonexistent plugin found.');
@@ -107,9 +50,10 @@ class DefaultPluginBagTest extends UnitTestCase {
    * @see \Drupal\Component\Plugin\DefaultPluginBag::get()
    */
   public function testGet() {
+    $this->setupPluginBag($this->once());
     $apple = $this->pluginInstances['apple'];
 
-    $this->assertEquals($apple, $this->defaultPluginBag->get('apple'));
+    $this->assertSame($apple, $this->defaultPluginBag->get('apple'));
   }
 
   /**
@@ -118,43 +62,8 @@ class DefaultPluginBagTest extends UnitTestCase {
    * @expectedException \Drupal\Component\Plugin\Exception\PluginException
    */
   public function testGetNotExistingPlugin() {
+    $this->setupPluginBag();
     $this->defaultPluginBag->get('pear');
-  }
-
-  /**
-   * Returns some example plugin definitions.
-   *
-   * @return array
-   *   The example plugin definitions.
-   */
-  protected function getPluginDefinitions() {
-    $definitions = array(
-      'apple' => array(
-        'id' => 'apple',
-        'label' => 'Apple',
-        'color' => 'green',
-        'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple',
-        'provider' => 'plugin_test',
-      ),
-      'banana' => array(
-        'id' => 'banana',
-        'label' => 'Banana',
-        'color' => 'yellow',
-        'uses' => array(
-          'bread' => 'Banana bread',
-        ),
-        'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Banana',
-        'provider' => 'plugin_test',
-      ),
-      'cherry' => array(
-        'id' => 'cherry',
-        'label' => 'Cherry',
-        'color' => 'red',
-        'class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry',
-        'provider' => 'plugin_test',
-      ),
-    );
-    return $definitions;
   }
 
   /**
@@ -185,6 +94,7 @@ class DefaultPluginBagTest extends UnitTestCase {
    * @dataProvider providerTestSortHelper
    */
   public function testSortHelper($plugin_id_1, $plugin_id_2, $expected) {
+    $this->setupPluginBag($this->any());
     if ($expected != 0) {
       $expected = $expected > 0 ? 1 : -1;
     }
@@ -197,6 +107,7 @@ class DefaultPluginBagTest extends UnitTestCase {
    * @see \Drupal\Component\Plugin\DefaultPluginBag::getConfiguration()
    */
   public function testGetConfiguration() {
+    $this->setupPluginBag($this->exactly(3));
     // The expected order matches $this->config.
     $expected = array('banana', 'cherry', 'apple');
 
@@ -213,6 +124,94 @@ class DefaultPluginBagTest extends UnitTestCase {
     $ids = $this->defaultPluginBag->getInstanceIds();
     sort($expected);
     $this->assertSame($expected, array_keys($ids), 'After sorting, the order of the instances is also sorted.');
+  }
+
+  /**
+   * Tests the removeInstanceId() method.
+   *
+   * @see \Drupal\Component\Plugin\DefaultPluginBag::removeInstanceId()
+   */
+  public function testRemoveInstanceId() {
+    $this->setupPluginBag($this->exactly(2));
+    $this->defaultPluginBag->removeInstanceId('cherry');
+    $config = $this->defaultPluginBag->getConfiguration();
+    $this->assertArrayNotHasKey('cherry', $config, 'After removing an instance, the configuration is updated.');
+  }
+
+  /**
+   * Tests the setConfiguration() method.
+   *
+   * @see \Drupal\Component\Plugin\DefaultPluginBag::setConfiguration()
+   */
+  public function testSetConfiguration() {
+    $this->setupPluginBag($this->exactly(4));
+    $expected = array(
+      'id' => 'cherry',
+      'key' => 'value',
+      'custom' => 'bananas',
+    );
+    $this->defaultPluginBag->setConfiguration('cherry', $expected);
+    $config = $this->defaultPluginBag->getConfiguration();
+    $this->assertSame($expected, $config['cherry']);
+  }
+
+  /**
+   * Tests the count() method.
+   */
+  public function testCount() {
+    $this->setupPluginBag();
+    $this->assertSame(3, $this->defaultPluginBag->count());
+  }
+
+  /**
+   * Tests the clear() method.
+   */
+  public function testClear() {
+    $this->setupPluginBag($this->exactly(6));
+    $this->defaultPluginBag->getConfiguration();
+    $this->defaultPluginBag->getConfiguration();
+    $this->defaultPluginBag->clear();
+    $this->defaultPluginBag->getConfiguration();
+  }
+
+  /**
+   * Tests the setInstanceIds() method.
+   */
+  public function testSetInstanceIds() {
+    $this->setupPluginBag($this->any());
+    // Set the instance IDs in a different order than the original.
+    $this->defaultPluginBag->setInstanceIds(array(
+      'apple' => 'apple',
+      'cherry' => 'cherry',
+    ));
+
+    $expected = array(
+      'cherry' => 'cherry',
+      'apple' => 'apple',
+    );
+    $config = $this->defaultPluginBag->getConfiguration();
+    $instance_ids = $this->defaultPluginBag->getInstanceIds();
+    $this->assertSame($expected, $instance_ids);
+    $this->assertSame(array_keys($expected), array_keys($config));
+  }
+
+  /**
+   * Tests the set() method.
+   */
+  public function testSet() {
+    $this->setupPluginBag($this->exactly(4));
+    $instance = $this->pluginManager->createInstance('cherry', $this->config['cherry']);
+    $this->defaultPluginBag->set('cherry2', $instance);
+    $this->defaultPluginBag->setConfiguration('cherry2', $this->config['cherry']);
+
+    $expected = array(
+      'banana',
+      'cherry',
+      'apple',
+      'cherry2',
+    );
+    $config = $this->defaultPluginBag->getConfiguration();
+    $this->assertSame($expected, array_keys($config));
   }
 
 }

@@ -77,6 +77,7 @@ abstract class PluginBag implements \Iterator, \Countable {
    */
   public function set($instance_id, $value) {
     $this->pluginInstances[$instance_id] = $value;
+    $this->addInstanceId($instance_id);
   }
 
   /**

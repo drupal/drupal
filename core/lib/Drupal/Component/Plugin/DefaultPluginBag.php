@@ -77,8 +77,7 @@ class DefaultPluginBag extends PluginBag {
     if (!isset($configuration[$this->pluginKey])) {
       throw new UnknownPluginException($instance_id);
     }
-    $this->pluginInstances[$instance_id] = $this->manager->createInstance($configuration[$this->pluginKey], $configuration);
-    $this->addInstanceId($instance_id);
+    $this->set($instance_id, $this->manager->createInstance($configuration[$this->pluginKey], $configuration));
   }
 
   /**
@@ -128,6 +127,15 @@ class DefaultPluginBag extends PluginBag {
     // Restore the current order.
     $this->instanceIDs = $current_order;
     return $instances;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInstanceIds(array $instance_ids) {
+    parent::setInstanceIds($instance_ids);
+    // Ensure the new order matches the original order.
+    $this->instanceIDs = $this->originalOrder = array_intersect_assoc($this->originalOrder, $this->instanceIDs);
   }
 
   /**
