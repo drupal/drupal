@@ -25,8 +25,7 @@
  *   An associative array of configuration mapper information. Use an entity
  *   name for the key (for entity mapping) or a unique string for configuration
  *   name list mapping. The values of the associative array are arrays
- *   themselves in the same structure as the *.configuration_translation.yml
- *   files.
+ *   themselves in the same structure as the *.config_translation.yml files.
  *
  * @see hook_config_translation_info_alter()
  * @see \Drupal\config_translation\ConfigMapperManagerInterface
@@ -77,8 +76,7 @@ function hook_config_translation_info(&$info) {
  *   An associative array of discovered configuration mappers. Use an entity
  *   name for the key (for entity mapping) or a unique string for configuration
  *   name list mapping. The values of the associative array are arrays
- *   themselves in the same structure as the *.configuration_translation.yml
- *   files.
+ *   themselves in the same structure as the *.config_translation.yml files.
  *
  * @see hook_translation_info()
  * @see \Drupal\config_translation\ConfigMapperManagerInterface
