@@ -81,4 +81,14 @@ class Tasks extends InstallTasks {
     }
     return TRUE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormOptions(array $database) {
+    $form = parent::getFormOptions($database);
+    $form['advanced_options']['port']['#default_value'] = '3306';
+
+    return $form;
+  }
 }

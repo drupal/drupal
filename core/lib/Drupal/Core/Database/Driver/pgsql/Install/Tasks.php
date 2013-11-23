@@ -247,4 +247,14 @@ class Tasks extends InstallTasks {
       $this->fail(t('Drupal could not be correctly setup with the existing database. Revise any errors.'));
     }
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormOptions(array $database) {
+    $form = parent::getFormOptions($database);
+    $form['advanced_options']['port']['#default_value'] = '5432';
+
+    return $form;
+  }
 }

@@ -40,7 +40,7 @@ class Tasks extends InstallTasks {
   /**
    * {@inheritdoc}
    */
-  public function getFormOptions($database) {
+  public function getFormOptions(array $database) {
     $form = parent::getFormOptions($database);
 
     // Remove the options that only apply to client/server style databases.

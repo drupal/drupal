@@ -209,14 +209,13 @@ abstract class Tasks {
    * @return
    *   The options form array.
    */
-  public function getFormOptions($database) {
+  public function getFormOptions(array $database) {
     $form['database'] = array(
       '#type' => 'textfield',
       '#title' => t('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
       '#required' => TRUE,
-      '#description' => t('The name of the database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_distribution_name())),
       '#states' => array(
         'required' => array(
           ':input[name=driver]' => array('value' => $this->pdoDriver),
@@ -249,7 +248,6 @@ abstract class Tasks {
       '#type' => 'details',
       '#title' => t('Advanced options'),
       '#collapsed' => TRUE,
-      '#description' => t("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider."),
       '#weight' => 10,
     );
 
@@ -257,32 +255,29 @@ abstract class Tasks {
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
-      '#title' => t('Table prefix'),
+      '#title' => t('Table name prefix'),
       '#default_value' => '',
       '#size' => 45,
-      '#description' => t('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_distribution_name(), '%prefix' => $db_prefix)),
+      '#description' => t('If more than one application will be sharing this database, a unique table name prefix–such as %prefix–will prevent collisions.', array('%prefix' => $db_prefix)),
       '#weight' => 10,
     );
 
     $form['advanced_options']['host'] = array(
       '#type' => 'textfield',
-      '#title' => t('Database host'),
+      '#title' => t('Host'),
       '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,
       // Hostnames can be 255 characters long.
       '#maxlength' => 255,
       '#required' => TRUE,
-      '#description' => t('If your database is located on a different server, change this.'),
     );
 
     $form['advanced_options']['port'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Database port'),
+      '#type' => 'number',
+      '#title' => t('Port number'),
       '#default_value' => empty($database['port']) ? '' : $database['port'],
-      '#size' => 45,
-      // The maximum port number is 65536, 5 digits.
-      '#maxlength' => 5,
-      '#description' => t('If your database server is listening to a non-standard port, enter its number.'),
+      '#min' => 0,
+      '#max' => 65536,
     );
 
     return $form;
@@ -306,11 +301,6 @@ abstract class Tasks {
     // Verify the table prefix.
     if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
       $errors[$database['driver'] . '][advanced_options][db_prefix'] = t('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%prefix' => $database['prefix']));
-    }
-
-    // Verify the database port.
-    if (!empty($database['port']) && !is_numeric($database['port'])) {
-      $errors[$database['driver'] . '][advanced_options][port'] =  t('Database port must be a number.');
     }
 
     return $errors;
