@@ -44,7 +44,7 @@ user.account_settings:
 user.admin_account:
   path: '/admin/people'
   defaults:
-    _controller: '\Drupal\user\Controller\UserAdmin::userList'
+    _entity_list: 'user'
   requirements:
     _permission: 'administer users'
 

@@ -21,6 +21,7 @@ use Drupal\user\UserInterface;
  *   controllers = {
  *     "storage" = "Drupal\user\UserStorageController",
  *     "access" = "Drupal\user\UserAccessController",
+ *     "list" = "Drupal\user\Controller\UserListController",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\user\ProfileFormController",
