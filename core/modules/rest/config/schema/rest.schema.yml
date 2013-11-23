@@ -1,0 +1,50 @@
+# Schema for the configuration files of the REST module.
+
+rest.settings:
+  type: mapping
+  label: 'REST settings'
+  mapping:
+    resources:
+      type: sequence
+      label: 'Resources'
+      sequence:
+        - type: sequence
+          label: 'Resource'
+          sequence:
+            - type: rest.resource.[%key]
+
+rest.resource.GET:
+  type: mapping
+  label: 'GET method settings'
+  mapping:
+    supported_format:
+      type: sequence
+      label: 'Supported format'
+      sequence:
+        - type: string
+          label: 'Format'
+
+rest.resource.POST:
+  type: mapping
+  label: 'POST method settings'
+  mapping:
+    supported_auth:
+      type: sequence
+      label: 'Supported format'
+      sequence:
+        - type: string
+          label: 'Format'
+
+rest.resource.PATCH:
+  type: sequence
+  label: 'PATCH method settings'
+  sequence:
+    - type: string
+      label: 'Format'
+
+rest.resource.DELETE:
+  type: sequence
+  label: 'DELETE method settings'
+  sequence:
+    - type: string
+      label: 'Format'
