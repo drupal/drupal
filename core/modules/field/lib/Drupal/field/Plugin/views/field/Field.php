@@ -259,7 +259,7 @@ class Field extends FieldPluginBase {
         $default_langcode = language_default()->id;
         $langcode = str_replace(
           array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-          array($this->languageManager->getLanguage(Language::TYPE_CONTENT)),
+          array($this->languageManager->getLanguage(Language::TYPE_CONTENT), $default_langcode),
           $this->view->display_handler->options['field_langcode']
         );
         $placeholder = $this->placeholder();
@@ -859,7 +859,7 @@ class Field extends FieldPluginBase {
       $default_langcode = language_default()->id;
       $langcode = str_replace(
         array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
-        array($this->languageManager->getLanguage(Language::TYPE_CONTENT)),
+        array($this->languageManager->getLanguage(Language::TYPE_CONTENT), $default_langcode),
         $this->view->display_handler->options['field_language']
       );
 
