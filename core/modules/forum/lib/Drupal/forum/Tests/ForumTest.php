@@ -103,6 +103,7 @@ class ForumTest extends WebTestBase {
       'skip comment approval',
       'access comments',
     ));
+    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
   }
 
   /**
@@ -257,6 +258,8 @@ class ForumTest extends WebTestBase {
     $this->forumContainer = $this->createForum('container');
     // Verify "edit container" link exists and functions correctly.
     $this->drupalGet('admin/structure/forum');
+    // Verify help text is shown.
+    $this->assertText(t('Forums contain forum topics. Use containers to group related forums'));
     // Verify action links are there.
     $this->assertLink('Add forum');
     $this->assertLink('Add container');
