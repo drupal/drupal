@@ -113,7 +113,7 @@ class ViewsData {
   public function get($key = NULL) {
     if ($key) {
       if (!isset($this->storage[$key])) {
-        // Prepare a cache ID.
+        // Prepare a cache ID for get and set.
         $cid = $this->baseCid . ':' . $key;
 
         $from_cache = FALSE;
@@ -135,15 +135,11 @@ class ViewsData {
             $this->storage[$key] = array();
           }
           // Create a cache entry for the requested table.
-          $this->cacheBackend->set($this->prepareCid($cid), $this->storage[$key]);
+          $this->cacheSet($cid, $this->storage[$key]);
         }
       }
-      if (isset($this->storage[$key])) {
-        return $this->storage[$key];
-      }
 
-      // If the key is invalid, return an empty array.
-      return array();
+      return $this->storage[$key];
     }
     else {
       if (!$this->fullyLoaded) {
@@ -170,6 +166,18 @@ class ViewsData {
     }
 
     return $this->cacheBackend->get($this->prepareCid($cid));
+  }
+
+  /**
+   * Sets data to the cache backend.
+   *
+   * @param string $cid
+   *   The cache ID to set.
+   * @param mixed $data
+   *   The data that will be cached.
+   */
+  protected function cacheSet($cid, $data) {
+    return $this->cacheBackend->set($this->prepareCid($cid), $data);
   }
 
   /**
@@ -206,7 +214,7 @@ class ViewsData {
       $this->processEntityTypes($data);
 
       // Keep a record with all data.
-      $this->cacheBackend->set($this->prepareCid($this->baseCid), $data);
+      $this->cacheSet($this->baseCid, $data);
 
       return $data;
     }
