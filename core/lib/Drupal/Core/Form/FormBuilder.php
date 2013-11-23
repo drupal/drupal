@@ -443,9 +443,9 @@ class FormBuilder implements FormBuilderInterface {
   public function submitForm($form_arg, &$form_state) {
     if (!isset($form_state['build_info']['args'])) {
       $args = func_get_args();
-      array_shift($args);
-      array_shift($args);
-      $form_state['build_info']['args'] = $args;
+      // Remove $form and $form_state from the arguments.
+      unset($args[0], $args[1]);
+      $form_state['build_info']['args'] = array_values($args);
     }
     // Merge in default values.
     $form_state += $this->getFormStateDefaults();
