@@ -198,10 +198,10 @@ class File extends ContentEntityBase implements FileInterface {
 
     foreach ($entities as $entity) {
       // Delete all remaining references to this file.
-      $file_usage = file_usage()->listUsage($entity);
+      $file_usage = \Drupal::service('file.usage')->listUsage($entity);
       if (!empty($file_usage)) {
         foreach ($file_usage as $module => $usage) {
-          file_usage()->delete($entity, $module);
+          \Drupal::service('file.usage')->delete($entity, $module);
         }
       }
       // Delete the actual file. Failures due to invalid files and files that

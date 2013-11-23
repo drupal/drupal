@@ -917,7 +917,7 @@ function file_create_filename($basename, $directory) {
  *   The file id.
  *
  * @see file_unmanaged_delete()
- * @see file_usage()->listUsage()
+ * @see \Drupal\file\FileUsage\FileUsageBase::delete()
  */
 function file_delete($fid) {
   return file_delete_multiple(array($fid));
@@ -934,7 +934,7 @@ function file_delete($fid) {
  *   The file id.
  *
  * @see file_unmanaged_delete()
- * @see file_usage()->listUsage()
+ * @see \Drupal\file\FileUsage\FileUsageBase::delete()
  */
 function file_delete_multiple(array $fids) {
   entity_delete_multiple('file', $fids);

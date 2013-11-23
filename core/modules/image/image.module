@@ -475,12 +475,12 @@ function image_field_entity_update(FieldInterface $field) {
     if ($file_new) {
       $file_new->status = FILE_STATUS_PERMANENT;
       $file_new->save();
-      file_usage()->add($file_new, 'image', 'default_image', $field->uuid);
+      \Drupal::service('file.usage')->add($file_new, 'image', 'default_image', $field->uuid);
     }
 
     // Is there an old file?
     if ($fid_old && ($file_old = file_load(reset($fid_old)))) {
-      file_usage()->delete($file_old, 'image', 'default_image', $field->uuid);
+      \Drupal::service('file.usage')->delete($file_old, 'image', 'default_image', $field->uuid);
     }
   }
 
@@ -522,11 +522,11 @@ function image_field_instance_update(FieldInstanceInterface $field_instance) {
     if ($file_new) {
       $file_new->status = FILE_STATUS_PERMANENT;
       $file_new->save();
-      file_usage()->add($file_new, 'image', 'default_image', $field_instance->uuid);
+      \Drupal::service('file.usage')->add($file_new, 'image', 'default_image', $field_instance->uuid);
     }
     // Delete the old file, if present.
     if ($fid_old && ($file_old = file_load($fid_old[0]))) {
-      file_usage()->delete($file_old, 'image', 'default_image', $field_instance->uuid);
+      \Drupal::service('file.usage')->delete($file_old, 'image', 'default_image', $field_instance->uuid);
     }
   }
 
@@ -550,7 +550,7 @@ function image_field_entity_delete(FieldInterface $field) {
   // The value of a managed_file element can be an array if #extended == TRUE.
   $fid = (isset($field->settings['default_image']['fid']['fids']) ? $field->settings['default_image']['fid']['fids'] : $field->settings['default_image']['fid']);
   if ($fid && ($file = file_load($fid[0]))) {
-    file_usage()->delete($file, 'image', 'default_image', $field->uuid);
+    \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field->uuid);
   }
 }
 
@@ -573,6 +573,6 @@ function image_field_instance_delete(FieldInstanceInterface $field_instance) {
 
   // Remove the default image when the instance is deleted.
   if ($fid && ($file = file_load($fid))) {
-    file_usage()->delete($file, 'image', 'default_image', $field_instance->uuid);
+    \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field_instance->uuid);
   }
 }
