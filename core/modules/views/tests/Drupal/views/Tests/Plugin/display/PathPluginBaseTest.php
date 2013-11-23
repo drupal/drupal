@@ -67,18 +67,28 @@ class PathPluginBaseTest extends UnitTestCase {
       ->setConstructorArgs(array(array(), 'path_base', array(), $this->routeProvider, $this->state))
       ->setMethods(NULL)
       ->getMock();
-    $this->setupAccessPluginManager();
+    $this->setupContainer();
   }
 
   /**
-   * Setup access plugin manager in a Drupal class.
+   * Setup access plugin manager and config factory in the Drupal class.
    */
-  public function setupAccessPluginManager() {
+  public function setupContainer() {
     $this->accessPluginManager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
     $container = new ContainerBuilder();
     $container->set('plugin.manager.views.access', $this->accessPluginManager);
+
+    $config = array(
+      'views.settings' => array(
+        'skip_cache' => TRUE,
+        'display_extenders' => array(),
+      ),
+    );
+
+    $container->set('config.factory', $this->getConfigFactoryStub($config));
+
     \Drupal::setContainer($container);
   }
 

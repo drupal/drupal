@@ -103,6 +103,13 @@ abstract class DisplayPluginBase extends PluginBase {
   protected $usesAreas = TRUE;
 
   /**
+   * Static cache for unpackOptions, but not if we are in the UI.
+   *
+   * @var array
+   */
+  protected static $unpackOptions = array();
+
+  /**
    * Constructs a new DisplayPluginBase object.
    *
    * Because DisplayPluginBase::initDisplay() takes the display configuration by
@@ -124,12 +131,10 @@ abstract class DisplayPluginBase extends PluginBase {
 
     // Load extenders as soon as possible.
     $this->extender = array();
-    $extenders = views_get_enabled_display_extenders();
-    if (!empty($extenders)) {
+    if ($extenders = Views::getEnabledDisplayExtenders()) {
       $manager = Views::pluginManager('display_extender');
       foreach ($extenders as $extender) {
-        $plugin = $manager->createInstance($extender);
-        if ($plugin) {
+        if ($plugin = $manager->createInstance($extender)) {
           $plugin->init($this->view, $this);
           $this->extender[$extender] = $plugin;
         }
@@ -148,23 +153,23 @@ abstract class DisplayPluginBase extends PluginBase {
       unset($options['defaults']);
     }
 
-    // Cache for unpackOptions, but not if we are in the ui.
-    static $unpack_options = array();
-    if (empty($view->editing)) {
-      $cid = 'unpackOptions:' . hash('sha256', serialize(array($this->options, $options)));
-      if (empty($unpack_options[$cid])) {
-        $cache = views_cache_get($cid, TRUE);
+    $skip_cache = \Drupal::config('views.settings')->get('skip_cache');
+
+    if (empty($view->editing) || !$skip_cache) {
+      $cid = 'unpackOptions:' . hash('sha256', serialize(array($this->options, $options))) . ':' . \Drupal::languageManager()->getLanguage()->id;
+      if (empty(static::$unpackOptions[$cid])) {
+        $cache = \Drupal::cache('views_info')->get($cid);
         if (!empty($cache->data)) {
           $this->options = $cache->data;
         }
         else {
           $this->unpackOptions($this->options, $options);
-          views_cache_set($cid, $this->options, TRUE);
+          \Drupal::cache('views_info')->set($cid, $this->options);
         }
-        $unpack_options[$cid] = $this->options;
+        static::$unpackOptions[$cid] = $this->options;
       }
       else {
-        $this->options = $unpack_options[$cid];
+        $this->options = static::$unpackOptions[$cid];
       }
     }
     else {
