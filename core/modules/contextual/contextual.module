@@ -1,10 +1,12 @@
 <?php
-use Drupal\Component\Utility\Url;
 
 /**
  * @file
  * Adds contextual links to perform actions related to elements on a page.
  */
+
+use Drupal\Component\Utility\Url;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_menu().
@@ -229,7 +231,7 @@ function contextual_preprocess(&$variables, $hook, $info) {
  * @see contextual_element_info()
  */
 function contextual_pre_render_placeholder($element) {
-  $element['#markup'] = '<div data-contextual-id="' . $element['#id'] . '"></div>';
+  $element['#markup'] = '<div' . new Attribute(array('data-contextual-id' => $element['#id'])) . '></div>';
   return $element;
 }
 

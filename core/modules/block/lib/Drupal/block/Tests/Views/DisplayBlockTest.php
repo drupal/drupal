@@ -10,6 +10,7 @@ namespace Drupal\block\Tests\Views;
 use Drupal\Component\Utility\String;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Defines a test for block display.
@@ -232,7 +233,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $id = 'block:block=' . $block->id() . ':|views_ui_edit:view=test_view_block:location=block&name=test_view_block&display_id=block_1';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
-    $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+    $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
 
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()

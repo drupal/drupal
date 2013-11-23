@@ -9,11 +9,12 @@ namespace Drupal\views_ui\Tests;
 
 use Drupal\Component\Utility\String;
 
+use Drupal\views\Views;
+use Drupal\Core\Template\Attribute;
+
 /**
  * Tests the handling of displays in the UI, adding removing etc.
  */
-use Drupal\views\Views;
-
 class DisplayTest extends UITestBase {
 
   /**
@@ -295,7 +296,7 @@ class DisplayTest extends UITestBase {
     $this->drupalGet('test-display');
     $id = 'views_ui_edit:view=test_display:location=page&name=test_display&display_id=page_1';
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
-    $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+    $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
 
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()

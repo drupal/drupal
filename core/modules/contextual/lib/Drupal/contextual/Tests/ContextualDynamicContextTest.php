@@ -8,6 +8,7 @@
 namespace Drupal\contextual\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Tests accessible links after inaccessible links on dynamic context.
@@ -120,7 +121,7 @@ class ContextualDynamicContextTest extends WebTestBase {
    * @return bool
    */
   protected function assertContextualLinkPlaceHolder($id) {
-    $this->assertRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+    $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
   }
 
   /**
@@ -132,7 +133,7 @@ class ContextualDynamicContextTest extends WebTestBase {
    * @return bool
    */
   protected function assertNoContextualLinkPlaceHolder($id) {
-    $this->assertNoRaw('<div data-contextual-id="'. $id . '"></div>', format_string('Contextual link placeholder with id @id does not exist.', array('@id' => $id)));
+    $this->assertNoRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id does not exist.', array('@id' => $id)));
   }
 
   /**
