@@ -71,7 +71,7 @@ class NodeTypeTest extends NodeTestBase {
       'title_label' => 'title for foo',
       'type' => 'foo',
     );
-    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save and manage fields'));
     $type_exists = (bool) entity_load('node_type', 'foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
   }

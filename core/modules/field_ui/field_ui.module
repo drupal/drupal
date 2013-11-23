@@ -200,6 +200,8 @@ function field_ui_form_node_type_form_alter(&$form, $form_state) {
     $form['actions']['save_continue']['#value'] = t('Save and manage fields');
     $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] + 5;
     $form['actions']['save_continue']['#submit'][] = 'field_ui_form_node_type_form_submit';
+    // Hide the 'Save content type' button.
+    $form['actions']['submit']['#access'] = FALSE;
   }
 }
 
