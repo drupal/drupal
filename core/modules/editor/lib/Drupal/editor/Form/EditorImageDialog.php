@@ -199,7 +199,11 @@ class EditorImageDialog extends FormBase {
     // attributes.
     if (!empty($form_state['values']['fid'][0])) {
       $file = file_load($form_state['values']['fid'][0]);
-      $form_state['values']['attributes']['src'] = file_create_url($file->getFileUri());
+      $file_url = file_create_url($file->getFileUri());
+      // Transform absolute image URLs to relative image URLs: prevent problems
+      // on multisite set-ups and prevent mixed content errors.
+      $file_url = file_url_transform_relative($file_url);
+      $form_state['values']['attributes']['src'] = $file_url;
       $form_state['values']['attributes']['data-editor-file-uuid'] = $file->uuid();
     }
 

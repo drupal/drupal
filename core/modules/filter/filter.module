@@ -1377,10 +1377,9 @@ function _filter_html_image_secure_process($text) {
   $images = $html_dom->getElementsByTagName('img');
   foreach ($images as $image) {
     $src = $image->getAttribute('src');
-    // Remove absolute URLs pointing to the local domain to prevent mixed
-    // content errors.
-    $request = \Drupal::request();
-    $image->setAttribute('src', preg_replace('|^https?://' . $request->getHttpHost() . '|', '', $src));
+    // Transform absolute image URLs to relative image URLs: prevent problems on
+    // multisite set-ups and prevent mixed content errors.
+    $image->setAttribute('src', file_url_transform_relative($src));
 
     // Verify that $src starts with $base_path.
     // This also ensures that external images cannot be referenced.
