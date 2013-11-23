@@ -2,7 +2,7 @@ node.content_overview:
   path: '/admin/content'
   defaults:
     _title: 'Content'
-    _content: '\Drupal\node\Controller\NodeController::contentOverview'
+    _entity_list: 'node'
   requirements:
     _permission: 'access content overview'
 

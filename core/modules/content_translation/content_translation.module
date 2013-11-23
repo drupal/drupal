@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_help().
@@ -138,6 +139,21 @@ function content_translation_entity_field_info_alter(&$info, $entity_type) {
         }
       }
     }
+  }
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function content_translation_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
+  // @todo Use an access permission.
+  if ($entity instanceof NodeInterface && $entity->isTranslatable()) {
+    $uri = $entity->uri();
+    $operations['translate'] = array(
+      'title' => t('Translate'),
+      'href' => $uri['path'] . '/translations',
+      'options' => $uri['options'],
+    );
   }
 }
 

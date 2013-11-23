@@ -19,14 +19,6 @@ use Drupal\node\NodeInterface;
 class NodeController extends ControllerBase {
 
   /**
-   * @todo Remove node_admin_nodes().
-   */
-  public function contentOverview() {
-    module_load_include('admin.inc', 'node');
-    return node_admin_nodes();
-  }
-
-  /**
    * @todo Remove node_add_page().
    */
   public function addPage() {

@@ -29,6 +29,7 @@ use Drupal\node\NodeInterface;
  *       "delete" = "Drupal\node\Form\NodeDeleteForm",
  *       "edit" = "Drupal\node\NodeFormController"
  *     },
+ *     "list" = "Drupal\node\NodeListController",
  *     "translation" = "Drupal\node\NodeTranslationController"
  *   },
  *   base_table = "node",
