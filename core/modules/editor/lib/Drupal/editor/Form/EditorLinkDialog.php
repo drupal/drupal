@@ -81,7 +81,7 @@ class EditorLinkDialog extends FormBase {
   public function submitForm(array &$form, array &$form_state) {
     $response = new AjaxResponse();
 
-    if (form_get_errors()) {
+    if (form_get_errors($form_state)) {
       unset($form['#prefix'], $form['#suffix']);
       $status_messages = array('#theme' => 'status_messages');
       $output = drupal_render($form);

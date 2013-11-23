@@ -163,7 +163,7 @@ function dblog_filter_form($form) {
  */
 function dblog_filter_form_validate($form, &$form_state) {
   if ($form_state['values']['op'] == t('Filter') && empty($form_state['values']['type']) && empty($form_state['values']['severity'])) {
-    form_set_error('type', t('You must select something to filter by.'));
+    form_set_error('type', $form_state, t('You must select something to filter by.'));
   }
 }
 

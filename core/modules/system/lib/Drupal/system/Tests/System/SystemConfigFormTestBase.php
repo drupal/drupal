@@ -54,7 +54,7 @@ abstract class SystemConfigFormTestBase extends WebTestBase {
     drupal_form_submit($this->form, $form_state);
 
     // Check that the form returns an error when expected, and vice versa.
-    $errors = form_get_errors();
+    $errors = form_get_errors($form_state);
     $valid_form = empty($errors);
     $args = array(
       '%values' => print_r($values, TRUE),

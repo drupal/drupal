@@ -144,7 +144,7 @@ class SiteInformationForm extends ConfigFormBase {
     }
     // Validate front page path.
     if (!drupal_valid_path($form_state['values']['site_frontpage'])) {
-      form_set_error('site_frontpage', t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_frontpage'])));
+      form_set_error('site_frontpage', $form_state, t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_frontpage'])));
     }
     // Get the normal paths of both error pages.
     if (!empty($form_state['values']['site_403'])) {
@@ -155,11 +155,11 @@ class SiteInformationForm extends ConfigFormBase {
     }
     // Validate 403 error path.
     if (!empty($form_state['values']['site_403']) && !drupal_valid_path($form_state['values']['site_403'])) {
-      form_set_error('site_403', t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_403'])));
+      form_set_error('site_403', $form_state, t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_403'])));
     }
     // Validate 404 error path.
     if (!empty($form_state['values']['site_404']) && !drupal_valid_path($form_state['values']['site_404'])) {
-      form_set_error('site_404', t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_404'])));
+      form_set_error('site_404', $form_state, t("The path '%path' is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_404'])));
     }
 
     parent::validateForm($form, $form_state);

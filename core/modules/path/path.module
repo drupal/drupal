@@ -164,7 +164,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
     $query->addExpression('1');
     $query->range(0, 1);
     if ($query->execute()->fetchField()) {
-      form_error($element, t('The alias is already in use.'));
+      form_error($element, $form_state, t('The alias is already in use.'));
     }
   }
 }

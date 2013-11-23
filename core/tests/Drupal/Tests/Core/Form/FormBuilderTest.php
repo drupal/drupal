@@ -163,10 +163,7 @@ class FormBuilderTest extends UnitTestCase {
   public function testGetFormIdWithObject() {
     $expected_form_id = 'my_module_form_id';
 
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->once())
-      ->method('getFormId')
-      ->will($this->returnValue($expected_form_id));
+    $form_arg = $this->getMockForm($expected_form_id);
 
     $form_state = array();
     $form_id = $this->formBuilder->getFormId($form_arg, $form_state);
@@ -349,14 +346,7 @@ class FormBuilderTest extends UnitTestCase {
     $form_id = 'test_form_id';
     $expected_form = $form_id();
 
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->once())
-      ->method('getFormId')
-      ->will($this->returnValue($form_id));
-    $form_arg->expects($this->once())
-      ->method('buildForm')
-      ->will($this->returnValue($expected_form));
-
+    $form_arg = $this->getMockForm($form_id, $expected_form);
 
     $form = $this->formBuilder->getForm($form_arg);
     $this->assertFormElement($expected_form, $form, 'test');
@@ -370,10 +360,7 @@ class FormBuilderTest extends UnitTestCase {
     $form_id = 'test_form_id';
     $expected_form = $form_id();
 
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->once())
-      ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+    $form_arg = $this->getMockForm(NULL, $expected_form);
 
     $form_state['build_info']['callback_object'] = $form_arg;
     $form_state['build_info']['args'] = array();
@@ -392,7 +379,7 @@ class FormBuilderTest extends UnitTestCase {
     $base_form_id = 'test_form_id';
     $expected_form = $base_form_id();
     // Set the module handler to return information from hook_forms().
-    $this->moduleHandler->expects($this->any())
+    $this->moduleHandler->expects($this->once())
       ->method('invokeAll')
       ->with('forms', array($form_id, array()))
       ->will($this->returnValue(array(
@@ -417,10 +404,8 @@ class FormBuilderTest extends UnitTestCase {
     $form_id = 'test_form_id';
     $expected_form = $form_id();
 
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->any())
-      ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+    // The form will be built four times.
+    $form_arg = $this->getMockForm(NULL, $expected_form, 4);
 
     // Do an initial build of the form and track the build ID.
     $form_state = array();
@@ -446,41 +431,49 @@ class FormBuilderTest extends UnitTestCase {
    * Tests the submitForm() method.
    */
   public function testSubmitForm() {
-    $expected_form = test_form_id();
+    $form_id = 'test_form_id';
+    $expected_form = $form_id();
     $expected_form['test']['#required'] = TRUE;
     $expected_form['options']['#required'] = TRUE;
     $expected_form['value']['#required'] = TRUE;
 
     $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->any())
+    $form_arg->expects($this->exactly(5))
+      ->method('getFormId')
+      ->will($this->returnValue($form_id));
+    $form_arg->expects($this->exactly(5))
       ->method('buildForm')
       ->will($this->returnValue($expected_form));
 
     $form_state = array();
     $form_state['values']['test'] = $this->randomName();
+    $form_state['values']['op'] = 'Submit';
     $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors();
+    $errors = $this->formBuilder->getErrors($form_state);
     $this->assertNotEmpty($errors['options']);
 
     $form_state = array();
     $form_state['values']['test'] = $this->randomName();
     $form_state['values']['options'] = 'foo';
+    $form_state['values']['op'] = 'Submit';
     $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors();
-    $this->assertNull($errors);
+    $errors = $this->formBuilder->getErrors($form_state);
+    $this->assertEmpty($errors);
 
     $form_state = array();
     $form_state['values']['test'] = $this->randomName();
     $form_state['values']['options'] = array('foo');
+    $form_state['values']['op'] = 'Submit';
     $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors();
-    $this->assertNull($errors);
+    $errors = $this->formBuilder->getErrors($form_state);
+    $this->assertEmpty($errors);
 
     $form_state = array();
     $form_state['values']['test'] = $this->randomName();
     $form_state['values']['options'] = array('foo', 'baz');
+    $form_state['values']['op'] = 'Submit';
     $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors();
+    $errors = $this->formBuilder->getErrors($form_state);
     $this->assertNotEmpty($errors['options']);
 
     $form_state = array();
@@ -488,7 +481,7 @@ class FormBuilderTest extends UnitTestCase {
     $form_state['values']['options'] = $this->randomName();
     $form_state['values']['op'] = 'Submit';
     $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors();
+    $errors = $this->formBuilder->getErrors($form_state);
     $this->assertNotEmpty($errors['options']);
   }
 
@@ -498,20 +491,19 @@ class FormBuilderTest extends UnitTestCase {
    * @dataProvider providerTestFlattenOptions
    */
   public function testFlattenOptions($options) {
-    $expected_form = test_form_id();
+    $form_id = 'test_form_id';
+    $expected_form = $form_id();
     $expected_form['select']['#required'] = TRUE;
     $expected_form['select']['#options'] = $options;
 
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->any())
-      ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+    $form_arg = $this->getMockForm($form_id, $expected_form);
 
     $form_state = array();
     $form_state['values']['select'] = 'foo';
+    $form_state['values']['op'] = 'Submit';
     $this->formBuilder->submitForm($form_arg, $form_state);
-    $errors = $this->formBuilder->getErrors();
-    $this->assertNull($errors);
+    $errors = $this->formBuilder->getErrors($form_state);
+    $this->assertEmpty($errors);
   }
 
   /**
@@ -530,6 +522,94 @@ class FormBuilderTest extends UnitTestCase {
   }
 
   /**
+   * Tests the setErrorByName() method.
+   *
+   * @param array|null $limit_validation_errors
+   *   The errors to limit validation for, NULL will run all validation.
+   * @param array $expected_errors
+   *   The errors expected to be set.
+   *
+   * @dataProvider providerTestSetErrorByName
+   */
+  public function testSetErrorByName($limit_validation_errors, $expected_errors) {
+    $form_id = 'test_form_id';
+    $expected_form = $form_id();
+    $expected_form['actions']['submit']['#submit'][] = 'test_form_id_custom_submit';
+    $expected_form['actions']['submit']['#limit_validation_errors'] = $limit_validation_errors;
+
+    $form_arg = $this->getMockForm($form_id, $expected_form);
+    $form_builder = $this->formBuilder;
+    $form_arg->expects($this->once())
+      ->method('validateForm')
+      ->will($this->returnCallback(function (array &$form, array &$form_state) use ($form_builder) {
+        $form_builder->setErrorByName('test', $form_state, 'Fail 1');
+        $form_builder->setErrorByName('test', $form_state, 'Fail 2');
+        $form_builder->setErrorByName('options', $form_state);
+      }));
+
+    $form_state = array();
+    $form_state['values']['test'] = $this->randomName();
+    $form_state['values']['options'] = 'foo';
+    $form_state['values']['op'] = 'Submit';
+    $this->formBuilder->submitForm($form_arg, $form_state);
+
+    $errors = $this->formBuilder->getErrors($form_state);
+    $this->assertSame($expected_errors, $errors);
+  }
+
+  /**
+   * Provides test data for testing the setErrorByName() method.
+   *
+   * @return array
+   *   Returns some test data.
+   */
+  public function providerTestSetErrorByName() {
+    return array(
+      // Only validate the 'options' element.
+      array(array(array('options')), array('options' => '')),
+      // Do not limit an validation, and, ensuring the first error is returned
+      // for the 'test' element.
+      array(NULL, array('test' => 'Fail 1', 'options' => '')),
+      // Limit all validation.
+      array(array(), array()),
+    );
+  }
+
+  /**
+   * Tests the getError() method.
+   *
+   * @dataProvider providerTestGetError
+   */
+  public function testGetError($parents, $expected = NULL) {
+    $form_state = array();
+    // Set errors on a top level and a child element, and a nested element.
+    $this->formBuilder->setErrorByName('foo', $form_state, 'Fail 1');
+    $this->formBuilder->setErrorByName('foo][bar', $form_state, 'Fail 2');
+    $this->formBuilder->setErrorByName('baz][bim', $form_state, 'Fail 3');
+
+    $element['#parents'] = $parents;
+    $error = $this->formBuilder->getError($element, $form_state);
+    $this->assertSame($expected, $error);
+  }
+
+  /**
+   * Provides test data for testing the getError() method.
+   *
+   * @return array
+   *   Returns some test data.
+   */
+  public function providerTestGetError() {
+    return array(
+      array(array('foo'), 'Fail 1'),
+      array(array('foo', 'bar'), 'Fail 1'),
+      array(array('baz')),
+      array(array('baz', 'bim'), 'Fail 3'),
+      array(array($this->randomName())),
+      array(array()),
+    );
+  }
+
+  /**
    * Tests the getCache() method.
    */
   public function testGetCache() {
@@ -538,10 +618,7 @@ class FormBuilderTest extends UnitTestCase {
 
     // FormBuilder::buildForm() will be called 3 times, but the form object will
     // only be called twice due to caching.
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->exactly(2))
-      ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+    $form_arg = $this->getMockForm(NULL, $expected_form, 2);
 
     // The CSRF token and the user authentication are checked each time.
     $this->csrfToken->expects($this->exactly(3))
@@ -600,16 +677,49 @@ class FormBuilderTest extends UnitTestCase {
       ->method('prepare')
       ->will($this->returnValue($expected_form));
 
-    $form_arg = $this->getMock('Drupal\Core\Form\FormInterface');
-    $form_arg->expects($this->any())
-      ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+    $form_arg = $this->getMockForm(NULL, $expected_form);
 
     // Do an initial build of the form and track the build ID.
     $form_state = array();
     $form_state['build_info']['callback_object'] = $form_arg;
     $form_state['build_info']['args'] = array();
     $this->formBuilder->buildForm($form_id, $form_state);
+  }
+
+  /**
+   * Provides a mocked form object.
+   *
+   * @param string $form_id
+   *   (optional) The form ID to be used. If none is provided, the form will be
+   *   set to expect that getFormId() will never be called.
+   * @param mixed $expected_form
+   *   (optional) If provided, the expected form response for buildForm() to
+   *   return. Defaults to NULL.
+   * @param int $count
+   *   (optional) The number of times the form is expected to be built. Defaults
+   *   to 1.
+   *
+   * @return \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Form\FormInterface
+   *   The mocked form object.
+   */
+  protected function getMockForm($form_id = NULL, $expected_form = NULL, $count = 1) {
+    $form = $this->getMock('Drupal\Core\Form\FormInterface');
+    if ($form_id) {
+      $form->expects($this->once())
+        ->method('getFormId')
+        ->will($this->returnValue($form_id));
+    }
+    else {
+      $form->expects($this->never())
+        ->method('getFormId');
+    }
+
+    if ($expected_form) {
+      $form->expects($this->exactly($count))
+        ->method('buildForm')
+        ->will($this->returnValue($expected_form));
+    }
+    return $form;
   }
 
   /**
@@ -789,6 +899,8 @@ namespace {
       '#value' => 'Submit',
     );
     return $form;
+  }
+  function test_form_id_custom_submit(array &$form, array &$form_state) {
   }
 
   if (!defined('WATCHDOG_ERROR')) {

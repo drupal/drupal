@@ -295,7 +295,7 @@ function editor_form_filter_admin_format_validate($form, &$form_state) {
   // selected a text editor and has then clicked 'Save configuration', we should
   // point out that the user must still configure the text editor.
   if ($form_state['values']['editor']['editor'] !== '' && empty($form_state['editor'])) {
-    form_set_error('editor][editor', t('You must configure the selected text editor.'));
+    form_set_error('editor][editor', $form_state, t('You must configure the selected text editor.'));
   }
 }
 

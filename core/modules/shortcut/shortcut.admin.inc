@@ -120,11 +120,11 @@ function shortcut_set_switch_validate($form, &$form_state) {
   if ($form_state['values']['set'] == 'new') {
     // Check to prevent creating a shortcut set with an empty title.
     if (trim($form_state['values']['label']) == '') {
-      form_set_error('new', t('The new set label is required.'));
+      form_set_error('new', $form_state, t('The new set label is required.'));
     }
     // Check to prevent a duplicate title.
     if (shortcut_set_title_exists($form_state['values']['label'])) {
-      form_set_error('label', t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state['values']['label'])));
+      form_set_error('label', $form_state, t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state['values']['label'])));
     }
   }
 }
@@ -293,7 +293,7 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
  */
 function shortcut_link_edit_validate($form, &$form_state) {
   if (!shortcut_valid_link($form_state['values']['shortcut_link']['link_path'])) {
-    form_set_error('shortcut_link][link_path', t('The link must correspond to a valid path on the site.'));
+    form_set_error('shortcut_link][link_path', $form_state, t('The link must correspond to a valid path on the site.'));
   }
 }
 

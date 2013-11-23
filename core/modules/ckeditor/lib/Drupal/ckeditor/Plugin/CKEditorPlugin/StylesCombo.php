@@ -96,7 +96,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function validateStylesValue(array $element, array &$form_state) {
     if ($this->generateStylesSetSetting($element['#value']) === FALSE) {
-      form_error($element, t('The provided list of styles is syntactically incorrect.'));
+      form_error($element, $form_state, t('The provided list of styles is syntactically incorrect.'));
     }
   }
 

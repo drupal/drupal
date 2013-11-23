@@ -103,7 +103,6 @@ class FormTest extends WebTestBase {
           $form_id = $this->randomName();
           $form = array();
           $form_state = form_state_defaults();
-          form_clear_error();
           $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
           $element = $data['element']['#title'];
           $form[$element] = $data['element'];
@@ -113,7 +112,7 @@ class FormTest extends WebTestBase {
           $form_state['method'] = 'post';
           drupal_prepare_form($form_id, $form, $form_state);
           drupal_process_form($form_id, $form, $form_state);
-          $errors = form_get_errors();
+          $errors = form_get_errors($form_state);
           // Form elements of type 'radios' throw all sorts of PHP notices
           // when you try to render them like this, so we ignore those for
           // testing the required marker.
@@ -237,9 +236,6 @@ class FormTest extends WebTestBase {
    * @see form_test_validate_required_form_no_title()
    */
   function testRequiredTextfieldNoTitle() {
-    $form = $form_state = array();
-    form_test_validate_required_form_no_title($form, $form_state);
-
     // Attempt to submit the form with no required field set.
     $edit = array();
     $this->drupalPostForm('form-test/validate-required-no-title', $edit, 'Submit');

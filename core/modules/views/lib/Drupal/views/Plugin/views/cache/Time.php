@@ -91,7 +91,7 @@ class Time extends CachePluginBase {
     $custom_fields = array('output_lifespan', 'results_lifespan');
     foreach ($custom_fields as $field) {
       if ($form_state['values']['cache_options'][$field] == 'custom' && !is_numeric($form_state['values']['cache_options'][$field . '_custom'])) {
-        form_error($form[$field .'_custom'], t('Custom time values must be numeric.'));
+        form_error($form[$field .'_custom'], $form_state, t('Custom time values must be numeric.'));
       }
     }
   }

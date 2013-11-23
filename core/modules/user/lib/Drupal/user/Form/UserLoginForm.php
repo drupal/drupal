@@ -118,7 +118,7 @@ class UserLoginForm extends FormBase {
   public function validateName(array &$form, array &$form_state) {
     if (!empty($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
       // Blocked in user administration.
-      form_set_error('name', $this->t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
+      form_set_error('name', $form_state, $this->t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
     }
   }
 
@@ -186,15 +186,15 @@ class UserLoginForm extends FormBase {
 
       if (isset($form_state['flood_control_triggered'])) {
         if ($form_state['flood_control_triggered'] == 'user') {
-          form_set_error('name', format_plural($flood_config->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+          form_set_error('name', $form_state, format_plural($flood_config->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
         }
         else {
           // We did not find a uid, so the limit is IP-based.
-          form_set_error('name', $this->t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+          form_set_error('name', $form_state, $this->t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
         }
       }
       else {
-        form_set_error('name', $this->t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
+        form_set_error('name', $form_state, $this->t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
         $accounts = $this->userStorage->loadByProperties(array('name' => $form_state['values']['name']));
         if (!empty($accounts)) {
           watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));

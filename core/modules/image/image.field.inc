@@ -117,7 +117,7 @@ function _image_field_required_fields_validate($element, &$form_state) {
     }
     // Check if field is left emtpy.
     elseif (empty($image_field[$field])) {
-      form_error($element, t('The field !title is required', array('!title' => $element['#title'])));
+      form_error($element, $form_state, t('The field !title is required', array('!title' => $element['#title'])));
       return;
     }
   }

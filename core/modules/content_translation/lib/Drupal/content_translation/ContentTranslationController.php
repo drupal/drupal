@@ -414,11 +414,11 @@ class ContentTranslationController implements ContentTranslationControllerInterf
       $translation = $form_state['values']['content_translation'];
       // Validate the "authored by" field.
       if (!empty($translation['name']) && !($account = user_load_by_name($translation['name']))) {
-        form_set_error('content_translation][name', t('The translation authoring username %name does not exist.', array('%name' => $translation['name'])));
+        form_set_error('content_translation][name', $form_state, t('The translation authoring username %name does not exist.', array('%name' => $translation['name'])));
       }
       // Validate the "authored on" field.
       if (!empty($translation['created']) && strtotime($translation['created']) === FALSE) {
-        form_set_error('content_translation][created', t('You have to specify a valid translation authoring date.'));
+        form_set_error('content_translation][created', $form_state, t('You have to specify a valid translation authoring date.'));
       }
     }
   }

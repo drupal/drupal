@@ -90,10 +90,10 @@ class UpdateSettingsForm extends ConfigFormBase {
         $form_state['notify_emails'] = $valid;
       }
       elseif (count($invalid) == 1) {
-        form_set_error('update_notify_emails', t('%email is not a valid e-mail address.', array('%email' => reset($invalid))));
+        form_set_error('update_notify_emails', $form_state, t('%email is not a valid e-mail address.', array('%email' => reset($invalid))));
       }
       else {
-        form_set_error('update_notify_emails', t('%emails are not valid e-mail addresses.', array('%emails' => implode(', ', $invalid))));
+        form_set_error('update_notify_emails', $form_state, t('%emails are not valid e-mail addresses.', array('%emails' => implode(', ', $invalid))));
       }
     }
 

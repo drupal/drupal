@@ -51,7 +51,7 @@ class Combine extends String {
         );
       }
       else {
-        form_set_error('', t('You have to add some fields to be able to use this filter.'));
+        form_set_error('', $form_state, t('You have to add some fields to be able to use this filter.'));
       }
     }
   }

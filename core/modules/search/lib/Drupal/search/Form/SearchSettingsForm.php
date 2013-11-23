@@ -218,7 +218,7 @@ class SearchSettingsForm extends ConfigFormBase {
       $new_plugins = array_filter($form_state['values']['active_plugins']);
       $default = $form_state['values']['default_plugin'];
       if (!in_array($default, $new_plugins, TRUE)) {
-        form_set_error('default_plugin', $this->t('Your default search plugin is not selected as an active plugin.'));
+        form_set_error('default_plugin', $form_state, $this->t('Your default search plugin is not selected as an active plugin.'));
       }
     }
     // Handle per-plugin validation logic.

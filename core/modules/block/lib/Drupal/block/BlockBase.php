@@ -148,7 +148,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    */
   public function submitConfigurationForm(array &$form, array &$form_state) {
     // Process the block's submission handling if no errors occurred only.
-    if (!form_get_errors()) {
+    if (!form_get_errors($form_state)) {
       $this->configuration['label'] = $form_state['values']['label'];
       $this->configuration['label_display'] = $form_state['values']['label_display'];
       $this->configuration['module'] = $form_state['values']['module'];

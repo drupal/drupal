@@ -183,7 +183,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $entity_storage = $this->entityManager->getStorageController($form_state['values']['config_type']);
       // If an entity ID was not specified, set an error.
       if (!isset($data[$id_key])) {
-        form_set_error('import', $this->t('Missing ID key "@id_key" for this @entity_type import.', array('@id_key' => $id_key, '@entity_type' => $definition['label'])));
+        form_set_error('import', $form_state, $this->t('Missing ID key "@id_key" for this @entity_type import.', array('@id_key' => $id_key, '@entity_type' => $definition['label'])));
         return;
       }
       $uuid_key = $definition['entity_keys']['uuid'];
@@ -191,17 +191,17 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       if ($entity = $entity_storage->load($data[$id_key])) {
         $this->configExists = $entity;
         if (!isset($data[$uuid_key])) {
-          form_set_error('import', $this->t('An entity with this machine name already exists but the import did not specify a UUID.'));
+          form_set_error('import', $form_state, $this->t('An entity with this machine name already exists but the import did not specify a UUID.'));
           return;
         }
         if ($data[$uuid_key] !== $entity->uuid()) {
-          form_set_error('import', $this->t('An entity with this machine name already exists but the UUID does not match.'));
+          form_set_error('import', $form_state, $this->t('An entity with this machine name already exists but the UUID does not match.'));
           return;
         }
       }
       // If there is no entity with a matching ID, check for a UUID match.
       elseif (isset($data[$uuid_key]) && $entity_storage->loadByProperties(array($uuid_key => $data[$uuid_key]))) {
-        form_set_error('import', $this->t('An entity with this UUID already exists but the machine name does not match.'));
+        form_set_error('import', $form_state, $this->t('An entity with this UUID already exists but the machine name does not match.'));
       }
     }
     else {

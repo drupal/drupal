@@ -97,7 +97,7 @@ class SimpletestSettingsForm extends ConfigFormBase {
     // If a password was provided but a username wasn't, the credentials are
     // incorrect, so throw an error.
     if (empty($form_state['values']['simpletest_httpauth_username']) && !empty($form_state['values']['simpletest_httpauth_password'])) {
-      form_set_error('simpletest_httpauth_username', $this->t('HTTP authentication credentials must include a username in addition to a password.'));
+      form_set_error('simpletest_httpauth_username', $form_state, $this->t('HTTP authentication credentials must include a username in addition to a password.'));
     }
 
     parent::validateForm($form, $form_state);

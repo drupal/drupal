@@ -237,7 +237,7 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
       $extensions = array_filter(explode(' ', $extensions));
       $extensions = implode(' ', array_unique($extensions));
       if (!preg_match('/^([a-z0-9]+([.][a-z0-9])* ?)+$/', $extensions)) {
-        form_error($element, t('The list of allowed extensions is not valid, be sure to exclude leading dots and to separate extensions with a comma or space.'));
+        form_error($element, $form_state, t('The list of allowed extensions is not valid, be sure to exclude leading dots and to separate extensions with a comma or space.'));
       }
       else {
         form_set_value($element, $extensions, $form_state);
@@ -256,7 +256,7 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
    */
   public static function validateMaxFilesize($element, &$form_state) {
     if (!empty($element['#value']) && !is_numeric(parse_size($element['#value']))) {
-      form_error($element, t('The "!name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', array('!name' => t($element['title']))));
+      form_error($element, $form_state, t('The "!name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', array('!name' => t($element['title']))));
     }
   }
 

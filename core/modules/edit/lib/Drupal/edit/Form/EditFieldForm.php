@@ -155,7 +155,7 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
     if ($changed_field_name = $this->getChangedFieldName($entity)) {
       $changed_field_errors = $entity->$changed_field_name->validate();
       if (count($changed_field_errors)) {
-        form_set_error('changed_field', $changed_field_errors[0]->getMessage());
+        form_set_error('changed_field', $form_state, $changed_field_errors[0]->getMessage());
       }
     }
   }

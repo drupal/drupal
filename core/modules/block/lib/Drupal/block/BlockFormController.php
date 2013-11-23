@@ -313,8 +313,10 @@ class BlockFormController extends EntityFormController {
     $entity = $this->entity;
     // The Block Entity form puts all block plugin form elements in the
     // settings form element, so just pass that to the block for submission.
+    // @todo Find a way to avoid this manipulation.
     $settings = array(
-      'values' => &$form_state['values']['settings']
+      'values' => &$form_state['values']['settings'],
+      'errors' => $form_state['errors'],
     );
     // Call the plugin submit handler.
     $entity->getPlugin()->submitConfigurationForm($form, $settings);

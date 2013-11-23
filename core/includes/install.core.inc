@@ -653,7 +653,7 @@ function install_run_task($task, &$install_state) {
         'build_info' => array('args' => array(&$install_state)),
       );
       drupal_form_submit($function, $form_state);
-      $errors = form_get_errors();
+      $errors = form_get_errors($form_state);
       if (!empty($errors)) {
         throw new Exception(implode("\n", $errors));
       }
@@ -1192,7 +1192,7 @@ function install_settings_form_validate($form, &$form_state) {
   $form_state['storage']['database'] = $database;
   $errors = install_database_errors($database, $form_state['values']['settings_file']);
   foreach ($errors as $name => $message) {
-    form_set_error($name, $message);
+    form_set_error($name, $form_state, $message);
   }
 }
 
@@ -2699,7 +2699,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
  */
 function install_configure_form_validate($form, &$form_state) {
   if ($error = user_validate_name($form_state['values']['account']['name'])) {
-    form_error($form['admin_account']['account']['name'], $error);
+    form_error($form['admin_account']['account']['name'], $form_state, $error);
   }
 }
 

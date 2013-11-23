@@ -1081,9 +1081,9 @@ class ViewExecutable {
     if ($this->display_handler->usesExposed()) {
       $exposed_form = $this->display_handler->getPlugin('exposed_form');
       $this->exposed_widgets = $exposed_form->renderExposedForm();
-      if (form_set_error() || !empty($this->build_info['abort'])) {
+      if (\Drupal::formBuilder()->getAnyErrors() || !empty($this->build_info['abort'])) {
         $this->built = TRUE;
-        // Don't execute the query, but rendering will still be executed to display the empty text.
+        // Don't execute the query, $form_state, but rendering will still be executed to display the empty text.
         $this->executed = TRUE;
         return empty($this->build_info['fail']);
       }

@@ -104,20 +104,6 @@ class FormBuilder implements FormBuilderInterface {
   protected $forms;
 
   /**
-   * An array of form errors.
-   *
-   * @var array
-   */
-  protected $errors = array();
-
-  /**
-   * @todo.
-   *
-   * @var array
-   */
-  protected $errorSections;
-
-  /**
    * An array of validated forms.
    *
    * @var array
@@ -317,6 +303,8 @@ class FormBuilder implements FormBuilderInterface {
       'method' => 'post',
       'groups' => array(),
       'buttons' => array(),
+      'errors' => array(),
+      'limit_validation_errors' => NULL,
     );
   }
 
@@ -441,6 +429,8 @@ class FormBuilder implements FormBuilderInterface {
       'executed',
       'validate_handlers',
       'values',
+      'errors',
+      'limit_validation_errors',
     );
   }
 
@@ -472,7 +462,7 @@ class FormBuilder implements FormBuilderInterface {
 
     // Reset form validation.
     $form_state['must_validate'] = TRUE;
-    $this->clearErrors();
+    $this->clearErrors($form_state);
 
     $this->prepareForm($form_id, $form, $form_state);
     $this->processForm($form_id, $form, $form_state);
@@ -608,12 +598,12 @@ class FormBuilder implements FormBuilderInterface {
       // form is processed, so scenarios that result in the form being built
       // behind the scenes and again for the browser don't increment all the
       // element IDs needlessly.
-      if (!$this->getErrors()) {
+      if (!$this->getAnyErrors()) {
         // In case of errors, do not break HTML IDs of other forms.
         $this->drupalStaticReset('drupal_html_id');
       }
 
-      if ($form_state['submitted'] && !$this->getErrors() && !$form_state['rebuild']) {
+      if ($form_state['submitted'] && !$this->getAnyErrors() && !$form_state['rebuild']) {
         // Execute form submit handlers.
         $this->executeHandlers('submit', $form, $form_state);
 
@@ -678,7 +668,7 @@ class FormBuilder implements FormBuilderInterface {
       //   along with element-level #submit properties, it makes no sense to
       //   have divergent form execution based on whether the triggering element
       //   has #executes_submit_callback set to TRUE.
-      if (($form_state['rebuild'] || !$form_state['executed']) && !$this->getErrors()) {
+      if (($form_state['rebuild'] || !$form_state['executed']) && !$this->getAnyErrors()) {
         // Form building functions (e.g., self::handleInputElement()) may use
         // $form_state['rebuild'] to determine if they are running in the
         // context of a rebuild, so ensure it is set.
@@ -852,11 +842,15 @@ class FormBuilder implements FormBuilderInterface {
         $url = $this->urlGenerator->generateFromPath($path, array('query' => $query));
 
         // Setting this error will cause the form to fail validation.
-        $this->setErrorByName('form_token', $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
+        $this->setErrorByName('form_token', $form_state, $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
       }
     }
 
+    // Recursively validate each form element.
     $this->doValidateForm($form, $form_state, $form_id);
+    // After validation, loop through and assign each element its errors.
+    $this->setElementErrorsFromFormState($form, $form_state);
+    // Mark this form as validated.
     $this->validatedForms[$form_id] = TRUE;
 
     // If validation errors are limited then remove any non validated form values,
@@ -1010,7 +1004,7 @@ class FormBuilder implements FormBuilderInterface {
       if (isset($elements['#needs_validation'])) {
         // Verify that the value is not longer than #maxlength.
         if (isset($elements['#maxlength']) && Unicode::strlen($elements['#value']) > $elements['#maxlength']) {
-          $this->setError($elements, $this->t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => Unicode::strlen($elements['#value']))));
+          $this->setError($elements, $form_state, $this->t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => Unicode::strlen($elements['#value']))));
         }
 
         if (isset($elements['#options']) && isset($elements['#value'])) {
@@ -1024,7 +1018,7 @@ class FormBuilder implements FormBuilderInterface {
             $value = in_array($elements['#type'], array('checkboxes', 'tableselect')) ? array_keys($elements['#value']) : $elements['#value'];
             foreach ($value as $v) {
               if (!isset($options[$v])) {
-                $this->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
+                $this->setError($elements, $form_state, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
                 $this->watchdog('form', 'Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
               }
             }
@@ -1043,7 +1037,7 @@ class FormBuilder implements FormBuilderInterface {
             $this->setValue($elements, NULL, $form_state);
           }
           elseif (!isset($options[$elements['#value']])) {
-            $this->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
+            $this->setError($elements, $form_state, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
             $this->watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
           }
         }
@@ -1061,7 +1055,7 @@ class FormBuilder implements FormBuilderInterface {
       // too large a security risk to have any invalid user input when executing
       // form-level submit handlers.
       if (isset($form_state['triggering_element']['#limit_validation_errors']) && ($form_state['triggering_element']['#limit_validation_errors'] !== FALSE) && !($form_state['submitted'] && !isset($form_state['triggering_element']['#submit']))) {
-        $this->setErrorByName(NULL, '', $form_state['triggering_element']['#limit_validation_errors']);
+        $form_state['limit_validation_errors'] = $form_state['triggering_element']['#limit_validation_errors'];
       }
       // If submit handlers won't run (due to the submission having been
       // triggered by an element whose #executes_submit_callback property isn't
@@ -1073,14 +1067,14 @@ class FormBuilder implements FormBuilderInterface {
       // system_element_info()), so that full validation is their default
       // behavior.
       elseif (isset($form_state['triggering_element']) && !isset($form_state['triggering_element']['#limit_validation_errors']) && !$form_state['submitted']) {
-        $this->setErrorByName(NULL, '', array());
+        $form_state['limit_validation_errors'] = array();
       }
       // As an extra security measure, explicitly turn off error suppression if
       // one of the above conditions wasn't met. Since this is also done at the
       // end of this function, doing it here is only to handle the rare edge
       // case where a validate handler invokes form processing of another form.
       else {
-        $this->errorSections = NULL;
+        $form_state['limit_validation_errors'] = NULL;
       }
 
       // Make sure a value is passed when the field is required.
@@ -1120,17 +1114,17 @@ class FormBuilder implements FormBuilderInterface {
       // variables are also known to be defined and we can test them again.
       if (isset($is_empty_value) && ($is_empty_multiple || $is_empty_string || $is_empty_value)) {
         if (isset($elements['#required_error'])) {
-          $this->setError($elements, $elements['#required_error']);
+          $this->setError($elements, $form_state, $elements['#required_error']);
         }
         // A #title is not mandatory for form elements, but without it we cannot
         // set a form error message. So when a visible title is undesirable,
         // form constructors are encouraged to set #title anyway, and then set
         // #title_display to 'invisible'. This improves accessibility.
         elseif (isset($elements['#title'])) {
-          $this->setError($elements, $this->t('!name field is required.', array('!name' => $elements['#title'])));
+          $this->setError($elements, $form_state, $this->t('!name field is required.', array('!name' => $elements['#title'])));
         }
         else {
-          $this->setError($elements);
+          $this->setError($elements, $form_state);
         }
       }
 
@@ -1140,7 +1134,30 @@ class FormBuilder implements FormBuilderInterface {
     // Done validating this element, so turn off error suppression.
     // self::doValidateForm() turns it on again when starting on the next
     // element, if it's still appropriate to do so.
-    $this->errorSections = NULL;
+    $form_state['limit_validation_errors'] = NULL;
+  }
+
+  /**
+   * Stores the errors of each element directly on the element.
+   *
+   * Because self::getError() and self::getErrors() require the $form_state,
+   * we must provide a way for non-form functions to check the errors for a
+   * specific element. The most common usage of this is a #pre_render callback.
+   *
+   * @param array $elements
+   *   An associative array containing the structure of a form element.
+   * @param array $form_state
+   *   An associative array containing the current state of the form.
+   */
+  protected function setElementErrorsFromFormState(array &$elements, array &$form_state) {
+    // Recurse through all children.
+    foreach ($this->elementChildren($elements) as $key) {
+      if (isset($elements[$key]) && $elements[$key]) {
+        $this->setElementErrorsFromFormState($elements[$key], $form_state);
+      }
+    }
+    // Store the errors for this element on the element directly.
+    $elements['#errors'] = $this->getError($elements, $form_state);
   }
 
   /**
@@ -1179,14 +1196,10 @@ class FormBuilder implements FormBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function setErrorByName($name = NULL, $message = '', $limit_validation_errors = NULL) {
-    if (isset($limit_validation_errors)) {
-      $this->errorSections = $limit_validation_errors;
-    }
-
-    if (isset($name) && !isset($this->errors[$name])) {
+  public function setErrorByName($name, array &$form_state, $message = '') {
+    if (!isset($form_state['errors'][$name])) {
       $record = TRUE;
-      if (isset($this->errorSections)) {
+      if (isset($form_state['limit_validation_errors'])) {
         // #limit_validation_errors is an array of "sections" within which user
         // input must be valid. If the element is within one of these sections,
         // the error must be recorded. Otherwise, it can be suppressed.
@@ -1195,7 +1208,7 @@ class FormBuilder implements FormBuilderInterface {
         // its submit action to be triggered even if none of the submitted
         // values are valid.
         $record = FALSE;
-        foreach ($this->errorSections as $section) {
+        foreach ($form_state['limit_validation_errors'] as $section) {
           // Exploding by '][' reconstructs the element's #parents. If the
           // reconstructed #parents begin with the same keys as the specified
           // section, then the element's values are within the part of
@@ -1210,44 +1223,51 @@ class FormBuilder implements FormBuilderInterface {
         }
       }
       if ($record) {
-        $this->errors[$name] = $message;
+        $form_state['errors'][$name] = $message;
+        $this->request->attributes->set('_form_errors', TRUE);
         if ($message) {
           $this->drupalSetMessage($message, 'error');
         }
       }
     }
 
-    return $this->errors;
+    return $form_state['errors'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function clearErrors() {
-    $this->errors = array();
+  public function clearErrors(array &$form_state) {
+    $form_state['errors'] = array();
+    $this->request->attributes->set('_form_errors', FALSE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getErrors() {
-    $form = $this->setErrorByName();
-    if (!empty($form)) {
-      return $form;
-    }
+  public function getErrors(array $form_state) {
+    return $form_state['errors'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getError($element) {
-    $form = $this->setErrorByName();
-    $parents = array();
-    foreach ($element['#parents'] as $parent) {
-      $parents[] = $parent;
-      $key = implode('][', $parents);
-      if (isset($form[$key])) {
-        return $form[$key];
+  public function getAnyErrors() {
+    return (bool) $this->request->attributes->get('_form_errors');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getError($element, array &$form_state) {
+    if ($errors = $this->getErrors($form_state)) {
+      $parents = array();
+      foreach ($element['#parents'] as $parent) {
+        $parents[] = $parent;
+        $key = implode('][', $parents);
+        if (isset($errors[$key])) {
+          return $errors[$key];
+        }
       }
     }
   }
@@ -1255,8 +1275,8 @@ class FormBuilder implements FormBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function setError(&$element, $message = '') {
-    $this->setErrorByName(implode('][', $element['#parents']), $message);
+  public function setError(&$element, array &$form_state, $message = '') {
+    $this->setErrorByName(implode('][', $element['#parents']), $form_state, $message);
   }
 
   /**
@@ -1277,6 +1297,7 @@ class FormBuilder implements FormBuilderInterface {
       '#required' => FALSE,
       '#attributes' => array(),
       '#title_display' => 'before',
+      '#errors' => NULL,
     );
 
     // Special handling if we're on the top level form element.

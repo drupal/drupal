@@ -550,8 +550,8 @@ function user_validate_current_pass(&$form, &$form_state) {
     if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $current_value)) {
       $current_pass_failed = empty($form_state['values']['current_pass']) || !\Drupal::service('password')->check($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
-        form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
-        form_set_error($key);
+        form_set_error('current_pass', $form_state, t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
+        form_set_error($key, $form_state);
       }
       // We only need to check the password once.
       break;
@@ -611,7 +611,7 @@ function user_template_preprocess_default_variables_alter(&$variables) {
   }
 
   $variables['user'] = clone $user;
-  // Remove password and session IDs, since themes should not need nor see them.
+  // Remove password and session IDs, $form_state, since themes should not need nor see them.
   unset($variables['user']->pass, $variables['user']->sid, $variables['user']->ssid);
 
   $variables['is_admin'] = user_access('access administration pages');

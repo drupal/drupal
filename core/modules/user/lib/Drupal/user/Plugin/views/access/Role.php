@@ -81,7 +81,7 @@ class Role extends AccessPluginBase {
 
   public function validateOptionsForm(&$form, &$form_state) {
     if (!array_filter($form_state['values']['access_options']['role'])) {
-      form_error($form['role'], t('You must select at least one role if type is "by role"'));
+      form_error($form['role'], $form_state, t('You must select at least one role if type is "by role"'));
     }
   }
 

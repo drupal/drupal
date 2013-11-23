@@ -125,7 +125,7 @@ class CategoryAdminForm extends FormBase {
         $unique = $this->categoryStorageController->isUnique($title);
       }
       if (!$unique) {
-        form_set_error('title', $this->t('A category named %category already exists. Enter a unique title.', array('%category' => $title)));
+        form_set_error('title', $form_state, $this->t('A category named %category already exists. Enter a unique title.', array('%category' => $title)));
       }
     }
   }

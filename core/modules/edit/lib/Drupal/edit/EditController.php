@@ -256,7 +256,7 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
     else {
       $response->addCommand(new FieldFormCommand(drupal_render($form)));
 
-      $errors = form_get_errors();
+      $errors = form_get_errors($form_state);
       if (count($errors)) {
         $status_messages = array(
           '#theme' => 'status_messages'

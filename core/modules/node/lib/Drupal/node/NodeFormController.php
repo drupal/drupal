@@ -251,7 +251,7 @@ class NodeFormController extends ContentEntityFormController {
     $node = $this->entity;
     $preview_mode = $this->settings['preview'];
 
-    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview']));
+    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!form_get_errors($form_state) && isset($form_state['node_preview']));
 
     // If saving is an option, privileged users get dedicated form submit
     // buttons to adjust the publishing status while saving in one go.
@@ -330,7 +330,7 @@ class NodeFormController extends ContentEntityFormController {
     $node = $this->buildEntity($form, $form_state);
 
     if ($node->id() && (node_last_changed($node->id(), $this->getFormLangcode($form_state)) > $node->getChangedTime())) {
-      form_set_error('changed', t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
+      form_set_error('changed', $form_state, t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
     }
 
     // Validate the "authored by" field.
@@ -338,14 +338,14 @@ class NodeFormController extends ContentEntityFormController {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
-      form_set_error('name', t('The username %name does not exist.', array('%name' => $form_state['values']['name'])));
+      form_set_error('name', $form_state, t('The username %name does not exist.', array('%name' => $form_state['values']['name'])));
     }
 
     // Validate the "authored on" field.
     // The date element contains the date object.
     $date = $node->date instanceof DrupalDateTime ? $node->date : new DrupalDateTime($node->date);
     if ($date->hasErrors()) {
-      form_set_error('date', t('You have to specify a valid date.'));
+      form_set_error('date', $form_state, t('You have to specify a valid date.'));
     }
 
     // Invoke hook_node_validate() for validation needed by modules.
@@ -403,7 +403,7 @@ class NodeFormController extends ContentEntityFormController {
     //   classes.
     module_load_include('inc', 'node', 'node.pages');
     drupal_set_title(t('Preview'), PASS_THROUGH);
-    $form_state['node_preview'] = node_preview($this->entity);
+    $form_state['node_preview'] = node_preview($this->entity, $form_state);
     $form_state['rebuild'] = TRUE;
   }
 

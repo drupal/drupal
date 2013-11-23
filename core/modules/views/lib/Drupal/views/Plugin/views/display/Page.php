@@ -375,19 +375,19 @@ class Page extends PathPluginBase {
     if ($form_state['section'] == 'menu') {
       $path = $this->getOption('path');
       if ($form_state['values']['menu']['type'] == 'normal' && strpos($path, '%') !== FALSE) {
-        form_error($form['menu']['type'], t('Views cannot create normal menu items for paths with a % in them.'));
+        form_error($form['menu']['type'], $form_state, t('Views cannot create normal menu items for paths with a % in them.'));
       }
 
       if ($form_state['values']['menu']['type'] == 'default tab' || $form_state['values']['menu']['type'] == 'tab') {
         $bits = explode('/', $path);
         $last = array_pop($bits);
         if ($last == '%') {
-          form_error($form['menu']['type'], t('A display whose path ends with a % cannot be a tab.'));
+          form_error($form['menu']['type'], $form_state, t('A display whose path ends with a % cannot be a tab.'));
         }
       }
 
       if ($form_state['values']['menu']['type'] != 'none' && empty($form_state['values']['menu']['title'])) {
-        form_error($form['menu']['title'], t('Title is required for this menu type.'));
+        form_error($form['menu']['title'], $form_state, t('Title is required for this menu type.'));
       }
     }
   }

@@ -1285,12 +1285,12 @@ function comment_get_display_page($cid, $instance) {
  *
  * @param \Drupal\comment\CommentInterface $comment
  */
-function comment_preview(CommentInterface $comment) {
+function comment_preview(CommentInterface $comment, array &$form_state) {
   global $user;
   $preview_build = array();
   $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
 
-  if (!form_get_errors()) {
+  if (!form_get_errors($form_state)) {
     // Attach the user and time information.
     if (!empty($comment->name->value)) {
       $account = user_load_by_name($comment->name->value);

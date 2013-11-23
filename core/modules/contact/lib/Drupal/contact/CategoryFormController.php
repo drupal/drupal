@@ -84,7 +84,7 @@ class CategoryFormController extends EntityFormController {
     foreach ($recipients as &$recipient) {
       $recipient = trim($recipient);
       if (!valid_email_address($recipient)) {
-        form_set_error('recipients', t('%recipient is an invalid e-mail address.', array('%recipient' => $recipient)));
+        form_set_error('recipients', $form_state, t('%recipient is an invalid e-mail address.', array('%recipient' => $recipient)));
       }
     }
     $form_state['values']['recipients'] = $recipients;

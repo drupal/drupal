@@ -729,6 +729,8 @@ function file_cron() {
  * @param $form_field_name
  *   A string that is the associative array key of the upload form element in
  *   the form array.
+ * @param array $form_state
+ *   An associative array containing the current state of the form.
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
  *   file. See file_validate() for a full discussion of the array format.
@@ -764,7 +766,7 @@ function file_cron() {
  *   - source: Path to the file before it is moved.
  *   - destination: Path to the file after it is moved (same as 'uri').
  */
-function file_save_upload($form_field_name, $validators = array(), $destination = FALSE, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
+function file_save_upload($form_field_name, array &$form_state, $validators = array(), $destination = FALSE, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
   $user = \Drupal::currentUser();
   static $upload_cache;
 
@@ -922,7 +924,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
       else {
         $message .= ' ' . array_pop($errors);
       }
-      form_set_error($form_field_name, $message);
+      form_set_error($form_field_name, $form_state, $message);
       $files[$i] = FALSE;
       continue;
     }
@@ -932,7 +934,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     // operations.
     $file->uri = $file->destination;
     if (!drupal_move_uploaded_file($uploaded_files['files']['tmp_name'][$form_field_name][$i], $file->getFileUri())) {
-      form_set_error($form_field_name, t('File upload error. Could not move uploaded file.'));
+      form_set_error($form_field_name, $form_state, t('File upload error. Could not move uploaded file.'));
       watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->uri));
       $files[$i] = FALSE;
       continue;
@@ -1274,7 +1276,7 @@ function file_managed_file_process($element, &$form_state, $form) {
  *
  * This function is assigned as a #value_callback in file_element_info().
  */
-function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) {
+function file_managed_file_value(&$element, $input, &$form_state) {
   // Find the current value of this field.
   $fids = !empty($input['fids']) ? explode(' ', $input['fids']) : array();
   foreach ($fids as $key => $fid) {
@@ -1287,7 +1289,7 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
     $return = $input;
 
     // Uploads take priority over all other values.
-    if ($files = file_managed_file_save_upload($element)) {
+    if ($files = file_managed_file_save_upload($element, $form_state)) {
       if ($element['#multiple']) {
         $fids = array_merge($fids, array_keys($files));
       }
@@ -1362,19 +1364,19 @@ function file_managed_file_validate(&$element, &$form_state) {
         if ($file->isPermanent()) {
           $references = file_usage()->listUsage($file);
           if (empty($references)) {
-            form_error($element, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
+            form_error($element, $form_state, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
           }
         }
       }
       else {
-        form_error($element, t('The file referenced by the !name field does not exist.', array('!name' => $element['#title'])));
+        form_error($element, $form_state, t('The file referenced by the !name field does not exist.', array('!name' => $element['#title'])));
       }
     }
   }
 
   // Check required property based on the FID.
   if ($element['#required'] && empty($element['fids']['#value']) && !in_array($clicked_button, array('upload_button', 'remove_button'))) {
-    form_error($element['upload'], t('!name field is required.', array('!name' => $element['#title'])));
+    form_error($element['upload'], $form_state, t('!name field is required.', array('!name' => $element['#title'])));
   }
 
   // Consolidate the array value of this field to array of FIDs.
@@ -1452,12 +1454,14 @@ function file_managed_file_submit($form, &$form_state) {
  *
  * @param $element
  *   The FAPI element whose values are being saved.
+ * @param array $form_state
+ *   An associative array containing the current state of the form.
  *
  * @return
  *   An array of file entities for each file that was saved, keyed by its file
  *   ID, or FALSE if no files were saved.
  */
-function file_managed_file_save_upload($element) {
+function file_managed_file_save_upload($element, array &$form_state) {
   $upload_name = implode('_', $element['#parents']);
   if (empty($_FILES['files']['name'][$upload_name])) {
     return FALSE;
@@ -1466,7 +1470,7 @@ function file_managed_file_save_upload($element) {
   $destination = isset($element['#upload_location']) ? $element['#upload_location'] : NULL;
   if (isset($destination) && !file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
     watchdog('file', 'The upload directory %directory for the file field !name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', array('%directory' => $destination, '!name' => $element['#field_name']));
-    form_set_error($upload_name, t('The file could not be uploaded.'));
+    form_set_error($upload_name, $form_state, t('The file could not be uploaded.'));
     return FALSE;
   }
 
@@ -1474,9 +1478,9 @@ function file_managed_file_save_upload($element) {
   $files_uploaded = $element['#multiple'] && count(array_filter($_FILES['files']['name'][$upload_name])) > 0;
   $files_uploaded |= !$element['#multiple'] && !empty($_FILES['files']['name'][$upload_name]);
   if ($files_uploaded) {
-    if (!$files = file_save_upload($upload_name, $element['#upload_validators'], $destination)) {
+    if (!$files = file_save_upload($upload_name, $form_state, $element['#upload_validators'], $destination)) {
       watchdog('file', 'The file upload failed. %upload', array('%upload' => $upload_name));
-      form_set_error($upload_name, t('Files in the !name field were unable to be uploaded.', array('!name' => $element['#title'])));
+      form_set_error($upload_name, $form_state, t('Files in the !name field were unable to be uploaded.', array('!name' => $element['#title'])));
       return array();
     }
 

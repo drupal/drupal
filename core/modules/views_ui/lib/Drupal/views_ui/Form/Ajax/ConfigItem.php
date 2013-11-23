@@ -192,7 +192,7 @@ class ConfigItem extends ViewsFormBase {
   public function validateForm(array &$form, array &$form_state) {
     $form_state['handler']->validateOptionsForm($form['options'], $form_state);
 
-    if (form_get_errors()) {
+    if (form_get_errors($form_state)) {
       $form_state['rerender'] = TRUE;
     }
   }

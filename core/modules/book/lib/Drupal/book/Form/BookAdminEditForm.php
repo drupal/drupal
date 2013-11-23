@@ -96,7 +96,7 @@ class BookAdminEditForm extends FormBase {
    */
   public function validateForm(array &$form, array &$form_state) {
     if ($form_state['values']['tree_hash'] != $form_state['values']['tree_current_hash']) {
-      form_set_error('', $this->t('This book has been modified by another user, the changes could not be saved.'));
+      form_set_error('', $form_state, $this->t('This book has been modified by another user, the changes could not be saved.'));
     }
   }
 

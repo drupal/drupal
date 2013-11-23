@@ -139,7 +139,7 @@ class OpmlFeedAdd extends FormBase {
   public function validateForm(array &$form, array &$form_state) {
     // If both fields are empty or filled, cancel.
     if (empty($form_state['values']['remote']) == empty($_FILES['files']['name']['upload'])) {
-      form_set_error('remote', $this->t('You must <em>either</em> upload a file or enter a URL.'));
+      form_set_error('remote', $form_state, $this->t('You must <em>either</em> upload a file or enter a URL.'));
     }
   }
 
@@ -148,7 +148,7 @@ class OpmlFeedAdd extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $validators = array('file_validate_extensions' => array('opml xml'));
-    if ($file = file_save_upload('upload', $validators, FALSE, 0)) {
+    if ($file = file_save_upload('upload', $form_state, $validators, FALSE, 0)) {
       $data = file_get_contents($file->getFileUri());
     }
     else {

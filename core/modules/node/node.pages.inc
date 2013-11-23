@@ -110,13 +110,13 @@ function node_add($node_type) {
  *
  * @see node_form_build_preview()
  */
-function node_preview(NodeInterface $node) {
+function node_preview(NodeInterface $node, array &$form_state) {
   if (node_access('create', $node) || node_access('update', $node)) {
 
     $node->changed = REQUEST_TIME;
 
     // Display a preview of the node.
-    if (!form_get_errors()) {
+    if (!form_get_errors($form_state)) {
       $node->in_preview = TRUE;
       $node_preview = array(
         '#theme' => 'node_preview',

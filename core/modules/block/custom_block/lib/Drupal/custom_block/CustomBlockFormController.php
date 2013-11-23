@@ -238,7 +238,7 @@ class CustomBlockFormController extends ContentEntityFormController {
       // @todo Inject this once https://drupal.org/node/2060865 is in.
       $exists = \Drupal::entityManager()->getStorageController('custom_block')->loadByProperties(array('info' => $form_state['values']['info']));
       if (!empty($exists)) {
-        form_set_error('info', t('A block with description %name already exists.', array(
+        form_set_error('info', $form_state, t('A block with description %name already exists.', array(
         '%name' => $form_state['values']['info']
       )));
       }

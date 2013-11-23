@@ -180,7 +180,7 @@ function locale_translation_status_form($form, &$form_state) {
 function locale_translation_status_form_validate($form, &$form_state) {
   // Check if a language has been selected. 'tableselect' doesn't.
   if (!array_filter($form_state['values']['langcodes'])) {
-    form_set_error('', t('Select a language to update.'));
+    form_set_error('', $form_state, t('Select a language to update.'));
   }
 }
 

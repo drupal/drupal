@@ -224,11 +224,11 @@ class ElementsTableSelectTest extends WebTestBase {
 
     drupal_process_form($form_id, $form, $form_state);
 
-    $errors = form_get_errors();
+    $errors = form_get_errors($form_state);
 
     // Clear errors and messages.
     drupal_get_messages();
-    form_clear_error();
+    $form_state['errors'] = array();
 
     // Return the processed form together with form_state and errors
     // to allow the caller lowlevel access to the form.

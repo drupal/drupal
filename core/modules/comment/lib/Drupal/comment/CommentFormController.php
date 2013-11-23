@@ -275,10 +275,10 @@ class CommentFormController extends ContentEntityFormController {
 
       $date = $form_state['values']['date'];
       if ($date instanceOf DrupalDateTime && $date->hasErrors()) {
-        form_set_error('date', $this->t('You have to specify a valid date.'));
+        form_set_error('date', $form_state, $this->t('You have to specify a valid date.'));
       }
       if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account) {
-        form_set_error('name', $this->t('You have to specify a valid author.'));
+        form_set_error('name', $form_state, $this->t('You have to specify a valid author.'));
       }
     }
     elseif ($form_state['values']['is_anonymous']) {
@@ -288,7 +288,7 @@ class CommentFormController extends ContentEntityFormController {
       if ($form_state['values']['name']) {
         $accounts = $this->entityManager->getStorageController('user')->loadByProperties(array('name' => $form_state['values']['name']));
         if (!empty($accounts)) {
-          form_set_error('name', $this->t('The name you used belongs to a registered user.'));
+          form_set_error('name', $form_state, $this->t('The name you used belongs to a registered user.'));
         }
       }
     }
@@ -356,7 +356,7 @@ class CommentFormController extends ContentEntityFormController {
    */
   public function preview(array $form, array &$form_state) {
     $comment = $this->entity;
-    $form_state['comment_preview'] = comment_preview($comment);
+    $form_state['comment_preview'] = comment_preview($comment, $form_state);
     $form_state['comment_preview']['#title'] = $this->t('Preview comment');
     $form_state['rebuild'] = TRUE;
   }

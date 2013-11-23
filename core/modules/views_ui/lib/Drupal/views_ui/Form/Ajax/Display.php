@@ -99,7 +99,7 @@ class Display extends ViewsFormBase {
   public function validateForm(array &$form, array &$form_state) {
     $form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id'])->validateOptionsForm($form['options'], $form_state);
 
-    if (form_get_errors()) {
+    if (form_get_errors($form_state)) {
       $form_state['rerender'] = TRUE;
     }
   }

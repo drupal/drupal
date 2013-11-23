@@ -180,7 +180,7 @@ class ViewAddFormController extends ViewFormControllerBase {
 
     foreach ($errors as $display_errors) {
       foreach ($display_errors as $name => $message) {
-        form_set_error($name, $message);
+        form_set_error($name, $form_state, $message);
       }
     }
   }

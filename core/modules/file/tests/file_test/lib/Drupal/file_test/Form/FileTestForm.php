@@ -101,7 +101,7 @@ class FileTestForm implements FormInterface {
       $validators['file_validate_extensions'] = array($form_state['values']['extensions']);
     }
 
-    $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state['values']['file_test_replace']);
+    $file = file_save_upload('file_test_upload', $form_state, $validators, $destination, 0, $form_state['values']['file_test_replace']);
     if ($file) {
       $form_state['values']['file_test_upload'] = $file;
       drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->getFileUri())));

@@ -172,7 +172,7 @@ class FieldEditForm extends FormBase {
     $cardinality = $form_state['values']['field']['cardinality'];
     $cardinality_number = $form_state['values']['field']['cardinality_number'];
     if ($cardinality === 'number' && empty($cardinality_number)) {
-      form_error($form['field']['cardinality_container']['cardinality_number'], $this->t('Number of values is required.'));
+      form_error($form['field']['cardinality_container']['cardinality_number'], $form_state, $this->t('Number of values is required.'));
     }
   }
 

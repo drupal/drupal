@@ -195,14 +195,14 @@ abstract class SqlBase extends PagerPluginBase {
       $error = TRUE;
     }
     if ($error) {
-      form_set_error('pager_options][expose][items_per_page_options', t('Insert a list of integer numeric values separated by commas: e.g: 10, 20, 50, 100'));
+      form_set_error('pager_options][expose][items_per_page_options', $form_state, t('Insert a list of integer numeric values separated by commas: e.g: 10, 20, 50, 100'));
     }
 
     // Take sure that the items_per_page is part of the expose settings.
     if (!empty($form_state['values']['pager_options']['expose']['items_per_page']) && !empty($form_state['values']['pager_options']['items_per_page'])) {
       $items_per_page = $form_state['values']['pager_options']['items_per_page'];
       if (array_search($items_per_page, $options) === FALSE) {
-        form_set_error('pager_options][expose][items_per_page_options', t('Insert the items per page (@items_per_page) from above.',
+        form_set_error('pager_options][expose][items_per_page_options', $form_state, t('Insert the items per page (@items_per_page) from above.',
             array('@items_per_page' => $items_per_page))
         );
       }
@@ -369,7 +369,7 @@ abstract class SqlBase extends PagerPluginBase {
   public function exposedFormValidate(&$form, &$form_state) {
     if (!empty($form_state['values']['offset']) && trim($form_state['values']['offset'])) {
       if (!is_numeric($form_state['values']['offset']) || $form_state['values']['offset'] < 0) {
-        form_set_error('offset', t('Offset must be an number greather or equal than 0.'));
+        form_set_error('offset', $form_state, t('Offset must be an number greather or equal than 0.'));
       }
     }
   }

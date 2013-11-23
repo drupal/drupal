@@ -450,7 +450,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     if ($form_state['section'] == 'path') {
       if (strpos($form_state['values']['path'], '%') === 0) {
-        form_error($form['path'], t('"%" may not be used for the first segment of a path.'));
+        form_error($form['path'], $form_state, t('"%" may not be used for the first segment of a path.'));
       }
 
       // Automatically remove '/' and trailing whitespace from path.

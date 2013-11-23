@@ -232,7 +232,7 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
       ->condition('name', $format_name)
       ->execute();
     if ($format_exists) {
-      form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
+      form_set_error('name', $form_state, t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
     }
   }
 

@@ -227,7 +227,7 @@ function forum_uri($forum) {
  * Checks in particular that the node is assigned only a "leaf" term in the
  * forum taxonomy.
  */
-function forum_node_validate(EntityInterface $node, $form) {
+function forum_node_validate(EntityInterface $node, $form, &$form_state) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     // vocabulary is selected, not a "container" term.
     if (!$node->taxonomy_forums->isEmpty()) {
@@ -241,7 +241,7 @@ function forum_node_validate(EntityInterface $node, $form) {
         }
         $term = $item->entity;
         if (!$term) {
-          form_set_error('taxonomy_forums', t('Select a forum.'));
+          form_set_error('taxonomy_forums', $form_state, t('Select a forum.'));
           continue;
         }
         $used = \Drupal::entityQuery('taxonomy_term')
@@ -251,7 +251,7 @@ function forum_node_validate(EntityInterface $node, $form) {
           ->count()
           ->execute();
         if ($used && !empty($term->forum_container->value)) {
-          form_set_error('taxonomy_forums', t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->label())));
+          form_set_error('taxonomy_forums', $form_state, t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->label())));
         }
       }
     }

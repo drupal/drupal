@@ -134,7 +134,7 @@ class LinkWidget extends WidgetBase {
   function validateTitle(&$element, &$form_state, $form) {
     if ($element['url']['#value'] !== '' && $element['title']['#value'] === '') {
       $element['title']['#required'] = TRUE;
-      form_error($element['title'], t('!name field is required.', array('!name' => $element['title']['#title'])));
+      form_error($element['title'], $form_state, t('!name field is required.', array('!name' => $element['title']['#title'])));
     }
   }
 }

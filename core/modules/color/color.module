@@ -310,7 +310,7 @@ function color_scheme_form_validate($form, &$form_state) {
   // Only accept hexadecimal CSS color strings to avoid XSS upon use.
   foreach ($form_state['values']['palette'] as $key => $color) {
     if (!color_valid_hexadecimal_string($color)) {
-      form_set_error('palette][' . $key, t('You must enter a valid hexadecimal color value for %name.', array('%name' => $form['color']['palette'][$key]['#title'])));
+      form_set_error('palette][' . $key, $form_state, t('You must enter a valid hexadecimal color value for %name.', array('%name' => $form['color']['palette'][$key]['#title'])));
     }
   }
 }

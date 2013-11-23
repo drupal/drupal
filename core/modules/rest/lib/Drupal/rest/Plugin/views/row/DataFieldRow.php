@@ -115,7 +115,7 @@ class DataFieldRow extends RowPluginBase {
    */
   public function validateAliasName($element, &$form_state) {
     if (preg_match('@[^A-Za-z0-9_-]+@', $element['#value'])) {
-      form_error($element, t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
+      form_error($element, $form_state, t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
     }
   }
 
@@ -129,7 +129,7 @@ class DataFieldRow extends RowPluginBase {
     // If array filter returns empty, no values have been entered. Unique keys
     // should only be validated if we have some.
     if (($filtered = array_filter($aliases)) && (array_unique($filtered) !== $filtered)) {
-      form_set_error('aliases', t('All field aliases must be unique'));
+      form_set_error('aliases', $form_state, t('All field aliases must be unique'));
     }
   }
 

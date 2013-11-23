@@ -37,7 +37,7 @@ class NodeBulkForm extends ActionBulkForm {
   public function views_form_validate(&$form, &$form_state) {
     $selected = array_filter($form_state['values'][$this->options['id']]);
     if (empty($selected)) {
-      form_set_error('', t('No items selected.'));
+      form_set_error('', $form_state, t('No items selected.'));
     }
   }
 

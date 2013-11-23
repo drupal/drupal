@@ -104,7 +104,7 @@ function datetime_theme() {
  *   The current state of the form.
  */
 function datetime_datetime_widget_validate(&$element, &$form_state) {
-  if (!form_get_errors()) {
+  if (!form_get_errors($form_state)) {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
     if ($input_exists) {
@@ -142,7 +142,7 @@ function datetime_datetime_widget_validate(&$element, &$form_state) {
  *   The current state of the form.
  */
 function datetime_datelist_widget_validate(&$element, &$form_state) {
-  if (!form_get_errors()) {
+  if (!form_get_errors($form_state)) {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
     if ($input_exists) {
@@ -574,7 +574,7 @@ function datetime_datetime_validate($element, &$form_state) {
     // If there's empty input and the field is required, set an error. A
     // reminder of the required format in the message provides a good UX.
     elseif (empty($input['date']) && empty($input['time']) && $element['#required']) {
-      form_error($element, t('The %field date is required. Please enter a date in the format %format.', array('%field' => $title, '%format' => datetime_format_example($format))));
+      form_error($element, $form_state, t('The %field date is required. Please enter a date in the format %format.', array('%field' => $title, '%format' => datetime_format_example($format))));
     }
     else {
       // If the date is valid, set it.
@@ -585,7 +585,7 @@ function datetime_datetime_validate($element, &$form_state) {
       // If the date is invalid, set an error. A reminder of the required
       // format in the message provides a good UX.
       else {
-        form_error($element, t('The %field date is invalid. Please enter a date in the format %format.', array('%field' => $title, '%format' => datetime_format_example($format))));
+        form_error($element, $form_state, t('The %field date is invalid. Please enter a date in the format %format.', array('%field' => $title, '%format' => datetime_format_example($format))));
       }
     }
   }
@@ -921,7 +921,7 @@ function datetime_datelist_validate($element, &$form_state) {
     }
     // If there's empty input and the field is required, set an error.
     elseif (empty($input['year']) && empty($input['month']) && empty($input['day']) && $element['#required']) {
-      form_error($element, t('The %field date is required.'));
+      form_error($element, $form_state, t('The %field date is required.'));
     }
     else {
       // If the input is valid, set it.
@@ -931,7 +931,7 @@ function datetime_datelist_validate($element, &$form_state) {
       }
       // If the input is invalid, set an error.
       else {
-        form_error($element, t('The %field date is invalid.'));
+        form_error($element, $form_state, t('The %field date is invalid.'));
       }
     }
   }

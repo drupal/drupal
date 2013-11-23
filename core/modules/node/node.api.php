@@ -737,7 +737,7 @@ function hook_node_update_index(\Drupal\Core\Entity\EntityInterface $node, $lang
 function hook_node_validate(\Drupal\Core\Entity\EntityInterface $node, $form, &$form_state) {
   if (isset($node->end) && isset($node->start)) {
     if ($node->start > $node->end) {
-      form_set_error('time', t('An event may not end before it starts.'));
+      form_set_error('time', $form_state, t('An event may not end before it starts.'));
     }
   }
 }

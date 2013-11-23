@@ -323,7 +323,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       $validators = array('file_validate_is_image' => array());
 
       // Check for a new uploaded logo.
-      $file = file_save_upload('logo_upload', $validators, FALSE, 0);
+      $file = file_save_upload('logo_upload', $form_state, $validators, FALSE, 0);
       if (isset($file)) {
         // File upload was attempted.
         if ($file) {
@@ -332,14 +332,14 @@ class ThemeSettingsForm extends ConfigFormBase {
         }
         else {
           // File upload failed.
-          form_set_error('logo_upload', t('The logo could not be uploaded.'));
+          form_set_error('logo_upload', $form_state, t('The logo could not be uploaded.'));
         }
       }
 
       $validators = array('file_validate_extensions' => array('ico png gif jpg jpeg apng svg'));
 
       // Check for a new uploaded favicon.
-      $file = file_save_upload('favicon_upload', $validators, FALSE, 0);
+      $file = file_save_upload('favicon_upload', $form_state, $validators, FALSE, 0);
       if (isset($file)) {
         // File upload was attempted.
         if ($file) {
@@ -348,7 +348,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         }
         else {
           // File upload failed.
-          form_set_error('favicon_upload', t('The favicon could not be uploaded.'));
+          form_set_error('favicon_upload', $form_state, t('The favicon could not be uploaded.'));
         }
       }
 
@@ -357,13 +357,13 @@ class ThemeSettingsForm extends ConfigFormBase {
       if ($form_state['values']['logo_path']) {
         $path = $this->validatePath($form_state['values']['logo_path']);
         if (!$path) {
-          form_set_error('logo_path', t('The custom logo path is invalid.'));
+          form_set_error('logo_path', $form_state, t('The custom logo path is invalid.'));
         }
       }
       if ($form_state['values']['favicon_path']) {
         $path = $this->validatePath($form_state['values']['favicon_path']);
         if (!$path) {
-          form_set_error('favicon_path', t('The custom favicon path is invalid.'));
+          form_set_error('favicon_path', $form_state, t('The custom favicon path is invalid.'));
         }
       }
     }

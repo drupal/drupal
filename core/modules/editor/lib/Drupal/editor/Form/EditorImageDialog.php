@@ -207,7 +207,7 @@ class EditorImageDialog extends FormBase {
       $form_state['values']['attributes']['data-editor-file-uuid'] = $file->uuid();
     }
 
-    if (form_get_errors()) {
+    if (form_get_errors($form_state)) {
       unset($form['#prefix'], $form['#suffix']);
       $status_messages = array('#theme' => 'status_messages');
       $output = drupal_render($form);

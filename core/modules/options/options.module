@@ -171,21 +171,21 @@ function options_field_settings_form_validate_allowed_values($element, &$form_st
   $values = options_extract_allowed_values($element['#value'], $field_type, $generate_keys);
 
   if (!is_array($values)) {
-    form_error($element, t('Allowed values list: invalid input.'));
+    form_error($element, $form_state, t('Allowed values list: invalid input.'));
   }
   else {
     // Check that keys are valid for the field type.
     foreach ($values as $key => $value) {
       if ($field_type == 'list_integer' && !preg_match('/^-?\d+$/', $key)) {
-        form_error($element, t('Allowed values list: keys must be integers.'));
+        form_error($element, $form_state, t('Allowed values list: keys must be integers.'));
         break;
       }
       if ($field_type == 'list_float' && !is_numeric($key)) {
-        form_error($element, t('Allowed values list: each key must be a valid integer or decimal.'));
+        form_error($element, $form_state, t('Allowed values list: each key must be a valid integer or decimal.'));
         break;
       }
       elseif ($field_type == 'list_text' && drupal_strlen($key) > 255) {
-        form_error($element, t('Allowed values list: each key must be a string at most 255 characters long.'));
+        form_error($element, $form_state, t('Allowed values list: each key must be a string at most 255 characters long.'));
         break;
       }
     }
@@ -194,7 +194,7 @@ function options_field_settings_form_validate_allowed_values($element, &$form_st
     if ($has_data) {
       $lost_keys = array_diff(array_keys($field->getFieldSetting('allowed_values')), array_keys($values));
       if (_options_values_in_use($field, $lost_keys)) {
-        form_error($element, t('Allowed values list: some values are being removed while currently in use.'));
+        form_error($element, $form_state, t('Allowed values list: some values are being removed while currently in use.'));
       }
     }
 

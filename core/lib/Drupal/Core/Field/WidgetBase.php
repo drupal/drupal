@@ -359,7 +359,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
             // @todo: Pass $violation->arrayPropertyPath as property path.
             $error_element = $this->errorElement($delta_element, $violation, $form, $form_state);
             if ($error_element !== FALSE) {
-              form_error($error_element, $violation->getMessage());
+              form_error($error_element, $form_state, $violation->getMessage());
             }
           }
         }
