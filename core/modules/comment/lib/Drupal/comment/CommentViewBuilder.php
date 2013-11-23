@@ -163,7 +163,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
     if ($status == COMMENT_OPEN) {
       if ($entity->access('delete')) {
         $links['comment-delete'] = array(
-          'title' => t('delete'),
+          'title' => t('Delete'),
           'href' => "comment/{$entity->id()}/delete",
           'html' => TRUE,
         );
@@ -171,21 +171,21 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
 
       if ($entity->access('update')) {
         $links['comment-edit'] = array(
-          'title' => t('edit'),
+          'title' => t('Edit'),
           'href' => "comment/{$entity->id()}/edit",
           'html' => TRUE,
         );
       }
       if ($entity->access('create')) {
         $links['comment-reply'] = array(
-          'title' => t('reply'),
+          'title' => t('Reply'),
           'href' => "comment/reply/{$entity->entity_type->value}/{$entity->entity_id->value}/{$entity->field_name->value}/{$entity->id()}",
           'html' => TRUE,
         );
       }
       if ($entity->status->value == COMMENT_NOT_PUBLISHED && $entity->access('approve')) {
         $links['comment-approve'] = array(
-          'title' => t('approve'),
+          'title' => t('Approve'),
           'href' => "comment/{$entity->id()}/approve",
           'html' => TRUE,
           'query' => array('token' => $this->csrfToken->get("comment/{$entity->id()}/approve")),
@@ -205,7 +205,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
     // Add translations link for translation-enabled comment bundles.
     if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($entity)) {
       $links['comment-translations'] = array(
-        'title' => t('translate'),
+        'title' => t('Translate'),
         'href' => 'comment/' . $entity->id() . '/translations',
         'html' => TRUE,
       );

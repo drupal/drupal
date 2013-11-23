@@ -137,7 +137,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->drupalGet('comment/1/approve', array('query' => array('token' => 'forged')));
     $this->assertResponse(403, 'Forged comment approval was denied.');
     $this->drupalGet('node/' . $this->node->id());
-    $this->clickLink(t('approve'));
+    $this->clickLink(t('Approve'));
     $this->drupalLogout();
 
     $this->drupalGet('node/' . $this->node->id());

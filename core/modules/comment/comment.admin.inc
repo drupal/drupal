@@ -154,14 +154,14 @@ function comment_admin_overview($form, &$form_state, $arg) {
     );
     $links = array();
     $links['edit'] = array(
-      'title' => t('edit'),
+      'title' => t('Edit'),
       'route_name' => 'comment.edit_page',
       'route_parameters' => array('comment' => $comment->id()),
       'query' => $destination,
     );
     if (module_invoke('content_translation', 'translate_access', $comment)) {
       $links['translate'] = array(
-        'title' => t('translate'),
+        'title' => t('Translate'),
         'route_name' => 'content_translation.translation_overview_comment',
         'route_parameters' => array('comment' => $comment->id()),
         'query' => $destination,
