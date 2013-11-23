@@ -79,7 +79,7 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
     parent::postCreate($storage_controller);
 
     // Generate menu-compatible set name.
-    if (!$this->getOriginalID()) {
+    if (!$this->getOriginalId()) {
       // Save a new shortcut set with links copied from the user's default set.
       $default_set = shortcut_default_set();
       // Generate a name to have no collisions with menu.

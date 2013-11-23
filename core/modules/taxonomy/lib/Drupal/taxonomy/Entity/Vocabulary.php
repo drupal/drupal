@@ -107,7 +107,7 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
     if (!$update) {
       entity_invoke_bundle_hook('create', 'taxonomy_term', $this->id());
     }
-    elseif ($this->getOriginalID() != $this->id()) {
+    elseif ($this->getOriginalId() != $this->id()) {
       // Reflect machine name changes in the definitions of existing 'taxonomy'
       // fields.
       $fields = field_read_fields();
@@ -115,7 +115,7 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
         $update_field = FALSE;
         if ($field->getFieldType() == 'taxonomy_term_reference') {
           foreach ($field->settings['allowed_values'] as &$value) {
-            if ($value['vocabulary'] == $this->getOriginalID()) {
+            if ($value['vocabulary'] == $this->getOriginalId()) {
               $value['vocabulary'] = $this->id();
               $update_field = TRUE;
             }
@@ -126,9 +126,9 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
         }
       }
       // Update bundles.
-      entity_invoke_bundle_hook('rename', 'taxonomy_term', $this->getOriginalID(), $this->id());
+      entity_invoke_bundle_hook('rename', 'taxonomy_term', $this->getOriginalId(), $this->id());
     }
-    $storage_controller->resetCache($update ? array($this->getOriginalID()) : array());
+    $storage_controller->resetCache($update ? array($this->getOriginalId()) : array());
   }
 
   /**

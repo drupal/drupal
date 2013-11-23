@@ -74,7 +74,7 @@ class ShortcutSetFormController extends EntityFormController {
    */
   public function save(array $form, array &$form_state) {
     $entity = $this->entity;
-    $is_new = !$entity->getOriginalID();
+    $is_new = !$entity->getOriginalId();
     $entity->save();
 
     if ($is_new) {

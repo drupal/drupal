@@ -144,7 +144,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    *   The image style.
    */
   protected static function replaceImageStyle(ImageStyleInterface $style) {
-    if ($style->id() != $style->getOriginalID()) {
+    if ($style->id() != $style->getOriginalId()) {
       // Loop through all fields searching for image fields.
       foreach (field_read_instances() as $instance) {
         if ($instance->getFieldType() == 'image') {
@@ -155,7 +155,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
             $display_options = $display->getComponent($field_name);
 
             // Check if the formatter involves an image style.
-            if ($display_options && $display_options['type'] == 'image' && $display_options['settings']['image_style'] == $style->getOriginalID()) {
+            if ($display_options && $display_options['type'] == 'image' && $display_options['settings']['image_style'] == $style->getOriginalId()) {
               // Update display information for any instance using the image
               // style that was just deleted.
               $display_options['settings']['image_style'] = $style->id();
@@ -165,7 +165,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
           }
           $entity_form_display = entity_get_form_display($instance->entity_type, $instance->bundle, 'default');
           $widget_configuration = $entity_form_display->getComponent($field_name);
-          if ($widget_configuration['settings']['preview_image_style'] == $style->getOriginalID()) {
+          if ($widget_configuration['settings']['preview_image_style'] == $style->getOriginalId()) {
             $widget_options['settings']['preview_image_style'] = $style->id();
             $entity_form_display->setComponent($field_name, $widget_options)
               ->save();

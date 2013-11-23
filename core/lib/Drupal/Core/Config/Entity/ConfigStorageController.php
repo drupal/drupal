@@ -393,8 +393,8 @@ class ConfigStorageController extends EntityStorageControllerBase {
 
     // Load the stored entity, if any.
     // At this point, the original ID can only be NULL or a valid ID.
-    if ($entity->getOriginalID() !== NULL) {
-      $id = $entity->getOriginalID();
+    if ($entity->getOriginalId() !== NULL) {
+      $id = $entity->getOriginalId();
     }
     $config = $this->configFactory->get($prefix . $id);
     $is_new = $config->isNew();
@@ -432,7 +432,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $this->invokeHook('update', $entity);
 
       // Immediately update the original ID.
-      $entity->setOriginalID($entity->id());
+      $entity->setOriginalId($entity->id());
     }
     else {
       $return = SAVED_NEW;

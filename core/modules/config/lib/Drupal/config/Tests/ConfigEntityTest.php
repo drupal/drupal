@@ -46,7 +46,7 @@ class ConfigEntityTest extends WebTestBase {
 
     // Verify ConfigEntity properties/methods on the newly created empty entity.
     $this->assertIdentical($empty->isNew(), TRUE);
-    $this->assertIdentical($empty->getOriginalID(), NULL);
+    $this->assertIdentical($empty->getOriginalId(), NULL);
     $this->assertIdentical($empty->bundle(), 'config_test');
     $this->assertIdentical($empty->id(), NULL);
     $this->assertTrue($empty->uuid());
@@ -100,7 +100,7 @@ class ConfigEntityTest extends WebTestBase {
 
     // Verify methods on the newly created entity.
     $this->assertIdentical($config_test->isNew(), TRUE);
-    $this->assertIdentical($config_test->getOriginalID(), $expected['id']);
+    $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
     $this->assertIdentical($config_test->id(), $expected['id']);
     $this->assertTrue($config_test->uuid());
     $expected['uuid'] = $config_test->uuid();
@@ -124,7 +124,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertIdentical($config_test->uuid(), $expected['uuid']);
     $this->assertIdentical($config_test->label(), $expected['label']);
     $this->assertIdentical($config_test->isNew(), FALSE);
-    $this->assertIdentical($config_test->getOriginalID(), $expected['id']);
+    $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
 
     // Save again, and verify correct status and properties again.
     $status = $config_test->save();
@@ -133,7 +133,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertIdentical($config_test->uuid(), $expected['uuid']);
     $this->assertIdentical($config_test->label(), $expected['label']);
     $this->assertIdentical($config_test->isNew(), FALSE);
-    $this->assertIdentical($config_test->getOriginalID(), $expected['id']);
+    $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
 
     // Re-create the entity with the same ID and verify updated status.
     $same_id = entity_create('config_test', array(
@@ -161,7 +161,7 @@ class ConfigEntityTest extends WebTestBase {
       $new_id = $ids[$i];
       // Before renaming, everything should point to the current ID.
       $this->assertIdentical($config_test->id(), $old_id);
-      $this->assertIdentical($config_test->getOriginalID(), $old_id);
+      $this->assertIdentical($config_test->getOriginalId(), $old_id);
 
       // Rename.
       $config_test->id = $new_id;
@@ -172,7 +172,7 @@ class ConfigEntityTest extends WebTestBase {
 
       // Verify that originalID points to new ID directly after renaming.
       $this->assertIdentical($config_test->id(), $new_id);
-      $this->assertIdentical($config_test->getOriginalID(), $new_id);
+      $this->assertIdentical($config_test->getOriginalId(), $new_id);
     }
 
     // Test config entity prepopulation.

@@ -213,7 +213,7 @@ class NodeTypeFormController extends EntityFormController {
     // Save or reset persistent variable values.
     foreach ($variables as $key => $value) {
       $variable_new = $key . '_' . $type->id();
-      $variable_old = $key . '_' . $type->getOriginalID();
+      $variable_old = $key . '_' . $type->getOriginalId();
       if (is_array($value)) {
         $value = array_keys(array_filter($value));
       }

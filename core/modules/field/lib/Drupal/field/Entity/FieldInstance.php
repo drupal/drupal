@@ -387,7 +387,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   protected function saveUpdated() {
     $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
-    $original = $instance_controller->loadUnchanged($this->getOriginalID());
+    $original = $instance_controller->loadUnchanged($this->getOriginalId());
     $this->original = $original;
 
     // Some updates are always disallowed.

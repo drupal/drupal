@@ -33,7 +33,7 @@ class ViewUIObjectTest extends UnitTestCase {
    */
   public function testEntityDecoration() {
     $method_args = array();
-    $method_args['setOriginalID'] = array(12);
+    $method_args['setOriginalId'] = array(12);
     $method_args['setStatus'] = array(TRUE);
     $method_args['enforceIsNew'] = array(FALSE);
     $method_args['label'] = array(Language::LANGCODE_NOT_SPECIFIED);
