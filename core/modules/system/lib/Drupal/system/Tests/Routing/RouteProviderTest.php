@@ -17,6 +17,7 @@ use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Routing\RouteProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\MatcherDumper;
+use Drupal\Tests\Core\Routing\RoutingFixtures;
 
 /**
  * Basic tests for the RouteProvider.

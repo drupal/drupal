@@ -13,6 +13,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Drupal\simpletest\UnitTestBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\MatcherDumper;
+use Drupal\Tests\Core\Routing\RoutingFixtures;
 
 /**
  * Basic tests for the UrlMatcherDumper.

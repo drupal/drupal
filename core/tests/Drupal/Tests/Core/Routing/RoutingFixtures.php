@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\system\Tests\Routing;
+namespace Drupal\Tests\Core\Routing;
 
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
