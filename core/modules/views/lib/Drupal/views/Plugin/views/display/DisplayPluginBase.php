@@ -485,7 +485,7 @@ abstract class DisplayPluginBase extends PluginBase {
           'exposed_form' => TRUE,
 
           'link_display' => TRUE,
-          'link_url' => '',
+          'link_url' => TRUE,
           'group_by' => TRUE,
 
           'style' => TRUE,

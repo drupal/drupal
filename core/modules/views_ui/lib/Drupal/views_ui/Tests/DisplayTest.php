@@ -272,11 +272,16 @@ class DisplayTest extends UITestBase {
     $this->assertEqual($result[0], 'Page', 'Make sure that the link option summary shows the right linked display.');
 
     $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
-    $this->drupalPostForm($link_display_path, array('link_display' => 'custom_url'), t('Apply'));
+    $this->drupalPostForm($link_display_path, array('link_display' => 'custom_url', 'link_url' => 'a-custom-url'), t('Apply'));
     // The form redirects to the master display.
     $this->drupalGet($path);
 
     $this->assertLink(t('Custom URL'), 0, 'The link option has custom url as summary.');
+
+    // Test the default link_url value for new display
+    $this->drupalPostForm(NULL, array(), t('Add Block'));
+    $this->clickLink(t('Custom URL'));
+    $this->assertFieldByName('link_url', 'a-custom-url');
   }
 
   /**
