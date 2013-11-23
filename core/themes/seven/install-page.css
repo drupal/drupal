@@ -174,11 +174,15 @@ body.install-page #page-title {
   float: none;
   width: auto;
 }
-@media all and (max-width: 975px) and (min-width: 48em) {
+@media all and (max-width: 1010px) and (min-width: 48em) {
   .install-page .password-strength,
   .install-page .confirm-parent,
   .install-page div.password-confirm {
     float: none;
     width: auto;
+  }
+  input.password-confirm,
+  input.password-field {
+    float: none;
   }
 }

@@ -21,7 +21,7 @@
  * Password strength indicator.
  */
 .password-strength {
-  width: 17em;
+  width: 13em;
   float: right;  /* LTR */
 }
 [dir="rtl"] .password-strength {
@@ -51,11 +51,16 @@ input.password-confirm,
 input.password-field {
   width: 13.7em;
   margin-bottom: 0.4em;
+  float: left; /* LTR */
 }
 div.password-confirm {
   float: right;  /* LTR */
   visibility: hidden;
-  width: 17em;
+  width: 13em;
+}
+[dir="rtl"] input.password-confirm,
+[dir="rtl"] input.password-field {
+  float: right;
 }
 [dir="rtl"] div.password-confirm {
   float: left;
@@ -74,6 +79,7 @@ div.password-suggestions ul {
   clear: left; /* LTR */
   margin: 0;
   max-width: 33em;
+  overflow: hidden;
 }
 [dir="rtl"] .confirm-parent,
 [dir="rtl"] .password-parent {
@@ -108,5 +114,6 @@ div.password-suggestions ul {
     clear: none;
     width: 100%;
     max-width: none;
+    overflow: hidden;
   }
 }
