@@ -1,0 +1,27 @@
+# Schema for Configuration files of the entity module.
+
+entity.view_mode.*.*:
+  type: mapping
+  label: 'Entity View Mode settings'
+  mapping:
+    id:
+      type: string
+      label: 'Entity View Mode ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'The human-readable name of the form or view mode'
+    targetEntityType:
+      type: string
+      label: 'Used for Entity type'
+    status:
+      type: boolean
+      label: 'Enabled'
+    cache:
+      type: boolean
+      label: 'Cached'
+    langcode:
+      type: string
+      label: 'Default language'
