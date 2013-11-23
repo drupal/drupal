@@ -51,10 +51,6 @@ function entity_menu() {
   $items['admin/structure/display-modes/view/add/%'] = array(
     'route_name' => 'entity.view_mode_add_type',
   );
-  $items['admin/structure/display-modes/view/manage/%'] = array(
-    'title' => 'Edit view mode',
-    'route_name' => 'entity.view_mode_edit',
-  );
   $items['admin/structure/display-modes/view/manage/%/delete'] = array(
     'route_name' => 'entity.view_mode_delete',
   );
@@ -76,10 +72,6 @@ function entity_menu() {
   );
   $items['admin/structure/display-modes/form/add/%'] = array(
     'route_name' => 'entity.form_mode_add_type',
-  );
-  $items['admin/structure/display-modes/form/manage/%'] = array(
-    'title' => 'Edit form mode',
-    'route_name' => 'entity.form_mode_edit',
   );
   $items['admin/structure/display-modes/form/manage/%/delete'] = array(
     'route_name' => 'entity.form_mode_delete',
