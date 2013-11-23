@@ -15,6 +15,7 @@ use Drupal\aggregator\ItemInterface;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -352,11 +353,35 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
   }
 
   /**
-   * @todo Remove aggregator_opml().
+   * Generates an OPML representation of all feeds or feeds by category.
+   *
+   * @param int $cid
+   *   (optional) If set, feeds are exported only from a category with this ID.
+   *   Otherwise, all feeds are exported. Defaults to NULL.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response containing the OPML.
    */
   public function opmlPage($cid = NULL) {
-    module_load_include('pages.inc', 'aggregator');
-    return aggregator_page_opml($cid);
+    if ($cid) {
+      $result = $this->database->query('SELECT f.title, f.url FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} c on f.fid = c.fid WHERE c.cid = :cid ORDER BY title', array(':cid' => $cid));
+    }
+    else {
+      $result = $this->database->query('SELECT * FROM {aggregator_feed} ORDER BY title');
+    }
+
+    $feeds = $result->fetchAll();
+    $aggregator_page_opml = array(
+      '#theme' => 'aggregator_page_opml',
+      '#feeds' => $feeds,
+    );
+    $output = drupal_render($aggregator_page_opml);
+
+    $response = new Response();
+    $response->headers->set('Content-Type', 'text/xml; charset=utf-8');
+    $response->setContent($output);
+
+    return $response;
   }
 
 }

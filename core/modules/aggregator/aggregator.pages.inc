@@ -90,48 +90,19 @@ function template_preprocess_aggregator_item(&$variables) {
 }
 
 /**
- * Page callback: Generates an OPML representation of all feeds.
- *
- * @param $cid
- *   (optional) If set, feeds are exported only from a category with this ID.
- *   Otherwise, all feeds are exported. Defaults to NULL.
- *
- * @return string
- *   An OPML formatted string.
- *
- * @see aggregator_menu()
- *
- * @deprecated Use \Drupal\aggregator\Controller\AggregatorController::opmlPage()
- */
-function aggregator_page_opml($cid = NULL) {
-  if ($cid) {
-    $result = db_query('SELECT f.title, f.url FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} c on f.fid = c.fid WHERE c.cid = :cid ORDER BY title', array(':cid' => $cid));
-  }
-  else {
-    $result = db_query('SELECT * FROM {aggregator_feed} ORDER BY title');
-  }
-
-  $feeds = $result->fetchAll();
-  $aggregator_page_opml = array(
-    '#theme' => 'aggregator_page_opml',
-    '#feeds' => $feeds,
-  );
-  return drupal_render($aggregator_page_opml);
-}
-
-/**
  * Prints the OPML page for the feed.
  *
  * @param array $variables
  *   An associative array containing:
  *   - feeds: An array of the feeds to theme.
  *
+ * @return string
+ *   An OPML formatted string.
+ *
  * @ingroup themeable
  */
 function theme_aggregator_page_opml($variables) {
   $feeds = $variables['feeds'];
-
-  drupal_add_http_header('Content-Type', 'text/xml; charset=utf-8');
 
   $output  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";
@@ -146,7 +117,7 @@ function theme_aggregator_page_opml($variables) {
   $output .= "</body>\n";
   $output .= "</opml>\n";
 
-  print $output;
+  return $output;
 }
 
 /**
