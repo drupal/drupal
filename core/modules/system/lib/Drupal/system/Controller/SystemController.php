@@ -101,7 +101,7 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
             '#content' => $this->systemManager->getAdminBlock($item),
           );
 
-          if (!empty($block['content'])) {
+          if (!empty($block['content']['#content'])) {
             $block['show'] = TRUE;
           }
 
