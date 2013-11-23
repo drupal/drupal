@@ -31,14 +31,14 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
   /**
    * An array containing the base entity type's definition.
    *
-   * @var string
+   * @var array
    */
   protected $baseEntityInfo = array();
 
   /**
    * The bundle info for the base entity type.
    *
-   * @var string
+   * @var array
    */
   protected $baseEntityBundles = array();
 
@@ -59,7 +59,7 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
    * @param array $entity_info
    *   An array of entity info for the entity type.
    * @param array $definition
-   *   The plugin definition of the config translation mapper.
+   *   (optional) The plugin definition of the config translation mapper.
    *
    * @return static
    *   A new instance of the entity controller.
@@ -76,7 +76,7 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
   }
 
   /**
-   * Constructs a new EntityListController object.
+   * Constructs a new ConfigTranslationFieldInstanceListController object.
    *
    * @param string $entity_type
    *   The type of entity to be listed.
@@ -88,7 +88,7 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
    *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager.
-   * @param $definition
+   * @param array $definition
    *   The plugin definition of the config translation mapper.
    */
   public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, EntityManager $entity_manager, array $definition) {

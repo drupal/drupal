@@ -11,7 +11,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
-use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

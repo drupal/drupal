@@ -26,7 +26,7 @@ class ConfigTranslationLocalTasks extends DerivativeBase implements ContainerDer
   protected $mapperManager;
 
   /**
-   * The base plugin ID
+   * The base plugin ID.
    *
    * @var string
    */
@@ -101,7 +101,7 @@ class ConfigTranslationLocalTasks extends DerivativeBase implements ContainerDer
    * @return bool|string
    *   Returns the local task ID of the parent task, otherwise return FALSE.
    */
-  protected function getTaskFromRoute($route_name, &$local_tasks) {
+  protected function getTaskFromRoute($route_name, array &$local_tasks) {
     $root_local_task = FALSE;
     foreach ($local_tasks as $plugin_id => $local_task) {
       if ($local_task['route_name'] == $route_name) {

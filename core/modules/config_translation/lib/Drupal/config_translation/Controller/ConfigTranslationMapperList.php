@@ -28,7 +28,7 @@ class ConfigTranslationMapperList extends ControllerBase implements ContainerInj
   protected $mappers;
 
   /**
-   * Constructs a new ConfigTranslationMapperIndex object.
+   * Constructs a new ConfigTranslationMapperList object.
    *
    * @param \Drupal\config_translation\ConfigMapperInterface[] $mappers
    *   The configuration mapper manager.
@@ -38,7 +38,7 @@ class ConfigTranslationMapperList extends ControllerBase implements ContainerInj
   }
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(

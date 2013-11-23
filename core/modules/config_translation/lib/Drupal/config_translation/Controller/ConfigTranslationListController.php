@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ConfigTranslationListController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
-   * Definition of the config mapper.
+   * The definition of the config mapper.
    *
    * @var array
    */
@@ -37,7 +37,7 @@ class ConfigTranslationListController extends ControllerBase implements Containe
    *
    * @param \Drupal\config_translation\ConfigMapperManagerInterface $mapper_manager
    *   The config mapper manager.
-   * @param $config_translation_mapper
+   * @param string $config_translation_mapper
    *   The config mapper id.
    */
   public function __construct(ConfigMapperManagerInterface $mapper_manager, $config_translation_mapper) {

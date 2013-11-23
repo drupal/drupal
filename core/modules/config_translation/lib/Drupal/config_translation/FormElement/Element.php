@@ -8,7 +8,7 @@
 namespace Drupal\config_translation\FormElement;
 
 /**
- * Base class for form elements.
+ * Defines a base class for form elements.
  */
 abstract class Element implements ElementInterface {
 

@@ -33,7 +33,7 @@ class ConfigTranslationOverviewAccess implements StaticAccessCheckInterface {
   protected $sourceLanguage;
 
   /**
-   * Constructs a ConfigNameCheck object.
+   * Constructs a ConfigTranslationOverviewAccess object.
    *
    * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
    *   The mapper plugin discovery service.

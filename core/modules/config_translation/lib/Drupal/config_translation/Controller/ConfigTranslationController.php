@@ -9,8 +9,8 @@ namespace Drupal\config_translation\Controller;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Access\AccessManager;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
-use Symfony\Component\Routing\Route;
 
 /**
  * Provides page callbacks for the configuration translation interface.
@@ -28,7 +27,7 @@ use Symfony\Component\Routing\Route;
 class ConfigTranslationController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
-   * Configuration mapper manager.
+   * The configuration mapper manager.
    *
    * @var \Drupal\config_translation\ConfigMapperManagerInterface
    */
@@ -144,8 +143,8 @@ class ConfigTranslationController extends ControllerBase implements ContainerInj
     foreach ($languages as $language) {
       $langcode = $language->id;
 
-      // This is needed because e.g.
-      // ConfigMapperInterface::getAddRouteParameters()
+      // This is needed because
+      // ConfigMapperInterface::getAddRouteParameters(), for example,
       // needs to return the correct language code for each table row.
       $fake_request->attributes->set('langcode', $langcode);
       $mapper->populateFromRequest($fake_request);
@@ -227,7 +226,7 @@ class ConfigTranslationController extends ControllerBase implements ContainerInj
    *   Path to look up.
    *
    * @return \Symfony\Component\HttpFoundation\Request|null
-   *   A populated request object or NULL if the patch couldn't be matched.
+   *   A populated request object or NULL if the patch could not be matched.
    */
   protected function getRequestForPath(Request $request, $path) {
     // @todo Use RequestHelper::duplicate once https://drupal.org/node/2090293

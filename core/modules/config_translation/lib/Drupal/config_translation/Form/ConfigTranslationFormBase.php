@@ -7,7 +7,6 @@
 
 namespace Drupal\config_translation\Form;
 
-use Drupal\config_translation\ConfigMapperInterface;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\Schema\Element;
@@ -41,7 +40,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   protected $configMapperManager;
 
   /**
-   * String translation storage object.
+   * The string translation storage object.
    *
    * @var \Drupal\locale\StringStorageInterface
    */
@@ -114,7 +113,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   }
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function getBaseFormID() {
     return 'config_translation_form';
@@ -131,11 +130,12 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    * @param array $form_state
    *   An associative array containing the current state of the form.
    * @param \Symfony\Component\HttpFoundation\Request $request
-   *   Page request object.
+   *   (optional) Page request object.
    * @param string $plugin_id
-   *   The plugin ID of the mapper.
+   *   (optional) The plugin ID of the mapper.
    * @param string $langcode
-   *   The language code of the language the form is adding or editing.
+   *   (optional) The language code of the language the form is adding or
+   *   editing.
    *
    * @return array
    *   The form structure.
@@ -359,8 +359,8 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    *   Either format is used, the nested arrays are just containers and not
    *   needed for saving the data.
    * @param bool $shipped_config
-   *   Flag to specify whether the configuration had a shipped version and
-   *   therefore should also be stored in the locale database.
+   *   (optional) Flag to specify whether the configuration had a shipped
+   *   version and therefore should also be stored in the locale database.
    */
   protected function setConfig(Language $language, Config $base_config, Config $translation_config, array $config_values, $shipped_config = FALSE) {
     foreach ($config_values as $key => $value) {
