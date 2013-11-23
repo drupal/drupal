@@ -308,8 +308,8 @@ function rdf_preprocess_node(&$variables) {
   }
 
   // Adds RDFa markup annotating the number of comments a node has.
-  $comment_count_mapping = $mapping->getPreparedFieldMapping('comment_count');
-  if (\Drupal::moduleHandler()->moduleExists('comment')) {
+  if (\Drupal::moduleHandler()->moduleExists('comment') && \Drupal::currentUser()->hasPermission('access comments')) {
+    $comment_count_mapping = $mapping->getPreparedFieldMapping('comment_count');
     if (!empty($comment_count_mapping['properties'])) {
       $fields = array_keys(\Drupal::service('comment.manager')->getFields('node'));
       $definitions = array_keys($variables['node']->getPropertyDefinitions());
@@ -317,32 +317,12 @@ function rdf_preprocess_node(&$variables) {
       $count = 0;
       foreach ($valid_fields as $field_name) {
         $count += $variables['node']->get($field_name)->comment_count;
-        // Annotates the 'x comments' link in teaser view.
-        if (isset($variables['content']['links']['comment__' . $field_name]['#links']['comment-comments'])) {
-          $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->get($field_name)->comment_count);
-          // According to RDFa parsing rule number 4, a new subject URI is created
-          // from the href attribute if no rel/rev attribute is present. To get
-          // the original node URL from the about attribute of the parent
-          // container we set an empty rel attribute which triggers rule number 5.
-          // See http://www.w3.org/TR/rdfa-syntax/#sec_5.5.
-          $comment_count_attributes['rel'] = '';
-          $variables['content']['links']['comment__' . $field_name]['#links']['comment-comments']['attributes'] += $comment_count_attributes;
-        }
-      }
-      // In full node view, the number of comments is not displayed by
-      // node.html.twig so it is expressed in RDFa in the <head> tag of the HTML
-      // page.
-      if ($variables['page'] && \Drupal::currentUser()->hasPermission('access comments')) {
-        $element = array(
-          '#tag' => 'meta',
-          '#attributes' => array(
-            'about' => $variables['node_url'],
-            'property' => $comment_count_mapping['properties'],
-            'content' => $count,
-            'datatype' => $comment_count_mapping['datatype'],
-          ),
+        // Adds RDFa markup for the comment count near the node title as metadata
+        $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->get($field_name)->comment_count);
+        $variables['title_suffix']['rdf_meta_comment_count'] = array(
+          '#theme' => 'rdf_metadata',
+          '#metadata' => array($comment_count_attributes),
         );
-        drupal_add_html_head($element, 'rdf_node_comment_count');
       }
     }
   }

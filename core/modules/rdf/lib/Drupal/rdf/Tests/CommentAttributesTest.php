@@ -125,9 +125,6 @@ class CommentAttributesTest extends CommentTestBase {
       'datatype' => 'http://www.w3.org/2001/XMLSchema#integer',
     );
     $this->assertTrue($graph->hasProperty($this->node_uri, 'http://rdfs.org/sioc/ns#num_replies', $expected_value), 'Number of comments found in RDF output of teaser view (sioc:num_replies).');
-    // Makes sure we don't generate the wrong statement for number of comments.
-    $node_comments_uri = url('node/' . $this->node->id(), array('fragment' => 'comments', 'absolute' => TRUE));
-    $this->assertFalse($graph->hasProperty($node_comments_uri, 'http://rdfs.org/sioc/ns#num_replies', $expected_value), 'Number of comments found in RDF output of teaser view mode (sioc:num_replies).');
 
     // Tests number of comments in full node view, expected value is the same.
     $parser = new \EasyRdf_Parser_Rdfa();
