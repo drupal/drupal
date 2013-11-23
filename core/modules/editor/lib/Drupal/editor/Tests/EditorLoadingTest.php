@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\editor\Tests\EditorLoadingTest.
+ * Contains \Drupal\editor\Tests\EditorLoadingTest.
  */
 
 namespace Drupal\editor\Tests;
@@ -29,7 +29,7 @@ class EditorLoadingTest extends WebTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Add text formats.
@@ -66,7 +66,7 @@ class EditorLoadingTest extends WebTestBase {
   /**
    * Tests loading of text editors.
    */
-  function testLoading() {
+  public function testLoading() {
     // Only associate a text editor with the "Full HTML" text format.
     $editor = entity_create('editor', array(
       'format' => 'full_html',
@@ -169,4 +169,5 @@ class EditorLoadingTest extends WebTestBase {
       $this->xpath('//select[contains(@class, "filter-list")]'),
     );
   }
+
 }

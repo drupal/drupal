@@ -12,6 +12,7 @@
 "use strict";
 
 Drupal.editorConfiguration = {
+
   /**
    * Must be called by a specific text editor's configuration whenever a feature
    * is added by the user.
@@ -25,6 +26,7 @@ Drupal.editorConfiguration = {
   addedFeature: function (feature) {
     $(document).trigger('drupalEditorFeatureAdded', feature);
   },
+
   /**
    * Must be called by a specific text editor's configuration whenever a feature
    * is removed by the user.
@@ -38,6 +40,7 @@ Drupal.editorConfiguration = {
   removedFeature: function (feature) {
     $(document).trigger('drupalEditorFeatureRemoved', feature);
   },
+
   /**
    * Must be called by a specific text editor's configuration whenever a feature
    * is modified, i.e. has different rules.
@@ -54,6 +57,7 @@ Drupal.editorConfiguration = {
   modifiedFeature: function (feature) {
     $(document).trigger('drupalEditorFeatureModified', feature);
   },
+
   /**
    * May be called by a specific text editor's configuration whenever a feature
    * is being added, to check whether it would require the filter settings to be

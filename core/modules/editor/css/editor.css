@@ -2,6 +2,7 @@
  * @file
  * Styles for text editors.
  */
+
 .editor-dialog {
   /* This !important is required to override inline CSS of jQuery UI. */
   width: 80% !important;

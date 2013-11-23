@@ -2,14 +2,13 @@
 
 /**
  * @file
- * Definition of \Drupal\editor\Tests\EditorManagerTest.
+ * Contains \Drupal\editor\Tests\EditorManagerTest.
  */
 
 namespace Drupal\editor\Tests;
 
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\editor\Plugin\EditorManager;
-
 
 /**
  * Unit tests for the configurable text editor manager.
@@ -38,7 +37,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Install the Filter module.
@@ -65,7 +64,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
   /**
    * Tests the configurable text editor manager.
    */
-  function testManager() {
+  public function testManager() {
     $this->editorManager = $this->container->get('plugin.manager.editor');
 
     // Case 1: no text editor available:

@@ -29,7 +29,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     $this->installSchema('node', array('node', 'node_access', 'node_field_data', 'node_field_revision', 'node_revision'));
     $this->installSchema('file', array('file_managed', 'file_usage'));
@@ -58,7 +58,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
   /**
    * Tests the configurable text editor manager.
    */
-  function testEditorEntityHooks() {
+  public function testEditorEntityHooks() {
     $image = entity_create('file', array());
     $image->setFileUri('core/misc/druplicon.png');
     $image->setFilename(drupal_basename($image->getFileUri()));

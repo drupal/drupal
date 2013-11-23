@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\editor\Tests\EditIntegrationLoadingTest.
+ * Contains \Drupal\editor\Tests\EditIntegrationLoadingTest.
  */
 
 namespace Drupal\editor\Tests;
@@ -36,7 +36,7 @@ class EditIntegrationLoadingTest extends WebTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Create a text format.
@@ -73,7 +73,7 @@ class EditIntegrationLoadingTest extends WebTestBase {
   /**
    * Test loading of untransformed text when a user doesn't have access to it.
    */
-  function testUsersWithoutPermission() {
+  public function testUsersWithoutPermission() {
     // Create 3 users, each with insufficient permissions, i.e. without either
     // or both of the following permissions:
     // - the 'access in-place editing' permission
@@ -103,7 +103,7 @@ class EditIntegrationLoadingTest extends WebTestBase {
   /**
    * Test loading of untransformed text when a user does have access to it.
    */
-  function testUserWithPermission() {
+  public function testUserWithPermission() {
     $user = $this->drupalCreateUser(array_merge(static::$basic_permissions, array('edit any article content', 'access in-place editing')));
     $this->drupalLogin($user);
     $this->drupalGet('node/1');

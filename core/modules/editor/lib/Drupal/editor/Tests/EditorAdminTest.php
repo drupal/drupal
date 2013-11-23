@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\editor\Tests\EditorAdminTest.
+ * Contains \Drupal\editor\Tests\EditorAdminTest.
  */
 
 namespace Drupal\editor\Tests;
@@ -29,7 +29,7 @@ class EditorAdminTest extends WebTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Add text format.
@@ -48,7 +48,7 @@ class EditorAdminTest extends WebTestBase {
   /**
    * Tests an existing format without any editors available.
    */
-  function testNoEditorAvailable() {
+  public function testNoEditorAvailable() {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
 
@@ -72,7 +72,7 @@ class EditorAdminTest extends WebTestBase {
   /**
    * Tests adding a text editor to an existing text format.
    */
-  function testAddEditorToExistingFormat() {
+  public function testAddEditorToExistingFormat() {
     $this->enableUnicornEditor();
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
@@ -86,7 +86,7 @@ class EditorAdminTest extends WebTestBase {
   /**
    * Tests adding a text editor to a new text format.
    */
-  function testAddEditorToNewFormat() {
+  public function testAddEditorToNewFormat() {
     $this->enableUnicornEditor();
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/config/content/formats/add');

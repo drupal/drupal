@@ -64,7 +64,7 @@ class EditIntegrationTest extends EditTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Install the Filter module.
@@ -122,7 +122,7 @@ class EditIntegrationTest extends EditTestBase {
    * always with a ProcessedTextEditor plug-in present, but with varying text
    * format compatibility.
    */
-  function testEditorSelection() {
+  public function testEditorSelection() {
     $this->editorManager = new InPlaceEditorManager($this->container->get('container.namespaces'));
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
 
@@ -146,7 +146,7 @@ class EditIntegrationTest extends EditTestBase {
   /**
    * Tests (custom) metadata when the formatted text editor is used.
    */
-  function testMetadata() {
+  public function testMetadata() {
     $this->editorManager = new InPlaceEditorManager($this->container->get('container.namespaces'));
     $this->accessChecker = new MockEditEntityFieldAccessCheck();
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
@@ -178,7 +178,7 @@ class EditIntegrationTest extends EditTestBase {
   /**
    * Tests GetUntransformedTextCommand AJAX command.
    */
-  function testGetUntransformedTextCommand() {
+  public function testGetUntransformedTextCommand() {
     // Create an entity with values for the field.
     $this->entity = entity_create('entity_test', array());
     $this->entity->{$this->field_name}->value = 'Test';
@@ -198,4 +198,5 @@ class EditIntegrationTest extends EditTestBase {
     );
     $this->assertEqual(drupal_json_encode($expected), $response->prepare($request)->getContent(), 'The GetUntransformedTextCommand AJAX command works correctly.');
   }
+
 }

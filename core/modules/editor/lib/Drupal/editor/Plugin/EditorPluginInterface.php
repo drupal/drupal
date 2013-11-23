@@ -13,9 +13,8 @@ use Drupal\editor\Entity\Editor;
 /**
  * Defines an interface for configurable text editors.
  *
- * Modules implementing this interface may want to extend the EditorBase
- * class, which provides default implementations of each method where
- * appropriate.
+ * Modules implementing this interface may want to extend the EditorBase class,
+ * which provides default implementations of each method where appropriate.
  */
 interface EditorPluginInterface extends PluginInspectionInterface {
 
@@ -106,8 +105,8 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    *   A configured text editor object.
    *
    * @return array
-   *   An array of libraries that will be added to the page for use by this
-   *   text editor.
+   *   An array of libraries that will be added to the page for use by this text
+   *   editor.
    *
    * @see drupal_process_attached()
    * @see EditorManager::getAttachments()
