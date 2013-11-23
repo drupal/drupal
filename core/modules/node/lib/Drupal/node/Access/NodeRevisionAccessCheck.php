@@ -135,7 +135,7 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
 
     if (!isset($this->access[$cid])) {
       // Perform basic permission checks first.
-      if (!user_access($map[$op], $account) && !user_access($type_map[$op], $account) && !user_access('administer nodes', $account)) {
+      if (!$account->hasPermission($map[$op]) && !$account->hasPermission($type_map[$op]) && !$account->hasPermission('administer nodes')) {
         return $this->access[$cid] = FALSE;
       }
 
@@ -147,7 +147,7 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
       if ($node->isDefaultRevision() && ($this->connection->query('SELECT COUNT(*) FROM {node_field_revision} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $node->id()))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
         $this->access[$cid] = FALSE;
       }
-      elseif (user_access('administer nodes', $account)) {
+      elseif ($account->hasPermission('administer nodes')) {
         $this->access[$cid] = TRUE;
       }
       else {
