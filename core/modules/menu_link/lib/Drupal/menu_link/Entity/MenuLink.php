@@ -532,7 +532,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
 
     // Need to check both plid and menu_name, since plid can be 0 in any menu.
     if (isset($this->original) && ($this->plid != $this->original->plid || $this->menu_name != $this->original->menu_name)) {
-      $storage_controller->moveChildren($this, $this->original);
+      $storage_controller->moveChildren($this);
     }
     // Find the router_path.
     if (empty($this->router_path) || empty($this->original) || (isset($this->original) && $this->original->link_path != $this->link_path)) {
