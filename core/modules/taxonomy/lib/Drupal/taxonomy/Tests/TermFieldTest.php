@@ -127,7 +127,7 @@ class TermFieldTest extends TaxonomyTestBase {
     // Delete the vocabulary and verify that the widget is gone.
     $this->vocabulary->delete();
     $this->drupalGet('entity_test/add');
-    $this->assertNoFieldByName($this->field_name, '', 'Widget is not displayed');
+    $this->assertNoFieldByName($this->field_name, '', 'Widget is not displayed.');
   }
 
   /**

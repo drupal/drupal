@@ -72,8 +72,8 @@ class VocabularyTest extends TaxonomyTestBase {
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
 
     $site_name = \Drupal::config('system.site')->get('name');
-    $this->assertTitle(t('Don\'t Panic | @site-name', array('@site-name' => $site_name)));
-    $this->assertNoTitle(t('Don&#039;t Panic | @site-name', array('@site-name' => $site_name)));
+    $this->assertTitle(t('Don\'t Panic | @site-name', array('@site-name' => $site_name)), 'The page title contains the escaped character.');
+    $this->assertNoTitle(t('Don&#039;t Panic | @site-name', array('@site-name' => $site_name)), 'The page title does not contain an encoded character.');
   }
 
   /**

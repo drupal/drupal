@@ -54,7 +54,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     // Add a term.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     // Check that we have the language selector.
-    $this->assertField('edit-langcode', t('The language selector field was found on the page'));
+    $this->assertField('edit-langcode', t('The language selector field was found on the page.'));
     // Submit the term.
     $edit = array(
       'name' => $this->randomName(),
@@ -63,7 +63,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);
     $term = reset($terms);
-    $this->assertEqual($term->language()->id, $edit['langcode']);
+    $this->assertEqual($term->language()->id, $edit['langcode'], 'The term contains the correct langcode.');
 
     // Check if on the edit page the language is correct.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
@@ -87,7 +87,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
-    $this->assertOptionSelected('edit-langcode', 'bb');
+    $this->assertOptionSelected('edit-langcode', 'bb', 'The expected langcode was selected.');
 
     // Make the default language of the terms to be the current interface.
     $edit = array(
@@ -96,9 +96,9 @@ class TermLanguageTest extends TaxonomyTestBase {
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('aa/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
-    $this->assertOptionSelected('edit-langcode', 'aa');
+    $this->assertOptionSelected('edit-langcode', 'aa', "The expected langcode, 'aa', was selected.");
     $this->drupalGet('bb/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
-    $this->assertOptionSelected('edit-langcode', 'bb');
+    $this->assertOptionSelected('edit-langcode', 'bb', "The expected langcode, 'bb', was selected.");
 
     // Change the default language of the site and check if the default terms
     // language is still correctly selected.
@@ -114,6 +114,6 @@ class TermLanguageTest extends TaxonomyTestBase {
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
-    $this->assertOptionSelected('edit-langcode', 'cc');
+    $this->assertOptionSelected('edit-langcode', 'cc', "The expected langcode, 'cc', was selected.");
   }
 }

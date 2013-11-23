@@ -47,7 +47,7 @@ class EfqTest extends TaxonomyTestBase {
       'bundle' => $this->vocabulary->id(),
     );
     $term = _field_create_entity_from_ids($ids);
-    $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs');
+    $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs.');
 
     // Create a second vocabulary and five more terms.
     $vocabulary2 = $this->createVocabulary();
@@ -69,6 +69,6 @@ class EfqTest extends TaxonomyTestBase {
       'bundle' => $vocabulary2->id(),
     );
     $term = _field_create_entity_from_ids($ids);
-    $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs');
+    $this->assertEqual($term->id(), $tid, 'Taxonomy term can be created based on the IDs.');
   }
 }
