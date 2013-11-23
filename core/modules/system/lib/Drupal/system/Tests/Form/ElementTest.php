@@ -99,12 +99,12 @@ class ElementTest extends WebTestBase {
   function testButtonClasses() {
     $this->drupalGet('form-test/button-class');
     // Just contains(@class, "button") won't do because then
-    // "button-foo" would contain "button". Instead, check
+    // "button--foo" would contain "button". Instead, check
     // " button ". Make sure it matches in the beginning and the end too
     // by adding a space before and after.
     $this->assertEqual(2, count($this->xpath('//*[contains(concat(" ", @class, " "), " button ")]')));
-    $this->assertEqual(1, count($this->xpath('//*[contains(concat(" ", @class, " "), " button-foo ")]')));
-    $this->assertEqual(1, count($this->xpath('//*[contains(concat(" ", @class, " "), " button-danger ")]')));
+    $this->assertEqual(1, count($this->xpath('//*[contains(concat(" ", @class, " "), " button--foo ")]')));
+    $this->assertEqual(1, count($this->xpath('//*[contains(concat(" ", @class, " "), " button--danger ")]')));
   }
 
   /**

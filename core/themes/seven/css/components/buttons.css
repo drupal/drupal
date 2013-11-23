@@ -1,0 +1,47 @@
+/**
+ * @file
+ * Structural styles for Seven’s UI buttons
+ *
+ * Apply these classes to any element (<link>, <button>, <input>, etc.) that
+ * should appear as a button.
+ */
+
+/**
+ * Buttons.
+ *
+ * 1. Enable z-index on buttons.
+ * 2. Normalize 'line-height'; can’t be changed from 'normal' in Firefox 4+.
+ * 3. Allows full range of styling in Webkit and Gecko.
+ *
+ * @todo Consider moving box-sizing into base.css under a universal selector.
+ * See https://drupal.org/node/2124251
+ *
+ */
+.button {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  position: relative;  /* 1 */
+  text-align: center;
+  line-height: normal;  /* 2 */
+  cursor: pointer;
+  -webkit-appearance: none;  /* 3 */
+     -moz-appearance: none;  /* " */
+}
+
+/* Prevent focus ring being covered by next siblings. */
+.button:focus {
+  z-index: 10;
+}
+
+/* Link actions. */
+.link {
+  display: inline;
+  cursor: pointer;
+  padding: 0;
+  border: 0;
+  background: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+}

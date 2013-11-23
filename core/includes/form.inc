@@ -2248,13 +2248,13 @@ function form_pre_render_button($element) {
 
   $element['#attributes']['class'][] = 'button';
   if (!empty($element['#button_type'])) {
-    $element['#attributes']['class'][] = 'button-' . $element['#button_type'];
+    $element['#attributes']['class'][] = 'button--' . $element['#button_type'];
   }
   // @todo Various JavaScript depends on this button class.
   $element['#attributes']['class'][] = 'form-submit';
 
   if (!empty($element['#attributes']['disabled'])) {
-    $element['#attributes']['class'][] = 'form-button-disabled';
+    $element['#attributes']['class'][] = 'is-disabled';
   }
 
   return $element;
@@ -2285,13 +2285,13 @@ function form_pre_render_image_button($element) {
 
   $element['#attributes']['class'][] = 'image-button';
   if (!empty($element['#button_type'])) {
-    $element['#attributes']['class'][] = 'image-button-' . $element['#button_type'];
+    $element['#attributes']['class'][] = 'image-button--' . $element['#button_type'];
   }
   // @todo Various JavaScript depends on this button class.
   $element['#attributes']['class'][] = 'form-submit';
 
   if (!empty($element['#attributes']['disabled'])) {
-    $element['#attributes']['class'][] = 'image-button-disabled';
+    $element['#attributes']['class'][] = 'is-disabled';
   }
 
   return $element;

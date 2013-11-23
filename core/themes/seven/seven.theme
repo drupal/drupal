@@ -137,7 +137,7 @@ function seven_admin_block_content($variables) {
 function seven_tablesort_indicator($variables) {
   $theme_path = drupal_get_path('theme', 'seven');
 
-  if($variables['style'] == 'asc') {
+  if ($variables['style'] == 'asc') {
     $image_uri = $theme_path . '/images/arrow-asc.png';
     $text = t('Sort ascending');
   }
@@ -155,6 +155,59 @@ function seven_tablesort_indicator($variables) {
     '#title' => $text,
   );
   return drupal_render($image);
+}
+
+/**
+ * Overrides theme_menu_local_action().
+ */
+function seven_menu_local_action($variables) {
+  $link = $variables['element']['#link'];
+  $link += array(
+    'href' => '',
+    'localized_options' => array(),
+    'route_parameters' => array(),
+  );
+  $link['localized_options']['attributes']['class'][] = 'button';
+  $link['localized_options']['attributes']['class'][] = 'button--primary';
+  $link['localized_options']['attributes']['class'][] = 'button--small';
+
+  // @todo Replace with a generalized solution for icons.
+  // See http://drupal.org/node/1849712
+  $link['localized_options']['attributes']['class'][] = 'button-action';
+
+  // We require Modernizr's touch test for button styling.
+  $libraries = array(
+    '#attached' => array(
+      'library' => array(
+        array('system', 'modernizr'),
+      ),
+    ),
+  );
+  drupal_render($libraries);
+
+  $output = '<li>';
+  // @todo Remove this check and the call to l() when all pages are converted to
+  //   routes.
+  // @todo Figure out how to support local actions without a href properly.
+  if ($link['href'] === '' && !empty($link['route_name'])) {
+    $output .= Drupal::l($link['title'], $link['route_name'], $link['route_parameters'], $link['localized_options']);
+  }
+  else {
+    $output .= l($link['title'], $link['href'], $link['localized_options']);
+  }
+  $output .= "</li>";
+
+  return $output;
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function seven_element_info_alter(&$type) {
+  // We require Modernizr for button styling.
+  if (isset($type['button'])) {
+    $type['button']['#attached']['library'][] = array('system', 'modernizr');
+  }
 }
 
 /**
