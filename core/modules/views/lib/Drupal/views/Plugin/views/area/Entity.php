@@ -46,6 +46,7 @@ class Entity extends TokenizeAreaPluginBase {
 
     $options['entity_id'] = array('default' => '');
     $options['view_mode'] = array('default' => 'default');
+    $options['bypass_access'] = array('default' => FALSE);
 
     return $options;
   }
@@ -68,6 +69,13 @@ class Entity extends TokenizeAreaPluginBase {
       '#title' => t('ID'),
       '#type' => 'textfield',
       '#default_value' => $this->options['entity_id'],
+    );
+
+    $form['bypass_access'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Bypass access checks'),
+      '#description' => t('If enabled, access permissions for rendering the entity are not checked.'),
+      '#default_value' => !empty($this->options['bypass_access']),
     );
   }
 
@@ -93,7 +101,8 @@ class Entity extends TokenizeAreaPluginBase {
   public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
       $entity_id = $this->tokenizeValue($this->options['entity_id']);
-      if ($entity = entity_load($this->entityType, $entity_id)) {
+      $entity = entity_load($this->entityType, $entity_id);
+      if ($entity && (!empty($this->options['bypass_access']) || $entity->access('view'))) {
         return entity_view($entity, $this->options['view_mode']);
       }
     }

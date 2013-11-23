@@ -544,6 +544,7 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
  */
 function entity_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
   \Drupal::state()->set('entity_test_entity_access', TRUE);
+  return \Drupal::state()->get("entity_test_entity_access.{$operation}." . $entity->id(), NULL);
 }
 
 /**
