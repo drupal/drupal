@@ -89,8 +89,7 @@ class BookNavigationBlock extends BlockBase {
       if ($book_menus) {
         return array(
           '#theme' => 'book_all_books_block',
-          $book_menus
-        );
+        ) + $book_menus;
       }
     }
     elseif ($current_bid) {
