@@ -91,7 +91,7 @@ class Page extends PathPluginBase {
 
     // First execute the view so it's possible to get tokens for the title.
     // And the title, which is much easier.
-    drupal_set_title(filter_xss_admin($this->view->getTitle()), PASS_THROUGH);
+    $render['#title'] = filter_xss_admin($this->view->getTitle());
 
     $response = $this->view->getResponse();
     $response->setContent(drupal_render_page($render));
