@@ -178,6 +178,14 @@ function edit_preprocess_field(&$variables) {
   $element = $variables['element'];
   $entity = $element['#object'];
 
+  // Edit module only supports view modes, not dynamically defined "display
+  // options" (which field_view_field() always names the "_custom" view mode).
+  // @see field_view_field()
+  // @see https://drupal.org/node/2120335
+  if ($element['#view_mode'] === '_custom') {
+    return;
+  }
+
   // Fields that are not part of the entity (i.e. dynamically injected "pseudo
   // fields") and computed fields are not editable.
   $definition = $entity->getPropertyDefinition($element['#field_name']);
