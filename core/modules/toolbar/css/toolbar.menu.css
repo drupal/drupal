@@ -91,5 +91,6 @@
 }
 [dir="rtl"] .toolbar .toolbar-icon.toolbar-handle {
   left: 0;
+  padding: 0;
   right: auto;
 }
