@@ -137,7 +137,10 @@ Drupal.behaviors.contextual = {
       dataType: 'json',
       success: function (results) {
         for (var id in results) {
-          if (results.hasOwnProperty(id)) {
+          // If the rendered contextual links are empty, then the current user
+          // does not have permission to access the associated links: don't
+          // render anything.
+          if (results.hasOwnProperty(id) && results[id].length > 0) {
             // Update the placeholders to contain its rendered contextual links.
             // Usually there will only be one placeholder, but it's possible for
             // multiple identical placeholders exist on the page (probably
