@@ -136,11 +136,11 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(array('forum'), FALSE);
     $this->assertText(t('You must enable the History, Taxonomy, Options, Number, Comment, Datetime, Ban, XML-RPC modules to install Forum.'));
     $edit['modules[Core][history][enable]'] = 'history';
-    $edit['modules[Core][options][enable]'] = 'options';
-    $edit['modules[Core][number][enable]'] = 'number';
+    $edit['modules[Field types][options][enable]'] = 'options';
+    $edit['modules[Field types][number][enable]'] = 'number';
     $edit['modules[Core][taxonomy][enable]'] = 'taxonomy';
     $edit['modules[Core][comment][enable]'] = 'comment';
-    $edit['modules[Core][datetime][enable]'] = 'datetime';
+    $edit['modules[Field types][datetime][enable]'] = 'datetime';
     $edit['modules[Core][ban][enable]'] = 'ban';
     $edit['modules[Core][xmlrpc][enable]'] = 'xmlrpc';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));

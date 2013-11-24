@@ -78,7 +78,7 @@ class UserPermissionsTest extends WebTestBase {
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = TRUE;
     // Aggregator depends on file module, enable that as well.
-    $edit['modules[Core][file][enable]'] = TRUE;
+    $edit['modules[Field types][file][enable]'] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertTrue(user_access('administer news feeds', $this->admin_user), 'The permission was automatically assigned to the administrator role');
   }
