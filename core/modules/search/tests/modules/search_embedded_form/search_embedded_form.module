@@ -10,49 +10,9 @@
  */
 
 /**
- * Form constructor for embedding search results for testing.
- *
- * @see search_embedded_form_form_submit().
- *
- * @deprecated Use \Drupal\search_embedded_form\Form\SearchEmbeddedForm::testEmbeddedForm()
- */
-function search_embedded_form_form($form, &$form_state) {
-  $count = \Drupal::config('search_embedded_form.settings')->get('submitted');
-
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Your name'),
-    '#maxlength' => 255,
-    '#default_value' => '',
-    '#required' => TRUE,
-    '#description' => t('Times form has been submitted: %count', array('%count' => $count)),
-  );
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Send away'),
-  );
-
-  $form['#submit'][] = 'search_embedded_form_form_submit';
-
-  return $form;
-}
-
-/**
- * Submit handler for search_embedded_form_form().
- */
-function search_embedded_form_form_submit($form, &$form_state) {
-  $config = \Drupal::config('search_embedded_form.settings');
-  $submit_count = (int) $config->get('submitted');
-  $config->set('submitted', $submit_count + 1)->save();
-  drupal_set_message(t('Test form was submitted'));
-}
-
-/**
  * Adds the test form to search results.
  */
 function search_embedded_form_preprocess_search_result(&$variables) {
-  $form = drupal_get_form('search_embedded_form_form');
+  $form = \Drupal::formBuilder()->getForm('Drupal\search_embedded_form\Form\SearchEmbeddedForm');
   $variables['snippet'] .= drupal_render($form);
 }
