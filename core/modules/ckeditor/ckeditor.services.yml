@@ -1,7 +1,7 @@
 services:
   plugin.manager.ckeditor.plugin:
     class: Drupal\ckeditor\CKEditorPluginManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    parent: default_plugin_manager
   cache.ckeditor.languages:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

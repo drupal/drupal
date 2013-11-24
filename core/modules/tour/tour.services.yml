@@ -1,4 +1,4 @@
 services:
   plugin.manager.tour.tip:
     class: Drupal\tour\TipPluginManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    parent: default_plugin_manager

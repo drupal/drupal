@@ -170,6 +170,9 @@ services:
     arguments: [ '%container.namespaces%' ]
     tags:
       - { name: persist }
+  default_plugin_manager:
+    abstract: true
+    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager', '@string_translation']
@@ -186,7 +189,7 @@ services:
     arguments: ['@container.namespaces', '@cache.field', '@module_handler', '@language_manager', '@plugin.manager.field.field_type']
   plugin.manager.archiver:
     class: Drupal\Core\Archiver\ArchiverManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    parent: default_plugin_manager
   plugin.manager.action:
     class: Drupal\Core\Action\ActionManager
     arguments: ['@container.namespaces']
@@ -231,12 +234,12 @@ services:
     arguments: [slave]
   typed_data:
     class: Drupal\Core\TypedData\TypedDataManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    parent: default_plugin_manager
     calls:
       - [setValidationConstraintManager, ['@validation.constraint']]
   validation.constraint:
     class: Drupal\Core\Validation\ConstraintManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    parent: default_plugin_manager
   lock:
     class: Drupal\Core\Lock\DatabaseLockBackend
     arguments: ['@database']
@@ -545,7 +548,7 @@ services:
     arguments: ['@config.factory']
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    parent: default_plugin_manager
   kernel_destruct_subscriber:
     class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
     tags:

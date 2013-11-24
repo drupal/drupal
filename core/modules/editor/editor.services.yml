@@ -1,4 +1,4 @@
 services:
   plugin.manager.editor:
     class: Drupal\editor\Plugin\EditorManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    parent: default_plugin_manager

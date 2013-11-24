@@ -9,4 +9,4 @@ services:
       - { name: path_processor_inbound, priority: 300 }
   plugin.manager.image.effect:
     class: Drupal\image\ImageEffectManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    parent: default_plugin_manager
