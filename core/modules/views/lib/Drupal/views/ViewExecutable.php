@@ -178,7 +178,7 @@ class ViewExecutable {
   /**
    * Where the $query object will reside.
    *
-   * @var \Drupal\views\Plugin\query\QueryInterface
+   * @var \Drupal\views\Plugin\views\query\QueryPluginBase
    */
   public $query = NULL;
 
