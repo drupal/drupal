@@ -25,21 +25,14 @@
     <h3>{{ title }}</h3>
   {% endif %}
 
-  {% if list.type == 'ul' %}
-    <ul{{ list.attributes }}>
-  {% else %}
-    <ol{{ list.attributes }}>
-  {% endif %}
+  <{{ list.type }}{{ list.attributes }}>
 
-  {% for row in rows %}
-    <li{{ row.attributes }}>{{ row.content }}</li>
-  {% endfor %}
+    {% for row in rows %}
+      <li{{ row.attributes }}>{{ row.content }}</li>
+    {% endfor %}
 
-  {% if list.type == 'ul' %}
-    </ul>
-  {% else %}
-    </ol>
-  {% endif %}
+  </{{ list.type }}>
+
 {% if attributes -%}
   </div>
 {% endif %}
