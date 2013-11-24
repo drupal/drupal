@@ -8,25 +8,6 @@
  *
  * @see autocomplete.js
  */
-/* Suggestion list */
-#autocomplete {
-  border: 1px solid;
-  overflow: hidden;
-  position: absolute;
-  z-index: 100;
-}
-#autocomplete ul {
-  list-style: none;
-  list-style-image: none;
-  margin: 0;
-  padding: 0;
-}
-#autocomplete li {
-  background: #fff;
-  color: #000;
-  cursor: default;
-  white-space: pre;
-}
 
 /* Animated throbber */
 .js input.form-autocomplete {
@@ -37,10 +18,10 @@
 .js[dir="rtl"] input.form-autocomplete {
   background-position: 0% 2px;
 }
-.js input.throbbing {
+.js input.form-autocomplete.ui-autocomplete-loading {
   background-position: 100% -18px; /* LTR */
 }
-.js[dir="rtl"] input.throbbing {
+.js[dir="rtl"] input.form-autocomplete.ui-autocomplete-loading {
   background-position: 0% -18px;
 }
 

@@ -730,7 +730,6 @@ label {
 .form-item label.option input {
   vertical-align: middle;
 }
-.form-disabled input.form-autocomplete,
 .form-disabled input.form-text,
 .form-disabled input.form-tel,
 .form-disabled input.form-email,

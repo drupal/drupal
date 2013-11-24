@@ -1096,7 +1096,9 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
+      array('system', 'drupalSettings'),
       array('system', 'drupal.ajax'),
+      array('system', 'jquery.ui.autocomplete'),
     ),
   );
 

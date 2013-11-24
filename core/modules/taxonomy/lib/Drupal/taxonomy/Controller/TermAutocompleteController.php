@@ -200,7 +200,7 @@ class TermAutocompleteController implements ContainerInjectionInterface {
         if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
           $name = '"' . str_replace('"', '""', $name) . '"';
         }
-        $matches[$prefix . $name] = String::checkPlain($term->label());
+        $matches[] = array('value' => $prefix . $name, 'label' => String::checkPlain($term->label()));
       }
       return $matches;
     }

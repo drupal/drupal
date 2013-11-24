@@ -1434,10 +1434,10 @@ input.form-submit:focus {
 .js[dir="rtl"] input.form-autocomplete {
   background-position: 1% 4px;
 }
-.js input.throbbing {
+.js input.form-autocomplete.ui-autocomplete-loading {
   background-position: 100% -16px; /* LTR */
 }
-.js[dir="rtl"] input.throbbing {
+.js[dir="rtl"] input.form-autocomplete.ui-autocomplete-loading {
   background-position: 1% -16px;
 }
 

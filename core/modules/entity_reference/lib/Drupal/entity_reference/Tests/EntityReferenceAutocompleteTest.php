@@ -79,21 +79,24 @@ class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
     // We should get both entities in a JSON encoded string.
     $input = '10/';
     $data = $this->getAutocompleteResult('single', $input);
-    $this->assertIdentical($data[$entity_1->name->value . ' (1)'], check_plain($entity_1->name->value), 'Autocomplete returned the first matching entity');
-    $this->assertIdentical($data[$entity_2->name->value . ' (2)'], check_plain($entity_2->name->value), 'Autocomplete returned the second matching entity');
+    $this->assertIdentical($data[0]['label'], check_plain($entity_1->name->value), 'Autocomplete returned the first matching entity');
+    $this->assertIdentical($data[1]['label'], check_plain($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
     // Try to autocomplete a entity label that matches the first entity.
     // We should only get the first entity in a JSON encoded string.
     $input = '10/16';
     $data = $this->getAutocompleteResult('single', $input);
-    $target = array($entity_1->name->value . ' (1)' => check_plain($entity_1->name->value));
-    $this->assertIdentical($data, $target, 'Autocomplete returns only the expected matching entity.');
+    $target = array(
+      'value' => $entity_1->name->value . ' (1)',
+      'label' => check_plain($entity_1->name->value),
+    );
+    $this->assertIdentical(reset($data), $target, 'Autocomplete returns only the expected matching entity.');
 
     // Try to autocomplete a entity label that matches the second entity, and
     // the first entity  is already typed in the autocomplete (tags) widget.
     $input = $entity_1->name->value . ' (1), 10/17';
     $data = $this->getAutocompleteResult('tags', $input);
-    $this->assertIdentical($data[$entity_1->name->value . ' (1), ' . $entity_2->name->value . ' (2)'], check_plain($entity_2->name->value), 'Autocomplete returned the second matching entity');
+    $this->assertIdentical($data[0]['label'], check_plain($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
     // Try to autocomplete a entity label with both a comma and a slash.
     $input = '"label with, and / t';
@@ -103,8 +106,11 @@ class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
     if (strpos($entity_3->name->value, ',') !== FALSE || strpos($entity_3->name->value, '"') !== FALSE) {
       $n = '"' . str_replace('"', '""', $entity_3->name->value) .  ' (3)"';
     }
-    $target = array($n => check_plain($entity_3->name->value));
-    $this->assertIdentical($data, $target, 'Autocomplete returns an entity label containing a comma and a slash.');
+    $target = array(
+      'value' => $n,
+      'label' => check_plain($entity_3->name->value),
+    );
+    $this->assertIdentical(reset($data), $target, 'Autocomplete returns an entity label containing a comma and a slash.');
   }
 
   /**

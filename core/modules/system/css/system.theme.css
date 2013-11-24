@@ -192,9 +192,10 @@ label button.link {
  * @see autocomplete.js
  */
 /* Suggestion list */
-#autocomplete li.selected {
+.ui-autocomplete li.ui-menu-item a.ui-state-focus, .autocomplete li.ui-menu-item a.ui-state-hover {
   background: #0072b9;
   color: #fff;
+  margin: 0;
 }
 
 /**

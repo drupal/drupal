@@ -220,13 +220,13 @@ class TermTest extends TaxonomyTestBase {
     // The term will be quoted, and the " will be encoded in unicode (\u0022).
     $input = substr($term_objects['term3']->label(), 0, 3);
     $json = $this->drupalGet('taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id(), array('query' => array('q' => $input)));
-    $this->assertEqual($json, '{"\u0022' . $term_objects['term3']->label() . '\u0022":"' . $term_objects['term3']->label() . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->label())));
+    $this->assertEqual($json, '[{"value":"\u0022' . $term_objects['term3']->label() . '\u0022","label":"' . $term_objects['term3']->label() . '"}]', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term3']->label())));
 
     // Test autocomplete on term 4 - it is alphanumeric only, so no extra
     // quoting.
     $input = substr($term_objects['term4']->label(), 0, 3);
     $this->drupalGet('taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id(), array('query' => array('q' => $input)));
-    $this->assertRaw('{"' . $term_objects['term4']->label() . '":"' . $term_objects['term4']->label() . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term4']->label())));
+    $this->assertRaw('[{"value":"' . $term_objects['term4']->label() . '","label":"' . $term_objects['term4']->label() . '"}', format_string('Autocomplete returns term %term_name after typing the first 3 letters.', array('%term_name' => $term_objects['term4']->label())));
 
     // Test taxonomy autocomplete with a nonexistent field.
     $field_name = $this->randomName();
@@ -261,15 +261,18 @@ class TermTest extends TaxonomyTestBase {
     // The result order is not guaranteed, so check each term separately.
     $result = $this->drupalGet($path, array('query' => array('q' => $input)));
     $data = drupal_json_decode($result);
-    $this->assertEqual($data[$first_term->label()], check_plain($first_term->label()), 'Autocomplete returned the first matching term.');
-    $this->assertEqual($data[$second_term->label()], check_plain($second_term->label()), 'Autocomplete returned the second matching term.');
+    $this->assertEqual($data[0]['label'], check_plain($first_term->label()), 'Autocomplete returned the first matching term');
+    $this->assertEqual($data[1]['label'], check_plain($second_term->label()), 'Autocomplete returned the second matching term');
 
     // Try to autocomplete a term name that matches first term.
     // We should only get the first term in a json encoded string.
     $input = '10/16';
     $path = 'taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id();
     $this->drupalGet($path, array('query' => array('q' => $input)));
-    $target = array($first_term->label() => check_plain($first_term->label()));
+    $target = array(array(
+      'value' => check_plain($first_term->label()),
+      'label' => $first_term->label(),
+    ));
     $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns only the expected matching term.');
 
     // Try to autocomplete a term name with both a comma and a slash.
@@ -281,7 +284,10 @@ class TermTest extends TaxonomyTestBase {
     if (strpos($third_term->label(), ',') !== FALSE || strpos($third_term->label(), '"') !== FALSE) {
       $n = '"' . str_replace('"', '""', $third_term->label()) . '"';
     }
-    $target = array($n => check_plain($third_term->label()));
+    $target = array(array(
+      'value' => $n,
+      'label' => check_plain($third_term->label()),
+    ));
     $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns a term containing a comma and a slash.');
   }
 

@@ -100,7 +100,7 @@ class EntityReferenceAutocomplete {
           if (strpos($key, ',') !== FALSE || strpos($key, '"') !== FALSE) {
             $key = '"' . str_replace('"', '""', $key) . '"';
           }
-          $matches[$prefix . $key] = $label;
+          $matches[] = array('value' => $prefix . $key, 'label' => $label);
         }
       }
     }

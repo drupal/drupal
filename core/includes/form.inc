@@ -2158,20 +2158,8 @@ function form_process_autocomplete($element, &$form_state) {
   if ($access) {
     $element['#attributes']['class'][] = 'form-autocomplete';
     $element['#attached']['library'][] = array('system', 'drupal.autocomplete');
-    // Provide a hidden element for the JavaScript behavior to bind to. Since
-    // this element is for client-side functionality only, do not process input.
-    // @todo Refactor autocomplete.js to accept drupalSettings instead of
-    //   requiring extraneous markup.
-    $element['autocomplete'] = array(
-      '#type' => 'hidden',
-      '#input' => FALSE,
-      '#value' => $path,
-      '#disabled' => TRUE,
-      '#attributes' => array(
-        'class' => array('autocomplete'),
-        'id' => $element['#id'] . '-autocomplete',
-      ),
-    );
+    // Provide a data attribute for the JavaScript behavior to bind to.
+    $element['#attributes']['data-autocomplete-path'] = $path;
   }
   return $element;
 }

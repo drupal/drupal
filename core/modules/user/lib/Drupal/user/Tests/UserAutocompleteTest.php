@@ -53,8 +53,8 @@ class UserAutocompleteTest extends WebTestBase {
     // Test that anonymous username is in the result when requested and escaped
     // with check_plain().
     $users = $this->drupalGetJSON('user/autocomplete/anonymous', array('query' => array('q' => drupal_substr($anonymous_name, 0, 4))));
-    $this->assertTrue(in_array(check_plain($anonymous_name), $users), 'The anonymous name found in autocompletion results.');
+    $this->assertEqual(check_plain($anonymous_name), $users[0]['label'], 'The anonymous name found in autocompletion results.');
     $users = $this->drupalGetJSON('user/autocomplete', array('query' => array('q' => drupal_substr($anonymous_name, 0, 4))));
-    $this->assertFalse(isset($users[$anonymous_name]), 'The anonymous name not found in autocompletion results without enabling anonymous username.');
+    $this->assertTrue(empty($users), 'The anonymous name not found in autocompletion results without enabling anonymous username.');
   }
 }

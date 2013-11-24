@@ -7,6 +7,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Database\Connection;
 
@@ -62,12 +63,12 @@ class UserAutocomplete {
         $anonymous_name = $this->configFactory->get('user.settings')->get('anonymous');
         // Allow autocompletion for the anonymous user.
         if (stripos($anonymous_name, $string) !== FALSE) {
-          $matches[$anonymous_name] = check_plain($anonymous_name);
+          $matches[] = array('value' => $anonymous_name, 'label' => String::checkPlain($anonymous_name));
         }
       }
       $result = $this->connection->select('users')->fields('users', array('name'))->condition('name', db_like($string) . '%', 'LIKE')->range(0, 10)->execute();
       foreach ($result as $account) {
-        $matches[$account->name] = check_plain($account->name);
+        $matches[] = array('value' => $account->name, 'label' => String::checkPlain($account->name));
       }
     }
 
