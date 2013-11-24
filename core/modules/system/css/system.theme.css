@@ -99,6 +99,13 @@ abbr.form-required, abbr.tabledrag-changed, abbr.ajax-changed {
   margin-left: 0;
   margin-right: 0;
 }
+fieldset.fieldset-no-border {
+  border: none;
+  padding: 0;
+}
+fieldset.fieldset-no-border legend {
+  text-transform: none;
+}
 
 /**
  * Inline items.
