@@ -51,7 +51,7 @@ class CsrfAccessCheck implements StaticAccessCheckInterface {
   public function access(Route $route, Request $request, AccountInterface $account) {
     // If this is the controller request, check CSRF access as normal.
     if ($request->attributes->get('_controller_request')) {
-      return $this->csrfToken->validate($request->query->get('token'), $route->getRequirement('_csrf_token')) ? static::ALLOW : static::KILL;
+      return $this->csrfToken->validate($request->query->get('token'), $request->attributes->get('_system_path')) ? static::ALLOW : static::KILL;
     }
 
     // Otherwise, this could be another requested access check that we don't
