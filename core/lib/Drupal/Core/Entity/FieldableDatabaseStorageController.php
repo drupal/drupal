@@ -1106,7 +1106,6 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    */
   public function onFieldDelete(FieldInterface $field) {
     // Mark all data associated with the field for deletion.
-    $field->deleted = FALSE;
     $table = static::_fieldTableName($field);
     $revision_table = static::_fieldRevisionTableName($field);
     $this->database->update($table)
@@ -1115,9 +1114,10 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
 
     // Move the table to a unique name while the table contents are being
     // deleted.
-    $field->deleted = TRUE;
-    $new_table = static::_fieldTableName($field);
-    $revision_new_table = static::_fieldRevisionTableName($field);
+    $deleted_field = clone $field;
+    $deleted_field->deleted = TRUE;
+    $new_table = static::_fieldTableName($deleted_field);
+    $revision_new_table = static::_fieldRevisionTableName($deleted_field);
     $this->database->schema()->renameTable($table, $new_table);
     $this->database->schema()->renameTable($revision_table, $revision_new_table);
   }

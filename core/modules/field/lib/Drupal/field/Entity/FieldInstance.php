@@ -9,6 +9,7 @@ namespace Drupal\field\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\field\FieldException;
 use Drupal\field\FieldInstanceInterface;
 
@@ -319,163 +320,122 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::save().
-   *
-   * @return
-   *   Either SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
+   * Overrides \Drupal\Core\Entity\Entity::preSave().
    *
    * @throws \Drupal\field\FieldException
    *   If the field instance definition is invalid.
-   *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   In case of failures at the configuration storage level.
    */
-  public function save() {
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    $entity_manager = \Drupal::entityManager();
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+
     if ($this->isNew()) {
-      return $this->saveNew();
+      // Ensure the field instance is unique within the bundle.
+      if ($prior_instance = $storage_controller->load($this->id())) {
+        throw new FieldException(format_string('Attempt to create an instance of field %name on bundle @bundle that already has an instance of that field.', array('%name' => $this->field->name, '@bundle' => $this->bundle)));
+      }
+      // Set the field UUID.
+      $this->field_uuid = $this->field->uuid;
+      // Set the default instance settings.
+      $this->settings += $field_type_manager->getDefaultInstanceSettings($this->field->type);
+      // Notify the entity storage controller.
+      $entity_manager->getStorageController($this->entity_type)->onInstanceCreate($this);
     }
     else {
-      return $this->saveUpdated();
+      // Some updates are always disallowed.
+      if ($this->entity_type != $this->original->entity_type) {
+        throw new FieldException("Cannot change an existing instance's entity_type.");
+      }
+      if ($this->bundle != $this->original->bundle && empty($this->bundle_rename_allowed)) {
+        throw new FieldException("Cannot change an existing instance's bundle.");
+      }
+      if ($this->field_uuid != $this->original->field_uuid) {
+        throw new FieldException("Cannot change an existing instance's field.");
+      }
+      // Set the default instance settings.
+      $this->settings += $field_type_manager->getDefaultInstanceSettings($this->field->type);
+      // Notify the entity storage controller.
+      $entity_manager->getStorageController($this->entity_type)->onInstanceUpdate($this);
     }
   }
 
   /**
-   * Saves a new field instance definition.
-   *
-   * @return
-   *   SAVED_NEW if the definition was saved.
-   *
-   * @throws \Drupal\field\FieldException
-   *   If the field instance definition is invalid.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   In case of failures at the configuration storage level.
+   * {@inheritdoc}
    */
-  protected function saveNew() {
-    $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
-
-    // Ensure the field instance is unique within the bundle.
-    if ($prior_instance = $instance_controller->load($this->id())) {
-      throw new FieldException(format_string('Attempt to create an instance of field %name on bundle @bundle that already has an instance of that field.', array('%name' => $this->field->name, '@bundle' => $this->bundle)));
-    }
-
-    // Set the field UUID.
-    $this->field_uuid = $this->field->uuid;
-
-    // Ensure default values are present.
-    $this->prepareSave();
-
-    // Save the configuration.
-    $result = parent::save();
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    // Clear the cache.
     field_cache_clear();
-
-    return $result;
   }
 
   /**
-   * Saves an updated field instance definition.
-   *
-   * @return
-   *   SAVED_UPDATED if the definition was saved.
-   *
-   * @throws \Drupal\field\FieldException
-   *   If the field instance definition is invalid.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   In case of failures at the configuration storage level.
+   * {@inheritdoc}
    */
-  protected function saveUpdated() {
-    $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $instances) {
+    $state = \Drupal::state();
 
-    $original = $instance_controller->loadUnchanged($this->getOriginalId());
-    $this->original = $original;
+    // Keep the instance definitions in the state storage so we can use them
+    // later during field_purge_batch().
+    $deleted_instances = $state->get('field.instance.deleted') ?: array();
+    foreach ($instances as $instance) {
+      if (!$instance->deleted) {
+        $config = $instance->getExportProperties();
+        $config['deleted'] = TRUE;
+        $deleted_instances[$instance->uuid] = $config;
+      }
+    }
+    $state->set('field.instance.deleted', $deleted_instances);
+  }
 
-    // Some updates are always disallowed.
-    if ($this->entity_type != $original->entity_type) {
-      throw new FieldException("Cannot change an existing instance's entity_type.");
-    }
-    if ($this->bundle != $original->bundle && empty($this->bundle_rename_allowed)) {
-      throw new FieldException("Cannot change an existing instance's bundle.");
-    }
-    if ($this->field_uuid != $original->field_uuid) {
-      throw new FieldException("Cannot change an existing instance's field.");
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $instances) {
+    $field_controller = \Drupal::entityManager()->getStorageController('field_entity');
 
-    // Ensure default values are present.
-    $this->prepareSave();
+    // Clear the cache upfront, to refresh the results of getBundles().
+    field_cache_clear();
 
     // Notify the entity storage controller.
-    \Drupal::entityManager()->getStorageController($this->entity_type)->onInstanceUpdate($this);
-
-    // Save the configuration.
-    $result = parent::save();
-    field_cache_clear();
-
-    return $result;
-  }
-
-  /**
-   * Prepares the instance definition for saving.
-   */
-  protected function prepareSave() {
-    $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->field->type);
-
-    // Set the default instance settings.
-    $this->settings += $field_type_info['instance_settings'];
-  }
-
-  /**
-   * Overrides \Drupal\Core\Entity\Entity::delete().
-   *
-   * @param bool $field_cleanup
-   *   (optional) If TRUE, the field will be deleted as well if its last
-   *   instance is being deleted. If FALSE, it is the caller's responsibility to
-   *   handle the case of fields left without instances. Defaults to TRUE.
-   */
-  public function delete($field_cleanup = TRUE) {
-    if (!$this->deleted) {
-      $state = \Drupal::state();
-
-      // Delete the configuration of this instance and save the configuration
-      // in the key_value table so we can use it later during
-      // field_purge_batch().
-      $deleted_instances = $state->get('field.instance.deleted') ?: array();
-      $config = $this->getExportProperties();
-      $config['deleted'] = TRUE;
-      $deleted_instances[$this->uuid] = $config;
-      $state->set('field.instance.deleted', $deleted_instances);
-
-      parent::delete();
-
-      // Notify the entity storage controller.
-      \Drupal::entityManager()->getStorageController($this->entity_type)->onInstanceDelete($this);
-
-      // Clear the cache.
-      field_cache_clear();
-
-      // Remove the instance from the entity form displays.
-      $ids = array();
-      $form_modes = array('default' => array()) + entity_get_form_modes($this->entity_type);
-      foreach (array_keys($form_modes) as $form_mode) {
-        $ids[] = $this->entity_type . '.' . $this->bundle . '.' . $form_mode;
+    foreach ($instances as $instance) {
+      if (!$instance->deleted) {
+        \Drupal::entityManager()->getStorageController($instance->entity_type)->onInstanceDelete($instance);
       }
-      foreach (entity_load_multiple('entity_form_display', $ids) as $form_display) {
-        $form_display->removeComponent($this->field->name)->save();
-      }
+    }
 
-      // Remove the instance from the entity displays.
-      $ids = array();
-      $view_modes = array('default' => array()) + entity_get_view_modes($this->entity_type);
-      foreach (array_keys($view_modes) as $view_mode) {
-        $ids[] = $this->entity_type . '.' . $this->bundle . '.' . $view_mode;
+    // Delete fields that have no more instances.
+    $fields_to_delete = array();
+    foreach ($instances as $instance) {
+      if (!$instance->deleted && empty($instance->noFieldDelete) && count($instance->field->getBundles()) == 0) {
+        // Key by field UUID to avoid deleting the same field twice.
+        $fields_to_delete[$instance->field_uuid] = $instance->getField();
       }
-      foreach (entity_load_multiple('entity_display', $ids) as $display) {
-        $display->removeComponent($this->field->name)->save();
-      }
+    }
+    if ($fields_to_delete) {
+      $field_controller->delete($fields_to_delete);
+    }
 
-      // Delete the field itself if we just deleted its last instance.
-      if ($field_cleanup && count($this->field->getBundles()) == 0) {
-        $this->field->delete();
+    // Cleanup entity displays.
+    $displays_to_update = array();
+    foreach ($instances as $instance) {
+      if (!$instance->deleted) {
+        $view_modes = array('default' => array()) + entity_get_view_modes($instance->entity_type);
+        foreach (array_keys($view_modes) as $mode) {
+          $displays_to_update['entity_display'][$instance->entity_type . '.' . $instance->bundle . '.' . $mode][] = $instance->field->name;
+        }
+        $form_modes = array('default' => array()) + entity_get_form_modes($instance->entity_type);
+        foreach (array_keys($form_modes) as $mode) {
+          $displays_to_update['entity_form_display'][$instance->entity_type . '.' . $instance->bundle . '.' . $mode][] = $instance->field->name;
+        }
+      }
+    }
+    foreach ($displays_to_update as $type => $ids) {
+      foreach (entity_load_multiple($type, array_keys($ids)) as $id => $display) {
+        foreach ($ids[$id] as $field_name) {
+          $display->removeComponent($field_name);
+        }
+        $display->save();
       }
     }
   }
