@@ -104,7 +104,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
         $t_args = array('%language' => $languages[$form_langcode]->name, '%title' => $entity->label());
         $title = empty($source_langcode) ? $title . ' [' . t('%language translation', $t_args) . ']' : t('Create %language translation of %title', $t_args);
       }
-      drupal_set_title($title, PASS_THROUGH);
+      $form['#title'] = $title;
     }
 
     // Display source language selector only if we are creating a new
