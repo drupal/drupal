@@ -23,7 +23,8 @@ use Drupal\Core\Annotation\Translation;
  */
 class None extends CachePluginBase {
 
-  public function cacheStart() { /* do nothing */ }
+  public function cacheStart() {
+  }
 
   public function summaryTitle() {
     return t('None');

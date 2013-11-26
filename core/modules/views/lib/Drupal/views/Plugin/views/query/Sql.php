@@ -1247,8 +1247,8 @@ class Sql extends QueryPluginBase {
 
     // Make sure each entity table has the base field added so that the
     // entities can be loaded.
-    $entity_tables = $this->getEntityTables();
-    if ($entity_tables) {
+    $entity_information = $this->getEntityTableInfo();
+    if ($entity_information) {
       $params = array();
       if ($groupby) {
         // Handle grouping, by retrieving the minimum entity_id.
@@ -1257,10 +1257,10 @@ class Sql extends QueryPluginBase {
         );
       }
 
-      foreach ($entity_tables as $table_alias => $table) {
-        $info = entity_get_info($table['entity_type']);
-        $base_field = empty($table['revision']) ? $info['entity_keys']['id'] : $info['entity_keys']['revision'];
-        $this->addField($table_alias, $base_field, '', $params);
+      foreach ($entity_information as $entity_type => $info) {
+        $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
+        $base_field = empty($table['revision']) ? $entity_info['entity_keys']['id'] : $entity_info['entity_keys']['revision'];
+        $this->addField($info['alias'], $base_field, '', $params);
       }
     }
 
@@ -1451,9 +1451,11 @@ class Sql extends QueryPluginBase {
    * Returns an array of all tables from the query that map to an entity type.
    *
    * Includes the base table and all relationships, if eligible.
+   *
    * Available keys for each table:
    * - base: The actual base table (i.e. "user" for an author relationship).
    * - relationship_id: The id of the relationship, or "none".
+   * - alias: The alias used for the relationship.
    * - entity_type: The entity type matching the base table.
    * - revision: A boolean that specifies whether the table is a base table or
    *   a revision table of the entity type.
@@ -1461,14 +1463,17 @@ class Sql extends QueryPluginBase {
    * @return array
    *   An array of table information, keyed by table alias.
    */
-  public function getEntityTables() {
+  public function getEntityTableInfo() {
     // Start with the base table.
     $entity_tables = array();
     $views_data = Views::viewsData();
-    $base_table_data = $views_data->get($this->view->storage->get('base_table'));
+    $base_table = $this->view->storage->get('base_table');
+    $base_table_data = $views_data->get($base_table);
+
     if (isset($base_table_data['table']['entity type'])) {
-      $entity_tables[$this->view->storage->get('base_table')] = array(
-        'base' => $this->view->storage->get('base_table'),
+      $entity_tables[$base_table_data['table']['entity type']] = array(
+        'base' => $base_table,
+        'alias' => $base_table,
         'relationship_id' => 'none',
         'entity_type' => $base_table_data['table']['entity type'],
         'revision' => FALSE,
@@ -1478,9 +1483,10 @@ class Sql extends QueryPluginBase {
     foreach ($this->view->relationship as $relationship_id => $relationship) {
       $table_data = $views_data->get($relationship->definition['base']);
       if (isset($table_data['table']['entity type'])) {
-        $entity_tables[$relationship->alias] = array(
+        $entity_tables[$table_data['table']['entity type']] = array(
           'base' => $relationship->definition['base'],
           'relationship_id' => $relationship_id,
+          'alias' => $relationship->alias,
           'entity_type' => $table_data['table']['entity type'],
           'revision' => FALSE,
         );
@@ -1489,7 +1495,7 @@ class Sql extends QueryPluginBase {
 
     // Determine which of the tables are revision tables.
     foreach ($entity_tables as $table_alias => $table) {
-      $info = entity_get_info($table['entity_type']);
+      $info = \Drupal::entityManager()->getDefinition($table['entity_type']);
       if (isset($info['revision table']) && $info['revision table'] == $table['base']) {
         $entity_tables[$table_alias]['revision'] = TRUE;
       }
@@ -1506,36 +1512,34 @@ class Sql extends QueryPluginBase {
    * $result->_relationship_entities[$relationship_id];
    */
   function loadEntities(&$results) {
-    $entity_tables = $this->getEntityTables();
+    $entity_information = $this->getEntityTableInfo();
     // No entity tables found, nothing else to do here.
-    if (empty($entity_tables)) {
+    if (empty($entity_information)) {
       return;
     }
 
     // Assemble a list of entities to load.
-    $ids_by_table = array();
-    foreach ($entity_tables as $table_alias => $table) {
-      $entity_type = $table['entity_type'];
-      $info = entity_get_info($entity_type);
-      $id_key = empty($table['revision']) ? $info['entity_keys']['id'] : $info['entity_keys']['revision'];
-      $id_alias = $this->getFieldAlias($table_alias, $id_key);
+    $ids_by_type = array();
+    foreach ($entity_information as $entity_type => $info) {
+      $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
+      $id_key = empty($table['revision']) ? $entity_info['entity_keys']['id'] : $entity_info['entity_keys']['revision'];
+      $id_alias = $this->getFieldAlias($info['alias'], $id_key);
 
       foreach ($results as $index => $result) {
         // Store the entity id if it was found.
         if (isset($result->{$id_alias}) && $result->{$id_alias} != '') {
-          $ids_by_table[$table_alias][$index] = $result->$id_alias;
+          $ids_by_type[$entity_type][$index] = $result->$id_alias;
         }
       }
     }
 
     // Load all entities and assign them to the correct result row.
-    foreach ($ids_by_table as $table_alias => $ids) {
-      $table = $entity_tables[$table_alias];
-      $entity_type = $table['entity_type'];
-      $relationship_id = $table['relationship_id'];
+    foreach ($ids_by_type as $entity_type => $ids) {
+      $info = $entity_information[$entity_type];
+      $relationship_id = $info['relationship_id'];
 
       // Drupal core currently has no way to load multiple revisions. Sad.
-      if ($table['revision']) {
+      if ($info['revision']) {
         $entities = array();
         foreach ($ids as $revision_id) {
           $entity = entity_revision_load($entity_type, $revision_id);

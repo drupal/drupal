@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
-use Drupal\views\ViewExecutable;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
@@ -94,7 +94,8 @@ abstract class CachePluginBase extends PluginBase {
    * @param $type
    *   The cache type, either 'query', 'result' or 'output'.
    */
-  protected function cacheExpire($type) { }
+  protected function cacheExpire($type) {
+  }
 
    /**
     * Determine expiration time in the cache table of the cache type
@@ -108,7 +109,6 @@ abstract class CachePluginBase extends PluginBase {
   protected function cacheSetExpire($type) {
     return CacheBackendInterface::CACHE_PERMANENT;
   }
-
 
   /**
    * Save data to the cache.
@@ -126,16 +126,15 @@ abstract class CachePluginBase extends PluginBase {
           'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
           'current_page' => $this->view->getCurrentPage(),
         );
-        cache($this->table)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type));
+        \Drupal::cache($this->table)->set($this->generateResultsKey(), $data, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
       case 'output':
         $this->storage['output'] = $this->view->display_handler->output;
         $this->gatherHeaders();
-        cache($this->table)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type));
+        \Drupal::cache($this->table)->set($this->generateOutputKey(), $this->storage, $this->cacheSetExpire($type), $this->getCacheTags());
         break;
     }
   }
-
 
   /**
    * Retrieve data from the cache.
@@ -151,7 +150,7 @@ abstract class CachePluginBase extends PluginBase {
       case 'results':
         // Values to set: $view->result, $view->total_rows, $view->execute_time,
         // $view->current_page.
-        if ($cache = cache($this->table)->get($this->generateResultsKey())) {
+        if ($cache = \Drupal::cache($this->table)->get($this->generateResultsKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->view->result = $cache->data['result'];
             $this->view->total_rows = $cache->data['total_rows'];
@@ -162,7 +161,7 @@ abstract class CachePluginBase extends PluginBase {
         }
         return FALSE;
       case 'output':
-        if ($cache = cache($this->table)->get($this->generateOutputKey())) {
+        if ($cache = \Drupal::cache($this->table)->get($this->generateOutputKey())) {
           if (!$cutoff || $cache->created > $cutoff) {
             $this->storage = $cache->data;
             $this->view->display_handler->output = $cache->data['output'];
@@ -181,7 +180,8 @@ abstract class CachePluginBase extends PluginBase {
    * to be sure that we catch everything. Maybe that's a bad idea.
    */
   public function cacheFlush() {
-    cache($this->table)->deleteTags(array($this->view->storage->id() => TRUE));
+    $id = $this->view->storage->id();
+    Cache::invalidateTags(array('view' => array($id => $id)));
   }
 
   /**
@@ -324,6 +324,50 @@ abstract class CachePluginBase extends PluginBase {
     }
 
     return $this->outputKey;
+  }
+
+  /**
+   * Gets an array of cache tags for the current view.
+   *
+   * @return array
+   *   An array fo cache tags based on the current view.
+   */
+  protected function getCacheTags() {
+    $tags = array();
+    $id = $this->view->storage->id();
+
+    $tags['view'][$id] = $id;
+
+    $entity_information = $this->view->query->getEntityTableInfo();
+
+    if (!empty($entity_information)) {
+      // Add an ENTITY_TYPE_view tag for each entity type used by this view.
+      foreach (array_keys($entity_information) as $type) {
+        $tags[$type . '_view'] = TRUE;
+      }
+
+      // Collect entity IDs if there are view results.
+      if (!empty($this->view->result)) {
+        foreach ($this->view->result as $result) {
+          $type = $result->_entity->entityType();
+
+          $tags[$type][] = $result->_entity->id();
+          $tags[$type . '_view_' . $result->_entity->bundle()] = TRUE;
+
+          foreach ($result->_relationship_entities as $entity) {
+            $type = $entity->entityType();
+
+            $tags[$type][] = $entity->id();
+            $tags[$type . '_view_' . $entity->bundle()] = TRUE;
+          }
+        }
+      }
+    }
+
+    // Filter out any duplicate values from generated tags.
+    return array_map(function($item) {
+      return is_array($item) ? array_unique($item) : $item;
+    }, $tags);
   }
 
 }

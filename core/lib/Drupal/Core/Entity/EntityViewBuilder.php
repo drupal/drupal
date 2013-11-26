@@ -264,11 +264,13 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $ids = NULL) {
-    if (isset($ids)) {
+  public function resetCache(array $entities = NULL) {
+    if (isset($entities)) {
       $tags = array();
-      foreach ($ids as $entity_id) {
-        $tags[$this->entityType][$entity_id] = $entity_id;
+      foreach ($entities as $entity) {
+        $id = $entity->id();
+        $tags[$this->entityType][$id] = $id;
+        $tags[$this->entityType . '_view_' . $entity->bundle()] = TRUE;
       }
       \Drupal::cache($this->cacheBin)->deleteTags($tags);
     }

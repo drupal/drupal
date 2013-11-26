@@ -42,7 +42,7 @@ class CacheTest extends PluginTestBase {
    *
    * @see views_plugin_cache_time
    */
-  function testTimeCaching() {
+  public function testTimeCaching() {
     // Create a basic result which just 2 results.
     $view = views_get_view('test_cache');
     $view->setDisplay();

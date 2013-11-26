@@ -79,10 +79,9 @@ interface EntityViewBuilderInterface {
   /**
    * Resets the entity render cache.
    *
-   * @param array|null $ids
-   *   (optional) If specified, the cache is reset for the given entity IDs
-   *   only.
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   (optional) If specified, the cache is reset for the given entities only.
    */
-  public function resetCache(array $ids = NULL);
+  public function resetCache(array $entities = NULL);
 
 }

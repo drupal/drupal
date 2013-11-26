@@ -411,6 +411,6 @@ class CommentFormController extends ContentEntityFormController {
     // Clear the block and page caches so that anonymous users see the comment
     // they have posted.
     Cache::invalidateTags(array('content' => TRUE));
-    $this->entityManager->getViewBuilder($entity->entityType())->resetCache(array($entity->id()));
+    $this->entityManager->getViewBuilder($entity->entityType())->resetCache(array($entity));
   }
 }
