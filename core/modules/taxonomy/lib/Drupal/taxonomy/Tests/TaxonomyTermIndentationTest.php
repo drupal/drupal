@@ -54,6 +54,27 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     // Submit the edited form and check for HTML indentation element presence.
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid'), $edit, t('Save'));
     $this->assertPattern('|<div class="indentation">&nbsp;</div>|');
+
+    // Check explicitly that term 2's parent is term 1.
+    $parents = taxonomy_term_load_parents($term2->id());
+    $this->assertEqual(key($parents), 1, 'Term 1 is the term 2\'s parent');
+
+    // Move the second term back out to the root level.
+    $edit = array(
+      'terms[tid:' . $term2->id() . ':0][term][tid]' => 2,
+      'terms[tid:' . $term2->id() . ':0][term][parent]' => '',
+      'terms[tid:' . $term2->id() . ':0][term][depth]' => 0,
+      'terms[tid:' . $term2->id() . ':0][weight]' => 1,
+    );
+
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid'), $edit, t('Save'));
+    // All terms back at the root level, no identation should be present.
+    $this->assertNoPattern('|<div class="indentation">&nbsp;</div>|');
+
+    // Check explicitly that term 2 has no parents.
+    drupal_static_reset();
+    $parents = taxonomy_term_load_parents($term2->id());
+    $this->assertTrue(empty($parents), 'Term 2 has no parents now');
   }
 
 }

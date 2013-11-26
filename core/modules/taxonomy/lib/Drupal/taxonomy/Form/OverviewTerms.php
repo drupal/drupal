@@ -228,7 +228,7 @@ class OverviewTerms extends FormBase {
           '#type' => 'hidden',
           // Yes, default_value on a hidden. It needs to be changeable by the
           // javascript.
-          '#default_value' => $term->parent->value,
+          '#default_value' => $term->parents[0],
           '#attributes' => array(
             'class' => array('term-parent'),
           ),
@@ -387,12 +387,12 @@ class OverviewTerms extends FormBase {
     $weight = 0;
     $term = $tree[0];
     while ($term->id() != $form['#first_tid']) {
-      if ($term->parent->value == 0 && $term->weight->value != $weight) {
+      if ($term->parents[0] == 0 && $term->weight->value != $weight) {
         $term->weight->value = $weight;
         $changed_terms[$term->id()] = $term;
       }
       $weight++;
-      $hierarchy = $term->parent->value != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+      $hierarchy = $term->parents[0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
       $term = $tree[$weight];
     }
 
@@ -408,18 +408,18 @@ class OverviewTerms extends FormBase {
         }
         // Terms not at the root level can safely start from 0 because they're all on this page.
         elseif ($values['term']['parent'] > 0) {
-          $level_weights[$values['term']['parent']] = isset($level_weights[$values['term']['parent']]) ? $level_weights[$values['term']->parent->value] + 1 : 0;
+          $level_weights[$values['term']['parent']] = isset($level_weights[$values['term']['parent']]) ? $level_weights[$values['term']['parent']] + 1 : 0;
           if ($level_weights[$values['term']['parent']] != $term->weight->value) {
             $term->weight->value = $level_weights[$values['term']['parent']];
             $changed_terms[$term->id()] = $term;
           }
         }
         // Update any changed parents.
-        if ($values['term']['parent'] != $term->parent->value) {
+        if ($values['term']['parent'] != $term->parents[0]) {
           $term->parent->value = $values['term']['parent'];
           $changed_terms[$term->id()] = $term;
         }
-        $hierarchy = $term->parent->value != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+        $hierarchy = $term->parents[0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
         $weight++;
       }
     }
@@ -427,12 +427,12 @@ class OverviewTerms extends FormBase {
     // Build a list of all terms that need to be updated on following pages.
     for ($weight; $weight < count($tree); $weight++) {
       $term = $tree[$weight];
-      if ($term->parent->value == 0 && $term->weight->value != $weight) {
-        $term->parent->value = $term->parent->value;
+      if ($term->parents[0] == 0 && $term->weight->value != $weight) {
+        $term->parent->value = $term->parents[0];
         $term->weight->value = $weight;
         $changed_terms[$term->id()] = $term;
       }
-      $hierarchy = $term->parent->value != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
+      $hierarchy = $term->parents[0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;
     }
 
     // Save all updated terms.
