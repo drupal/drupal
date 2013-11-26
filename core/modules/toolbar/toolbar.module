@@ -410,13 +410,22 @@ function toolbar_toolbar() {
     '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'link',
-      '#title' => t('Home'),
+      '#title' => t('Back to site'),
       '#href' => '<front>',
       '#options' => array(
         'attributes' => array(
-          'title' => t('Home page'),
-          'class' => array('toolbar-icon', 'toolbar-icon-home'),
+          'title' => t('Return to site content'),
+          'class' => array('toolbar-icon', 'toolbar-icon-escape-admin'),
+          'data-toolbar-escape-admin' => TRUE,
         ),
+      ),
+    ),
+    '#wrapper_attributes' => array(
+      'class' => array('hidden'),
+    ),
+    '#attached' => array(
+      'library' => array(
+        array('toolbar', 'toolbar.escapeAdmin'),
       ),
     ),
     '#weight' => -20,
@@ -606,6 +615,19 @@ function toolbar_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
+      array('system', 'jquery.once'),
+    ),
+  );
+  $libraries['toolbar.escapeAdmin'] = array(
+    'title' => 'Provides a button to escape the administration area.',
+    'version' => \Drupal::VERSION,
+    'js' => array(
+      drupal_get_path('module', 'toolbar') . '/js/escapeAdmin.js',
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
     ),
   );

@@ -38,6 +38,9 @@
 .toolbar .menu li {
   display: block;
 }
+.toolbar .toolbar-bar .toolbar-tab.hidden {
+  display: none;
+}
 .toolbar a {
   display: block;
   line-height: 1;
