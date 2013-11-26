@@ -1731,20 +1731,3 @@ function comment_library_info() {
   );
   return $libraries;
 }
-
-/**
- * #post_render_cache callback; replaces the placeholder with the comment form.
- *
- * @param array $context
- *   An array with the following keys:
- *   - entity_type: an entity type
- *   - entity_id: an entity ID
- *   - field_name: a comment field name
- *
- * @return array $element
- *   The updated $element.
- */
-function comment_replace_form_placeholder(array $context) {
-  $entity = entity_load($context['entity_type'], $context['entity_id']);
-  return comment_add($entity, $context['field_name']);
-}

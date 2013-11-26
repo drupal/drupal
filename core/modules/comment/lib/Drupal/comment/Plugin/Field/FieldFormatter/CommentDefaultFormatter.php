@@ -151,7 +151,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           else {
             $output['comment_form'] = array(
               '#type' => 'render_cache_placeholder',
-              '#callback' => 'comment_replace_form_placeholder',
+              '#callback' => '\Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter::renderForm',
               '#context' => array(
                 'entity_type' => $entity->entityType(),
                 'entity_id' => $entity->id(),
@@ -172,6 +172,23 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
     }
 
     return $elements;
+  }
+
+  /**
+   * #post_render_cache callback; replaces placeholder with comment form.
+   *
+   * @param array $context
+   *   An array with the following keys:
+   *   - entity_type: an entity type
+   *   - entity_id: an entity ID
+   *   - field_name: a comment field name
+   *
+   * @return array
+   *   A renderable array containing the comment form.
+   */
+  public static function renderForm(array $context) {
+    $entity = entity_load($context['entity_type'], $context['entity_id']);
+    return comment_add($entity, $context['field_name']);
   }
 
 }
