@@ -1,7 +1,6 @@
 /* ---------- Color Module Styles ----------- */
 
-body,
-body.overlay {
+body {
   color: #3b3b3b;
 }
 .comment .comment-arrow {

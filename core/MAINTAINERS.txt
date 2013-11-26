@@ -330,9 +330,6 @@ Number module
 Options module
 - Yves Chedemois 'yched' http://drupal.org/user/39567
 
-Overlay module
-- ?
-
 Path module
 - ?
 

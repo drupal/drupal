@@ -1066,50 +1066,6 @@ body.in-maintenance #logo {
   color: green;
 }
 
-/* Overlay theming */
-.overlay #branding {
-  background-color: #fff;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-.overlay #branding h1.page-title,
-.overlay #left,
-.overlay #footer {
-  display: none;
-}
-.overlay #page {
-  margin: 0;
-  padding: 0 20px;
-}
-.overlay #branding .breadcrumb {
-  float: left; /* LTR */
-  position: relative;
-  z-index: 10;
-}
-[dir="rtl"] .overlay #branding .breadcrumb {
-  float: right;
-}
-#overlay-tabs {
-  bottom: -1px;
-  font-size: 1.54em;
-  line-height: 1.54em;
-  margin: 0;
-}
-.overlay ul.secondary {
-  background: transparent none;
-  margin: -1.4em 0 0.3em 0; /* LTR */
-  overflow: visible;
-}
-[dir="rtl"] .overlay ul.secondary {
-  margin: -1.4em 0 0.3em 0;
-}
-.overlay #content {
-  padding: 0;
-}
-h1#overlay-title {
-  font-weight: normal;
-}
-
 /* Shortcut theming */
 .add-or-remove-shortcuts a:focus span.text,
 .add-or-remove-shortcuts a:hover span.text {
@@ -1225,28 +1181,6 @@ h1#overlay-title {
 }
 .js .form-actions .dropbutton-multiple.open .dropbutton-action:hover {
   background-color: #73b3dd;
-}
-
-/* Disable overlay message */
-#overlay-disable-message {
-  background-color: #addafc;
-}
-#overlay-disable-message a,
-#overlay-disable-message a:visited {
-  color: #000;
-}
-#overlay-disable-message a:focus,
-#overlay-disable-message a:active {
-  outline: none;
-  text-decoration: underline;
-}
-.overlay-disable-message-focused a {
-  padding: 0.4em 0.6em;
-}
-.overlay-disable-message-focused #overlay-dismiss-message {
-  background-color: #59a0d8;
-  color: #fff;
-  border-radius: 8px;
 }
 
 /**
@@ -1615,9 +1549,6 @@ details.fieldset-no-legend {
 .entity-meta details .summary {
  display: none; /* Hide JS summaries. @todo Rethink summaries. */
 }
-.overlay .layout-region-node-footer {
-  padding-bottom: .5em;
-}
 
 /**
  * Widescreen
@@ -1689,47 +1620,6 @@ details.fieldset-no-legend {
   }
   .entity-meta-header {
     border-top: 0;
-  }
-
-  /* Additional overlay theming */
-
-  /**
-   * These are terrible selectors.
-   * @todo Add a proper class to the overlay for this page.
-   */
-  .overlay[class*="page-node-add-"] #overlay-content,
-  .overlay.page-node-edit #overlay-content {
-    padding: 0;
-  }
-  .overlay[class*="page-node-add-"] #page,
-  .overlay.page-node-edit #page {
-    padding: 0;
-  }
-  .overlay[class*="page-node-add-"] #branding,
-  .overlay.page-node-edit #branding {
-    padding-left: 2em;
-    padding-right: 2em;
-  }
-  .overlay[class*="page-node-add-"] #console,
-  .overlay.page-node-edit #console {
-    margin: 0 2em;
-  }
-  .overlay[class*="page-node-add-"] .messages,
-  .overlay.page-node-edit .messages {
-    margin-bottom: 1em;
-  }
-  .overlay .layout-node-form {
-    border-top: 1px solid #bfbfbf;
-  }
-  .overlay .layout-node-form:before {
-    display: none;
-  }
-  .overlay .layout-region-node-main,
-  .overlay .layout-region-node-footer {
-    padding-left: 2em;
-  }
-  .overlay .layout-region-node-footer {
-    padding-bottom: 1.5em;
   }
 }
 @media

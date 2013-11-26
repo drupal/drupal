@@ -1,4 +1,3 @@
-
 Drupal 8.0, xxxx-xx-xx (development version)
 ----------------------
 - Added Twig as the default template engine and converted all .tpl.php templates
@@ -43,6 +42,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Poll
       * Profile
       * Trigger
+- Removed the Overlay module from core.
 - Removed the Garland theme from core.
 - Removed the Statistics module's accesslog functionality and reports from core.
 - Removed backwards-compatibility with 'magic_quotes_gpc'/'magic_quotes_runtime'
@@ -52,6 +52,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
 - JavaScript changes:
     * Updated to jQuery 2.0.3
     * Updated to jQuery UI 1.10.2
+    * Removed jquery.bbq
 - Tremendously improved language support all around.
     * Great language improvements for users:
       * Improved language selection with user preference detection in the

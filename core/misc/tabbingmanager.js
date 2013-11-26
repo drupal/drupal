@@ -7,12 +7,6 @@
 
 "use strict";
 
-// Do not process the window of the overlay.
-if (parent.Drupal.overlay && parent.Drupal.overlay.iframeWindow === window) {
-  return;
-}
-
-
 /**
  * Provides an API for managing page tabbing order modifications.
  */

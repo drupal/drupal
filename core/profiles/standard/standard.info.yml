@@ -30,7 +30,6 @@ dependencies:
   - search
   - shortcut
   - toolbar
-  - overlay
   - field_ui
   - file
   - rdf

@@ -31,16 +31,6 @@ function initContextualToolbar (context) {
   new contextualToolbar.VisualView(viewOptions);
   new contextualToolbar.AuralView(viewOptions);
 
-  // Update the model based on overlay events.
-  $(document).on({
-    'drupalOverlayOpen.contextualToolbar': function () {
-      model.set('overlayIsOpen', true);
-    },
-    'drupalOverlayClose.contextualToolbar': function () {
-      model.set('overlayIsOpen', false);
-    }
-  });
-
   // Show the edit tab while there's >=1 contextual link.
   if (Drupal.contextual && Drupal.contextual.collection) {
     var contextualCollection = Drupal.contextual.collection;
@@ -98,10 +88,8 @@ Drupal.contextualToolbar = {
       // Indicates whether the toggle is currently in "view" or "edit" mode.
       isViewing: true,
       // Indicates whether the toggle should be visible or hidden. Automatically
-      // calculated, depends on overlayIsOpen and contextualCount.
+      // calculated, depends on contextualCount.
       isVisible: false,
-      // Indicates whether the overlay is open or not.
-      overlayIsOpen: false,
       // Tracks how many contextual links exist on the page.
       contextualCount: 0,
       // A TabbingContext object as returned by Drupal.TabbingManager: the set
@@ -109,8 +97,8 @@ Drupal.contextualToolbar = {
       tabbingContext: null
     },
     initialize: function () {
-      this.on('change:overlayIsOpen change:contextualCount', function (model) {
-        model.set('isVisible', !model.get('overlayIsOpen') && model.get('contextualCount') > 0);
+      this.on('change:contextualCount', function (model) {
+        model.set('isVisible', model.get('contextualCount') > 0);
       });
     }
   }),

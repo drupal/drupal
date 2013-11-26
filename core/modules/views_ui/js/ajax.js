@@ -23,8 +23,7 @@
   };
 
   Drupal.AjaxCommands.prototype.viewsReplaceTitle = function (ajax, response, status) {
-    // In case we're in the overlay, get a reference to the underlying window.
-    var doc = parent.document;
+    var doc = document;
     // For the <title> element, make a best-effort attempt to replace the page
     // title and leave the site name alone. If the theme doesn't use the site
     // name in the <title> element, this will fail.
@@ -36,7 +35,6 @@
     doc.title = oldTitle.replace(re, response.title + ' $1 ' + response.siteName);
 
     $('h1.page-title').text(response.title);
-    $('h1#overlay-title').text(response.title);
   };
 
   /**

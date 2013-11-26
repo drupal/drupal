@@ -1535,10 +1535,6 @@ input.form-submit:focus {
 div.password-suggestions {
   border: 0;
 }
-.ui-widget-overlay {
-  background: #222222;
-  opacity: 0.7;
-}
 #forum .name {
   font-size: 1.083em;
 }
@@ -1679,9 +1675,6 @@ ol.search-results {
 div.add-or-remove-shortcuts {
   padding-top: 0.9em;
 }
-.overlay div.add-or-remove-shortcuts {
-  padding-top: 0.8em;
-}
 
 /* ---------- Admin-specific Theming ---------- */
 
@@ -1710,13 +1703,7 @@ div.add-or-remove-shortcuts {
 .page-admin #admin-dblog img {
   margin: 0 5px;
 }
-/* Fix spacing when Seven is used in the overlay. */
-#system-theme-settings details {
-  padding: 0;
-}
-#system-theme-settings details summary {
-  margin-top: 0;
-}
+
 /* Configuration. */
 div.admin .right,
 div.admin .left {
@@ -1741,33 +1728,6 @@ div.admin-panel dd {
 }
 div.admin-panel .description {
   margin: 0 0 14px 7px;
-}
-
-/* ---------- Overlay layout styles ----------- */
-
-.overlay #main,
-.overlay #content {
-  width: auto;
-  float: none;
-}
-.overlay #page {
-  padding: 0 2em;
-}
-.overlay .region-page-top,
-.overlay #header,
-.overlay #page-title,
-.overlay #featured,
-.overlay #sidebar-first,
-.overlay #triptych-wrapper,
-.overlay #footer-wrapper {
-  display: none;
-}
-.overlay-processed .field-type-image {
-  display: block;
-  float: none;
-}
-.overlay #messages {
-  width: auto;
 }
 
 /* ---------- book ----------- */

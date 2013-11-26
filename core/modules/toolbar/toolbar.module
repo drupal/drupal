@@ -384,22 +384,6 @@ function theme_toolbar_tray_heading_wrapper(&$variables) {
 }
 
 /**
- * Implements hook_system_info_alter().
- *
- * Indicate that the 'page_top' region (in which the toolbar will be displayed)
- * is an overlay supplemental region that should be refreshed whenever its
- * content is updated.
- *
- * This information is provided for any module that might need to use it, not
- * just the core Overlay module.
- */
-function toolbar_system_info_alter(&$info, $file, $type) {
-  if ($type == 'theme') {
-    $info['overlay_supplemental_regions'][] = 'page_top';
-  }
-}
-
-/**
  * Implements hook_toolbar().
  */
 function toolbar_toolbar() {

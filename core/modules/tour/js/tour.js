@@ -7,6 +7,8 @@
 
 "use strict";
 
+var queryString = decodeURI(window.location.search);
+
 /**
  * Attaches the tour's toolbar tab behavior.
  *
@@ -28,33 +30,6 @@ Drupal.behaviors.tour = {
         model: model
       });
 
-      // Update the model based on Overlay events.
-      $(document)
-        // Overlay is opening: cancel tour if active and mark overlay as open.
-        .on('drupalOverlayOpen.tour', function () {
-          model.set({ isActive: false, overlayIsOpen: true });
-        })
-        // Overlay is loading a new URL: clear tour & cancel if active.
-        .on('drupalOverlayBeforeLoad.tour', function () {
-          model.set({ isActive: false, overlayTour: [] });
-        })
-        // Overlay is closing: clear tour & cancel if active, mark overlay closed.
-        .on('drupalOverlayClose.tour', function () {
-          model.set({ isActive: false, overlayIsOpen: false, overlayTour: [] });
-        })
-        // Overlay has loaded DOM: check whether a tour is available.
-        .on('drupalOverlayReady.tour', function () {
-          // We must select the tour in the Overlay's window using the Overlay's
-          // jQuery, because the joyride plugin only works for the window in which
-          // it was loaded.
-          // @todo Make upstream contribution so this can be simplified, which
-          // should also allow us to *not* load jquery.joyride.js in the Overlay,
-          // resulting in better front-end performance.
-          var overlay = Drupal.overlay.iframeWindow;
-          var $overlayContext = overlay.jQuery(overlay.document);
-          model.set('overlayTour', $overlayContext.find('ol#tour'));
-        });
-
       model
         // Allow other scripts to respond to tour events.
         .on('change:isActive', function (model, isActive) {
@@ -64,8 +39,7 @@ Drupal.behaviors.tour = {
         .set('tour', $(context).find('ol#tour'));
 
       // Start the tour imediately if toggled via query string.
-      var query = $.deparam.querystring();
-      if (query.tour) {
+      if (/tour=?/i.test(queryString)) {
         model.set('isActive', true);
       }
 
@@ -82,10 +56,6 @@ Drupal.tour.models.StateModel = Backbone.Model.extend({
   defaults: {
     // Indicates whether the Drupal root window has a tour.
     tour: [],
-    // Indicates whether the Overlay is open.
-    overlayIsOpen: false,
-    // Indicates whether the Overlay window has a tour.
-    overlayTour: [],
     // Indicates whether the tour is currently running.
     isActive: false,
     // Indicates which tour is the active one (necessary to cleanly stop).
@@ -104,7 +74,7 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
    * Implements Backbone Views' initialize().
    */
   initialize: function () {
-    this.model.on('change:tour change:overlayTour change:overlayIsOpen change:isActive', this.render, this);
+    this.model.on('change:tour change:isActive', this.render, this);
     this.model.on('change:isActive', this.toggleTour, this);
   },
 
@@ -159,8 +129,7 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
    *   A jQuery element pointing to a <ol> containing tour items.
    */
   _getTour: function () {
-    var whichTour = (this.model.get('overlayIsOpen')) ? 'overlayTour' : 'tour';
-    return this.model.get(whichTour);
+    return this.model.get('tour');
   },
 
   /**
@@ -168,12 +137,10 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
    *
    * @return jQuery
    *   A jQuery element pointing to the document within which a tour would be
-   *   started given the current state. I.e. when the Overlay is open, this will
-   *   point to the HTML document inside the Overlay's iframe, otherwise it will
-   *   point to the Drupal root window.
+   *   started given the current state.
    */
   _getDocument: function () {
-    return (this.model.get('overlayIsOpen')) ? $(Drupal.overlay.iframeWindow.document) : $(document);
+    return $(document);
   },
 
   /**
@@ -196,7 +163,7 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
    */
   _removeIrrelevantTourItems: function ($tour, $document) {
     var removals = false;
-    var query = $.deparam.querystring();
+    var tips = /tips=([^&]+)/.exec(queryString);
     $tour
       .find('li')
       .each(function () {
@@ -205,7 +172,7 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
         var itemClass = $this.attr('data-class');
         // If the query parameter 'tips' is set, remove all tips that don't
         // have the matching class.
-        if (query.tips && !$(this).hasClass(query.tips)) {
+        if (tips && !$(this).hasClass(tips[1])) {
           removals = true;
           $this.remove();
           return;

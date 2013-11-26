@@ -110,15 +110,6 @@ Drupal.behaviors.toolbar = {
         // Update the model when the viewport offset changes.
         .on('drupalViewportOffsetChange.toolbar', function (event, offsets) {
           model.set('offsets', offsets);
-        })
-        // The overlay will hide viewport overflow, potentially stranding tray
-        // items that are offscreen. The toolbar will adjust tray presentation
-        // to prevent this when viewport overflow is hidden.
-        .on('drupalOverlayOpen.toolbar', function () {
-          model.set('isViewportOverflowConstrained', true);
-        })
-        .on('drupalOverlayClose.toolbar', function () {
-          model.set('isViewportOverflowConstrained', false);
         });
 
       // Broadcast model changes to other modules.
@@ -217,9 +208,9 @@ Drupal.toolbar = {
       // Menu subtrees are loaded through an AJAX request only when the Toolbar
       // is set to a vertical orientation.
       areSubtreesLoaded: false,
-      // If the viewport overflow becomes constrained, such as when the overlay
-      // is open, isFixed must be true so that elements in the trays aren't
-      // lost offscreen and impossible to get to.
+      // If the viewport overflow becomes constrained, isFixed must be true so
+      // that elements in the trays aren't lost off-screen and impossible to
+      // get to.
       isViewportOverflowConstrained: false,
       // The orientation of the active tray.
       orientation: 'vertical',

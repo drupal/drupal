@@ -77,5 +77,4 @@
     }
   });
 
-// @todo remove window.parent once overlay is removed from core.
-})(jQuery, Drupal, drupalSettings, Drupal.debounce,  window.parent.Drupal.displace);
+})(jQuery, Drupal, drupalSettings, Drupal.debounce, Drupal.displace);

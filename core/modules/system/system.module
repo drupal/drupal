@@ -1104,7 +1104,7 @@ function system_library_info() {
 
   // A utility that measures and reports viewport offset dimensions from
   // elements like the toolbar that can potentially displace the positioning of
-  // elements like the overlay.
+  // elements.
   $libraries['drupal.displace'] = array(
     'title' => 'Drupal displace',
     'version' => \Drupal::VERSION,

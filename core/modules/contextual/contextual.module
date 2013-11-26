@@ -136,9 +136,7 @@ function contextual_library_info() {
     'title' => 'Contextual Links Toolbar Tab',
     'version' => \Drupal::VERSION,
     'js' => array(
-      // Add the JavaScript, with a group and weight such that it will run
-      // before modules/overlay/overlay-parent.js.
-      $path . '/js/contextual.toolbar.js' => array('group' => JS_LIBRARY, 'weight' => -1),
+      $path . '/js/contextual.toolbar.js' => array('group' => JS_LIBRARY),
     ),
     'css' => array(
       $path . '/css/contextual.toolbar.css' => array(),

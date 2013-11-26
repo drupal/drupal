@@ -16,8 +16,6 @@ db_update('users')
   ->fields(array(
     'data' => serialize(array(
       'contact' => 1,
-      'overlay_message_dismissed' => '1',
-      'overlay' => '1',
       'garbage' => 'data',
     )),
   ))
@@ -28,7 +26,6 @@ db_update('users')
   ->fields(array(
     'data' => serialize(array(
       'contact' => '0',
-      'overlay' => 1,
       'more' => array('garbage', 'data'),
     )),
   ))
