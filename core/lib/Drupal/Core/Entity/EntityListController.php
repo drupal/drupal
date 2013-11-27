@@ -202,6 +202,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
     $build = array(
       '#theme' => 'table',
       '#header' => $this->buildHeader(),
+      '#title' => $this->getTitle(),
       '#rows' => array(),
       '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityInfo['label'])),
     );
@@ -247,6 +248,17 @@ class EntityListController implements EntityListControllerInterface, EntityContr
   public function setTranslationManager(TranslationInterface $translation_manager) {
     $this->translationManager = $translation_manager;
     return $this;
+  }
+
+  /**
+   * Returns the title of the page.
+   *
+   * @return string
+   *   A string title of the page.
+   *
+   */
+  protected function getTitle() {
+    return;
   }
 
 }

@@ -50,10 +50,8 @@ class CustomBlockTypeListController extends ConfigEntityListController {
   /**
    * {@inheritdoc}
    */
-  public function render() {
-    // @todo Remove this once https://drupal.org/node/2032535 is in.
-    drupal_set_title(t('Custom block types'));
-    return parent::render();
+  protected function getTitle() {
+    return $this->t('Custom block types');
   }
 
 }

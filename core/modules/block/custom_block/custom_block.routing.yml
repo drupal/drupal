@@ -9,6 +9,7 @@ custom_block.add_page:
   path: '/block/add'
   defaults:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::add'
+    _title: 'Add custom block'
   requirements:
     _permission: 'administer blocks'
 
@@ -16,6 +17,7 @@ custom_block.add_form:
   path: '/block/add/{custom_block_type}'
   defaults:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::addForm'
+    _title_callback: 'Drupal\custom_block\Controller\CustomBlockController::getAddFormTitle'
   requirements:
     _permission: 'administer blocks'
 
