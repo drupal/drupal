@@ -38,13 +38,6 @@ class Page extends PathPluginBase {
   protected $usesAttachments = TRUE;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::usesBreadcrumb().
-   */
-  public function usesBreadcrumb() {
-    return TRUE;
-  }
-
-  /**
    * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::defineOptions().
    */
   protected function defineOptions() {
@@ -83,8 +76,6 @@ class Page extends PathPluginBase {
 
     // Let the world know that this is the page view we're using.
     views_set_page_view($this->view);
-
-    $this->view->getBreadcrumb(TRUE);
 
     // And now render the view.
     $render = $this->view->render();

@@ -92,7 +92,6 @@ class ViewElementTest extends ViewTestBase {
         'wildcard' => 'all',
         'wildcard_substitution' => 'All',
         'title' => '',
-        'breadcrumb' => '',
         'default_argument_type' => 'fixed',
         'default_argument' => '',
         'validate' => array(

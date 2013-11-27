@@ -271,12 +271,7 @@ views_argument:
     title:
       type: label
       label: 'Title'
-    breadcrumb_enable:
-      type: boolean
-      label: 'Override breadcrumb'
-    breadcrumb:
-      type: label
-      label: 'Breadcrumb'
+      label: 'Overridden title'
     default_argument_type:
       type: string
       label: 'Type'

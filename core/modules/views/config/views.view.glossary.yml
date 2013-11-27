@@ -237,8 +237,6 @@ display:
           admin_label: ''
           title_enable: false
           title: ''
-          breadcrumb_enable: false
-          breadcrumb: ''
           default_argument_skip_url: false
           summary_options: {  }
           validate:
@@ -356,8 +354,6 @@ display:
           admin_label: ''
           title_enable: false
           title: ''
-          breadcrumb_enable: false
-          breadcrumb: ''
           default_argument_skip_url: false
           validate:
             type: none

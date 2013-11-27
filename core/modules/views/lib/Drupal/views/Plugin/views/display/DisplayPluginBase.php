@@ -783,13 +783,6 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   /**
-   * Check to see if the display needs a breadcrumb
-   *
-   * By default, displays do not need breadcrumbs
-   */
-  public function usesBreadcrumb() { return FALSE; }
-
-  /**
    * Determine if a given option is set to use the default display or the
    * current display
    *

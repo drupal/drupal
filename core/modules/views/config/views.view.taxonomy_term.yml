@@ -102,14 +102,10 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          breadcrumb_enable: false
-          breadcrumb: ''
           default_argument_options: {  }
           default_argument_skip_url: false
           summary_options: {  }
           validate_options: {  }
-          set_breadcrumb: '0'
-          use_taxonomy_term_path: '0'
           provider: taxonomy
         term_node_tid_depth_modifier:
           id: term_node_tid_depth_modifier
@@ -128,8 +124,6 @@ display:
           default_action: ignore
           title_enable: false
           title: ''
-          breadcrumb_enable: false
-          breadcrumb: ''
           default_argument_options: {  }
           default_argument_skip_url: false
           summary_options: {  }

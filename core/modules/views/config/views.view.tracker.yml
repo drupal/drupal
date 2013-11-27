@@ -479,8 +479,6 @@ display:
           group_type: group
           admin_label: ''
           default_action: ignore
-          breadcrumb_enable: false
-          breadcrumb: ''
           default_argument_options: {  }
           default_argument_skip_url: false
           summary_options: {  }

@@ -68,9 +68,8 @@ class DefaultDisplay extends DisplayPluginBase {
    * This illustrates that render is smart enough to call build and execute
    * if these items have not already been accomplished.
    *
-   * Note that execute also must accomplish other tasks, such
-   * as setting page titles, breadcrumbs, and generating exposed filter
-   * data if necessary.
+   * Note that execute also must accomplish other tasks, such as setting page
+   * titles, and generating exposed filter data if necessary.
    */
   public function execute() {
     return $this->view->render($this->display['id']);

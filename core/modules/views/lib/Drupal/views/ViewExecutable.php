@@ -901,15 +901,11 @@ class ViewExecutable {
 
     // build arguments.
     $position = -1;
-
-    // Create a title for use in the breadcrumb trail.
-    $title = $this->display_handler->getOption('title');
-
-    $this->build_info['breadcrumb'] = array();
-    $breadcrumb_args = array();
     $substitutions = array();
-
     $status = TRUE;
+
+    // Get the title.
+    $title = $this->display_handler->getOption('title');
 
     // Iterate through each argument and process.
     foreach ($this->argument as $id => $arg) {
@@ -954,30 +950,10 @@ class ViewExecutable {
         $substitutions['%' . ($position + 1)] = $arg_title;
         $substitutions['!' . ($position + 1)] = strip_tags(decode_entities($arg));
 
-        // Since we're really generating the breadcrumb for the item above us,
-        // check the default action of this argument.
-        if ($this->display_handler->usesBreadcrumb() && $argument->usesBreadcrumb()) {
-          $path = $this->getUrl($breadcrumb_args);
-          if (strpos($path, '%') === FALSE) {
-            if (!empty($argument->options['breadcrumb_enable']) && !empty($argument->options['breadcrumb'])) {
-              $breadcrumb = $argument->options['breadcrumb'];
-            }
-            else {
-              $breadcrumb = $title;
-            }
-            $this->build_info['breadcrumb'][$path] = str_replace(array_keys($substitutions), $substitutions, $breadcrumb);
-          }
-        }
-
-        // Allow the argument to muck with this breadcrumb.
-        $argument->setBreadcrumb($this->build_info['breadcrumb']);
-
         // Test to see if we should use this argument's title
         if (!empty($argument->options['title_enable']) && !empty($argument->options['title'])) {
           $title = $argument->options['title'];
         }
-
-        $breadcrumb_args[] = $arg;
       }
       else {
         // determine default condition and handle.
@@ -1404,7 +1380,7 @@ class ViewExecutable {
    * This function should NOT be used by anything external as this
    * returns data in the format specified by the display. It can also
    * have other side effects that are only intended for the 'proper'
-   * use of the display, such as setting page titles and breadcrumbs.
+   * use of the display, such as setting page titles.
    *
    * If you simply want to view the display, use View::preview() instead.
    */
@@ -1721,40 +1697,6 @@ class ViewExecutable {
       }
     }
     return $this->display_handler->getPath();
-  }
-
-  /**
-   * Get the breadcrumb used for this view.
-   *
-   * @param $set
-   *   If true, use drupal_set_breadcrumb() to install the breadcrumb.
-   */
-  public function getBreadcrumb($set = FALSE) {
-    // Now that we've built the view, extract the breadcrumb.
-    $base = TRUE;
-    $breadcrumb = array();
-
-    if (!empty($this->build_info['breadcrumb'])) {
-      foreach ($this->build_info['breadcrumb'] as $path => $title) {
-        // Check to see if the frontpage is in the breadcrumb trail; if it
-        // is, we'll remove that from the actual breadcrumb later.
-        if ($path == \Drupal::config('system.site')->get('page.front')) {
-          $base = FALSE;
-          $title = t('Home');
-        }
-        if ($title) {
-          $breadcrumb[] = l($title, $path, array('html' => TRUE));
-        }
-      }
-
-      if ($set) {
-        if ($base && $current_breadcrumbs = drupal_set_breadcrumb()) {
-          $breadcrumb = array_merge($current_breadcrumbs, $breadcrumb);
-        }
-        drupal_set_breadcrumb($breadcrumb);
-      }
-    }
-    return $breadcrumb;
   }
 
   /**

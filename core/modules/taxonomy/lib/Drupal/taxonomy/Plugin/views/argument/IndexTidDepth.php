@@ -27,7 +27,6 @@ class IndexTidDepth extends ArgumentPluginBase {
 
     $options['depth'] = array('default' => 0);
     $options['break_phrase'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['set_breadcrumb'] = array('default' => FALSE, 'bool' => TRUE);
     $options['use_taxonomy_term_path'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
@@ -48,33 +47,7 @@ class IndexTidDepth extends ArgumentPluginBase {
       '#default_value' => !empty($this->options['break_phrase']),
     );
 
-    $form['set_breadcrumb'] = array(
-      '#type' => 'checkbox',
-      '#title' => t("Set the breadcrumb for the term parents"),
-      '#description' => t('If selected, the breadcrumb trail will include all parent terms, each one linking to this view. Note that this only works if just one term was received.'),
-      '#default_value' => !empty($this->options['set_breadcrumb']),
-    );
-
-    $form['use_taxonomy_term_path'] = array(
-      '#type' => 'checkbox',
-      '#title' => t("Use Drupal's taxonomy term path to create breadcrumb links"),
-      '#description' => t('If selected, the links in the breadcrumb trail will be created using the standard drupal method instead of the custom views method. This is useful if you are using modules like taxonomy redirect to modify your taxonomy term links.'),
-      '#default_value' => !empty($this->options['use_taxonomy_term_path']),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[set_breadcrumb]"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
     parent::buildOptionsForm($form, $form_state);
-  }
-
-  public function setBreadcrumb(&$breadcrumb) {
-    if (empty($this->options['set_breadcrumb']) || !is_numeric($this->argument)) {
-      return;
-    }
-
-    return views_taxonomy_set_breadcrumb($breadcrumb, $this);
   }
 
   /**

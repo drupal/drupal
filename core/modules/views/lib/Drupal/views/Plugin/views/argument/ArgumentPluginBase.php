@@ -77,25 +77,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
     }
   }
 
-  /**
-   * Give an argument the opportunity to modify the breadcrumb, if it wants.
-   * This only gets called on displays where a breadcrumb is actually used.
-   *
-   * The breadcrumb will be in the form of an array, with the keys being
-   * the path and the value being the already sanitized title of the path.
-   */
-  public function setBreadcrumb(&$breadcrumb) { }
-
-  /**
-   * Determine if the argument can generate a breadcrumb
-   *
-   * @return TRUE/FALSE
-   */
-  public function usesBreadcrumb() {
-    $info = $this->defaultActions($this->options['default_action']);
-    return !empty($info['breadcrumb']);
-  }
-
   public function isException($arg = NULL) {
     if (!isset($arg)) {
       $arg = isset($this->argument) ? $this->argument : NULL;
@@ -135,8 +116,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
     );
     $options['title_enable'] = array('default' => FALSE, 'bool' => TRUE);
     $options['title'] = array('default' => '', 'translatable' => TRUE);
-    $options['breadcrumb_enable'] = array('default' => FALSE, 'bool' => TRUE);
-    $options['breadcrumb'] = array('default' => '', 'translatable' => TRUE);
     $options['default_argument_type'] = array('default' => 'fixed');
     $options['default_argument_options'] = array('default' => array());
     $options['default_argument_skip_url'] = array('default' => FALSE, 'bool' => TRUE);
@@ -257,26 +236,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
       '#states' => array(
         'visible' => array(
           ':input[name="options[title_enable]"]' => array('checked' => TRUE),
-        ),
-      ),
-      '#fieldset' => 'argument_present',
-    );
-
-    $form['breadcrumb_enable'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Override breadcrumb'),
-      '#default_value' => $this->options['breadcrumb_enable'],
-      '#fieldset' => 'argument_present',
-    );
-    $form['breadcrumb'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Provide breadcrumb'),
-      '#title_display' => 'invisible',
-      '#default_value' => $this->options['breadcrumb'],
-      '#description' => t('Enter a breadcrumb name you would like to use. See "Title" for percent substitutions.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="options[breadcrumb_enable]"]' => array('checked' => TRUE),
         ),
       ),
       '#fieldset' => 'argument_present',
@@ -447,7 +406,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
       'ignore' => array(
         'title' => t('Display all results for the specified field'),
         'method' => 'defaultIgnore',
-        'breadcrumb' => TRUE, // generate a breadcrumb to here
       ),
       'default' => array(
         'title' => t('Provide default value'),
@@ -455,7 +413,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
         'form method' => 'defaultArgumentForm',
         'has default argument' => TRUE,
         'default only' => TRUE, // this can only be used for missing argument, not validation failure
-        'breadcrumb' => TRUE, // generate a breadcrumb to here
       ),
       'not found' => array(
         'title' => t('Hide view'),
@@ -467,17 +424,14 @@ abstract class ArgumentPluginBase extends HandlerBase {
         'method' => 'defaultSummary',
         'form method' => 'defaultSummaryForm',
         'style plugin' => TRUE,
-        'breadcrumb' => TRUE, // generate a breadcrumb to here
       ),
       'empty' => array(
         'title' => t('Display contents of "No results found"'),
         'method' => 'defaultEmpty',
-        'breadcrumb' => TRUE, // generate a breadcrumb to here
       ),
       'access denied' => array(
         'title' => t('Display "Access Denied"'),
         'method' => 'defaultAccessDenied',
-        'breadcrumb' => FALSE, // generate a breadcrumb to here
       ),
     );
 
