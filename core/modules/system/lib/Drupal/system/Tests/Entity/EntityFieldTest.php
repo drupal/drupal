@@ -353,21 +353,19 @@ class EntityFieldTest extends EntityUnitTestBase  {
    */
   protected function checkIntrospection($entity_type) {
     // Test getting metadata upfront.
-    // @todo: Make this work without having to create entity objects.
-    $entity = entity_create($entity_type, array());
-    $definitions = $entity->getPropertyDefinitions();
-    $this->assertEqual($definitions['name']['type'], 'field_item:string', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']['type'], 'field_item:entity_reference', $entity_type .': User field found.');
-    $this->assertEqual($definitions['field_test_text']['type'], 'field_item:text', $entity_type .': Test-text-field field found.');
+    $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type);
+    $this->assertEqual($definitions['name']->getFieldType(), 'string', $entity_type .': Name field found.');
+    $this->assertEqual($definitions['user_id']->getFieldType(), 'entity_reference', $entity_type .': User field found.');
+    $this->assertEqual($definitions['field_test_text']->getFieldType(), 'text', $entity_type .': Test-text-field field found.');
 
     // Test introspecting an entity object.
     // @todo: Add bundles and test bundles as well.
     $entity = entity_create($entity_type, array());
 
     $definitions = $entity->getPropertyDefinitions();
-    $this->assertEqual($definitions['name']['type'], 'field_item:string', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']['type'], 'field_item:entity_reference', $entity_type .': User field found.');
-    $this->assertEqual($definitions['field_test_text']['type'], 'field_item:text', $entity_type .': Test-text-field field found.');
+    $this->assertEqual($definitions['name']->getFieldType(), 'string', $entity_type .': Name field found.');
+    $this->assertEqual($definitions['user_id']->getFieldType(), 'entity_reference', $entity_type .': User field found.');
+    $this->assertEqual($definitions['field_test_text']->getFieldType(), 'text', $entity_type .': Test-text-field field found.');
 
     $name_properties = $entity->name->getPropertyDefinitions();
     $this->assertEqual($name_properties['value']['type'], 'string', $entity_type .': String value property of the name found.');

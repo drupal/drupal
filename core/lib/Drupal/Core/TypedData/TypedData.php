@@ -20,7 +20,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * The data definition.
    *
-   * @var array
+   * @var \Drupal\Core\TypedData\DataDefinitionInterface
    */
   protected $definition;
 
@@ -41,7 +41,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * Constructs a TypedData object given its definition and context.
    *
-   * @param array $definition
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
    *   The data definition.
    * @param string $name
    *   (optional) The name of the created property, or NULL if it is the root
@@ -51,8 +51,12 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    *   root of a typed data tree. Defaults to NULL.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
+   *
+   * @todo When \Drupal\Core\Config\TypedConfigManager has been fixed to use
+   *   class-based definitions, type-hint $definition to
+   *   DataDefinitionInterface.
    */
-  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
     $this->definition = $definition;
     $this->parent = $parent;
     $this->name = $name;

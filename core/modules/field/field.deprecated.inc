@@ -616,7 +616,7 @@ function field_attach_form_validate(ContentEntityInterface $entity, $form, &$for
   $has_violations = FALSE;
   foreach ($entity as $field_name => $field) {
     $definition = $field->getDefinition();
-    if (!empty($definition['configurable']) && (empty($options['field_name']) || $options['field_name'] == $field_name)) {
+    if ($definition->isFieldConfigurable() && (empty($options['field_name']) || $options['field_name'] == $field_name)) {
       $field_violations = $field->validate();
       if (count($field_violations)) {
         $has_violations = TRUE;
@@ -926,13 +926,13 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
   if (!isset($field_name)) {
     $display_langcodes = array();
     foreach ($definitions as $name => $definition) {
-      if (!empty($definition['configurable'])) {
+      if ($definition->isFieldConfigurable()) {
         $display_langcodes[$name] = $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
       }
     }
     return $display_langcodes;
   }
-  elseif (!empty($definitions[$field_name]['configurable'])) {
+  elseif ($definitions[$field_name]->isFieldConfigurable()) {
     return $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
   }
 }

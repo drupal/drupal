@@ -134,7 +134,7 @@ function content_translation_entity_field_info_alter(&$info, $entity_type) {
     foreach ($fields as $name => $translatable) {
       foreach ($keys as $key) {
         if (isset($info[$key][$name])) {
-          $info[$key][$name]['translatable'] = (bool) $translatable;
+          $info[$key][$name]->setTranslatable((bool) $translatable);
           break;
         }
       }
@@ -655,7 +655,7 @@ function content_translation_form_alter(array &$form, array &$form_state) {
     if (!$entity->isNew() && (!isset($translations[$form_langcode]) || count($translations) > 1)) {
       foreach ($entity->getPropertyDefinitions() as $property_name => $definition) {
         if (isset($form[$property_name])) {
-          $form[$property_name]['#multilingual'] = !empty($definition['translatable']);
+          $form[$property_name]['#multilingual'] = $definition->isFieldTranslatable();
         }
       }
     }

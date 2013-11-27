@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Field\Plugin\DataType\FieldInstanceInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\field\Field;
 
@@ -25,10 +26,11 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
-    if (isset($definition['instance'])) {
-      $this->instance = $definition['instance'];
+    // Definition can be the field config or field instance.
+    if ($definition instanceof FieldInstanceInterface) {
+      $this->instance = $definition;
     }
   }
 
@@ -36,6 +38,10 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
    * {@inheritdoc}
    */
   public function getFieldDefinition() {
+    // Configurable fields have the field_config entity injected as definition,
+    // but we want to return the more specific field instance here.
+    // @todo: Overhaul this once we have per-bundle field definitions injected,
+    // see https://drupal.org/node/2114707.
     if (!isset($this->instance)) {
       $entity = $this->getEntity();
       $instances = Field::fieldInfo()->getBundleInstances($entity->entityType(), $entity->bundle());
@@ -43,9 +49,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
         $this->instance = $instances[$this->getName()];
       }
       else {
-        // For base fields, fall back to the parent implementation.
-        // @todo: Inject the field definition with
-        //   https://drupal.org/node/2047229.
+        // For base fields, fall back to return the general definition.
         return parent::getFieldDefinition();
       }
     }
@@ -71,13 +75,6 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
     }
 
     return $constraints;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getDefaultValue() {
-    return $this->getFieldDefinition()->getFieldDefaultValue($this->getEntity());
   }
 
   /**

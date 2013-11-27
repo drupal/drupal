@@ -263,9 +263,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
    */
   public function onFieldItemsPurge(EntityInterface $entity, FieldInstanceInterface $instance) {
     if ($values = $this->readFieldItemsToPurge($entity, $instance)) {
-      $field = $instance->getField();
-      $definition = _field_generate_entity_field_definition($field, $instance);
-      $items = \Drupal::typedData()->create($definition, $values, $field->getFieldName(), $entity);
+      $items = \Drupal::typedData()->create($instance, $values, $instance->getFieldName(), $entity);
       $items->delete();
     }
     $this->purgeFieldItems($entity, $instance);

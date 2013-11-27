@@ -25,9 +25,7 @@ interface EntityManagerInterface extends PluginManagerInterface {
   /**
    * Gets an array of content entity field definitions.
    *
-   * If a bundle is passed, fields specific to this bundle are included. Entity
-   * fields are always multi-valued, so 'list' is TRUE for each returned field
-   * definition.
+   * If a bundle is passed, fields specific to this bundle are included.
    *
    * @param string $entity_type
    *   The entity type to get field definitions for. Only entity types that
@@ -36,19 +34,11 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *   (optional) The entity bundle for which to get field definitions. If NULL
    *   is passed, no bundle-specific fields are included. Defaults to NULL.
    *
-   * @return array
-   *   An array of field definitions of entity fields, keyed by field
-   *   name. In addition to the typed data definition keys as described at
-   *   \Drupal\Core\TypedData\TypedDataManager::create() the following keys are
-   *   supported:
-   *   - queryable: Whether the field is queryable via QueryInterface.
-   *     Defaults to TRUE if 'computed' is FALSE or not set, to FALSE otherwise.
-   *   - translatable: Whether the field is translatable. Defaults to FALSE.
-   *   - configurable: A boolean indicating whether the field is configurable
-   *     via field.module. Defaults to FALSE.
+   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   *   An array of entity field definitions, keyed by field name.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
-   * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitionsByConstraints()
+   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitionsByConstraints()
    */
   public function getFieldDefinitions($entity_type, $bundle = NULL);
 

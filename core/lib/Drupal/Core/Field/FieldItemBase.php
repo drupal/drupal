@@ -25,7 +25,7 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * Overrides \Drupal\Core\TypedData\TypedData::__construct().
    */
-  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     // Initialize computed properties by default, such that they get cloned
     // with the whole item.

@@ -52,77 +52,49 @@ class TypedDataManager extends DefaultPluginManager {
   }
 
   /**
-   * Implements \Drupal\Component\Plugin\PluginManagerInterface::createInstance().
+   * Instantiates a typed data object.
    *
-   * @param string $plugin_id
-   *   The id of a plugin, i.e. the data type.
+   * @param string $data_type
+   *   The data type, for which a typed object should be instantiated.
    * @param array $configuration
-   *   The plugin configuration, i.e. the data definition.
-   * @param string $name
-   *   (optional) If a property or list item is to be created, the name of the
-   *   property or the delta of the list item.
-   * @param mixed $parent
-   *   (optional) If a property or list item is to be created, the parent typed
-   *   data object implementing either the ListInterface or the
-   *   ComplexDataInterface.
+   *   The plugin configuration array, i.e. an array with the following keys:
+   *   - data definition: The data definition object, i.e. an instance of
+   *     \Drupal\Core\TypedData\DataDefinitionInterface.
+   *   - name: (optional) If a property or list item is to be created, the name
+   *     of the property or the delta of the list item.
+   *   - parent: (optional) If a property or list item is to be created, the
+   *     parent typed data object implementing either the ListInterface or the
+   *     ComplexDataInterface.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The instantiated typed data object.
    */
-  public function createInstance($plugin_id, array $configuration, $name = NULL, $parent = NULL) {
-    $type_definition = $this->getDefinition($plugin_id);
+  public function createInstance($data_type, array $configuration) {
+    $data_definition = $configuration['data_definition'];
+    $type_definition = $this->getDefinition($data_type);
 
     if (!isset($type_definition)) {
-      throw new \InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $plugin_id)));
+      throw new \InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $data_type)));
     }
 
     // Allow per-data definition overrides of the used classes, i.e. take over
-    // classes specified in the data definition.
-    $key = empty($configuration['list']) ? 'class' : 'list_class';
-    if (isset($configuration[$key])) {
-      $class = $configuration[$key];
-    }
-    elseif (isset($type_definition[$key])) {
-      $class = $type_definition[$key];
-    }
+    // classes specified in the type definition.
+    $class = $data_definition->getClass();
+    $class = isset($class) ? $class : $type_definition['class'];
 
     if (!isset($class)) {
-      throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $plugin_id));
+      throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $data_type));
     }
-    return new $class($configuration, $name, $parent);
+    return new $class($data_definition, $configuration['name'], $configuration['parent']);
   }
 
   /**
    * Creates a new typed data object instance.
    *
-   * @param array $definition
-   *   The data definition array with the following array keys and values:
-   *   - type: The data type of the data to wrap. Required.
-   *   - label: A human readable label.
-   *   - description: A human readable description.
-   *   - list: Whether the data is multi-valued, i.e. a list of data items.
-   *     Defaults to FALSE.
-   *   - computed: A boolean specifying whether the data value is computed by
-   *     the object, e.g. depending on some other values.
-   *   - read-only: A boolean specifying whether the data is read-only. Defaults
-   *     to TRUE for computed properties, to FALSE otherwise.
-   *   - class: If set and 'list' is FALSE, the class to use for creating the
-   *     typed data object; otherwise the default class of the data type will be
-   *     used.
-   *   - list_class: If set and 'list' is TRUE, the class to use for creating
-   *     the typed data object; otherwise the default list class of the data
-   *     type will be used.
-   *   - settings: An array of settings, as required by the used 'class'. See
-   *     the documentation of the class for supported or required settings.
-   *   - list_settings: An array of settings as required by the used
-   *     'list_class'. See the documentation of the list class for support or
-   *     required settings.
-   *   - constraints: An array of validation constraints. See
-   *     \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
-   *   - required: A boolean specifying whether a non-NULL value is mandatory.
-   *   Further keys may be supported in certain usages, e.g. for further keys
-   *   supported for entity field definitions see
-   *   \Drupal\Core\Entity\StorageControllerInterface::getPropertyDefinitions().
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
+   *   The data definition of the typed data object. For backwards-compatibility
+   *   an array representation of the data definition may be passed also.
+   *   @todo: Need to remove array support in https://drupal.org/node/2112239.
    * @param mixed $value
    *   (optional) The data value. If set, it has to match one of the supported
    *   data type format as documented for the data type classes.
@@ -148,12 +120,20 @@ class TypedDataManager extends DefaultPluginManager {
    * @see \Drupal\Core\TypedData\Plugin\DataType\Uri
    * @see \Drupal\Core\TypedData\Plugin\DataType\Binary
    */
-  public function create(array $definition, $value = NULL, $name = NULL, $parent = NULL) {
-    $wrapper = $this->createInstance($definition['type'], $definition, $name, $parent);
-    if (isset($value)) {
-      $wrapper->setValue($value, FALSE);
+  public function create($definition, $value = NULL, $name = NULL, $parent = NULL) {
+    // @todo: Remove array support once https://drupal.org/node/2112239 is in.
+    if (is_array($definition)) {
+      $definition = DataDefinition::createFromOldStyleDefinition($definition);
     }
-    return $wrapper;
+    $typed_data = $this->createInstance($definition->getDataType(), array(
+      'data_definition' => $definition,
+      'name' => $name,
+      'parent' => $parent,
+    ));
+    if (isset($value)) {
+      $typed_data->setValue($value, FALSE);
+    }
+    return $typed_data;
   }
 
   /**
@@ -335,18 +315,20 @@ class TypedDataManager extends DefaultPluginManager {
    *
    * @see \Drupal\Core\Validation\ConstraintManager
    *
-   * @param array $definition
-   *   A data definition array.
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
+   *   A data definition.
    *
    * @return array
    *   Array of constraints, each being an instance of
    *   \Symfony\Component\Validator\Constraint.
+   *
+   * @todo: Having this as well as $definition->getConstraints() is confusing.
    */
-  public function getConstraints($definition) {
+  public function getConstraints(DataDefinitionInterface $definition) {
     $constraints = array();
     $validation_manager = $this->getValidationConstraintManager();
 
-    $type_definition = $this->getDefinition($definition['type']);
+    $type_definition = $this->getDefinition($definition->getDataType());
     // Auto-generate a constraint for data types implementing a primitive
     // interface.
     if (is_subclass_of($type_definition['class'], '\Drupal\Core\TypedData\PrimitiveInterface')) {
@@ -363,19 +345,21 @@ class TypedDataManager extends DefaultPluginManager {
       }
     }
     // Add any constraints specified as part of the data definition.
-    if (isset($definition['constraints'])) {
-      foreach ($definition['constraints'] as $name => $options) {
-        $constraints[] = $validation_manager->create($name, $options);
-      }
+    $defined_constraints = $definition->getConstraints();
+    foreach ($defined_constraints as $name => $options) {
+      $constraints[] = $validation_manager->create($name, $options);
     }
     // Add the NotNull constraint for required data.
-    if (!empty($definition['required']) && empty($definition['constraints']['NotNull'])) {
+    if ($definition->isRequired() && !isset($defined_constraints['NotNull'])) {
       $constraints[] = $validation_manager->create('NotNull', array());
     }
 
     // If the definition does not provide a class use the class from the type
     // definition for performing interface checks.
-    $class = isset($definition['class']) ? $definition['class'] : $type_definition['class'];
+    $class = $definition->getClass();
+    if (!$class) {
+      $class = $type_definition['class'];
+    }
     // Check if the class provides allowed values.
     if (array_key_exists('Drupal\Core\TypedData\AllowedValuesInterface', class_implements($class))) {
       $constraints[] = $validation_manager->create('AllowedValues', array());

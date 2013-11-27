@@ -101,7 +101,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
             // translation.
             // @todo Remove this special casing as soon as configurable and
             //   base field definitions are "unified".
-            if (!empty($definition['configurable']) && ($field = FieldService::fieldInfo()->getField($entity_type, $field_name))) {
+            if ($definition->isFieldConfigurable() && ($field = FieldService::fieldInfo()->getField($entity_type, $field_name))) {
               $instance = FieldService::fieldInfo()->getInstance($entity_type, $bundle, $field_name);
               $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
                 '#label' => $instance->getFieldLabel(),
@@ -122,7 +122,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
             // fields support translation. Whether they are actually enabled is
             // determined through our settings. As a consequence only fields
             // that support translation can be enabled or disabled.
-            elseif (isset($field_settings[$field_name]) || !empty($definition['translatable'])) {
+            elseif (isset($field_settings[$field_name]) || $definition->isFieldTranslatable()) {
               $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
                 '#label' => $definition['label'],
                 '#type' => 'checkbox',

@@ -102,8 +102,8 @@ class LegacyConfigFieldItemList extends ConfigFieldItemList {
    *   The name of the hook, e.g. 'presave', 'validate'.
    */
   protected function legacyCallback($hook, $args = array()) {
-    $definition = $this->getPluginDefinition();
-    $module = $definition['provider'];
+    $type_definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getFieldDefinition()->getFieldType());
+    $module = $type_definition['provider'];
     $callback = "{$module}_field_{$hook}";
     if (function_exists($callback)) {
       // We need to remove the empty "prototype" item here.

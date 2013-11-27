@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\TypedData;
 
-use Drupal\Component\Utility\String;
+use Drupal\Core\TypedData\ListDefinition;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -313,10 +313,7 @@ class TypedDataTest extends DrupalUnitTestBase {
   public function testTypedDataLists() {
     // Test working with an existing list of strings.
     $value = array('one', 'two', 'three');
-    $typed_data = $this->createTypedData(array(
-      'type' => 'string',
-      'list' => TRUE,
-    ), $value);
+    $typed_data = $this->createTypedData(ListDefinition::create('string'), $value);
     $this->assertEqual($typed_data->getValue(), $value, 'List value has been set.');
     // Test iterating.
     $count = 0;

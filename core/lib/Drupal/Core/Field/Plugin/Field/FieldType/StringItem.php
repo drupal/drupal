@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'string' entity field type.
@@ -31,15 +32,13 @@ class StringItem extends FieldItemBase {
   static $propertyDefinitions;
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
+   * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
 
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'string',
-        'label' => t('Text value'),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('string')
+        ->setLabel(t('Text value'));
     }
     return static::$propertyDefinitions;
   }

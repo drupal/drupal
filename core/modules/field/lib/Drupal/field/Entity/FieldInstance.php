@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\field\FieldException;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInstanceInterface;
 
 /**
@@ -205,6 +206,13 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * @var \Drupal\field\Entity\FieldInstance
    */
   public $original = NULL;
+
+  /**
+   * The data definition of a field item.
+   *
+   * @var \Drupal\Core\TypedData\DataDefinition
+   */
+  protected $itemDefinition;
 
   /**
    * Constructs a FieldInstance object.
@@ -566,15 +574,22 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function allowBundleRename() {
-    $this->bundle_rename_allowed = TRUE;
+  public function isFieldConfigurable() {
+    return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldConfigurable() {
+  public function isFieldQueryable() {
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function allowBundleRename() {
+    $this->bundle_rename_allowed = TRUE;
   }
 
   /*
@@ -598,4 +613,82 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     $this->__construct($values);
   }
 
+  public function getDataType() {
+    return 'list';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLabel() {
+    return $this->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->getFieldDescription();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isList() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isReadOnly() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isComputed() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRequired() {
+    // Only field instances can be required.
+    return $this->isFieldRequired();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getClass() {
+    return $this->field->getClass();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettings() {
+    return $this->getFieldSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getItemDefinition() {
+    if (!isset($this->itemDefinition)) {
+      $this->itemDefinition = DataDefinition::create('field_item:' . $this->field->type)
+        ->setSettings($this->getFieldSettings());
+    }
+    return $this->itemDefinition;
+  }
 }

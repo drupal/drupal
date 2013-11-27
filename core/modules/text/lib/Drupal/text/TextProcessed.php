@@ -29,7 +29,7 @@ class TextProcessed extends TypedData {
   /**
    * Overrides TypedData::__construct().
    */
-  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
 
     if (!isset($definition['settings']['text source'])) {

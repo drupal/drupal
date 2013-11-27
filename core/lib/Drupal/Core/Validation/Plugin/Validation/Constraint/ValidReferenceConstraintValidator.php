@@ -19,6 +19,9 @@ class ValidReferenceConstraintValidator extends ConstraintValidator {
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
+    if (!isset($value)) {
+      return;
+    }
     $id = $value->get('target_id')->getValue();
     // '0' or NULL are considered valid empty references.
     if (empty($id)) {

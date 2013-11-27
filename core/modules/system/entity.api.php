@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Field\FieldDefinition;
 
 /**
  * @addtogroup hooks
@@ -626,10 +627,8 @@ function hook_entity_form_display_alter(\Drupal\entity\Entity\EntityFormDisplay 
  *
  * @return array
  *   An array of entity field information having the following optional entries:
- *   - definitions: An array of field definitions to add all entities of this
- *     type, keyed by field name. See
- *     \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions() for a list of
- *     supported keys in field definitions.
+ *   - definitions: An array of field definitions to add to all entities of this
+ *     type, keyed by field name.
  *   - optional: An array of field definitions for optional entity fields, keyed
  *     by field name. Optional fields are fields that only exist for certain
  *     bundles of the entity type.
@@ -637,29 +636,26 @@ function hook_entity_form_display_alter(\Drupal\entity\Entity\EntityFormDisplay 
  *     optional fields that entities of this bundle have.
  *
  * @see hook_entity_field_info_alter()
+ * @see \Drupal\Core\Field\FieldDefinitionInterface
  * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
  * @see \Drupal\Core\TypedData\TypedDataManager::create()
  */
 function hook_entity_field_info($entity_type) {
   if (mymodule_uses_entity_type($entity_type)) {
     $info = array();
-    $info['definitions']['mymodule_text'] = array(
-      'type' => 'string_item',
-      'list' => TRUE,
-      'label' => t('The text'),
-      'description' => t('A text property added by mymodule.'),
-      'computed' => TRUE,
-      'class' => '\Drupal\mymodule\EntityComputedText',
-    );
+    $info['definitions']['mymodule_text'] = FieldDefinition::create('string')
+      ->setLabel(t('The text'))
+      ->setDescription(t('A text property added by mymodule.'))
+      ->setComputed(TRUE)
+      ->setClass('\Drupal\mymodule\EntityComputedText');
+
     if ($entity_type == 'node') {
       // Add a property only to entities of the 'article' bundle.
-      $info['optional']['mymodule_text_more'] = array(
-        'type' => 'string_item',
-        'list' => TRUE,
-        'label' => t('More text'),
-        'computed' => TRUE,
-        'class' => '\Drupal\mymodule\EntityComputedMoreText',
-      );
+      $info['optional']['mymodule_text_more'] = FieldDefinition::create('string')
+        ->setLabel(t('More text'))
+        ->setComputed(TRUE)
+        ->setClass('\Drupal\mymodule\EntityComputedMoreText');
+
       $info['bundle map']['article'][0] = 'mymodule_text_more';
     }
     return $info;
@@ -678,8 +674,8 @@ function hook_entity_field_info($entity_type) {
  */
 function hook_entity_field_info_alter(&$info, $entity_type) {
   if (!empty($info['definitions']['mymodule_text'])) {
-    // Alter the mymodule_text property to use a custom class.
-    $info['definitions']['mymodule_text']['class'] = '\Drupal\anothermodule\EntityComputedText';
+    // Alter the mymodule_text field to use a custom class.
+    $info['definitions']['mymodule_text']->setClass('\Drupal\anothermodule\EntityComputedText');
   }
 }
 

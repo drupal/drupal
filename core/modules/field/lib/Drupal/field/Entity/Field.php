@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldException;
 use Drupal\field\FieldInterface;
 
@@ -196,6 +197,13 @@ class Field extends ConfigEntityBase implements FieldInterface {
    * @var \Drupal\field\Entity\Field
    */
   public $original = NULL;
+
+  /**
+   * The data definition of a field item.
+   *
+   * @var \Drupal\Core\TypedData\DataDefinition
+   */
+  protected $itemDefinition;
 
   /**
    * Constructs a Field object.
@@ -567,6 +575,20 @@ class Field extends ConfigEntityBase implements FieldInterface {
   }
 
   /**
+   * Sets whether the field is translatable.
+   *
+   * @param bool $translatable
+   *   Whether the field is translatable.
+   *
+   * @return \Drupal\field\Entity\Field
+   *   The object itself for chaining.
+   */
+  public function setTranslatable($translatable) {
+    $this->translatable = $translatable;
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFieldLabel() {
@@ -577,7 +599,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
    * {@inheritdoc}
    */
   public function getFieldDescription() {
-    return '';
+    return NULL;
   }
 
   /**
@@ -606,6 +628,20 @@ class Field extends ConfigEntityBase implements FieldInterface {
    * {@inheritdoc}
    */
   public function getFieldDefaultValue(EntityInterface $entity) { }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldConfigurable() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldQueryable() {
+    return TRUE;
+  }
 
   /**
    * A list of columns that can not be used as field type columns.
@@ -675,8 +711,90 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function isFieldConfigurable() {
+  public function getDataType() {
+    return 'list';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLabel() {
+    return $this->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->getFieldDescription();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isList() {
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isReadOnly() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isComputed() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRequired() {
+    return $this->isFieldRequired();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getClass() {
+    // Derive list class from the field type.
+    $type_definition = \Drupal::service('plugin.manager.field.field_type')
+      ->getDefinition($this->getFieldType());
+    return $type_definition['list_class'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettings() {
+    // This should actually return the settings for field item list, which are
+    // not the field settings. However, there is no harm in returning field
+    // settings here, so we do that to avoid confusion for now.
+    // @todo: Unify with getFieldSettings() or remove once typed data moved
+    // to the adapter approach.
+    return $this->getFieldSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getItemDefinition() {
+    if (!isset($this->itemDefinition)) {
+      $this->itemDefinition = DataDefinition::create('field_item:' . $this->type)
+        ->setSettings($this->getFieldSettings());
+    }
+    return $this->itemDefinition;
   }
 
 }

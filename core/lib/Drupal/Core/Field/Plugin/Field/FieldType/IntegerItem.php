@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'integer' entity field type.
@@ -31,15 +32,13 @@ class IntegerItem extends FieldItemBase {
   static $propertyDefinitions;
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
+   * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
 
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'integer',
-        'label' => t('Integer value'),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('integer')
+        ->setLabel(t('Integer value'));
     }
     return static::$propertyDefinitions;
   }

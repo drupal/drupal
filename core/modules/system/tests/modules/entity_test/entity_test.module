@@ -75,7 +75,7 @@ function entity_test_entity_info_alter(&$info) {
 function entity_test_entity_field_info_alter(&$info, $entity_type) {
   if ($entity_type == 'entity_test_mulrev' && ($names = \Drupal::state()->get('entity_test.field_definitions.translatable'))) {
     foreach ($names as $name => $value) {
-      $info['definitions'][$name]['translatable'] = $value;
+      $info['definitions'][$name]->setTranslatable($value);
     }
   }
 }

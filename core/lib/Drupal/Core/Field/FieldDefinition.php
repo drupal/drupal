@@ -8,27 +8,25 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\ListDefinition;
 
 /**
  * A class for defining entity fields.
  */
-class FieldDefinition implements FieldDefinitionInterface {
+class FieldDefinition extends ListDefinition implements FieldDefinitionInterface, \ArrayAccess {
 
   /**
-   * The array holding values for all definition keys.
+   * Creates a new field definition.
    *
-   * @var array
-   */
-  protected $definition = array();
-
-  /**
-   * Constructs a new FieldDefinition object.
+   * @param string $type
+   *   The type of the field.
    *
-   * @param array $definition
-   *   (optional) If given, a definition represented as array.
+   * @return \Drupal\Core\Field\FieldDefinition
+   *   A new field definition object.
    */
-  public function __construct(array $definition = array()) {
-    $this->definition = $definition;
+  public static function create($type) {
+    return new static(array(), DataDefinition::create('field_item:' . $type));
   }
 
   /**
@@ -44,7 +42,7 @@ class FieldDefinition implements FieldDefinitionInterface {
    * @param string $name
    *   The field name to set.
    *
-   * @return \Drupal\Core\Field\FieldDefinition
+   * @return self
    *   The object itself for chaining.
    */
   public function setFieldName($name) {
@@ -56,58 +54,63 @@ class FieldDefinition implements FieldDefinitionInterface {
    * {@inheritdoc}
    */
   public function getFieldType() {
+    $data_type = $this->getItemDefinition()->getDataType();
     // Cut of the leading field_item: prefix from 'field_item:FIELD_TYPE'.
-    $parts = explode(':', $this->definition['type']);
+    $parts = explode(':', $data_type);
     return $parts[1];
-  }
-
-  /**
-   * Sets the field type.
-   *
-   * @param string $type
-   *   The field type to set.
-   *
-   * @return \Drupal\Core\Field\FieldDefinition
-   *   The object itself for chaining.
-   */
-  public function setFieldType($type) {
-    $this->definition['type'] = 'field_item:' . $type;
-    return $this;
-  }
-
-  /**
-   * Sets a field setting.
-   *
-   * @param string $type
-   *   The field type to set.
-   *
-   * @return \Drupal\Core\Field\FieldDefinition
-   *   The object itself for chaining.
-   */
-  public function setFieldSetting($setting_name, $value) {
-    $this->definition['settings'][$setting_name] = $value;
-    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFieldSettings() {
-    return $this->definition['settings'];
+    return $this->getItemDefinition()->getSettings();
+  }
+
+  /**
+   * Sets field settings.
+   *
+   * @param array $settings
+   *   The value to set.
+   *
+   * @return self
+   *   The object itself for chaining.
+   */
+  public function setFieldSettings(array $settings) {
+    $this->getItemDefinition()->setSettings($settings);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFieldSetting($setting_name) {
-    return isset($this->definition['settings'][$setting_name]) ? $this->definition['settings'][$setting_name] : NULL;
+    $settings = $this->getFieldSettings();
+    return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
+  }
+
+  /**
+   * Sets a field setting.
+   *
+   * @param string $setting_name
+   *   The field setting to set.
+   * @param mixed $value
+   *   The value to set.
+   *
+   * @return self
+   *   The object itself for chaining.
+   */
+  public function setFieldSetting($setting_name, $value) {
+    $settings = $this->getFieldSettings();
+    $settings[$setting_name] = $value;
+    return $this->setFieldSettings($settings);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFieldPropertyNames() {
-    return array_keys(\Drupal::typedData()->create($this->definition['type'])->getPropertyDefinitions());
+    return array_keys(\Drupal::typedData()->create($this->getItemDefinition())->getPropertyDefinitions());
   }
 
   /**
@@ -123,7 +126,7 @@ class FieldDefinition implements FieldDefinitionInterface {
    * @param bool $translatable
    *   Whether the field is translatable.
    *
-   * @return \Drupal\Core\Field\FieldDefinition
+   * @return self
    *   The object itself for chaining.
    */
   public function setTranslatable($translatable) {
@@ -135,42 +138,28 @@ class FieldDefinition implements FieldDefinitionInterface {
    * {@inheritdoc}
    */
   public function getFieldLabel() {
-    return $this->definition['label'];
+    return $this->getLabel();
   }
 
   /**
-   * Sets the field label.
-   *
-   * @param string $label
-   *   The field label to set.
-   *
-   * @return \Drupal\Core\Field\FieldDefinition
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setFieldLabel($label) {
-    $this->definition['label'] = $label;
-    return $this;
+    return $this->setLabel($label);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFieldDescription() {
-    return $this->definition['description'];
+    return $this->getDescription();
   }
 
   /**
-   * Sets the field label.
-   *
-   * @param string $description
-   *   The field label to set.
-   *
-   * @return \Drupal\Core\Field\FieldDefinition
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setFieldDescription($description) {
-    $this->definition['description'] = $description;
-    return $this;
+    return $this->setDescription($description);
   }
 
   /**
@@ -185,7 +174,7 @@ class FieldDefinition implements FieldDefinitionInterface {
    * {@inheritdoc}
    */
   public function isFieldRequired() {
-    return !empty($this->definition['required']);
+    return $this->isRequired();
   }
 
   /**
@@ -200,13 +189,33 @@ class FieldDefinition implements FieldDefinitionInterface {
    * Sets whether the field is required.
    *
    * @param bool $required
-   *   TRUE if the field is required, FALSE otherwise.
+   *   Whether the field is required.
    *
-   * @return \Drupal\Core\Field\FieldDefinition
+   * @return self
    *   The object itself for chaining.
    */
   public function setFieldRequired($required) {
-    $this->definition['required'] = $required;
+    return $this->setRequired($required);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldQueryable() {
+    return isset($this->definition['queryable']) ? $this->definition['queryable'] : !$this->isComputed();
+  }
+
+  /**
+   * Sets whether the field is queryable.
+   *
+   * @param bool $queryable
+   *   Whether the field is queryable.
+   *
+   * @return self
+   *   The object itself for chaining.
+   */
+  public function setFieldQueryable($queryable) {
+    $this->definition['queryable'] = $queryable;
     return $this;
   }
 
@@ -218,11 +227,13 @@ class FieldDefinition implements FieldDefinitionInterface {
    * @param array $constraints
    *   The constraints to set.
    *
-   * @return \Drupal\Core\Field\FieldDefinition
+   * @return self
    *   The object itself for chaining.
    */
   public function setPropertyConstraints($name, array $constraints) {
-    $this->definition['item_definition']['constraints']['ComplexData'][$name] = $constraints;
+    $item_constraints = $this->getItemDefinition()->getConstraints();
+    $item_constraints['ComplexData'][$name] = $constraints;
+    $this->getItemDefinition()->setConstraints($item_constraints);
     return $this;
   }
 
@@ -240,4 +251,77 @@ class FieldDefinition implements FieldDefinitionInterface {
     return $this->getFieldSetting('default_value');
   }
 
+  /**
+   * Allows creating field definition objects from old style definition arrays.
+   *
+   * @todo: Remove once https://drupal.org/node/2112239 is in.
+   */
+  public static function createFromOldStyleDefinition(array $definition) {
+    unset($definition['list']);
+
+    // Separate the list item definition from the list definition.
+    $list_definition = $definition;
+    unset($list_definition['type']);
+
+    // Constraints, class and settings apply to the list item.
+    unset($list_definition['constraints']);
+    unset($list_definition['class']);
+    unset($list_definition['settings']);
+
+    $field_definition = new FieldDefinition($list_definition);
+    if (isset($definition['list_class'])) {
+      $field_definition->setClass($definition['list_class']);
+    }
+    else {
+      $type_definition = \Drupal::typedData()->getDefinition($definition['type']);
+      if (isset($type_definition['list_class'])) {
+        $field_definition->setClass($type_definition['list_class']);
+      }
+    }
+    if (isset($definition['translatable'])) {
+      $field_definition->setTranslatable($definition['translatable']);
+      unset($definition['translatable']);
+    }
+
+    // Take care of the item definition now.
+    // Required applies to the field definition only.
+    unset($definition['required']);
+    $item_definition = new DataDefinition($definition);
+    $field_definition->setItemDefinition($item_definition);
+    return $field_definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * This is for BC support only.
+   * @todo: Remove once https://drupal.org/node/2112239 is in.
+   */
+  public function &offsetGet($offset) {
+    if ($offset == 'type') {
+      // What previously was "type" is now the type of the list item.
+      $type = &$this->itemDefinition->offsetGet('type');
+      return $type;
+    }
+    if (!isset($this->definition[$offset])) {
+      $this->definition[$offset] = NULL;
+    }
+    return $this->definition[$offset];
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * This is for BC support only.
+   * @todo: Remove once https://drupal.org/node/2112239 is in.
+   */
+  public function offsetSet($offset, $value) {
+    if ($offset == 'type') {
+      // What previously was "type" is now the type of the list item.
+      $this->itemDefinition->setDataType($value);
+    }
+    else {
+      $this->definition[$offset] = $value;
+    }
+  }
 }

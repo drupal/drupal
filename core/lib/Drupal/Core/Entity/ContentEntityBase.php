@@ -399,7 +399,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       }
       // Non-translatable fields are always stored with
       // Language::LANGCODE_DEFAULT as key.
-      if ($langcode != Language::LANGCODE_DEFAULT && empty($definition['translatable'])) {
+      if ($langcode != Language::LANGCODE_DEFAULT && !$definition->isFieldTranslatable()) {
         if (!isset($this->fields[$property_name][Language::LANGCODE_DEFAULT])) {
           $this->fields[$property_name][Language::LANGCODE_DEFAULT] = $this->getTranslatedField($property_name, Language::LANGCODE_DEFAULT);
         }
@@ -437,7 +437,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function getProperties($include_computed = FALSE) {
     $properties = array();
     foreach ($this->getPropertyDefinitions() as $name => $definition) {
-      if ($include_computed || empty($definition['computed'])) {
+      if ($include_computed || !$definition->isComputed()) {
         $properties[$name] = $this->get($name);
       }
     }
@@ -710,7 +710,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $definitions = $translation->getPropertyDefinitions();
 
     foreach ($values as $name => $value) {
-      if (isset($definitions[$name]) && !empty($definitions[$name]['translatable'])) {
+      if (isset($definitions[$name]) && $definitions[$name]->isFieldTranslatable()) {
         $translation->$name = $value;
       }
     }
@@ -724,7 +724,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function removeTranslation($langcode) {
     if (isset($this->translations[$langcode]) && $langcode != Language::LANGCODE_DEFAULT && $langcode != $this->getDefaultLanguage()->id) {
       foreach ($this->getPropertyDefinitions() as $name => $definition) {
-        if (!empty($definition['translatable'])) {
+        if ($definition->isFieldTranslatable()) {
           unset($this->values[$name][$langcode]);
           unset($this->fields[$name][$langcode]);
         }
@@ -779,7 +779,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       return;
     }
     foreach ($this->getPropertyDefinitions() as $name => $definition) {
-      if (empty($definition['computed']) && !empty($this->fields[$name])) {
+      if (!$definition->isComputed() && !empty($this->fields[$name])) {
         foreach ($this->fields[$name] as $langcode => $field) {
           $field->filterEmptyValues();
           $this->values[$name][$langcode] = $field->getValue();
@@ -911,7 +911,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         // object keyed by language. To avoid creating different field objects
         // we retain just the original value, as references will be recreated
         // later as needed.
-        if (empty($definitions[$name]['translatable']) && count($values) > 1) {
+        if (!$definitions[$name]->isFieldTranslatable() && count($values) > 1) {
           $values = array_intersect_key($values, array(Language::LANGCODE_DEFAULT => TRUE));
         }
         foreach ($values as $langcode => $items) {

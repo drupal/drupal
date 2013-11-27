@@ -26,6 +26,34 @@ class FieldDefinitionTest extends UnitTestCase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Prepare a container with a mock typed data object, that returns no
+    // type definitions.
+    // @todo: Overhaul how field definitions deal with dependencies and improve
+    // unit tests. See https://drupal.org/node/2143555.
+    $typed_data = $this->getMockBuilder('Drupal\Core\TypedData\TypedDataManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $typed_data
+      ->expects($this->any())
+      ->method('getDefinition')
+      ->will($this->returnValue(NULL));
+
+    $container = $this->getMock('Drupal\Core\DependencyInjection\Container');
+    $container
+      ->expects($this->any())
+      ->method('get')
+      ->will($this->returnValue($typed_data));
+
+    \Drupal::setContainer($container);
+  }
+
+  /**
    * Tests field name methods.
    */
   public function testFieldName() {
@@ -59,10 +87,9 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field type methods.
    */
   public function testFieldType() {
-    $definition = new FieldDefinition();
-    $field_name = $this->randomName();
-    $definition->setFieldType($field_name);
-    $this->assertEquals($field_name, $definition->getFieldType());
+    $field_type = $this->randomName();
+    $definition = FieldDefinition::create($field_type);
+    $this->assertEquals($field_type, $definition->getFieldType());
   }
 
   /**

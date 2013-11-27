@@ -9,20 +9,16 @@ namespace Drupal\Core\Field;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\Core\TypedData\ItemList;
+use Drupal\Core\TypedData\Plugin\DataType\ItemList;
 use Drupal\Core\Language\Language;
 
 /**
  * Represents an entity field; that is, a list of field item objects.
  *
- * An entity field is a list of field items, which contain only primitive
- * properties or entity references. Note that even single-valued entity
- * fields are represented as list of items, however for easy access to the
- * contained item the entity field delegates __get() and __set() calls
- * directly to the first item.
- *
- * Supported settings (below the definition's 'settings' key) are:
- * - default_value: (optional) If set, the default value to apply to the field.
+ * An entity field is a list of field items, each containing a set of
+ * properties. Note that even single-valued entity fields are represented as
+ * list of field items, however for easy access to the contained item the entity
+ * field delegates __get() and __set() calls directly to the first item.
  */
 class FieldItemList extends ItemList implements FieldItemListInterface {
 
@@ -42,11 +38,10 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   protected $langcode = Language::LANGCODE_DEFAULT;
 
   /**
-   * Overrides TypedData::__construct().
+   * {@inheritdoc}
    */
-  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
-    $this->definition['field_name'] = $name;
     // Always initialize one empty item as most times a value for at least one
     // item will be present. That way prototypes created by
     // \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance() will
@@ -79,7 +74,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function getFieldDefinition() {
-    return new FieldDefinition($this->definition);
+    return $this->definition;
   }
 
   /**
@@ -108,7 +103,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\TypedData\ItemList::setValue().
+   * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
     if (!isset($values) || $values === array()) {
@@ -213,10 +208,8 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    // @todo Remove getDefaultValue() and directly call
-    // FieldDefinition::getFieldDefaultValue() here, once
-    // https://drupal.org/node/2047229 is fixed.
     $value = $this->getDefaultValue();
+
     // NULL or array() mean "no default value", but  0, '0' and the empty string
     // are valid default values.
     if (!isset($value) || (is_array($value) && empty($value))) {
@@ -236,24 +229,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    *   The default value for the field.
    */
   protected function getDefaultValue() {
-    if (isset($this->definition['settings']['default_value'])) {
-      return $this->definition['settings']['default_value'];
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConstraints() {
-    // Constraints usually apply to the field item, but required does make
-    // sense on the field only. So we special-case it to apply to the field for
-    // now.
-    // @todo: Separate list and list item definitions to separate constraints.
-    $constraints = array();
-    if (!empty($this->definition['required'])) {
-      $constraints[] = \Drupal::typedData()->getValidationConstraintManager()->create('NotNull', array());
-    }
-    return $constraints;
+    return $this->getFieldDefinition()->getFieldDefaultValue($this->getEntity());
   }
 
   /**

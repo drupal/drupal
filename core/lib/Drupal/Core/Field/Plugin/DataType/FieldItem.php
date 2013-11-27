@@ -2,13 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\FieldItem.
+ * Contains \Drupal\Core\Field\Plugin\DataType\FieldItem.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Field\Plugin\DataType;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the base plugin for deriving data types for field types.
@@ -20,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "field_item",
  *   label = @Translation("Field item"),
  *   list_class = "\Drupal\Core\Field\FieldItemList",
- *   derivative = "Drupal\Core\Entity\Plugin\DataType\Deriver\FieldItemDeriver"
+ *   derivative = "Drupal\Core\Field\Plugin\DataType\Deriver\FieldItemDeriver"
  * )
  */
 abstract class FieldItem {

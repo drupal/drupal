@@ -11,7 +11,9 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -200,67 +202,55 @@ class Term extends ContentEntityBase implements TermInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['tid'] = array(
-      'label' => t('Term ID'),
-      'description' => t('The term ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['uuid'] = array(
-      'label' => t('UUID'),
-      'description' => t('The term UUID.'),
-      'type' => 'uuid_field',
-      'read-only' => TRUE,
-    );
-    $properties['vid'] = array(
-      'label' => t('Vocabulary ID'),
-      'description' => t('The ID of the vocabulary to which the term is assigned.'),
-      'type' => 'string_field',
-    );
-    $properties['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The term language code.'),
-      'type' => 'language_field',
-    );
-    $properties['name'] = array(
-      'label' => t('Name'),
-      'description' => t('The term name.'),
-      'type' => 'string_field',
-    );
-    $properties['description'] = array(
-      'label' => t('Description'),
-      'description' => t('A description of the term'),
-      'type' => 'string_field',
-    );
+    $fields['tid'] = FieldDefinition::create('integer')
+      ->setLabel(t('Term ID'))
+      ->setDescription(t('The term ID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The term UUID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['vid'] = FieldDefinition::create('string')
+      ->setLabel(t('Vocabulary ID'))
+      ->setDescription(t('The ID of the vocabulary to which the term is assigned.'));
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The term language code.'));
+
+    $fields['name'] = FieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDescription(t('The term name.'));
+
+    $fields['description'] = FieldDefinition::create('string')
+      ->setLabel(t('Description'))
+      ->setDescription(t('A description of the term.'));
+
     // @todo Combine with description.
-    $properties['format'] = array(
-      'label' => t('Description format'),
-      'description' => t('The filter format ID of the description.'),
-      'type' => 'string_field',
-    );
-    $properties['weight'] = array(
-      'label' => t('Weight'),
-      'description' => t('The weight of this term in relation to other terms.'),
-      'type' => 'integer_field',
-      'settings' => array('default_value' => 0),
-    );
-    $properties['parent'] = array(
-      'label' => t('Term Parents'),
-      'description' => t('The parents of this term.'),
-      'type' => 'integer_field',
+    $fields['format'] = FieldDefinition::create('string')
+      ->setLabel(t('Description format'))
+      ->setDescription(t('The filter format ID of the description.'));
+
+    $fields['weight'] = FieldDefinition::create('integer')
+      ->setLabel(t('Weight'))
+      ->setDescription(t('The weight of this term in relation to other terms.'))
+      ->setFieldSetting('default_value', 0);
+
+    $fields['parent'] = FieldDefinition::create('integer')
+      ->setLabel(t('Term Parents'))
+      ->setDescription(t('The parents of this term.'))
       // Save new terms with no parents by default.
-      'settings' => array('default_value' => 0),
-      'computed' => TRUE,
-    );
-    $properties['changed'] = array(
-      'label' => t('Changed'),
-      'description' => t('The time that the term was last edited.'),
-      'type' => 'integer_field',
-      'property_constraints' => array(
-        'value' => array('EntityChanged' => array()),
-      ),
-    );
-    return $properties;
+      ->setFieldSetting('default_value', 0)
+      ->setComputed(TRUE);
+
+    $fields['changed'] = FieldDefinition::create('integer')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the term was last edited.'))
+      ->setPropertyConstraints('value', array('EntityChanged' => array()));
+
+    return $fields;
   }
 
   /**

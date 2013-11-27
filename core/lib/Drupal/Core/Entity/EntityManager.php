@@ -10,6 +10,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
@@ -333,6 +334,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         $this->entityFieldInfo[$entity_type] = $cache->data;
       }
       else {
+        // @todo: Refactor to allow for per-bundle overrides.
+        // See https://drupal.org/node/2114707.
         $class = $this->factory->getPluginClass($entity_type, $this->getDefinition($entity_type));
 
         $base_definitions = $class::baseFieldDefinitions($entity_type);
@@ -357,22 +360,31 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         $result = $this->moduleHandler->invokeAll('entity_field_info', array($entity_type));
         $this->entityFieldInfo[$entity_type] = NestedArray::mergeDeep($this->entityFieldInfo[$entity_type], $result);
 
+        // Enforce field definitions to be objects.
+        foreach (array('definitions', 'optional') as $key) {
+          foreach ($this->entityFieldInfo[$entity_type][$key] as $field_name => &$definition) {
+            if (is_array($definition)) {
+              $definition = FieldDefinition::createFromOldStyleDefinition($definition);
+            }
+            // Automatically set the field name for non-configurable fields.
+            if ($definition instanceof FieldDefinition) {
+              $definition->setFieldName($field_name);
+            }
+          }
+        }
+
+        // Invoke alter hooks.
         $hooks = array('entity_field_info', $entity_type . '_field_info');
         $this->moduleHandler->alter($hooks, $this->entityFieldInfo[$entity_type], $entity_type);
 
-        // Enforce fields to be multiple and untranslatable by default.
+        // Ensure all basic fields are not defined as translatable.
         $entity_info = $this->getDefinition($entity_type);
         $keys = array_intersect_key(array_filter($entity_info['entity_keys']), array_flip(array('id', 'revision', 'uuid', 'bundle')));
         $untranslatable_fields = array_flip(array('langcode') + $keys);
         foreach (array('definitions', 'optional') as $key) {
-          foreach ($this->entityFieldInfo[$entity_type][$key] as $name => &$definition) {
-            $definition['list'] = TRUE;
-            // Ensure ids and langcode fields are never made translatable.
-            if (isset($untranslatable_fields[$name]) && !empty($definition['translatable'])) {
-              throw new \LogicException(format_string('The @field field cannot be translatable.', array('@field' => $definition['label'])));
-            }
-            if (!isset($definition['translatable'])) {
-              $definition['translatable'] = FALSE;
+          foreach ($this->entityFieldInfo[$entity_type][$key] as $field_name => &$definition) {
+            if (isset($untranslatable_fields[$field_name]) && $definition->isFieldTranslatable()) {
+              throw new \LogicException(format_string('The @field field cannot be translatable.', array('@field' => $definition->getFieldLabel())));
             }
           }
         }

@@ -9,8 +9,7 @@ namespace Drupal\serialization\Tests\Normalizer;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\Normalizer\ListNormalizer;
-use Drupal\Core\TypedData\ItemList;
-use Drupal\Core\TypedData\Plugin\DataType\Integer;
+use Drupal\Core\TypedData\Plugin\DataType\ItemList;
 
 /**
  * Tests the ListNormalizer class.

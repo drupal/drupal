@@ -42,14 +42,20 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
   /**
    * Defines the base fields of the entity type.
    *
+   * Implementations typically use the class \Drupal\Core\Field\FieldDefinition
+   * for creating the field definitions; for example a 'name' field could be
+   * defined as the following:
+   * @code
+   * $fields['name'] = FieldDefinition::create('string')
+   *   ->setLabel(t('Name'));
+   * @endcode
+   *
    * @param string $entity_type
    *   The entity type to return properties for. Useful when a single class is
    *   used for multiple, possibly dynamic entity types.
    *
-   * @return array
-   *   An array of entity field definitions as specified by
-   *   \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions(), keyed by field
-   *   name.
+   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   *   An array of entity field definitions, keyed by field name.
    *
    * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
    */

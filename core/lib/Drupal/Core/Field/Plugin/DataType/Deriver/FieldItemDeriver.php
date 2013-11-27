@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\Deriver\FieldItemDeriver.
+ * Contains \Drupal\Core\Field\Plugin\DataType\Deriver\FieldItemDeriver.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType\Deriver;
+namespace Drupal\Core\Field\Plugin\DataType\Deriver;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
