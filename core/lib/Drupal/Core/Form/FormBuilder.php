@@ -843,6 +843,12 @@ class FormBuilder implements FormBuilderInterface {
 
         // Setting this error will cause the form to fail validation.
         $this->setErrorByName('form_token', $form_state, $this->t('The form has become outdated. Copy any unsaved work in the form below and then <a href="@link">reload this page</a>.', array('@link' => $url)));
+
+        // Stop here and don't run any further validation handlers, because they
+        // could invoke non-safe operations which opens the door for CSRF
+        // vulnerabilities.
+        $this->validatedForms[$form_id] = TRUE;
+        return;
       }
     }
 

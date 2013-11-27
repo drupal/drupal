@@ -110,6 +110,9 @@ class FormTest extends WebTestBase {
           $form_state['input'][$element] = $empty;
           $form_state['input']['form_id'] = $form_id;
           $form_state['method'] = 'post';
+          // The form token CSRF protection should not interfere with this test,
+          // so we bypass it by marking this test form as programmed.
+          $form_state['programmed'] = TRUE;
           drupal_prepare_form($form_id, $form, $form_state);
           drupal_process_form($form_id, $form, $form_state);
           $errors = form_get_errors($form_state);

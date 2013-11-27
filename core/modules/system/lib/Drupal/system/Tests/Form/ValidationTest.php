@@ -65,6 +65,18 @@ class ValidationTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), 'Save');
     $this->assertNoFieldByName('name', 'Form element was hidden.');
     $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
+
+    // Verify that #validate handlers don't run if the CSRF token is invalid.
+    $this->drupalLogin($this->drupalCreateUser());
+    $this->drupalGet('form-test/validate');
+    $edit = array(
+      'name' => 'validate',
+      'form_token' => 'invalid token'
+    );
+    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->assertNoFieldByName('name', '#value changed by #validate', 'Form element #value was not altered.');
+    $this->assertNoText('Name value: value changed by form_set_value() in #validate', 'Form element value in $form_state was not altered.');
+    $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
   }
 
   /**
