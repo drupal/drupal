@@ -81,7 +81,11 @@ class Crypt {
    *   any = padding characters removed.
    */
   public static function hmacBase64($data, $key) {
-    $hmac = base64_encode(hash_hmac('sha256', $data, $key, TRUE));
+    // Casting $data and $key to strings here is necessary to avoid empty string
+    // results of the hash function if they are not scalar values. As this
+    // function is used in security-critical contexts like token validation it is
+    // important that it never returns an empty string.
+    $hmac = base64_encode(hash_hmac('sha256', (string) $data, (string) $key, TRUE));
     // Modify the hmac so it's safe to use in URLs.
     return strtr($hmac, array('+' => '-', '/' => '_', '=' => ''));
   }

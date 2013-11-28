@@ -84,7 +84,7 @@ class CsrfTokenGenerator {
    *   is TRUE, the return value will always be TRUE for anonymous users.
    */
   public function validate($token, $value = '', $skip_anonymous = FALSE) {
-    return ($skip_anonymous && $this->currentUser->isAnonymous()) || ($token == $this->get($value));
+    return ($skip_anonymous && $this->currentUser->isAnonymous()) || ($token === $this->get($value));
   }
 
 }
