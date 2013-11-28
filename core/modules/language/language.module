@@ -216,18 +216,17 @@ function language_element_info() {
  *   An array containing the default options.
  */
 function language_configuration_element_default_options() {
-  $language_options = array();
+  $language_options = array(
+    'site_default' => t("Site's default language (!language)", array('!language' => language_default()->name)),
+    'current_interface' => t('Current interface language'),
+    'authors_default' => t("Author's preferred language"),
+  );
 
   $languages = language_list(Language::STATE_ALL);
   foreach ($languages as $langcode => $language) {
     $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
   }
 
-  $language_options += array(
-    'site_default' => t("Site's default language (!language)", array('!language' => language_default()->name)),
-    'current_interface' => t('Current interface language'),
-    'authors_default' => t("Author's preferred language"),
-  );
   return $language_options;
 }
 
