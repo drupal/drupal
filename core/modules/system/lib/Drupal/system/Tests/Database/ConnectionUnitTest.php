@@ -41,7 +41,7 @@ class ConnectionUnitTest extends UnitTestBase {
     // @todo Make this test driver-agnostic, or find a proper way to skip it.
     // @see http://drupal.org/node/1273478
     $connection_info = Database::getConnectionInfo('default');
-    $this->skipTest = (bool) $connection_info['default']['driver'] != 'mysql';
+    $this->skipTest = (bool) ($connection_info['default']['driver'] != 'mysql');
     if ($this->skipTest) {
       // Insert an assertion to prevent Simpletest from interpreting the test
       // as failure.
