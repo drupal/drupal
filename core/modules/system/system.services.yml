@@ -6,10 +6,6 @@ services:
   system.manager:
     class: Drupal\system\SystemManager
     arguments: ['@module_handler', '@database', '@entity.manager']
-  system.breadcrumb.legacy:
-    class: Drupal\system\LegacyBreadcrumbBuilder
-    tags:
-      - {name: breadcrumb_builder, priority: 500}
   system.breadcrumb.default:
     class: Drupal\system\PathBasedBreadcrumbBuilder
     arguments: ['@request', '@entity.manager', '@access_manager', '@router', '@path_processor_manager', '@config.factory',  '@title_resolver']
