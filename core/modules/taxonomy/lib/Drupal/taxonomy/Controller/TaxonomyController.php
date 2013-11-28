@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\VocabularyInterface;
@@ -40,6 +41,19 @@ class TaxonomyController extends ControllerBase {
   public function termPage(TermInterface $taxonomy_term) {
     module_load_include('pages.inc', 'taxonomy');
     return taxonomy_term_page($taxonomy_term);
+  }
+
+  /**
+   * Route title callback.
+   *
+   * @param \Drupal\taxonomy\TermInterface $taxonomy_term
+   *   The taxonomy term.
+   *
+   * @return string
+   *   The term label.
+   */
+  public function termTitle(TermInterface $taxonomy_term) {
+    return Xss::filter($taxonomy_term->label());
   }
 
   /**

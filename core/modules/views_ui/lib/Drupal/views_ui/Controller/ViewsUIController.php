@@ -250,7 +250,7 @@ class ViewsUIController implements ContainerInjectionInterface {
     if (isset($data['table']['base']['title'])) {
       $name .= ' (' . $data['table']['base']['title'] . ')';
     }
-    drupal_set_title($name);
+    $build['#title'] = $name;
 
     $build['edit'] = $this->entityManager->getForm($view, 'edit', array('display_id' => $display_id));
     $build['preview'] = $this->entityManager->getForm($view, 'preview', array('display_id' => $display_id));

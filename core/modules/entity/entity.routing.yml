@@ -2,6 +2,7 @@ entity.display_mode:
   path: '/admin/structure/display-modes'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Display modes'
   requirements:
     _permission: 'administer display modes'
 
@@ -9,6 +10,7 @@ entity.view_mode_list:
   path: '/admin/structure/display-modes/view'
   defaults:
     _entity_list: 'view_mode'
+    _title: 'View modes'
   requirements:
     _permission: 'administer display modes'
 
@@ -24,6 +26,7 @@ entity.view_mode_add_type:
   path: '/admin/structure/display-modes/view/add/{entity_type}'
   defaults:
     _entity_form: 'view_mode.add'
+    _title: 'Add view mode'
   requirements:
     _permission: 'administer display modes'
 
@@ -31,6 +34,7 @@ entity.view_mode_edit:
   path: '/admin/structure/display-modes/view/manage/{view_mode}'
   defaults:
     _entity_form: 'view_mode.edit'
+    _title: 'Edit view mode'
   requirements:
     _entity_access: 'view_mode.update'
 
@@ -38,6 +42,7 @@ entity.view_mode_delete:
   path: '/admin/structure/display-modes/view/manage/{view_mode}/delete'
   defaults:
     _entity_form: 'view_mode.delete'
+    _title: 'Delete view mode'
   requirements:
     _entity_access: 'view_mode.delete'
 
@@ -45,6 +50,7 @@ entity.form_mode_list:
   path: '/admin/structure/display-modes/form'
   defaults:
     _entity_list: 'form_mode'
+    _title: 'Form modes'
   requirements:
     _permission: 'administer display modes'
 
@@ -60,6 +66,7 @@ entity.form_mode_add_type:
   path: '/admin/structure/display-modes/form/add/{entity_type}'
   defaults:
     _entity_form: 'form_mode.add'
+    _title: 'Add form mode'
   requirements:
     _permission: 'administer display modes'
 
@@ -67,6 +74,7 @@ entity.form_mode_edit:
   path: '/admin/structure/display-modes/form/manage/{form_mode}'
   defaults:
     _entity_form: 'form_mode.edit'
+    _title: 'Edit form mode'
   requirements:
     _entity_access: 'form_mode.update'
 
@@ -74,5 +82,6 @@ entity.form_mode_delete:
   path: '/admin/structure/display-modes/form/manage/{form_mode}/delete'
   defaults:
     _entity_form: 'form_mode.delete'
+    _title: 'Delete form mode'
   requirements:
     _entity_access: 'form_mode.delete'

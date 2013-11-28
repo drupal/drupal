@@ -10,6 +10,7 @@ contact.category_list:
   path: '/admin/structure/contact'
   defaults:
     _entity_list: 'contact_category'
+    _title: 'Contact form categories'
   requirements:
     _permission: 'administer contact forms'
 
@@ -25,6 +26,7 @@ contact.category_edit:
   path: '/admin/structure/contact/manage/{contact_category}'
   defaults:
     _entity_form: contact_category.edit
+    _title: 'Edit contact category'
   requirements:
     _entity_access: contact_category.update
 

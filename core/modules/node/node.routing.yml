@@ -74,6 +74,7 @@ node.revision_revert_confirm:
   path: '/node/{node}/revisions/{node_revision}/revert'
   defaults:
     _form: '\Drupal\node\Form\NodeRevisionRevertForm'
+    _title: 'Revert to earlier revision'
   requirements:
     _access_node_revision: 'update'
 
@@ -81,6 +82,7 @@ node.revision_delete_confirm:
   path: '/node/{node}/revisions/{node_revision}/delete'
   defaults:
     _form: '\Drupal\node\Form\NodeRevisionDeleteForm'
+    _title: 'Delete earlier revision'
   requirements:
     _access_node_revision: 'delete'
 
@@ -97,6 +99,7 @@ node.type_add:
   path: '/admin/structure/types/add'
   defaults:
     _entity_form: 'node_type.add'
+    _title: 'Add content type'
   requirements:
     _permission: 'administer content types'
 

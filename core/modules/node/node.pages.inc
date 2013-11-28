@@ -182,7 +182,7 @@ function theme_node_preview($variables) {
  * @deprecated Use \Drupal\node\Controller\NodeController::revisionOverview()
  */
 function node_revision_overview($node) {
-  drupal_set_title(t('Revisions for %title', array('%title' => $node->label())), PASS_THROUGH);
+  $build['#title'] = t('Revisions for %title', array('%title' => $node->label()));
 
   $header = array(t('Revision'), t('Operations'));
 

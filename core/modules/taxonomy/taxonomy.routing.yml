@@ -10,6 +10,7 @@ taxonomy.term_add:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
   defaults:
     _content: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
+    _title: 'Add term'
   requirements:
     _entity_create_access: 'taxonomy_term:{taxonomy_vocabulary}'
 
@@ -17,6 +18,7 @@ taxonomy.term_edit:
   path: '/taxonomy/term/{taxonomy_term}/edit'
   defaults:
     _entity_form: 'taxonomy_term.default'
+    _title: 'Edit term'
   requirements:
     _entity_access: 'taxonomy_term.update'
 
@@ -24,6 +26,7 @@ taxonomy.term_delete:
   path: '/taxonomy/term/{taxonomy_term}/delete'
   defaults:
     _entity_form: 'taxonomy_term.delete'
+    _title: 'Delete term'
   requirements:
     _entity_access: 'taxonomy_term.delete'
 
@@ -31,6 +34,7 @@ taxonomy.vocabulary_add:
   path: '/admin/structure/taxonomy/add'
   defaults:
     _entity_form: 'taxonomy_vocabulary'
+    _title: 'Add vocabulary'
   requirements:
     _entity_create_access: 'taxonomy_vocabulary'
 
@@ -38,6 +42,7 @@ taxonomy.vocabulary_edit:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/edit'
   defaults:
     _entity_form: 'taxonomy_vocabulary.default'
+    _title: 'Edit vocabulary'
   requirements:
     _entity_access: 'taxonomy_vocabulary.update'
 
@@ -45,6 +50,7 @@ taxonomy.vocabulary_delete:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
   defaults:
     _entity_form: 'taxonomy_vocabulary.delete'
+    _title: 'Delete vocabulary'
   requirements:
     _entity_access: 'taxonomy_vocabulary.delete'
 
@@ -80,6 +86,8 @@ taxonomy.term_page:
   path: '/taxonomy/term/{taxonomy_term}'
   defaults:
     _content: '\Drupal\taxonomy\Controller\TaxonomyController::termPage'
+    _title: 'Taxonomy term'
+    _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
   requirements:
     _entity_access: 'taxonomy_term.view'
 
@@ -87,5 +95,7 @@ taxonomy.term_feed:
   path: '/taxonomy/term/{taxonomy_term}/feed'
   defaults:
     _content: '\Drupal\taxonomy\Controller\TaxonomyController::termFeed'
+    _title: 'Taxonomy term'
+    _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
   requirements:
     _entity_access: 'taxonomy_term.view'

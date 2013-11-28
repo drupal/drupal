@@ -31,6 +31,7 @@ user.admin_index:
   path: '/admin/config/people'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'People'
   requirements:
     _permission: 'access administration pages'
 
@@ -38,6 +39,7 @@ user.account_settings:
   path: '/admin/config/people/accounts'
   defaults:
     _form: '\Drupal\user\AccountSettingsForm'
+    _title: 'Account settings'
   requirements:
     _permission: 'administer account settings'
 
@@ -45,6 +47,7 @@ user.admin_account:
   path: '/admin/people'
   defaults:
     _entity_list: 'user'
+    _title: 'People'
   requirements:
     _permission: 'administer users'
 
@@ -52,6 +55,7 @@ user.admin_create:
   path: '/admin/people/create'
   defaults:
     _entity_form: 'user.register'
+    _title: 'Add user'
   requirements:
     _permission: 'administer users'
 
@@ -59,6 +63,7 @@ user.admin_permissions:
   path: '/admin/people/permissions'
   defaults:
     _form: '\Drupal\user\Form\UserPermissionsForm'
+    _title: 'Permissions'
   requirements:
     _permission: 'administer permissions'
 
@@ -66,6 +71,7 @@ user.admin_permission:
   path: '/admin/people/permissions/{role_id}'
   defaults:
     _form: '\Drupal\user\Form\UserPermissionsRoleSpecificForm'
+    _title: 'Edit role'
   requirements:
     _permission: 'administer permissions'
 
@@ -81,6 +87,7 @@ user.role_list:
   path: '/admin/people/roles'
   defaults:
     _entity_list: 'user_role'
+    _title: 'Roles'
   requirements:
     _permission: 'administer permissions'
 
@@ -88,6 +95,7 @@ user.role_add:
   path: '/admin/people/roles/add'
   defaults:
     _entity_form: user_role.default
+    _title: 'Add role'
   requirements:
     _permission: 'administer permissions'
 
@@ -102,6 +110,7 @@ user.role_delete:
   path: '/admin/people/roles/manage/{user_role}/delete'
   defaults:
     _entity_form: user_role.delete
+    _title: 'Edit role'
   requirements:
     _entity_access: user_role.delete
 
@@ -117,6 +126,7 @@ user.page:
   path: '/user'
   defaults:
     _content: '\Drupal\user\Controller\UserController::userPage'
+    _title: 'Log in'
   requirements:
     _access: 'TRUE'
 
@@ -140,6 +150,7 @@ user.edit:
   path: '/user/{user}/edit'
   defaults:
     _entity_form: 'user.default'
+    _title_callback: 'Drupal\user\Controller\UserController::userTitle'
   requirements:
     _entity_access: 'user.update'
 

@@ -2,6 +2,7 @@ dblog.overview:
   path: '/admin/reports/dblog'
   defaults:
     _content: '\Drupal\dblog\Controller\DbLogController::overview'
+    _title: 'Recent log messages'
   requirements:
     _permission: 'access site reports'
 
@@ -9,6 +10,7 @@ dblog.event:
   path: '/admin/reports/event/{event_id}'
   defaults:
     _content: '\Drupal\dblog\Controller\DbLogController::eventDetails'
+    _title: 'Details'
   requirements:
     _permission: 'access site reports'
 

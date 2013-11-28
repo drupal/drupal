@@ -119,13 +119,9 @@ function aggregator_menu() {
     'route_name' => 'aggregator.categories',
   );
   $items['aggregator/categories/%aggregator_category'] = array(
-    'title callback' => '_aggregator_category_title',
-    'title arguments' => array(2),
     'route_name' => 'aggregator.category_view',
   );
   $items['aggregator/sources/%aggregator_feed'] = array(
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(2),
     'route_name' => 'aggregator.feed_view',
   );
   $items['admin/config/services/aggregator/edit/feed/%aggregator_feed'] = array(
@@ -146,19 +142,6 @@ function aggregator_menu() {
   );
 
   return $items;
-}
-
-/**
- * Title callback: Returns a title for aggregator category pages.
- *
- * @param $category
- *   An aggregator category.
- *
- * @return
- *   A string with the aggregator category title.
- */
-function _aggregator_category_title($category) {
-  return $category->title;
 }
 
 /**

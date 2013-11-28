@@ -127,6 +127,7 @@ system.site_information_settings:
   path: '/admin/config/system/site-information'
   defaults:
     _form: 'Drupal\system\Form\SiteInformationForm'
+    _title: 'Site information'
   requirements:
     _permission: 'administer site configuration'
 
@@ -134,6 +135,7 @@ system.cron_settings:
   path: '/admin/config/system/cron'
   defaults:
     _form: 'Drupal\system\Form\CronForm'
+    _title: 'Cron'
   requirements:
     _permission: 'administer site configuration'
 
@@ -141,6 +143,7 @@ system.logging_settings:
   path: '/admin/config/development/logging'
   defaults:
     _form: 'Drupal\system\Form\LoggingForm'
+    _title: 'Logging and errors'
   requirements:
     _permission: 'administer site configuration'
 
@@ -148,6 +151,7 @@ system.performance_settings:
   path: '/admin/config/development/performance'
   defaults:
     _form: 'Drupal\system\Form\PerformanceForm'
+    _title: 'Performance'
   requirements:
     _permission: 'administer site configuration'
 
@@ -155,6 +159,7 @@ system.file_system_settings:
   path: '/admin/config/media/file-system'
   defaults:
     _form: 'Drupal\system\Form\FileSystemForm'
+    _title: 'File system'
   requirements:
     _permission: 'administer site configuration'
 
@@ -162,6 +167,7 @@ system.rss_feeds_settings:
   path: '/admin/config/services/rss-publishing'
   defaults:
     _form: 'Drupal\system\Form\RssFeedsForm'
+    _title: 'RSS publishing'
   requirements:
     _permission: 'administer site configuration'
 
@@ -169,6 +175,7 @@ system.regional_settings:
   path: '/admin/config/regional/settings'
   defaults:
     _form: 'Drupal\system\Form\RegionalForm'
+    _title: 'Regional settings'
   requirements:
     _permission: 'administer site configuration'
 
@@ -176,6 +183,7 @@ system.image_toolkit_settings:
   path: '/admin/config/media/image-toolkit'
   defaults:
     _form: 'Drupal\system\Form\ImageToolkitForm'
+    _title: 'Image toolkit'
   requirements:
     _permission: 'administer administration pages'
 
@@ -183,6 +191,7 @@ system.site_maintenance_mode:
   path: '/admin/config/development/maintenance'
   defaults:
     _form: 'Drupal\system\Form\SiteMaintenanceModeForm'
+    _title: 'Maintenance mode'
   requirements:
     _permission: 'administer site configuration'
 
@@ -197,6 +206,7 @@ system.date_format_list:
   path: '/admin/config/regional/date-time'
   defaults:
     _entity_list: 'date_format'
+    _title: 'Date and time formats'
   requirements:
     _permission: 'administer site configuration'
 
@@ -204,6 +214,7 @@ system.date_format_add:
   path: '/admin/config/regional/date-time/formats/add'
   defaults:
     _entity_form: 'date_format.add'
+    _title: 'Add date format'
   requirements:
     _permission: 'administer site configuration'
 
@@ -211,6 +222,7 @@ system.date_format_edit:
   path: '/admin/config/regional/date-time/formats/manage/{date_format}'
   defaults:
     _entity_form: 'date_format.edit'
+    _title: 'Edit date format'
   requirements:
     _entity_access: 'date_format.update'
 
@@ -235,6 +247,7 @@ system.modules_list_confirm:
   path: '/admin/modules/list/confirm'
   defaults:
     _form: 'Drupal\system\Form\ModulesListConfirmForm'
+    _title: 'Some required modules must be enabled'
   requirements:
     _permission: 'administer modules'
 
@@ -256,6 +269,7 @@ system.status:
   path: '/admin/reports/status'
   defaults:
     _controller: 'Drupal\system\Controller\SystemInfoController::status'
+    _title: 'Status report'
   requirements:
     _permission: 'administer site configuration'
 
@@ -309,6 +323,7 @@ system.theme_settings:
   path: '/admin/appearance/settings'
   defaults:
     _form: '\Drupal\system\Form\ThemeSettingsForm'
+    _title: 'Settings'
   requirements:
     _permission: 'administer themes'
 
@@ -335,6 +350,7 @@ system.modules_uninstall_confirm:
   path: '/admin/modules/uninstall/confirm'
   defaults:
     _form: 'Drupal\system\Form\ModulesUninstallConfirmForm'
+    _title: 'Confirm uninstall'
   requirements:
     _permission: 'administer modules'
 

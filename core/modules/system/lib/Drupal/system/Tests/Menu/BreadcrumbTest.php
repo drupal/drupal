@@ -322,8 +322,7 @@ class BreadcrumbTest extends MenuTestBase {
     ));
     $this->drupalLogin($this->web_user);
 
-    // Verify correct breadcrumb and page title on another user's account pages
-    // (without menu link).
+    // Verify correct breadcrumb and page title on another user's account pages.
     $trail = $home;
     $this->assertBreadcrumb('user/' . $this->admin_user->id(), $trail, $this->admin_user->getUsername());
     $trail += array(
@@ -331,8 +330,7 @@ class BreadcrumbTest extends MenuTestBase {
     );
     $this->assertBreadcrumb('user/' . $this->admin_user->id() . '/edit', $trail, $this->admin_user->getUsername());
 
-    // Verify correct breadcrumb and page title when viewing own user account
-    // pages (without menu link).
+    // Verify correct breadcrumb and page title when viewing own user account.
     $trail = $home;
     $this->assertBreadcrumb('user/' . $this->web_user->id(), $trail, $this->web_user->getUsername());
     $trail += array(
@@ -342,38 +340,6 @@ class BreadcrumbTest extends MenuTestBase {
       'user' => t('My account'),
     );
     $this->assertBreadcrumb('user/' . $this->web_user->id() . '/edit', $trail, $this->web_user->getUsername(), $tree);
-
-    // Add a Tools menu links for 'user' and $this->admin_user.
-    // Although it may be faster to manage these links via low-level API
-    // functions, there's a lot that can go wrong in doing so.
-    $this->drupalLogin($this->admin_user);
-    $edit = array(
-      'link_title' => 'User',
-      'link_path' => 'user',
-    );
-    $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
-    $menu_links_user = entity_load_multiple_by_properties('menu_link', array('link_title' => $edit['link_title'], 'link_path' => $edit['link_path']));
-    $link_user = reset($menu_links_user);
-
-    $edit = array(
-      'link_title' => $this->admin_user->getUsername() . ' link',
-      'link_path' => 'user/' . $this->admin_user->id(),
-    );
-    $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
-    $menu_links_admin_user = entity_load_multiple_by_properties('menu_link', array('link_title' => $edit['link_title'], 'link_path' => $edit['link_path']));
-    $link_admin_user = reset($menu_links_admin_user);
-
-    // Verify expected breadcrumbs for the two separate links.
-    $this->drupalLogout();
-    $trail = $home;
-    $tree = array(
-      $link_user['link_path'] => $link_user['link_title'],
-    );
-    $this->assertBreadcrumb('user', $trail, $link_user['link_title'], $tree);
-    $tree = array(
-      $link_admin_user['link_path'] => $link_admin_user['link_title'],
-    );
-    // $this->assertBreadcrumb('user/' . $this->admin_user->id(), $trail, $link_admin_user['link_title'], $tree);
 
     // Create an only slightly privileged user being able to access site reports
     // but not administration pages.

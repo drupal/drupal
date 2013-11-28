@@ -10,6 +10,7 @@ aggregator.admin_settings:
   path: '/admin/config/services/aggregator/settings'
   defaults:
     _form: '\Drupal\aggregator\Form\SettingsForm'
+    _title: 'Settings'
   requirements:
     _permission: 'administer news feeds'
 
@@ -17,6 +18,7 @@ aggregator.feed_items_delete:
   path: '/admin/config/services/aggregator/remove/{aggregator_feed}'
   defaults:
     _entity_form: 'aggregator_feed.remove_items'
+    _title: 'Remove items'
   requirements:
     _permission: 'administer news feeds'
 
@@ -24,6 +26,7 @@ aggregator.feed_delete:
   path: '/admin/config/services/aggregator/delete/feed/{aggregator_feed}'
   defaults:
     _entity_form: 'aggregator_feed.delete'
+    _title: 'Delete feed'
   requirements:
     _permission: 'administer news feeds'
 
@@ -31,6 +34,7 @@ aggregator.feed_add:
   path: '/admin/config/services/aggregator/add/feed'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::feedAdd'
+    _title: 'Add feed'
   requirements:
     _permission: 'administer news feeds'
 
@@ -38,6 +42,7 @@ aggregator.feed_configure:
   path: '/aggregator/sources/{aggregator_feed}/configure'
   defaults:
     _entity_form: 'aggregator_feed.default'
+    _title: 'Configure'
   requirements:
     _permission: 'administer news feeds'
 
@@ -45,6 +50,7 @@ aggregator.feed_edit:
   path: '/admin/config/services/aggregator/edit/feed/{aggregator_feed}'
   defaults:
     _entity_form: 'aggregator_feed.default'
+    _title: 'Edit feed'
   requirements:
     _permission: 'administer news feeds'
 
@@ -52,6 +58,7 @@ aggregator.feed_refresh:
   path: '/admin/config/services/aggregator/update/{aggregator_feed}'
   defaults:
     _controller: '\Drupal\aggregator\Controller\AggregatorController::feedRefresh'
+    _title: 'Update items'
   requirements:
     _permission: 'administer news feeds'
 
@@ -59,6 +66,7 @@ aggregator.opml_add:
   path: '/admin/config/services/aggregator/add/opml'
   defaults:
     _form: '\Drupal\aggregator\Form\OpmlFeedAdd'
+    _title: 'Import OMPL'
   requirements:
     _permission: 'administer news feeds'
 
@@ -66,6 +74,7 @@ aggregator.feed_view:
   path: '/aggregator/sources/{aggregator_feed}'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::viewFeed'
+    _title_callback: '\Drupal\aggregator\Controller\AggregatorController::feedTitle'
   requirements:
     _permission: 'access news feeds'
 
@@ -73,6 +82,7 @@ aggregator.page_last:
   path: '/aggregator'
   defaults:
     _controller: '\Drupal\aggregator\Controller\AggregatorController::pageLast'
+    _title: 'Feed aggregator'
   requirements:
     _permission: 'access news feeds'
 
@@ -80,6 +90,7 @@ aggregator.sources:
   path: '/aggregator/sources'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::sources'
+    _title: 'Sources'
   requirements:
     _permission: 'access news feeds'
 
@@ -87,6 +98,7 @@ aggregator.categories:
   path: '/aggregator/categories'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::categories'
+    _title: 'Categories'
   requirements:
     _access_aggregator_categories: 'TRUE'
 
@@ -94,6 +106,7 @@ aggregator.category_view:
   path: '/aggregator/categories/{cid}'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::viewCategory'
+    _title_callback: '\Drupal\aggregator\Controller\AggregatorController::categoryTitle'
   requirements:
     _permission: 'access news feeds'
 
@@ -101,6 +114,7 @@ aggregator.category_edit:
   path: '/aggregator/categories/{cid}/configure'
   defaults:
     _form: '\Drupal\aggregator\Form\CategoryAdminForm'
+    _title: 'Configure'
   requirements:
     _permission: 'administer news feeds'
 
@@ -115,6 +129,7 @@ aggregator.category_delete:
   path: '/admin/config/services/aggregator/delete/category/{cid}'
   defaults:
     _form: '\Drupal\aggregator\Form\CategoryDeleteForm'
+    _title: 'Delete category'
   requirements:
     _permission: 'administer news feeds'
 
@@ -122,6 +137,7 @@ aggregator.category_add:
   path: '/admin/config/services/aggregator/add/category'
   defaults:
     _form: '\Drupal\aggregator\Form\CategoryAdminForm'
+    _title: 'Add category'
   requirements:
     _permission: 'administer news feeds'
 
@@ -129,6 +145,7 @@ aggregator.categorize_category_form:
   path: '/aggregator/categories/{cid}/categorize'
   defaults:
     _form: '\Drupal\aggregator\Form\CategorizeCategoryForm'
+    _title: 'Categorize'
   requirements:
     _permission: 'administer news feeds'
 
@@ -136,6 +153,7 @@ aggregator.categorize_feed_form:
   path: '/aggregator/sources/{aggregator_feed}/categorize'
   defaults:
     _form: '\Drupal\aggregator\Form\CategorizeFeedForm'
+    _title: 'Categorize'
   requirements:
     _permission: 'administer news feeds'
 

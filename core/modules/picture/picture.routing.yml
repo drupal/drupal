@@ -2,6 +2,7 @@ picture.mapping_page:
   path: '/admin/config/media/picturemapping'
   defaults:
     _entity_list: 'picture_mapping'
+    _title: 'Picture mappings'
   requirements:
     _permission: 'administer pictures'
 
@@ -9,6 +10,7 @@ picture.mapping_page_add:
   path: '/admin/config/media/picturemapping/add'
   defaults:
     _entity_form: 'picture_mapping.add'
+    _title: 'Add picture mapping'
   requirements:
     _permission: 'administer pictures'
 
@@ -16,6 +18,7 @@ picture.mapping_page_edit:
   path: '/admin/config/media/picturemapping/{picture_mapping}'
   defaults:
     _entity_form: 'picture_mapping.edit'
+    _title: 'Edit picture mapping'
   requirements:
     _permission: 'administer pictures'
 
@@ -23,6 +26,7 @@ picture.mapping_page_duplicate:
   path: '/admin/config/media/picturemapping/{picture_mapping}/duplicate'
   defaults:
     _entity_form: 'picture_mapping.duplicate'
+    _title: 'Duplicate picture mapping'
   requirements:
     _permission: 'administer pictures'
 

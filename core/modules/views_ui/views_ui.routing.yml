@@ -2,6 +2,7 @@ views_ui.list:
   path: '/admin/structure/views'
   defaults:
     _entity_list: 'view'
+    _title: 'Views'
   requirements:
     _permission: 'administer views'
 
@@ -9,6 +10,7 @@ views_ui.add:
   path: '/admin/structure/views/add'
   defaults:
     _entity_form: 'view.add'
+    _title: 'Add new view'
   requirements:
     _permission: 'administer views'
 
@@ -16,6 +18,7 @@ views_ui.settings_basic:
   path: '/admin/structure/views/settings'
   defaults:
     _form: '\Drupal\views_ui\Form\BasicSettingsForm'
+    _title: 'Settings'
   requirements:
     _permission: 'administer views'
 
@@ -23,6 +26,7 @@ views_ui.settings_advanced:
   path: '/admin/structure/views/settings/advanced'
   defaults:
     _form: '\Drupal\views_ui\Form\AdvancedSettingsForm'
+    _title: 'Advanced'
   requirements:
     _permission: 'administer views'
 
@@ -30,6 +34,7 @@ views_ui.reports_fields:
   path: '/admin/reports/fields/views-fields'
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::reportFields'
+    _title: 'Used in views'
   requirements:
     _permission: 'administer views'
 
@@ -37,6 +42,7 @@ views_ui.reports_plugins:
   path: '/admin/reports/views-plugins'
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::reportPlugins'
+    _title: 'Views plugins'
   requirements:
     _permission: 'administer views'
 
@@ -52,6 +58,7 @@ views_ui.clone:
   path: '/admin/structure/views/view/{view}/clone'
   defaults:
     _entity_form: 'view.clone'
+    _title: 'Clone view'
   requirements:
     _permission: 'administer views'
 
@@ -59,6 +66,7 @@ views_ui.delete:
   path: '/admin/structure/views/view/{view}/delete'
   defaults:
     _entity_form: 'view.delete'
+    _title: 'Delete view'
   requirements:
     _permission: 'administer views'
 

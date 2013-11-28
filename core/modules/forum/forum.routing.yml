@@ -2,6 +2,7 @@ forum.delete:
   path: '/admin/structure/forum/delete/forum/{taxonomy_term}'
   defaults:
     _form: '\Drupal\forum\Form\DeleteForm'
+    _title: 'Delete forum'
   requirements:
     _permission: 'administer forums'
 
@@ -9,6 +10,7 @@ forum.settings:
   path: '/admin/structure/forum/settings'
   defaults:
     _form: '\Drupal\forum\ForumSettingsForm'
+    _title: 'Forums'
   requirements:
     _permission: 'administer forums'
 
@@ -16,6 +18,7 @@ forum.index:
   path: '/forum'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::forumIndex'
+    _title: 'Forums'
   requirements:
     _permission: 'access content'
 
@@ -30,6 +33,7 @@ forum.add_container:
   path: '/admin/structure/forum/add/container'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::addContainer'
+    _title: 'Add container'
   requirements:
     _permission: 'administer forums'
 
@@ -37,6 +41,7 @@ forum.add_forum:
   path: '/admin/structure/forum/add/forum'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::addForum'
+    _title: 'Add forum'
   requirements:
     _permission: 'administer forums'
 
@@ -44,6 +49,7 @@ forum.edit_container:
   path: '/admin/structure/forum/edit/container/{taxonomy_term}'
   defaults:
     _entity_form: 'taxonomy_term.container'
+    _title: 'Edit container'
   requirements:
     _permission: 'administer forums'
 
@@ -51,6 +57,7 @@ forum.edit_forum:
   path: '/admin/structure/forum/edit/forum/{taxonomy_term}'
   defaults:
     _entity_form: 'taxonomy_term.forum'
+    _title: 'Edit forum'
   requirements:
     _permission: 'administer forums'
 
@@ -58,5 +65,6 @@ forum.overview:
   path: '/admin/structure/forum'
   defaults:
     _form: '\Drupal\forum\Form\Overview'
+    _title: 'Forums'
   requirements:
     _permission: 'administer forums'

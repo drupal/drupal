@@ -2,6 +2,7 @@ path.delete:
   path: '/admin/config/search/path/delete/{pid}'
   defaults:
     _form: '\Drupal\path\Form\DeleteForm'
+    _title: 'Delete alias'
   requirements:
     _permission: 'administer url aliases'
 

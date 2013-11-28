@@ -2,6 +2,7 @@ book.render:
   path: '/book'
   defaults:
     _content: '\Drupal\book\Controller\BookController::bookRender'
+    _title: 'Books'
   requirements:
     _permission: 'access content'
 
@@ -9,6 +10,7 @@ book.admin:
   path: '/admin/structure/book'
   defaults:
     _content: '\Drupal\book\Controller\BookController::adminOverview'
+    _title: 'Books'
   requirements:
     _permission: 'administer book outlines'
 
@@ -16,6 +18,7 @@ book.settings:
   path: '/admin/structure/book/settings'
   defaults:
     _form: '\Drupal\book\Form\BookSettingsForm'
+    _title: 'Books'
   requirements:
     _permission: 'administer site configuration'
 
@@ -31,6 +34,7 @@ book.outline:
   path: '/node/{node}/outline'
   defaults:
     _entity_form: 'node.book_outline'
+    _title: 'Outline'
   requirements:
     _permission: 'administer book outlines'
     _entity_access: 'node.view'

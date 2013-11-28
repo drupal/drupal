@@ -7,6 +7,7 @@
 
 namespace Drupal\menu\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\menu_link\MenuLinkStorageControllerInterface;
@@ -94,6 +95,19 @@ class MenuController implements ContainerInjectionInterface {
       'menu_name' => $menu->id(),
     ));
     return $this->entityManager->getForm($menu_link);
+  }
+
+  /**
+   * Route title callback.
+   *
+   * @param \Drupal\system\MenuInterface $menu
+   *   The menu entity.
+   *
+   * @return string
+   *   The menu label.
+   */
+  public function menuTitle(MenuInterface $menu) {
+    return Xss::filter($menu->label());
   }
 
 }

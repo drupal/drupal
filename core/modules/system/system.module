@@ -2773,7 +2773,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
     $options = array('path' => $path);
   }
 
-  drupal_set_title($question, PASS_THROUGH);
+  $form['#title'] = $question;
 
   $form['#attributes']['class'][] = 'confirmation';
   $form['description'] = array('#markup' => $description);

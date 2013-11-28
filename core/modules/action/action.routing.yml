@@ -1,6 +1,7 @@
 action.admin:
   path: '/admin/config/system/actions'
   defaults:
+    _title: 'Actions'
     _entity_list: 'action'
   requirements:
     _permission: 'administer actions'

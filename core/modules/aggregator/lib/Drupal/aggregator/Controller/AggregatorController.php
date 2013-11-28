@@ -7,6 +7,7 @@
 
 namespace Drupal\aggregator\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\aggregator\CategoryStorageControllerInterface;
@@ -92,7 +93,6 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
     $items = $entity_manager->getStorageController('aggregator_item')->loadByFeed($aggregator_feed->id());
     // Print the feed items.
     $build = $this->buildPageList($items, $feed_source);
-    $build['#title'] = $aggregator_feed->label();
     return $build;
   }
 
@@ -106,10 +106,8 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    *   The render array with list of items for the feed.
    */
   public function viewCategory($cid) {
-    $category = $this->categoryStorage->load($cid);
     $items = $this->entityManager()->getStorageController('aggregator_item')->loadByCategory($cid);
     $build = $this->buildPageList($items);
-    $build['#title'] = $category->title;
     return $build;
   }
 
@@ -382,6 +380,33 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
     $response->setContent($output);
 
     return $response;
+  }
+
+  /**
+   * Route title callback.
+   *
+   * @param \Drupal\aggregator\FeedInterface $aggregator_feed
+   *   The aggregator feed.
+   *
+   * @return string
+   *   The feed label.
+   */
+  public function feedTitle(FeedInterface $aggregator_feed) {
+    return Xss::filter($aggregator_feed->label());
+  }
+
+  /**
+   * Route title callback.
+   *
+   * @param int $cid
+   *   The category ID.
+   *
+   * @return string
+   *   The category label.
+   */
+  public function categoryTitle($cid) {
+    $category = $this->categoryStorage->load($cid);
+    return Xss::filter($category->title);
   }
 
 }

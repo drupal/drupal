@@ -2,5 +2,6 @@ field_ui.list:
   path: '/admin/reports/fields'
   defaults:
     _entity_list: 'field_entity'
+    _title: 'Field list'
   requirements:
     _permission: 'administer content types'

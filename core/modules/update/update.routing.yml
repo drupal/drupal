@@ -2,6 +2,7 @@ update.settings:
   path: '/admin/reports/updates/settings'
   defaults:
     _form: '\Drupal\update\UpdateSettingsForm'
+    _title: 'Settings'
   requirements:
     _permission: 'administer site configuration'
 
@@ -9,6 +10,7 @@ update.status:
   path: '/admin/reports/updates'
   defaults:
     _content: '\Drupal\update\Controller\UpdateController::updateStatus'
+    _title: 'Available updates'
   requirements:
     _permission: 'administer site configuration'
 
@@ -24,6 +26,7 @@ update.report_install:
   path: '/admin/reports/updates/install'
   defaults:
     _content: '\Drupal\update\Form\UpdateForm::reportInstall'
+    _title: 'Install'
   options:
     _access_mode: 'ALL'
   requirements:
@@ -45,6 +48,7 @@ update.module_install:
   path: '/admin/modules/install'
   defaults:
     _content: '\Drupal\update\Form\UpdateForm::moduleInstall'
+    _title: 'Install new module'
   options:
     _access_mode: 'ALL'
   requirements:
@@ -66,6 +70,7 @@ update.theme_install:
   path: '/admin/theme/install'
   defaults:
     _content: '\Drupal\update\Form\UpdateForm::themeInstall'
+    _title: 'Install new theme'
   options:
     _access_mode: 'ALL'
   requirements:

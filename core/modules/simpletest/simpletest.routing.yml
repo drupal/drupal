@@ -2,6 +2,7 @@ simpletest.settings:
   path: '/admin/config/development/testing/settings'
   defaults:
     _form: 'Drupal\simpletest\Form\SimpletestSettingsForm'
+    _title: 'Settings'
   requirements:
     _permission: 'administer unit tests'
 
@@ -9,6 +10,7 @@ simpletest.test_form:
   path: '/admin/config/development/testing'
   defaults:
     _form: '\Drupal\simpletest\Form\SimpletestTestForm'
+    _title: 'Testing'
   requirements:
     _permission: 'administer unit tests'
 
@@ -16,5 +18,6 @@ simpletest.result_form:
   path: '/admin/config/development/testing/results/{test_id}'
   defaults:
     _form: 'Drupal\simpletest\Form\SimpletestResultsForm'
+    _title: 'Test result'
   requirements:
     _permission: 'administer unit tests'

@@ -2,6 +2,7 @@ filter.tips_all:
   path: '/filter/tips'
   defaults:
     _content: '\Drupal\filter\Controller\FilterController::filterTips'
+    _title: 'Compose tips'
   requirements:
     _access: 'TRUE'
 
@@ -9,6 +10,7 @@ filter.tips:
   path: '/filter/tips/{filter_format}'
   defaults:
     _content: '\Drupal\filter\Controller\FilterController::filterTips'
+    _title: 'Compose tips'
   requirements:
     _entity_access: 'filter_format.view'
 
@@ -40,6 +42,7 @@ filter.admin_disable:
   path: '/admin/config/content/formats/manage/{filter_format}/disable'
   defaults:
     _entity_form: 'filter_format.disable'
+    _title: 'Disable text format'
   requirements:
     _filter_disable_format_access: 'TRUE'
     _permission: 'administer filters'

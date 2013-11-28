@@ -2,6 +2,7 @@ search.settings:
   path: '/admin/config/search/settings'
   defaults:
     _form: '\Drupal\search\Form\SearchSettingsForm'
+    _title: 'Search settings'
   requirements:
     _permission: 'administer search'
 
@@ -9,6 +10,7 @@ search.reindex_confirm:
   path: '/admin/config/search/settings/reindex'
   defaults:
     _form: '\Drupal\search\Form\ReindexConfirm'
+    _title: 'Clear index'
   requirements:
     _permission: 'administer search'
 

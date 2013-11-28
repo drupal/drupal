@@ -199,7 +199,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
  * @deprecated Use \Drupal\shortcut\Form\ShortcutForm::add()
  */
 function shortcut_link_add($form, &$form_state, $shortcut_set) {
-  drupal_set_title(t('Add new shortcut'));
+  $form['#title'] = t('Add new shortcut');
   $form['shortcut_set'] = array(
     '#type' => 'value',
     '#value' => $shortcut_set,
@@ -228,7 +228,7 @@ function shortcut_link_add($form, &$form_state, $shortcut_set) {
  * @deprecated Use \Drupal\shortcut\Form\ShortcutForm::edit()
  */
 function shortcut_link_edit($form, &$form_state, $shortcut_link) {
-  drupal_set_title(t('Editing @shortcut', array('@shortcut' => $shortcut_link['link_title'])));
+  $form['#title'] = t('Editing @shortcut', array('@shortcut' => $shortcut_link['link_title']));
   $form['original_shortcut_link'] = array(
     '#type' => 'value',
     '#value' => $shortcut_link,
