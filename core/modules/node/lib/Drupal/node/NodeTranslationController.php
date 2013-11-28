@@ -24,12 +24,13 @@ class NodeTranslationController extends ContentTranslationController {
     // Move the translation fieldset to a vertical tab.
     if (isset($form['content_translation'])) {
       $form['content_translation'] += array(
-        '#group' => 'additional_settings',
-        '#weight' => 100,
+        '#group' => 'advanced',
         '#attributes' => array(
           'class' => array('node-translation-options'),
         ),
       );
+
+      $form['content_translation']['#weight'] = 100;
 
       // We do not need to show these values on node forms: they inherit the
       // basic node property values.
