@@ -40,6 +40,16 @@ function menu_install() {
     }
   }
   menu_cache_clear_all();
+
+  if (\Drupal::moduleHandler()->moduleExists('node')) {
+    $node_types = array_keys(node_type_get_names());
+    foreach ($node_types as $type_id) {
+      \Drupal::config('menu.entity.node.' . $type_id)
+        ->set('available_menus', array('main'))
+        ->set('parent', 'main:0')
+        ->save();
+    }
+  }
 }
 
 /**
@@ -121,6 +131,26 @@ function menu_update_8004() {
       ->set('label', $menu->title)
       ->set('description', $menu->description)
       ->save();
+  }
+}
+
+/**
+ * Ensure menu settings exist for all node types.
+ *
+ * @ingroup config_upgrade
+ */
+function menu_update_8005() {
+  if (\Drupal::moduleHandler()->moduleExists('node')) {
+    $node_types = array_keys(node_type_get_names());
+    foreach ($node_types as $type_id) {
+      $menu_settings = \Drupal::config("menu.entity.node.$type_id");
+      if ($menu_settings->isNew()) {
+        $menu_settings
+          ->set('available_menus', array('main'))
+          ->set('parent', 'main:0')
+          ->save();
+      }
+    }
   }
 }
 

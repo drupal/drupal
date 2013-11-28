@@ -168,8 +168,10 @@ class BreadcrumbTest extends MenuTestBase {
     //   breadcrumbs may differ, possibly due to theme overrides.
     $menus = array('main', 'tools');
     // Alter node type menu settings.
-    variable_set("menu_options_$type", $menus);
-    variable_set("menu_parent_$type", 'tools:0');
+    \Drupal::config("menu.entity.node.$type")
+      ->set('available_menus', $menus)
+      ->set('parent', 'tools:0')
+      ->save();
 
     foreach ($menus as $menu) {
       // Create a parent node in the current menu.

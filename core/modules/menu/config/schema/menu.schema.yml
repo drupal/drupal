@@ -13,3 +13,11 @@ menu.settings:
     override_parent_selector:
       type: boolean
       label: 'Override parent selector'
+
+menu.entity.node.*:
+  type: mapping
+  label: 'Per-content type menu settings'
+  mapping:
+    available_menus:
+      type: array
+      label: 'Available menus'
