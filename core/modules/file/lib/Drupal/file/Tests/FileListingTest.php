@@ -60,7 +60,8 @@ class FileListingTest extends FileFieldTestBase {
    * Tests file overview with different user permissions.
    */
   function testFileListingPages() {
-    // Users without sufficent permissions should not see file listing.
+    $file_usage = $this->container->get('file.usage');
+    // Users without sufficient permissions should not see file listing.
     $this->drupalLogin($this->base_user);
     $this->drupalGet('admin/content/files');
     $this->assertResponse(403);
@@ -114,11 +115,11 @@ class FileListingTest extends FileFieldTestBase {
 
     $this->drupalGet('admin/content/files');
     $file = entity_load('file', $orphaned_file);
-    $usage = $this->sumUsages(file_usage()->listUsage($file));
+    $usage = $this->sumUsages($file_usage->listUsage($file));
     $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
     $file = entity_load('file', $used_file);
-    $usage = $this->sumUsages(file_usage()->listUsage($file));
+    $usage = $this->sumUsages($file_usage->listUsage($file));
     $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
     $result = $this->xpath("//td[contains(@class, 'views-field-status') and contains(text(), :value)]", array(':value' => t('Temporary')));
@@ -127,7 +128,7 @@ class FileListingTest extends FileFieldTestBase {
     // Test file usage page.
     foreach ($nodes as $node) {
       $file = entity_load('file', $node->file->target_id);
-      $usage = file_usage()->listUsage($file);
+      $usage = $file_usage->listUsage($file);
       $this->drupalGet('admin/content/files/usage/' . $file->id());
       $this->assertResponse(200);
       $this->assertText($node->getTitle(), 'Node title found on usage page.');

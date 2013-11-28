@@ -18,7 +18,7 @@ abstract class FileUsageBase implements FileUsageInterface {
    * Implements Drupal\file\FileUsage\FileUsageInterface::add().
    */
   public function add(File $file, $module, $type, $id, $count = 1) {
-    // Make sure that a used file is permament.
+    // Make sure that a used file is permanent.
     if (!$file->isPermanent()) {
       $file->setPermanent();
       $file->save();
@@ -31,7 +31,7 @@ abstract class FileUsageBase implements FileUsageInterface {
   public function delete(File $file, $module, $type = NULL, $id = NULL, $count = 1) {
     // If there are no more remaining usages of this file, mark it as temporary,
     // which result in a delete through system_cron().
-    $usage = file_usage()->listUsage($file);
+    $usage = \Drupal::service('file.usage')->listUsage($file);
     if (empty($usage)) {
       $file->setTemporary();
       $file->save();

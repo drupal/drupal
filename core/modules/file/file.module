@@ -121,6 +121,9 @@ function file_load($fid, $reset = FALSE) {
 /**
  * Returns the file usage service.
  *
+ * @deprecated as of Drupal 8.0. Use \Drupal::service('file.usage') instead, or
+ *   even better have the file usage service injected into your object.
+ *
  * @return \Drupal\file\FileUsage\FileUsageInterface.
  */
 function file_usage() {
@@ -275,7 +278,7 @@ function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
     \Drupal::moduleHandler()->invokeAll('file_move', array($file, $source));
 
     // Delete the original if it's not in use elsewhere.
-    if ($delete_source && !file_usage()->listUsage($source)) {
+    if ($delete_source && !\Drupal::service('file.usage')->listUsage($source)) {
       $source->delete();
     }
 
@@ -703,7 +706,7 @@ function file_cron() {
   $result = \Drupal::entityManager()->getStorageController('file')->retrieveTemporaryFiles();
   foreach ($result as $row) {
     if ($file = file_load($row->fid)) {
-      $references = file_usage()->listUsage($file);
+      $references = \Drupal::service('file.usage')->listUsage($file);
       if (empty($references)) {
         if (file_exists($file->getFileUri())) {
           $file->delete();
@@ -723,8 +726,8 @@ function file_cron() {
  * Saves file uploads to a new location.
  *
  * The files will be added to the {file_managed} table as temporary files.
- * Temporary files are periodically cleaned. Use file_usage()->add() to register
- * the usage of the file which will automatically mark it as permanent.
+ * Temporary files are periodically cleaned. Use the 'file.usage' service to
+ * register the usage of the file which will automatically mark it as permanent.
  *
  * @param $form_field_name
  *   A string that is the associative array key of the upload form element in
@@ -1362,7 +1365,7 @@ function file_managed_file_validate(&$element, &$form_state) {
     foreach ($fids as $fid) {
       if ($file = file_load($fid)) {
         if ($file->isPermanent()) {
-          $references = file_usage()->listUsage($file);
+          $references = \Drupal::service('file.usage')->listUsage($file);
           if (empty($references)) {
             form_error($element, $form_state, t('The file used in the !name field may not be referenced.', array('!name' => $element['#title'])));
           }
@@ -1856,7 +1859,7 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
   // Fill the static cache, disregard $field and $field_type for now.
   if (!isset($references[$file->id()][$age])) {
     $references[$file->id()][$age] = array();
-    $usage_list = file_usage()->listUsage($file);
+    $usage_list = \Drupal::service('file.usage')->listUsage($file);
     $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : array();
     foreach ($file_usage_list as $entity_type => $entity_ids) {
       $entity_info = entity_get_info($entity_type);
