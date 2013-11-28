@@ -60,10 +60,10 @@ class Language {
   /**
    * Language code referring to the default language of data, e.g. of an entity.
    *
-   * @todo: Change value to differ from Language::LANGCODE_NOT_SPECIFIED once
-   * field API leverages the property API.
+   * See the BCP 47 syntax for defining private language tags:
+   * http://www.rfc-editor.org/rfc/bcp/bcp47.txt
    */
-  const LANGCODE_DEFAULT = 'und';
+  const LANGCODE_DEFAULT = 'x-default';
 
   /**
    * The language state when referring to configurable languages.

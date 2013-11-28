@@ -44,9 +44,9 @@ class FieldNormalizer extends NormalizerBase {
     // in to the field item normalizer in the context. The langcode is appended
     // to the field item values.
     else {
-      foreach ($entity->getTranslationLanguages() as $lang) {
-        $context['langcode'] = $lang->id == 'und' ? Language::LANGCODE_DEFAULT : $lang->id;
-        $translation = $entity->getTranslation($lang->id);
+      foreach ($entity->getTranslationLanguages() as $language) {
+        $context['langcode'] = $language->id;
+        $translation = $entity->getTranslation($language->id);
         $translated_field = $translation->get($field_name);
         $normalized_field_items = array_merge($normalized_field_items, $this->normalizeFieldItems($translated_field, $format, $context));
       }

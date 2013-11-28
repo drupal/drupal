@@ -312,7 +312,7 @@ function aggregator_update_8001() {
     'length' => 12,
     'not null' => TRUE,
     'default' => '',
-    'initial' => Language::LANGCODE_DEFAULT,
+    'initial' => Language::LANGCODE_NOT_SPECIFIED,
   ));
   db_add_field('aggregator_item', 'langcode', array(
     'description' => 'The {language}.langcode of this feed item.',
@@ -320,6 +320,6 @@ function aggregator_update_8001() {
     'length' => 12,
     'not null' => TRUE,
     'default' => '',
-    'initial' => Language::LANGCODE_DEFAULT,
+    'initial' => Language::LANGCODE_NOT_SPECIFIED,
   ));
 }

@@ -35,7 +35,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    *
    * @var string
    */
-  protected $langcode = Language::LANGCODE_DEFAULT;
+  protected $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
   /**
    * {@inheritdoc}

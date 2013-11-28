@@ -206,7 +206,10 @@ class DenormalizeTest extends NormalizerTestBase {
     // Assert that all fields are NULL and not set to default values. Example:
     // the UUID field is NULL and not initialized as usual.
     foreach ($denormalized as $field_name => $field) {
-      $this->assertFalse(isset($denormalized->$field_name), "$field_name is not set.");
+      // The 'langcode' field always has a value.
+      if ($field_name != 'langcode') {
+        $this->assertFalse(isset($denormalized->$field_name), "$field_name is not set.");
+      }
     }
   }
 }

@@ -142,7 +142,7 @@ class TranslationTest extends FieldUnitTestBase {
     $this->field->translatable = FALSE;
     $this->field->save();
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
-    $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === Language::LANGCODE_NOT_SPECIFIED, 'For untranslatable fields only Language::LANGCODE_NOT_SPECIFIED is available.');
+    $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === Language::LANGCODE_DEFAULT, 'For untranslatable fields only Language::LANGCODE_DEFAULT is available.');
   }
 
   /**

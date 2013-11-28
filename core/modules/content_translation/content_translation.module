@@ -80,10 +80,6 @@ function content_translation_entity_info_alter(array &$entity_info) {
   // Provide defaults for translation info.
   foreach ($entity_info as $entity_type => &$info) {
     if (!empty($info['translatable'])) {
-      // Every fieldable entity type must have a translation controller class,
-      // no matter if it is enabled for translation or not. As a matter of fact
-      // we might need it to correctly switch field translatability when a field
-      // is shared accross different entities.
       $info['controllers'] += array('translation' => 'Drupal\content_translation\ContentTranslationController');
 
       if (!isset($info['translation']['content_translation'])) {
@@ -222,12 +218,6 @@ function content_translation_menu() {
       ) + $item;
     }
   }
-
-  $items['admin/config/regional/content_translation/translatable/%/%'] = array(
-    'title' => 'Confirm change in translatability.',
-    'description' => 'Confirm page for changing field translatability.',
-    'route_name' => 'content_translation.translatable',
-  );
 
   return $items;
 }
@@ -817,36 +807,12 @@ function content_translation_field_extra_fields() {
  * Implements hook_form_FORM_ID_alter() for 'field_ui_field_edit_form'.
  */
 function content_translation_form_field_ui_field_edit_form_alter(array &$form, array &$form_state, $form_id) {
-  $field = $form['#field'];
-  $field_name = $field->getFieldName();
-  $translatable = $field->isFieldTranslatable();
-  $entity_type = $field->entity_type;
-  $label = t('Field translation');
-
-  if ($field->hasData()) {
-    $form['field']['translatable'] = array(
-      '#type' => 'item',
-      '#title' => $label,
-      '#attributes' => array('class' => 'translatable'),
-      'link' => array(
-        '#type' => 'link',
-        '#prefix' => t('This field has data in existing content.') . ' ',
-        '#title' => !$translatable ? t('Enable translation') : t('Disable translation'),
-        '#href' => "admin/config/regional/content_translation/translatable/$entity_type/$field_name",
-        '#options' => array('query' => drupal_get_destination()),
-        '#access' => user_access('administer content translation'),
-      ),
-    );
-  }
-  else {
-    $form['field']['translatable'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Users may translate this field.'),
-      '#default_value' => $translatable,
-    );
-  }
-
-  $form['field']['translatable']['#weight'] = 20;
+  $form['field']['translatable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Users may translate this field.'),
+    '#default_value' => $form['#field']->isFieldTranslatable(),
+    '#weight' => 20,
+  );
 }
 
 /**

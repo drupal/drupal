@@ -128,7 +128,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     $entity = entity_load($entity_type, $entity->id());
     $cache = cache('field')->get("field:$entity_type:" . $entity->id());
     $this->assertEqual($cache->data, array(
-      Language::LANGCODE_DEFAULT => array(
+      Language::LANGCODE_NOT_SPECIFIED => array(
         'summary_field' => array(
           0 => array(
             'value' => $value,
@@ -144,7 +144,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     // Inject fake processed values into the cache to make sure that these are
     // used as-is and not re-calculated when the entity is loaded.
     $data = array(
-      Language::LANGCODE_DEFAULT => array(
+      Language::LANGCODE_NOT_SPECIFIED => array(
         'summary_field' => array(
           0 => array(
             'value' => $value,

@@ -1,6 +1,0 @@
-content_translation.translatable:
-  path: '/admin/config/regional/content_translation/translatable/{entity_type}/{field_name}'
-  defaults:
-    _form: 'Drupal\content_translation\Form\TranslatableForm'
-  requirements:
-    _permission: 'administer content translation'

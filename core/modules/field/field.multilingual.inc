@@ -21,11 +21,11 @@ use Drupal\field\FieldInterface;
  * @endcode
  * Every field can hold a single or multiple value for each language code
  * belonging to the available language codes set:
- * - For untranslatable fields this set only contains Language::LANGCODE_NOT_SPECIFIED.
+ * - For untranslatable fields this set is only Language::LANGCODE_DEFAULT.
  * - For translatable fields this set can contain any language code. By default
  *   it is the list returned by field_content_languages(), which contains all
- *   installed languages with the addition of Language::LANGCODE_NOT_SPECIFIED. This
- *   default can be altered by modules implementing
+ *   installed languages with the addition of Language::LANGCODE_NOT_SPECIFIED.
+ *   This default can be altered by modules implementing
  *   hook_field_available_languages_alter().
  *
  * The available language codes for a particular field are returned by
@@ -69,10 +69,10 @@ use Drupal\field\FieldInterface;
  * Collects the available language codes for the given entity type and field.
  *
  * If the given field has language support enabled, an array of available
- * language codes will be returned, otherwise only Language::LANGCODE_NOT_SPECIFIED will
- * be returned. Since the default value for a 'translatable' entity property is
- * FALSE, we ensure that only entities that are able to handle translations
- * actually get translatable fields.
+ * language codes will be returned, otherwise only Language::LANGCODE_DEFAULT
+ * will be returned. Since the default value for a 'translatable' entity
+ * property is FALSE, we ensure that only entities that are able to handle
+ * translations actually get translatable fields.
  *
  * @param $entity_type
  *   The type of the entity the field is attached to, e.g. 'node' or 'user'.
@@ -92,7 +92,7 @@ function field_available_languages($entity_type, FieldInterface $field) {
 
   if (!isset($field_langcodes[$entity_type][$field_name])) {
     // If the field has language support enabled we retrieve an (alterable) list
-    // of enabled languages, otherwise we return just Language::LANGCODE_NOT_SPECIFIED.
+    // of enabled languages, otherwise we return Language::LANGCODE_DEFAULT.
     if (field_is_translatable($entity_type, $field)) {
       $langcodes = field_content_languages();
       // Let other modules alter the available languages.
@@ -101,7 +101,7 @@ function field_available_languages($entity_type, FieldInterface $field) {
       $field_langcodes[$entity_type][$field_name] = $langcodes;
     }
     else {
-      $field_langcodes[$entity_type][$field_name] = array(Language::LANGCODE_NOT_SPECIFIED);
+      $field_langcodes[$entity_type][$field_name] = array(Language::LANGCODE_DEFAULT);
     }
   }
 

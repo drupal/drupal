@@ -325,7 +325,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
           // Get the revision IDs.
           $revision_ids = array();
           foreach ($entities as $values) {
-            $revision_ids[] = $values[$this->revisionKey];
+            $revision_ids[] = $values[$this->revisionKey][Language::LANGCODE_DEFAULT];
           }
           $query->condition($this->revisionKey, $revision_ids);
         }
@@ -832,12 +832,14 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   protected function doLoadFieldItems($entities, $age) {
     $load_current = $age == static::FIELD_LOAD_CURRENT;
 
-    // Collect entities ids and bundles.
+    // Collect entities ids, bundles and languages.
     $bundles = array();
     $ids = array();
+    $default_langcodes = array();
     foreach ($entities as $key => $entity) {
       $bundles[$entity->bundle()] = TRUE;
       $ids[] = $load_current ? $key : $entity->getRevisionId();
+      $default_langcodes[$key] = $entity->getUntranslated()->language()->id;
     }
 
     // Collect impacted fields.
@@ -849,14 +851,13 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
     }
 
     // Load field data.
-    $all_langcodes = array_keys(language_list());
+    $langcodes = array_keys(language_list(Language::STATE_ALL));
     foreach ($fields as $field_name => $field) {
       $table = $load_current ? static::_fieldTableName($field) : static::_fieldRevisionTableName($field);
 
-      // If the field is translatable ensure that only values having valid
-      // languages are retrieved. Since we are loading values for multiple
-      // entities, we cannot limit the query to the available translations.
-      $langcodes = $field->isFieldTranslatable() ? $all_langcodes : array(Language::LANGCODE_NOT_SPECIFIED);
+      // Ensure that only values having valid languages are retrieved. Since we
+      // are loading values for multiple entities, we cannot limit the query to
+      // the available translations.
       $results = $this->database->select($table, 't')
         ->fields('t')
         ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
@@ -867,23 +868,27 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
 
       $delta_count = array();
       foreach ($results as $row) {
-        if (!isset($delta_count[$row->entity_id][$row->langcode])) {
-          $delta_count[$row->entity_id][$row->langcode] = 0;
-        }
-
-        if ($field->getFieldCardinality() == FieldInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getFieldCardinality()) {
-          $item = array();
-          // For each column declared by the field, populate the item from the
-          // prefixed database column.
-          foreach ($field->getColumns() as $column => $attributes) {
-            $column_name = static::_fieldColumnName($field, $column);
-            // Unserialize the value if specified in the column schema.
-            $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name) : $row->$column_name;
+        // Ensure that records for non-translatable fields having invalid
+        // languages are skipped.
+        if ($row->langcode == $default_langcodes[$row->entity_id] || $field->isFieldTranslatable()) {
+          if (!isset($delta_count[$row->entity_id][$row->langcode])) {
+            $delta_count[$row->entity_id][$row->langcode] = 0;
           }
 
-          // Add the item to the field values for the entity.
-          $entities[$row->entity_id]->getTranslation($row->langcode)->{$field_name}[$delta_count[$row->entity_id][$row->langcode]] = $item;
-          $delta_count[$row->entity_id][$row->langcode]++;
+          if ($field->getFieldCardinality() == FieldInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getFieldCardinality()) {
+            $item = array();
+            // For each column declared by the field, populate the item from the
+            // prefixed database column.
+            foreach ($field->getColumns() as $column => $attributes) {
+              $column_name = static::_fieldColumnName($field, $column);
+              // Unserialize the value if specified in the column schema.
+              $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name) : $row->$column_name;
+            }
+
+            // Add the item to the field values for the entity.
+            $entities[$row->entity_id]->getTranslation($row->langcode)->{$field_name}[$delta_count[$row->entity_id][$row->langcode]] = $item;
+            $delta_count[$row->entity_id][$row->langcode]++;
+          }
         }
       }
     }
@@ -897,6 +902,9 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
     $id = $entity->id();
     $bundle = $entity->bundle();
     $entity_type = $entity->entityType();
+    $default_langcode = $entity->getUntranslated()->language()->id;
+    $translation_langcodes = array_keys($entity->getTranslationLanguages());
+
     if (!isset($vid)) {
       $vid = $id;
     }
@@ -930,7 +938,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       $query = $this->database->insert($table_name)->fields($columns);
       $revision_query = $this->database->insert($revision_name)->fields($columns);
 
-      $langcodes = $field->isFieldTranslatable() ? array_keys($entity->getTranslationLanguages()) : array(Language::LANGCODE_NOT_SPECIFIED);
+      $langcodes = $field->isFieldTranslatable() ? $translation_langcodes : array($default_langcode);
       foreach ($langcodes as $langcode) {
         $delta_count = 0;
         $items = $entity->getTranslation($langcode)->get($field_name);
