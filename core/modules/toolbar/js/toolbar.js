@@ -194,10 +194,10 @@ Drupal.toolbar = {
     defaults: {
       // The active toolbar tab. All other tabs should be inactive under
       // normal circumstances. It will remain active across page loads. The
-      // active item is stored as a DOM element, not a jQuery set.
+      // active item is stored as an ID selector e.g. '#toolbar-item--1'.
       activeTab: null,
-      // Represents whether a tray is open or not. Stored as a DOM element, not
-      // a jQuery set.
+      // Represents whether a tray is open or not. Stored as an ID selector e.g.
+      // '#toolbar-item--1-tray'.
       activeTray: null,
       // Indicates whether the toolbar is displayed in an oriented fashion,
       // either horizontal or vertical.
@@ -366,8 +366,9 @@ Drupal.toolbar = {
       // activatable tab.
       if (event.target.hasAttribute('data-toolbar-tray')) {
         var tab = this.model.get('activeTab');
+        var id = '#' + event.target.id;
         // Set the event target as the active item if it is not already.
-        this.model.set('activeTab', (!tab || event.target !== tab) ? event.target : null);
+        this.model.set('activeTab', (!tab || id !== tab) ? id : null);
 
         event.preventDefault();
         event.stopPropagation();
@@ -508,8 +509,8 @@ Drupal.toolbar = {
         $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');
       }
       else {
-        // The navbar container is invisible. Its placement is used to determine
-        // the container for the trays.
+        // The toolbar container is invisible. Its placement is used to
+        // determine the container for the trays.
         $trays.css('padding-top', this.$el.find('.toolbar-bar').outerHeight());
       }
     },
