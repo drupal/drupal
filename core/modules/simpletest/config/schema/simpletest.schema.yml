@@ -1,0 +1,25 @@
+# Schema for the configuration files of the Simpletest module.
+
+simpletest.settings:
+  type: mapping
+  label: 'Testing'
+  mapping:
+    clear_results:
+      type: boolean
+      label: 'Clear results after each complete test suite run'
+    verbose:
+      type: boolean
+      label: 'Provide verbose information when running tests'
+    httpauth:
+      type: mapping
+      label: 'HTTP authentication'
+      mapping:
+        method:
+          type: integer
+          label: 'Method'
+        username:
+          type: string
+          label: 'Username'
+        password:
+          type: string
+          label: 'Password'
