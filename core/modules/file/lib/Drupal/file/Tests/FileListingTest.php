@@ -72,6 +72,19 @@ class FileListingTest extends FileFieldTestBase {
       $nodes[] = $this->drupalCreateNode(array('type' => 'article'));
     }
 
+    $this->drupalGet('admin/content/files');
+    $this->assertResponse(200);
+    $this->assertText('No files available.');
+    $this->drupalGet('admin/content/files');
+    $this->assertResponse(200);
+
+    // Create a file with no usage.
+    $file = $this->createFile();
+
+    $this->drupalGet('admin/content/files/usage/' . $file->id());
+    $this->assertResponse(200);
+    $this->assertTitle(t('File usage information for @file | Drupal', array('@file' => $file->getFilename())));
+
     foreach ($nodes as &$node) {
       $this->drupalGet('node/' . $node->id() . '/edit');
       $file = $this->getTestFile('image');
@@ -84,7 +97,6 @@ class FileListingTest extends FileFieldTestBase {
     }
 
     $this->drupalGet('admin/content/files');
-    $this->assertResponse(200);
 
     foreach ($nodes as $node) {
       $file = entity_load('file', $node->file->target_id);
@@ -131,4 +143,29 @@ class FileListingTest extends FileFieldTestBase {
       $this->assertLinkByHref('node/' . $node->id(), 0, 'Link to registering entity found on usage page.');
     }
   }
+
+  /**
+   * Creates and saves a test file.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *  A file entity.
+   */
+  protected function createFile() {
+    // Create a new file entity.
+    $file = entity_create('file', array(
+      'uid' => 1,
+      'filename' => 'druplicon.txt',
+      'uri' => 'public://druplicon.txt',
+      'filemime' => 'text/plain',
+      'timestamp' => 1,
+      'status' => FILE_STATUS_PERMANENT,
+    ));
+    file_put_contents($file->getFileUri(), 'hello world');
+
+    // Save it, inserting a new record.
+    $file->save();
+
+    return $file;
+  }
+
 }

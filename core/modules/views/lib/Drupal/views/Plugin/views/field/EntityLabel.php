@@ -100,11 +100,14 @@ class EntityLabel extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    $entity = $this->loadedReferencers[$this->getValue($values, $this->definition['entity type field'])][$this->getValue($values)];
+    $type = $this->getValue($values, $this->definition['entity type field']);
+    $value = $this->getValue($values);
 
-    if (empty($entity)) {
-      return NULL;
+    if (empty($this->loadedReferencers[$type][$value])) {
+      return;
     }
+
+    $entity = $this->loadedReferencers[$type][$value];
 
     if (!empty($this->options['link_to_entity'])) {
       $uri = $entity->uri();
@@ -123,7 +126,9 @@ class EntityLabel extends FieldPluginBase {
 
     $entity_ids_per_type = array();
     foreach ($values as $value) {
-      $entity_ids_per_type[$this->getValue($value, 'type')][] = $this->getValue($value);
+      if ($type = $this->getValue($value, 'type')) {
+        $entity_ids_per_type[$type][] = $this->getValue($value);
+      }
     }
 
     foreach ($entity_ids_per_type as $type => $ids) {

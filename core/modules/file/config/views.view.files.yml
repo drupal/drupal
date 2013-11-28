@@ -396,7 +396,7 @@ display:
           id: count
           table: file_usage
           field: count
-          relationship: none
+          relationship: fid
           group_type: sum
           admin_label: ''
           label: 'Used in'
@@ -578,7 +578,15 @@ display:
           empty: true
           content: 'No files available.'
           plugin_id: text_custom
-      relationships: {  }
+      relationships:
+        fid:
+          id: fid
+          table: file_managed
+          field: fid
+          relationship: none
+          group_type: group
+          admin_label: 'File usage'
+          required: true
       arguments: {  }
       group_by: '1'
       show_admin_links: '1'
@@ -600,6 +608,16 @@ display:
       defaults:
         pager: true
         pager_options: true
+        relationships: false
+      relationships:
+        fid:
+          id: fid
+          table: file_managed
+          field: fid
+          relationship: none
+          group_type: group
+          admin_label: 'File usage'
+          required: false
   page_2:
     display_plugin: page
     id: page_2
@@ -621,6 +639,7 @@ display:
         arguments: false
         style: false
         row: false
+        relationships: false
       pager:
         type: mini
         options:
@@ -947,6 +966,15 @@ display:
       row:
         type: fields
         options: {  }
+      relationships:
+        fid:
+          id: fid
+          table: file_managed
+          field: fid
+          relationship: none
+          group_type: group
+          admin_label: 'File usage'
+          required: true
 label: Files
 module: file
 id: files
