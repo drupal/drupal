@@ -174,7 +174,7 @@ function locale_menu() {
     'title' => 'User interface translation',
     'description' => 'Translate the built-in user interface.',
     'route_name' => 'locale.translate_page',
-    'weight' => -5,
+    'weight' => 15,
   );
 
   $items['admin/reports/translations'] = array(

@@ -71,7 +71,7 @@ function language_menu() {
     'title' => 'Languages',
     'description' => 'Configure languages for content and the user interface.',
     'route_name' => 'language.admin_overview',
-    'weight' => -10,
+    'weight' => 0,
   );
 
   // Content language settings.
@@ -79,6 +79,7 @@ function language_menu() {
     'title' => 'Content language',
     'description' => 'Configure language support for content.',
     'route_name' => 'language.content_settings_page',
+    'weight' => 10,
   );
 
   return $items;

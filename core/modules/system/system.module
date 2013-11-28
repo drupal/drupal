@@ -738,7 +738,7 @@ function system_menu() {
     'title' => 'Date and time formats',
     'description' => 'Configure display format strings for date and time.',
     'route_name' => 'system.date_format_list',
-    'weight' => -9,
+    'weight' => -5,
   );
   $items['admin/config/regional/date-time/formats/manage/%'] = array(
     'title' => 'Edit date format',
