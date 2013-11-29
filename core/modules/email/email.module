@@ -41,6 +41,7 @@ function email_field_info_alter(&$info) {
   else {
     $info['email']['default_formatter'] = 'email_mailto';
   }
+  $info['email']['provider'] = 'email';
 }
 
 /**
