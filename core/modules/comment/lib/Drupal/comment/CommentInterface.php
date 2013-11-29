@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\Entity\CommentInterface.
+ * Contains \Drupal\comment\CommentInterface.
  */
 
 namespace Drupal\comment;

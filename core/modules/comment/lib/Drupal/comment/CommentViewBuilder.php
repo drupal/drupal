@@ -127,13 +127,17 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
       $entity->content['#entity'] = $entity;
       $entity->content['#theme'] = 'comment__' . $entity->field_id->value . '__' . $commented_entity->bundle();
       $entity->content['links'] = array(
-        '#theme' => 'links__comment',
-        '#pre_render' => array('drupal_pre_render_links'),
-        '#attributes' => array('class' => array('links', 'inline')),
+        '#type' => 'render_cache_placeholder',
+        '#callback' => '\Drupal\comment\CommentViewBuilder::renderLinks',
+        '#context' => array(
+          'comment_entity_id' => $entity->id(),
+          'view_mode' => $view_mode,
+          'langcode' => $langcode,
+          'commented_entity_type' => $commented_entity->entityType(),
+          'commented_entity_id' => $commented_entity->id(),
+          'in_preview' => !empty($entity->in_preview),
+        ),
       );
-      if (empty($entity->in_preview)) {
-        $entity->content['links'][$this->entityType] = $this->buildLinks($entity, $commented_entity);
-      }
 
       if (!isset($entity->content['#attached'])) {
         $entity->content['#attached'] = array();
@@ -146,9 +150,51 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
   }
 
   /**
+   * #post_render_cache callback; replaces the placeholder with comment links.
+   *
+   * Renders the links on a comment.
+   *
+   * @param array $context
+   *   An array with the following keys:
+   *   - comment_entity_id: a comment entity ID
+   *   - view_mode: the view mode in which the comment entity is being viewed
+   *   - langcode: in which language the comment entity is being viewed
+   *   - commented_entity_type: the entity type to which the comment is attached
+   *   - commented_entity_id: the entity ID to which the comment is attached
+   *   - in_preview: whether the comment is currently being previewed
+   *
+   * @return array
+   *   A renderable array representing the comment links.
+   */
+  public static function renderLinks(array $context) {
+    $links = array(
+      '#theme' => 'links__comment',
+      '#pre_render' => array('drupal_pre_render_links'),
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
+
+    if (!$context['in_preview']) {
+      $entity = entity_load('comment', $context['comment_entity_id']);
+      $commented_entity = entity_load($context['commented_entity_type'], $context['commented_entity_id']);
+
+      $links['comment'] = self::buildLinks($entity, $commented_entity);
+
+      // Allow other modules to alter the comment links.
+      $hook_context = array(
+        'view_mode' => $context['view_mode'],
+        'langcode' => $context['langcode'],
+        'commented_entity' => $commented_entity
+      );
+      \Drupal::moduleHandler()->alter('comment_links', $links, $entity, $hook_context);
+    }
+
+    return $links;
+  }
+
+  /**
    * Build the default links (reply, edit, delete …) for a comment.
    *
-   * @param \Drupal\comment\Entity\CommentInterface $entity
+   * @param \Drupal\comment\CommentInterface $entity
    *   The comment object.
    * @param \Drupal\Core\Entity\EntityInterface $commented_entity
    *   The entity to which the comment is attached.
@@ -156,9 +202,11 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    * @return array
    *   An array that can be processed by drupal_pre_render_links().
    */
-  protected function buildLinks(CommentInterface $entity, EntityInterface $commented_entity) {
+  protected static function buildLinks(CommentInterface $entity, EntityInterface $commented_entity) {
     $links = array();
     $status = $commented_entity->get($entity->field_name->value)->status;
+
+    $container = \Drupal::getContainer();
 
     if ($status == COMMENT_OPEN) {
       if ($entity->access('delete')) {
@@ -188,7 +236,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
           'title' => t('Approve'),
           'href' => "comment/{$entity->id()}/approve",
           'html' => TRUE,
-          'query' => array('token' => $this->csrfToken->get("comment/{$entity->id()}/approve")),
+          'query' => array('token' => $container->get('csrf_token')->get("comment/{$entity->id()}/approve")),
         );
       }
       if (empty($links)) {
@@ -203,7 +251,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
     }
 
     // Add translations link for translation-enabled comment bundles.
-    if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($entity)) {
+    if ($container->get('module_handler')->moduleExists('content_translation') && content_translation_translate_access($entity)) {
       $links['comment-translations'] = array(
         'title' => t('Translate'),
         'href' => 'comment/' . $entity->id() . '/translations',

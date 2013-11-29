@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\comment\CommentInterface;
 
 /**
  * @file
@@ -194,6 +195,38 @@ function hook_comment_predelete(Drupal\comment\Comment $comment) {
  */
 function hook_comment_delete(Drupal\comment\Comment $comment) {
   drupal_set_message(t('Comment: @subject has been deleted', array('@subject' => $comment->subject->value)));
+}
+
+/**
+ * Alter the links of a comment.
+ *
+ * @param array &$links
+ *   A renderable array representing the comment links.
+ * @param \Drupal\comment\CommentInterface $entity
+ *   The comment being rendered.
+ * @param array &$context
+ *   Various aspects of the context in which the comment links are going to be
+ *   displayed, with the following keys:
+ *   - 'view_mode': the view mode in which the comment is being viewed
+ *   - 'langcode': the language in which the comment is being viewed
+ *   - 'commented_entity': the entity to which the comment is attached
+ *
+ * @see \Drupal\comment\CommentViewBuilder::renderLinks()
+ * @see \Drupal\comment\CommentViewBuilder::buildLinks()
+ */
+function hook_comment_links_alter(array &$links, CommentInterface $entity, array &$context) {
+  $links['mymodule'] = array(
+    '#theme' => 'links__comment__mymodule',
+    '#attributes' => array('class' => array('links', 'inline')),
+    '#links' => array(
+      'comment-report' => array(
+        'title' => t('Report'),
+        'href' => "comment/{$entity->id()}/report",
+        'html' => TRUE,
+        'query' => array('token' => \Drupal::getContainer()->get('csrf_token')->get("comment/{$entity->id()}/report")),
+      ),
+    ),
+  );
 }
 
 /**

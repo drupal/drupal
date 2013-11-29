@@ -6,6 +6,8 @@
  * the Comment module.
  */
 
+use Drupal\comment\CommentInterface;
+
 /**
  * Implements hook_entity_info_alter().
  */
@@ -14,4 +16,27 @@ function comment_test_entity_info_alter(&$info) {
     // Enable language handling for comment fields.
     $info['comment']['translation']['comment_test'] = TRUE;
   }
+}
+
+/**
+ * Implements hook_comment_links_alter().
+ */
+function comment_test_comment_links_alter(array &$links, CommentInterface &$entity, array &$context) {
+  // Allow tests to enable or disable this alter hook.
+  if (!\Drupal::state()->get('comment_test_links_alter_enabled', FALSE)) {
+    return;
+  }
+
+  $links['comment_test'] = array(
+    '#theme' => 'links__comment__comment_test',
+    '#attributes' => array('class' => array('links', 'inline')),
+    '#links' => array(
+      'comment-report' => array(
+        'title' => t('Report'),
+        'href' => "comment/{$entity->id()}/report",
+        'html' => TRUE,
+        'query' => array('token' => \Drupal::getContainer()->get('csrf_token')->get("comment/{$entity->id()}/report")),
+      ),
+    ),
+  );
 }
