@@ -7,8 +7,6 @@
 
 namespace Drupal\rest\Tests;
 
-use Drupal\rest\Tests\RESTTestBase;
-
 /**
  * Tests resource creation on user, node and test entities.
  */
@@ -100,19 +98,6 @@ class CreateTest extends RESTTestBase {
       // Try to send no data at all, which does not make sense on POST requests.
       $this->httpRequest('entity/' . $entity_type, 'POST', NULL, $this->defaultMimeType);
       $this->assertResponse(400);
-
-      // Try to create an entity without the CSRF token.
-      $this->curlExec(array(
-        CURLOPT_HTTPGET => FALSE,
-        CURLOPT_POST => TRUE,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $serialized,
-        CURLOPT_URL => url('entity/' . $entity_type, array('absolute' => TRUE)),
-        CURLOPT_NOBODY => FALSE,
-        CURLOPT_HTTPHEADER => array('Content-Type: ' . $this->defaultMimeType),
-      ));
-      $this->assertResponse(403);
-      $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
       // Try to send invalid data to trigger the entity validation constraints.
       // Send a UUID that is too long.

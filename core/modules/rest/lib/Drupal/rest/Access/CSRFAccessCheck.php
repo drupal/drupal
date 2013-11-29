@@ -45,7 +45,8 @@ class CSRFAccessCheck implements AccessCheckInterface {
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
     $method = $request->getMethod();
-    $cookie = $request->cookies->get(session_name(), FALSE);
+    $cookie = $request->attributes->get('_authentication_provider') == 'cookie';
+
     // This check only applies if
     // 1. this is a write operation
     // 2. the user was successfully authenticated and

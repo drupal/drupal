@@ -29,6 +29,13 @@ abstract class RESTTestBase extends WebTestBase {
    */
   protected $defaultMimeType;
 
+  /**
+   * The entity type to use for testing.
+   *
+   * @var string
+   */
+  protected $testEntityType = 'entity_test';
+
   protected function setUp() {
     parent::setUp();
     $this->defaultFormat = 'hal_json';
@@ -294,5 +301,20 @@ abstract class RESTTestBase extends WebTestBase {
             return array('delete any resttest content');
         }
     }
+  }
+
+  /**
+   * Loads an entity based on the location URL returned in the location header.
+   *
+   * @param string $location_url
+   *   The URL returned in the Location header.
+   *
+   * @return \Drupal\Core\Entity\Entity|FALSE.
+   *   The entity or FALSE if there is no matching entity.
+   */
+  protected function loadEntityFromLocationHeader($location_url) {
+    $url_parts = explode('/', $location_url);
+    $id = end($url_parts);
+    return entity_load($this->testEntityType, $id);
   }
 }
