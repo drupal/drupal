@@ -323,6 +323,15 @@
 }
 
 /**
+ * Overlays
+ */
+.ui-widget-overlay {
+  background: #000;
+  opacity: .70;
+  filter: Alpha(Opacity=70);
+}
+
+/**
  * Slider
  */
 .ui-slider {
