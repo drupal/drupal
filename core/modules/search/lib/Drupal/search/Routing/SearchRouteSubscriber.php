@@ -42,6 +42,7 @@ class SearchRouteSubscriber extends RouteSubscriberBase {
       $path = 'search/' . $search_info['path'] . '/{keys}';
       $defaults = array(
         '_content' => 'Drupal\search\Controller\SearchController::view',
+        '_title' => $search_info['title'],
         'plugin_id' => $plugin_id,
         'keys' => '',
       );

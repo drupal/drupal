@@ -77,6 +77,7 @@ class SearchController extends ControllerBase implements ContainerInjectionInter
     if (!$keys && $request->query->has('keys')) {
       $keys = trim($request->query->get('keys'));
     }
+    $build['#title'] = $this->t('Search');
 
     if (!empty($plugin_id)) {
       $active_plugin_info = $this->searchManager->getActiveDefinitions();
