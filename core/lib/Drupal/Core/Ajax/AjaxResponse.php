@@ -26,7 +26,7 @@ class AjaxResponse extends JsonResponse {
   /**
    * Add an AJAX command to the response.
    *
-   * @param object $command
+   * @param \Drupal\Core\Ajax\CommandInterface $command
    *   An AJAX command object implementing CommandInterface.
    * @param boolean $prepend
    *   A boolean which determines whether the new command should be executed
@@ -35,7 +35,7 @@ class AjaxResponse extends JsonResponse {
    * @return AjaxResponse
    *   The current AjaxResponse.
    */
-  public function addCommand($command, $prepend = FALSE) {
+  public function addCommand(CommandInterface $command, $prepend = FALSE) {
     if ($prepend) {
       array_unshift($this->commands, $command->render());
     }
@@ -44,6 +44,16 @@ class AjaxResponse extends JsonResponse {
     }
 
     return $this;
+  }
+
+  /**
+   * Gets all AJAX commands.
+   *
+   * @return \Drupal\Core\Ajax\CommandInterface[]
+   *   Returns all previously added AJAX commands.
+   */
+  public function &getCommands() {
+    return $this->commands;
   }
 
   /**
