@@ -358,6 +358,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
   public function getEffects() {
     if (!$this->effectsBag) {
       $this->effectsBag = new ImageEffectBag(\Drupal::service('plugin.manager.image.effect'), $this->effects);
+      $this->effectsBag->sort();
     }
     return $this->effectsBag;
   }
@@ -376,7 +377,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    */
   public function getExportProperties() {
     $properties = parent::getExportProperties();
-    $properties['effects'] = $this->getEffects()->sort()->getConfiguration();
+    $properties['effects'] = $this->getEffects()->getConfiguration();
     return $properties;
   }
 

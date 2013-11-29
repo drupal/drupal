@@ -156,7 +156,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $effect_edits_order = array_keys($effect_edits);
     $order_correct = TRUE;
     $index = 0;
-    foreach ($style->getEffects()->sort() as $effect) {
+    foreach ($style->getEffects() as $effect) {
       if ($effect_edits_order[$index] != $effect->getPluginId()) {
         $order_correct = FALSE;
       }
@@ -204,7 +204,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $effect_edits_order = array_reverse($effect_edits_order);
     $order_correct = TRUE;
     $index = 0;
-    foreach ($style->getEffects()->sort() as $effect) {
+    foreach ($style->getEffects() as $effect) {
       if ($effect_edits_order[$index] != $effect->getPluginId()) {
         $order_correct = FALSE;
       }

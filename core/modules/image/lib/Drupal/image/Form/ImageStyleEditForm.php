@@ -72,7 +72,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       // Render effects below parent elements.
       '#weight' => 5,
     );
-    foreach ($this->entity->getEffects()->sort() as $effect) {
+    foreach ($this->entity->getEffects() as $effect) {
       $key = $effect->getUuid();
       $form['effects'][$key]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$key]['weight'] : NULL;
       $form['effects'][$key]['label'] = array(
