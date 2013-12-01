@@ -100,10 +100,14 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
       foreach ($dirs as $dir) {
         $dir .= DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
         if (file_exists($dir)) {
-          foreach (new \DirectoryIterator($dir) as $fileinfo) {
-            // @todo Once core requires 5.3.6, use $fileinfo->getExtension().
-            if (pathinfo($fileinfo->getFilename(), PATHINFO_EXTENSION) == 'php') {
-              $class = $namespace . '\\' . $fileinfo->getBasename('.php');
+          $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
+          );
+          foreach ($iterator as $fileinfo) {
+            if ($fileinfo->getExtension() == 'php') {
+              $sub_path = $iterator->getSubIterator()->getSubPath();
+              $sub_path = $sub_path ? str_replace(DIRECTORY_SEPARATOR, '\\', $sub_path) . '\\' : '';
+              $class = $namespace . '\\' . $sub_path . $fileinfo->getBasename('.php');
 
               // The filename is already known, so there is no need to find the
               // file. However, StaticReflectionParser needs a finder, so use a
