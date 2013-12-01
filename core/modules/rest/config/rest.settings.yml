@@ -1,26 +1,46 @@
 # Enable all methods on nodes.
+# You must enable Hal and Basic_auth modules for this to work. Also, if you are
+# going to use Basic_auth in a production environment then you should consider
+# setting up SSL.
+# There are alternatives to Basic_auth in contrib such as OAuth module.
 resources:
   entity:node:
-    GET: { }
-    POST: { }
-    PATCH: { }
-    DELETE: { }
+    GET:
+      supported_formats:
+        - hal_json
+      supported_auth:
+        - basic_auth
+    POST:
+      supported_formats:
+        - hal_json
+      supported_auth:
+        - basic_auth
+    PATCH:
+      supported_formats:
+        - hal_json
+      supported_auth:
+        - basic_auth
+    DELETE:
+      supported_formats:
+        - hal_json
+      supported_auth:
+        - basic_auth
 
-# To enable only specific formats for an operation, list the supported_formats.
-# For example, the following config makes JSON the only format available for
-# node GET requests.
-#   resources:
-#     entity:node:
-#       GET:
-#         supported_formats:
-#           - json
+# Multiple formats and multiple authentication providers can be defined for a
+# resource:
 #
-# To enable only specific authentication methods for an operation, list them
-# at supported_auth.
-# For example, the following config only allows Basic HTTP authenticated
-# requests for the POST method on the node entity.
-#   resources:
-#     entity:node:
-#       POST:
-#         supported_auth:
-#           - basic_auth
+# resources:
+#   entity:node:
+#     GET:
+#       supported_formats:
+#         - json
+#         - hal_json
+#         - xml
+#       supported_auth:
+#         - cookie
+#         - basic_auth
+#
+# hal_json is the only format supported for POST and PATCH methods.
+#
+# The full documentation is located at
+# https://drupal.org/documentation/modules/rest

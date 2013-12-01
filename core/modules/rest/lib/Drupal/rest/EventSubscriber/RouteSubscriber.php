@@ -60,23 +60,29 @@ class RouteSubscriber extends RouteSubscriberBase {
         if ($method && isset($enabled_methods[$method])) {
           $route->setRequirement('_access_rest_csrf',  'TRUE');
 
-          // If the array of configured format restrictions is empty for a
-          // method always add the route.
-          if (empty($enabled_methods[$method])) {
-            $collection->add("rest.$name", $route);
+          // Check that authentication providers are defined.
+          if (empty($enabled_methods[$method]['supported_auth']) || !is_array($enabled_methods[$method]['supported_auth'])) {
+            watchdog('rest', 'At least one authentication provider must be defined for resource @id', array(':id' => $id), WATCHDOG_ERROR);
             continue;
           }
-          // Check if there are authentication provider restrictions in the
-          // configuration and apply them to the route.
-          if (!empty($enabled_methods[$method]['supported_auth']) && is_array($enabled_methods[$method]['supported_auth'])) {
-            $route->setOption('_auth', $enabled_methods[$method]['supported_auth']);
+
+          // Check that formats are defined.
+          if (empty($enabled_methods[$method]['supported_formats']) || !is_array($enabled_methods[$method]['supported_formats'])) {
+            watchdog('rest', 'At least one format must be defined for resource @id', array(':id' => $id), WATCHDOG_ERROR);
+            continue;
           }
-          // If there is no format requirement or if it matches the
-          // configuration also add the route.
+
+          // If the route has a format requirement, then verify that the
+          // resource has it.
           $format_requirement = $route->getRequirement('_format');
-          if (!$format_requirement || empty($enabled_methods[$method]['supported_formats']) || in_array($format_requirement, $enabled_methods[$method]['supported_formats'])) {
-            $collection->add("rest.$name", $route);
+          if ($format_requirement && !in_array($format_requirement, $enabled_methods[$method]['supported_formats'])) {
+            continue;
           }
+
+          // The configuration seems legit at this point, so we set the
+          // authentication provider and add the route.
+          $route->setOption('_auth', $enabled_methods[$method]['supported_auth']);
+          $collection->add("rest.$name", $route);
         }
       }
     }
