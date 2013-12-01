@@ -33,7 +33,7 @@ interface NodeAccessControllerInterface {
    *
    * If a realm is provided, it will only delete grants from that realm, but it
    * will always delete a grant from the 'all' realm. Modules that utilize
-   * node_access() can use this function when doing mass updates due to widespread
+   * node access can use this function when doing mass updates due to widespread
    * permission changes.
    *
    * Note: Don't call this function directly from a contributed module. Call

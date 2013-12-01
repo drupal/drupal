@@ -10,7 +10,7 @@ namespace Drupal\node\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Verifies node_access() functionality for multiple languages.
+ * Verifies node access functionality for multiple languages.
  */
 class NodeAccessLanguageTest extends NodeTestBase {
 
@@ -54,7 +54,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
   }
 
   /**
-   * Tests node_access() with multiple node languages and no private nodes.
+   * Tests node access with multiple node languages and no private nodes.
    */
   function testNodeAccess() {
     $web_user = $this->drupalCreateUser(array('access content'));
@@ -96,7 +96,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
     $this->assertNodeAccess($expected_node_access_no_access, $node_public_no_language, $web_user, 'ca');
     $this->assertNodeAccess($expected_node_access_no_access, $node_public_no_language, $web_user, 'hr');
 
-    // Reset the node access cache and turn on our test node_access() code.
+    // Reset the node access cache and turn on our test node access code.
     drupal_static_reset('node_access');
     variable_set('node_access_test_secret_catalan', 1);
 
@@ -111,7 +111,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
   }
 
   /**
-   * Tests node_access() with multiple node languages and private nodes.
+   * Tests node access with multiple node languages and private nodes.
    */
   function testNodeAccessPrivate() {
     $web_user = $this->drupalCreateUser(array('access content'));
@@ -154,7 +154,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
     $this->assertNodeAccess($expected_node_access_no_access, $node_private_no_language, $web_user, 'ca');
     $this->assertNodeAccess($expected_node_access_no_access, $node_private_no_language, $web_user, 'hr');
 
-    // Reset the node access cache and turn on our test node_access() code.
+    // Reset the node access cache and turn on our test node access code.
     entity_access_controller('node')->resetCache();
     \Drupal::state()->set('node_access_test_secret_catalan', 1);
 

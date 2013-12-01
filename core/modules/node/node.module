@@ -1119,13 +1119,13 @@ function theme_node_recent_block($variables) {
       'data' => drupal_render($node_recent_content),
       'class' => 'title-author',
     );
-    if (node_access('update', $node)) {
+    if ($node->access('update')) {
       $row[] = array(
         'data' => l(t('edit'), 'node/' . $node->id() . '/edit', $l_options),
         'class' => 'edit',
       );
     }
-    if (node_access('delete', $node)) {
+    if ($node->access('delete')) {
       $row[] = array(
         'data' => l(t('delete'), 'node/' . $node->id() . '/delete', $l_options),
         'class' => 'delete',
@@ -1445,9 +1445,10 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * @{
  * The node access system determines who can do what to which nodes.
  *
- * In determining access rights for a node, node_access() first checks whether
- * the user has the "bypass node access" permission. Such users have
- * unrestricted access to all nodes. user 1 will always pass this check.
+ * In determining access rights for a node, \Drupal\node\NodeAccessController
+ * first checks whether the user has the "bypass node access" permission. Such
+ * users have unrestricted access to all nodes. user 1 will always pass this
+ * check.
  *
  * Next, all implementations of hook_node_access() will be called. Each
  * implementation may explicitly allow, explicitly deny, or ignore the access
@@ -1482,55 +1483,6 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * To see how to write a node access module of your own, see
  * node_access_example.module.
  */
-
-/**
- * Access callback: Checks a user's permission for performing a node operation.
- *
- * @param $op
- *   The operation to be performed on the node. Possible values are:
- *   - "view"
- *   - "update"
- *   - "delete"
- *   - "create"
- * @param \Drupal\Core\Entity\EntityInterface|string|stdClass $node
- *   The node entity on which the operation is to be performed, or the node type
- *   object, or node type string (e.g., 'forum') for the 'create' operation.
- * @param $account
- *   (optional) A user object representing the user for whom the operation is to
- *   be performed. Determines access for a user other than the current user.
- *   Defaults to NULL.
- * @param $langcode
- *   (optional) Language code for the variant of the node. Different language
- *   variants might have different permissions associated. If NULL, the
- *   original langcode of the node is used. Defaults to NULL.
- *
- * @return
- *   TRUE if the operation may be performed, FALSE otherwise.
- *
- * @see node_menu()
- */
-function node_access($op, $node, $account = NULL, $langcode = NULL) {
-  $access_controller = \Drupal::entityManager()->getAccessController('node');
-
-  if ($op == 'create') {
-    if (!$node instanceof EntityInterface) {
-      $bundle = $node;
-    }
-    elseif ($node instanceof NodeTypeInterface) {
-      $bundle = $node->id();
-    }
-    else {
-      $bundle = $node->bundle();
-    }
-    return $access_controller->createAccess($bundle, $account, array('langcode' => $langcode));
-  }
-
-  // If no language code was provided, default to the node's langcode.
-  if (empty($langcode)) {
-    $langcode = $node->prepareLangcode();
-  }
-  return $access_controller->access($node, $op, $langcode, $account);
-}
 
 /**
  * Implements hook_node_access().
@@ -1992,7 +1944,7 @@ function node_modules_uninstalled($modules) {
  */
 function node_file_download_access($field, EntityInterface $entity, File $file) {
   if ($entity->entityType() == 'node') {
-    return node_access('view', $entity);
+    return $entity->access('view');
   }
 }
 

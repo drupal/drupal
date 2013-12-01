@@ -167,7 +167,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
   }
 
   /**
-   * Tests node_access() and node access queries with multiple node languages.
+   * Tests node access and node access queries with multiple node languages.
    */
   function testNodeAccessLanguageAwareCombination() {
 

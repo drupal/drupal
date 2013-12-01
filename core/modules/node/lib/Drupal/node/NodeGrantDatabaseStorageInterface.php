@@ -56,8 +56,8 @@ interface NodeGrantDatabaseStorageInterface {
    *
    * If a realm is provided, it will only delete grants from that realm, but
    * it will always delete a grant from the 'all' realm. Modules that use
-   * node_access() can use this method when doing mass updates due to
-   * widespread permission changes.
+   * node access can use this method when doing mass updates due to widespread
+   * permission changes.
    *
    * Note: Don't call this method directly from a contributed module. Call
    * node_access_write_grants() instead.

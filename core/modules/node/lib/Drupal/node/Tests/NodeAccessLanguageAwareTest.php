@@ -123,7 +123,7 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
   }
 
   /**
-   * Tests node_access() and node access queries with multiple node languages.
+   * Tests node access and node access queries with multiple node languages.
    */
   function testNodeAccessLanguageAware() {
     // The node_access_test_language module only grants view access.

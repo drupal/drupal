@@ -305,7 +305,7 @@ class NodeFormController extends ContentEntityFormController {
     }
 
     $element['preview'] = array(
-      '#access' => $preview_mode != DRUPAL_DISABLED && (node_access('create', $node) || node_access('update', $node)),
+      '#access' => $preview_mode != DRUPAL_DISABLED && ($node->access('create') || $node->access('update')),
       '#value' => t('Preview'),
       '#weight' => 20,
       '#validate' => array(
@@ -317,7 +317,7 @@ class NodeFormController extends ContentEntityFormController {
       ),
     );
 
-    $element['delete']['#access'] = node_access('delete', $node);
+    $element['delete']['#access'] = $node->access('delete');
     $element['delete']['#weight'] = 100;
 
     return $element;

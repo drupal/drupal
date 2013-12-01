@@ -30,8 +30,9 @@ use Drupal\node\NodeInterface;
 function node_add_page() {
   $content = array();
   // Only use node types the user has access to.
+  $access_controller = Drupal::entityManager()->getAccessController('node');
   foreach (node_type_get_types() as $type) {
-    if (node_access('create', $type->type)) {
+    if ($access_controller->createAccess($type->type)) {
       $content[$type->type] = $type;
     }
   }
@@ -111,7 +112,7 @@ function node_add($node_type) {
  * @see node_form_build_preview()
  */
 function node_preview(NodeInterface $node, array &$form_state) {
-  if (node_access('create', $node) || node_access('update', $node)) {
+  if ($node->access('create') || $node->access('update')) {
 
     $node->changed = REQUEST_TIME;
 
@@ -192,11 +193,11 @@ function node_revision_overview($node) {
   $type = $node->getType();
 
   $revert_permission = FALSE;
-  if ((user_access("revert $type revisions") || user_access('revert all revisions') || user_access('administer nodes')) && node_access('update', $node)) {
+  if ((user_access("revert $type revisions") || user_access('revert all revisions') || user_access('administer nodes')) && $node->access('update')) {
     $revert_permission = TRUE;
   }
   $delete_permission = FALSE;
-  if ((user_access("delete $type revisions") || user_access('delete all revisions') || user_access('administer nodes')) && node_access('delete', $node)) {
+  if ((user_access("delete $type revisions") || user_access('delete all revisions') || user_access('administer nodes')) && $node->access('delete')) {
     $delete_permission = TRUE;
   }
   foreach ($revisions as $revision) {

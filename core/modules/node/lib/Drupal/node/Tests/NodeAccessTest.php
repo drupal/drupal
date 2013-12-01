@@ -36,13 +36,13 @@ class NodeAccessTest extends NodeTestBase {
     // Ensures user without 'access content' permission can do nothing.
     $web_user1 = $this->drupalCreateUser(array('create page content', 'edit any page content', 'delete any page content'));
     $node1 = $this->drupalCreateNode(array('type' => 'page'));
-    $this->assertNodeAccess(array('create' => FALSE), 'page', $web_user1);
+    $this->assertNodeCreateAccess($node1->bundle(), FALSE, $web_user1);
     $this->assertNodeAccess(array('view' => FALSE, 'update' => FALSE, 'delete' => FALSE), $node1, $web_user1);
 
     // Ensures user with 'bypass node access' permission can do everything.
     $web_user2 = $this->drupalCreateUser(array('bypass node access'));
     $node2 = $this->drupalCreateNode(array('type' => 'page'));
-    $this->assertNodeAccess(array('create' => TRUE), 'page', $web_user2);
+    $this->assertNodeCreateAccess($node2->bundle(), TRUE, $web_user2);
     $this->assertNodeAccess(array('view' => TRUE, 'update' => TRUE, 'delete' => TRUE), $node2, $web_user2);
 
     // User cannot 'view own unpublished content'.
@@ -51,7 +51,7 @@ class NodeAccessTest extends NodeTestBase {
     $this->assertNodeAccess(array('view' => FALSE), $node3, $web_user3);
 
     // User cannot create content without permission.
-    $this->assertNodeAccess(array('create' => FALSE), 'page', $web_user3);
+    $this->assertNodeCreateAccess($node3->bundle(), FALSE, $web_user3);
 
     // User can 'view own unpublished content', but another user cannot.
     $web_user4 = $this->drupalCreateUser(array('access content', 'view own unpublished content'));

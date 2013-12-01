@@ -220,7 +220,7 @@ function hook_file_delete(Drupal\file\FileInterface $file) {
  */
 function hook_file_download_access($field, Drupal\Core\Entity\EntityInterface $entity, Drupal\file\FileInterface $file) {
   if ($entity->entityType() == 'node') {
-    return node_access('view', $entity);
+    return $entity->access('view');
   }
 }
 

@@ -83,7 +83,7 @@ class RevisionLink extends Link {
     // Unpublished nodes ignore access control.
     $node->setPublished(TRUE);
     // Ensure user has access to perform the operation on this node.
-    if (!node_access($op, $node)) {
+    if (!$node->access($op)) {
       return array($node, NULL);
     }
     return array($node, $vid);
