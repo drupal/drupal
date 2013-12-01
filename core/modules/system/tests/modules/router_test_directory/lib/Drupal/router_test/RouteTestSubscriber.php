@@ -51,7 +51,7 @@ class RouteTestSubscriber implements EventSubscriberInterface {
    *   The altered route collection.
    */
   public function alterRoutes(RouteBuildEvent $event) {
-    if ($event->getModule() == 'router_test') {
+    if ($event->getProvider() == 'router_test') {
       $collection = $event->getRouteCollection();
       $route = $collection->get('router_test.6');
       // Change controller method from test1 to test5.

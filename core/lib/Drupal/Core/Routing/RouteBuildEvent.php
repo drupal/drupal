@@ -23,18 +23,18 @@ class RouteBuildEvent extends Event {
   protected $routeCollection;
 
   /**
-   * The module name that provides the route.
+   * The provider of this route collection.
    *
    * @var string
    */
-  protected $module;
+  protected $provider;
 
   /**
    * Constructs a RouteBuildEvent object.
    */
-  public function __construct(RouteCollection $route_collection, $module) {
+  public function __construct(RouteCollection $route_collection, $provider) {
     $this->routeCollection = $route_collection;
-    $this->module = $module;
+    $this->provider = $provider;
   }
 
   /**
@@ -45,10 +45,10 @@ class RouteBuildEvent extends Event {
   }
 
   /**
-   * Gets the module that provides the route.
+   * Gets the provider for this route collection.
    */
-  public function getModule() {
-    return $this->module;
+  public function getProvider() {
+    return $this->provider;
   }
 
 }

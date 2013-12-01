@@ -129,7 +129,7 @@ class MatcherDumperTest extends UnitTestBase {
 
     $this->fixtures->createTables($connection);
 
-    $dumper->dump(array('route_set' => 'test'));
+    $dumper->dump(array('provider' => 'test'));
 
     $record = $connection->query("SELECT * FROM {test_routes} WHERE name= :name", array(':name' => 'test_route'))->fetchObject();
 

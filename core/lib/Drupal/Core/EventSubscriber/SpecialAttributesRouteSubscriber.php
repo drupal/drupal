@@ -56,7 +56,7 @@ class SpecialAttributesRouteSubscriber extends RouteSubscriberBase {
    */
   public function onAlterRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
-    return $this->alterRoutes($collection, $event->getModule());
+    return $this->alterRoutes($collection, $event->getProvider());
   }
 
 }

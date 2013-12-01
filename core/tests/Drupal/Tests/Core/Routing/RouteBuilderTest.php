@@ -172,13 +172,13 @@ class RouteBuilderTest extends UnitTestCase {
       ->with($routing_fixtures->sampleRouteCollection());
     $this->dumper->expects($this->at(1))
       ->method('dump')
-      ->with(array('route_set' => 'test_module'));
+      ->with(array('provider' => 'test_module'));
     $this->dumper->expects($this->at(2))
       ->method('addRoutes')
       ->with($empty_collection);
     $this->dumper->expects($this->at(3))
       ->method('dump')
-      ->with(array('route_set' => 'dynamic_routes'));
+      ->with(array('provider' => 'dynamic_routes'));
 
 
     $this->assertTrue($this->routeBuilder->rebuild());
@@ -218,7 +218,7 @@ class RouteBuilderTest extends UnitTestCase {
       ->with($route_collection_filled);
     $this->dumper->expects($this->once())
       ->method('dump')
-      ->with(array('route_set' => 'dynamic_routes'));
+      ->with(array('provider' => 'dynamic_routes'));
 
     $this->assertTrue($this->routeBuilder->rebuild());
   }

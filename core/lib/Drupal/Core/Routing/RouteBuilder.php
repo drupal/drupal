@@ -95,7 +95,7 @@ class RouteBuilder {
 
     $yaml_discovery = $this->getYamlDiscovery();
 
-    foreach ($yaml_discovery->findAll() as $module => $routes) {
+    foreach ($yaml_discovery->findAll() as $provider => $routes) {
       $collection = new RouteCollection();
 
       foreach ($routes as $name => $route_info) {
@@ -109,9 +109,9 @@ class RouteBuilder {
         $collection->add($name, $route);
       }
 
-      $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection, $module));
+      $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection, $provider));
       $this->dumper->addRoutes($collection);
-      $this->dumper->dump(array('route_set' => $module));
+      $this->dumper->dump(array('provider' => $provider));
     }
 
     // Now allow modules to register additional, dynamic routes.
@@ -119,7 +119,7 @@ class RouteBuilder {
     $this->dispatcher->dispatch(RoutingEvents::DYNAMIC, new RouteBuildEvent($collection, 'dynamic_routes'));
     $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection, 'dynamic_routes'));
     $this->dumper->addRoutes($collection);
-    $this->dumper->dump(array('route_set' => 'dynamic_routes'));
+    $this->dumper->dump(array('provider' => 'dynamic_routes'));
 
     $this->lock->release('router_rebuild');
     return TRUE;

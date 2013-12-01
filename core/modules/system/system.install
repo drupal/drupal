@@ -962,8 +962,8 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'route_set' => array(
-        'description' => 'The route set grouping to which a route belongs.',
+      'provider' => array(
+        'description' => 'The provider grouping to which a route belongs.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -989,7 +989,7 @@ function system_schema() {
     ),
     'indexes' => array(
       'pattern_outline_fit' => array('pattern_outline', 'fit'),
-      'route_set' => array('route_set'),
+      'provider' => array('provider'),
     ),
     'primary key' => array('name'),
   );
@@ -1620,8 +1620,8 @@ function system_update_8022() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'route_set' => array(
-        'description' => 'The route set grouping to which a route belongs.',
+      'provider' => array(
+        'description' => 'The provider grouping to which a route belongs.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -1647,7 +1647,7 @@ function system_update_8022() {
     ),
     'indexes' => array(
       'pattern_outline_fit' => array('pattern_outline', 'fit'),
-      'route_set' => array('route_set'),
+      'provider' => array('provider'),
     ),
     'primary key' => array('name'),
   );

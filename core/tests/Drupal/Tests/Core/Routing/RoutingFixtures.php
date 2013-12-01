@@ -175,8 +175,8 @@ class RoutingFixtures {
           'not null' => TRUE,
           'default' => '',
         ),
-        'route_set' => array(
-          'description' => 'The route set grouping to which a route belongs.',
+        'provider' => array(
+          'description' => 'The provider grouping to which a route belongs.',
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,
@@ -215,7 +215,7 @@ class RoutingFixtures {
       'indexes' => array(
         'fit' => array('fit'),
         'pattern_outline' => array('pattern_outline'),
-        'route_set' => array('route_set'),
+        'provider' => array('provider'),
       ),
       'primary key' => array('name'),
     );
