@@ -216,8 +216,8 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     // Some form elements belong in a fieldset for presentation, but can't
     // be moved into one because of the form_state['values'] hierarchy. Those
     // elements can add a #fieldset => 'fieldset_name' property, and they'll
-    // be moved to their fieldset during preRender.
-    $form['#pre_render'][] = 'views_ui_pre_render_add_fieldset_markup';
+    // be moved to their fieldset during pre_render.
+    $form['#pre_render'][] = array(get_class($this), 'preRenderAddFieldsetMarkup');
   }
 
   /**
@@ -362,6 +362,65 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         'class' => array('global-tokens'),
       ),
     );
+  }
+
+  /**
+   * Moves form elements into fieldsets for presentation purposes.
+   *
+   * Many views forms use #tree = TRUE to keep their values in a hierarchy for
+   * easier storage. Moving the form elements into fieldsets during form
+   * building would break up that hierarchy. Therefore, we wait until the
+   * pre_render stage, where any changes we make affect presentation only and
+   * aren't reflected in $form_state['values'].
+   *
+   * @param array $form
+   *   The form build array to alter.
+   *
+   * @return array
+   *   The form build array.
+   */
+  public static function preRenderAddFieldsetMarkup(array $form) {
+    foreach (element_children($form) as $key) {
+      $element = $form[$key];
+      // In our form builder functions, we added an arbitrary #fieldset property
+      // to any element that belongs in a fieldset. If this form element has
+      // that property, move it into its fieldset.
+      if (isset($element['#fieldset']) && isset($form[$element['#fieldset']])) {
+        $form[$element['#fieldset']][$key] = $element;
+        // Remove the original element this duplicates.
+        unset($form[$key]);
+      }
+    }
+
+    return $form;
+  }
+
+  /**
+   * Flattens the structure of form elements.
+   *
+   * If a form element has #flatten = TRUE, then all of it's children get moved
+   * to the same level as the element itself. So $form['to_be_flattened'][$key]
+   * becomes $form[$key], and $form['to_be_flattened'] gets unset.
+   *
+   * @param array $form
+   *   The form build array to alter.
+   *
+   * @return array
+   *   The form build array.
+   */
+  public static function preRenderFlattenData($form) {
+    foreach (element_children($form) as $key) {
+      $element = $form[$key];
+      if (!empty($element['#flatten'])) {
+        foreach (element_children($element) as $child_key) {
+          $form[$child_key] = $form[$key][$child_key];
+        }
+        // All done, remove the now-empty parent.
+        unset($form[$key]);
+      }
+    }
+
+    return $form;
   }
 
 }

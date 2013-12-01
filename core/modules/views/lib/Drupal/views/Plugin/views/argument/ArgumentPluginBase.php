@@ -144,7 +144,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
 
     $argument_text = $this->view->display_handler->getArgumentText();
 
-    $form['#pre_render'][] = 'views_ui_pre_render_move_argument_options';
+    $form['#pre_render'][] = array(get_class($this), 'preRenderMoveArgumentOptions');
 
     $form['description'] = array(
       '#markup' => $argument_text['description'],
@@ -1071,6 +1071,33 @@ abstract class ArgumentPluginBase extends HandlerBase {
       }
     }
     return $element;
+  }
+
+  /**
+   * Moves argument options into their place.
+   *
+   * When configuring the default argument behavior, almost each of the radio
+   * buttons has its own fieldset shown bellow it when the radio button is
+   * clicked. That fieldset is created through a custom form process callback.
+   * Each element that has #argument_option defined and pointing to a default
+   * behavior gets moved to the appropriate fieldset.
+   * So if #argument_option is specified as 'default', the element is moved
+   * to the 'default_options' fieldset.
+   */
+  public static function preRenderMoveArgumentOptions($form) {
+    foreach (element_children($form) as $key) {
+      $element = $form[$key];
+      if (!empty($element['#argument_option'])) {
+        $container_name = $element['#argument_option'] . '_options';
+        if (isset($form['no_argument']['default_action'][$container_name])) {
+          $form['no_argument']['default_action'][$container_name][$key] = $element;
+        }
+        // Remove the original element this duplicates.
+        unset($form[$key]);
+      }
+    }
+
+    return $form;
   }
 
 }

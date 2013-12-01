@@ -497,7 +497,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // prior to rendering. That's why the preRender for it needs to run first,
     // so that when the next preRender (the one for fieldsets) runs, it gets
     // the flattened data.
-    array_unshift($form['#pre_render'], 'views_ui_pre_render_flatten_data');
+    array_unshift($form['#pre_render'], array(get_class($this), 'preRenderFlattenData'));
     $form['expose']['#flatten'] = TRUE;
 
     if (empty($this->always_required)) {
@@ -832,7 +832,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // prior to rendering. That's why the preRender for it needs to run first,
     // so that when the next preRender (the one for fieldsets) runs, it gets
     // the flattened data.
-    array_unshift($form['#pre_render'], 'views_ui_pre_render_flatten_data');
+    array_unshift($form['#pre_render'], array(get_class($this), 'preRenderFlattenData'));
     $form['group_info']['#flatten'] = TRUE;
 
     if (!empty($this->options['group_info']['identifier'])) {
