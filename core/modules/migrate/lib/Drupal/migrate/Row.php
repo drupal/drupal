@@ -44,7 +44,7 @@ class Row {
   protected $idMap = array(
     'original_hash' => '',
     'hash' => '',
-    'needs_update' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
+    'source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE,
   );
 
   /**
@@ -248,7 +248,7 @@ class Row {
    *   TRUE if the row needs updating, FALSE otherwise.
    */
   public function needsUpdate() {
-    return $this->idMap['needs_update'] == MigrateIdMapInterface::STATUS_NEEDS_UPDATE;
+    return $this->idMap['source_row_status'] == MigrateIdMapInterface::STATUS_NEEDS_UPDATE;
   }
 
   /**

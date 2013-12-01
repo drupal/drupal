@@ -53,10 +53,8 @@ class FakeSelect extends Select {
    *
    * @param string $table
    *   The base table name used within fake select.
-   *
    * @param string $alias
    *   The base table alias used within fake select.
-   *
    * @param array $database_contents
    *   An array of mocked database content.
    *
@@ -169,7 +167,6 @@ class FakeSelect extends Select {
    *   of JOINs.
    */
   protected function executeJoins() {
-    // @TODO add support for all_fields.
     $fields = array();
     foreach ($this->fields as $field_info) {
       $this->fieldsWithTable[$field_info['table'] . '.' . $field_info['field']] = $field_info;
@@ -180,6 +177,10 @@ class FakeSelect extends Select {
         foreach (array_keys($table) as $field) {
           if (!isset($this->fields[$field])) {
             $this->fieldsWithTable[$field] = array(
+              'table' => $alias,
+              'field' => $field,
+            );
+            $this->fieldsWithTable["$alias.$field"] = array(
               'table' => $alias,
               'field' => $field,
             );
@@ -508,4 +509,19 @@ class FakeSelect extends Select {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function fields($table_alias, array $fields = array()) {
+    if (!$fields) {
+      $table = $this->tables[$table_alias]['table'];
+      if (!empty($this->databaseContents[$table])) {
+        $fields = array_keys(reset($this->databaseContents[$table]));
+      }
+      else {
+        throw new \Exception('All fields on empty table is not supported.');
+      }
+    }
+    return parent::fields($table_alias, $fields);
+  }
 }

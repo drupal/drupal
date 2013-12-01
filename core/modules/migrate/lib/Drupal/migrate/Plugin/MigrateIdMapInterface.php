@@ -221,7 +221,7 @@ interface MigrateIdMapInterface extends PluginInspectionInterface {
    *
    * @todo Remove this as this is SQL only and so doesn't belong to the interface.
    */
-  public function getQualifiedMapTable();
+  public function getQualifiedMapTableName();
 
   /**
    * Sets the migrate message.

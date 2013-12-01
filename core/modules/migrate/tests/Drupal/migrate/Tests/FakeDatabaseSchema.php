@@ -14,11 +14,14 @@ class FakeDatabaseSchema extends Schema {
 
   /**
    * As set on MigrateSqlSourceTestCase::databaseContents.
+   *
+   * @var array
    */
-  protected $databaseContents;
+  public $databaseContents;
 
   public function __construct($database_contents) {
     $this->uniqueIdentifier = uniqid('', TRUE);
+
     // @todo Maybe we can generate an internal representation.
     $this->databaseContents = $database_contents;
   }
@@ -84,7 +87,7 @@ class FakeDatabaseSchema extends Schema {
   }
 
   public function dropTable($table) {
-    throw new \Exception(sprintf('Unsupported method "%s"', __METHOD__));
+    unset($this->databaseContents[$table]);
   }
 
   public function dropUniqueKey($table, $name) {
@@ -92,7 +95,13 @@ class FakeDatabaseSchema extends Schema {
   }
 
   public function fieldExists($table, $column) {
-    throw new \Exception(sprintf('Unsupported method "%s"', __METHOD__));
+    if (!empty($this->databaseContents[$table])) {
+      $row = reset($this->databaseContents[$table]);
+      return isset($row[$column]);
+    }
+    else {
+      throw new \Exception("Can't determine whether field exists with an empty / nonexistent table.");
+    }
   }
 
   public function fieldNames($fields) {
@@ -132,7 +141,7 @@ class FakeDatabaseSchema extends Schema {
   }
 
   public function uniqueIdentifier() {
-    throw new \Exception(sprintf('Unsupported method "%s"', __METHOD__));
+    return $this->uniqueIdentifier;
   }
 
   /**

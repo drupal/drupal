@@ -19,7 +19,7 @@ class MigrateTestBase extends WebTestBase {
    *
    * @var array
    */
-  var $databaseDumpFiles = array();
+  public $databaseDumpFiles = array();
 
   public static $modules = array('migrate');
 

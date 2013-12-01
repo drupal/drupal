@@ -127,9 +127,9 @@ abstract class SqlBase extends SourcePluginBase {
           $delimiter = ' AND ';
         }
 
-        $alias = $this->query->leftJoin($this->migration->getIdMap()->getQualifiedMapTable(), 'map', $map_join);
+        $alias = $this->query->leftJoin($this->migration->getIdMap()->getQualifiedMapTableName(), 'map', $map_join);
         $conditions->isNull($alias . '.sourceid1');
-        $conditions->condition($alias . '.needs_update', MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
+        $conditions->condition($alias . '.source_row_status', MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
         $condition_added = TRUE;
 
         // And as long as we have the map table, add its data to the row.
@@ -143,7 +143,7 @@ abstract class SqlBase extends SourcePluginBase {
           $map_key = 'destid' . $count++;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");
         }
-        $this->query->addField($alias, 'needs_update', 'migrate_map_needs_update');
+        $this->query->addField($alias, 'source_row_status', 'migrate_map_source_row_status');
       }
       // 3. If we are using highwater marks, also include rows above the mark.
       //    But, include all rows if the highwater mark is not set.

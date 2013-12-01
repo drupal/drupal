@@ -167,12 +167,12 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
   public $systemOfRecord = self::SOURCE;
 
   /**
-   * Specify value of needs_update for current map row. Usually set by
+   * Specify value of source_row_status for current map row. Usually set by
    * MigrateFieldHandler implementations.
    *
    * @var int
    */
-  public $needsUpdate = MigrateIdMapInterface::STATUS_IMPORTED;
+  public $sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
 
   /**
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface

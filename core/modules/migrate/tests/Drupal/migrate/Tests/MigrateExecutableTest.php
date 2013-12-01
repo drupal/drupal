@@ -42,6 +42,13 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   protected $executable;
 
+  protected $mapJoinable = FALSE;
+
+  protected $migrationConfiguration = array(
+    'id' => 'test',
+    'limit' => array('units' => 'seconds', 'value' => 5),
+  );
+
   /**
    * {@inheritdoc}
    */
@@ -54,7 +61,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   }
 
   protected function setUp() {
-    $this->migration = $this->getMock('Drupal\migrate\Entity\MigrationInterface');
+    $this->migration = $this->getMigration();
     $this->message = $this->getMock('Drupal\migrate\MigrateMessageInterface');
     $id_map = $this->getMock('Drupal\migrate\Plugin\MigrateIdMapInterface');
 
@@ -71,10 +78,11 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   public function testImportWithFailingRewind() {
     $iterator = $this->getMock('\Iterator');
+    $exception_message = $this->getRandomGenerator()->string();
     $iterator->expects($this->once())
       ->method('valid')
-      ->will($this->returnCallback(function() {
-        throw new \Exception('invalid source iteration');
+      ->will($this->returnCallback(function() use ($exception_message) {
+        throw new \Exception($exception_message);
       }));
     $source = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
     $source->expects($this->any())
@@ -88,7 +96,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     // Ensure that a message with the proper message was added.
     $this->message->expects($this->once())
       ->method('display')
-      ->with('Migration failed with source plugin exception: invalid source iteration');
+      ->with("Migration failed with source plugin exception: $exception_message");
 
     $result = $this->executable->import();
     $this->assertEquals(MigrationInterface::RESULT_FAILED, $result);
