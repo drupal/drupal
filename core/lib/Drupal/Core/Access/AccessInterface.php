@@ -20,14 +20,14 @@ interface AccessInterface {
    *
    * A checker should return this value to indicate that it grants access.
    */
-  const ALLOW = TRUE;
+  const ALLOW = 'ALLOW';
 
   /**
    * Deny access.
    *
    * A checker should return this value to indicate it does not grant access.
    */
-  const DENY = NULL;
+  const DENY = 'DENY';
 
   /**
    * Block access.
@@ -36,6 +36,6 @@ interface AccessInterface {
    * block access, regardless of any other access checkers. Most checkers
    * should prefer DENY.
    */
-  const KILL = FALSE;
+  const KILL = 'KILL';
 
 }

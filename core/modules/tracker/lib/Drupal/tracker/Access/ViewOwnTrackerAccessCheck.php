@@ -30,7 +30,7 @@ class ViewOwnTrackerAccessCheck implements StaticAccessCheckInterface {
   public function access(Route $route, Request $request, AccountInterface $account) {
     // The user object from the User ID in the path.
     $user = $request->attributes->get('user');
-    return $user && $account->isAuthenticated() && ($user->id() == $account->id());
+    return ($user && $account->isAuthenticated() && ($user->id() == $account->id())) ? static::ALLOW : static::DENY;
   }
 }
 

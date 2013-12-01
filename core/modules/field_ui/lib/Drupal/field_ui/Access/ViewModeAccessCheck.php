@@ -67,6 +67,8 @@ class ViewModeAccessCheck implements StaticAccessCheckInterface {
         return $account->hasPermission($permission) ? static::ALLOW : static::DENY;
       }
     }
+
+    return static::DENY;
   }
 
 }

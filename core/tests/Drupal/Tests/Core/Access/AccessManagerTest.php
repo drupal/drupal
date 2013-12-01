@@ -11,10 +11,8 @@ use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Access\DefaultAccessCheck;
-use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\UnitTestCase;
 use Drupal\router_test\Access\DefinedTestAccessCheck;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -466,6 +464,70 @@ class AccessManagerTest extends UnitTestCase {
     $this->setupAccessChecker();
 
     $this->assertFalse($this->accessManager->checkNamedRoute('test_route_1', array(), $this->account), 'A non existing route lead to access.');
+  }
+
+  /**
+   * Tests that an access checker throws an exception for not allowed values.
+   *
+   * @dataProvider providerCheckException
+   *
+   * @expectedException \Drupal\Core\Access\AccessException
+   */
+  public function testCheckException($return_value, $access_mode) {
+    $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+
+    // Setup a test route for each access configuration.
+    $requirements = array(
+      '_test_incorrect_value' => 'TRUE',
+    );
+    $options = array(
+      '_access_mode' => $access_mode,
+      '_access_checks' => array(
+        'test_incorrect_value',
+      ),
+    );
+    $route = new Route('', array(), $requirements, $options);
+
+    $route_provider->expects($this->any())
+      ->method('getRouteByName')
+      ->will($this->returnValue($route));
+
+    $request = new Request();
+
+    $container = new ContainerBuilder();
+
+    // Register a service that will return an incorrect value.
+    $access_check = $this->getMock('Drupal\Core\Routing\Access\AccessInterface');
+    $access_check->expects($this->any())
+      ->method('access')
+      ->will($this->returnValue($return_value));
+    $container->set('test_incorrect_value', $access_check);
+
+    $access_manager = new AccessManager($route_provider, $this->urlGenerator, $this->paramConverter);
+    $access_manager->setContainer($container);
+    $access_manager->addCheckService('test_incorrect_value');
+
+    $access_manager->checkNamedRoute('test_incorrect_value', array(), $this->account, $request);
+  }
+
+  /**
+   * Data provider for testCheckException.
+   *
+   * @return array
+   */
+  public function providerCheckException() {
+    return array(
+      array(array(), 'ALL'),
+      array(array(), 'ANY'),
+      array(array(1), 'ALL'),
+      array(array(1), 'ANY'),
+      array('string', 'ALL'),
+      array('string', 'ANY'),
+      array(0, 'ALL'),
+      array(0, 'ANY'),
+      array(1, 'ALL'),
+      array(1, 'ANY'),
+    );
   }
 
   /**

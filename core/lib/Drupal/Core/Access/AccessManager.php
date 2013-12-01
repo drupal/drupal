@@ -261,6 +261,11 @@ class AccessManager extends ContainerAware {
       }
 
       $service_access = $this->checks[$service_id]->access($route, $request, $account);
+
+      if (!in_array($service_access, array(AccessInterface::ALLOW, AccessInterface::DENY, AccessInterface::KILL), TRUE)) {
+        throw new AccessException("Access error in $service_id. Access services can only return AccessInterface::ALLOW, AccessInterface::DENY, or AccessInterface::KILL constants.");
+      }
+
       if ($service_access === AccessInterface::ALLOW) {
         $access = TRUE;
       }
@@ -299,6 +304,11 @@ class AccessManager extends ContainerAware {
       }
 
       $service_access = $this->checks[$service_id]->access($route, $request, $account);
+
+      if (!in_array($service_access, array(AccessInterface::ALLOW, AccessInterface::DENY, AccessInterface::KILL), TRUE)) {
+        throw new AccessException("Access error in $service_id. Access services can only return AccessInterface::ALLOW, AccessInterface::DENY, or AccessInterface::KILL constants.");
+      }
+
       if ($service_access === AccessInterface::ALLOW) {
         $access = TRUE;
       }

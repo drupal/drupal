@@ -136,7 +136,8 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
     if (!isset($this->access[$cid])) {
       // Perform basic permission checks first.
       if (!$account->hasPermission($map[$op]) && !$account->hasPermission($type_map[$op]) && !$account->hasPermission('administer nodes')) {
-        return $this->access[$cid] = FALSE;
+        $this->access[$cid] = FALSE;
+        return FALSE;
       }
 
       // There should be at least two revisions. If the vid of the given node
