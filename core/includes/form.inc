@@ -2813,9 +2813,9 @@ function theme_form_element($variables) {
 function theme_form_required_marker($variables) {
   $attributes = array(
     'class' => 'form-required',
-    'title' => t('This field is required.'),
+    'aria-hidden' => 'true',
   );
-  return '<abbr' . new Attribute($attributes) . '>*</abbr>';
+  return '<span' . new Attribute($attributes) . '>*</span>';
 }
 
 /**

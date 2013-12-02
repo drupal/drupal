@@ -94,7 +94,7 @@ class FormTest extends WebTestBase {
     $elements['file']['empty_values'] = $empty_strings;
 
     // Regular expression to find the expected marker on required elements.
-    $required_marker_preg = '@<label.*<abbr class="form-required" title="This field is required\.">\*</abbr></label>@';
+    $required_marker_preg = '@<label.*<span class="form-required" aria-hidden="true">\*</span></label>@';
 
     // Go through all the elements and all the empty values for them.
     foreach ($elements as $type => $data) {
