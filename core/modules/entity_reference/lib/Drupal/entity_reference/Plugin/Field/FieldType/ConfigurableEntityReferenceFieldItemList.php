@@ -33,9 +33,13 @@ class ConfigurableEntityReferenceFieldItemList extends ConfigFieldItemList {
         }
       }
       if ($uuids) {
+        $target_type = $this->getFieldDefinition()->getFieldSetting('target_type');
+        $entity_ids = \Drupal::entityQuery($target_type)
+          ->condition('uuid', $uuids, 'IN')
+          ->execute();
         $entities = \Drupal::entityManager()
-          ->getStorageController($this->getFieldDefinition()->getFieldSetting('target_type'))
-          ->loadByProperties(array('uuid' => $uuids));
+          ->getStorageController($target_type)
+          ->loadMultiple($entity_ids);
 
         foreach ($entities as $id => $entity) {
           $entity_ids[$entity->uuid()] = $id;
