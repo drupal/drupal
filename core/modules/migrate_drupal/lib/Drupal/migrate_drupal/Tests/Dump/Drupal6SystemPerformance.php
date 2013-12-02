@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\Drupal6SystemCron.
+ * Contains \Drupal\migrate\Tests\Drupal6SystemPerformance.
  */
 
-namespace Drupal\migrate\Tests\Dump;
+namespace Drupal\migrate_drupal\Tests\Dump;
 
 use Drupal\Core\Database\Connection;
 
 /**
- * Database dump for testing system.cron.yml migration.
+ * Database dump for testing system.performance.yml migration.
  */
-class Drupal6SystemCron {
+class Drupal6SystemPerformance {
 
   /**
    * Sample database schema and values.
@@ -47,13 +47,18 @@ class Drupal6SystemCron {
       'value',
     ))
     ->values(array(
-      'name' => 'cron_threshold_warning',
-      'value' => 'i:172800;',
+      'name' => 'preprocess_css',
+      'value' => 'i:0;',
     ))
     ->values(array(
-      'name' => 'cron_threshold_error',
-      'value' => 'i:1209600;',
+      'name' => 'preprocess_js',
+      'value' => 'i:0;',
+    ))
+    ->values(array(
+      'name' => 'cache_lifetime',
+      'value' => 'i:0;',
     ))
     ->execute();
   }
+
 }

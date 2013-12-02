@@ -5,10 +5,10 @@
  * Contains \Drupal\migrate\Plugin\migrate\source\d6\Variable.
  */
 
-namespace Drupal\migrate\Plugin\migrate\source;
+namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\Plugin\migrate\source\d6\Drupal6SqlBase;
+use Drupal\migrate_drupal\Plugin\migrate\source\d6\Drupal6SqlBase;
 
 /**
  * Drupal 6 variable source from database.

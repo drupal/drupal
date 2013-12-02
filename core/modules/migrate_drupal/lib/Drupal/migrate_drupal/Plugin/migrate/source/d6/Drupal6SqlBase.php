@@ -5,7 +5,7 @@
  * Contains \Drupal\migrate\Plugin\migrate\source\d6\Drupal6SqlBase.
  */
 
-namespace Drupal\migrate\Plugin\migrate\source\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 

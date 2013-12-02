@@ -5,7 +5,7 @@
  * Contains \Drupal\migrate\Tests\Drupal6SystemRss.
  */
 
-namespace Drupal\migrate\Tests\Dump;
+namespace Drupal\migrate_drupal\Tests\Dump;
 
 use Drupal\Core\Database\Connection;
 
