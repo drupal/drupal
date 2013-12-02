@@ -128,7 +128,7 @@ abstract class ShortcutTestBase extends WebTestBase {
    */
   function getShortcutInformation($set, $key) {
     $info = array();
-    foreach ($set->links as $uuid => $link) {
+    foreach ($set->links as $link) {
       $info[] = $link->{$key};
     }
     return $info;
