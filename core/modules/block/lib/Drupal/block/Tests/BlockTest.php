@@ -195,6 +195,9 @@ class BlockTest extends BlockTestBase {
     $this->drupalPostForm('admin/structure/block/manage/' . $id, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
+    $this->drupalGet('admin/structure/block/manage/' . $id);
+    $this->assertNoFieldChecked('edit-settings-label-display', 'The display_block option has the correct default value on the configuration form.');
+
     $this->drupalGet('user');
     $this->assertNoText($title, 'Block title was not displayed when hidden.');
   }

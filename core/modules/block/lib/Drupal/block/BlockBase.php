@@ -105,7 +105,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
     $form['label_display'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Display title'),
-      '#default_value' => $this->configuration['label_display'] == BlockInterface::BLOCK_LABEL_VISIBLE,
+      '#default_value' => ($this->configuration['label_display'] === BlockInterface::BLOCK_LABEL_VISIBLE),
       '#return_value' => BlockInterface::BLOCK_LABEL_VISIBLE,
     );
 
