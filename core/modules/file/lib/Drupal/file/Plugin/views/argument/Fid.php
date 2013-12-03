@@ -66,7 +66,7 @@ class Fid extends Numeric implements ContainerFactoryPluginInterface {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('entity.query')
     );
   }

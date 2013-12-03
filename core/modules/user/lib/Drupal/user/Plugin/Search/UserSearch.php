@@ -63,7 +63,7 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
   static public function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
     return new static(
       $container->get('database'),
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('module_handler'),
       $container->get('current_user'),
       $configuration,

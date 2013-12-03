@@ -41,7 +41,7 @@ class ViewEditTest extends UITestBase {
     $this->drupalPostForm(NULL, array(), t('Delete'));
 
     $this->assertUrl('admin/structure/views');
-    $view = $this->container->get('plugin.manager.entity')->getStorageController('view')->load('test_view');
+    $view = $this->container->get('entity.manager')->getStorageController('view')->load('test_view');
     $this->assertFalse($view instanceof View);
   }
 

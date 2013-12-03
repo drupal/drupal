@@ -65,7 +65,7 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
     return new static(
       $container->get('user.tempstore'),
       $container->get('module_handler'),
-      $container->get('plugin.manager.entity')->getStorageController('node_type')
+      $container->get('entity.manager')->getStorageController('node_type')
     );
   }
 

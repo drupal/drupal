@@ -9,6 +9,6 @@ services:
       - { name: access_check }
   access_check.node.add:
     class: Drupal\node\Access\NodeAddAccessCheck
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']
     tags:
       - { name: access_check }

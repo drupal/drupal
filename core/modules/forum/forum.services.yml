@@ -1,7 +1,7 @@
 services:
   forum_manager:
     class: Drupal\forum\ForumManager
-    arguments: ['@config.factory', '@plugin.manager.entity', '@database', '@field.info', '@string_translation']
+    arguments: ['@config.factory', '@entity.manager', '@database', '@field.info', '@string_translation']
   forum.breadcrumb:
     class: Drupal\forum\ForumBreadcrumbBuilder
     arguments: ['@entity.manager', '@config.factory', '@forum_manager']

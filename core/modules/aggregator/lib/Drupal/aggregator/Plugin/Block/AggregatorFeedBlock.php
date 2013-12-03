@@ -70,7 +70,7 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('plugin.manager.entity')->getStorageController('aggregator_feed'),
+      $container->get('entity.manager')->getStorageController('aggregator_feed'),
       $container->get('database')
     );
   }

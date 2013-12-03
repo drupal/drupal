@@ -398,7 +398,7 @@ class ForumTest extends WebTestBase {
     $parent_tid = db_query("SELECT t.parent FROM {taxonomy_term_hierarchy} t WHERE t.tid = :tid", array(':tid' => $tid))->fetchField();
     $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
 
-    $forum = $this->container->get('plugin.manager.entity')->getStorageController('taxonomy_term')->load($tid);
+    $forum = $this->container->get('entity.manager')->getStorageController('taxonomy_term')->load($tid);
     $this->assertEqual(($type == 'forum container'), (bool) $forum->forum_container->value);
     return $term;
   }

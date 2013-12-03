@@ -74,8 +74,8 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
 
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getViewBuilder('aggregator_item'),
-      $container->get('plugin.manager.entity')->getStorageController('aggregator_item'),
+      $container->get('entity.manager')->getViewBuilder('aggregator_item'),
+      $container->get('entity.manager')->getStorageController('aggregator_item'),
       $container->get('aggregator.category.storage')
     );
   }

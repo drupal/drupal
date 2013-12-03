@@ -11,13 +11,13 @@ services:
 
   content_translation.overview_access:
     class: Drupal\content_translation\Access\ContentTranslationOverviewAccess
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']
     tags:
       - { name: access_check }
 
   content_translation.manage_access:
     class: Drupal\content_translation\Access\ContentTranslationManageAccessCheck
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']
     tags:
       - { name: access_check }
 
