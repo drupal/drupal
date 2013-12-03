@@ -57,7 +57,6 @@ class FieldInfoTest extends FieldUnitTestBase {
       $this->assertEqual($fields[$field->uuid]->getFieldSetting($key), $val, format_string('Field setting %key has correct default value %value', array('%key' => $key, '%value' => $val)));
     }
     $this->assertEqual($fields[$field->uuid]->getFieldCardinality(), 1, 'info fields contains cardinality 1');
-    $this->assertEqual($fields[$field->uuid]->active, TRUE, 'info fields contains active 1');
 
     // Create an instance, verify that it shows up
     $instance_definition = array(

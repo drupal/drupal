@@ -14,11 +14,7 @@ use Drupal\field\Entity\Field;
  */
 function comment_uninstall() {
   // Remove the comment fields.
-  $fields = entity_load_multiple_by_properties('field_entity', array(
-    'type' => 'comment',
-    'include_inactive' => TRUE,
-    'include_deleted' => FALSE,
-  ));
+  $fields = entity_load_multiple_by_properties('field_entity', array('type' => 'comment'));
   foreach ($fields as $field) {
     entity_invoke_bundle_hook('delete', 'comment', $field->entity_type . '__' . $field->name);
     $field->delete();

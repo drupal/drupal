@@ -544,9 +544,7 @@ class FieldOverview extends OverviewBase {
     // Prefix with 'field_'.
     $field_name = 'field_' . $value;
 
-    // We need to check inactive fields as well, so we can't use
-    // field_info_fields().
-    return (bool) field_read_fields(array('entity_type' => $this->entity_type, 'name' => $field_name), array('include_inactive' => TRUE));
+    return (bool) field_info_field($this->entity_type, $field_name);
   }
 
 }

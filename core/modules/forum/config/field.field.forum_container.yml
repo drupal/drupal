@@ -10,7 +10,6 @@ settings:
     - ''
   allowed_values_function: ''
 module: options
-active: '1'
 entity_type: taxonomy_term
 locked: '1'
 cardinality: '1'

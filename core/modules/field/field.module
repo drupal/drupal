@@ -141,9 +141,6 @@ function field_theme() {
  * Implements hook_cron().
  */
 function field_cron() {
-  // Refresh the 'active' status of fields.
-  field_sync_field_status();
-
   // Do a pass of purging on deleted Field API data, if any exists.
   $limit = \Drupal::config('field.settings')->get('purge_batch_size');
   field_purge_batch($limit);
@@ -254,7 +251,7 @@ function field_entity_bundle_delete($entity_type, $bundle) {
   // Get the instances on the bundle. field_read_instances() must be used
   // here since field_info_instances() does not return instances for disabled
   // entity types or bundles.
-  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => TRUE));
+  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle));
   foreach ($instances as $instance) {
     $instance->delete();
   }
@@ -267,79 +264,20 @@ function field_entity_bundle_delete($entity_type, $bundle) {
  * Implements hook_rebuild().
  */
 function field_rebuild() {
-  // Refresh the 'active' status of fields.
-  field_sync_field_status();
+  field_cache_clear();
 }
 
 /**
  * Implements hook_modules_installed().
  */
 function field_modules_installed($modules) {
-  // Refresh the 'active' status of fields.
-  field_sync_field_status();
+  field_cache_clear();
 }
 
 /**
  * Implements hook_modules_uninstalled().
  */
 function field_modules_uninstalled($modules) {
-  // Refresh the 'active' status of fields.
-  field_sync_field_status();
-}
-
-/**
- * Refreshes the 'active' and 'storage[active]' values for fields.
- */
-function field_sync_field_status() {
-  $module_handler = \Drupal::moduleHandler();
-  $state = \Drupal::state();
-
-  // Get both deleted and non-deleted field definitions.
-  $fields = array();
-  foreach (config_get_storage_names_with_prefix('field.field.') as $name) {
-    $field = \Drupal::config($name)->get();
-    $fields[$field['uuid']] = $field;
-  }
-  $deleted_fields = $state->get('field.field.deleted') ?: array();
-  $fields += $deleted_fields;
-
-  if (empty($fields)) {
-    return;
-  }
-
-  // Set the 'module' and 'active' values for the current set of enabled
-  // modules.
-  $changed = array();
-  $modules = $module_handler->getModuleList();
-  $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
-  // Set fields with missing field type modules to inactive.
-  foreach ($fields as $uuid => &$field) {
-    // Associate field types.
-    if (isset($field_types[$field['type']]) && ($field['module'] != $field_types[$field['type']]['provider'] || !$field['active'])) {
-      $field['module'] = $field_types[$field['type']]['provider'];
-      $field['active'] = TRUE;
-      $changed[$uuid] = $field;
-    }
-    if (!isset($modules[$field['module']]) && $field['active']) {
-      $field['active'] = FALSE;
-      $changed[$uuid] = $field;
-    }
-  }
-
-  // Store the updated field definitions.
-  foreach ($changed as $uuid => $field) {
-    if (!empty($field['deleted'])) {
-      $deleted_fields[$uuid] = $field;
-    }
-    else {
-      \Drupal::config('field.field.' . $field['id'])
-        ->set('module', $field['module'])
-        ->set('active', $field['active'])
-        ->save();
-    }
-  }
-  $state->set('field.field.deleted', $deleted_fields);
-
   field_cache_clear();
 }
 

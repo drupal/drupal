@@ -6,7 +6,6 @@ type: text
 settings:
   max_length: '255'
 module: text
-active: '1'
 locked: '0'
 cardinality: '1'
 translatable: false

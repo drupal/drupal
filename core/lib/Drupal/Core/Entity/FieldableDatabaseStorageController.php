@@ -1200,10 +1200,10 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    * {@inheritdoc}
    */
   public function onBundleRename($bundle, $bundle_new) {
-    // We need to account for deleted or inactive fields and instances. The
-    // method runs before the instance definitions are updated, so we need to
-    // fetch them using the old bundle name.
-    $instances = field_read_instances(array('entity_type' => $this->entityType, 'bundle' => $bundle), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
+    // We need to account for deleted fields and instances. The method runs
+    // before the instance definitions are updated, so we need to fetch them
+    // using the old bundle name.
+    $instances = field_read_instances(array('entity_type' => $this->entityType, 'bundle' => $bundle), array('include_deleted' => TRUE));
     foreach ($instances as $instance) {
       $field = $instance->getField();
       $table_name = static::_fieldTableName($field);

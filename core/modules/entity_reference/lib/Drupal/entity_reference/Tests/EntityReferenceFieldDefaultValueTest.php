@@ -69,9 +69,6 @@ class EntityReferenceFieldDefaultValueTest extends WebTestBase {
     ));
     $this->instance->save();
 
-    // Rebuild field info to check if entity_reference field still working.
-    field_sync_field_status();
-
     // Set created node as default_value.
     $instance_edit = array(
       'default_value_input[' . $this->field->name . '][0][target_id]' => $referenced_node->getTitle() . ' (' .$referenced_node->id() . ')',

@@ -146,7 +146,6 @@ class FieldEditForm extends FormBase {
     $form['field']['field_name'] = array('#type' => 'value', '#value' => $field->getFieldName());
     $form['field']['type'] = array('#type' => 'value', '#value' => $field->getFieldType());
     $form['field']['module'] = array('#type' => 'value', '#value' => $field->module);
-    $form['field']['active'] = array('#type' => 'value', '#value' => $field->active);
 
     // Add settings provided by the field module. The field module is
     // responsible for not returning settings that cannot be changed if

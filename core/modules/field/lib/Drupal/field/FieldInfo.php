@@ -190,12 +190,10 @@ class FieldInfo {
 
     $map = array();
 
-    // Get active fields.
+    // Get fields.
     foreach (config_get_storage_names_with_prefix('field.field.') as $config_id) {
       $field_config = $this->config->get($config_id)->get();
-      if ($field_config['active']) {
-        $fields[$field_config['uuid']] = $field_config;
-      }
+      $fields[$field_config['uuid']] = $field_config;
     }
     // Get field instances.
     foreach (config_get_storage_names_with_prefix('field.instance.') as $config_id) {
@@ -216,7 +214,7 @@ class FieldInfo {
   }
 
   /**
-   * Returns all active fields, including deleted ones.
+   * Returns all fields, including deleted ones.
    *
    * @return \Drupal\field\FieldInterface[]
    *   An array of field entities, keyed by field ID.
@@ -254,7 +252,7 @@ class FieldInfo {
   }
 
   /**
-   * Retrieves all active, non-deleted instances definitions.
+   * Retrieves all non-deleted instances definitions.
    *
    * @param string $entity_type
    *   (optional) The entity type.
@@ -302,7 +300,7 @@ class FieldInfo {
   /**
    * Returns a field definition from a field name.
    *
-   * This method only retrieves active, non-deleted fields.
+   * This method only retrieves non-deleted fields.
    *
    * @param string $entity_type
    *   The entity type.
@@ -341,8 +339,6 @@ class FieldInfo {
 
   /**
    * Returns a field entity from a field ID.
-   *
-   * This method only retrieves active fields, deleted or not.
    *
    * @param string $field_id
    *   The field ID.
@@ -444,8 +440,8 @@ class FieldInfo {
     if (entity_get_info($entity_type) && !empty($field_map[$entity_type])) {
 
       // Collect names of fields and instances involved in the bundle, using the
-      // field map. The field map is already filtered to active, non-deleted
-      // fields and instances, so those are kept out of the persistent caches.
+      // field map. The field map is already filtered to non-deleted fields and
+      // instances, so those are kept out of the persistent caches.
       $config_ids = array();
       foreach ($field_map[$entity_type] as $field_name => $field_data) {
         if (in_array($bundle, $field_data['bundles'])) {

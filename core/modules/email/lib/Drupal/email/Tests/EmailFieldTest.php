@@ -90,9 +90,6 @@ class EmailFieldTest extends WebTestBase {
       ))
       ->save();
 
-    // Rebuild field info to check if email field still working.
-    field_sync_field_status();
-
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget found.');
@@ -109,14 +106,13 @@ class EmailFieldTest extends WebTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
+    $this->assertRaw($value);
 
-    if ($this->assertRaw($value)) {
-      // Verify that a mailto link is displayed.
-      $entity = entity_load('entity_test', $id);
-      $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
-      $entity->content = field_attach_view($entity, $display);
-      $this->drupalSetContent(drupal_render($entity->content));
-      $this->assertLinkByHref('mailto:test@example.com');
-    }
+    // Verify that a mailto link is displayed.
+    $entity = entity_load('entity_test', $id);
+    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
+    $entity->content = field_attach_view($entity, $display);
+    $this->drupalSetContent(drupal_render($entity->content));
+    $this->assertLinkByHref('mailto:test@example.com');
   }
 }

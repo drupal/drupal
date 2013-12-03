@@ -4,7 +4,6 @@ name: field_tags
 entity_type: node
 type: taxonomy_term_reference
 module: taxonomy
-active: '1'
 settings:
   allowed_values:
     -

@@ -101,13 +101,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
   public $module;
 
   /**
-   * Flag indicating whether the field type module is enabled.
-   *
-   * @var bool
-   */
-  public $active;
-
-  /**
    * Field-type specific settings.
    *
    * An array of key/value pairs, The keys and default values are defined by the
@@ -265,7 +258,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
       'type',
       'settings',
       'module',
-      'active',
       'locked',
       'cardinality',
       'translatable',
@@ -326,9 +318,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
 
     // Ensure the field name is unique (we do not care about deleted fields).
     if ($prior_field = $storage_controller->load($this->id)) {
-      $message = $prior_field->active ?
-        'Attempt to create field name %name which already exists and is active.' :
-        'Attempt to create field name %name which already exists, although it is inactive.';
+      $message = 'Attempt to create field name %name which already exists.';
       throw new FieldException(format_string($message, array('%name' => $this->name)));
     }
 
@@ -347,7 +337,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
       throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
     }
     $this->module = $field_type['provider'];
-    $this->active = TRUE;
 
     // Make sure all settings are present, so that a complete field
     // definition is passed to the various hooks and written to config.

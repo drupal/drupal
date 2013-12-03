@@ -36,7 +36,6 @@ function _update_8003_field_create_field(array &$field_config) {
     'locked' => FALSE,
     'settings' => array(),
     'indexes' => array(),
-    'active' => TRUE,
     'status' => 1,
     'langcode' => 'und',
   );
@@ -337,7 +336,6 @@ function field_update_8003() {
       'uuid' => $uuid->generate(),
       'type' => $record['type'],
       'module' => $record['module'],
-      'active' => $record['active'],
       'entity_type' => $record['entity_type'],
       'settings' => $record['data']['settings'],
       'locked' => $record['locked'],

@@ -160,7 +160,7 @@ function field_info_formatter_settings($type) {
 /**
  * Returns a lightweight map of fields across bundles.
  *
- * The function only returns active, non deleted fields.
+ * The function only returns non-deleted fields.
  *
  * @return
  *   An array keyed by entity type. Each value is an array which keys are
@@ -195,9 +195,7 @@ function field_info_field_map() {
  *   The entity type.
  * @param $field_name
  *   The name of the field to retrieve. $field_name can only refer to a
- *   non-deleted, active field. For deleted fields, use
- *   field_info_field_by_id(). To retrieve information about inactive fields,
- *   use field_read_fields().
+ *   non-deleted field. For deleted fields, use field_info_field_by_id().
  *
  * @return
  *   The field array, as returned by field_read_fields(), with an
@@ -218,8 +216,7 @@ function field_info_field($entity_type, $field_name) {
  * Returns data about an individual field, given a field ID.
  *
  * @param $field_id
- *   The ID of the field to retrieve. $field_id can refer to a deleted field,
- *   but not an inactive one.
+ *   The ID of the field to retrieve. $field_id can refer to a deleted field.
  *
  * @return
  *   The field array, as returned by field_read_fields(), with an additional
@@ -342,9 +339,7 @@ function field_info_instance($entity_type, $field_name, $bundle_name) {
  * @param $field_name
  *   The field name to read.
  * @param array $include_additional
- *   The default behavior of this function is to not return a field that is
- *   inactive. Setting $include_additional['include_inactive'] to TRUE will
- *   override this behavior.
+ *   Additional properties to match.
  *
  * @return
  *   A field definition array, or FALSE.
@@ -361,13 +356,12 @@ function field_read_field($entity_type, $field_name, $include_additional = array
  * Reads in fields that match an array of conditions.
  *
  * @param array $conditions
- *   An array of conditions to match against. Keys are names of properties found
- *   in field configuration files, and values are conditions to match.
+ *   An array of conditions to match against. Keys are names of properties
+ *   found in field configuration files, and values are conditions to match.
  * @param array $include_additional
- *   The default behavior of this function is to not return fields that are
- *   inactive or have been deleted. Setting
- *   $include_additional['include_inactive'] or
- *   $include_additional['include_deleted'] to TRUE will override this behavior.
+ *   The default behavior of this function is to not return fields that have
+ *   been deleted. Setting $include_additional['include_deleted'] to TRUE will
+ *   override this behavior.
  *
  * @return
  *   An array of fields matching $params. If
@@ -378,14 +372,11 @@ function field_read_field($entity_type, $field_name, $include_additional = array
  *   entity_load_multiple_by_properties('field_entity', $conditions).
  */
 function field_read_fields($conditions = array(), $include_additional = array()) {
-  // Include inactive fields if specified in the $include_additional parameter.
-  $include_inactive = isset($include_additional['include_inactive']) && $include_additional['include_inactive'];
   // Include deleted fields if specified either in the $include_additional or
   // the $conditions parameters.
   $include_deleted = (isset($include_additional['include_deleted']) && $include_additional['include_deleted']) || (isset($conditions['deleted']) && $conditions['deleted']);
 
-  // Pass include_inactive and include_deleted to the $conditions array.
-  $conditions['include_inactive'] = $include_inactive;
+  // Pass include_deleted to the $conditions array.
   $conditions['include_deleted'] = $include_deleted;
 
   return entity_load_multiple_by_properties('field_entity', $conditions);
@@ -406,9 +397,8 @@ function field_read_fields($conditions = array(), $include_additional = array())
  *   The bundle to which the field is bound.
  * @param array $include_additional
  *   The default behavior of this function is to not return an instance that has
- *   been deleted, or whose field is inactive. Setting
- *   $include_additional['include_inactive'] or
- *   $include_additional['include_deleted'] to TRUE will override this behavior.
+ *   been deleted. Setting $include_additional['include_deleted'] to TRUE will
+ *   override this behavior.
  *
  * @return
  *   An instance structure, or FALSE.
@@ -430,8 +420,7 @@ function field_read_instance($entity_type, $field_name, $bundle, $include_additi
  *   conditions to match.
  * @param $include_additional
  *   The default behavior of this function is to not return field instances that
- *   have been marked deleted, or whose field is inactive. Setting
- *   $include_additional['include_inactive'] or
+ *   have been marked deleted. Setting
  *   $include_additional['include_deleted'] to TRUE will override this behavior.
  *
  * @return
@@ -441,15 +430,11 @@ function field_read_instance($entity_type, $field_name, $bundle, $include_additi
  *   entity_load_multiple_by_properties('field_instance', $conditions).
  */
 function field_read_instances($conditions = array(), $include_additional = array()) {
-  // Include instances of inactive fields if specified in the
-  // $include_additional parameter.
-  $include_inactive = isset($include_additional['include_inactive']) && $include_additional['include_inactive'];
   // Include deleted instances if specified either in the $include_additional
   // or the $conditions parameters.
   $include_deleted = (isset($include_additional['include_deleted']) && $include_additional['include_deleted']) || (isset($conditions['deleted']) && $conditions['deleted']);
 
-  // Pass include_inactive and include_deleted to the $conditions array.
-  $conditions['include_inactive'] = $include_inactive;
+  // Pass include_deleted to the $conditions array.
   $conditions['include_deleted'] = $include_deleted;
 
   return entity_load_multiple_by_properties('field_instance', $conditions);

@@ -94,10 +94,6 @@ class FieldStorageController extends ConfigStorageController {
    * {@inheritdoc}
    */
   public function loadByProperties(array $conditions = array()) {
-    // Include instances of inactive fields if specified in the
-    // $conditions parameters.
-    $include_inactive = isset($conditions['include_inactive']) ? $conditions['include_inactive'] : FALSE;
-    unset($conditions['include_inactive']);
     // Include deleted instances if specified in the $conditions parameters.
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
@@ -119,11 +115,6 @@ class FieldStorageController extends ConfigStorageController {
       foreach ($deleted_fields as $id => $config) {
         $fields[$id] = $this->entityManager->getStorageController($this->entityType)->create($config);
       }
-    }
-
-    // Translate "do not include inactive instances" into actual conditions.
-    if (!$include_inactive) {
-      $conditions['active'] = TRUE;
     }
 
     // Collect matching fields.

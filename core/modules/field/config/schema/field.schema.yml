@@ -35,9 +35,6 @@ field.field.*.*:
     module:
       type: string
       label: 'Module'
-    active:
-      type: boolean
-      label: 'Active'
     locked:
       type: boolean
       label: 'Locked'

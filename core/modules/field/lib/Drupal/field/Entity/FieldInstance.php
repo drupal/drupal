@@ -250,10 +250,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     }
     elseif (isset($values['field_uuid'])) {
       $field = field_info_field_by_id($values['field_uuid']);
-      // field_info_field_by_id() will not find the field if it is inactive.
-      if (!$field) {
-        $field = current(field_read_fields(array('uuid' => $values['field_uuid']), array('include_inactive' => TRUE, 'include_deleted' => TRUE)));
-      }
       if (!$field) {
         throw new FieldException(format_string('Attempt to create an instance of unknown field @uuid', array('@uuid' => $values['field_uuid'])));
       }

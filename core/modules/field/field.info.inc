@@ -38,6 +38,7 @@ function field_info_cache_clear() {
   // Clear typed data definitions.
   \Drupal::typedData()->clearCachedDefinitions();
   \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();
+  \Drupal::service('config.factory')->reset();
 
   Field::fieldInfo()->flush();
 }

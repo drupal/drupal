@@ -4,7 +4,6 @@ name: field_image
 entity_type: node
 type: image
 module: image
-active: '1'
 settings:
   uri_scheme: public
   default_image:

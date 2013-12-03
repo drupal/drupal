@@ -21,7 +21,7 @@ function forum_install() {
   // Create the 'taxonomy_forums' field if it doesn't already exist. If forum
   // is being enabled at the same time as taxonomy after both modules have been
   // enabled, the field might exist but still be marked inactive.
-  if (!field_read_field('node', 'taxonomy_forums', array('include_inactive' => TRUE))) {
+  if (!field_info_field('node', 'taxonomy_forums')) {
     entity_create('field_entity', array(
       'name' => 'taxonomy_forums',
       'entity_type' => 'node',
@@ -81,7 +81,6 @@ function forum_install() {
   $fields = entity_load_multiple_by_properties('field_entity', array(
     'type' => 'comment',
     'name' => 'comment_forum',
-    'include_inactive' => TRUE,
     'include_deleted' => FALSE,
   ));
   if (empty($fields)) {
