@@ -239,11 +239,11 @@ class StyleTest extends ViewTestBase {
     foreach ($rows as $row) {
       $attributes = $row->attributes();
       $class = (string) $attributes['class'][0];
-      $this->assertTrue(strpos($class, $random_name) !== FALSE, 'Take sure that a custom css class is added to the output.');
+      $this->assertTrue(strpos($class, $random_name) !== FALSE, 'Make sure that a custom css class is added to the output.');
 
       // Check token replacement.
       $name = $view->field['name']->getValue($view->result[$count]);
-      $this->assertTrue(strpos($class, "test-token-$name") !== FALSE, 'Take sure that a token in custom css class is replaced.');
+      $this->assertTrue(strpos($class, "test-token-$name") !== FALSE, 'Make sure that a token in custom css class is replaced.');
 
       $count++;
     }

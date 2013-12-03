@@ -166,7 +166,7 @@ class GroupwiseMax extends RelationshipPluginBase {
   }
 
   /**
-   * When the form is submitted, take sure to clear the subquery string cache.
+   * When the form is submitted, make sure to clear the subquery string cache.
    */
   public function submitOptionsForm(&$form, &$form_state) {
     $cid = 'views_relationship_groupwise_max:' . $this->view->storage->id() . ':' . $this->view->current_display . ':' . $this->options['id'];

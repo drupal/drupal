@@ -10,10 +10,11 @@
  *   - Test on a generic entity not on a node.
  *
  * What has to be tested:
- *   - Take sure that every wanted field is added to the according entity type.
- *   - Take sure the joins are done correct.
- *   - Use basic fields and take sure that the full wanted object is build.
- *   - Use relationships between different entity types, for example node and the node author(user).
+ *   - Make sure that every wanted field is added to the according entity type.
+ *   - Make sure the joins are done correctly.
+ *   - Use basic fields and make sure that the full wanted object is built.
+ *   - Use relationships between different entity types, for example node and
+ *     the node author(user).
  */
 
 namespace Drupal\field\Tests\Views;

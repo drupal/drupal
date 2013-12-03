@@ -844,7 +844,7 @@ class Field extends FieldPluginBase {
         $tokens['[' . $this->options['id'] . '-' . $id . ']'] = filter_xss_admin($raw[$id]);
       }
       else {
-        // Take sure that empty values are replaced as well.
+        // Make sure that empty values are replaced as well.
         $tokens['[' . $this->options['id'] . '-' . $id . ']'] = '';
       }
     }

@@ -1252,7 +1252,7 @@ abstract class FieldPluginBase extends HandlerBase {
         $more_link_path = $this->options['alter']['more_link_path'];
         $more_link_path = strip_tags(decode_entities(strtr($more_link_path, $tokens)));
 
-        // Take sure that paths which was runned through url() does work as well.
+        // Make sure that paths which were run through url() work as well.
         $base_path = base_path();
         // Checks whether the path starts with the base_path.
         if (strpos($more_link_path, $base_path) === 0) {
@@ -1645,7 +1645,7 @@ abstract class FieldPluginBase extends HandlerBase {
    *     - max_length: Maximum length of the string, the rest gets truncated.
    *     - word_boundary: Trim only on a word boundary.
    *     - ellipsis: Show an ellipsis (...) at the end of the trimmed string.
-   *     - html: Take sure that the html is correct.
+   *     - html: Make sure that the html is correct.
    *
    * @param string $value
    *   The string which should be trimmed.

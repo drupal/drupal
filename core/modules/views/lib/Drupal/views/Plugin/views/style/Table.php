@@ -438,7 +438,7 @@ class Table extends StylePluginBase {
   }
 
   public function wizardSubmit(&$form, &$form_state, WizardInterface $wizard, &$display_options, $display_type) {
-    // If any of the displays use the table style, take sure that the fields
+    // If any of the displays use the table style, make sure that the fields
     // always have a labels by unsetting the override.
     foreach ($display_options['default']['fields'] as &$field) {
       unset($field['label']);

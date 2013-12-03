@@ -269,7 +269,7 @@ class HandlerTest extends ViewTestBase {
     $expected_options = array('none', 'nid');
     $this->assertEqual($options, $expected_options);
 
-    // Remove the relationship and take sure no relationship option appears.
+    // Remove the relationship and make sure no relationship option appears.
     $this->drupalPostForm('admin/structure/views/nojs/config-item/test_handler_relationships/default/relationship/nid', array(), t('Remove'));
     $this->drupalGet($handler_options_path);
     $this->assertNoFieldByName($relationship_name, 'Make sure that no relationship option is available');

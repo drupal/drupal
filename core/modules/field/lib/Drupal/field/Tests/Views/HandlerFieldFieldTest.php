@@ -137,7 +137,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     );
     $this->executeView($view);
 
-    // Take sure that the formatter works as expected.
+    // Make sure that the formatter works as expected.
     // @TODO: actually there should be a specific formatter.
     for ($i = 0; $i < 2; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $this->fields[0]->getFieldName());
@@ -163,7 +163,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
       }
-      $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
+      $this->assertEqual($rendered_field, implode(', ', $items), 'Make sure that the amount of items is limited.');
     }
 
     // Test that an empty field is rendered without error.
@@ -186,7 +186,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
       }
-      $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
+      $this->assertEqual($rendered_field, implode(', ', $items), 'Make sure that the amount of items is limited.');
     }
     $view->destroy();
 
@@ -207,7 +207,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
       }
-      $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
+      $this->assertEqual($rendered_field, implode(', ', $items), 'Make sure that the amount of items is limited.');
     }
     $view->destroy();
 
@@ -225,7 +225,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
       $pure_items = $this->nodes[$i]->{$field_name}->getValue();
       $items[] = $pure_items[0]['value'];
       $items[] = $pure_items[4]['value'];
-      $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
+      $this->assertEqual($rendered_field, implode(', ', $items), 'Make sure that the amount of items is limited.');
     }
     $view->destroy();
 
@@ -245,7 +245,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
       }
-      $this->assertEqual($rendered_field, implode(':', $items), 'Take sure that the amount of items are limited.');
+      $this->assertEqual($rendered_field, implode(':', $items), 'Make sure that the amount of items is limited.');
     }
   }
 

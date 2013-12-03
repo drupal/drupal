@@ -28,7 +28,7 @@ class StyleUnformattedTest extends StyleTestBase {
   }
 
   /**
-   * Take sure that the default css classes works as expected.
+   * Make sure that the default css classes works as expected.
    */
   function testDefaultRowClasses() {
     $view = views_get_view('test_view');
@@ -43,20 +43,20 @@ class StyleUnformattedTest extends StyleTestBase {
       $count++;
       $attributes = $row->attributes();
       $class = (string) $attributes['class'][0];
-      // Take sure that each row has a row css class.
-      $this->assertTrue(strpos($class, "views-row-$count") !== FALSE, 'Take sure that each row has a row css class.');
-      // Take sure that the odd/even classes are set right.
+      // Make sure that each row has a row css class.
+      $this->assertTrue(strpos($class, "views-row-$count") !== FALSE, 'Make sure that each row has a row css class.');
+      // Make sure that the odd/even classes are set right.
       $odd_even = $count % 2 == 0 ? 'even' : 'odd';
-      $this->assertTrue(strpos($class, "views-row-$odd_even") !== FALSE, 'Take sure that the odd/even classes are set right.');
+      $this->assertTrue(strpos($class, "views-row-$odd_even") !== FALSE, 'Make sure that the odd/even classes are set right.');
 
       if ($count == 1) {
-        $this->assertTrue(strpos($class, "views-row-first") !== FALSE, 'Take sure that the first class is set right.');
+        $this->assertTrue(strpos($class, "views-row-first") !== FALSE, 'Make sure that the first class is set right.');
       }
       elseif ($count == $count_result) {
-        $this->assertTrue(strpos($class, "views-row-last") !== FALSE, 'Take sure that the last class is set right.');
+        $this->assertTrue(strpos($class, "views-row-last") !== FALSE, 'Make sure that the last class is set right.');
 
       }
-      $this->assertTrue(strpos($class, 'views-row') !== FALSE, 'Take sure that the views row class is set right.');
+      $this->assertTrue(strpos($class, 'views-row') !== FALSE, 'Make sure that the views row class is set right.');
     }
   }
 

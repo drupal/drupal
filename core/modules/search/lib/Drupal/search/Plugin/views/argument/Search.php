@@ -20,7 +20,7 @@ use Drupal\Component\Annotation\PluginID;
 class Search extends ArgumentPluginBase {
 
   /**
-   * Take sure that parseSearchExpression is runned and everything is set up for it.
+   * Make sure that parseSearchExpression is run and everything is set up.
    *
    * @param $input
    *    The search phrase which was input by the user.
@@ -83,7 +83,7 @@ class Search extends ArgumentPluginBase {
         $conditions = $this->search_query->conditions();
         $condition_conditions =& $conditions->conditions();
         foreach ($condition_conditions  as $key => &$condition) {
-          // Take sure we just look at real conditions.
+          // Make sure we just look at real conditions.
           if (is_numeric($key)) {
             // Replace the conditions with the table alias of views.
             $this->search_query->condition_replace_string('d.', "$search_dataset.", $condition);

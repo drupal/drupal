@@ -198,7 +198,7 @@ abstract class SqlBase extends PagerPluginBase {
       form_set_error('pager_options][expose][items_per_page_options', $form_state, t('Insert a list of integer numeric values separated by commas: e.g: 10, 20, 50, 100'));
     }
 
-    // Take sure that the items_per_page is part of the expose settings.
+    // Make sure that the items_per_page is part of the expose settings.
     if (!empty($form_state['values']['pager_options']['expose']['items_per_page']) && !empty($form_state['values']['pager_options']['items_per_page'])) {
       $items_per_page = $form_state['values']['pager_options']['items_per_page'];
       if (array_search($items_per_page, $options) === FALSE) {

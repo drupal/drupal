@@ -194,7 +194,7 @@ Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
   }
   else {
     var position = $.inArray(label, this.checkedItems);
-    // Delete the item from the list and take sure that the list doesn't have undefined items left.
+    // Delete the item from the list and make sure that the list doesn't have undefined items left.
     for (var i = 0; i < this.checkedItems.length; i++) {
       if (i === position) {
         this.checkedItems.splice(i, 1);
