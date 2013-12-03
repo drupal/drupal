@@ -127,6 +127,43 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function formatPlural($count, $singular, $plural, array $args = array(), array $options = array()) {
+    $args['@count'] = $count;
+    // Join both forms to search a translation.
+    $translatable_string = implode(LOCALE_PLURAL_DELIMITER, array($singular, $plural));
+    // Translate as usual.
+    $translated_strings = $this->translate($translatable_string, $args, $options);
+    // Split joined translation strings into array.
+    $translated_array = explode(LOCALE_PLURAL_DELIMITER, $translated_strings);
+
+    if ($count == 1) {
+      return $translated_array[0];
+    }
+
+    // Get the plural index through the gettext formula.
+    // @todo implement static variable to minimize function_exists() usage.
+    $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
+    if ($index == 0) {
+      // Singular form.
+      return $translated_array[0];
+    }
+    else {
+      if (isset($translated_array[$index])) {
+        // N-th plural form.
+        return $translated_array[$index];
+      }
+      else {
+        // If the index cannot be computed or there's no translation, use
+        // the second plural form as a fallback (which allows for most flexiblity
+        // with the replaceable @count value).
+        return $translated_array[1];
+      }
+    }
+  }
+
+  /**
    * Sets the default langcode.
    *
    * @param string $langcode

@@ -585,7 +585,7 @@ services:
     arguments: ['@module_handler']
   date:
     class: Drupal\Core\Datetime\Date
-    arguments: ['@entity.manager', '@language_manager']
+    arguments: ['@entity.manager', '@language_manager', '@string_translation']
   feed.bridge.reader:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:

@@ -12,6 +12,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
  * Provides a service to handler various date related functionality.
@@ -43,16 +44,38 @@ class Date {
   protected $dateFormats = array();
 
   /**
+   * Contains the different date interval units.
+   *
+   * This array is keyed by strings representing the unit (e.g.
+   * '1 year|@count years') and with the amount of values of the unit in
+   * seconds.
+   *
+   * @var array
+   */
+  protected $units = array(
+    '1 year|@count years' => 31536000,
+    '1 month|@count months' => 2592000,
+    '1 week|@count weeks' => 604800,
+    '1 day|@count days' => 86400,
+    '1 hour|@count hours' => 3600,
+    '1 min|@count min' => 60,
+    '1 sec|@count sec' => 1,
+  );
+
+  /**
    * Constructs a Date object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
+   *   The string translation.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LanguageManager $language_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, LanguageManager $language_manager, TranslationInterface $translation) {
     $this->dateFormatStorage = $entity_manager->getStorageController('date_format');
     $this->languageManager = $language_manager;
+    $this->stringTranslation = $translation;
   }
 
   /**
@@ -125,6 +148,47 @@ class Date {
       'format_string_type' => $key,
     );
     return Xss::filter($date->format($format, $settings));
+  }
+
+  /**
+   * Formats a time interval with the requested granularity.
+   *
+   * @param int $interval
+   *   The length of the interval in seconds.
+   * @param int $granularity
+   *   (optional) How many different units to display in the string (2 by
+   *   default).
+   * @param string $langcode
+   *   (optional) Language code to translate to a language other than what is
+   *   used to display the page. Defaults to NULL.
+   *
+   * @return string
+   *   A translated string representation of the interval.
+   */
+  public function formatInterval($interval, $granularity = 2, $langcode = NULL) {
+    $output = '';
+    foreach ($this->units as $key => $value) {
+      $key = explode('|', $key);
+      if ($interval >= $value) {
+        $output .= ($output ? ' ' : '') . $this->stringTranslation->formatPlural(floor($interval / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
+        $interval %= $value;
+        $granularity--;
+      }
+
+      if ($granularity == 0) {
+        break;
+      }
+    }
+    return $output ? $output : $this->t('0 sec', array(), array('langcode' => $langcode));
+  }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->stringTranslation->translate($string, $args, $options);
   }
 
   /**

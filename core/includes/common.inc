@@ -897,39 +897,11 @@ function format_xml_elements($array) {
  *
  * @see t()
  * @see format_string()
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal::translation()->formatPlural()
  */
 function format_plural($count, $singular, $plural, array $args = array(), array $options = array()) {
-  $args['@count'] = $count;
-  // Join both forms to search a translation.
-  $tranlatable_string = implode(LOCALE_PLURAL_DELIMITER, array($singular, $plural));
-  // Translate as usual.
-  $translated_strings = t($tranlatable_string, $args, $options);
-  // Split joined translation strings into array.
-  $translated_array = explode(LOCALE_PLURAL_DELIMITER, $translated_strings);
-
-  if ($count == 1) {
-    return $translated_array[0];
-  }
-
-  // Get the plural index through the gettext formula.
-  // @todo implement static variable to minimize function_exists() usage.
-  $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
-  if ($index == 0) {
-    // Singular form.
-    return $translated_array[0];
-  }
-  else {
-    if (isset($translated_array[$index])) {
-      // N-th plural form.
-      return $translated_array[$index];
-    }
-    else {
-      // If the index cannot be computed or there's no translation, use
-      // the second plural form as a fallback (which allows for most flexiblity
-      // with the replaceable @count value).
-      return $translated_array[1];
-    }
-  }
+  return \Drupal::translation()->formatPlural($count, $singular, $plural, $args, $options);
 }
 
 /**
@@ -1007,31 +979,11 @@ function format_size($size, $langcode = NULL) {
  *
  * @return
  *   A translated string representation of the interval.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal::service('date')->formatInterval().
  */
 function format_interval($interval, $granularity = 2, $langcode = NULL) {
-  $units = array(
-    '1 year|@count years' => 31536000,
-    '1 month|@count months' => 2592000,
-    '1 week|@count weeks' => 604800,
-    '1 day|@count days' => 86400,
-    '1 hour|@count hours' => 3600,
-    '1 min|@count min' => 60,
-    '1 sec|@count sec' => 1
-  );
-  $output = '';
-  foreach ($units as $key => $value) {
-    $key = explode('|', $key);
-    if ($interval >= $value) {
-      $output .= ($output ? ' ' : '') . format_plural(floor($interval / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
-      $interval %= $value;
-      $granularity--;
-    }
-
-    if ($granularity == 0) {
-      break;
-    }
-  }
-  return $output ? $output : t('0 sec', array(), array('langcode' => $langcode));
+  return \Drupal::service('date')->formatInterval($interval, $granularity, $langcode);
 }
 
 /**
