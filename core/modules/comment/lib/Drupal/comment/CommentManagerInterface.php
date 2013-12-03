@@ -27,7 +27,7 @@ interface CommentManagerInterface {
    * Utility function to return an array of comment fields.
    *
    * @param string $entity_type
-   *   The entity type to return fields which are attached on.
+   *   The content entity type to which the comment fields are attached.
    *
    * @return array
    *   An array of comment field map definitions, keyed by field name. Each
@@ -38,7 +38,7 @@ interface CommentManagerInterface {
    *
    * @see field_info_field_map()
    */
-  public function getFields($entity_type = NULL);
+  public function getFields($entity_type);
 
   /**
    * Utility function to return all comment fields.
