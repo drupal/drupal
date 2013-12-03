@@ -199,10 +199,6 @@ class RearrangeFilter extends ViewsFormBase {
       );
     }
 
-    if (isset($form_state['update_name'])) {
-      $name = $form_state['update_name'];
-    }
-
     $view->getStandardButtons($form, $form_state, 'views_ui_rearrange_filter_form');
     $form['actions']['add_group'] = array(
       '#type' => 'submit',
@@ -228,7 +224,6 @@ class RearrangeFilter extends ViewsFormBase {
     else {
       $old_fields = $display->getOption($types['filter']['plural']);
     }
-    $count = 0;
 
     $groups = $form_state['values']['filter_groups'];
     // Whatever button was clicked, re-calculate field information.

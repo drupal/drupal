@@ -98,7 +98,6 @@ class ConfigItemGroup extends ViewsFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $item = &$form_state['handler']->options;
     $type = $form_state['type'];
-    $id = $form_state['id'];
 
     $handler = Views::handlerManager($type)->getHandler($item);
     $executable = $form_state['view']->getExecutable();

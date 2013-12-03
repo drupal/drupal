@@ -757,7 +757,6 @@ class ViewUI implements ViewStorageInterface {
   public function getFormProgress() {
     $progress = FALSE;
     if (!empty($this->stack)) {
-      $stack = $this->stack;
       // The forms on the stack have integer keys that don't change as the forms
       // are completed, so we can see which ones are still left.
       $keys = array_keys($this->stack);
