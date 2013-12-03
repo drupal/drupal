@@ -27,9 +27,12 @@ class TaxonomyTermReferenceFieldItemList extends LegacyConfigFieldItemList {
         $uuids[$delta] = $properties['target_uuid'];
       }
       if ($uuids) {
+        $entity_ids = \Drupal::entityQuery('taxonomy_term')
+          ->condition('uuid', $uuids, 'IN')
+          ->execute();
         $entities = \Drupal::entityManager()
           ->getStorageController('taxonomy_term')
-          ->loadByProperties(array('uuid' => $uuids));
+          ->loadMultiple($entity_ids);
 
         foreach ($entities as $id => $entity) {
           $entity_ids[$entity->uuid()] = $id;
