@@ -17,13 +17,64 @@ namespace Drupal\Core\Language;
  * @see language_default()
  */
 class Language {
+
   // Properties within the Language are set up as the default language.
+
+  /**
+   * The human readable English name.
+   *
+   * @var string
+   */
   public $name = '';
+
+  /**
+   * The ID, langcode.
+   *
+   * @var string
+   */
   public $id = '';
+
+  /**
+   * The direction, left-to-right, or right-to-left.
+   *
+   * Defined using constants, either DIRECTION_LTR or const DIRECTION_RTL.
+   *
+   * @var int
+   */
   public $direction = Language::DIRECTION_LTR;
+
+  /**
+   * The weight, used for ordering languages in lists, like selects or tables.
+   *
+   * @var int
+   */
   public $weight = 0;
+
+  /**
+   * Flag indicating if this is the only site default language.
+   *
+   * @var bool
+   */
   public $default = FALSE;
+
+  /**
+   * The language negotiation method used when a language was detected.
+   *
+   * @var bool
+   *
+   * @see language_types_initialize()
+   */
   public $method_id = NULL;
+
+  /**
+   * Locked indicates a language used by the system, not an actual language.
+   *
+   * Examples of locked languages are, LANGCODE_NOT_SPECIFIED, und, and
+   * LANGCODE_NOT_APPLICABLE, zxx, which are usually shown in language selects
+   * but hidden in places like the Language configuration and cannot be deleted.
+   *
+   * @var bool
+   */
   public $locked = FALSE;
 
   /**
