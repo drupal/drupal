@@ -48,9 +48,10 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
       $options = array();
 
       $destination = $event->getRequest()->query->get('destination');
-      // A destination in $_GET always overrides the current RedirectResponse.
-      // We do not allow absolute URLs to be passed via $_GET, as this can be an
-      // attack vector, with the following exception:
+      // A destination from \Drupal::request()->query always overrides the
+      // current RedirectResponse. We do not allow absolute URLs to be passed
+      // via \Drupal::request()->query, as this can be an attack vector, with
+      // the following exception:
       // - Absolute URLs that point to this site (i.e. same base URL and
       //   base path) are allowed.
       if ($destination && (!url_is_external($destination) || _external_url_is_local($destination))) {

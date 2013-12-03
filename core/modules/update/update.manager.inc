@@ -632,7 +632,8 @@ function _update_manager_check_backends(&$form, $operation) {
  * @see update_manager_install_form_submit()
  */
 function update_manager_install_form_validate($form, &$form_state) {
-  if (!($form_state['values']['project_url'] XOR !empty($_FILES['files']['name']['project_upload']))) {
+  $uploaded_file = \Drupal::request()->files->get('files[project_upload]', NULL, TRUE);
+  if (!($form_state['values']['project_url'] XOR !empty($uploaded_file))) {
     form_set_error('project_url', $form_state, t('You must either provide a URL or upload an archive file to install.'));
   }
 }

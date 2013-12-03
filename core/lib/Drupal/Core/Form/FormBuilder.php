@@ -569,7 +569,7 @@ class FormBuilder implements FormBuilderInterface {
   public function processForm($form_id, &$form, &$form_state) {
     $form_state['values'] = array();
 
-    // With $_GET, these forms are always submitted if requested.
+    // With GET, these forms are always submitted if requested.
     if ($form_state['method'] == 'get' && !empty($form_state['always_process'])) {
       if (!isset($form_state['input']['form_build_id'])) {
         $form_state['input']['form_build_id'] = $form['#build_id'];
@@ -1485,9 +1485,10 @@ class FormBuilder implements FormBuilderInterface {
       $name = array_shift($element['#parents']);
       $element['#name'] = $name;
       if ($element['#type'] == 'file') {
-        // To make it easier to handle $_FILES in file.inc, we place all
+        // To make it easier to handle files in file.inc, we place all
         // file fields in the 'files' array. Also, we do not support
         // nested file names.
+        // @todo Remove this files prefix now?
         $element['#name'] = 'files[' . $element['#name'] . ']';
       }
       elseif (count($element['#parents'])) {
@@ -1603,7 +1604,8 @@ class FormBuilder implements FormBuilderInterface {
       if (!empty($element['#is_button'])) {
         // All buttons in the form need to be tracked for
         // form_state_values_clean() and for the self::doBuildForm() code that
-        // handles a form submission containing no button information in $_POST.
+        // handles a form submission containing no button information in
+        // \Drupal::request()->request.
         $form_state['buttons'][] = $element;
         if ($this->buttonWasClicked($element, $form_state)) {
           $form_state['triggering_element'] = $element;
@@ -1663,15 +1665,15 @@ class FormBuilder implements FormBuilderInterface {
     // buttons on a form share the same name (usually 'op'), and the specific
     // return value is used to determine which was clicked. This ONLY works as
     // long as $form['#name'] puts the value at the top level of the tree of
-    // $_POST data.
+    // \Drupal::request()->request data.
     if (isset($form_state['input'][$element['#name']]) && $form_state['input'][$element['#name']] == $element['#value']) {
       return TRUE;
     }
     // When image buttons are clicked, browsers do NOT pass the form element
-    // value in $_POST. Instead they pass an integer representing the
-    // coordinates of the click on the button image. This means that image
-    // buttons MUST have unique $form['#name'] values, but the details of their
-    // $_POST data should be ignored.
+    // value in \Drupal::request()->Request. Instead they pass an integer
+    // representing the coordinates of the click on the button image. This means
+    // that image buttons MUST have unique $form['#name'] values, but the
+    // details of their \Drupal::request()->request data should be ignored.
     elseif (!empty($element['#has_garbage_value']) && isset($element['#value']) && $element['#value'] !== '') {
       return TRUE;
     }

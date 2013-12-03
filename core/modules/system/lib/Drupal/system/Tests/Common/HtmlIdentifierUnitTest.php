@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\UnitTestBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests cleaning HTML identifiers.
@@ -19,6 +20,18 @@ class HtmlIdentifierUnitTest extends UnitTestBase {
       'description' => 'Test the functions drupal_html_class(), drupal_html_id() and drupal_clean_css_identifier() for expected behavior',
       'group' => 'Common',
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $container = \Drupal::getContainer();
+    $request = new Request();
+    $container->set('request', $request);
+    \Drupal::setContainer($container);
   }
 
   /**

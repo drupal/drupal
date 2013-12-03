@@ -170,7 +170,7 @@ class OverviewTerms extends FormBase {
     // error. Ensure the form is rebuilt in the same order as the user
     // submitted.
     if (!empty($form_state['input'])) {
-      // Get the $_POST order.
+      // Get the POST order.
       $order = array_flip(array_keys($form_state['input']['terms']));
       // Update our form with the new order.
       $current_page = array_merge($order, $current_page);

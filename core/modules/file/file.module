@@ -773,8 +773,9 @@ function file_save_upload($form_field_name, array &$form_state, $validators = ar
   $user = \Drupal::currentUser();
   static $upload_cache;
 
+  $file_upload = \Drupal::request()->files->get("files[$form_field_name]", NULL, TRUE);
   // Make sure there's an upload to process.
-  if (empty($_FILES['files']['name'][$form_field_name])) {
+  if (empty($file_upload)) {
     return NULL;
   }
 
@@ -789,40 +790,39 @@ function file_save_upload($form_field_name, array &$form_state, $validators = ar
 
   // Prepare uploaded files info. Representation is slightly different
   // for multiple uploads and we fix that here.
-  $uploaded_files = $_FILES;
-  if (!is_array($uploaded_files['files']['name'][$form_field_name])) {
-    foreach (array('name', 'type', 'tmp_name', 'error', 'size') as $value)
-    $uploaded_files['files'][$value][$form_field_name] = array($uploaded_files['files'][$value][$form_field_name]);
+  $uploaded_files = $file_upload;
+  if (!is_array($file_upload)) {
+    $uploaded_files = array($file_upload);
   }
 
   $files = array();
-  foreach ($uploaded_files['files']['name'][$form_field_name] as $i => $name) {
+  foreach ($uploaded_files as $i => $file_info) {
     // Check for file upload errors and return FALSE for this file if a lower
     // level system error occurred. For a complete list of errors:
     // See http://php.net/manual/features.file-upload.errors.php.
-    switch ($uploaded_files['files']['error'][$form_field_name][$i]) {
+    switch ($file_info->getError()) {
       case UPLOAD_ERR_INI_SIZE:
       case UPLOAD_ERR_FORM_SIZE:
-        drupal_set_message(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', array('%file' => $name, '%maxsize' => format_size(file_upload_max_size()))), 'error');
+        drupal_set_message(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', array('%file' => $file_info->getFilename(), '%maxsize' => format_size(file_upload_max_size()))), 'error');
         $files[$i] = FALSE;
         continue;
 
       case UPLOAD_ERR_PARTIAL:
       case UPLOAD_ERR_NO_FILE:
-        drupal_set_message(t('The file %file could not be saved because the upload did not complete.', array('%file' => $name)), 'error');
+        drupal_set_message(t('The file %file could not be saved because the upload did not complete.', array('%file' => $file_info->getFilename())), 'error');
         $files[$i] = FALSE;
         continue;
 
       case UPLOAD_ERR_OK:
         // Final check that this is a valid upload, if it isn't, use the
         // default error handler.
-        if (is_uploaded_file($uploaded_files['files']['tmp_name'][$form_field_name][$i])) {
+        if (is_uploaded_file($file_info->getRealPath())) {
           break;
         }
 
         // Unknown error
       default:
-        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $name)), 'error');
+        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $file_info->getFilename())), 'error');
         $files[$i] = FALSE;
         continue;
 
@@ -831,9 +831,9 @@ function file_save_upload($form_field_name, array &$form_state, $validators = ar
     $values = array(
       'uid' => $user->id(),
       'status' => 0,
-      'filename' => trim(drupal_basename($name, '.')),
-      'uri' => $uploaded_files['files']['tmp_name'][$form_field_name][$i],
-      'filesize' => $uploaded_files['files']['size'][$form_field_name][$i],
+      'filename' => $file_info->getClientOriginalName(),
+      'uri' => $file_info->getRealPath(),
+      'filesize' => $file_info->getSize(),
     );
     $values['filemime'] = file_get_mimetype($values['filename']);
     $file = entity_create('file', $values);
@@ -936,7 +936,7 @@ function file_save_upload($form_field_name, array &$form_state, $validators = ar
     // directory. This overcomes open_basedir restrictions for future file
     // operations.
     $file->uri = $file->destination;
-    if (!drupal_move_uploaded_file($uploaded_files['files']['tmp_name'][$form_field_name][$i], $file->getFileUri())) {
+    if (!drupal_move_uploaded_file($file_info->getRealPath(), $file->getFileUri())) {
       form_set_error($form_field_name, $form_state, t('File upload error. Could not move uploaded file.'));
       watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->uri));
       $files[$i] = FALSE;
@@ -1466,7 +1466,8 @@ function file_managed_file_submit($form, &$form_state) {
  */
 function file_managed_file_save_upload($element, array &$form_state) {
   $upload_name = implode('_', $element['#parents']);
-  if (empty($_FILES['files']['name'][$upload_name])) {
+  $file_upload = \Drupal::request()->files->get("files[$upload_name]", NULL, TRUE);
+  if (empty($file_upload)) {
     return FALSE;
   }
 
@@ -1478,8 +1479,8 @@ function file_managed_file_save_upload($element, array &$form_state) {
   }
 
   // Save attached files to the database.
-  $files_uploaded = $element['#multiple'] && count(array_filter($_FILES['files']['name'][$upload_name])) > 0;
-  $files_uploaded |= !$element['#multiple'] && !empty($_FILES['files']['name'][$upload_name]);
+  $files_uploaded = $element['#multiple'] && count(array_filter($file_upload)) > 0;
+  $files_uploaded |= !$element['#multiple'] && !empty($file_upload);
   if ($files_uploaded) {
     if (!$files = file_save_upload($upload_name, $form_state, $element['#upload_validators'], $destination)) {
       watchdog('file', 'The file upload failed. %upload', array('%upload' => $upload_name));

@@ -411,7 +411,8 @@ function drupal_get_feeds($delimiter = "\n") {
  * Processes a URL query parameter array to remove unwanted elements.
  *
  * @param $query
- *   (optional) An array to be processed. Defaults to $_GET.
+ *   (optional) An array to be processed. Defaults to \Drupal::request()->query
+ *   parameters.
  * @param $exclude
  *   (optional) A list of $query array keys to remove. Use "parent[child]" to
  *   exclude nested items.
@@ -490,7 +491,7 @@ function drupal_get_destination() {
  * The returned array contains a 'path' that may be passed separately to url().
  * For example:
  * @code
- *   $options = drupal_parse_url($_GET['destination']);
+ *   $options = drupal_parse_url(\Drupal::request()->query->get('destination'));
  *   $my_url = url($options['path'], $options);
  *   $my_link = l('Example link', $options['path'], $options);
  * @endcode
@@ -501,7 +502,7 @@ function drupal_get_destination() {
  * $options['query'] and the fragment into $options['fragment'].
  *
  * @param $url
- *   The URL string to parse, f.e. $_GET['destination'].
+ *   The URL string to parse.
  *
  * @return
  *   An associative array containing the keys:
@@ -1934,6 +1935,7 @@ function drupal_html_id($id) {
   // take into account IDs that are already in use on the base page.
   $seen_ids_init = &drupal_static(__FUNCTION__ . ':init');
   if (!isset($seen_ids_init)) {
+    $ajax_html_ids = \Drupal::request()->request->get('ajax_html_ids');
     // Ideally, Drupal would provide an API to persist state information about
     // prior page requests in the database, and we'd be able to add this
     // function's $seen_ids static variable to that state information in order
@@ -1943,7 +1945,7 @@ function drupal_html_id($id) {
     // normally not recommended as it could open up security risks, but because
     // the raw POST data is cast to a number before being returned by this
     // function, this usage is safe.
-    if (empty($_POST['ajax_html_ids'])) {
+    if (empty($ajax_html_ids)) {
       $seen_ids_init = array();
     }
     else {
@@ -1952,7 +1954,7 @@ function drupal_html_id($id) {
       // requested id. $_POST['ajax_html_ids'] contains the ids as they were
       // returned by this function, potentially with the appended counter, so
       // we parse that to reconstruct the $seen_ids array.
-      $ajax_html_ids = explode(' ', $_POST['ajax_html_ids']);
+      $ajax_html_ids = explode(' ', $ajax_html_ids);
       foreach ($ajax_html_ids as $seen_id) {
         // We rely on '--' being used solely for separating a base id from the
         // counter, which this function ensures when returning an id.

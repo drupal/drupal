@@ -83,7 +83,8 @@ function _drupal_session_read($sid) {
   // Handle the case of first time visitors and clients that don't store
   // cookies (eg. web crawlers).
   $insecure_session_name = substr(session_name(), 1);
-  if (!isset($_COOKIE[session_name()]) && !isset($_COOKIE[$insecure_session_name])) {
+  $cookies = \Drupal::request()->cookies;
+  if (!$cookies->has(session_name()) && !$cookies->has($insecure_session_name)) {
     $user = new UserSession();
     return '';
   }
@@ -95,9 +96,9 @@ function _drupal_session_read($sid) {
   if (\Drupal::request()->isSecure()) {
     $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchAssoc();
     if (!$values) {
-      if (isset($_COOKIE[$insecure_session_name])) {
+      if ($cookies->has($insecure_session_name)) {
         $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid AND s.uid = 0", array(
-        ':sid' => $_COOKIE[$insecure_session_name]))
+        ':sid' => $cookies->get($insecure_session_name)))
         ->fetchAssoc();
       }
     }
@@ -188,13 +189,14 @@ function _drupal_session_write($sid, $value) {
       // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
       if (\Drupal::request()->isSecure()) {
         $key['ssid'] = $sid;
+        $cookies = \Drupal::request()->cookies;
         // The "secure pages" setting allows a site to simultaneously use both
         // secure and insecure session cookies. If enabled and both cookies are
         // presented then use both keys.
         if (settings()->get('mixed_mode_sessions', FALSE)) {
           $insecure_session_name = substr(session_name(), 1);
-          if (isset($_COOKIE[$insecure_session_name])) {
-            $key['sid'] = $_COOKIE[$insecure_session_name];
+          if ($cookies->has($insecure_session_name)) {
+            $key['sid'] = $cookies->get($insecure_session_name);
           }
         }
       }
@@ -241,9 +243,8 @@ function drupal_session_initialize() {
   session_set_save_handler('_drupal_session_open', '_drupal_session_close', '_drupal_session_read', '_drupal_session_write', '_drupal_session_destroy', '_drupal_session_garbage_collection');
 
   $is_https = \Drupal::request()->isSecure();
-  // We use !empty() in the following check to ensure that blank session IDs
-  // are not valid.
-  if (!empty($_COOKIE[session_name()]) || ($is_https && settings()->get('mixed_mode_sessions', FALSE) && !empty($_COOKIE[substr(session_name(), 1)]))) {
+  $cookies = \Drupal::request()->cookies;
+  if (($cookies->has(session_name()) && ($session_name = $cookies->get(session_name()))) || ($is_https && settings()->get('mixed_mode_sessions', FALSE) && ($cookies->has(substr(session_name(), 1))) && ($session_name = $cookies->get(substr(session_name(), 1))))) {
     // If a session cookie exists, initialize the session. Otherwise the
     // session is only started on demand in drupal_session_commit(), making
     // anonymous users not use a session cookie unless something is stored in
@@ -267,7 +268,7 @@ function drupal_session_initialize() {
     if ($is_https && settings()->get('mixed_mode_sessions', FALSE)) {
       $insecure_session_name = substr(session_name(), 1);
       $session_id = Crypt::hashBase64(uniqid(mt_rand(), TRUE));
-      $_COOKIE[$insecure_session_name] = $session_id;
+      $cookies->set($insecure_session_name, $session_id);
     }
   }
   date_default_timezone_set(drupal_get_user_timezone());
@@ -323,7 +324,8 @@ function drupal_session_commit() {
         $insecure_session_name = substr(session_name(), 1);
         $params = session_get_cookie_params();
         $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
-        setcookie($insecure_session_name, $_COOKIE[$insecure_session_name], $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
+        $cookie_params = \Drupal::request()->cookies;
+        setcookie($insecure_session_name, $cookie_params->get($insecure_session_name), $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
       }
     }
     // Write the session data.
@@ -356,11 +358,12 @@ function drupal_session_regenerate() {
   }
 
   $is_https = \Drupal::request()->isSecure();
+  $cookies = \Drupal::request()->cookies;
 
   if ($is_https && settings()->get('mixed_mode_sessions', FALSE)) {
     $insecure_session_name = substr(session_name(), 1);
-    if (!isset($GLOBALS['lazy_session']) && isset($_COOKIE[$insecure_session_name])) {
-      $old_insecure_session_id = $_COOKIE[$insecure_session_name];
+    if (!isset($GLOBALS['lazy_session']) && $cookies->has($insecure_session_name)) {
+      $old_insecure_session_id = $cookies->get($insecure_session_name);
     }
     $params = session_get_cookie_params();
     $session_id = Crypt::hashBase64(uniqid(mt_rand(), TRUE) . Crypt::randomBytes(55));
@@ -369,7 +372,7 @@ function drupal_session_regenerate() {
     // it will expire when the browser is closed.
     $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
     setcookie($insecure_session_name, $session_id, $expire, $params['path'], $params['domain'], FALSE, $params['httponly']);
-    $_COOKIE[$insecure_session_name] = $session_id;
+    $cookies->set($insecure_session_name, $session_id);
   }
 
   if (drupal_session_started()) {
@@ -461,13 +464,14 @@ function _drupal_session_destroy($sid) {
  *   Force the secure value of the cookie.
  */
 function _drupal_session_delete_cookie($name, $secure = NULL) {
-  if (isset($_COOKIE[$name]) || (!\Drupal::request()->isSecure() && $secure === TRUE)) {
+  $cookies = \Drupal::request()->cookies;
+  if ($cookies->has($name) || (!\Drupal::request()->isSecure() && $secure === TRUE)) {
     $params = session_get_cookie_params();
     if ($secure !== NULL) {
       $params['secure'] = $secure;
     }
     setcookie($name, '', REQUEST_TIME - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    unset($_COOKIE[$name]);
+    $cookies->remove($name);
   }
 }
 

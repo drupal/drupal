@@ -40,7 +40,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    */
   public function testEntityViewBuilderCache() {
     // Force a request via GET so we can get drupal_render() cache working.
-    $request_method = $_SERVER['REQUEST_METHOD'];
+    $request_method = \Drupal::request()->server->get('REQUEST_METHOD');
     $this->container->get('request')->setMethod('GET');
 
     $entity_test = $this->createTestEntity('entity_test');
@@ -85,7 +85,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
    */
   public function testEntityViewBuilderCacheWithReferences() {
     // Force a request via GET so we can get drupal_render() cache working.
-    $request_method = $_SERVER['REQUEST_METHOD'];
+    $request_method = \Drupal::request()->server->get('REQUEST_METHOD');
     $this->container->get('request')->setMethod('GET');
 
     // Create an entity reference field and an entity that will be referenced.

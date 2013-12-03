@@ -44,7 +44,7 @@ function system_requirements($phase) {
   }
 
   // Web server information.
-  $software = $_SERVER['SERVER_SOFTWARE'];
+  $software = \Drupal::request()->server->get('SERVER_SOFTWARE');
   $requirements['webserver'] = array(
     'title' => t('Web server'),
     'value' => $software,

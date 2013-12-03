@@ -154,8 +154,9 @@ interface FormBuilderInterface extends FormErrorInterface {
    *     understanding of security implications. In almost all cases, code
    *     should use the data in the 'values' array exclusively. The most common
    *     use of this key is for multi-step forms that need to clear some of the
-   *     user input when setting 'rebuild'. The values correspond to $_POST or
-   *     $_GET, depending on the 'method' chosen.
+   *     user input when setting 'rebuild'. The values correspond to
+   *     \Drupal::request()->request or \Drupal::request()->query, depending on
+   *     the 'method' chosen.
    *   - always_process: If TRUE and the method is GET, a form_id is not
    *     necessary. This should only be used on RESTful GET forms that do NOT
    *     write data, as this could lead to security issues. It is useful so that
@@ -169,8 +170,8 @@ interface FormBuilderInterface extends FormErrorInterface {
    *     invoked via self::submitForm(). Defaults to FALSE.
    *   - process_input: Boolean flag. TRUE signifies correct form submission.
    *     This is always TRUE for programmed forms coming from self::submitForm()
-   *     (see 'programmed' key), or if the form_id coming from the $_POST data
-   *     is set and matches the current form_id.
+   *     (see 'programmed' key), or if the form_id coming from the
+   *     \Drupal::request()->request data is set and matches the current form_id.
    *   - submitted: If TRUE, the form has been submitted. Defaults to FALSE.
    *   - executed: If TRUE, the form was submitted and has been processed and
    *     executed. Defaults to FALSE.
@@ -309,11 +310,12 @@ interface FormBuilderInterface extends FormErrorInterface {
    * @param $form_state
    *   A keyed array containing the current state of the form. Most important is
    *   the $form_state['values'] collection, a tree of data used to simulate the
-   *   incoming $_POST information from a user's form submission. If a key is
-   *   not filled in $form_state['values'], then the default value of the
-   *   respective element is used. To submit an unchecked checkbox or other
-   *   control that browsers submit by not having a $_POST entry, include the
-   *   key, but set the value to NULL.
+   *   incoming \Drupal::request()->request information from a user's form
+   *   submission. If a key is not filled in $form_state['values'], then the
+   *   default value of the respective element is used. To submit an unchecked
+   *   checkbox or other control that browsers submit by not having a
+   *   \Drupal::request()->request entry, include the key, but set the value to
+   *   NULL.
    * @param ...
    *   Any additional arguments are passed on to the functions called by
    *   self::submitForm(), including the unique form constructor function.
@@ -378,8 +380,8 @@ interface FormBuilderInterface extends FormErrorInterface {
    *   A keyed array containing the current state of the form. This
    *   includes the current persistent storage data for the form, and
    *   any data passed along by earlier steps when displaying a
-   *   multi-step form. Additional information, like the sanitized $_POST
-   *   data, is also accumulated here.
+   *   multi-step form. Additional information, like the sanitized
+   *   \Drupal::request()->request data, is also accumulated here.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
    */
@@ -477,8 +479,9 @@ interface FormBuilderInterface extends FormErrorInterface {
    *   redirect is accomplished by returning a RedirectResponse, passing in the
    *   value of $form_state['redirect'] if it is set, or the current path if it
    *   is not. RedirectResponse preferentially uses the value of
-   *   $_GET['destination'] (the 'destination' URL query string) if it is
-   *   present, so this will override any values set by $form_state['redirect'].
+   *   \Drupal::request->query->get('destination') (the 'destination' URL query
+   *   string) if it is present, so this will override any values set by
+   *   $form_state['redirect'].
    *
    * @param $form_state
    *   An associative array containing the current state of the form.
@@ -599,7 +602,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    *   A keyed array containing the current state of the form. In this
    *   context, it is used to accumulate information about which button
    *   was clicked when the form was submitted, as well as the sanitized
-   *   $_POST data.
+   *   \Drupal::request()->request data.
    *
    * @return array
    */

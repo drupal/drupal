@@ -8,11 +8,17 @@
 namespace Drupal\system\Tests\Bootstrap;
 
 use Drupal\simpletest\UnitTestBase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests for overriding server variables via the API.
  */
 class OverrideServerVariablesUnitTest extends UnitTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Overriding server variables',
@@ -40,17 +46,17 @@ class OverrideServerVariablesUnitTest extends UnitTestBase {
       ),
     );
     foreach ($tests as $url => $expected_server_values) {
-      // Remember the original value of $_SERVER, since the function call below
-      // will modify it.
-      $original_server = $_SERVER;
+      $container = \Drupal::getContainer();
+      $request = Request::createFromGlobals();
+      $container->set('request', $request);
+      \Drupal::setContainer($container);
+
       // Call drupal_override_server_variables() and ensure that all expected
       // $_SERVER variables were modified correctly.
       drupal_override_server_variables(array('url' => $url));
       foreach ($expected_server_values as $key => $value) {
-        $this->assertIdentical($_SERVER[$key], $value);
+        $this->assertIdentical(\Drupal::request()->server->get($key), $value);
       }
-      // Restore the original value of $_SERVER.
-      $_SERVER = $original_server;
     }
   }
 }

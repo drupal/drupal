@@ -34,7 +34,8 @@ class Url {
    *   http_build_query() directly.
    *
    * @param array $query
-   *   The query parameter array to be processed, e.g. $_GET.
+   *   The query parameter array to be processed,
+   *   e.g. \Drupal::request()->query->all().
    * @param string $parent
    *   Internal use only. Used to build the $query array key for nested items.
    *
@@ -118,13 +119,14 @@ class Url {
    * The returned array contains a 'path' that may be passed separately to url().
    * For example:
    * @code
-   *   $options = Url::parse($_GET['destination']);
+   *   $options = Url::parse(\Drupal::request()->query->get('destination'));
    *   $my_url = url($options['path'], $options);
    *   $my_link = l('Example link', $options['path'], $options);
    * @endcode
    *
    * @param string $url
-   *   The URL string to parse, f.e. $_GET['destination'].
+   *   The URL string to parse, i.e.
+   *     \Drupal::request()->query->get('destination').
    *
    * @return
    *   An associative array containing the keys:

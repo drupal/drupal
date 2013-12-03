@@ -15,33 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TableSortExtenderUnitTest extends UnitTestBase {
 
-  /**
-   * Storage for initial value of $_GET.
-   *
-   * @var array
-   */
-  protected $GET = array();
-
   public static function getInfo() {
     return array(
       'name' => 'Tablesort',
       'description' => 'Tests table sorting.',
       'group' => 'System',
     );
-  }
-
-  function setUp() {
-    // Save the original $_GET to be restored later.
-    $this->GET = $_GET;
-
-    parent::setUp();
-  }
-
-  function tearDown() {
-    // Revert $_GET.
-    $_GET = $this->GET;
-
-    parent::tearDown();
   }
 
   /**
@@ -52,8 +31,8 @@ class TableSortExtenderUnitTest extends UnitTestBase {
     // Test simple table headers.
 
     $headers = array('foo', 'bar', 'baz');
-    // Reset $_GET to prevent parameters from Simpletest and Batch API ending
-    // up in $ts['query'].
+    // Reset $requesr->query to prevent parameters from Simpletest and Batch API
+    // ending up in $ts['query'].
     $expected_ts = array(
       'name' => 'foo',
       'sql' => '',

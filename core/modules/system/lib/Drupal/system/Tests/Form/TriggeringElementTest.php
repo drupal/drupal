@@ -95,7 +95,7 @@ class TriggeringElementTest extends WebTestBase {
     // trying to get around security safeguards could easily do. We have to do
     // a little trickery here, to work around the safeguards in drupalPostForm(): by
     // renaming the text field that is in the form to 'button1', we can get the
-    // data we want into $_POST.
+    // data we want into \Drupal::request()->request.
     $elements = $this->xpath('//form[@id="' . $form_html_id . '"]//input[@name="text"]');
     $elements[0]['name'] = 'button1';
     $this->drupalPostForm(NULL, array('button1' => 'button1'), NULL, array(), array(), $form_html_id);

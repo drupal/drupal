@@ -495,7 +495,8 @@ function form_type_checkboxes_value($element, $input = FALSE) {
     // NULL elements from the array before constructing the return value, to
     // simulate the behavior of web browsers (which do not send unchecked
     // checkboxes to the server at all). This will not affect non-programmatic
-    // form submissions, since all values in $_POST are strings.
+    // form submissions, since all values in \Drupal::request()->request are
+    // strings.
     foreach ($input as $key => $value) {
       if (!isset($value)) {
         unset($input[$key]);

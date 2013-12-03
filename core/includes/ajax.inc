@@ -241,7 +241,7 @@ function ajax_render($commands = array()) {
     // since the base page ought to have at least one JS file and one CSS file
     // loaded. It probably indicates an error, and rather than making the page
     // reload all of the files, instead we return no new files.
-    if (empty($_POST['ajax_page_state'][$type])) {
+    if (!\Drupal::request()->request->get("ajax_page_state[$type]", NULL, TRUE)) {
       $items[$type] = array();
     }
     else {

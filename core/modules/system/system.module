@@ -2722,7 +2722,8 @@ function system_default_region($theme) {
  *
  * If the submit handler for a form that implements confirm_form() is invoked,
  * the user successfully confirmed the action. You should never directly
- * inspect $_POST to see if an action was confirmed.
+ * inspect $_POST or \Drupal::request()->request to see if an action was
+ * confirmed.
  *
  * Note - if the parameters $question, $description, $yes, or $no could contain
  * any user input (such as node titles or taxonomy terms), it is the
@@ -2817,7 +2818,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 function system_admin_compact_mode() {
   // PHP converts dots into underscores in cookie names to avoid problems with
   // its parser, so we use a converted cookie name.
-  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : \Drupal::config('system.site')->get('admin_compact_mode');
+  return \Drupal::request()->cookies->get('Drupal_visitor_admin_compact_mode', \Drupal::config('system.site')->get('admin_compact_mode'));
 }
 
 /**
