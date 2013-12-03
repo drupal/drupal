@@ -731,8 +731,6 @@ function datetime_datelist_form_process($element, &$form_state) {
   $order = !empty($element['#date_part_order']) ? $element['#date_part_order'] : array('year', 'month', 'day');
   $text_parts = !empty($element['#date_text_parts']) ? $element['#date_text_parts'] : array();
 
-  $has_time = FALSE;
-
   // Output multi-selector for date.
   foreach ($order as $part) {
     switch ($part) {
@@ -758,28 +756,24 @@ function datetime_datelist_form_process($element, &$form_state) {
       case 'hour':
         $format = in_array('ampm', $element['#date_part_order']) ? 'g': 'G';
         $options = $date_helper->hours($format, $element['#required']);
-        $has_time = TRUE;
         $title = t('Hour');
         break;
 
       case 'minute':
         $format = 'i';
         $options = $date_helper->minutes($format, $element['#required'], $element['#date_increment']);
-        $has_time = TRUE;
         $title = t('Minute');
         break;
 
       case 'second':
         $format = 's';
         $options = $date_helper->seconds($format, $element['#required'], $element['#date_increment']);
-        $has_time = TRUE;
         $title = t('Second');
         break;
 
       case 'ampm':
         $format = 'a';
         $options = $date_helper->ampm($element['#required']);
-        $has_time = TRUE;
         $title = t('AM/PM');
     }
 
@@ -913,8 +907,6 @@ function datetime_datelist_validate($element, &$form_state) {
   $input = NestedArray::getValue($form_state['values'], $element['#parents'], $input_exists);
   if ($input_exists) {
 
-    $title = !empty($element['#title']) ? $element['#title'] : '';
-
     // If there's empty input and the field is not required, set it to empty.
     if (empty($input['year']) && empty($input['month']) && empty($input['day']) && !$element['#required']) {
       form_set_value($element, NULL, $form_state);
@@ -967,7 +959,6 @@ function date_increment_round(&$date, $increment) {
     date_time_set($date, $hour, $minute, $second);
     if ($hour == 24) {
       $day += 1;
-      $hour = 0;
       $year = date_format($date, 'Y');
       $month = date_format($date, 'n');
       date_date_set($date, $year, $month, $day);
