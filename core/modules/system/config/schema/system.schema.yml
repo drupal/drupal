@@ -256,9 +256,6 @@ system.performance:
     stale_file_threshold:
       type: integer
       label: 'Stale file threshold'
-    theme_link:
-      type: boolean
-      label: 'Force inline link rendering'
 
 system.rss:
   type: mapping

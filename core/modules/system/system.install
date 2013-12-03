@@ -1876,17 +1876,6 @@ function system_update_8042() {
 }
 
 /**
- * Move system theme settings from variable to config.
- *
- * @ingroup config_upgrade
- */
-function system_update_8043() {
-  update_variables_to_config('system.performance', array(
-    'theme_link' => 'theme_link',
-  ));
-}
-
-/**
  * Move system fast 404 settings from variable to config.
  *
  * @ingroup config_upgrade

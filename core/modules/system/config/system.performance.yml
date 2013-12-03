@@ -16,4 +16,3 @@ js:
 response:
   gzip: false
 stale_file_threshold: 2592000
-theme_link: true
