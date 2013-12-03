@@ -2583,7 +2583,7 @@ function menu_router_rebuild() {
   $transaction = db_transaction();
 
   try {
-    list($menu, $masks) = menu_router_build(TRUE);
+    list($menu) = menu_router_build(TRUE);
     _menu_navigation_links_rebuild($menu);
     // Clear the menu, page and block caches.
     menu_cache_clear_all();
@@ -2683,7 +2683,7 @@ function menu_get_router() {
   // Check first if we have it in memory already.
   $menu = _menu_router_cache();
   if (empty($menu)) {
-    list($menu, $masks) = menu_router_build();
+    list($menu) = menu_router_build();
   }
   return $menu;
 }
@@ -2898,7 +2898,7 @@ function _menu_find_router_path($link_path) {
   elseif (!isset($menu[$router_path])) {
     // Add an empty router path as a fallback.
     $ancestors[] = '';
-    foreach ($ancestors as $key => $router_path) {
+    foreach ($ancestors as $router_path) {
       if (isset($menu[$router_path])) {
         // Exit the loop leaving $router_path as the first match.
         break;
@@ -3189,7 +3189,7 @@ function _menu_router_save($menu, $masks) {
 
   $num_records = 0;
 
-  foreach ($menu as $path => $item) {
+  foreach ($menu as $item) {
     // Fill in insert object values.
     $insert->values(array(
       'path' => $item['path'],
