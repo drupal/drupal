@@ -35,7 +35,7 @@ class PageEditTest extends NodeTestBase {
   function testPageEdit() {
     $this->drupalLogin($this->web_user);
 
-    $title_key = 'title';
+    $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     // Create node to edit.
     $edit = array();
@@ -77,13 +77,13 @@ class PageEditTest extends NodeTestBase {
     // Edit the same node, creating a new revision.
     $this->drupalGet("node/" . $node->id() . "/edit");
     $edit = array();
-    $edit['title'] = $this->randomName(8);
+    $edit['title[0][value]'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
     $edit['revision'] = TRUE;
     $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
 
     // Ensure that the node revision has been created.
-    $revised_node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
+    $revised_node = $this->drupalGetNodeByTitle($edit['title[0][value]'], TRUE);
     $this->assertNotIdentical($node->getRevisionId(), $revised_node->getRevisionId(), 'A new revision has been created.');
     // Ensure that the node author is preserved when it was not changed in the
     // edit form.
@@ -104,12 +104,12 @@ class PageEditTest extends NodeTestBase {
     // Create node to edit.
     $body_key = 'body[0][value]';
     $edit = array();
-    $edit['title'] = $this->randomName(8);
+    $edit['title[0][value]'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save and publish'));
 
     // Check that the node was authored by the currently logged in user.
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertIdentical($node->getAuthorId(), $this->admin_user->id(), 'Node authored by admin user.');
 
     // Try to change the 'authored by' field to an invalid user name.

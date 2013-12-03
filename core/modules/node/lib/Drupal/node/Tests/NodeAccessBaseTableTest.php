@@ -72,7 +72,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
       $this->drupalLogin($this->webUser);
       foreach (array(0 => 'Public', 1 => 'Private') as $is_private => $type) {
         $edit = array(
-          'title' => t('@private_public Article created by @user', array('@private_public' => $type, '@user' => $this->webUser->getUsername())),
+          'title[0][value]' => t('@private_public Article created by @user', array('@private_public' => $type, '@user' => $this->webUser->getUsername())),
         );
         if ($is_private) {
           $edit['private'] = TRUE;
@@ -85,13 +85,13 @@ class NodeAccessBaseTableTest extends NodeTestBase {
         }
 
         $this->drupalPostForm('node/add/article', $edit, t('Save'));
-        $nid = db_query('SELECT nid FROM {node_field_data} WHERE title = :title', array(':title' => $edit['title']))->fetchField();
+        $nid = db_query('SELECT nid FROM {node_field_data} WHERE title = :title', array(':title' => $edit['title[0][value]']))->fetchField();
         $private_status = db_query('SELECT private FROM {node_access_test} where nid = :nid', array(':nid' => $nid))->fetchField();
         $this->assertTrue($is_private == $private_status, 'The private status of the node was properly set in the node_access_test table.');
         if ($is_private) {
           $private_nodes[] = $nid;
         }
-        $titles[$nid] = $edit['title'];
+        $titles[$nid] = $edit['title[0][value]'];
         $this->nodesByUser[$this->webUser->id()][$nid] = $is_private;
       }
     }

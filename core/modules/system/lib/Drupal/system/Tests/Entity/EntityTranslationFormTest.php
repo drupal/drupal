@@ -60,14 +60,14 @@ class EntityTranslationFormTest extends WebTestBase {
 
     // Create a node with language Language::LANGCODE_NOT_SPECIFIED.
     $edit = array();
-    $edit["title"] = $this->randomName(8);
+    $edit['title[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
 
     $this->drupalGet('node/add/page');
     $form_langcode = \Drupal::state()->get('entity_test.form_langcode') ?: FALSE;
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue($node->language()->id == $form_langcode, 'Form language is the same as the entity language.');
 
     // Edit the node and test the form language.
@@ -91,14 +91,14 @@ class EntityTranslationFormTest extends WebTestBase {
     // Create a node with language.
     $edit = array();
     $langcode = $this->langcodes[0];
-    $edit['title'] = $this->randomName(8);
+    $edit['title[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
     $edit['langcode'] = $langcode;
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), 'Basic page created.');
+    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit['title[0][value]'])), 'Basic page created.');
 
     // Check to make sure the node was created.
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue($node, 'Node found in database.');
 
     // Make body translatable.

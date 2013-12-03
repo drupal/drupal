@@ -19,7 +19,7 @@ class NodeLastChangedTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'user', 'node', 'field');
+  public static $modules = array('entity', 'user', 'node', 'field', 'text', 'filter');
 
   public static function getInfo() {
     return array(

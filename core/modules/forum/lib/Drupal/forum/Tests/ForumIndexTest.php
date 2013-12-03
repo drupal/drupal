@@ -47,7 +47,7 @@ class ForumIndexTest extends WebTestBase {
     // Create a test node.
     $title = $this->randomName(20);
     $edit = array(
-      'title' => $title,
+      'title[0][value]' => $title,
       'body[0][value]' => $this->randomName(200),
     );
 

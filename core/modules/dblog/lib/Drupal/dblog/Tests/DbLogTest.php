@@ -309,7 +309,7 @@ class DbLogTest extends WebTestBase {
     // Create a node using the form in order to generate an add content event
     // (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
-    $title = $edit["title"];
+    $title = $edit['title[0][value]'];
     $this->drupalPostForm('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     // Retrieve the node object.
@@ -369,7 +369,7 @@ class DbLogTest extends WebTestBase {
     switch ($type) {
       case 'forum':
         $content = array(
-          'title' => $this->randomName(8),
+          'title[0][value]' => $this->randomName(8),
           'taxonomy_forums' => array(1),
           'body[0][value]' => $this->randomName(32),
         );
@@ -377,7 +377,7 @@ class DbLogTest extends WebTestBase {
 
       default:
         $content = array(
-          'title' => $this->randomName(8),
+          'title[0][value]' => $this->randomName(8),
           'body[0][value]' => $this->randomName(32),
         );
         break;

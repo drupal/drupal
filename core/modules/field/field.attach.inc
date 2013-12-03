@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity\Entity\EntityFormDisplay;
 
 /**
@@ -63,8 +64,8 @@ use Drupal\entity\Entity\EntityFormDisplay;
  * @param string $method
  *   The name of the method to invoke.
  * @param callable $target_function
- *   A function that receives an $instance object and returns the object on
- *   which the method should be invoked.
+ *   A function that receives a FieldDefinitionInterface object and returns the
+ *   object on which the method should be invoked.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The fully formed $entity_type entity.
  * @param mixed $a
@@ -76,66 +77,38 @@ use Drupal\entity\Entity\EntityFormDisplay;
  *   keys:
  *   - field_name: The name of the field whose operation should be invoked. By
  *     default, the operation is invoked on all the fields in the entity's
- *     bundle. NOTE: This option is not compatible with the 'deleted' option;
- *     the 'field_id' option should be used instead.
- *   - field_id: The ID of the field whose operation should be invoked. By
- *     default, the operation is invoked on all the fields in the entity's'
- *     bundles.
- *   - deleted: If TRUE, the function will operate on deleted fields as well
- *     as non-deleted fields. If unset or FALSE, only non-deleted fields are
- *     operated on.
- *   - langcode: A language code or an array of language codes keyed by field
- *     name. It will be used to narrow down to a single value the available
- *     languages to act on.
+ *     bundle.
  *
  * @return array
  *   An array of returned values.
  */
 function field_invoke_method($method, $target_function, EntityInterface $entity, &$a = NULL, &$b = NULL, array $options = array()) {
-  // Merge default options.
-  $default_options = array(
-    'deleted' => FALSE,
-    'langcode' => NULL,
-  );
-  $options += $default_options;
-
   $entity_type = $entity->entityType();
-  // Determine the list of instances to iterate on.
-  $instances = _field_invoke_get_instances($entity_type, $entity->bundle(), $options);
 
-  // Iterate through the instances and collect results.
+  // Determine the list of fields to iterate on.
+  $field_definitions = _field_invoke_get_field_definitions($entity_type, $entity->bundle(), $options);
+
+  // Iterate through the fields and collect results.
   $return = array();
-  foreach ($instances as $instance) {
-
+  foreach ($field_definitions as $field_definition) {
     // Let the function determine the target object on which the method should be
     // called.
-    $target = call_user_func($target_function, $instance);
+    $target = call_user_func($target_function, $field_definition);
 
     if (method_exists($target, $method)) {
-      $field = $instance->getField();
-      $field_name = $field->getFieldName();
+      $items = $entity->get($field_definition->getFieldName());
+      $items->filterEmptyValues();
 
-      // Determine the list of languages to iterate on.
-      $available_langcodes = field_available_languages($entity_type, $field);
-      $langcodes = _field_language_suggestion($available_langcodes, $options['langcode'], $field_name);
+      $result = $target->$method($items, $a, $b);
 
-      foreach ($langcodes as $langcode) {
-        if ($entity->hasTranslation($langcode)) {
-          $items = $entity->getTranslation($langcode)->get($field_name);
-          $items->filterEmptyValues();
-
-          $result = $target->$method($items, $a, $b);
-
-          if (isset($result)) {
-            // For methods with array results, we merge results together.
-            // For methods with scalar results, we collect results in an array.
-            if (is_array($result)) {
-              $return = array_merge($return, $result);
-            }
-            else {
-              $return[] = $result;
-            }
-          }
+      if (isset($result)) {
+        // For methods with array results, we merge results together.
+        // For methods with scalar results, we collect results in an array.
+        if (is_array($result)) {
+          $return = array_merge($return, $result);
+        }
+        else {
+          $return[] = $result;
         }
       }
     }
@@ -150,8 +123,8 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
  * @param string $method
  *   The name of the method to invoke.
  * @param callable $target_function
- *   A function that receives an $instance object and returns the object on
- *   which the method should be invoked.
+ *   A function that receives a FieldDefinitionInterface object and a bundle
+ *   name and returns the object on which the method should be invoked.
  * @param array $entities
  *   An array of entities, keyed by entity ID.
  * @param mixed $a
@@ -163,17 +136,7 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
  *   keys:
  *   - field_name: The name of the field whose operation should be invoked. By
  *     default, the operation is invoked on all the fields in the entity's
- *     bundle. NOTE: This option is not compatible with the 'deleted' option;
- *     the 'field_id' option should be used instead.
- *   - field_id: The ID of the field whose operation should be invoked. By
- *     default, the operation is invoked on all the fields in the entity's'
- *     bundles.
- *   - deleted: If TRUE, the function will operate on deleted fields as well
- *     as non-deleted fields. If unset or FALSE, only non-deleted fields are
- *     operated on.
- *   - langcode: A language code or an array of language codes keyed by field
- *     name. It will be used to narrow down to a single value the available
- *     languages to act on.
+ *     bundle.
  *
  * @return array
  *   An array of returned values keyed by entity ID.
@@ -181,14 +144,6 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
  * @see field_invoke_method()
  */
 function field_invoke_method_multiple($method, $target_function, array $entities, &$a = NULL, &$b = NULL, array $options = array()) {
-  // Merge default options.
-  $default_options = array(
-    'deleted' => FALSE,
-    'langcode' => NULL,
-  );
-  $options += $default_options;
-
-  $instances = array();
   $grouped_items = array();
   $grouped_targets = array();
   $return = array();
@@ -196,65 +151,54 @@ function field_invoke_method_multiple($method, $target_function, array $entities
   // Go through the entities and collect the instances on which the method
   // should be called.
   foreach ($entities as $entity) {
-    $id = $entity->id();
     $entity_type = $entity->entityType();
+    $bundle = $entity->bundle();
+    $id = $entity->id();
 
-    // Determine the list of instances to iterate on.
-    $entity_instances = _field_invoke_get_instances($entity_type, $entity->bundle(), $options);
+    // Determine the list of fields to iterate on.
+    $field_definitions = _field_invoke_get_field_definitions($entity_type, $bundle, $options);
 
-    foreach ($entity_instances as $instance) {
-      $instance_uuid = $instance->uuid();
-      $field_name = $instance->getFieldName();
+    foreach ($field_definitions as $field_definition) {
+      $field_name = $field_definition->getFieldName();
+      $group_key = "$bundle:$field_name";
 
       // Let the closure determine the target object on which the method should
       // be called.
-      if (empty($grouped_targets[$instance_uuid])) {
-        $grouped_targets[$instance_uuid] = call_user_func($target_function, $instance);
+      if (empty($grouped_targets[$group_key])) {
+        $target = call_user_func($target_function, $field_definition, $bundle);
+        if (method_exists($target, $method)) {
+          $grouped_targets[$group_key] = $target;
+        }
+        else {
+          $grouped_targets[$group_key] = FALSE;
+        }
       }
 
-      if (method_exists($grouped_targets[$instance_uuid], $method)) {
-        // Add the instance to the list of instances to invoke the hook on.
-        if (!isset($instances[$instance_uuid])) {
-          $instances[$instance_uuid] = $instance;
-        }
-
-        // Unless a language code suggestion is provided we iterate on all the
-        // available language codes.
-        $field = $instance->getField();
-        $available_langcodes = field_available_languages($entity_type, $field);
-        $langcode = !empty($options['langcode'][$id]) ? $options['langcode'][$id] : $options['langcode'];
-        $langcodes = _field_language_suggestion($available_langcodes, $langcode, $field_name);
-        foreach ($langcodes as $langcode) {
-          if ($entity->hasTranslation($langcode)) {
-            // Group the items corresponding to the current field.
-            $items = $entity->getTranslation($langcode)->get($field_name);
-            $items->filterEmptyValues();
-            $grouped_items[$instance_uuid][$langcode][$id] = $items;
-          }
-        }
+      // If there is a target, group the field items.
+      if ($grouped_targets[$group_key]) {
+        $items = $entity->get($field_name);
+        $items->filterEmptyValues();
+        $grouped_items[$group_key][$id] = $items;
       }
     }
     // Initialize the return value for each entity.
     $return[$id] = array();
   }
 
-  // For each instance, invoke the method and collect results.
-  foreach ($instances as $instance_uuid => $instance) {
-    // Iterate over all the field translations.
-    foreach ($grouped_items[$instance_uuid] as $items) {
-      $results = $grouped_targets[$instance_uuid]->$method($items, $a, $b);
+  // For each field, invoke the method and collect results.
+  foreach ($grouped_items as $key => $entities_items) {
+    $results = $grouped_targets[$key]->$method($entities_items, $a, $b);
 
-      if (isset($results)) {
-        // Collect results by entity.
-        // For hooks with array results, we merge results together.
-        // For hooks with scalar results, we collect results in an array.
-        foreach ($results as $id => $result) {
-          if (is_array($result)) {
-            $return[$id] = array_merge($return[$id], $result);
-          }
-          else {
-            $return[$id][] = $result;
-          }
+    if (isset($results)) {
+      // Collect results by entity.
+      // For hooks with array results, we merge results together.
+      // For hooks with scalar results, we collect results in an array.
+      foreach ($results as $id => $result) {
+        if (is_array($result)) {
+          $return[$id] = array_merge($return[$id], $result);
+        }
+        else {
+          $return[$id][] = $result;
         }
       }
     }
@@ -264,7 +208,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
 }
 
 /**
- * Retrieves a list of instances to operate on.
+ * Retrieves a list of field definitions to operate on.
  *
  * Helper for field_invoke_method().
  *
@@ -281,47 +225,31 @@ function field_invoke_method_multiple($method, $target_function, array $entities
  *   See field_invoke_method() for details.
  *
  * @return
- *   The array of selected instance definitions.
+ *   The array of selected field definitions.
  */
-function _field_invoke_get_instances($entity_type, $bundle, $options) {
-  if ($options['deleted']) {
-    // Deleted fields are not included in field_info_instances(), and need to
-    // be fetched from the database with field_read_instances().
-    $params = array('entity_type' => $entity_type, 'bundle' => $bundle);
-    if (isset($options['field_id'])) {
-      // Single-field mode by field id: field_read_instances() does the filtering.
-      // Single-field mode by field name is not compatible with the 'deleted'
-      // option.
-      $params['field_id'] = $options['field_id'];
+function _field_invoke_get_field_definitions($entity_type, $bundle, $options) {
+  // @todo Replace with \Drupal::entityManager()->getFieldDefinition() after
+  //   [#2047229] lands.
+  $entity = _field_create_entity_from_ids((object) array('entity_type' => $entity_type, 'bundle' => $bundle, 'entity_id' => NULL));
+  $field_definitions = array();
+  if (isset($options['field_name'])) {
+    if ($entity->hasField($options['field_name'])) {
+      $field_definitions[] = $entity->get($options['field_name'])->getFieldDefinition();
     }
-    $instances = field_read_instances($params, array('include_deleted' => TRUE));
-  }
-  elseif (isset($options['field_name'])) {
-    // Single-field mode by field name: field_info_instance() does the
-    // filtering.
-    $instances = array(field_info_instance($entity_type, $options['field_name'], $bundle));
   }
   else {
-    $instances = field_info_instances($entity_type, $bundle);
-    if (isset($options['field_id'])) {
-      // Single-field mode by field id: we need to loop on each instance to
-      // find the right one.
-      foreach ($instances as $instance) {
-        if ($instance->getField()->uuid() == $options['field_id']) {
-          $instances = array($instance);
-          break;
-        }
-      }
+    foreach ($entity as $items) {
+      $field_definitions[] = $items->getFieldDefinition();
     }
   }
 
-  return $instances;
+  return $field_definitions;
 }
 
 /**
  * Defines a 'target function' for field_invoke_method().
  *
- * Used to invoke methods on an instance's widget.
+ * Used to invoke methods on a field's widget.
  *
  * @param \Drupal\entity\Entity\EntityFormDisplay $form_display
  *   An EntityFormDisplay object.
@@ -330,8 +258,8 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  *   A 'target function' for field_invoke_method().
  */
 function _field_invoke_widget_target($form_display) {
-  return function ($instance) use ($form_display) {
-    return $form_display->getRenderer($instance->getFieldName());
+  return function (FieldDefinitionInterface $field_definition) use ($form_display) {
+    return $form_display->getRenderer($field_definition->getFieldName());
   };
 }
 

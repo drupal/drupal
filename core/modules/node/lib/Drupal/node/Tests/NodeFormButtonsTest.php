@@ -47,7 +47,7 @@ class NodeFormButtonsTest extends NodeTestBase {
 
     // Save the node and assert it's published after clicking
     // 'Save and publish'.
-    $edit = array('title' => $this->randomString());
+    $edit = array('title[0][value]' => $this->randomString());
     $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
 
     // Get the node.
@@ -83,7 +83,7 @@ class NodeFormButtonsTest extends NodeTestBase {
     $this->assertButtons(array(t('Save')), FALSE);
 
     // Create the node.
-    $edit = array('title' => $this->randomString());
+    $edit = array('title[0][value]' => $this->randomString());
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
     $node_2 = node_load(2);
     $this->assertTrue($node_2->isPublished(), 'Node is published');
@@ -118,7 +118,7 @@ class NodeFormButtonsTest extends NodeTestBase {
     // Verify the node is unpublished by default for a normal user.
     $this->drupalLogout();
     $this->drupalLogin($this->web_user);
-    $edit = array('title' => $this->randomString());
+    $edit = array('title[0][value]' => $this->randomString());
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
     $node_3 = node_load(3);
     $this->assertFalse($node_3->isPublished(), 'Node is unpublished');

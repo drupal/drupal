@@ -359,13 +359,13 @@ class Node extends ContentEntityBase implements NodeInterface {
     $properties['title'] = array(
       'label' => t('Title'),
       'description' => t('The title of this node, always treated as non-markup plain text.'),
-      'type' => 'string_field',
+      'type' => 'field_item:text',
+      'list_class' => '\Drupal\node\NodeTitleItemList',
       'required' => TRUE,
       'settings' => array(
         'default_value' => '',
-      ),
-      'property_constraints' => array(
-        'value' => array('Length' => array('max' => 255)),
+        'max_length' => 255,
+        'text_processing' => 0,
       ),
       'translatable' => TRUE,
     );

@@ -21,7 +21,13 @@ Drupal.edit.editors.plain_text = Drupal.edit.EditorView.extend({
     var fieldModel = this.fieldModel;
 
     // Store the original value of this field. Necessary for reverting changes.
-    var $textElement = this.$textElement = this.$el.find('.field-item:first');
+    var $textElement;
+    if (this.$el.is(':has(.field-item)')) {
+      $textElement = this.$textElement = this.$el.find('.field-item:first');
+    }
+    else {
+      $textElement = this.$textElement = this.$el;
+    }
     editorModel.set('originalValue', $.trim(this.$textElement.text()));
 
     // Sets the state to 'changed' whenever the value changes

@@ -19,6 +19,7 @@ use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityFormDisplay;
 use Drupal\file\Entity\File;
 use Drupal\user\UserInterface;
 
@@ -171,6 +172,9 @@ function node_theme() {
       'render element' => 'form',
       'template' => 'node-edit-form',
     ),
+    'field__node__title' => array(
+      'base hook' => 'field',
+    ),
   );
 }
 
@@ -191,13 +195,41 @@ function node_entity_bundle_info() {
  * Implements hook_entity_display_alter().
  */
 function node_entity_display_alter(EntityDisplay $display, $context) {
-  // Hide field labels in search index.
-  if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
-    foreach ($display->getComponents() as $name => $options) {
-      if (isset($options['label'])) {
-        $options['label'] = 'hidden';
-        $display->setComponent($name, $options);
+  if ($context['entity_type'] == 'node') {
+    // Hide field labels in search index.
+    if ($context['view_mode'] == 'search_index') {
+      foreach ($display->getComponents() as $name => $options) {
+        if (isset($options['label'])) {
+          $options['label'] = 'hidden';
+          $display->setComponent($name, $options);
+        }
       }
+    }
+    // @todo Manage base field displays in the YAML:
+    //   https://drupal.org/node/2144919.
+    $display->setComponent('title', array(
+      'label' => 'hidden',
+      'type' => 'text_default',
+    ));
+  }
+}
+
+/**
+ * Implements hook_entity_form_display_alter().
+ */
+function node_entity_form_display_alter(EntityFormDisplay $form_display, $context) {
+  if ($context['entity_type'] == 'node') {
+    // @todo Manage base field displays in the YAML:
+    //   https://drupal.org/node/2144919.
+    $node_type = node_type_load($context['bundle']);
+    if ($node_type->has_title) {
+      // Title is also registered in node_field_extra_fields().
+      $options = $form_display->getComponent('title') ?: array('weight' => -5);
+      $options['type'] = 'text_textfield';
+      $form_display->setComponent('title', $options);
+    }
+    else {
+      $form_display->removeComponent('title');
     }
   }
 }
@@ -648,7 +680,8 @@ function template_preprocess_node(&$variables) {
 
   $uri = $node->uri();
   $variables['node_url']  = url($uri['path'], $uri['options']);
-  $variables['label'] = check_plain($node->label());
+  $variables['label'] = $variables['elements']['title'];
+  unset($variables['elements']['title']);
   $variables['page'] = $variables['view_mode'] == 'full' && node_is_page($node);
 
   // Helpful $content variable for templates.
@@ -704,6 +737,23 @@ function template_preprocess_node(&$variables) {
     $variables['attributes']['class'][] = 'preview';
   }
   $variables['content_attributes']['class'][] = 'content';
+}
+
+/**
+ * Returns HTML for the node title field.
+ *
+ * This is an override of theme_field() for the node title field. See that
+ * function for documentation about its details and overrides.
+ *
+ * @param array $variables
+ *   An associative array. See theme_field() for details.
+ *
+ * @see theme_field()
+ *
+ * @ingroup themeable
+ */
+function theme_field__node__title($variables) {
+  return '<span' . $variables['attributes'] . '>' . drupal_render($variables['items']) . '</span>';
 }
 
 /**

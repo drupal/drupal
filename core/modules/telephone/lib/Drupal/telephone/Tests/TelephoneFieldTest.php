@@ -87,8 +87,8 @@ class TelephoneFieldTest extends WebTestBase {
 
     // Test basic entery of telephone field.
     $edit = array(
-      "title" => $this->randomName(),
-      "field_telephone[0][value]" => "123456789",
+      'title[0][value]' => $this->randomName(),
+      'field_telephone[0][value]' => "123456789",
     );
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -96,8 +96,8 @@ class TelephoneFieldTest extends WebTestBase {
 
     // Add number with a space in it. Need to ensure it is stripped on output.
     $edit = array(
-      "title" => $this->randomName(),
-      "field_telephone[0][value]" => "1234 56789",
+      'title[0][value]' => $this->randomName(),
+      'field_telephone[0][value]' => "1234 56789",
     );
 
     $this->drupalPostForm('node/add/article', $edit, t('Save'));

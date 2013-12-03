@@ -189,7 +189,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), format_string('After removing all files, there is no "Remove" button displayed (JSMode=%type).', array('%type' => $type)));
 
       // Save the node and ensure it does not have any files.
-      $this->drupalPostForm(NULL, array('title' => $this->randomName()), t('Save and publish'));
+      $this->drupalPostForm(NULL, array('title[0][value]' => $this->randomName()), t('Save and publish'));
       $matches = array();
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
@@ -267,10 +267,10 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Create node.
     $edit = array(
-      'title' => $this->randomName(),
+      'title[0][value]' => $this->randomName(),
     );
     $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');

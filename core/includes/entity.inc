@@ -708,6 +708,14 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
   $display = entity_get_display($entity_type, $bundle, $render_view_mode);
   $display->originalMode = $view_mode;
 
+  // Let modules alter the display.
+  $display_context = array(
+    'entity_type' => $entity_type,
+    'bundle' => $bundle,
+    'view_mode' => $view_mode,
+  );
+  drupal_alter('entity_display', $display, $display_context);
+
   return $display;
 }
 
@@ -807,6 +815,14 @@ function entity_get_render_form_display(EntityInterface $entity, $form_mode) {
 
   $form_display = entity_get_form_display($entity_type, $bundle, $render_form_mode);
   $form_display->originalMode = $form_mode;
+
+  // Let modules alter the form display.
+  $form_display_context = array(
+    'entity_type' => $entity_type,
+    'bundle' => $bundle,
+    'form_mode' => $form_mode,
+  );
+  drupal_alter('entity_form_display', $form_display, $form_display_context);
 
   return $form_display;
 }

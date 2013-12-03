@@ -62,7 +62,7 @@ class MenuNodeTest extends WebTestBase {
     // Create a node.
     $node_title = $this->randomName();
     $edit = array(
-      'title' => $node_title,
+      'title[0][value]' => $node_title,
       'body[0][value]' => $this->randomString(),
     );
     $this->drupalPostForm('node/add/page', $edit, t('Save'));

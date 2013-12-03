@@ -17,7 +17,7 @@ use Drupal\Component\Plugin\Exception\ContextException;
  */
 class ContextPluginTest extends DrupalUnitTestBase {
 
-  public static $modules = array('system', 'user', 'node', 'field');
+  public static $modules = array('system', 'user', 'node', 'field', 'filter', 'text');
 
   public static function getInfo() {
     return array(

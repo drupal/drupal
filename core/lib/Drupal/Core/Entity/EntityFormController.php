@@ -125,15 +125,6 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     $this->prepareEntity();
 
     $form_display = entity_get_render_form_display($this->entity, $this->getOperation());
-
-    // Let modules alter the form display.
-    $form_display_context = array(
-      'entity_type' => $this->entity->entityType(),
-      'bundle' => $this->entity->bundle(),
-      'form_mode' => $this->getOperation(),
-    );
-    $this->moduleHandler->alter('entity_form_display', $form_display, $form_display_context);
-
     $this->setFormDisplay($form_display, $form_state);
 
     // Invoke the prepare form hooks.

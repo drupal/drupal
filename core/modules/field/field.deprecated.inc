@@ -8,9 +8,9 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity\Entity\EntityDisplay;
 use Drupal\field\Field;
-
 
 /**
  * Returns information about field types.
@@ -565,8 +565,6 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
   // Get the entity_form_display object for this form.
   $form_display = $form_state['form_display'];
 
-  // If no language is provided use the default site language.
-  $options['langcode'] = field_valid_language($langcode);
   $form += (array) field_invoke_method('form', _field_invoke_widget_target($form_display), $entity, $form, $form_state, $options);
 
   $form['#entity_type'] = $entity->entityType();
@@ -631,7 +629,8 @@ function field_attach_form_validate(ContentEntityInterface $entity, $form, &$for
 
   if ($has_violations) {
     // Map errors back to form elements.
-    field_invoke_method('flagErrors', _field_invoke_widget_target($form_state['form_display']), $entity, $form, $form_state, $options);
+    $form_display = $form_state['form_display'];
+    field_invoke_method('flagErrors', _field_invoke_widget_target($form_display), $entity, $form, $form_state, $options);
   }
 }
 
@@ -696,8 +695,6 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
  * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_prepare_view($entity_type, array $entities, array $displays, $langcode = NULL) {
-  $options['langcode'] = array();
-
   // To ensure hooks are only run once per entity, only process items without
   // the _field_view_prepared flag.
   // @todo: resolve this more generally for both entity and field level hooks.
@@ -707,10 +704,6 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
       // Add this entity to the items to be prepared.
       $prepare[$id] = $entity;
 
-      // Determine the actual language code to display for each field, given the
-      // language codes available in the field data.
-      $options['langcode'][$id] = field_language($entity, NULL, $langcode);
-
       // Mark this item as prepared.
       $entity->_field_view_prepared = TRUE;
     }
@@ -719,9 +712,9 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   // Then let the formatters do their own specific massaging. For each
   // instance, call the prepareView() method on the formatter object handed by
   // the entity display.
-  $target_function = function ($instance) use ($displays) {
-    if (isset($displays[$instance->bundle])) {
-      return $displays[$instance->bundle]->getRenderer($instance->getFieldName());
+  $target_function = function (FieldDefinitionInterface $field_definition, $bundle) use ($displays) {
+    if (isset($displays[$bundle])) {
+      return $displays[$bundle]->getRenderer($field_definition->getFieldName());
     }
   };
   $null = NULL;
@@ -749,7 +742,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  *   provided the current language is used.
  * @param array $options
  *   An associative array of additional options. See field_invoke_method() for
- *   details. Note: key "langcode" will be overridden inside this function.
+ *   details.
  *
  * @return array
  *   A renderable array for the field values.
@@ -757,14 +750,10 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_view(EntityInterface $entity, EntityDisplay $display, $langcode = NULL, array $options = array()) {
-  // Determine the actual language code to display for each field, given the
-  // language codes available in the field data.
-  $options['langcode'] = field_language($entity, NULL, $langcode);
-
-  // For each instance, call the view() method on the formatter object handed
+  // For each field, call the view() method on the formatter object handed
   // by the entity display.
-  $target_function = function ($instance) use ($display) {
-    return $display->getRenderer($instance->getFieldName());
+  $target_function = function (FieldDefinitionInterface $field_definition) use ($display) {
+    return $display->getRenderer($field_definition->getFieldName());
   };
   $null = NULL;
   $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);

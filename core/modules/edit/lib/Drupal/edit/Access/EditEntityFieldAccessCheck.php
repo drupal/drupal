@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\FieldInfo;
 
 /**
  * Access check for editing entity fields.
@@ -30,23 +29,13 @@ class EditEntityFieldAccessCheck implements StaticAccessCheckInterface, EditEnti
   protected $entityManager;
 
   /**
-   * The field info.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
-
-  /**
    * Constructs a EditEntityFieldAccessCheck object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\field\FieldInfo $field_info
-   *   The field info.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldInfo $field_info) {
+  public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
-    $this->fieldInfo = $field_info;
   }
 
   /**
@@ -95,7 +84,7 @@ class EditEntityFieldAccessCheck implements StaticAccessCheckInterface, EditEnti
 
     // Validate the field name and language.
     $field_name = $request->attributes->get('field_name');
-    if (!$field_name || !$this->fieldInfo->getInstance($entity->entityType(), $entity->bundle(), $field_name)) {
+    if (!$field_name || !$entity->hasField($field_name)) {
       throw new NotFoundHttpException();
     }
     $langcode = $request->attributes->get('langcode');

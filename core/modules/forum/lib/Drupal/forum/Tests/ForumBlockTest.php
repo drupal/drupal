@@ -170,7 +170,7 @@ class ForumBlockTest extends WebTestBase {
       $date->modify('+1 minute');
 
       $edit = array(
-        'title' => $title,
+        'title[0][value]' => $title,
         'body[0][value]' => $body,
         // Forum posts are ordered by timestamp, so force a unique timestamp by
         // adding the index.

@@ -52,7 +52,7 @@ class ForumNodeAccessTest extends WebTestBase {
     // Create a private node.
     $private_node_title = $this->randomName(20);
     $edit = array(
-      'title' => $private_node_title,
+      'title[0][value]' => $private_node_title,
       'body[0][value]' => $this->randomName(200),
       'private' => TRUE,
     );
@@ -63,7 +63,7 @@ class ForumNodeAccessTest extends WebTestBase {
     // Create a public node.
     $public_node_title = $this->randomName(20);
     $edit = array(
-      'title' => $public_node_title,
+      'title[0][value]' => $public_node_title,
       'body[0][value]' => $this->randomName(200),
     );
     $this->drupalPostForm('node/add/forum', $edit, t('Save'), array('query' => array('forum_id' => 1)));

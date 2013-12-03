@@ -243,7 +243,7 @@ class BookTest extends WebTestBase {
     static $number = 0; // Used to ensure that when sorted nodes stay in same order.
 
     $edit = array();
-    $edit["title"] = $number . ' - SimpleTest test node ' . $this->randomName(10);
+    $edit['title[0][value]'] = $number . ' - SimpleTest test node ' . $this->randomName(10);
     $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomName(32) . ' ' . $this->randomName(32);
     $edit['book[bid]'] = $book_nid;
 
@@ -258,7 +258,7 @@ class BookTest extends WebTestBase {
     }
 
     // Check to make sure the book node was created.
-    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotNull(($node === FALSE ? NULL : $node), 'Book node found in database.');
     $number++;
 

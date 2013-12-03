@@ -110,7 +110,7 @@ class PagePreviewTest extends NodeTestBase {
    * Checks the node preview functionality.
    */
   function testPagePreview() {
-    $title_key = "title";
+    $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     $term_key = $this->field_name;
 
@@ -159,7 +159,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertNoLink($newterm1);
     $this->assertNoLink($newterm2);
 
-    $this->drupalPostForm('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Check with one more new term, keeping old terms, removing the existing
     // one.
@@ -171,17 +171,17 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertRaw('>' . $newterm2 . '<', 'Second existing term displayed.');
     $this->assertRaw('>' . $newterm3 . '<', 'Third new term displayed.');
     $this->assertNoText($this->term->label());
-    $this->assertNoLink($newterm1);
-    $this->assertNoLink($newterm2);
+    $this->assertLink($newterm1);
+    $this->assertLink($newterm2);
     $this->assertNoLink($newterm3);
-    $this->drupalPostForm('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
   }
 
   /**
    * Checks the node preview functionality, when using revisions.
    */
   function testPagePreviewWithRevisions() {
-    $title_key = 'title';
+    $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     $term_key = $this->field_name;
     // Force revision on "Basic page" content.

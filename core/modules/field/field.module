@@ -4,6 +4,7 @@
  * Attach custom data fields to Drupal entities.
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\field\FieldInterface;
@@ -444,7 +445,7 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
  * The function takes care of invoking the prepare_view steps. It also respects
  * field access permissions.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  *   The entity containing the field to display.
  * @param $field_name
  *   The name of the field to display.
@@ -477,16 +478,16 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
  *
  * @see field_view_value()
  */
-function field_view_field(EntityInterface $entity, $field_name, $display_options = array(), $langcode = NULL) {
+function field_view_field(ContentEntityInterface $entity, $field_name, $display_options = array(), $langcode = NULL) {
   $output = array();
   $bundle = $entity->bundle();
   $entity_type = $entity->entityType();
 
   // Return nothing if the field doesn't exist.
-  $instance = field_info_instance($entity_type, $field_name, $bundle);
-  if (!$instance) {
+  if (!$entity->hasField($field_name)) {
     return $output;
   }
+  $field_definition = $entity->get($field_name)->getFieldDefinition();
 
   // Get the formatter object.
   if (is_string($display_options)) {
@@ -497,11 +498,10 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
     $view_mode = '_custom';
     // hook_field_attach_display_alter() needs to receive the 'prepared'
     // $display_options, so we cannot let preparation happen internally.
-    $field = field_info_field($entity_type, $field_name);
     $formatter_manager = Drupal::service('plugin.manager.field.formatter');
-    $display_options = $formatter_manager->prepareConfiguration($field->getFieldType(), $display_options);
+    $display_options = $formatter_manager->prepareConfiguration($field_definition->getFieldType(), $display_options);
     $formatter = $formatter_manager->getInstance(array(
-      'field_definition' => $instance,
+      'field_definition' => $field_definition,
       'view_mode' => $view_mode,
       'prepare' => FALSE,
       'configuration' => $display_options,
@@ -711,7 +711,7 @@ function template_preprocess_field(&$variables, $hook) {
  * the exact performance impact depends on the server configuration and the
  * details of the website.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - label_hidden: A boolean indicating whether to show or hide the field
  *     label.

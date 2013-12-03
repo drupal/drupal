@@ -39,12 +39,12 @@ class NodePostSettingsTest extends NodeTestBase {
 
     // Create a node.
     $edit = array();
-    $edit['title'] = $this->randomName(8);
+    $edit['title[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $elements = $this->xpath('//*[contains(@class,:class)]', array(':class' => 'submitted'));
     $this->assertEqual(count($elements), 1, 'Post information is displayed.');
     $node->delete();
@@ -56,7 +56,7 @@ class NodePostSettingsTest extends NodeTestBase {
 
     // Create a node.
     $edit = array();
-    $edit['title'] = $this->randomName(8);
+    $edit['title[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 

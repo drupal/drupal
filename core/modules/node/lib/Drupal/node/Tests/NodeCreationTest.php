@@ -45,15 +45,15 @@ class NodeCreationTest extends NodeTestBase {
   function testNodeCreation() {
     // Create a node.
     $edit = array();
-    $edit["title"] = $this->randomName(8);
-    $edit["body[0][value]"] = $this->randomName(16);
+    $edit['title[0][value]'] = $this->randomName(8);
+    $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the Basic page has been created.
-    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), 'Basic page created.');
+    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit['title[0][value]'])), 'Basic page created.');
 
     // Check that the node exists in the database.
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue($node, 'Node found in database.');
   }
 
@@ -110,7 +110,7 @@ class NodeCreationTest extends NodeTestBase {
 
     // Create a node.
     $edit = array();
-    $edit['title'] = $this->randomName(8);
+    $edit['title[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
@@ -119,7 +119,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertText(t('Test page text'));
 
     // Confirm that the node was created.
-    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])));
+    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit['title[0][value]'])));
   }
 
   /**

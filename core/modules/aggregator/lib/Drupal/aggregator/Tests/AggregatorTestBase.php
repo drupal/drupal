@@ -359,7 +359,7 @@ EOF;
     // Post $count article nodes.
     for ($i = 0; $i < $count; $i++) {
       $edit = array();
-      $edit['title'] = $this->randomName();
+      $edit['title[0][value]'] = $this->randomName();
       $edit['body[0][value]'] = $this->randomName();
       $this->drupalPostForm('node/add/article', $edit, t('Save'));
     }

@@ -71,16 +71,16 @@ class PageTitleTest extends WebTestBase {
     $this->assertTrue(strpos(drupal_get_title(), '<em>') !== FALSE, 'Tags in title are not converted to entities when $output is PASS_THROUGH.');
     // Generate node content.
     $edit = array(
-      'title' => '!SimpleTest! ' . $title . $this->randomName(20),
+      'title[0][value]' => '!SimpleTest! ' . $title . $this->randomName(20),
       'body[0][value]' => '!SimpleTest! test body' . $this->randomName(200),
     );
     // Create the node with HTML in the title.
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotNull($node, 'Node created and found in database');
     $this->drupalGet("node/" . $node->id());
-    $this->assertText(check_plain($edit["title"]), 'Check to make sure tags in the node title are converted.');
+    $this->assertText(check_plain($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
   }
   /**
    * Test if the title of the site is XSS proof.

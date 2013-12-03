@@ -4,7 +4,7 @@ services:
     arguments: ['@container.namespaces']
   access_check.edit.entity_field:
     class: Drupal\edit\Access\EditEntityFieldAccessCheck
-    arguments: ['@entity.manager', '@field.info']
+    arguments: ['@entity.manager']
     tags:
       - { name: access_check }
   access_check.edit.entity:

@@ -100,7 +100,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $this->assertFalse($result, 'Referenced node does not exist yet.');
 
     $edit = array(
-      'title' => $this->randomName(),
+      'title[0][value]' => $this->randomName(),
       'test_field[0][target_id]' => $new_title,
     );
     $this->drupalPostForm("node/add/$this->referencing_type", $edit, 'Save');

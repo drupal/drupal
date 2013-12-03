@@ -208,20 +208,9 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
       // Store entities for rendering by view_mode.
       $view_modes[$entity_view_mode][$entity->id()] = $entity;
 
-      // Load the corresponding display settings if not stored yet.
+      // Get the corresponding display settings.
       if (!isset($displays[$entity_view_mode][$bundle])) {
-        // Get the display object for this bundle and view mode.
-        $display = entity_get_render_display($entity, $entity_view_mode);
-
-        // Let modules alter the display.
-        $display_context = array(
-          'entity_type' => $this->entityType,
-          'bundle' => $bundle,
-          'view_mode' => $entity_view_mode,
-        );
-        drupal_alter('entity_display', $display, $display_context);
-
-        $displays[$entity_view_mode][$bundle] = $display;
+        $displays[$entity_view_mode][$bundle] = entity_get_render_display($entity, $entity_view_mode);
       }
     }
 

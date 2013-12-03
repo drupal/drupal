@@ -77,7 +77,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
-    return array('title' => $this->randomName()) + parent::getNewEntityValues($langcode);
+    return array('title' => array(array('value' => $this->randomName()))) + parent::getNewEntityValues($langcode);
   }
 
   /**
@@ -86,7 +86,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   protected function createEntity($values, $langcode, $bundle_name = NULL) {
     $this->drupalLogin($this->editor);
     $edit = array(
-      'title' => $values['title'],
+      'title[0][value]' => $values['title'][0]['value'],
       "{$this->fieldName}[0][value]" => $values[$this->fieldName][0]['value'],
       'langcode' => $langcode,
     );
@@ -262,7 +262,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $languages = language_list();
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, array('language' => $languages[$langcode]));
-      $this->assertText($values[$langcode]['title'], format_string('The %langcode node translation is correctly displayed.', array('%langcode' => $langcode)));
+      $this->assertText($values[$langcode]['title'][0]['value'], format_string('The %langcode node translation is correctly displayed.', array('%langcode' => $langcode)));
     }
   }
 

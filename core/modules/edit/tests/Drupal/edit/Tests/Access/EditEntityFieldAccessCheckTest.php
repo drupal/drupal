@@ -41,13 +41,6 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
   protected $entityManager;
 
   /**
-   * The mocked field info.
-   *
-   * @var \Drupal\field\FieldInfo|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $fieldInfo;
-
-  /**
    * The mocked entity storage controller.
    *
    * @var \Drupal\Core\Entity\EntityStorageControllerInterface|\PHPUnit_Framework_MockObject_MockObject
@@ -71,11 +64,7 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->method('getStorageController')
       ->will($this->returnValue($this->entityStorageController));
 
-    $this->fieldInfo = $this->getMockBuilder('Drupal\field\FieldInfo')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $this->editAccessCheck = new EditEntityFieldAccessCheck($this->entityManager, $this->fieldInfo);
+    $this->editAccessCheck = new EditEntityFieldAccessCheck($this->entityManager);
   }
 
   /**
@@ -91,16 +80,12 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    * @see \Drupal\edit\Tests\edit\Access\EditEntityFieldAccessCheckTest::testAccess()
    */
   public function providerTestAccess() {
-    $editable_entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $editable_entity = $this->createMockEntity();
     $editable_entity->expects($this->any())
       ->method('access')
       ->will($this->returnValue(TRUE));
 
-    $non_editable_entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $non_editable_entity = $this->createMockEntity();
     $non_editable_entity->expects($this->any())
       ->method('access')
       ->will($this->returnValue(FALSE));
@@ -146,21 +131,14 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $entity_with_field = clone $entity;
     $entity_with_field->expects($this->any())
       ->method('get')
+      ->with('valid')
       ->will($this->returnValue($field));
 
     // Prepare the request to be valid.
-    $request->attributes->set('entity', $entity_with_field);
     $request->attributes->set('entity_type', 'test_entity');
-    $request->attributes->set('field_name', 'example');
+    $request->attributes->set('entity', $entity_with_field);
+    $request->attributes->set('field_name', 'valid');
     $request->attributes->set('langcode', Language::LANGCODE_NOT_SPECIFIED);
-
-    $this->fieldInfo->expects($this->any())
-      ->method('getInstance')
-      ->will($this->returnValue(array(
-        'example' => array(
-          'field_name' => 'example',
-        )
-      )));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $access = $this->editAccessCheck->access($route, $request, $account);
@@ -220,12 +198,7 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'entity_test');
-
-    $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $request->attributes->set('entity', $entity);
+    $request->attributes->set('entity', $this->createMockEntity());
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->editAccessCheck->access($route, $request, $account);
@@ -240,24 +213,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'entity_test');
-
-    $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $entity->expects($this->any())
-      ->method('entityType')
-      ->will($this->returnValue('entity_test'));
-    $entity->expects($this->any())
-      ->method('bundle')
-      ->will($this->returnValue('test_bundle'));
-
-    $request->attributes->set('entity', $entity);
+    $request->attributes->set('entity', $this->createMockEntity());
     $request->attributes->set('field_name', 'not_valid');
-
-    $this->fieldInfo->expects($this->once())
-      ->method('getInstance')
-      ->with('entity_test', 'test_bundle', 'not_valid')
-      ->will($this->returnValue(NULL));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->editAccessCheck->access($route, $request, $account);
@@ -272,21 +229,8 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'entity_test');
-
-    $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $request->attributes->set('entity', $entity);
-
+    $request->attributes->set('entity', $this->createMockEntity());
     $request->attributes->set('field_name', 'valid');
-
-    $field = $this->getMockBuilder('Drupal\field\Entity\Field')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $this->fieldInfo->expects($this->once())
-      ->method('getInstance')
-      ->will($this->returnValue($field));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
     $this->editAccessCheck->access($route, $request, $account);
@@ -301,25 +245,30 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
     $request = new Request();
     $request->attributes->set('entity_type', 'entity_test');
-
-    $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $request->attributes->set('entity', $entity);
-
+    $request->attributes->set('entity', $this->createMockEntity());
     $request->attributes->set('field_name', 'valid');
     $request->attributes->set('langcode', 'xx-lolspeak');
 
-    $field = $this->getMockBuilder('Drupal\field\Entity\Field')
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->editAccessCheck->access($route, $request, $account);
+  }
+
+  /**
+   * Returns a mock entity.
+   */
+  protected function createMockEntity() {
+    $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->fieldInfo->expects($this->once())
-      ->method('getInstance')
-      ->will($this->returnValue($field));
+    $entity->expects($this->any())
+      ->method('hasField')
+      ->will($this->returnValueMap(array(
+        array('valid', TRUE),
+        array('not_valid', FALSE),
+      )));
 
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->editAccessCheck->access($route, $request, $account);
+    return $entity;
   }
 
 }

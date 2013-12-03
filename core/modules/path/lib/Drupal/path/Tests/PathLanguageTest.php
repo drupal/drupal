@@ -94,7 +94,7 @@ class PathLanguageTest extends PathTestBase {
     $this->clickLink(t('Add'));
 
     $edit = array();
-    $edit['title'] = $this->randomName();
+    $edit['title[0][value]'] = $this->randomName();
     $edit['body[0][value]'] = $this->randomName();
     $french_alias = $this->randomName();
     $edit['path[alias]'] = $french_alias;

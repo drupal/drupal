@@ -101,18 +101,6 @@ class NodeFormController extends ContentEntityFormController {
       '#default_value' => $node->getChangedTime(),
     );
 
-    $node_type = node_type_load($node->getType());
-    if ($node_type->has_title) {
-      $form['title'] = array(
-        '#type' => 'textfield',
-        '#title' => check_plain($node_type->title_label),
-        '#required' => TRUE,
-        '#default_value' => $node->title->value,
-        '#maxlength' => 255,
-        '#weight' => -5,
-      );
-    }
-
     $language_configuration = module_invoke('language', 'get_default_configuration', 'node', $node->getType());
     $form['langcode'] = array(
       '#title' => t('Language'),

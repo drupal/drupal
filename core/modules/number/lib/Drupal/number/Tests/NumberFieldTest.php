@@ -199,7 +199,7 @@ class NumberFieldTest extends WebTestBase {
     // Create new content and check that prefix and suffix are shown.
     $rand_number = rand();
     $edit = array(
-      'title' => $this->randomName(),
+      'title[0][value]' => $this->randomName(),
       'field_' .$field_name . '[0][value]' => $rand_number,
     );
     $this->drupalPostForm("node/add/$type", $edit, t('Save'));

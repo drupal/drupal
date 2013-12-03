@@ -328,8 +328,23 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
 
     if (!empty($field_state['constraint_violations'])) {
+      $form_builder = \Drupal::formBuilder();
+
       // Locate the correct element in the the form.
       $element = NestedArray::getValue($form_state['complete_form'], $field_state['array_parents']);
+
+      // Do not report entity-level validation errors if Form API errors have
+      // already been reported for the field.
+      // @todo Field validation should not be run on fields with FAPI errors to
+      //   begin with. See https://drupal.org/node/2070429.
+      $element_path = implode('][', $element['#parents']);
+      if ($reported_errors = $form_builder->getErrors($form_state)) {
+        foreach (array_keys($reported_errors) as $error_path) {
+          if (strpos($error_path, $element_path) === 0) {
+            return;
+          }
+        }
+      }
 
       // Only set errors if the element is accessible.
       if (!isset($element['#access']) || $element['#access']) {
@@ -341,16 +356,22 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           // Separate violations by delta.
           $property_path = explode('.', $violation->getPropertyPath());
           $delta = array_shift($property_path);
-          $violation->arrayPropertyPath = $property_path;
+          // Violations at the ItemList level are not associated to any delta,
+          // we file them under $delta NULL.
+          $delta = is_numeric($delta) ? $delta : NULL;
+
           $violations_by_delta[$delta][] = $violation;
+          $violation->arrayPropertyPath = $property_path;
         }
 
         foreach ($violations_by_delta as $delta => $delta_violations) {
-          // For a multiple-value widget, pass all errors to the main widget.
-          // For single-value widgets, pass errors by delta.
-          if ($is_multiple) {
+          // Pass violations to the main element:
+          // - if this is a multiple-value widget,
+          // - or if the violations are at the ItemList level.
+          if ($is_multiple || $delta === NULL) {
             $delta_element = $element;
           }
+          // Otherwise, pass errors by delta to the corresponding sub-element.
           else {
             $original_delta = $field_state['original_deltas'][$delta];
             $delta_element = $element[$original_delta];
@@ -359,7 +380,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
             // @todo: Pass $violation->arrayPropertyPath as property path.
             $error_element = $this->errorElement($delta_element, $violation, $form, $form_state);
             if ($error_element !== FALSE) {
-              form_error($error_element, $form_state, $violation->getMessage());
+              $form_builder->setError($error_element, $form_state, $violation->getMessage());
             }
           }
         }

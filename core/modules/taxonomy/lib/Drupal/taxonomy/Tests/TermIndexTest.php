@@ -105,14 +105,14 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Post an article.
     $edit = array();
-    $edit["title"] = $this->randomName();
+    $edit['title[0][value]'] = $this->randomName();
     $edit['body[0][value]'] = $this->randomName();
     $edit["{$this->field_name_1}[]"] = $term_1->id();
     $edit["{$this->field_name_2}[]"] = $term_1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is indexed, and only once.
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
       ':nid' => $node->id(),
       ':tid' => $term_1->id(),

@@ -232,13 +232,13 @@ class FilterAdminTest extends WebTestBase {
     $text = $body . '<random>' . $extra_text . '</random>';
 
     $edit = array();
-    $edit["title"] = $this->randomName();
+    $edit['title[0][value]'] = $this->randomName();
     $edit['body[0][value]'] = $text;
     $edit['body[0][format]'] = $basic;
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
-    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), 'Filtered node created.');
+    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit['title[0][value]'])), 'Filtered node created.');
 
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue($node, 'Node found in database.');
 
     $this->drupalGet('node/' . $node->id());

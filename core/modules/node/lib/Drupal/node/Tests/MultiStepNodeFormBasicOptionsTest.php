@@ -61,7 +61,7 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
       ->save();
 
     $edit = array(
-      'title' => 'a',
+      'title[0][value]' => 'a',
       'promote' => FALSE,
       'sticky' => 1,
       "{$this->field_name}[0][value]" => $this->randomString(32),

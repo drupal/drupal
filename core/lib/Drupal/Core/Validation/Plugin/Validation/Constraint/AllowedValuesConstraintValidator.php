@@ -20,6 +20,9 @@ class AllowedValuesConstraintValidator extends ChoiceValidator {
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
+    if (!isset($value)) {
+      return;
+    }
     if ($this->context->getMetadata()->getTypedData() instanceof AllowedValuesInterface) {
       $account = \Drupal::currentUser();
       $allowed_values = $this->context->getMetadata()->getTypedData()->getSettableValues($account);

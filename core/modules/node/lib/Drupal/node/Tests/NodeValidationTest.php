@@ -54,13 +54,13 @@ class NodeValidationTest extends EntityUnitTestBase {
     $violations = $node->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when title is too long.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'title.0.value');
-    $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', array('%limit' => 255)));
+    $this->assertEqual($violations[0]->getMessage(), '<em class="placeholder">Title</em>: the text may not be longer than 255 characters.');
 
     $node->set('title', NULL);
     $violations = $node->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when title is not set.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'title');
-    $this->assertEqual($violations[0]->getMessage(), t('This value should not be null.'));
+    $this->assertEqual($violations[0]->getMessage(), 'This value should not be null.');
 
     // Make the title valid again.
     $node->set('title', $this->randomString());
@@ -71,6 +71,6 @@ class NodeValidationTest extends EntityUnitTestBase {
     $violations = $node->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when changed date is before the last changed date.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'changed.0.value');
-    $this->assertEqual($violations[0]->getMessage(), t('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.'));
+    $this->assertEqual($violations[0]->getMessage(), 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
   }
 }

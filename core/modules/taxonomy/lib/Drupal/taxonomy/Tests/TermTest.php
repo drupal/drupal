@@ -112,13 +112,13 @@ class TermTest extends TaxonomyTestBase {
 
     // Post an article.
     $edit = array();
-    $edit['title'] = $this->randomName();
+    $edit['title[0][value]'] = $this->randomName();
     $edit['body[0][value]'] = $this->randomName();
     $edit[$this->instance->getFieldName() . '[]'] = $term1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet('node/' . $node->id());
     $this->assertText($term1->label(), 'Term is displayed when viewing the node.');
 
@@ -163,7 +163,7 @@ class TermTest extends TaxonomyTestBase {
     );
 
     $edit = array();
-    $edit['title'] = $this->randomName();
+    $edit['title[0][value]'] = $this->randomName();
     $edit['body[0][value]'] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
@@ -186,7 +186,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Save, creating the terms.
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
-    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Article'), '%title' => $edit["title"])), 'The node was created successfully.');
+    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Article'), '%title' => $edit['title[0][value]'])), 'The node was created successfully.');
     foreach ($terms as $term) {
       $this->assertText($term, 'The term was saved and appears on the node page.');
     }
@@ -207,7 +207,7 @@ class TermTest extends TaxonomyTestBase {
     $term_names = array($term_objects['term3']->label(), $term_objects['term4']->label());
 
     // Get the node.
-    $node = $this->drupalGetNodeByTitle($edit["title"]);
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet('node/' . $node->id());
 
     foreach ($term_names as $term_name) {
@@ -531,7 +531,7 @@ class TermTest extends TaxonomyTestBase {
     // Create a term and a node using it.
     $term = $this->createTerm($this->vocabulary);
     $edit = array();
-    $edit['title'] = $this->randomName(8);
+    $edit['title[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
     $edit[$this->instance->getFieldName()] = $term->label();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
