@@ -850,6 +850,8 @@ abstract class FieldPluginBase extends HandlerBase {
       foreach ($previous as $id => $label) {
         $options[t('Fields')]["[$id]"] = $label;
       }
+      // Add the field to the list of options.
+      $options[t('Fields')]["[{$this->options['id']}]"] = $this->label();
 
       $count = 0; // This lets us prepare the key as we want it printed.
       foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
