@@ -167,7 +167,6 @@ abstract class AggregatorTestBase extends WebTestBase {
 
     // Ensure we have the right number of items.
     $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()));
-    $items = array();
     $feed->items = array();
     foreach ($result as $item) {
       $feed->items[] = $item->iid;
