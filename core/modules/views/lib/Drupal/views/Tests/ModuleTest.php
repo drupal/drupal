@@ -206,8 +206,8 @@ class ModuleTest extends ViewUnitTestBase {
 
     // Test the $opt_group parameter.
     $expected_opt_groups = array();
-    foreach ($all_views as $id => $view) {
-      foreach ($view->get('display') as $display_id => $display) {
+    foreach ($all_views as $view) {
+      foreach ($view->get('display') as $display) {
           $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = t('@view : @display', array('@view' => $view->id(), '@display' => $display['id']));
       }
     }
@@ -287,8 +287,8 @@ class ModuleTest extends ViewUnitTestBase {
    */
   protected function formatViewOptions(array $views = array()) {
     $expected_options = array();
-    foreach ($views as $id => $view) {
-      foreach ($view->get('display') as $display_id => $display) {
+    foreach ($views as $view) {
+      foreach ($view->get('display') as $display) {
         $expected_options[$view->id() . ':' . $display['id']] = t('View: @view - Display: @display',
           array('@view' => $view->id(), '@display' => $display['id']));
       }
