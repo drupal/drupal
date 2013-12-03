@@ -3313,8 +3313,7 @@ function hook_link_alter(&$variables) {
  * identified when you are looking at the Drupal source code by having
  * "@ Annotation" in their documentation blocks (without the space after @). To
  * find examples of annotation for a particular annotation class, such as
- * EntityType, look for class files that contain a PHP "use" declaration of the
- * annotation class, or files that have an @ annotation section using the
+ * EntityType, look for class files that have an @ annotation section using the
  * annotation class.
  * @}
  */
