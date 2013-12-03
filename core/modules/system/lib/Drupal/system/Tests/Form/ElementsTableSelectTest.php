@@ -216,6 +216,9 @@ class ElementsTableSelectTest extends WebTestBase {
     $form_state = form_state_defaults();
 
     $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
+    // The form token CSRF protection should not interfere with this test, so we
+    // bypass it by setting the token to FALSE.
+    $form['#token'] = FALSE;
 
     $form_state['input'] = $edit;
     $form_state['input']['form_id'] = $form_id;
@@ -223,10 +226,6 @@ class ElementsTableSelectTest extends WebTestBase {
     drupal_prepare_form($form_id, $form, $form_state);
 
     drupal_process_form($form_id, $form, $form_state);
-
-    // The form token CSRF protection should not interfere with this test, so we
-    // bypass it by marking this test form as programmed.
-    $form_state['programmed'] = TRUE;
 
     $errors = form_get_errors($form_state);
 

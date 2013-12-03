@@ -591,6 +591,11 @@ class FormBuilder implements FormBuilderInterface {
 
     // Only process the input if we have a correct form submission.
     if ($form_state['process_input']) {
+      // Form constructors may explicitly set #token to FALSE when cross site
+      // request forgery is irrelevant to the form, such as search forms.
+      if (isset($form['#token']) && $form['#token'] === FALSE) {
+        unset($form['#token']);
+      }
       $this->validateForm($form_id, $form, $form_state);
 
       // drupal_html_id() maintains a cache of element IDs it has seen, so it
