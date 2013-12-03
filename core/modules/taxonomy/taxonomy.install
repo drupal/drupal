@@ -48,13 +48,13 @@ function taxonomy_schema() {
         'default' => '',
         'description' => 'The term name.',
       ),
-      'description' => array(
+      'description__value' => array(
         'type' => 'text',
         'not null' => FALSE,
         'size' => 'big',
         'description' => 'A description of the term.',
       ),
-      'format' => array(
+      'description__format' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
@@ -427,4 +427,25 @@ function taxonomy_update_8009() {
       }
     }
   }
+}
+
+/**
+ * Rename the 'description' and 'format' columns for taxonomy terms.
+ */
+function taxonomy_update_8010() {
+  $description = array(
+    'type' => 'text',
+    'not null' => FALSE,
+    'size' => 'big',
+    'description' => 'A description of the term.',
+  );
+  db_change_field('taxonomy_term_data', 'description', 'description__value', $description);
+
+  $format = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+    'description' => 'The filter format ID of the description.',
+  );
+  db_change_field('taxonomy_term_data', 'format', 'description__format', $format);
 }

@@ -346,10 +346,15 @@ class TermTest extends TaxonomyTestBase {
     // Did this page request display a 'term-listing-heading'?
     $this->assertPattern('|class="taxonomy-term-description"|', 'Term page displayed the term description element.');
     // Check that it does NOT show a description when description is blank.
-    $term->description = '';
+    $term->description->value = NULL;
     $term->save();
     $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertNoPattern('|class="taxonomy-term-description"|', 'Term page did not display the term description when description was blank.');
+
+    // Check that the description value is processed.
+    $term->description->value = $value = $this->randomName();
+    $term->save();
+    $this->assertEqual($term->description->processed, "<p>$value</p>\n");
 
     // Check that the term feed page is working.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');

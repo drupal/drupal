@@ -23,7 +23,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'options');
+  public static $modules = array('taxonomy', 'options', 'text', 'filter');
 
   public static function getInfo() {
     return array(

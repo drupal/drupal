@@ -224,14 +224,10 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The term name.'));
 
-    $fields['description'] = FieldDefinition::create('string')
+    $fields['description'] = FieldDefinition::create('text_long')
       ->setLabel(t('Description'))
-      ->setDescription(t('A description of the term.'));
-
-    // @todo Combine with description.
-    $fields['format'] = FieldDefinition::create('string')
-      ->setLabel(t('Description format'))
-      ->setDescription(t('The filter format ID of the description.'));
+      ->setDescription(t('A description of the term.'))
+      ->setFieldSetting('text_processing', 1);
 
     $fields['weight'] = FieldDefinition::create('integer')
       ->setLabel(t('Weight'))

@@ -24,10 +24,12 @@ class TermViewBuilder extends EntityViewBuilder {
 
     foreach ($entities as $entity) {
       // Add the description if enabled.
+      // @todo Remove this when base fields are able to use formatters.
+      // https://drupal.org/node/2144919
       $display = $displays[$entity->bundle()];
       if (!empty($entity->description->value) && $display->getComponent('description')) {
         $entity->content['description'] = array(
-          '#markup' => check_markup($entity->description->value, $entity->format->value, '', TRUE),
+          '#markup' => $entity->description->processed,
           '#prefix' => '<div class="taxonomy-term-description">',
           '#suffix' => '</div>',
         );

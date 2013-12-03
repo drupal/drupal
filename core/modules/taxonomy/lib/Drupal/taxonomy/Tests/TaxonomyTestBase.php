@@ -55,9 +55,11 @@ abstract class TaxonomyTestBase extends WebTestBase {
     $format = array_pop($filter_formats);
     $term = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
-      'description' => $this->randomName(),
-      // Use the first available text format.
-      'format' => $format->format,
+      'description' => array(
+        'value' => $this->randomName(),
+        // Use the first available text format.
+        'format' => $format->format,
+      ),
       'vid' => $vocabulary->id(),
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));

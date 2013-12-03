@@ -281,11 +281,21 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
     $entities = array();
     foreach ($records as $id => $record) {
       $entities[$id] = array();
+      // Skip the item delta and item value levels (if possible) but let the
+      // field assign the value as suiting. This avoids unnecessary array
+      // hierarchies and saves memory here.
       foreach ($record as $name => $value) {
-        // Skip the item delta and item value levels but let the field assign
-        // the value as suiting. This avoids unnecessary array hierarchies and
-        // saves memory here.
-        $entities[$id][$name][Language::LANGCODE_DEFAULT] = $value;
+        // Handle columns named [field_name]__[column_name] (e.g for field types
+        // that store several properties).
+        if ($field_name = strstr($name, '__', TRUE)) {
+          $property_name = substr($name, strpos($name, '__') + 2);
+          $entities[$id][$field_name][Language::LANGCODE_DEFAULT][$property_name] = $value;
+        }
+        else {
+          // Handle columns named directly after the field (e.g if the field
+          // type only stores one property).
+          $entities[$id][$name][Language::LANGCODE_DEFAULT] = $value;
+        }
       }
       // If we have no multilingual values we can instantiate entity objecs
       // right now, otherwise we need to collect all the field values first.
@@ -332,13 +342,13 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       }
 
       $data = $query->execute();
-      $field_definition = \Drupal::entityManager()->getFieldDefinitions($this->entityType);
+      $field_definitions = \Drupal::entityManager()->getFieldDefinitions($this->entityType);
       $translations = array();
       if ($this->revisionDataTable) {
-        $data_fields = array_flip(array_diff(drupal_schema_fields_sql($this->entityInfo['revision_data_table']), drupal_schema_fields_sql($this->entityInfo['base_table'])));
+        $data_column_names = array_flip(array_diff(drupal_schema_fields_sql($this->entityInfo['revision_data_table']), drupal_schema_fields_sql($this->entityInfo['base_table'])));
       }
       else {
-        $data_fields = array_flip(drupal_schema_fields_sql($this->entityInfo['data_table']));
+        $data_column_names = array_flip(drupal_schema_fields_sql($this->entityInfo['data_table']));
       }
 
       foreach ($data as $values) {
@@ -349,9 +359,24 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
         $langcode = empty($values['default_langcode']) ? $values['langcode'] : Language::LANGCODE_DEFAULT;
         $translations[$id][$langcode] = TRUE;
 
-        foreach ($field_definition as $name => $definition) {
-          if (isset($data_fields[$name])) {
-            $entities[$id][$name][$langcode] = $values[$name];
+        foreach (array_keys($field_definitions) as $field_name) {
+          // Handle columns named directly after the field.
+          if (isset($data_column_names[$field_name])) {
+            $entities[$id][$field_name][$langcode] = $values[$field_name];
+          }
+          else {
+            // @todo Change this logic to be based on a mapping of field
+            // definition properties (translatability, revisionability) in
+            // https://drupal.org/node/2144631.
+            foreach ($data_column_names as $data_column_name) {
+              // Handle columns named [field_name]__[column_name], for which we
+              // need to look through all column names from the table that start
+              // with the name of the field.
+              if (($data_field_name = strstr($data_column_name, '__', TRUE)) && $data_field_name === $field_name) {
+                $property_name = substr($data_column_name, strpos($data_column_name, '__') + 2);
+                $entities[$id][$field_name][$langcode][$property_name] = $values[$data_column_name];
+              }
+            }
           }
         }
       }
@@ -744,17 +769,41 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    */
   protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
     $record = new \stdClass();
+    $values = array();
     $definitions = $entity->getPropertyDefinitions();
     $schema = drupal_get_schema($this->entityInfo[$table_key]);
     $is_new = $entity->isNew();
 
+    $multi_column_fields = array();
     foreach (drupal_schema_fields_sql($this->entityInfo[$table_key]) as $name) {
-      $info = $schema['fields'][$name];
-      $value = isset($definitions[$name]) && isset($entity->$name->value) ? $entity->$name->value : NULL;
+      // Check for fields which store data in multiple columns and process them
+      // separately.
+      if ($field = strstr($name, '__', TRUE)) {
+        $multi_column_fields[$field] = TRUE;
+        continue;
+      }
+      $values[$name] = isset($definitions[$name]) && isset($entity->$name->value) ? $entity->$name->value : NULL;
+    }
+
+    // Handle fields that store multiple properties and match each property name
+    // to its schema column name.
+    foreach (array_keys($multi_column_fields) as $field_name) {
+      $field_items = $entity->get($field_name);
+      $field_value = $field_items->getValue();
+      // @todo Reconsider the usage of getPropertyDefinitions() after
+      // https://drupal.org/node/2144327.
+      foreach (array_keys($field_items[0]->getPropertyDefinitions()) as $property_name) {
+        if (isset($schema['fields'][$field_name . '__' . $property_name])) {
+          $values[$field_name . '__' . $property_name] = isset($field_value[0][$property_name]) ? $field_value[0][$property_name] : NULL;
+        }
+      }
+    }
+
+    foreach ($values as $field_name => $value) {
       // If we are creating a new entity, we must not populate the record with
       // NULL values otherwise defaults would not be applied.
       if (isset($value) || !$is_new) {
-        $record->$name = drupal_schema_get_field_value($info, $value);
+        $record->$field_name = drupal_schema_get_field_value($schema['fields'][$field_name], $value);
       }
     }
 

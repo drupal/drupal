@@ -128,12 +128,12 @@ function taxonomy_views_data() {
   );
 
   // Term description
-  $data['taxonomy_term_data']['description'] = array(
+  $data['taxonomy_term_data']['description__value'] = array(
     'title' => t('Term description'),
     'help' => t('The description associated with a taxonomy term.'),
     'field' => array(
       'id' => 'markup',
-      'format' => array('field' => 'format'),
+      'format' => array('field' => 'description__format'),
       'click sortable' => FALSE,
     ),
     'filter' => array(
