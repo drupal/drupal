@@ -155,7 +155,6 @@ class PoDatabaseWriter implements PoWriterInterface {
    */
   function setHeader(PoHeader $header) {
     $this->_header = $header;
-    $config = \Drupal::config('locale.settings');
     $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
 
     // Check for options.
@@ -267,7 +266,7 @@ class PoDatabaseWriter implements PoWriterInterface {
         // No such source string in the database yet.
         $string = \Drupal::service('locale.storage')->createString(array('source' => $source, 'context' => $context))
           ->save();
-        $target = \Drupal::service('locale.storage')->createTranslation(array(
+        \Drupal::service('locale.storage')->createTranslation(array(
           'lid' => $string->getId(),
           'language' => $this->_langcode,
           'translation' => $translation,

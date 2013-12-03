@@ -96,7 +96,7 @@ class LocaleStringTest extends WebTestBase {
 
     // Create some translations and then delete string and all of its translations.
     $lid = $source->lid;
-    $translations = $this->createAllTranslations($source);
+    $this->createAllTranslations($source);
     $search = $this->storage->getTranslations(array('lid' => $source->lid));
     $this->assertEqual(count($search), 3, 'Created and retrieved all translations for our source string.');
 
@@ -144,7 +144,7 @@ class LocaleStringTest extends WebTestBase {
     // Not customized translations.
     $translate1 = $this->createAllTranslations($source1);
     // Customized translations.
-    $translate2 = $this->createAllTranslations($source2, array('customized' => LOCALE_CUSTOMIZED));
+    $this->createAllTranslations($source2, array('customized' => LOCALE_CUSTOMIZED));
     // Try quick search function with different field combinations.
     $langcode = 'es';
     $found = $this->storage->findTranslation(array('language' => $langcode, 'source' => $source1->source, 'context' => $source1->context));

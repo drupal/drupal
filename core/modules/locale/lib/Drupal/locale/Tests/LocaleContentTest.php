@@ -63,8 +63,6 @@ class LocaleContentTest extends WebTestBase {
    * Test if a content type can be set to multilingual and language is present.
    */
   function testContentTypeLanguageConfiguration() {
-    global $base_url;
-
     $type1 = $this->drupalCreateContentType();
     $type2 = $this->drupalCreateContentType();
 

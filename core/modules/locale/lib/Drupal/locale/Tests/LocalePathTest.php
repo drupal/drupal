@@ -41,8 +41,6 @@ class LocalePathTest extends WebTestBase {
    * Test if a language can be associated with a path alias.
    */
   function testPathLanguageConfiguration() {
-    global $base_url;
-
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'create page content', 'administer url aliases', 'create url aliases', 'access administration pages'));
 

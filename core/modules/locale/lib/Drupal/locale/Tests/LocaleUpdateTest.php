@@ -65,7 +65,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    */
   function testUpdateProjectsHidden() {
     module_load_include('compare.inc', 'locale');
-    $config = \Drupal::config('locale.settings');
+    \Drupal::config('locale.settings');
 
     // Make the test modules look like a normal custom module.
     \Drupal::state()->set('locale.test_system_info_alter', TRUE);
