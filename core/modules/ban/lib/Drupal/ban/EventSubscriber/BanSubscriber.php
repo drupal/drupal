@@ -37,7 +37,7 @@ class BanSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Response with 403 if the visitor's IP adress is banned.
+   * Response with 403 if the visitor's IP address is banned.
    *
    * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.

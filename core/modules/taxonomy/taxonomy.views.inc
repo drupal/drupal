@@ -358,7 +358,7 @@ function taxonomy_views_data() {
 function taxonomy_views_data_alter(&$data) {
   $data['node']['term_node_tid'] = array(
     'title' => t('Taxonomy terms on node'),
-    'help' => t('Relate nodes to taxonomy terms, specifiying which vocabulary or vocabularies to use. This relationship will cause duplicated records if there are multiple terms.'),
+    'help' => t('Relate nodes to taxonomy terms, specifying which vocabulary or vocabularies to use. This relationship will cause duplicated records if there are multiple terms.'),
     'relationship' => array(
       'id' => 'node_term_data',
       'label' => t('term'),

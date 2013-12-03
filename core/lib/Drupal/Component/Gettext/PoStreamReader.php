@@ -247,11 +247,11 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * this line ends the current item, it is saved with setItemFromArray() with
    * data from $this->_current_item.
    *
-   * An internal state machine is maintained in this reader using $this->_context
-   * as the reading state. PO items are inbetween COMMENT states (when items have
-   * at least one line or comment inbetween them or indicated by MSGSTR or
-   * MSGSTR_ARR followed immediately by an MSGID or MSGCTXT (when items closely
-   * follow each other).
+   * An internal state machine is maintained in this reader using
+   * $this->_context as the reading state. PO items are in between COMMENT
+   * states (when items have at least one line or comment in between them) or
+   * indicated by MSGSTR or MSGSTR_ARR followed immediately by an MSGID or
+   * MSGCTXT (when items closely follow each other).
    *
    * @return
    *   FALSE if an error was logged, NULL otherwise. The errors are considered

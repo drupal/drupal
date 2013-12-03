@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Lists avalable colors and color schemes for the Bartik theme.
+ * Lists available colors and color schemes for the Bartik theme.
  */
 
 // Put the logo path into JavaScript for the live preview.

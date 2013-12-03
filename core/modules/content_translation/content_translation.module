@@ -266,7 +266,7 @@ function content_translation_menu_alter(array &$items) {
           }
           while (!empty($entity_form_item['type']) && $entity_form_item['type'] == MENU_DEFAULT_LOCAL_TASK);
 
-          // Make the "Translate" tab follow the "Edit" one when possibile.
+          // Make the "Translate" tab follow the "Edit" one when possible.
           if (isset($entity_form_item['weight'])) {
             $items["$path/translations"]['weight'] = $entity_form_item['weight'] + 0.01;
           }

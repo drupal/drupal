@@ -103,7 +103,7 @@ class UserLoginTest extends WebTestBase {
    * Test that user password is re-hashed upon login after changing $count_log2.
    */
   function testPasswordRehashOnLogin() {
-    // Determine default log2 for phpass hashing algoritm
+    // Determine default log2 for phpass hashing algorithm
     $default_count_log2 = 16;
 
     // Retrieve instance of password hashing algorithm

@@ -15,7 +15,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 function locale_test_system_info_alter(&$info, $file, $type) {
   // Only modify the system info if required.
   // By default the locale_test modules are hidden and have a project specified.
-  // To test the module detection proces by locale_project_list() the
+  // To test the module detection process by locale_project_list() the
   // test modules should mimic a custom module. I.e. be non-hidden.
   if (\Drupal::state()->get('locale.test_system_info_alter')) {
     if ($file->name == 'locale_test' || $file->name == 'locale_test_translate') {

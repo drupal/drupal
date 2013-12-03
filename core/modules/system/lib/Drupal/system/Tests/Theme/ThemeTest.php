@@ -39,7 +39,7 @@ class ThemeTest extends WebTestBase {
    * Test attribute merging.
    *
    * Render arrays that use a render element and templates (and hence call
-   * template_preprocess()) must ensure the attributes at different occassions
+   * template_preprocess()) must ensure the attributes at different occasions
    * are all merged correctly:
    *   - $variables['attributes'] as passed in to theme()
    *   - the render element's #attributes

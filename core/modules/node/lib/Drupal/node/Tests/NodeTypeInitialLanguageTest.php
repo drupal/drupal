@@ -86,7 +86,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     // Tests if the language field is hidden by default.
     $this->assertOptionSelected('edit-fields-langcode-type', 'hidden', 'Language is hidden by default on manage display tab.');
 
-    // Changes the inital language settings.
+    // Changes the initial language settings.
     $edit = array(
       'language_configuration[langcode]' => 'en',
     );

@@ -156,9 +156,9 @@ Drupal.edit.FieldModel = Backbone.Model.extend({
     // - Trigger: user.
     // - Guarantees: see 'candidate' and 'active'.
     // - Expected behavior: saving indicator, in-place editor is saving field
-    //   data into TempStore. Upon succesful saving (without validation errors),
-    //   the in-place editor transitions the field's state to 'saved', but to
-    //   'invalid' upon failed saving (with validation errors).
+    //   data into TempStore. Upon successful saving (without validation
+    //   errors), the in-place editor transitions the field's state to 'saved',
+    //   but to 'invalid' upon failed saving (with validation errors).
     'saving',
     // In-place editor has successfully saved the changed field.
     // - Trigger: in-place editor.

@@ -1124,7 +1124,7 @@ abstract class TestBase {
 
     // Reset all static variables.
     // All destructors of statically cached objects have been invoked above;
-    // this second reset is guranteed to reset everything to nothing.
+    // this second reset is guaranteed to reset everything to nothing.
     drupal_static_reset();
 
     // Restore original in-memory configuration.

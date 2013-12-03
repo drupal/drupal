@@ -116,7 +116,7 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
 
   public function tearDown() {
     // Destruct the registered backend, each test will get a fresh instance,
-    // properly emptying it here ensure that on persistant data backends they
+    // properly emptying it here ensure that on persistent data backends they
     // will come up empty the next test.
     foreach ($this->cachebackends as $bin => $cachebackend) {
       $this->cachebackends[$bin]->deleteAll();

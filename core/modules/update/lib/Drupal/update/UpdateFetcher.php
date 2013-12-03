@@ -98,7 +98,7 @@ class UpdateFetcher {
     $url = $this->getFetchBaseUrl($project);
     $url .= '/' . $name . '/' . \Drupal::CORE_COMPATIBILITY;
 
-    // Only append usage infomation if we have a site key and the project is
+    // Only append usage information if we have a site key and the project is
     // enabled. We do not want to record usage statistics for disabled projects.
     if (!empty($site_key) && (strpos($project['project_type'], 'disabled') === FALSE)) {
       // Append the site key.

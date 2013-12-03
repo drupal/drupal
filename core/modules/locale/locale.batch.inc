@@ -87,7 +87,7 @@ function locale_translation_batch_status_check($project, $langcode, $options = a
  * Batch finished callback: Set result message.
  *
  * @param boolean $success
- *   TRUE if batch succesfully completed.
+ *   TRUE if batch successfully completed.
  * @param array $results
  *   Batch results.
  */
@@ -185,7 +185,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
 
         // The import is finished.
         if (isset($context['finished']) && $context['finished'] == 1) {
-          // The import is successfull.
+          // The import is successful.
           if (isset($context['results']['files'][$file->uri])) {
             $context['message'] = t('Imported translation for %project.', array('%project' => $source->project));
 
@@ -203,7 +203,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
  * Batch finished callback: Set result message.
  *
  * @param boolean $success
- *   TRUE if batch succesfully completed.
+ *   TRUE if batch successfully completed.
  * @param array
  *   Batch results.
  */

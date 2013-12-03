@@ -20,7 +20,7 @@ Drupal.behaviors.copyFieldValue = {
       }
     }
     if (ids.length) {
-      // Listen to value:copy events on all dependant fields.
+      // Listen to value:copy events on all dependent fields.
       // We have to use body and not document because of the way jQuery events
       // bubble up the DOM tree.
       $('body').once('copy-field-values').on('value:copy', this.valueTargetCopyHandler);
@@ -51,7 +51,7 @@ Drupal.behaviors.copyFieldValue = {
   /**
    * Handler for a Blur event on a source field.
    *
-   * This event handler will trigger a 'value:copy' event on all dependant fields.
+   * This event handler will trigger a 'value:copy' event on all dependent fields.
    */
   valueSourceBlurHandler: function (e) {
     var value = $(e.target).val();

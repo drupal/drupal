@@ -251,7 +251,7 @@ function hook_views_data() {
       'label' => t('Published'),
       // This setting is used by the boolean filter handler, as possible option.
       'type' => 'yes-no',
-      // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statment.
+      // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statement.
       'use_equal' => TRUE,
     ),
     'sort' => array(

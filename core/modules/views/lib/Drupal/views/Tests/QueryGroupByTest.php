@@ -162,7 +162,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
    */
   public function testGroupByCountOnlyFilters() {
     // Check if GROUP BY and HAVING are included when a view
-    // Doesn't display SUM, COUNT, MAX... functions in SELECT statment
+    // Doesn't display SUM, COUNT, MAX... functions in SELECT statement
 
     for ($x = 0; $x < 10; $x++) {
       $this->storageController->create(array('name' => 'name1'))->save();

@@ -100,7 +100,7 @@ Drupal.behaviors.toolbar = {
       // Trigger an initial attempt to load menu subitems. This first attempt
       // is made after the media query handlers have had an opportunity to
       // process. The toolbar starts in the vertical orientation by default,
-      // unless the viewport is wide enough to accomodate a horizontal
+      // unless the viewport is wide enough to accommodate a horizontal
       // orientation. Thus we give the Toolbar a chance to determine if it
       // should be set to horizontal orientation before attempting to load menu
       // subtrees.

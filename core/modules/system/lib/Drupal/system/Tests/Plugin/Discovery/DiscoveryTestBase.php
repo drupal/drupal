@@ -44,7 +44,7 @@ class DiscoveryTestBase extends UnitTestBase {
   function testDiscoveryInterface() {
     // Ensure that getDefinitions() returns the expected definitions.
     // For the arrays to be identical (instead of only equal), they must be
-    // sorted equally, which seems unneccessary here.
+    // sorted equally, which seems unnecessary here.
     $this->assertEqual($this->discovery->getDefinitions(), $this->expectedDefinitions);
 
     // Ensure that getDefinition() returns the expected definition.

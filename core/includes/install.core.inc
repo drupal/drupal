@@ -1670,7 +1670,7 @@ function install_select_language_form($form, &$form_state, $files = array()) {
  *
  * @return string
  *   A themed status report, or an exception if there are requirement errors.
- *   Upon successfull download the page is reloaded and no output is returned.
+ *   Upon successful download the page is reloaded and no output is returned.
  */
 function install_download_translation(&$install_state) {
   // Check whether all conditions are met to download. Download the translation
@@ -1680,7 +1680,7 @@ function install_download_translation(&$install_state) {
     return $output;
   }
 
-  // The download was successfull, reload the page in the new lanagage.
+  // The download was successful, reload the page in the new lanagage.
   install_goto(install_redirect_url($install_state));
 }
 
@@ -2205,7 +2205,7 @@ function install_finished(&$install_state) {
   // Will also trigger indexing of profile-supplied content or feeds.
   drupal_cron_run();
 
-  // Save a snapshot of the intially installed configuration.
+  // Save a snapshot of the initially installed configuration.
   $active = drupal_container()->get('config.storage');
   $snapshot = drupal_container()->get('config.storage.snapshot');
   config_import_create_snapshot($active, $snapshot);

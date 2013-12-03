@@ -26,7 +26,7 @@ class TourTestBase extends WebTestBase {
    * $this->assertTourTips();
    *
    * // Advanced example. The following would be used for multipage or
-   * // targetting a specific subset of tips.
+   * // targeting a specific subset of tips.
    * $tips = array();
    * $tips[] = array('data-id' => 'foo');
    * $tips[] = array('data-id' => 'bar');

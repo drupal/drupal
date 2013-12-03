@@ -417,7 +417,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Test the 'None' option.
 
-    // Check that the 'none' option has no efect if actual options are selected
+    // Check that the 'none' option has no effect if actual options are selected
     // as well.
     $edit = array('card_2[]' => array('_none' => '_none', 0 => 0));
     $this->drupalPostForm('entity_test/manage/' . $entity->id(), $edit, t('Save'));

@@ -209,7 +209,7 @@ class MergeTest extends DatabaseTestBase {
   function testInvalidMerge() {
     try {
       // This query will fail because there is no key field specified.
-      // Normally it would throw an exception but we are supressing it with
+      // Normally it would throw an exception but we are suppressing it with
       // the throw_exception option.
       $options['throw_exception'] = FALSE;
       db_merge('test_people', $options)

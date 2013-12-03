@@ -74,7 +74,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
    *    insert its own toolbar UI into Edit's tightly integrated toolbar.
    *  - Boolean fullWidthToolbar: indicates whether Edit's tightly integrated
    *    toolbar should consume the full width of the element, rather than being
-   *    just long enough to accomodate a label.
+   *    just long enough to accommodate a label.
    */
   getEditUISettings: function () {
     return { padding: false, unifiedToolbar: false, fullWidthToolbar: false, popup: false };

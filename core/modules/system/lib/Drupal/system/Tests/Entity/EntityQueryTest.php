@@ -311,7 +311,7 @@ class EntityQueryTest extends EntityUnitTestBase {
       ->sort("$greetings.format")
       ->sort('id');
     // As we do not have any conditions, here are the possible colors and
-    // language codes, already in order, with the first occurence of the
+    // language codes, already in order, with the first occurrence of the
     // entity id marked with *:
     // 8  NULL pl *
     // 12 NULL pl *
@@ -507,7 +507,7 @@ class EntityQueryTest extends EntityUnitTestBase {
   /**
    * Test adding a tag and metadata to the Entity query object.
    *
-   * The tags and metadata should propogate to the SQL query object.
+   * The tags and metadata should propagate to the SQL query object.
    */
   function testMetaData() {
     $query = \Drupal::entityQuery('entity_test_mulrev');
@@ -517,6 +517,6 @@ class EntityQueryTest extends EntityUnitTestBase {
       ->execute();
 
     global $efq_test_metadata;
-    $this->assertEqual($efq_test_metadata, 'bar', 'Tag and metadata propogated to the SQL query object.');
+    $this->assertEqual($efq_test_metadata, 'bar', 'Tag and metadata propagated to the SQL query object.');
   }
 }

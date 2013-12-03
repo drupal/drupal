@@ -269,7 +269,7 @@ abstract class FieldPluginBase extends HandlerBase {
    *
    * This function can be overridden by fields that want more or fewer
    * elements available, though this seems like it would be an incredibly
-   * rare occurence.
+   * rare occurrence.
    */
   public function getElements() {
     static $elements = NULL;
@@ -1642,7 +1642,7 @@ abstract class FieldPluginBase extends HandlerBase {
    *
    * @param array $alter
    *   The alter array of options to use.
-   *     - max_length: Maximum lenght of the string, the rest gets truncated.
+   *     - max_length: Maximum length of the string, the rest gets truncated.
    *     - word_boundary: Trim only on a word boundary.
    *     - ellipsis: Show an ellipsis (...) at the end of the trimmed string.
    *     - html: Take sure that the html is correct.

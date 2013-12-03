@@ -15,7 +15,7 @@ function scrollValue(position) {
   return document.documentElement[position] || document.body[position];
 }
 
-// Select and initilize sticky table headers.
+// Select and initialize sticky table headers.
 function tableHeaderInitHandler(e) {
   var $tables = $(e.data.context).find('table.sticky-enabled').once('tableheader');
   for (var i = 0, il = $tables.length; i < il; i++) {

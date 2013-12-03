@@ -169,7 +169,7 @@ class Tables implements TablesInterface {
       else {
         // ensureEntityTable() decides whether an entity property will be
         // queried from the data table or the base table based on where it
-        // finds the property first. The data table is prefered, which is why
+        // finds the property first. The data table is preferred, which is why
         // it gets added before the base table.
         $entity_tables = array();
         if (isset($entity_info['data_table'])) {

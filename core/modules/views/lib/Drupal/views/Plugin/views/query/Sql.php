@@ -841,7 +841,7 @@ class Sql extends QueryPluginBase {
   /**
    * Add a complex WHERE clause to the query.
    *
-   * The caller is reponsible for ensuring that all fields are fully qualified
+   * The caller is responsible for ensuring that all fields are fully qualified
    * (TABLE.FIELD) and that the table already exists in the query.
    * Internally the dbtng method "where" is used.
    *

@@ -72,7 +72,7 @@ class AuthTest extends RESTTestBase {
     // Now read it with the Basic authentication which is enabled and should
     // work.
     $response = $this->basicAuthGet('entity/' . $entity_type . '/' . $entity->id(), $account->getUsername(), $account->pass_raw);
-    $this->assertResponse('200', 'HTTP response code is 200 for successfuly authorized requests.');
+    $this->assertResponse('200', 'HTTP response code is 200 for successfully authorized requests.');
     $this->curlClose();
   }
 

@@ -38,7 +38,7 @@ Drupal.behaviors.tour = {
         // Initialization: check whether a tour is available on the current page.
         .set('tour', $(context).find('ol#tour'));
 
-      // Start the tour imediately if toggled via query string.
+      // Start the tour immediately if toggled via query string.
       if (/tour=?/i.test(queryString)) {
         model.set('isActive', true);
       }

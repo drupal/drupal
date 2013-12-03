@@ -88,7 +88,7 @@ class UserValidationTest extends DrupalUnitTestBase {
     // Create a second test user to provoke a name collision.
     $user2 = entity_create('user', array(
       'name' => 'existing',
-      'mail' => 'existing@exmaple.com',
+      'mail' => 'existing@example.com',
     ));
     $user2->save();
     $user->set('name', 'existing');
@@ -114,11 +114,11 @@ class UserValidationTest extends DrupalUnitTestBase {
     $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
 
     // Provoke a e-mail collision with an exsiting user.
-    $user->set('mail', 'existing@exmaple.com');
+    $user->set('mail', 'existing@example.com');
     $violations = $user->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when e-mail already exists.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
-    $this->assertEqual($violations[0]->getMessage(), t('The e-mail address %mail is already taken.', array('%mail' => 'existing@exmaple.com')));
+    $this->assertEqual($violations[0]->getMessage(), t('The e-mail address %mail is already taken.', array('%mail' => 'existing@example.com')));
     $user->set('mail', NULL);
 
     $user->set('signature', $this->randomString(256));

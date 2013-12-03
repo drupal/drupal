@@ -33,7 +33,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
   function testLanguageFromBrowser() {
     // The order of the languages is only important if the browser language
     // codes are having the same qvalue, otherwise the one with the highest
-    // qvalue is prefered. The automatically generated generic tags are always
+    // qvalue is preferred. The automatically generated generic tags are always
     // having a lower qvalue.
 
     $languages = array(
@@ -77,7 +77,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
     );
 
     $test_cases = array(
-      // Equal qvalue for each language, choose the site prefered one.
+      // Equal qvalue for each language, choose the site preferred one.
       'en,en-US,fr-CA,fr,es-MX' => 'en',
       'en-US,en,fr-CA,fr,es-MX' => 'en',
       'fr,en' => 'en',

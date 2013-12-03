@@ -52,7 +52,8 @@ class SpecialAttributesRouteSubscriber extends RouteSubscriberBase {
    *   The route build event.
    *
    * @return bool
-   *   Returns TRUE if the variables were succesfully replaced, otherwise FALSE.
+   *   Returns TRUE if the variables were successfully replaced, otherwise
+   *   FALSE.
    */
   public function onAlterRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();

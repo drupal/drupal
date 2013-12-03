@@ -110,7 +110,7 @@ class CssOptimizer implements AssetOptimizerInterface {
       $content = $this->processCss($contents, $_optimize);
     }
 
-    // Restore the parent base path as the file and its childen are processed.
+    // Restore the parent base path as the file and its children are processed.
     $basepath = $parent_base_path;
     return $content;
   }

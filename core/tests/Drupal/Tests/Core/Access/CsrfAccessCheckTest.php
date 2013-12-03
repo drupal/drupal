@@ -108,7 +108,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * Tests the access() method with no _controller_request attribute set.
    *
-   * This will default to the 'ANY' access conjuction.
+   * This will default to the 'ANY' access conjunction.
    */
   public function testAccessTokenMissAny() {
     $this->csrfToken->expects($this->never())
@@ -125,7 +125,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * Tests the access() method with no _controller_request attribute set.
    *
-   * This will use the 'ALL' access conjuction.
+   * This will use the 'ALL' access conjunction.
    */
   public function testAccessTokenMissAll() {
     $this->csrfToken->expects($this->never())

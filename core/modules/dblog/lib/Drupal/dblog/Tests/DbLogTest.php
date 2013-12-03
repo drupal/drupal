@@ -24,7 +24,7 @@ class DbLogTest extends WebTestBase {
   public static $modules = array('dblog', 'node', 'forum', 'help');
 
   /**
-   * A user with some relevent administrative permissions.
+   * A user with some relevant administrative permissions.
    *
    * @var object
    */

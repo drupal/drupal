@@ -1217,7 +1217,7 @@ function views_query_views_alter(AlterableInterface $query) {
     }
   }
 
-  // Replaces substitions in filter criterias.
+  // Replaces substitions in filter criteria.
   _views_query_tag_alter_condition($query, $where, $substitutions);
 }
 

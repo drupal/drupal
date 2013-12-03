@@ -624,7 +624,7 @@ function valid_url($url, $absolute = FALSE) {
  *   given step.
  *
  * @return bool
- *   TRUE if no step mismatch has occured, or FALSE otherwise.
+ *   TRUE if no step mismatch has occurred, or FALSE otherwise.
  *
  * @deprecated as of Drupal 8.0. Use
  *   \Drupal\Component\Utility\Number::validStep() directly instead

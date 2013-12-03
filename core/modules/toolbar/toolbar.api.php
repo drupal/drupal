@@ -13,7 +13,7 @@
 /**
  * Add items to the toolbar menu.
  *
- * The toolbar is a container for adminstrative and site-global interactive
+ * The toolbar is a container for administrative and site-global interactive
  * components.
  *
  * The toolbar provides a common styling for items denoted by the
@@ -21,7 +21,7 @@
  * a toolbar item with the appropriate markup to apply the styling.
  *
  * The toolbar provides a construct called a 'tray'. The tray is a container
- * for content. The tray may be associated with a toggle in the adminstration
+ * for content. The tray may be associated with a toggle in the administration
  * bar. The toggle shows or hides the tray and is optimized for small and
  * large screens. To create this association, hook_toolbar() returns one or
  * more render elements of type 'toolbar_item', containing the toggle and tray
@@ -31,7 +31,7 @@
  *   - 'tab': A renderable array.
  *   - 'tray': Optional. A renderable array.
  *   - '#weight': Optional. Integer weight used for sorting toolbar items in
- *     adminstration bar area.
+ *     administration bar area.
  *
  * This hook is invoked in toolbar_pre_render().
  *

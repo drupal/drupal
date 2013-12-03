@@ -452,7 +452,7 @@ class SelectTest extends DatabaseTestBase {
   function testInvalidSelectCount() {
     try {
       // This query will fail because the table does not exist.
-      // Normally it would throw an exception but we are supressing
+      // Normally it would throw an exception but we are suppressing
       // it with the throw_exception option.
       $options['throw_exception'] = FALSE;
       db_select('some_table_that_doesnt_exist', 't', $options)

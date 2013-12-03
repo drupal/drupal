@@ -232,8 +232,8 @@ class Url {
     }
     else {
       // When comparing base paths, we need a trailing slash to make sure a
-      // partial URL match isn't occuring. Since base_path() always returns with
-      // a trailing slash, we don't need to add the trailing slash here.
+      // partial URL match isn't occurring. Since base_path() always returns
+      // with a trailing slash, we don't need to add the trailing slash here.
       return ($url_parts['host'] == $base_host && stripos($url_parts['path'], $base_url) === 0);
     }
   }

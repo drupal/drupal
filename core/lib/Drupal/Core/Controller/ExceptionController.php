@@ -268,7 +268,7 @@ class ExceptionController extends ContainerAware {
   }
 
   /**
-   * Processes an AccessDenied exception that occured on a JSON request.
+   * Processes an AccessDenied exception that occurred on a JSON request.
    *
    * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
    *   The flattened exception.
@@ -282,7 +282,7 @@ class ExceptionController extends ContainerAware {
   }
 
   /**
-   * Processes a NotFound exception that occured on a JSON request.
+   * Processes a NotFound exception that occurred on a JSON request.
    *
    * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
    *   The flattened exception.
@@ -296,7 +296,7 @@ class ExceptionController extends ContainerAware {
   }
 
   /**
-   * Processes a MethodNotAllowed exception that occured on a JSON request.
+   * Processes a MethodNotAllowed exception that occurred on a JSON request.
    *
    * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
    *   The flattened exception.

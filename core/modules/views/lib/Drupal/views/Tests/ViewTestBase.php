@@ -211,7 +211,7 @@ abstract class ViewTestBase extends WebTestBase {
    *   message is provided, the message will indicate the button label.
    *
    * @return bool
-   *   TRUE if the asserion was succesful, or FALSE on failure.
+   *   TRUE if the asserion was successful, or FALSE on failure.
    */
   protected function helperButtonHasLabel($id, $expected_label, $message = 'Label has the expected value: %label.') {
     return $this->assertFieldById($id, $expected_label, t($message, array('%label' => $expected_label)));

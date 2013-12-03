@@ -28,7 +28,7 @@ class Number {
    *   given step.
    *
    * @return bool
-   *   TRUE if no step mismatch has occured, or FALSE otherwise.
+   *   TRUE if no step mismatch has occurred, or FALSE otherwise.
    *
    * @see http://opensource.apple.com/source/WebCore/WebCore-1298/html/NumberInputType.cpp
    */

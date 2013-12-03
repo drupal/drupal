@@ -91,14 +91,14 @@ EOD;
   const STATUS_ERROR = -1;
 
   /**
-   * Holds the multibyte capabilities of the current enviroment.
+   * Holds the multibyte capabilities of the current environment.
    *
    * @var int
    */
   protected static $status = 0;
 
   /**
-   * Get the current status of unicode/multibyte support on this enviroment.
+   * Get the current status of unicode/multibyte support on this environment.
    *
    * @return int
    *   The status of multibyte support. It can be one of:
@@ -107,14 +107,14 @@ EOD;
    *   - \Drupal\Component\Utility\Unicode::STATUS_SINGLEBYTE
    *     Standard PHP (emulated) unicode support.
    *   - \Drupal\Component\Utility\Unicode::STATUS_ERROR
-   *     An error occured. No unicode support.
+   *     An error occurred. No unicode support.
    */
   public static function getStatus() {
     return static::$status;
   }
 
   /**
-   * Sets the value for multibyte support status for the current enviroment.
+   * Sets the value for multibyte support status for the current environment.
    *
    * The following status keys are supported:
    *   - \Drupal\Component\Utility\Unicode::STATUS_MULTIBYTE
@@ -122,7 +122,7 @@ EOD;
    *   - \Drupal\Component\Utility\Unicode::STATUS_SINGLEBYTE
    *     Standard PHP (emulated) unicode support.
    *   - \Drupal\Component\Utility\Unicode::STATUS_ERROR
-   *     An error occured. No unicode support.
+   *     An error occurred. No unicode support.
    *
    * @param int $status
    *   The new status of multibyte support.

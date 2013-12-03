@@ -1516,7 +1516,7 @@ class ViewExecutable {
    * this sets the display handler if it hasn't been.
    */
   public function access($displays = NULL, $account = NULL) {
-    // Noone should have access to disabled views.
+    // No one should have access to disabled views.
     if (!$this->storage->status()) {
       return FALSE;
     }

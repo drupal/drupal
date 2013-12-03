@@ -736,7 +736,7 @@ function locale_translate_file_attach_properties($file, $options = array()) {
  *   Defaults to all languagues
  *
  * @return boolean
- *   TRUE if files are removed sucessfully. FALSE if one or more files could
+ *   TRUE if files are removed successfully. FALSE if one or more files could
  *   not be deleted.
  */
 function locale_translate_delete_translation_files($projects = array(), $langcodes = array()) {

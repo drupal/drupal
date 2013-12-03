@@ -2264,7 +2264,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     // The file properties add more entropy not easily accessible to others.
     $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
-    // We cant use Crypt::hmacBase64() yet because this can be called in very
+    // We can't use Crypt::hmacBase64() yet because this can be called in very
     // early bootstrap when autoloader has not been initialized yet.
     $test_hmac = base64_encode(hash_hmac('sha256', $check_string, $key, TRUE));
     $test_hmac = strtr($test_hmac, array('+' => '-', '/' => '_', '=' => ''));

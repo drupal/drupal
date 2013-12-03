@@ -92,7 +92,7 @@ function hook_language_types_info_alter(array &$language_types) {
  *
  * @return
  *   An associative array of language negotiation method definitions. The keys
- *   are method identifiers, and the values are associative arrays definining
+ *   are method identifiers, and the values are associative arrays defining
  *   each method, with the following elements:
  *   - types: An array of allowed language types. If a language negotiation
  *     method does not specify which language types it should be used with, it

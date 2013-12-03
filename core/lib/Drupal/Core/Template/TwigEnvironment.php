@@ -15,7 +15,7 @@ use Drupal\Component\PhpStorage\PhpStorageFactory;
  * Instances of this class are used to store the configuration and extensions,
  * and are used to load templates from the file system or other locations.
  *
- * @see core\vendor\twig\twig\lib\Twig\Enviornment.php
+ * @see core\vendor\twig\twig\lib\Twig\Environment.php
  */
 class TwigEnvironment extends \Twig_Environment {
   protected $cache_object = NULL;

@@ -553,7 +553,7 @@ class FieldUnitTest extends ViewUnitTestBase {
       'сд асд асд ас',
       'асд асд асд ас'
     );
-    // Just test maxlength without word boundry.
+    // Just test maxlength without word boundary.
     $alter = array(
       'max_length' => 10,
     );

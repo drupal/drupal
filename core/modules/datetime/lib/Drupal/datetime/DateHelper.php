@@ -461,7 +461,7 @@ class DateHelper {
    *
    * @param mixed $date
    *   (optional) A date object, timestamp, or a date string.
-   *   Defaults to NULL, whcih means to use the current date.
+   *   Defaults to NULL, which means to use the current date.
    *
    * @return int
    *   The number of days in the year.
@@ -506,7 +506,7 @@ class DateHelper {
    *
    * @param mixed $date
    *   (optional) A date object, timestamp, or a date string.
-   *   Defaults to NULL, whcih means use the current date.
+   *   Defaults to NULL, which means use the current date.
    * @param string $abbr
    *   (optional) Whether to return the abbreviated name for that day.
    *   Defaults to TRUE.

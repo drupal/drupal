@@ -3,7 +3,7 @@
 "use strict";
 
 /**
- * Markes changes of translations
+ * Marks changes of translations
  */
 Drupal.behaviors.localeTranslateDirty = {
   attach: function () {

@@ -496,7 +496,7 @@ class User extends ContentEntityBase implements UserInterface {
       'label' => t('Signature format'),
       'description' => t('The signature format of this user'),
       // @todo Convert the type to filter_format once
-      // https://drupal.org/node/1758622 is comitted
+      // https://drupal.org/node/1758622 is committed
       'type' => 'string_field',
     );
     $properties['theme'] = array(

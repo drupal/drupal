@@ -481,9 +481,9 @@ class ViewsDataTest extends UnitTestCase {
 
     // Initialize the views data cache and request a non-existing table. This
     // will result in the same cache requests as we explicitly write an empty
-    // cache entry for non-existing tables to avoid unecessary requests in those
-    // situations. We do have to load the cache entry for all tables to check if
-    // the table does exist or not.
+    // cache entry for non-existing tables to avoid unnecessary requests in
+    // those situations. We do have to load the cache entry for all tables to
+    // check if the table does exist or not.
     for ($i = 0; $i < 5; $i++) {
       $views_data = $this->viewsData->get($non_existing_table);
       $this->assertSame(array(), $views_data);
@@ -513,9 +513,9 @@ class ViewsDataTest extends UnitTestCase {
 
     // Initialize the views data cache and request a non-existing table. This
     // will result in the same cache requests as we explicitly write an empty
-    // cache entry for non-existing tables to avoid unecessary requests in those
-    // situations. We do have to load the cache entry for all tables to check if
-    // the table does exist or not.
+    // cache entry for non-existing tables to avoid unnecessary requests in
+    // those situations. We do have to load the cache entry for all tables to
+    // check if the table does exist or not.
     for ($i = 0; $i < 5; $i++) {
       $views_data = $this->viewsData->get($non_existing_table);
       $this->assertSame(array(), $views_data);

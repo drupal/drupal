@@ -34,12 +34,12 @@ class EntityRouteEnhancerTest extends UnitTestCase {
    * @see \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer::enhancer()
    */
   public function testEnhancer() {
-    $negotation = $this->getMock('Drupal\core\ContentNegotiation', array('getContentType'));
-    $negotation->expects($this->any())
+    $negotiation = $this->getMock('Drupal\core\ContentNegotiation', array('getContentType'));
+    $negotiation->expects($this->any())
       ->method('getContentType')
       ->will($this->returnValue('html'));
 
-    $route_enhancer = new EntityRouteEnhancer($negotation);
+    $route_enhancer = new EntityRouteEnhancer($negotiation);
 
     // Set a controller to ensure it is not overridden.
     $request = new Request();

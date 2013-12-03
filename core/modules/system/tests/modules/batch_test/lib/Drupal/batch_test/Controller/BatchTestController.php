@@ -13,7 +13,7 @@ namespace Drupal\batch_test\Controller;
 class BatchTestController {
 
   /**
-   * Redirects successfuly.
+   * Redirects successfully.
    *
    * @return array
    *   Render array containing success message.

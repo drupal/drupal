@@ -46,7 +46,7 @@ class MatcherDumperTest extends UnitTestBase {
   }
 
   /**
-   * Confirms that the dumper can be instantiated successfuly.
+   * Confirms that the dumper can be instantiated successfully.
    */
   function testCreate() {
     $connection = Database::getConnection();

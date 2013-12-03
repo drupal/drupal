@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\DrupalKernel;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests content negotation.
+ * Tests content negotiation.
  */
 class ContentNegotiationTest extends WebTestBase {
 

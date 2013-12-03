@@ -144,7 +144,7 @@ class DisplayBlockTest extends ViewTestBase {
     $block_storage_controller = $this->container->get('entity.manager')->getStorageController('block');
 
     // Remove the block display, so both block entities from the first view
-    // should both dissapear.
+    // should both disappear.
     $view = views_get_view('test_view_block');
     $view->initDisplay();
     $view->displayHandlers->remove('block_1');

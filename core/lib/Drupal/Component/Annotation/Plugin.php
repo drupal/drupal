@@ -23,7 +23,7 @@ use Drupal\Component\Utility\NestedArray;
 class Plugin implements AnnotationInterface {
 
   /**
-   * The plugin definiton read from the class annotation.
+   * The plugin definition read from the class annotation.
    *
    * @var array
    */

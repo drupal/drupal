@@ -134,9 +134,9 @@ function language_from_browser($languages) {
   foreach ($browser_langcodes as $langcode => $qvalue) {
     // For Chinese languages the generic tag is either zh-hans or zh-hant, so we
     // need to handle this separately, we can not split $langcode on the
-    // first occurence of '-' otherwise we get a non-existing language zh.
+    // first occurrence of '-' otherwise we get a non-existing language zh.
     // All other languages use a langcode without a '-', so we can safely split
-    // on the first occurence of it.
+    // on the first occurrence of it.
     $generic_tag = '';
     if (strlen($langcode) > 7 && (substr($langcode, 0, 7) == 'zh-hant' || substr($langcode, 0, 7) == 'zh-hans')) {
       $generic_tag = substr($langcode, 0, 7);
