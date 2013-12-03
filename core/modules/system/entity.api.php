@@ -684,7 +684,7 @@ function hook_entity_field_info_alter(&$info, $entity_type) {
  *
  * @param array $operations
  *   Operations array as returned by
- *   \Drupal\Core\Entity\EntityStorageControllerInterface::getOperations().
+ *   \Drupal\Core\Entity\EntityListControllerInterface::getOperations().
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity on which the linked operations will be performed.
  */
