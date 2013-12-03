@@ -546,7 +546,7 @@ abstract class DisplayPluginBase extends PluginBase {
         'bool' => TRUE,
       ),
       'use_more_always' => array(
-        'default' => FALSE,
+        'default' => TRUE,
         'bool' => TRUE,
       ),
       'use_more_text' => array(

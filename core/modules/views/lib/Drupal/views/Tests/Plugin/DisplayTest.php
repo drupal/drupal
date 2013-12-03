@@ -225,6 +225,10 @@ class DisplayTest extends PluginTestBase {
     $this->drupalSetContent($output);
     $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
     $this->assertTrue(empty($result), 'The more link is not shown when view has more records.');
+
+    // Test the default value of use_more_always.
+    $view = entity_create('view', array())->getExecutable();
+    $this->assertTrue($view->getDisplay()->getOption('use_more_always'), 'Always display the more link by default.');
   }
 
   /**
