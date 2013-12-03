@@ -8,12 +8,9 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context as ComponentContext;
-use Drupal\Core\Entity\Plugin\DataType\EntityWrapper;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\Core\Validation\DrupalTranslator;
-use Symfony\Component\Validator\Validation;
 
 /**
  * A Drupal specific context wrapper class.
@@ -36,8 +33,7 @@ class Context extends ComponentContext {
     if (!$is_complex && $typed_value instanceof ListInterface) {
       $is_complex = $typed_value[0] instanceof ComplexDataInterface;
     }
-    // @todo We won't need the getType == entity check once #1868004 lands.
-    if ($typed_value instanceof TypedDataInterface && (!$is_complex || $typed_value instanceof EntityWrapper)) {
+    if ($typed_value instanceof TypedDataInterface && !$is_complex) {
       return $typed_value->getValue();
     }
     return $typed_value;
