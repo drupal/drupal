@@ -65,7 +65,7 @@ class CacheDecoratorLanguageTest extends WebTestBase {
       $languages[$langcode] = language_save($language);
       // Set up translations for each mock block label.
       $custom_strings = array();
-      foreach ($this->mockBlockExpectedDefinitions as $plugin_id => $definition) {
+      foreach ($this->mockBlockExpectedDefinitions as $definition) {
         $custom_strings[$definition['label']] = $langcode . ' ' . $definition['label'];
       }
       $this->addCustomTranslations($langcode, array('' => $custom_strings));
@@ -80,7 +80,7 @@ class CacheDecoratorLanguageTest extends WebTestBase {
   public function testCacheDecoratorLanguage() {
     $languages = $this->languages;
     $this->drupalGet('plugin_definition_test');
-    foreach ($this->mockBlockExpectedDefinitions as $plugin_id => $definition) {
+    foreach ($this->mockBlockExpectedDefinitions as $definition) {
       // Find our source text.
       $this->assertText($definition['label']);
     }
@@ -88,7 +88,7 @@ class CacheDecoratorLanguageTest extends WebTestBase {
       $url = $langcode . '/plugin_definition_test';
       // For each language visit the language specific version of the page again.
       $this->drupalGet($url);
-      foreach ($this->mockBlockExpectedDefinitions as $plugin_id => $definition) {
+      foreach ($this->mockBlockExpectedDefinitions as $definition) {
         // Find our provided translations.
         $label = $langcode . ' ' . $definition['label'];
         $this->assertText($label);
@@ -110,13 +110,13 @@ class CacheDecoratorLanguageTest extends WebTestBase {
     }
     // Change the translations for the german language and recheck strings.
     $custom_strings = array();
-    foreach ($this->mockBlockExpectedDefinitions as $plugin_id => $definition) {
+    foreach ($this->mockBlockExpectedDefinitions as $definition) {
       $custom_strings[$definition['label']] = $definition['label'] . ' de';
     }
     $this->addCustomTranslations('de', array('' => $custom_strings));
     $this->writeCustomTranslations();
     $this->drupalGet('de/plugin_definition_test');
-    foreach ($this->mockBlockExpectedDefinitions as $plugin_id => $definition) {
+    foreach ($this->mockBlockExpectedDefinitions as $definition) {
       // Find our provided translations.
       $label = $definition['label'] . ' de';
       $this->assertText($label);
