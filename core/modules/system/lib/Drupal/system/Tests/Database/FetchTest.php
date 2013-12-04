@@ -126,7 +126,6 @@ class FetchTest extends DatabaseTestBase {
    * Confirms that we can fetch an entire column of a result set at once.
    */
   function testQueryFetchCol() {
-    $records = array();
     $result = db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25));
     $column = $result->fetchCol();
     $this->assertIdentical(count($column), 3, 'fetchCol() returns the right number of records.');
