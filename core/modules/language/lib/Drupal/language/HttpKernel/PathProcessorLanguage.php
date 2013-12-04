@@ -140,7 +140,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
         // In case either the original base URL or the HTTP host contains a
         // port, retain it.
         if (isset($normalized_base_url) && strpos($normalized_base_url, ':') !== FALSE) {
-          list($host, $port) = explode(':', $normalized_base_url);
+          list( , $port) = explode(':', $normalized_base_url);
           $options['base_url'] .= ':' . $port;
         }
         elseif ($port != 80) {
