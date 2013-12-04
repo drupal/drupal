@@ -493,4 +493,16 @@ class BookManager {
     return $toc;
   }
 
+  /**
+   * Deletes node's entry form book table.
+   *
+   * @param int $nid
+   *   The nid to delete.
+   */
+  public function deleteBook($nid) {
+    $this->connection->delete('book')
+      ->condition('nid', $nid)
+      ->execute();
+  }
+
 }

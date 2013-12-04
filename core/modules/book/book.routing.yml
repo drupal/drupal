@@ -52,7 +52,7 @@ book.admin_edit:
 book.remove:
   path: '/node/{node}/outline/remove'
   defaults:
-    _content: '\Drupal\book\Form\BookForm::remove'
+    _form: '\Drupal\book\Form\BookRemoveForm'
     _title: 'Remove from outline'
   options:
     _access_mode: 'ALL'

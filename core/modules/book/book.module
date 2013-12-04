@@ -186,35 +186,6 @@ function book_menu() {
 }
 
 /**
- * Access callback: Determines if the outline tab is accessible.
- *
- * Path:
- * - admin/structure/book/%node
- * - node/%node/outline
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node whose outline tab is to be viewed.
- *
- * @see book_menu()
- */
-function _book_outline_access(EntityInterface $node) {
-  return \Drupal::currentUser()->hasPermission('administer book outlines') && $node->access('view');
-}
-
-/**
- * Access callback: Determines if the user can remove nodes from the outline.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node to remove from the outline.
- *
- * @see book_menu()
- */
-function _book_outline_remove_access(EntityInterface $node) {
-  return \Drupal::service('book.manager')->checkNodeIsRemovable($node)
-    && _book_outline_access($node);
-}
-
-/**
  * Implements hook_admin_paths().
  */
 function book_admin_paths() {
