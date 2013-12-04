@@ -25,7 +25,7 @@ class CustomBlockStorageController extends FieldableDatabaseStorageController {
     // Create an array of block types for passing as a load argument.
     // Note that blocks at this point are still \StdClass objects returned from
     // the database.
-    foreach ($blocks as $id => $entity) {
+    foreach ($blocks as $entity) {
       $types[$entity->type] = $entity->type;
     }
 
