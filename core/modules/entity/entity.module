@@ -81,21 +81,6 @@ function entity_menu() {
 }
 
 /**
- * Implements hook_local_actions().
- */
-function entity_local_actions() {
-  return array(
-    array(
-      'route_name' => 'entity.view_mode_add',
-      'title' => t('Add view mode'),
-      'appears_on' => array(
-        'entity.view_mode_list',
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_entity_bundle_rename().
  */
 function entity_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
