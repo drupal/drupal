@@ -38,14 +38,14 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
       'foo' => 'bar',
       'biff' => array(
         'bang' => 'pow',
-      )
+      ),
     );
     $casting_array_key = 'casting_array';
     $casting_array_false_value_key = 'casting_array.cast.false';
     $casting_array_value = array(
       'cast' => array(
         'false' => FALSE,
-      )
+      ),
     );
     $nested_array_key = 'nested.array';
     $true_key = 'true';
@@ -54,7 +54,7 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     // Attempt to read non-existing configuration.
     $config = \Drupal::config($name);
 
-    // Verify an configuration object is returned.
+    // Verify a configuration object is returned.
     $this->assertEqual($config->getName(), $name);
     $this->assertTrue($config, 'Config object created.');
 
@@ -65,23 +65,23 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     $data = $storage->read($name);
     $this->assertIdentical($data, FALSE);
 
-    // Add a top level value
+    // Add a top level value.
     $config = \Drupal::config($name);
     $config->set($key, $value);
 
-    // Add a nested value
+    // Add a nested value.
     $config->set($nested_key, $nested_value);
 
-    // Add an array
+    // Add an array.
     $config->set($array_key, $array_value);
 
-    // Add a nested array
+    // Add a nested array.
     $config->set($nested_array_key, $array_value);
 
-    // Add a boolean false value. Should get cast to 0
+    // Add a boolean false value. Should get cast to 0.
     $config->set($false_key, FALSE);
 
-    // Add a boolean true value. Should get cast to 1
+    // Add a boolean true value. Should get cast to 1.
     $config->set($true_key, TRUE);
 
     // Add a null value. Should get cast to an empty string.
@@ -95,59 +95,59 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     $data = $storage->read($name);
     $this->assertTrue($data);
 
-    // Read top level value
+    // Read top level value.
     $config = \Drupal::config($name);
     $this->assertEqual($config->getName(), $name);
     $this->assertTrue($config, 'Config object created.');
     $this->assertEqual($config->get($key), 'bar', 'Top level configuration value found.');
 
-    // Read nested value
+    // Read nested value.
     $this->assertEqual($config->get($nested_key), $nested_value, 'Nested configuration value found.');
 
-    // Read array
+    // Read array.
     $this->assertEqual($config->get($array_key), $array_value, 'Top level array configuration value found.');
 
-    // Read nested array
+    // Read nested array.
     $this->assertEqual($config->get($nested_array_key), $array_value, 'Nested array configuration value found.');
 
-    // Read a top level value that doesn't exist
+    // Read a top level value that doesn't exist.
     $this->assertNull($config->get('i_dont_exist'), 'Non-existent top level value returned NULL.');
 
-    // Read a nested value that doesn't exist
+    // Read a nested value that doesn't exist.
     $this->assertNull($config->get('i.dont.exist'), 'Non-existent nested value returned NULL.');
 
-    // Read false value
+    // Read false value.
     $this->assertEqual($config->get($false_key), '0', format_string("Boolean FALSE value returned the string '0'."));
 
-    // Read true value
+    // Read true value.
     $this->assertEqual($config->get($true_key), '1', format_string("Boolean TRUE value returned the string '1'."));
 
     // Read null value.
     $this->assertIdentical($config->get('null'), NULL);
 
-    // Read false that had been nested in an array value
+    // Read false that had been nested in an array value.
     $this->assertEqual($config->get($casting_array_false_value_key), '0', format_string("Nested boolean FALSE value returned the string '0'."));
 
-    // Unset a top level value
+    // Unset a top level value.
     $config->clear($key);
 
-    // Unset a nested value
+    // Unset a nested value.
     $config->clear($nested_key);
     $config->save();
     $config = \Drupal::config($name);
 
-    // Read unset top level value
+    // Read unset top level value.
     $this->assertNull($config->get($key), 'Top level value unset.');
 
-    // Read unset nested value
+    // Read unset nested value.
     $this->assertNull($config->get($nested_key), 'Nested value unset.');
 
-    // Create two new configuration files to test listing
+    // Create two new configuration files to test listing.
     $config = \Drupal::config('foo.baz');
     $config->set($key, $value);
     $config->save();
 
-    // Test chained set()->save()
+    // Test chained set()->save().
     $chained_name = 'biff.bang';
     $config = \Drupal::config($chained_name);
     $config->set($key, $value)->save();
