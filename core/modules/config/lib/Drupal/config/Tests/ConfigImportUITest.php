@@ -38,7 +38,6 @@ class ConfigImportUITest extends WebTestBase {
   function testImport() {
     $name = 'system.site';
     $dynamic_name = 'config_test.dynamic.new';
-    $storage = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
 
     $this->drupalGet('admin/config/development/configuration');
@@ -120,7 +119,6 @@ class ConfigImportUITest extends WebTestBase {
    * Tests the screen that shows differences between active and staging.
    */
   function testImportDiff() {
-    $active = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
     $config_name = 'config_test.system';
     $change_key = 'foo';
