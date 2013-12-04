@@ -248,7 +248,6 @@ function views_ui_view_preview_section_display_category_links(ViewExecutable $vi
  * Returns all contextual links for the main content part of the view.
  */
 function views_ui_view_preview_section_rows_links(ViewExecutable $view) {
-  $display = $view->display_handler->display;
   $links = array();
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'filter', TRUE));
   $links = array_merge($links, views_ui_view_preview_section_handler_links($view, 'field', TRUE));
