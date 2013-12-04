@@ -310,7 +310,6 @@ class OptionsFieldUITest extends FieldTestBase {
 
     $on = $this->randomName();
     $off = $this->randomName();
-    $allowed_values = array(1 => $on, 0 => $off);
     $edit = array(
       'on' => $on,
       'off' => $off,
