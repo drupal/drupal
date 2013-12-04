@@ -8,6 +8,7 @@
 namespace Drupal\Core\TypedData;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
@@ -218,7 +219,7 @@ class TypedDataManager extends DefaultPluginManager {
       }
       // Make sure we have got a valid definition.
       if (!$definition) {
-        throw new \InvalidArgumentException('Property ' . check_plain($property_name) . ' is unknown.');
+        throw new \InvalidArgumentException('Property ' . String::checkPlain($property_name) . ' is unknown.');
       }
       // Now create the prototype using the definition, but do not pass the
       // given value as it will serve as prototype for any further instance.

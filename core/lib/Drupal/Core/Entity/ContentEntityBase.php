@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
@@ -395,7 +396,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     if (!isset($this->fields[$name][$langcode])) {
       $definition = $this->getPropertyDefinition($name);
       if (!$definition) {
-        throw new \InvalidArgumentException('Field ' . check_plain($name) . ' is unknown.');
+        throw new \InvalidArgumentException('Field ' . String::checkPlain($name) . ' is unknown.');
       }
       // Non-translatable fields are always stored with
       // Language::LANGCODE_DEFAULT as key.

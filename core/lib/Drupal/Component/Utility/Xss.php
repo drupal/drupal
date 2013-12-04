@@ -88,7 +88,8 @@ class Xss {
    *
    * Use only for fields where it is impractical to use the
    * whole filter system, but where some (mainly inline) mark-up
-   * is desired (so check_plain() is not acceptable).
+   * is desired (so \Drupal\Component\Utility\String::checkPlain() is
+   * not acceptable).
    *
    * Allows all tags that can be used inside an HTML body, save
    * for scripts and styles.

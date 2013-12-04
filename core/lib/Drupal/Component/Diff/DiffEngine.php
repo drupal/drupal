@@ -964,10 +964,10 @@ class _HWLDF_WordAccumulator {
   function _flushGroup($new_tag) {
     if ($this->_group !== '') {
       if ($this->_tag == 'mark') {
-        $this->_line .= '<span class="diffchange">' . check_plain($this->_group) . '</span>';
+        $this->_line .= '<span class="diffchange">' . String::checkPlain($this->_group) . '</span>';
       }
       else {
-        $this->_line .= check_plain($this->_group);
+        $this->_line .= String::checkPlain($this->_group);
       }
     }
     $this->_group = '';
@@ -1191,19 +1191,19 @@ class DrupalDiffFormatter extends DiffFormatter {
 
   function _added($lines) {
     foreach ($lines as $line) {
-      $this->rows[] = array_merge($this->emptyLine(), $this->addedLine(check_plain($line)));
+      $this->rows[] = array_merge($this->emptyLine(), $this->addedLine(String::checkPlain($line)));
     }
   }
 
   function _deleted($lines) {
     foreach ($lines as $line) {
-      $this->rows[] = array_merge($this->deletedLine(check_plain($line)), $this->emptyLine());
+      $this->rows[] = array_merge($this->deletedLine(String::checkPlain($line)), $this->emptyLine());
     }
   }
 
   function _context($lines) {
     foreach ($lines as $line) {
-      $this->rows[] = array_merge($this->contextLine(check_plain($line)), $this->contextLine(check_plain($line)));
+      $this->rows[] = array_merge($this->contextLine(String::checkPlain($line)), $this->contextLine(String::checkPlain($line)));
     }
   }
 

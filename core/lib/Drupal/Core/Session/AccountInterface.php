@@ -120,7 +120,8 @@ interface AccountInterface {
    *
    * @return
    *   An unsanitized string with the username to display. The code receiving
-   *   this result must ensure that check_plain() is called on it before it is
+   *   this result must ensure that \Drupal\Component\Utility\String::checkPlain()
+   *   is called on it before it is
    *   printed to the page.
    */
   public function getUsername();

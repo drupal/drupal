@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
+use Drupal\Component\Utility\String;
 
 use Drupal\Core\ContentNegotiation;
 
@@ -136,7 +137,7 @@ class ExceptionController extends ContainerAware {
    *   The request object that triggered this exception.
    */
   public function on404Html(FlattenException $exception, Request $request) {
-    watchdog('page not found', check_plain($request->attributes->get('_system_path')), NULL, WATCHDOG_WARNING);
+    watchdog('page not found', String::checkPlain($request->attributes->get('_system_path')), NULL, WATCHDOG_WARNING);
 
     // Check for and return a fast 404 page if configured.
     $config = \Drupal::config('system.performance');
@@ -146,7 +147,7 @@ class ExceptionController extends ContainerAware {
       $fast_paths = $config->get('fast_404.paths');
       if ($fast_paths && preg_match($fast_paths, $request->getPathInfo())) {
         $fast_404_html = $config->get('fast_404.html');
-        $fast_404_html = strtr($fast_404_html, array('@path' => check_plain($request->getUri())));
+        $fast_404_html = strtr($fast_404_html, array('@path' => String::checkPlain($request->getUri())));
         return new Response($fast_404_html, 404);
       }
     }
@@ -353,7 +354,7 @@ class ExceptionController extends ContainerAware {
       '%type' => $exception->getClass(),
       // The standard PHP exception handler considers that the exception message
       // is plain-text. We mimick this behavior here.
-      '!message' => check_plain($message),
+      '!message' => String::checkPlain($message),
       '%function' => $caller['function'],
       '%file' => $caller['file'],
       '%line' => $caller['line'],
