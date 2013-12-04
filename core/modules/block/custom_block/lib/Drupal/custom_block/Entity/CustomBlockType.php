@@ -87,7 +87,9 @@ class CustomBlockType extends ConfigEntityBase implements CustomBlockTypeInterfa
 
     if (!$update) {
       entity_invoke_bundle_hook('create', 'custom_block', $this->id());
-      custom_block_add_body_field($this->id);
+      if (!$this->isSyncing()) {
+        custom_block_add_body_field($this->id);
+      }
     }
     elseif ($this->getOriginalId() != $this->id) {
       entity_invoke_bundle_hook('rename', 'custom_block', $this->getOriginalId(), $this->id);

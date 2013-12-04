@@ -1433,8 +1433,8 @@ function user_role_names($membersonly = FALSE, $permission = NULL) {
  * Implements hook_user_role_insert().
  */
 function user_user_role_insert(RoleInterface $role) {
-  // Ignore the authenticated and anonymous roles.
-  if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID))) {
+  // Ignore the authenticated and anonymous roles or the role is being synced.
+  if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID)) || $role->isSyncing()) {
     return;
   }
 
@@ -1470,8 +1470,8 @@ function user_user_role_insert(RoleInterface $role) {
  * Implements hook_user_role_delete().
  */
 function user_user_role_delete(RoleInterface $role) {
-  // Ignore the authenticated and anonymous roles.
-  if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID))) {
+  // Ignore the authenticated and anonymous roles or the role is being synced.
+  if (in_array($role->id(), array(DRUPAL_AUTHENTICATED_RID, DRUPAL_ANONYMOUS_RID)) || $role->isSyncing()) {
     return;
   }
 

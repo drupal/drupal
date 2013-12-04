@@ -251,7 +251,7 @@ function comment_count_unpublished() {
  * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
  */
 function comment_field_instance_create(FieldInstanceInterface $instance) {
-  if ($instance->getFieldType() == 'comment') {
+  if ($instance->getFieldType() == 'comment' && !$instance->isSyncing()) {
     \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getFieldName());
     \Drupal::cache()->delete('comment_entity_info');
     // Assign default values for the field instance.
