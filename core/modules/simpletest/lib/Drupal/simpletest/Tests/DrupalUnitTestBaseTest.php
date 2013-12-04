@@ -229,7 +229,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->enableModules(array('field_test'));
 
     // Create a field and an instance.
-    $display = entity_create('entity_display', array(
+    entity_create('entity_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
       'mode' => 'default',
