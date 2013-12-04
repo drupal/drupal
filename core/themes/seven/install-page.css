@@ -85,9 +85,18 @@ body.install-page #page-title {
   background: transparent;
   padding-top: 0;
 }
+body.install-page .site-slogan {
+  margin: 0.75em 0 0.75em 50px; /* LTR */
+}
+[dir="rtl"] body.install-page .site-slogan {
+  margin: 0.75em 50px 0.75em 0;
+}
 @media all and  (max-width: 48em) { /* 768px */
   body.install-page #site-name {
     margin-left: 0;
+  }
+  body.install-page .site-slogan {
+    margin: 0.75em 0 1.5em;
   }
   body.install-page {
     padding: 0;
