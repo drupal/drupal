@@ -308,16 +308,12 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
   //   fall back to the default language.
   $node = db_query('SELECT nid, status, uid, changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC, status DESC', array(':nid' => $nid))->fetchObject();
 
-  // The user only keeps his or her subscription if both of the following are true:
-  //   (1) The node exists.
-  //   (2) The user is either the node author or has commented on the node.
-  $keep_subscription = FALSE;
-
+  // The user only keeps their subscription if the node exists.
   if ($node) {
-    // Self-authorship is one reason to keep the user's subscription.
+    // And they are the author of the node.
     $keep_subscription = ($node->uid == $uid);
 
-    // Comments are a second reason to keep the user's subscription.
+    // Or if they have commented on the node.
     if (!$keep_subscription) {
       // Check if the user has commented at least once on the given nid.
       $keep_subscription = db_query_range("SELECT COUNT(*) FROM {comment} WHERE entity_type = 'node' AND entity_id = :nid AND uid = :uid AND status = :status", 0, 1, array(
