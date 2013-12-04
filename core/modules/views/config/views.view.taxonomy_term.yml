@@ -87,7 +87,9 @@ display:
           field: term_node_tid_depth
           default_action: 'not found'
           exception:
+            value: all
             title_enable: true
+            title: All
           title_enable: true
           title: '%1'
           default_argument_type: fixed
@@ -95,17 +97,27 @@ display:
             format: default_summary
           specify_validation: true
           validate:
-            type: taxonomy_term
+            type: 'entity:taxonomy_term'
+            fail: 'not found'
+          validate_options:
+            access: '1'
+            operation: view
+            multiple: '1'
+            bundles: {  }
           depth: '0'
           break_phrase: true
           plugin_id: taxonomy_index_tid_depth
           relationship: none
           group_type: group
           admin_label: ''
-          default_argument_options: {  }
+          default_argument_options:
+            argument: ''
           default_argument_skip_url: false
-          summary_options: {  }
-          validate_options: {  }
+          summary_options:
+            base_path: ''
+            count: '1'
+            items_per_page: '25'
+            override: false
           provider: taxonomy
         term_node_tid_depth_modifier:
           id: term_node_tid_depth_modifier

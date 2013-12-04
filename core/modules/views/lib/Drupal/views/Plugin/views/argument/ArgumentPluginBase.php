@@ -252,10 +252,12 @@ abstract class ArgumentPluginBase extends HandlerBase {
       '#type' => 'container',
       '#fieldset' => 'argument_present',
     );
+    // Validator options include derivatives with :. These are sanitized for js
+    // and reverted on submission.
     $form['validate']['type'] = array(
       '#type' => 'select',
       '#title' => t('Validator'),
-      '#default_value' => $this->options['validate']['type'],
+      '#default_value' => static::encodeValidatorId($this->options['validate']['type']),
       '#states' => array(
         'visible' => array(
           ':input[name="options[specify_validation]"]' => array('checked' => TRUE),
@@ -288,8 +290,10 @@ abstract class ArgumentPluginBase extends HandlerBase {
         $plugin = $this->getPlugin('argument_validator', $id);
         if ($plugin) {
           if ($plugin->access() || $this->options['validate']['type'] == $id) {
-            $form['validate']['options'][$id] = array(
-              '#prefix' => '<div id="edit-options-validate-options-' . $id . '-wrapper">',
+            // Sanitize ID for js.
+            $sanitized_id = static::encodeValidatorId($id);
+            $form['validate']['options'][$sanitized_id] = array(
+              '#prefix' => '<div id="edit-options-validate-options-' . $sanitized_id . '-wrapper">',
               '#suffix' => '</div>',
               '#type' => 'item',
               // Even if the plugin has no options add the key to the form_state.
@@ -297,14 +301,14 @@ abstract class ArgumentPluginBase extends HandlerBase {
               '#states' => array(
                 'visible' => array(
                   ':input[name="options[specify_validation]"]' => array('checked' => TRUE),
-                  ':input[name="options[validate][type]"]' => array('value' => $id),
+                  ':input[name="options[validate][type]"]' => array('value' => $sanitized_id),
                 ),
               ),
-              '#id' => 'edit-options-validate-options-' . $id,
+              '#id' => 'edit-options-validate-options-' . $sanitized_id,
               '#default_value' => array(),
             );
-            $plugin->buildOptionsForm($form['validate']['options'][$id], $form_state);
-            $validate_types[$id] = $info['title'];
+            $plugin->buildOptionsForm($form['validate']['options'][$sanitized_id], $form_state);
+            $validate_types[$sanitized_id] = $info['title'];
           }
         }
       }
@@ -346,10 +350,12 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $plugin->validateOptionsForm($form['summary']['options'][$summary_id], $form_state, $form_state['values']['options']['summary']['options'][$summary_id]);
     }
 
-    $validate_id = $form_state['values']['options']['validate']['type'];
+    $sanitized_id = $form_state['values']['options']['validate']['type'];
+    // Correct ID for js sanitized version.
+    $validate_id = static::decodeValidatorId($sanitized_id);
     $plugin = $this->getPlugin('argument_validator', $validate_id);
     if ($plugin) {
-      $plugin->validateOptionsForm($form['validate']['options'][$default_id], $form_state, $form_state['values']['options']['validate']['options'][$validate_id]);
+      $plugin->validateOptionsForm($form['validate']['options'][$default_id], $form_state, $form_state['values']['options']['validate']['options'][$sanitized_id]);
     }
 
   }
@@ -379,11 +385,13 @@ abstract class ArgumentPluginBase extends HandlerBase {
       $form_state['values']['options']['summary_options'] = $options;
     }
 
-    $validate_id = $form_state['values']['options']['validate']['type'];
+    $sanitized_id = $form_state['values']['options']['validate']['type'];
+    // Correct ID for js sanitized version.
+    $form_state['values']['options']['validate']['type'] = $validate_id = static::decodeValidatorId($sanitized_id);
     $plugin = $this->getPlugin('argument_validator', $validate_id);
     if ($plugin) {
-      $options = &$form_state['values']['options']['validate']['options'][$validate_id];
-      $plugin->submitOptionsForm($form['validate']['options'][$validate_id], $form_state, $options);
+      $options = &$form_state['values']['options']['validate']['options'][$sanitized_id];
+      $plugin->submitOptionsForm($form['validate']['options'][$sanitized_id], $form_state, $options);
       // Copy the now submitted options to their final resting place so they get saved.
       $form_state['values']['options']['validate_options'] = $options;
     }
@@ -840,7 +848,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * @param $data
    *   The query results for the row.
    */
- public function summaryArgument($data) {
+  public function summaryArgument($data) {
     return $data->{$this->base_alias};
   }
 
@@ -1100,6 +1108,35 @@ abstract class ArgumentPluginBase extends HandlerBase {
     return $form;
   }
 
+  /**
+   * Sanitize validator options including derivatives with : for js.
+   *
+   * Reason and alternative: http://drupal.org/node/2035345
+   *
+   * @param string $id
+   *   The identifier to be sanitized.
+   *
+   * @return string
+   *   The sanitized identifier.
+   *
+   * @see decodeValidatorId().
+   */
+  public static function encodeValidatorId($id) {
+    return str_replace(':', '---', $id);
+  }
+
+  /**
+   * Revert sanititized validator options.
+   *
+   * @param string $id
+   *   The santitized identifier to be reverted.
+   *
+   * @return string
+   *   The original identifier.
+   */
+  public static function decodeValidatorId($id) {
+    return str_replace('---', ':', $id);
+  }
 }
 
 /**
