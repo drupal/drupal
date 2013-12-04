@@ -25,7 +25,7 @@ class CaseSensitivityTest extends DatabaseTestBase {
   function testCaseSensitiveInsert() {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
-    $john = db_insert('test')
+    db_insert('test')
       ->fields(array(
         'name' => 'john', // <- A record already exists with name 'John'.
         'age' => 2,
