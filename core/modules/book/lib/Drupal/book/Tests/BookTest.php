@@ -487,7 +487,7 @@ class BookTest extends WebTestBase {
    */
   public function testBookOrdering() {
     // Create new book.
-    $nodes = $this->createBook();
+    $this->createBook();
     $book = $this->book;
 
     $this->drupalLogin($this->admin_user);
