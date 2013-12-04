@@ -34,7 +34,7 @@ class NodeBulkForm extends ActionBulkForm {
   /**
    * {@inheritdoc}
    */
-  public function views_form_validate(&$form, &$form_state) {
+  public function viewsFormValidate(&$form, &$form_state) {
     $selected = array_filter($form_state['values'][$this->options['id']]);
     if (empty($selected)) {
       form_set_error('', $form_state, t('No items selected.'));
@@ -44,8 +44,8 @@ class NodeBulkForm extends ActionBulkForm {
   /**
    * {@inheritdoc}
    */
-  public function views_form_submit(&$form, &$form_state) {
-    parent::views_form_submit($form, $form_state);
+  public function viewsFormSubmit(&$form, &$form_state) {
+    parent::viewsFormSubmit($form, $form_state);
     if ($form_state['step'] == 'views_form_views_form') {
       Cache::invalidateTags(array('content' => TRUE));
     }

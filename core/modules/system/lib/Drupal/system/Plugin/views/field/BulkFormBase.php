@@ -105,7 +105,7 @@ abstract class BulkFormBase extends FieldPluginBase {
    * @param array $form_state
    *   An associative array containing the current state of the form.
    */
-  public function views_form(&$form, &$form_state) {
+  public function viewsForm(&$form, &$form_state) {
     // Add the tableselect javascript.
     $form['#attached']['library'][] = array('system', 'drupal.tableselect');
 
@@ -173,7 +173,7 @@ abstract class BulkFormBase extends FieldPluginBase {
    * @param array $form_state
    *   An associative array containing the current state of the form.
    */
-  public function views_form_submit(&$form, &$form_state) {
+  public function viewsFormSubmit(&$form, &$form_state) {
     if ($form_state['step'] == 'views_form_views_form') {
       // Filter only selected checkboxes.
       $selected = array_filter($form_state['values'][$this->options['id']]);

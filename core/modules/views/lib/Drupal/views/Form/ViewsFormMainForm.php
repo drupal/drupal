@@ -62,8 +62,8 @@ class ViewsFormMainForm implements FormInterface {
         $callback($view, $field, $form, $form_state);
         $has_form = TRUE;
       }
-      elseif (method_exists($field, 'views_form')) {
-        $field->views_form($form, $form_state);
+      elseif (method_exists($field, 'viewsForm')) {
+        $field->viewsForm($form, $form_state);
         $has_form = TRUE;
       }
 
@@ -90,8 +90,8 @@ class ViewsFormMainForm implements FormInterface {
     $area_handlers = array_merge(array_values($view->header), array_values($view->footer));
     $empty = empty($view->result);
     foreach ($area_handlers as $area) {
-      if (method_exists($area, 'views_form') && !$area->views_form_empty($empty)) {
-        $area->views_form($form, $form_state);
+      if (method_exists($area, 'viewsForm') && !$area->viewsFormEmpty($empty)) {
+        $area->viewsForm($form, $form_state);
       }
     }
 
@@ -111,16 +111,16 @@ class ViewsFormMainForm implements FormInterface {
 
     // Call the validation method on every field handler that has it.
     foreach ($view->field as $field) {
-      if (method_exists($field, 'views_form_validate')) {
-        $field->views_form_validate($form, $form_state);
+      if (method_exists($field, 'viewsFormValidate')) {
+        $field->viewsFormValidate($form, $form_state);
       }
     }
 
     // Call the validate method on every area handler that has it.
     foreach (array('header', 'footer') as $area) {
       foreach ($view->{$area} as $area_handler) {
-        if (method_exists($area_handler, 'views_form_validate')) {
-          $area_handler->views_form_validate($form, $form_state);
+        if (method_exists($area_handler, 'viewsFormValidate')) {
+          $area_handler->viewsFormValidate($form, $form_state);
         }
       }
     }
@@ -134,16 +134,16 @@ class ViewsFormMainForm implements FormInterface {
 
     // Call the submit method on every field handler that has it.
     foreach ($view->field as $field) {
-      if (method_exists($field, 'views_form_submit')) {
-        $field->views_form_submit($form, $form_state);
+      if (method_exists($field, 'viewsFormSubmit')) {
+        $field->viewsFormSubmit($form, $form_state);
       }
     }
 
     // Call the submit method on every area handler that has it.
     foreach (array('header', 'footer') as $area) {
       foreach ($view->{$area} as $area_handler) {
-        if (method_exists($area_handler, 'views_form_submit')) {
-          $area_handler->views_form_submit($form, $form_state);
+        if (method_exists($area_handler, 'viewsFormSubmit')) {
+          $area_handler->viewsFormSubmit($form, $form_state);
         }
       }
     }

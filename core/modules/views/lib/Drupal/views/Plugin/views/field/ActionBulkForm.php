@@ -98,10 +98,10 @@ class ActionBulkForm extends BulkFormBase {
   }
 
   /**
-   * Implements \Drupal\system\Plugin\views\field\BulkFormBase::views_form_submit().
+   * Implements \Drupal\system\Plugin\views\field\BulkFormBase::viewsFormSubmit().
    */
-  public function views_form_submit(&$form, &$form_state) {
-    parent::views_form_submit($form, $form_state);
+  public function viewsFormSubmit(&$form, &$form_state) {
+    parent::viewsFormSubmit($form, $form_state);
     if ($form_state['step'] == 'views_form_views_form') {
       $count = count(array_filter($form_state['values'][$this->options['id']]));
       $action = $this->actions[$form_state['values']['action']];
