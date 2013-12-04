@@ -32,10 +32,10 @@ class HandlerFieldRoleTest extends UserTestBase {
   public function testRole() {
     // Create a couple of roles for the view.
     $rolename_a = 'a' . $this->randomName(8);
-    $rid_a = $this->drupalCreateRole(array('access content'), $rolename_a, $rolename_a, 9);
+    $this->drupalCreateRole(array('access content'), $rolename_a, $rolename_a, 9);
 
     $rolename_b = 'b' . $this->randomName(8);
-    $rid_b = $this->drupalCreateRole(array('access content'), $rolename_b, $rolename_b, 8);
+    $this->drupalCreateRole(array('access content'), $rolename_b, $rolename_b, 8);
 
     $rolename_not_assigned = $this->randomName(8);
     $this->drupalCreateRole(array('access content'), $rolename_not_assigned, $rolename_not_assigned);
