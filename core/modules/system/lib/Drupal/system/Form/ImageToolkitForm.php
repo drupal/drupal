@@ -102,7 +102,7 @@ class ImageToolkitForm extends ConfigFormBase {
 
     // Call the form submit handler for each of the toolkits.
     // Get the toolkit settings forms.
-    foreach ($this->availableToolkits as $id => $toolkit) {
+    foreach ($this->availableToolkits as $toolkit) {
       $toolkit->settingsFormSubmit($form, $form_state);
     }
 
