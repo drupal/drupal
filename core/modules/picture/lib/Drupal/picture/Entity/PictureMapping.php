@@ -155,7 +155,7 @@ class PictureMapping extends ConfigEntityBase implements PictureMappingInterface
    */
   public function hasMappings() {
     $mapping_found = FALSE;
-    foreach ($this->mappings as $breakpoint => $multipliers) {
+    foreach ($this->mappings as $multipliers) {
       $filtered_array = array_filter($multipliers);
       if (!empty($filtered_array)) {
         $mapping_found = TRUE;
