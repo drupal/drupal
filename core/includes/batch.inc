@@ -47,13 +47,15 @@ function _batch_page(Request $request) {
   drupal_register_shutdown_function('_batch_shutdown');
 
   // Add batch-specific CSS.
+  $attached = array('#attached' => array('css' => array()));
   foreach ($batch['sets'] as $batch_set) {
     if (isset($batch_set['css'])) {
       foreach ($batch_set['css'] as $css) {
-        drupal_add_css($css);
+        $attached['#attached']['css'][$css] = array();
       }
     }
   }
+  drupal_render($attached);
 
   $op = $request->get('op', '');
   $output = NULL;
