@@ -123,8 +123,6 @@ class TrackerAttributesTest extends WebTestBase {
     $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
     $user_uri = url('user/' . $node->getAuthorId(), array('absolute' => TRUE));
 
-    $user = ($node->getAuthorId() == 0) ? 'Anonymous user' : 'Registered user';
-
     // Parses tracker page where the nodes are displayed in a table.
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
