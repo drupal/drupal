@@ -293,7 +293,16 @@ function theme_update_report($variables) {
       $output .= drupal_render($table);
     }
   }
-  drupal_add_css(drupal_get_path('module', 'update') . '/css/update.admin.css');
+
+  $assets = array(
+    '#attached' => array(
+      'library' => array(
+        array('update', 'drupal.update.admin'),
+      ),
+    )
+  );
+  drupal_render($assets);
+
   return $output;
 }
 

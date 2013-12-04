@@ -145,6 +145,23 @@ function update_page_build() {
 }
 
 /**
+ * Implements hook_library_info().
+ */
+function update_library_info() {
+  $path = drupal_get_path('module', 'update');
+  $libraries['drupal.update.admin'] = array(
+    'title' => 'Update administration UI',
+    'website' => '',
+    'version' => \Drupal::VERSION,
+    'css' => array(
+      $path . '/css/update.admin.css' => array(),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Implements hook_menu().
  */
 function update_menu() {
