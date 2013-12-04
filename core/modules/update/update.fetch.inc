@@ -214,7 +214,7 @@ function _update_refresh() {
   // out the stale data at this point.
   \Drupal::keyValueExpirable('update_available_releases')->deleteAll();
 
-  foreach ($projects as $key => $project) {
+  foreach ($projects as $project) {
     update_create_fetch_task($project);
   }
 }
@@ -317,7 +317,6 @@ function update_parse_xml($raw_xml) {
   if (!isset($xml->short_name)) {
     return;
   }
-  $short_name = (string) $xml->short_name;
   $data = array();
   foreach ($xml as $k => $v) {
     $data[$k] = (string) $v;
