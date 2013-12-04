@@ -33,7 +33,6 @@ class StatusExtraTest extends NodeTestBase {
    * Tests the status extra filter.
    */
   public function testStatusExtra() {
-    $column_map = array('nid' => 'nid');
     $node_author = $this->drupalCreateUser(array('view own unpublished content'));
     $node_author_not_unpublished = $this->drupalCreateUser();
     $normal_user = $this->drupalCreateUser();
