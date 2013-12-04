@@ -714,7 +714,7 @@ abstract class WebTestBase extends TestBase {
    * @see \Drupal\simpletest\WebTestBase::prepareEnvironment()
    */
   protected function setUp() {
-    global $user, $conf;
+    global $conf;
 
     // When running tests through the Simpletest UI (vs. on the command line),
     // Simpletest's batch conflicts with the installer's batch. Batch API does
