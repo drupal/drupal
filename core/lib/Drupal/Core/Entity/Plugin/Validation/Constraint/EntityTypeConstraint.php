@@ -2,20 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Validation\Constraint\EntityTypeConstraint.
+ * Contains \Drupal\Core\Entity\Constraint\EntityTypeConstraint.
  */
 
-namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
+namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
-
 /**
  * Checks if a value is a valid entity type.
- *
- * @todo: Move this below the entity core component.
  *
  * @Plugin(
  *   id = "EntityType",

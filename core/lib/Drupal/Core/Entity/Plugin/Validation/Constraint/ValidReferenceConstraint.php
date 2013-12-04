@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidReferenceConstraint.
+ * Contains \Drupal\Core\Entity\Plugin\Validation\Constraint\ValidReferenceConstraint.
  */
 
-namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
+namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;

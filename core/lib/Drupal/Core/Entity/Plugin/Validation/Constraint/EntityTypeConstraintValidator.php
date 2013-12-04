@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityTypeConstraintValidator.
+ * Contains \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityTypeConstraintValidator.
  */
 
-namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
+namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\Validator\Constraint;

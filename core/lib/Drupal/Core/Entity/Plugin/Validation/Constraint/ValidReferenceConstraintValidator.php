@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidReferenceConstraintValidator.
+ * Contains \Drupal\Core\Entity\Plugin\Validation\Constraint\ValidReferenceConstraintValidator.
  */
 
-namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
+namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
