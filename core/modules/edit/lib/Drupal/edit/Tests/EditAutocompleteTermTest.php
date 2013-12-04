@@ -66,7 +66,7 @@ class EditAutocompleteTermTest extends WebTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $type = $this->drupalCreateContentType(array(
@@ -194,7 +194,6 @@ class EditAutocompleteTermTest extends WebTestBase {
       $this->assertLink('new term');
     }
   }
-
 
   /**
    * Returns a new term with random name and description in $this->vocabulary.

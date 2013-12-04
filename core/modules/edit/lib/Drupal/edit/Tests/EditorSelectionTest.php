@@ -37,7 +37,7 @@ class EditorSelectionTest extends EditTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->editorManager = $this->container->get('plugin.manager.edit.editor');
@@ -58,7 +58,7 @@ class EditorSelectionTest extends EditTestBase {
    * Tests a textual field, without/with text processing, with cardinality 1 and
    * >1, always without a WYSIWYG editor present.
    */
-  function testText() {
+  public function testText() {
     $field_name = 'field_text';
     $this->createFieldWithInstance(
       $field_name, 'text', 1, 'Simple text field',
@@ -105,7 +105,7 @@ class EditorSelectionTest extends EditTestBase {
    * always with an Editor plugin present that supports textual fields with text
    * processing, but with varying text format compatibility.
    */
-  function testTextWysiwyg() {
+  public function testTextWysiwyg() {
     // Enable edit_test module so that the 'wysiwyg' editor becomes available.
     $this->enableModules(array('edit_test'));
 
@@ -142,7 +142,7 @@ class EditorSelectionTest extends EditTestBase {
   /**
    * Tests a number field, with cardinality 1 and >1.
    */
-  function testNumber() {
+  public function testNumber() {
     $field_name = 'field_nr';
     $this->createFieldWithInstance(
       $field_name, 'number_integer', 1, 'Simple number field',

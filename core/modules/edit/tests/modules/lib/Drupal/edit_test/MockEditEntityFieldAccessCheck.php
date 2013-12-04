@@ -3,9 +3,6 @@
 /**
  * @file
  * Contains \Drupal\edit_test\MockEditEntityFieldAccessCheck.
- *
- * @todo We may want to get rid of this once http://drupal.org/node/1862750
- * is done.
  */
 
 namespace Drupal\edit_test;
@@ -19,7 +16,7 @@ use Drupal\edit\Access\EditEntityFieldAccessCheckInterface;
 class MockEditEntityFieldAccessCheck implements EditEntityFieldAccessCheckInterface {
 
   /**
-   * Implements EntityFieldAccessCheckInterface::accessEditEntityField().
+   * {@inheritdoc}
    */
   public function accessEditEntityField(EntityInterface $entity, $field_name) {
     return TRUE;

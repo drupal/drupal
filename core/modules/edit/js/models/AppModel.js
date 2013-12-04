@@ -1,8 +1,16 @@
-(function ($, _, Backbone, Drupal) {
+/**
+ * @file
+ * A Backbone Model for the state of the in-place editing application.
+ *
+ * @see Drupal.edit.AppView
+ */
+
+(function (Backbone, Drupal) {
 
 "use strict";
 
 Drupal.edit.AppModel = Backbone.Model.extend({
+
   defaults: {
     // The currently state = 'highlighted' Drupal.edit.FieldModel, if any.
     // @see Drupal.edit.FieldModel.states
@@ -14,6 +22,7 @@ Drupal.edit.AppModel = Backbone.Model.extend({
     // confirmation.
     activeModal: null
   }
+
 });
 
-}(jQuery, _, Backbone, Drupal));
+}(Backbone, Drupal));

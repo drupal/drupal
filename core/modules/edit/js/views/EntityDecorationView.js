@@ -1,4 +1,9 @@
-(function ($, Backbone) {
+/**
+ * @file
+ * A Backbone view that decorates the in-place editable entity.
+ */
+
+(function (Drupal, $, Backbone) {
 
 "use strict";
 
@@ -30,4 +35,4 @@ Drupal.edit.EntityDecorationView = Backbone.View.extend({
 
 });
 
-}(jQuery, Backbone));
+}(Drupal, jQuery, Backbone));

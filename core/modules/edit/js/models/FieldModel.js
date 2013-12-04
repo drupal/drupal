@@ -1,3 +1,8 @@
+/**
+ * @file
+ * A Backbone Model for the state of an in-place editable field in the DOM.
+ */
+
 (function (_, Backbone, Drupal) {
 
 "use strict";

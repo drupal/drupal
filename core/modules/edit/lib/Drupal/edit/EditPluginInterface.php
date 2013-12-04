@@ -11,10 +11,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
- * Defines an interface for in-place editors (Create.js PropertyEditor widgets).
- *
- * A PropertyEditor widget is a user-facing interface to edit an entity property
- * through Create.js.
+ * Defines an interface for in-place editors plugins.
  */
 interface EditPluginInterface extends PluginInspectionInterface {
 
@@ -57,4 +54,5 @@ interface EditPluginInterface extends PluginInspectionInterface {
    * @see drupal_process_attached()
    */
   public function getAttachments();
+
 }

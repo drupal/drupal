@@ -32,7 +32,7 @@ class EditLoadingTest extends WebTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Create a text format.

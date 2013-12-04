@@ -2,6 +2,7 @@
  * @file
  * Form-based in-place editor. Works for any field type.
  */
+
 (function ($, Drupal) {
 
 "use strict";

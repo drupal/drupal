@@ -2,6 +2,7 @@
  * @file
  * Provides utility functions for Edit.
  */
+
 (function ($, Drupal) {
 
 "use strict";
@@ -32,6 +33,7 @@ Drupal.edit.util.buildUrl = function (id, urlFormat) {
 };
 
 Drupal.edit.util.form = {
+
   /**
    * Loads a form, calls a callback to insert.
    *
@@ -118,6 +120,7 @@ Drupal.edit.util.form = {
   unajaxifySaving: function (ajax) {
     $(ajax.element).off('click.edit');
   }
+
 };
 
 })(jQuery, Drupal);

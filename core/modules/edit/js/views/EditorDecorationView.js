@@ -2,6 +2,7 @@
  * @file
  * A Backbone View that decorates the in-place edited element.
  */
+
 (function ($, Backbone, Drupal) {
 
 "use strict";
@@ -346,6 +347,7 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
     }
     return pos;
   }
+
 });
 
 })(jQuery, Backbone, Drupal);

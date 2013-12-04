@@ -1,5 +1,6 @@
 /**
- * @file edit.module.css
+ * @file
+ * Generic base styles for edit module.
  *
  * Note: every class is prefixed with "edit-" to prevent collisions with modules
  * or themes. In Edit module-specific DOM subtrees, this is not necessary.

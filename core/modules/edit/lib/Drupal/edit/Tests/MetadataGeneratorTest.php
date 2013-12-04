@@ -54,7 +54,7 @@ class MetadataGeneratorTest extends EditTestBase {
     );
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->editorManager = $this->container->get('plugin.manager.edit.editor');
@@ -66,7 +66,7 @@ class MetadataGeneratorTest extends EditTestBase {
   /**
    * Tests a simple entity type, with two different simple fields.
    */
-  function testSimpleEntityType() {
+  public function testSimpleEntityType() {
     $field_1_name = 'field_text';
     $field_1_label = 'Simple text field';
     $this->createFieldWithInstance(
@@ -125,7 +125,10 @@ class MetadataGeneratorTest extends EditTestBase {
     $this->assertEqual($expected_2, $metadata_2, 'The correct metadata is generated for the second field.');
   }
 
-  function testEditorWithCustomMetadata() {
+  /**
+   * Tests a field whose associated in-place editor generates custom metadata.
+   */
+  public function testEditorWithCustomMetadata() {
     $this->installSchema('system', 'url_alias');
     $this->enableModules(array('user', 'filter'));
 
@@ -179,4 +182,5 @@ class MetadataGeneratorTest extends EditTestBase {
     );
     $this->assertEqual($expected, $metadata, 'The correct metadata (including custom metadata) is generated.');
   }
+
 }

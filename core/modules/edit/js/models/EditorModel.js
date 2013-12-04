@@ -1,10 +1,14 @@
+/**
+ * @file
+ * A Backbone Model for the state of an in-place editor.
+ *
+ * @see Drupal.edit.EditorView
+ */
+
 (function (Backbone, Drupal) {
 
 "use strict";
 
-/**
- * State of an in-place editor.
- */
 Drupal.edit.EditorModel = Backbone.Model.extend({
 
   defaults: {

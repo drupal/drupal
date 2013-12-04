@@ -1,10 +1,12 @@
+/**
+ * @file
+ * A Backbone Model for the state of an in-place editable entity in the DOM.
+ */
+
 (function (_, $, Backbone, Drupal) {
 
 "use strict";
 
-/**
- * State of an in-place editable entity in the DOM.
- */
 Drupal.edit.EntityModel = Backbone.Model.extend({
 
   defaults: {

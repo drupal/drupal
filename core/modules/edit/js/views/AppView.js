@@ -1,4 +1,11 @@
-(function ($, _, Backbone, Drupal, drupalSettings) {
+/**
+ * @file
+ * A Backbone View that controls the overall "in-place editing application".
+ *
+ * @see Drupal.edit.AppModel
+ */
+
+(function ($, _, Backbone, Drupal) {
 
 "use strict";
 
@@ -10,9 +17,6 @@
 // makes it impossible for Edit to know where to restore the original HTML.
 var reload = false;
 
-/**
- *
- */
 Drupal.edit.AppView = Backbone.View.extend({
 
   /**
@@ -490,6 +494,7 @@ Drupal.edit.AppView = Backbone.View.extend({
         entityModel.set('state', 'deactivating');
       });
   }
+
 });
 
-}(jQuery, _, Backbone, Drupal, drupalSettings));
+}(jQuery, _, Backbone, Drupal));

@@ -2,6 +2,7 @@
  * @file
  * Provides overridable theme functions for all of Edit's client-side HTML.
  */
+
 (function ($, Drupal) {
 
 "use strict";

@@ -24,7 +24,7 @@ class EditTestBase extends DrupalUnitTestBase {
   /**
    * Sets the default field storage backend for fields created during tests.
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->installSchema('system', 'variable');
@@ -53,7 +53,7 @@ class EditTestBase extends DrupalUnitTestBase {
    * @param array $formatter_settings
    *   The formatter settings.
    */
-  function createFieldWithInstance($field_name, $type, $cardinality, $label, $instance_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
+  public function createFieldWithInstance($field_name, $type, $cardinality, $label, $instance_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
     $field = $field_name . '_field';
     $this->$field = entity_create('field_entity', array(
       'name' => $field_name,
@@ -91,4 +91,5 @@ class EditTestBase extends DrupalUnitTestBase {
       ))
       ->save();
   }
+
 }

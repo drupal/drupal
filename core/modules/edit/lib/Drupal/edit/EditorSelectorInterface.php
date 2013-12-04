@@ -41,4 +41,5 @@ interface EditorSelectorInterface {
    * @see drupal_process_attached()
    */
   public function getEditorAttachments(array $editor_ids);
+
 }

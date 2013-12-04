@@ -24,7 +24,7 @@ class InPlaceEditor extends Plugin {
   public $id;
 
   /**
-   * An array of in-place editors that have registered themselves as
+   * An array of in-place editors plugin IDs that have registered themselves as
    * alternatives to this in-place editor.
    *
    * @var array

@@ -16,6 +16,7 @@
  *   - contextualLinksQueue: queue of contextual links on entities for which it
  *     is not yet known whether the user has permission to edit at >=1 of them.
  */
+
 (function ($, _, Backbone, Drupal, drupalSettings) {
 
 "use strict";

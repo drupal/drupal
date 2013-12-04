@@ -51,7 +51,7 @@ class WysiwygEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\edit\EditPluginInterface::getAttachments().
+   * {@inheritdoc}
    */
   public function getAttachments() {
     return array(
@@ -60,4 +60,5 @@ class WysiwygEditor extends EditorBase {
       ),
     );
   }
+
 }
