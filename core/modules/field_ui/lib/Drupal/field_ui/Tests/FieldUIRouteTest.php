@@ -52,6 +52,10 @@ class FieldUIRouteTest extends WebTestBase {
 
     $this->drupalGet('admin/structure/types/manage/article/fields');
     $this->assertTitle('Manage fields | Drupal');
+
+    $this->drupalGet('admin/structure/types/manage/article');
+    $this->assertLink('Manage display');
+    $this->assertLink('Manage form display');
   }
 
 }

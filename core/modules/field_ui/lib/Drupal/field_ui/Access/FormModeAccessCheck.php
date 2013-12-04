@@ -46,7 +46,7 @@ class FormModeAccessCheck implements StaticAccessCheckInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
-    if ($entity_type = $request->attributes->get('entity_type')) {
+    if ($entity_type = $route->getDefault('entity_type')) {
       $form_mode = $request->attributes->get('form_mode_name');
 
       if (!($bundle = $request->attributes->get('bundle'))) {
