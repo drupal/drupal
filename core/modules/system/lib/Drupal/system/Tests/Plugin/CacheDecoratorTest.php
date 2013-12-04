@@ -41,7 +41,6 @@ class CacheDecoratorTest extends DiscoveryTestBase {
   }
 
   public function setUp() {
-    global $conf;
 
     parent::setUp();
 
