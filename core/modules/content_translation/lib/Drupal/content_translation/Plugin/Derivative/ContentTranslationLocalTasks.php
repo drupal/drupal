@@ -7,15 +7,15 @@
 
 namespace Drupal\content_translation\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\content_translation\ContentTranslationManagerInterface;
+use Drupal\Core\Menu\LocalTaskDerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic local tasks for content translation.
  */
-class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDerivativeInterface {
+class ContentTranslationLocalTasks extends LocalTaskDerivativeBase implements ContainerDerivativeInterface {
 
   /**
    * The base plugin ID
@@ -84,31 +84,8 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
       $translation_route_name = $entity_info['links']['drupal:content-translation-overview'];
       $translation_tab = $this->basePluginId . ':' . $translation_route_name;
 
-      $local_tasks[$translation_tab]['tab_root_id'] = $this->getTaskFromRoute($entity_route_name, $local_tasks);
+      $local_tasks[$translation_tab]['tab_root_id'] = $this->getPluginIdFromRoute($entity_route_name, $local_tasks);
     }
-  }
-
-  /**
-   * Find the local task ID of the parent route given the route name.
-   *
-   * @param string $route_name
-   *   The route name of the parent local task.
-   * @param array $local_tasks
-   *   An array of all local task definitions.
-   *
-   * @return bool|string
-   *   Returns the local task ID of the parent task, otherwise return FALSE.
-   */
-  protected function getTaskFromRoute($route_name, &$local_tasks) {
-    $parent_local_task = FALSE;
-    foreach ($local_tasks as $plugin_id => $local_task) {
-      if ($local_task['route_name'] == $route_name) {
-        $parent_local_task = $plugin_id;
-        break;
-      }
-    }
-
-    return $parent_local_task;
   }
 
 }

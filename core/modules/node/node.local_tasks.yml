@@ -11,6 +11,10 @@ node.delete_confirm:
   tab_root_id: node.view
   title: Delete
   weight: 10
+node.content_overview:
+  title: Content
+  route_name: node.content_overview
+  tab_root_id: node.content_overview
 node.revision_overview:
   route_name: node.revision_overview
   tab_root_id: node.view

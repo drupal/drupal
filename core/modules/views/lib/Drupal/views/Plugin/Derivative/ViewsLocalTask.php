@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\views\Plugin\Derivative\ViewsLocalTask.
+ */
+
+namespace Drupal\views\Plugin\Derivative;
+
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\Menu\LocalTaskDerivativeBase;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\views\Views;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Provides local task definitions for all views configured as local tasks.
+ */
+class ViewsLocalTask extends LocalTaskDerivativeBase implements ContainerDerivativeInterface {
+
+  /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
+   * The state key value store.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $state;
+
+  /**
+   * Constructs a \Drupal\views\Plugin\Derivative\ViewsLocalTask instance.
+   *
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
+   *   The state key value store.
+   */
+  public function __construct(RouteProviderInterface $route_provider, KeyValueStoreInterface $state) {
+    $this->routeProvider = $route_provider;
+    $this->state = $state;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, $base_plugin_id) {
+    return new static(
+      $container->get('router.route_provider'),
+      $container->get('state')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDerivativeDefinitions(array $base_plugin_definition) {
+    $this->derivatives = array();
+
+    $view_route_names = $this->state->get('views.view_route_names');
+    foreach ($this->getApplicableMenuViews() as $pair) {
+      /** @var $executable \Drupal\views\ViewExecutable */
+      list($executable, $display_id) = $pair;
+
+      $executable->setDisplay($display_id);
+      $menu = $executable->display_handler->getOption('menu');
+      if (in_array($menu['type'], array('tab', 'default tab'))) {
+        $plugin_id = 'view.' . $executable->storage->id() . '.' . $display_id;
+        $route_name = $view_route_names[$executable->storage->id() . '.' . $display_id];
+
+        // Don't add a local task for views which override existing routes.
+        // @todo Alternative it could just change the existing entry.
+        if ($route_name != $plugin_id) {
+          continue;
+        }
+
+        $this->derivatives[$plugin_id] = array(
+          'route_name' => $route_name,
+          'weight' => $menu['weight'],
+          'title' => $menu['title'],
+        ) + $base_plugin_definition;
+
+        // Default local tasks have themselves as tab root id.
+        if ($menu['type'] == 'default tab') {
+          $this->derivatives[$plugin_id]['tab_root_id'] = 'views_view:' . $plugin_id;
+        }
+      }
+    }
+    return $this->derivatives;
+  }
+
+  /**
+   * Alters tab_root_id and tab_parent_id into the views local tasks.
+   */
+  public function alterLocalTasks(&$local_tasks) {
+    $view_route_names = $this->state->get('views.view_route_names');
+
+    foreach ($this->getApplicableMenuViews() as $pair) {
+      /** @var $executable \Drupal\views\ViewExecutable */
+      list($executable, $display_id) = $pair;
+
+      $executable->setDisplay($display_id);
+      $menu = $executable->display_handler->getOption('menu');
+
+      // We already have set the tab_root_id for default tabs.
+      if (in_array($menu['type'], array('tab'))) {
+        $plugin_id = 'view.' . $executable->storage->id() . '.' . $display_id;
+        $view_route_name = $view_route_names[$executable->storage->id() . '.' . $display_id];
+
+        // Don't add a local task for views which override existing routes.
+        if ($view_route_name != $plugin_id) {
+          unset($local_tasks[$plugin_id]);
+          continue;
+        }
+
+        // Find out the parent route.
+        // @todo Find out how to find both the root and parent tab.
+        $path = $executable->display_handler->getPath();
+        $split = explode('/', $path);
+        array_pop($split);
+        $path = implode('/', $split);
+
+        $pattern = '/' . str_replace('%', '{}', $path);
+        if ($routes = $this->routeProvider->getRoutesByPattern($pattern)) {
+          foreach ($routes->all() as $name => $route) {
+            if ($parent_task = $this->getPluginIdFromRoute($name, $local_tasks)) {
+              $local_tasks['views_view:' . $plugin_id]['tab_root_id'] = $parent_task;
+            }
+            // Skip after the first found route.
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Return a list of all views and display IDs that have a menu entry.
+   *
+   * @return array
+   *   A list of arrays containing the $view and $display_id.
+   * @code
+   * array(
+   *   array($view, $display_id),
+   *   array($view, $display_id),
+   * );
+   * @endcode
+   */
+  protected function getApplicableMenuViews() {
+    return Views::getApplicableViews('uses_hook_menu');
+  }
+
+}

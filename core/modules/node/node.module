@@ -985,10 +985,6 @@ function node_menu() {
     'route_name' => 'node.content_overview',
     'weight' => -10,
   );
-  $items['admin/content/node'] = array(
-    'title' => 'Content',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
 
   $items['admin/structure/types'] = array(
     'title' => 'Content types',

@@ -12,6 +12,7 @@
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Language\Language;
+use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Entity\View;
@@ -1354,4 +1355,13 @@ function views_element_validate_tags($element, &$form_state) {
       return;
     }
   }
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function views_local_tasks_alter(&$local_tasks) {
+  $container = \Drupal::getContainer();
+  $local_task = ViewsLocalTask::create($container, 'views_view');
+  $local_task->alterLocalTasks($local_tasks);
 }

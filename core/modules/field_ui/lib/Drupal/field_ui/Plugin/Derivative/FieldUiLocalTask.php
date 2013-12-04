@@ -7,8 +7,8 @@
 
 namespace Drupal\field_ui\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Menu\LocalTaskDerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides local task definitions for all entity bundles.
  */
-class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInterface {
+class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDerivativeInterface {
 
   /**
    * The route provider.
@@ -197,29 +197,6 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
         }
       }
     }
-  }
-
-  /**
-   * Finds the local task ID of a route given the route name.
-   *
-   * @param string $route_name
-   *   The route name.
-   * @param array $local_tasks
-   *   An array of all local task definitions.
-   *
-   * @return string|null
-   *   Returns the local task ID of the given route or NULL if none is found.
-   */
-  protected function getPluginIdFromRoute($route_name, &$local_tasks) {
-    $local_task_id = NULL;
-    foreach ($local_tasks as $plugin_id => $local_task) {
-      if ($local_task['route_name'] == $route_name) {
-        $local_task_id = $plugin_id;
-        break;
-      }
-    }
-
-    return $local_task_id;
   }
 
   /**

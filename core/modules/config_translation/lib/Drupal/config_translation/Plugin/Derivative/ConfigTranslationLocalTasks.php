@@ -8,15 +8,14 @@
 namespace Drupal\config_translation\Plugin\Derivative;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
-use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Menu\LocalTaskDerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic local tasks for config translation.
  */
-class ConfigTranslationLocalTasks extends DerivativeBase implements ContainerDerivativeInterface {
+class ConfigTranslationLocalTasks extends LocalTaskDerivativeBase implements ContainerDerivativeInterface {
 
   /**
    * The mapper plugin discovery service.
@@ -80,7 +79,7 @@ class ConfigTranslationLocalTasks extends DerivativeBase implements ContainerDer
       /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
       $route_name = $mapper->getOverviewRouteName();
       $translation_tab = $this->basePluginId . ':' . $route_name;
-      $tab_root_id = $this->getTaskFromRoute($mapper->getBaseRouteName(), $local_tasks);
+      $tab_root_id = $this->getPluginIdFromRoute($mapper->getBaseRouteName(), $local_tasks);
       if (!empty($tab_root_id)) {
         $local_tasks[$translation_tab]['tab_root_id'] = $tab_root_id;
       }
@@ -90,27 +89,5 @@ class ConfigTranslationLocalTasks extends DerivativeBase implements ContainerDer
     }
   }
 
-  /**
-   * Find the local task ID of the parent route given the route name.
-   *
-   * @param string $route_name
-   *   The route name of the parent local task.
-   * @param array $local_tasks
-   *   An array of all local task definitions.
-   *
-   * @return bool|string
-   *   Returns the local task ID of the parent task, otherwise return FALSE.
-   */
-  protected function getTaskFromRoute($route_name, array &$local_tasks) {
-    $root_local_task = FALSE;
-    foreach ($local_tasks as $plugin_id => $local_task) {
-      if ($local_task['route_name'] == $route_name) {
-        $root_local_task = $plugin_id;
-        break;
-      }
-    }
-
-    return $root_local_task;
-  }
 
 }
