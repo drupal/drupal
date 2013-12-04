@@ -149,7 +149,6 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
    * Overrides DatabaseStorageController::save().
    */
   public function save(EntityInterface $entity) {
-    $entity_class = $this->entityInfo['class'];
 
     // We return SAVED_UPDATED by default because the logic below might not
     // update the entity if its values haven't changed, so returning FALSE
