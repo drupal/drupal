@@ -214,7 +214,7 @@ function template_preprocess_aggregator_feed_source(&$variables) {
     $variables['last_checked'] = t('never');
   }
 
-  if (user_access('administer news feeds')) {
+  if (\Drupal::currentUser()->hasPermission('administer news feeds')) {
     $variables['last_checked'] = l($variables['last_checked'], 'admin/config/services/aggregator');
   }
 
