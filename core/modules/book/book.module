@@ -392,7 +392,7 @@ function book_next($book_link) {
   $flat = book_get_flat_menu($book_link);
   // Assigning the array to $flat resets the array pointer for use with each().
   do {
-    list($key, $curr) = each($flat);
+    list($key, ) = each($flat);
   }
   while ($key && $key != $book_link['mlid']);
 
