@@ -62,7 +62,7 @@ class Entity extends ArgumentValidatorPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('plugin.manager.entity')
+      $container->get('entity.manager')
     );
   }
 
