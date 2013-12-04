@@ -479,7 +479,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $this->assertTrue(strpos($scripts, 'core/assets/vendor/farbtastic/farbtastic.js'), 'JavaScript of library was added to the page.');
     $this->assertTrue(strpos($styles, 'core/assets/vendor/farbtastic/farbtastic.css'), 'Stylesheet of library was added to the page.');
 
-    $result = drupal_add_library('common_test', 'shorthand.plugin');
+    drupal_add_library('common_test', 'shorthand.plugin');
     $path = drupal_get_path('module', 'common_test') . '/js/shorthand.js?v=0.8.3.37';
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, $path), 'JavaScript specified in hook_library_info() using shorthand format (without any options) was added to the page.');
