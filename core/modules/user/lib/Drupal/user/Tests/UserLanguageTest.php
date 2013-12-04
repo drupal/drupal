@@ -33,8 +33,6 @@ class UserLanguageTest extends WebTestBase {
    * Test if user can change their default language.
    */
   function testUserLanguageConfiguration() {
-    global $base_url;
-
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
     // User to change their default language.
