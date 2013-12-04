@@ -87,6 +87,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->container->get('entity.manager')->getStorageController('user')->resetCache();
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
+    $this->assertNotNull($new_user, 'New account successfully created with matching passwords.');
     $this->assertText(t('Registration successful. You are now logged in.'), 'Users are logged in after registering.');
     $this->drupalLogout();
 
