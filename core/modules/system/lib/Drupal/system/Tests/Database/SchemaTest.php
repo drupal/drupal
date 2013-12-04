@@ -225,7 +225,6 @@ class SchemaTest extends UnitTestBase {
       'fields' => array('serial_column' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE)),
       'primary key' => array('serial_column'),
     );
-    $ret = array();
     db_create_table($table_name, $table_spec);
 
     // Now set up columns for the other types.
