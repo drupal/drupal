@@ -45,7 +45,7 @@ class RegisterSerializationClassesCompilerPass implements CompilerPassInterface 
 
     // Find all serialization formats known.
     $formats = array();
-    foreach ($container->findTaggedServiceIds('encoder') as $id => $attributes) {
+    foreach ($container->findTaggedServiceIds('encoder') as $attributes) {
       $formats[] = $attributes[0]['format'];
     }
     $container->setParameter('serializer.formats', $formats);
