@@ -31,8 +31,6 @@ class FilterCaption extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode, $cache, $cache_id) {
-    $search = array();
-    $replace = array();
 
     if (stristr($text, 'data-caption') !== FALSE || stristr($text, 'data-align') !== FALSE) {
       $dom = filter_dom_load($text);
