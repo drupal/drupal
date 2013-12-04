@@ -525,7 +525,7 @@ function simpletest_test_get_all($module = NULL) {
 
       // Sort the groups and tests within the groups by name.
       uksort($groups, 'strnatcasecmp');
-      foreach ($groups as $group => &$tests) {
+      foreach ($groups as &$tests) {
         uksort($tests, 'strnatcasecmp');
       }
 
