@@ -89,4 +89,4 @@ block.block.*:
           label: 'View mode'
     langcode:
       type: string
-      label: 'Language code'
+      label: 'Default language'

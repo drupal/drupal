@@ -43,4 +43,4 @@ filter.format.*:
         - type: filter
     langcode:
       type: string
-      label: 'Language'
+      label: 'Default language'

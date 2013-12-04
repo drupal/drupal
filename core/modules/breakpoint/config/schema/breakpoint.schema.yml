@@ -35,7 +35,7 @@ breakpoint.breakpoint.*.*.*:
           label: 'Multiplier'
     langcode:
       type: string
-      label: 'Language'
+      label: 'Default language'
 
 breakpoint.breakpoint_group.*.*.*:
   type: mapping

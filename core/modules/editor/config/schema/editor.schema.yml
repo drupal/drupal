@@ -43,4 +43,4 @@ editor.editor.*:
       label: 'Status'
     langcode:
       type: string
-      label: 'Language'
+      label: 'Default language'

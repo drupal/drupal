@@ -73,4 +73,4 @@ language.entity.*:
       label: 'Status'
     langcode:
       type: string
-      label: 'Language code'
+      label: 'Default language'
