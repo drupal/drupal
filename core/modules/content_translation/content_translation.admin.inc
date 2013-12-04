@@ -333,23 +333,31 @@ function content_translation_form_language_content_settings_submit(array $form, 
  *     value, indicating field translatability.
  */
 function _content_translation_update_field_translatability($settings) {
-  $fields = array();
+  // Update translatability for configurable fields.
+  // @todo Remove this once configurable fields rely on entity field info to
+  //   track translatability. See https://drupal.org/node/2018685.
   foreach ($settings as $entity_type => $entity_settings) {
+    $fields = array();
     foreach ($entity_settings as $bundle => $bundle_settings) {
       // Collapse field settings since here we have per instance settings, but
       // translatability has per-field scope. We assume that all the field
       // instances have the same value.
       if (!empty($bundle_settings['fields'])) {
         foreach ($bundle_settings['fields'] as $field_name => $translatable) {
-          // If a field is enabled for translation for at least one instance we
-          // need to mark it as translatable.
+          // If translatability changes for at least one field instance we need
+          // to switch field translatability.
           $field = FieldService::fieldInfo()->getField($entity_type, $field_name);
           if ($field && $field->isFieldTranslatable() !== $translatable) {
-            $field->translatable = $translatable;
-            $field->save();
+            $fields[$field_name] = $translatable;
           }
         }
       }
+    }
+    // Store updated fields.
+    foreach ($fields as $field_name => $translatable) {
+      $field = FieldService::fieldInfo()->getField($entity_type, $field_name);
+      $field->translatable = $translatable;
+      $field->save();
     }
   }
 

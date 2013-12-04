@@ -812,6 +812,24 @@ function content_translation_form_field_ui_field_edit_form_alter(array &$form, a
     '#default_value' => $form['#field']->isFieldTranslatable(),
     '#weight' => 20,
   );
+  $form['#submit'][] = 'content_translation_form_field_ui_field_edit_form_submit';
+}
+
+/**
+ * Form submission handler for 'field_ui_field_edit_form'.
+ */
+function content_translation_form_field_ui_field_edit_form_submit($form, array &$form_state) {
+  $instance = $form_state['instance'];
+  $value = content_translation_get_config($instance->entity_type, $instance->bundle, 'fields');
+  if (!isset($value)) {
+    $value = array();
+  }
+  $value[$instance->getField()->getFieldName()] = $form_state['values']['field']['translatable'];
+  // Store the same value for all bundles as translatability is tracked per
+  // field.
+  foreach (entity_get_bundles($instance->entity_type) as $bundle => $info) {
+    content_translation_set_config($instance->entity_type, $bundle, 'fields', $value);
+  }
 }
 
 /**
