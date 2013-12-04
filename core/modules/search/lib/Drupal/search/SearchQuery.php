@@ -451,11 +451,9 @@ class SearchQuery extends SelectExtender {
       // Re-normalize scores with multipliers by dividing by the total of all
       // multipliers. The expressions were altered in addScore(), so here just
       // add the arguments for the total.
-      $i = 0;
       $sum = array_sum($this->multiply);
-      foreach ($this->multiply as $total) {
+      for ($i = 0; $i < count($this->multiply); $i++) {
         $this->scoresArguments[':total_' . $i] = $sum;
-        $i++;
       }
     }
 
