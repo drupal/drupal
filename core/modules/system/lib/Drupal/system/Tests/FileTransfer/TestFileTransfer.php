@@ -33,8 +33,6 @@ class TestFileTransfer extends FileTransfer {
   }
 
   function connect() {
-    $parts = explode(':', $this->hostname);
-    $port = (count($parts) == 2) ? $parts[1] : $this->port;
     $this->connection = new MockTestConnection();
     $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
   }
