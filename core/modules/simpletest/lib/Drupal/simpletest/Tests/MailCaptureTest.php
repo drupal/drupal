@@ -41,7 +41,7 @@ class MailCaptureTest extends WebTestBase {
     $this->assertEqual(count($captured_emails), 0, 'The captured e-mails queue is empty.', 'E-mail');
 
     // Send the e-mail.
-    $response = drupal_mail_system('simpletest', 'drupal_mail_test')->mail($message);
+    drupal_mail_system('simpletest', 'drupal_mail_test')->mail($message);
 
     // Ensure that there is one e-mail in the captured e-mails array.
     $captured_emails = $this->drupalGetMails();
