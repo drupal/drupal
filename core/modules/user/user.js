@@ -180,7 +180,7 @@ Drupal.behaviors.fieldUserRegistration = {
 
     if ($checkbox.length) {
       $(context).find('input#edit-instance-required').once('user-register-form-checkbox', function () {
-        $(this).bind('change', function (e) {
+        $(this).on('change', function (e) {
           if ($(this).prop('checked')) {
             $checkbox.prop('checked', true);
           }

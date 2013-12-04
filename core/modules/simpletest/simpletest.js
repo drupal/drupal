@@ -15,7 +15,7 @@ Drupal.behaviors.simpleTestMenuCollapse = {
       $this.html(drupalSettings.simpleTest.images[direction]);
 
       // Adds group toggling functionality to arrow images.
-      $this.click(function () {
+      $this.on('click', function () {
         var trs = $this.closest('tbody').children('.' + drupalSettings.simpleTest[this.id].testClass);
         var direction = drupalSettings.simpleTest[this.id].imageDirection;
         var row = direction ? trs.length - 1 : 0;
@@ -80,7 +80,7 @@ Drupal.behaviors.simpleTestSelectAll = {
       }
 
       // Have the single-test checkboxes follow the group checkbox.
-      groupCheckbox.change(function () {
+      groupCheckbox.on('change', function () {
         var checked = $(this).prop('checked');
         for (var i = 0; i < testCheckboxes.length; i++) {
           $('#' + testCheckboxes[i]).prop('checked', checked);
@@ -89,7 +89,7 @@ Drupal.behaviors.simpleTestSelectAll = {
 
       // Have the group checkbox follow the single-test checkboxes.
       for (var i = 0; i < testCheckboxes.length; i++) {
-        $('#' + testCheckboxes[i]).change(updateGroupCheckbox);
+        $('#' + testCheckboxes[i]).on('change', updateGroupCheckbox);
       }
 
       // Initialize status for the group checkbox correctly.

@@ -90,24 +90,24 @@ Drupal.verticalTab = function (settings) {
 
   this.link.attr('href', '#' + settings.details.attr('id'));
 
-  this.link.click(function (e) {
+  this.link.on('click', function (e) {
     e.preventDefault();
     self.focus();
   });
 
   // Keyboard events added:
   // Pressing the Enter key will open the tab pane.
-  this.link.keydown(function(event) {
+  this.link.on('keydown', function (event) {
     event.preventDefault();
     if (event.keyCode === 13) {
       self.focus();
       // Set focus on the first input field of the visible details/tab pane.
-      $(".vertical-tabs-pane :input:visible:enabled:first").focus();
+      $(".vertical-tabs-pane :input:visible:enabled:first").trigger('focus');
     }
   });
 
   this.details
-    .bind('summaryUpdated', function () {
+    .on('summaryUpdated', function () {
       self.updateSummary();
     })
     .trigger('summaryUpdated');

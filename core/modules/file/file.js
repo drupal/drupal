@@ -23,7 +23,7 @@ Drupal.behaviors.fileValidateAutoAttach = {
       elements = settings.file.elements;
       for (selector in elements) {
         if (elements.hasOwnProperty(selector)) {
-          $context.find(selector).bind('change', {extensions: elements[selector]}, validateExtension);
+          $context.find(selector).on('change', {extensions: elements[selector]}, validateExtension);
         }
       }
     }
@@ -36,7 +36,7 @@ Drupal.behaviors.fileValidateAutoAttach = {
       elements = settings.file.elements;
       for (selector in elements) {
         if (elements.hasOwnProperty(selector)) {
-          $context.find(selector).unbind('change', validateExtension);
+          $context.find(selector).off('change', validateExtension);
         }
       }
     }
@@ -63,13 +63,13 @@ Drupal.behaviors.fileAutoUpload = {
 Drupal.behaviors.fileButtons = {
   attach: function (context) {
     var $context = $(context);
-    $context.find('input.form-submit').bind('mousedown', Drupal.file.disableFields);
-    $context.find('div.form-managed-file input.form-submit').bind('mousedown', Drupal.file.progressBar);
+    $context.find('input.form-submit').on('mousedown', Drupal.file.disableFields);
+    $context.find('div.form-managed-file input.form-submit').on('mousedown', Drupal.file.progressBar);
   },
   detach: function (context) {
     var $context = $(context);
-    $context.find('input.form-submit').unbind('mousedown', Drupal.file.disableFields);
-    $context.find('div.form-managed-file input.form-submit').unbind('mousedown', Drupal.file.progressBar);
+    $context.find('input.form-submit').off('mousedown', Drupal.file.disableFields);
+    $context.find('div.form-managed-file input.form-submit').off('mousedown', Drupal.file.progressBar);
   }
 };
 
@@ -78,10 +78,10 @@ Drupal.behaviors.fileButtons = {
  */
 Drupal.behaviors.filePreviewLinks = {
   attach: function (context) {
-    $(context).find('div.form-managed-file .file a, .file-widget .file a').bind('click',Drupal.file.openInNewWindow);
+    $(context).find('div.form-managed-file .file a, .file-widget .file a').on('click',Drupal.file.openInNewWindow);
   },
   detach: function (context){
-    $(context).find('div.form-managed-file .file a, .file-widget .file a').unbind('click', Drupal.file.openInNewWindow);
+    $(context).find('div.form-managed-file .file a, .file-widget .file a').off('click', Drupal.file.openInNewWindow);
   }
 };
 

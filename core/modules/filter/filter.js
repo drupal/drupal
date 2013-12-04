@@ -15,12 +15,12 @@ Drupal.behaviors.filterGuidelines = {
     $(context).find('.filter-guidelines').once('filter-guidelines')
       .find(':header').hide()
       .closest('.filter-wrapper').find('select.filter-list')
-      .bind('change', function () {
+      .on('change', function () {
         $(this).closest('.filter-wrapper')
           .find('.filter-guidelines-item').hide()
           .filter('.filter-guidelines-' + this.value).show();
       })
-      .change();
+      .trigger('change');
   }
 };
 

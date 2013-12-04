@@ -93,7 +93,7 @@ function TableHeader(table) {
   this.tableOffset = this.$originalTable.offset();
 
   // React to columns change to avoid making checks in the scroll callback.
-  this.$originalTable.bind('columnschange', {tableHeader: this}, function (e, display) {
+  this.$originalTable.on('columnschange', {tableHeader: this}, function (e, display) {
     var tableHeader = e.data.tableHeader;
     if (tableHeader.displayWeight === null || tableHeader.displayWeight !== display) {
       tableHeader.recalculateSticky();

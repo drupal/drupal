@@ -39,7 +39,7 @@ Drupal.behaviors.menuLinkAutomaticTitle = {
         $link_title.data('menuLinkAutomaticTitleOveridden', true);
       }
       // Whenever the value is changed manually, disable this behavior.
-      $link_title.keyup(function () {
+      $link_title.on('keyup', function () {
         $link_title.data('menuLinkAutomaticTitleOveridden', true);
       });
       // Global trigger on checkbox (do not fill-in a value when disabled).
@@ -57,7 +57,7 @@ Drupal.behaviors.menuLinkAutomaticTitle = {
         $checkbox.trigger('formUpdated');
       });
       // Take over any title change.
-      $title.keyup(function () {
+      $title.on('keyup', function () {
         if (!$link_title.data('menuLinkAutomaticTitleOveridden') && $checkbox.is(':checked')) {
           $link_title.val($title.val());
           $link_title.val($title.val()).trigger('formUpdated');

@@ -55,7 +55,7 @@ Drupal.behaviors.color = {
     }
 
     // Set up colorScheme selector.
-    form.find('#edit-scheme').change(function () {
+    form.find('#edit-scheme').on('change', function () {
       var schemes = settings.color.schemes, colorScheme = this.options[this.selectedIndex].value;
       if (colorScheme !== '' && schemes[colorScheme]) {
         // Get colors of active scheme.
@@ -184,8 +184,8 @@ Drupal.behaviors.color = {
       var input = e.target;
       // Remove old bindings.
       if (focused) {
-        $(focused).unbind('keyup', farb.updateValue)
-          .unbind('keyup', preview).unbind('keyup', resetScheme)
+        $(focused).off('keyup', farb.updateValue)
+          .off('keyup', preview).off('keyup', resetScheme)
           .parent().removeClass('item-selected');
       }
 
@@ -193,7 +193,7 @@ Drupal.behaviors.color = {
       focused = input;
       farb.linkTo(function (color) { callback(input, color, true, false); });
       farb.setColor(input.value);
-      $(focused).keyup(farb.updateValue).keyup(preview).keyup(resetScheme)
+      $(focused).on('keyup', farb.updateValue).on('keyup', preview).on('keyup', resetScheme)
         .parent().addClass('item-selected');
     }
 
@@ -240,11 +240,11 @@ Drupal.behaviors.color = {
       $(this).after(hook);
       hooks.push(hook);
 
-      $(this).parent().find('.lock').click();
+      $(this).parent().find('.lock').trigger('click');
       this.i = i;
       inputs.push(this);
     })
-    .focus(focus);
+    .on('focus', focus);
 
     form.find('#palette label');
 

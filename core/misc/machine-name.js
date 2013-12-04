@@ -35,9 +35,9 @@ Drupal.behaviors.machineName = {
       var data = e.data;
       e.preventDefault();
       data.$wrapper.show();
-      data.$target.focus();
+      data.$target.trigger('focus');
       data.$suffix.hide();
-      data.$source.unbind('.machineName');
+      data.$source.off('.machineName');
     }
 
     function machineNameHandler(e) {
@@ -109,16 +109,16 @@ Drupal.behaviors.machineName = {
           options: options
         };
         // If it is editable, append an edit link.
-        var $link = $('<span class="admin-link"><button type="button" class="link">' + Drupal.t('Edit') + '</button></span>').bind('click', eventData, clickEditHandler);
+        var $link = $('<span class="admin-link"><button type="button" class="link">' + Drupal.t('Edit') + '</button></span>').on('click', eventData, clickEditHandler);
         $suffix.append(' ').append($link);
 
         // Preview the machine name in realtime when the human-readable name
         // changes, but only if there is no machine name yet; i.e., only upon
         // initial creation, not when editing.
         if ($target.val() === '') {
-          $source.bind('keyup.machineName change.machineName input.machineName', eventData, machineNameHandler)
+          $source.on('keyup.machineName change.machineName input.machineName', eventData, machineNameHandler)
           // Initialize machine name preview.
-          .keyup();
+          .trigger('keyup');
         }
       }
     }

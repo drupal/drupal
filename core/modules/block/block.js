@@ -78,7 +78,7 @@ Drupal.behaviors.blockDrag = {
         window.alert(Drupal.t('The block cannot be placed in this region.'));
         // Simulate that there was a selected element change, so the row is put
         // back to from where the user tried to drag it.
-        regionField.change();
+        regionField.trigger('change');
       }
       else if ($rowElement.prev('tr').is('.region-message')) {
         var weightField = $rowElement.find('select.block-weight');
@@ -94,7 +94,7 @@ Drupal.behaviors.blockDrag = {
 
     // Add the behavior to each region select list.
     $(context).find('select.block-region-select').once('block-region-select', function () {
-      $(this).change(function (event) {
+      $(this).on('change', function (event) {
         // Make our new row and select field.
         var row = $(this).closest('tr');
         var select = $(this);
@@ -106,7 +106,7 @@ Drupal.behaviors.blockDrag = {
         // Modify empty regions with added or removed fields.
         checkEmptyRegions(table, row);
         // Remove focus from selectbox.
-        select.get(0).blur();
+        select.trigger('blur');
       });
     });
 

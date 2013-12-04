@@ -55,7 +55,7 @@ Drupal.behaviors.editor = {
         });
       }
       // Detach any editor when the containing form is submitted.
-      $this.parents('form').submit(function (event) {
+      $this.parents('form').on('submit', function (event) {
         // Do not detach if the event was canceled.
         if (event.isDefaultPrevented()) {
           return;

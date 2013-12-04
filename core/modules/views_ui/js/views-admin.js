@@ -307,7 +307,7 @@ Drupal.viewsUi.OptionsSearch = function ($form) {
   this.$form = $form;
   // Add a keyup handler to the search box.
   this.$searchBox = this.$form.find('#edit-override-controls-options-search');
-  this.$searchBox.keyup($.proxy(this.handleKeyup, this));
+  this.$searchBox.on('keyup', $.proxy(this.handleKeyup, this));
   // Get a list of option labels and their corresponding divs and maintain it
   // in memory, so we have as little overhead as possible at keyup time.
   this.options = this.getOptions(this.$form.find('.filterable-option'));
@@ -527,7 +527,7 @@ $.extend(Drupal.viewsUi.RearrangeFilterHandler.prototype, {
   clickAddGroupButton: function () {
     // Due to conflicts between Drupal core's AJAX system and the Views AJAX
     // system, the only way to get this to work seems to be to trigger both the
-    // .mousedown() and .submit() events.
+    // mousedown and submit events.
     this.addGroupButton
       .trigger('mousedown')
       .trigger('submit');
@@ -856,7 +856,7 @@ Drupal.viewsUi.Checkboxifier = function (button) {
   this.$button.hide();
   this.$parent.find('.exposed-description, .grouped-description').hide();
 
-  this.$input.click($.proxy(this, 'clickHandler'));
+  this.$input.on('click', $.proxy(this, 'clickHandler'));
 
 };
 
@@ -864,8 +864,9 @@ Drupal.viewsUi.Checkboxifier = function (button) {
  * When the checkbox is checked or unchecked, simulate a button press.
  */
 Drupal.viewsUi.Checkboxifier.prototype.clickHandler = function (e) {
-  this.$button.mousedown();
-  this.$button.submit();
+  this.$button
+    .trigger('mousedown')
+    .trigger('submit');
 };
 
 /**

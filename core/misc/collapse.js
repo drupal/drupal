@@ -40,7 +40,7 @@ $.extend(CollapsibleDetails.prototype, {
   setupSummary: function () {
     this.$summary = $('<span class="summary"></span>');
     this.$node
-      .bind('summaryUpdated', $.proxy(this.onSummaryUpdated, this))
+      .on('summaryUpdated', $.proxy(this.onSummaryUpdated, this))
       .trigger('summaryUpdated');
   },
   /**
@@ -60,7 +60,7 @@ $.extend(CollapsibleDetails.prototype, {
       .attr('href', '#' + this.$node.attr('id'))
       .prepend($legend.contents())
       .appendTo($legend)
-      .click($.proxy(this.onLegendClick, this));
+      .on('click', $.proxy(this.onLegendClick, this));
     $legend.append(this.$summary);
   },
   /**

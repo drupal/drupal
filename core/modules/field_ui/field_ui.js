@@ -157,7 +157,7 @@ Drupal.fieldUIOverview = {
 
       // Fire the Ajax update.
       $('input[name=refresh_rows]').val(rowNames.join(' '));
-      $('input#edit-refresh').mousedown();
+      $('input#edit-refresh').trigger('mousedown');
 
       // Disabled elements do not appear in POST ajax data, so we mark the
       // elements disabled only after firing the request.
@@ -190,7 +190,7 @@ Drupal.fieldUIDisplayOverview.field = function (row, data) {
 
   // Attach change listener to the 'plugin type' select.
   this.$pluginSelect = $(row).find('select.field-plugin-type');
-  this.$pluginSelect.change(Drupal.fieldUIOverview.onChange);
+  this.$pluginSelect.on('change', Drupal.fieldUIOverview.onChange);
 
   return this;
 };

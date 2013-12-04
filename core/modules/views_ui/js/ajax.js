@@ -49,9 +49,9 @@
    */
   Drupal.behaviors.livePreview = {
     attach: function (context) {
-      $('input#edit-displays-live-preview', context).once('views-ajax-processed').click(function() {
+      $('input#edit-displays-live-preview', context).once('views-ajax').on('click', function () {
         if ($(this).is(':checked')) {
-          $('#preview-submit').click();
+          $('#preview-submit').trigger('click');
         }
       });
     }
@@ -62,13 +62,13 @@
    */
   Drupal.behaviors.syncPreviewDisplay = {
     attach: function (context) {
-      $("#views-tabset a").once('views-ajax-processed').click(function() {
+      $("#views-tabset a").once('views-ajax').on('click', function () {
         var href = $(this).attr('href');
         // Cut of #views-tabset.
         var display_id = href.substr(11);
         // Set the form element.
         $("#views-live-preview #preview-display-id").val(display_id);
-      }).addClass('views-ajax-processed');
+      });
     }
   };
 
@@ -80,7 +80,7 @@
         'progress': { 'type': 'throbber' }
       };
       // Bind AJAX behaviors to all items showing the class.
-      $('a.views-ajax-link', context).once('views-ajax-processed').each(function () {
+      $('a.views-ajax-link', context).once('views-ajax').each(function () {
         var element_settings = base_element_settings;
         // Set the URL to go to the anchor.
         if ($(this).attr('href')) {
@@ -91,7 +91,7 @@
       });
 
       $('div#views-live-preview a')
-        .once('views-ajax-processed').each(function () {
+        .once('views-ajax').each(function () {
         // We don't bind to links without a URL.
         if (!$(this).attr('href')) {
           return true;
@@ -115,8 +115,8 @@
       // @todo Revisit this after fixing Views UI to display a Preview outside
       //   of the main Edit form.
       $('div#views-live-preview input[type=submit]')
-        .once('views-ajax-processed').each(function(event) {
-        $(this).click(function () {
+        .once('views-ajax').each(function(event) {
+        $(this).on('click', function () {
           this.form.clk = this;
           return true;
         });

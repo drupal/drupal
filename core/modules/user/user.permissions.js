@@ -41,7 +41,7 @@ Drupal.behaviors.permissions = {
 
       // Initialize the authenticated user checkbox.
       $table.find('input[type=checkbox].rid-authenticated')
-        .bind('click.permissions', self.toggle)
+        .on('click.permissions', self.toggle)
         // .triggerHandler() cannot be used here, as it only affects the first
         // element.
         .each(self.toggle);

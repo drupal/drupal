@@ -127,7 +127,7 @@ $.extend(TabbingManager.prototype, {
     if ($hasFocus.length === 0) {
       $hasFocus = $set.eq(0);
     }
-    $hasFocus.focus();
+    $hasFocus.trigger('focus');
   },
 
   /**

@@ -536,7 +536,7 @@ Drupal.ckeditor = {
         if (success) {
           $group.appendTo($(event.currentTarget).closest('.ckeditor-row').children('.ckeditor-toolbar-groups'));
           // Focus on the new group.
-          $group.focus();
+          $group.trigger('focus');
         }
       }
 
@@ -574,7 +574,7 @@ Drupal.ckeditor = {
      *   elements involved in the sort action.
      */
     startButtonDrag: function (event, ui) {
-      this.$el.find('a:focus').blur();
+      this.$el.find('a:focus').trigger('blur');
 
       // Show the button group names as soon as the user starts dragging.
       this.model.set('groupNamesVisible', true);
@@ -597,7 +597,7 @@ Drupal.ckeditor = {
         }
         // Refocus the target button so that the user can continue from a known
         // place.
-        ui.item.find('a').focus();
+        ui.item.find('a').trigger('focus');
       });
     },
 
@@ -809,7 +809,7 @@ Drupal.ckeditor = {
                   .off()
                   .remove();
                 // Focus on the first button in the active toolbar.
-                $activeButtons.find('.ckeditor-toolbar-group-buttons').eq(0).children().eq(0).children().focus();
+                $activeButtons.find('.ckeditor-toolbar-group-buttons').eq(0).children().eq(0).children().trigger('focus');
               }
               // Otherwise, move it.
               else {
@@ -852,7 +852,7 @@ Drupal.ckeditor = {
           }
           // Refocus the target button so that the user can continue from a known
           // place.
-          $target.focus();
+          $target.trigger('focus');
         });
 
         event.preventDefault();
@@ -933,7 +933,7 @@ Drupal.ckeditor = {
         }
 
         registerGroupMove(this, $group);
-        $group.focus();
+        $group.trigger('focus');
         event.preventDefault();
         event.stopPropagation();
       }
@@ -1410,7 +1410,7 @@ function openGroupNameDialog (view, $group, callback) {
     // When editing, set the "group name" input in the form to the current value.
     .attr('value', $group.attr('data-drupal-ckeditor-toolbar-group-name'))
     // Focus on the "group name" input in the form.
-    .focus();
+    .trigger('focus');
 }
 
 /**

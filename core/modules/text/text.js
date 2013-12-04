@@ -42,7 +42,7 @@ Drupal.behaviors.textSummary = {
 
       // If no summary is set, hide the summary field.
       if ($widget.find('.text-summary').val() === '') {
-        $link.click();
+        $link.trigger('click');
       }
     });
   }

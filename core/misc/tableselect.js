@@ -28,7 +28,7 @@ Drupal.tableSelect = function () {
   };
 
   // Find all <th> with class select-all, and insert the check all checkbox.
-  $table.find('th.select-all').prepend($('<input type="checkbox" class="form-checkbox" />').attr('title', strings.selectAll)).click(function (event) {
+  $table.find('th.select-all').prepend($('<input type="checkbox" class="form-checkbox" />').attr('title', strings.selectAll)).on('click', function (event) {
     if ($(event.target).is('input[type="checkbox"]')) {
       // Loop through all checkboxes and set their state to the select all checkbox' state.
       checkboxes.each(function () {
@@ -42,7 +42,7 @@ Drupal.tableSelect = function () {
   });
 
   // For each of the checkboxes within the table that are not disabled.
-  checkboxes = $table.find('td input[type="checkbox"]:enabled').click(function (e) {
+  checkboxes = $table.find('td input[type="checkbox"]:enabled').on('click', function (e) {
     // Either add or remove the selected class based on the state of the check all checkbox.
     $(this).closest('tr').toggleClass('selected', this.checked);
 

@@ -106,7 +106,7 @@ Drupal.tableDrag = function (table, tableSettings) {
   // Add a link before the table for users to show or hide weight columns.
   $table.before($('<button type="button" class="link tabledrag-toggle-weight"></button>')
     .attr('title', Drupal.t('Re-order rows by numerical weight instead of dragging.'))
-    .click($.proxy(function (e) {
+    .on('click', $.proxy(function (e) {
       e.preventDefault();
       this.toggleColumns();
     }, this))
@@ -123,16 +123,16 @@ Drupal.tableDrag = function (table, tableSettings) {
   // Add event bindings to the document. The self variable is passed along
   // as event handlers do not have direct access to the tableDrag object.
   if (Modernizr.touch) {
-    $(document).bind('touchmove', function (event) { return self.dragRow(event.originalEvent.touches[0], self); });
-    $(document).bind('touchend', function (event) { return self.dropRow(event.originalEvent.touches[0], self); });
+    $(document).on('touchmove', function (event) { return self.dragRow(event.originalEvent.touches[0], self); });
+    $(document).on('touchend', function (event) { return self.dropRow(event.originalEvent.touches[0], self); });
   }
   else {
-    $(document).bind('mousemove', function (event) { return self.dragRow(event, self); });
-    $(document).bind('mouseup', function (event) { return self.dropRow(event, self); });
+    $(document).on('mousemove', function (event) { return self.dragRow(event, self); });
+    $(document).on('mouseup', function (event) { return self.dropRow(event, self); });
   }
 
   // React to localStorage event showing or hiding weight columns.
-  $(window).bind('storage', $.proxy(function (e) {
+  $(window).on('storage', $.proxy(function (e) {
     // Only react to 'Drupal.tableDrag.showWeight' value change.
     if (e.originalEvent.key === 'Drupal.tableDrag.showWeight') {
       // This was changed in another window, get the new value for this window.
@@ -332,32 +332,32 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
     });
   }
   else {
-    handle.mousedown(function (event) {
+    handle.on('mousedown', function (event) {
       event.preventDefault();
       self.dragStart(event, self, item);
     });
   }
 
   // Prevent the anchor tag from jumping us to the top of the page.
-  handle.click(function (e) {
+  handle.on('click', function (e) {
     e.preventDefault();
   });
 
   // Set blur cleanup when a handle is focused.
-  handle.focus(function () {
+  handle.on('focus', function () {
     self.safeBlur = true;
   });
 
   // On blur, fire the same function as a touchend/mouseup. This is used to
   // update values after a row has been moved through the keyboard support.
-  handle.blur(function (event) {
+  handle.on('blur', function (event) {
     if (self.rowObject && self.safeBlur) {
       self.dropRow(event, self);
     }
   });
 
   // Add arrow-key support to the handle.
-  handle.keydown(function (event) {
+  handle.on('keydown', function (event) {
     // If a rowObject doesn't yet exist and this isn't the tab key.
     if (event.keyCode !== 9 && !self.rowObject) {
       self.rowObject = new self.row(item, 'keyboard', self.indentEnabled, self.maxDepth, true);
@@ -406,7 +406,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
             self.rowObject.indent(0);
             window.scrollBy(0, -parseInt(item.offsetHeight, 10));
           }
-          handle.get(0).focus(); // Regain focus after the DOM manipulation.
+          handle.trigger('focus'); // Regain focus after the DOM manipulation.
         }
         break;
       case 39: // Right arrow.
@@ -448,7 +448,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
             self.rowObject.indent(0);
             window.scrollBy(0, parseInt(item.offsetHeight, 10));
           }
-          handle.get(0).focus(); // Regain focus after the DOM manipulation.
+          handle.trigger('focus'); // Regain focus after the DOM manipulation.
         }
         break;
     }
@@ -472,7 +472,7 @@ Drupal.tableDrag.prototype.makeDraggable = function (item) {
   // Compatibility addition, return false on keypress to prevent unwanted scrolling.
   // IE and Safari will suppress scrolling on keydown, but all other browsers
   // need to return false on keypress. http://www.quirksmode.org/js/keys.html
-  handle.keypress(function (event) {
+  handle.on('keypress', function (event) {
     switch (event.keyCode) {
       case 37: // Left arrow.
       case 38: // Up arrow.
@@ -504,7 +504,7 @@ Drupal.tableDrag.prototype.dragStart = function (event, self, item) {
 
   // If there's a lingering row object from the keyboard, remove its focus.
   if (self.rowObject) {
-    $(self.rowObject.element).find('a.tabledrag-handle').blur();
+    $(self.rowObject.element).find('a.tabledrag-handle').trigger('blur');
   }
 
   // Create a new rowObject for manipulation of this row.
