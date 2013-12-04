@@ -75,10 +75,6 @@ class StatisticsLoggingTest extends WebTestBase {
    */
   function testLogging() {
     $path = 'node/' . $this->node->id();
-    $expected = array(
-      'title' => $this->node->label(),
-      'path' => $path,
-    );
 
     // Verify logging of an uncached page.
     $this->drupalGet($path);
