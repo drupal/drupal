@@ -224,7 +224,7 @@ abstract class DisplayPluginBase extends PluginBase {
   public function usesExposed() {
     if (!isset($this->has_exposed)) {
       foreach ($this->handlers as $type => $value) {
-        foreach ($this->view->$type as $id => $handler) {
+        foreach ($this->view->$type as $handler) {
           if ($handler->canExpose() && $handler->isExposed()) {
             // one is all we need; if we find it, return true.
             $this->has_exposed = TRUE;
@@ -373,7 +373,7 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     if (!empty($this->view->argument) && $this->getOption('hide_attachment_summary')) {
-      foreach ($this->view->argument as $argument_id => $argument) {
+      foreach ($this->view->argument as $argument) {
         if ($argument->needsStylePlugin() && empty($argument->argument_validated)) {
           return FALSE;
         }
@@ -1030,17 +1030,17 @@ abstract class DisplayPluginBase extends PluginBase {
     if (!empty($this->view->build_info['substitutions'])) {
       $tokens = $this->view->build_info['substitutions'];
     }
-    $count = 0;
-    foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
-      $token = '%' . ++$count;
-      if (!isset($tokens[$token])) {
-        $tokens[$token] = '';
-      }
 
-      // Use strip tags as there should never be HTML in the path.
-      // However, we need to preserve special characters like " that
-      // were removed by check_plain().
-      $tokens['!' . $count] = isset($this->view->args[$count - 1]) ? strip_tags(decode_entities($this->view->args[$count - 1])) : '';
+    // Add tokens for every argument (contextual filter) and path arg.
+    $handlers = count($this->view->display_handler->getHandlers('argument'));
+    for ($count = 1; $count <= $handlers; $count++) {
+      if (!isset($tokens["%$count"])) {
+        $tokens["%$count"] = '';
+      }
+       // Use strip tags as there should never be HTML in the path.
+       // However, we need to preserve special characters like " that
+       // were removed by check_plain().
+      $tokens["!$count"] = isset($this->view->args[$count - 1]) ? strip_tags(decode_entities($this->view->args[$count - 1])) : '';
     }
 
     return $tokens;
@@ -1128,8 +1128,6 @@ abstract class DisplayPluginBase extends PluginBase {
     $style_plugin_instance = $this->getPlugin('style');
     $style_summary = empty($style_plugin_instance->definition['title']) ? t('Missing style plugin') : $style_plugin_instance->summaryTitle();
     $style_title = empty($style_plugin_instance->definition['title']) ? t('Missing style plugin') : $style_plugin_instance->pluginTitle();
-
-    $style = '';
 
     $options['style'] = array(
       'category' => 'format',
@@ -1715,7 +1713,7 @@ abstract class DisplayPluginBase extends PluginBase {
 
         $options = array();
         $count = 0; // This lets us prepare the key as we want it printed.
-        foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
+        foreach ($this->view->display_handler->getHandlers('argument') as $handler) {
           $options[t('Arguments')]['%' . ++$count] = t('@argument title', array('@argument' => $handler->adminLabel()));
           $options[t('Arguments')]['!' . $count] = t('@argument input', array('@argument' => $handler->adminLabel()));
         }
@@ -2073,7 +2071,6 @@ abstract class DisplayPluginBase extends PluginBase {
     $registry = $this->theme_registry;
     $extension = $this->theme_extension;
 
-    $output = '';
     $picked = FALSE;
     foreach ($themes as $theme) {
       $template = strtr($theme, '_', '-') . $extension;
