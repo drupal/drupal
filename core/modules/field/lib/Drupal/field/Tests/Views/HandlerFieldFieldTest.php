@@ -95,7 +95,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
    */
   protected function prepareView(ViewExecutable $view) {
     $view->initDisplay();
-    foreach ($this->fields as $key => $field) {
+    foreach ($this->fields as $field) {
       $field_name = $field->getFieldName();
       $view->display_handler->options['fields'][$field_name]['id'] = $field_name;
       $view->display_handler->options['fields'][$field_name]['table'] = 'node__' . $field_name;
@@ -167,8 +167,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
     }
 
     // Test that an empty field is rendered without error.
-    $rendered_field = $view->style_plugin->getField(4, $this->fields[4]->getFieldName());
-
+    $view->style_plugin->getField(4, $this->fields[4]->getFieldName());
+	
     $view->destroy();
 
     // Test delta limit + offset
