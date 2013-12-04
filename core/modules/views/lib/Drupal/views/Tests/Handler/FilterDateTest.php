@@ -149,7 +149,6 @@ class FilterDateTest extends HandlerTestBase {
    * Make sure the validation callbacks works.
    */
   protected function _testUiValidation() {
-    $view = views_get_view('test_filter_date_between');
 
     $this->drupalLogin($this->drupalCreateUser(array('administer views', 'administer site configuration')));
     menu_router_rebuild();
