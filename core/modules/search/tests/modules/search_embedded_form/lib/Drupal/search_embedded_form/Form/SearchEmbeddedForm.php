@@ -25,7 +25,7 @@ class SearchEmbeddedForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $count = $this->config('search_embedded_form.settings')->get('submitted');
+    $count = \Drupal::state()->get('search_embedded_form.submit_count');
 
     $form['name'] = array(
       '#type' => 'textfield',
@@ -49,9 +49,9 @@ class SearchEmbeddedForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $config = $this->config('search_embedded_form.settings');
-    $submit_count = (int) $config->get('submitted');
-    $config->set('submitted', $submit_count + 1)->save();
+    $state = \Drupal::state();
+    $submit_count = (int) $state->get('search_embedded_form.submit_count');
+    $state->set('search_embedded_form.submit_count', $submit_count + 1);
     drupal_set_message($this->t('Test form was submitted'));
   }
 
