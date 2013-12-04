@@ -1685,7 +1685,7 @@ class LocaleBrowserDetectionTest extends DrupalUnitTestCase {
     );
 
     $test_cases = array(
-      // Equal qvalue for each language, choose the site prefered one.
+      // Equal qvalue for each language, choose the site preferred one.
       'en,en-US,fr-CA,fr,es-MX' => 'en',
       'en-US,en,fr-CA,fr,es-MX' => 'en',
       'fr,en' => 'en',

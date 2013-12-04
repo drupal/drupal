@@ -318,7 +318,7 @@ function field_ui_field_attach_create_bundle($entity_type, $bundle) {
 }
 
 /**
- * Determines the adminstration path for a bundle.
+ * Determines the administration path for a bundle.
  */
 function _field_ui_bundle_admin_path($entity_type, $bundle_name) {
   $bundles = field_info_bundles($entity_type);

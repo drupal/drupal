@@ -111,7 +111,7 @@ function hook_language_types_info_alter(array &$language_types) {
  *
  * @return
  *   An associative array of language negotiation provider definitions. The keys
- *   are provider identifiers, and the values are associative arrays definining
+ *   are provider identifiers, and the values are associative arrays defining
  *   each provider, with the following elements:
  *   - types: An array of allowed language types. If a language negotiation
  *     provider does not specify which language types it should be used with, it

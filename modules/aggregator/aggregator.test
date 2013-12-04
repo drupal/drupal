@@ -931,7 +931,7 @@ class AggregatorRenderingTestCase extends AggregatorTestCase {
     // up.
     $feed->block = 0;
     aggregator_save_feed((array) $feed);
-    // It is nescessary to flush the cache after saving the number of items.
+    // It is necessary to flush the cache after saving the number of items.
     drupal_flush_all_caches();
     // Check that the block is no longer displayed.
     $this->drupalGet('node');

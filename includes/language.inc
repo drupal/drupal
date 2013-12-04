@@ -313,7 +313,7 @@ function language_negotiation_get_switch_links($type, $path) {
 }
 
 /**
- * Removes any unused language negotation providers from the configuration.
+ * Removes any unused language negotiation providers from the configuration.
  */
 function language_negotiation_purge() {
   // Ensure that we are getting the defined language negotiation information. An

@@ -359,7 +359,7 @@ class OptionsWidgetsTestCase extends FieldTestCase {
 
     // Test the 'None' option.
 
-    // Check that the 'none' option has no efect if actual options are selected
+    // Check that the 'none' option has no effect if actual options are selected
     // as well.
     $edit = array("card_2[$langcode][]" => array('_none' => '_none', 0 => 0));
     $this->drupalPost('test-entity/manage/' . $entity->ftid . '/edit', $edit, t('Save'));

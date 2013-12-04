@@ -216,10 +216,10 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
     }
     // Add some extra chars to the token.
     $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
-    $this->assertResponse(403, 'Image was inaccessible at the URL wih an invalid token.');
+    $this->assertResponse(403, 'Image was inaccessible at the URL with an invalid token.');
     // Change the parameter name so the token is missing.
     $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $generate_url));
-    $this->assertResponse(403, 'Image was inaccessible at the URL wih a missing token.');
+    $this->assertResponse(403, 'Image was inaccessible at the URL with a missing token.');
 
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);
@@ -268,7 +268,7 @@ class ImageStylesPathAndUrlTestCase extends DrupalWebTestCase {
     elseif ($clean_url) {
       // Add some extra chars to the token.
       $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
-      $this->assertResponse(200, 'Existing image was accessible at the URL wih an invalid token.');
+      $this->assertResponse(200, 'Existing image was accessible at the URL with an invalid token.');
     }
 
     // Allow insecure image derivatives to be created for the remainder of this

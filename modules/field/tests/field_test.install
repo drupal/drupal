@@ -60,7 +60,7 @@ function field_test_schema() {
     'description' => 'The base table for test entities with a bundle key.',
     'fields' => array(
       'ftid' => array(
-        'description' => 'The primary indentifier for a test_entity_bundle_key.',
+        'description' => 'The primary identifier for a test_entity_bundle_key.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -79,7 +79,7 @@ function field_test_schema() {
     'description' => 'The base table for test entities with a bundle.',
     'fields' => array(
       'ftid' => array(
-        'description' => 'The primary indentifier for a test_entity_bundle.',
+        'description' => 'The primary identifier for a test_entity_bundle.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

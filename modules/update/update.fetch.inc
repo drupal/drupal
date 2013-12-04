@@ -289,7 +289,7 @@ function _update_build_fetch_url($project, $site_key = '') {
   $url = _update_get_fetch_url_base($project);
   $url .= '/' . $name . '/' . DRUPAL_CORE_COMPATIBILITY;
 
-  // Only append usage infomation if we have a site key and the project is
+  // Only append usage information if we have a site key and the project is
   // enabled. We do not want to record usage statistics for disabled projects.
   if (!empty($site_key) && (strpos($project['project_type'], 'disabled') === FALSE)) {
     // Append the site key.
