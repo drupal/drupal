@@ -40,7 +40,7 @@ class SearchRankingTest extends SearchTestBase {
 
   public function testRankings() {
     // Login with sufficient privileges.
-    $this->drupalLogin($this->drupalCreateUser(array('post comments', 'skip comment approval', 'create page content')));
+    $this->drupalLogin($this->drupalCreateUser(array('post comments', 'skip comment approval', 'create page content', 'administer search')));
     // Add a comment field.
     $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
@@ -107,21 +107,43 @@ class SearchRankingTest extends SearchTestBase {
     for ($i = 0; $i < 5; $i ++) {
       $client->post($stats_path, array(), array('nid' => $nid))->send();
     }
-    // Test each of the possible rankings.
+
     // @todo - comments and views are removed from the array since they are
     // broken in core. Those modules expected hook_update_index() to be called
     // even though it was only called on modules that implemented a search type.
     array_pop($node_ranks);
     array_pop($node_ranks);
+
+    // Test that the settings form displays the context ranking section.
+    $this->drupalGet('admin/config/search/settings');
+    $this->assertText(t('Content ranking'));
+
+    // Check that all rankings are visible and set to 0.
     foreach ($node_ranks as $node_rank) {
-      // Disable all relevancy rankings except the one we are testing.
-      foreach ($node_ranks as $var) {
-        variable_set('node_rank_' . $var, $var == $node_rank ? 10 : 0);
-      }
+      $this->assertTrue($this->xpath('//select[@id="edit-node-rank-' . $node_rank . '"]//option[@value="0"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 0.');
+    }
+
+    // Test each of the possible rankings.
+    $edit = array();
+    foreach ($node_ranks as $node_rank) {
+      // Enable the ranking we are testing.
+      $edit['node_rank_' . $node_rank] = 10;
+      $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
+      $this->assertTrue($this->xpath('//select[@id="edit-node-rank-' . $node_rank . '"]//option[@value="10"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 10.');
+
       // Do the search and assert the results.
       $this->nodeSearchPlugin->setSearch('rocks', array(), array());
       $set = $this->nodeSearchPlugin->execute();
       $this->assertEqual($set[0]['node']->id(), $nodes[$node_rank][1]->id(), 'Search ranking "' . $node_rank . '" order.');
+      // Clear this ranking for the next test.
+      $edit['node_rank_' . $node_rank] = 0;
+    }
+
+    // Save the final node_rank change then check that all rankings are visible
+    // and have been set back to 0.
+    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
+    foreach ($node_ranks as $node_rank) {
+      $this->assertTrue($this->xpath('//select[@id="edit-node-rank-' . $node_rank . '"]//option[@value="0"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 0.');
     }
   }
 
