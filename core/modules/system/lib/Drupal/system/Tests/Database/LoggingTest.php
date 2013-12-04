@@ -26,7 +26,7 @@ class LoggingTest extends DatabaseTestBase {
    * Tests that we can log the existence of a query.
    */
   function testEnableLogging() {
-    $log = Database::startLog('testing');
+    Database::startLog('testing');
 
     db_query('SELECT name FROM {test} WHERE age > :age', array(':age' => 25))->fetchCol();
     db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Ringo'))->fetchCol();
