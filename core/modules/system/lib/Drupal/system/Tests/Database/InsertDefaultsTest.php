@@ -42,7 +42,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
     $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     try {
-      $result = db_insert('test')->execute();
+      db_insert('test')->execute();
       // This is only executed if no exception has been thrown.
       $this->fail('Expected exception NoFieldsException has not been thrown.');
     } catch (NoFieldsException $e) {
