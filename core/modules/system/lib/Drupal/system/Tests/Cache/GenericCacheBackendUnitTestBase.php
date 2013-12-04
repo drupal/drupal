@@ -178,7 +178,6 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
     $backend->delete('test1');
     $this->assertIdentical(FALSE, $backend->get('test1'), "Backend does not contain data for cache id test1 after deletion.");
 
-    $cached = $backend->get('test2');
     $this->assert(is_object($backend->get('test2')), "Backend still has an object for cache id test2.");
 
     $backend->delete('test2');
