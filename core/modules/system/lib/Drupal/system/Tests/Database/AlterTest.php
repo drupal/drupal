@@ -31,14 +31,9 @@ class AlterTest extends DatabaseTestBase {
     $query->addField('test', 'age', 'age');
     $query->addTag('database_test_alter_add_range');
 
-    $result = $query->execute();
+    $result = $query->execute()->fetchAll();
 
-    $num_records = 0;
-    foreach ($result as $record) {
-      $num_records++;
-    }
-
-    $this->assertEqual($num_records, 2, 'Returned the correct number of rows.');
+    $this->assertEqual(count($result), 2, 'Returned the correct number of rows.');
   }
 
   /**
