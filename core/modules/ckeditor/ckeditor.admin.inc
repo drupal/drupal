@@ -21,7 +21,7 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
   $plugins = $variables['plugins'];
   $buttons = array();
   $variables['multiple_buttons'] = array();
-  foreach ($plugins as $plugin => $plugin_buttons) {
+  foreach ($plugins as $plugin_buttons) {
     foreach ($plugin_buttons as $button_name => $button) {
       $button['name'] = $button_name;
       if (!empty($button['multiple'])) {
@@ -59,8 +59,6 @@ function template_preprocess_ckeditor_settings_toolbar(&$variables) {
  * Displays the toolbar configuration for CKEditor.
  */
 function theme_ckeditor_settings_toolbar($variables) {
-  $editor = $variables['editor'];
-  $plugins = $variables['plugins'];
   $rtl = $variables['language_direction'] === 'rtl' ? '_rtl' : '';
 
   $build_button_item = function($button, $rtl) {
@@ -119,7 +117,7 @@ function theme_ckeditor_settings_toolbar($variables) {
   }
   // Assemble list of multiple buttons that may be added multiple times.
   $multiple_buttons = array();
-  foreach ($variables['multiple_buttons'] as $button_name => $button) {
+  foreach ($variables['multiple_buttons'] as $button) {
     $multiple_buttons[] = $build_button_item($button, $rtl);
   }
 
