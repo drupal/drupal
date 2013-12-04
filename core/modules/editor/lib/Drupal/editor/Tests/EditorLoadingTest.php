@@ -79,7 +79,7 @@ class EditorLoadingTest extends WebTestBase {
     // - doesn't have access to the full_html text format, so: no text editor.
     $this->drupalLogin($this->normal_user);
     $this->drupalGet('node/add/article');
-    list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
+    list( , $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
@@ -144,7 +144,7 @@ class EditorLoadingTest extends WebTestBase {
     // The untrusted user tries to edit content that is written in a text format
     // that (s)he is not allowed to use.
     $this->drupalGet('node/1/edit');
-    list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
+    list( , $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
