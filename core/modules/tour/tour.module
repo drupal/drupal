@@ -110,7 +110,6 @@ function tour_preprocess_page(&$variables) {
 
   // @todo replace this with http://drupal.org/node/1918768 once it is committed.
   $path = current_path();
-  $tour_items = array();
   // Load all of the items and match on path.
   $tours = entity_load_multiple('tour');
 
