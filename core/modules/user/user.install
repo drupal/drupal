@@ -141,12 +141,6 @@ function user_schema() {
       'name' => array('name'),
     ),
     'primary key' => array('uid'),
-    'foreign keys' => array(
-      'signature_format' => array(
-        'table' => 'filter_format',
-        'columns' => array('signature_format' => 'format'),
-      ),
-    ),
   );
 
   $schema['users_data'] = array(

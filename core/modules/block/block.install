@@ -281,12 +281,6 @@ function block_update_8008() {
         'indexes' => array(
           'format' => array('format'),
         ),
-        'foreign keys' => array(
-          'format' => array(
-            'table' => 'filter_format',
-            'columns' => array('format' => 'format'),
-          ),
-        ),
       ),
     );
     _update_8003_field_create_field($body_field);

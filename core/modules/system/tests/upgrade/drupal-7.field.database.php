@@ -81,12 +81,6 @@ $field_id = db_insert('field_config')
       'indexes' => array(
         'format' => array(0 => 'format')
       ),
-      'foreign keys' => array(
-        'format' => array(
-          'table' => 'filter_format',
-          'columns' => array('format' => 'format')
-        )
-      )
     )),
     'cardinality' => 1,
     'translatable' => 0,
@@ -248,14 +242,6 @@ $schema = array(
       'test_shared_field_format',
     ),
   ),
-  'foreign keys' => array(
-    'test_shared_field_format' => array(
-      'table' => 'filter_format',
-      'columns' => array(
-        'test_shared_field_format' => 'format',
-      ),
-    ),
-  ),
   'module' => 'field_sql_storage',
   'name' => 'field_data_test_shared_field',
 );
@@ -386,12 +372,6 @@ $field_id = db_insert('field_config')
       'indexes' => array(
         'format' => array(0 => 'format')
       ),
-      'foreign keys' => array(
-        'format' => array(
-          'table' => 'filter_format',
-          'columns' => array('format' => 'format')
-        )
-      )
     )),
     'cardinality' => 1,
     'translatable' => 0,
@@ -518,14 +498,6 @@ db_create_table("field_deleted_data_{$field_id}", array(
       'test_deleted_field_format',
     ),
   ),
-  'foreign keys' => array(
-    'test_deleted_field_format' => array(
-      'table' => 'filter_format',
-      'columns' => array(
-        'test_deleted_field_format' => 'format',
-      ),
-    ),
-  ),
   'module' => 'field_sql_storage',
   'name' => "field_deleted_data_{$field_id}",
 ));
@@ -610,14 +582,6 @@ db_create_table("field_deleted_revision_{$field_id}", array(
     ),
     'test_deleted_field_format' => array(
       'test_deleted_field_format',
-    ),
-  ),
-  'foreign keys' => array(
-    'test_deleted_field_format' => array(
-      'table' => 'filter_format',
-      'columns' => array(
-        'test_deleted_field_format' => 'format',
-      ),
     ),
   ),
   'module' => 'field_sql_storage',

@@ -45,12 +45,6 @@ class TextLongItem extends TextItemBase {
       'indexes' => array(
         'format' => array('format'),
       ),
-      'foreign keys' => array(
-        'format' => array(
-          'table' => 'filter_format',
-          'columns' => array('format' => 'format'),
-        ),
-      ),
     );
   }
 
