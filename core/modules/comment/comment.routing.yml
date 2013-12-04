@@ -32,6 +32,7 @@ comment.approve:
     entity_type: 'comment'
   requirements:
     _entity_access: 'comment.approve'
+    _csrf_token: 'TRUE'
 
 comment.permalink:
   path: '/comment/{comment}'

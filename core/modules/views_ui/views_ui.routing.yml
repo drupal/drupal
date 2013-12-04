@@ -52,6 +52,7 @@ views_ui.operation:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
   requirements:
     _permission: 'administer views'
+    _csrf_token: 'TRUE'
     op: 'enable|disable'
 
 views_ui.clone:

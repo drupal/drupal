@@ -61,6 +61,7 @@ aggregator.feed_refresh:
     _title: 'Update items'
   requirements:
     _permission: 'administer news feeds'
+    _csrf_token: 'TRUE'
 
 aggregator.opml_add:
   path: '/admin/config/services/aggregator/add/opml'

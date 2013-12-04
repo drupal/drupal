@@ -155,7 +155,10 @@ class ViewListController extends ConfigEntityListController implements EntityCon
     foreach (array('enable', 'disable') as $op) {
       if (isset($operations[$op])) {
         $operations[$op]['ajax'] = TRUE;
-        $operations[$op]['query']['token'] = drupal_get_token($op);
+        $operations[$op]['route_name'] = 'views_ui.operation';
+        $operations[$op]['route_parameters'] = array('view' => $entity->id(), 'op' => $op);
+        // @todo Remove this when entity links use route_names.
+        unset($operations[$op]['href']);
       }
     }
 

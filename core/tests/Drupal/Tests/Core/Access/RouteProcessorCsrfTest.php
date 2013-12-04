@@ -72,7 +72,8 @@ class RouteProcessorCsrfTest extends UnitTestCase {
   public function testProcessOutbound() {
     $this->csrfToken->expects($this->once())
       ->method('get')
-      ->with('/test-path')
+      // The leading '/' will be stripped from the path.
+      ->with('test-path')
       ->will($this->returnValue('test_token'));
 
     $route = new Route('/test-path', array(), array('_csrf_token' => 'TRUE'));
@@ -90,7 +91,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
   public function testProcessOutboundDynamicOne() {
     $this->csrfToken->expects($this->once())
       ->method('get')
-      ->with('/test-path/100')
+      ->with('test-path/100')
       ->will($this->returnValue('test_token'));
 
     $route = new Route('/test-path/{slug}', array(), array('_csrf_token' => 'TRUE'));
@@ -105,7 +106,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
   public function testProcessOutboundDynamicTwo() {
     $this->csrfToken->expects($this->once())
       ->method('get')
-      ->with('/100/test-path/test')
+      ->with('100/test-path/test')
       ->will($this->returnValue('test_token'));
 
     $route = new Route('{slug_1}/test-path/{slug_2}', array(), array('_csrf_token' => 'TRUE'));

@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
 
@@ -181,14 +180,8 @@ class ViewsUIController implements ContainerInjectionInterface {
    *   Either returns a rebuilt listing page as an AJAX response, or redirects
    *   back to the listing page.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function ajaxOperation(ViewStorageInterface $view, $op, Request $request) {
-    if (!drupal_valid_token($request->query->get('token'), $op)) {
-      // Throw an access denied exception if the token is invalid or missing.
-      throw new AccessDeniedHttpException();
-    }
-
     // Perform the operation.
     $view->$op()->save();
 

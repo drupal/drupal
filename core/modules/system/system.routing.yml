@@ -257,6 +257,7 @@ system.theme_disable:
     _controller: 'Drupal\system\Controller\ThemeController::disable'
   requirements:
     _permission: 'administer themes'
+    _csrf_token: 'TRUE'
 
 system.theme_enable:
   path: '/admin/appearance/enable'
@@ -264,6 +265,7 @@ system.theme_enable:
     _controller: 'Drupal\system\Controller\ThemeController::enable'
   requirements:
     _permission: 'administer themes'
+    _csrf_token: 'TRUE'
 
 system.status:
   path: '/admin/reports/status'
@@ -318,6 +320,7 @@ system.theme_set_default:
     _content: '\Drupal\system\Controller\SystemController::themeSetDefault'
   requirements:
     _permission: 'administer themes'
+    _csrf_token: 'TRUE'
 
 system.theme_settings:
   path: '/admin/appearance/settings'

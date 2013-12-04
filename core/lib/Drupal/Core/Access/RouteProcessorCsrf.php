@@ -39,7 +39,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface {
    */
   public function processOutbound(Route $route, array &$parameters) {
     if ($route->hasRequirement('_csrf_token')) {
-      $path = $route->getPath();
+      $path = ltrim($route->getPath(), '/');
       // Replace the path parameters with values from the parameters array.
       foreach ($parameters as $param => $value) {
         $path = str_replace("{{$param}}", $value, $path);

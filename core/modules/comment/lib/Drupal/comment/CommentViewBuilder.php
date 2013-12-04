@@ -234,9 +234,9 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
       if ($entity->status->value == COMMENT_NOT_PUBLISHED && $entity->access('approve')) {
         $links['comment-approve'] = array(
           'title' => t('Approve'),
-          'href' => "comment/{$entity->id()}/approve",
+          'route_name' => 'comment.approve',
+          'route_parameters' => array('comment' => $entity->id()),
           'html' => TRUE,
-          'query' => array('token' => $container->get('csrf_token')->get("comment/{$entity->id()}/approve")),
         );
       }
       if (empty($links)) {

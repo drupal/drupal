@@ -60,9 +60,8 @@ class ThemeController implements ContainerInjectionInterface {
    */
   public function disable(Request $request) {
     $theme = $request->get('theme');
-    $token = $request->get('token');
 
-    if (isset($theme) && isset($token) && drupal_valid_token($token, 'system-theme-operation-link')) {
+    if (isset($theme)) {
       // Get current list of themes.
       $themes = list_themes();
 
@@ -102,9 +101,8 @@ class ThemeController implements ContainerInjectionInterface {
    */
   public function enable(Request $request) {
     $theme = $request->get('theme');
-    $token = $request->get('token');
 
-    if (isset($theme) && isset($token) && drupal_valid_token($token, 'system-theme-operation-link')) {
+    if (isset($theme)) {
       // Get current list of themes.
       $themes = list_themes(TRUE);
 

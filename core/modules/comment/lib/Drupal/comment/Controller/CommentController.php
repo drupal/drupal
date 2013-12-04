@@ -10,7 +10,6 @@ namespace Drupal\comment\Controller;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\field\FieldInfo;
-use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -38,13 +37,6 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
   protected $httpKernel;
 
   /**
-   * The CSRF token manager service.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
    * The current user service.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -70,8 +62,6 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   HTTP kernel to handle requests.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
-   *   The CSRF token manager service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user service.
    * @param \Drupal\field\FieldInfo $field_info
@@ -79,9 +69,8 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
    * @param \Drupal\comment\CommentManagerInterface $comment_manager
    *   The comment manager service.
    */
-  public function __construct(HttpKernelInterface $httpKernel, CsrfTokenGenerator $csrf_token, AccountInterface $current_user, FieldInfo $field_info, CommentManagerInterface $comment_manager) {
+  public function __construct(HttpKernelInterface $httpKernel, AccountInterface $current_user, FieldInfo $field_info, CommentManagerInterface $comment_manager) {
     $this->httpKernel = $httpKernel;
-    $this->csrfToken = $csrf_token;
     $this->currentUser = $current_user;
     $this->fieldInfo = $field_info;
     $this->commentManager = $comment_manager;
@@ -93,7 +82,6 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('http_kernel'),
-      $container->get('csrf_token'),
       $container->get('current_user'),
       $container->get('field.info'),
       $container->get('comment.manager')
@@ -103,24 +91,12 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
   /**
    * Publishes the specified comment.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
    * @param \Drupal\comment\CommentInterface $comment
    *   A comment entity.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    * @return \Symfony\Component\HttpFoundation\RedirectResponse.
    */
-  public function commentApprove(Request $request, CommentInterface $comment) {
-    // @todo CRSF tokens are validated in the content controller until it gets
-    //   moved to the access layer:
-    //   Integrate CSRF link token directly into routing system:
-    //   https://drupal.org/node/1798296.
-    $token = $request->query->get('token');
-    if (!isset($token) || !$this->csrfToken->validate($token, 'comment/' . $comment->id() . '/approve')) {
-      throw new AccessDeniedHttpException();
-    }
-
+  public function commentApprove(CommentInterface $comment) {
     $comment->status->value = COMMENT_PUBLISHED;
     $comment->save();
 

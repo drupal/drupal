@@ -64,7 +64,6 @@ function system_themes_page() {
       // Confirm that the theme engine is available.
       $theme->incompatible_engine = (isset($theme->info['engine']) && !isset($theme->owner));
     }
-    $query['token'] = drupal_get_token('system-theme-operation-link');
     $theme->operations = array();
     if (!empty($theme->status) || !$theme->incompatible_core && !$theme->incompatible_php && !$theme->incompatible_base && !$theme->incompatible_engine) {
       // Create the operations links.
@@ -81,14 +80,14 @@ function system_themes_page() {
           if ($theme->name != $admin_theme) {
             $theme->operations[] = array(
               'title' => t('Disable'),
-              'href' => 'admin/appearance/disable',
+              'route_name' => 'system.theme_disable',
               'query' => $query,
               'attributes' => array('title' => t('Disable !theme theme', array('!theme' => $theme->info['name']))),
             );
           }
           $theme->operations[] = array(
             'title' => t('Set default'),
-            'href' => 'admin/appearance/default',
+            'route_name' => 'system.theme_set_default',
             'query' => $query,
             'attributes' => array('title' => t('Set !theme as default theme', array('!theme' => $theme->info['name']))),
           );
@@ -98,13 +97,13 @@ function system_themes_page() {
       else {
         $theme->operations[] = array(
           'title' => t('Enable'),
-          'href' => 'admin/appearance/enable',
+          'route_name' => 'system.theme_enable',
           'query' => $query,
           'attributes' => array('title' => t('Enable !theme theme', array('!theme' => $theme->info['name']))),
         );
         $theme->operations[] = array(
           'title' => t('Enable and set default'),
-          'href' => 'admin/appearance/default',
+          'route_name' => 'system.theme_set_default',
           'query' => $query,
           'attributes' => array('title' => t('Enable !theme as default theme', array('!theme' => $theme->info['name']))),
         );
@@ -191,8 +190,7 @@ function system_themes_admin_form_submit($form, &$form_state) {
 function system_theme_default() {
   $request = \Drupal::request();
   $theme = $request->get('theme');
-  $token = $request->get('token');
-  if (!empty($theme) && !empty($token) && drupal_valid_token($token, 'system-theme-operation-link')) {
+  if (!empty($theme)) {
     // Get current list of themes.
     $themes = list_themes();
 

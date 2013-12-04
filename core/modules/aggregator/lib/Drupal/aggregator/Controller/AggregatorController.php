@@ -142,8 +142,6 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    *
    * @param \Drupal\aggregator\FeedInterface $aggregator_feed
    *   An object describing the feed to be refreshed.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request object containing the search string.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirection to the admin overview page.
@@ -151,15 +149,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If the query token is missing or invalid.
    */
-  public function feedRefresh(FeedInterface $aggregator_feed, Request $request) {
-    // @todo CSRF tokens are validated in page callbacks rather than access
-    //   callbacks, because access callbacks are also invoked during menu link
-    //   generation. Add token support to routing: http://drupal.org/node/755584.
-    $token = $request->query->get('token');
-    if (!isset($token) || !drupal_valid_token($token, 'aggregator/update/' . $aggregator_feed->id())) {
-      throw new AccessDeniedHttpException();
-    }
-
+  public function feedRefresh(FeedInterface $aggregator_feed) {
     // @todo after https://drupal.org/node/1972246 find a new place for it.
     aggregator_refresh($aggregator_feed);
     return $this->redirect('aggregator.admin_overview');
@@ -202,7 +192,6 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
         'title' => $this->t('Update items'),
         'route_name' => 'aggregator.feed_refresh',
         'route_parameters' => array('aggregator_feed' => $feed->fid),
-        'query' => array('token' => drupal_get_token("aggregator/update/$feed->fid")),
       );
       $row[] = array(
         'data' => array(
