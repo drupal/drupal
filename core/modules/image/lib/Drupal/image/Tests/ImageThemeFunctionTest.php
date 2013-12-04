@@ -93,7 +93,6 @@ class ImageThemeFunctionTest extends WebTestBase {
     $style->save();
     $url = $style->buildUrl($original_uri);
 
-    $path = $this->randomName();
     $element = array(
       '#theme' => 'image_style',
       '#style_name' => 'image_test',
