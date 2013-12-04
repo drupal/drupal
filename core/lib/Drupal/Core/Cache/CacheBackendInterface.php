@@ -20,20 +20,20 @@ namespace Drupal\Core\Cache;
  * Drupal\Core\Cache\CacheBackendInterface was called MyCustomCache, the
  * following line would make Drupal use it for the 'cache_page' bin:
  * @code
- *  $conf['cache_classes']['cache_page'] = 'MyCustomCache';
+ *  $settings['cache_classes']['cache_page'] = 'MyCustomCache';
  * @endcode
  *
  * Additionally, you can register your cache implementation to be used by
- * default for all cache bins by setting the $conf['cache_classes'] variable and
+ * default for all cache bins by setting the $settings['cache_classes'] variable and
  * changing the value of the 'cache' key to the name of your implementation of
  * the Drupal\Core\Cache\CacheBackendInterface, e.g.
  * @code
- *  $conf['cache_classes']['cache'] = 'MyCustomCache';
+ *  $settings['cache_classes']['cache'] = 'MyCustomCache';
  * @endcode
  *
  * To implement a completely custom cache bin, use the same variable format:
  * @code
- *  $conf['cache_classes']['custom_bin'] = 'MyCustomCache';
+ *  $settings['cache_classes']['custom_bin'] = 'MyCustomCache';
  * @endcode
  * To access your custom cache bin, specify the name of the bin when storing
  * or retrieving cached data:
