@@ -100,7 +100,8 @@ const LANGUAGE_NEGOTIATION_INTERFACE = 'language-interface';
  *   $langcode = language_from_url($languages);
  *
  *   // If we are on an administrative path, override with the default language.
- *   if (isset($_GET['q']) && strtok($_GET['q'], '/') == 'admin') {
+ *   $query = \Drupal::request()->query;
+ *   if ($query->has('q') && strtok($query->get('q'), '/') == 'admin') {
  *     return language_default()->id;
  *   }
  *   return $langcode;

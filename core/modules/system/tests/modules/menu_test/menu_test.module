@@ -11,7 +11,7 @@ use Drupal\menu_link\Entity\MenuLink;
  * Implements hook_menu().
  */
 function menu_test_menu() {
-  // The name of the menu changes during the course of the test. Using a $_GET.
+  // The name of the menu changes during the course of the test. Using a GET.
   $items['menu_name_test'] = array(
     'title' => 'Test menu_name router item',
     'route_name' => 'menu_test.menu_name_test',

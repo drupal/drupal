@@ -106,8 +106,8 @@ class ViewAjaxController implements ContainerInjectionInterface {
           $request->attributes->set('_system_path', $path);
         }
 
-        // Add all $_POST data, because AJAX is always a post and many things,
-        // such as tablesorts, exposed filters and paging assume $_GET.
+        // Add all POST data, because AJAX is always a post and many things,
+        // such as tablesorts, exposed filters and paging assume GET.
         $request_all = $request->request->all();
         $query_all = $request->query->all();
         $request->query->replace($request_all + $query_all);

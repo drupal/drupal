@@ -6,13 +6,6 @@
  */
 
 /**
- * Auto-detect appropriate line endings for e-mails.
- *
- * $settings['mail_line_endings'] will override this setting.
- */
-define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') !== FALSE ? "\r\n" : "\n");
-
-/**
  * Composes and optionally sends an e-mail message.
  *
  * Sending an e-mail works with defining an e-mail template (subject, text
@@ -431,7 +424,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
       if (isset($casing)) {
         $chunk = $casing($chunk);
       }
-      $line_endings = settings()->get('mail_line_endings', MAIL_LINE_ENDINGS);
+      $line_endings = settings()->get('mail_line_endings', PHP_EOL);
       // Format it and apply the current indentation.
       $output .= drupal_wrap_mail($chunk, implode('', $indent)) . $line_endings;
       // Remove non-quotation markers from indentation.

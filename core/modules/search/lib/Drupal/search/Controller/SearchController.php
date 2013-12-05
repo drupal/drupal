@@ -72,8 +72,8 @@ class SearchController extends ControllerBase implements ContainerInjectionInter
   public function view(Request $request, $plugin_id = NULL, $keys = NULL) {
     $info = FALSE;
     $keys = trim($keys);
-    // Also try to pull search keywords out of the $_REQUEST variable to
-    // support old GET format of searches for existing links.
+    // Also try to pull search keywords from the request to support old GET
+    // format of searches for existing links.
     if (!$keys && $request->query->has('keys')) {
       $keys = trim($request->query->get('keys'));
     }
@@ -105,11 +105,11 @@ class SearchController extends ControllerBase implements ContainerInjectionInter
     // Default results output is an empty string.
     $results = array('#markup' => '');
 
-    // Process the search form. Note that if there is $_POST data,
-    // search_form_submit() will cause a redirect to search/[path]/[keys],
-    // which will get us back to this page callback. In other words, the search
-    // form submits with POST but redirects to GET. This way we can keep
-    // the search query URL clean as a whistle.
+    // Process the search form. Note that if there is
+    // \Drupal::request()->request data, search_form_submit() will cause a
+    // redirect to search/[path]/[keys], which will get us back to this page
+    // callback. In other words, the search form submits with POST but redirects
+    // to GET. This way we can keep the search query URL clean as a whistle.
     if ($request->request->has('form_id') || $request->request->get('form_id') != 'search_form') {
       // Only search if there are keywords or non-empty conditions.
       if ($plugin->isSearchExecutable()) {

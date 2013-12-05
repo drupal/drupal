@@ -339,10 +339,10 @@ function views_ui_build_form_path($form_state) {
  * #process callback for a button; determines if a button is the form's triggering element.
  *
  * The Form API has logic to determine the form's triggering element based on
- * the data in $_POST. However, it only checks buttons based on a single #value
+ * the data in POST. However, it only checks buttons based on a single #value
  * per button. This function may be added to a button's #process callbacks to
  * extend button click detection to support multiple #values per button. If the
- * data in $_POST matches any value in the button's #values array, then the
+ * data in POST matches any value in the button's #values array, then the
  * button is detected as having been clicked. This can be used when the value
  * (label) of the same logical button may be different based on context (e.g.,
  * "Apply" vs. "Apply and continue").

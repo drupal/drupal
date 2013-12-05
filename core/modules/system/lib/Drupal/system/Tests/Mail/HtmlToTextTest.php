@@ -348,7 +348,7 @@ class HtmlToTextTest extends WebTestBase {
   public function testVeryLongLineWrap() {
     $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</><br />Drupal';
     $output = drupal_html_to_text($input);
-    $eol = settings()->get('mail_line_endings', MAIL_LINE_ENDINGS);
+    $eol = settings()->get('mail_line_endings', PHP_EOL);
 
     $maximum_line_length = 0;
     foreach (explode($eol, $output) as $line) {

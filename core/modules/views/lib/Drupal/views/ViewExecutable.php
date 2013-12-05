@@ -556,7 +556,7 @@ class ViewExecutable {
 
   /**
    * Set the exposed filters input to an array. If unset they will be taken
-   * from $_GET when the time comes.
+   * from \Drupal::request()->query when the time comes.
    */
   public function setExposedInput($filters) {
     $this->exposed_input = $filters;
@@ -566,8 +566,8 @@ class ViewExecutable {
    * Figure out what the exposed input for this view is.
    */
   public function getExposedInput() {
-    // Fill our input either from $_GET or from something previously set on the
-    // view.
+    // Fill our input either from \Drupal::request()->query or from something
+    // previously set on the view.
     if (empty($this->exposed_input)) {
       $this->exposed_input = \Drupal::request()->query->all();
       // unset items that are definitely not our input:

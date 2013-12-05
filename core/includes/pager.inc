@@ -16,13 +16,13 @@ use Drupal\Component\Utility\Url;
  *
  * @return
  *  The number of the current requested page, within the pager represented by
- *  $element. This is determined from the URL query parameter $_GET['page'], or
- *  0 by default. Note that this number may differ from the actual page being
- *  displayed. For example, if a search for "example text" brings up three
- *  pages of results, but a users visits search/node/example+text?page=10, this
- *  function will return 10, even though the default pager implementation
- *  adjusts for this and still displays the third page of search results at
- *  that URL.
+ *  $element. This is determined from the URL query parameter
+ *  \Drupal::request()->query->get('page'), or 0 by default. Note that this
+ *  number may differ from the actual page being displayed. For example, if a
+ *  search for "example text" brings up three pages of results, but a users
+ *  visits search/node/example+text?page=10, this function will return 10, even
+ *  though the default pager implementation adjusts for this and still displays
+ * the third page of search results at that URL.
  *
  * @see pager_default_initialize()
  */
@@ -109,10 +109,11 @@ function pager_find_page($element = 0) {
  *
  * @return
  *   The number of the current page, within the pager represented by $element.
- *   This is determined from the URL query parameter $_GET['page'], or 0 by
- *   default. However, if a page that does not correspond to the actual range
- *   of the result set was requested, this function will return the closest
- *   page actually within the result set.
+ *   This is determined from the URL query parameter
+ *   \Drupal::request()->query->get('page), or 0 by default. However, if a page
+ *   that does not correspond to the actual range of the result set was
+ *   requested, this function will return the closest page actually within the
+ *   result set.
  */
 function pager_default_initialize($total, $limit, $element = 0) {
   global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;

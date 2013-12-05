@@ -1100,7 +1100,7 @@ function views_exposed_form($form, &$form_state) {
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
-    // Prevent from showing up in $_GET.
+    // Prevent from showing up in \Drupal::request()->query.
     '#name' => '',
     '#type' => 'submit',
     '#value' => t('Apply'),

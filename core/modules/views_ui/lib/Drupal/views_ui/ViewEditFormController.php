@@ -292,9 +292,6 @@ class ViewEditFormController extends ViewFormControllerBase {
         if (($display->getPluginId() == 'page') && ($old_path == $destination) && ($old_path != $view->getExecutable()->displayHandlers->get($id)->getOption('path'))) {
           $destination = $view->getExecutable()->displayHandlers->get($id)->getOption('path');
           $query->remove('destination');
-          // @todo For whatever reason drupal_goto is still using $_GET.
-          // @see http://drupal.org/node/1668866
-          unset($_GET['destination']);
         }
       }
       $form_state['redirect'] = $destination;
