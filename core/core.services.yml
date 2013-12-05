@@ -173,6 +173,9 @@ services:
   default_plugin_manager:
     abstract: true
     arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+  theme_handler:
+    class: Drupal\Core\Extension\ThemeHandler
+    arguments: ['@config.factory', '@module_handler', '@cache.cache', '@info_parser', '@router.builder']
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager', '@string_translation']

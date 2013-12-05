@@ -2461,117 +2461,11 @@ function system_rebuild_module_data() {
  *
  * @return
  *   An associative array of themes information.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal::service('theme_handler')->rebuildThemeData().
  */
 function _system_rebuild_theme_data() {
-  // Find themes
-  $themes = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'themes');
-  // Allow modules to add further themes.
-  if ($module_themes = \Drupal::moduleHandler()->invokeAll('system_theme_info')) {
-    foreach ($module_themes as $name => $uri) {
-      // @see file_scan_directory()
-      $themes[$name] = (object) array(
-        'uri' => $uri,
-        'filename' => pathinfo($uri, PATHINFO_FILENAME),
-        'name' => $name,
-      );
-    }
-  }
-
-  // Find theme engines
-  $engines = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.engine$/', 'themes/engines');
-
-  // Set defaults for theme info.
-  $defaults = array(
-    'engine' => 'twig',
-    'regions' => array(
-      'sidebar_first' => 'Left sidebar',
-      'sidebar_second' => 'Right sidebar',
-      'content' => 'Content',
-      'header' => 'Header',
-      'footer' => 'Footer',
-      'highlighted' => 'Highlighted',
-      'help' => 'Help',
-      'page_top' => 'Page top',
-      'page_bottom' => 'Page bottom',
-    ),
-    'description' => '',
-    'features' => _system_default_theme_features(),
-    'screenshot' => 'screenshot.png',
-    'php' => DRUPAL_MINIMUM_PHP,
-    'stylesheets' => array(),
-    'scripts' => array(),
-  );
-
-  $sub_themes = array();
-  // Read info files for each theme
-  foreach ($themes as $key => $theme) {
-    $themes[$key]->filename = $theme->uri;
-    $themes[$key]->info = \Drupal::service('info_parser')->parse($theme->uri) + $defaults;
-
-    // Skip this extension if its type is not theme.
-    if (!isset($themes[$key]->info['type']) || $themes[$key]->info['type'] != 'theme') {
-      unset($themes[$key]);
-      continue;
-    }
-
-    // Add the info file modification time, so it becomes available for
-    // contributed modules to use for ordering theme lists.
-    $themes[$key]->info['mtime'] = filemtime($theme->uri);
-
-    // Invoke hook_system_info_alter() to give installed modules a chance to
-    // modify the data in the .info.yml files if necessary.
-    $type = 'theme';
-    drupal_alter('system_info', $themes[$key]->info, $themes[$key], $type);
-
-    if (!empty($themes[$key]->info['base theme'])) {
-      $sub_themes[] = $key;
-    }
-
-    $engine = $themes[$key]->info['engine'];
-    if (isset($engines[$engine])) {
-      $themes[$key]->owner = $engines[$engine]->uri;
-      $themes[$key]->prefix = $engines[$engine]->name;
-      $themes[$key]->template = TRUE;
-    }
-
-    // Prefix stylesheets and scripts with module path.
-    $path = dirname($theme->uri);
-    $theme->info['stylesheets'] = _system_info_add_path($theme->info['stylesheets'], $path);
-    $theme->info['scripts'] = _system_info_add_path($theme->info['scripts'], $path);
-
-    // Give the screenshot proper path information.
-    if (!empty($themes[$key]->info['screenshot'])) {
-      $themes[$key]->info['screenshot'] = $path . '/' . $themes[$key]->info['screenshot'];
-    }
-  }
-
-  // Now that we've established all our master themes, go back and fill in data
-  // for subthemes.
-  foreach ($sub_themes as $key) {
-    $themes[$key]->base_themes = drupal_find_base_themes($themes, $key);
-    // Don't proceed if there was a problem with the root base theme.
-    if (!current($themes[$key]->base_themes)) {
-      continue;
-    }
-    $base_key = key($themes[$key]->base_themes);
-    foreach (array_keys($themes[$key]->base_themes) as $base_theme) {
-      $themes[$base_theme]->sub_themes[$key] = $themes[$key]->info['name'];
-    }
-    // Copy the 'owner' and 'engine' over if the top level theme uses a theme
-    // engine.
-    if (isset($themes[$base_key]->owner)) {
-      if (isset($themes[$base_key]->info['engine'])) {
-        $themes[$key]->info['engine'] = $themes[$base_key]->info['engine'];
-        $themes[$key]->owner = $themes[$base_key]->owner;
-        $themes[$key]->prefix = $themes[$base_key]->prefix;
-      }
-      else {
-        $themes[$key]->prefix = $key;
-      }
-    }
-  }
-
-  return $themes;
+  return \Drupal::service('theme_handler')->rebuildThemeData();
 }
 
 /**
@@ -2605,41 +2499,6 @@ function system_rebuild_theme_data() {
   \Drupal::state()->set('system.theme.files', $files);
 
   return $themes;
-}
-
-/**
- * Prefixes all values in an .info.yml file array with a given path.
- *
- * This helper function is mainly used to prefix all array values of an
- * .info.yml file property with a single given path (to the module or theme);
- * e.g., to prefix all values of the 'stylesheets' or 'scripts' properties with
- * the file path to the defining module/theme.
- *
- * @param $info
- *   A nested array of data of an .info.yml file to be processed.
- * @param $path
- *   A file path to prepend to each value in $info.
- *
- * @return
- *   The $info array with prefixed values.
- *
- * @see _system_rebuild_module_data()
- * @see _system_rebuild_theme_data()
- */
-function _system_info_add_path($info, $path) {
-  foreach ($info as $key => $value) {
-    // Recurse into nested values until we reach the deepest level.
-    if (is_array($value)) {
-      $info[$key] = _system_info_add_path($info[$key], $path);
-    }
-    // Unset the original value's key and set the new value with prefix, using
-    // the original value as key, so original values can still be looked up.
-    else {
-      unset($info[$key]);
-      $info[$value] = $path . '/' . $value;
-    }
-  }
-  return $info;
 }
 
 /**

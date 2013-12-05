@@ -9,6 +9,7 @@ namespace Drupal\Core\DependencyInjection;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * ServiceProvider class for update.php service overrides.
@@ -38,6 +39,12 @@ class UpdateServiceProvider implements ServiceProviderInterface {
       ->register("cache_factory", 'Drupal\Core\Cache\MemoryBackendFactory');
     $container
       ->register('router.builder', 'Drupal\Core\Routing\RouteBuilderStatic');
+
+    $container->register('theme_handler', 'Drupal\Core\Extension\ThemeHandler')
+      ->addArgument(new Reference('config.factory'))
+      ->addArgument(new Reference('module_handler'))
+      ->addArgument(new Reference('cache.cache'))
+      ->addArgument(new Reference('info_parser'));
   }
 
 }

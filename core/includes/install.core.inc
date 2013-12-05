@@ -484,7 +484,14 @@ function install_begin_request(&$install_state) {
 
     // Register the info parser.
     $container->register('info_parser', 'Drupal\Core\Extension\InfoParser');
+
+    $container->register('theme_handler', 'Drupal\Core\Extension\ThemeHandler')
+      ->addArgument(new Reference('config.factory'))
+      ->addArgument(new Reference('module_handler'))
+      ->addArgument(new Reference('cache.cache'))
+      ->addArgument(new Reference('info_parser'));
   }
+
   // Set the request in the kernel to the new created Request above
   // so it is available to the rest of the installation process.
   $container->set('request', $request);
