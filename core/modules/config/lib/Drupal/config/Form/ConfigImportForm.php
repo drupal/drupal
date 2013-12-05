@@ -74,12 +74,11 @@ class ConfigImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
-    $file_upload = $this->getRequest()->files->get('files[import_tarball]', NULL, TRUE);
-    if ($file_upload && $file_upload->isValid()) {
-      $form_state['values']['import_tarball'] = $file_upload->getRealPath();
+    if (!empty($_FILES['files']['error']['import_tarball'])) {
+      form_set_error('import_tarball', $form_state, $this->t('The import tarball could not be uploaded.'));
     }
     else {
-      form_set_error('import_tarball', $form_state, $this->t('The import tarball could not be uploaded.'));
+      $form_state['values']['import_tarball'] = $_FILES['files']['tmp_name']['import_tarball'];
     }
   }
 

@@ -33,8 +33,8 @@ class EditorImageDialog extends FormBase {
    *   The filter format for which this dialog corresponds.
    */
   public function buildForm(array $form, array &$form_state, FilterFormat $filter_format = NULL) {
-    // The default values are set directly from \Drupal::request()->request,
-    // provided by the editor plugin opening the dialog.
+    // The default values are set directly from $_POST, provided by the
+    // editor plugin opening the dialog.
     if (!isset($form_state['image_element'])) {
       $form_state['image_element'] = isset($form_state['input']['editor_object']) ? $form_state['input']['editor_object'] : array();
     }

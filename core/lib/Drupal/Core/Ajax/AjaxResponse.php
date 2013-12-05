@@ -95,11 +95,10 @@ class AjaxResponse extends JsonResponse {
     // diffing logic using array_diff_key().
     $ajax_page_state = $request->request->get('ajax_page_state');
     foreach (array('css', 'js') as $type) {
-      // It is highly suspicious if
-      // $request->request->get("ajax_page_state[$type]") is empty, since the
-      // base page ought to have at least one JS file and one CSS file loaded.
-      // It probably indicates an error, and rather than making the page reload
-      // all of the files, instead we return no new files.
+      // It is highly suspicious if $_POST['ajax_page_state'][$type] is empty,
+      // since the base page ought to have at least one JS file and one CSS file
+      // loaded. It probably indicates an error, and rather than making the page
+      // reload all of the files, instead we return no new files.
       if (empty($ajax_page_state[$type])) {
         $items[$type] = array();
       }

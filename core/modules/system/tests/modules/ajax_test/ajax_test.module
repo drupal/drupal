@@ -78,9 +78,8 @@ function ajax_test_order() {
  */
 function ajax_test_error() {
   $message = '';
-  $query = \Drupal::request()->query;
-  if ($query->has('message')) {
-    $message = $query->get('message');
+  if (!empty($_GET['message'])) {
+    $message = $_GET['message'];
   }
   $response = new AjaxResponse();
   $response->addCommand(new AlertCommand($message));

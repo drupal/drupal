@@ -457,28 +457,25 @@ function config_get_config_directory($type = CONFIG_ACTIVE_DIRECTORY) {
  * 'REMOTE_ADDR' key.
  *
  * @param $variables
- *   (optional) An associative array of variables within
- *   \Drupal::request()->server that should be replaced. If the special element
- *   'url' is provided in this array, it will be used to populate some of the
- *   server defaults; it should be set to the URL of the current page request,
- *   excluding any GET request but including the script name
- *   (e.g., http://www.example.com/mysite/index.php).
+ *   (optional) An associative array of variables within $_SERVER that should
+ *   be replaced. If the special element 'url' is provided in this array, it
+ *   will be used to populate some of the server defaults; it should be set to
+ *   the URL of the current page request, excluding any $_GET request but
+ *   including the script name (e.g., http://www.example.com/mysite/index.php).
  *
  * @see conf_path()
  * @see request_uri()
  * @see \Symfony\Component\HttpFoundation\Request::getClientIP()
  */
 function drupal_override_server_variables($variables = array()) {
-  $request = \Drupal::request();
-  $server_vars = $request->server->all();
   // Allow the provided URL to override any existing values in $_SERVER.
   if (isset($variables['url'])) {
     $url = parse_url($variables['url']);
     if (isset($url['host'])) {
-      $server_vars['HTTP_HOST'] = $url['host'];
+      $_SERVER['HTTP_HOST'] = $url['host'];
     }
     if (isset($url['path'])) {
-      $server_vars['SCRIPT_NAME'] = $url['path'];
+      $_SERVER['SCRIPT_NAME'] = $url['path'];
     }
     unset($variables['url']);
   }
@@ -495,7 +492,7 @@ function drupal_override_server_variables($variables = array()) {
     'HTTP_USER_AGENT' => NULL,
   );
   // Replace elements of the $_SERVER array, as appropriate.
-  $request->server->replace($variables + $server_vars + $defaults);
+  $_SERVER = $variables + $_SERVER + $defaults;
 }
 
 /**

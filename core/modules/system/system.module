@@ -2733,7 +2733,7 @@ function system_default_region($theme) {
 function system_admin_compact_mode() {
   // PHP converts dots into underscores in cookie names to avoid problems with
   // its parser, so we use a converted cookie name.
-  return \Drupal::request()->cookies->get('Drupal_visitor_admin_compact_mode', \Drupal::config('system.site')->get('admin_compact_mode'));
+  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : \Drupal::config('system.site')->get('admin_compact_mode');
 }
 
 /**

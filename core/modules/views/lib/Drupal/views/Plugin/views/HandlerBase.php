@@ -446,7 +446,7 @@ abstract class HandlerBase extends PluginBase {
     $this->buildExposeForm($form, $form_state);
 
     // When we click the expose button, we add new gadgets to the form but they
-    // have no data in POST so their defaults get wiped out. This prevents
+    // have no data in $_POST so their defaults get wiped out. This prevents
     // these defaults from getting wiped out. This setting will only be TRUE
     // during a 2nd pass rerender.
     if (!empty($form_state['force_expose_options'])) {

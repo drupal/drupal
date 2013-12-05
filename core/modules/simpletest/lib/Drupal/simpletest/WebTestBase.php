@@ -1139,16 +1139,13 @@ abstract class WebTestBase extends TestBase {
     // debug the code running on the child site. In order to make debuggers work
     // this bit of information is forwarded. Make sure that the debugger listens
     // to at least three external connections.
-    $request = \Drupal::request();
-    $cookie_params = $request->cookies;
-    if ($cookie_params->has('XDEBUG_SESSION')) {
-      $cookies[] = 'XDEBUG_SESSION=' . $cookie_params->get('XDEBUG_SESSION');
+    if (isset($_COOKIE['XDEBUG_SESSION'])) {
+      $cookies[] = 'XDEBUG_SESSION=' . $_COOKIE['XDEBUG_SESSION'];
     }
     // For CLI requests, the information is stored in $_SERVER.
-    $server = $request->server;
-    if ($server->has('XDEBUG_CONFIG')) {
+    if (isset($_SERVER['XDEBUG_CONFIG'])) {
       // $_SERVER['XDEBUG_CONFIG'] has the form "key1=value1 key2=value2 ...".
-      $pairs = explode(' ', $server->get('XDEBUG_CONFIG'));
+      $pairs = explode(' ', $_SERVER['XDEBUG_CONFIG']);
       foreach ($pairs as $pair) {
         list($key, $value) = explode('=', $pair);
         // Account for key-value pairs being separated by multiple spaces.

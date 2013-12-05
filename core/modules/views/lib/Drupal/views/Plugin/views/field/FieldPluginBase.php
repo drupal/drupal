@@ -1484,7 +1484,7 @@ abstract class FieldPluginBase extends HandlerBase {
       $tokens['!' . $count] = isset($this->view->args[$count - 1]) ? strip_tags(decode_entities($this->view->args[$count - 1])) : '';
     }
 
-    // Get flattened set of tokens for any array depth in query parameters.
+    // Get flattened set of tokens for any array depth in $_GET parameters.
     $tokens += $this->getTokenValuesRecursive(\Drupal::request()->query->all());
 
     // Now add replacements for our fields.
