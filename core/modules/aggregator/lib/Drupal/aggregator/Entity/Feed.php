@@ -200,7 +200,6 @@ class Feed extends ContentEntityBase implements FeedInterface {
    * {@inheritdoc}
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    $storage_controller->deleteCategories($entities);
     foreach ($entities as $entity) {
       // Notify processors to remove stored items.
       $manager = \Drupal::service('plugin.manager.aggregator.processor');
@@ -224,26 +223,6 @@ class Feed extends ContentEntityBase implements FeedInterface {
         $block_storage = \Drupal::entityManager()->getStorageController('block');
         $block_storage->delete($block_storage->loadMultiple($ids));
       }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
-    parent::preSave($storage_controller);
-
-    $storage_controller->deleteCategories(array($this->id() => $this));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = FALSE) {
-    parent::postSave($storage_controller, $update);
-
-    if (!empty($this->categories)) {
-      $storage_controller->saveCategories($this, $this->categories);
     }
   }
 

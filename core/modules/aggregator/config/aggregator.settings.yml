@@ -8,4 +8,3 @@ items:
   expire: 9676800
 source:
   list_max: 3
-  category_selector: checkboxes

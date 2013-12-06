@@ -10,7 +10,6 @@ namespace Drupal\aggregator\Controller;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\aggregator\CategoryStorageControllerInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\aggregator\ItemInterface;
 use Drupal\Core\Database\Connection;
@@ -32,23 +31,13 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
   protected $database;
 
   /**
-   * The category storage controller.
-   *
-   * @var \Drupal\aggregator\CategoryStorageControllerInterface
-   */
-  protected $categoryStorage;
-
-  /**
    * Constructs a \Drupal\aggregator\Controller\AggregatorController object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
-   * @param \Drupal\aggregator\CategoryStorageControllerInterface $category_storage
-   *   The category storage service.
    */
-  public function __construct(Connection $database, CategoryStorageControllerInterface $category_storage) {
+  public function __construct(Connection $database) {
     $this->database = $database;
-    $this->categoryStorage = $category_storage;
   }
 
   /**
@@ -56,8 +45,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('database'),
-      $container->get('aggregator.category.storage')
+      $container->get('database')
     );
   }
 
@@ -93,21 +81,6 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
     $items = $entity_manager->getStorageController('aggregator_item')->loadByFeed($aggregator_feed->id());
     // Print the feed items.
     $build = $this->buildPageList($items, $feed_source);
-    return $build;
-  }
-
-  /**
-   * Displays feed items aggregated in a category.
-   *
-   * @param int $cid
-   *   The category id for which to list all of the aggregated items.
-   *
-   * @return array
-   *   The render array with list of items for the feed.
-   */
-  public function viewCategory($cid) {
-    $items = $this->entityManager()->getStorageController('aggregator_item')->loadByCategory($cid);
-    $build = $this->buildPageList($items);
     return $build;
   }
 
@@ -209,75 +182,6 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
       '#empty' => $this->t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => $this->urlGenerator()->generateFromPath('admin/config/services/aggregator/add/feed'))),
     );
 
-    $result = $this->database->query('SELECT c.cid, c.title, COUNT(ci.iid) as items FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid GROUP BY c.cid, c.title ORDER BY title');
-
-    $header = array($this->t('Title'), $this->t('Items'), $this->t('Operations'));
-    $rows = array();
-    foreach ($result as $category) {
-      $row = array();
-      $row[] = l($category->title, "aggregator/categories/$category->cid");
-      $row[] = format_plural($category->items, '1 item', '@count items');
-      $links = array();
-      $links['edit'] = array(
-        'title' => $this->t('Edit'),
-        'route_name' => 'aggregator.category_admin_edit',
-        'route_parameters' => array('cid' => $category->cid),
-      );
-      $links['delete'] = array(
-        'title' => $this->t('Delete'),
-        'route_name' => 'aggregator.category_delete',
-        'route_parameters' => array('cid' => $category->cid),
-      );
-      $row[] = array(
-        'data' => array(
-          '#type' => 'operations',
-          '#links' => $links,
-        ),
-      );
-      $rows[] = $row;
-    }
-    $build['categories'] = array(
-      '#prefix' => '<h3>' . $this->t('Category overview') . '</h3>',
-      '#theme' => 'table',
-      '#header' => $header,
-      '#rows' => $rows,
-      '#empty' => $this->t('No categories available. <a href="@link">Add category</a>.', array('@link' => $this->urlGenerator()->generateFromPath('admin/config/services/aggregator/add/category'))),
-    );
-
-    return $build;
-  }
-
-  /**
-   * Displays all the categories used by the Aggregator module.
-   *
-   * @return array
-   *   A render array.
-   */
-  public function categories() {
-    $entity_manager = $this->entityManager();
-    $result = $this->database->query('SELECT c.cid, c.title, c.description FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid LEFT JOIN {aggregator_item} i ON ci.iid = i.iid GROUP BY c.cid, c.title, c.description');
-
-    $build = array(
-      '#type' => 'container',
-      '#attributes' => array('class' => array('aggregator-wrapper')),
-      '#sorted' => TRUE,
-    );
-    $aggregator_summary_items = $this->config('aggregator.settings')->get('source.list_max');
-    foreach ($result as $category) {
-      $summary_items = array();
-      if ($aggregator_summary_items) {
-        $items = $entity_manager->getStorageController('aggregator_item')->loadByCategory($category->cid);
-        if ($items) {
-          $summary_items = $entity_manager->getViewBuilder('aggregator_item')->viewMultiple($items, 'summary');
-        }
-      }
-      $category->url = $this->urlGenerator()->generateFromPath('aggregator/categories/' . $category->cid);
-      $build[$category->cid] = array(
-        '#theme' => 'aggregator_summary_items',
-        '#summary_items' => $summary_items,
-        '#source' => $category,
-      );
-    }
     return $build;
   }
 
@@ -340,22 +244,13 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
   }
 
   /**
-   * Generates an OPML representation of all feeds or feeds by category.
-   *
-   * @param int $cid
-   *   (optional) If set, feeds are exported only from a category with this ID.
-   *   Otherwise, all feeds are exported. Defaults to NULL.
+   * Generates an OPML representation of all feeds.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response containing the OPML.
    */
   public function opmlPage($cid = NULL) {
-    if ($cid) {
-      $result = $this->database->query('SELECT f.title, f.url FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} c on f.fid = c.fid WHERE c.cid = :cid ORDER BY title', array(':cid' => $cid));
-    }
-    else {
-      $result = $this->database->query('SELECT * FROM {aggregator_feed} ORDER BY title');
-    }
+    $result = $this->database->query('SELECT * FROM {aggregator_feed} ORDER BY title');
 
     $feeds = $result->fetchAll();
     $aggregator_page_opml = array(
@@ -382,20 +277,6 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    */
   public function feedTitle(FeedInterface $aggregator_feed) {
     return Xss::filter($aggregator_feed->label());
-  }
-
-  /**
-   * Route title callback.
-   *
-   * @param int $cid
-   *   The category ID.
-   *
-   * @return string
-   *   The category label.
-   */
-  public function categoryTitle($cid) {
-    $category = $this->categoryStorage->load($cid);
-    return Xss::filter($category->title);
   }
 
 }

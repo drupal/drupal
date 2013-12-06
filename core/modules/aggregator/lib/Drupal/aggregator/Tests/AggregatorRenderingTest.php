@@ -31,8 +31,6 @@ class AggregatorRenderingTest extends AggregatorTestBase {
 
   /**
    * Adds a feed block to the page and checks its links.
-   *
-   * @todo Test the category block as well.
    */
   public function testBlockLinks() {
     // Create feed.

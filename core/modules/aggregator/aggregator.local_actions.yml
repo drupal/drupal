@@ -4,12 +4,6 @@ aggregator.feed_add:
   appears_on:
     - 'aggregator.admin_overview'
 
-aggregator.category_add:
-  route_name: aggregator.category_add
-  title: 'Add category'
-  appears_on:
-    - 'aggregator.admin_overview'
-
 aggregator.opml_add:
   route_name: aggregator.opml_add
   title: 'Import OPML'

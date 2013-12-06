@@ -34,7 +34,6 @@ class AggregatorConfigurationTest extends AggregatorTestBase {
       'aggregator_allowed_html_tags' => '<a>',
       'aggregator_summary_items' => 10,
       'aggregator_clear' => 3600,
-      'aggregator_category_selector' => 'select',
       'aggregator_teaser_length' => 200,
       'aggregator_fetcher' => 'aggregator_test_fetcher',
       'aggregator_parser' => 'aggregator_test_parser',

@@ -25,7 +25,7 @@ function aggregator_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Viewing feeds') . '</dt>';
-      $output .= '<dd>' . t('Feeds contain published content, and may be grouped in categories, generally by topic. Users view feed content in the <a href="@aggregator">main aggregator display</a>, or by <a href="@aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed or category can be displayed as a block through the <a href="@admin-block">Blocks administration page</a>.', array('@aggregator' => url('aggregator'), '@aggregator-sources' => url('aggregator/sources'), '@admin-block' => url('admin/structure/block'))) . '</a></dd>';
+      $output .= '<dd>' . t('Feeds contain published content. Users view feed content in the <a href="@aggregator">main aggregator display</a>, or by <a href="@aggregator-sources">their source</a> (usually via an RSS feed reader). The most recent content in a feed can be displayed as a block through the <a href="@admin-block">Blocks administration page</a>.', array('@aggregator' => url('aggregator'), '@aggregator-sources' => url('aggregator/sources'), '@admin-block' => url('admin/structure/block'))) . '</a></dd>';
       $output .= '<dt>' . t('Adding, editing, and deleting feeds') . '</dt>';
       $output .= '<dd>' . t('Administrators can add, edit, and delete feeds, and choose how often to check each feed for newly updated items on the <a href="@feededit">Feed aggregator administration page</a>.', array('@feededit' => url('admin/config/services/aggregator'))) . '</dd>';
       $output .= '<dt>' . t('OPML integration') . '</dt>';
@@ -36,12 +36,10 @@ function aggregator_help($path, $arg) {
       return $output;
     case 'admin/config/services/aggregator':
       $output = '<p>' . t('Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="@rss">RSS</a>, <a href="@rdf">RDF</a>, and <a href="@atom">Atom</a>.', array('@rss' => 'http://cyber.law.harvard.edu/rss/', '@rdf' => 'http://www.w3.org/RDF/', '@atom' => 'http://www.atomenabled.org')) . '</p>';
-      $output .= '<p>' . t('Current feeds are listed below, and <a href="@addfeed">new feeds may be added</a>. For each feed or feed category, the <em>latest items</em> block may be enabled at the <a href="@block">blocks administration page</a>.', array('@addfeed' => url('admin/config/services/aggregator/add/feed'), '@block' => url('admin/structure/block'))) . '</p>';
+      $output .= '<p>' . t('Current feeds are listed below, and <a href="@addfeed">new feeds may be added</a>. For each feed, the <em>latest items</em> block may be enabled at the <a href="@block">blocks administration page</a>.', array('@addfeed' => url('admin/config/services/aggregator/add/feed'), '@block' => url('admin/structure/block'))) . '</p>';
       return $output;
     case 'admin/config/services/aggregator/add/feed':
       return '<p>' . t('Add a feed in RSS, RDF or Atom format. A feed may only have one entry.') . '</p>';
-    case 'admin/config/services/aggregator/add/category':
-      return '<p>' . t('Categories allow feed items from different feeds to be grouped together. For example, several sport-related feeds may belong to a category named <em>Sports</em>. Feed items may be grouped automatically (by selecting a category when creating or editing a feed) or manually (via the <em>Categorize</em> page available from feed item listings). Each category provides its own feed page and block.') . '</p>';
     case 'admin/config/services/aggregator/add/opml':
       return '<p>' . t('<acronym title="Outline Processor Markup Language">OPML</acronym> is an XML format used to exchange multiple feeds between aggregators. A single OPML document may contain a collection of many feeds. Drupal can parse such a file and import all feeds at once, saving you the effort of adding them manually. You may either upload a local file from your computer or enter a URL where Drupal can download it.') . '</p>';
   }
@@ -81,7 +79,7 @@ function aggregator_theme() {
       'file' => 'aggregator.pages.inc',
     ),
     'aggregator_page_rss' => array(
-      'variables' => array('feeds' => NULL, 'category' => NULL),
+      'variables' => array('feeds' => NULL),
       'file' => 'aggregator.pages.inc',
     ),
   );
@@ -93,7 +91,7 @@ function aggregator_theme() {
 function aggregator_menu() {
   $items['admin/config/services/aggregator'] = array(
     'title' => 'Feed aggregator',
-    'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
+    'description' => "Configure which content your site aggregates from other sites, and how often it polls them.",
     'route_name' => 'aggregator.admin_overview',
     'weight' => 10,
   );
@@ -114,13 +112,6 @@ function aggregator_menu() {
     'title' => 'Sources',
     'route_name' => 'aggregator.sources',
   );
-  $items['aggregator/categories'] = array(
-    'title' => 'Categories',
-    'route_name' => 'aggregator.categories',
-  );
-  $items['aggregator/categories/%aggregator_category'] = array(
-    'route_name' => 'aggregator.category_view',
-  );
   $items['aggregator/sources/%aggregator_feed'] = array(
     'route_name' => 'aggregator.feed_view',
   );
@@ -131,14 +122,6 @@ function aggregator_menu() {
   $items['admin/config/services/aggregator/delete/feed/%aggregator_feed'] = array(
     'title' => 'Delete feed',
     'route_name' => 'aggregator.feed_delete',
-  );
-  $items['admin/config/services/aggregator/edit/category/%aggregator_category'] = array(
-    'title' => 'Edit category',
-    'route_name' => 'aggregator.category_admin_edit',
-  );
-  $items['admin/config/services/aggregator/delete/category/%aggregator_category'] = array(
-    'title' => 'Delete category',
-    'route_name' => 'aggregator.category_delete',
   );
 
   return $items;
@@ -197,56 +180,6 @@ function aggregator_queue_info() {
     ),
   );
   return $queues;
-}
-
-/**
- * Adds/edits/deletes aggregator categories.
- *
- * @param $edit
- *   An associative array describing the category to be added/edited/deleted.
- */
-function aggregator_save_category($edit) {
-  $link_path = 'aggregator/categories/';
-  if (!empty($edit['cid'])) {
-    $link_path .= $edit['cid'];
-    if (!empty($edit['title'])) {
-      db_merge('aggregator_category')
-        ->key(array('cid' => $edit['cid']))
-        ->fields(array(
-          'title' => $edit['title'],
-          'description' => $edit['description'],
-        ))
-        ->execute();
-      $op = 'update';
-    }
-    else {
-      db_delete('aggregator_category')
-        ->condition('cid', $edit['cid'])
-        ->execute();
-      // Make sure there is no active block for this category.
-      if (\Drupal::moduleHandler()->moduleExists('block')) {
-        foreach (entity_load_multiple_by_properties('block', array('plugin' => 'aggregator_category_block:' . $edit['cid'])) as $block) {
-          $block->delete();
-        }
-      }
-      $edit['title'] = '';
-      $op = 'delete';
-    }
-  }
-  elseif (!empty($edit['title'])) {
-    // A single unique id for bundles and feeds, to use in blocks.
-    $link_path .= db_insert('aggregator_category')
-      ->fields(array(
-        'title' => $edit['title'],
-        'description' => $edit['description'],
-        'block' => 5,
-      ))
-      ->execute();
-    $op = 'insert';
-  }
-  if (isset($op) && \Drupal::moduleHandler()->moduleExists('menu_link')) {
-    menu_link_maintain('aggregator', $op, $link_path, $edit['title']);
-  }
 }
 
 /**
@@ -346,22 +279,6 @@ function aggregator_refresh(Feed $feed) {
  */
 function aggregator_feed_load($fid) {
   return entity_load('aggregator_feed', $fid);
-}
-
-/**
- * Loads an aggregator category.
- *
- * @param $cid
- *   The category id.
- *
- * @return stdClass|null
- *   An object containing all category properties.
- *
- * @deprecated Use Drupal\aggregator\CategoryStorageControllerInterface::load()
- *   instead.
- */
-function aggregator_category_load($cid) {
-  return \Drupal::service('aggregator.category.storage')->load($cid);
 }
 
 /**

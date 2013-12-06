@@ -265,58 +265,5 @@ function aggregator_views_data() {
     ),
   );
 
-  $data['aggregator_category_feed']['table']['join'] = array(
-    'aggregator_item' => array(
-      'left_field' => 'fid',
-      'field' => 'fid',
-    ),
-  );
-
-  $data['aggregator_category']['table']['group'] = t('Aggregator category');
-
-  $data['aggregator_category']['table']['join'] = array(
-    'aggregator_item' => array(
-      'left_table' => 'aggregator_category_feed',
-      'left_field' => 'cid',
-      'field' => 'cid',
-    ),
-  );
-
-  $data['aggregator_category']['cid'] = array(
-    'title' => t('Category ID'),
-    'help' => t('The unique ID of the aggregator category.'),
-    'field' => array(
-      'id' => 'numeric',
-    ),
-    'argument' => array(
-      'id' => 'aggregator_category_cid',
-      'name field' => 'title',
-      'numeric' => TRUE,
-    ),
-    'filter' => array(
-      'id' => 'aggregator_category_cid',
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-  );
-
-  $data['aggregator_category']['title'] = array(
-    'title' => t('Category'),
-    'help' => t('The title of the aggregator category.'),
-    'field' => array(
-      'id' => 'aggregator_category',
-     ),
-    'argument' => array(
-      'id' => 'string',
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-    'filter' => array(
-      'id' => 'string',
-    ),
-  );
-
   return $data;
 }

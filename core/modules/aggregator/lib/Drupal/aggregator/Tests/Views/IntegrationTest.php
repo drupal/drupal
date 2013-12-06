@@ -54,7 +54,7 @@ class IntegrationTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('aggregator', array('aggregator_item', 'aggregator_feed', 'aggregator_category_feed', 'aggregator_category', 'aggregator_category_item'));
+    $this->installSchema('aggregator', array('aggregator_item', 'aggregator_feed'));
 
     ViewTestData::createTestViews(get_class($this), array('aggregator_test_views'));
 

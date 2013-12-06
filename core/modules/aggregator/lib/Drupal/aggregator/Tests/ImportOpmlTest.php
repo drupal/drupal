@@ -38,16 +38,6 @@ class ImportOpmlTest extends AggregatorTestBase {
    * Opens OPML import form.
    */
   function openImportForm() {
-    db_delete('aggregator_category')->execute();
-
-    $category = $this->randomName(10);
-    $cid = db_insert('aggregator_category')
-      ->fields(array(
-        'title' => $category,
-        'description' => '',
-      ))
-      ->execute();
-
     // Enable the help block.
     $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
 
@@ -56,7 +46,6 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->assertField('files[upload]', 'Found file upload field.');
     $this->assertField('remote', 'Found Remote URL field.');
     $this->assertField('refresh', '', 'Found Refresh field.');
-    $this->assertFieldByName("category[$cid]", $cid, 'Found category field.');
   }
 
   /**
@@ -103,17 +92,6 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->assertEqual($before, $after, 'No feeds were added during the two last form submissions.');
 
     db_delete('aggregator_feed')->execute();
-    db_delete('aggregator_category')->execute();
-    db_delete('aggregator_category_feed')->execute();
-
-    $category = $this->randomName(10);
-    db_insert('aggregator_category')
-      ->fields(array(
-        'cid' => 1,
-        'title' => $category,
-        'description' => '',
-      ))
-      ->execute();
 
     $feeds[0] = $this->getFeedEditArray();
     $feeds[1] = $this->getFeedEditArray();
@@ -121,7 +99,6 @@ class ImportOpmlTest extends AggregatorTestBase {
     $edit = array(
       'files[upload]' => $this->getValidOpml($feeds),
       'refresh'       => '900',
-      'category[1]'   => $category,
     );
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
     $this->assertRaw(t('A feed with the URL %url already exists.', array('%url' => $feeds[0]['url'])), 'Verifying that a duplicate URL was identified');
@@ -130,19 +107,17 @@ class ImportOpmlTest extends AggregatorTestBase {
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
     $this->assertEqual($after, 2, 'Verifying that two distinct feeds were added.');
 
-    $feeds_from_db = db_query("SELECT f.title, f.url, f.refresh, cf.cid FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} cf ON f.fid = cf.fid");
-    $refresh = $category = TRUE;
+    $feeds_from_db = db_query("SELECT title, url, refresh FROM {aggregator_feed}");
+    $refresh = TRUE;
     foreach ($feeds_from_db as $feed) {
       $title[$feed->url] = $feed->title;
       $url[$feed->title] = $feed->url;
-      $category = $category && $feed->cid == 1;
       $refresh = $refresh && $feed->refresh == 900;
     }
 
     $this->assertEqual($title[$feeds[0]['url']], $feeds[0]['title'], 'First feed was added correctly.');
     $this->assertEqual($url[$feeds[1]['title']], $feeds[1]['url'], 'Second feed was added correctly.');
     $this->assertTrue($refresh, 'Refresh times are correct.');
-    $this->assertTrue($category, 'Categories are correct.');
   }
 
   /**

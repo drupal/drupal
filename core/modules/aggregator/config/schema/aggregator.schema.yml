@@ -36,6 +36,3 @@ aggregator.settings:
         list_max:
           type: integer
           label: 'Number of items shown in listing pages'
-        category_selector:
-            type: string
-            label: 'Select categories using'

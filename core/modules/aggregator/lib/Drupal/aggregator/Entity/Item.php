@@ -62,24 +62,6 @@ class Item extends ContentEntityBase implements ItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    parent::postSave($storage_controller, $update);
-
-    $storage_controller->saveCategories($this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    parent::preDelete($storage_controller, $entities);
-
-    $storage_controller->deleteCategories($entities);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function baseFieldDefinitions($entity_type) {
     $fields['iid'] = FieldDefinition::create('integer')
       ->setLabel(t('Aggregator item ID'))

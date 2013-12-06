@@ -10,7 +10,6 @@
  * - source_title: Title of the remote source.
  * - source_date: Date the feed was posted on the remote source.
  * - content: Feed item content.
- * - categories: Linked categories assigned to the feed.
  *
  * @see template_preprocess_aggregator_item()
  *
@@ -32,12 +31,6 @@
   {% if content %}
     <div class="feed-item-body">
       {{ content }}
-    </div>
-  {% endif %}
-
-  {% if categories %}
-    <div class="feed-item-categories">
-      {{ 'Categories'|t }}: {{ categories|join(', ') }}
     </div>
   {% endif %}
 </div>

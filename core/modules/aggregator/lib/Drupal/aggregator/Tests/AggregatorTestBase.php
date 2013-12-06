@@ -207,37 +207,6 @@ abstract class AggregatorTestBase extends WebTestBase {
   }
 
   /**
-   * Pulls feed categories from {aggregator_category_feed} table.
-   *
-   * @param \Drupal\aggregator\Entity\Feed $feed
-   *   Feed object representing the feed.
-   */
-  function getFeedCategories(Feed $feed) {
-    // add the categories to the feed so we can use them
-    $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $feed->id()));
-
-    foreach ($result as $category) {
-      $feed->categories[] = $category->cid;
-    }
-  }
-
-  /**
-   * Pulls categories from {aggregator_category} table.
-   *
-   * @return array
-   *   An associative array keyed by category ID and values are set to the
-   *   category names.
-   */
-  function getCategories() {
-    $categories = array();
-    $result = db_query('SELECT * FROM {aggregator_category}');
-    foreach ($result as $category) {
-      $categories[$category->cid] = $category;
-    }
-    return $categories;
-  }
-
-  /**
    * Checks whether the feed name and URL are unique.
    *
    * @param $feed_name

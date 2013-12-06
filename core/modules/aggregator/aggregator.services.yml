@@ -8,11 +8,3 @@ services:
   plugin.manager.aggregator.processor:
     class: Drupal\aggregator\Plugin\AggregatorPluginManager
     arguments: [processor, '@container.namespaces', '@cache.cache', '@language_manager']
-  access_check.aggregator.categories:
-    class: Drupal\aggregator\Access\CategoriesAccessCheck
-    arguments: ['@database']
-    tags:
-      - { name: access_check }
-  aggregator.category.storage:
-    class: Drupal\aggregator\CategoryStorageController
-    arguments: ['@database']

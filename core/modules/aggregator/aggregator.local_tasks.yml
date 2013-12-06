@@ -8,28 +8,10 @@ aggregator.admin_settings:
   weight: 100
   tab_root_id: aggregator.admin_overview
 
-aggregator.category_view:
-  route_name: aggregator.category_view
-  tab_root_id: aggregator.category_view
-  title: 'View'
-aggregator.categorize_category_form:
-  route_name: aggregator.categorize_category_form
-  tab_root_id: aggregator.category_view
-  title: Categorize
-aggregator.category_edit:
-  route_name: aggregator.category_edit
-  tab_root_id: aggregator.category_view
-  title: Configure
-  weight: 10
-
 aggregator.feed_view:
   route_name: aggregator.feed_view
   tab_root_id: aggregator.feed_view
   title: View
-aggregator.categorize_feed_form:
-  route_name: aggregator.categorize_feed_form
-  tab_root_id: aggregator.feed_view
-  title: 'Categorize'
 aggregator.feed_configure:
   route_name: aggregator.feed_configure
   tab_root_id: aggregator.feed_view

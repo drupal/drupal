@@ -16,22 +16,16 @@ use Drupal\Core\Entity\EntityInterface;
  *   - sum: No filtering.
  *   - source: Filter the feed items, limiting the result to items from a
  *     single source.
- *   - category: Filter the feed items by category.
  * @param mixed $data
- *   Feed or category data used for filtering. The type and value of $data
- *   depends on $type:
+ *   Feed data used for filtering. The type and value of $data depends on $type:
  *   - source: $data is an object with $data->fid identifying the feed used to
  *     as filter.
- *   - category: $data is an array with $data['cid'] being the category id to
- *     filter on.
  *   The $data parameter is not used when $type is 'sum'.
  * @param int $limit
  *   (optional) The number of records to return. Defaults to 20.
  *
  * @deprecated Use \Drupal\aggregator\ItemStorageController::loadAll() for
  *   loading all feed items, \Drupal\aggregator\ItemStorageController::loadByFeed()
- *   for loading feed items filtered by the source feed, and \Drupal\aggregator\ItemStorageController::loadByCategory()
- *   for loading feed items filtered by the feed category.
  *
  * @return \Drupal\aggregator\ItemInterface[]
  *   An array of the feed items.
@@ -44,9 +38,6 @@ function aggregator_load_feed_items($type, $data = NULL, $limit = 20) {
 
     case 'source':
       return $storage_controller->loadByFeed($data->id(), $limit);
-
-    case 'category':
-      return $storage_controller->loadByCategory($data->cid, $limit);
   }
 }
 
@@ -79,11 +70,6 @@ function template_preprocess_aggregator_item(&$variables) {
   }
   else {
     $variables['source_date'] = format_date($item->getPostedTime(), 'medium');
-  }
-
-  $variables['categories'] = array();
-  foreach ($item->categories as $category) {
-    $variables['categories'][$category->cid] = l($category->title, 'aggregator/categories/' . $category->cid);
   }
 
   $variables['attributes']['class'][] = 'feed-item';

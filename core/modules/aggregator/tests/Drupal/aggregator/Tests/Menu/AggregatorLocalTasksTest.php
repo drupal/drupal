@@ -52,36 +52,13 @@ class AggregatorLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   /**
-   * Checks aggregator category tasks.
-   *
-   * @dataProvider getAggregatorCategoryRoutes
-   */
-  public function testAggregatorCategoryLocalTasks($route) {
-    $this->assertLocalTasks($route, array(
-      0 => array('aggregator.category_view', 'aggregator.categorize_category_form', 'aggregator.category_edit'),
-    ));
-    ;
-  }
-
-  /**
-   * Provides a list of category routes to test.
-   */
-  public function getAggregatorCategoryRoutes() {
-    return array(
-      array('aggregator.category_view'),
-      array('aggregator.categorize_category_form'),
-      array('aggregator.category_edit'),
-    );
-  }
-
-  /**
    * Checks aggregator source tasks.
    *
    * @dataProvider getAggregatorSourceRoutes
    */
   public function testAggregatorSourceLocalTasks($route) {
     $this->assertLocalTasks($route, array(
-      0 => array('aggregator.feed_view', 'aggregator.categorize_feed_form', 'aggregator.feed_configure'),
+      0 => array('aggregator.feed_view', 'aggregator.feed_configure'),
     ));
     ;
   }
@@ -92,7 +69,6 @@ class AggregatorLocalTasksTest extends LocalTaskIntegrationTest {
   public function getAggregatorSourceRoutes() {
     return array(
       array('aggregator.feed_view'),
-      array('aggregator.categorize_feed_form'),
       array('aggregator.feed_configure'),
     );
   }

@@ -7,7 +7,6 @@
 
 namespace Drupal\aggregator\Form;
 
-use Drupal\aggregator\CategoryStorageControllerInterface;
 use Drupal\aggregator\FeedStorageControllerInterface;
 use Drupal\Component\Utility\Url;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -44,13 +43,6 @@ class OpmlFeedAdd extends FormBase {
   protected $httpClient;
 
   /**
-   * The category storage controller.
-   *
-   * @var \Drupal\aggregator\CategoryStorageControllerInterface
-   */
-  protected $categoryStorageController;
-
-  /**
    * Constructs a database object.
    *
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
@@ -59,14 +51,11 @@ class OpmlFeedAdd extends FormBase {
    *   The feed storage.
    * @param \Guzzle\Http\ClientInterface $http_client
    *   The Guzzle HTTP client.
-   * @param \Drupal\aggregator\CategoryStorageControllerInterface $category_storage_controller
-   *   The category storage controller.
    */
-  public function __construct(QueryFactory $query_factory, FeedStorageControllerInterface $feed_storage, ClientInterface $http_client, CategoryStorageControllerInterface $category_storage_controller) {
+  public function __construct(QueryFactory $query_factory, FeedStorageControllerInterface $feed_storage, ClientInterface $http_client) {
     $this->queryFactory = $query_factory;
     $this->feedStorageController = $feed_storage;
     $this->httpClient = $http_client;
-    $this->categoryStorageController = $category_storage_controller;
   }
 
   /**
@@ -76,8 +65,7 @@ class OpmlFeedAdd extends FormBase {
     return new static(
       $container->get('entity.query'),
       $container->get('entity.manager')->getStorageController('aggregator_feed'),
-      $container->get('http_default_client'),
-      $container->get('aggregator.category.storage')
+      $container->get('http_default_client')
     );
   }
 
@@ -114,16 +102,6 @@ class OpmlFeedAdd extends FormBase {
       '#description' => $this->t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
     );
 
-    // Handling of categories.
-    $options = array_map('check_plain', $this->categoryStorageController->loadAllKeyed());
-    if ($options) {
-      $form['category'] = array(
-        '#type' => 'checkboxes',
-        '#title' => $this->t('Categorize news items'),
-        '#options' => $options,
-        '#description' => $this->t('New feed items are automatically filed in the checked categories.'),
-      );
-    }
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
@@ -210,7 +188,6 @@ class OpmlFeedAdd extends FormBase {
         'url' => $feed['url'],
         'refresh' => $form_state['values']['refresh'],
       ));
-      $new_feed->categories = $form_state['values']['category'];
       $new_feed->save();
     }
 
