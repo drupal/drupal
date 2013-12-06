@@ -2128,7 +2128,7 @@ function template_preprocess_html(&$variables) {
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.
-  if (isset($variables['page']['#title'])) {
+  if (!empty($variables['page']['#title'])) {
     $head_title = array(
       'title' => strip_tags($variables['page']['#title']),
       'name' => String::checkPlain($site_config->get('name')),

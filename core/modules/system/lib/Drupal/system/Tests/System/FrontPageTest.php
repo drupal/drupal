@@ -19,7 +19,7 @@ class FrontPageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'system_test');
+  public static $modules = array('node', 'system_test', 'views');
 
   public static function getInfo() {
     return array(
@@ -46,8 +46,16 @@ class FrontPageTest extends WebTestBase {
   /**
    * Test front page functionality.
    */
-  function testDrupalIsFrontPage() {
+  public function testDrupalFrontPage() {
+    // Create a promoted node to test the <title> tag on the front page view.
+    $settings = array(
+      'title' => $this->randomName(8),
+      'promote' => 1,
+    );
+    $node = $this->drupalCreateNode($settings);
     $this->drupalGet('');
+    $this->assertTitle('Home | Drupal');
+
     $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet('node');
     $this->assertText(t('On front page.'), 'Path is the front page.');
