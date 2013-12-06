@@ -18,10 +18,16 @@ picture.mappings.*:
       label: 'Mappings'
       sequence:
         - type: sequence
-          label: 'Mapping'
+          label: 'Source type'
           sequence:
-            - type: string
-              label: 'Image style'
+            - type: sequence
+              label: 'Source'
+              sequence:
+                - type: sequence
+                  label: 'Machine name'
+                  sequence:
+                    - type: string
+                      label: 'Image style'
     breakpointGroup:
       type: string
       label: 'Breakpoint group'
