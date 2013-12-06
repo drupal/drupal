@@ -19,7 +19,7 @@ class UserBlocksTests extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('block', 'views');
 
   /**
    * The admin user used in this test.
@@ -80,8 +80,7 @@ class UserBlocksTests extends WebTestBase {
    * Test the Who's Online block.
    */
   function testWhosOnlineBlock() {
-    $block = $this->drupalPlaceBlock('user_online_block');
-    $config = $block->get('settings');
+    $block = $this->drupalPlaceBlock('views_block:who_s_online-who_s_online_block');
 
     // Generate users.
     $user1 = $this->drupalCreateUser(array());
@@ -94,7 +93,7 @@ class UserBlocksTests extends WebTestBase {
 
     // Insert an inactive user who should not be seen in the block, and ensure
     // that the admin user used in setUp() does not appear.
-    $inactive_time = REQUEST_TIME - $config['seconds_online'] - 1;
+    $inactive_time = REQUEST_TIME - (15 * 60) - 1;
     $this->updateAccess($user3->id(), $inactive_time);
     $this->updateAccess($this->adminUser->id(), $inactive_time);
 

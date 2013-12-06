@@ -48,7 +48,7 @@ db_insert('role_permission')->fields(array(
 ))
 ->execute();
 
-// Adds some role visibility settings on the who's online block for the long
+// Adds some role visibility settings on the "Powered by" block for the long
 // role.
 db_insert('block_role')->fields(array(
   'module',
@@ -56,8 +56,8 @@ db_insert('block_role')->fields(array(
   'rid',
 ))
 ->values(array(
-  'module' => 'user',
-  'delta' => 'online',
+  'module' => 'system',
+  'delta' => 'powered',
   'rid' => '5',
 ))
 ->execute();

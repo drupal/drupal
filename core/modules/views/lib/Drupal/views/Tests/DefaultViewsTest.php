@@ -112,6 +112,11 @@ class DefaultViewsTest extends ViewTestBase {
       );
       entity_create('comment', $comment)->save();
     }
+
+    // Some views, such as the "Who's Online" view, only return results if at
+    // least one user is logged in.
+    $account = $this->drupalCreateUser(array());
+    $this->drupalLogin($account);
   }
 
   /**
