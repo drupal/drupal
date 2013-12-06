@@ -8,6 +8,7 @@
 namespace Drupal\telephone\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 
 /**
@@ -50,10 +51,8 @@ class TelephoneItem extends ConfigFieldItemBase {
    */
   public function getPropertyDefinitions() {
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'string',
-        'label' => t('Telephone number'),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('string')
+        ->setLabel(t('Telephone number'));
     }
     return static::$propertyDefinitions;
   }

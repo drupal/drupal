@@ -8,6 +8,7 @@
 namespace Drupal\file\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 use Drupal\Core\Field\ConfigFieldItemInterface;
 
@@ -87,19 +88,16 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-    $this->definition['settings']['target_type'] = 'file';
+    $this->definition->setSetting('target_type', 'file');
 
     if (!isset(static::$propertyDefinitions)) {
       static::$propertyDefinitions = parent::getPropertyDefinitions();
 
-      static::$propertyDefinitions['display'] = array(
-        'type' => 'boolean',
-        'label' => t('Flag to control whether this file should be displayed when viewing content.'),
-      );
-      static::$propertyDefinitions['description'] = array(
-        'type' => 'string',
-        'label' => t('A description of the file.'),
-      );
+      static::$propertyDefinitions['display'] = DataDefinition::create('boolean')
+        ->setLabel(t('Flag to control whether this file should be displayed when viewing content'));
+
+      static::$propertyDefinitions['description'] = DataDefinition::create('string')
+        ->setLabel(t('A description of the file'));
     }
     return static::$propertyDefinitions;
   }

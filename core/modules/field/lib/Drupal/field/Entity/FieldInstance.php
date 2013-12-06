@@ -673,8 +673,22 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
+  public function getSetting($setting_name) {
+    return $this->getFieldSetting($setting_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConstraints() {
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraint($constraint_name) {
+    return NULL;
   }
 
   /**

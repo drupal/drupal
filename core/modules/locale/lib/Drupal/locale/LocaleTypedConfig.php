@@ -50,7 +50,7 @@ class LocaleTypedConfig extends Element {
    * @param \Drupal\locale\LocaleConfigManager $localeConfig;
    *   The locale configuration manager object.
    */
-  public function __construct($definition, $name, $langcode, \Drupal\locale\LocaleConfigManager $localeConfig) {
+  public function __construct($definition, $name, $langcode, LocaleConfigManager $localeConfig) {
     parent::__construct($definition, $name);
     $this->langcode = $langcode;
     $this->localeConfig = $localeConfig;

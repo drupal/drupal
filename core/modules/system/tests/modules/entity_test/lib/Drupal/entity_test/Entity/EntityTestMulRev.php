@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
@@ -50,17 +51,16 @@ class EntityTestMulRev extends EntityTestRev {
    */
   public static function baseFieldDefinitions($entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields['revision_id'] = array(
-      'label' => t('ID'),
-      'description' => t('The version id of the test entity.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $fields['default_langcode'] = array(
-      'label' => t('Default language'),
-      'description' => t('Flag to inditcate whether this is the default language.'),
-      'type' => 'boolean_field',
-    );
+
+    $fields['revision_id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Revision ID'))
+      ->setDescription(t('The version id of the test entity.'))
+      ->setReadOnly(TRUE);
+
+    $fields['default_langcode'] = FieldDefinition::create('boolean')
+      ->setLabel(t('Default language'))
+      ->setDescription(t('Flag to indicate whether this is the default language.'));
+
     return $fields;
   }
 

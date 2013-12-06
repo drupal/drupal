@@ -7,6 +7,7 @@
 
 namespace Drupal\number\Plugin\Field\FieldType;
 
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 use Drupal\Component\Utility\MapArray;
 
@@ -38,10 +39,8 @@ class DecimalItem extends NumberItemBase {
    */
   public function getPropertyDefinitions() {
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'string',
-        'label' => t('Decimal value'),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('string')
+        ->setLabel(t('Decimal value'));
     }
     return static::$propertyDefinitions;
   }

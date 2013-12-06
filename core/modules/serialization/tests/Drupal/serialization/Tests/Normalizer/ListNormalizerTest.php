@@ -7,6 +7,7 @@
 
 namespace Drupal\serialization\Tests\Normalizer;
 
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\Normalizer\ListNormalizer;
 use Drupal\Core\TypedData\Plugin\DataType\ItemList;
@@ -75,7 +76,7 @@ class ListNormalizerTest extends UnitTestCase {
 
     $this->normalizer = new ListNormalizer();
 
-    $this->list = new ItemList(array());
+    $this->list = new ItemList(new DataDefinition());
     $this->list->setValue($this->expectedListValues);
   }
 

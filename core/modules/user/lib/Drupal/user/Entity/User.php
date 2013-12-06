@@ -10,6 +10,7 @@ namespace Drupal\user\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\user\UserInterface;
 
 /**
@@ -429,129 +430,102 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['uid'] = array(
-      'label' => t('User ID'),
-      'description' => t('The user ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['uuid'] = array(
-      'label' => t('UUID'),
-      'description' => t('The user UUID.'),
-      'type' => 'uuid_field',
-      'read-only' => TRUE,
-    );
-    $properties['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The user language code.'),
-      'type' => 'language_field',
-    );
-    $properties['preferred_langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t("The user's preferred langcode for receiving emails and viewing the site."),
-      'type' => 'language_field',
-    );
-    $properties['preferred_admin_langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t("The user's preferred langcode for viewing administration pages."),
-      'type' => 'language_field',
-    );
-    $properties['name'] = array(
-      'label' => t('Name'),
-      'description' => t('The name of this user'),
-      'type' => 'string_field',
-      'settings' => array('default_value' => ''),
-      'property_constraints' => array(
-        // No Length contraint here because the UserName constraint also covers
+    $fields['uid'] = FieldDefinition::create('integer')
+      ->setLabel(t('User ID'))
+      ->setDescription(t('The user ID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The user UUID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The user language code.'));
+
+    $fields['preferred_langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Preferred admin language code'))
+      ->setDescription(t("The user's preferred language code for receiving emails and viewing the site."));
+
+    $fields['preferred_admin_langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Preferred language code'))
+      ->setDescription(t("The user's preferred language code for viewing administration pages."));
+
+    $fields['name'] = FieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDescription(t('The name of this user.'))
+      ->setFieldSetting('default_value', '')
+      ->setPropertyConstraints('value', array(
+        // No Length constraint here because the UserName constraint also covers
         // that.
-        'value' => array(
-          'UserName' => array(),
-          'UserNameUnique' => array(),
-        ),
-      ),
-    );
-    $properties['pass'] = array(
-      'label' => t('Password'),
-      'description' => t('The password of this user (hashed)'),
-      'type' => 'string_field',
-    );
-    $properties['mail'] = array(
-      'label' => t('E-mail'),
-      'description' => t('The e-mail of this user'),
-      'type' => 'email_field',
-      'settings' => array('default_value' => ''),
-      'property_constraints' => array(
-        'value' => array('UserMailUnique' => array()),
-      ),
-    );
-    $properties['signature'] = array(
-      'label' => t('Signature'),
-      'description' => t('The signature of this user'),
-      'type' => 'string_field',
-      'property_constraints' => array(
-        'value' => array('Length' => array('max' => 255)),
-      ),
-    );
-    $properties['signature_format'] = array(
-      'label' => t('Signature format'),
-      'description' => t('The signature format of this user'),
-      // @todo Convert the type to filter_format once
-      // https://drupal.org/node/1758622 is committed
-      'type' => 'string_field',
-    );
-    $properties['theme'] = array(
-      'label' => t('Theme'),
-      'description' => t('The default theme of this user'),
-      'type' => 'string_field',
-      'property_constraints' => array(
-        'value' => array('Length' => array('max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH)),
-      ),
-    );
-    $properties['timezone'] = array(
-      'label' => t('Timezone'),
-      'description' => t('The timezone of this user'),
-      'type' => 'string_field',
-      'property_constraints' => array(
-        'value' => array('Length' => array('max' => 32)),
-      ),
-    );
-    $properties['status'] = array(
-      'label' => t('User status'),
-      'description' => t('Whether the user is active (1) or blocked (0).'),
-      'type' => 'boolean_field',
-      'settings' => array('default_value' => 1),
-    );
-    $properties['created'] = array(
-      'label' => t('Created'),
-      'description' => t('The time that the node was created.'),
-      'type' => 'integer_field',
-    );
-    $properties['access'] = array(
-      'label' => t('Last access'),
-      'description' => t('The time that the user last accessed the site.'),
-      'type' => 'integer_field',
-      'settings' => array('default_value' => 0),
-    );
-    $properties['login'] = array(
-      'label' => t('Last login'),
-      'description' => t('The time that the user last logged in.'),
-      'type' => 'integer_field',
-      'settings' => array('default_value' => 0),
-    );
-    $properties['init'] = array(
-      'label' => t('Init'),
-      'description' => t('The email address used for initial account creation.'),
-      'type' => 'email_field',
-      'settings' => array('default_value' => ''),
-    );
-    $properties['roles'] = array(
-      'label' => t('Roles'),
-      'description' => t('The roles the user has.'),
-      // @todo Convert this to entity_reference_field, see
-      // https://drupal.org/node/2044859
-      'type' => 'string_field',
-    );
-    return $properties;
+        'UserName' => array(),
+        'UserNameUnique' => array(),
+      ));
+
+    $fields['pass'] = FieldDefinition::create('string')
+      ->setLabel(t('Password'))
+      ->setDescription(t('The password of this user (hashed).'));
+
+    $fields['mail'] = FieldDefinition::create('email')
+      ->setLabel(t('Email'))
+      ->setDescription(t('The email of this user.'))
+      ->setFieldSetting('default_value', '')
+      ->setPropertyConstraints('value', array('UserMailUnique' => array()));
+
+    // @todo Convert to a text field in https://drupal.org/node/1548204.
+    $fields['signature'] = FieldDefinition::create('string')
+      ->setLabel(t('Signature'))
+      ->setDescription(t('The signature of this user.'))
+      ->setPropertyConstraints('value', array('Length' => array('max' => 255)));
+    $fields['signature_format'] = FieldDefinition::create('string')
+      ->setLabel(t('Signature format'))
+      ->setDescription(t('The signature format of this user.'));
+
+    $fields['theme'] = FieldDefinition::create('string')
+      ->setLabel(t('Theme'))
+      ->setDescription(t('The default theme of this user.'))
+      ->setPropertyConstraints('value', array('Length' => array('max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH)));
+
+    $fields['timezone'] = FieldDefinition::create('string')
+      ->setLabel(t('Timezone'))
+      ->setDescription(t('The timezone of this user.'))
+      ->setPropertyConstraints('value', array('Length' => array('max' => 32)));
+
+    $fields['status'] = FieldDefinition::create('boolean')
+      ->setLabel(t('User status'))
+      ->setDescription(t('Whether the user is active (1) or blocked (0).'))
+      ->setFieldSetting('default_value', 1);
+
+    // @todo Convert to a "created" field in https://drupal.org/node/2145103.
+    $fields['created'] = FieldDefinition::create('integer')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time that the user was created.'));
+
+    // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
+    $fields['access'] = FieldDefinition::create('integer')
+      ->setLabel(t('Last access'))
+      ->setDescription(t('The time that the user last accessed the site.'))
+      ->setFieldSetting('default_value', 0);
+
+    // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
+    $fields['login'] = FieldDefinition::create('integer')
+      ->setLabel(t('Last login'))
+      ->setDescription(t('The time that the user last logged in.'))
+      ->setFieldSetting('default_value', 0);
+
+    $fields['init'] = FieldDefinition::create('email')
+      ->setLabel(t('Initial email'))
+      ->setDescription(t('The email address used for initial account creation.'))
+      ->setFieldSetting('default_value', '');
+
+    // @todo Convert this to entity_reference_field, see
+    // https://drupal.org/node/2044859.
+    $fields['roles'] = FieldDefinition::create('string')
+      ->setLabel(t('Roles'))
+      ->setDescription(t('The roles the user has.'));
+
+    return $fields;
   }
 
 }

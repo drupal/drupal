@@ -7,6 +7,7 @@
 
 namespace Drupal\number\Plugin\Field\FieldType;
 
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 
 /**
@@ -33,10 +34,8 @@ class IntegerItem extends NumberItemBase {
    */
   public function getPropertyDefinitions() {
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'integer',
-        'label' => t('Integer value'),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('integer')
+        ->setLabel(t('Integer value'));
     }
     return static::$propertyDefinitions;
   }

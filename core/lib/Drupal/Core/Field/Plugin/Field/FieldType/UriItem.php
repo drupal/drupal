@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'uri' entity field type.
@@ -34,13 +35,11 @@ class UriItem extends FieldItemBase {
    * Implements ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
-
     if (!isset(self::$propertyDefinitions)) {
-      self::$propertyDefinitions['value'] = array(
-        'type' => 'uri',
-        'label' => t('URI value'),
-      );
+      self::$propertyDefinitions['value'] = DataDefinition::create('uri')
+        ->setLabel(t('URI value'));
     }
     return self::$propertyDefinitions;
   }
+
 }

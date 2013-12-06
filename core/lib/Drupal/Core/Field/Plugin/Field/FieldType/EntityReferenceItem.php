@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'entity_reference' entity field type.
@@ -41,45 +42,41 @@ class EntityReferenceItem extends FieldItemBase {
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
-    $target_type = $this->definition['settings']['target_type'];
+    $settings = $this->definition->getSettings();
+    $target_type = $settings['target_type'];
 
     // Definitions vary by entity type and bundle, so key them accordingly.
     $key = $target_type . ':';
-    $key .= isset($this->definition['settings']['target_bundle']) ? $this->definition['settings']['target_bundle'] : '';
+    $key .= isset($settings['target_bundle']) ? $settings['target_bundle'] : '';
 
     if (!isset(static::$propertyDefinitions[$key])) {
       $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
       if (is_subclass_of($target_type_info['class'], '\Drupal\Core\Entity\ContentEntityInterface')) {
-        static::$propertyDefinitions[$key]['target_id'] = array(
-          // @todo: Lookup the entity type's ID data type and use it here.
-          // https://drupal.org/node/2107249
-          'type' => 'integer',
-          'label' => t('Entity ID'),
-          'constraints' => array(
+        // @todo: Lookup the entity type's ID data type and use it here.
+        // https://drupal.org/node/2107249
+        static::$propertyDefinitions[$key]['target_id'] = DataDefinition::create('integer')
+          ->setLabel(t('Entity ID'))
+          ->setConstraints(array(
             'Range' => array('min' => 0),
-          ),
-        );
+          ));
       }
       else {
-        static::$propertyDefinitions[$key]['target_id'] = array(
-          'type' => 'string',
-          'label' => t('Entity ID'),
-        );
+        static::$propertyDefinitions[$key]['target_id'] = DataDefinition::create('string')
+          ->setLabel(t('Entity ID'));
       }
 
-      static::$propertyDefinitions[$key]['entity'] = array(
-        'type' => 'entity_reference',
-        'constraints' => array(
-          'EntityType' => $this->definition['settings']['target_type'],
-        ),
-        'label' => t('Entity'),
-        'description' => t('The referenced entity'),
+      static::$propertyDefinitions[$key]['entity'] = DataDefinition::create('entity_reference')
+        ->setLabel(t('Entity'))
+        ->setDescription(t('The referenced entity'))
         // The entity object is computed out of the entity ID.
-        'computed' => TRUE,
-        'read-only' => FALSE,
-      );
-      if (isset($this->definition['settings']['target_bundle'])) {
-        static::$propertyDefinitions[$key]['entity']['constraints']['Bundle'] = $this->definition['settings']['target_bundle'];
+        ->setComputed(TRUE)
+        ->setReadOnly(FALSE)
+        ->setConstraints(array(
+          'EntityType' => $settings['target_type'],
+        ));
+
+      if (isset($settings['target_bundle'])) {
+        static::$propertyDefinitions[$key]['entity']->addConstraint('Bundle', $settings['target_bundle']);
       }
     }
     return static::$propertyDefinitions[$key];

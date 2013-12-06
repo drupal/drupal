@@ -8,6 +8,7 @@
 namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'path' entity field type.
@@ -35,14 +36,11 @@ class PathItem extends FieldItemBase {
    */
   public function getPropertyDefinitions() {
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['alias'] = array(
-        'type' => 'string',
-        'label' => t('Path alias'),
-      );
-      static::$propertyDefinitions['pid'] = array(
-        'type' => 'integer',
-        'label' => t('Path id'),
-      );
+      static::$propertyDefinitions['alias'] = DataDefinition::create('string')
+        ->setLabel(t('Path alias'));
+
+      static::$propertyDefinitions['pid'] = DataDefinition::create('string')
+        ->setLabel(t('Path id'));
     }
     return static::$propertyDefinitions;
   }

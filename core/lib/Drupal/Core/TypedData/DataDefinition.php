@@ -25,7 +25,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param string $type
    *   The data type of the data; e.g., 'string', 'integer' or 'any'.
    *
-   * @return \Drupal\Core\TypedData\DataDefinition
+   * @return static
    *   A new DataDefinition object.
    */
   public static function create($type) {
@@ -56,7 +56,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param string $type
    *   The data type to set.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setDataType($type) {
@@ -77,7 +77,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param string $label
    *   The label to set.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setLabel($label) {
@@ -98,7 +98,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param string $description
    *   The description to set.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setDescription($description) {
@@ -130,7 +130,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param bool $read_only
    *   Whether the data is read-only.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setReadOnly($read_only) {
@@ -151,7 +151,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param bool $computed
    *   Whether the data is computed.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setComputed($computed) {
@@ -172,7 +172,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param bool $required
    *   Whether the data is required.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setRequired($required) {
@@ -193,7 +193,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param string|null $class
    *   The class to use.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setClass($class) {
@@ -202,12 +202,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Returns the array of settings, as required by the used class.
-   *
-   * See the documentation of the class for supported or required settings.
-   *
-   * @return array
-   *   The array of settings.
+   * {@inheritdoc}
    */
   public function getSettings() {
     return isset($this->definition['settings']) ? $this->definition['settings'] : array();
@@ -219,11 +214,34 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param array $settings
    *   The array of settings.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setSettings(array $settings) {
     $this->definition['settings'] = $settings;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSetting($setting_name) {
+    return isset($this->definition['settings'][$setting_name]) ? $this->definition['settings'][$setting_name] : NULL;
+  }
+
+  /**
+   * Sets a definition setting.
+   *
+   * @param string $setting_name
+   *   The definition setting to set.
+   * @param mixed $value
+   *   The value to set.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setSetting($setting_name, $value) {
+    $this->definition['settings'][$setting_name] = $value;
     return $this;
   }
 
@@ -241,6 +259,13 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getConstraint($constraint_name) {
+    return isset($this->definition['constraints'][$constraint_name]) ? $this->definition['constraints'][$constraint_name] : NULL;
+  }
+
+  /**
    * Sets the array of validation constraints.
    *
    * See \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
@@ -248,7 +273,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param array $constraints
    *   The array of constraints.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function setConstraints(array $constraints) {
@@ -266,7 +291,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @param array|null $options
    *   The constraint options as required by the constraint plugin, or NULL.
    *
-   * @return self
+   * @return static
    *   The object itself for chaining.
    */
   public function addConstraint($constraint_name, $options = NULL) {
@@ -278,7 +303,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
-   * @todo: Remove once https://drupal.org/node/2112239 is in.
+   * @todo: Remove in https://drupal.org/node/1928868.
    */
   public function offsetExists($offset) {
     // PHP's array access does not work correctly with isset(), so we have to
@@ -290,7 +315,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
-   * @todo: Remove once https://drupal.org/node/2112239 is in.
+   * @todo: Remove in https://drupal.org/node/1928868.
    */
   public function &offsetGet($offset) {
     if (!isset($this->definition[$offset])) {
@@ -303,7 +328,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
-   * @todo: Remove once https://drupal.org/node/2112239 is in.
+   * @todo: Remove in https://drupal.org/node/1928868.
    */
   public function offsetSet($offset, $value) {
     $this->definition[$offset] = $value;
@@ -313,7 +338,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
-   * @todo: Remove once https://drupal.org/node/2112239 is in.
+   * @todo: Remove in https://drupal.org/node/1928868.
    */
   public function offsetUnset($offset) {
     unset($this->definition[$offset]);
@@ -328,44 +353,4 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
     return $this->definition;
   }
 
-  /**
-   * Allows creating data definition objects from old style definition arrays.
-   *
-   * @todo: Remove once https://drupal.org/node/2112239 is in.
-   */
-  public static function createFromOldStyleDefinition(array $definition) {
-    if (empty($definition['list'])) {
-      return new DataDefinition($definition);
-    }
-
-    // If the definition describes a list, separate the list item definition
-    // from the list definition.
-    unset($definition['list']);
-
-    $list_definition = $definition;
-    unset($list_definition['type']);
-
-    // Constraints, class and settings apply to the list item.
-    unset($list_definition['constraints']);
-    unset($list_definition['class']);
-    unset($list_definition['settings']);
-
-    $list_definition = new ListDefinition($list_definition);
-    if (isset($definition['list_class'])) {
-      $list_definition->setClass($definition['list_class']);
-    }
-    else {
-      $type_definition = \Drupal::typedData()->getDefinition($definition['type']);
-      if (isset($type_definition['list_class'])) {
-        $list_definition->setClass($type_definition['list_class']);
-      }
-    }
-
-    // Take care of the item definition now.
-    // Required applies to the list definition only.
-    unset($definition['required']);
-    $item_definition = new DataDefinition($definition);
-    $list_definition->setItemDefinition($item_definition);
-    return $list_definition;
-  }
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\text\Plugin\Field\FieldType;
 
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 
 /**
@@ -40,20 +41,15 @@ class TextWithSummaryItem extends TextItemBase {
     if (!isset(static::$propertyDefinitions)) {
       static::$propertyDefinitions = parent::getPropertyDefinitions();
 
-      static::$propertyDefinitions['summary'] = array(
-        'type' => 'string',
-        'label' => t('Summary text value'),
-      );
-      static::$propertyDefinitions['summary_processed'] = array(
-        'type' => 'string',
-        'label' => t('Processed summary text'),
-        'description' => t('The summary text value with the text format applied.'),
-        'computed' => TRUE,
-        'class' => '\Drupal\text\TextProcessed',
-        'settings' => array(
-          'text source' => 'summary',
-        ),
-      );
+      static::$propertyDefinitions['summary'] = DataDefinition::create('string')
+        ->setLabel(t('Summary text value'));
+
+      static::$propertyDefinitions['summary_processed'] = DataDefinition::create('string')
+        ->setLabel(t('Processed summary text'))
+        ->setDescription(t('The summary text value with the text format applied.'))
+        ->setComputed(TRUE)
+        ->setClass('\Drupal\text\TextProcessed')
+        ->setSetting('text source', 'summary');
     }
     return static::$propertyDefinitions;
   }

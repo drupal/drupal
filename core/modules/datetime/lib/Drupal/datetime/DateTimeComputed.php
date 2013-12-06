@@ -8,6 +8,7 @@
 namespace Drupal\datetime;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedData;
 
@@ -29,9 +30,9 @@ class DateTimeComputed extends TypedData {
   /**
    * {@inheritdoc}
    */
-  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
-    if (!isset($definition['settings']['date source'])) {
+    if (!$definition->getSetting('date source')) {
       throw new \InvalidArgumentException("The definition's 'date source' key has to specify the name of the date property to be computed.");
     }
   }
@@ -45,7 +46,7 @@ class DateTimeComputed extends TypedData {
     }
 
     $item = $this->getParent();
-    $value = $item->{($this->definition['settings']['date source'])};
+    $value = $item->{($this->definition->getSetting('date source'))};
 
     $storage_format = $item->getFieldDefinition()->getFieldSetting('datetime_type') == 'date' ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
     try {

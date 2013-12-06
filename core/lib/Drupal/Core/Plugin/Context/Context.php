@@ -9,6 +9,7 @@ namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context as ComponentContext;
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
@@ -45,7 +46,7 @@ class Context extends ComponentContext {
   public function setContextValue($value) {
     // Make sure the value set is a typed data object.
     if (!empty($this->contextDefinition['type']) && !$value instanceof TypedDataInterface) {
-      $value = \Drupal::typedData()->create($this->contextDefinition, $value);
+      $value = \Drupal::typedData()->create(new DataDefinition($this->contextDefinition), $value);
     }
     parent::setContextValue($value);
   }

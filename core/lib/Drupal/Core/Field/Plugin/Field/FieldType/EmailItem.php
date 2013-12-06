@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'email' entity field type.
@@ -36,10 +37,8 @@ class EmailItem extends FieldItemBase {
   public function getPropertyDefinitions() {
 
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'email',
-        'label' => t('E-mail value'),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('email')
+        ->setLabel(t('E-mail value'));
     }
     return static::$propertyDefinitions;
   }

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\FieldInterface;
 
@@ -35,11 +36,12 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-    $target_type = $this->definition['settings']['target_type'];
+    $settings = $this->definition->getSettings();
+    $target_type = $settings['target_type'];
 
     // Definitions vary by entity type and bundle, so key them accordingly.
     $key = $target_type . ':';
-    $key .= isset($this->definition['settings']['target_bundle']) ? $this->definition['settings']['target_bundle'] : '';
+    $key .= isset($settings['target_bundle']) ? $settings['target_bundle'] : '';
 
     if (!isset(static::$propertyDefinitions[$key])) {
       // Call the parent to define the target_id and entity properties.
@@ -49,25 +51,18 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
       // revisions.
       $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
       if (!empty($target_type_info['entity_keys']['revision']) && !empty($target_type_info['revision_table'])) {
-        static::$propertyDefinitions[$key]['revision_id'] = array(
-          'type' => 'integer',
-          'label' => t('Revision ID'),
-          'constraints' => array(
-            'Range' => array('min' => 0),
-          ),
-        );
+        static::$propertyDefinitions[$key]['revision_id'] = DataDefinition::create('integer')
+          ->setLabel(t('Revision ID'))
+          ->setConstraints(array('Range' => array('min' => 0)));
       }
 
-      static::$propertyDefinitions[$key]['label'] = array(
-        'type' => 'string',
-        'label' => t('Label (auto-create)'),
-        'computed' => TRUE,
-      );
-      static::$propertyDefinitions[$key]['access'] = array(
-        'type' => 'boolean',
-        'label' => t('Access'),
-        'computed' => TRUE,
-      );
+      static::$propertyDefinitions[$key]['label'] = DataDefinition::create('string')
+        ->setLabel(t('Label (auto-create)'))
+        ->setComputed(TRUE);
+
+      static::$propertyDefinitions[$key]['access'] = DataDefinition::create('boolean')
+        ->setLabel(t('Access'))
+        ->setComputed(TRUE);
     }
     return static::$propertyDefinitions[$key];
   }

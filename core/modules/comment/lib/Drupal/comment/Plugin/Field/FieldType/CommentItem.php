@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\Field\FieldType;
 
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 use Drupal\Core\Field\ConfigFieldItemBase;
 
@@ -43,35 +44,26 @@ class CommentItem extends ConfigFieldItemBase {
    */
   public function getPropertyDefinitions() {
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions = array(
-        'status' => array(
-          'type' => 'integer',
-          'label' => t('Comment status value'),
-        ),
-        'cid' => array(
-          'type' => 'integer',
-          'label' => t('Last comment ID'),
-        ),
-        'last_comment_timestamp' => array(
-          'label' => t('Last comment timestamp'),
-          'description' => t('The time that the last comment was created.'),
-          'type' => 'integer',
-        ),
-        'last_comment_name' => array(
-          'label' => t('Last comment name'),
-          'description' => t('The name of the user posting the last comment.'),
-          'type' => 'string',
-        ),
-        'last_comment_uid' => array(
-          'type' => 'integer',
-          'label' => t('Last comment user ID'),
-        ),
-        'comment_count' => array(
-          'label' => t('Number of comments'),
-          'description' => t('The number of comments.'),
-          'type' => 'integer',
-        ),
-      );
+      static::$propertyDefinitions['status'] = DataDefinition::create('integer')
+        ->setLabel(t('Comment status value'));
+
+      static::$propertyDefinitions['cid'] = DataDefinition::create('integer')
+        ->setLabel(t('Last comment ID'));
+
+      static::$propertyDefinitions['last_comment_timestamp'] = DataDefinition::create('integer')
+        ->setLabel(t('Last comment timestamp'))
+        ->setDescription(t('The time that the last comment was created.'));
+
+      static::$propertyDefinitions['last_comment_name'] = DataDefinition::create('string')
+        ->setLabel(t('Last comment name'))
+        ->setDescription(t('The name of the user posting the last comment.'));
+
+      static::$propertyDefinitions['last_comment_uid'] = DataDefinition::create('integer')
+        ->setLabel(t('Last comment user ID'));
+
+      static::$propertyDefinitions['comment_count'] = DataDefinition::create('integer')
+        ->setLabel(t('Number of comments'))
+        ->setDescription(t('The number of comments.'));
     }
     return static::$propertyDefinitions;
   }

@@ -9,6 +9,7 @@ namespace Drupal\node\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
@@ -327,104 +328,91 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['nid'] = array(
-      'label' => t('Node ID'),
-      'description' => t('The node ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['uuid'] = array(
-      'label' => t('UUID'),
-      'description' => t('The node UUID.'),
-      'type' => 'uuid_field',
-      'read-only' => TRUE,
-    );
-    $properties['vid'] = array(
-      'label' => t('Revision ID'),
-      'description' => t('The node revision ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['type'] = array(
-      'label' => t('Type'),
-      'description' => t('The node type.'),
-      'type' => 'string_field',
-      'read-only' => TRUE,
-    );
-    $properties['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The node language code.'),
-      'type' => 'language_field',
-    );
-    $properties['title'] = array(
-      'label' => t('Title'),
-      'description' => t('The title of this node, always treated as non-markup plain text.'),
-      'type' => 'field_item:text',
-      'list_class' => '\Drupal\node\NodeTitleItemList',
-      'required' => TRUE,
-      'settings' => array(
+    $fields['nid'] = FieldDefinition::create('integer')
+      ->setLabel(t('Node ID'))
+      ->setDescription(t('The node ID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The node UUID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['vid'] = FieldDefinition::create('integer')
+      ->setLabel(t('Revision ID'))
+      ->setDescription(t('The node revision ID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['type'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Type'))
+      ->setDescription(t('The node type.'))
+      ->setFieldSetting('target_type', 'node_type')
+      ->setReadOnly(TRUE);
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The node language code.'));
+
+    $fields['title'] = FieldDefinition::create('text')
+      ->setLabel(t('Title'))
+      ->setDescription(t('The title of this node, always treated as non-markup plain text.'))
+      ->setClass('\Drupal\node\NodeTitleItemList')
+      ->setRequired(TRUE)
+      ->setTranslatable(TRUE)
+      ->setFieldSettings(array(
         'default_value' => '',
         'max_length' => 255,
         'text_processing' => 0,
-      ),
-      'translatable' => TRUE,
-    );
-    $properties['uid'] = array(
-      'label' => t('User ID'),
-      'description' => t('The user ID of the node author.'),
-      'type' => 'entity_reference_field',
-      'settings' => array(
+      ));
+
+    $fields['uid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('User ID'))
+      ->setDescription(t('The user ID of the node author.'))
+      ->setFieldSettings(array(
         'target_type' => 'user',
         'default_value' => 0,
-      ),
-    );
-    $properties['status'] = array(
-      'label' => t('Publishing status'),
-      'description' => t('A boolean indicating whether the node is published.'),
-      'type' => 'boolean_field',
-    );
-    $properties['created'] = array(
-      'label' => t('Created'),
-      'description' => t('The time that the node was created.'),
-      'type' => 'integer_field',
-    );
-    $properties['changed'] = array(
-      'label' => t('Changed'),
-      'description' => t('The time that the node was last edited.'),
-      'type' => 'integer_field',
-      'property_constraints' => array(
-        'value' => array('EntityChanged' => array()),
-      ),
-    );
-    $properties['promote'] = array(
-      'label' => t('Promote'),
-      'description' => t('A boolean indicating whether the node should be displayed on the front page.'),
-      'type' => 'boolean_field',
-    );
-    $properties['sticky'] = array(
-      'label' => t('Sticky'),
-      'description' => t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'),
-      'type' => 'boolean_field',
-    );
-    $properties['revision_timestamp'] = array(
-      'label' => t('Revision timestamp'),
-      'description' => t('The time that the current revision was created.'),
-      'type' => 'integer_field',
-      'queryable' => FALSE,
-    );
-    $properties['revision_uid'] = array(
-      'label' => t('Revision user ID'),
-      'description' => t('The user ID of the author of the current revision.'),
-      'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'user'),
-      'queryable' => FALSE,
-    );
-    $properties['log'] = array(
-      'label' => t('Log'),
-      'description' => t('The log entry explaining the changes in this version.'),
-      'type' => 'string_field',
-    );
-    return $properties;
+      ));
+
+    $fields['status'] = FieldDefinition::create('boolean')
+      ->setLabel(t('Publishing status'))
+      ->setDescription(t('A boolean indicating whether the node is published.'));
+
+    // @todo Convert to a "created" field in https://drupal.org/node/2145103.
+    $fields['created'] = FieldDefinition::create('integer')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time that the node was created.'));
+
+    // @todo Convert to a "changed" field in https://drupal.org/node/2145103.
+    $fields['changed'] = FieldDefinition::create('integer')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the node was last edited.'))
+      ->setPropertyConstraints('value', array('EntityChanged' => array()));
+
+    $fields['promote'] = FieldDefinition::create('boolean')
+      ->setLabel(t('Promote'))
+      ->setDescription(t('A boolean indicating whether the node should be displayed on the front page.'));
+
+    $fields['sticky'] = FieldDefinition::create('boolean')
+      ->setLabel(t('Sticky'))
+      ->setDescription(t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'));
+
+    // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
+    $fields['revision_timestamp'] = FieldDefinition::create('integer')
+      ->setLabel(t('Revision timestamp'))
+      ->setDescription(t('The time that the current revision was created.'))
+      ->setFieldQueryable(FALSE);
+
+    $fields['revision_uid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Revision user ID'))
+      ->setDescription(t('The user ID of the author of the current revision.'))
+      ->setFieldSettings(array('target_type' => 'user'))
+      ->setFieldQueryable(FALSE);
+
+    $fields['log'] = FieldDefinition::create('string')
+      ->setLabel(t('Log'))
+      ->setDescription(t('The log entry explaining the changes in this revision.'));
+
+    return $fields;
   }
 
 }

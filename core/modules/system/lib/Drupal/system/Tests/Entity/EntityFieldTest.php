@@ -8,9 +8,11 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
@@ -368,16 +370,16 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($definitions['field_test_text']->getFieldType(), 'text', $entity_type .': Test-text-field field found.');
 
     $name_properties = $entity->name->getPropertyDefinitions();
-    $this->assertEqual($name_properties['value']['type'], 'string', $entity_type .': String value property of the name found.');
+    $this->assertEqual($name_properties['value']->getDataType(), 'string', $entity_type .': String value property of the name found.');
 
     $userref_properties = $entity->user_id->getPropertyDefinitions();
-    $this->assertEqual($userref_properties['target_id']['type'], 'integer', $entity_type .': Entity id property of the user found.');
-    $this->assertEqual($userref_properties['entity']['type'], 'entity_reference', $entity_type .': Entity reference property of the user found.');
+    $this->assertEqual($userref_properties['target_id']->getDataType(), 'integer', $entity_type .': Entity id property of the user found.');
+    $this->assertEqual($userref_properties['entity']->getDataType(), 'entity_reference', $entity_type .': Entity reference property of the user found.');
 
     $textfield_properties = $entity->field_test_text->getPropertyDefinitions();
-    $this->assertEqual($textfield_properties['value']['type'], 'string', $entity_type .': String value property of the test-text field found.');
-    $this->assertEqual($textfield_properties['format']['type'], 'filter_format', $entity_type .': String format field of the test-text field found.');
-    $this->assertEqual($textfield_properties['processed']['type'], 'string', $entity_type .': String processed property of the test-text field found.');
+    $this->assertEqual($textfield_properties['value']->getDataType(), 'string', $entity_type .': String value property of the test-text field found.');
+    $this->assertEqual($textfield_properties['format']->getDataType(), 'filter_format', $entity_type .': String format field of the test-text field found.');
+    $this->assertEqual($textfield_properties['processed']->getDataType(), 'string', $entity_type .': String processed property of the test-text field found.');
 
     // @todo: Once the user entity has definitions, continue testing getting
     // them from the $userref_values['entity'] property.
@@ -534,13 +536,9 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $entity = $this->createTestEntity('entity_test');
     $entity->save();
     // Create a reference field item and let it reference the entity.
-    $definition = array(
-      'type' => 'field_item:entity_reference',
-      'settings' => array(
-        'target_type' => 'entity_test',
-      ),
-      'label' => 'Test entity',
-    );
+    $definition = FieldDefinition::create('entity_reference')
+      ->setLabel('Test entity')
+      ->setFieldSetting('target_type', 'entity_test');
     $reference_field_item = \Drupal::TypedData()->create($definition);
     $reference = $reference_field_item->get('entity');
     $reference->setValue($entity);
@@ -561,13 +559,12 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($violations->count(), 1);
 
     // Test bundle validation.
-    $definition = array(
-      'type' => 'field_item:entity_reference',
-      'settings' => array(
+    $definition = FieldDefinition::create('entity_reference')
+      ->setLabel('Test entity')
+      ->setFieldSettings(array(
         'target_type' => 'node',
         'target_bundle' => 'article',
-      ),
-    );
+      ));
     $reference_field_item = \Drupal::TypedData()->create($definition);
     $reference = $reference_field_item->get('entity');
     $reference->setValue($node);

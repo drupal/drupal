@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
@@ -227,7 +228,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     else {
       $type = 'entity:' . $this->entityType();
     }
-    return array('type' => $type);
+    return DataDefinition::create($type);
   }
 
   /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 use Drupal\Core\Field\ConfigFieldItemBase;
 
@@ -39,16 +40,12 @@ class ShapeItem extends ConfigFieldItemBase {
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['shape'] = array(
-        'type' => 'string',
-        'label' => t('Shape'),
-      );
-      static::$propertyDefinitions['color'] = array(
-        'type' => 'string',
-        'label' => t('Color'),
-      );
+      static::$propertyDefinitions['shape'] = DataDefinition::create('string')
+        ->setLabel(t('Shape'));
+
+      static::$propertyDefinitions['color'] = DataDefinition::create('string')
+        ->setLabel(t('Color'));
     }
     return static::$propertyDefinitions;
   }

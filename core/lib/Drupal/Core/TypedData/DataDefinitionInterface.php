@@ -102,14 +102,40 @@ interface DataDefinitionInterface {
   public function getSettings();
 
   /**
+   * Returns the value of a given setting.
+   *
+   * @param string $setting_name
+   *   The setting name.
+   *
+   * @return mixed
+   *   The setting value.
+   */
+  public function getSetting($setting_name);
+
+  /**
    * Returns an array of validation constraints.
    *
    * See \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
    *
    * @return array
-   *   Array of constraints, each being an instance of
-   *   \Symfony\Component\Validator\Constraint.
+   *   An array of validation constraint definitions, keyed by constraint name.
+   *   Each constraint definition can be used for instantiating
+   *   \Symfony\Component\Validator\Constraint objects.
    */
   public function getConstraints();
+
+  /**
+   * Returns a validation constraint.
+   *
+   * See \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
+   *
+   * @param string $constraint_name
+   *   The name of the the constraint, i.e. its plugin id.
+   *
+   * @return array
+   *   A validation constraint definition which can be used for instantiating a
+   *   \Symfony\Component\Validator\Constraint object.
+   */
+  public function getConstraint($constraint_name);
 
 }

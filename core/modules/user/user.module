@@ -9,6 +9,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\user\RoleInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\TypedData\DataDefinition;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\menu_link\Entity\MenuLink;
@@ -350,10 +351,9 @@ function user_load_by_name($name) {
  *
  */
 function user_validate_name($name) {
-  $data = \Drupal::typedData()->create(array(
-    'type' => 'string',
-    'constraints' => array('UserName' => array()),
-  ));
+  $definition = DataDefinition::create('string')
+    ->setConstraints(array('UserName' => array()));
+  $data = \Drupal::typedData()->create($definition);
   $data->setValue($name);
   $violations = $data->validate();
   if (count($violations) > 0) {

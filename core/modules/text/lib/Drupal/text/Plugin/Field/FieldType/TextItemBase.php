@@ -9,6 +9,7 @@ namespace Drupal\text\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\ConfigFieldItemBase;
 use Drupal\Core\Field\PrepareCacheInterface;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Base class for 'text' configurable field types.
@@ -27,24 +28,18 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
    */
   public function getPropertyDefinitions() {
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'string',
-        'label' => t('Text value'),
-      );
-      static::$propertyDefinitions['format'] = array(
-        'type' => 'filter_format',
-        'label' => t('Text format'),
-      );
-      static::$propertyDefinitions['processed'] = array(
-        'type' => 'string',
-        'label' => t('Processed text'),
-        'description' => t('The text value with the text format applied.'),
-        'computed' => TRUE,
-        'class' => '\Drupal\text\TextProcessed',
-        'settings' => array(
-          'text source' => 'value',
-        ),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('string')
+        ->setLabel(t('Text value'));
+
+      static::$propertyDefinitions['format'] = DataDefinition::create('filter_format')
+        ->setLabel(t('Text format'));
+
+      static::$propertyDefinitions['processed'] = DataDefinition::create('string')
+        ->setLabel(t('Processed text'))
+        ->setDescription(t('The text value with the text format applied.'))
+        ->setComputed(TRUE)
+        ->setClass('\Drupal\text\TextProcessed')
+        ->setSetting('text source', 'value');
     }
     return static::$propertyDefinitions;
   }
@@ -79,7 +74,7 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
     $text_processing = $this->getFieldSetting('text_processing');
     if (!$text_processing || filter_format_allowcache($this->get('format')->getValue())) {
       foreach ($this->getPropertyDefinitions() as $property => $definition) {
-        if (isset($definition['class']) && ($definition['class'] == '\Drupal\text\TextProcessed')) {
+        if ($definition->getClass() == '\Drupal\text\TextProcessed') {
           $data[$property] = $this->get($property)->getValue();
         }
       }
@@ -98,8 +93,8 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
 
     // Unset processed properties that are affected by the change.
     foreach ($this->getPropertyDefinitions() as $property => $definition) {
-      if (isset($definition['class']) && ($definition['class'] == '\Drupal\text\TextProcessed')) {
-        if ($property_name == 'format' || (isset($definition['settings']['text source']) && $definition['settings']['text source'] == $property_name)) {
+      if ($definition->getClass() == '\Drupal\text\TextProcessed') {
+        if ($property_name == 'format' || ($definition->getSetting('text source') == $property_name)) {
           $this->set($property, NULL, FALSE);
         }
       }

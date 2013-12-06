@@ -105,7 +105,7 @@ interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
   /**
    * Gets an array of property definitions of contained properties.
    *
-   * @return array
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
    *   An array of property definitions of contained properties, keyed by
    *   property name.
    */

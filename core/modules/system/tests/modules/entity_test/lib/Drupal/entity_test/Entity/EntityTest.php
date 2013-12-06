@@ -10,6 +10,7 @@ namespace Drupal\entity_test\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
 
 /**
@@ -114,45 +115,39 @@ class EntityTest extends ContentEntityBase {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $fields['id'] = array(
-      'label' => t('ID'),
-      'description' => t('The ID of the test entity.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $fields['uuid'] = array(
-      'label' => t('UUID'),
-      'description' => t('The UUID of the test entity.'),
-      'type' => 'uuid_field',
-    );
-    $fields['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The language code of the test entity.'),
-      'type' => 'language_field',
-    );
-    $fields['name'] = array(
-      'label' => t('Name'),
-      'description' => t('The name of the test entity.'),
-      'type' => 'string_field',
-      'translatable' => TRUE,
-      'property_constraints' => array(
-        'value' => array('Length' => array('max' => 32)),
-      ),
-    );
-    $fields['type'] = array(
-      'label' => t('Type'),
-      'description' => t('The bundle of the test entity.'),
-      'type' => 'string_field',
-      'required' => TRUE,
-      // @todo: Add allowed values validation.
-    );
-    $fields['user_id'] = array(
-      'label' => t('User ID'),
-      'description' => t('The ID of the associated user.'),
-      'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'user'),
-      'translatable' => TRUE,
-    );
+    $fields['id'] = FieldDefinition::create('integer')
+      ->setLabel(t('ID'))
+      ->setDescription(t('The ID of the test entity.'))
+      ->setReadOnly(TRUE);
+
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The UUID of the test entity.'))
+      ->setReadOnly(TRUE);
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The language code of the test entity.'));
+
+    $fields['name'] = FieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDescription(t('The name of the test entity.'))
+      ->setTranslatable(TRUE)
+      ->setPropertyConstraints('value', array('Length' => array('max' => 32)));
+
+    // @todo: Add allowed values validation.
+    $fields['type'] = FieldDefinition::create('string')
+      ->setLabel(t('Type'))
+      ->setDescription(t('The bundle of the test entity.'))
+      ->setRequired(TRUE);
+
+    $fields['user_id'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('User ID'))
+      ->setDescription(t('The ID of the associated user.'))
+      ->setFieldSettings(array('target_type' => 'user'))
+      ->setTranslatable(TRUE);
+
     return $fields;
   }
+
 }

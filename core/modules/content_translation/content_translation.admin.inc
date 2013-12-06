@@ -124,7 +124,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
             // that support translation can be enabled or disabled.
             elseif (isset($field_settings[$field_name]) || $definition->isFieldTranslatable()) {
               $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
-                '#label' => $definition['label'],
+                '#label' => $definition->getLabel(),
                 '#type' => 'checkbox',
                 '#default_value' => $translatable,
               );

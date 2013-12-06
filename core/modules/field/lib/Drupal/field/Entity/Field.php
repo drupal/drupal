@@ -771,8 +771,27 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
+  public function getSetting($setting_name) {
+    // This should actually return the settings for field item list, which are
+    // not the field settings. However, there is no harm in returning field
+    // settings here, so we do that to avoid confusion for now.
+    // @todo: Unify with getFieldSettings() or remove once typed data moved
+    // to the adapter approach.
+    return $this->getFieldSetting($setting_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConstraints() {
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraint($constraint_name) {
+    return NULL;
   }
 
   /**

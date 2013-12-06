@@ -338,15 +338,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         // See https://drupal.org/node/2114707.
         $class = $this->factory->getPluginClass($entity_type, $this->getDefinition($entity_type));
 
-        $base_definitions = $class::baseFieldDefinitions($entity_type);
-        foreach ($base_definitions as &$base_definition) {
-          // Support old-style field types to avoid that all base field
-          // definitions need to be changed.
-          // @todo: Remove after https://drupal.org/node/2047229.
-          $base_definition['type'] = preg_replace('/(.+)_field/', 'field_item:$1', $base_definition['type']);
-        }
         $this->entityFieldInfo[$entity_type] = array(
-          'definitions' => $base_definitions,
+          'definitions' => $class::baseFieldDefinitions($entity_type),
           // Contains definitions of optional (per-bundle) fields.
           'optional' => array(),
           // An array keyed by bundle name containing the optional fields added
@@ -360,13 +353,9 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         $result = $this->moduleHandler->invokeAll('entity_field_info', array($entity_type));
         $this->entityFieldInfo[$entity_type] = NestedArray::mergeDeep($this->entityFieldInfo[$entity_type], $result);
 
-        // Enforce field definitions to be objects.
+        // Automatically set the field name for non-configurable fields.
         foreach (array('definitions', 'optional') as $key) {
           foreach ($this->entityFieldInfo[$entity_type][$key] as $field_name => &$definition) {
-            if (is_array($definition)) {
-              $definition = FieldDefinition::createFromOldStyleDefinition($definition);
-            }
-            // Automatically set the field name for non-configurable fields.
             if ($definition instanceof FieldDefinition) {
               $definition->setFieldName($field_name);
             }

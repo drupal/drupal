@@ -10,6 +10,7 @@ namespace Drupal\field_test\Plugin\Field\FieldType;
 use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Field\PrepareCacheInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 use Drupal\Core\Field\ConfigFieldItemBase;
 
@@ -48,12 +49,9 @@ class TestItem extends ConfigFieldItemBase implements PrepareCacheInterface {
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'integer',
-        'label' => t('Test integer value'),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('integer')
+        ->setLabel(t('Test integer value'));
     }
     return static::$propertyDefinitions;
   }

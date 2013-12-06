@@ -11,6 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\custom_block\CustomBlockInterface;
 
 /**
@@ -244,51 +245,44 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['id'] = array(
-      'label' => t('ID'),
-      'description' => t('The custom block ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['uuid'] = array(
-      'label' => t('UUID'),
-      'description' => t('The custom block UUID.'),
-      'type' => 'uuid_field',
-    );
-    $properties['revision_id'] = array(
-      'label' => t('Revision ID'),
-      'description' => t('The revision ID.'),
-      'type' => 'integer_field',
-    );
-    $properties['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The custom block language code.'),
-      'type' => 'language_field',
-    );
-    $properties['info'] = array(
-      'label' => t('Subject'),
-      'description' => t('The custom block name.'),
-      'type' => 'string_field',
-    );
-    $properties['type'] = array(
-      'label' => t('Block type'),
-      'description' => t('The block type.'),
-      'type' => 'string_field',
-    );
-    $properties['log'] = array(
-      'label' => t('Revision log message'),
-      'description' => t('The revision log message.'),
-      'type' => 'string_field',
-    );
-    $properties['changed'] = array(
-      'label' => t('Changed'),
-      'description' => t('The time that the custom block was last edited.'),
-      'type' => 'integer_field',
-      'property_constraints' => array(
-        'value' => array('EntityChanged' => array()),
-      ),
-    );
-    return $properties;
+    $fields['id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Custom block ID'))
+      ->setDescription(t('The custom block ID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The custom block UUID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['revision_id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Revision ID'))
+      ->setDescription(t('The revision ID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The custom block language code.'));
+
+    $fields['info'] = FieldDefinition::create('string')
+      ->setLabel(t('Subject'))
+      ->setDescription(t('The custom block name.'));
+
+    $fields['type'] = FieldDefinition::create('string')
+      ->setLabel(t('Block type'))
+      ->setDescription(t('The block type.'));
+
+    $fields['log'] = FieldDefinition::create('string')
+      ->setLabel(t('Revision log message'))
+      ->setDescription(t('The revision log message.'));
+
+    // @todo Convert to a "changed" field in https://drupal.org/node/2145103.
+    $fields['changed'] = FieldDefinition::create('integer')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the custom block was last edited.'))
+      ->setPropertyConstraints('value', array('EntityChanged' => array()));
+
+    return $fields;
   }
 
   /**

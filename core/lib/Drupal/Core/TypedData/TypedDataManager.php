@@ -95,7 +95,6 @@ class TypedDataManager extends DefaultPluginManager {
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
    *   The data definition of the typed data object. For backwards-compatibility
    *   an array representation of the data definition may be passed also.
-   *   @todo: Need to remove array support in https://drupal.org/node/2112239.
    * @param mixed $value
    *   (optional) The data value. If set, it has to match one of the supported
    *   data type format as documented for the data type classes.
@@ -121,11 +120,7 @@ class TypedDataManager extends DefaultPluginManager {
    * @see \Drupal\Core\TypedData\Plugin\DataType\Uri
    * @see \Drupal\Core\TypedData\Plugin\DataType\Binary
    */
-  public function create($definition, $value = NULL, $name = NULL, $parent = NULL) {
-    // @todo: Remove array support once https://drupal.org/node/2112239 is in.
-    if (is_array($definition)) {
-      $definition = DataDefinition::createFromOldStyleDefinition($definition);
-    }
+  public function create(DataDefinitionInterface $definition, $value = NULL, $name = NULL, $parent = NULL) {
     $typed_data = $this->createInstance($definition->getDataType(), array(
       'data_definition' => $definition,
       'name' => $name,
@@ -194,9 +189,14 @@ class TypedDataManager extends DefaultPluginManager {
    */
   public function getPropertyInstance(TypedDataInterface $object, $property_name, $value = NULL) {
     $definition = $object->getRoot()->getDefinition();
-    $key = $definition['type'];
-    if (isset($definition['settings'])) {
-      $key .= ':' . implode(',', $definition['settings']);
+    // If the definition is a list, we need to look at the data type and the
+    // settings of its item definition.
+    if ($definition instanceof ListDefinition) {
+      $definition = $definition->getItemDefinition();
+    }
+    $key = $definition->getDataType();
+    if ($settings = $definition->getSettings()) {
+      $key .= ':' . implode(',', $settings);
     }
     $key .= ':' . $object->getPropertyPath() . '.';
     // If we are creating list items, we always use 0 in the key as all list

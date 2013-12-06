@@ -9,6 +9,7 @@ namespace Drupal\datetime\Plugin\Field\FieldType;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\PrepareCacheInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInterface;
 use Drupal\Core\Field\ConfigFieldItemBase;
 
@@ -43,20 +44,15 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
    */
   public function getPropertyDefinitions() {
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'datetime_iso8601',
-        'label' => t('Date value'),
-      );
-      static::$propertyDefinitions['date'] = array(
-        'type' => 'datetime_computed',
-        'label' => t('Computed date'),
-        'description' => t('The computed DateTime object.'),
-        'computed' => TRUE,
-        'class' => '\Drupal\datetime\DateTimeComputed',
-        'settings' => array(
-          'date source' => 'value',
-        ),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('datetime_iso8601')
+        ->setLabel(t('Date value'));
+
+      static::$propertyDefinitions['date'] = DataDefinition::create('datetime_computed')
+        ->setLabel(t('Computed date'))
+        ->setDescription(t('The computed DateTime object.'))
+        ->setComputed(TRUE)
+        ->setClass('\Drupal\datetime\DateTimeComputed')
+        ->setSetting('date source', 'value');
     }
 
     return static::$propertyDefinitions;

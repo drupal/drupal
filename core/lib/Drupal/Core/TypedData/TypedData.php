@@ -54,7 +54,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    *
    * @todo When \Drupal\Core\Config\TypedConfigManager has been fixed to use
    *   class-based definitions, type-hint $definition to
-   *   DataDefinitionInterface.
+   *   DataDefinitionInterface. https://drupal.org/node/1928868
    */
   public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
     $this->definition = $definition;
@@ -73,7 +73,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    * {@inheritdoc}
    */
   public function getPluginDefinition() {
-    return \Drupal::typedData()->getDefinition($this->definition['type']);
+    return \Drupal::typedData()->getDefinition($this->definition->getDataType());
   }
 
   /**

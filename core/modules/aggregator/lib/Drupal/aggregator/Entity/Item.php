@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\aggregator\ItemInterface;
+use Drupal\Core\Field\FieldDefinition;
 
 /**
  * Defines the aggregator item entity class.
@@ -80,52 +81,47 @@ class Item extends ContentEntityBase implements ItemInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $fields['iid'] = array(
-      'label' => t('ID'),
-      'description' => t('The ID of the aggregor item.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $fields['fid'] = array(
-      'label' => t('Aggregator feed ID'),
-      'description' => t('The ID of the aggregator feed.'),
-      'type' => 'integer_field',
-    );
-    $fields['title'] = array(
-      'label' => t('Title'),
-      'description' => t('The title of the feed item.'),
-      'type' => 'string_field',
-    );
-    $fields['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The feed item language code.'),
-      'type' => 'language_field',
-    );
-    $fields['link'] = array(
-      'label' => t('Link'),
-      'description' => t('The link of the feed item.'),
-      'type' => 'uri_field',
-    );
-    $fields['author'] = array(
-      'label' => t('Author'),
-      'description' => t('The author of the feed item.'),
-      'type' => 'string_field',
-    );
-    $fields['description'] = array(
-      'label' => t('Description'),
-      'description' => t('The body of the feed item.'),
-      'type' => 'string_field',
-    );
-    $fields['timestamp'] = array(
-      'label' => t('Posted timestamp'),
-      'description' => t('Posted date of the feed item, as a Unix timestamp.'),
-      'type' => 'integer_field',
-    );
-    $fields['guid'] = array(
-      'label' => t('GUID'),
-      'description' => t('Unique identifier for the feed item.'),
-      'type' => 'string_field',
-    );
+    $fields['iid'] = FieldDefinition::create('integer')
+      ->setLabel(t('Aggregator item ID'))
+      ->setDescription(t('The ID of the feed item.'))
+      ->setReadOnly(TRUE);
+
+    $fields['fid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Aggregator feed ID'))
+      ->setDescription(t('The ID of the aggregator feed.'))
+      ->setFieldSetting('target_type', 'aggregator_feed');
+
+    $fields['title'] = FieldDefinition::create('string')
+      ->setLabel(t('Title'))
+      ->setDescription(t('The title of the feed item.'));
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The feed item language code.'));
+
+    $fields['link'] = FieldDefinition::create('uri')
+      ->setLabel(t('Link'))
+      ->setDescription(t('The link of the feed item.'));
+
+    $fields['author'] = FieldDefinition::create('string')
+      ->setLabel(t('Author'))
+      ->setDescription(t('The author of the feed item.'));
+
+    // @todo Convert to a text field in https://drupal.org/node/2149845.
+    $fields['description'] = FieldDefinition::create('string')
+      ->setLabel(t('Description'))
+      ->setDescription(t('The body of the feed item.'));
+
+    // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
+    $fields['timestamp'] = FieldDefinition::create('integer')
+      ->setLabel(t('Posted timestamp'))
+      ->setDescription(t('Posted date of the feed item, as a Unix timestamp.'));
+
+    // @todo Convert to a real UUID field in https://drupal.org/node/2149851.
+    $fields['guid'] = FieldDefinition::create('string')
+      ->setLabel(t('GUID'))
+      ->setDescription(t('Unique identifier for the feed item.'));
+
     return $fields;
   }
 
@@ -133,7 +129,7 @@ class Item extends ContentEntityBase implements ItemInterface {
    * @inheritdoc
    */
   public function getFeedId() {
-    return $this->get('fid')->value;
+    return $this->get('fid')->target_id;
   }
 
   /**

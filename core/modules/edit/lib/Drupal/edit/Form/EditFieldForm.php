@@ -233,8 +233,8 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
    */
   protected function getChangedFieldName(EntityInterface $entity) {
     foreach ($entity as $field_name => $field) {
-      $definition = $field->getDefinition();
-      if (isset($definition['property_constraints']['value']['EntityChanged'])) {
+      $constraints = $field->getItemDefinition()->getConstraints();
+      if (isset($constraints['ComplexData']['value']['EntityChanged'])) {
         return $field_name;
       }
     }

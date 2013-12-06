@@ -7,9 +7,9 @@
 
 namespace Drupal\text;
 
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedData;
-use Drupal\Core\TypedData\ReadOnlyException;
 
 /**
  * A computed property for processing text with a format.
@@ -29,10 +29,10 @@ class TextProcessed extends TypedData {
   /**
    * Overrides TypedData::__construct().
    */
-  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
 
-    if (!isset($definition['settings']['text source'])) {
+    if ($definition->getSetting('text source') === NULL) {
       throw new \InvalidArgumentException("The definition's 'source' key has to specify the name of the text property to be processed.");
     }
   }
@@ -46,7 +46,7 @@ class TextProcessed extends TypedData {
     }
 
     $item = $this->getParent();
-    $text = $item->{($this->definition['settings']['text source'])};
+    $text = $item->{($this->definition->getSetting('text source'))};
 
     // Avoid running check_markup() or check_plain() on empty strings.
     if (!isset($text) || $text === '') {

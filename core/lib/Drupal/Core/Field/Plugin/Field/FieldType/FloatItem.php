@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'float' entity field type.
@@ -36,10 +37,8 @@ class FloatItem extends FieldItemBase {
   public function getPropertyDefinitions() {
 
     if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = array(
-        'type' => 'float',
-        'label' => t('Float value'),
-      );
+      static::$propertyDefinitions['value'] = DataDefinition::create('float')
+        ->setLabel(t('Float value'));
     }
     return static::$propertyDefinitions;
   }

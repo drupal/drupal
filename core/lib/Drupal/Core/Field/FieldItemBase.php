@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Plugin\DataType\Map;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\user;
@@ -23,14 +24,14 @@ use Drupal\user;
 abstract class FieldItemBase extends Map implements FieldItemInterface {
 
   /**
-   * Overrides \Drupal\Core\TypedData\TypedData::__construct().
+   * {@inheritdoc}
    */
-  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     // Initialize computed properties by default, such that they get cloned
     // with the whole item.
     foreach ($this->getPropertyDefinitions() as $name => $definition) {
-      if (!empty($definition['computed'])) {
+      if ($definition->isComputed()) {
         $this->properties[$name] = \Drupal::typedData()->getPropertyInstance($this, $name);
       }
     }
@@ -183,20 +184,6 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     if (isset($this->properties[$property_name])) {
       unset($this->values[$property_name]);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConstraints() {
-    $constraints = parent::getConstraints();
-    // If property constraints are present add in a ComplexData constraint for
-    // applying them.
-    if (!empty($this->definition['property_constraints'])) {
-      $constraints[] = \Drupal::typedData()->getValidationConstraintManager()
-        ->create('ComplexData', $this->definition['property_constraints']);
-    }
-    return $constraints;
   }
 
   /**

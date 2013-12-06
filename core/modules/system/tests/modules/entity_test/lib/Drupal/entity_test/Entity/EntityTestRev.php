@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
@@ -69,12 +70,13 @@ class EntityTestRev extends EntityTest {
    */
   public static function baseFieldDefinitions($entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields['revision_id'] = array(
-      'label' => t('ID'),
-      'description' => t('The version id of the test entity.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
+
+    $fields['revision_id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Revision ID'))
+      ->setDescription(t('The version id of the test entity.'))
+      ->setReadOnly(TRUE);
+
     return $fields;
   }
+
 }

@@ -12,7 +12,9 @@ use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the comment entity class.
@@ -351,108 +353,99 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['cid'] = array(
-      'label' => t('ID'),
-      'description' => t('The comment ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['uuid'] = array(
-      'label' => t('UUID'),
-      'description' => t('The comment UUID.'),
-      'type' => 'uuid_field',
-    );
-    $properties['pid'] = array(
-      'label' => t('Parent ID'),
-      'description' => t('The parent comment ID if this is a reply to a comment.'),
-      'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'comment'),
-    );
-    $properties['entity_id'] = array(
-      'label' => t('Entity ID'),
-      'description' => t('The ID of the entity of which this comment is a reply.'),
-      'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'node'),
-      'required' => TRUE,
-    );
-    $properties['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The comment language code.'),
-      'type' => 'language_field',
-    );
-    $properties['subject'] = array(
-      'label' => t('Subject'),
-      'description' => t('The comment title or subject.'),
-      'type' => 'string_field',
-    );
-    $properties['uid'] = array(
-      'label' => t('User ID'),
-      'description' => t('The user ID of the comment author.'),
-      'type' => 'entity_reference_field',
-      'settings' => array(
+    $fields['cid'] = FieldDefinition::create('integer')
+      ->setLabel(t('Comment ID'))
+      ->setDescription(t('The comment ID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The comment UUID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['pid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Parent ID'))
+      ->setDescription(t('The parent comment ID if this is a reply to a comment.'))
+      ->setFieldSetting('target_type', 'comment');
+
+    $fields['entity_id'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Entity ID'))
+      ->setDescription(t('The ID of the entity of which this comment is a reply.'))
+      ->setFieldSetting('target_type', 'node')
+      ->setRequired(TRUE);
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The comment language code.'));
+
+    $fields['subject'] = FieldDefinition::create('string')
+      ->setLabel(t('Subject'))
+      ->setDescription(t('The comment title or subject.'));
+
+    $fields['uid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('User ID'))
+      ->setDescription(t('The user ID of the comment author.'))
+      ->setFieldSettings(array(
         'target_type' => 'user',
         'default_value' => 0,
-      ),
-    );
-    $properties['name'] = array(
-      'label' => t('Name'),
-      'description' => t("The comment author's name."),
-      'type' => 'string_field',
-      'settings' => array('default_value' => ''),
-    );
-    $properties['mail'] = array(
-      'label' => t('e-mail'),
-      'description' => t("The comment author's e-mail address."),
-      'type' => 'string_field',
-    );
-    $properties['homepage'] = array(
-      'label' => t('Homepage'),
-      'description' => t("The comment author's home page address."),
-      'type' => 'string_field',
-    );
-    $properties['hostname'] = array(
-      'label' => t('Hostname'),
-      'description' => t("The comment author's hostname."),
-      'type' => 'string_field',
-    );
-    $properties['created'] = array(
-      'label' => t('Created'),
-      'description' => t('The time that the comment was created.'),
-      'type' => 'integer_field',
-    );
-    $properties['changed'] = array(
-      'label' => t('Changed'),
-      'description' => t('The time that the comment was last edited.'),
-      'type' => 'integer_field',
-    );
-    $properties['status'] = array(
-      'label' => t('Publishing status'),
-      'description' => t('A boolean indicating whether the comment is published.'),
-      'type' => 'boolean_field',
-    );
-    $properties['thread'] = array(
-      'label' => t('Thread place'),
-      'description' => t("The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length."),
-      'type' => 'string_field',
-    );
-    $properties['entity_type'] = array(
-      'label' => t('Entity type'),
-      'description' => t("The entity type to which this comment is attached."),
-      'type' => 'string_field',
-    );
-    $properties['field_id'] = array(
-      'label' => t('Field ID'),
-      'description' => t("The comment field id."),
-      'type' => 'string_field',
-    );
-    $properties['field_name'] = array(
-      'label' => t('Comment field name'),
-      'description' => t("The field name through which this comment was added."),
-      'type' => 'string_field',
-      'computed' => TRUE,
-      'class' => '\Drupal\comment\CommentFieldName',
-    );
-    return $properties;
+      ));
+
+    $fields['name'] = FieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDescription(t("The comment author's name."))
+      ->setFieldSetting('default_value', '');
+
+    $fields['mail'] = FieldDefinition::create('email')
+      ->setLabel(t('Email'))
+      ->setDescription(t("The comment author's e-mail address."));
+
+    $fields['homepage'] = FieldDefinition::create('string')
+      ->setLabel(t('Homepage'))
+      ->setDescription(t("The comment author's home page address."));
+
+    $fields['hostname'] = FieldDefinition::create('string')
+      ->setLabel(t('Hostname'))
+      ->setDescription(t("The comment author's hostname."));
+
+    // @todo Convert to a "created" field in https://drupal.org/node/2145103.
+    $fields['created'] = FieldDefinition::create('integer')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time that the comment was created.'));
+
+    // @todo Convert to a "changed" field in https://drupal.org/node/2145103.
+    $fields['changed'] = FieldDefinition::create('integer')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the comment was last edited.'))
+      ->setPropertyConstraints('value', array('EntityChanged' => array()));
+
+    $fields['status'] = FieldDefinition::create('boolean')
+      ->setLabel(t('Publishing status'))
+      ->setDescription(t('A boolean indicating whether the comment is published.'));
+
+    $fields['thread'] = FieldDefinition::create('string')
+      ->setLabel(t('Thread place'))
+      ->setDescription(t("The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length."));
+
+    $fields['entity_type'] = FieldDefinition::create('string')
+      ->setLabel(t('Entity type'))
+      ->setDescription(t('The entity type to which this comment is attached.'));
+
+    // @todo Convert to aa entity_reference field in
+    // https://drupal.org/node/2149859.
+    $fields['field_id'] = FieldDefinition::create('string')
+      ->setLabel(t('Field ID'))
+      ->setDescription(t('The comment field id.'));
+
+    $fields['field_name'] = FieldDefinition::create('string')
+      ->setLabel(t('Comment field name'))
+      ->setDescription(t('The field name through which this comment was added.'))
+      ->setComputed(TRUE);
+
+    $item_definition = $fields['field_name']->getItemDefinition();
+    $item_definition->setClass('\Drupal\comment\CommentFieldName');
+    $fields['field_name']->setItemDefinition($item_definition);
+
+    return $fields;
   }
 
   /**
