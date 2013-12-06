@@ -15,6 +15,7 @@ function forum_views_data() {
     'field' => 'nid',
     'title' => t('Forum content'),
     'access query tag' => 'node_access',
+    'query metadata' => array('base_table' => 'forum_index'),
   );
 
   $data['forum_index']['nid'] = array(

@@ -19,7 +19,7 @@ class ForumNodeAccessTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block');
+  public static $modules = array('node', 'comment', 'forum', 'taxonomy', 'tracker', 'node_access_test', 'block', 'views');
 
   public static function getInfo() {
     return array(
@@ -72,8 +72,8 @@ class ForumNodeAccessTest extends WebTestBase {
 
 
     // Enable the new and active forum blocks.
-    $this->drupalPlaceBlock('forum_active_block');
-    $this->drupalPlaceBlock('forum_new_block');
+    $this->drupalPlaceBlock('views_block:forum_topic_lists-block_1');
+    $this->drupalPlaceBlock('views_block:forum_topic_lists-block_2');
 
     // Test for $access_user.
     $this->drupalLogin($access_user);

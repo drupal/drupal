@@ -20,7 +20,7 @@ class ForumBlockTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('forum', 'block');
+  public static $modules = array('forum', 'block', 'views');
 
   /**
    * A user with various administrative privileges.
@@ -59,7 +59,7 @@ class ForumBlockTest extends WebTestBase {
     $topics = $this->createForumTopics();
 
     // Enable the new forum topics block.
-    $block = $this->drupalPlaceBlock('forum_new_block');
+    $block = $this->drupalPlaceBlock('views_block:forum_topic_lists-block_2');
     $this->drupalGet('');
 
     $this->assertLink(t('More'), 0, 'New forum topics block has a "more"-link.');
@@ -68,22 +68,6 @@ class ForumBlockTest extends WebTestBase {
     // We expect all 5 forum topics to appear in the "New forum topics" block.
     foreach ($topics as $topic) {
       $this->assertLink($topic, 0, format_string('Forum topic @topic found in the "New forum topics" block.', array('@topic' => $topic)));
-    }
-
-    // Configure the new forum topics block to only show 2 topics.
-    $block->getPlugin()->setConfigurationValue('block_count', 2);
-    $block->save();
-
-    $this->drupalGet('');
-    // We expect only the 2 most recent forum topics to appear in the "New forum
-    // topics" block.
-    for ($index = 0; $index < 5; $index++) {
-      if (in_array($index, array(3, 4))) {
-        $this->assertLink($topics[$index], 0, format_string('Forum topic @topic found in the "New forum topics" block.', array('@topic' => $topics[$index])));
-      }
-      else {
-        $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "New forum topics" block.', array('@topic' => $topics[$index])));
-      }
     }
   }
 
@@ -115,7 +99,7 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Enable the block.
-    $block = $this->drupalPlaceBlock('forum_active_block');
+    $block = $this->drupalPlaceBlock('views_block:forum_topic_lists-block_1');
     $this->drupalGet('');
     $this->assertLink(t('More'), 0, 'Active forum topics block has a "more"-link.');
     $this->assertLinkByHref('forum', 0, 'Active forum topics block has a "more"-link.');
@@ -129,23 +113,6 @@ class ForumBlockTest extends WebTestBase {
       }
       else {
         $this->assertNoText($topics[$index], format_string('Forum topic @topic not found in the "Active forum topics" block.', array('@topic' => $topics[$index])));
-      }
-    }
-
-    // Configure the active forum block to only show 2 topics.
-    $block->getPlugin()->setConfigurationValue('block_count', 2);
-    $block->save();
-
-    $this->drupalGet('');
-
-    // We expect only the 2 forum topics with most recent comments to appear in
-    // the "Active forum topics" block.
-    for ($index = 0; $index < 10; $index++) {
-      if (in_array($index, array(3, 4))) {
-        $this->assertLink($topics[$index], 0, 'Forum topic found in the "Active forum topics" block.');
-      }
-      else {
-        $this->assertNoText($topics[$index], 'Forum topic not found in the "Active forum topics" block.');
       }
     }
   }

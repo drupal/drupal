@@ -553,23 +553,6 @@ function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Render API callback: Lists nodes based on the element's #query property.
- *
- * This function can be used as a #pre_render callback.
- *
- * @see \Drupal\forum\Plugin\block\block\NewTopicsBlock::build()
- * @see \Drupal\forum\Plugin\block\block\ActiveTopicsBlock::build()
- */
-function forum_block_view_pre_render($elements) {
-  $result = $elements['#query']->execute();
-  if ($node_title_list = node_title_list($result)) {
-    $elements['forum_list'] = $node_title_list;
-    $elements['forum_more'] = array('#theme' => 'more_link', '#url' => 'forum', '#title' => t('Read the latest forum topics.'));
-  }
-  return $elements;
-}
-
-/**
  * Implements hook_preprocess_HOOK() for block templates.
  */
 function forum_preprocess_block(&$variables) {
