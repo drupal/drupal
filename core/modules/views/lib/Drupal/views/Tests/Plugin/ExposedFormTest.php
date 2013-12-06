@@ -21,7 +21,7 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_reset_button', 'test_exposed_block');
+  public static $testViews = array('test_exposed_form_buttons', 'test_exposed_block');
 
   /**
    * Modules to enable.
@@ -50,33 +50,68 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
+   * Tests the submit button.
+   */
+  public function testSubmitButton() {
+    // Test the submit button value defaults to 'Apply'.
+    $this->drupalGet('test_exposed_form_buttons');
+    $this->assertResponse(200);
+    $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', t('Apply'));
+
+    // Rename the label of the submit button.
+    $view = Views::getView('test_exposed_form_buttons');
+    $view->setDisplay();
+
+    $exposed_form = $view->display_handler->getOption('exposed_form');
+    $exposed_form['options']['submit_button'] = $expected_label = $this->randomName();
+    $view->display_handler->setOption('exposed_form', $exposed_form);
+    $view->save();
+
+    views_invalidate_cache();
+
+    // Make sure the submit button label changed.
+    $this->drupalGet('test_exposed_form_buttons');
+    $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', $expected_label);
+
+    // Make sure an empty label uses the default 'Apply' button value too.
+    $view = Views::getView('test_exposed_form_buttons');
+    $view->setDisplay();
+
+    $exposed_form = $view->display_handler->getOption('exposed_form');
+    $exposed_form['options']['submit_button'] = '';
+    $view->display_handler->setOption('exposed_form', $exposed_form);
+    $view->save();
+
+    views_invalidate_cache();
+
+    // Make sure the submit button label shows 'Apply'.
+    $this->drupalGet('test_exposed_form_buttons');
+    $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', t('Apply'));
+  }
+
+  /**
    * Tests whether the reset button works on an exposed form.
    */
   public function testResetButton() {
     // Test the button is hidden when there is no exposed input.
-    $this->drupalGet('test_reset_button');
+    $this->drupalGet('test_exposed_form_buttons');
     $this->assertNoField('edit-reset');
 
-    $this->drupalGet('test_reset_button', array('query' => array('type' => 'article')));
+    $this->drupalGet('test_exposed_form_buttons', array('query' => array('type' => 'article')));
     // Test that the type has been set.
     $this->assertFieldById('edit-type', 'article', 'Article type filter set.');
 
     // Test the reset works.
-    $this->drupalGet('test_reset_button', array('query' => array('op' => 'Reset')));
+    $this->drupalGet('test_exposed_form_buttons', array('query' => array('op' => 'Reset')));
     $this->assertResponse(200);
     // Test the type has been reset.
     $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
 
     // Test the button is hidden after reset.
     $this->assertNoField('edit-reset');
-  }
 
-  /**
-   * Tests, whether and how the reset button can be renamed.
-   */
-  public function testRenameResetButton() {
     // Rename the label of the reset button.
-    $view = views_get_view('test_reset_button');
+    $view = Views::getView('test_exposed_form_buttons');
     $view->setDisplay();
 
     $exposed_form = $view->display_handler->getOption('exposed_form');
@@ -88,7 +123,7 @@ class ExposedFormTest extends ViewTestBase {
     views_invalidate_cache();
 
     // Look whether the reset button label changed.
-    $this->drupalGet('test_reset_button', array('query' => array('type' => 'article')));
+    $this->drupalGet('test_exposed_form_buttons', array('query' => array('type' => 'article')));
     $this->assertResponse(200);
 
     $this->helperButtonHasLabel('edit-reset', $expected_label);
@@ -98,7 +133,7 @@ class ExposedFormTest extends ViewTestBase {
    * Tests the exposed form markup.
    */
   public function testExposedFormRender() {
-    $view = views_get_view('test_reset_button');
+    $view = views_get_view('test_exposed_form_buttons');
     $this->executeView($view);
     $exposed_form = $view->display_handler->getPlugin('exposed_form');
     $output = $exposed_form->renderExposedForm();

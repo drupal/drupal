@@ -45,11 +45,11 @@ display:
     position: '0'
   page_1:
     display_options:
-      path: test_reset_button
+      path: test_exposed_form_buttons
     display_plugin: page
     display_title: Page
     id: page_1
     position: '0'
 label: ''
-id: test_reset_button
+id: test_exposed_form_buttons
 tag: ''
