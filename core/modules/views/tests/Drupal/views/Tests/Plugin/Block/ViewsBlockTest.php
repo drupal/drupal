@@ -54,6 +54,13 @@ class ViewsBlockTest extends UnitTestCase {
    */
   protected $storageController;
 
+  /**
+   * The mocked user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $account;
+
   public static function getInfo() {
     return array(
       'name' => ' Block: Views block',
@@ -101,6 +108,7 @@ class ViewsBlockTest extends UnitTestCase {
       ->method('load')
       ->with('test_view')
       ->will($this->returnValue($this->view));
+    $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
   }
 
   /**
@@ -120,7 +128,7 @@ class ViewsBlockTest extends UnitTestCase {
     $config = array();
     $definition = array();
     $definition['module'] = 'views';
-    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storageController);
+    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storageController, $this->account);
 
     $this->assertEquals($build, $plugin->build());
   }
@@ -141,7 +149,7 @@ class ViewsBlockTest extends UnitTestCase {
     $config = array();
     $definition = array();
     $definition['module'] = 'views';
-    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storageController);
+    $plugin = new ViewsBlock($config, $block_id, $definition, $this->executableFactory, $this->storageController, $this->account);
 
     $this->assertEquals(array(), $plugin->build());
   }

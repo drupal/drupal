@@ -30,6 +30,6 @@ class Block extends Plugin {
    *
    * @ingroup plugin_translatable
    */
-  public $admin_label;
+  public $admin_label = '';
 
 }

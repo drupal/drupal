@@ -41,7 +41,14 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   protected $displaySet;
 
   /**
-   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $user;
+
+  /**
+   * Constructs a \Drupal\views\Plugin\Block\ViewsBlockBase object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -53,8 +60,10 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    *   The view executable factory.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
    *   The views storage controller.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageControllerInterface $storage_controller) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageControllerInterface $storage_controller, AccountInterface $user) {
     $this->pluginId = $plugin_id;
     list($plugin, $delta) = explode(':', $this->getPluginId());
     list($name, $this->displayID) = explode('-', $delta, 2);
@@ -62,6 +71,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $view = $storage_controller->load($name);
     $this->view = $executable_factory->get($view);
     $this->displaySet = $this->view->setDisplay($this->displayID);
+    $this->user = $user;
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -73,7 +83,8 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     return new static(
       $configuration, $plugin_id, $plugin_definition,
       $container->get('views.executable'),
-      $container->get('entity.manager')->getStorageController('view')
+      $container->get('entity.manager')->getStorageController('view'),
+      $container->get('current_user')
     );
   }
 
@@ -87,6 +98,16 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    $settings = array();
+    $settings['views_label'] = '';
+
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildConfigurationForm(array $form, array &$form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
@@ -94,7 +115,64 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $form['label']['#default_value'] = '';
     $form['label']['#access'] = FALSE;
 
+    // Unset the machine_name provided by BlockFormController.
+    unset($form['id']['#machine_name']['source']);
+    // Prevent users from changing the auto-generated block machine_name.
+    $form['id']['#access'] = FALSE;
+    $form['#pre_render'][] = '\Drupal\views\Plugin\views\PluginBase::preRenderAddFieldsetMarkup';
+
+    // Allow to override the label on the actual page.
+    $form['views_label_checkbox'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Override title'),
+      '#default_value' => !empty($this->configuration['views_label']),
+    );
+
+    $form['views_label_fieldset'] = array(
+      '#type' => 'fieldset',
+      '#states' => array(
+        'visible' => array(
+          array(
+            ':input[name="settings[views_label_checkbox]"]' => array('checked' => TRUE),
+          ),
+        ),
+      ),
+    );
+
+    $form['views_label'] = array(
+      '#title' => $this->t('Title'),
+      '#type' => 'textfield',
+      '#default_value' => $this->configuration['views_label'] ?: $this->view->getTitle(),
+      '#states' => array(
+        'visible' => array(
+          array(
+            ':input[name="settings[views_label_checkbox]"]' => array('checked' => TRUE),
+          ),
+        ),
+      ),
+      '#fieldset' => 'views_label_fieldset',
+    );
+
+    if ($this->view->storage->access('edit') && \Drupal::moduleHandler()->moduleExists('views_ui')) {
+      $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore. (Try changing it directly in <a href="@url">@name</a>.)', array('@url' => \Drupal::url('views_ui.edit_display', array('view' => $this->view->storage->id(), 'display_id' => $this->displayID)), '@name' => $this->view->storage->label()));
+    }
+    else {
+      $form['views_label']['#description'] = $this->t('Changing the title here means it cannot be dynamically altered anymore.');
+    }
+
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, &$form_state) {
+    if (!empty($form_state['values']['views_label_checkbox'])) {
+      $this->configuration['views_label'] = $form_state['values']['views_label'];
+    }
+    else {
+      $this->configuration['views_label'] = '';
+    }
   }
 
   /**

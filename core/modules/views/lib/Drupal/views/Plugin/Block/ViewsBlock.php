@@ -32,7 +32,13 @@ class ViewsBlock extends ViewsBlockBase {
 
     if ($output = $this->view->executeDisplay($this->displayID)) {
       // Set the label to the title configured in the view.
-      $this->configuration['label'] = Xss::filterAdmin($this->view->getTitle());
+      if (empty($this->configuration['views_label'])) {
+        $this->configuration['label'] = Xss::filterAdmin($this->view->getTitle());
+      }
+      else {
+        $this->configuration['label'] = $this->configuration['views_label'];
+      }
+      $this->configuration['label_display'] = TRUE;
       // Before returning the block output, convert it to a renderable array
       // with contextual links.
       $this->addContextualLinks($output);
@@ -46,10 +52,10 @@ class ViewsBlock extends ViewsBlockBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    $settings = array();
+    $settings = parent::defaultConfiguration();
 
     if ($this->displaySet) {
-      return $this->view->display_handler->blockSettings($settings);
+      $settings += $this->view->display_handler->blockSettings($settings);
     }
 
     return $settings;
@@ -79,6 +85,7 @@ class ViewsBlock extends ViewsBlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, &$form_state) {
+    parent::blockSubmit($form, $form_state);
     if ($this->displaySet) {
       $this->view->display_handler->blockSubmit($this, $form, $form_state);
     }

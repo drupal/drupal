@@ -121,7 +121,13 @@ class Block extends ConfigEntityBase implements BlockInterface {
    */
   public function label($langcode = NULL) {
     $settings = $this->get('settings');
-    return $settings['label'];
+    if ($settings['label']) {
+      return $settings['label'];
+    }
+    else {
+      $definition = $this->getPlugin()->getPluginDefinition();
+      return $definition['admin_label'];
+    }
   }
 
   /**
