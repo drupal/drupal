@@ -25,6 +25,13 @@ class HistoryUserTimestamp extends FilterPluginBase {
   // Don't display empty space where the operator would be.
   var $no_operator = TRUE;
 
+  /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
   public function buildExposeForm(&$form, &$form_state) {
     parent::buildExposeForm($form, $form_state);
     // @todo There are better ways of excluding required and multiple (object flags)

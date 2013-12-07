@@ -20,6 +20,13 @@ use Drupal\views\ResultRow;
  */
 class ContextualLinks extends FieldPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
   protected function defineOptions() {
     $options = parent::defineOptions();
 

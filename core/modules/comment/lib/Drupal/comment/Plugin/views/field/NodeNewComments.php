@@ -25,6 +25,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeNewComments extends Numeric {
 
   /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
+  /**
    * Database Service Object.
    *
    * @var \Drupal\Core\Database\Connection

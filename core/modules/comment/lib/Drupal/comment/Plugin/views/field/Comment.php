@@ -23,6 +23,13 @@ use Drupal\Component\Annotation\PluginID;
 class Comment extends FieldPluginBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
+  /**
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::init().
    *
    * Provide generic option to link to comment.

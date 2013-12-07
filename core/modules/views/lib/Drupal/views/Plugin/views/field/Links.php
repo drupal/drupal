@@ -15,6 +15,13 @@ namespace Drupal\views\Plugin\views\field;
 abstract class Links extends FieldPluginBase {
 
   /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
+  /**
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::defineOptions().
    */
   public function defineOptions() {

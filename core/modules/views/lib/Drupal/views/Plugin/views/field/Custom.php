@@ -19,6 +19,13 @@ use Drupal\views\ResultRow;
  */
 class Custom extends FieldPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
   public function query() {
     // do nothing -- to override the parent query.
   }

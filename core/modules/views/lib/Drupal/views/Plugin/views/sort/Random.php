@@ -16,6 +16,13 @@ use Drupal\Component\Annotation\PluginID;
  */
 class Random extends SortPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
   public function query() {
     $this->query->addOrderBy('rand');
   }

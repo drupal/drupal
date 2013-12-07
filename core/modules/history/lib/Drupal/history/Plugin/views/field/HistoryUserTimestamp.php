@@ -26,6 +26,13 @@ use Drupal\Component\Annotation\PluginID;
 class HistoryUserTimestamp extends Node {
 
   /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
+  /**
    * Overrides \Drupal\node\Plugin\views\field\Node::init().
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {

@@ -19,6 +19,14 @@ use Drupal\views\ResultRow;
  */
 class Counter extends FieldPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function usesGroupBy() {
+    return FALSE;
+  }
+
+
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['counter_start'] = array('default' => 1);
