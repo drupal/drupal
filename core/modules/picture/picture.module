@@ -63,11 +63,6 @@ function picture_menu() {
     'title' => 'Edit picture mapping',
     'route_name' => 'picture.mapping_page_edit',
   );
-  $items['admin/config/media/picturemapping/%picture_mapping/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
   $items['admin/config/media/picturemapping/%picture_mapping/duplicate'] = array(
     'title' => 'Duplicate picture mapping',
     'route_name' => 'picture.mapping_page_duplicate',

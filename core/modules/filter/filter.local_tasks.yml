@@ -3,3 +3,8 @@ filter.format_edit_tab:
   title: 'Configure'
   tab_root_id: filter.format_edit_tab
   weight: -10
+
+filter.admin_overview:
+  title: List
+  route_name: filter.admin_overview
+  tab_root_id: filter.admin_overview

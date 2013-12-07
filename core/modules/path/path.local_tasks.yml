@@ -1,0 +1,4 @@
+path.admin_overview:
+  title: List
+  route_name: path.admin_overview
+  tab_root_id: path.admin_overview

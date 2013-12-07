@@ -767,16 +767,13 @@ function user_menu() {
     'position' => 'left',
     'weight' => -4,
   );
-  $items['admin/people/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
+
   // Permissions and role forms.
   $items['admin/people/permissions'] = array(
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
     'route_name' => 'user.admin_permissions',
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_SIBLING_LOCAL_TASK,
   );
 
   $items['admin/people/roles/manage/%user_role'] = array(

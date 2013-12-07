@@ -41,3 +41,13 @@ user.edit:
   route_name: user.edit
   tab_root_id: user.view
   title: Edit
+
+user.admin_account:
+  title: List
+  route_name: user.admin_account
+  tab_root_id: user.admin_account
+
+user.admin_permissions:
+  title: Permissions
+  route_name: user.admin_permissions
+  tab_root_id: user.admin_account

@@ -991,10 +991,6 @@ function node_menu() {
     'description' => 'Manage content types, including default status, front page promotion, comment settings, etc.',
     'route_name' => 'node.overview_types',
   );
-  $items['admin/structure/types/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
   $items['node/add'] = array(
     'title' => 'Add content',
     'route_name' => 'node.add_page',

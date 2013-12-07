@@ -167,25 +167,6 @@ function search_menu() {
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
-  // Add paths for searching. We add each plugin search path twice: once without
-  // and once with %menu_tail appended. The reason for this is that we want to
-  // preserve keywords when switching tabs, and also to have search tabs
-  // highlighted properly. The only way to do that within the Drupal menu
-  // system appears to be having two sets of tabs. See discussion on issue
-  // http://drupal.org/node/245103 for details.
-
-  $default_info = search_get_default_plugin_info();
-  if ($default_info) {
-    foreach (\Drupal::service('plugin.manager.search')->getActiveDefinitions() as $plugin_id => $search_info) {
-      $path = 'search/' . $search_info['path'];
-      $items[$path] = array(
-        'title' => $search_info['title'],
-        'route_name' => 'search.view_' . $plugin_id,
-        'type' => MENU_LOCAL_TASK,
-        'weight' => $plugin_id == $default_info['id'] ? -10 : 0,
-      );
-    }
-  }
   return $items;
 }
 

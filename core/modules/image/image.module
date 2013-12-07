@@ -95,11 +95,6 @@ function image_menu() {
     'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
     'route_name' => 'image.style_list',
   );
-  $items['admin/config/media/image-styles/list'] = array(
-    'title' => 'List',
-    'description' => 'List the current image styles on the site.',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
   $items['admin/config/media/image-styles/manage/%image_style'] = array(
     'title' => 'Edit style',
     'description' => 'Configure an image style.',

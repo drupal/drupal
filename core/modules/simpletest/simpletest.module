@@ -38,17 +38,6 @@ function simpletest_menu() {
     'route_name' => 'simpletest.test_form',
     'weight' => -5,
   );
-  $items['admin/config/development/testing/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/config/development/testing/settings'] = array(
-    'title' => 'Settings',
-    'route_name' => 'simpletest.settings',
-    'access arguments' => array('administer unit tests'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 100,
-  );
   $items['admin/config/development/testing/results/%'] = array(
     'title' => 'Test result',
     'description' => 'View result of tests.',

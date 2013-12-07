@@ -24,3 +24,7 @@ node.type_edit:
   title: 'Edit'
   route_name: node.type_edit
   tab_root_id: node.type_edit
+node.overview_types:
+  title: List
+  route_name: node.overview_types
+  tab_root_id: node.overview_types

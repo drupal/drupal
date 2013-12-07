@@ -1,0 +1,9 @@
+simpletest.test_form:
+  title: List
+  route_name: simpletest.test_form
+  tab_root_id: simpletest.test_form
+simpletest.settings:
+  title: Settings
+  route_name: simpletest.settings
+  tab_root_id: simpletest.test_form
+  weight: 100

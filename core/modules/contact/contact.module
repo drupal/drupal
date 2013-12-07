@@ -81,12 +81,6 @@ function contact_menu() {
     'route_name' => 'contact.site_page_category',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
-  $items['user/%user/contact'] = array(
-    'title' => 'Contact',
-    'route_name' => 'contact.personal_page',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
-  );
   return $items;
 }
 

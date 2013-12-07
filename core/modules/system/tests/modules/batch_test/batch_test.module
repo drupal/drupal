@@ -15,57 +15,6 @@ function batch_test_menu() {
     'title' => 'Batch test',
     'route_name' => 'batch_test.test_form',
   );
-  // Simple form: one submit handler, setting a batch.
-  $items['batch-test/simple'] = array(
-    'title' => 'Simple',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => 0,
-  );
-  // Multistep form: two steps, each setting a batch.
-  $items['batch-test/multistep'] = array(
-    'title' => 'Multistep',
-    'route_name' => 'batch_test.multistep',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-  );
-  // Chained form: four submit handlers, several of which set a batch.
-  $items['batch-test/chained'] = array(
-    'title' => 'Chained',
-    'route_name' => 'batch_test.chained',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
-  );
-  // Programmatic form: the page submits the 'Chained' form through
-  // drupal_form_submit().
-  $items['batch-test/programmatic'] = array(
-    'route_name' => 'batch_test.programmatic',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3,
-  );
-  // No form: fire a batch simply by accessing a page.
-  $items['batch-test/no-form'] = array(
-    'route_name' => 'batch_test.no_form',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 4,
-  );
-  // No form: fire a batch; return > 100% complete
-  $items['batch-test/large-percentage'] = array(
-    'route_name' => 'batch_test.large_percentage',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 5,
-  );
-  // Tests programmatic form submission within a batch operation.
-  $items['batch-test/nested-programmatic'] = array(
-    'route_name' => 'batch_test.nested_programmatic',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 6,
-  );
-  // Landing page to test redirects.
-  $items['batch-test/redirect'] = array(
-    'route_name' => 'batch_test.redirect',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 7,
-  );
 
   return $items;
 }

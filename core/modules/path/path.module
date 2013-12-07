@@ -63,10 +63,6 @@ function path_menu() {
     'route_name' => 'path.admin_overview',
     'weight' => -5,
   );
-  $items['admin/config/search/path/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
   $items['admin/config/search/path/edit/%path'] = array(
     'title' => 'Edit alias',
     'route_name' => 'path.admin_edit',

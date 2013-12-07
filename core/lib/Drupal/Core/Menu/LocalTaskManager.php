@@ -126,7 +126,7 @@ class LocalTaskManager extends DefaultPluginManager {
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->alterInfo($module_handler, 'local_tasks');
-    $this->setCacheBackend($cache, $language_manager, 'local_task_plugins', array('local_task' => 1));
+    $this->setCacheBackend($cache, $language_manager, 'local_task_plugins', array('local_task' => TRUE));
   }
 
   /**

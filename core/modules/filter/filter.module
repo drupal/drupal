@@ -136,10 +136,6 @@ function filter_menu() {
     'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
     'route_name' => 'filter.admin_overview',
   );
-  $items['admin/config/content/formats/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
   $items['admin/config/content/formats/manage/%'] = array(
     'title callback' => 'entity_page_label',
     'title arguments' => array(5),

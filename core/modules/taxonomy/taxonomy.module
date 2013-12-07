@@ -260,15 +260,6 @@ function taxonomy_menu() {
     'title callback' => 'entity_page_label',
     'title arguments' => array(4),
   );
-  $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/edit'] = array(
-    'title' => 'Edit',
-    'route_name' => 'taxonomy.vocabulary_edit',
-    'type' => MENU_LOCAL_TASK,
-  );
 
   return $items;
 }

@@ -71,16 +71,6 @@ function menu_menu() {
     'description' => 'Add new menus to your site, edit existing menus, and rename and reorganize menu links.',
     'route_name' => 'menu.overview_page',
   );
-  $items['admin/structure/menu/list'] = array(
-    'title' => 'List menus',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/structure/menu/settings'] = array(
-    'title' => 'Settings',
-    'route_name' => 'menu.settings',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 100,
-  );
   $items['admin/structure/menu/manage/%menu'] = array(
     'title' => 'Edit menu',
     'route_name' => 'menu.menu_edit',

@@ -178,20 +178,6 @@ function content_translation_menu() {
         $item[str_replace('_', ' ', $key)] = $value;
       }
 
-      $items["$path/translations"] = array(
-        'title' => 'Translate',
-        'route_name' => $info['links']['drupal:content-translation-overview'],
-        'type' => MENU_LOCAL_TASK,
-        'context' => MENU_CONTEXT_PAGE,
-        'weight' => 2,
-      ) + $item;
-
-      $items["$path/translations/overview"] = array(
-        'title' => 'Overview',
-        'type' => MENU_DEFAULT_LOCAL_TASK,
-        'weight' => 0,
-      );
-
       // Add translation callback.
       // @todo Add the access callback instead of replacing it as soon as the
       // routing system supports multiple callbacks.
