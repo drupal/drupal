@@ -63,13 +63,13 @@
   padding-right: 0;
   padding-left: 5em;
 }
-.toolbar .toolbar-tray-vertical > .toolbar-lining:before {
+.toolbar .toolbar-tray-vertical {
   background-color: #ffffff;
   border-right: 1px solid #aaaaaa; /* LTR */
   box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-tray-vertical > .toolbar-lining:before {
   border-left: 1px solid #aaaaaa;
+[dir="rtl"] .toolbar .toolbar-tray-vertical {
   border-right: 0 none;
   box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
 }
