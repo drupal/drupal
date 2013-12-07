@@ -42,7 +42,7 @@ class NumberDecimalFormatter extends DefaultNumberFormatter {
       '#title' => t('Decimal marker'),
       '#options' => array('.' => t('Decimal point'), ',' => t('Comma')),
       '#default_value' => $this->getSetting('decimal_separator'),
-      'weight' => 5,
+      '#weight' => 5,
     );
     $elements['scale'] = array(
       '#type' => 'select',
@@ -50,7 +50,7 @@ class NumberDecimalFormatter extends DefaultNumberFormatter {
       '#options' => drupal_map_assoc(range(0, 10)),
       '#default_value' => $this->getSetting('scale'),
       '#description' => t('The number of digits to the right of the decimal.'),
-      'weight' => 6,
+      '#weight' => 6,
     );
 
     return $elements;
