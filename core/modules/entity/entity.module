@@ -11,6 +11,29 @@
 use Drupal\Core\Config\Entity\ConfigStorageController;
 
 /**
+ * Implements hook_help().
+ */
+function entity_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#entity':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Entity module manages various types of content and configuration for the website. This information is collectively know as "entities", which are grouped into "entity types" (such as the main site content, comments, custom blocks, taxonomy terms, user accounts, and views configuration). Some entity types are further grouped into sub-types (for example, you could have article and page content types within the main site content entity type, and tag and category vocabularies within the taxonomy term entity type); other entity types, such as user accounts, do not have sub-types.') . '</p>';
+      $output .= '<p>' . t('Content entity types store most of their text, file, and other information in fields. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</p>';
+      $output .= '<p>' . t('Configuration entity types are used to store configuration information for your site, such as individual views in the Views module, and settings for your main site content types. Configuration stored in this way can be exported, imported, and managed using the Configuration Manager module. See the <a href="!config-help">Configuration Manager module help</a> page for more information.', array('!config-help' => \Drupal::url('help.page', array('name' => 'config')))) . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href="!entity_documentation">online documentation for the Entity module</a>.', array('!entity_documentation' => 'https://drupal.org/documentation/modules/entity')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing view modes') . '</dt>';
+      $output .= '<dd>' . t('Each content entity can have various "modes" for viewing. For instance, a content item could be viewed in full content mode on its own page, teaser mode in a list, or RSS mode in a feed. You can create, edit the names of, and delete view modes on the <a href="!view-modes">View modes page</a>. Once a view mode has been set up, you can choose and format fields for the view mode within each entity sub-type on the Manage display page. See the <a href="!field_ui">Field UI module help page</a> for more information.', array('!view-modes' => \Drupal::url('entity.view_mode_list'), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '<dt>' . t('Managing form modes') . '</dt>';
+      $output .= '<dd>' . t('Each content entity can have various editing forms appropriate for different situations, which are known as "form modes". For instance, you might want to define a quick editing mode that allows users to edit the most important fields, and a full editing mode that gives access to all the fields. You can create, edit the names of, and delete form modes on the <a href="!form-modes">Manage custom form modes page</a>. Once a form mode has been set up, you can choose which fields are available on that form within each entity sub-type on the Manage form display page. See the <a href="!field_ui">Field UI module help page</a> for more information.', array('!form-modes' => \Drupal::url('entity.form_mode_list'), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function entity_permission() {
