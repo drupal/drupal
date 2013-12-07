@@ -162,7 +162,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function __construct($environment, ClassLoader $class_loader, $allow_dumping = TRUE) {
     $this->environment = $environment;
-    $this->booted = false;
+    $this->booted = FALSE;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
   }
@@ -189,7 +189,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       return;
     }
     $this->booted = FALSE;
-    $this->container = null;
+    $this->container = NULL;
   }
 
   /**
@@ -274,7 +274,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true) {
+  public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = TRUE) {
     if (FALSE === $this->booted) {
       $this->boot();
     }
@@ -510,7 +510,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $path = DRUPAL_ROOT . '/core/lib/Drupal/' . $parent_directory;
       foreach (new \DirectoryIterator($path) as $component) {
         if (!$component->isDot() && is_dir($component->getPathname() . '/Plugin')) {
-          $namespaces['Drupal\\' . $parent_directory  .'\\' . $component->getFilename()] = DRUPAL_ROOT . '/core/lib';
+          $namespaces['Drupal\\' . $parent_directory . '\\' . $component->getFilename()] = DRUPAL_ROOT . '/core/lib';
         }
       }
     }
