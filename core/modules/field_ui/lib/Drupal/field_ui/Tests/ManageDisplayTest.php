@@ -104,6 +104,11 @@ class ManageDisplayTest extends FieldUiTestBase {
     $edit = array($fieldname => 'non empty setting');
     $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
     $this->assertText('Default empty setting now has a value.');
+
+    // Test the no settings form behavior.
+    $edit = array('fields[field_test][type]' => 'field_no_settings', 'refresh_rows' => 'field_test');
+    $this->drupalPostAjaxForm(NULL, $edit, array('op' => t('Refresh')));
+    $this->assertNoFieldByName('field_test_settings_edit');
   }
 
   /**

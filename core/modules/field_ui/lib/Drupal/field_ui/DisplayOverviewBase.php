@@ -358,7 +358,10 @@ abstract class DisplayOverviewBase extends OverviewBase {
             '#cell_attributes' => array('class' => array('field-plugin-summary-cell')),
           );
         }
-        if ($plugin->getSettings()) {
+
+        // Check selected plugin settings to display edit link or not.
+        $plugin_definition = $plugin->getPluginDefinition();
+        if ($plugin_definition['settings']) {
           $field_row['settings_edit'] = $base_button + array(
             '#type' => 'image_button',
             '#name' => $field_id . '_settings_edit',
