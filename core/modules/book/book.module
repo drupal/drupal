@@ -306,8 +306,8 @@ function book_get_flat_menu($book_link) {
   $flat = &drupal_static(__FUNCTION__, array());
 
   if (!isset($flat[$book_link['mlid']])) {
-    // Call menu_tree_all_data() to take advantage of the menu system's caching.
-    $tree = menu_tree_all_data($book_link['menu_name'], $book_link, $book_link['depth'] + 1);
+    // Call bookTreeAllData() to take advantage of the menu system's caching.
+    $tree = \Drupal::service('book.manager')->bookTreeAllData($book_link['menu_name'], $book_link, $book_link['depth'] + 1);
     $flat[$book_link['mlid']] = array();
     _book_flatten_menu($tree, $flat[$book_link['mlid']]);
   }
@@ -363,7 +363,7 @@ function book_prev($book_link) {
     // The previous page in the book may be a child of the previous visible link.
     if ($prev['depth'] == $book_link['depth'] && $prev['has_children']) {
       // The subtree will have only one link at the top level - get its data.
-      $tree = book_menu_subtree_data($prev);
+      $tree = \Drupal::service('book.manager')->bookMenuSubtreeData($prev);
       $data = array_shift($tree);
       // The link of interest is the last child - iterate to find the deepest one.
       while ($data['below']) {
@@ -430,7 +430,7 @@ function book_children($book_link) {
   }
 
   if ($children) {
-    $elements = menu_tree_output($children);
+    $elements = \Drupal::service('book.manager')->bookTreeOutput($children);
     return drupal_render($elements);
   }
   return '';
@@ -470,20 +470,6 @@ function book_node_view(EntityInterface $node, EntityDisplay $display, $view_mod
 
   if ($view_mode != 'rss') {
     book_node_view_link($node, $view_mode);
-  }
-}
-
-/**
- * Implements hook_page_alter().
- *
- * Adds the book menu to the list of menus used to build the active trail when
- * viewing a book page.
- */
-function book_page_alter(&$page) {
-  if (($node = menu_get_object()) && !empty($node->book['bid'])) {
-    $active_menus = menu_get_active_menu_names();
-    $active_menus[] = $node->book['menu_name'];
-    menu_set_active_menu_names($active_menus);
   }
 }
 
@@ -549,6 +535,7 @@ function book_node_predelete(EntityInterface $node) {
         \Drupal::service('book.manager')->updateOutline($child_node);
       }
     }
+    // @todo - remove this call when we change the schema.
     menu_link_delete($node->book['mlid']);
     db_delete('book')
       ->condition('mlid', $node->book['mlid'])
@@ -823,78 +810,6 @@ function book_node_type_update(NodeTypeInterface $type) {
  */
 function book_link_load($mlid) {
   return entity_load('menu_link', $mlid);
-}
-
-/**
- * Gets the data representing a subtree of the book hierarchy.
- *
- * The root of the subtree will be the link passed as a parameter, so the
- * returned tree will contain this item and all its descendents in the menu
- * tree.
- *
- * @param $link
- *   A fully loaded menu link.
- *
- * @return
- *   A subtree of menu links in an array, in the order they should be rendered.
- */
-function book_menu_subtree_data($link) {
-  $tree = &drupal_static(__FUNCTION__, array());
-
-  // Generate a cache ID (cid) specific for this $menu_name and $link.
-  $cid = 'links:' . $link['menu_name'] . ':subtree-cid:' . $link['mlid'];
-
-  if (!isset($tree[$cid])) {
-    $cache = cache('menu')->get($cid);
-
-    if ($cache && isset($cache->data)) {
-      // If the cache entry exists, it will just be the cid for the actual data.
-      // This avoids duplication of large amounts of data.
-      $cache = cache('menu')->get($cache->data);
-
-      if ($cache && isset($cache->data)) {
-        $data = $cache->data;
-      }
-    }
-
-    // If the subtree data was not in the cache, $data will be NULL.
-    if (!isset($data)) {
-      $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
-      $query->join('menu_router', 'm', 'm.path = ml.router_path');
-      $query->join('book', 'b', 'ml.mlid = b.mlid');
-      $query->fields('b');
-      $query->fields('m', array('load_functions', 'to_arg_functions', 'access_callback', 'access_arguments', 'page_callback', 'page_arguments', 'title', 'title_callback', 'title_arguments', 'type'));
-      $query->fields('ml');
-      $query->condition('menu_name', $link['menu_name']);
-      for ($i = 1; $i <= MENU_MAX_DEPTH && $link["p$i"]; ++$i) {
-        $query->condition("p$i", $link["p$i"]);
-      }
-      for ($i = 1; $i <= MENU_MAX_DEPTH; ++$i) {
-        $query->orderBy("p$i");
-      }
-      $links = array();
-      foreach ($query->execute() as $item) {
-        $links[] = $item;
-      }
-      $data['tree'] = menu_tree_data($links, array(), $link['depth']);
-      $data['node_links'] = array();
-      menu_tree_collect_node_links($data['tree'], $data['node_links']);
-      // Compute the real cid for book subtree data.
-      $tree_cid = 'links:' . $item['menu_name'] . ':subtree-data:' . hash('sha256', serialize($data));
-      // Cache the data, if it is not already in the cache.
-
-      if (!cache('menu')->get($tree_cid)) {
-        cache('menu')->set($tree_cid, $data);
-      }
-      // Cache the cid of the (shared) data using the menu and item-specific cid.
-      cache('menu')->set($cid, $tree_cid);
-    }
-    // Check access for the current user to each item in the tree.
-    menu_tree_check_access($data['tree'], $data['node_links']);
-    $tree[$cid] = $data['tree'];
-  }
-
-  return $tree[$cid];
 }
 
 /**

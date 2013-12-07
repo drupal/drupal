@@ -73,7 +73,8 @@ class BookNavigationBlock extends BlockBase {
         if ($book['bid'] == $current_bid) {
           // If the current page is a node associated with a book, the menu
           // needs to be retrieved.
-          $book_menus[$book_id] = menu_tree_output(menu_tree_all_data($node->book['menu_name'], $node->book));
+          $data = \Drupal::service('book.manager')->bookTreeAllData($node->book['menu_name'], $node->book);
+          $book_menus[$book_id] = \Drupal::service('book.manager')->bookTreeOutput($data);
         }
         else {
           // Since we know we will only display a link to the top node, there
@@ -83,7 +84,7 @@ class BookNavigationBlock extends BlockBase {
           $book_node = node_load($book['nid']);
           $book['access'] = $book_node->access('view');
           $pseudo_tree[0]['link'] = $book;
-          $book_menus[$book_id] = menu_tree_output($pseudo_tree);
+          $book_menus[$book_id] = \Drupal::service('book.manager')->bookTreeOutput($pseudo_tree);
         }
       }
       if ($book_menus) {
@@ -101,10 +102,10 @@ class BookNavigationBlock extends BlockBase {
       $nid = $select->execute()->fetchField();
       // Only show the block if the user has view access for the top-level node.
       if ($nid) {
-        $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
+        $tree = \Drupal::service('book.manager')->bookTreeAllData($node->book['menu_name'], $node->book);
         // There should only be one element at the top level.
         $data = array_shift($tree);
-        $below = menu_tree_output($data['below']);
+        $below = \Drupal::service('book.manager')->bookTreeOutput($data['below']);
         if (!empty($below)) {
           $book_title_link = array('#theme' => 'book_title_link', '#link' => $data['link']);
           return array(

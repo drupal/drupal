@@ -163,7 +163,7 @@ class BookAdminEditForm extends FormBase {
       '#tree' => TRUE,
     );
 
-    $tree = book_menu_subtree_data($node->book);
+    $tree = \Drupal::service('book.manager')->bookMenuSubtreeData($node->book);
     // Do not include the book item itself.
     $tree = array_shift($tree);
     if ($tree['below']) {

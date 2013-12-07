@@ -68,7 +68,7 @@ class BookExport {
       throw new \Exception();
     }
 
-    $tree = book_menu_subtree_data($node->book);
+    $tree = \Drupal::service('book.manager')->bookMenuSubtreeData($node->book);
     $contents = $this->exportTraverse($tree, array($this, 'bookNodeExport'));
     return array(
       '#theme' => 'book_export_html',
