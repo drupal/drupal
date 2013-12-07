@@ -295,12 +295,15 @@ function hook_views_data_alter(array &$data) {
     'title' => t('Example field'),
     'help' => t('Some example content that references a user'),
     'handler' => 'hook_handlers_field_example_field',
+    'field' => array(
+      'id' => 'example_field',
+    ),
   );
 
   // This example changes the handler of the node title field.
   // In this handler you could do stuff, like preview of the node when clicking
   // the node title.
-  $data['node']['title']['handler'] = 'modulename_handlers_field_node_title';
+  $data['node']['title']['field']['id'] = 'node_title';
 
   // This example adds a relationship to table {foo}, so that 'foo' views can
   // add this table using a relationship. Because we don't want to write over
