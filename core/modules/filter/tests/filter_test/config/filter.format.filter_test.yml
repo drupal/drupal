@@ -1,6 +1,6 @@
 format: filter_test
 name: 'Test format'
-weight: '2'
+weight: 2
 roles:
   - anonymous
   - authenticated
@@ -11,19 +11,19 @@ filters:
   filter_html_escape:
     id: filter_html_escape
     module: filter
-    status: '1'
-    weight: '-10'
+    status: true
+    weight: -10
     settings: {  }
   filter_autop:
     id: filter_autop
     module: filter
-    status: '1'
-    weight: '0'
+    status: true
+    weight: 0
     settings: {  }
   filter_url:
     id: filter_url
     module: filter
-    status: '1'
-    weight: '0'
+    status: true
+    weight: 0
     settings:
-      filter_url_length: '72'
+      filter_url_length: 72
