@@ -70,7 +70,10 @@ class RouteSubscriber extends RouteSubscriberBase {
 
         $route = new Route(
           "$path/fields/{field_instance}",
-          array('_form' => '\Drupal\field_ui\Form\FieldInstanceEditForm'),
+          array(
+            '_form' => '\Drupal\field_ui\Form\FieldInstanceEditForm',
+            '_title_callback' => '\Drupal\field_ui\Form\FieldInstanceEditForm::getTitle',
+          ),
           array('_permission' => 'administer ' . $entity_type . ' fields')
         );
         $collection->add("field_ui.instance_edit_$entity_type", $route);

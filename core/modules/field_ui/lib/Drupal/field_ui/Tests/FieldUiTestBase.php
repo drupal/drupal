@@ -73,6 +73,8 @@ abstract class FieldUiTestBase extends WebTestBase {
     // First step : 'Add new field' on the 'Manage fields' page.
     $this->drupalPostForm("$bundle_path/fields",  $initial_edit, t('Save'));
     $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', array('%label' => $label)), 'Field settings page was displayed.');
+    // Test Breadcrumbs.
+    $this->assertLink($label, 0, 'Field label is correct in the breadcrumb of the field settings page.');
 
     // Second step : 'Field settings' form.
     $this->drupalPostForm(NULL, $field_edit, t('Save field settings'));
@@ -128,6 +130,9 @@ abstract class FieldUiTestBase extends WebTestBase {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
     $this->assertRaw(t('Are you sure you want to delete the field %label', array('%label' => $label)), 'Delete confirmation was found.');
+
+    // Test Breadcrumbs.
+    $this->assertLink($label, 0, 'Field label is correct in the breadcrumb of the field delete page.');
 
     // Submit confirmation form.
     $this->drupalPostForm(NULL, array(), t('Delete'));

@@ -9,6 +9,7 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Component\Utility\String;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -218,6 +219,19 @@ class FieldInstanceEditForm extends FormBase {
         'query' => $destination,
       ),
     );
+  }
+
+  /**
+   * The _title_callback for the field instance settings form.
+   *
+   * @param \Drupal\field\FieldInstanceInterface $field_instance
+   *   The field instance.
+   *
+   * @return string
+   *   The label of the field instance.
+   */
+  public function getTitle(FieldInstanceInterface $field_instance) {
+    return String::checkPlain($field_instance->label());
   }
 
 }
