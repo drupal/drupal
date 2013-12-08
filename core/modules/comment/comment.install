@@ -730,13 +730,6 @@ function comment_update_8008(&$sandbox) {
 }
 
 /**
- * Remove the comment_block_count variable.
- */
-function comment_update_8009() {
-  variable_del('comment_block_count');
-}
-
-/**
  * @} End of "addtogroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

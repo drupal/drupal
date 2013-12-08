@@ -87,6 +87,8 @@ class DefaultViewRecentComments extends ViewTestBase {
         'entity_id' => $this->node->id(),
       ));
       $comment->uid->target_id = 0;
+      // Stagger the comments so the timestamp sorting works.
+      $comment->created->value = REQUEST_TIME - $i;
       $comment->subject->value = 'Test comment ' . $i;
       $comment->comment_body->value = 'Test body ' . $i;
       $comment->comment_body->format = 'full_html';
@@ -102,7 +104,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     // Store all the nodes just created to access their properties on the tests.
     $this->commentsCreated = entity_load_multiple('comment');
 
-    // Sort created comments in descending order.
+    // Sort created comments in ascending order.
     ksort($this->commentsCreated, SORT_NUMERIC);
   }
 
@@ -118,14 +120,14 @@ class DefaultViewRecentComments extends ViewTestBase {
       'comment_entity_id' => 'entity_id',
       'comment_subject' => 'subject',
       'cid' => 'cid',
-      'comment_created' => 'created'
+      'comment_changed' => 'changed'
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
       $expected_result[$key]['entity_id'] = $comment->entity_id->value;
       $expected_result[$key]['subject'] = $comment->subject->value;
       $expected_result[$key]['cid'] = $comment->id();
-      $expected_result[$key]['created'] = $comment->created->value;
+      $expected_result[$key]['changed'] = $comment->changed->value;
     }
     $this->assertIdenticalResultset($view, $expected_result, $map);
 
@@ -137,4 +139,34 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
   }
 
+  /**
+   * Tests the page defined by the comments_recent view.
+   */
+  public function testPageDisplay() {
+    $view = views_get_view('comments_recent');
+    $view->setDisplay('page_1');
+    $this->executeView($view);
+
+    $map = array(
+      'comment_entity_id' => 'entity_id',
+      'comment_subject' => 'subject',
+      'comment_changed' => 'changed',
+      'cid' => 'cid'
+    );
+    $expected_result = array();
+    foreach (array_values($this->commentsCreated) as $key => $comment) {
+      $expected_result[$key]['entity_id'] = $comment->entity_id->value;
+      $expected_result[$key]['subject'] = $comment->subject->value;
+      $expected_result[$key]['changed'] = $comment->changed->value;
+      $expected_result[$key]['cid'] = $comment->id();
+    }
+    $this->assertIdenticalResultset($view, $expected_result, $map);
+
+    // Check the number of results given by the display is the expected.
+    $this->assertEqual(count($view->result), $this->pageDisplayResults,
+      format_string('There are exactly @results comments. Expected @expected',
+        array('@results' => count($view->result), '@expected' => $this->pageDisplayResults)
+      )
+    );
+  }
 }
