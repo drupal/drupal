@@ -568,9 +568,6 @@ function user_preprocess_block(&$variables) {
       case 'user_login_block':
         $variables['attributes']['role'] = 'form';
         break;
-      case 'user_new_block':
-        $variables['attributes']['role'] = 'complementary';
-        break;
     }
   }
 }

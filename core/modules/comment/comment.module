@@ -173,9 +173,6 @@ function comment_field_extra_fields() {
  */
 function comment_theme() {
   return array(
-    'comment_block' => array(
-      'variables' => array('number' => NULL),
-    ),
     'comment_preview' => array(
       'variables' => array('comment' => NULL),
     ),
@@ -427,30 +424,6 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
   }
 
   return $pagenum;
-}
-
-/**
- * Returns HTML for a list of recent comments.
- *
- * @ingroup themeable
- */
-function theme_comment_block($variables) {
-  $items = array();
-  $number = $variables['number'];
-  foreach (comment_get_recent($number) as $comment) {
-    $items[] = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)) . '&nbsp;<span>' . t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->changed))) . '</span>';
-  }
-
-  if ($items) {
-    $item_list = array(
-      '#theme' => 'item_list',
-      '#items' => $items,
-    );
-    return drupal_render($item_list);
-  }
-  else {
-    return t('No comments available.');
-  }
 }
 
 /**

@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\comment\Tests;
+use Drupal\Component\Utility\String;
 
 /**
  * Tests the Comment module blocks.
@@ -17,7 +18,7 @@ class CommentBlockTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('block', 'views');
 
   function setUp() {
     parent::setUp();
@@ -46,12 +47,18 @@ class CommentBlockTest extends CommentTestBase {
    */
   function testRecentCommentBlock() {
     $this->drupalLogin($this->admin_user);
-    $block = $this->drupalPlaceBlock('recent_comments', array('block_count' => 2));
+    $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1');
 
-    // Add some test comments, one without a subject.
-    $comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
-    $comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
-    $comment3 = $this->postComment($this->node, $this->randomName());
+    // Add some test comments, with and without subjects. Because the 10 newest
+    // comments should be shown by the block, we create 11 to test that behavior
+    // below.
+    $timestamp = REQUEST_TIME;
+    for ($i = 0; $i < 11; ++$i) {
+      $subject = ($i % 2) ? $this->randomName() : '';
+      $comments[$i] = $this->postComment($this->node, $this->randomName(), $subject);
+      $comments[$i]->created->value = $timestamp--;
+      $comments[$i]->save();
+    }
 
     // Test that a user without the 'access comments' permission cannot see the
     // block.
@@ -61,48 +68,35 @@ class CommentBlockTest extends CommentTestBase {
     // posting a node from a node form.
     cache_invalidate_tags(array('content' => TRUE));
     $this->drupalGet('');
-    $label = $block->label();
-    $this->assertNoText($label, 'Block was not found.');
+    $this->assertNoText(t('Recent comments'));
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access comments'));
 
     // Test that a user with the 'access comments' permission can see the
     // block.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('');
-    $this->assertText($label, 'Block was found.');
+    $this->assertText(t('Recent comments'));
 
-    // Test the only the 2 latest comments are shown and in the proper order.
-    $this->assertNoText($comment1->subject->value, 'Comment not found in block.');
-    $this->assertText($comment2->subject->value, 'Comment found in block.');
-    $this->assertText($comment3->comment_body->value, 'Comment found in block.');
-    $this->assertTrue(strpos($this->drupalGetContent(), $comment3->comment_body->value) < strpos($this->drupalGetContent(), $comment2->subject->value), 'Comments were ordered correctly in block.');
-
-    // Set the number of recent comments to show to 10.
-    $block->getPlugin()->setConfigurationValue('block_count', 10);
-    $block->save();
-
-    // Post an additional comment.
-    $comment4 = $this->postComment($this->node, $this->randomName(), $this->randomName());
-
-    // Test that all four comments are shown.
-    $this->assertText($comment1->subject->value, 'Comment found in block.');
-    $this->assertText($comment2->subject->value, 'Comment found in block.');
-    $this->assertText($comment3->comment_body->value, 'Comment found in block.');
-    $this->assertText($comment4->subject->value, 'Comment found in block.');
+    // Test the only the 10 latest comments are shown and in the proper order.
+    $this->assertNoText($comments[10]->subject->value, 'Comment 11 not found in block.');
+    for ($i = 0; $i < 10; $i++) {
+      $this->assertText($comments[$i]->subject->value, String::format('Comment @number found in block.', array('@number' => 10 - $i)));
+      if ($i > 1) {
+        $previous_position = $position;
+        $position = strpos($this->drupalGetContent(), $comments[$i]->subject->value);
+        $this->assertTrue($position > $previous_position, String::format('Comment @a appears after comment @b', array('@a' => 10 - $i, '@b' => 11 - $i)));
+      }
+      $position = strpos($this->drupalGetContent(), $comments[$i]->subject->value);
+    }
 
     // Test that links to comments work when comments are across pages.
     $this->setCommentsPerPage(1);
-    $this->drupalGet('');
-    $this->clickLink($comment1->subject->value);
-    $this->assertText($comment1->subject->value, 'Comment link goes to correct page.');
-    $this->drupalGet('');
-    $this->clickLink($comment2->subject->value);
-    $this->assertText($comment2->subject->value, 'Comment link goes to correct page.');
-    $this->clickLink($comment4->subject->value);
-    $this->assertText($comment4->subject->value, 'Comment link goes to correct page.');
-    // Check that when viewing a comment page from a link to the comment, that
-    // rel="canonical" is added to the head of the document.
-    $this->assertRaw('<link rel="canonical"', 'Canonical URL was found in the HTML head');
+
+    for ($i = 0; $i < 10; $i++) {
+      $this->clickLink($comments[$i]->subject->value);
+      $this->assertText($comments[$i]->subject->value, 'Comment link goes to correct page.');
+      $this->assertRaw('<link rel="canonical"', 'Canonical URL was found in the HTML head');
+    }
   }
 
 }
