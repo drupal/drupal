@@ -270,6 +270,8 @@ function simpletest_script_init($server_software) {
 
   $host = 'localhost';
   $path = '';
+  $port = '80';
+
   // Determine location of php command automatically, unless a command line argument is supplied.
   if (!empty($args['php'])) {
     $php = $args['php'];
@@ -294,6 +296,7 @@ function simpletest_script_init($server_software) {
     $parsed_url = parse_url($args['url']);
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = isset($parsed_url['path']) ? rtrim($parsed_url['path']) : '';
+    $port = (isset($parsed_url['port']) ? $parsed_url['port'] : $port);
     if ($path == '/') {
       $path = '';
     }
@@ -307,6 +310,7 @@ function simpletest_script_init($server_software) {
   $_SERVER['HTTP_HOST'] = $host;
   $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
   $_SERVER['SERVER_ADDR'] = '127.0.0.1';
+  $_SERVER['SERVER_PORT'] = $port;
   $_SERVER['SERVER_SOFTWARE'] = $server_software;
   $_SERVER['SERVER_NAME'] = 'localhost';
   $_SERVER['REQUEST_URI'] = $path .'/';
