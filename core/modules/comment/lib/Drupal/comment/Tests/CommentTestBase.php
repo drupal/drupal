@@ -59,6 +59,7 @@ abstract class CommentTestBase extends WebTestBase {
       'administer content types',
       'administer comments',
       'administer comment fields',
+      'administer comment display',
       'skip comment approval',
       'post comments',
       'access comments',

@@ -123,6 +123,12 @@ class CommentFieldsTest extends CommentTestBase {
     $edit = array('instance[settings][text_processing]' => 0);
     $this->drupalPostForm('admin/structure/comments/manage/node__comment/fields/comment.node__comment.comment_body', $edit, t('Save settings'));
 
+    // Change formatter settings.
+    $this->drupalGet('admin/structure/comments/manage/node__comment/display');
+    $edit = array('fields[comment_body][type]' => 'text_trimmed', 'refresh_rows' => 'comment_body');
+    $commands = $this->drupalPostAjaxForm(NULL, $edit, array('op' => t('Refresh')));
+    $this->assertTrue($commands, 'Ajax commands returned');
+
     // Post a comment without an explicit subject.
     $this->drupalLogin($this->web_user);
     $edit = array('comment_body[0][value]' => $this->randomName(8));
