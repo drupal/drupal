@@ -69,6 +69,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
    */
   function testTruncate() {
     $num_records_before = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
+    $this->assertTrue($num_records_before > 0, 'The table is not empty.');
 
     db_truncate('test')->execute();
 
