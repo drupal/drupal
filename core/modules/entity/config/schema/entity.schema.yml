@@ -2,26 +2,52 @@
 
 entity.view_mode.*.*:
   type: mapping
-  label: 'Entity View Mode settings'
+  label: 'Entity view mode settings'
   mapping:
     id:
       type: string
-      label: 'Entity View Mode ID'
+      label: 'ID'
     uuid:
       type: string
       label: 'UUID'
     label:
       type: label
-      label: 'The human-readable name of the form or view mode'
+      label: 'The human-readable name of the view mode'
     targetEntityType:
       type: string
-      label: 'Used for Entity type'
+      label: 'Target entity type'
     status:
       type: boolean
       label: 'Enabled'
     cache:
       type: boolean
       label: 'Cached'
+    langcode:
+      type: string
+      label: 'Default language'
+
+entity.form_mode.*.*:
+  type: mapping
+  label: 'Entity form mode settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'The human-readable name of the form mode'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    status:
+      type: boolean
+      label: 'Enabled'
+    cache:
+      type: boolean
+      label: 'Cache'
     langcode:
       type: string
       label: 'Default language'
