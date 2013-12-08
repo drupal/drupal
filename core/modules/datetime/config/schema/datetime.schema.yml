@@ -1,0 +1,30 @@
+# Schema for the configuration files of the Datetime module.
+
+field.datetime.settings:
+  type: mapping
+  label: 'Datetime settings'
+  mapping:
+    datetime_type:
+      type: string
+      label: 'Date type'
+
+field.datetime.instance_settings:
+  type: mapping
+  label: 'Datetime settings'
+  mapping:
+    default_value:
+      type: string
+      label: 'Default date'
+    user_register_form:
+      type: boolean
+      label: 'Display on user registration form.'
+
+field.datetime.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: sequence
+      label: 'Default value'
+      sequence:
+        - type: string
+          label: 'Value'
