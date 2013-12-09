@@ -65,7 +65,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
   protected function constructValue($data, $context) {
     $field_item = $context['target_instance'];
     $field_definition = $field_item->getFieldDefinition();
-    $target_type = $field_definition->getFieldSetting('target_type');
+    $target_type = $field_definition->getSetting('target_type');
     if ($id = $this->entityResolver->resolve($this, $data, $target_type)) {
       return array('target_id' => $id);
     }

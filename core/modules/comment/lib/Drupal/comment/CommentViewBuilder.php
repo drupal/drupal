@@ -278,7 +278,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
       $commented_entity = $this->entityManager->getStorageController($comment->entity_type->value)->load($comment->entity_id->value);
       $instance = $this->fieldInfo->getInstance($commented_entity->entityType(), $commented_entity->bundle(), $comment->field_name->value);
       $is_threaded = isset($comment->divs)
-        && $instance->getFieldSetting('default_mode') == COMMENT_MODE_THREADED;
+        && $instance->getSetting('default_mode') == COMMENT_MODE_THREADED;
 
       // Add indentation div or close open divs as needed.
       if ($is_threaded) {

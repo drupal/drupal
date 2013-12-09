@@ -29,7 +29,7 @@ abstract class ImageFormatterBase extends FileFormatterBase {
         // If we are dealing with a configurable field, look in both
         // instance-level and field-level settings.
         if (empty($default_image['fid']) && $this->fieldDefinition instanceof FieldInstanceInterface) {
-          $default_image = $this->fieldDefinition->getField()->getFieldSetting('default_image');
+          $default_image = $this->fieldDefinition->getField()->getSetting('default_image');
         }
 
         if (!empty($default_image['fid']) && ($file = file_load($default_image['fid']))) {

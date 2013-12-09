@@ -52,7 +52,7 @@ class TextProcessed extends TypedData {
     if (!isset($text) || $text === '') {
       $this->processed = '';
     }
-    elseif ($item->getFieldDefinition()->getFieldSetting('text_processing')) {
+    elseif ($item->getFieldDefinition()->getSetting('text_processing')) {
       $this->processed = check_markup($text, $item->format, $item->getLangcode());
     }
     else {

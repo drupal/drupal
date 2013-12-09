@@ -59,8 +59,8 @@ class FieldDefinitionTest extends UnitTestCase {
   public function testFieldName() {
     $definition = new FieldDefinition();
     $field_name = $this->randomName();
-    $definition->setFieldName($field_name);
-    $this->assertEquals($field_name, $definition->getFieldName());
+    $definition->setName($field_name);
+    $this->assertEquals($field_name, $definition->getName());
   }
 
   /**
@@ -69,8 +69,8 @@ class FieldDefinitionTest extends UnitTestCase {
   public function testFieldLabel() {
     $definition = new FieldDefinition();
     $label = $this->randomName();
-    $definition->setFieldLabel($label);
-    $this->assertEquals($label, $definition->getFieldLabel());
+    $definition->setLabel($label);
+    $this->assertEquals($label, $definition->getLabel());
   }
 
   /**
@@ -79,8 +79,8 @@ class FieldDefinitionTest extends UnitTestCase {
   public function testFieldDescription() {
     $definition = new FieldDefinition();
     $description = $this->randomName();
-    $definition->setFieldDescription($description);
-    $this->assertEquals($description, $definition->getFieldDescription());
+    $definition->setDescription($description);
+    $this->assertEquals($description, $definition->getDescription());
   }
 
   /**
@@ -89,7 +89,7 @@ class FieldDefinitionTest extends UnitTestCase {
   public function testFieldType() {
     $field_type = $this->randomName();
     $definition = FieldDefinition::create($field_type);
-    $this->assertEquals($field_type, $definition->getFieldType());
+    $this->assertEquals($field_type, $definition->getType());
   }
 
   /**
@@ -99,9 +99,9 @@ class FieldDefinitionTest extends UnitTestCase {
     $definition = new FieldDefinition();
     $setting = $this->randomName();
     $value = $this->randomName();
-    $definition->setFieldSetting($setting, $value);
-    $this->assertEquals($value, $definition->getFieldSetting($setting));
-    $this->assertEquals(array($setting => $value), $definition->getFieldSettings());
+    $definition->setSetting($setting, $value);
+    $this->assertEquals($value, $definition->getSetting($setting));
+    $this->assertEquals(array($setting => $value), $definition->getSettings());
   }
 
   /**
@@ -111,11 +111,11 @@ class FieldDefinitionTest extends UnitTestCase {
     $definition = new FieldDefinition();
     $setting = 'default_value';
     $value = $this->randomName();
-    $definition->setFieldSetting($setting, $value);
+    $definition->setSetting($setting, $value);
     $entity = $this->getMockBuilder('Drupal\Core\Entity\Entity')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->assertEquals($value, $definition->getFieldDefaultValue($entity));
+    $this->assertEquals($value, $definition->getDefaultValue($entity));
   }
 
   /**
@@ -123,11 +123,11 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldTranslatable() {
     $definition = new FieldDefinition();
-    $this->assertFalse($definition->isFieldTranslatable());
+    $this->assertFalse($definition->isTranslatable());
     $definition->setTranslatable(TRUE);
-    $this->assertTrue($definition->isFieldTranslatable());
+    $this->assertTrue($definition->isTranslatable());
     $definition->setTranslatable(FALSE);
-    $this->assertFalse($definition->isFieldTranslatable());
+    $this->assertFalse($definition->isTranslatable());
   }
 
   /**
@@ -135,7 +135,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldCardinality() {
     $definition = new FieldDefinition();
-    $this->assertEquals(1, $definition->getFieldCardinality());
+    $this->assertEquals(1, $definition->getCardinality());
     // @todo: Add more tests when this can be controlled.
   }
 
@@ -144,11 +144,11 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldRequired() {
     $definition = new FieldDefinition();
-    $this->assertFalse($definition->isFieldRequired());
-    $definition->setFieldRequired(TRUE);
-    $this->assertTrue($definition->isFieldRequired());
-    $definition->setFieldRequired(FALSE);
-    $this->assertFalse($definition->isFieldRequired());
+    $this->assertFalse($definition->isRequired());
+    $definition->setRequired(TRUE);
+    $this->assertTrue($definition->isRequired());
+    $definition->setRequired(FALSE);
+    $this->assertFalse($definition->isRequired());
   }
 
   /**
@@ -156,7 +156,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testFieldConfigurable() {
     $definition = new FieldDefinition();
-    $this->assertFalse($definition->isFieldConfigurable());
+    $this->assertFalse($definition->isConfigurable());
   }
 
 }

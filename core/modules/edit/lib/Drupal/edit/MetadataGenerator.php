@@ -68,7 +68,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
    * {@inheritdoc}
    */
   public function generateField(EntityInterface $entity, FieldDefinitionInterface $field_definition, $langcode, $view_mode) {
-    $field_name = $field_definition->getFieldName();
+    $field_name = $field_definition->getName();
 
     // Early-return if user does not have access.
     $access = $this->accessChecker->accessEditEntityField($entity, $field_name);
@@ -85,7 +85,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     }
 
     // Gather metadata, allow the editor to add additional metadata of its own.
-    $label = $field_definition->getFieldLabel();
+    $label = $field_definition->getLabel();
     $editor = $this->editorManager->createInstance($editor_id);
     $metadata = array(
       'label' => check_plain($label),

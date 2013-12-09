@@ -177,7 +177,7 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
     // @todo Refine automated log messages and abstract them to all entity
     //   types: http://drupal.org/node/1678002.
     if ($entity->entityType() == 'node' && $entity->isNewRevision() && !isset($entity->log)) {
-      $entity->log = t('Updated the %field-name field through in-place editing.', array('%field-name' => $entity->get($field_name)->getFieldDefinition()->getFieldLabel()));
+      $entity->log = t('Updated the %field-name field through in-place editing.', array('%field-name' => $entity->get($field_name)->getFieldDefinition()->getLabel()));
     }
 
     return $entity;

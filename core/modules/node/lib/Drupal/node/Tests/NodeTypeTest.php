@@ -84,7 +84,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     $instance = field_info_instance('node', 'body', 'page');
-    $this->assertEqual($instance->getFieldLabel(), 'Body', 'Body field was found.');
+    $this->assertEqual($instance->getLabel(), 'Body', 'Body field was found.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('node/add/page');

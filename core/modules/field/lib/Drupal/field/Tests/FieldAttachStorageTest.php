@@ -48,7 +48,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   function testFieldAttachSaveLoad() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithInstance('', $entity_type);
-    $cardinality = $this->field->getFieldCardinality();
+    $cardinality = $this->field->getCardinality();
 
     // Configure the instance so that we test
     // \Drupal\field_test\Plugin\Field\FieldType\TestItem::getCacheData().
@@ -248,7 +248,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   function testFieldAttachDelete() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithInstance('', $entity_type);
-    $cardinality = $this->field->getFieldCardinality();
+    $cardinality = $this->field->getCardinality();
     $entity = entity_create($entity_type, array('type' => $this->instance->bundle));
     $vids = array();
 
@@ -306,7 +306,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   function testEntityCreateRenameBundle() {
     $entity_type = 'entity_test_rev';
     $this->createFieldWithInstance('', $entity_type);
-    $cardinality = $this->field->getFieldCardinality();
+    $cardinality = $this->field->getCardinality();
 
     // Create a new bundle.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
@@ -376,7 +376,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Save an entity with data for both fields
     $entity = entity_create($entity_type, array('type' => $this->instance->bundle));
-    $values = $this->_generateTestFieldValues($this->field->getFieldCardinality());
+    $values = $this->_generateTestFieldValues($this->field->getCardinality());
     $entity->{$this->field_name} = $values;
     $entity->{$field_name} = $this->_generateTestFieldValues(1);
     $entity = $this->entitySaveReload($entity);

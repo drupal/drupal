@@ -357,7 +357,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         foreach (array('definitions', 'optional') as $key) {
           foreach ($this->entityFieldInfo[$entity_type][$key] as $field_name => &$definition) {
             if ($definition instanceof FieldDefinition) {
-              $definition->setFieldName($field_name);
+              $definition->setName($field_name);
             }
           }
         }
@@ -372,8 +372,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         $untranslatable_fields = array_flip(array('langcode') + $keys);
         foreach (array('definitions', 'optional') as $key) {
           foreach ($this->entityFieldInfo[$entity_type][$key] as $field_name => &$definition) {
-            if (isset($untranslatable_fields[$field_name]) && $definition->isFieldTranslatable()) {
-              throw new \LogicException(format_string('The @field field cannot be translatable.', array('@field' => $definition->getFieldLabel())));
+            if (isset($untranslatable_fields[$field_name]) && $definition->isTranslatable()) {
+              throw new \LogicException(format_string('The @field field cannot be translatable.', array('@field' => $definition->getLabel())));
             }
           }
         }

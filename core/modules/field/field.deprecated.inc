@@ -599,7 +599,7 @@ function field_attach_form_validate(ContentEntityInterface $entity, $form, &$for
   $has_violations = FALSE;
   foreach ($entity as $field_name => $field) {
     $definition = $field->getDefinition();
-    if ($definition->isFieldConfigurable() && (empty($options['field_name']) || $options['field_name'] == $field_name)) {
+    if ($definition->isConfigurable() && (empty($options['field_name']) || $options['field_name'] == $field_name)) {
       $field_violations = $field->validate();
       if (count($field_violations)) {
         $has_violations = TRUE;
@@ -699,7 +699,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   // the entity display.
   $target_function = function (FieldDefinitionInterface $field_definition, $bundle) use ($displays) {
     if (isset($displays[$bundle])) {
-      return $displays[$bundle]->getRenderer($field_definition->getFieldName());
+      return $displays[$bundle]->getRenderer($field_definition->getName());
     }
   };
   $null = NULL;
@@ -738,7 +738,7 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
   // For each field, call the view() method on the formatter object handed
   // by the entity display.
   $target_function = function (FieldDefinitionInterface $field_definition) use ($display) {
-    return $display->getRenderer($field_definition->getFieldName());
+    return $display->getRenderer($field_definition->getName());
   };
   $null = NULL;
   $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);
@@ -799,10 +799,10 @@ function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL)
  *   The default value for the field.
  *
  * @deprecated as of Drupal 8.0. Use
- *   $instance->getFieldDefaultValue($entity)
+ *   $instance->getDefaultValue($entity)
  */
 function field_get_default_value(EntityInterface $entity, $field, $instance, $langcode = NULL) {
-  return $instance->getFieldDefaultValue($entity);
+  return $instance->getDefaultValue($entity);
 }
 
 /**
@@ -900,13 +900,13 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
   if (!isset($field_name)) {
     $display_langcodes = array();
     foreach ($definitions as $name => $definition) {
-      if ($definition->isFieldConfigurable()) {
+      if ($definition->isConfigurable()) {
         $display_langcodes[$name] = $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
       }
     }
     return $display_langcodes;
   }
-  elseif ($definitions[$field_name]->isFieldConfigurable()) {
+  elseif ($definitions[$field_name]->isConfigurable()) {
     return $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
   }
 }

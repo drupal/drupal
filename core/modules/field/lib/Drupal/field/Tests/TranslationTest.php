@@ -164,7 +164,7 @@ class TranslationTest extends FieldUnitTestBase {
     $available_langcodes = array_keys(language_list());
     $entity->langcode->value = reset($available_langcodes);
     foreach ($available_langcodes as $langcode) {
-      $field_translations[$langcode] = $this->_generateTestFieldValues($this->field->getFieldCardinality());
+      $field_translations[$langcode] = $this->_generateTestFieldValues($this->field->getCardinality());
       $entity->getTranslation($langcode)->{$this->field_name}->setValue($field_translations[$langcode]);
     }
 
@@ -201,7 +201,7 @@ class TranslationTest extends FieldUnitTestBase {
     $values = array('type' => $instance->bundle, 'langcode' => $translation_langcodes[0]);
     $entity = entity_create($entity_type, $values);
     foreach ($translation_langcodes as $langcode) {
-      $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->field->getFieldCardinality());
+      $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->field->getCardinality());
       $entity->getTranslation($langcode, FALSE)->{$this->field_name}->setValue($values[$this->field_name][$langcode]);
     }
 
@@ -219,7 +219,7 @@ class TranslationTest extends FieldUnitTestBase {
       $values = array('type' => $instance->bundle, 'langcode' => $translation_langcodes[0]);
       $entity = entity_create($entity_type, $values);
       foreach ($translation_langcodes as $langcode) {
-        $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->field->getFieldCardinality());
+        $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->field->getCardinality());
         $entity->getTranslation($langcode)->{$this->field_name}->setValue($values[$this->field_name][$langcode]);
         $entity->getTranslation($langcode)->{$field_name_default}->setValue($empty_items);
         $values[$field_name_default][$langcode] = $empty_items;

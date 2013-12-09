@@ -144,7 +144,7 @@ class EntityTest extends ContentEntityBase {
     $fields['user_id'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The ID of the associated user.'))
-      ->setFieldSettings(array('target_type' => 'user'))
+      ->setSettings(array('target_type' => 'user'))
       ->setTranslatable(TRUE);
 
     return $fields;

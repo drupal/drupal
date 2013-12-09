@@ -53,7 +53,7 @@ class FileFieldItemList extends ConfigFieldItemList {
     }
 
     // Get the file IDs attached to the field before this update.
-    $field_name = $this->getFieldDefinition()->getFieldName();
+    $field_name = $this->getFieldDefinition()->getName();
     $original_fids = array();
     $original_items = $entity->original->getTranslation($this->getLangcode())->$field_name;
     foreach ($original_items as $item) {

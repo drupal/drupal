@@ -121,12 +121,12 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
     $fields = array($this->field_name, $this->untranslatable_field_name);
     foreach ($fields as $field_name) {
       $field = FieldService::fieldInfo()->getField($entity_type, $field_name);
-      $translatable = !$field->isFieldTranslatable();
+      $translatable = !$field->isTranslatable();
       $field->set('translatable', $translatable);
       $field->save();
       FieldService::fieldInfo()->flush();
       $field = FieldService::fieldInfo()->getField($entity_type, $field_name);
-      $this->assertEqual($field->isFieldTranslatable(), $translatable, 'Field translatability changed.');
+      $this->assertEqual($field->isTranslatable(), $translatable, 'Field translatability changed.');
     }
     \Drupal::cache('field')->deleteAll();
   }

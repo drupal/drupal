@@ -147,8 +147,8 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
     if ($style->id() != $style->getOriginalId()) {
       // Loop through all fields searching for image fields.
       foreach (field_read_instances() as $instance) {
-        if ($instance->getFieldType() == 'image') {
-          $field_name = $instance->getFieldName();
+        if ($instance->getType() == 'image') {
+          $field_name = $instance->getName();
           $view_modes = array('default') + array_keys(entity_get_view_modes($instance->entity_type));
           foreach ($view_modes as $view_mode) {
             $display = entity_get_display($instance->entity_type, $instance->bundle, $view_mode);

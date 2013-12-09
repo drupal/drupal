@@ -88,7 +88,7 @@ function field_available_languages($entity_type, FieldInterface $field) {
     $drupal_static_fast['field_langcodes'] = &drupal_static(__FUNCTION__);
   }
   $field_langcodes = &$drupal_static_fast['field_langcodes'];
-  $field_name = $field->getFieldName();
+  $field_name = $field->getName();
 
   if (!isset($field_langcodes[$entity_type][$field_name])) {
     // If the field has language support enabled we retrieve an (alterable) list
@@ -167,7 +167,7 @@ function field_content_languages() {
  *   TRUE if the field can be translated.
  */
 function field_is_translatable($entity_type, FieldInterface $field) {
-  return $field->isFieldTranslatable() && field_has_translation_handler($entity_type);
+  return $field->isTranslatable() && field_has_translation_handler($entity_type);
 }
 
 /**

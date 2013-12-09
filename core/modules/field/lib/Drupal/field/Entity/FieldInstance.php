@@ -454,40 +454,40 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldName() {
+  public function getName() {
     return $this->field->name;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldType() {
+  public function getType() {
     return $this->field->type;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldSettings() {
-    return $this->settings + $this->field->getFieldSettings();
+  public function getSettings() {
+    return $this->settings + $this->field->getSettings();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldSetting($setting_name) {
+  public function getSetting($setting_name) {
     if (array_key_exists($setting_name, $this->settings)) {
       return $this->settings[$setting_name];
     }
     else {
-      return $this->field->getFieldSetting($setting_name);
+      return $this->field->getSetting($setting_name);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldPropertyNames() {
+  public function getPropertyNames() {
     $schema = $this->field->getSchema();
     return array_keys($schema['columns']);
   }
@@ -495,7 +495,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function isFieldTranslatable() {
+  public function isTranslatable() {
     return $this->field->translatable;
   }
 
@@ -522,42 +522,42 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldLabel() {
+  public function getLabel() {
     return $this->label();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldDescription() {
+  public function getDescription() {
     return $this->description;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldCardinality() {
+  public function getCardinality() {
     return $this->field->cardinality;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldRequired() {
+  public function isRequired() {
     return $this->required;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldMultiple() {
-    return $this->field->isFieldMultiple();
+  public function isMultiple() {
+    return $this->field->isMultiple();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldDefaultValue(EntityInterface $entity) {
+  public function getDefaultValue(EntityInterface $entity) {
     if (!empty($this->default_value_function)) {
       $function = $this->default_value_function;
       return $function($entity, $this->getField(), $this, $entity->language()->id);
@@ -570,14 +570,14 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function isFieldConfigurable() {
+  public function isConfigurable() {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldQueryable() {
+  public function isQueryable() {
     return TRUE;
   }
 
@@ -616,20 +616,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLabel() {
-    return $this->label();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDescription() {
-    return $this->getFieldDescription();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isList() {
     return TRUE;
   }
@@ -651,30 +637,8 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function isRequired() {
-    // Only field instances can be required.
-    return $this->isFieldRequired();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getClass() {
     return $this->field->getClass();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSettings() {
-    return $this->getFieldSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSetting($setting_name) {
-    return $this->getFieldSetting($setting_name);
   }
 
   /**
@@ -697,7 +661,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   public function getItemDefinition() {
     if (!isset($this->itemDefinition)) {
       $this->itemDefinition = DataDefinition::create('field_item:' . $this->field->type)
-        ->setSettings($this->getFieldSettings());
+        ->setSettings($this->getSettings());
     }
     return $this->itemDefinition;
   }

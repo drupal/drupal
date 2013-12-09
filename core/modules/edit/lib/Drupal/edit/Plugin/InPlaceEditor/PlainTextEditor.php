@@ -28,11 +28,11 @@ class PlainTextEditor extends EditorBase {
    */
   function isCompatible(FieldDefinitionInterface $field_definition, array $items) {
     // This editor is incompatible with multivalued fields.
-    if ($field_definition->getFieldCardinality() != 1) {
+    if ($field_definition->getCardinality() != 1) {
       return FALSE;
     }
     // This editor is incompatible with processed ("rich") text fields.
-    elseif ($field_definition->getFieldSetting('text_processing')) {
+    elseif ($field_definition->getSetting('text_processing')) {
       return FALSE;
     }
     else {

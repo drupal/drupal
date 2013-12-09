@@ -60,7 +60,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
 
       // Sync when the field is not empty, when the synchronization translations
       // setting is set, and the field is translatable.
-      $translation_sync = $instance->getFieldSetting('translation_sync');
+      $translation_sync = $instance->getSetting('translation_sync');
       if (!$entity->get($field_name)->isEmpty() && !empty($translation_sync) && field_is_translatable($entity_type, $field)) {
         // Retrieve all the untranslatable column groups and merge them into
         // single list.
@@ -68,7 +68,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
         if (!empty($groups)) {
           $columns = array();
           foreach ($groups as $group) {
-            $column_groups = $field->getFieldSetting('column_groups');
+            $column_groups = $field->getSetting('column_groups');
             $info = $column_groups[$group];
             // A missing 'columns' key indicates we have a single-column group.
             $columns = array_merge($columns, isset($info['columns']) ? $info['columns'] : array($group));

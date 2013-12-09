@@ -51,7 +51,7 @@ function entity_reference_field_entity_update(FieldInterface $field) {
     return;
   }
 
-  if ($field->getFieldSetting('target_type') == $field->original->getFieldSetting('target_type')) {
+  if ($field->getSetting('target_type') == $field->original->getSetting('target_type')) {
     // Target type didn't change.
     return;
   }
@@ -61,7 +61,7 @@ function entity_reference_field_entity_update(FieldInterface $field) {
     return;
   }
 
-  $field_name = $field->getFieldName();
+  $field_name = $field->getName();
 
   foreach ($field->bundles() as $entity_type => $bundles) {
     foreach ($bundles as $bundle) {
@@ -153,7 +153,7 @@ function entity_reference_options_list(FieldDefinitionInterface $field_definitio
   }
 
   // Rebuild the array by changing the bundle key into the bundle label.
-  $target_type = $field_definition->getFieldSetting('target_type');
+  $target_type = $field_definition->getSetting('target_type');
   $bundles = entity_get_bundles($target_type);
 
   $return = array();

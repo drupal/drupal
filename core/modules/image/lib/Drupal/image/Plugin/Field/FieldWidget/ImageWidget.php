@@ -78,7 +78,7 @@ class ImageWidget extends FileWidget {
   protected function formMultipleElements(FieldItemListInterface $items, array &$form, array &$form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 
-    $cardinality = $this->fieldDefinition->getFieldCardinality();
+    $cardinality = $this->fieldDefinition->getCardinality();
     $file_upload_help = array(
       '#theme' => 'file_upload_help',
       '#upload_validators' => $elements[0]['#upload_validators'],
@@ -87,7 +87,7 @@ class ImageWidget extends FileWidget {
     if ($cardinality == 1) {
       // If there's only one field, return it as delta 0.
       if (empty($elements[0]['#default_value']['fids'])) {
-        $file_upload_help['#description'] = field_filter_xss($this->fieldDefinition->getFieldDescription());
+        $file_upload_help['#description'] = field_filter_xss($this->fieldDefinition->getDescription());
         $elements[0]['#description'] = drupal_render($file_upload_help);
       }
     }

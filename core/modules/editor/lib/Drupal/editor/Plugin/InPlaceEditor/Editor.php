@@ -28,13 +28,13 @@ class Editor extends PluginBase implements EditPluginInterface {
    */
   function isCompatible(FieldDefinitionInterface $field_definition, array $items) {
     // This editor is incompatible with multivalued fields.
-    if ($field_definition->getFieldCardinality() != 1) {
+    if ($field_definition->getCardinality() != 1) {
       return FALSE;
     }
     // This editor is compatible with processed ("rich") text fields; but only
     // if there is a currently active text format, that text format has an
     // associated editor and that editor supports inline editing.
-    elseif ($field_definition->getFieldSetting('text_processing')) {
+    elseif ($field_definition->getSetting('text_processing')) {
       $format_id = $items[0]['format'];
       if (isset($format_id) && $editor = editor_load($format_id)) {
         $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->editor);

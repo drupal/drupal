@@ -59,12 +59,12 @@ class ViewsSelection implements SelectionInterface {
    * {@inheritdoc}
    */
   public static function settingsForm(FieldDefinitionInterface $field_definition) {
-    $selection_handler_settings = $field_definition->getFieldSetting('handler_settings') ?: array();
+    $selection_handler_settings = $field_definition->getSetting('handler_settings') ?: array();
     $view_settings = !empty($selection_handler_settings['view']) ? $selection_handler_settings['view'] : array();
     $displays = views_get_applicable_views('entity_reference_display');
     // Filter views that list the entity type we want, and group the separate
     // displays by view.
-    $entity_info = \Drupal::entityManager()->getDefinition($field_definition->getFieldSetting('target_type'));
+    $entity_info = \Drupal::entityManager()->getDefinition($field_definition->getSetting('target_type'));
     $options = array();
     foreach ($displays as $data) {
       list($view, $display_id) = $data;
@@ -131,14 +131,14 @@ class ViewsSelection implements SelectionInterface {
    *   Return TRUE if the view was initialized, FALSE otherwise.
    */
   protected function initializeView($match = NULL, $match_operator = 'CONTAINS', $limit = 0, $ids = NULL) {
-    $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
+    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
     $view_name = $handler_settings['view']['view_name'];
     $display_name = $handler_settings['view']['display_name'];
 
     // Check that the view is valid and the display still exists.
     $this->view = views_get_view($view_name);
     if (!$this->view || !$this->view->access($display_name)) {
-      drupal_set_message(t('The reference view %view_name used in the %field_name field cannot be found.', array('%view_name' => $view_name, '%field_name' => $this->fieldDefinition->getFieldLabel())), 'warning');
+      drupal_set_message(t('The reference view %view_name used in the %field_name field cannot be found.', array('%view_name' => $view_name, '%field_name' => $this->fieldDefinition->getLabel())), 'warning');
       return FALSE;
     }
     $this->view->setDisplay($display_name);
@@ -158,7 +158,7 @@ class ViewsSelection implements SelectionInterface {
    * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
-    $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
+    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
     $display_name = $handler_settings['view']['display_name'];
     $arguments = $handler_settings['view']['arguments'];
     $result = array();
@@ -189,7 +189,7 @@ class ViewsSelection implements SelectionInterface {
    * {@inheritdoc}
    */
   public function validateReferenceableEntities(array $ids) {
-    $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
+    $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
     $display_name = $handler_settings['view']['display_name'];
     $arguments = $handler_settings['view']['arguments'];
     $result = array();

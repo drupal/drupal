@@ -79,7 +79,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->createCustomBlockType('other');
 
     $instance = field_info_instance('custom_block', 'body', 'basic');
-    $this->assertEqual($instance->getFieldLabel(), 'Block body', 'Body field was found.');
+    $this->assertEqual($instance->getLabel(), 'Block body', 'Body field was found.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('block/add/basic');

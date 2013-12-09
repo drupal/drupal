@@ -500,21 +500,21 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldName() {
+  public function getName() {
     return $this->name;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldType() {
+  public function getType() {
     return $this->type;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldSettings() {
+  public function getSettings() {
     // @todo field_info_field_types() calls _field_info_collate_types() which
     //   maintains its own static cache. However, do some CPU and memory
     //   profiling to see if it's worth statically caching $field_type_info, or
@@ -528,12 +528,12 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldSetting($setting_name) {
-    // @todo See getFieldSettings() about potentially statically caching this.
+  public function getSetting($setting_name) {
+    // @todo See getSettings() about potentially statically caching this.
     $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->type);
 
     // We assume here that consecutive array_key_exists() is more efficient than
-    // calling getFieldSettings() when all we need is a single setting.
+    // calling getSettings() when all we need is a single setting.
     if (array_key_exists($setting_name, $this->settings)) {
       return $this->settings[$setting_name];
     }
@@ -551,7 +551,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldPropertyNames() {
+  public function getPropertyNames() {
     $schema = $this->getSchema();
     return array_keys($schema['columns']);
   }
@@ -559,7 +559,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function isFieldTranslatable() {
+  public function isTranslatable() {
     return $this->translatable;
   }
 
@@ -580,55 +580,55 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldLabel() {
+  public function getLabel() {
     return $this->label();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldDescription() {
+  public function getDescription() {
     return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldCardinality() {
+  public function getCardinality() {
     return $this->cardinality;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldRequired() {
+  public function isRequired() {
     return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldMultiple() {
-    $cardinality = $this->getFieldCardinality();
+  public function isMultiple() {
+    $cardinality = $this->getCardinality();
     return ($cardinality == static::CARDINALITY_UNLIMITED) || ($cardinality > 1);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldDefaultValue(EntityInterface $entity) { }
+  public function getDefaultValue(EntityInterface $entity) { }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldConfigurable() {
+  public function isConfigurable() {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldQueryable() {
+  public function isQueryable() {
     return TRUE;
   }
 
@@ -707,20 +707,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLabel() {
-    return $this->label();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDescription() {
-    return $this->getFieldDescription();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isList() {
     return TRUE;
   }
@@ -742,42 +728,11 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function isRequired() {
-    return $this->isFieldRequired();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getClass() {
     // Derive list class from the field type.
     $type_definition = \Drupal::service('plugin.manager.field.field_type')
-      ->getDefinition($this->getFieldType());
+      ->getDefinition($this->getType());
     return $type_definition['list_class'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSettings() {
-    // This should actually return the settings for field item list, which are
-    // not the field settings. However, there is no harm in returning field
-    // settings here, so we do that to avoid confusion for now.
-    // @todo: Unify with getFieldSettings() or remove once typed data moved
-    // to the adapter approach.
-    return $this->getFieldSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSetting($setting_name) {
-    // This should actually return the settings for field item list, which are
-    // not the field settings. However, there is no harm in returning field
-    // settings here, so we do that to avoid confusion for now.
-    // @todo: Unify with getFieldSettings() or remove once typed data moved
-    // to the adapter approach.
-    return $this->getFieldSetting($setting_name);
   }
 
   /**
@@ -800,7 +755,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
   public function getItemDefinition() {
     if (!isset($this->itemDefinition)) {
       $this->itemDefinition = DataDefinition::create('field_item:' . $this->type)
-        ->setSettings($this->getFieldSettings());
+        ->setSettings($this->getSettings());
     }
     return $this->itemDefinition;
   }

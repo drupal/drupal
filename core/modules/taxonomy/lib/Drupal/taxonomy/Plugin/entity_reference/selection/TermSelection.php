@@ -38,7 +38,7 @@ class TermSelection extends SelectionBase {
    */
   public static function settingsForm(FieldDefinitionInterface $field_definition) {
     $form = parent::settingsForm($field_definition);
-    $selection_handler_settings = $field_definition->getFieldSetting('handler_settings');
+    $selection_handler_settings = $field_definition->getSetting('handler_settings');
 
     // @todo: Currently allow auto-create only on taxonomy terms.
     $form['auto_create'] = array(

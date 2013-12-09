@@ -78,7 +78,7 @@ abstract class NumberItemBase extends ConfigFieldItemBase {
     $constraints = parent::getConstraints();
 
     $settings = $this->getFieldSettings();
-    $label = $this->getFieldDefinition()->getFieldLabel();
+    $label = $this->getFieldDefinition()->getLabel();
 
     if (!empty($settings['min'])) {
       $min = $settings['min'];

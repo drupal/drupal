@@ -96,7 +96,7 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
     $target = call_user_func($target_function, $field_definition);
 
     if (method_exists($target, $method)) {
-      $items = $entity->get($field_definition->getFieldName());
+      $items = $entity->get($field_definition->getName());
       $items->filterEmptyValues();
 
       $result = $target->$method($items, $a, $b);
@@ -159,7 +159,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
     $field_definitions = _field_invoke_get_field_definitions($entity_type, $bundle, $options);
 
     foreach ($field_definitions as $field_definition) {
-      $field_name = $field_definition->getFieldName();
+      $field_name = $field_definition->getName();
       $group_key = "$bundle:$field_name";
 
       // Let the closure determine the target object on which the method should
@@ -259,7 +259,7 @@ function _field_invoke_get_field_definitions($entity_type, $bundle, $options) {
  */
 function _field_invoke_widget_target($form_display) {
   return function (FieldDefinitionInterface $field_definition) use ($form_display) {
-    return $form_display->getRenderer($field_definition->getFieldName());
+    return $form_display->getRenderer($field_definition->getName());
   };
 }
 

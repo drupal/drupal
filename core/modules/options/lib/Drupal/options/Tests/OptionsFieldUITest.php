@@ -232,9 +232,9 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
     $this->assertFieldByName('off', $off, t("The 'Off' value is stored correctly."));
     $field = field_info_field('node', $this->field_name);
-    $this->assertEqual($field->getFieldSetting('allowed_values'), $allowed_values, 'The allowed value is correct');
-    $this->assertNull($field->getFieldSetting('on'), 'The on value is not saved into settings');
-    $this->assertNull($field->getFieldSetting('off'), 'The off value is not saved into settings');
+    $this->assertEqual($field->getSetting('allowed_values'), $allowed_values, 'The allowed value is correct');
+    $this->assertNull($field->getSetting('on'), 'The on value is not saved into settings');
+    $this->assertNull($field->getSetting('off'), 'The off value is not saved into settings');
   }
 
   /**
@@ -282,7 +282,7 @@ class OptionsFieldUITest extends FieldTestBase {
    *   element.
    * @param $result
    *   Either an expected resulting array in
-   *   $field->getFieldSetting('allowed_values'), or an expected error message.
+   *   $field->getSetting('allowed_values'), or an expected error message.
    * @param $message
    *   Message to display.
    */
@@ -296,7 +296,7 @@ class OptionsFieldUITest extends FieldTestBase {
     else {
       field_info_cache_clear();
       $field = field_info_field('node', $this->field_name);
-      $this->assertIdentical($field->getFieldSetting('allowed_values'), $result, $message);
+      $this->assertIdentical($field->getSetting('allowed_values'), $result, $message);
     }
   }
 

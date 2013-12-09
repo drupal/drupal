@@ -114,7 +114,7 @@ class TermTest extends TaxonomyTestBase {
     $edit = array();
     $edit['title[0][value]'] = $this->randomName();
     $edit['body[0][value]'] = $this->randomName();
-    $edit[$this->instance->getFieldName() . '[]'] = $term1->id();
+    $edit[$this->instance->getName() . '[]'] = $term1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
@@ -128,7 +128,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertText($term1->label(), 'Term is displayed after saving the node with no changes.');
 
     // Edit the node with a different term.
-    $edit[$this->instance->getFieldName() . '[]'] = $term2->id();
+    $edit[$this->instance->getName() . '[]'] = $term2->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     $this->drupalGet('node/' . $node->id());
@@ -148,7 +148,7 @@ class TermTest extends TaxonomyTestBase {
     // Enable tags in the vocabulary.
     $instance = $this->instance;
     entity_get_form_display($instance->entity_type, $instance->bundle, 'default')
-      ->setComponent($instance->getFieldName(), array(
+      ->setComponent($instance->getName(), array(
         'type' => 'taxonomy_autocomplete',
         'settings' => array(
           'placeholder' => 'Start typing here.',
@@ -167,7 +167,7 @@ class TermTest extends TaxonomyTestBase {
     $edit['body[0][value]'] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit[$instance->getFieldName()] = drupal_implode_tags($terms);
+    $edit[$instance->getName()] = drupal_implode_tags($terms);
 
     // Verify the placeholder is there.
     $this->drupalGet('node/add/article');
@@ -523,7 +523,7 @@ class TermTest extends TaxonomyTestBase {
     // Enable tags in the vocabulary.
     $instance = $this->instance;
     entity_get_form_display($instance->entity_type, $instance->bundle, 'default')
-      ->setComponent($instance->getFieldName(), array(
+      ->setComponent($instance->getName(), array(
         'type' => 'taxonomy_autocomplete',
       ))
       ->save();
@@ -533,7 +533,7 @@ class TermTest extends TaxonomyTestBase {
     $edit = array();
     $edit['title[0][value]'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
-    $edit[$this->instance->getFieldName()] = $term->label();
+    $edit[$this->instance->getName()] = $term->label();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when editing and saving the node with no

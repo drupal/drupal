@@ -136,7 +136,7 @@ class Tables implements TablesInterface {
 
             // Get the field definitions form a mocked entity.
             $values = array();
-            $field_name = $field->getFieldName();
+            $field_name = $field->getName();
             // If there are bundles, pick one.
             if (!empty($entity_info['entity_keys']['bundle'])) {
               $values[$entity_info['entity_keys']['bundle']] = reset($field_map[$entity_type][$field_name]['bundles']);
@@ -151,7 +151,7 @@ class Tables implements TablesInterface {
             // column, i.e. target_id or fid.
             // Otherwise, the code executing the relationship will throw an
             // exception anyways so no need to do it here.
-            if (!$column && isset($propertyDefinitions[$relationship_specifier]) && $entity->{$field->getFieldName()}->get('entity') instanceof EntityReference) {
+            if (!$column && isset($propertyDefinitions[$relationship_specifier]) && $entity->{$field->getName()}->get('entity') instanceof EntityReference) {
               $column = current(array_keys($propertyDefinitions));
             }
             // Prepare the next index prefix.
@@ -249,10 +249,10 @@ class Tables implements TablesInterface {
    * @throws \Drupal\Core\Entity\Query\QueryException
    */
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field) {
-    $field_name = $field->getFieldName();
+    $field_name = $field->getName();
     if (!isset($this->fieldTables[$index_prefix . $field_name])) {
       $table = $this->sqlQuery->getMetaData('age') == EntityStorageControllerInterface::FIELD_LOAD_CURRENT ? FieldableDatabaseStorageController::_fieldTableName($field) : FieldableDatabaseStorageController::_fieldRevisionTableName($field);
-      if ($field->getFieldCardinality() != 1) {
+      if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
       $entity_type = $this->sqlQuery->getMetaData('entity_type');

@@ -56,7 +56,7 @@ class ConfigurableEmailItem extends EmailItem implements ConfigFieldItemInterfac
       'value' => array(
         'Length' => array(
           'max' => static::EMAIL_MAX_LENGTH,
-          'maxMessage' => t('%name: the e-mail address can not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getFieldLabel(), '@max' => static::EMAIL_MAX_LENGTH)),
+          'maxMessage' => t('%name: the e-mail address can not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getLabel(), '@max' => static::EMAIL_MAX_LENGTH)),
         )
       ),
     ));

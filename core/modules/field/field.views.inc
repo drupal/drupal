@@ -90,7 +90,7 @@ function field_views_field_label($entity_type, $field_name) {
   foreach ($instances as $bundle => $bundle_instances) {
     if (isset($bundle_instances[$field_name])) {
       $instance = $bundle_instances[$field_name];
-      $label = $instance->getFieldLabel();
+      $label = $instance->getLabel();
       $label_counter[$label] = isset($label_counter[$label]) ? ++$label_counter[$label] : 1;
       $all_labels[$label] = TRUE;
     }
@@ -117,7 +117,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
   $data = array();
 
   // Check the field type is available.
-  if (!\Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getFieldType())) {
+  if (!\Drupal::service('plugin.manager.field.field_type')->getDefinition($field->getType())) {
     return $data;
   }
   // Check the field has instances.
@@ -125,7 +125,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
     return $data;
   }
 
-  $field_name = $field->getFieldName();
+  $field_name = $field->getName();
   $field_columns = $field->getColumns();
 
   // Grab information about the entity type tables.
@@ -375,7 +375,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
       }
 
       // Expose additional delta column for multiple value fields.
-      if ($field->isFieldMultiple()) {
+      if ($field->isMultiple()) {
         $title_delta = t('@label (!name:delta)', array('@label' => $label, '!name' => $field_name));
         $title_short_delta = t('@label:delta', array('@label' => $label));
 
@@ -417,7 +417,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
       }
 
       // Expose additional language column for translatable fields.
-      if ($field->isFieldTranslatable()) {
+      if ($field->isTranslatable()) {
         $title_language = t('@label (!name:language)', array('@label' => $label, '!name' => $field_name));
         $title_short_language = t('@label:language', array('@label' => $label));
 
@@ -474,7 +474,7 @@ function list_field_views_data($field) {
         $data[$table_name][$field_name]['filter']['id'] = 'field_list';
       }
       if (isset($field_data['argument']) && $field_name != 'delta') {
-        if ($field->getFieldType() == 'list_text') {
+        if ($field->getType() == 'list_text') {
           $data[$table_name][$field_name]['argument']['id'] = 'field_list_string';
         }
         else {

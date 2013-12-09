@@ -95,7 +95,7 @@ class CommentItem extends ConfigFieldItemBase {
     $settings = $this->getFieldSettings();
 
     $entity_type = $this->getEntity()->entityType();
-    $field_name = $this->getFieldDefinition()->getFieldName();
+    $field_name = $this->getFieldDefinition()->getName();
 
     $element['comment'] = array(
       '#type' => 'details',
@@ -164,7 +164,7 @@ class CommentItem extends ConfigFieldItemBase {
   public function __get($name) {
     if ($name == 'status' && !isset($this->values[$name])) {
       // Get default value from field instance when no data saved in entity.
-      $field_default_values = $this->getFieldDefinition()->getFieldDefaultValue($this->getEntity());
+      $field_default_values = $this->getFieldDefinition()->getDefaultValue($this->getEntity());
       return $field_default_values[0]['status'];
     }
     else {

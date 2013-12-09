@@ -49,18 +49,18 @@ class FieldInfoTest extends FieldUnitTestBase {
     $field->save();
     $fields = field_info_fields();
     $this->assertEqual(count($fields), count($core_fields) + 1, 'One new field exists');
-    $this->assertEqual($fields[$field->uuid]->getFieldName(), $field->getFieldName(), 'info fields contains field name');
-    $this->assertEqual($fields[$field->uuid]->getFieldType(), $field->getFieldType(), 'info fields contains field type');
+    $this->assertEqual($fields[$field->uuid]->getName(), $field->getName(), 'info fields contains field name');
+    $this->assertEqual($fields[$field->uuid]->getType(), $field->getType(), 'info fields contains field type');
     $this->assertEqual($fields[$field->uuid]->module, 'field_test', 'info fields contains field module');
     $settings = array('test_field_setting' => 'dummy test string');
     foreach ($settings as $key => $val) {
-      $this->assertEqual($fields[$field->uuid]->getFieldSetting($key), $val, format_string('Field setting %key has correct default value %value', array('%key' => $key, '%value' => $val)));
+      $this->assertEqual($fields[$field->uuid]->getSetting($key), $val, format_string('Field setting %key has correct default value %value', array('%key' => $key, '%value' => $val)));
     }
-    $this->assertEqual($fields[$field->uuid]->getFieldCardinality(), 1, 'info fields contains cardinality 1');
+    $this->assertEqual($fields[$field->uuid]->getCardinality(), 1, 'info fields contains cardinality 1');
 
     // Create an instance, verify that it shows up
     $instance_definition = array(
-      'field_name' => $field->getFieldName(),
+      'field_name' => $field->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => $this->randomName(),
@@ -75,7 +75,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     $this->assertEqual(count($instances), 1, format_string('One instance shows up in info when attached to a bundle on a @label.', array(
       '@label' => $info['label']
     )));
-    $this->assertTrue($instance_definition < $instances[$instance->getFieldName()], 'Instance appears in info correctly');
+    $this->assertTrue($instance_definition < $instances[$instance->getName()], 'Instance appears in info correctly');
 
     // Test a valid entity type but an invalid bundle.
     $instances = field_info_instances('entity_test', 'invalid_bundle');

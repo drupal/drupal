@@ -225,7 +225,7 @@ function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   $instances = field_read_instances();
   foreach ($instances as $instance) {
     if ($instance->entity_type == $entity_type && $instance->bundle == $bundle_old) {
-      $id_new = $instance->entity_type . '.' . $bundle_new . '.' . $instance->getFieldName();
+      $id_new = $instance->entity_type . '.' . $bundle_new . '.' . $instance->getName();
       $instance->id = $id_new;
       $instance->bundle = $bundle_new;
       $instance->allowBundleRename();
@@ -437,7 +437,7 @@ function field_view_field(ContentEntityInterface $entity, $field_name, $display_
     // hook_field_attach_display_alter() needs to receive the 'prepared'
     // $display_options, so we cannot let preparation happen internally.
     $formatter_manager = Drupal::service('plugin.manager.field.formatter');
-    $display_options = $formatter_manager->prepareConfiguration($field_definition->getFieldType(), $display_options);
+    $display_options = $formatter_manager->prepareConfiguration($field_definition->getType(), $display_options);
     $formatter = $formatter_manager->getInstance(array(
       'field_definition' => $field_definition,
       'view_mode' => $view_mode,

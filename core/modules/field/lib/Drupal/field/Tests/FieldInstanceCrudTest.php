@@ -51,7 +51,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $this->field = entity_create('field_entity', $this->field_definition);
     $this->field->save();
     $this->instance_definition = array(
-      'field_name' => $this->field->getFieldName(),
+      'field_name' => $this->field->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
@@ -115,7 +115,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Read the instance back.
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue($this->instance_definition['field_name'] == $instance->getFieldName(), 'The field was properly read.');
+    $this->assertTrue($this->instance_definition['field_name'] == $instance->getName(), 'The field was properly read.');
     $this->assertTrue($this->instance_definition['entity_type'] == $instance->entity_type, 'The field was properly read.');
     $this->assertTrue($this->instance_definition['bundle'] == $instance->bundle, 'The field was properly read.');
   }
@@ -128,16 +128,16 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Check that basic changes are saved.
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $instance->required = !$instance->isFieldRequired();
+    $instance->required = !$instance->isRequired();
     $instance->label = $this->randomName();
     $instance->description = $this->randomName();
     $instance->settings['test_instance_setting'] = $this->randomName();
     $instance->save();
 
     $instance_new = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertEqual($instance->isFieldRequired(), $instance_new->isFieldRequired(), '"required" change is saved');
-    $this->assertEqual($instance->getFieldLabel(), $instance_new->getFieldLabel(), '"label" change is saved');
-    $this->assertEqual($instance->getFieldDescription(), $instance_new->getFieldDescription(), '"description" change is saved');
+    $this->assertEqual($instance->isRequired(), $instance_new->isRequired(), '"required" change is saved');
+    $this->assertEqual($instance->getLabel(), $instance_new->getLabel(), '"label" change is saved');
+    $this->assertEqual($instance->getDescription(), $instance_new->getDescription(), '"description" change is saved');
 
     // TODO: test failures.
   }

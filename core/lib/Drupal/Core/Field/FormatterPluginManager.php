@@ -101,7 +101,7 @@ class FormatterPluginManager extends DefaultPluginManager {
   public function getInstance(array $options) {
     $configuration = $options['configuration'];
     $field_definition = $options['field_definition'];
-    $field_type = $field_definition->getFieldType();
+    $field_type = $field_definition->getType();
 
     // Fill in default configuration if needed.
     if (!isset($options['prepare']) || $options['prepare'] == TRUE) {

@@ -230,7 +230,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    *   The default value for the field.
    */
   protected function getDefaultValue() {
-    return $this->getFieldDefinition()->getFieldDefaultValue($this->getEntity());
+    return $this->getFieldDefinition()->getDefaultValue($this->getEntity());
   }
 
   /**

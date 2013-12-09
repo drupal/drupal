@@ -557,7 +557,7 @@ function _editor_get_processed_text_fields(ContentEntityInterface $entity) {
   // Find all configurable fields, because only they could have a
   // text_processing setting.
   $configurable_fields = array_keys(array_filter($properties, function ($definition) {
-    return $definition->isFieldConfigurable();
+    return $definition->isConfigurable();
   }));
   if (empty($configurable_fields)) {
     return array();
@@ -567,7 +567,7 @@ function _editor_get_processed_text_fields(ContentEntityInterface $entity) {
   return array_filter($configurable_fields, function ($field) use ($entity) {
     $settings = Field::fieldInfo()
       ->getInstance($entity->entityType(), $entity->bundle(), $field)
-      ->getFieldSettings();
+      ->getSettings();
     return isset($settings['text_processing']) && $settings['text_processing'] === '1';
   });
 }

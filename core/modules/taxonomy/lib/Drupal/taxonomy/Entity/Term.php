@@ -227,18 +227,18 @@ class Term extends ContentEntityBase implements TermInterface {
     $fields['description'] = FieldDefinition::create('text_long')
       ->setLabel(t('Description'))
       ->setDescription(t('A description of the term.'))
-      ->setFieldSetting('text_processing', 1);
+      ->setSetting('text_processing', 1);
 
     $fields['weight'] = FieldDefinition::create('integer')
       ->setLabel(t('Weight'))
       ->setDescription(t('The weight of this term in relation to other terms.'))
-      ->setFieldSetting('default_value', 0);
+      ->setSetting('default_value', 0);
 
     $fields['parent'] = FieldDefinition::create('integer')
       ->setLabel(t('Term Parents'))
       ->setDescription(t('The parents of this term.'))
       // Save new terms with no parents by default.
-      ->setFieldSetting('default_value', 0)
+      ->setSetting('default_value', 0)
       ->setComputed(TRUE);
 
     $fields['changed'] = FieldDefinition::create('integer')

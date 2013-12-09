@@ -77,7 +77,7 @@ class TelephoneItem extends ConfigFieldItemBase {
       'value' => array(
         'Length' => array(
           'max' => $max_length,
-          'maxMessage' => t('%name: the telephone number may not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getFieldLabel(), '@max' => $max_length)),
+          'maxMessage' => t('%name: the telephone number may not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length)),
         )
       ),
     ));

@@ -31,7 +31,7 @@ class CommentWidget extends WidgetBase {
     $entity = $items->getParent();
 
     // Get default value from the field instance.
-    $field_default_values = $this->fieldDefinition->getFieldDefaultValue($entity);
+    $field_default_values = $this->fieldDefinition->getDefaultValue($entity);
     $status = $items->status;
 
     $element['status'] = array(
@@ -57,7 +57,7 @@ class CommentWidget extends WidgetBase {
     // If the entity doesn't have any comments, the "hidden" option makes no
     // sense, so don't even bother presenting it to the user unless this is the
     // default value widget on the field settings form.
-    if ($element['#field_parents'] != array('default_value_input') && !$entity->get($field->getFieldName())->comment_count) {
+    if ($element['#field_parents'] != array('default_value_input') && !$entity->get($field->getName())->comment_count) {
       $element['status'][COMMENT_HIDDEN]['#access'] = FALSE;
       // Also adjust the description of the "closed" option.
       $element['status'][COMMENT_CLOSED]['#description'] = t('Users cannot post comments.');

@@ -68,8 +68,8 @@ function options_field_info() {
  * Implements hook_field_settings_form().
  */
 function options_field_settings_form($field, $instance) {
-  $settings = $field->getFieldSettings();
-  $field_type = $field->getFieldType();
+  $settings = $field->getSettings();
+  $field_type = $field->getType();
 
   switch ($field_type) {
     case 'list_integer':
@@ -165,7 +165,7 @@ function options_field_settings_form($field, $instance) {
 function options_field_settings_form_validate_allowed_values($element, &$form_state) {
   $field = $element['#field'];
   $has_data = $element['#field_has_data'];
-  $field_type = $field->getFieldType();
+  $field_type = $field->getType();
   $generate_keys = ($field_type == 'list_integer' || $field_type == 'list_float') && !$has_data;
 
   $values = options_extract_allowed_values($element['#value'], $field_type, $generate_keys);
@@ -192,7 +192,7 @@ function options_field_settings_form_validate_allowed_values($element, &$form_st
 
     // Prevent removing values currently in use.
     if ($has_data) {
-      $lost_keys = array_diff(array_keys($field->getFieldSetting('allowed_values')), array_keys($values));
+      $lost_keys = array_diff(array_keys($field->getSetting('allowed_values')), array_keys($values));
       if (_options_values_in_use($field, $lost_keys)) {
         form_error($element, $form_state, t('Allowed values list: some values are being removed while currently in use.'));
       }
@@ -243,9 +243,9 @@ function options_field_entity_delete(FieldInterface $field) {
 function options_allowed_values(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
-  $cache_id = implode(':', array($entity->entityType(), $entity->bundle(), $field_definition->getFieldName()));
+  $cache_id = implode(':', array($entity->entityType(), $entity->bundle(), $field_definition->getName()));
   if (!isset($allowed_values[$cache_id])) {
-    $function = $field_definition->getFieldSetting('allowed_values_function');
+    $function = $field_definition->getSetting('allowed_values_function');
     // If $cacheable is FALSE, then the allowed values are not statically
     // cached. See options_test_dynamic_values_callback() for an example of
     // generating dynamic and uncached values.
@@ -254,7 +254,7 @@ function options_allowed_values(FieldDefinitionInterface $field_definition, Enti
       $values = $function($field_definition, $entity, $cacheable);
     }
     else {
-      $values = $field_definition->getFieldSetting('allowed_values');
+      $values = $field_definition->getSetting('allowed_values');
     }
 
     if ($cacheable) {
@@ -368,11 +368,11 @@ function options_allowed_values_string($values) {
 function options_field_update_forbid($field, $prior_field) {
   if ($field->module == 'options' && $field->hasData()) {
     // Forbid any update that removes allowed values with actual data.
-    $allowed_values = $field->getFieldSetting('allowed_values');
-    $prior_allowed_values = $prior_field->getFieldSetting('allowed_values');
+    $allowed_values = $field->getSetting('allowed_values');
+    $prior_allowed_values = $prior_field->getSetting('allowed_values');
     $lost_keys = array_diff(array_keys($prior_allowed_values), array_keys($allowed_values));
     if (_options_values_in_use($field, $lost_keys)) {
-      throw new FieldUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', array('@field_name' => $field->getFieldName())));
+      throw new FieldUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', array('@field_name' => $field->getName())));
     }
   }
 }
@@ -384,7 +384,7 @@ function _options_values_in_use(FieldInterface $field, $values) {
   if ($values) {
     $factory = \Drupal::service('entity.query');
     $result = $factory->get($field->entity_type)
-      ->condition($field->getFieldName() . '.value', $values)
+      ->condition($field->getName() . '.value', $values)
       ->count()
       ->accessCheck(FALSE)
       ->range(0, 1)
@@ -417,9 +417,9 @@ function options_field_validate(EntityInterface $entity = NULL, $field, $instanc
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($allowed_values) && !isset($allowed_values[$item['value']])) {
-        $errors[$instance->getFieldName()][$langcode][$delta][] = array(
+        $errors[$instance->getName()][$langcode][$delta][] = array(
           'error' => 'list_illegal_value',
-          'message' => t('%name: illegal value.', array('%name' => $instance->getFieldLabel())),
+          'message' => t('%name: illegal value.', array('%name' => $instance->getLabel())),
         );
       }
     }

@@ -54,14 +54,14 @@ class FieldValidationTest extends FieldUnitTestBase {
     // Check that the expected constraint violations are reported.
     $this->assertEqual(count($violations), 1);
     $this->assertEqual($violations[0]->getPropertyPath(), '');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: this field cannot hold more than @count values.', array('%name' => $this->instance->getFieldLabel(), '@count' => $cardinality)));
+    $this->assertEqual($violations[0]->getMessage(), t('%name: this field cannot hold more than @count values.', array('%name' => $this->instance->getLabel(), '@count' => $cardinality)));
   }
 
   /**
    * Tests that constraints defined by the field type are validated.
    */
   function testFieldConstraints() {
-    $cardinality = $this->field->getFieldCardinality();
+    $cardinality = $this->field->getCardinality();
     $entity = $this->entity;
 
     // The test is only valid if the field cardinality is greater than 2.
@@ -76,7 +76,7 @@ class FieldValidationTest extends FieldUnitTestBase {
       }
       else {
         $value = -1;
-        $expected_violations[$delta . '.value'][] = t('%name does not accept the value -1.', array('%name' => $this->instance->getFieldLabel()));
+        $expected_violations[$delta . '.value'][] = t('%name does not accept the value -1.', array('%name' => $this->instance->getLabel()));
       }
       $entity->{$this->field_name}->offsetGet($delta)->set('value', $value);
     }

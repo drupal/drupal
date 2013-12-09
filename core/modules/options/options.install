@@ -9,7 +9,7 @@
  * Implements hook_field_schema().
  */
 function options_field_schema($field) {
-  switch ($field->getFieldType()) {
+  switch ($field->getType()) {
     case 'list_text':
       $columns = array(
         'value' => array(

@@ -455,7 +455,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of this user.'))
-      ->setFieldSetting('default_value', '')
+      ->setSetting('default_value', '')
       ->setPropertyConstraints('value', array(
         // No Length constraint here because the UserName constraint also covers
         // that.
@@ -470,7 +470,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['mail'] = FieldDefinition::create('email')
       ->setLabel(t('Email'))
       ->setDescription(t('The email of this user.'))
-      ->setFieldSetting('default_value', '')
+      ->setSetting('default_value', '')
       ->setPropertyConstraints('value', array('UserMailUnique' => array()));
 
     // @todo Convert to a text field in https://drupal.org/node/1548204.
@@ -495,7 +495,7 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('User status'))
       ->setDescription(t('Whether the user is active (1) or blocked (0).'))
-      ->setFieldSetting('default_value', 1);
+      ->setSetting('default_value', 1);
 
     // @todo Convert to a "created" field in https://drupal.org/node/2145103.
     $fields['created'] = FieldDefinition::create('integer')
@@ -506,18 +506,18 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['access'] = FieldDefinition::create('integer')
       ->setLabel(t('Last access'))
       ->setDescription(t('The time that the user last accessed the site.'))
-      ->setFieldSetting('default_value', 0);
+      ->setSetting('default_value', 0);
 
     // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
     $fields['login'] = FieldDefinition::create('integer')
       ->setLabel(t('Last login'))
       ->setDescription(t('The time that the user last logged in.'))
-      ->setFieldSetting('default_value', 0);
+      ->setSetting('default_value', 0);
 
     $fields['init'] = FieldDefinition::create('email')
       ->setLabel(t('Initial email'))
       ->setDescription(t('The email address used for initial account creation.'))
-      ->setFieldSetting('default_value', '');
+      ->setSetting('default_value', '');
 
     // @todo Convert this to entity_reference_field, see
     // https://drupal.org/node/2044859.

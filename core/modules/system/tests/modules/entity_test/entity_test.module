@@ -397,7 +397,7 @@ function entity_test_label_callback($entity_type, $entity, $langcode = NULL) {
  * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
  */
 function entity_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
-  if ($field_definition->getFieldName() == 'field_test_text') {
+  if ($field_definition->getName() == 'field_test_text') {
     if ($items) {
       if ($items[0]->value == 'no access value') {
         return FALSE;
@@ -415,7 +415,7 @@ function entity_test_entity_field_access($operation, FieldDefinitionInterface $f
  * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
  */
 function entity_test_entity_field_access_alter(array &$grants, array $context) {
-  if ($context['field_definition']->getFieldName() == 'field_test_text' && $context['items'][0]->value == 'access alter value') {
+  if ($context['field_definition']->getName() == 'field_test_text' && $context['items'][0]->value == 'access alter value') {
     $grants[':default'] = FALSE;
   }
 }
@@ -504,7 +504,7 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
  *   The field language code to fill-in with the default value.
  */
 function entity_test_field_default_value(EntityInterface $entity, Field $field, FieldInstance $instance, $langcode) {
-  return array(array('value' => $field->getFieldName() . '_' . $langcode));
+  return array(array('value' => $field->getName() . '_' . $langcode));
 }
 
 /**

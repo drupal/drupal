@@ -32,7 +32,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   /**
    * {@inheritdoc}
    */
-  public function getFieldName() {
+  public function getName() {
     return $this->definition['field_name'];
   }
 
@@ -45,7 +45,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    * @return static
    *   The object itself for chaining.
    */
-  public function setFieldName($name) {
+  public function setName($name) {
     $this->definition['field_name'] = $name;
     return $this;
   }
@@ -53,7 +53,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   /**
    * {@inheritdoc}
    */
-  public function getFieldType() {
+  public function getType() {
     $data_type = $this->getItemDefinition()->getDataType();
     // Cut of the leading field_item: prefix from 'field_item:FIELD_TYPE'.
     $parts = explode(':', $data_type);
@@ -63,7 +63,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   /**
    * {@inheritdoc}
    */
-  public function getFieldSettings() {
+  public function getSettings() {
     return $this->getItemDefinition()->getSettings();
   }
 
@@ -76,7 +76,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    * @return static
    *   The object itself for chaining.
    */
-  public function setFieldSettings(array $settings) {
+  public function setSettings(array $settings) {
     $this->getItemDefinition()->setSettings($settings);
     return $this;
   }
@@ -84,7 +84,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   /**
    * {@inheritdoc}
    */
-  public function getFieldSetting($setting_name) {
+  public function getSetting($setting_name) {
     return $this->getItemDefinition()->getSetting($setting_name);
   }
 
@@ -99,7 +99,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    * @return static
    *   The object itself for chaining.
    */
-  public function setFieldSetting($setting_name, $value) {
+  public function setSetting($setting_name, $value) {
     $this->getItemDefinition()->setSetting($setting_name, $value);
     return $this;
   }
@@ -107,14 +107,14 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   /**
    * {@inheritdoc}
    */
-  public function getFieldPropertyNames() {
+  public function getPropertyNames() {
     return array_keys(\Drupal::typedData()->create($this->getItemDefinition())->getPropertyDefinitions());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFieldTranslatable() {
+  public function isTranslatable() {
     return !empty($this->definition['translatable']);
   }
 
@@ -135,35 +135,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   /**
    * {@inheritdoc}
    */
-  public function getFieldLabel() {
-    return $this->getLabel();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setFieldLabel($label) {
-    return $this->setLabel($label);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldDescription() {
-    return $this->getDescription();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setFieldDescription($description) {
-    return $this->setDescription($description);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldCardinality() {
+  public function getCardinality() {
     // @todo: Allow to control this.
     return isset($this->definition['cardinality']) ? $this->definition['cardinality'] : 1;
   }
@@ -171,35 +143,15 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   /**
    * {@inheritdoc}
    */
-  public function isFieldRequired() {
-    return $this->isRequired();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isFieldMultiple() {
-    $cardinality = $this->getFieldCardinality();
+  public function isMultiple() {
+    $cardinality = $this->getCardinality();
     return ($cardinality == static::CARDINALITY_UNLIMITED) || ($cardinality > 1);
   }
 
   /**
-   * Sets whether the field is required.
-   *
-   * @param bool $required
-   *   Whether the field is required.
-   *
-   * @return static
-   *   The object itself for chaining.
-   */
-  public function setFieldRequired($required) {
-    return $this->setRequired($required);
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function isFieldQueryable() {
+  public function isQueryable() {
     return isset($this->definition['queryable']) ? $this->definition['queryable'] : !$this->isComputed();
   }
 
@@ -212,7 +164,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    * @return static
    *   The object itself for chaining.
    */
-  public function setFieldQueryable($queryable) {
+  public function setQueryable($queryable) {
     $this->definition['queryable'] = $queryable;
     return $this;
   }
@@ -238,15 +190,15 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   /**
    * {@inheritdoc}
    */
-  public function isFieldConfigurable() {
+  public function isConfigurable() {
     return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFieldDefaultValue(EntityInterface $entity) {
-    return $this->getFieldSetting('default_value');
+  public function getDefaultValue(EntityInterface $entity) {
+    return $this->getSetting('default_value');
   }
 
 }

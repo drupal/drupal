@@ -87,7 +87,7 @@ class EntityReferenceController implements ContainerInjectionInterface {
     }
 
     $access_controller = $this->entityManager->getAccessController($entity_type);
-    if ($instance->getFieldType() != 'entity_reference' || !$access_controller->fieldAccess('edit', $instance)) {
+    if ($instance->getType() != 'entity_reference' || !$access_controller->fieldAccess('edit', $instance)) {
       throw new AccessDeniedHttpException();
     }
 

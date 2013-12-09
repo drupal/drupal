@@ -630,7 +630,7 @@ function content_translation_form_alter(array &$form, array &$form_state) {
     if (!$entity->isNew() && (!isset($translations[$form_langcode]) || count($translations) > 1)) {
       foreach ($entity->getPropertyDefinitions() as $property_name => $definition) {
         if (isset($form[$property_name])) {
-          $form[$property_name]['#multilingual'] = $definition->isFieldTranslatable();
+          $form[$property_name]['#multilingual'] = $definition->isTranslatable();
         }
       }
     }
@@ -795,7 +795,7 @@ function content_translation_form_field_ui_field_edit_form_alter(array &$form, a
   $form['field']['translatable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Users may translate this field.'),
-    '#default_value' => $form['#field']->isFieldTranslatable(),
+    '#default_value' => $form['#field']->isTranslatable(),
     '#weight' => 20,
   );
   $form['#submit'][] = 'content_translation_form_field_ui_field_edit_form_submit';
@@ -810,7 +810,7 @@ function content_translation_form_field_ui_field_edit_form_submit($form, array &
   if (!isset($value)) {
     $value = array();
   }
-  $value[$instance->getField()->getFieldName()] = $form_state['values']['field']['translatable'];
+  $value[$instance->getField()->getName()] = $form_state['values']['field']['translatable'];
   // Store the same value for all bundles as translatability is tracked per
   // field.
   foreach (entity_get_bundles($instance->entity_type) as $bundle => $info) {
@@ -822,7 +822,7 @@ function content_translation_form_field_ui_field_edit_form_submit($form, array &
  * Implements hook_form_FORM_ID_alter() for 'field_ui_field_instance_edit_form'.
  */
 function content_translation_form_field_ui_field_instance_edit_form_alter(array &$form, array &$form_state, $form_id) {
-  if ($form['#field']->isFieldTranslatable()) {
+  if ($form['#field']->isTranslatable()) {
     module_load_include('inc', 'content_translation', 'content_translation.admin');
     $element = content_translation_field_sync_widget($form['#field']);
     if ($element) {
@@ -1008,7 +1008,7 @@ function content_translation_save_settings($settings) {
         if (!empty($bundle_settings['columns'])) {
           foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
             $instance = field_info_instance($entity_type, $field_name, $bundle);
-            if ($instance->isFieldTranslatable()) {
+            if ($instance->isTranslatable()) {
               $instance->settings['translation_sync'] = $column_settings;
             }
             // If the field does not have translatable enabled we need to reset

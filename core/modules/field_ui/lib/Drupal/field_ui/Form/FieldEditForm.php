@@ -107,7 +107,7 @@ class FieldEditForm extends FormBase {
     }
 
     // Build the configurable field values.
-    $cardinality = $field->getFieldCardinality();
+    $cardinality = $field->getCardinality();
     $form['field']['cardinality_container'] = array(
       // We can't use the container element because it doesn't support the title
       // or description properties.
@@ -143,8 +143,8 @@ class FieldEditForm extends FormBase {
     );
 
     // Build the non-configurable field values.
-    $form['field']['field_name'] = array('#type' => 'value', '#value' => $field->getFieldName());
-    $form['field']['type'] = array('#type' => 'value', '#value' => $field->getFieldType());
+    $form['field']['field_name'] = array('#type' => 'value', '#value' => $field->getName());
+    $form['field']['type'] = array('#type' => 'value', '#value' => $field->getType());
     $form['field']['module'] = array('#type' => 'value', '#value' => $field->module);
 
     // Add settings provided by the field module. The field module is
@@ -157,7 +157,7 @@ class FieldEditForm extends FormBase {
     // FieldItem.
     $ids = (object) array('entity_type' => $this->instance->entity_type, 'bundle' => $this->instance->bundle, 'entity_id' => NULL);
     $entity = _field_create_entity_from_ids($ids);
-    $form['field']['settings'] += $entity->get($field->getFieldName())->offsetGet(0)->settingsForm($form, $form_state, $field->hasData());
+    $form['field']['settings'] += $entity->get($field->getName())->offsetGet(0)->settingsForm($form, $form_state, $field->hasData());
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save field settings'));

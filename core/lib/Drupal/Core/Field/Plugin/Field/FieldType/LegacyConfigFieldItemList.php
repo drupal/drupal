@@ -40,14 +40,14 @@ class LegacyConfigFieldItemList extends ConfigFieldItemList {
     $this->legacyCallback('validate', array(&$legacy_errors));
 
     $langcode = $this->getLangcode();
-    $field_name = $this->getFieldDefinition()->getFieldName();
+    $field_name = $this->getFieldDefinition()->getName();
 
     if (isset($legacy_errors[$field_name][$langcode])) {
       foreach ($legacy_errors[$field_name][$langcode] as $delta => $item_errors) {
         foreach ($item_errors as $item_error) {
           // We do not have the information about which column triggered the
           // error, so assume the first column...
-          $property_names = $this->getFieldDefinition()->getFieldPropertyNames();
+          $property_names = $this->getFieldDefinition()->getPropertyNames();
           $property_name = $property_names[0];
           $violations->add(new ConstraintViolation($item_error['message'], $item_error['message'], array(), $this, $delta . '.' . $property_name, $this->offsetGet($delta)->get($property_name)->getValue(), NULL, $item_error['error']));
         }
@@ -102,7 +102,7 @@ class LegacyConfigFieldItemList extends ConfigFieldItemList {
    *   The name of the hook, e.g. 'presave', 'validate'.
    */
   protected function legacyCallback($hook, $args = array()) {
-    $type_definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getFieldDefinition()->getFieldType());
+    $type_definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getFieldDefinition()->getType());
     $module = $type_definition['provider'];
     $callback = "{$module}_field_{$hook}";
     if (function_exists($callback)) {

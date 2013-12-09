@@ -110,13 +110,13 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testRadioButtons() {
     // Create an instance of the 'single value' field.
     $instance = entity_create('field_instance', array(
-      'field_name' => $this->card_1->getFieldName(),
+      'field_name' => $this->card_1->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ));
     $instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_1->getFieldName(), array(
+      ->setComponent($this->card_1->getName(), array(
         'type' => 'options_buttons',
       ))
       ->save();
@@ -167,13 +167,13 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testCheckBoxes() {
     // Create an instance of the 'multiple values' field.
     $instance = entity_create('field_instance', array(
-      'field_name' => $this->card_2->getFieldName(),
+      'field_name' => $this->card_2->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ));
     $instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_2->getFieldName(), array(
+      ->setComponent($this->card_2->getName(), array(
         'type' => 'options_buttons',
       ))
       ->save();
@@ -257,14 +257,14 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testSelectListSingle() {
     // Create an instance of the 'single value' field.
     $instance = entity_create('field_instance', array(
-      'field_name' => $this->card_1->getFieldName(),
+      'field_name' => $this->card_1->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'required' => TRUE,
     ));
     $instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_1->getFieldName(), array(
+      ->setComponent($this->card_1->getName(), array(
         'type' => 'options_select',
       ))
       ->save();
@@ -292,7 +292,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: select invalid 'none' option.
     $edit = array('card_1' => '_none');
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('!title field is required.', array('!title' => $instance->getFieldName())), 'Cannot save a required field when selecting "none" from the select list.');
+    $this->assertRaw(t('!title field is required.', array('!title' => $instance->getName())), 'Cannot save a required field when selecting "none" from the select list.');
 
     // Submit form: select first option.
     $edit = array('card_1' => 0);
@@ -357,13 +357,13 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testSelectListMultiple() {
     // Create an instance of the 'multiple values' field.
     $instance = entity_create('field_instance', array(
-      'field_name' => $this->card_2->getFieldName(),
+      'field_name' => $this->card_2->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ));
     $instance->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->card_2->getFieldName(), array(
+      ->setComponent($this->card_2->getName(), array(
         'type' => 'options_select',
       ))
       ->save();
@@ -477,12 +477,12 @@ class OptionsWidgetsTest extends FieldTestBase {
   function testOnOffCheckbox() {
     // Create an instance of the 'boolean' field.
     entity_create('field_instance', array(
-      'field_name' => $this->bool->getFieldName(),
+      'field_name' => $this->bool->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ))->save();
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->bool->getFieldName(), array(
+      ->setComponent($this->bool->getName(), array(
         'type' => 'options_onoff',
       ))
       ->save();

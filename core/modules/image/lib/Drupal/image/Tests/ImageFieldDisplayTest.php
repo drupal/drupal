@@ -252,7 +252,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field('node', $field_name);
-    $default_image = $field->getFieldSetting('default_image');
+    $default_image = $field->getSetting('default_image');
     $file = file_load($default_image['fid']);
     $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
     $image = array(
@@ -290,7 +290,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field('node', $field_name);
-    $default_image = $field->getFieldSetting('default_image');
+    $default_image = $field->getSetting('default_image');
     $this->assertFalse($default_image['fid'], 'Default image removed from field.');
     // Create an image field that uses the private:// scheme and test that the
     // default image works as expected.
@@ -307,7 +307,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     field_info_cache_clear();
 
     $private_field = field_info_field('node', $private_field_name);
-    $default_image = $private_field->getFieldSetting('default_image');
+    $default_image = $private_field->getSetting('default_image');
     $file = file_load($default_image['fid']);
     $this->assertEqual('private', file_uri_scheme($file->getFileUri()), 'Default image uses private:// scheme.');
     $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');

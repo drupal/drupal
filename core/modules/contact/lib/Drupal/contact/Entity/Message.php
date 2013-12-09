@@ -146,7 +146,7 @@ class Message extends ContentEntityBase implements MessageInterface {
     $fields['category'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Category ID'))
       ->setDescription(t('The ID of the associated category.'))
-      ->setFieldSettings(array('target_type' => 'contact_category'))
+      ->setSettings(array('target_type' => 'contact_category'))
       ->setRequired(TRUE);
 
     $fields['name'] = FieldDefinition::create('string')
@@ -172,7 +172,7 @@ class Message extends ContentEntityBase implements MessageInterface {
     $fields['recipient'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Recipient ID'))
       ->setDescription(t('The ID of the recipient user for personal contact messages.'))
-      ->setFieldSettings(array('target_type' => 'user'));
+      ->setSettings(array('target_type' => 'user'));
 
     return $fields;
   }

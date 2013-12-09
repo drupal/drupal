@@ -68,7 +68,7 @@ class OnOffWidget extends OptionsWidgetBase {
 
     // Override the title from the incoming $element.
     if ($this->getSetting('display_label')) {
-      $element['#title'] = $this->fieldDefinition->getFieldLabel();
+      $element['#title'] = $this->fieldDefinition->getLabel();
     }
     else {
       $element['#title'] = isset($options[1]) ? $options[1] : '';

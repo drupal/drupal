@@ -917,14 +917,15 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
 
       $delta_count = array();
       foreach ($results as $row) {
+
         // Ensure that records for non-translatable fields having invalid
         // languages are skipped.
-        if ($row->langcode == $default_langcodes[$row->entity_id] || $field->isFieldTranslatable()) {
+        if ($row->langcode == $default_langcodes[$row->entity_id] || $field->isTranslatable()) {
           if (!isset($delta_count[$row->entity_id][$row->langcode])) {
             $delta_count[$row->entity_id][$row->langcode] = 0;
           }
 
-          if ($field->getFieldCardinality() == FieldInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getFieldCardinality()) {
+          if ($field->getCardinality() == FieldInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getCardinality()) {
             $item = array();
             // For each column declared by the field, populate the item from the
             // prefixed database column.
@@ -987,7 +988,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       $query = $this->database->insert($table_name)->fields($columns);
       $revision_query = $this->database->insert($revision_name)->fields($columns);
 
-      $langcodes = $field->isFieldTranslatable() ? $translation_langcodes : array($default_langcode);
+      $langcodes = $field->isTranslatable() ? $translation_langcodes : array($default_langcode);
       foreach ($langcodes as $langcode) {
         $delta_count = 0;
         $items = $entity->getTranslation($langcode)->get($field_name);
@@ -1010,7 +1011,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
           $query->values($record);
           $revision_query->values($record);
 
-          if ($field->getFieldCardinality() != FieldInterface::CARDINALITY_UNLIMITED && ++$delta_count == $field->getFieldCardinality()) {
+          if ($field->getCardinality() != FieldInterface::CARDINALITY_UNLIMITED && ++$delta_count == $field->getCardinality()) {
             break;
           }
         }
@@ -1279,12 +1280,12 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    */
   public static function _fieldSqlSchema(FieldInterface $field, array $schema = NULL) {
     if ($field->deleted) {
-      $description_current = "Data storage for deleted field {$field->uuid()} ({$field->entity_type}, {$field->getFieldName()}).";
-      $description_revision = "Revision archive storage for deleted field {$field->uuid()} ({$field->entity_type}, {$field->getFieldName()}).";
+      $description_current = "Data storage for deleted field {$field->uuid()} ({$field->entity_type}, {$field->getName()}).";
+      $description_revision = "Revision archive storage for deleted field {$field->uuid()} ({$field->entity_type}, {$field->getName()}).";
     }
     else {
-      $description_current = "Data storage for {$field->entity_type} field {$field->getFieldName()}.";
-      $description_revision = "Revision archive storage for {$field->entity_type} field {$field->getFieldName()}.";
+      $description_current = "Data storage for {$field->entity_type} field {$field->getName()}.";
+      $description_revision = "Revision archive storage for {$field->entity_type} field {$field->getName()}.";
     }
 
     $current = array(
@@ -1498,7 +1499,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *   unique among all other fields.
    */
   static public function _fieldIndexName(FieldInterface $field, $index) {
-    return $field->getFieldName() . '_' . $index;
+    return $field->getName() . '_' . $index;
   }
 
   /**
@@ -1521,7 +1522,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *   unique among all other fields.
    */
   static public function _fieldColumnName(FieldInterface $field, $column) {
-    return in_array($column, Field::getReservedColumns()) ? $column : $field->getFieldName() . '_' . $column;
+    return in_array($column, Field::getReservedColumns()) ? $column : $field->getName() . '_' . $column;
   }
 
 }

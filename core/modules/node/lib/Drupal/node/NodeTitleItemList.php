@@ -21,12 +21,12 @@ class NodeTitleItemList extends FieldItemList {
    * {@inheritdoc}
    *
    * The typehint for $definition is a class rather than an interface, because
-   * there is no interface for setFieldLabel().
+   * there is no interface for setLabel().
    */
   public function __construct(FieldDefinition $definition, $name, NodeInterface $node) {
     $node_type = node_type_load($node->getType());
     if (isset($node_type->title_label)) {
-      $definition->setFieldLabel($node_type->title_label);
+      $definition->setLabel($node_type->title_label);
     }
     parent::__construct($definition, $name, $node);
   }

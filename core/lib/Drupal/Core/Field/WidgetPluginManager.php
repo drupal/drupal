@@ -87,7 +87,7 @@ class WidgetPluginManager extends DefaultPluginManager {
 
     $configuration = $options['configuration'];
     $field_definition = $options['field_definition'];
-    $field_type = $field_definition->getFieldType();
+    $field_type = $field_definition->getType();
 
     // Fill in default configuration if needed.
     if ($options['prepare']) {

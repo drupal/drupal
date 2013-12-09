@@ -125,14 +125,14 @@ class FieldOverview extends OverviewBase {
           'id' => drupal_html_class($name),
         ),
         'label' => array(
-          '#markup' => check_plain($instance->getFieldLabel()),
+          '#markup' => check_plain($instance->getLabel()),
         ),
         'field_name' => array(
-          '#markup' => $instance->getFieldName(),
+          '#markup' => $instance->getName(),
         ),
         'type' => array(
           '#type' => 'link',
-          '#title' => $field_types[$field->getFieldType()]['label'],
+          '#title' => $field_types[$field->getType()]['label'],
           '#href' => $admin_field_path . '/field',
           '#options' => array('attributes' => array('title' => $this->t('Edit field settings.'))),
         ),
@@ -423,7 +423,7 @@ class FieldOverview extends OverviewBase {
         $form_state['fields_added']['_add_new_field'] = $values['field_name'];
       }
       catch (\Exception $e) {
-        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $instance->getFieldLabel(), '!message' => $e->getMessage())), 'error');
+        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $instance->getLabel(), '!message' => $e->getMessage())), 'error');
       }
     }
 
@@ -466,7 +466,7 @@ class FieldOverview extends OverviewBase {
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
         }
         catch (\Exception $e) {
-          drupal_set_message($this->t('There was a problem creating field instance %label: @message.', array('%label' => $instance->getFieldLabel(), '@message' => $e->getMessage())), 'error');
+          drupal_set_message($this->t('There was a problem creating field instance %label: @message.', array('%label' => $instance->getLabel(), '@message' => $e->getMessage())), 'error');
         }
       }
     }
@@ -515,14 +515,14 @@ class FieldOverview extends OverviewBase {
         // Do not show:
         // - locked fields,
         // - fields that should not be added via user interface.
-        $field_type = $instance->getFieldType();
+        $field_type = $instance->getType();
         $field = $instance->getField();
         if (empty($field->locked) && empty($field_types[$field_type]['no_ui'])) {
-          $options[$instance->getFieldName()] = array(
+          $options[$instance->getName()] = array(
             'type' => $field_type,
             'type_label' => $field_types[$field_type]['label'],
-            'field' => $instance->getFieldName(),
-            'label' => $instance->getFieldLabel(),
+            'field' => $instance->getName(),
+            'label' => $instance->getLabel(),
           );
         }
       }

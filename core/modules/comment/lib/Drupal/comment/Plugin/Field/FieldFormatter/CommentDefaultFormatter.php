@@ -107,7 +107,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
     $elements = array();
     $output = array();
 
-    $field_name = $this->fieldDefinition->getFieldName();
+    $field_name = $this->fieldDefinition->getName();
     $entity = $items->getEntity();
 
     $status = $items->status;

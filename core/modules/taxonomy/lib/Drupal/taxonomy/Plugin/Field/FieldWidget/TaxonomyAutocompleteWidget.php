@@ -74,7 +74,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
       '#autocomplete_route_name' => $this->getSetting('autocomplete_route_name'),
       '#autocomplete_route_parameters' => array(
         'entity_type' => $items->getEntity()->entityType(),
-        'field_name' => $this->fieldDefinition->getFieldName(),
+        'field_name' => $this->fieldDefinition->getName(),
       ),
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),

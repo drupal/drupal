@@ -233,7 +233,7 @@ class File extends ContentEntityBase implements FileInterface {
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The user ID of the file.'))
-      ->setFieldSetting('target_type', 'user');
+      ->setSetting('target_type', 'user');
 
     $fields['filename'] = FieldDefinition::create('string')
       ->setLabel(t('Filename'))

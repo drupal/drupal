@@ -161,7 +161,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     // Attach a file to the node.
     $field = field_info_field('node', $field_name);
     $name = 'files[' . $field_name . '_0]';
-    if ($field->getFieldCardinality() != 1) {
+    if ($field->getCardinality() != 1) {
       $name .= '[]';
     }
     $edit[$name] = drupal_realpath($file->getFileUri());

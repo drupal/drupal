@@ -86,7 +86,7 @@ class CommentFormController extends ContentEntityFormController {
     $form['#id'] = drupal_html_id('comment_form');
     $form['#theme'] = array('comment_form__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field_name, 'comment_form');
 
-    $anonymous_contact = $instance->getFieldSetting('anonymous');
+    $anonymous_contact = $instance->getSetting('anonymous');
     $is_admin = $comment->id() && $this->currentUser->hasPermission('administer comments');
 
     if (!$this->currentUser->isAuthenticated() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
@@ -206,7 +206,7 @@ class CommentFormController extends ContentEntityFormController {
       '#title' => $this->t('Subject'),
       '#maxlength' => 64,
       '#default_value' => $comment->subject->value,
-      '#access' => $instance->getFieldSetting('subject'),
+      '#access' => $instance->getSetting('subject'),
     );
 
     // Used for conditional validation of author fields.
@@ -233,7 +233,7 @@ class CommentFormController extends ContentEntityFormController {
     $comment = $this->entity;
     $entity = $this->entityManager->getStorageController($comment->entity_type->value)->load($comment->entity_id->value);
     $instance = $this->fieldInfo->getInstance($comment->entity_type->value, $entity->bundle(), $comment->field_name->value);
-    $preview_mode = $instance->getFieldSetting('preview');
+    $preview_mode = $instance->getSetting('preview');
 
     // No delete action on the comment form.
     unset($element['delete']);

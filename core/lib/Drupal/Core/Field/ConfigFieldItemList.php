@@ -64,13 +64,13 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
     // Check that the number of values doesn't exceed the field cardinality. For
     // form submitted values, this can only happen with 'multiple value'
     // widgets.
-    $cardinality = $this->getFieldDefinition()->getFieldCardinality();
+    $cardinality = $this->getFieldDefinition()->getCardinality();
     if ($cardinality != FieldDefinitionInterface::CARDINALITY_UNLIMITED) {
       $constraints[] = \Drupal::typedData()
         ->getValidationConstraintManager()
         ->create('Count', array(
           'max' => $cardinality,
-          'maxMessage' => t('%name: this field cannot hold more than @count values.', array('%name' => $this->getFieldDefinition()->getFieldLabel(), '@count' => $cardinality)),
+          'maxMessage' => t('%name: this field cannot hold more than @count values.', array('%name' => $this->getFieldDefinition()->getLabel(), '@count' => $cardinality)),
         ));
     }
 
@@ -102,7 +102,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
 
     if (count($violations)) {
       // Store reported errors in $form_state.
-      $field_name = $this->getFieldDefinition()->getFieldName();
+      $field_name = $this->getFieldDefinition()->getName();
       $field_state = field_form_get_state($element['#parents'], $field_name, $form_state);
       $field_state['constraint_violations'] = $violations;
       field_form_set_state($element['#parents'], $field_name, $form_state, $field_state);
@@ -142,7 +142,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
       // Use the widget currently configured for the 'default' form mode, or
       // fallback to the default widget for the field type.
       $entity_form_display = entity_get_form_display($entity->entityType(), $entity->bundle(), 'default');
-      $widget = $entity_form_display->getRenderer($this->getFieldDefinition()->getFieldName());
+      $widget = $entity_form_display->getRenderer($this->getFieldDefinition()->getName());
       if (!$widget) {
         $widget = \Drupal::service('plugin.manager.field.widget')->getInstance(array('field_definition' => $this->getFieldDefinition()));
       }

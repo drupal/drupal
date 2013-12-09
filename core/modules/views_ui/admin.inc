@@ -226,7 +226,7 @@ function views_ui_taxonomy_autocomplete_validate($element, &$form_state) {
     // vocabulary IDs.
     $field = field_info_field($element['#entity_type'], $element['#field_name']);
     $vocabularies = array();
-    $allowed_values = $field->getFieldSetting('allowed_values');
+    $allowed_values = $field->getSetting('allowed_values');
     if (!empty($allowed_values)) {
       foreach ($allowed_values as $tree) {
         if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {

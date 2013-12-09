@@ -137,7 +137,7 @@ class TestItem extends ConfigFieldItemBase implements PrepareCacheInterface {
       'value' => array(
         'TestField' => array(
           'value' => -1,
-          'message' => t('%name does not accept the value @value.', array('%name' => $this->getFieldDefinition()->getFieldLabel(), '@value' => -1)),
+          'message' => t('%name does not accept the value @value.', array('%name' => $this->getFieldDefinition()->getLabel(), '@value' => -1)),
         )
       ),
     ));

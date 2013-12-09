@@ -210,7 +210,7 @@ function hook_field_widget_info_alter(array &$info) {
 function hook_field_widget_form_alter(&$element, &$form_state, $context) {
   // Add a css class to widget form elements for all fields of type mytype.
   $field_definition = $context['items']->getFieldDefinition();
-  if ($field_definition->getFieldType() == 'mytype') {
+  if ($field_definition->getType() == 'mytype') {
     // Be sure not to overwrite existing attributes.
     $element['#attributes']['class'][] = 'myclass';
   }

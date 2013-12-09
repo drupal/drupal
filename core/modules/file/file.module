@@ -1881,7 +1881,7 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
           // This contains the possible field names.
           $instances = field_info_instances($entity_type, $bundle);
           foreach ($instances as $field_name => $instance) {
-            $field_type = $instance->getFieldType();
+            $field_type = $instance->getType();
             // If this is the first time this field type is seen, check
             // whether it references files.
             if (!isset($field_columns[$field_type])) {
@@ -1921,7 +1921,7 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
     foreach ($return as $field_name => $data) {
       foreach (array_keys($data) as $entity_type) {
         $current_field = field_info_field($entity_type, $field_name);
-        if (($field_type && $current_field->getFieldType() != $field_type) || ($field && $field->uuid() != $current_field->uuid())) {
+        if (($field_type && $current_field->getType() != $field_type) || ($field && $field->uuid() != $current_field->uuid())) {
           unset($return[$field_name][$entity_type]);
         }
       }

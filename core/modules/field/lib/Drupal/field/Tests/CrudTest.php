@@ -44,8 +44,8 @@ class CrudTest extends FieldUnitTestBase {
     $field = entity_create('field_entity', $field_definition);
     $field->save();
     $mem = field_test_memorize();
-    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]->getFieldName(), $field_definition['name'], 'hook_entity_create() called with correct arguments.');
-    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]->getFieldType(), $field_definition['type'], 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]->getName(), $field_definition['name'], 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]->getType(), $field_definition['type'], 'hook_entity_create() called with correct arguments.');
 
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are
@@ -349,13 +349,13 @@ class CrudTest extends FieldUnitTestBase {
     // Save an entity with data for the field
     $entity = entity_create('entity_test', array());
     $values[0]['value'] = mt_rand(1, 127);
-    $entity->{$field->getFieldName()}->value = $values[0]['value'];
+    $entity->{$field->getName()}->value = $values[0]['value'];
     $entity = $this->entitySaveReload($entity);
 
     // Verify the field is present on load
-    $this->assertIdentical(count($entity->{$field->getFieldName()}), count($values), "Data in previously deleted field saves and loads correctly");
+    $this->assertIdentical(count($entity->{$field->getName()}), count($values), "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
-      $this->assertEqual($entity->{$field->getFieldName()}[$delta]->value, $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
+      $this->assertEqual($entity->{$field->getName()}[$delta]->value, $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
     }
   }
 

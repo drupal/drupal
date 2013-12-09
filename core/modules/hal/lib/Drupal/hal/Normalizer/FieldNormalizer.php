@@ -37,7 +37,7 @@ class FieldNormalizer extends NormalizerBase {
 
     // If this field is not translatable, it can simply be normalized without
     // separating it into different translations.
-    if (!$field_definition->isFieldTranslatable()) {
+    if (!$field_definition->isTranslatable()) {
       $normalized_field_items = $this->normalizeFieldItems($field, $format, $context);
     }
     // Otherwise, the languages have to be extracted from the entity and passed

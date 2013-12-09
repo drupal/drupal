@@ -56,13 +56,13 @@ class ShapeItem extends ConfigFieldItemBase {
   public static function schema(FieldInterface $field) {
     $foreign_keys = array();
     // The 'foreign keys' key is not always used in tests.
-    if ($field->getFieldSetting('foreign_key_name')) {
+    if ($field->getSetting('foreign_key_name')) {
       $foreign_keys['foreign keys'] = array(
         // This is a dummy foreign key definition, references a table that
         // doesn't exist, but that's not a problem.
-        $field->getFieldSetting('foreign_key_name') => array(
-          'table' => $field->getFieldSetting('foreign_key_name'),
-          'columns' => array($field->getFieldSetting('foreign_key_name') => 'id'),
+        $field->getSetting('foreign_key_name') => array(
+          'table' => $field->getSetting('foreign_key_name'),
+          'columns' => array($field->getSetting('foreign_key_name') => 'id'),
         ),
       );
     }

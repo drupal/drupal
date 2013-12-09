@@ -346,7 +346,7 @@ class Node extends ContentEntityBase implements NodeInterface {
     $fields['type'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Type'))
       ->setDescription(t('The node type.'))
-      ->setFieldSetting('target_type', 'node_type')
+      ->setSetting('target_type', 'node_type')
       ->setReadOnly(TRUE);
 
     $fields['langcode'] = FieldDefinition::create('language')
@@ -359,7 +359,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setClass('\Drupal\node\NodeTitleItemList')
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
-      ->setFieldSettings(array(
+      ->setSettings(array(
         'default_value' => '',
         'max_length' => 255,
         'text_processing' => 0,
@@ -368,7 +368,7 @@ class Node extends ContentEntityBase implements NodeInterface {
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The user ID of the node author.'))
-      ->setFieldSettings(array(
+      ->setSettings(array(
         'target_type' => 'user',
         'default_value' => 0,
       ));
@@ -400,13 +400,13 @@ class Node extends ContentEntityBase implements NodeInterface {
     $fields['revision_timestamp'] = FieldDefinition::create('integer')
       ->setLabel(t('Revision timestamp'))
       ->setDescription(t('The time that the current revision was created.'))
-      ->setFieldQueryable(FALSE);
+      ->setQueryable(FALSE);
 
     $fields['revision_uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Revision user ID'))
       ->setDescription(t('The user ID of the author of the current revision.'))
-      ->setFieldSettings(array('target_type' => 'user'))
-      ->setFieldQueryable(FALSE);
+      ->setSettings(array('target_type' => 'user'))
+      ->setQueryable(FALSE);
 
     $fields['log'] = FieldDefinition::create('string')
       ->setLabel(t('Log'))

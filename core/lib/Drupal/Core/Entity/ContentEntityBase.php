@@ -401,8 +401,9 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       }
       // Non-translatable fields are always stored with
       // Language::LANGCODE_DEFAULT as key.
+
       $default = $langcode == Language::LANGCODE_DEFAULT;
-      if (!$default && !$definition->isFieldTranslatable()) {
+      if (!$default && !$definition->isTranslatable()) {
         if (!isset($this->fields[$name][Language::LANGCODE_DEFAULT])) {
           $this->fields[$name][Language::LANGCODE_DEFAULT] = $this->getTranslatedField($name, Language::LANGCODE_DEFAULT);
         }
@@ -728,7 +729,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $definitions = $translation->getPropertyDefinitions();
 
     foreach ($values as $name => $value) {
-      if (isset($definitions[$name]) && $definitions[$name]->isFieldTranslatable()) {
+      if (isset($definitions[$name]) && $definitions[$name]->isTranslatable()) {
         $translation->$name = $value;
       }
     }
@@ -742,7 +743,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   public function removeTranslation($langcode) {
     if (isset($this->translations[$langcode]) && $langcode != Language::LANGCODE_DEFAULT && $langcode != $this->defaultLangcode) {
       foreach ($this->getPropertyDefinitions() as $name => $definition) {
-        if ($definition->isFieldTranslatable()) {
+        if ($definition->isTranslatable()) {
           unset($this->values[$name][$langcode]);
           unset($this->fields[$name][$langcode]);
         }
@@ -928,7 +929,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         // object keyed by language. To avoid creating different field objects
         // we retain just the original value, as references will be recreated
         // later as needed.
-        if (!$definitions[$name]->isFieldTranslatable() && count($values) > 1) {
+        if (!$definitions[$name]->isTranslatable() && count($values) > 1) {
           $values = array_intersect_key($values, array(Language::LANGCODE_DEFAULT => TRUE));
         }
         foreach ($values as $langcode => $items) {

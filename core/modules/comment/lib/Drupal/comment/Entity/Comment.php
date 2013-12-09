@@ -366,12 +366,12 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['pid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Parent ID'))
       ->setDescription(t('The parent comment ID if this is a reply to a comment.'))
-      ->setFieldSetting('target_type', 'comment');
+      ->setSetting('target_type', 'comment');
 
     $fields['entity_id'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Entity ID'))
       ->setDescription(t('The ID of the entity of which this comment is a reply.'))
-      ->setFieldSetting('target_type', 'node')
+      ->setSetting('target_type', 'node')
       ->setRequired(TRUE);
 
     $fields['langcode'] = FieldDefinition::create('language')
@@ -385,7 +385,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The user ID of the comment author.'))
-      ->setFieldSettings(array(
+      ->setSettings(array(
         'target_type' => 'user',
         'default_value' => 0,
       ));
@@ -393,7 +393,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t("The comment author's name."))
-      ->setFieldSetting('default_value', '');
+      ->setSetting('default_value', '');
 
     $fields['mail'] = FieldDefinition::create('email')
       ->setLabel(t('Email'))

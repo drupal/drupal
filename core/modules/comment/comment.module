@@ -241,8 +241,8 @@ function comment_count_unpublished() {
  * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
  */
 function comment_field_instance_create(FieldInstanceInterface $instance) {
-  if ($instance->getFieldType() == 'comment' && !$instance->isSyncing()) {
-    \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getFieldName());
+  if ($instance->getType() == 'comment' && !$instance->isSyncing()) {
+    \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getName());
     \Drupal::cache()->delete('comment_entity_info');
     // Assign default values for the field instance.
     $instance->default_value = array(array(
@@ -260,7 +260,7 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
  * Implements hook_ENTITY_TYPE_update() for 'field_instance'.
  */
 function comment_field_instance_update(FieldInstanceInterface $instance) {
-  if ($instance->getFieldType() == 'comment') {
+  if ($instance->getType() == 'comment') {
     \Drupal::entityManager()->getViewBuilder($instance->entity_type)->resetCache();
   }
 }
@@ -269,9 +269,9 @@ function comment_field_instance_update(FieldInstanceInterface $instance) {
  * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
  */
 function comment_field_entity_delete(FieldInterface $field) {
-  if ($field->getFieldType() == 'comment') {
+  if ($field->getType() == 'comment') {
     // Delete all fields and displays attached to the comment bundle.
-    entity_invoke_bundle_hook('delete', 'comment', $field->getFieldName());
+    entity_invoke_bundle_hook('delete', 'comment', $field->getName());
     \Drupal::cache()->delete('comment_entity_info');
   }
 }
@@ -280,11 +280,11 @@ function comment_field_entity_delete(FieldInterface $field) {
  * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
  */
 function comment_field_instance_delete(FieldInstanceInterface $instance) {
-  if ($instance->getFieldType() == 'comment') {
+  if ($instance->getType() == 'comment') {
     // Delete all comments that used by the entity bundle.
     $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_id = :field_id", array(
       ':entity_type' => $instance->entityType(),
-      ':field_id' => $instance->entityType() . '__' . $instance->getFieldName(),
+      ':field_id' => $instance->entityType() . '__' . $instance->getName(),
     ))->fetchCol();
     entity_delete_multiple('comment', $comments);
     \Drupal::cache()->delete('comment_entity_info');
@@ -368,8 +368,8 @@ function comment_get_recent($number = 10) {
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
   $instance = \Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
-  $mode = $instance->getFieldSetting('default_mode');
-  $comments_per_page = $instance->getFieldSetting('per_page');
+  $mode = $instance->getSetting('default_mode');
+  $comments_per_page = $instance->getSetting('per_page');
   $pagenum = NULL;
   $flat = $mode == COMMENT_MODE_FLAT ? TRUE : FALSE;
   if ($num_comments <= $comments_per_page) {
@@ -518,7 +518,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         }
         // Provide a link to new comment form.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance->getFieldSetting('form_location');
+          $comment_form_location = $instance->getSetting('form_location');
           if (user_access('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
@@ -549,7 +549,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         // But we don't want this link if we're building the entity for search
         // indexing or constructing a search result excerpt.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance->getFieldSetting('form_location');
+          $comment_form_location = $instance->getSetting('form_location');
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
@@ -817,7 +817,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_state) {
-  if ($form['#field']->getFieldType() == 'comment') {
+  if ($form['#field']->getType() == 'comment') {
     // Collect translation settings.
     if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
       array_unshift($form['#submit'], 'comment_translation_configuration_element_submit');
@@ -862,7 +862,7 @@ function comment_form_field_ui_display_overview_form_alter(&$form, $form_state) 
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_edit_form_alter(&$form, $form_state) {
-  if ($form['#field']->getFieldType() == 'comment') {
+  if ($form['#field']->getType() == 'comment') {
     // We only support posting one comment at the time so it doesn't make sense
     // to let the site builder choose anything else.
     $form['field']['cardinality_container']['cardinality']['#options'] = drupal_map_assoc(array(1));
@@ -1029,8 +1029,8 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
         continue;
       }
       $instance = \Drupal::service('field.info')->getInstance('node', $node->getType(), $field_name);
-      $mode = $instance->getFieldSetting('default_mode');
-      $comments_per_page = $instance->getFieldSetting('per_page');
+      $mode = $instance->getSetting('default_mode');
+      $comments_per_page = $instance->getSetting('per_page');
       if ($node->get($field_name)->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = entity_load_multiple('comment', $cids);
         comment_prepare_thread($comments);
@@ -1234,7 +1234,7 @@ function comment_get_display_ordinal($cid, $instance) {
     $query->condition('c1.status', COMMENT_PUBLISHED);
   }
 
-  if ($instance->getFieldSetting('default_mode') == COMMENT_MODE_FLAT) {
+  if ($instance->getSetting('default_mode') == COMMENT_MODE_FLAT) {
     // For flat comments, cid is used for ordering comments due to
     // unpredictable behavior with timestamp, so we make the same assumption
     // here.
@@ -1266,7 +1266,7 @@ function comment_get_display_ordinal($cid, $instance) {
  */
 function comment_get_display_page($cid, $instance) {
   $ordinal = comment_get_display_ordinal($cid, $instance);
-  $comments_per_page = $instance->getFieldSetting('per_page');
+  $comments_per_page = $instance->getSetting('per_page');
   return floor($ordinal / $comments_per_page);
 }
 
@@ -1532,7 +1532,7 @@ function theme_comment_post_forbidden($variables) {
       $instance = \Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
-      if ($instance->getFieldSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
+      if ($instance->getSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
         $destination = array('destination' => 'comment/reply/' . $entity->entityType() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
       }
       else {

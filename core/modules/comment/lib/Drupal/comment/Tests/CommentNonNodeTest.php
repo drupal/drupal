@@ -88,8 +88,8 @@ class CommentNonNodeTest extends WebTestBase {
     $edit['comment_body[0][value]'] = $comment;
 
     $instance = $this->container->get('field.info')->getInstance('entity_test', 'entity_test', 'comment');
-    $preview_mode = $instance->getFieldSetting('preview');
-    $subject_mode = $instance->getFieldSetting('subject');
+    $preview_mode = $instance->getSetting('preview');
+    $subject_mode = $instance->getSetting('subject');
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {

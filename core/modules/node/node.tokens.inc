@@ -156,7 +156,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
                   $length = $settings['trim_length'];
                 }
 
-                $output = text_summary($output, $instance->getFieldSetting('text_processing') ? $item->format : NULL, $length);
+                $output = text_summary($output, $instance->getSetting('text_processing') ? $item->format : NULL, $length);
               }
             }
             $replacements[$original] = $output;

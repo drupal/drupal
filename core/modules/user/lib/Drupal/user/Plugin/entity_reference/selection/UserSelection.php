@@ -31,7 +31,7 @@ class UserSelection extends SelectionBase {
    * {@inheritdoc}
    */
   public static function settingsForm(FieldDefinitionInterface $field_definition) {
-    $selection_handler_settings = $field_definition->getFieldSetting('handler_settings');
+    $selection_handler_settings = $field_definition->getSetting('handler_settings');
 
     // Merge in default values.
     $selection_handler_settings += array(

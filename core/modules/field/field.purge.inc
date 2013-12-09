@@ -171,7 +171,7 @@ function field_purge_instance($instance) {
 function field_purge_field($field) {
   $instances = field_read_instances(array('field_id' => $field->uuid()), array('include_deleted' => 1));
   if (count($instances) > 0) {
-    throw new FieldException(t('Attempt to purge a field @field_name that still has instances.', array('@field_name' => $field->getFieldName())));
+    throw new FieldException(t('Attempt to purge a field @field_name that still has instances.', array('@field_name' => $field->getName())));
   }
 
   $state = \Drupal::state();

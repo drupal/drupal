@@ -242,7 +242,7 @@ class FieldInfo {
     // Fill the name/ID map.
     foreach ($this->fieldsById as $field) {
       if (!$field->deleted) {
-        $this->fieldIdsByName[$field->entity_type][$field->getFieldName()] = $field->uuid();
+        $this->fieldIdsByName[$field->entity_type][$field->getName()] = $field->uuid();
       }
     }
 
@@ -279,7 +279,7 @@ class FieldInfo {
 
         foreach (field_read_instances() as $instance) {
           $instance = $this->prepareInstance($instance);
-          $this->bundleInstances[$instance->entity_type][$instance->bundle][$instance->getFieldName()] = $instance;
+          $this->bundleInstances[$instance->entity_type][$instance->bundle][$instance->getName()] = $instance;
         }
 
         // Store in persistent cache.
@@ -366,7 +366,7 @@ class FieldInfo {
       // Store in the static cache.
       $this->fieldsById[$field->uuid()] = $field;
       if (!$field->deleted) {
-        $this->fieldIdsByName[$field->entity_type][$field->getFieldName()] = $field->uuid();
+        $this->fieldIdsByName[$field->entity_type][$field->getName()] = $field->uuid();
       }
 
       return $field;
@@ -410,7 +410,7 @@ class FieldInfo {
         if (!isset($this->fieldsById[$field->uuid()])) {
           $this->fieldsById[$field->uuid()] = $field;
           if (!$field->deleted) {
-            $this->fieldIdsByName[$field->entity_type][$field->getFieldName()] = $field->uuid();
+            $this->fieldIdsByName[$field->entity_type][$field->getName()] = $field->uuid();
           }
         }
       }
@@ -458,7 +458,7 @@ class FieldInfo {
             $field = $this->prepareField($field);
 
             $this->fieldsById[$field->uuid()] = $field;
-            $this->fieldIdsByName[$field->entity_type][$field->getFieldName()] = $field->uuid();
+            $this->fieldIdsByName[$field->entity_type][$field->getName()] = $field->uuid();
           }
 
           $fields[] = $this->fieldsById[$field->uuid()];
@@ -468,7 +468,7 @@ class FieldInfo {
         $loaded_instances = entity_load_multiple('field_instance', array_values($config_ids));
         foreach ($loaded_instances as $instance) {
           $instance = $this->prepareInstance($instance);
-          $instances[$instance->getFieldName()] = $instance;
+          $instances[$instance->getName()] = $instance;
         }
       }
     }
@@ -560,7 +560,7 @@ class FieldInfo {
    */
   public function prepareField(FieldInterface $field) {
     // Make sure all expected field settings are present.
-    $field->settings += $this->fieldTypeManager->getDefaultSettings($field->getFieldType());
+    $field->settings += $this->fieldTypeManager->getDefaultSettings($field->getType());
 
     return $field;
   }
@@ -576,7 +576,7 @@ class FieldInfo {
    */
   public function prepareInstance(FieldInstanceInterface $instance) {
     // Make sure all expected instance settings are present.
-    $instance->settings += $this->fieldTypeManager->getDefaultInstanceSettings($instance->getFieldType());
+    $instance->settings += $this->fieldTypeManager->getDefaultInstanceSettings($instance->getType());
 
     return $instance;
   }

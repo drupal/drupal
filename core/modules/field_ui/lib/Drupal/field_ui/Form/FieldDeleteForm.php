@@ -46,7 +46,7 @@ class FieldDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the field %field?', array('%field' => $this->entity->getFieldLabel()));
+    return $this->t('Are you sure you want to delete the field %field?', array('%field' => $this->entity->getLabel()));
   }
 
   /**

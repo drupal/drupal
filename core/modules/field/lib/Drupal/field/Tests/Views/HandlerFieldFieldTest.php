@@ -73,13 +73,13 @@ class HandlerFieldFieldTest extends FieldTestBase {
 
       for ($key = 0; $key < 3; $key++) {
         $field = $this->fields[$key];
-        $edit[$field->getFieldName()][0]['value'] = $this->randomName(8);
+        $edit[$field->getName()][0]['value'] = $this->randomName(8);
       }
       for ($j = 0; $j < 5; $j++) {
-        $edit[$this->fields[3]->getFieldName()][$j]['value'] = $this->randomName(8);
+        $edit[$this->fields[3]->getName()][$j]['value'] = $this->randomName(8);
       }
       // Set this field to be empty.
-      $edit[$this->fields[4]->getFieldName()] = array(array('value' => NULL));
+      $edit[$this->fields[4]->getName()] = array(array('value' => NULL));
 
       $this->nodes[$i] = $this->drupalCreateNode($edit);
     }
@@ -96,7 +96,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
   protected function prepareView(ViewExecutable $view) {
     $view->initDisplay();
     foreach ($this->fields as $field) {
-      $field_name = $field->getFieldName();
+      $field_name = $field->getName();
       $view->display_handler->options['fields'][$field_name]['id'] = $field_name;
       $view->display_handler->options['fields'][$field_name]['table'] = 'node__' . $field_name;
       $view->display_handler->options['fields'][$field_name]['field'] = $field_name;
@@ -117,7 +117,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     // Tests that the rendered fields match the actual value of the fields.
     for ($i = 0; $i < 3; $i++) {
       for ($key = 0; $key < 2; $key++) {
-        $field_name = $this->fields[$key]->getFieldName();
+        $field_name = $this->fields[$key]->getName();
         $rendered_field = $view->style_plugin->getField($i, $field_name);
         $expected_field = $this->nodes[$i]->$field_name->value;
         $this->assertEqual($rendered_field, $expected_field);
@@ -131,8 +131,8 @@ class HandlerFieldFieldTest extends FieldTestBase {
   public function _testFormatterSimpleFieldRender() {
     $view = views_get_view('test_view_fieldapi');
     $this->prepareView($view);
-    $view->displayHandlers->get('default')->options['fields'][$this->fields[0]->getFieldName()]['type'] = 'text_trimmed';
-    $view->displayHandlers->get('default')->options['fields'][$this->fields[0]->getFieldName()]['settings'] = array(
+    $view->displayHandlers->get('default')->options['fields'][$this->fields[0]->getName()]['type'] = 'text_trimmed';
+    $view->displayHandlers->get('default')->options['fields'][$this->fields[0]->getName()]['settings'] = array(
       'trim_length' => 3,
     );
     $this->executeView($view);
@@ -140,14 +140,14 @@ class HandlerFieldFieldTest extends FieldTestBase {
     // Make sure that the formatter works as expected.
     // @TODO: actually there should be a specific formatter.
     for ($i = 0; $i < 2; $i++) {
-      $rendered_field = $view->style_plugin->getField($i, $this->fields[0]->getFieldName());
+      $rendered_field = $view->style_plugin->getField($i, $this->fields[0]->getName());
       $this->assertEqual(strlen($rendered_field), 3);
     }
   }
 
   public function _testMultipleFieldRender() {
     $view = views_get_view('test_view_fieldapi');
-    $field_name = $this->fields[3]->getFieldName();
+    $field_name = $this->fields[3]->getName();
 
     // Test delta limit.
     $this->prepareView($view);
@@ -167,8 +167,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     }
 
     // Test that an empty field is rendered without error.
-    $view->style_plugin->getField(4, $this->fields[4]->getFieldName());
-	
+    $view->style_plugin->getField(4, $this->fields[4]->getName());
     $view->destroy();
 
     // Test delta limit + offset

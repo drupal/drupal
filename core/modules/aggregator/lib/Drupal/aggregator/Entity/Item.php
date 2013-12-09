@@ -71,7 +71,7 @@ class Item extends ContentEntityBase implements ItemInterface {
     $fields['fid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Aggregator feed ID'))
       ->setDescription(t('The ID of the aggregator feed.'))
-      ->setFieldSetting('target_type', 'aggregator_feed');
+      ->setSetting('target_type', 'aggregator_feed');
 
     $fields['title'] = FieldDefinition::create('string')
       ->setLabel(t('Title'))

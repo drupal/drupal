@@ -66,7 +66,7 @@ class LinkWidget extends WidgetBase {
 
     // If cardinality is 1, ensure a label is output for the field by wrapping it
     // in a details element.
-    if ($this->fieldDefinition->getFieldCardinality() == 1) {
+    if ($this->fieldDefinition->getCardinality() == 1) {
       $element += array(
         '#type' => 'fieldset',
       );

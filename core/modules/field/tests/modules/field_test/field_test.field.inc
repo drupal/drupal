@@ -22,7 +22,7 @@ function field_test_field_widget_info_alter(&$info) {
  * Implements hook_field_update_forbid().
  */
 function field_test_field_update_forbid($field, $prior_field) {
-  if ($field->getFieldType() == 'test_field' && $field->getFieldSetting('unchangeable') != $prior_field->getFieldSetting('unchangeable')) {
+  if ($field->getType() == 'test_field' && $field->getSetting('unchangeable') != $prior_field->getSetting('unchangeable')) {
     throw new FieldException("field_test 'unchangeable' setting cannot be changed'");
   }
 }
@@ -38,13 +38,13 @@ function field_test_default_value(EntityInterface $entity, $field, $instance) {
  * Implements hook_entity_field_access().
  */
 function field_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
-  if ($field_definition->getFieldName() == "field_no_{$operation}_access") {
+  if ($field_definition->getName() == "field_no_{$operation}_access") {
     return FALSE;
   }
 
   // Only grant view access to test_view_field fields when the user has
   // 'view test_view_field content' permission.
-  if ($field_definition->getFieldName() == 'test_view_field' && $operation == 'view' && !$account->hasPermission('view test_view_field content')) {
+  if ($field_definition->getName() == 'test_view_field' && $operation == 'view' && !$account->hasPermission('view test_view_field content')) {
     return FALSE;
   }
 

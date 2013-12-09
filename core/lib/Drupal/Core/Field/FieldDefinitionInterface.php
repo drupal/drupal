@@ -67,7 +67,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return string
    *   The field name.
    */
-  public function getFieldName();
+  public function getName();
 
   /**
    * Returns the field type.
@@ -77,7 +77,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    *
    * @see \Drupal\Core\Field\FieldTypePluginManager
    */
-  public function getFieldType();
+  public function getType();
 
   /**
    * Returns the field settings.
@@ -89,7 +89,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return array
    *   An array of key/value pairs.
    */
-  public function getFieldSettings();
+  public function getSettings();
 
   /**
    * Returns the value of a given field setting.
@@ -100,7 +100,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return mixed
    *   The setting value.
    */
-  public function getFieldSetting($setting_name);
+  public function getSetting($setting_name);
 
   /**
    * Returns the names of the field's subproperties.
@@ -116,7 +116,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return array
    *   The property names.
    */
-  public function getFieldPropertyNames();
+  public function getPropertyNames();
 
   /**
    * Returns whether the field is translatable.
@@ -124,7 +124,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return bool
    *   TRUE if the field is translatable.
    */
-  public function isFieldTranslatable();
+  public function isTranslatable();
 
   /**
    * Determines whether the field is configurable via field.module.
@@ -132,7 +132,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return bool
    *   TRUE if the field is configurable.
    */
-  public function isFieldConfigurable();
+  public function isConfigurable();
 
   /**
    * Determines whether the field is queryable via QueryInterface.
@@ -140,7 +140,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return bool
    *   TRUE if the field is queryable.
    */
-  public function isFieldQueryable();
+  public function isQueryable();
 
   /**
    * Returns the human-readable label for the field.
@@ -148,7 +148,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return string
    *   The field label.
    */
-  public function getFieldLabel();
+  public function getLabel();
 
   /**
    * Returns the human-readable description for the field.
@@ -160,7 +160,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return string|null
    *   The field description, or NULL if no description is available.
    */
-  public function getFieldDescription();
+  public function getDescription();
 
   /**
    * Returns the maximum number of items allowed for the field.
@@ -171,7 +171,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return integer
    *   The field cardinality.
    */
-  public function getFieldCardinality();
+  public function getCardinality();
 
   /**
    * Returns whether at least one non-empty item is required for this field.
@@ -182,7 +182,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return bool
    *   TRUE if the field is required.
    */
-  public function isFieldRequired();
+  public function isRequired();
 
   /**
    * Returns whether the field can contain multiple items.
@@ -190,7 +190,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return bool
    *   TRUE if the field can contain multiple items, FALSE otherwise.
    */
-  public function isFieldMultiple();
+  public function isMultiple();
 
   /**
    * Returns the default value for the field in a newly created entity.
@@ -207,6 +207,6 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    *     array.
    *   - NULL or array() for no default value.
    */
-  public function getFieldDefaultValue(EntityInterface $entity);
+  public function getDefaultValue(EntityInterface $entity);
 
 }

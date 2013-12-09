@@ -92,7 +92,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->assertSettings('comment', 'node__comment_article', TRUE, $edit);
     field_info_cache_clear();
     $field = field_info_field('comment', 'comment_body');
-    $this->assertTrue($field->isFieldTranslatable(), 'Comment body is translatable.');
+    $this->assertTrue($field->isTranslatable(), 'Comment body is translatable.');
 
     // Test that language settings are correctly stored.
     $language_configuration = language_get_default_configuration('comment', 'node__comment_article');
@@ -132,8 +132,8 @@ class ContentTranslationSettingsTest extends WebTestBase {
       $this->assertSettings('node', 'article', TRUE, $edit);
       $field = FieldService::fieldInfo()->getField('node', 'body');
       $definitions = \Drupal::entityManager()->getFieldDefinitions('node', 'article');
-      $this->assertEqual($definitions['body']->isFieldTranslatable(), $translatable, 'Field translatability correctly switched.');
-      $this->assertEqual($field->isFieldTranslatable(), $definitions['body']->isFieldTranslatable(), 'Configurable field translatability correctly switched.');
+      $this->assertEqual($definitions['body']->isTranslatable(), $translatable, 'Field translatability correctly switched.');
+      $this->assertEqual($field->isTranslatable(), $definitions['body']->isTranslatable(), 'Configurable field translatability correctly switched.');
 
       // Test that also the Field UI form behaves correctly.
       $translatable = !$translatable;
@@ -143,8 +143,8 @@ class ContentTranslationSettingsTest extends WebTestBase {
       entity_info_cache_clear();
       $field = FieldService::fieldInfo()->getField('node', 'body');
       $definitions = \Drupal::entityManager()->getFieldDefinitions('node', 'article');
-      $this->assertEqual($definitions['body']->isFieldTranslatable(), $translatable, 'Field translatability correctly switched.');
-      $this->assertEqual($field->isFieldTranslatable(), $definitions['body']->isFieldTranslatable(), 'Configurable field translatability correctly switched.');
+      $this->assertEqual($definitions['body']->isTranslatable(), $translatable, 'Field translatability correctly switched.');
+      $this->assertEqual($field->isTranslatable(), $definitions['body']->isTranslatable(), 'Configurable field translatability correctly switched.');
     }
   }
 

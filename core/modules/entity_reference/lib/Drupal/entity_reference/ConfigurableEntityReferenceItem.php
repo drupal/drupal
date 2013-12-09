@@ -26,7 +26,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
    * {@inheritdoc}
    */
   public static function schema(FieldInterface $field) {
-    $target_type = $field->getFieldSetting('target_type');
+    $target_type = $field->getSetting('target_type');
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
 
     if (is_subclass_of($target_type_info['class'], '\Drupal\Core\Entity\ContentEntityInterface')) {
@@ -137,7 +137,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
       '#type' => 'select',
       '#title' => t('Reference method'),
       '#options' => $handlers_options,
-      '#default_value' => $instance->getFieldSetting('handler'),
+      '#default_value' => $instance->getSetting('handler'),
       '#required' => TRUE,
       '#ajax' => TRUE,
       '#limit_validation_errors' => array(),

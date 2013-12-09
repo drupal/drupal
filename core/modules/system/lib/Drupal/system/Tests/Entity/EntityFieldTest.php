@@ -356,18 +356,18 @@ class EntityFieldTest extends EntityUnitTestBase  {
   protected function checkIntrospection($entity_type) {
     // Test getting metadata upfront.
     $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type);
-    $this->assertEqual($definitions['name']->getFieldType(), 'string', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']->getFieldType(), 'entity_reference', $entity_type .': User field found.');
-    $this->assertEqual($definitions['field_test_text']->getFieldType(), 'text', $entity_type .': Test-text-field field found.');
+    $this->assertEqual($definitions['name']->getType(), 'string', $entity_type .': Name field found.');
+    $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type .': User field found.');
+    $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type .': Test-text-field field found.');
 
     // Test introspecting an entity object.
     // @todo: Add bundles and test bundles as well.
     $entity = entity_create($entity_type, array());
 
     $definitions = $entity->getPropertyDefinitions();
-    $this->assertEqual($definitions['name']->getFieldType(), 'string', $entity_type .': Name field found.');
-    $this->assertEqual($definitions['user_id']->getFieldType(), 'entity_reference', $entity_type .': User field found.');
-    $this->assertEqual($definitions['field_test_text']->getFieldType(), 'text', $entity_type .': Test-text-field field found.');
+    $this->assertEqual($definitions['name']->getType(), 'string', $entity_type .': Name field found.');
+    $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type .': User field found.');
+    $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type .': Test-text-field field found.');
 
     $name_properties = $entity->name->getPropertyDefinitions();
     $this->assertEqual($name_properties['value']->getDataType(), 'string', $entity_type .': String value property of the name found.');
@@ -538,7 +538,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     // Create a reference field item and let it reference the entity.
     $definition = FieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
-      ->setFieldSetting('target_type', 'entity_test');
+      ->setSetting('target_type', 'entity_test');
     $reference_field_item = \Drupal::TypedData()->create($definition);
     $reference = $reference_field_item->get('entity');
     $reference->setValue($entity);
@@ -561,7 +561,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     // Test bundle validation.
     $definition = FieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
-      ->setFieldSettings(array(
+      ->setSettings(array(
         'target_type' => 'node',
         'target_bundle' => 'article',
       ));

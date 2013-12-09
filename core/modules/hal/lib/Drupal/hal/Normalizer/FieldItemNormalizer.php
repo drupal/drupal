@@ -58,7 +58,7 @@ class FieldItemNormalizer extends NormalizerBase {
       $langcode = $data['lang'];
       unset($data['lang']);
       $field_definition = $field_item->getFieldDefinition();
-      if ($field_definition->isFieldTranslatable()) {
+      if ($field_definition->isTranslatable()) {
         $field_item = $this->createTranslatedInstance($field_item, $langcode);
       }
     }

@@ -113,7 +113,7 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
       $fields = field_read_fields();
       foreach ($fields as $field) {
         $update_field = FALSE;
-        if ($field->getFieldType() == 'taxonomy_term_reference') {
+        if ($field->getType() == 'taxonomy_term_reference') {
           foreach ($field->settings['allowed_values'] as &$value) {
             if ($value['vocabulary'] == $this->getOriginalId()) {
               $value['vocabulary'] = $this->id();

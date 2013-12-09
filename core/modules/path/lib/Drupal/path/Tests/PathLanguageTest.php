@@ -70,7 +70,7 @@ class PathLanguageTest extends PathTestBase {
     // Ensure configuration changes are picked up in the host environment.
     Field::fieldInfo()->flush();
     $field = Field::fieldInfo()->getField('node', 'body');
-    $this->assertTrue($field->isFieldTranslatable(), 'Node body is translatable.');
+    $this->assertTrue($field->isTranslatable(), 'Node body is translatable.');
   }
 
   /**

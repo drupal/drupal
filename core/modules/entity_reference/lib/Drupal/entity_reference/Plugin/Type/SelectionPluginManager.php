@@ -54,8 +54,8 @@ class SelectionPluginManager extends DefaultPluginManager {
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::getInstance().
    */
   public function getInstance(array $options) {
-    $selection_handler = $options['field_definition']->getFieldSetting('handler');
-    $target_entity_type = $options['field_definition']->getFieldSetting('target_type');
+    $selection_handler = $options['field_definition']->getSetting('handler');
+    $target_entity_type = $options['field_definition']->getSetting('target_type');
 
     // Get all available selection plugins for this entity type.
     $selection_handler_groups = $this->getSelectionGroups($target_entity_type);
