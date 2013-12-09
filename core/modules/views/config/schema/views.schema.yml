@@ -1,5 +1,73 @@
 # Schema for the configuration files of the Views module.
 
+views.settings:
+  type: mapping
+  label: 'Views settings'
+  mapping:
+    display_extenders:
+      type: sequence
+      label: 'Display extenders'
+      sequence:
+        - type: string
+          label: 'Display extender'
+    no_javascript:
+      type: boolean
+      label: 'Disable JavaScript with Views'
+    skip_cache:
+      type: boolean
+      label: 'Disable views data caching'
+    sql_signature:
+      type: boolean
+      label: 'Add Views signature to all SQL queries'
+    ui:
+      type: mapping
+      label: 'UI settings'
+      mapping:
+        show:
+          type: mapping
+          label: 'Live preview settings'
+          mapping:
+            additional_queries:
+              type: boolean
+              label: 'Show other queries run during render during live preview'
+            advanced_column:
+              type: boolean
+              label: 'Always show advanced display settings'
+            master_display:
+              type: boolean
+              label: 'Always show the master (default) display'
+            performance_statistics:
+              type: boolean
+              label: 'Show performance statistics'
+            preview_information:
+              type: boolean
+              label: 'Show information and statistics about the view during live preview'
+            sql_query:
+              type: mapping
+              label: 'Query settings'
+              mapping:
+                enabled:
+                  type: boolean
+                  label: 'Show the SQL query'
+                where:
+                  type: string
+                  label: 'Show SQL query'
+            display_embed:
+              type: boolean
+              label: 'Allow embedded displays'
+        always_live_preview:
+          type: boolean
+          label: 'Automatically update preview on changes'
+        exposed_filter_any_label:
+          type: string
+          label: 'Label for "Any" value on non-required single-select exposed filters'
+    field_rewrite_elements:
+      type: sequence
+      label: 'Field rewrite elements'
+      sequence:
+        - type: string
+          label: 'Element'
+
 views.view.*:
   type: mapping
   label: 'View'
