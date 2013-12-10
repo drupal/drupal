@@ -4,7 +4,7 @@ description: "Support module for Field UI testing."
 package: Testing
 version: VERSION
 core: 8.x
-hidden: TRUE
+hidden: true
 
 dependencies:
   - field_ui
