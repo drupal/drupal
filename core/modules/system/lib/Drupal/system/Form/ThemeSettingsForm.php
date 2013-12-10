@@ -332,7 +332,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         }
         else {
           // File upload failed.
-          form_set_error('logo_upload', $form_state, t('The logo could not be uploaded.'));
+          $this->setFormError('logo_upload', $form_state, $this->t('The logo could not be uploaded.'));
         }
       }
 
@@ -348,7 +348,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         }
         else {
           // File upload failed.
-          form_set_error('favicon_upload', $form_state, t('The favicon could not be uploaded.'));
+          $this->setFormError('favicon_upload', $form_state, $this->t('The favicon could not be uploaded.'));
         }
       }
 
@@ -357,13 +357,13 @@ class ThemeSettingsForm extends ConfigFormBase {
       if ($form_state['values']['logo_path']) {
         $path = $this->validatePath($form_state['values']['logo_path']);
         if (!$path) {
-          form_set_error('logo_path', $form_state, t('The custom logo path is invalid.'));
+          $this->setFormError('logo_path', $form_state, $this->t('The custom logo path is invalid.'));
         }
       }
       if ($form_state['values']['favicon_path']) {
         $path = $this->validatePath($form_state['values']['favicon_path']);
         if (!$path) {
-          form_set_error('favicon_path', $form_state, t('The custom favicon path is invalid.'));
+          $this->setFormError('favicon_path', $form_state, $this->t('The custom favicon path is invalid.'));
         }
       }
     }

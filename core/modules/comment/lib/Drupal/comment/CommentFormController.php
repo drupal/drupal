@@ -275,10 +275,10 @@ class CommentFormController extends ContentEntityFormController {
 
       $date = $form_state['values']['date'];
       if ($date instanceOf DrupalDateTime && $date->hasErrors()) {
-        form_set_error('date', $form_state, $this->t('You have to specify a valid date.'));
+        $this->setFormError('date', $form_state, $this->t('You have to specify a valid date.'));
       }
       if ($form_state['values']['name'] && !$form_state['values']['is_anonymous'] && !$account) {
-        form_set_error('name', $form_state, $this->t('You have to specify a valid author.'));
+        $this->setFormError('name', $form_state, $this->t('You have to specify a valid author.'));
       }
     }
     elseif ($form_state['values']['is_anonymous']) {
@@ -288,7 +288,7 @@ class CommentFormController extends ContentEntityFormController {
       if ($form_state['values']['name']) {
         $accounts = $this->entityManager->getStorageController('user')->loadByProperties(array('name' => $form_state['values']['name']));
         if (!empty($accounts)) {
-          form_set_error('name', $form_state, $this->t('The name you used belongs to a registered user.'));
+          $this->setFormError('name', $form_state, $this->t('The name you used belongs to a registered user.'));
         }
       }
     }

@@ -112,7 +112,7 @@ class SearchForm extends FormBase {
   public function submitForm(array &$form, array &$form_state) {
     $keys = $form_state['values']['processed_keys'];
     if ($keys == '') {
-      form_set_error('keys', $form_state, t('Please enter some keywords.'));
+      $this->setFormError('keys', $form_state, $this->t('Please enter some keywords.'));
       // Fall through to the form redirect.
     }
 

@@ -105,13 +105,13 @@ class BanAdmin extends FormBase {
   public function validateForm(array &$form, array &$form_state) {
     $ip = trim($form_state['values']['ip']);
     if ($this->ipManager->isBanned($ip)) {
-      form_set_error('ip', $form_state, $this->t('This IP address is already banned.'));
+      $this->setFormError('ip', $form_state, $this->t('This IP address is already banned.'));
     }
     elseif ($ip == $this->getRequest()->getClientIP()) {
-      form_set_error('ip', $form_state, $this->t('You may not ban your own IP address.'));
+      $this->setFormError('ip', $form_state, $this->t('You may not ban your own IP address.'));
     }
     elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
-      form_set_error('ip', $form_state, $this->t('Enter a valid IP address.'));
+      $this->setFormError('ip', $form_state, $this->t('Enter a valid IP address.'));
     }
   }
 

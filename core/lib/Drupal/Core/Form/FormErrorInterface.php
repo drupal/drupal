@@ -92,15 +92,15 @@ interface FormErrorInterface {
    * would be triggered if the input processing and validation steps were fully
    * skipped.
    *
-   * @param $name
+   * @param string $name
    *   The name of the form element. If the #parents property of your form
    *   element is array('foo', 'bar', 'baz') then you may set an error on 'foo'
    *   or 'foo][bar][baz'. Setting an error on 'foo' sets an error for every
    *   element where the #parents array starts with 'foo'.
    * @param array $form_state
    *   An associative array containing the current state of the form.
-   * @param $message
-   *   The error message to present to the user.
+   * @param string $message
+   *   (optional) The error message to present to the user.
    *
    * @return mixed
    *   Return value is for internal use only. To get a list of errors, use

@@ -318,7 +318,7 @@ class NodeFormController extends ContentEntityFormController {
     $node = $this->buildEntity($form, $form_state);
 
     if ($node->id() && (node_last_changed($node->id(), $this->getFormLangcode($form_state)) > $node->getChangedTime())) {
-      form_set_error('changed', $form_state, t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
+      $this->setFormError('changed', $form_state, $this->t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
     }
 
     // Validate the "authored by" field.
@@ -326,14 +326,14 @@ class NodeFormController extends ContentEntityFormController {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
-      form_set_error('name', $form_state, t('The username %name does not exist.', array('%name' => $form_state['values']['name'])));
+      $this->setFormError('name', $form_state, $this->t('The username %name does not exist.', array('%name' => $form_state['values']['name'])));
     }
 
     // Validate the "authored on" field.
     // The date element contains the date object.
     $date = $node->date instanceof DrupalDateTime ? $node->date : new DrupalDateTime($node->date);
     if ($date->hasErrors()) {
-      form_set_error('date', $form_state, t('You have to specify a valid date.'));
+      $this->setFormError('date', $form_state, $this->t('You have to specify a valid date.'));
     }
 
     // Invoke hook_node_validate() for validation needed by modules.

@@ -234,7 +234,7 @@ class MenuLinkFormController extends EntityFormController {
       }
     }
     if (!trim($menu_link->link_path) || !drupal_valid_path($menu_link->link_path, TRUE)) {
-      form_set_error('link_path', $form_state, t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $menu_link->link_path)));
+      $this->setFormError('link_path', $form_state, $this->t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $menu_link->link_path)));
     }
 
     parent::validate($form, $form_state);

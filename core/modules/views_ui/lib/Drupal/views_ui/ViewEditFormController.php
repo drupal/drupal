@@ -236,7 +236,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     $view = $this->entity;
     foreach ($view->getExecutable()->validate() as $display_errors) {
       foreach ($display_errors as $error) {
-        form_set_error('', $form_state, $error);
+        $this->setFormError('', $form_state, $error);
       }
     }
   }

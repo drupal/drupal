@@ -119,7 +119,7 @@ class UserPasswordForm extends FormBase {
       form_set_value(array('#parents' => array('account')), $account, $form_state);
     }
     else {
-      form_set_error('name', $form_state, $this->t('Sorry, %name is not recognized as a username or an e-mail address.', array('%name' => $name)));
+      $this->setFormError('name', $form_state, $this->t('Sorry, %name is not recognized as a username or an e-mail address.', array('%name' => $name)));
     }
   }
 

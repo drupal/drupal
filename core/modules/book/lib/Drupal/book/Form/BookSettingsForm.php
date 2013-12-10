@@ -53,7 +53,7 @@ class BookSettingsForm extends ConfigFormBase {
   public function validateForm(array &$form, array &$form_state) {
     $child_type = $form_state['values']['book_child_type'];
     if (empty($form_state['values']['book_allowed_types'][$child_type])) {
-      form_set_error('book_child_type', $form_state, $this->t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => $this->t('Add child page'))));
+      $this->setFormError('book_child_type', $form_state, $this->t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => $this->t('Add child page'))));
     }
 
     parent::validateForm($form, $form_state);

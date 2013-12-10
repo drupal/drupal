@@ -7,19 +7,18 @@
 
 namespace Drupal\edit\Form;
 
+use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormInterface;
 use Drupal\user\TempStoreFactory;
 use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Builds and process a form for editing a single entity field.
  */
-class EditFieldForm implements FormInterface, ContainerInjectionInterface {
+class EditFieldForm extends FormBase {
 
   /**
    * Stores the tempstore factory.
@@ -145,7 +144,7 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
     if ($changed_field_name = $this->getChangedFieldName($entity)) {
       $changed_field_errors = $entity->$changed_field_name->validate();
       if (count($changed_field_errors)) {
-        form_set_error('changed_field', $form_state, $changed_field_errors[0]->getMessage());
+        $this->setFormError('changed_field', $form_state, $changed_field_errors[0]->getMessage());
       }
     }
   }

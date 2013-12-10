@@ -79,7 +79,7 @@ class ConfigImportForm extends FormBase {
       $form_state['values']['import_tarball'] = $file_upload->getRealPath();
     }
     else {
-      form_set_error('import_tarball', $form_state, $this->t('The import tarball could not be uploaded.'));
+      $this->setFormError('import_tarball', $form_state, $this->t('The import tarball could not be uploaded.'));
     }
   }
 
@@ -100,7 +100,7 @@ class ConfigImportForm extends FormBase {
         $form_state['redirect_route']['route_name'] = 'config.sync';
       }
       catch (\Exception $e) {
-        form_set_error('import_tarball', $form_state, $this->t('Could not extract the contents of the tar file. The error message is <em>@message</em>', array('@message' => $e->getMessage())));
+        $this->setFormError('import_tarball', $form_state, $this->t('Could not extract the contents of the tar file. The error message is <em>@message</em>', array('@message' => $e->getMessage())));
       }
       drupal_unlink($path);
     }

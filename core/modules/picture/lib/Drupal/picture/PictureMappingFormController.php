@@ -126,7 +126,7 @@ class PictureMappingFormController extends EntityFormController {
       }
       // Make sure at least one mapping is defined.
       elseif (!$picture_mapping->isNew() && !$picture_mapping->hasMappings()) {
-        form_set_error('mappings', $form_state, $this->t('Please select at least one mapping.'));
+        $this->setFormError('mappings', $form_state, $this->t('Please select at least one mapping.'));
       }
     }
   }

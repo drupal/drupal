@@ -315,12 +315,12 @@ class FieldOverview extends OverviewBase {
     if (array_filter(array($field['label'], $field['field_name'], $field['type']))) {
       // Missing label.
       if (!$field['label']) {
-        form_set_error('fields][_add_new_field][label', $form_state, $this->t('Add new field: you need to provide a label.'));
+        $this->setFormError('fields][_add_new_field][label', $form_state, $this->t('Add new field: you need to provide a label.'));
       }
 
       // Missing field name.
       if (!$field['field_name']) {
-        form_set_error('fields][_add_new_field][field_name', $form_state, $this->t('Add new field: you need to provide a field name.'));
+        $this->setFormError('fields][_add_new_field][field_name', $form_state, $this->t('Add new field: you need to provide a field name.'));
       }
       // Field name validation.
       else {
@@ -333,7 +333,7 @@ class FieldOverview extends OverviewBase {
 
       // Missing field type.
       if (!$field['type']) {
-        form_set_error('fields][_add_new_field][type', $form_state, $this->t('Add new field: you need to select a field type.'));
+        $this->setFormError('fields][_add_new_field][type', $form_state, $this->t('Add new field: you need to select a field type.'));
       }
     }
   }
@@ -359,12 +359,12 @@ class FieldOverview extends OverviewBase {
       if (array_filter(array($field['label'], $field['field_name']))) {
         // Missing label.
         if (!$field['label']) {
-          form_set_error('fields][_add_existing_field][label', $form_state, $this->t('Re-use existing field: you need to provide a label.'));
+          $this->setFormError('fields][_add_existing_field][label', $form_state, $this->t('Re-use existing field: you need to provide a label.'));
         }
 
         // Missing existing field name.
         if (!$field['field_name']) {
-          form_set_error('fields][_add_existing_field][field_name', $form_state, $this->t('Re-use existing field: you need to select a field.'));
+          $this->setFormError('fields][_add_existing_field][field_name', $form_state, $this->t('Re-use existing field: you need to select a field.'));
         }
       }
     }

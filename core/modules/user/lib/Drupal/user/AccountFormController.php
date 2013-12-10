@@ -296,7 +296,7 @@ abstract class AccountFormController extends ContentEntityFormController {
     // Validate new or changing username.
     if (isset($form_state['values']['name'])) {
       if ($error = user_validate_name($form_state['values']['name'])) {
-        form_set_error('name', $form_state, $error);
+        $this->setFormError('name', $form_state, $error);
       }
       // Cast the user ID as an integer. It might have been set to NULL, which
       // could lead to unexpected results.
@@ -310,7 +310,7 @@ abstract class AccountFormController extends ContentEntityFormController {
         ->fetchField();
 
         if ($name_taken) {
-          form_set_error('name', $form_state, $this->t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
+          $this->setFormError('name', $form_state, $this->t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
         }
       }
     }
@@ -329,10 +329,10 @@ abstract class AccountFormController extends ContentEntityFormController {
       if ($mail_taken) {
         // Format error message dependent on whether the user is logged in or not.
         if ($GLOBALS['user']->isAuthenticated()) {
-          form_set_error('mail', $form_state, $this->t('The e-mail address %email is already taken.', array('%email' => $mail)));
+          $this->setFormError('mail', $form_state, $this->t('The e-mail address %email is already taken.', array('%email' => $mail)));
         }
         else {
-          form_set_error('mail', $form_state, $this->t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
+          $this->setFormError('mail', $form_state, $this->t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $mail, '@password' => url('user/password'))));
         }
       }
     }
@@ -347,7 +347,7 @@ abstract class AccountFormController extends ContentEntityFormController {
 
       $user_schema = drupal_get_schema('users');
       if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
-        form_set_error('signature', $form_state, $this->t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
+        $this->setFormError('signature', $form_state, $this->t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
       }
     }
   }
