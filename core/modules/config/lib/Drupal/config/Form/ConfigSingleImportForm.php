@@ -139,6 +139,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     );
     $form['config_name'] = array(
       '#title' => $this->t('Configuration name'),
+      '#description' => $this->t('Enter the name of the configuration file without the <em>.yml</em> extension. (e.g. <em>system.site</em>)'),
       '#type' => 'textfield',
       '#states' => array(
         'required' => array(
