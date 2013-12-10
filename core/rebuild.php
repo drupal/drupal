@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Rebuilds all Drupal caches even when Drupal itself does not work.
+ *
+ * Needs a token query argument which can be calculated using the
+ * scripts/rebuild_token_calculator.sh script.
+ *
+ * @see drupal_rebuild()
+ */
+
+use Drupal\Component\Utility\Crypt;
+
+// Change the directory to the Drupal root.
+chdir('..');
+
+require_once dirname(__DIR__) . '/core/includes/bootstrap.inc';
+require_once dirname(__DIR__) . '/core/includes/utility.inc';
+
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+if (settings()->get('rebuild_access', FALSE) ||
+  (isset($_GET['token'], $_GET['timestamp']) &&
+    ((REQUEST_TIME - $_GET['timestamp']) < 300) &&
+    ($_GET['token'] === Crypt::hmacBase64($_GET['timestamp'], $GLOBALS['drupal_hash_salt']))
+  )) {
+
+  drupal_rebuild();
+  drupal_set_message('Cache rebuild complete.');
+}
+
+header('Location: ' . $GLOBALS['base_url']);

@@ -15,6 +15,11 @@ try {
   drupal_handle_request();
 }
 catch (Exception $e) {
-  print 'If you have just changed code (for example deployed a new module or moved an existing one) read http://drupal.org/documentation/rebuild';
+  $message = 'If you have just changed code (for example deployed a new module or moved an existing one) read <a href="http://drupal.org/documentation/rebuild">http://drupal.org/documentation/rebuild</a>';
+  if (settings()->get('rebuild_access', FALSE)) {
+    $rebuild_path = $GLOBALS['base_url'] . '/rebuild.php';
+    $message .= " or run the <a href=\"$rebuild_path\">rebuild script</a>";
+  }
+  print $message;
   throw $e;
 }

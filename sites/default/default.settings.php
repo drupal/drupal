@@ -502,6 +502,16 @@ $settings['update_free_access'] = FALSE;
 # $settings['maintenance_theme'] = 'bartik';
 
 /**
+ * Enable access to rebuild.php.
+ *
+ * This setting can be enabled to allow Drupal's php and database cached
+ * storage to be cleared via the rebuild.php page. Access to this page can also
+ * be gained by generating a query string from rebuild_token_calculator.sh and
+ * using these parameters in a request to rebuild.php.
+ */
+# $settings['rebuild_access'] = TRUE;
+
+/**
  * Base URL (optional).
  *
  * If Drupal is generating incorrect URLs on your site, which could

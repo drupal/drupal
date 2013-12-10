@@ -518,6 +518,15 @@ function system_requirements($phase) {
       );
     }
     $requirements['update status']['title'] = t('Update notifications');
+
+    if (settings()->get('rebuild_access')) {
+      $requirements['rebuild access'] = array(
+        'title' => t('Rebuild access'),
+        'value' => t('Enabled'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('The rebuild_access setting is enabled in settings.php. It is recommended to have this setting disabled unless you are performing a rebuild.'),
+      );
+    }
   }
 
   // Ensure that if upgrading from 7 to 8 we have no disabled modules.
