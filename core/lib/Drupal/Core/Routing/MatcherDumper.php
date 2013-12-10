@@ -109,19 +109,20 @@ class MatcherDumper implements MatcherDumperInterface {
     // Delete any old records in this provider first, then insert the new ones.
     // That avoids stale data. The transaction makes it atomic to avoid
     // unstable router states due to random failures.
-    $txn = $this->connection->startTransaction();
-
-    $this->connection->delete($this->tableName)
-      ->condition('provider', $options['provider'])
-      ->execute();
-
-    $insert->execute();
-
-    // We want to reuse the dumper for multiple providers, so on dump, flush
-    // the queued routes.
-    $this->routes = NULL;
-
-    // Transaction ends here.
+    $transaction = $this->connection->startTransaction();
+    try {
+      $this->connection->delete($this->tableName)
+        ->condition('provider', $options['provider'])
+        ->execute();
+      $insert->execute();
+      // We want to reuse the dumper for multiple providers, so on dump, flush
+      // the queued routes.
+      $this->routes = NULL;
+    } catch (\Exception $e) {
+      $transaction->rollback();
+      watchdog_exception('Routing', $e);
+      throw $e;
+    }
   }
 
   /**
