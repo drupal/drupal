@@ -651,8 +651,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    * {@inheritdoc}
    */
   public function getUntranslated() {
-    $langcode = Language::LANGCODE_DEFAULT;
-    return isset($this->translations[$langcode]['entity']) ? $this->translations[$langcode]['entity'] : $this->getTranslation($langcode);
+    return $this->getTranslation(Language::LANGCODE_DEFAULT);
   }
 
   /**
