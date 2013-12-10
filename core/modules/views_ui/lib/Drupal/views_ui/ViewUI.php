@@ -807,7 +807,7 @@ class ViewUI implements ViewStorageInterface {
    *   TRUE if the view is locked, FALSE otherwise.
    */
   public function isLocked() {
-    return is_object($this->lock) && ($this->lock->owner != $GLOBALS['user']->id());
+    return is_object($this->lock) && ($this->lock->owner != \Drupal::currentUser()->id());
   }
 
   /**
