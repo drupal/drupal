@@ -34,7 +34,7 @@ use Drupal\user\UserInterface;
  *   admin_permission = "administer user",
  *   base_table = "users",
  *   uri_callback = "user_uri",
- *   label_callback = "user_label",
+ *   label_callback = "user_format_name",
  *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {

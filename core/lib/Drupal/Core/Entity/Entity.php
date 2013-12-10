@@ -110,7 +110,7 @@ abstract class Entity implements EntityInterface {
     $label = NULL;
     $entity_info = $this->entityInfo();
     if (isset($entity_info['label_callback']) && function_exists($entity_info['label_callback'])) {
-      $label = $entity_info['label_callback']($this->entityType, $this, $langcode);
+      $label = $entity_info['label_callback']($this, $langcode);
     }
     elseif (!empty($entity_info['entity_keys']['label']) && isset($this->{$entity_info['entity_keys']['label']})) {
       $label = $this->{$entity_info['entity_keys']['label']};

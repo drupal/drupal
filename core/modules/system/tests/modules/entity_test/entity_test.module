@@ -377,8 +377,6 @@ function entity_test_entity_test_insert($entity) {
 /**
  * Entity label callback.
  *
- * @param $entity_type
- *   The entity type.
  * @param $entity
  *   The entity object.
  * @param $langcocde
@@ -387,7 +385,7 @@ function entity_test_entity_test_insert($entity) {
  * @return
  *   The label of the entity prefixed with "label callback".
  */
-function entity_test_label_callback($entity_type, $entity, $langcode = NULL) {
+function entity_test_label_callback($entity, $langcode = NULL) {
   return 'label callback ' . $entity->name->value;
 }
 
