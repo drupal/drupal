@@ -2,6 +2,7 @@ id: entity_test.test_bundle_2.field_test_import_staging_2
 uuid: 49d6dd19-5097-443d-8f00-fc79525bebce
 langcode: und
 field_uuid: 2165d9aa-9a0c-41a1-be02-2a49f3405c00
+field_name: field_test_import_staging_2
 entity_type: entity_test
 bundle: test_bundle_2
 label: 'Test import field 2 on test bundle 2'

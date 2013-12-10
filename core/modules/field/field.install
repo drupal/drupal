@@ -76,6 +76,7 @@ function _update_8003_field_create_instance(array $field_config, array &$instanc
     'required' => FALSE,
     'uuid' => $uuid->generate(),
     'field_uuid' => $field_config['uuid'],
+    'field_name' => $field_config['name'],
     'field_type' => $field_config['type'],
     'default_value' => array(),
     'default_value_function' => '',
@@ -380,6 +381,7 @@ function field_update_8003() {
     $field_data[$record['entity_type'] . ':' . $record['id']] = array(
       'uuid' => $config['uuid'],
       'type' => $record['type'],
+      'name' => $record['field_name'],
     );
   }
 
@@ -393,6 +395,7 @@ function field_update_8003() {
       'id' => $record['entity_type'] . '.' . $record['bundle'] . '.' . $record['field_name'],
       'uuid' => $uuid->generate(),
       'field_uuid' => $field_data[$field_data_key]['uuid'],
+      'field_name' => $field_data[$field_data_key]['name'],
       'field_type' => $field_data[$field_data_key]['type'],
       'entity_type' => $record['entity_type'],
       'bundle' => $record['bundle'],

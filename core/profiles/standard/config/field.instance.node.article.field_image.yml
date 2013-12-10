@@ -1,9 +1,8 @@
 id: node.article.field_image
 uuid: 9601b8f1-65a9-46a6-a500-d072d1232449
-field_name: field_image
-field_uuid: 748beaea-5074-4ff2-b51c-28a643d37c3a
 entity_type: node
 bundle: article
+field_name: field_image
 label: Image
 description: ''
 required: false
