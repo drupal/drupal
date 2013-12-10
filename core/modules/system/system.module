@@ -183,9 +183,6 @@ function system_theme() {
       'variables' => array('menu_items' => NULL),
       'file' => 'system.admin.inc',
     ),
-    'system_powered_by' => array(
-      'variables' => array(),
-    ),
     'system_compact_link' => array(
       'variables' => array(),
     ),
@@ -2737,15 +2734,6 @@ function system_time_zones($blank = NULL) {
   // Sort the translated time zones alphabetically.
   asort($zones);
   return $zones;
-}
-
-/**
- * Returns HTML for the Powered by Drupal text.
- *
- * @ingroup themeable
- */
-function theme_system_powered_by() {
-  return '<span>' . t('Powered by <a href="@poweredby">Drupal</a>', array('@poweredby' => 'http://drupal.org')) . '</span>';
 }
 
 /**

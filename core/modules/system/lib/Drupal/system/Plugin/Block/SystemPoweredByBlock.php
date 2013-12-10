@@ -25,7 +25,7 @@ class SystemPoweredByBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    return array('#theme' => 'system_powered_by');
+    return array('#markup' => '<span>' . t('Powered by <a href="@poweredby">Drupal</a>', array('@poweredby' => 'http://drupal.org')) . '</span>');
   }
 
 }
