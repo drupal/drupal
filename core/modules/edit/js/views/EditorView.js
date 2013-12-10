@@ -179,7 +179,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
   save: function () {
     var fieldModel = this.fieldModel;
     var editorModel = this.model;
-    var backstageId = 'edit_backstage-' + this.fieldModel.id.replace(/[\/\_\s]/g, '-');
+    var backstageId = 'edit_backstage-' + this.fieldModel.id.replace(/[\/\[\]\_\s]/g, '-');
 
     function fillAndSubmitForm (value) {
       var $form = $('#' + backstageId).find('form');
@@ -193,7 +193,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
     }
 
     var formOptions = {
-      fieldID: this.fieldModel.id,
+      fieldID: this.fieldModel.get('fieldID'),
       $el: this.$el,
       nocssjs: true,
       // Reset an existing entry for this entity in the TempStore (if any) when

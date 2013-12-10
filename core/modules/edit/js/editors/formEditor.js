@@ -66,7 +66,7 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
     var fieldModel = this.fieldModel;
 
     // Generate a DOM-compatible ID for the form container DOM element.
-    var id = 'edit-form-for-' + fieldModel.id.replace(/\//g, '_');
+    var id = 'edit-form-for-' + fieldModel.id.replace(/[\/\[\]]/g, '_');
 
     // Render form container.
     var $formContainer = this.$formContainer = $(Drupal.theme('editFormContainer', {
@@ -91,7 +91,7 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
 
     // Load form, insert it into the form container and attach event handlers.
     var formOptions = {
-      fieldID: fieldModel.id,
+      fieldID: fieldModel.get('fieldID'),
       $el: this.$el,
       nocssjs: false,
       // Reset an existing entry for this entity in the TempStore (if any) when

@@ -34,7 +34,7 @@ Drupal.edit.editors.editor = Drupal.edit.EditorView.extend({
   initialize: function (options) {
     Drupal.edit.EditorView.prototype.initialize.call(this, options);
 
-    var metadata = Drupal.edit.metadata.get(this.fieldModel.id, 'custom');
+    var metadata = Drupal.edit.metadata.get(this.fieldModel.get('fieldID'), 'custom');
     this.textFormat = drupalSettings.editor.formats[metadata.format];
     this.textFormatHasTransformations = metadata.formatHasTransformations;
     this.textEditor = Drupal.editors[this.textFormat.editor];
@@ -160,7 +160,7 @@ Drupal.edit.editors.editor = Drupal.edit.EditorView.extend({
    * @see \Drupal\editor\Ajax\GetUntransformedTextCommand
    */
   _getUntransformedText: function (callback) {
-    var fieldID = this.fieldModel.id;
+    var fieldID = this.fieldModel.get('fieldID');
 
     // Create a Drupal.ajax instance to load the form.
     var textLoaderAjax = new Drupal.ajax(fieldID, this.$el, {
