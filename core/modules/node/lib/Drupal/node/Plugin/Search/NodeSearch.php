@@ -94,7 +94,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
    */
   protected $advanced = array(
     'type' => array('column' => 'n.type'),
-    'langcode' => array('column' => 'n.langcode'),
+    'langcode' => array('column' => 'i.langcode'),
     'author' => array('column' => 'n.uid'),
     'term' => array('column' => 'ti.tid', 'join' => array('table' => 'taxonomy_index', 'alias' => 'ti', 'condition' => 'n.nid = ti.nid')),
   );
@@ -230,7 +230,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
 
     foreach ($find as $item) {
       // Render the node.
-      $node = $node_storage->load($item->sid);
+      $node = $node_storage->load($item->sid)->getTranslation($item->langcode);
       $build = $node_render->view($node, 'search_result', $item->langcode);
       unset($build['#theme']);
       $node->rendered = drupal_render($build);
@@ -249,7 +249,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
       $results[] = array(
         'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
         'type' => check_plain($this->entityManager->getStorageController('node_type')->load($node->bundle())->label()),
-        'title' => $node->label($item->langcode),
+        'title' => $node->label(),
         'user' => drupal_render($username),
         'date' => $node->getChangedTime(),
         'node' => $node,
@@ -326,6 +326,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
     $node_render = $this->entityManager->getViewBuilder('node');
 
     foreach ($languages as $language) {
+      $node = $node->getTranslation($language->id);
       // Render the node.
       $build = $node_render->view($node, 'search_index', $language->id);
 
@@ -558,5 +559,4 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
       }
     }
   }
-
 }
