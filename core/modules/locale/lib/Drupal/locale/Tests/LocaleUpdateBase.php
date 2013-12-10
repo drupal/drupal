@@ -17,13 +17,6 @@ use Drupal\Component\Utility\String;
 class LocaleUpdateBase extends WebTestBase {
 
   /**
-   * The path of the translations directory where local translations are stored.
-   *
-   * @var string
-   */
-  protected $tranlations_directory;
-
-  /**
    * Timestamp for an old translation.
    *
    * @var integer
@@ -68,7 +61,6 @@ class LocaleUpdateBase extends WebTestBase {
    *   directory.
    */
   protected function setTranslationsDirectory($path) {
-    $this->tranlations_directory = $path;
     file_prepare_directory($path, FILE_CREATE_DIRECTORY);
     \Drupal::config('locale.settings')->set('translation.path', $path)->save();
   }
