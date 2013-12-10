@@ -54,13 +54,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   public $uuid;
 
   /**
-   * The name of the field attached to the bundle by this instance.
-   *
-   * @var string
-   */
-  public $field_name;
-
-  /**
    * The UUID of the field attached to the bundle by this instance.
    *
    * @var string
@@ -230,15 +223,15 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    *   class; see the class property documentation for details. Some array
    *   elements have special meanings and a few are required; these special
    *   elements are:
-   *   - field_name: The name of the field this is an instance of. This only
-   *     supports non-deleted fields.
-   *   - field_uuid: (optional) The uuid of the field this is an instance of.
-   *     If present, this has priority over the 'field_name' value.
+   *   - field_name: optional. The name of the field this is an instance of.
+   *   - field_uuid: optional. Either field_uuid or field_name is required
+   *     to build field instance. field_name will gain higher priority.
+   *     If field_name is not provided, field_uuid will be checked then.
    *   - entity_type: required.
    *   - bundle: required.
    *
    * In most cases, Field instance entities are created via
-   * entity_create('field_instance', $values), where $values is the same
+   * entity_create('field_instance', $values)), where $values is the same
    * parameter as in this constructor.
    *
    * @see entity_create()
@@ -246,30 +239,28 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * @ingroup field_crud
    */
   public function __construct(array $values, $entity_type = 'field_instance') {
-    // Field instances configuration is stored with a 'field_uuid' property
-    // unambiguously identifying the field.
-    if (isset($values['field_uuid'])) {
-      $field = field_info_field_by_id($values['field_uuid']);
-      if (!$field) {
-        throw new FieldException(format_string('Attempt to create an instance of unknown field @uuid', array('@uuid' => $values['field_uuid'])));
-      }
-      $values['field_name'] = $field->getFieldName();
-    }
-    // Alternatively, accept incoming 'field_name' instead of 'field_uuid', for
-    // easier DX on creation of new instances (either through programmatic
-    // creation / or through import of default config files).
-    elseif (isset($values['field_name']) && isset($values['entity_type'])) {
+    // Accept incoming 'field_name' instead of 'field_uuid', for easier DX on
+    // creation of new instances.
+    if (isset($values['field_name']) && isset($values['entity_type']) && !isset($values['field_uuid'])) {
       $field = field_info_field($values['entity_type'], $values['field_name']);
       if (!$field) {
         throw new FieldException(format_string('Attempt to create an instance of field @field_name that does not exist on entity type @entity_type.', array('@field_name' => $values['field_name'], '@entity_type' => $values['entity_type'])));
       }
-      $values['field_uuid'] = $field->uuid();
+      $values['field_uuid'] = $field->uuid;
+    }
+    elseif (isset($values['field_uuid'])) {
+      $field = field_info_field_by_id($values['field_uuid']);
+      if (!$field) {
+        throw new FieldException(format_string('Attempt to create an instance of unknown field @uuid', array('@uuid' => $values['field_uuid'])));
+      }
     }
     else {
       throw new FieldException('Attempt to create an instance of an unspecified field.');
     }
 
-    // At this point, we have a Field we can assign.
+    // At this point, we should have a 'field_uuid' and a Field. Ditch the
+    // 'field_name' property if it was provided, and assign the $field property.
+    unset($values['field_name']);
     $this->field = $field;
 
     // Discard the 'field_type' entry that is added in config records to ease
@@ -309,7 +300,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
       'status',
       'langcode',
       'field_uuid',
-      'field_name',
       'entity_type',
       'bundle',
       'label',
@@ -350,6 +340,8 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
       if ($prior_instance = $storage_controller->load($this->id())) {
         throw new FieldException(format_string('Attempt to create an instance of field %name on bundle @bundle that already has an instance of that field.', array('%name' => $this->field->name, '@bundle' => $this->bundle)));
       }
+      // Set the field UUID.
+      $this->field_uuid = $this->field->uuid;
       // Set the default instance settings.
       $this->settings += $field_type_manager->getDefaultInstanceSettings($this->field->type);
       // Notify the entity storage controller.
@@ -419,10 +411,9 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     // Delete fields that have no more instances.
     $fields_to_delete = array();
     foreach ($instances as $instance) {
-      $field = $instance->getField();
-      if (!$instance->deleted && empty($instance->noFieldDelete) && count($field->getBundles()) == 0) {
+      if (!$instance->deleted && empty($instance->noFieldDelete) && count($instance->field->getBundles()) == 0) {
         // Key by field UUID to avoid deleting the same field twice.
-        $fields_to_delete[$instance->field_uuid] = $field;
+        $fields_to_delete[$instance->field_uuid] = $instance->getField();
       }
     }
     if ($fields_to_delete) {
