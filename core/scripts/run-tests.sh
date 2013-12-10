@@ -295,7 +295,7 @@ function simpletest_script_init($server_software) {
   if (!empty($args['url'])) {
     $parsed_url = parse_url($args['url']);
     $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
-    $path = isset($parsed_url['path']) ? rtrim($parsed_url['path']) : '';
+    $path = isset($parsed_url['path']) ? rtrim(rtrim($parsed_url['path']), '/') : '';
     $port = (isset($parsed_url['port']) ? $parsed_url['port'] : $port);
     if ($path == '/') {
       $path = '';
