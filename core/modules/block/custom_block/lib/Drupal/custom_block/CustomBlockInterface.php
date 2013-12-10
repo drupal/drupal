@@ -16,6 +16,36 @@ use Drupal\Core\Entity\EntityChangedInterface;
 interface CustomBlockInterface extends ContentEntityInterface, EntityChangedInterface {
 
   /**
+   * Returns the block revision log message.
+   *
+   * @return string
+   *   The revision log message.
+   */
+  public function getRevisionLog();
+
+  /**
+   * Sets the block description.
+   *
+   * @param string $info
+   *   The block description.
+   *
+   * @return \Drupal\custom_block\CustomBlockInterface
+   *   The class instance that this method is called on.
+   */
+  public function setInfo($info);
+
+  /**
+   * Sets the block revision log message.
+   *
+   * @param string $log
+   *   The revision log message.
+   *
+   * @return \Drupal\custom_block\CustomBlockInterface
+   *   The class instance that this method is called on.
+   */
+  public function setRevisionLog($log);
+
+  /**
    * Sets the theme value.
    *
    * When creating a new custom block from the block library, the user is
@@ -24,6 +54,9 @@ interface CustomBlockInterface extends ContentEntityInterface, EntityChangedInte
    *
    * @param string $theme
    *   The theme name.
+   *
+   * @return \Drupal\custom_block\CustomBlockInterface
+   *   The class instance that this method is called on.
    */
   public function setTheme($theme);
 

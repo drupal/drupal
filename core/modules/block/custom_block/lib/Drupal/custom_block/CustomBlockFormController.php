@@ -27,10 +27,9 @@ class CustomBlockFormController extends ContentEntityFormController {
   protected function prepareEntity() {
     $block = $this->entity;
     // Set up default values, if required.
-    $block_type = entity_load('custom_block_type', $block->type->value);
-    // If this is a new custom block, fill in the default values.
-    if (isset($block->id->value)) {
-      $block->set('log', NULL);
+    $block_type = entity_load('custom_block_type', $block->bundle());
+    if (!$block->isNew()) {
+      $block->setRevisionLog(NULL);
     }
     // Always use the default revision setting.
     $block->setNewRevision($block_type->revision);
@@ -48,27 +47,19 @@ class CustomBlockFormController extends ContentEntityFormController {
     // Override the default CSS class name, since the user-defined custom block
     // type name in 'TYPE-block-form' potentially clashes with third-party class
     // names.
-    $form['#attributes']['class'][0] = drupal_html_class('block-' . $block->type->value . '-form');
+    $form['#attributes']['class'][0] = drupal_html_class('block-' . $block->bundle() . '-form');
 
     // Basic block information.
-    // These elements are just values so they are not even sent to the client.
-    foreach (array('revision_id', 'id') as $key) {
-      $form[$key] = array(
-        '#type' => 'value',
-        '#value' => $block->$key->value,
-      );
-    }
-
     $form['info'] = array(
       '#type' => 'textfield',
       '#title' => t('Block description'),
       '#required' => TRUE,
-      '#default_value' => $block->info->value,
+      '#default_value' => $block->label(),
       '#weight' => -5,
       '#description' => t('A brief description of your block. Used on the <a href="@overview">Blocks administration page</a>.', array('@overview' => url('admin/structure/block'))),
     );
 
-    $language_configuration = module_invoke('language', 'get_default_configuration', 'custom_block', $block->type->value);
+    $language_configuration = module_invoke('language', 'get_default_configuration', 'custom_block', $block->bundle());
 
     // Set the correct default language.
     if ($block->isNew() && !empty($language_configuration['langcode'])) {
@@ -79,7 +70,7 @@ class CustomBlockFormController extends ContentEntityFormController {
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $block->langcode->value,
+      '#default_value' => $block->getUntranslated()->language()->id,
       '#languages' => Language::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
@@ -130,7 +121,7 @@ class CustomBlockFormController extends ContentEntityFormController {
       '#type' => 'textarea',
       '#title' => t('Revision log message'),
       '#rows' => 4,
-      '#default_value' => $block->log->value,
+      '#default_value' => $block->getRevisionLog(),
       '#description' => t('Briefly describe the changes you have made.'),
     );
 
@@ -163,10 +154,10 @@ class CustomBlockFormController extends ContentEntityFormController {
    */
   public function save(array $form, array &$form_state) {
     $block = $this->entity;
-    $insert = empty($block->id->value);
+    $insert = $block->isNew();
     $block->save();
     $watchdog_args = array('@type' => $block->bundle(), '%info' => $block->label());
-    $block_type = entity_load('custom_block_type', $block->type->value);
+    $block_type = entity_load('custom_block_type', $block->bundle());
     $t_args = array('@type' => $block_type->label(), '%info' => $block->label());
 
     if ($insert) {
@@ -178,9 +169,9 @@ class CustomBlockFormController extends ContentEntityFormController {
       drupal_set_message(t('@type %info has been updated.', $t_args));
     }
 
-    if ($block->id->value) {
-      $form_state['values']['id'] = $block->id->value;
-      $form_state['id'] = $block->id->value;
+    if ($block->id()) {
+      $form_state['values']['id'] = $block->id();
+      $form_state['id'] = $block->id();
       if ($insert) {
         if (!$theme = $block->getTheme()) {
           $theme = $this->config('system.theme')->get('default');

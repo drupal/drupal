@@ -60,66 +60,6 @@ use Drupal\custom_block\CustomBlockInterface;
 class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
 
   /**
-   * The block ID.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $id;
-
-  /**
-   * The block revision ID.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $revision_id;
-
-  /**
-   * Indicates whether this is the default block revision.
-   *
-   * The default revision of a block is the one loaded when no specific revision
-   * has been specified. Only default revisions are saved to the block_custom
-   * table.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $isDefaultRevision = TRUE;
-
-  /**
-   * The block UUID.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $uuid;
-
-  /**
-   * The custom block type (bundle).
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $type;
-
-  /**
-   * The block language code.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $langcode;
-
-  /**
-   * The block description.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $info;
-
-  /**
-   * The block revision log message.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $log;
-
-  /**
    * The theme the block is being created in.
    *
    * When creating a new custom block from the block library, the user is
@@ -144,7 +84,7 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
    * {@inheritdoc}
    */
   public function getRevisionId() {
-    return $this->revision_id->value;
+    return $this->get('revision_id')->value;
   }
 
   /**
@@ -152,6 +92,7 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
    */
   public function setTheme($theme) {
     $this->theme = $theme;
+    return $this;
   }
 
   /**
@@ -162,30 +103,13 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
   }
 
   /**
-   * Initialize the object. Invoked upon construction and wake up.
-   */
-  protected function init() {
-    parent::init();
-    // We unset all defined properties except theme, so magic getters apply.
-    // $this->theme is a special use-case that is only used in the lifecycle of
-    // adding a new block using the block library.
-    unset($this->id);
-    unset($this->info);
-    unset($this->revision_id);
-    unset($this->log);
-    unset($this->uuid);
-    unset($this->type);
-    unset($this->new);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     parent::preSave($storage_controller);
 
     // Before saving the custom block, set changed time.
-    $this->changed->value = REQUEST_TIME;
+    $this->set('changed', REQUEST_TIME);
   }
 
   /**
@@ -202,7 +126,7 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
    * {@inheritdoc}
    */
   public function getInstances() {
-    return entity_load_multiple_by_properties('block', array('plugin' => 'custom_block:' . $this->uuid->value));
+    return entity_load_multiple_by_properties('block', array('plugin' => 'custom_block:' . $this->uuid()));
   }
 
   /**
@@ -227,7 +151,7 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
     elseif (isset($this->original) && (!isset($record->log) || $record->log === '')) {
       // If we are updating an existing custom_block without adding a new
       // revision and the user did not supply a log, keep the existing one.
-      $record->log = $this->original->log->value;
+      $record->log = $this->original->getRevisionLog();
     }
   }
 
@@ -290,6 +214,29 @@ class CustomBlock extends ContentEntityBase implements CustomBlockInterface {
    */
   public function getChangedTime() {
     return $this->get('changed')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionLog() {
+    return $this->get('log')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInfo($info) {
+    $this->set('info', $info);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionLog($log) {
+    $this->set('log', $log);
+    return $this;
   }
 
 }

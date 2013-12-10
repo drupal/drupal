@@ -40,13 +40,13 @@ function custom_block_test_custom_block_view(CustomBlock $custom_block, $view_mo
  * Implements hook_custom_block_presave().
  */
 function custom_block_test_custom_block_presave(CustomBlock $custom_block) {
-  if ($custom_block->info->value == 'testing_custom_block_presave') {
-    $custom_block->info->value .= '_presave';
+  if ($custom_block->label() == 'testing_custom_block_presave') {
+    $custom_block->setInfo($custom_block->label() .'_presave');
   }
   // Determine changes.
-  if (!empty($custom_block->original) && $custom_block->original->info->value == 'test_changes') {
-    if ($custom_block->original->info->value != $custom_block->info->value) {
-      $custom_block->info->value .= '_presave';
+  if (!empty($custom_block->original) && $custom_block->original->label() == 'test_changes') {
+    if ($custom_block->original->label() != $custom_block->label()) {
+      $custom_block->setInfo($custom_block->label() .'_presave');
       // Drupal 1.0 release.
       $custom_block->changed = 979534800;
     }
@@ -58,9 +58,9 @@ function custom_block_test_custom_block_presave(CustomBlock $custom_block) {
  */
 function custom_block_test_custom_block_update(CustomBlock $custom_block) {
   // Determine changes on update.
-  if (!empty($custom_block->original) && $custom_block->original->info->value == 'test_changes') {
-    if ($custom_block->original->info->value != $custom_block->info->value) {
-      $custom_block->info->value .= '_update';
+  if (!empty($custom_block->original) && $custom_block->original->label() == 'test_changes') {
+    if ($custom_block->original->label() != $custom_block->label()) {
+      $custom_block->setInfo($custom_block->label() .'_update');
     }
   }
 }
@@ -74,11 +74,11 @@ function custom_block_test_custom_block_update(CustomBlock $custom_block) {
  */
 function custom_block_test_custom_block_insert(CustomBlock $custom_block) {
   // Set the custom_block title to the custom_block ID and save.
-  if ($custom_block->info->value == 'new') {
-    $custom_block->info->value = 'CustomBlock ' . $custom_block->id->value;
+  if ($custom_block->label() == 'new') {
+    $custom_block->setInfo('CustomBlock ' . $custom_block->id());
     $custom_block->save();
   }
-  if ($custom_block->info->value == 'fail_creation') {
+  if ($custom_block->label() == 'fail_creation') {
     throw new Exception('Test exception for rollback.');
   }
 }

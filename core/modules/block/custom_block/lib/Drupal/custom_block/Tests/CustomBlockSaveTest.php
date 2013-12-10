@@ -60,7 +60,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
     $block->save();
 
     // Verify that block_submit did not wipe the provided id.
-    $this->assertEqual($block->id->value, $test_id, 'Block imported using provide id');
+    $this->assertEqual($block->id(), $test_id, 'Block imported using provide id');
 
     // Test the import saved.
     $block_by_id = custom_block_load($test_id);
@@ -82,7 +82,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
     $this->assertEqual($block->label(), 'test_changes', 'No changes have been determined.');
 
     // Apply changes.
-    $block->info->value = 'updated';
+    $block->setInfo('updated');
     $block->save();
 
     // The hook implementations custom_block_test_custom_block_presave() and
@@ -92,7 +92,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
     $this->assertEqual($block->getChangedTime(), 979534800, 'Saving a custom block uses "changed" timestamp set in presave hook.');
 
     // Test the static block load cache to be cleared.
-    $block = custom_block_load($block->id->value);
+    $block = custom_block_load($block->id());
     $this->assertEqual($block->label(), 'updated_presave', 'Static cache has been cleared.');
   }
 
@@ -109,7 +109,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
     // custom_block_test_custom_block_insert() tiggers a save on insert if the
     // title equals 'new'.
     $block = $this->createCustomBlock('new');
-    $this->assertEqual($block->label(), 'CustomBlock ' . $block->id->value, 'Custom block saved on block insert.');
+    $this->assertEqual($block->label(), 'CustomBlock ' . $block->id(), 'Custom block saved on block insert.');
   }
 
 }

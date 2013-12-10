@@ -36,7 +36,7 @@ class CustomBlockTranslationController extends ContentTranslationController {
    * Overrides ContentTranslationController::entityFormTitle().
    */
   protected function entityFormTitle(EntityInterface $entity) {
-    $block_type = entity_load('custom_block_type', $entity->type->value);
+    $block_type = entity_load('custom_block_type', $entity->bundle());
     return t('<em>Edit @type</em> @title', array('@type' => $block_type->label(), '@title' => $entity->label()));
   }
 

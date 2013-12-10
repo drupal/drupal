@@ -48,9 +48,9 @@ class CustomBlockLoadHooksTest extends CustomBlockTestBase {
     $custom_blocks = entity_load_multiple_by_properties('custom_block', array('type' => 'basic'));
     $loaded_custom_block = end($custom_blocks);
     $this->assertEqual($loaded_custom_block->custom_block_test_loaded_ids, array(
-      $custom_block1->id->value,
-      $custom_block2->id->value,
-      $custom_block3->id->value
+      $custom_block1->id(),
+      $custom_block2->id(),
+      $custom_block3->id(),
     ), 'hook_custom_block_load() received the correct list of custom_block IDs the first time it was called.');
     $this->assertEqual($loaded_custom_block->custom_block_test_loaded_types, array('basic'), 'hook_custom_block_load() received the correct list of custom block types the first time it was called.');
 
@@ -60,10 +60,10 @@ class CustomBlockLoadHooksTest extends CustomBlockTestBase {
     $custom_blocks = entity_load_multiple('custom_block', \Drupal::entityQuery('custom_block')->execute(), TRUE);
     $loaded_custom_block = end($custom_blocks);
     $this->assertEqual($loaded_custom_block->custom_block_test_loaded_ids, array(
-      $custom_block1->id->value,
-      $custom_block2->id->value,
-      $custom_block3->id->value,
-      $custom_block4->id->value
+      $custom_block1->id(),
+      $custom_block2->id(),
+      $custom_block3->id(),
+      $custom_block4->id(),
     ), 'hook_custom_block_load() received the correct list of custom_block IDs the second time it was called.');
     $this->assertEqual($loaded_custom_block->custom_block_test_loaded_types, array('basic', 'other'), 'hook_custom_block_load() received the correct list of custom_block types the second time it was called.');
   }

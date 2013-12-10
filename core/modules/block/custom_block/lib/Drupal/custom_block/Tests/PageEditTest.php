@@ -65,8 +65,8 @@ class PageEditTest extends CustomBlockTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Ensure that the block revision has been created.
-    $revised_block = entity_load('custom_block', $block->id->value, TRUE);
-    $this->assertNotIdentical($block->revision_id->value, $revised_block->revision_id->value, 'A new revision has been created.');
+    $revised_block = entity_load('custom_block', $block->id(), TRUE);
+    $this->assertNotIdentical($block->getRevisionId(), $revised_block->getRevisionId(), 'A new revision has been created.');
 
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
