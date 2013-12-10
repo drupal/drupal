@@ -2,7 +2,7 @@ base_field: uid
 base_table: users
 core: 8.x
 description: ''
-status: '1'
+status: true
 display:
   default:
     display_plugin: default
@@ -20,12 +20,12 @@ display:
         type: basic
         options:
           submit_button: Filter
-          reset_button: '1'
+          reset_button: true
           reset_button_label: Reset
       pager:
         type: full
         options:
-          items_per_page: '50'
+          items_per_page: 50
       style:
         type: table
         options:
@@ -41,8 +41,8 @@ display:
           table: users
           field: name
           label: Username
-          link_to_user: '1'
-          format_username: '1'
+          link_to_user: true
+          format_username: true
           plugin_id: user_name
           provider: user
         translation_link:
@@ -50,15 +50,15 @@ display:
           table: users
           field: translation_link
           label: 'Translation link'
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
           element_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           text: Translate
           plugin_id: content_translation_link
       filters:
@@ -68,9 +68,9 @@ display:
           field: uid_raw
           operator: '!='
           value:
-            value: '0'
-          group: '1'
-          exposed: '0'
+            value: 0
+          group: true
+          exposed: false
           plugin_id: numeric
           provider: views
       sorts:
@@ -87,7 +87,7 @@ display:
           id: area
           table: views
           field: area
-          empty: '1'
+          empty: true
           content: 'No people available.'
           format: plain_text
           plugin_id: text
