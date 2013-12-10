@@ -4,15 +4,13 @@
  * Default theme implementation for displaying a tablesort indicator.
  *
  * Available variables:
- * - image: A renderable image element.
  * - style: Either 'asc' or 'desc', indicating the sorting direction.
- * - uri: URI to ascending or descending image.
- *
- * @see template_preprocess_tablesort_indicator()
  *
  * @ingroup themeable
  */
 #}
-{% spaceless %}
-  {{ image }}
-{% endspaceless %}
+{% if style == 'asc' -%}
+  <img src="{{ url('core/misc/arrow-asc.png') }}" width="13" height="13" alt="{{ 'sort ascending'|t }}" title="{{ 'sort ascending'|t }}" />
+{% else -%}
+  <img src="{{ url('core/misc/arrow-desc.png') }}" width="13" height="13" alt="{{ 'sort descending'|t }}" title="{{ 'sort descending'|t }}" />
+{% endif %}
