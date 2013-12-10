@@ -1,6 +1,5 @@
 <?php
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\Number;
 use Drupal\Component\Utility\Settings;
@@ -21,6 +20,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\SystemListingInfo;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Render\Element;
 
 /**
  * @file
@@ -3821,7 +3821,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   }
 
   // Get the children of the element, sorted by weight.
-  $children = element_children($elements, TRUE);
+  $children = Element::children($elements, TRUE);
 
   // Initialize this element's #children, unless a #pre_render callback already
   // preset #children.
@@ -4668,23 +4668,35 @@ function drupal_sort_title($a, $b) {
 
 /**
  * Checks if the key is a property.
+ *
+ * @see \Drupal\Core\Render\Element::property()
+ *
+ * @deprecated as of Drupal 8.0. Use Element::property() instead.
  */
 function element_property($key) {
-  return $key[0] == '#';
+  return Element::property($key);
 }
 
 /**
  * Gets properties of a structured array element (keys beginning with '#').
+ *
+ * @see \Drupal\Core\Render\Element::properties()
+ *
+ * @deprecated as of Drupal 8.0. Use Element::properties() instead.
  */
 function element_properties($element) {
-  return array_filter(array_keys((array) $element), 'element_property');
+  return Element::properties($element);
 }
 
 /**
  * Checks if the key is a child.
+ *
+ * @see \Drupal\Core\Render\Element::child()
+ *
+ * @deprecated as of Drupal 8.0. Use Element::child() instead.
  */
 function element_child($key) {
-  return !isset($key[0]) || $key[0] != '#';
+  return Element::child($key);
 }
 
 /**
@@ -4700,43 +4712,13 @@ function element_child($key) {
  *
  * @return
  *   The array keys of the element's children.
+ *
+ * @see \Drupal\Core\Render\Element::children()
+ *
+ * @deprecated as of Drupal 8.0. Use Element::children() instead.
  */
 function element_children(&$elements, $sort = FALSE) {
-  // Do not attempt to sort elements which have already been sorted.
-  $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
-
-  // Filter out properties from the element, leaving only children.
-  $children = array();
-  $sortable = FALSE;
-  foreach ($elements as $key => $value) {
-    if ($key === '' || $key[0] !== '#') {
-      if (is_array($value)) {
-        $children[$key] = $value;
-        if (isset($value['#weight'])) {
-          $sortable = TRUE;
-        }
-      }
-      // Only trigger an error if the value is not null.
-      // @see http://drupal.org/node/1283892
-      elseif (isset($value)) {
-        trigger_error(t('"@key" is an invalid render array key', array('@key' => $key)), E_USER_ERROR);
-      }
-    }
-  }
-  // Sort the children if necessary.
-  if ($sort && $sortable) {
-    uasort($children, 'element_sort');
-    // Put the sorted children back into $elements in the correct order, to
-    // preserve sorting if the same element is passed through
-    // element_children() twice.
-    foreach ($children as $key => $child) {
-      unset($elements[$key]);
-      $elements[$key] = $child;
-    }
-    $elements['#sorted'] = TRUE;
-  }
-
-  return array_keys($children);
+  return Element::children($elements, $sort);
 }
 
 /**
@@ -4747,27 +4729,13 @@ function element_children(&$elements, $sort = FALSE) {
  *
  * @return
  *   The array keys of the element's visible children.
+ *
+ * @see \Drupal\Core\Render\Element::getVisibleChildren()
+ *
+ * @deprecated as of Drupal 8.0. Use Element::getVisibleChildren() instead.
  */
 function element_get_visible_children(array $elements) {
-  $visible_children = array();
-
-  foreach (element_children($elements) as $key) {
-    $child = $elements[$key];
-
-    // Skip un-accessible children.
-    if (isset($child['#access']) && !$child['#access']) {
-      continue;
-    }
-
-    // Skip value and hidden elements, since they are not rendered.
-    if (isset($child['#type']) && in_array($child['#type'], array('value', 'hidden'))) {
-      continue;
-    }
-
-    $visible_children[$key] = $child;
-  }
-
-  return array_keys($visible_children);
+  return Element::getVisibleChildren($elements);
 }
 
 /**
@@ -4781,18 +4749,13 @@ function element_get_visible_children(array $elements) {
  *   array('#propertyname' => 'attributename'). If both names are identical
  *   except for the leading '#', then an attribute name value is sufficient and
  *   no property name needs to be specified.
+ *
+ * @see \Drupal\Core\Render\Element::setAttributes()
+ *
+ * @deprecated as of Drupal 8.0. Use Element::setAttributes() instead.
  */
 function element_set_attributes(array &$element, array $map) {
-  foreach ($map as $property => $attribute) {
-    // If the key is numeric, the attribute name needs to be taken over.
-    if (is_int($property)) {
-      $property = '#' . $attribute;
-    }
-    // Do not overwrite already existing attributes.
-    if (isset($element[$property]) && !isset($element['#attributes'][$attribute])) {
-      $element['#attributes'][$attribute] = $element[$property];
-    }
-  }
+  Element::setAttributes($element, $map);
 }
 
 /**

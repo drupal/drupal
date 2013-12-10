@@ -15,6 +15,7 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\HttpKernel;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -1003,7 +1004,7 @@ class FormBuilder implements FormBuilderInterface {
    */
   protected function doValidateForm(&$elements, &$form_state, $form_id = NULL) {
     // Recurse through all children.
-    foreach ($this->elementChildren($elements) as $key) {
+    foreach (Element::children($elements) as $key) {
       if (isset($elements[$key]) && $elements[$key]) {
         $this->doValidateForm($elements[$key], $form_state);
       }
@@ -1162,7 +1163,7 @@ class FormBuilder implements FormBuilderInterface {
    */
   protected function setElementErrorsFromFormState(array &$elements, array &$form_state) {
     // Recurse through all children.
-    foreach ($this->elementChildren($elements) as $key) {
+    foreach (Element::children($elements) as $key) {
       if (isset($elements[$key]) && $elements[$key]) {
         $this->setElementErrorsFromFormState($elements[$key], $form_state);
       }
@@ -1367,7 +1368,7 @@ class FormBuilder implements FormBuilderInterface {
 
     // Recurse through all child elements.
     $count = 0;
-    foreach ($this->elementChildren($element) as $key) {
+    foreach (Element::children($element) as $key) {
       // Prior to checking properties of child elements, their default
       // properties need to be loaded.
       if (isset($element[$key]['#type']) && empty($element[$key]['#defaults_loaded']) && ($info = $this->getElementInfo($element[$key]['#type']))) {
@@ -1772,15 +1773,6 @@ class FormBuilder implements FormBuilderInterface {
    */
   protected function drupalSetMessage($message = NULL, $type = 'status', $repeat = FALSE) {
     return drupal_set_message($message, $type, $repeat);
-  }
-
-  /**
-   * Wraps element_children().
-   *
-   * @return array
-   */
-  protected function elementChildren(&$elements, $sort = FALSE) {
-    return element_children($elements, $sort);
   }
 
   /**

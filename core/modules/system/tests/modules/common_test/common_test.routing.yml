@@ -12,14 +12,6 @@ common_test.destination:
   requirements:
     _permission: 'access content'
 
-common_test.drupal_render_invalid_keys:
-  path: '/common-test/drupal-render-invalid-keys'
-  defaults:
-    _title: 'Drupal Render'
-    _content: '\Drupal\common_test\Controller\CommonTestController::drupalRenderInvalidKeys'
-  requirements:
-    _permission: 'access content'
-
 common_test.js_and_css_querystring:
   path: '/common-test/query-string'
   defaults:

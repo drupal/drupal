@@ -816,21 +816,6 @@ class TestFormBuilder extends FormBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function elementChildren(&$elements, $sort = FALSE) {
-    $children = array();
-    foreach ($elements as $key => $value) {
-      if ($key === '' || $key[0] !== '#') {
-        if (is_array($value)) {
-          $children[] = $key;
-        }
-      }
-    }
-    return $children;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function drupalHtmlClass($class) {
     return $class;
   }

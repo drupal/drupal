@@ -146,23 +146,6 @@ class RenderWebTest extends WebTestBase {
   }
 
   /**
-   * Tests rendering elements with invalid keys.
-   */
-  function testDrupalRenderInvalidKeys() {
-    $error = array(
-      '%type' => 'User error',
-      '!message' => '"child" is an invalid render array key',
-      '%function' => 'element_children()',
-    );
-    $message = t('%type: !message in %function (line ', $error);
-
-    \Drupal::config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_ALL)->save();
-    $this->drupalGet('common-test/drupal-render-invalid-keys');
-    $this->assertResponse(200, 'Received expected HTTP status code.');
-    $this->assertRaw($message, format_string('Found error message: !message.', array('!message' => $message)));
-  }
-
-  /**
    * Tests that elements are rendered properly.
    */
   protected function assertRenderedElement(array $element, $xpath, array $xpath_args = array()) {

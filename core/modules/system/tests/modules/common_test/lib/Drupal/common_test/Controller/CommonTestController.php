@@ -62,20 +62,6 @@ class CommonTestController implements ContainerInjectionInterface {
   }
 
   /**
-   * Renders an element with an invalid render array key.
-   *
-   * @return array
-   *   A render array.
-   */
-  public function drupalRenderInvalidKeys() {
-    define('SIMPLETEST_COLLECT_ERRORS', FALSE);
-    // Keys that begin with # may contain a value of any type, otherwise they must
-    // contain arrays.
-    $element = array('child' => 'This should be an array.');
-    return drupal_render($element);
-  }
-
-  /**
    * Adds a JavaScript file and a CSS file with a query string appended.
    *
    * @return string
