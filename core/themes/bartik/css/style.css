@@ -1579,7 +1579,6 @@ div.password-suggestions {
   float: left; /* LTR */
   font-size: 1em;
   margin-right: 5px;
-  width: 9em;
 }
 [dir="rtl"] #search-form input#edit-keys,
 [dir="rtl"] #block-search-form .form-item-search-block-form input {

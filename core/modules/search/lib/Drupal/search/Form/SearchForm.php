@@ -80,7 +80,7 @@ class SearchForm extends FormBase {
       '#type' => 'search',
       '#title' => $prompt,
       '#default_value' => $plugin->getKeywords(),
-      '#size' => $prompt ? 40 : 20,
+      '#size' => $prompt ? 30 : 20,
       '#maxlength' => 255,
     );
     // processed_keys is used to coordinate keyword passing between other forms
