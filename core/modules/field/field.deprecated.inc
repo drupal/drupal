@@ -895,18 +895,15 @@ function field_valid_language($langcode, $default = TRUE) {
  */
 function field_language(EntityInterface $entity, $field_name = NULL, $langcode = NULL) {
   $langcode = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode)->language()->id;
-  $definitions = $entity->getPropertyDefinitions();
   $translatable = field_has_translation_handler($entity->entityType());
   if (!isset($field_name)) {
     $display_langcodes = array();
-    foreach ($definitions as $name => $definition) {
-      if ($definition->isConfigurable()) {
-        $display_langcodes[$name] = $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
-      }
+    foreach ($entity->getPropertyDefinitions() as $name => $definition) {
+      $display_langcodes[$name] = $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
     }
     return $display_langcodes;
   }
-  elseif ($definitions[$field_name]->isConfigurable()) {
+  else {
     return $translatable ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
   }
 }
