@@ -26,8 +26,6 @@ class AjaxTestForm implements FormInterface {
    */
   public function buildForm(array $form, array &$form_state) {
 
-    drupal_set_title(t('Ajax Form contents'));
-
     $form['#action'] = url('ajax-test/dialog');
     $form['#cache'] = TRUE;
 
