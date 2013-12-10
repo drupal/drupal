@@ -261,8 +261,9 @@ Drupal.edit.AppView = Backbone.View.extend({
       fieldModel: fieldModel
     });
 
-    // Create in-place editor's toolbar — positions appropriately above the
-    // edited element.
+    // Create in-place editor's toolbar for this field — stored inside the
+    // entity toolbar, the entity toolbar will position itself appropriately
+    // above (or below) the edited element.
     var toolbarView = new Drupal.edit.FieldToolbarView({
       el: fieldToolbarRoot,
       model: fieldModel,
@@ -273,7 +274,7 @@ Drupal.edit.AppView = Backbone.View.extend({
 
     // Create decoration for edited element: padding if necessary, sets classes
     // on the element to style it according to the current state.
-    var decorationView = new Drupal.edit.EditorDecorationView({
+    var decorationView = new Drupal.edit.FieldDecorationView({
       el: $(editorView.getEditedElement()),
       model: fieldModel,
       editorView: editorView

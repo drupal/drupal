@@ -44,7 +44,7 @@ Drupal.edit.FieldModel = Backbone.Model.extend({
     // states in which the field is still changed.
     isChanged: false,
     // Is tracked by the EntityModel, is mirrored here solely for decorative
-    // purposes: so that EditorDecorationView.renderChanged() can react to it.
+    // purposes: so that FieldDecorationView.renderChanged() can react to it.
     inTempStore: false,
     // The full HTML representation of this field (with the element that has
     // the data-edit-field-id as the outer element). Used to propagate changes

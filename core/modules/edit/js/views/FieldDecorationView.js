@@ -7,7 +7,7 @@
 
 "use strict";
 
-Drupal.edit.EditorDecorationView = Backbone.View.extend({
+Drupal.edit.FieldDecorationView = Backbone.View.extend({
 
   _widthAttributeIsEmpty: null,
 
