@@ -73,6 +73,9 @@ field.instance.*.*.*:
     field_uuid:
       type: string
       label: 'Field UUID'
+    field_name:
+      type: string
+      label: 'Field name'
     bundle:
       type: string
       label: 'Bundle'
