@@ -403,7 +403,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       '#region_callback' => array($this, 'getRowRegion'),
       '#js_settings' => array('rowHandler' => 'field'),
       'human_name' => array(
-        '#markup' => check_plain($extra_field['label']),
+        '#markup' => $extra_field['label'],
       ),
       'weight' => array(
         '#type' => 'textfield',
