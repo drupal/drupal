@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\NodeInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 
@@ -937,6 +938,37 @@ function hook_node_type_update(\Drupal\node\NodeTypeInterface $type) {
  */
 function hook_node_type_delete(\Drupal\node\NodeTypeInterface $type) {
   drupal_set_message(t('You have just deleted a content type with the machine name %type.', array('%type' => $type->id())));
+}
+
+/**
+ * Alter the links of a node.
+ *
+ * @param array &$links
+ *   A renderable array representing the node links.
+ * @param \Drupal\node\NodeInterface $entity
+ *   The node being rendered.
+ * @param array &$context
+ *   Various aspects of the context in which the node links are going to be
+ *   displayed, with the following keys:
+ *   - 'view_mode': the view mode in which the comment is being viewed
+ *   - 'langcode': the language in which the comment is being viewed
+ *
+ * @see \Drupal\node\NodeViewBuilder::renderLinks()
+ * @see \Drupal\node\NodeViewBuilder::buildLinks()
+ */
+function hook_node_links_alter(array &$links, NodeInterface $entity, array &$context) {
+  $links['mymodule'] = array(
+    '#theme' => 'links__node__mymodule',
+    '#attributes' => array('class' => array('links', 'inline')),
+    '#links' => array(
+      'node-report' => array(
+        'title' => t('Report'),
+        'href' => "node/{$entity->id()}/report",
+        'html' => TRUE,
+        'query' => array('token' => \Drupal::getContainer()->get('csrf_token')->get("node/{$entity->id()}/report")),
+      ),
+    ),
+  );
 }
 
 /**

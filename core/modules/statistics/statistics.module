@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 use Drupal\entity\Entity\EntityDisplay;
 
 /**
@@ -56,30 +57,24 @@ function statistics_node_view(EntityInterface $node, EntityDisplay $display, $vi
       'type' => 'setting',
     );
   }
+}
 
-  if ($view_mode != 'rss') {
+/**
+ * Implements hook_node_links_alter().
+ */
+function statistics_node_links_alter(array &$node_links, NodeInterface $entity, array &$context) {
+  if ($context['view_mode'] != 'rss') {
     if (\Drupal::currentUser()->hasPermission('view post access counter')) {
-      $statistics = statistics_get($node->id());
+      $statistics = statistics_get($entity->id());
       if ($statistics) {
         $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 view', '@count views');
-        $node->content['links']['statistics'] = array(
+        $node_links['statistics'] = array(
           '#theme' => 'links__node__statistics',
           '#links' => $links,
           '#attributes' => array('class' => array('links', 'inline')),
         );
       }
     }
-  }
-}
-
-/**
- * Implements hook_node_view_alter().
- */
-function statistics_node_view_alter(&$build, EntityInterface $node, EntityDisplay $display) {
-  // If statistics were added to the node render array, we can't use the render
-  // cache.
-  if (isset($build['links']['statistics'])) {
-    unset($build['#cache']);
   }
 }
 
