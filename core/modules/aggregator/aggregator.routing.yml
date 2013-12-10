@@ -96,10 +96,9 @@ aggregator.sources:
     _permission: 'access news feeds'
 
 aggregator.opml_page:
-  path: '/aggregator/opml/{cid}'
+  path: '/aggregator/opml'
   defaults:
     _title: 'OPML feed'
     _controller: '\Drupal\aggregator\Controller\AggregatorController::opmlPage'
-    cid: null
   requirements:
     _permission: 'access news feeds'

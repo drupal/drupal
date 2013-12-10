@@ -249,7 +249,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response containing the OPML.
    */
-  public function opmlPage($cid = NULL) {
+  public function opmlPage() {
     $result = $this->database->query('SELECT * FROM {aggregator_feed} ORDER BY title');
 
     $feeds = $result->fetchAll();
