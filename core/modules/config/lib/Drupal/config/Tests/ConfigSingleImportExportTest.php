@@ -8,6 +8,7 @@
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests the user interface for importing/exporting a single configuration.
@@ -95,6 +96,25 @@ EOD;
     $this->assertIdentical($entity->id(), 'second');
     $this->assertFalse($entity->status());
     $this->assertIdentical($entity->uuid(), $second_uuid);
+  }
+
+  /**
+   * Tests importing a simple configuration file.
+   */
+  public function testImportSimpleConfiguration() {
+    $this->drupalLogin($this->drupalCreateUser(array('import configuration')));
+    $yaml = new Yaml();
+    $config = \Drupal::config('system.site')->set('name', 'Test simple import');
+    $edit = array(
+      'config_type' => 'system.simple',
+      'config_name' => $config->getName(),
+      'import' => $yaml->dump($config->get()),
+    );
+    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
+    $this->assertRaw(t('Are you sure you want to update the %name @type?', array('%name' => $config->getName(), '@type' => 'simple configuration')));
+    $this->drupalPostForm(NULL, array(), t('Confirm'));
+    $this->drupalGet('/');
+    $this->assertText('Test simple import');
   }
 
   /**

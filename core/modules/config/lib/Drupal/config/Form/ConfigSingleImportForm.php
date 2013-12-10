@@ -207,7 +207,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     }
     else {
       $config = $this->config($form_state['values']['config_name']);
-      $this->configExists = $config->isNew() ? $config : FALSE;
+      $this->configExists = !$config->isNew() ? $config : FALSE;
     }
 
     // Store the decoded version of the submitted import.
