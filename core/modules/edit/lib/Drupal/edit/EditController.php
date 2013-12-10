@@ -207,8 +207,8 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
   public function fieldForm(EntityInterface $entity, $field_name, $langcode, $view_mode_id, Request $request) {
     $response = new AjaxResponse();
 
-    // Replace entity with tempstore copy if available and not resetting, init
-    // tempstore copy otherwise.
+    // Replace entity with TempStore copy if available and not resetting, init
+    // TempStore copy otherwise.
     $tempstore_entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
     if ($tempstore_entity && $request->request->get('reset') !== 'true') {
       $entity = $tempstore_entity;
@@ -229,8 +229,8 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
     $form = drupal_build_form($form_object->getFormId(), $form_state);
 
     if (!empty($form_state['executed'])) {
-      // The form submission saved the entity in tempstore. Return the
-      // updated view of the field from the tempstore copy.
+      // The form submission saved the entity in TempStore. Return the
+      // updated view of the field from the TempStore copy.
       $entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
 
       // Render the field. If the view mode ID is not an Entity Display view
@@ -280,10 +280,13 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being edited.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The Ajax response.
    */
   public function entitySave(EntityInterface $entity) {
-    // Take the entity from tempstore and save in entity storage. fieldForm()
-    // ensures that the tempstore copy exists ahead.
+    // Take the entity from TempStore and save in entity storage. fieldForm()
+    // ensures that the TempStore copy exists ahead.
     $tempstore = $this->tempStoreFactory->get('edit');
     $tempstore->get($entity->uuid())->save();
     $tempstore->delete($entity->uuid());

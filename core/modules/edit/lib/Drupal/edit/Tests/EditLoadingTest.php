@@ -32,7 +32,7 @@ class EditLoadingTest extends WebTestBase {
     );
   }
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Create a text format.
@@ -79,7 +79,7 @@ class EditLoadingTest extends WebTestBase {
     // Library and in-place editors.
     $settings = $this->drupalGetSettings();
     $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/edit/js/edit.js']), 'Edit library not loaded.');
-    $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/edit/js/createjs/editingWidgets/formwidget.js']), "'form' in-place editor not loaded.");
+    $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/edit/js/editors/formEditor.js']), "'form' in-place editor not loaded.");
 
     // HTML annotation must always exist (to not break the render cache).
     $this->assertRaw('data-edit-entity-id="node/1"');
@@ -135,7 +135,7 @@ class EditLoadingTest extends WebTestBase {
     // Library and in-place editors.
     $settings = $this->drupalGetSettings();
     $this->assertTrue(isset($settings['ajaxPageState']['js']['core/modules/edit/js/edit.js']), 'Edit library loaded.');
-    $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/edit/js/createjs/editingWidgets/formwidget.js']), "'form' in-place editor not loaded.");
+    $this->assertFalse(isset($settings['ajaxPageState']['js']['core/modules/edit/js/editors/formEditor.js']), "'form' in-place editor not loaded.");
 
     // HTML annotation must always exist (to not break the render cache).
     $this->assertRaw('data-edit-entity-id="node/1"');

@@ -17,7 +17,7 @@
  * but before they are cached. Hence any alterations will be cached.
  *
  * @param array &$editors
- *   An array of informations on existing in-place editors, as collected by the
+ *   An array of metadata on existing in-place editors, as collected by the
  *   annotation discovery mechanism.
  *
  * @see \Drupal\edit\Annotation\InPlaceEditor
@@ -72,7 +72,7 @@ function hook_edit_editor_alter(&$editors) {
 function hook_edit_render_field(Drupal\Core\Entity\EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
   return array(
     '#prefix' => '<div class="example-markup">',
-    'field' => field_view_field($entity, $field_name),
+    'field' => field_view_field($entity, $field_name, $view_mode_id, $langcode),
     '#suffix' => '</div>',
   );
 }

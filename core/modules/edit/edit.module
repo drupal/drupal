@@ -76,6 +76,7 @@ function edit_library_info() {
     'js' => array(
       // Core.
       $path . '/js/edit.js' => $options,
+      $path . '/js/util.js' => $options,
       // Models.
       $path . '/js/models/AppModel.js' => $options,
       $path . '/js/models/EntityModel.js' => $options,
@@ -90,7 +91,6 @@ function edit_library_info() {
       $path . '/js/views/FieldToolbarView.js' => $options,
       $path . '/js/views/EditorView.js' => $options,
       // Other.
-      $path . '/js/util.js' => $options,
       $path . '/js/theme.js' => $options,
     ),
     'css' => array(

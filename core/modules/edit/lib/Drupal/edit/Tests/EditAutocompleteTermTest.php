@@ -66,7 +66,7 @@ class EditAutocompleteTermTest extends WebTestBase {
     );
   }
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $type = $this->drupalCreateContentType(array(

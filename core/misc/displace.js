@@ -13,7 +13,7 @@
   };
 
   /**
-   * Registers a resize hanlder on the window.
+   * Registers a resize handler on the window.
    */
   Drupal.behaviors.drupalDisplace = {
     attach: function () {

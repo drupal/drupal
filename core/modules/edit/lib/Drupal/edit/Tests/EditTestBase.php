@@ -24,7 +24,7 @@ class EditTestBase extends DrupalUnitTestBase {
   /**
    * Sets the default field storage backend for fields created during tests.
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->installSchema('system', 'variable');
