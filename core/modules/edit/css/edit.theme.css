@@ -4,12 +4,6 @@
  */
 
 /**
- * Hide comments on entities
- */
-.edit-entity-active .comment-wrapper {
-  display: none ;
-}
-/**
  * Editable.
  */
 .edit-field.edit-editable,

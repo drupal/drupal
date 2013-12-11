@@ -225,13 +225,35 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
      *     element that the 'my' element will be positioned against. Also known
      *     as the 'of' element.
      */
-    function refinePosition (suggested, info) {
+    function refinePosition (view, suggested, info) {
+      // Determine if the pointer should be on the top or bottom.
+      var isBelow = suggested.top > info.target.top;
+      info.element.element.toggleClass('edit-toolbar-pointer-top', isBelow);
+      // Don't position the toolbar past the first or last editable field if
+      // the entity is the target.
+      if (view.$entity[0] === info.target.element[0]) {
+        // Get the first or last field according to whether the toolbar is above
+        // or below the entity.
+        var $field = view.$entity.find('.edit-editable').eq((isBelow) ? -1 : 0);
+        if ($field.length > 0) {
+          suggested.top = (isBelow) ? ($field.offset().top + $field.outerHeight(true)) : $field.offset().top - info.element.element.outerHeight(true);
+        }
+      }
+      // Don't let the toolbar go outside the fence.
+      var fenceTop = view.$fence.offset().top;
+      var fenceHeight = view.$fence.height();
+      var toolbarHeight = info.element.element.outerHeight(true);
+      if (suggested.top < fenceTop) {
+        suggested.top = fenceTop;
+      }
+      else if ((suggested.top + toolbarHeight) > (fenceTop + fenceHeight)) {
+        suggested.top = fenceTop + fenceHeight - toolbarHeight;
+      }
+      // Position the toolbar.
       info.element.element.css({
         left: Math.floor(suggested.left),
         top: Math.floor(suggested.top)
       });
-      // Determine if the pointer should be on the top or bottom.
-      info.element.element.toggleClass('edit-toolbar-pointer-top', info.element.top > info.target.top);
     }
 
     /**
@@ -247,7 +269,7 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
           at: edge + '+' + (1 + horizontalPadding) + ' top',
           of: of,
           collision: 'flipfit',
-          using: refinePosition,
+          using: refinePosition.bind(null, that),
           within: that.$fence
         })
         // Resize the toolbar to match the dimensions of the field, up to a
