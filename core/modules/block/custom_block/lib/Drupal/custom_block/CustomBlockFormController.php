@@ -40,6 +40,7 @@ class CustomBlockFormController extends ContentEntityFormController {
    */
   public function form(array $form, array &$form_state) {
     $block = $this->entity;
+    $account = $this->currentUser();
 
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('Edit custom block %label', array('%label' => $block->label()));
@@ -96,14 +97,14 @@ class CustomBlockFormController extends ContentEntityFormController {
         'js' => array(drupal_get_path('module', 'custom_block') . '/custom_block.js'),
       ),
       '#weight' => 20,
-      '#access' => $block->isNewRevision() || user_access('administer blocks'),
+      '#access' => $block->isNewRevision() || $account->hasPermission('administer blocks'),
     );
 
     $form['revision_information']['revision'] = array(
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $block->isNewRevision(),
-      '#access' => user_access('administer blocks'),
+      '#access' => $account->hasPermission('administer blocks'),
     );
 
     // Check the revision log checkbox when the log textarea is filled in.

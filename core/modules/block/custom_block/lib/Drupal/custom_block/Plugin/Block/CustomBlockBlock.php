@@ -12,6 +12,7 @@ use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\block\Plugin\Type\BlockManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -42,6 +43,13 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
   protected $moduleHandler;
 
   /**
+   * The Drupal account to use for checking for access to block.
+   *
+   * @var \Drupal\Core\Session\AccountInterface.
+   */
+  protected $account;
+
+  /**
    * Constructs a new CustomBlockBlock.
    *
    * @param array $configuration
@@ -54,12 +62,15 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
    *   The Plugin Block Manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The Module Handler.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account for which view access should be checked.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, BlockManager $block_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, BlockManager $block_manager, ModuleHandlerInterface $module_handler, AccountInterface $account) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->blockManager = $block_manager;
     $this->moduleHandler = $module_handler;
+    $this->account = $account;
   }
 
   /**
@@ -71,7 +82,8 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
       $plugin_id,
       $plugin_definition,
       $container->get('plugin.manager.block'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('current_user')
     );
   }
 
@@ -134,7 +146,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
           '%uuid' => $uuid,
           '!url' => url('block/add')
         )),
-        '#access' => user_access('administer blocks')
+        '#access' => $this->account->hasPermission('administer blocks')
       );
     }
   }
