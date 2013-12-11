@@ -28,4 +28,16 @@ interface RouteProviderInterface extends RouteProviderBaseInterface {
    */
   public function getRoutesByPattern($pattern);
 
+  /**
+   * Returns all the routes on the system.
+   *
+   * Usage of this method is discouraged for performance reasons. If possible,
+   * use RouteProviderInterface::getRoutesByNames() or
+   * RouteProviderInterface::getRoutesByPattern() instead.
+   *
+   * @return \Symfony\Component\Routing\Route[]
+   *   An iterator of routes keyed by route name.
+   */
+  public function getAllRoutes();
+
 }

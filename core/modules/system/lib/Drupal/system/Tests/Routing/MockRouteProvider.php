@@ -75,5 +75,11 @@ class MockRouteProvider implements RouteProviderInterface {
     return new RouteCollection();
   }
 
+  /**
+   * @inheritdoc}
+   */
+  public function getAllRoutes() {
+    return $this->routes->all();
+  }
 
 }

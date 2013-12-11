@@ -262,4 +262,11 @@ class RouteProvider implements RouteProviderInterface {
     return $collection;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllRoutes() {
+    return new LazyLoadingRouteCollection($this->connection, $this->tableName);
+  }
+
 }
