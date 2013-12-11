@@ -237,7 +237,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
       // Default to the anonymous user.
       $name = '';
       if ($new_translation) {
-        $name = $GLOBALS['user']->getUsername();
+        $name = \Drupal::currentUser()->getUsername();
       }
       elseif ($entity->translation[$form_langcode]['uid']) {
         $name = user_load($entity->translation[$form_langcode]['uid'])->getUsername();

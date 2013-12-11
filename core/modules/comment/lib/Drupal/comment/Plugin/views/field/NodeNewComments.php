@@ -100,7 +100,7 @@ class NodeNewComments extends Numeric {
   }
 
   public function preRender(&$values) {
-    global $user;
+    $user = \Drupal::currentUser();
     if ($user->isAnonymous() || empty($values)) {
       return;
     }

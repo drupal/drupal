@@ -1276,7 +1276,6 @@ function comment_get_display_page($cid, $instance) {
  * @param \Drupal\comment\CommentInterface $comment
  */
 function comment_preview(CommentInterface $comment, array &$form_state) {
-  global $user;
   $preview_build = array();
   $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
 
@@ -1285,8 +1284,8 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
     if (!empty($comment->name->value)) {
       $account = user_load_by_name($comment->name->value);
     }
-    elseif ($user->isAuthenticated() && empty($comment->is_anonymous)) {
-      $account = $user;
+    elseif (\Drupal::currentUser()->isAuthenticated() && empty($comment->is_anonymous)) {
+      $account = \Drupal::currentUser();
     }
 
     if (!empty($account) && $account->isAuthenticated()) {
@@ -1514,13 +1513,12 @@ function template_preprocess_comment(&$variables) {
 function theme_comment_post_forbidden($variables) {
   $entity = $variables['commented_entity'];
   $field_name = $variables['field_name'];
-  global $user;
 
   // Since this is expensive to compute, we cache it so that a page with many
   // comments only has to query the database once for all the links.
   $authenticated_post_comments = &drupal_static(__FUNCTION__, NULL);
 
-  if ($user->isAnonymous()) {
+  if (\Drupal::currentUser()->isAnonymous()) {
     if (!isset($authenticated_post_comments)) {
       // We only output a link if we are certain that users will get permission
       // to post comments by logging in.
