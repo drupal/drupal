@@ -4,7 +4,6 @@ javascript:
   directory: languages
 translation:
   use_source: remote_and_local
-  check_disabled_modules: false
   default_filename: '%project-%version.%language.po'
   default_server_pattern: 'http://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po'
   overwrite_customized: false

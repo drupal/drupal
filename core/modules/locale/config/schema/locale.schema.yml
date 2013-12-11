@@ -24,9 +24,6 @@ locale.settings:
         use_source:
           type: string
           label: 'Translation source'
-        check_disabled_modules:
-          type: boolean
-          label: 'Check for updates of disabled modules and themes'
         default_filename:
           type: string
           label: 'Default translation filename pattern'

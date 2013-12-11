@@ -330,9 +330,8 @@ function locale_cron_fill_queue() {
   $query->join('locale_project', 'p', 'p.name = f.project');
   $query->condition('f.last_checked', $last, '<');
   $query->fields('f', array('project', 'langcode'));
-  if (!$config->get('translation.check_disabled_modules')) {
-    $query->condition('p.status', 1);
-  }
+  // Only currently installed / enabled components should be checked for.
+  $query->condition('p.status', 1);
   $files = $query->execute()->fetchAll();
   foreach ($files as $file) {
     $updates[$file->project][] = $file->langcode;

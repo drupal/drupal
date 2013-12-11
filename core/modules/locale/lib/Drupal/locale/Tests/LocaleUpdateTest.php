@@ -61,28 +61,6 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   }
 
   /**
-   * Check if a list of translatable projects can include hidden projects.
-   */
-  function testUpdateProjectsHidden() {
-    module_load_include('compare.inc', 'locale');
-    \Drupal::config('locale.settings');
-
-    // Make the test modules look like a normal custom module.
-    \Drupal::state()->set('locale.test_system_info_alter', TRUE);
-    $this->resetAll();
-
-    // Set test condition: include disabled modules when building a project list.
-    $edit = array(
-      'check_disabled_modules' => TRUE,
-    );
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
-
-    $projects = locale_translation_project_list();
-    $this->assertTrue(isset($projects['locale_test_translate']), 'Disabled module found');
-    $this->assertTrue(isset($projects['locale_test']), 'Enabled module found');
-  }
-
-  /**
    * Checks if local or remote translation sources are detected.
    *
    * The translation status process by default checks the status of the

@@ -142,10 +142,6 @@ function locale_translation_project_list() {
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $module_data, 'module', TRUE, $additional_whitelist);
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE, $additional_whitelist);
-    if ($config->get('translation.check_disabled_modules')) {
-      $project_info->processInfoList($projects, $module_data, 'module', FALSE, $additional_whitelist);
-      $project_info->processInfoList($projects, $theme_data, 'theme', FALSE, $additional_whitelist);
-    }
 
     // Allow other modules to alter projects before fetching and comparing.
     drupal_alter('locale_translation_projects', $projects);
