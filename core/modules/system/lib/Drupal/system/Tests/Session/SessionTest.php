@@ -78,8 +78,7 @@ class SessionTest extends WebTestBase {
   }
 
   /**
-   * Test data persistence via the session_test module callbacks. Also tests
-   * drupal_session_count() since session data is already generated here.
+   * Test data persistence via the session_test module callbacks.
    */
   function testDataPersistence() {
     $user = $this->drupalCreateUser(array('access content'));
