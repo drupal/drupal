@@ -597,6 +597,13 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     $this->bundle_rename_allowed = TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function targetBundle() {
+    return $this->bundle;
+  }
+
   /*
    * Implements the magic __sleep() method.
    *

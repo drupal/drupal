@@ -19,14 +19,19 @@ namespace Drupal\config_translation;
 class ConfigFieldInstanceMapper extends ConfigEntityMapper {
 
   /**
+   * Loaded entity instance to help produce the translation interface.
+   *
+   * @var \Drupal\field\FieldInstanceInterface
+   */
+  protected $entity;
+
+  /**
    * {@inheritdoc}
    */
   public function getBaseRouteParameters() {
     $parameters = parent::getBaseRouteParameters();
     $base_entity_info = $this->entityManager->getDefinition($this->pluginDefinition['base_entity_type']);
-    // @todo Field instances have no method to return the bundle the instance is
-    //   attached to. See https://drupal.org/node/2134861
-    $parameters[$base_entity_info['bundle_entity_type']] = $this->entity->bundle;
+    $parameters[$base_entity_info['bundle_entity_type']] = $this->entity->targetBundle();
     return $parameters;
   }
 

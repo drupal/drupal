@@ -32,4 +32,12 @@ interface FieldInstanceInterface extends ConfigEntityInterface, FieldDefinitionI
    */
   public function allowBundleRename();
 
+  /**
+   * Returns the name of the bundle this field instance is attached to.
+   *
+   * @return string
+   *   The name of the bundle this field instance is attached to.
+   */
+  public function targetBundle();
+
 }
