@@ -3,8 +3,8 @@ uuid: adaef6a9-8dc0-4f2e-9858-88daac440aa9
 targetEntityType: taxonomy_term
 bundle: forums
 mode: default
-status: 1
+status: true
 content:
   description:
-    weight: '0'
-    visible: '1'
+    weight: 0
+    visible: true

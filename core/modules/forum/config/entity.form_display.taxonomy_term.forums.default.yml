@@ -3,11 +3,11 @@ uuid: c8eab085-8fd3-4545-8600-e13b7d8bb9c4
 targetEntityType: taxonomy_term
 bundle: forums
 mode: default
-status: 1
+status: true
 content:
   name:
-    weight: '-5'
-    visible: '1'
+    weight: -5
+    visible: true
   description:
-    weight: '0'
-    visible: '1'
+    weight: 0
+    visible: true
