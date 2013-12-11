@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Breadcrumb;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
@@ -85,7 +86,7 @@ class BreadcrumbManager implements BreadcrumbBuilderInterface {
         break;
       }
       else {
-        throw new \UnexpectedValueException(format_string('Invalid breadcrumb returned by !class::build().', array('!class' => get_class($builder))));
+        throw new \UnexpectedValueException(String::format('Invalid breadcrumb returned by !class::build().', array('!class' => get_class($builder))));
       }
     }
     // Allow modules to alter the breadcrumb.
