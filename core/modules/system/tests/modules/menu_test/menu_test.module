@@ -293,6 +293,11 @@ function menu_test_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
+  $items['menu-test/context'] = array(
+    'title' => \Drupal::config('menu_test.menu_item')->get('title'),
+    'route_name' => 'menu_test.context',
+  );
+
   return $items;
 }
 
