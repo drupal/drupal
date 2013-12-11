@@ -10,7 +10,7 @@ namespace Drupal\views\EventSubscriber;
 use Drupal\Component\Utility\MapArray;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
 use Drupal\views\ViewExecutable;
@@ -44,7 +44,7 @@ class RouteSubscriber extends RouteSubscriberBase implements DestructableInterfa
   /**
    * The state key value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected $state;
 
@@ -60,10 +60,10 @@ class RouteSubscriber extends RouteSubscriberBase implements DestructableInterfa
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\KeyValueStore\StateInterface $state
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
    *   The state key value store.
    */
-  public function __construct(EntityManagerInterface $entity_manager, StateInterface $state) {
+  public function __construct(EntityManagerInterface $entity_manager, KeyValueStoreInterface $state) {
     $this->viewStorageController = $entity_manager->getStorageController('view');
     $this->state = $state;
   }

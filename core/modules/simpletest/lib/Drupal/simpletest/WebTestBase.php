@@ -1008,7 +1008,6 @@ abstract class WebTestBase extends TestBase {
     // Clear the tag cache.
     drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
     \Drupal::service('config.factory')->reset();
-    \Drupal::state()->resetCache();
   }
 
   /**

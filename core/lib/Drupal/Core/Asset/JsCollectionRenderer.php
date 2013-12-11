@@ -6,7 +6,8 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Core\Asset\AssetCollectionRendererInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 
 /**
  * Renders JavaScript assets.
@@ -16,17 +17,17 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
   /**
    * The state key/value store.
    *
-   * @var \Drupal\Core\KeyValueStore\StateInterface
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected $state;
 
   /**
    * Constructs a CssCollectionRenderer.
    *
-   * @param \Drupal\Core\KeyValueStore\StateInterface
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    *   The state key/value store.
    */
-  public function __construct(StateInterface $state) {
+  public function __construct(KeyValueStoreInterface $state) {
     $this->state = $state;
   }
 
