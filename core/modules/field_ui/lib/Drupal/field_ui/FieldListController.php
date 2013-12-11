@@ -89,13 +89,13 @@ class FieldListController extends ConfigEntityListController {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row['id'] = t('Field name');
-    $row['type'] = array(
+    $header['id'] = t('Field name');
+    $header['type'] = array(
       'data' => t('Field type'),
       'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
     );
-    $row['usage'] = t('Used in');
-    return $row;
+    $header['usage'] = t('Used in');
+    return $header;
   }
 
   /**
