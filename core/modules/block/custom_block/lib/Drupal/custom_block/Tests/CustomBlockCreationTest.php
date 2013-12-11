@@ -78,6 +78,10 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     $this->drupalGet('admin/structure/block/manage/testblock');
     $this->assertFieldByXPath('//select[@name="settings[custom_block][view_mode]"]/option[@selected="selected"]/@value', 'test_view_mode', 'View mode changed to Test View Mode');
 
+    // Test the available view mode options.
+    $this->assertOption('edit-settings-custom-block-view-mode', 'default', 'The default view mode is available.');
+    $this->assertOption('edit-settings-custom-block-view-mode', 'full', 'The full view mode is available.');
+
     // Check that the block exists in the database.
     $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info']));
     $block = reset($blocks);

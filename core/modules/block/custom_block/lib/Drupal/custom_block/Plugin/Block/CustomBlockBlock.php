@@ -92,7 +92,7 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
    * Adds body and description fields to the block configuration form.
    */
   public function blockForm($form, &$form_state) {
-    $options = array();
+    $options = array('default' => t('Default'));
     $view_modes = entity_get_view_modes('custom_block');
     foreach ($view_modes as $view_mode => $detail) {
       $options[$view_mode] = $detail['label'];
