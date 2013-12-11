@@ -1088,7 +1088,7 @@ function system_library_info() {
     'title' => 'Drupal autocomplete',
     'version' => \Drupal::VERSION,
     'js' => array(
-      'core/misc/autocomplete.js' => array('group' => JS_DEFAULT),
+      'core/misc/autocomplete.js' => array('group' => JS_LIBRARY, 'weight' => -1),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
