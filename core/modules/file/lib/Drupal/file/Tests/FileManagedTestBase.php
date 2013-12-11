@@ -38,6 +38,8 @@ abstract class FileManagedTestBase extends FileTestBase {
    *   'insert', etc.
    */
   function assertFileHooksCalled($expected) {
+    \Drupal::state()->resetCache();
+
     // Determine which hooks were called.
     $actual = array_keys(array_filter(file_test_get_all_calls()));
 

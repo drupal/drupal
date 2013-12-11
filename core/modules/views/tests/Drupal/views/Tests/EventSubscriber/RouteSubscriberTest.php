@@ -44,7 +44,7 @@ class RouteSubscriberTest extends UnitTestCase {
   /**
    * The mocked key value storage.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\KeyValueStore\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $state;
 
@@ -68,7 +68,7 @@ class RouteSubscriberTest extends UnitTestCase {
       ->method('getStorageController')
       ->with('view')
       ->will($this->returnValue($this->viewStorageController));
-    $this->state = $this->getMock('\Drupal\Core\KeyValueStore\KeyValueStoreInterface');
+    $this->state = $this->getMock('\Drupal\Core\KeyValueStore\StateInterface');
     $this->routeSubscriber = new TestRouteSubscriber($this->entityManager, $this->state);
   }
 

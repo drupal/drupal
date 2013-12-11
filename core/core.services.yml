@@ -137,10 +137,10 @@ services:
     factory_class: Drupal\Component\Utility\Settings
     factory_method: getSingleton
   state:
-    class: Drupal\Core\KeyValueStore\KeyValueStoreInterface
-    factory_method: get
-    factory_service: keyvalue
-    arguments: [state]
+    class: Drupal\Core\KeyValueStore\State
+    arguments: ['@keyvalue']
+    tags:
+      - { name: persist }
   queue:
     class: Drupal\Core\Queue\QueueFactory
     arguments: ['@settings']

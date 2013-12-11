@@ -9,7 +9,7 @@ namespace Drupal\Core\Language;
 
 use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\KeyValueStore\StateInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,7 +27,7 @@ class LanguageManager {
   /**
    * The Key/Value Store to use for state.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @var \Drupal\Core\KeyValueStore\StateInterface
    */
   protected $state = NULL;
 
@@ -65,12 +65,12 @@ class LanguageManager {
   /**
    * Constructs an LanguageManager object.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
+   * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   (optional) The state keyvalue store. Defaults to NULL.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   (optional) The module handler service. Defaults to NULL.
    */
-  public function __construct(KeyValueStoreInterface $state = NULL, ModuleHandlerInterface $module_handler = NULL) {
+  public function __construct(StateInterface $state = NULL, ModuleHandlerInterface $module_handler = NULL) {
     $this->state = $state;
     $this->moduleHandler = $module_handler;
   }

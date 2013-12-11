@@ -82,7 +82,7 @@ class CollectRoutesTest extends UnitTestCase {
       ->getMock();
     $container->set('router.route_provider', $route_provider);
 
-    $state = $this->getMock('\Drupal\Core\KeyValueStore\KeyValueStoreInterface');
+    $state = $this->getMock('\Drupal\Core\KeyValueStore\StateInterface');
     $container->set('state', $state);
 
     $style_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')

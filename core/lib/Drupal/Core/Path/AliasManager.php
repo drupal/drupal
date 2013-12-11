@@ -21,13 +21,6 @@ class AliasManager implements AliasManagerInterface {
   protected $connection;
 
   /**
-   * The Key/Value Store to use for state
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $state;
-
-  /**
    * Language manager for retrieving the default langcode when none is specified.
    *
    * @var \Drupal\Core\Language\LanguageManager

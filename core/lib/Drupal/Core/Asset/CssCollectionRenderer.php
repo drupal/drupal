@@ -6,9 +6,8 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\Asset\AssetCollectionRendererInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Component\Utility\String;
+use Drupal\Core\KeyValueStore\StateInterface;
 
 /**
  * Renders CSS assets.
@@ -18,17 +17,17 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   /**
    * The state key/value store.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @var \Drupal\Core\KeyValueStore\StateInterface
    */
   protected $state;
 
   /**
    * Constructs a CssCollectionRenderer.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @param \Drupal\Core\KeyValueStore\StateInterface
    *   The state key/value store.
    */
-  public function __construct(KeyValueStoreInterface $state) {
+  public function __construct(StateInterface $state) {
     $this->state = $state;
   }
 

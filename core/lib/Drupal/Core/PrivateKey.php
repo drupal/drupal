@@ -7,7 +7,7 @@
 
 namespace Drupal\Core;
 
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Component\Utility\Crypt;
 
 /**
@@ -18,17 +18,17 @@ class PrivateKey {
   /**
    * The state service.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @var \Drupal\Core\KeyValueStore\StateInterface
    */
   protected $state;
 
   /**
    * Constructs the token generator.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
+   * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state service.
    */
-  function __construct(KeyValueStoreInterface $state) {
+  function __construct(StateInterface $state) {
     $this->state = $state;
   }
 
