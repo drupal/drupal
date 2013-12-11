@@ -60,9 +60,8 @@ class HistoryUserTimestamp extends FilterPluginBase {
   }
 
   public function query() {
-    global $user;
     // This can only work if we're authenticated in.
-    if (!$user->isAuthenticated()) {
+    if (!\Drupal::currentUser()->isAuthenticated()) {
       return;
     }
 

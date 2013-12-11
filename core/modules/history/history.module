@@ -100,10 +100,9 @@ function history_read_multiple($nids) {
  *   current user.
  */
 function history_write($nid, $account = NULL) {
-  global $user;
 
   if (!isset($account)) {
-    $account = $user;
+    $account = \Drupal::currentUser();
   }
 
   if ($account->isAuthenticated()) {
