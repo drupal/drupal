@@ -611,13 +611,16 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
           ->execute();
       }
 
+      foreach ($entities as $entity) {
+        $this->invokeFieldMethod('delete', $entity);
+        $this->deleteFieldItems($entity);
+      }
+
       // Reset the cache as soon as the changes have been applied.
       $this->resetCache($ids);
 
       $entity_class::postDelete($this, $entities);
       foreach ($entities as $entity) {
-        $this->invokeFieldMethod('delete', $entity);
-        $this->deleteFieldItems($entity);
         $this->invokeHook('delete', $entity);
       }
       // Ignore slave server temporarily.
@@ -669,11 +672,11 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
         if ($this->revisionDataTable) {
           $this->savePropertyData($entity, 'revision_data_table');
         }
-        $this->resetCache(array($entity->id()));
         $entity->setNewRevision(FALSE);
-        $entity->postSave($this, TRUE);
         $this->invokeFieldMethod('update', $entity);
         $this->saveFieldItems($entity, TRUE);
+        $this->resetCache(array($entity->id()));
+        $entity->postSave($this, TRUE);
         $this->invokeHook('update', $entity);
         if ($this->dataTable) {
           $this->invokeTranslationHooks($entity);
@@ -696,13 +699,13 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
           $this->savePropertyData($entity, 'revision_data_table');
         }
 
-        // Reset general caches, but keep caches specific to certain entities.
-        $this->resetCache(array());
 
         $entity->enforceIsNew(FALSE);
-        $entity->postSave($this, FALSE);
         $this->invokeFieldMethod('insert', $entity);
         $this->saveFieldItems($entity, FALSE);
+        // Reset general caches, but keep caches specific to certain entities.
+        $this->resetCache(array());
+        $entity->postSave($this, FALSE);
         $this->invokeHook('insert', $entity);
       }
 

@@ -287,7 +287,10 @@ function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
- * Act on entities when inserted.
+ * Respond to creation of a new entity.
+ *
+ * This hook runs once the entity has been stored. Note that hook
+ * implementations may not alter the stored entity data.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -305,7 +308,10 @@ function hook_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
- * Act on entities when updated.
+ * Respond to updates to an entity.
+ *
+ * This hook runs once the entity storage has been updated. Note that hook
+ * implementations may not alter the stored entity data.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
@@ -322,7 +328,10 @@ function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
- * Acts after storing a new entity translation.
+ * Respond to creation of a new entity translation.
+ *
+ * This hook runs once the entity translation has been stored. Note that hook
+ * implementations may not alter the stored entity translation data.
  *
  * @param \Drupal\Core\Entity\EntityInterface $translation
  *   The entity object of the translation just stored.
@@ -336,7 +345,9 @@ function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $tra
 }
 
 /**
- * Acts after deleting an entity translation from the storage.
+ * Respond to entity translation deletion.
+ *
+ * This hook runs once the entity translation has been deleted from storage.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The original entity object.
@@ -352,8 +363,6 @@ function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $tra
 
 /**
  * Act before entity deletion.
- *
- * This hook runs after the entity type-specific predelete hook.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity that is about to be deleted.
@@ -382,7 +391,7 @@ function hook_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
 /**
  * Respond to entity deletion.
  *
- * This hook runs after the entity type-specific delete hook.
+ * This hook runs once the entity has been deleted from the storage.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity that has been deleted.
@@ -398,7 +407,7 @@ function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 /**
  * Respond to entity revision deletion.
  *
- * This hook runs after the entity type-specific revision delete hook.
+ * This hook runs once the entity revision has been deleted from the storage.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity revision that has been deleted.
