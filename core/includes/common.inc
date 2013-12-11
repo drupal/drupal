@@ -1827,6 +1827,9 @@ function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_
   // We strip out any character not in the above list.
   $identifier = preg_replace('/[^\x{002D}\x{0030}-\x{0039}\x{0041}-\x{005A}\x{005F}\x{0061}-\x{007A}\x{00A1}-\x{FFFF}]/u', '', $identifier);
 
+  // Identifiers cannot start with a digit, two hyphens, or a hyphen followed by a digit.
+  $identifier = preg_replace(array('/^[0-9]/', '/^(-[0-9])|^(--)/'), array('_', '__') , $identifier);
+
   return $identifier;
 }
 
