@@ -916,9 +916,11 @@ function locale_update_8015() {
         'description' => 'Version tag of the imported file.',
       ),
       'uri' => array(
-        'description' => 'File system path for importing the file.',
-        'type' => 'text',
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => TRUE,
+        'default' => '',
+        'description' => 'URI of the remote file, the resulting local file or the locally imported file.',
       ),
       'timestamp' => array(
         'type' => 'int',
