@@ -23,8 +23,9 @@ Drupal.edit.editors.plain_text = Drupal.edit.EditorView.extend({
 
     // Store the original value of this field. Necessary for reverting changes.
     var $textElement;
-    if (this.$el.is(':has(.field-item)')) {
-      $textElement = this.$textElement = this.$el.find('.field-item:first');
+    var $fieldItems = this.$el.find('.field-item');
+    if ($fieldItems.length) {
+      $textElement = this.$textElement = $fieldItems.eq(0);
     }
     else {
       $textElement = this.$textElement = this.$el;
