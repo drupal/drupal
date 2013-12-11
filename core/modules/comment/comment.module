@@ -912,6 +912,11 @@ function comment_entity_load($entities, $entity_type) {
   foreach ($result as $record) {
     $parts = explode('__', $record->field_id, 2);
     list(, $field_name) = $parts;
+
+    // Skip fields that entity does not have.
+    if (!$entities[$record->entity_id]->hasField($field_name)) {
+      continue;
+    }
     $comment_statistics = $entities[$record->entity_id]->get($field_name);
     $comment_statistics->cid = $record->cid;
     $comment_statistics->last_comment_timestamp = $record->last_comment_timestamp;

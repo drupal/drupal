@@ -37,8 +37,47 @@ class ForumUninstallTest extends WebTestBase {
     $field = field_info_field('node', 'taxonomy_forums');
     $this->assertNotNull($field, 'The taxonomy_forums field exists.');
 
+    // Create a taxonomy term.
+    $term = entity_create('taxonomy_term', array(
+      'name' => t('A term'),
+      'langcode' => language_default()->id,
+      'description' => '',
+      'parent' => array(0),
+      'vid' => 'forums',
+      'forum_container' => 0,
+    ));
+    $term->save();
+
+    // Create a forum node.
+    $node = $this->drupalCreateNode(array(
+      'title' => 'A forum post',
+      'type' => 'forum',
+      'taxonomy_forums' => array(array('target_id' => $term->id())),
+    ));
+
+    // Create at least one comment against the forum node.
+    $comment = entity_create('comment', array(
+      'entity_id' => $node->nid->value,
+      'entity_type' => 'node',
+      'field_name' => 'comment_forum',
+      'pid' => 0,
+      'uid' => 0,
+      'status' => COMMENT_PUBLISHED,
+      'subject' => $this->randomName(),
+      'hostname' => '127.0.0.1',
+    ));
+    $comment->save();
+
     // Uninstall the forum module which should trigger field deletion.
     $this->container->get('module_handler')->uninstall(array('forum'));
+
+    // We want to test the handling of removing the forum comment field, so we
+    // ensure there is at least one other comment field attached to a node type
+    // so that comment_entity_load() runs for nodes.
+    \Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'another_comment_field', COMMENT_OPEN);
+
+    $this->drupalGet('node/' . $node->nid->value);
+    $this->assertResponse(200);
 
     // Check that the field is now deleted.
     $field = field_info_field('node', 'taxonomy_forums');
