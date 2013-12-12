@@ -79,9 +79,9 @@ class UserStorageController extends FieldableDatabaseStorageController implement
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
+   * {@inheritdoc}
    */
-  function attachLoad(&$queried_users, $load_revision = FALSE) {
+  function postLoad(array &$queried_users) {
     foreach ($queried_users as $key => $record) {
       $queried_users[$key]->roles = array();
       if ($record->uid) {
@@ -95,9 +95,9 @@ class UserStorageController extends FieldableDatabaseStorageController implement
     // Add any additional roles from the database.
     $this->addRoles($queried_users);
 
-    // Call the default attachLoad() method. This will add fields and call
+    // Call the default postLoad() method. This will add fields and call
     // hook_user_load().
-    parent::attachLoad($queried_users, $load_revision);
+    parent::postLoad($queried_users);
   }
 
   /**

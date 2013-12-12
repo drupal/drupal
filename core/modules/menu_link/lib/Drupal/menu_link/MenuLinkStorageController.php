@@ -106,46 +106,6 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
   }
 
   /**
-   * Overrides DatabaseStorageController::attachLoad().
-   *
-   * @todo Don't call parent::attachLoad() at all because we want to be able to
-   * control the entity load hooks.
-   */
-  protected function attachLoad(&$menu_links, $load_revision = FALSE) {
-    $routes = array();
-
-    foreach ($menu_links as &$menu_link) {
-      $menu_link->options = unserialize($menu_link->options);
-      $menu_link->route_parameters = unserialize($menu_link->route_parameters);
-
-      // Use the weight property from the menu link.
-      $menu_link->router_item['weight'] = $menu_link->weight;
-
-      // By default use the menu_name as type.
-      $menu_link->bundle = $menu_link->menu_name;
-
-      // For all links that have an associated route, load the route object now
-      // and save it on the object. That way we avoid a select N+1 problem later.
-      if ($menu_link->route_name) {
-        $routes[$menu_link->id()] = $menu_link->route_name;
-      }
-    }
-
-    // Now mass-load any routes needed and associate them.
-    if ($routes) {
-      $route_objects = $this->routeProvider->getRoutesByNames($routes);
-      foreach ($routes as $entity_id => $route) {
-        // Not all stored routes will be valid on load.
-        if (isset($route_objects[$route])) {
-          $menu_links[$entity_id]->setRouteObject($route_objects[$route]);
-        }
-      }
-    }
-
-    parent::attachLoad($menu_links, $load_revision);
-  }
-
-  /**
    * Overrides DatabaseStorageController::save().
    */
   public function save(EntityInterface $entity) {

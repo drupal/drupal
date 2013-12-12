@@ -22,7 +22,7 @@ use Drupal\node\NodeInterface;
  *   label = @Translation("Content"),
  *   bundle_label = @Translation("Content type"),
  *   controllers = {
- *     "storage" = "Drupal\node\NodeStorageController",
+ *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "view_builder" = "Drupal\node\NodeViewBuilder",
  *     "access" = "Drupal\node\NodeAccessController",
  *     "form" = {
@@ -75,6 +75,17 @@ class Node extends ContentEntityBase implements NodeInterface {
    */
   public function getRevisionId() {
     return $this->get('vid')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    parent::preCreate($storage_controller, $values);
+    // @todo Handle this through property defaults.
+    if (empty($values['created'])) {
+      $values['created'] = REQUEST_TIME;
+    }
   }
 
   /**
@@ -147,6 +158,14 @@ class Node extends ContentEntityBase implements NodeInterface {
         search_reindex($entity->nid->value, 'node_search');
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $nodes) {
+    parent::postDelete($storage_controller, $nodes);
+    \Drupal::service('node.grant_storage')->deleteNodeRecords(array_keys($nodes));
   }
 
   /**

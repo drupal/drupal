@@ -356,7 +356,7 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array $entities) {
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
   }
 
   /**

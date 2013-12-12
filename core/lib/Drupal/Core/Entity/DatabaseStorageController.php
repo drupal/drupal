@@ -142,11 +142,11 @@ class DatabaseStorageController extends EntityStorageControllerBase {
       $queried_entities = $query_result->fetchAllAssoc($this->idKey);
     }
 
-    // Pass all entities loaded from the database through $this->attachLoad(),
+    // Pass all entities loaded from the database through $this->postLoad(),
     // which attaches fields (if supported by the entity type) and calls the
     // entity type specific load callback, for example hook_node_load().
     if (!empty($queried_entities)) {
-      $this->attachLoad($queried_entities);
+      $this->postLoad($queried_entities);
       $entities += $queried_entities;
     }
 
@@ -242,22 +242,6 @@ class DatabaseStorageController extends EntityStorageControllerBase {
     }
 
     return $query;
-  }
-
-  /**
-   * Attaches data to entities upon loading.
-   *
-   * @param $queried_entities
-   *   Associative array of query results, keyed on the entity ID.
-   * @param $load_revision
-   *   (optional) TRUE if the revision should be loaded, defaults to FALSE.
-   */
-  protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    // Call hook_entity_load().
-    foreach (\Drupal::moduleHandler()->getImplementations('entity_load') as $module) {
-      $function = $module . '_entity_load';
-      $function($queried_entities, $this->entityType);
-    }
   }
 
   /**

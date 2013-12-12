@@ -207,14 +207,14 @@ interface EntityInterface extends AccessibleInterface {
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities);
 
   /**
-   * Acts on loaded entities before the load hook is invoked.
+   * Acts on loaded entities.
    *
    * @param EntityStorageControllerInterface $storage_controller
    *   The entity storage controller object.
    * @param array $entities
    *   An array of entities.
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array $entities);
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities);
 
   /**
    * Creates a duplicate of the entity.

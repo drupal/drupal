@@ -22,7 +22,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *   label = @Translation("Custom Block"),
  *   bundle_label = @Translation("Custom Block type"),
  *   controllers = {
- *     "storage" = "Drupal\custom_block\CustomBlockStorageController",
+ *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "access" = "Drupal\custom_block\CustomBlockAccessController",
  *     "list" = "Drupal\custom_block\CustomBlockListController",
  *     "view_builder" = "Drupal\custom_block\CustomBlockViewBuilder",

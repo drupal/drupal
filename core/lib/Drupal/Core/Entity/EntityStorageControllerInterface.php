@@ -150,7 +150,24 @@ interface EntityStorageControllerInterface {
    * Gets the name of the service for the query for this entity storage.
    *
    * @return string
+   *   The name of the service for the query for this entity storage.
    */
   public function getQueryServicename();
+
+  /**
+   * Returns the entity type.
+   *
+   * @return string
+   *   The entity type.
+   */
+  public function entityType();
+
+  /**
+   * Returns the entity info.
+   *
+   * @return string
+   *   The entity info.
+   */
+  public function entityInfo();
 
 }

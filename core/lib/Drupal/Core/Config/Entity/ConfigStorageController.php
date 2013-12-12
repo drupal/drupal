@@ -141,11 +141,11 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $queried_entities = $this->buildQuery($ids);
     }
 
-    // Pass all entities loaded from the database through $this->attachLoad(),
+    // Pass all entities loaded from the database through $this->postLoad(),
     // which calls the
     // entity type specific load callback, for example hook_node_type_load().
     if (!empty($queried_entities)) {
-      $this->attachLoad($queried_entities);
+      $this->postLoad($queried_entities);
       $entities += $queried_entities;
     }
 
@@ -283,38 +283,6 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $result[$config->get($this->idKey)] = new $config_class($config->get(), $this->entityType);
     }
     return $result;
-  }
-
-  /**
-   * Attaches data to entities upon loading.
-   *
-   * This will attach fields, if the entity is fieldable. It calls
-   * hook_entity_load() for modules which need to add data to all entities.
-   * It also calls hook_TYPE_load() on the loaded entities. For example
-   * hook_node_load() or hook_user_load(). If your hook_TYPE_load()
-   * expects special parameters apart from the queried entities, you can set
-   * $this->hookLoadArguments prior to calling the method.
-   * See Drupal\node\NodeStorageController::attachLoad() for an example.
-   *
-   * @param $queried_entities
-   *   Associative array of query results, keyed on the entity ID.
-   * @param $revision_id
-   *   ID of the revision that was loaded, or FALSE if the most current revision
-   *   was loaded.
-   */
-  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
-    // Call hook_entity_load().
-    foreach (\Drupal::moduleHandler()->getImplementations('entity_load') as $module) {
-      $function = $module . '_entity_load';
-      $function($queried_entities, $this->entityType);
-    }
-    // Call hook_TYPE_load(). The first argument for hook_TYPE_load() are
-    // always the queried entities, followed by additional arguments set in
-    // $this->hookLoadArguments.
-    $args = array_merge(array($queried_entities), $this->hookLoadArguments);
-    foreach (\Drupal::moduleHandler()->getImplementations($this->entityType . '_load') as $module) {
-      call_user_func_array($module . '_' . $this->entityType . '_load', $args);
-    }
   }
 
   /**

@@ -39,12 +39,12 @@ class CommentStorageController extends FieldableDatabaseStorageController implem
   /**
    * {@inheritdoc}
    */
-  protected function attachLoad(&$records, $load_revision = FALSE) {
+  protected function postLoad(array &$queried_entities) {
     // Prepare standard comment fields.
-    foreach ($records as &$record) {
+    foreach ($queried_entities as &$record) {
       $record->name = $record->uid ? $record->registered_name : $record->name;
     }
-    parent::attachLoad($records, $load_revision);
+    parent::postLoad($queried_entities);
   }
 
   /**

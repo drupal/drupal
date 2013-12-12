@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "entity_test_label",
  *   label = @Translation("Entity Test label"),
  *   controllers = {
- *     "storage" = "Drupal\entity_test\EntityTestStorageController",
+ *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder"
  *   },
  *   base_table = "entity_test",

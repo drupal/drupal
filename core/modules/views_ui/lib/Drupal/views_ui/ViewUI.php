@@ -1140,7 +1140,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array $entities) {
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
   }
 
   /**

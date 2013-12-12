@@ -289,6 +289,16 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
+    parent::postLoad($storage_controller, $entities);
+    foreach ($entities as $entity) {
+      $entity->mergeDefaultDisplaysOptions();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
 

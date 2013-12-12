@@ -101,6 +101,19 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
   /**
    * {@inheritdoc}
    */
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
+    parent::postLoad($storage_controller, $entities);
+    foreach ($entities as $id => $entity) {
+      $links = menu_load_links('shortcut-' . $id);
+      foreach ($links as $menu_link) {
+        $entity->links[$menu_link->uuid()] = $menu_link;
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     parent::preSave($storage_controller);
 

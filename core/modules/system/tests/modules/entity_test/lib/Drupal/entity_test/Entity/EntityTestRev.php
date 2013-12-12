@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "entity_test_rev",
  *   label = @Translation("Test entity - revisions"),
  *   controllers = {
- *     "storage" = "Drupal\entity_test\EntityTestStorageController",
+ *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"

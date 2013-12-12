@@ -110,7 +110,7 @@ function node_access_test_form_node_form_alter(&$form, $form_state) {
 /**
  * Implements hook_node_load().
  */
-function node_access_test_node_load($nodes, $types) {
+function node_access_test_node_load($nodes) {
   $result = db_query('SELECT nid, private FROM {node_access_test} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
   foreach ($result as $record) {
     $nodes[$record->nid]->private = $record->private;

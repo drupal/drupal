@@ -435,7 +435,7 @@ function book_children($book_link) {
 /**
  * Implements hook_node_load().
  */
-function book_node_load($nodes, $types) {
+function book_node_load($nodes) {
   $result = db_query("SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid IN (:nids)", array(':nids' =>  array_keys($nodes)), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $record) {
     $nodes[$record['nid']]->book = $record;

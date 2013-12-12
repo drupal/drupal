@@ -230,7 +230,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    * {@inheritdoc}
    */
   public function delete() {
-    $this->database->delete('node_access')->execute();
+    $this->database->truncate('node_access')->execute();
   }
 
   /**
@@ -254,6 +254,15 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function count() {
     return $this->database->query('SELECT COUNT(*) FROM {node_access}')->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteNodeRecords(array $nids) {
+    $this->database->delete('node_access')
+      ->condition('nid', $nids, 'IN')
+      ->execute();
   }
 
 }

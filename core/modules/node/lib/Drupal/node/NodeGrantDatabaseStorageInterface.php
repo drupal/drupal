@@ -121,4 +121,13 @@ interface NodeGrantDatabaseStorageInterface {
    */
   public function count();
 
+  /**
+   * Remove the access records belonging to certain nodes.
+   *
+   * @param array $nids
+   *   A list of node IDs. The grant records belonging to these nodes will be
+   *   deleted.
+   */
+  public function deleteNodeRecords(array $nids);
+
 }

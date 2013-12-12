@@ -16,20 +16,6 @@ use Drupal\shortcut\ShortcutSetInterface;
 class ShortcutSetStorageController extends ConfigStorageController implements ShortcutSetStorageControllerInterface {
 
   /**
-   * Overrides \Drupal\config\ConfigStorageController::attachLoad().
-   */
-  protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
-    parent::attachLoad($queried_entities, $revision_id);
-
-    foreach ($queried_entities as $id => $entity) {
-      $links = menu_load_links('shortcut-' . $id);
-      foreach ($links as $menu_link) {
-        $entity->links[$menu_link->uuid()] = $menu_link;
-      }
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function deleteAssignedShortcutSets(ShortcutSetInterface $entity) {

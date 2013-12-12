@@ -576,6 +576,42 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   }
 
   /**
+   * @inheritdoc}
+   */
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
+    parent::postLoad($storage_controller, $entities);
+
+    $routes = array();
+    foreach ($entities as $menu_link) {
+      $menu_link->options = unserialize($menu_link->options);
+      $menu_link->route_parameters = unserialize($menu_link->route_parameters);
+
+      // Use the weight property from the menu link.
+      $menu_link->router_item['weight'] = $menu_link->weight;
+
+      // By default use the menu_name as type.
+      $menu_link->bundle = $menu_link->menu_name;
+
+      // For all links that have an associated route, load the route object now
+      // and save it on the object. That way we avoid a select N+1 problem later.
+      if ($menu_link->route_name) {
+        $routes[$menu_link->id()] = $menu_link->route_name;
+      }
+    }
+
+    // Now mass-load any routes needed and associate them.
+    if ($routes) {
+      $route_objects = \Drupal::service('router.route_provider')->getRoutesByNames($routes);
+      foreach ($routes as $entity_id => $route) {
+        // Not all stored routes will be valid on load.
+        if (isset($route_objects[$route])) {
+          $entities[$entity_id]->setRouteObject($route_objects[$route]);
+        }
+      }
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function findRouteNameParameters($link_path) {

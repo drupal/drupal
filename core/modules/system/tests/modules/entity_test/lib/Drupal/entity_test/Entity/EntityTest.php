@@ -11,6 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Language\Language;
 
 /**
@@ -20,7 +21,7 @@ use Drupal\Core\Language\Language;
  *   id = "entity_test",
  *   label = @Translation("Test entity"),
  *   controllers = {
- *     "storage" = "Drupal\entity_test\EntityTestStorageController",
+ *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "list" = "Drupal\entity_test\EntityTestListController",
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
@@ -93,6 +94,16 @@ class EntityTest extends ContentEntityBase {
     unset($this->name);
     unset($this->user_id);
     unset($this->type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    parent::preCreate($storage_controller, $values);
+    if (empty($values['type'])) {
+      $values['type'] = $storage_controller->entityType();
+    }
   }
 
   /**

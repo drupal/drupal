@@ -11,22 +11,6 @@
 use Drupal\custom_block\Entity\CustomBlock;
 
 /**
- * Implements hook_custom_block_load().
- */
-function custom_block_test_custom_block_load($custom_blocks, $types) {
-  // Add properties to each loaded custom_block which record the parameters that
-  // were passed in to this function, so the tests can check that (a) this hook
-  // was called, and (b) the parameters were what we expected them to be.
-  $ids = array_keys($custom_blocks);
-  ksort($ids);
-  sort($types);
-  foreach ($custom_blocks as $custom_block) {
-    $custom_block->custom_block_test_loaded_ids = $ids;
-    $custom_block->custom_block_test_loaded_types = $types;
-  }
-}
-
-/**
  * Implements hook_custom_block_view().
  */
 function custom_block_test_custom_block_view(CustomBlock $custom_block, $view_mode) {

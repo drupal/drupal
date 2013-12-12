@@ -229,11 +229,11 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       $queried_entities = $query_result->fetchAllAssoc($this->idKey);
     }
 
-    // Pass all entities loaded from the database through $this->attachLoad(),
+    // Pass all entities loaded from the database through $this->postLoad(),
     // which attaches fields (if supported by the entity type) and calls the
     // entity type specific load callback, for example hook_node_load().
     if (!empty($queried_entities)) {
-      $this->attachLoad($queried_entities);
+      $this->postLoad($queried_entities);
       $entities += $queried_entities;
     }
 
@@ -271,13 +271,11 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *
    * @param array $records
    *   Associative array of query results, keyed on the entity ID.
-   * @param bool $load_revision
-   *   (optional) TRUE if the revision should be loaded, defaults to FALSE.
    *
    * @return array
    *   An array of entity objects implementing the EntityInterface.
    */
-  protected function mapFromStorageRecords(array $records, $load_revision = FALSE) {
+  protected function mapFromStorageRecords(array $records) {
     $entities = array();
     foreach ($records as $id => $record) {
       $entities[$id] = array();
@@ -305,7 +303,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
         $entities[$id] = new $this->entityClass($entities[$id], $this->entityType, $bundle);
       }
     }
-    $this->attachPropertyData($entities, $load_revision);
+    $this->attachPropertyData($entities);
     return $entities;
   }
 
@@ -314,10 +312,8 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *
    * @param array &$entities
    *   Associative array of entities, keyed on the entity ID.
-   * @param int $revision_id
-   *   (optional) The revision to be loaded. Defaults to FALSE.
    */
-  protected function attachPropertyData(array &$entities, $revision_id = FALSE) {
+  protected function attachPropertyData(array &$entities) {
     if ($this->dataTable) {
       // If a revision table is available, we need all the properties of the
       // latest revision. Otherwise we fall back to the data table.
@@ -328,17 +324,12 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
         ->orderBy('data.' . $this->idKey);
 
       if ($this->revisionDataTable) {
-        if ($revision_id) {
-          $query->condition($this->revisionKey, $revision_id);
+        // Get the revision IDs.
+        $revision_ids = array();
+        foreach ($entities as $values) {
+          $revision_ids[] = is_object($values) ? $values->getRevisionId() : $values[$this->revisionKey][Language::LANGCODE_DEFAULT];
         }
-        else {
-          // Get the revision IDs.
-          $revision_ids = array();
-          foreach ($entities as $values) {
-            $revision_ids[] = $values[$this->revisionKey][Language::LANGCODE_DEFAULT];
-          }
-          $query->condition($this->revisionKey, $revision_ids);
-        }
+        $query->condition($this->revisionKey, $revision_ids);
       }
 
       $data = $query->execute();
@@ -397,11 +388,11 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
     $query_result = $this->buildQuery(array(), $revision_id)->execute();
     $queried_entities = $query_result->fetchAllAssoc($this->idKey);
 
-    // Pass the loaded entities from the database through $this->attachLoad(),
+    // Pass the loaded entities from the database through $this->postLoad(),
     // which attaches fields (if supported by the entity type) and calls the
     // entity type specific load callback, for example hook_node_load().
     if (!empty($queried_entities)) {
-      $this->attachLoad($queried_entities, $revision_id);
+      $this->postLoad($queried_entities);
     }
     return reset($queried_entities);
   }
@@ -544,30 +535,17 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *
    * @param $queried_entities
    *   Associative array of query results, keyed on the entity ID.
-   * @param $load_revision
-   *   (optional) TRUE if the revision should be loaded, defaults to FALSE.
    */
-  protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
+  protected function postLoad(array &$queried_entities) {
     // Map the loaded records into entity objects and according fields.
-    $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
+    $queried_entities = $this->mapFromStorageRecords($queried_entities);
 
     // Attach field values.
     if ($this->entityInfo['fieldable']) {
-      $this->loadFieldItems($queried_entities, $load_revision ? static::FIELD_LOAD_REVISION : static::FIELD_LOAD_CURRENT);
+      $this->loadFieldItems($queried_entities);
     }
 
-    // Call hook_entity_load().
-    foreach (\Drupal::moduleHandler()->getImplementations('entity_load') as $module) {
-      $function = $module . '_entity_load';
-      $function($queried_entities, $this->entityType);
-    }
-    // Call hook_TYPE_load(). The first argument for hook_TYPE_load() are
-    // always the queried entities, followed by additional arguments set in
-    // $this->hookLoadArguments.
-    $args = array_merge(array($queried_entities), $this->hookLoadArguments);
-    foreach (\Drupal::moduleHandler()->getImplementations($this->entityType . '_load') as $module) {
-      call_user_func_array($module . '_' . $this->entityType . '_load', $args);
-    }
+    parent::postLoad($queried_entities);
   }
 
   /**

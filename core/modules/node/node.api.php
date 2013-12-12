@@ -502,20 +502,23 @@ function hook_node_create(\Drupal\Core\Entity\EntityInterface $node) {
  *
  * @param $nodes
  *   An array of the nodes being loaded, keyed by nid.
- * @param $types
- *   An array containing the node types present in $nodes. Allows for an early
- *   return for modules that only support certain node types.
  *
  * For a detailed usage example, see nodeapi_example.module.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_load($nodes, $types) {
+function hook_node_load($nodes) {
   // Decide whether any of $types are relevant to our purposes.
   $types_we_want_to_process = \Drupal::config('my_types')->get('types');
-  if (count(array_intersect($types_we_want_to_process, $types))) {
+  $nids = array();
+  foreach ($nodes as $node) {
+    if (in_array($node->bundle(), $types_we_want_to_process)) {
+      $nids = $node->id();
+    }
+  }
+  if ($nids) {
     // Gather our extra data for each of these nodes.
-    $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
+    $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(:nids)', array(':nids' => $nids));
     // Add our extra data to the node objects.
     foreach ($result as $record) {
       $nodes[$record->nid]->foo = $record->foo;
