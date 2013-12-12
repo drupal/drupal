@@ -123,8 +123,7 @@ function system_help($path, $arg) {
       }
       break;
     case 'admin/config/development/maintenance':
-      global $user;
-      if ($user->id() == 1) {
+      if (\Drupal::currentUser()->id() == 1) {
         return '<p>' . t('Use maintenance mode when making major updates, particularly if the updates could disrupt visitors or the update process. Examples include upgrading, importing or exporting content, modifying a theme, modifying content types, and making backups.') . '</p>';
       }
       break;
@@ -2187,7 +2186,7 @@ function system_user_login($account) {
  * Add the time zone field to the user edit and register forms.
  */
 function system_user_timezone(&$form, &$form_state) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   $account = $form_state['controller']->getEntity();
   $form['timezone'] = array(
