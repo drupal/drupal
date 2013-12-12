@@ -62,7 +62,7 @@ class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function executeMultiple(array $entities) {
-    $this->tempStore->set($GLOBALS['user']->id(), $entities);
+    $this->tempStore->set(\Drupal::currentUser()->id(), $entities);
   }
 
   /**

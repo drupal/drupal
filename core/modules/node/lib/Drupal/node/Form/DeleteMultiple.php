@@ -96,7 +96,7 @@ class DeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterf
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $this->nodes = $this->tempStoreFactory->get('node_multiple_delete_confirm')->get($GLOBALS['user']->id());
+    $this->nodes = $this->tempStoreFactory->get('node_multiple_delete_confirm')->get(\Drupal::currentUser()->id());
     if (empty($this->nodes)) {
       return new RedirectResponse(url('admin/content', array('absolute' => TRUE)));
     }
@@ -120,7 +120,7 @@ class DeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterf
   public function submitForm(array &$form, array &$form_state) {
     if ($form_state['values']['confirm'] && !empty($this->nodes)) {
       $this->storageController->delete($this->nodes);
-      $this->tempStoreFactory->get('node_multiple_delete_confirm')->delete($GLOBALS['user']->id());
+      $this->tempStoreFactory->get('node_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());
       $count = count($this->nodes);
       watchdog('content', 'Deleted @count posts.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));

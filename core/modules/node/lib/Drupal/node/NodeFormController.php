@@ -47,8 +47,7 @@ class NodeFormController extends ContentEntityFormController {
           $node->$key = (int) in_array($key, $this->settings['options']);
         }
       }
-      global $user;
-      $node->setAuthorId($user->id());
+      $node->setAuthorId(\Drupal::currentUser()->id());
       $node->setCreatedTime(REQUEST_TIME);
     }
     else {
@@ -365,8 +364,7 @@ class NodeFormController extends ContentEntityFormController {
       $node->setNewRevision();
       // If a new revision is created, save the current user as revision author.
       $node->setRevisionCreationTime(REQUEST_TIME);
-      global $user;
-      $node->setRevisionAuthorId($user->id());
+      $node->setRevisionAuthorId(\Drupal::currentUser()->id());
     }
 
     $node->validated = TRUE;
