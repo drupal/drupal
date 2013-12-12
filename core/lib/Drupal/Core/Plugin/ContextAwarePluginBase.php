@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\ContextAwarePluginBase as PluginBase;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
  * Drupal specific class for plugins that use context.
@@ -51,6 +52,49 @@ abstract class ContextAwarePluginBase extends PluginBase {
     if ($this->context[$name]->validate()->count() > 0) {
       throw new PluginException("The provided context value does not pass validation.");
     }
+    return $this;
+  }
+
+  /**
+   * The translation manager service.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected $translationManager;
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->translationManager()->translate($string, $args, $options);
+  }
+
+  /**
+   * Gets the translation manager.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslationInterface
+   *   The translation manager.
+   */
+  protected function translationManager() {
+    if (!$this->translationManager) {
+      $this->translationManager = \Drupal::translation();
+    }
+    return $this->translationManager;
+  }
+
+  /**
+   * Sets the translation manager for this plugin.
+   *
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   *   The translation manager.
+   *
+   * @return self
+   *   The plugin object.
+   */
+  public function setTranslationManager(TranslationInterface $translation_manager) {
+    $this->translationManager = $translation_manager;
     return $this;
   }
 
