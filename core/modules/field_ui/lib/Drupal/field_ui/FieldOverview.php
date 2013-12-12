@@ -105,7 +105,10 @@ class FieldOverview extends OverviewBase {
       '#tree' => TRUE,
       '#header' => array(
         $this->t('Label'),
-        $this->t('Machine name'),
+        array(
+          'data' => $this->t('Machine name'),
+          'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
+        ),
         $this->t('Field type'),
         $this->t('Operations'),
       ),
