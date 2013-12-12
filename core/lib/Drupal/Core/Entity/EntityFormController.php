@@ -7,12 +7,9 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\TypedData\TranslatableInterface;
-use Drupal\entity\EntityFormDisplayInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for entity form controllers.

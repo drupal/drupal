@@ -14,7 +14,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
-use Drupal\entity\Entity\EntityDisplay;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\FieldInterface;
 use Drupal\file\FileInterface;
@@ -456,7 +456,7 @@ function theme_comment_block($variables) {
 /**
  * Implements hook_entity_view().
  */
-function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode) {
+function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode) {
   if ($entity->entityType() != 'node') {
     // Comment links are only added to node entity type for backwards
     // compatibility. Should you require comment links for other entity types
@@ -594,7 +594,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
 /**
  * Implements hook_node_view_alter().
  */
-function comment_node_view_alter(&$build, EntityInterface $node, EntityDisplay $display) {
+function comment_node_view_alter(&$build, EntityInterface $node, EntityViewDisplayInterface $display) {
   if (\Drupal::moduleHandler()->moduleExists('history')) {
     $build['#attributes']['data-history-node-id'] = $node->id();
   }

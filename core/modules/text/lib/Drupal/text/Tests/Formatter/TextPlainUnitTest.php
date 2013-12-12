@@ -9,7 +9,7 @@ namespace Drupal\text\Tests\Formatter;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
-use Drupal\entity\Entity\EntityDisplay;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -118,10 +118,10 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object with attached fields to render.
-   * @param \Drupal\entity\Entity\EntityDisplay $display
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
    *   The display to render the fields in.
    */
-  protected function renderEntityFields(EntityInterface $entity, EntityDisplay $display) {
+  protected function renderEntityFields(EntityInterface $entity, EntityViewDisplayInterface $display) {
     $content = field_attach_view($entity, $display);
     $this->content = drupal_render($content);
     return $this->content;

@@ -7,9 +7,8 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Language\Language;
-use Drupal\entity\Entity\EntityDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -163,7 +162,7 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
    *   The render array that is being created.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be prepared.
-   * @param \Drupal\entity\Entity\EntityDisplay $display
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
    *   The entity_display object holding the display options configured for
    *   the entity components.
    * @param string $view_mode
@@ -172,7 +171,7 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
    *   (optional) For which language the entity should be prepared, defaults to
    *   the current content language.
    */
-  protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) { }
+  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode = NULL) { }
 
   /**
    * {@inheritdoc}

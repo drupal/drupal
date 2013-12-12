@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\entity\EntityDisplayBaseInterface.
+ * Contains \Drupal\Core\Entity\Display\EntityDisplayInterface.
  */
 
-namespace Drupal\entity;
-
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
+namespace Drupal\Core\Entity\Display;
 
 /**
- * Provides an interface defining an entity display entity.
+ * Provides a common interface for entity displays.
  */
-interface EntityDisplayBaseInterface extends ConfigEntityInterface {
+interface EntityDisplayInterface {
 
   /**
    * Creates a duplicate of the EntityDisplay object on a different view mode.
@@ -23,7 +21,7 @@ interface EntityDisplayBaseInterface extends ConfigEntityInterface {
    * @param $view_mode
    *   The view mode for the new object.
    *
-   * @return \Drupal\entity\Entity\EntityDisplay
+   * @return self
    *   The new object.
    */
   public function createCopy($view_mode);
@@ -56,7 +54,7 @@ interface EntityDisplayBaseInterface extends ConfigEntityInterface {
    * @param array $options
    *   The display options.
    *
-   * @return \Drupal\entity\Entity\EntityDisplay
+   * @return self
    *   The EntityDisplay object.
    */
   public function setComponent($name, array $options = array());
@@ -67,7 +65,7 @@ interface EntityDisplayBaseInterface extends ConfigEntityInterface {
    * @param string $name
    *   The name of the component.
    *
-   * @return \Drupal\entity\Entity\EntityDisplay
+   * @return self
    *   The EntityDisplay object.
    */
   public function removeComponent($name);

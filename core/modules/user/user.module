@@ -3,7 +3,7 @@
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\entity\Entity\EntityDisplay;
+use \Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\file\Entity\File;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -494,7 +494,7 @@ function user_permission() {
 /**
  * Implements hook_user_view().
  */
-function user_user_view(UserInterface $account, EntityDisplay $display) {
+function user_user_view(UserInterface $account, EntityViewDisplayInterface $display) {
   if ($display->getComponent('member_for')) {
     $account->content['member_for'] = array(
       '#type' => 'item',

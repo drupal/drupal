@@ -8,7 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\entity\EntityDisplayBaseInterface;
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\field\FieldInstanceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -49,7 +49,7 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function buildFieldRow($field_id, FieldInstanceInterface $instance, EntityDisplayBaseInterface $entity_display, array $form, array &$form_state) {
+  protected function buildFieldRow($field_id, FieldInstanceInterface $instance, EntityDisplayInterface $entity_display, array $form, array &$form_state) {
     $field_row = parent::buildFieldRow($field_id, $instance, $entity_display, $form, $form_state);
 
     // Update the (invisible) title of the 'plugin' column.

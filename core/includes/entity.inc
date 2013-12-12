@@ -639,7 +639,7 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
  *   The view mode, or 'default' to retrieve the 'default' display object for
  *   this bundle.
  *
- * @return \Drupal\entity\Entity\EntityDisplay
+ * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
  *   The display object associated to the view mode.
  */
 function entity_get_display($entity_type, $bundle, $view_mode) {
@@ -682,7 +682,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  * @param string $view_mode
  *  The view mode being rendered.
  *
- * @return \Drupal\entity\Entity\EntityDisplay
+ * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
  *   The display object that should be used to render the entity.
  *
  * @see entity_get_display().
@@ -751,7 +751,7 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
  * @param string $form_mode
  *   The form mode.
  *
- * @return \Drupal\entity\Entity\EntityFormDisplay
+ * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
  *   The EntityFormDisplay object associated to the form mode.
  */
 function entity_get_form_display($entity_type, $bundle, $form_mode) {
@@ -790,7 +790,7 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
  * @param string $form_mode
  *   The form mode being rendered.
  *
- * @return \Drupal\entity\Entity\EntityFormDisplay
+ * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
  *   The form display object that should be used to render the entity form.
  *
  * @see entity_get_form_display().

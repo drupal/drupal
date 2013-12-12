@@ -14,14 +14,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\entity\Entity\EntityDisplay;
-use Drupal\entity\Entity\EntityFormDisplay;
 use Drupal\file\Entity\File;
-use Drupal\user\UserInterface;
 
 /**
  * Denotes that the node is not published.
@@ -194,7 +192,7 @@ function node_entity_bundle_info() {
 /**
  * Implements hook_entity_display_alter().
  */
-function node_entity_display_alter(EntityDisplay $display, $context) {
+function node_entity_display_alter(EntityViewDisplayInterface $display, $context) {
   if ($context['entity_type'] == 'node') {
     // Hide field labels in search index.
     if ($context['view_mode'] == 'search_index') {
@@ -217,7 +215,7 @@ function node_entity_display_alter(EntityDisplay $display, $context) {
 /**
  * Implements hook_entity_form_display_alter().
  */
-function node_entity_form_display_alter(EntityFormDisplay $form_display, $context) {
+function node_entity_form_display_alter(EntityFormDisplayInterface $form_display, $context) {
   if ($context['entity_type'] == 'node') {
     // @todo Manage base field displays in the YAML:
     //   https://drupal.org/node/2144919.

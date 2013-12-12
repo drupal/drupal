@@ -7,10 +7,8 @@
 
 namespace Drupal\entity\Entity;
 
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\entity\EntityDisplayBase;
-use Drupal\entity\EntityFormDisplayInterface;
 
 /**
  * Configuration entity that contains widget options for all components of a

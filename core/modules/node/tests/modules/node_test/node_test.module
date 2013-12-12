@@ -9,13 +9,13 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Entity\EntityDisplay;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_view().
  */
-function node_test_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
+function node_test_node_view(EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if ($view_mode == 'rss') {
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = array(

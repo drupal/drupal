@@ -8,11 +8,10 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManager;
-use Drupal\entity\EntityDisplayBaseInterface;
 use Drupal\field\FieldInstanceInterface;
-use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -209,7 +208,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   The field ID.
    * @param \Drupal\field\FieldInstanceInterface $instance
    *   The field instance.
-   * @param \Drupal\entity\EntityDisplayBaseInterface $entity_display
+   * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $entity_display
    *   The entity display.
    * @param array $form
    *   An associative array containing the structure of the form.
@@ -219,7 +218,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
    * @return array
    *   A table row array.
    */
-  protected function buildFieldRow($field_id, FieldInstanceInterface $instance, EntityDisplayBaseInterface $entity_display, array $form, array &$form_state) {
+  protected function buildFieldRow($field_id, FieldInstanceInterface $instance, EntityDisplayInterface $entity_display, array $form, array &$form_state) {
     $display_options = $entity_display->getComponent($field_id);
     $label = $instance->getLabel();
 
@@ -388,7 +387,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   The field ID.
    * @param array $extra_field
    *   The pseudo-field element.
-   * @param \Drupal\entity\EntityDisplayBaseInterface $entity_display
+   * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $entity_display
    *   The entity display.
    *
    * @return array
@@ -626,7 +625,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
    * @param string $mode
    *   A view or form mode.
    *
-   * @return \Drupal\entity\EntityDisplayBaseInterface
+   * @return \Drupal\Core\Entity\Display\EntityDisplayInterface
    *   An entity display.
    */
   abstract protected function getEntityDisplay($mode);

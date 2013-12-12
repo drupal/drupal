@@ -9,10 +9,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Language\Language;
-use Drupal\entity\Entity\EntityDisplay;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\menu_link\Entity\MenuLink;
-use Drupal\menu_link\MenuLinkStorageController;
 
 /**
  * Implements hook_help().
@@ -448,7 +446,7 @@ function book_node_load($nodes) {
 /**
  * Implements hook_node_view().
  */
-function book_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
+function book_node_view(EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if ($view_mode == 'full') {
     if (!empty($node->book['bid']) && empty($node->in_preview)) {
       $book_navigation = array( '#theme' => 'book_navigation', '#book_link' => $node->book);
