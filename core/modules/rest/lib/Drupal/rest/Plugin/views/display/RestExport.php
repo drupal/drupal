@@ -8,7 +8,7 @@
 namespace Drupal\rest\Plugin\views\display;
 
 
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
@@ -99,14 +99,14 @@ class RestExport extends PathPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
+   * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state key value store.
    * @param \Drupal\Core\ContentNegotiation $content_negotiation
    *   The content negotiation library.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, RouteProviderInterface $route_provider, KeyValueStoreInterface $state, ContentNegotiation $content_negotiation, Request $request) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, ContentNegotiation $content_negotiation, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
     $this->contentNegotiation = $content_negotiation;
     $this->request = $request;

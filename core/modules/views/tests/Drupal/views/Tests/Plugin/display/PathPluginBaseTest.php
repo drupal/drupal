@@ -43,7 +43,7 @@ class PathPluginBaseTest extends UnitTestCase {
   /**
    * The mocked key value storage.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\KeyValueStore\StateInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $state;
 
@@ -62,7 +62,7 @@ class PathPluginBaseTest extends UnitTestCase {
     parent::setUp();
 
     $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
-    $this->state = $this->getMock('\Drupal\Core\KeyValueStore\KeyValueStoreInterface');
+    $this->state = $this->getMock('\Drupal\Core\KeyValueStore\StateInterface');
     $this->pathPlugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
       ->setConstructorArgs(array(array(), 'path_base', array(), $this->routeProvider, $this->state))
       ->setMethods(NULL)

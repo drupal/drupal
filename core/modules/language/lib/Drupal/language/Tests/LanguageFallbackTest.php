@@ -26,7 +26,7 @@ class LanguageFallbackTest extends DrupalUnitTestBase {
   /**
    * The state storage service.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @var \Drupal\Core\KeyValueStore\StateInterface
    */
   protected $state;
 

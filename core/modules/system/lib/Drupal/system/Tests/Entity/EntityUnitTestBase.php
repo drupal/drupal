@@ -32,7 +32,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
   /**
    * The state service.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @var \Drupal\Core\KeyValueStore\StateInterface
    */
   protected $state;
 

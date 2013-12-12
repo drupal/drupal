@@ -8,7 +8,7 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\KeyValueStore\StateInterface;
 
 /**
  * Class that manages enabled modules in a Drupal installation.
@@ -18,7 +18,7 @@ class CachedModuleHandler extends ModuleHandler implements CachedModuleHandlerIn
   /**
    * State key/value store.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @var \Drupal\Core\KeyValueStore\StateInterface
    */
   protected $state;
 
@@ -39,7 +39,7 @@ class CachedModuleHandler extends ModuleHandler implements CachedModuleHandlerIn
   /**
    * Constructs a new CachedModuleHandler object.
    */
-  public function __construct(array $module_list = array(), KeyValueStoreInterface $state, CacheBackendInterface $bootstrap_cache) {
+  public function __construct(array $module_list = array(), StateInterface $state, CacheBackendInterface $bootstrap_cache) {
     parent::__construct($module_list);
     $this->state = $state;
     $this->bootstrapCache = $bootstrap_cache;

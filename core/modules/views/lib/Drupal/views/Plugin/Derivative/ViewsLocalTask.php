@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Menu\LocalTaskDerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -29,7 +29,7 @@ class ViewsLocalTask extends LocalTaskDerivativeBase implements ContainerDerivat
   /**
    * The state key value store.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   * @var \Drupal\Core\KeyValueStore\StateInterface
    */
   protected $state;
 
@@ -41,7 +41,7 @@ class ViewsLocalTask extends LocalTaskDerivativeBase implements ContainerDerivat
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
    *   The state key value store.
    */
-  public function __construct(RouteProviderInterface $route_provider, KeyValueStoreInterface $state) {
+  public function __construct(RouteProviderInterface $route_provider, StateInterface $state) {
     $this->routeProvider = $route_provider;
     $this->state = $state;
   }
