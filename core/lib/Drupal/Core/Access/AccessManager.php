@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\Access\AccessManager.
+ * Contains \Drupal\Core\Access\AccessManager.
  */
 
 namespace Drupal\Core\Access;

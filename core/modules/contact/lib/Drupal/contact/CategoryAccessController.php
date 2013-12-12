@@ -10,6 +10,7 @@ namespace Drupal\contact;
 use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+
 /**
  * Defines an access controller for the contact category entity.
  *
@@ -21,12 +22,17 @@ class CategoryAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   public function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    if ($operation == 'delete' || $operation == 'update') {
-      // Do not allow delete 'personal' category used for personal contact form.
-      return user_access('administer contact forms', $account) && $entity->id() !== 'personal';
+    if ($operation == 'view') {
+      // Do not allow access personal category via site-wide route.
+      return $account->hasPermission('access site-wide contact form') && $entity->id() !== 'personal';
+    }
+    elseif ($operation == 'delete' || $operation == 'update') {
+      // Do not allow the 'personal' category to be deleted, as it's used for
+      // the personal contact form.
+      return $account->hasPermission('administer contact forms') && $entity->id() !== 'personal';
     }
     else {
-      return user_access('administer contact forms', $account);
+      return $account->hasPermission('administer contact forms');
     }
   }
 

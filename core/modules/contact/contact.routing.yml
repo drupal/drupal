@@ -1,10 +1,10 @@
 contact.category_delete:
   path: '/admin/structure/contact/manage/{contact_category}/delete'
   defaults:
-    _entity_form: contact_category.delete
+    _entity_form: 'contact_category.delete'
     _title: 'Delete'
   requirements:
-    _entity_access: contact_category.delete
+    _entity_access: 'contact_category.delete'
 
 contact.category_list:
   path: '/admin/structure/contact'
@@ -17,7 +17,7 @@ contact.category_list:
 contact.category_add:
   path: '/admin/structure/contact/add'
   defaults:
-    _entity_form: contact_category.add
+    _entity_form: 'contact_category.add'
     _title: 'Add category'
   requirements:
     _permission: 'administer contact forms'
@@ -25,10 +25,10 @@ contact.category_add:
 contact.category_edit:
   path: '/admin/structure/contact/manage/{contact_category}'
   defaults:
-    _entity_form: contact_category.edit
+    _entity_form: 'contact_category.edit'
     _title: 'Edit contact category'
   requirements:
-    _entity_access: contact_category.update
+    _entity_access: 'contact_category.update'
 
 contact.site_page:
   path: '/contact'
@@ -45,7 +45,7 @@ contact.site_page_category:
     _title: 'Contact category form'
     _content: '\Drupal\contact\Controller\ContactController::contactSitePage'
   requirements:
-    _permission: 'access site-wide contact form'
+    _entity_access: 'contact_category.view'
 
 contact.personal_page:
   path: '/user/{user}/contact'

@@ -5,9 +5,6 @@
  * Enables the use of personal and site-wide contact forms.
  */
 
-use Drupal\contact\Entity\Category;
-use Drupal\user\UserInterface;
-
 /**
  * Implements hook_help().
  */
@@ -76,24 +73,10 @@ function contact_menu() {
   );
   $items['contact/%contact_category'] = array(
     'title' => 'Contact category form',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(1),
     'route_name' => 'contact.site_page_category',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   return $items;
-}
-
-/**
- * Access callback: Checks access for a user's personal contact form.
- *
- * @param $account
- *   The user object of the user whose contact form is being requested.
- *
- * @see contact_menu()
- */
-function _contact_personal_tab_access(UserInterface $account) {
-  return \Drupal::service('access_manager')->checkNamedRoute('contact.personal_page', array('user' => $account->id()), \Drupal::currentUser());
 }
 
 /**
