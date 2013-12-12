@@ -210,12 +210,18 @@ function _drupal_theme_initialize($theme, $base_theme = array()) {
     }
   }
 
-  // And now add the stylesheets properly
+  // And now add the stylesheets properly.
+  $css = array();
   foreach ($final_stylesheets as $media => $stylesheets) {
     foreach ($stylesheets as $stylesheet) {
-      drupal_add_css($stylesheet, array('group' => CSS_AGGREGATE_THEME, 'every_page' => TRUE, 'media' => $media));
+      $css['#attached']['css'][$stylesheet] = array(
+        'group' => CSS_AGGREGATE_THEME,
+        'every_page' => TRUE,
+        'media' => $media
+      );
     }
   }
+  drupal_render($css);
 
   // Do basically the same as the above for scripts
   $final_scripts = array();
