@@ -102,7 +102,6 @@ class Config {
    */
   public function init() {
     $this->isLoaded = FALSE;
-    $this->overrides = array();
     $this->notify('init');
     return $this;
   }
@@ -118,7 +117,6 @@ class Config {
    */
   public function initWithData(array $data) {
     $this->isLoaded = TRUE;
-    $this->overrides = array();
     $this->isNew = FALSE;
     $this->notify('init');
     $this->replaceData($data);
