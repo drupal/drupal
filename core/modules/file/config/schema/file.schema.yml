@@ -1,4 +1,4 @@
-# Schema for the configuration files of the file module.
+# Schema for the configuration files of the File module.
 
 file.settings:
   type: mapping
@@ -21,3 +21,41 @@ file.settings:
         directory:
           type: path
           label: 'Directory'
+
+field.file.settings:
+  type: mapping
+  label: 'File settings'
+  mapping:
+    display_field:
+      type: boolean
+      label: 'Enable Display field'
+    display_default:
+      type: boolean
+      label: 'Files displayed by default'
+    uri_scheme:
+      type: string
+      label: 'Upload destination'
+
+field.file.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: string
+      label: 'Value'
+
+field.file.instance_settings:
+  type: mapping
+  label: 'File settings'
+  mapping:
+    file_directory:
+      type: string
+      label: 'File directory'
+    file_extensions:
+      type: string
+      label: 'Allowed file extensions'
+    max_filesize:
+      type: string
+      label: 'Maximum upload size'
+    description_field:
+      type: boolean
+      label: 'Enable Description field'
