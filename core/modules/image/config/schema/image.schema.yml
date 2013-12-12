@@ -1,18 +1,5 @@
-# Image module schema: image.schema.yml
+# Schema for configuration files of the Image module.
 
-# Data types for image module.
-image.size:
-  type: mapping
-  mapping:
-    width:
-      type: integer
-      label: 'Width'
-    height:
-      type: integer
-      label: 'Height'
-
-# Image styles (multiple).
-# Plugin \Drupal\image\Entity\ImageStyle
 image.style.*:
   type: mapping
   label: 'Image style'
@@ -38,17 +25,15 @@ image.style.*:
       type: string
       label: 'Default language'
 
-# Image effects plugins: image.effect.%
-# These are used in image styles.
 image.effect.image_crop:
-  type: image.size
+  type: image_size
   label: 'Image crop'
   mapping:
     anchor:
       label: 'Anchor'
 
 image.effect.image_resize:
-  type: image.size
+  type: image_size
   label: 'Image resize'
 
 image.effect.image_rotate:
@@ -65,7 +50,7 @@ image.effect.image_rotate:
       label: 'Randomize'
 
 image.effect.image_scale:
-  type: image.size
+  type: image_size
   label: 'Image scale'
   mapping:
     upscale:
@@ -73,10 +58,9 @@ image.effect.image_scale:
       label: 'Upscale'
 
 image.effect.image_scale_and_crop:
-  type: image.size
+  type: image_size
   label: 'Image scale and crop'
 
-# Schema for configuration files of image module.
 image.settings:
   type: mapping
   mapping:
@@ -89,3 +73,86 @@ image.settings:
     suppress_itok_output:
       type: boolean
       label: 'Suppress the itok query string for image derivatives'
+
+field.image.settings:
+  type: mapping
+  label: 'Image settings'
+  mapping:
+    uri_scheme:
+      type: string
+      label: 'Upload destination'
+    default_image:
+      type: field_default_image
+      label: 'Default value'
+    column_groups:
+      type: mapping
+      label: 'Column groups'
+      mapping:
+        file:
+          type: mapping
+          label: 'File settings'
+          mapping:
+            label:
+              type: label
+              label: 'Label'
+            columns:
+              type: sequence
+              label: 'Columns'
+              sequence:
+                - type: string
+                  label: 'Column'
+        alt:
+          type: mapping
+          label: 'Alternative text'
+          mapping:
+            label:
+              type: label
+              label: 'Label'
+            translatable:
+              type: boolean
+              label: 'Translatable'
+        title:
+          type: mapping
+          label: 'Title text'
+          mapping:
+            label:
+              type: label
+              label: 'Label'
+            translatable:
+              type: boolean
+              label: 'Translatable'
+
+field.image.instance_settings:
+  type: mapping
+  label: 'Image settings'
+  mapping:
+    file_directory:
+      type: string
+      label: 'Upload destination'
+    file_extensions:
+      type: string
+      label: 'Allowed file extensions'
+    max_filesize:
+      type: string
+      label: 'Maximum upload size'
+    max_resolution:
+      type: string
+      label: 'Maximum image resolution'
+    min_resolution:
+      type: string
+      label: 'Minimum image resolution'
+    alt_field:
+      type: boolean
+      label: 'Enable Alt field'
+    alt_field_required:
+      type: boolean
+      label: 'Alt field required'
+    title_field:
+      type: boolean
+      label: 'Enable Title field'
+    title_field_required:
+      type: boolean
+      label: 'Title field required'
+    default_image:
+      type: field_default_image
+      label: 'Default value'
