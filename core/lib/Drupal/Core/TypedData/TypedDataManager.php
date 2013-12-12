@@ -362,7 +362,7 @@ class TypedDataManager extends DefaultPluginManager {
       $class = $type_definition['class'];
     }
     // Check if the class provides allowed values.
-    if (array_key_exists('Drupal\Core\TypedData\AllowedValuesInterface', class_implements($class))) {
+    if (is_subclass_of($class,'Drupal\Core\TypedData\AllowedValuesInterface')) {
       $constraints[] = $validation_manager->create('AllowedValues', array());
     }
 

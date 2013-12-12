@@ -7,9 +7,6 @@
 
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\field\FieldInterface;
-use Drupal\field\FieldInstanceInterface;
 use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
@@ -801,143 +798,11 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
 }
 
 /**
- * Implements hook_field_info().
- *
- * Field settings:
- * - allowed_values: a list array of one or more vocabulary trees:
- *   - vocabulary: a vocabulary machine name.
- *   - parent: a term ID of a term whose children are allowed. This should be
- *     '0' if all terms in a vocabulary are allowed. The allowed values do not
- *     include the parent term.
- *
- */
-function taxonomy_field_info() {
-  return array(
-    'taxonomy_term_reference' => array(
-      'label' => t('Term reference'),
-      'description' => t('This field stores a reference to a taxonomy term.'),
-      'default_widget' => 'options_select',
-      'default_formatter' => 'taxonomy_term_reference_link',
-      'class' => 'Drupal\taxonomy\Type\TaxonomyTermReferenceItem',
-      'settings' => array(
-        'options_list_callback' => NULL,
-        'allowed_values' => array(
-          array(
-            'vocabulary' => '',
-            'parent' => '0',
-          ),
-        ),
-      ),
-      'list_class' => '\Drupal\taxonomy\Plugin\Field\FieldType\TaxonomyTermReferenceFieldItemList',
-    ),
-  );
-}
-
-/**
  * Implements hook_field_widget_info_alter().
  */
 function taxonomy_field_widget_info_alter(&$info) {
   $info['options_select']['field_types'][] = 'taxonomy_term_reference';
   $info['options_buttons']['field_types'][] = 'taxonomy_term_reference';
-}
-
-/**
- * Implements hook_options_list().
- */
-function taxonomy_options_list(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
-  $function = $field_definition->getSetting('options_list_callback') ?: 'taxonomy_allowed_values';
-  return $function($field_definition, $entity);
-}
-
-/**
- * Implements hook_field_validate().
- *
- * Taxonomy field settings allow for either a single vocabulary ID, multiple
- * vocabulary IDs, or sub-trees of a vocabulary to be specified as allowed
- * values, although only the first of these is supported via the field UI.
- * Confirm that terms entered as values meet at least one of these conditions.
- *
- * Possible error codes:
- * - 'taxonomy_term_illegal_value': The value is not part of the list of allowed values.
- */
-function taxonomy_field_validate(EntityInterface $entity = NULL, FieldInterface $field, FieldInstanceInterface $instance, $langcode, $items, &$errors) {
-  // Build an array of existing term IDs so they can be loaded with
-  // entity_load_multiple('taxonomy_term');
-  foreach ($items as $delta => $item) {
-    if (!empty($item['target_id']) && $item['target_id'] != 'autocreate') {
-      $tids[] = $item['target_id'];
-    }
-  }
-  if (!empty($tids)) {
-    $terms = entity_load_multiple('taxonomy_term', $tids);
-
-    // Check each existing item to ensure it can be found in the
-    // allowed values for this field.
-    foreach ($items as $delta => $item) {
-      $validate = TRUE;
-      if (!empty($item['target_id']) && $item['target_id'] != 'autocreate') {
-        $validate = FALSE;
-        foreach ($instance->getSetting('allowed_values') as $settings) {
-          // If no parent is specified, check if the term is in the vocabulary.
-          if (isset($settings['vocabulary']) && empty($settings['parent'])) {
-            if ($settings['vocabulary'] == $terms[$item['target_id']]->bundle()) {
-              $validate = TRUE;
-              break;
-            }
-          }
-          // If a parent is specified, then to validate it must appear in the
-          // array returned by taxonomy_term_load_parents_all().
-          elseif (!empty($settings['parent'])) {
-            $ancestors = taxonomy_term_load_parents_all($item['target_id']);
-            foreach ($ancestors as $ancestor) {
-              if ($ancestor->id() == $settings['parent']) {
-                $validate = TRUE;
-                break 2;
-              }
-            }
-          }
-        }
-      }
-      if (!$validate) {
-        $errors[$instance->getName()][$langcode][$delta][] = array(
-          'error' => 'taxonomy_term_reference_illegal_value',
-          'message' => t('%name: illegal value.', array('%name' => $instance->getLabel())),
-        );
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_field_is_empty().
- */
-function taxonomy_field_is_empty($item, $field_type) {
-  return !is_array($item) || (empty($item['target_id']) && empty($item['entity']));
-}
-
-/**
- * Returns the set of valid terms for a taxonomy field.
- *
- * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
- *   The field definition.
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity object the field is attached to.
- *
- * @return
- *   The array of valid terms for this field, keyed by term id.
- */
-function taxonomy_allowed_values(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
-  $options = array();
-  foreach ($field_definition->getSetting('allowed_values') as $tree) {
-    if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
-      if ($terms = taxonomy_get_tree($vocabulary->id(), $tree['parent'], NULL, TRUE)) {
-        foreach ($terms as $term) {
-          $options[$term->id()] = str_repeat('-', $term->depth) . $term->label();
-        }
-      }
-    }
-  }
-  return $options;
 }
 
 /**
@@ -967,39 +832,6 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
 }
 
 /**
- * Implements hook_field_settings_form().
- */
-function taxonomy_field_settings_form($field, $instance) {
-  // Get proper values for 'allowed_values_function', which is a core setting.
-  $vocabularies = entity_load_multiple('taxonomy_vocabulary');
-  $options = array();
-  foreach ($vocabularies as $vocabulary) {
-    $options[$vocabulary->id()] = $vocabulary->name;
-  }
-  $form['allowed_values'] = array(
-    '#tree' => TRUE,
-  );
-
-  foreach ($field->getSetting('allowed_values') as $delta => $tree) {
-    $form['allowed_values'][$delta]['vocabulary'] = array(
-      '#type' => 'select',
-      '#title' => t('Vocabulary'),
-      '#default_value' => $tree['vocabulary'],
-      '#options' => $options,
-      '#required' => TRUE,
-      '#description' => t('The vocabulary which supplies the options for this field.'),
-      '#disabled' => $field->hasData(),
-    );
-    $form['allowed_values'][$delta]['parent'] = array(
-      '#type' => 'value',
-      '#value' => $tree['parent'],
-    );
-  }
-
-  return $form;
-}
-
-/**
  * @defgroup taxonomy_index Taxonomy indexing
  * @{
  * Functions to maintain taxonomy indexing.
@@ -1016,20 +848,6 @@ function taxonomy_field_settings_form($field, $instance) {
  * you should set the taxonomy.settings:maintain_index_table to '0' to avoid
  * unnecessary writes in SQL.
  */
-
-/**
- * Implements hook_field_presave().
- *
- * Create any new terms defined in a freetagging vocabulary.
- */
-function taxonomy_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
-  foreach ($items as $delta => $item) {
-    if (!$item['target_id'] && isset($item['target_id'])) {
-      $item['entity']->save();
-      $items[$delta]['target_id'] = $item['entity']->id();
-    }
-  }
-}
 
 /**
  * Implements hook_node_insert().

@@ -165,30 +165,6 @@ function taxonomy_schema() {
 }
 
 /**
- * Implements hook_field_schema().
- */
-function taxonomy_field_schema($field) {
-  return array(
-    'columns' => array(
-      'target_id' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-    ),
-    'indexes' => array(
-      'target_id' => array('target_id'),
-    ),
-    'foreign keys' => array(
-      'target_id' => array(
-        'table' => 'taxonomy_term_data',
-        'columns' => array('target_id' => 'tid'),
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_update_dependencies().
  */
 function taxonomy_update_dependencies() {

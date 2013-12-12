@@ -136,4 +136,20 @@ interface FieldItemInterface extends ComplexDataInterface {
    */
   public function deleteRevision();
 
+  /**
+   * Returns the name of the main property, if any.
+   *
+   * Some field items consist mainly of one main property, e.g. the value of a
+   * text field or the @code target_id @endcode of an entity reference. If the
+   * field item has no main property, the method returns NULL.
+   *
+   * @return string|null
+   *   The name of the value property, or NULL if there is none.
+   *
+   * @todo: Move this to ComplexDataInterface once we improved Typed data to do
+   *   not enforce having all methods on the data objects.
+   *   https://drupal.org/node/2002134
+   */
+  public function getMainPropertyName();
+
 }

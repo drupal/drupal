@@ -27,7 +27,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
     foreach ($entities_items as $items) {
       foreach ($items as $item) {
         // Force the array key to prevent duplicates.
-        if ($item->target_id !== 0) {
+        if ($item->target_id != NULL) {
           $tids[$item->target_id] = $item->target_id;
         }
       }
@@ -48,7 +48,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
             $item->entity = $terms[$item->target_id];
           }
           // Terms to be created are not in $terms, but are still legitimate.
-          elseif ($item->target_id === 0 && isset($item->entity)) {
+          elseif ($item->target_id === NULL && isset($item->entity)) {
             // Leave the item in place.
           }
           // Otherwise, unset the instance value, since the term does not exist.

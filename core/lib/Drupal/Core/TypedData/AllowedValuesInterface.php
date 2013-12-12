@@ -24,6 +24,11 @@ use Drupal\Core\Session\AccountInterface;
  * as structured options arrays that can be used in an Options widget such as a
  * select box or checkboxes.
  *
+ * Note that this interface is mostly applicable for primitive data values, but
+ * can be used on complex data structures if a (primitive) main property is
+ * specified. In that case, the allowed values and options apply to the main
+ * property only.
+ *
  * @see \Drupal\options\Plugin\Field\FieldWidget\OptionsWidgetBase
  */
 interface AllowedValuesInterface {

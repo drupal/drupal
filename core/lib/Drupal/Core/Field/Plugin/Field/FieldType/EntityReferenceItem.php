@@ -141,4 +141,12 @@ class EntityReferenceItem extends FieldItemBase {
     }
     parent::onChange($property_name);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMainPropertyName() {
+    return 'target_id';
+  }
+
 }
