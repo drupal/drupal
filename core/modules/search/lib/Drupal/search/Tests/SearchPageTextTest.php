@@ -45,6 +45,9 @@ class SearchPageTextTest extends SearchTestBase {
     $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), 'Help text is displayed when search returns no results.');
     $this->assertText(t('Search'));
     $this->assertTitle($title, 'Search page title is correct');
+    $this->assertNoText('Node', 'Erroneous tab and breadcrumb text is not present');
+    $this->assertNoText(t('Node'), 'Erroneous translated tab and breadcrumb text is not present');
+    $this->assertText(t('Content'), 'Tab and breadcrumb text is present');
 
     $edit['keys'] = $this->searching_user->getUsername();
     $this->drupalPostForm('search/user', $edit, t('Search'));
