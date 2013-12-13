@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Database\Connection;
+use Drupal\comment\CommentInterface;
 use Drupal\views\Plugin\views\field\Numeric;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -121,7 +122,7 @@ class NodeNewComments extends Numeric {
       $result = $this->database->query("SELECT n.nid, COUNT(c.cid) as num_comments FROM {node} n INNER JOIN {comment} c ON n.nid = c.entity_id AND c.entity_type = 'node'
         LEFT JOIN {history} h ON h.nid = n.nid AND h.uid = :h_uid WHERE n.nid IN (:nids)
         AND c.changed > GREATEST(COALESCE(h.timestamp, :timestamp), :timestamp) AND c.status = :status GROUP BY n.nid", array(
-        ':status' => COMMENT_PUBLISHED,
+        ':status' => CommentInterface::PUBLISHED,
         ':h_uid' => $user->id(),
         ':nids' => $nids,
         ':timestamp' => HISTORY_READ_LIMIT,

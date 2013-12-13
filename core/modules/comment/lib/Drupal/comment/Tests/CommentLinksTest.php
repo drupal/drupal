@@ -8,6 +8,7 @@
 namespace Drupal\comment\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\comment\CommentInterface;
 
 /**
  * Tests comment links based on environment configurations.
@@ -146,7 +147,7 @@ class CommentLinksTest extends CommentTestBase {
           'field_name' => 'comment',
           'pid' => 0,
           'uid' => 0,
-          'status' => COMMENT_PUBLISHED,
+          'status' => CommentInterface::PUBLISHED,
           'subject' => $this->randomName(),
           'hostname' => '127.0.0.1',
           'langcode' => Language::LANGCODE_NOT_SPECIFIED,

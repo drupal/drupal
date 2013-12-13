@@ -20,16 +20,6 @@ use Drupal\field\FieldInterface;
 use Drupal\file\FileInterface;
 
 /**
- * Comment is awaiting approval.
- */
-const COMMENT_NOT_PUBLISHED = 0;
-
-/**
- * Comment is published.
- */
-const COMMENT_PUBLISHED = 1;
-
-/**
  * Comments are displayed in a flat list - expanded.
  */
 const COMMENT_MODE_FLAT = 0;
@@ -232,7 +222,7 @@ function comment_menu_alter(&$items) {
  */
 function comment_count_unpublished() {
   $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE status = :status', array(
-    ':status' => COMMENT_NOT_PUBLISHED,
+    ':status' => CommentInterface::NOT_PUBLISHED,
   ))->fetchField();
   return t('Unapproved comments (@count)', array('@count' => $count));
 }
@@ -328,7 +318,7 @@ function comment_get_recent($number = 10) {
   $query = db_select('comment', 'c');
   $query->addMetaData('base_table', 'comment');
   $query->fields('c')
-    ->condition('c.status', COMMENT_PUBLISHED);
+    ->condition('c.status', CommentInterface::PUBLISHED);
   if (\Drupal::moduleHandler()->moduleExists('node')) {
     // Special case to filter by published content.
     $query->innerJoin('node_field_data', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
@@ -391,7 +381,7 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
       ->condition('entity_id', $entity->id())
       ->condition('entity_type', $entity->entityType())
       ->condition('field_id', $entity->entityType() . '__' . $field_name)
-      ->condition('status', COMMENT_PUBLISHED)
+      ->condition('status', CommentInterface::PUBLISHED)
       ->orderBy('created', 'DESC')
       ->orderBy('cid', 'DESC')
       ->range(0, $new_replies);
@@ -412,7 +402,7 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
                       AND entity_type = :entity_type
                       AND field_id = :field_id
                       AND status = :status AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
-      ':status' => COMMENT_PUBLISHED,
+      ':status' => CommentInterface::PUBLISHED,
       ':entity_id' => $entity->id(),
       ':field_id' => $entity->entityType() . '__' . $field_name,
       ':entity_type' => $entity->entityType(),
@@ -722,8 +712,8 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
     ->addMetaData('field_name', $field_name);
 
   if (!user_access('administer comments')) {
-    $query->condition('c.status', COMMENT_PUBLISHED);
-    $count_query->condition('c.status', COMMENT_PUBLISHED);
+    $query->condition('c.status', CommentInterface::PUBLISHED);
+    $count_query->condition('c.status', CommentInterface::PUBLISHED);
   }
   if ($mode == COMMENT_MODE_FLAT) {
     $query->orderBy('c.cid', 'ASC');
@@ -1195,7 +1185,7 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
     $query->addExpression('COUNT(cid)');
     $query->condition('c.entity_type', $entity_type)
       ->condition('c.entity_id', $entity_id)
-      ->condition('c.status', COMMENT_PUBLISHED)
+      ->condition('c.status', CommentInterface::PUBLISHED)
       ->condition('c.created', $timestamp, '>');
     if ($field_name) {
       // Limit to a particular field.
@@ -1236,7 +1226,7 @@ function comment_get_display_ordinal($cid, $instance) {
   $query->addExpression('COUNT(*)', 'count');
   $query->condition('c2.cid', $cid);
   if (!user_access('administer comments')) {
-    $query->condition('c1.status', COMMENT_PUBLISHED);
+    $query->condition('c1.status', CommentInterface::PUBLISHED);
   }
 
   if ($instance->getSetting('default_mode') == COMMENT_MODE_FLAT) {
@@ -1313,7 +1303,7 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
   if ($comment->pid->target_id) {
     $build = array();
     $parent = $comment->pid->entity;
-    if ($parent && $parent->status->value == COMMENT_PUBLISHED) {
+    if ($parent && $parent->status->value == CommentInterface::PUBLISHED) {
       $build = comment_view($parent);
     }
   }
@@ -1478,7 +1468,7 @@ function template_preprocess_comment(&$variables) {
     $variables['status'] = 'preview';
   }
   else {
-    $variables['status'] = ($comment->status->value == COMMENT_NOT_PUBLISHED) ? 'unpublished' : 'published';
+    $variables['status'] = ($comment->status->value == CommentInterface::NOT_PUBLISHED) ? 'unpublished' : 'published';
   }
 
   // Gather comment classes.
@@ -1659,7 +1649,7 @@ function comment_ranking() {
  */
 function comment_file_download_access($field, EntityInterface $entity, FileInterface $file) {
   if ($entity->entityType() == 'comment') {
-    if (user_access('access comments') && $entity->status->value == COMMENT_PUBLISHED || user_access('administer comments')) {
+    if (user_access('access comments') && $entity->status->value == CommentInterface::PUBLISHED || user_access('administer comments')) {
       $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
       // Check access to parent entity.
       return $commented_entity->access('view');

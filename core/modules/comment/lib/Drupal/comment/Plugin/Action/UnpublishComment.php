@@ -10,6 +10,7 @@ namespace Drupal\comment\Plugin\Action;
 use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ActionBase;
+use Drupal\comment\CommentInterface;
 
 /**
  * Unpublishes a comment.
@@ -26,7 +27,7 @@ class UnpublishComment extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($comment = NULL) {
-    $comment->status->value = COMMENT_NOT_PUBLISHED;
+    $comment->status->value = CommentInterface::NOT_PUBLISHED;
     $comment->save();
   }
 

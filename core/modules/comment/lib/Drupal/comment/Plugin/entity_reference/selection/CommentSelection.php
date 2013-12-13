@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\entity_reference\selection;
 
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\comment\CommentInterface;
 use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
@@ -35,7 +36,7 @@ class CommentSelection extends SelectionBase {
     // core requires us to also know about the concept of 'published' and
     // 'unpublished'.
     if (!user_access('administer comments')) {
-      $query->condition('status', COMMENT_PUBLISHED);
+      $query->condition('status', CommentInterface::PUBLISHED);
     }
     return $query;
   }

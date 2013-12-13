@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\comment\CommentInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountInterface;
 
@@ -92,7 +93,7 @@ function tracker_cron() {
         ->condition('c.entity_id', $row->nid)
         ->condition('c.entity_type', 'node')
         ->condition('c.uid', $row->uid, '<>')
-        ->condition('c.status', COMMENT_PUBLISHED);
+        ->condition('c.status', CommentInterface::PUBLISHED);
 
       // Insert the user-level data for the commenters (except if a commenter
       // is the node's author).
@@ -193,7 +194,7 @@ function tracker_node_predelete(EntityInterface $node, $arg = 0) {
 function tracker_comment_update($comment) {
   // $comment->save() calls hook_comment_publish() for all published comments
   // so we need to handle all other values here.
-  if ($comment->status->value != COMMENT_PUBLISHED && $comment->entity_type->value == 'node') {
+  if ($comment->status->value != CommentInterface::PUBLISHED && $comment->entity_type->value == 'node') {
     _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
   }
 }
@@ -285,7 +286,7 @@ function _tracker_calculate_changed($nid) {
   $changed = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC', array(':nid' => $nid), array('target' => 'slave'))->fetchField();
   $latest_comment = db_query_range("SELECT cid, changed FROM {comment} WHERE entity_type = 'node' AND entity_id = :nid AND status = :status ORDER BY changed DESC", 0, 1, array(
     ':nid' => $nid,
-    ':status' => COMMENT_PUBLISHED,
+    ':status' => CommentInterface::PUBLISHED,
   ), array('target' => 'slave'))->fetchObject();
   if ($latest_comment && $latest_comment->changed > $changed) {
     $changed = $latest_comment->changed;
@@ -319,7 +320,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
       $keep_subscription = db_query_range("SELECT COUNT(*) FROM {comment} WHERE entity_type = 'node' AND entity_id = :nid AND uid = :uid AND status = :status", 0, 1, array(
         ':nid' => $nid,
         ':uid' => $uid,
-        ':status' => COMMENT_PUBLISHED,
+        ':status' => CommentInterface::PUBLISHED,
       ))->fetchField();
     }
 

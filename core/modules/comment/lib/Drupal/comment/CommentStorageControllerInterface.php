@@ -9,7 +9,6 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\comment\CommentInterface;
 
 /**
  * Defines a common interface for comment entity controller classes.

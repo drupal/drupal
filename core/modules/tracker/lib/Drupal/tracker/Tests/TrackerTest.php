@@ -7,6 +7,7 @@
 
 namespace Drupal\tracker\Tests;
 
+use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -121,7 +122,7 @@ class TrackerTest extends WebTestBase {
     // Verify that unpublished comments are removed from the tracker.
     $admin_user = $this->drupalCreateUser(array('post comments', 'administer comments', 'access user profiles'));
     $this->drupalLogin($admin_user);
-    $this->drupalPostForm('comment/1/edit', array('status' => COMMENT_NOT_PUBLISHED), t('Save'));
+    $this->drupalPostForm('comment/1/edit', array('status' => CommentInterface::NOT_PUBLISHED), t('Save'));
     $this->drupalGet('user/' . $this->user->id() . '/track');
     $this->assertNoText($other_published_my_comment->label(), 'Unpublished comments are not counted on the tracker listing.');
   }

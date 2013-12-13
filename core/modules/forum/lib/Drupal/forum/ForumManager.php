@@ -11,6 +11,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\comment\CommentInterface;
 use Drupal\field\FieldInfo;
 use Drupal\node\NodeInterface;
 
@@ -518,14 +519,14 @@ class ForumManager implements ForumManagerInterface {
   public function updateIndex($nid) {
     $count = $this->connection->query("SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.entity_id = i.nid WHERE c.entity_id = :nid AND c.field_id = 'node__comment_forum' AND c.entity_type = 'node' AND c.status = :status", array(
       ':nid' => $nid,
-      ':status' => COMMENT_PUBLISHED,
+      ':status' => CommentInterface::PUBLISHED,
     ))->fetchField();
 
     if ($count > 0) {
       // Comments exist.
       $last_reply = $this->connection->queryRange("SELECT cid, name, created, uid FROM {comment} WHERE entity_id = :nid AND field_id = 'node__comment_forum' AND entity_type = 'node' AND status = :status ORDER BY cid DESC", 0, 1, array(
         ':nid' => $nid,
-        ':status' => COMMENT_PUBLISHED,
+        ':status' => CommentInterface::PUBLISHED,
       ))->fetchObject();
       $this->connection->update('forum_index')
         ->fields( array(

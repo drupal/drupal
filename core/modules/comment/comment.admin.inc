@@ -5,6 +5,8 @@
  * Admin page callbacks for the Comment module.
  */
 
+use Drupal\comment\CommentInterface;
+
 /**
  * Page callback: Presents an administrative comment listing.
  *
@@ -70,7 +72,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
   );
 
   // Load the comments that need to be displayed.
-  $status = ($arg == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
+  $status = ($arg == 'approval') ? CommentInterface::NOT_PUBLISHED : CommentInterface::PUBLISHED;
   $header = array(
     'subject' => array('data' => t('Subject'), 'field' => 'subject'),
     'author' => array('data' => t('Author'), 'field' => 'name', 'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
@@ -218,10 +220,10 @@ function comment_admin_overview_submit($form, &$form_state) {
       $comment = comment_load($value);
 
       if ($operation == 'unpublish') {
-        $comment->status->value = COMMENT_NOT_PUBLISHED;
+        $comment->status->value = CommentInterface::NOT_PUBLISHED;
       }
       elseif ($operation == 'publish') {
-        $comment->status->value = COMMENT_PUBLISHED;
+        $comment->status->value = CommentInterface::PUBLISHED;
       }
       $comment->save();
     }

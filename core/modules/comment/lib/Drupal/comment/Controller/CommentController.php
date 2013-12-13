@@ -97,7 +97,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
    * @return \Symfony\Component\HttpFoundation\RedirectResponse.
    */
   public function commentApprove(CommentInterface $comment) {
-    $comment->status->value = COMMENT_PUBLISHED;
+    $comment->status->value = CommentInterface::PUBLISHED;
     $comment->save();
 
     drupal_set_message($this->t('Comment approved.'));
@@ -246,7 +246,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
         // Load the parent comment.
         $comment = $this->entityManager()->getStorageController('comment')->load($pid);
         // Check if the parent comment is published and belongs to the current nid.
-        if (($comment->status->value == COMMENT_NOT_PUBLISHED) || ($comment->entity_id->value != $entity->id())) {
+        if (($comment->status->value == CommentInterface::NOT_PUBLISHED) || ($comment->entity_id->value != $entity->id())) {
           drupal_set_message($this->t('The comment you are replying to does not exist.'), 'error');
           return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
         }

@@ -219,7 +219,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     parent::preSave($storage_controller);
 
     if (!isset($this->status->value)) {
-      $this->status->value = \Drupal::currentUser()->hasPermission('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED;
+      $this->status->value = \Drupal::currentUser()->hasPermission('skip comment approval') ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED;
     }
     if ($this->isNew()) {
       // Add the comment to database. This next section builds the thread field.
@@ -306,7 +306,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $this->releaseThreadLock();
     // Update the {comment_entity_statistics} table prior to executing the hook.
     $storage_controller->updateEntityStatistics($this);
-    if ($this->status->value == COMMENT_PUBLISHED) {
+    if ($this->status->value == CommentInterface::PUBLISHED) {
       module_invoke_all('comment_publish', $this);
     }
   }

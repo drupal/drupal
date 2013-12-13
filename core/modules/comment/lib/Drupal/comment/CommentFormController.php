@@ -117,7 +117,7 @@ class CommentFormController extends ContentEntityFormController {
     // Prepare default values for form elements.
     if ($is_admin) {
       $author = $comment->name->value;
-      $status = (isset($comment->status->value) ? $comment->status->value : COMMENT_NOT_PUBLISHED);
+      $status = (isset($comment->status->value) ? $comment->status->value : CommentInterface::NOT_PUBLISHED);
       if (empty($form_state['comment_preview'])) {
         $form['#title'] = $this->t('Edit comment %title', array(
           '%title' => $comment->subject->value,
@@ -131,7 +131,7 @@ class CommentFormController extends ContentEntityFormController {
       else {
         $author = ($comment->name->value ? $comment->name->value : '');
       }
-      $status = ($this->currentUser->hasPermission('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
+      $status = ($this->currentUser->hasPermission('skip comment approval') ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED);
     }
 
     $date = '';
@@ -195,8 +195,8 @@ class CommentFormController extends ContentEntityFormController {
       '#title' => $this->t('Status'),
       '#default_value' => $status,
       '#options' => array(
-        COMMENT_PUBLISHED => $this->t('Published'),
-        COMMENT_NOT_PUBLISHED => $this->t('Not published'),
+        CommentInterface::PUBLISHED => $this->t('Published'),
+        CommentInterface::NOT_PUBLISHED => $this->t('Not published'),
       ),
       '#access' => $is_admin,
     );
@@ -383,7 +383,7 @@ class CommentFormController extends ContentEntityFormController {
       watchdog('content', 'Comment posted: %subject.', array('%subject' => $comment->subject->value), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->id(), array('fragment' => 'comment-' . $comment->id())));
 
       // Explain the approval queue if necessary.
-      if ($comment->status->value == COMMENT_NOT_PUBLISHED) {
+      if ($comment->status->value == CommentInterface::NOT_PUBLISHED) {
         if (!$this->currentUser->hasPermission('administer comments')) {
           drupal_set_message($this->t('Your comment has been queued for review by site administrators and will be published after approval.'));
         }

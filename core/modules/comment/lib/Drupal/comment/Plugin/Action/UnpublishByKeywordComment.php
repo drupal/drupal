@@ -10,6 +10,7 @@ namespace Drupal\comment\Plugin\Action;
 use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\comment\CommentInterface;
 
 /**
  * Unpublishes a comment containing certain keywords.
@@ -30,7 +31,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase {
     $text = drupal_render($build);
     foreach ($this->configuration['keywords'] as $keyword) {
       if (strpos($text, $keyword) !== FALSE) {
-        $comment->status->value = COMMENT_NOT_PUBLISHED;
+        $comment->status->value = CommentInterface::NOT_PUBLISHED;
         $comment->save();
         break;
       }

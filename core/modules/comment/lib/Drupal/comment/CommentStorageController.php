@@ -62,7 +62,7 @@ class CommentStorageController extends FieldableDatabaseStorageController implem
     $count = $query->condition('c.entity_id', $comment->entity_id->value)
       ->condition('c.entity_type', $comment->entity_type->value)
       ->condition('c.field_id', $comment->field_id->value)
-      ->condition('c.status', COMMENT_PUBLISHED)
+      ->condition('c.status', CommentInterface::PUBLISHED)
       ->execute()
       ->fetchField();
 
@@ -73,7 +73,7 @@ class CommentStorageController extends FieldableDatabaseStorageController implem
         ->condition('c.entity_id', $comment->entity_id->value)
         ->condition('c.entity_type', $comment->entity_type->value)
         ->condition('c.field_id', $comment->field_id->value)
-        ->condition('c.status', COMMENT_PUBLISHED)
+        ->condition('c.status', CommentInterface::PUBLISHED)
         ->orderBy('c.created', 'DESC')
         ->range(0, 1)
         ->execute()

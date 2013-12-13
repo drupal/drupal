@@ -10,6 +10,7 @@ namespace Drupal\comment\Plugin\Action;
 use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ActionBase;
+use Drupal\comment\CommentInterface;
 
 /**
  * Publishes a comment.
@@ -26,7 +27,7 @@ class PublishComment extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($comment = NULL) {
-    $comment->status->value = COMMENT_PUBLISHED;
+    $comment->status->value = CommentInterface::PUBLISHED;
     $comment->save();
   }
 

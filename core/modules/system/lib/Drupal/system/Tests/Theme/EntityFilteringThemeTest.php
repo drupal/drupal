@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -112,7 +113,7 @@ class EntityFilteringThemeTest extends WebTestBase {
       'entity_id' => $this->node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
-      'status' => COMMENT_PUBLISHED,
+      'status' => CommentInterface::PUBLISHED,
       'subject' => $this->xss_label,
       'comment_body' => array($this->randomName()),
     ));

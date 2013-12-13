@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\CommentInterface;
+
 /**
  * Tests the comment module administrative and end-user-facing interfaces.
  */
@@ -146,7 +148,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->setCommentsPerPage(50);
 
     // Attempt to reply to an unpublished comment.
-    $reply_loaded->status->value = COMMENT_NOT_PUBLISHED;
+    $reply_loaded->status->value = CommentInterface::NOT_PUBLISHED;
     $reply_loaded->save();
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $reply_loaded->id());
     $this->assertText(t('The comment you are replying to does not exist.'), 'Replying to an unpublished comment');

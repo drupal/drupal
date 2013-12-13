@@ -7,6 +7,7 @@
 
 namespace Drupal\forum\Tests;
 
+use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -62,7 +63,7 @@ class ForumUninstallTest extends WebTestBase {
       'field_name' => 'comment_forum',
       'pid' => 0,
       'uid' => 0,
-      'status' => COMMENT_PUBLISHED,
+      'status' => CommentInterface::PUBLISHED,
       'subject' => $this->randomName(),
       'hostname' => '127.0.0.1',
     ));
