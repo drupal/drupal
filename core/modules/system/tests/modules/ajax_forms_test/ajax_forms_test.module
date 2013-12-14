@@ -414,8 +414,21 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, $form_state) 
  * Ajax callback for 'settings' but with setting overrides.
  */
 function ajax_forms_test_advanced_commands_settings_with_merging_callback($form, $form_state) {
-  drupal_add_js(array('ajax_forms_test' => array('foo' => 42)), 'setting');
-  drupal_add_js(array('ajax_forms_test' => array('foo' => 9001)), 'setting');
+  $attached = array(
+    '#attached' => array(
+      'js' => array(
+        0 => array(
+          'type' => 'setting',
+          'data' => array('ajax_forms_test' => array('foo' => 42)),
+        ),
+        '1' => array(
+          'type' => 'setting',
+          'data' => array('ajax_forms_test' => array('foo' => 9001)),
+        ),
+      ),
+    ),
+  );
+  drupal_render($attached);
 
   $response = new AjaxResponse();
   return $response;
@@ -541,9 +554,22 @@ function ajax_forms_test_lazy_load_form($form, &$form_state) {
  */
 function ajax_forms_test_lazy_load_form_submit($form, &$form_state) {
   if ($form_state['values']['add_files']) {
-    drupal_add_js(array('ajax_forms_test_lazy_load_form_submit' => 'executed'), 'setting');
-    drupal_add_css(drupal_get_path('module', 'system') . '/css/system.admin.css');
-    drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+    $path = drupal_get_path('module', 'system');
+    $attached = array(
+      '#attached' => array(
+        'css' => array(
+          $path . '/css/system.admin.css' => array(),
+        ),
+        'js' => array(
+          0 => array(
+            'type' => 'setting',
+            'data' => array('ajax_forms_test_lazy_load_form_submit' => 'executed'),
+          ),
+          $path . '/system.js' => array(),
+        ),
+      ),
+    );
+    drupal_render($attached);
   }
   $form_state['rebuild'] = TRUE;
 }

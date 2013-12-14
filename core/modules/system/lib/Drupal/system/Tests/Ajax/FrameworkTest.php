@@ -47,14 +47,35 @@ class FrameworkTest extends AjaxTestBase {
     // Expected commands, in a very specific order.
     $expected_commands[0] = new SettingsCommand(array('ajax' => 'test'), TRUE);
     drupal_static_reset('drupal_add_css');
-    drupal_add_css($path . '/css/system.admin.css');
-    drupal_add_css($path . '/css/system.maintenance.css');
+    $attached = array(
+      '#attached' => array(
+        'css' => array(
+          $path . '/css/system.admin.css' => array(),
+          $path . '/css/system.maintenance.css' => array()
+        ),
+      ),
+    );
+    drupal_render($attached);
     $expected_commands[1] = new AddCssCommand(drupal_get_css(drupal_add_css(), TRUE));
     drupal_static_reset('drupal_add_js');
-    drupal_add_js($path . '/system.js');
+    $attached = array(
+      '#attached' => array(
+        'js' => array(
+          $path . '/system.js' => array(),
+        ),
+      ),
+    );
+    drupal_render($attached);
     $expected_commands[2] = new PrependCommand('head', drupal_get_js('header', drupal_add_js(), TRUE));
     drupal_static_reset('drupal_add_js');
-    drupal_add_js($path . '/system.modules.js', array('scope' => 'footer'));
+    $attached = array(
+      '#attached' => array(
+        'js' => array(
+          $path . '/system.modules.js' => array('scope' => 'footer'),
+        ),
+      ),
+    );
+    drupal_render($attached);
     $expected_commands[3] = new AppendCommand('body', drupal_get_js('footer', drupal_add_js(), TRUE));
     $expected_commands[4] = new HtmlCommand('body', 'Hello, world!');
 
