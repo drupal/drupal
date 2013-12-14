@@ -1,7 +1,8 @@
 id: feedback
-label: 'Website feedback'
 uuid: 29821a98-2498-4161-8d00-e4dba46dd1e8
+label: 'Website feedback'
 recipients: {  }
 reply: ''
 weight: 0
+status: true
 langcode: en

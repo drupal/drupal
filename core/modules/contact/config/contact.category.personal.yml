@@ -1,6 +1,8 @@
 id: personal
-label: 'Personal contact form'
 uuid: 4520a81c-a103-4b4d-b000-e95741044672
+label: 'Personal contact form'
 recipients: {  }
 reply: ''
 weight: 0
+status: true
+langcode: en

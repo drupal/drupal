@@ -2,13 +2,13 @@ base_field: uid
 base_table: users
 core: 8.x
 description: ''
-status: '1'
+status: true
 display:
   default:
     display_plugin: default
     id: default
     display_title: Master
-    position: '1'
+    position: 1
     display_options:
       access:
         type: perm
@@ -21,42 +21,42 @@ display:
       query:
         type: views_query
         options:
-          disable_sql_rewrite: '0'
-          distinct: '0'
-          slave: '0'
+          disable_sql_rewrite: false
+          distinct: false
+          slave: false
           query_comment: ''
           query_tags: {  }
       exposed_form:
         type: basic
         options:
           submit_button: Apply
-          reset_button: '0'
+          reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
-          expose_sort_order: '1'
+          expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
         type: full
         options:
-          items_per_page: '10'
-          offset: '0'
-          id: '0'
+          items_per_page: 10
+          offset: 0
+          id: 0
           total_pages: ''
           expose:
-            items_per_page: '0'
+            items_per_page: 0
             items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 20, 40, 60'
-            items_per_page_options_all: '0'
+            items_per_page_options: 5, 10, 20, 40, 60
+            items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
-            offset: '0'
+            offset: false
             offset_label: Offset
           tags:
             previous: '‹ previous'
             next: 'next ›'
             first: '« first'
             last: 'last »'
-          quantity: '9'
+          quantity: 9
       style:
         type: default
       row:
@@ -68,34 +68,34 @@ display:
           field: name
           label: ''
           alter:
-            alter_text: '0'
-            make_link: '0'
-            absolute: '0'
-            trim: '0'
-            word_boundary: '0'
-            ellipsis: '0'
-            strip_tags: '0'
-            html: '0'
-          hide_empty: '0'
-          empty_zero: '0'
-          link_to_user: '1'
-          overwrite_anonymous: '0'
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          link_to_user: true
+          overwrite_anonymous: false
           relationship: none
           group_type: group
           admin_label: ''
-          exclude: '0'
+          exclude: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_alter_empty: '1'
+          hide_alter_empty: true
           anonymous_text: ''
-          format_username: '1'
+          format_username: true
         contact:
           id: contact
           table: users
@@ -104,13 +104,13 @@ display:
           exclude: ''
       filters:
         status:
-          value: '1'
+          value: true
           table: users
           field: status
           id: status
           expose:
-            operator: '0'
-          group: '1'
+            operator: 0
+          group: 1
       sorts: {  }
       title: test_contact_link
       header: {  }
@@ -122,7 +122,7 @@ display:
     display_plugin: page
     id: page_1
     display_title: Page
-    position: '1'
+    position: 1
     display_options:
       path: test-contact-link
 label: test_contact_link
