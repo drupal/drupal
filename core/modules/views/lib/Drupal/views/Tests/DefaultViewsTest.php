@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\comment\CommentInterface;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewExecutable;
@@ -106,6 +107,7 @@ class DefaultViewsTest extends ViewTestBase {
 
       $comment = array(
         'uid' => $user->id(),
+        'status' => CommentInterface::PUBLISHED,
         'entity_id' => $node->id(),
         'entity_type' => 'node',
         'field_name' => 'comment'

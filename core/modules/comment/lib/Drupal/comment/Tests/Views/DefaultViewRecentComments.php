@@ -7,8 +7,9 @@
 
 namespace Drupal\comment\Tests\Views;
 
+use Drupal\comment\CommentInterface;
 use Drupal\entity\DatabaseStorageController;
-use  Drupal\views\Tests\ViewTestBase;
+use Drupal\views\Tests\ViewTestBase;
 
 class DefaultViewRecentComments extends ViewTestBase {
 
@@ -82,13 +83,12 @@ class DefaultViewRecentComments extends ViewTestBase {
     // Create some comments and attach them to the created node.
     for ($i = 0; $i < $this->masterDisplayResults; $i++) {
       $comment = entity_create('comment', array(
+        'status' => CommentInterface::PUBLISHED,
         'field_name' => 'comment',
         'entity_type' => 'node',
         'entity_id' => $this->node->id(),
       ));
       $comment->uid->target_id = 0;
-      // Stagger the comments so the timestamp sorting works.
-      $comment->created->value = REQUEST_TIME - $i;
       $comment->subject->value = 'Test comment ' . $i;
       $comment->comment_body->value = 'Test body ' . $i;
       $comment->comment_body->format = 'full_html';
@@ -104,7 +104,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     // Store all the nodes just created to access their properties on the tests.
     $this->commentsCreated = entity_load_multiple('comment');
 
-    // Sort created comments in ascending order.
+    // Sort created comments in descending order.
     ksort($this->commentsCreated, SORT_NUMERIC);
   }
 
@@ -120,14 +120,14 @@ class DefaultViewRecentComments extends ViewTestBase {
       'comment_entity_id' => 'entity_id',
       'comment_subject' => 'subject',
       'cid' => 'cid',
-      'comment_changed' => 'changed'
+      'comment_created' => 'created'
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
       $expected_result[$key]['entity_id'] = $comment->entity_id->value;
       $expected_result[$key]['subject'] = $comment->subject->value;
       $expected_result[$key]['cid'] = $comment->id();
-      $expected_result[$key]['changed'] = $comment->changed->value;
+      $expected_result[$key]['created'] = $comment->created->value;
     }
     $this->assertIdenticalResultset($view, $expected_result, $map);
 
@@ -139,34 +139,4 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
   }
 
-  /**
-   * Tests the page defined by the comments_recent view.
-   */
-  public function testPageDisplay() {
-    $view = views_get_view('comments_recent');
-    $view->setDisplay('page_1');
-    $this->executeView($view);
-
-    $map = array(
-      'comment_entity_id' => 'entity_id',
-      'comment_subject' => 'subject',
-      'comment_changed' => 'changed',
-      'cid' => 'cid'
-    );
-    $expected_result = array();
-    foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['entity_id'] = $comment->entity_id->value;
-      $expected_result[$key]['subject'] = $comment->subject->value;
-      $expected_result[$key]['changed'] = $comment->changed->value;
-      $expected_result[$key]['cid'] = $comment->id();
-    }
-    $this->assertIdenticalResultset($view, $expected_result, $map);
-
-    // Check the number of results given by the display is the expected.
-    $this->assertEqual(count($view->result), $this->pageDisplayResults,
-      format_string('There are exactly @results comments. Expected @expected',
-        array('@results' => count($view->result), '@expected' => $this->pageDisplayResults)
-      )
-    );
-  }
 }
