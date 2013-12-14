@@ -247,8 +247,7 @@ class File extends ContentEntityBase implements FileInterface {
       ->setLabel(t('File MIME type'))
       ->setDescription(t("The file's MIME type."));
 
-    // @todo Convert to an integer field in https://drupal.org/node/2149877.
-    $fields['filesize'] = FieldDefinition::create('boolean')
+    $fields['filesize'] = FieldDefinition::create('integer')
       ->setLabel(t('File size'))
       ->setDescription(t('The size of the file in bytes.'));
 
