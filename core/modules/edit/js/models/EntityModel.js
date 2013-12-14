@@ -296,6 +296,16 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
                 'state': 'deactivating',
                 'isCommitting' : false
               }, {'saved': true});
+            },
+            error: function () {
+              // Reset the "isCommitting" mutex.
+              entityModel.set('isCommitting', false);
+              // Change the state back to "opened", to allow the user to hit the
+              // "Save" button again.
+              entityModel.set('state', 'opened', { reason: 'networkerror' });
+              // Show a modal to inform the user of the network error.
+              var message = Drupal.t('Your changes to <q>@entity-title</q> could not be saved, either due to a website problem or a network connection problem.<br>Please try again.', { '@entity-title' : entityModel.get('label') })
+              Drupal.edit.util.networkErrorModal(Drupal.t('Sorry!'), message);
             }
           });
         }
@@ -345,7 +355,13 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
     var entitySaverAjax = new Drupal.ajax(id, $el, {
       url: Drupal.url('edit/entity/' + entityModel.get('entityID')),
       event: 'edit-save.edit',
-      progress: { type: 'none' }
+      progress: { type: 'none' },
+      error: function () {
+        $el.off('edit-save.edit');
+        // Let the Drupal.edit.EntityModel Backbone model's error() method
+        // handle errors.
+        options.error.call(entityModel);
+      }
     });
     // Entity saved successfully.
     entitySaverAjax.commands.editEntitySaved = function(ajax, response, status) {
@@ -438,8 +454,9 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
         accept = true;
       }
       // Allow: committing -> opened.
-      // Necessary to be able to correct an invalid field.
-      else if (from === 'committing' && to === 'opened' && context.reason && context.reason === 'invalid') {
+      // Necessary to be able to correct an invalid field, or to hit the "Save"
+      // button again after a server/network error.
+      else if (from === 'committing' && to === 'opened' && context.reason && (context.reason === 'invalid' || context.reason === 'networkerror')) {
         accept = true;
       }
       // Allow: deactivating -> opened.

@@ -32,6 +32,37 @@ Drupal.edit.util.buildUrl = function (id, urlFormat) {
   });
 };
 
+/**
+ * Shows a network error modal dialog.
+ *
+ * @param String title
+ *   The title to use in the modal dialog.
+ * @param String message
+ *   The message to use in the modal dialog.
+ */
+Drupal.edit.util.networkErrorModal = function (title, message) {
+  var networkErrorModal = Drupal.dialog('<div>' + message + '</div>', {
+    title: title,
+    dialogClass: 'edit-network-error',
+    buttons: [
+      {
+        text: Drupal.t('OK'),
+        click: function() {
+          networkErrorModal.close();
+        }
+      }
+    ],
+    create: function () {
+      $(this).parent().find('.ui-dialog-titlebar-close').remove();
+    },
+    close: function (event) {
+      // Automatically destroy the DOM element that was used for the dialog.
+      $(event.target).remove();
+    }
+  });
+  networkErrorModal.showModal();
+};
+
 Drupal.edit.util.form = {
 
   /**
@@ -67,7 +98,20 @@ Drupal.edit.util.form = {
         nocssjs : options.nocssjs,
         reset : options.reset
       },
-      progress: { type : null } // No progress indicator.
+      progress: { type : null }, // No progress indicator.
+      error: function (xhr, url) {
+        $el.off('edit-internal.edit');
+
+        // Show a modal to inform the user of the network error.
+        var fieldLabel = Drupal.edit.metadata.get(fieldID, 'label');
+        var message = Drupal.t('Could not load the form for <q>@field-label</q>, either due to a website problem or a network connection problem.<br>Please try again.', { '@field-label' : fieldLabel });
+        Drupal.edit.util.networkErrorModal(Drupal.t('Sorry!'), message);
+
+        // Change the state back to "candidate", to allow the user to start
+        // in-place editing of the field again.
+        var fieldModel = Drupal.edit.app.model.get('activeField');
+        fieldModel.set('state', 'candidate');
+      }
     });
     // Implement a scoped editFieldForm AJAX command: calls the callback.
     formLoaderAjax.commands.editFieldForm = function (ajax, response, status) {
