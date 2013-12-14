@@ -337,7 +337,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
   protected function invokeFieldMethod($method, ContentEntityInterface $entity) {
     foreach (array_keys($entity->getTranslationLanguages()) as $langcode) {
       $translation = $entity->getTranslation($langcode);
-      foreach ($translation as $field) {
+      foreach ($translation->getProperties(TRUE) as $field) {
         $field->$method();
       }
     }
