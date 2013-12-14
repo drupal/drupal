@@ -180,6 +180,7 @@ function aggregator_schema() {
     'primary key' => array('iid'),
     'indexes' => array(
       'fid' => array('fid'),
+      'timestamp' => array('timestamp'),
     ),
     'foreign keys' => array(
       'aggregator_feed' => array(
@@ -230,4 +231,13 @@ function aggregator_update_8001() {
     'default' => '',
     'initial' => Language::LANGCODE_NOT_SPECIFIED,
   ));
+}
+
+/**
+ * Add index on timestamp.
+ */
+function aggregator_update_8002() {
+  if (!db_index_exists('aggregator_item', 'timestamp')) {
+    db_add_index('aggregator_item', 'timestamp', array('timestamp'));
+  }
 }
