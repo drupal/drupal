@@ -2,7 +2,7 @@ base_field: wid
 base_table: watchdog
 core: 8.x
 description: ''
-status: '1'
+status: true
 display:
   default:
     display_plugin: default
