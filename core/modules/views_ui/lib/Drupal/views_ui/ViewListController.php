@@ -154,31 +154,17 @@ class ViewListController extends ConfigEntityListController implements EntityCon
     // Add AJAX functionality to enable/disable operations.
     foreach (array('enable', 'disable') as $op) {
       if (isset($operations[$op])) {
-        $operations[$op]['ajax'] = TRUE;
         $operations[$op]['route_name'] = 'views_ui.operation';
         $operations[$op]['route_parameters'] = array('view' => $entity->id(), 'op' => $op);
         // @todo Remove this when entity links use route_names.
         unset($operations[$op]['href']);
+
+        // Enable and disable operations should use AJAX.
+        $operations[$op]['attributes']['class'][] = 'use-ajax';
       }
     }
 
     return $operations;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildOperations(EntityInterface $entity) {
-    $build = parent::buildOperations($entity);
-
-    // Allow operations to specify that they use AJAX.
-    foreach ($build['#links'] as &$operation) {
-      if (!empty($operation['ajax'])) {
-        $operation['attributes']['class'][] = 'use-ajax';
-      }
-    }
-
-    return $build;
   }
 
   /**

@@ -1247,6 +1247,7 @@ function theme_links($variables) {
         'href' => NULL,
         'route_name' => NULL,
         'route_parameters' => NULL,
+        'ajax' => NULL,
       );
 
       $class = array();
@@ -1268,13 +1269,8 @@ function theme_links($variables) {
         '#href' => $link['href'],
         '#route_name' => $link['route_name'],
         '#route_parameters' => $link['route_parameters'],
+        '#ajax' => $link['ajax'],
       );
-
-      // @todo Reconcile Views usage of 'ajax' as a boolean with the rest of
-      //   core's usage of it as an array.
-      if (isset($link['ajax']) && is_array($link['ajax'])) {
-        $link_element['#ajax'] = $link['ajax'];
-      }
 
       // Handle links and ensure that the active class is added on the LIs.
       if (isset($link['route_name'])) {
