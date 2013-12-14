@@ -233,6 +233,7 @@ function user_install() {
       'uid' => 0,
       'name' => '',
       'mail' => '',
+      'langcode' => language_default()->id,
     ))
     ->execute();
 
@@ -246,6 +247,7 @@ function user_install() {
       'mail' => 'placeholder-for-uid-1',
       'created' => REQUEST_TIME,
       'status' => 1,
+      'langcode' => language_default()->id,
     ))
     ->execute();
 }

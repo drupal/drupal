@@ -35,6 +35,8 @@ class InstallerTranslationTest extends InstallerTest {
 
     // Add the translations directory so we can retrieve German translations.
     $conf['locale.settings']['translation.path'] = drupal_get_path('module', 'simpletest') . '/files/translations';
+    $conf['language_default']['name'] = 'German';
+    $conf['language_default']['id'] = 'de';
 
     // Create the database prefix for this test.
     $this->prepareDatabasePrefix();
@@ -119,6 +121,16 @@ class InstallerTranslationTest extends InstallerTest {
       }
       $config->save();
     }
+
+    // Submit site configuration form.
+    $this->drupalPostForm(NULL, array(
+      'site_mail' => 'admin@test.de',
+      'account[name]' => 'admin',
+      'account[mail]' => 'admin@test.de',
+      'account[pass][pass1]' => '123',
+      'account[pass][pass2]' => '123',
+      'site_default_country' => 'DE',
+    ), $submit_value);
 
     // Use the test mail class instead of the default mail handler class.
     \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();
