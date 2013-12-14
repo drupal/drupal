@@ -705,7 +705,7 @@ function comment_update_8008(&$sandbox) {
  * Remove the comment_block_count variable.
  */
 function comment_update_8009() {
-  variable_del('comment_block_count');
+  update_variable_del('comment_block_count');
 }
 
 /**
