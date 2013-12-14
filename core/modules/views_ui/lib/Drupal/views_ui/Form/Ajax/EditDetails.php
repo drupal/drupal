@@ -35,7 +35,7 @@ class EditDetails extends ViewsFormBase {
   public function buildForm(array $form, array &$form_state) {
     $view = $form_state['view'];
 
-    $form['#title'] = $this->t('View name and description');
+    $form['#title'] = $this->t('Name and description');
     $form['#section'] = 'details';
 
     $form['details'] = array(
@@ -44,8 +44,7 @@ class EditDetails extends ViewsFormBase {
     );
     $form['details']['label'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Human-readable name'),
-      '#description' => $this->t('A descriptive human-readable name for this view. Spaces are allowed'),
+      '#title' => t('Administrative name'),
       '#default_value' => $view->label(),
     );
     $form['details']['langcode'] = array(
@@ -54,18 +53,17 @@ class EditDetails extends ViewsFormBase {
       '#description' => $this->t('Language of labels and other textual elements in this view.'),
       '#default_value' => $view->get('langcode'),
     );
+    $form['details']['description'] = array(
+       '#type' => 'textfield',
+       '#title' => t('Administrative description'),
+       '#default_value' => $view->get('description'),
+     );
     $form['details']['tag'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('View tag'),
-      '#description' => $this->t('Optionally, enter a comma delimited list of tags for this view to use in filtering and sorting views on the administrative page.'),
+      '#title' => t('Administrative tags'),
+      '#description' => t('Enter a comma-separated list of words to describe your view.'),
       '#default_value' => $view->get('tag'),
       '#autocomplete_route_name' => 'views_ui.autocomplete',
-    );
-    $form['details']['description'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('View description'),
-      '#description' => $this->t('This description will appear on the Views administrative UI to tell you what the view is about.'),
-      '#default_value' => $view->get('description'),
     );
 
     $view->getStandardButtons($form, $form_state, 'views_ui_edit_details_form');
