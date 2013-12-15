@@ -86,33 +86,36 @@ abstract class CommentTestBase extends WebTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface|null $entity
    *   Node to post comment on or NULL to post to the previously loaded page.
-   * @param $comment
+   * @param string $comment
    *   Comment body.
-   * @param $subject
+   * @param string $subject
    *   Comment subject.
-   * @param $contact
+   * @param string $contact
    *   Set to NULL for no contact info, TRUE to ignore success checking, and
    *   array of values to set contact info.
+   * @param string $field_name
+   *   (optional) Field name through which the comment should be posted.
+   *   Defaults to 'comment'.
    *
    * @return \Drupal\comment\CommentInterface|null
    *   The posted comment or NULL when posted comment was not found.
    */
-  function postComment($entity, $comment, $subject = '', $contact = NULL) {
+  public function postComment($entity, $comment, $subject = '', $contact = NULL, $field_name = 'comment') {
     $edit = array();
     $edit['comment_body[0][value]'] = $comment;
 
     if ($entity !== NULL) {
-      $instance = $this->container->get('field.info')->getInstance('node', $entity->bundle(), 'comment');
+      $instance = $this->container->get('field.info')->getInstance('node', $entity->bundle(), $field_name);
     }
     else {
-      $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
+      $instance = $this->container->get('field.info')->getInstance('node', 'article', $field_name);
     }
     $preview_mode = $instance->settings['preview'];
     $subject_mode = $instance->settings['subject'];
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {
-      $this->drupalGet('comment/reply/node/' . $entity->id() . '/comment');
+      $this->drupalGet('comment/reply/node/' . $entity->id() . '/' . $field_name);
     }
 
     if ($subject_mode == TRUE) {
@@ -202,11 +205,14 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Sets the value governing whether the subject field should be enabled.
    *
-   * @param boolean $enabled
+   * @param bool $enabled
    *   Boolean specifying whether the subject field should be enabled.
+   * @param string $field_name
+   *   (optional) Field name through which the comment should be posted.
+   *   Defaults to 'comment'.
    */
-  function setCommentSubject($enabled) {
-    $this->setCommentSettings('subject', ($enabled ? '1' : '0'), 'Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
+  public function setCommentSubject($enabled, $field_name = 'comment') {
+    $this->setCommentSettings('subject', ($enabled ? '1' : '0'), 'Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.', $field_name);
   }
 
   /**
@@ -214,8 +220,11 @@ abstract class CommentTestBase extends WebTestBase {
    *
    * @param int $mode
    *   The preview mode: DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
+   * @param string $field_name
+   *   (optional) Field name through which the comment should be posted.
+   *   Defaults to 'comment'.
    */
-  function setCommentPreview($mode) {
+  public function setCommentPreview($mode, $field_name = 'comment') {
     switch ($mode) {
       case DRUPAL_DISABLED:
         $mode_text = 'disabled';
@@ -229,18 +238,21 @@ abstract class CommentTestBase extends WebTestBase {
         $mode_text = 'required';
         break;
     }
-    $this->setCommentSettings('preview', $mode, format_string('Comment preview @mode_text.', array('@mode_text' => $mode_text)));
+    $this->setCommentSettings('preview', $mode, format_string('Comment preview @mode_text.', array('@mode_text' => $mode_text)), $field_name);
   }
 
   /**
    * Sets the value governing whether the comment form is on its own page.
    *
-   * @param boolean $enabled
+   * @param bool $enabled
    *   TRUE if the comment form should be displayed on the same page as the
    *   comments; FALSE if it should be displayed on its own page.
+   * @param string $field_name
+   *   (optional) Field name through which the comment should be posted.
+   *   Defaults to 'comment'.
    */
-  function setCommentForm($enabled) {
-    $this->setCommentSettings('form_location', ($enabled ? COMMENT_FORM_BELOW : COMMENT_FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.');
+  public function setCommentForm($enabled, $field_name = 'comment') {
+    $this->setCommentSettings('form_location', ($enabled ? COMMENT_FORM_BELOW : COMMENT_FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.', $field_name);
   }
 
   /**
@@ -259,11 +271,14 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Sets the value specifying the default number of comments per page.
    *
-   * @param integer $comments
+   * @param int $number
    *   Comments per page value.
+   * @param string $field_name
+   *   (optional) Field name through which the comment should be posted.
+   *   Defaults to 'comment'.
    */
-  function setCommentsPerPage($number) {
-    $this->setCommentSettings('per_page', $number, format_string('Number of comments per page set to @number.', array('@number' => $number)));
+  public function setCommentsPerPage($number, $field_name = 'comment') {
+    $this->setCommentSettings('per_page', $number, format_string('Number of comments per page set to @number.', array('@number' => $number)), $field_name);
   }
 
   /**
@@ -275,9 +290,12 @@ abstract class CommentTestBase extends WebTestBase {
    *   Value of variable.
    * @param string $message
    *   Status message to display.
+   * @param string $field_name
+   *   (optional) Field name through which the comment should be posted.
+   *   Defaults to 'comment'.
    */
-  function setCommentSettings($name, $value, $message) {
-    $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
+  public function setCommentSettings($name, $value, $message, $field_name = 'comment') {
+    $instance = $this->container->get('field.info')->getInstance('node', 'article', $field_name);
     $instance->settings[$name] = $value;
     $instance->save();
     // Display status message.

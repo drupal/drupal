@@ -599,6 +599,9 @@ function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NU
  *   The comment display mode; COMMENT_MODE_FLAT or COMMENT_MODE_THREADED.
  * @param int $comments_per_page
  *   The amount of comments to display per page.
+ * @param int $pager_id
+ *   (optional) Pager id to use in case of multiple pagers on the one page.
+ *   Defaults to 0.
  *
  * @return
  *   An array of the IDs of the comment to be displayed.
@@ -657,9 +660,12 @@ function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NU
  * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
  * to consider the trailing "/" so we use a substring only.
  */
-function comment_get_thread(EntityInterface $entity, $field_name, $mode, $comments_per_page) {
+function comment_get_thread(EntityInterface $entity, $field_name, $mode, $comments_per_page, $pager_id = 0) {
   $query = db_select('comment', 'c')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
+  if ($pager_id) {
+    $query->element($pager_id);
+  }
   $query->addField('c', 'cid');
   $query
     ->condition('c.entity_id', $entity->id())
