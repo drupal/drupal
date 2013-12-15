@@ -8,9 +8,8 @@
 namespace Drupal\shortcut\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\shortcut\ShortcutInterface;
 use Drupal\shortcut\ShortcutSetInterface;
 
 /**
@@ -66,13 +65,6 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
   public $label;
 
   /**
-   * An array of menu links.
-   *
-   * @var array
-   */
-  public $links = array();
-
-  /**
    * {@inheritdoc}
    */
   public function postCreate(EntityStorageControllerInterface $storage_controller) {
@@ -82,61 +74,11 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
     if (!$this->getOriginalId()) {
       // Save a new shortcut set with links copied from the user's default set.
       $default_set = shortcut_default_set();
-      // Generate a name to have no collisions with menu.
-      // Size of menu_name is 32 so id could be 23 = 32 - strlen('shortcut-').
-      $id = substr($this->id(), 0, 23);
-      $this->set('id', $id);
-      if ($default_set->id() != $id) {
-        foreach ($default_set->links as $link) {
-          $link = $link->createDuplicate();
-          $link->enforceIsNew();
-          $link->menu_name = $id;
-          $link->save();
-          $this->links[$link->uuid()] = $link;
-        }
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
-    parent::postLoad($storage_controller, $entities);
-    foreach ($entities as $id => $entity) {
-      $links = menu_load_links('shortcut-' . $id);
-      foreach ($links as $menu_link) {
-        $entity->links[$menu_link->uuid()] = $menu_link;
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
-    parent::preSave($storage_controller);
-
-    // Just store the UUIDs.
-    foreach ($this->links as $uuid => $link) {
-      $this->links[$uuid] = $uuid;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    parent::postSave($storage_controller, $update);
-
-    foreach ($this->links as $uuid) {
-      if ($menu_link = entity_load_by_uuid('menu_link', $uuid)) {
-        // Do not specifically associate these links with the shortcut module,
-        // since other modules may make them editable via the menu system.
-        // However, we do need to specify the correct menu name.
-        $menu_link->menu_name = 'shortcut-' . $this->id();
-        $menu_link->plid = 0;
-        $menu_link->save();
+      foreach ($default_set->getShortcuts() as $shortcut) {
+        $shortcut = $shortcut->createDuplicate();
+        $shortcut->enforceIsNew();
+        $shortcut->shortcut_set->target_id = $this->id();
+        $shortcut->save();
       }
     }
   }
@@ -149,9 +91,36 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
 
     foreach ($entities as $entity) {
       $storage_controller->deleteAssignedShortcutSets($entity);
-      // Next, delete the menu links for this set.
-      menu_delete_links('shortcut-' . $entity->id());
+
+      // Next, delete the shortcuts for this set.
+      $shortcut_ids = \Drupal::entityQuery('shortcut')
+        ->condition('shortcut_set', $entity->id(), '=')
+        ->execute();
+
+      $controller = \Drupal::entityManager()->getStorageController('shortcut');
+      $entities = $controller->loadMultiple($shortcut_ids);
+      $controller->delete($entities);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetLinkWeights() {
+    $weight = -50;
+    foreach ($this->getShortcuts() as $shortcut) {
+      $shortcut->weight->value = ++$weight;
+      $shortcut->save();
+    }
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getShortcuts() {
+    return \Drupal::entityManager()->getStorageController('shortcut')->loadByProperties(array('shortcut_set' => $this->id()));
   }
 
 }

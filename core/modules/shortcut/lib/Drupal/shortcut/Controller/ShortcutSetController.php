@@ -34,21 +34,22 @@ class ShortcutSetController extends ControllerBase {
    */
   public function addShortcutLinkInline(ShortcutSetInterface $shortcut_set, Request $request) {
     $link = $request->query->get('link');
+    $name = $request->query->get('name');
     if (shortcut_valid_link($link)) {
-      $item = menu_get_item($link);
-      $title = ($item && $item['title']) ? $item['title'] : $link;
-      $link = array(
-        'link_title' => $title,
-        'link_path' => $link,
-      );
-      $this->moduleHandler()->loadInclude('shortcut', 'admin.inc');
-      shortcut_admin_add_link($link, $shortcut_set);
-      if ($shortcut_set->save() == SAVED_UPDATED) {
-        drupal_set_message(t('Added a shortcut for %title.', array('%title' => $link['link_title'])));
+      $shortcut = $this->entityManager()->getStorageController('shortcut')->create(array(
+        'title' => $name,
+        'shortcut_set' => $shortcut_set->id(),
+        'path' => $link,
+      ));
+
+      try {
+        $shortcut->save();
+        drupal_set_message($this->t('Added a shortcut for %title.', array('%title' => $shortcut->label())));
       }
-      else {
-        drupal_set_message(t('Unable to add a shortcut for %title.', array('%title' => $link['link_title'])));
+      catch (\Exception $e) {
+        drupal_set_message($this->t('Unable to add a shortcut for %title.', array('%title' => $shortcut->label())));
       }
+
       return $this->redirect('<front>');
     }
 

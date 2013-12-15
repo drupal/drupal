@@ -59,24 +59,21 @@ function standard_install() {
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
 
   // Populate the default shortcut set.
-  $shortcut_set = shortcut_set_load('default');
-  $menu_link = entity_create('menu_link', array(
-    'link_path' => 'node/add',
-    'link_title' => t('Add content'),
+  $shortcut = entity_create('shortcut', array(
+    'set' => 'default',
+    'title' => t('Add content'),
     'weight' => -20,
+    'path' => 'node/add',
   ));
-  $menu_link->save();
-  $shortcut_set->links[$menu_link->uuid()] = $menu_link;
+  $shortcut->save();
 
-  $menu_link = entity_create('menu_link', array(
-    'link_path' => 'admin/content',
-    'link_title' => t('All content'),
+  $shortcut = entity_create('shortcut', array(
+    'set' => 'default',
+    'title' => t('All content'),
     'weight' => -19,
+    'path' => 'admin/content',
   ));
-  $menu_link->save();
-  $shortcut_set->links[$menu_link->uuid()] = $menu_link;
-
-  $shortcut_set->save();
+  $shortcut->save();
 
   // Enable the admin theme.
   theme_enable(array('seven'));

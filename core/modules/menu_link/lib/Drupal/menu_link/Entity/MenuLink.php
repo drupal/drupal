@@ -7,16 +7,12 @@
 
 namespace Drupal\menu_link\Entity;
 
-use Drupal\Core\Language\Language;
-use Drupal\menu_link\MenuLinkInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
-
-use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Routing\UrlMatcher;
+use Drupal\menu_link\MenuLinkInterface;
+use Symfony\Component\Routing\Route;
 
 /**
  * Defines the menu link entity class.
@@ -547,7 +543,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     }
     // Find the route_name.
     if (!isset($this->route_name)) {
-      if ($result = static::findRouteNameParameters($this->link_path)) {
+      if ($result = \Drupal::service('router.matcher.final_matcher')->findRouteNameParameters($this->link_path)) {
         list($this->route_name, $this->route_parameters) = $result;
       }
       else {
@@ -608,25 +604,6 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
           $entities[$entity_id]->setRouteObject($route_objects[$route]);
         }
       }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function findRouteNameParameters($link_path) {
-    // Look up the route_name used for the given path.
-    $request = Request::create('/' . $link_path);
-    $request->attributes->set('_system_path', $link_path);
-    try {
-      $result = \Drupal::service('router')->matchRequest($request);
-      $return = array();
-      $return[] = isset($result['_route']) ? $result['_route'] : '';
-      $return[] = $result['_raw_variables']->all();
-      return $return;
-    }
-    catch (\Exception $e) {
-      return array();
     }
   }
 

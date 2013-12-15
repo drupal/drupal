@@ -31,7 +31,7 @@ class ShortcutSetListController extends ConfigEntityListController {
     $uri = $entity->uri();
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Edit menu');
+      $operations['edit']['title'] = t('Edit shortcut set');
       $operations['edit']['href'] = $uri['path'] . '/edit';
     }
 

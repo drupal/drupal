@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\menu_link\Tests\Plugin\Core\Entity\MenuLinkTest.
+ * Contains \Drupal\Tests\Core\Routing\UrlMatcherTest.
  */
 
-namespace Drupal\menu_link\Tests\Plugin\Core\Entity;
+namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\menu_link\Entity\MenuLink;
+use Drupal\Core\Routing\UrlMatcher;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -18,24 +18,38 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  * Tests the menu link entity class.
  *
  * @group Drupal
- * @group Drupal_menu
+ * @group Routing
  *
- * @see \Drupal\menu_link\Plugin\Core\Entity\MenuLink
+ * @see \Drupal\Core\Routing\UrlMatcher
  */
-class MenuLinkTest extends UnitTestCase {
+class UrlMatcherTest extends UnitTestCase {
+
+  /**
+   * The url generator to test.
+   *
+   * @var \Drupal\Core\Routing\UrlMatcher
+   */
+  protected $matcher;
 
   public static function getInfo() {
     return array(
-      'name' => 'Menu link entity',
-      'description' => 'Tests the menu link entity class.',
-      'group' => 'Menu',
+      'name' => 'UrlMatcher',
+      'description' => 'Confirm that the UrlMatcher is functioning properly.',
+      'group' => 'Routing',
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    $this->matcher = new UrlMatcher();
   }
 
   /**
    * Tests the findRouteNameParameters method.
    *
-   * @see \Drupal\menu_link\Plugin\Core\Entity\MenuLink::findRouteNameParameters()
+   * @see \Drupal\Core\Routing\UrlMatcher::findRouteNameParameters()
    */
   public function testFindRouteNameParameters() {
     $router = $this->getMock('Symfony\Component\Routing\Matcher\RequestMatcherInterface');
@@ -65,11 +79,11 @@ class MenuLinkTest extends UnitTestCase {
       ->method('matchRequest')
       ->will($this->throwException(new ResourceNotFoundException()));
 
-    $this->assertEquals(array('view.frontpage.page_1', array()), MenuLink::findRouteNameParameters('node'));
-    $this->assertEquals(array('node_view', array('node' => '1')), MenuLink::findRouteNameParameters('node/1'));
-    $this->assertEquals(array('node_edit', array('node' => '2')), MenuLink::findRouteNameParameters('node/2/edit'));
+    $this->assertEquals(array('view.frontpage.page_1', array()), $this->matcher->findRouteNameParameters('node'));
+    $this->assertEquals(array('node_view', array('node' => '1')), $this->matcher->findRouteNameParameters('node/1'));
+    $this->assertEquals(array('node_edit', array('node' => '2')), $this->matcher->findRouteNameParameters('node/2/edit'));
 
-    $this->assertEquals(array(), MenuLink::findRouteNameParameters('non-existing'));
+    $this->assertEquals(array(), $this->matcher->findRouteNameParameters('non-existing'));
   }
 
 }

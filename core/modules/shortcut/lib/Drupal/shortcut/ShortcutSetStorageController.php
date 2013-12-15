@@ -8,10 +8,9 @@
 namespace Drupal\shortcut;
 
 use Drupal\Core\Config\Entity\ConfigStorageController;
-use Drupal\shortcut\ShortcutSetInterface;
 
 /**
- * Defines a storage controller for shortcut entities.
+ * Defines a storage controller for shortcut_set entities.
  */
 class ShortcutSetStorageController extends ConfigStorageController implements ShortcutSetStorageControllerInterface {
 
@@ -63,4 +62,5 @@ class ShortcutSetStorageController extends ConfigStorageController implements Sh
   public function countAssignedUsers(ShortcutSetInterface $shortcut_set) {
     return db_query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', array(':name' => $shortcut_set->id()))->fetchField();
   }
+
 }

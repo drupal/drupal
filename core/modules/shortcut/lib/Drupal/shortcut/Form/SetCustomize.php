@@ -8,12 +8,39 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds the shortcut set customize form.
  */
 class SetCustomize extends EntityFormController {
+
+  /**
+   * The shortcut storage controller.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $storageController;
+
+  /**
+   * Constructs a SetCustomize object.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(EntityManager $entity_manager) {
+    $this->storageController = $entity_manager->getStorageController('shortcut');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -28,35 +55,36 @@ class SetCustomize extends EntityFormController {
     $form['shortcuts']['links'] = array(
       '#type' => 'table',
       '#header' => array(t('Name'), t('Weight'), t('Operations')),
-      '#empty' => t('No shortcuts available. @link', array('@link' => l(t('Add a shortcut'), 'admin/config/user-interface/shortcut/' . $this->entity->id() . '/add-link'))),
+      '#empty' => $this->t('No shortcuts available. <a href="@link">Add a shortcut</a>', array('@link' => $this->urlGenerator()->generateFromRoute('shortcut.link_add', array('shortcut_set' => $this->entity->id())))),
       '#attributes' => array('id' => 'shortcuts'),
       '#tabledrag' => array(
         array('order', 'sibling', 'shortcut-weight'),
       ),
     );
 
-    foreach ($this->entity->links as $link) {
-      $mlid = $link->id();
-      $form['shortcuts']['links'][$mlid]['#attributes']['class'][] = 'draggable';
-      $form['shortcuts']['links'][$mlid]['name']['#markup'] = l($link->link_title, $link->link_path);
-      $form['shortcuts']['links'][$mlid]['#weight'] = $link->weight;
-      $form['shortcuts']['links'][$mlid]['weight'] = array(
+    $shortcuts = $this->storageController->loadByProperties(array('shortcut_set' => $this->entity->id()));
+    foreach ($shortcuts as $shortcut) {
+      $id = $shortcut->id();
+      $form['shortcuts']['links'][$id]['#attributes']['class'][] = 'draggable';
+      $form['shortcuts']['links'][$id]['name']['#markup'] = l($shortcut->title->value, $shortcut->path->value);
+      $form['shortcuts']['links'][$id]['#weight'] = $shortcut->weight->value;
+      $form['shortcuts']['links'][$id]['weight'] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $link->link_title)),
+        '#title' => t('Weight for @title', array('@title' => $shortcut->title->value)),
         '#title_display' => 'invisible',
-        '#default_value' => $link->weight,
+        '#default_value' => $shortcut->weight->value,
         '#attributes' => array('class' => array('shortcut-weight')),
       );
 
       $links['edit'] = array(
         'title' => t('Edit'),
-        'href' => "admin/config/user-interface/shortcut/link/$mlid",
+        'href' => "admin/config/user-interface/shortcut/link/$id",
       );
       $links['delete'] = array(
         'title' => t('Delete'),
-        'href' => "admin/config/user-interface/shortcut/link/$mlid/delete",
+        'href' => "admin/config/user-interface/shortcut/link/$id/delete",
       );
-      $form['shortcuts']['links'][$mlid]['operations'] = array(
+      $form['shortcuts']['links'][$id]['operations'] = array(
         '#type' => 'operations',
         '#links' => $links,
       );
@@ -74,7 +102,7 @@ class SetCustomize extends EntityFormController {
     return array(
       'submit' => array(
         '#value' => t('Save changes'),
-        '#access' => !empty($this->entity->links),
+        '#access' => (bool) element_get_visible_children($form['shortcuts']['links']),
         '#submit' => array(
           array($this, 'submit'),
           array($this, 'save'),
@@ -87,9 +115,10 @@ class SetCustomize extends EntityFormController {
    * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
-    foreach ($this->entity->links as $link) {
-      $link->weight = $form_state['values']['shortcuts']['links'][$link->mlid]['weight'];
-      $link->save();
+    $shortcuts = $this->storageController->loadByProperties(array('shortcut_set' => $this->entity->id()));
+    foreach ($shortcuts as $shortcut) {
+      $shortcut->weight->value = $form_state['values']['shortcuts']['links'][$shortcut->id()]['weight'];
+      $shortcut->save();
     }
     drupal_set_message(t('The shortcut set has been updated.'));
   }

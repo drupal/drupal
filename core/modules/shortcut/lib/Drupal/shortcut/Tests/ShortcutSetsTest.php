@@ -89,23 +89,6 @@ class ShortcutSetsTest extends ShortcutTestBase {
   }
 
   /**
-   * Tests that save() correctly updates existing links.
-   */
-  function testShortcutSetSave() {
-    $set = $this->set;
-    $old_mlids = $this->getShortcutInformation($set, 'mlid');
-
-    $menu_link = $this->generateShortcutLink('admin', $this->randomName());
-    $menu_link->save();
-    $set->links[$menu_link->uuid()] = $menu_link;
-    $set->save();
-    $saved_set = shortcut_set_load($set->id());
-
-    $new_mlids = $this->getShortcutInformation($saved_set, 'mlid');
-    $this->assertTrue(count(array_intersect($old_mlids, $new_mlids)) == count($old_mlids), 'Shortcut::save() did not inadvertently change existing mlids.');
-  }
-
-  /**
    * Tests renaming a shortcut set.
    */
   function testShortcutSetRename() {
@@ -113,7 +96,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
 
     $new_label = $this->randomName();
     $this->drupalGet('admin/config/user-interface/shortcut');
-    $this->clickLink(t('Edit menu'));
+    $this->clickLink(t('Edit shortcut set'));
     $this->drupalPostForm(NULL, array('label' => $new_label), t('Save'));
     $set = shortcut_set_load($set->id());
     $this->assertTrue($set->label() == $new_label, 'Shortcut set has been successfully renamed.');
@@ -168,7 +151,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    */
   function testShortcutSetCreateWithSetName() {
     $random_name = $this->randomName();
-    $new_set = $this->generateShortcutSet($random_name, $random_name, TRUE);
+    $new_set = $this->generateShortcutSet($random_name, $random_name);
     $sets = entity_load_multiple('shortcut_set');
     $this->assertTrue(isset($sets[$random_name]), 'Successfully created a shortcut set with a defined set name.');
     $this->drupalGet('user/' . $this->admin_user->id() . '/shortcuts');

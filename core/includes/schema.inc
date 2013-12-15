@@ -534,7 +534,7 @@ function drupal_schema_get_field_value(array $info, $value) {
     elseif ($info['type'] == 'float') {
       $value = (float) $value;
     }
-    else {
+    elseif (!is_array($value)) {
       $value = (string) $value;
     }
   }

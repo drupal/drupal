@@ -7,6 +7,7 @@
 
 namespace Drupal\shortcut\Tests;
 
+use Drupal\shortcut\ShortcutSetInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -38,6 +39,8 @@ abstract class ShortcutTestBase extends WebTestBase {
 
   /**
    * Site-wide default shortcut set.
+   *
+   * @var \Drupal\shortcut\ShortcutSetInterface
    */
   protected $set;
 
@@ -50,22 +53,21 @@ abstract class ShortcutTestBase extends WebTestBase {
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
 
       // Populate the default shortcut set.
-      $shortcut_set = shortcut_set_load('default');
-      $menu_link = entity_create('menu_link', array(
-        'link_path' => 'node/add',
-        'link_title' => t('Add content'),
+      $shortcut = entity_create('shortcut', array(
+        'set' => 'default',
+        'title' => t('Add content'),
         'weight' => -20,
+        'path' => 'node/add',
       ));
-      $menu_link->save();
-      $shortcut_set->links[$menu_link->uuid()] = $menu_link;
-      $menu_item = entity_create('menu_link', array(
-        'link_path' => 'admin/content',
-        'link_title' => t('All content'),
+      $shortcut->save();
+
+      $shortcut = entity_create('shortcut', array(
+        'set' => 'default',
+        'title' => t('All content'),
         'weight' => -19,
+        'path' => 'admin/content',
       ));
-      $menu_item->save();
-      $shortcut_set->links[$menu_item->uuid()] = $menu_item;
-      $shortcut_set->save();
+      $shortcut->save();
     }
 
     // Create users.
@@ -84,53 +86,36 @@ abstract class ShortcutTestBase extends WebTestBase {
   /**
    * Creates a generic shortcut set.
    */
-  function generateShortcutSet($label = '', $id = NULL, $default_links = TRUE) {
+  function generateShortcutSet($label = '', $id = NULL) {
     $set = entity_create('shortcut_set', array(
       'id' => isset($id) ? $id : strtolower($this->randomName()),
       'label' => empty($label) ? $this->randomString() : $label,
     ));
-    if ($default_links) {
-      $menu_link = $this->generateShortcutLink('node/add');
-      $set->links[$menu_link->uuid()] = $menu_link;
-      $menu_link = $this->generateShortcutLink('admin/content');
-      $set->links[$menu_link->uuid()] = $menu_link;
-    }
     $set->save();
     return $set;
   }
 
   /**
-   * Creates a generic shortcut link.
-   */
-  function generateShortcutLink($path, $title = '') {
-    $link = entity_create('menu_link', array(
-      'link_path' => $path,
-      'link_title' => !empty($title) ? $title : $this->randomName(),
-    ));
-    $link->save();
-
-    return $link;
-  }
-
-  /**
    * Extracts information from shortcut set links.
    *
-   * @param object $set
+   * @param \Drupal\shortcut\ShortcutSetInterface $set
    *   The shortcut set object to extract information from.
    * @param string $key
    *   The array key indicating what information to extract from each link:
-   *    - 'link_path': Extract link paths.
-   *    - 'link_title': Extract link titles.
-   *    - 'mlid': Extract the menu link item ID numbers.
+   *    - 'title': Extract shortcut titles.
+   *    - 'path': Extract shortcut paths.
+   *    - 'id': Extract the shortcut ID.
    *
    * @return array
    *   Array of the requested information from each link.
    */
-  function getShortcutInformation($set, $key) {
+  function getShortcutInformation(ShortcutSetInterface $set, $key) {
     $info = array();
-    foreach ($set->links as $link) {
-      $info[] = $link->{$key};
+    \Drupal::entityManager()->getStorageController('shortcut')->resetCache();
+    foreach ($set->getShortcuts() as $shortcut) {
+      $info[] = $shortcut->{$key}->value;
     }
     return $info;
   }
+
 }
