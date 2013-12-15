@@ -95,11 +95,6 @@ function _drupal_maintenance_theme() {
   // Prime the theme registry.
   // @todo Remove global theme variables.
   Drupal::service('theme.registry');
-
-  // These CSS files are normally added by system_page_build(), except
-  // system.maintenance.css. When the database is inactive, it's not called so
-  // we add them here.
-  drupal_add_library('system', 'normalize');
 }
 
 /**

@@ -2358,6 +2358,8 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  * @param array $variables
  *   An associative array containing:
  *   - content - An array of page content.
+ *
+ * @see system_page_build()
  */
 function template_preprocess_maintenance_page(&$variables) {
   global $theme;
@@ -2424,21 +2426,31 @@ function template_preprocess_maintenance_page(&$variables) {
       $head_title['slogan'] = strip_tags(filter_xss_admin($site_slogan));
     }
   }
-  $path = drupal_get_path('module', 'system');
 
   // These are usually added from system_page_build() except maintenance.css.
   // When the database is inactive it's not called so we add it here.
-  $default_css = array(
-    '#attached' => array(
-      'css' => array(
-        $path . '/css/system.module.css',
-        $path . '/css/system.theme.css',
-        $path . '/css/system.admin.css',
-        $path . '/css/system.maintenance.css',
-      ),
-    ),
+  $default_css['library'][] = array('system', 'normalize');
+  $path = drupal_get_path('module', 'system');
+  // Adjust the weights to load these early.
+  $default_css['css'][$path . '/css/system.module.css'] = array(
+    'weight' => CSS_COMPONENT - 10,
+    'every_page' => TRUE,
   );
-  drupal_render($default_css);
+  $default_css['css'][$path . '/css/system.theme.css'] = array(
+    'weight' => CSS_SKIN - 10,
+    'every_page' => TRUE,
+  );
+  // Unlike regular pages, the admin.css is added for every maintenance page.
+  $default_css['css'][$path . '/css/system.admin.css'] = array(
+    'weight' => CSS_COMPONENT - 10,
+    'every_page' => TRUE,
+  );
+  $default_css['css'][$path . '/css/system.maintenance.css'] = array(
+    'weight' => CSS_COMPONENT - 10,
+    'every_page' => TRUE,
+  );
+  $attached = array('#attached' => $default_css);
+  drupal_render($attached);
 
   $variables['head_title_array']  = $head_title;
   $variables['head_title']        = implode(' | ', $head_title);
