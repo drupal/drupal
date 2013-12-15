@@ -33,6 +33,14 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
   public function testDefaultImages() {
     // Create files to use as the default images.
     $files = $this->drupalGetTestFiles('image');
+    // Create 10 files so the default image fids are not a single value.
+    for ($i = 1; $i <= 10; $i++) {
+      $filename = $this->randomName() . "$i";
+      $desired_filepath = 'public://' . $filename;
+      file_unmanaged_copy($files[0]->uri, $desired_filepath, FILE_EXISTS_ERROR);
+      $file = entity_create('file', array('uri' => $desired_filepath, 'filename' => $filename, 'name' => $filename));
+      $file->save();
+    }
     $default_images = array();
     foreach (array('field', 'instance', 'instance2', 'field_new', 'instance_new') as $image_target) {
       $file = entity_create('file', (array) array_pop($files));
@@ -173,7 +181,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Upload a new default for the field.
-    $field->settings['default_image']['fid'] = array($default_images['field_new']->id());
+    $field->settings['default_image']['fid'] = $default_images['field_new']->id();
     $field->save();
 
     // Confirm that the new default is used on the article field settings form.

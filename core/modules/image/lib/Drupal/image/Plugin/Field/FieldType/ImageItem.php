@@ -335,6 +335,7 @@ class ImageItem extends FileItem {
       '#description' => t('Image to be shown if no image is uploaded.'),
       '#default_value' => empty($settings['default_image']['fid']) ? array() : array($settings['default_image']['fid']),
       '#upload_location' => $settings['uri_scheme'] . '://default_images/',
+      '#element_validate' => array('file_managed_file_validate', array(get_class($this), 'validateDefaultImageForm')),
     );
     $element['default_image']['alt'] = array(
       '#type' => 'textfield',
@@ -358,6 +359,30 @@ class ImageItem extends FileItem {
       '#type' => 'value',
       '#value' => $settings['default_image']['height'],
     );
+  }
+
+  /**
+   * Validates the managed_file element for the default Image form.
+   *
+   * This function ensures the fid is a scalar value and not an array. It is
+   * assigned as a #element_validate callback in
+   * \Drupal\image\Plugin\Field\FieldType\ImageItem::defaultImageForm().
+   *
+   * @param array $element
+   *   The form element to process.
+   * @param array $form_state
+   *   The form state.
+   */
+  public static function validateDefaultImageForm(array &$element, array &$form_state) {
+    // Consolidate the array value of this field to a single FID as #extended
+    // for default image is not TRUE and this is a single value.
+    if (isset($element['fids']['#value'][0])) {
+      $value = $element['fids']['#value'][0];
+    }
+    else {
+      $value = 0;
+    }
+    \Drupal::formBuilder()->setValue($element, $value, $form_state);
   }
 
   /**

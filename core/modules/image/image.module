@@ -420,10 +420,8 @@ function image_entity_presave(EntityInterface $entity, $type) {
     return;
   }
 
-  if (!empty($entity->settings['default_image']['fid'][0])) {
-    $entity->settings['default_image']['fid'] = $entity->settings['default_image']['fid'][0];
-  }
-  if ($fid = $entity->settings['default_image']['fid']) {
+  $fid = $entity->settings['default_image']['fid'];
+  if ($fid) {
     $original_fid = isset($entity->original) ? $entity->original->settings['default_image']['fid'] : NULL;
     if ($fid != $original_fid) {
       $image = \Drupal::service('image.factory')->get(file_load($fid)->getFileUri());
@@ -454,15 +452,10 @@ function image_field_entity_update(FieldInterface $field) {
   $prior_field = $field->original;
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid_new = isset($field->settings['default_image']['fid']['fids']) ? $field->settings['default_image']['fid']['fids'] : $field->settings['default_image']['fid'];
-  $fid_old = isset($prior_field->settings['default_image']['fid']['fids']) ? $prior_field->settings['default_image']['fid']['fids'] : $prior_field->settings['default_image']['fid'];
-  // Ensure that $fid_new and $fid_old are arrays, because the field setting
-  // 'default_image' key 'fid' might be the fallback value 0, see the annotation
-  // block of \Drupal\image\Plugin\Field\FieldType\ImageItem.
-  $fid_old = (array) $fid_old;
-  $fid_new = (array) $fid_new;
+  $fid_new = $field->settings['default_image']['fid'];
+  $fid_old = $prior_field->settings['default_image']['fid'];
 
-  $file_new = $fid_new ? file_load(reset($fid_new)) : FALSE;
+  $file_new = $fid_new ? file_load($fid_new) : FALSE;
 
   if ($fid_new != $fid_old) {
 
@@ -474,7 +467,7 @@ function image_field_entity_update(FieldInterface $field) {
     }
 
     // Is there an old file?
-    if ($fid_old && ($file_old = file_load(reset($fid_old)))) {
+    if ($fid_old && ($file_old = file_load($fid_old))) {
       \Drupal::service('file.usage')->delete($file_old, 'image', 'default_image', $field->uuid);
     }
   }
@@ -499,19 +492,11 @@ function image_field_instance_update(FieldInstanceInterface $field_instance) {
 
   $prior_instance = $field_instance->original;
 
-  // The value of a managed_file element can be an array if the #extended
-  // property is set to TRUE.
   $fid_new = $field_instance->settings['default_image']['fid'];
-  if (isset($fid_new['fids'])) {
-    $fid_new = $fid_new['fids'];
-  }
   $fid_old = $prior_instance->settings['default_image']['fid'];
-  if (isset($fid_old['fids'])) {
-    $fid_old = $fid_old['fids'];
-  }
 
   // If the old and new files do not match, update the default accordingly.
-  $file_new = $fid_new ? file_load($fid_new[0]) : FALSE;
+  $file_new = $fid_new ? file_load($fid_new) : FALSE;
   if ($fid_new != $fid_old) {
     // Save the new file, if present.
     if ($file_new) {
@@ -520,7 +505,7 @@ function image_field_instance_update(FieldInstanceInterface $field_instance) {
       \Drupal::service('file.usage')->add($file_new, 'image', 'default_image', $field_instance->uuid);
     }
     // Delete the old file, if present.
-    if ($fid_old && ($file_old = file_load($fid_old[0]))) {
+    if ($fid_old && ($file_old = file_load($fid_old))) {
       \Drupal::service('file.usage')->delete($file_old, 'image', 'default_image', $field_instance->uuid);
     }
   }
@@ -543,8 +528,8 @@ function image_field_entity_delete(FieldInterface $field) {
   }
 
   // The value of a managed_file element can be an array if #extended == TRUE.
-  $fid = (isset($field->settings['default_image']['fid']['fids']) ? $field->settings['default_image']['fid']['fids'] : $field->settings['default_image']['fid']);
-  if ($fid && ($file = file_load($fid[0]))) {
+  $fid = $field->settings['default_image']['fid'];
+  if ($fid && ($file = file_load($fid))) {
     \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field->uuid);
   }
 }
@@ -559,12 +544,8 @@ function image_field_instance_delete(FieldInstanceInterface $field_instance) {
     return;
   }
 
-  // The value of a managed_file element can be an array if the #extended
-  // property is set to TRUE.
+  // The value of a managed_file element can be an array if #extended == TRUE.
   $fid = $field_instance->settings['default_image']['fid'];
-  if (is_array($fid)) {
-    $fid = $fid['fid'];
-  }
 
   // Remove the default image when the instance is deleted.
   if ($fid && ($file = file_load($fid))) {
