@@ -60,18 +60,20 @@ function standard_install() {
 
   // Populate the default shortcut set.
   $shortcut = entity_create('shortcut', array(
-    'set' => 'default',
+    'shortcut_set' => 'default',
     'title' => t('Add content'),
     'weight' => -20,
     'path' => 'node/add',
+    'langcode' => language_default()->id,
   ));
   $shortcut->save();
 
   $shortcut = entity_create('shortcut', array(
-    'set' => 'default',
+    'shortcut_set' => 'default',
     'title' => t('All content'),
     'weight' => -19,
     'path' => 'admin/content',
+    'langcode' => language_default()->id,
   ));
   $shortcut->save();
 
