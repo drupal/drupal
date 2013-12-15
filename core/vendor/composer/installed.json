@@ -2043,18 +2043,29 @@
     },
     {
         "name": "doctrine/common",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "dev-bmaster",
+        "version_normalized": "dev-bmaster",
         "source": {
             "type": "git",
-            "url": "https://github.com/doctrine/common.git",
-            "reference": "ba2ad8a7db24adb37a33ff52ee64b02d59ccfee0"
+            "url": "https://github.com/dawehner/common.git",
+            "reference": "99b44f52a1b844f9c4c34e618b160664d5c27daf"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/doctrine/common/zipball/ba2ad8a7db24adb37a33ff52ee64b02d59ccfee0",
-            "reference": "ba2ad8a7db24adb37a33ff52ee64b02d59ccfee0",
+            "url": "https://api.github.com/repos/dawehner/common/zipball/99b44f52a1b844f9c4c34e618b160664d5c27daf",
+            "reference": "99b44f52a1b844f9c4c34e618b160664d5c27daf",
             "shasum": ""
+        },
+        "archive": {
+            "exclude": [
+                "!vendor",
+                "tests",
+                "*phpunit.xml",
+                ".travis.yml",
+                "build.xml",
+                "build.properties",
+                "composer.phar"
+            ]
         },
         "require": {
             "doctrine/annotations": "1.*",
@@ -2064,7 +2075,7 @@
             "doctrine/lexer": "1.*",
             "php": ">=5.3.2"
         },
-        "time": "2013-12-03 21:02:18",
+        "time": "2013-12-12 18:37:37",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2077,21 +2088,13 @@
                 "Doctrine\\Common\\": "lib/"
             }
         },
-        "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
         ],
         "authors": [
             {
-                "name": "Jonathan Wage",
-                "email": "jonwage@gmail.com",
-                "homepage": "http://www.jwage.com/",
-                "role": "Creator"
-            },
-            {
                 "name": "Guilherme Blanco",
-                "email": "guilhermeblanco@gmail.com",
-                "homepage": "http://www.instaclick.com"
+                "email": "guilhermeblanco@gmail.com"
             },
             {
                 "name": "Roman Borschel",
@@ -2102,10 +2105,12 @@
                 "email": "kontakt@beberlei.de"
             },
             {
+                "name": "Jonathan Wage",
+                "email": "jonwage@gmail.com"
+            },
+            {
                 "name": "Johannes Schmitt",
-                "email": "schmittjoh@gmail.com",
-                "homepage": "http://jmsyst.com",
-                "role": "Developer of wrapped JMSSerializerBundle"
+                "email": "schmittjoh@gmail.com"
             }
         ],
         "description": "Common Library for Doctrine projects",
@@ -2116,6 +2121,9 @@
             "eventmanager",
             "persistence",
             "spl"
-        ]
+        ],
+        "support": {
+            "source": "https://github.com/dawehner/common/tree/bmaster"
+        }
     }
 ]
