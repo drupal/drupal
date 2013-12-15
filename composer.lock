@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "414745173d1e926721e1d7511a65dcec",
+    "hash": "c0c7604f8c0ed6b60809dfe98015e8b8",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -207,16 +207,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "2.4.0-RC4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "2.4.0-RC4"
+                "reference": "ba2ad8a7db24adb37a33ff52ee64b02d59ccfee0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/2.4.0-RC4",
-                "reference": "2.4.0-RC4",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/ba2ad8a7db24adb37a33ff52ee64b02d59ccfee0",
+                "reference": "ba2ad8a7db24adb37a33ff52ee64b02d59ccfee0",
                 "shasum": ""
             },
             "require": {
@@ -230,7 +230,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4.x-dev"
+                    "dev-master": "2.5.x-dev"
                 }
             },
             "autoload": {
@@ -246,7 +246,8 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -262,9 +263,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -277,7 +278,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-06-21 12:11:28"
+            "time": "2013-12-03 21:02:18"
         },
         {
             "name": "doctrine/inflector",
@@ -2056,7 +2057,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "doctrine/common": 10,
+        "doctrine/common": 20,
         "doctrine/annotations": 20,
         "kriswallsmith/assetic": 15,
         "symfony-cmf/routing": 15,

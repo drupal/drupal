@@ -17,37 +17,27 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common;
+namespace Doctrine\Common\Proxy\Exception;
+
+use Doctrine\Common\Persistence\Proxy;
+use OutOfBoundsException as BaseOutOfBoundsException;
 
 /**
- * Class to store and retrieve the version of Doctrine.
+ * Proxy Invalid Argument Exception.
  *
  * @link   www.doctrine-project.org
- * @since  2.0
- * @author Benjamin Eberlei <kontakt@beberlei.de>
- * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author Jonathan Wage <jonwage@gmail.com>
- * @author Roman Borschel <roman@code-factory.org>
+ * @author Fredrik Wendel <fredrik_w@users.sourceforge.net>
  */
-class Version
+class OutOfBoundsException extends BaseOutOfBoundsException implements ProxyException
 {
     /**
-     * Current Doctrine Version.
-     */
-    const VERSION = '2.5.0-DEV';
-
-    /**
-     * Compares a Doctrine version with the current one.
+     * @param string $className
+     * @param string $idField
      *
-     * @param string $version Doctrine version to compare.
-     *
-     * @return int -1 if older, 0 if it is the same, 1 if version passed as argument is newer.
+     * @return self
      */
-    public static function compare($version)
+    public static function missingPrimaryKeyValue($className, $idField)
     {
-        $currentVersion = str_replace(' ', '', strtolower(self::VERSION));
-        $version = str_replace(' ', '', $version);
-
-        return version_compare($version, $currentVersion);
+        return new self(sprintf("Missing value for primary key %s on %s", $idField, $className));
     }
 }
