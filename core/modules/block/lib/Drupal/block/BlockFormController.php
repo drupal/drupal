@@ -350,6 +350,11 @@ class BlockFormController extends EntityFormController {
         'block' => $this->entity->id(),
       ),
     );
+    $query = $this->getRequest()->query;
+    if ($query->has('destination')) {
+      $form_state['redirect_route']['options']['query']['destination'] = $query->get('destination');
+      $query->remove('destination');
+    }
   }
 
   /**
