@@ -330,8 +330,27 @@ class MigrateExecutable {
    */
   public function processRow(Row $row, array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
+      $multiple = FALSE;
       foreach ($plugins as $plugin) {
-        $value = $plugin->transform($value, $this, $row, $destination);
+        $definition = $plugin->getPluginDefinition();
+        // Many plugins expect a scalar value but the current value of the
+        // pipeline might be multiple scalars (this is set by the previous
+        // plugin) and in this case the current value needs to be iterated
+        // and each scalar separately transformed.
+        if ($multiple && !$definition['handle_multiples']) {
+          $new_value = array();
+          if (!is_array($value)) {
+            throw new MigrateException(sprintf('Pipeline failed for destination %s: %s got instead of an array,', $destination, $value));
+          }
+          foreach ($value as $scalar_value) {
+            $new_value[] = $plugin->transform($scalar_value, $this, $row, $destination);
+          }
+          $value = $new_value;
+        }
+        else {
+          $value = $plugin->transform($value, $this, $row, $destination);
+          $multiple = $multiple || $plugin->multiple();
+        }
       }
       $row->setDestinationProperty($destination, $value);
       // Reset the value.

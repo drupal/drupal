@@ -7,9 +7,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -17,9 +16,12 @@ use Drupal\migrate\Row;
  *
  * @see https://drupal.org/node/2135345
  *
- * @PluginId("iterator")
+ * @MigrateProcessPlugin(
+ *   id = "iterator",
+ *   handle_multiples = TRUE
+ * )
  */
-class Iterator extends PluginBase implements MigrateProcessInterface {
+class Iterator extends ProcessPluginBase {
 
   /**
    * Runs a process pipeline on each destination property per list item.
@@ -56,4 +58,10 @@ class Iterator extends PluginBase implements MigrateProcessInterface {
     return $row->getDestinationProperty('key');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function multiple() {
+    return TRUE;
+  }
 }

@@ -10,7 +10,9 @@ namespace Drupal\migrate\Plugin\migrate\process;
 /**
  * Ensures value is not duplicated against an entity field.
  *
- * @PluginId("dedupe_entity")
+ * @MigrateProcessPlugin(
+ *   id = "dedupe_entity"
+ * )
  */
 class DedupeEntity extends DedupeBase {
 

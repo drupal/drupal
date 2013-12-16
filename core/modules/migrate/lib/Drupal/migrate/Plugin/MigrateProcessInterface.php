@@ -33,4 +33,13 @@ interface MigrateProcessInterface extends PluginInspectionInterface {
    */
   public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property);
 
+  /**
+   * Indicates whether the returned value requires multiple handling.
+   *
+   * @return bool
+   *   TRUE when the returned value contains a list of values to be processed.
+   *   For example, when the 'source' property is a string and the value found
+   *   is an array.
+   */
+  public function multiple();
 }

@@ -8,10 +8,9 @@
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -19,23 +18,33 @@ use Drupal\migrate\Row;
  *
  * @see https://drupal.org/node/2143521
  *
- * @PluginId("static_map")
+ * @MigrateProcessPlugin(
+ *   id = "static_map"
+ * )
  */
-class StaticMap extends PluginBase implements MigrateProcessInterface {
+class StaticMap extends ProcessPluginBase {
 
   /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
-    if (!is_array($value)) {
-      $value = array($value);
+    $new_value = $value;
+    if (is_array($value)) {
+      if (!$value) {
+        throw new MigrateException('Can not lookup without a value.');
+      }
     }
-    if (!$value) {
-      throw new MigrateException('Can not lookup without a value.');
+    else {
+      $new_value = array($value);
     }
-    $new_value = NestedArray::getValue($this->configuration['map'], $value, $key_exists);
+    $new_value = NestedArray::getValue($this->configuration['map'], $new_value, $key_exists);
     if (!$key_exists) {
-      throw new MigrateException('Lookup failed.');
+      if (empty($this->configuration['bypass'])) {
+        throw new MigrateException('Lookup failed.');
+      }
+      else {
+        return $value;
+      }
     }
     return $new_value;
   }

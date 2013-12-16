@@ -8,9 +8,8 @@
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Core\Language\Language;
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -20,9 +19,11 @@ use Drupal\migrate\Row;
  * and replaced by an underscore and multiple underscores are collapsed into
  * one.
  *
- * @PluginId("machine_name")
+ * @MigrateProcessPlugin(
+ *   id = "machine_name"
+ * )
  */
-class MachineName extends PluginBase implements MigrateProcessInterface {
+class MachineName extends ProcessPluginBase {
 
   /**
    * @var \Drupal\Core\Transliteration\PHPTransliteration

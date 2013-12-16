@@ -7,9 +7,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -20,7 +19,7 @@ use Drupal\migrate\Row;
  * existing filter format names and if it exists, a numeric postfix is added
  * and incremented until a unique value is created.
  */
-abstract class DedupeBase extends PluginBase implements MigrateProcessInterface {
+abstract class DedupeBase extends ProcessPluginBase {
 
   /**
    * {@inheritdoc}

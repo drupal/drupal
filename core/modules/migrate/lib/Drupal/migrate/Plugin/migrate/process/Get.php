@@ -7,17 +7,23 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Row;
 
 /**
  * This plugin copies from the source to the destination.
  *
- * @PluginId("get")
+ * @MigrateProcessPlugin(
+ *   id = "get"
+ * )
  */
-class Get extends PluginBase implements MigrateProcessInterface {
+class Get extends ProcessPluginBase {
+
+  /**
+   * @var bool
+   */
+  protected $multiple;
 
   /**
    * {@inheritdoc}
@@ -50,6 +56,17 @@ class Get extends PluginBase implements MigrateProcessInterface {
         }
       }
     }
-    return is_string($source) ? $return[0] : $return;
+    if (is_string($source)) {
+      $this->multiple = is_array($return[0]);
+      return $return[0];
+    }
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function multiple() {
+    return $this->multiple;
   }
 }

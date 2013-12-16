@@ -7,18 +7,19 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Row;
 
 
 /**
  * This plugin sets missing values on the destination.
  *
- * @PluginId("default_value")
+ * @MigrateProcessPlugin(
+ *   id = "default_value"
+ * )
  */
-class DefaultValue extends PluginBase implements MigrateProcessInterface {
+class DefaultValue extends ProcessPluginBase {
 
  /**
    * {@inheritdoc}

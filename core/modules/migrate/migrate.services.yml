@@ -11,7 +11,7 @@ services:
     arguments: [source, '@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
   plugin.manager.migrate.process:
     class: Drupal\migrate\Plugin\MigratePluginManager
-    arguments: [process, '@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
+    arguments: [process, '@container.namespaces', '@cache.cache', '@language_manager', '@module_handler', 'Drupal\migrate\Annotation\MigrateProcessPlugin']
   plugin.manager.migrate.destination:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [destination, '@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']

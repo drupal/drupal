@@ -15,14 +15,14 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\migrate\Entity\MigrationInterface;
 
 /**
- * Manages migrate sources and steps.
+ * Manages migrate plugins.
  *
  * @see hook_migrate_info_alter()
  */
 class MigratePluginManager extends DefaultPluginManager {
 
   /**
-   * Constructs a MigraterPluginManager object.
+   * Constructs a MigratePluginManager object.
    *
    * @param string $type
    *   The type of the plugin: row, source, process, destination, entity_field, id_map.
@@ -35,9 +35,11 @@ class MigratePluginManager extends DefaultPluginManager {
    *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
+   * @param $annotation
+   *   The annotation class name.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct("Plugin/migrate/$type", $namespaces, 'Drupal\Component\Annotation\PluginID');
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
+    parent::__construct("Plugin/migrate/$type", $namespaces, $annotation);
     $this->alterInfo($module_handler, 'migrate_' . $type . '_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'migrate_plugins_' . $type);
   }
