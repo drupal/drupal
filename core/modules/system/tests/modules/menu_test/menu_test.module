@@ -64,18 +64,12 @@ function menu_test_menu() {
     'route_name' => 'menu_test.hierarchy_parent_child2',
   );
   // Theme callback tests.
-  $items['menu-test/theme-callback/%'] = array(
-    'title' => 'Page that displays different themes',
-    'route_name' => 'menu_test.theme_callback',
-    'theme callback' => 'menu_test_theme_callback',
-    'theme arguments' => array(2),
-  );
   $items['menu-test/theme-callback/%/inheritance'] = array(
-    'title' => 'Page that tests theme callback inheritance.',
+    'title' => 'Page that tests theme negotiation inheritance.',
     'route_name' => 'menu_test.theme_callback_inheritance',
   );
   $items['menu-test/no-theme-callback'] = array(
-    'title' => 'Page that displays different themes without using a theme callback.',
+    'title' => 'Page that displays different themes without using a theme negotiation.',
     'route_name' => 'menu_test.no_theme_callback',
   );
   // Path containing "exotic" characters.
@@ -444,7 +438,7 @@ function menu_test_custom_403_404_callback() {
 }
 
 /**
- * Page callback: Tests the theme callback functionality.
+ * Page callback: Tests the theme negotiation functionality.
  *
  * @param bool $inherited
  *   (optional) TRUE when the requested page is intended to inherit
@@ -462,64 +456,13 @@ function menu_test_theme_page_callback($inherited = FALSE) {
   global $theme_key;
   // Initialize the theme system so that $theme_key will be populated.
   drupal_theme_initialize();
-  // Now check both the requested custom theme and the actual theme being used.
-  $custom_theme = menu_get_custom_theme();
-  $requested_theme = empty($custom_theme) ? 'NONE' : $custom_theme;
-  $output = "Custom theme: $requested_theme. Actual theme: $theme_key.";
+  // Now we check what the theme negotiator service returns.
+  $active_theme = \Drupal::service('theme.negotiator')->getActiveTheme('getActiveTheme');
+  $output = "Active theme: $active_theme. Actual theme: $theme_key.";
   if ($inherited) {
-    $output .= ' Theme callback inheritance is being tested.';
+    $output .= ' Theme negotiation inheritance is being tested.';
   }
   return $output;
-}
-
-/**
- * Theme callback: Tests the theme callback functionality.
- *
- * Retrieves the theme key of the theme to use for the current request based on
- * the theme name provided in the URL.
- *
- * @param string $argument
- *   The argument passed in from the URL.
- *
- * @return string
- *   The name of the custom theme to request for the current page.
- *
- * @see menu_test_menu().
- */
-function menu_test_theme_callback($argument) {
-  // Test using the variable administrative theme.
-  if ($argument == 'use-admin-theme') {
-    return \Drupal::config('system.theme')->get('admin');
-  }
-  // Test using a theme that exists, but may or may not be enabled.
-  elseif ($argument == 'use-stark-theme') {
-    return 'stark';
-  }
-  // Test using a theme that does not exist.
-  elseif ($argument == 'use-fake-theme') {
-    return 'fake_theme';
-  }
-  // For any other value of the URL argument, do not return anything. This
-  // allows us to test that returning nothing from a theme callback function
-  // causes the page to correctly fall back on using the main site theme.
-}
-
-/**
- * Implements hook_custom_theme().
- *
- * If an appropriate variable has been set in the database, request the theme
- * that is stored there. Otherwise, do not attempt to dynamically set the theme.
- */
-function menu_test_custom_theme() {
-  // When requested by one of the MenuTrailTestCase tests, record the initial
-  // active trail during Drupal's bootstrap (before the user is redirected to a
-  // custom 403 or 404 page). See menu_test_custom_403_404_callback().
-  if (\Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
-    \Drupal::state()->set('menu_test.active_trail_initial', menu_get_active_trail());
-  }
-  if ($theme = \Drupal::state()->get('menu_test.hook_custom_theme_name') ?: FALSE) {
-    return $theme;
-  }
 }
 
 /**

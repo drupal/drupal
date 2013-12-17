@@ -833,20 +833,6 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'theme_callback' => array(
-        'description' => 'A function which returns the name of the theme that will be used to render this page. If left empty, the default theme will be used.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'theme_arguments' => array(
-        'description' => 'A serialized array of arguments for the theme callback.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
       'type' => array(
         'description' => 'Numeric representation of the type of the menu item, like MENU_LOCAL_TASK.',
         'type' => 'int',

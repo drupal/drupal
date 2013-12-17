@@ -23,6 +23,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterStringTranslatorsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterBreadcrumbBuilderPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAuthenticationPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
+use Drupal\Core\Theme\ThemeNegotiatorPass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
@@ -71,6 +72,9 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     // Add the compiler pass that will process the tagged breadcrumb builder
     // services.
     $container->addCompilerPass(new RegisterBreadcrumbBuilderPass());
+    // Add the compiler pass that will process the tagged theme negotiator
+    // service.
+    $container->addCompilerPass(new ThemeNegotiatorPass());
     // Add the compiler pass that lets service providers modify existing
     // service definitions.
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());

@@ -39,6 +39,8 @@ ajax_test.order:
   path: '/ajax-test/order'
   defaults:
     _controller: '\Drupal\ajax_test\Controller\AjaxTestController::order'
+  options:
+    _theme: ajax_base_page
   requirements:
     _access: 'TRUE'
 

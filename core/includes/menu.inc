@@ -463,8 +463,8 @@ function menu_set_item($path, $router_item) {
  *   menu_router table. The value corresponding to the key 'map' holds the
  *   loaded objects. The value corresponding to the key 'access' is TRUE if the
  *   current user can access this page. The values corresponding to the keys
- *   'title', 'page_arguments', 'access_arguments', and 'theme_arguments' will
- *   be filled in based on the database values and the objects loaded.
+ *   'title', 'page_arguments', and 'access_arguments', will be filled in based
+ *   on the database values and the objects loaded.
  */
 function menu_get_item($path = NULL, $router_item = NULL) {
   $router_items = &drupal_static(__FUNCTION__);
@@ -501,7 +501,6 @@ function menu_get_item($path = NULL, $router_item = NULL) {
       if ($router_item['access']) {
         $router_item['map'] = $map;
         $router_item['page_arguments'] = array_merge(menu_unserialize($router_item['page_arguments'], $map), array_slice($map, $router_item['number_parts']));
-        $router_item['theme_arguments'] = array_merge(menu_unserialize($router_item['theme_arguments'], $map), array_slice($map, $router_item['number_parts']));
       }
     }
     $router_items[$path] = $router_item;
@@ -1796,51 +1795,6 @@ function drupal_help_arg($arg = array()) {
 }
 
 /**
- * Gets the custom theme for the current page, if there is one.
- *
- * @param $initialize
- *   This parameter should only be used internally; it is set to TRUE in order
- *   to force the custom theme to be initialized for the current page request.
- *
- * @return
- *   The machine-readable name of the custom theme, if there is one.
- *
- * @see menu_set_custom_theme()
- */
-function menu_get_custom_theme($initialize = FALSE) {
-  $custom_theme = &drupal_static(__FUNCTION__);
-  // Skip this if the site is offline or being installed or updated, since the
-  // menu system may not be correctly initialized then.
-  if ($initialize && !_menu_site_is_offline(TRUE) && (!defined('MAINTENANCE_MODE') || (MAINTENANCE_MODE != 'update' && MAINTENANCE_MODE != 'install'))) {
-    // First allow modules to dynamically set a custom theme for the current
-    // page. Since we can only have one, the last module to return a valid
-    // theme takes precedence.
-    $custom_themes = array_filter(\Drupal::moduleHandler()->invokeAll('custom_theme'), 'drupal_theme_access');
-    if (!empty($custom_themes)) {
-      $custom_theme = array_pop($custom_themes);
-    }
-    // If there is a theme callback function for the current page, execute it.
-    // If this returns a valid theme, it will override any theme that was set
-    // by a hook_custom_theme() implementation above.
-    $router_item = menu_get_item();
-    if (!empty($router_item['access']) && !empty($router_item['theme_callback'])) {
-      $theme_name = call_user_func_array($router_item['theme_callback'], $router_item['theme_arguments']);
-      if (drupal_theme_access($theme_name)) {
-        $custom_theme = $theme_name;
-      }
-    }
-  }
-  return $custom_theme;
-}
-
-/**
- * Sets a custom theme for the current page, if there is one.
- */
-function menu_set_custom_theme() {
-  menu_get_custom_theme(TRUE);
-}
-
-/**
  * Returns an array containing the names of system-defined (default) menus.
  */
 function menu_list_system_menus() {
@@ -3071,13 +3025,6 @@ function _menu_router_build($callbacks, $save = FALSE) {
             }
           }
         }
-        // Same for theme callbacks.
-        if (!isset($item['theme callback']) && isset($parent['theme callback'])) {
-          $item['theme callback'] = $parent['theme callback'];
-          if (!isset($item['theme arguments']) && isset($parent['theme arguments'])) {
-            $item['theme arguments'] = $parent['theme arguments'];
-          }
-        }
         // Same for load arguments: if a loader doesn't have any explict
         // arguments, try to find arguments in the parent.
         if (!isset($item['load arguments'])) {
@@ -3114,8 +3061,6 @@ function _menu_router_build($callbacks, $save = FALSE) {
       'page callback' => '',
       'title arguments' => array(),
       'title callback' => 't',
-      'theme arguments' => array(),
-      'theme callback' => '',
       'description' => '',
       'description arguments' => array(),
       'description callback' => 't',
@@ -3180,8 +3125,6 @@ function _menu_router_save($menu, $masks) {
       'title',
       'title_callback',
       'title_arguments',
-      'theme_callback',
-      'theme_arguments',
       'type',
       'description',
       'description_callback',
@@ -3212,8 +3155,6 @@ function _menu_router_save($menu, $masks) {
       'title' => $item['title'],
       'title_callback' => $item['title callback'],
       'title_arguments' => ($item['title arguments'] ? serialize($item['title arguments']) : ''),
-      'theme_callback' => $item['theme callback'],
-      'theme_arguments' => serialize($item['theme arguments']),
       'type' => $item['type'],
       'description' => $item['description'],
       'description_callback' => $item['description callback'],

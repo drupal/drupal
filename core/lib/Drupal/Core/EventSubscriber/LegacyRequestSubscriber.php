@@ -27,15 +27,24 @@ class LegacyRequestSubscriber implements EventSubscriberInterface {
    */
   public function onKernelRequestLegacy(GetResponseEvent $event) {
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
-      menu_set_custom_theme();
-      drupal_theme_initialize();
-
       // Tell Drupal it is now fully bootstrapped (for the benefit of code that
       // calls drupal_get_bootstrap_phase()), but without having
       // _drupal_bootstrap_full() do anything, since we've already done the
       // equivalent above and in earlier listeners.
       _drupal_bootstrap_full(TRUE);
       drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+    }
+  }
+
+  /**
+   * Initializes the theme system after the routing system.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function onKernelRequestLegacyAfterRouting(GetResponseEvent $event) {
+    if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
+      drupal_theme_initialize();
     }
   }
 
@@ -47,6 +56,8 @@ class LegacyRequestSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onKernelRequestLegacy', 90);
+    // Initialize the theme system after the routing system.
+    $events[KernelEvents::REQUEST][] = array('onKernelRequestLegacyAfterRouting', 30);
 
     return $events;
   }

@@ -15,26 +15,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 
 /**
- * Implements hook_menu().
- */
-function edit_menu() {
-  // @todo Remove these menu items in http://drupal.org/node/1954892 when theme
-  //   callbacks are replaced with something else.
-  $items['edit/metadata'] = array(
-    'route_name' => 'edit.metadata',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  );
-  $items['edit/form/%/%/%/%/%'] = array(
-    'route_name' => 'edit.field_form',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_permission().
  */
 function edit_permission() {

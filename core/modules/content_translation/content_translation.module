@@ -168,7 +168,7 @@ function content_translation_menu() {
     if (content_translation_enabled($entity_type)) {
       $path = _content_translation_link_to_router_path($entity_type, $info['links']['canonical']);
       $entity_position = count(explode('/', $path)) - 1;
-      $keys = array_flip(array('theme_callback', 'theme_arguments', 'load_arguments'));
+      $keys = array_flip(array('load_arguments'));
       $menu_info = array_intersect_key($info['translation']['content_translation'], $keys) + array('file' => 'content_translation.pages.inc');
       $item = array();
 

@@ -382,7 +382,7 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
 
   // Allow Drupal to return new JavaScript and CSS files to load without
   // returning the ones already loaded.
-  // @see ajax_base_page_theme()
+  // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
   // @see drupal_get_css()
   // @see drupal_get_js()
   var pageState = drupalSettings.ajaxPageState;

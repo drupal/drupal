@@ -178,7 +178,7 @@ class ThemeTest extends WebTestBase {
    * Test the administration theme functionality.
    */
   function testAdministrationTheme() {
-    theme_enable(array('seven'));
+    theme_enable(array('bartik', 'seven'));
 
     // Enable an administration theme and show it on the node admin pages.
     $edit = array(

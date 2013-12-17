@@ -270,20 +270,6 @@ function views_permission() {
 }
 
 /**
- * Implement hook_menu().
- */
-function views_menu() {
-  $items = array();
-  $items['views/ajax'] = array(
-    'title' => 'Views',
-    'theme callback' => 'ajax_base_page_theme',
-    'route_name' => 'views.ajax',
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-}
-
-/**
  * Implement hook_menu_alter().
  */
 function views_menu_alter(&$callbacks) {

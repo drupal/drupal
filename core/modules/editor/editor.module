@@ -139,21 +139,6 @@ function editor_library_info() {
 }
 
 /**
- * Implements hook_menu().
- */
-function editor_menu() {
-  // @todo Remove this menu item in http://drupal.org/node/1954892 when theme
-  //   callbacks are replaced with something else.
-  $items['editor/%/%/%/%/%'] = array(
-    'route_name' => 'editor.field_untransformed_text',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  */
 function editor_form_filter_admin_overview_alter(&$form, $form_state) {

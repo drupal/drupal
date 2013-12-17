@@ -9,3 +9,7 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [block]
+  theme.negotiator.block.admin_demo:
+    class: Drupal\block\Theme\AdminDemoNegotiator
+    tags:
+      - { name: theme_negotiator, priority: 1000 }

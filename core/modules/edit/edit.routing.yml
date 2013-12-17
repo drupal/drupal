@@ -2,6 +2,8 @@ edit.metadata:
   path: '/edit/metadata'
   defaults:
     _controller: '\Drupal\edit\EditController::metadata'
+  options:
+    _theme: ajax_base_page
   requirements:
     _permission: 'access in-place editing'
 
@@ -16,6 +18,9 @@ edit.field_form:
   path: '/edit/form/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
     _controller: '\Drupal\edit\EditController::fieldForm'
+  options:
+    _access_mode: 'ALL'
+    _theme: ajax_base_page
   requirements:
     _permission: 'access in-place editing'
     _access_edit_entity_field: 'TRUE'
