@@ -60,6 +60,7 @@ abstract class AccessTestBase extends UserTestBase {
     $this->normalRole = $this->drupalCreateRole(array());
     $this->normalUser = $this->drupalCreateUser(array('views_test_data test permission'));
     $this->normalUser->addRole($this->normalRole);
+    $this->normalUser->save();
     // @todo when all the plugin information is cached make a reset function and
     // call it here.
   }

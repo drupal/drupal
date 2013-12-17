@@ -1,10 +1,16 @@
-base_table: node
+base_table: views_test_data
 core: '8'
 description: ''
 status: '1'
 display:
   default:
     display_options:
+      fields:
+        id:
+          id: id
+          field: id
+          table: views_test_data
+          plugin_id: numeric
       access:
         type: role
       cache:
@@ -21,6 +27,13 @@ display:
     display_title: Master
     id: default
     position: '0'
+  page_1:
+    display_options:
+      path: test-role
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: '1'
 label: ''
 id: test_access_role
 tag: ''

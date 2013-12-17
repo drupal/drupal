@@ -185,6 +185,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       $access_plugin = Views::pluginManager('access')->createInstance('none');
     }
     $access_plugin->alterRouteDefinition($route);
+    // @todo Figure out whether _access_mode ANY is the proper one. This is
+    //   particular important for altering routes.
+    $route->setOption('_access_mode', 'ANY');
+
     return $route;
   }
 

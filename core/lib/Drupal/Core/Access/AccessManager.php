@@ -159,13 +159,11 @@ class AccessManager extends ContainerAware {
           $checks[] = $service_id;
         }
       }
-      // This means appliesTo() method was empty. Iterate through all checkers.
-      else {
-        foreach ($this->dynamicRequirementMap as $service_id) {
-          if ($this->checks[$service_id]->applies($route)) {
-            $checks[] = $service_id;
-          }
-        }
+    }
+    // Finally, see if any dynamic access checkers apply.
+    foreach ($this->dynamicRequirementMap as $service_id) {
+      if ($this->checks[$service_id]->applies($route)) {
+        $checks[] = $service_id;
       }
     }
 
