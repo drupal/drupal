@@ -645,9 +645,6 @@ abstract class WebTestBase extends TestBase {
     if ($pass) {
       $this->loggedInUser = $account;
       $this->container->set('current_user', $account);
-      // @todo Temporary workaround for not being able to use synchronized
-      //   services in non dumped container.
-      $this->container->get('access_subscriber')->setCurrentUser($account);
     }
   }
 

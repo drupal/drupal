@@ -7,7 +7,7 @@
 
 namespace Drupal\views;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -17,13 +17,13 @@ use Symfony\Component\Routing\Route;
  *
  * @todo We could leverage the permission one as well?
  */
-class ViewsAccessCheck implements AccessCheckInterface {
+class ViewsAccessCheck implements StaticAccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return $route->hasDefault('view_id');
+  public function appliesTo() {
+    return array('views_id');
   }
 
   /**

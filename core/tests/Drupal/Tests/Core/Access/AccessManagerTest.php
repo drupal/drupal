@@ -147,37 +147,6 @@ class AccessManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests setChecks with a dynamic access checker.
-   */
-  public function testSetChecksWithDynamicAccessChecker() {
-    // Setup the access manager.
-    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->account);
-    $this->accessManager->setContainer($this->container);
-
-    // Setup the dynamic access checker.
-    $access_check = $this->getMock('Drupal\Core\Access\AccessCheckInterface');
-    $this->container->set('test_access', $access_check);
-    $this->accessManager->addCheckService('test_access');
-
-    $route = new Route('/test-path', array(), array('_foo' => '1', '_bar' => '1'));
-    $route2 = new Route('/test-path', array(), array('_foo' => '1', '_bar' => '2'));
-    $collection = new RouteCollection();
-    $collection->add('test_route', $route);
-    $collection->add('test_route2', $route2);
-
-    $access_check->expects($this->exactly(2))
-      ->method('applies')
-      ->with($this->isInstanceOf('Symfony\Component\Routing\Route'))
-      ->will($this->returnCallback(function (Route $route) {
-         return $route->getRequirement('_bar') == 2;
-      }));
-
-    $this->accessManager->setChecks($collection);
-    $this->assertEmpty($route->getOption('_access_checks'));
-    $this->assertEquals(array('test_access'), $route2->getOption('_access_checks'));
-  }
-
-  /**
    * Tests \Drupal\Core\Access\AccessManager::check().
    */
   public function testCheck() {

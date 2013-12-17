@@ -8,9 +8,6 @@
 namespace Drupal\user\Tests\Views;
 
 use Drupal\user\Plugin\views\access\Role;
-use Drupal\views\Views;
-use Drupal\views\ViewStorageInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests views role access plugin.
@@ -38,43 +35,19 @@ class AccessRoleTest extends AccessTestBase {
    * Tests role access plugin.
    */
   function testAccessRole() {
-    /** @var \Drupal\views\ViewStorageInterface $view */
-    $view = \Drupal::entityManager()->getStorageController('view')->load('test_access_role');
-    $display = &$view->getDisplay('default');
-    $display['display_options']['access']['options']['role'] = array(
+    $view = views_get_view('test_access_role');
+    $view->setDisplay();
+
+    $view->displayHandlers->get('default')->options['access']['options']['role'] = array(
       $this->normalRole => $this->normalRole,
     );
-    $view->save();
 
-    $executable = Views::executableFactory()->get($view);
-    $executable->setDisplay('page_1');
-
-    $access_plugin = $executable->display_handler->getPlugin('access');
+    $access_plugin = $view->display_handler->getPlugin('access');
     $this->assertTrue($access_plugin instanceof Role, 'Make sure the right class got instantiated.');
 
-    // Test the access() method on the access plugin.
-    $this->assertTrue($executable->display_handler->access($this->adminUser), 'Admin-Account should be able to access the view everytime');
-    $this->assertFalse($executable->display_handler->access($this->webUser));
-    $this->assertTrue($executable->display_handler->access($this->normalUser));
-
-    // Test the actual access doing a request.
-    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
-    $kernel = $this->container->get('http_kernel');
-
-    $this->drupalLogin($this->adminUser);
-    $request = Request::create('/test-role');
-    $response = $kernel->handle($request);
-    $this->assertEqual($response->getStatusCode(), 200);
-
-    $this->drupalLogin($this->webUser);
-    $request = Request::create('/test-role');
-    $response = $kernel->handle($request);
-    $this->assertEqual($response->getStatusCode(), 403);
-
-    $this->drupalLogin($this->normalUser);
-    $request = Request::create('/test-role');
-    $response = $kernel->handle($request);
-    $this->assertEqual($response->getStatusCode(), 200);
+    $this->assertTrue($view->display_handler->access($this->adminUser), 'Admin-Account should be able to access the view everytime');
+    $this->assertFalse($view->display_handler->access($this->webUser));
+    $this->assertTrue($view->display_handler->access($this->normalUser));
   }
 
 }
