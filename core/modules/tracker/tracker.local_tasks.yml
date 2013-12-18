@@ -8,3 +8,8 @@ tracker.users_recent_tab:
   title: 'My recent content'
   tab_root_id: tracker.page_tab
   class: '\Drupal\tracker\Plugin\Menu\UserTrackerTab'
+
+tracker.user_tab:
+  route_name: tracker.user_tab
+  tab_root_id: user.view
+  title: 'Track'
