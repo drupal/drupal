@@ -29,10 +29,10 @@ class State implements StateInterface {
   /**
    * Constructs a State object.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactory $key_value_factory
-   *  The key value store to use.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The key value store to use.
    */
-  function __construct(KeyValueFactory $key_value_factory) {
+  function __construct(KeyValueFactoryInterface $key_value_factory) {
     $this->keyValueStore = $key_value_factory->get('state');
   }
 

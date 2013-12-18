@@ -437,24 +437,11 @@ function install_begin_request(&$install_state) {
     $container->register('settings', 'Drupal\Component\Utility\Settings')
       ->setFactoryClass('Drupal\Component\Utility\Settings')
       ->setFactoryMethod('getSingleton');
-    $container->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
-      ->addArgument(new Reference('service_container'))
-      ->addArgument(new Reference('settings'));
-    // Register the expirable key value store used by form cache.
+
     $container
-      ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
-      ->addArgument(new Reference('service_container'))
-      ->addArgument(new Reference('settings'));
-    $container->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
+      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
     $container
-      ->register('keyvalue.expirable.null', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
-    $settings = Settings::getSingleton()->getAll();
-    $settings['settings_old'] = $settings;
-    $settings['keyvalue_expirable_default'] = 'keyvalue.expirable.null';
-    // Override the default keyvalue storage to use memory as the database is
-    // not available.
-    $settings['keyvalue_default'] = 'keyvalue.memory';
-    new Settings($settings);
+      ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
 
     $container->register('state', 'Drupal\Core\KeyValueStore\State')
       ->addArgument(new Reference('keyvalue'));
@@ -1296,11 +1283,6 @@ function install_settings_form_submit($form, &$form_state) {
 
   // Add the config directories to settings.php.
   drupal_install_config_directories($install_state['mode']);
-
-  // The container is about to be rebuilt so we need to unset the keyvalue
-  // storage override that the installer is using.
-  $settings = Settings::getSingleton()->getAll();
-  new Settings($settings['settings_old']);
 
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This

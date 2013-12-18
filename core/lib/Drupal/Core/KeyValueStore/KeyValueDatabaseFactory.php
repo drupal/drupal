@@ -12,7 +12,7 @@ use Drupal\Core\Database\Database;
 /**
  * Defines the key/value store factory for the database backend.
  */
-class KeyValueDatabaseFactory {
+class KeyValueDatabaseFactory implements KeyValueFactoryInterface {
 
   /**
    * Constructs this factory object.
@@ -26,14 +26,7 @@ class KeyValueDatabaseFactory {
   }
 
   /**
-   * Constructs a new key/value database storage object for a given collection name.
-   *
-   * @param string $collection
-   *   The name of the collection holding key and value pairs.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The connection to run against.
-   * @return \Drupal\Core\KeyValueStore\DatabaseStorage
-   *   A key/value store implementation for the given $collection.
+   * {@inheritdoc}
    */
   public function get($collection) {
     return new DatabaseStorage($collection, $this->connection);

@@ -25,15 +25,7 @@ class KeyValueDatabaseExpirableFactory extends KeyValueDatabaseFactory implement
   protected $storages;
 
   /**
-   * Constructs a new key/value expirable database storage object for a given
-   * collection name.
-   *
-   * @param string $collection
-   *   The name of the collection holding key and value pairs.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The connection to run against.
-   * @return \Drupal\Core\KeyValueStore\DatabaseStorageExpirable
-   *   A key/value store implementation for the given $collection.
+   * {@inheritdoc}
    */
   public function get($collection) {
     $storage = new DatabaseStorageExpirable($collection, $this->connection);

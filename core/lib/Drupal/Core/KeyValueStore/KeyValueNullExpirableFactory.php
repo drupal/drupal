@@ -10,17 +10,10 @@ namespace Drupal\Core\KeyValueStore;
 /**
  * Defines the key/value store factory for the null backend.
  */
-class KeyValueNullExpirableFactory {
+class KeyValueNullExpirableFactory implements KeyValueFactoryInterface {
 
   /**
-   * Constructs a new key/value expirable null storage object for a given
-   * collection name.
-   *
-   * @param string $collection
-   *   The name of the collection holding key and value pairs.
-   *
-   * @return \Drupal\Core\KeyValueStore\DatabaseStorageExpirable
-   *   A key/value store implementation for the given $collection.
+   * {@inheritdoc}
    */
   public function get($collection) {
     return new NullStorageExpirable($collection);

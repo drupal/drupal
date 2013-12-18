@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines the key/value store factory.
  */
-class KeyValueFactory {
+class KeyValueFactory implements KeyValueFactoryInterface {
 
   /**
    * The specific setting name prefix.
@@ -68,13 +68,7 @@ class KeyValueFactory {
   }
 
   /**
-   * Constructs a new key/value store for a given collection name.
-   *
-   * @param string $collection
-   *   The name of the collection holding key and value pairs.
-   *
-   * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   *   A key/value store implementation for the given $collection.
+   * {@inheritdoc}
    */
   public function get($collection) {
     if (!isset($this->stores[$collection])) {
