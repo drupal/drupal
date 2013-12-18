@@ -109,6 +109,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['path'] = array('default' => '');
+    $options['route_name'] = array('default' => '');
 
     return $options;
   }
@@ -197,8 +198,11 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     $route = $this->getRoute($view_id, $display_id);
 
-    $collection->add("view.$view_id.$display_id", $route);
-    return array("$view_id.$display_id" => "view.$view_id.$display_id");
+    if (!($route_name = $this->getOption('route_name'))) {
+      $route_name = "view.$view_id.$display_id";
+    }
+    $collection->add($route_name, $route);
+    return array("$view_id.$display_id" => $route_name);
   }
 
   /**

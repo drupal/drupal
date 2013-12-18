@@ -11,6 +11,9 @@ views.display.page:
     path:
       type: string
       label: 'Page path'
+    route_name:
+      type: string
+      label: 'Route name'
     menu:
       type: mapping
       label: 'Menu'

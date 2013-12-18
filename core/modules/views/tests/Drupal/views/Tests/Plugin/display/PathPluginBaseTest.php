@@ -116,7 +116,31 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertTrue($route instanceof Route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
+  }
 
+  /**
+   * Tests the collect routes method with an alternative route name in the UI.
+   */
+  public function testCollectRoutesWithSpecialRouteName() {
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = array(
+      'path' => 'test_route',
+      'route_name' => 'test_route',
+    );
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $collection = new RouteCollection();
+    $result = $this->pathPlugin->collectRoutes($collection);
+    $this->assertEquals(array('test_id.page_1' => 'test_route'), $result);
+
+    $route = $collection->get('test_route');
+    $this->assertTrue($route instanceof Route);
+    $this->assertEquals('test_id', $route->getDefault('view_id'));
+    $this->assertEquals('page_1', $route->getDefault('display_id'));
   }
 
   /**
