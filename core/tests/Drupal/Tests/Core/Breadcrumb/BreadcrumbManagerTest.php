@@ -71,6 +71,10 @@ class BreadcrumbManagerTest extends UnitTestCase {
     $attributes = array('key' => 'value');
 
     $builder->expects($this->once())
+      ->method('applies')
+      ->will($this->returnValue(TRUE));
+
+    $builder->expects($this->once())
       ->method('build')
       ->will($this->returnValue($breadcrumb));
 
@@ -90,10 +94,15 @@ class BreadcrumbManagerTest extends UnitTestCase {
   public function testBuildWithMultipleApplyingBuilders() {
     $builder1 = $this->getMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $builder1->expects($this->never())
+      ->method('applies');
+    $builder1->expects($this->never())
       ->method('build');
 
     $builder2 = $this->getMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $breadcrumb2 = array('<a href="/example2">Test2</a>');
+    $builder2->expects($this->once())
+      ->method('applies')
+      ->will($this->returnValue(TRUE));
     $builder2->expects($this->once())
       ->method('build')
       ->will($this->returnValue($breadcrumb2));
@@ -117,11 +126,16 @@ class BreadcrumbManagerTest extends UnitTestCase {
   public function testBuildWithOneNotApplyingBuilders() {
     $builder1 = $this->getMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $builder1->expects($this->once())
-      ->method('build')
-      ->will($this->returnValue(NULL));
+      ->method('applies')
+      ->will($this->returnValue(FALSE));
+    $builder1->expects($this->never())
+      ->method('build');
 
     $builder2 = $this->getMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $breadcrumb2 = array('<a href="/example2">Test2</a>');
+    $builder2->expects($this->once())
+      ->method('applies')
+      ->will($this->returnValue(TRUE));
     $builder2->expects($this->once())
       ->method('build')
       ->will($this->returnValue($breadcrumb2));
@@ -146,6 +160,9 @@ class BreadcrumbManagerTest extends UnitTestCase {
    */
   public function testBuildWithInvalidBreadcrumbResult() {
     $builder = $this->getMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
+    $builder->expects($this->once())
+      ->method('applies')
+      ->will($this->returnValue(TRUE));
     $builder->expects($this->once())
       ->method('build')
       ->will($this->returnValue('invalid_result'));

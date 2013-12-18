@@ -13,14 +13,26 @@ namespace Drupal\Core\Breadcrumb;
 interface BreadcrumbBuilderInterface {
 
   /**
+   * Whether this breadcrumb builder should be used to build the breadcrumb.
+   *
+   * @param array $attributes
+   *   Attributes representing the current page.
+   *
+   * @return bool
+   *   TRUE if this builder should be used or FALSE to let other builders
+   *   decide.
+   */
+  public function applies(array $attributes);
+
+  /**
    * Builds the breadcrumb.
    *
    * @param array $attributes
    *   Attributes representing the current page.
    *
-   * @return array|null
-   *   A render array for the breadcrumbs or NULL to let other builders decide.
-   *   Returning empty array will suppress all breadcrumbs.
+   * @return array
+   *   A render array for the breadcrumbs. Returning an empty array will
+   *   suppress all breadcrumbs.
    */
   public function build(array $attributes);
 

@@ -68,18 +68,27 @@ class BreadcrumbManager implements BreadcrumbBuilderInterface {
   /**
    * {@inheritdoc}
    */
+  public function applies(array $attributes) {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(array $attributes) {
     $breadcrumb = array();
     $context = array('builder' => NULL);
     // Call the build method of registered breadcrumb builders,
     // until one of them returns an array.
     foreach ($this->getSortedBuilders() as $builder) {
-      $build = $builder->build($attributes);
-      if (!isset($build)) {
-        // The builder returned NULL, so we continue with the other builders.
+      if (!$builder->applies($attributes)) {
+        // The builder does not apply, so we continue with the other builders.
         continue;
       }
-      elseif (is_array($build)) {
+
+      $build = $builder->build($attributes);
+
+      if (is_array($build)) {
         // The builder returned an array of breadcrumb links.
         $breadcrumb = $build;
         $context['builder'] = $builder;

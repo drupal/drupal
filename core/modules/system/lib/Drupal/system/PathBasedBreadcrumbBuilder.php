@@ -105,6 +105,13 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
+  public function applies(array $attributes) {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(array $attributes) {
     $links = array();
 

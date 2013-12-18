@@ -58,17 +58,22 @@ class ForumBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
+  public function applies(array $attributes) {
+    return !empty($attributes[RouteObjectInterface::ROUTE_NAME])
+    && (($attributes[RouteObjectInterface::ROUTE_NAME] == 'node.view' && isset($attributes['node']) && $this->forumManager->checkNodeType($attributes['node']))
+      || ($attributes[RouteObjectInterface::ROUTE_NAME] == 'forum.page' && isset($attributes['taxonomy_term']))
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(array $attributes) {
-    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME])) {
-      $route_name = $attributes[RouteObjectInterface::ROUTE_NAME];
-      if ($route_name == 'node.view' && isset($attributes['node'])) {
-        if ($this->forumManager->checkNodeType($attributes['node'])) {
-          return $this->forumPostBreadcrumb($attributes['node']);
-        }
-      }
-      if ($route_name == 'forum.page' && isset($attributes['taxonomy_term'])) {
-        return $this->forumTermBreadcrumb($attributes['taxonomy_term']);
-      }
+    if ($attributes[RouteObjectInterface::ROUTE_NAME] == 'node.view') {
+      return $this->forumPostBreadcrumb($attributes['node']);
+    }
+    elseif ($attributes[RouteObjectInterface::ROUTE_NAME] == 'forum.page') {
+      return $this->forumTermBreadcrumb($attributes['taxonomy_term']);
     }
   }
 

@@ -58,31 +58,38 @@ class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
+  public function applies(array $attributes) {
+    return !empty($attributes['node'])
+    && ($attributes['node'] instanceof NodeInterface)
+    && !empty($attributes['node']->book);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(array $attributes) {
-    if (!empty($attributes['node']) && $attributes['node'] instanceof NodeInterface && !empty($attributes['node']->book)) {
-      $mlids = array();
-      $links = array($this->l($this->t('Home'), '<front>'));
-      $book = $attributes['node']->book;
+    $mlids = array();
+    $links = array($this->l($this->t('Home'), '<front>'));
+    $book = $attributes['node']->book;
+    $depth = 1;
+    // We skip the current node.
+    while (!empty($book['p' . ($depth + 1)])) {
+      $mlids[] = $book['p' . $depth];
+      $depth++;
+    }
+    $menu_links = $this->menuLinkStorage->loadMultiple($mlids);
+    if (count($menu_links) > 0) {
       $depth = 1;
-      // We skip the current node.
       while (!empty($book['p' . ($depth + 1)])) {
-        $mlids[] = $book['p' . $depth];
+        if (!empty($menu_links[$book['p' . $depth]]) && ($menu_link = $menu_links[$book['p' . $depth]])) {
+          if ($this->accessManager->checkNamedRoute($menu_link->route_name, $menu_link->route_parameters, $this->account)) {
+            $links[] = $this->l($menu_link->label(), $menu_link->route_name, $menu_link->route_parameters, $menu_link->options);
+          }
+        }
         $depth++;
       }
-      $menu_links = $this->menuLinkStorage->loadMultiple($mlids);
-      if (count($menu_links) > 0) {
-        $depth = 1;
-        while (!empty($book['p' . ($depth + 1)])) {
-          if (!empty($menu_links[$book['p' . $depth]]) && ($menu_link = $menu_links[$book['p' . $depth]])) {
-            if ($this->accessManager->checkNamedRoute($menu_link->route_name, $menu_link->route_parameters, $this->account)) {
-              $links[] = $this->l($menu_link->label(), $menu_link->route_name, $menu_link->route_parameters, $menu_link->options);
-            }
-          }
-          $depth++;
-        }
-      }
-      return $links;
     }
+    return $links;
   }
 
 }
