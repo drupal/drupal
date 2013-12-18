@@ -216,6 +216,7 @@ class EditLoadingTest extends WebTestBase {
       $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in one AJAX command.');
       $this->assertIdentical('editFieldFormSaved', $ajax_commands[0]['command'], 'The first AJAX command is an editFieldFormSaved command.');
       $this->assertTrue(strpos($ajax_commands[0]['data'], 'Fine thanks.'), 'Form value saved and printed back.');
+      $this->assertIdentical($ajax_commands[0]['other_view_modes'], array(), 'Field was not rendered in any other view mode.');
 
       // Ensure the text on the original node did not change yet.
       $this->drupalGet('node/1');
@@ -426,6 +427,9 @@ class EditLoadingTest extends WebTestBase {
         'body[0][format]' => 'filtered_html',
         'op' => t('Save'),
       );
+      // Assume there is another field on this page, which doesn't use a custom
+      // render pipeline, but the default one, and it uses the "full" view mode.
+      $post += array('other_view_modes[]' => 'full');
 
       // Submit field form and check response. Should render with the custom
       // render pipeline.
@@ -436,6 +440,8 @@ class EditLoadingTest extends WebTestBase {
       $this->assertIdentical('editFieldFormSaved', $ajax_commands[0]['command'], 'The first AJAX command is an editFieldFormSaved command.');
       $this->assertTrue(strpos($ajax_commands[0]['data'], 'Fine thanks.'), 'Form value saved and printed back.');
       $this->assertTrue(strpos($ajax_commands[0]['data'], '<div class="edit-test-wrapper">') !== FALSE, 'Custom render pipeline used to render the value.');
+      $this->assertIdentical(array_keys($ajax_commands[0]['other_view_modes']), array('full'), 'Field was also rendered in the "full" view mode.');
+      $this->assertTrue(strpos($ajax_commands[0]['other_view_modes']['full'], 'Fine thanks.'), '"full" version of field contains the form value.');
     }
   }
 

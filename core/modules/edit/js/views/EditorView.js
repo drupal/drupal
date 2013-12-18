@@ -196,6 +196,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
       fieldID: this.fieldModel.get('fieldID'),
       $el: this.$el,
       nocssjs: true,
+      other_view_modes: fieldModel.findOtherViewModes(),
       // Reset an existing entry for this entity in the TempStore (if any) when
       // saving the field. Logically speaking, this should happen in a separate
       // request because this is an entity-level operation, not a field-level
@@ -232,7 +233,11 @@ Drupal.edit.EditorView = Backbone.View.extend({
         removeHiddenForm();
         // First, transition the state to 'saved'.
         fieldModel.set('state', 'saved');
-        // Then, set the 'html' attribute on the field model. This will cause
+        // Second, set the 'htmlForOtherViewModes' attribute, so that when this
+        // field is rerendered, the change can be propagated to other instances of
+        // this field, which may be displayed in different view modes.
+        fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
+        // Finally, set the 'html' attribute on the field model. This will cause
         // the field to be rerendered.
         fieldModel.set('html', response.data);
       };

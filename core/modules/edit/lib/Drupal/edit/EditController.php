@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -233,26 +234,26 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
       // updated view of the field from the TempStore copy.
       $entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
 
-      // Render the field. If the view mode ID is not an Entity Display view
-      // mode ID, then the field was rendered using a custom render pipeline,
-      // that is: not the Entity/Field API render pipeline.
-      // An example could be Views' render pipeline. In the example of Views,
-      // the view mode ID would probably contain the View's ID, display and the
-      // row index.
-      $entity_view_mode_ids = array_keys(entity_get_view_modes($entity->entityType()));
-      if (in_array($view_mode_id, $entity_view_mode_ids)) {
-        $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
-      }
-      else {
-        // Each part of a custom (non-Entity Display) view mode ID is separated
-        // by a dash; the first part must be the module name.
-        $mode_id_parts = explode('-', $view_mode_id, 2);
-        $module = reset($mode_id_parts);
-        $args = array($entity, $field_name, $view_mode_id, $langcode);
-        $output = $this->moduleHandler->invoke($module, 'edit_render_field', $args);
-      }
+      // Closure to render the field given a view mode.
+      // @todo Drupal 8 will — but does not yet — require PHP 5.4:
+      //       https://drupal.org/node/2152073. One of the new features in that
+      //       version is $this support for closures. See
+      //       http://php.net/manual/en/migration54.new-features.php.
+      //       That will allow us to get rid of this ugly $that = $this mess.
+      $that = $this;
+      $render_field_in_view_mode = function ($view_mode_id) use ($entity, $field_name, $langcode, $that) {
+        return $that->renderField($entity, $field_name, $langcode, $view_mode_id);
+      };
 
-      $response->addCommand(new FieldFormSavedCommand(drupal_render($output)));
+      // Re-render the updated field.
+      $output = $render_field_in_view_mode($view_mode_id);
+
+      // Re-render the updated field for other view modes (i.e. for other
+      // instances of the same logical field on the user's page).
+      $other_view_mode_ids = $request->request->get('other_view_modes') ?: array();
+      $other_view_modes = MapArray::copyValuesToKeys($other_view_mode_ids, $render_field_in_view_mode);
+
+      $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));
     }
     else {
       $response->addCommand(new FieldFormCommand(drupal_render($form)));
@@ -273,6 +274,53 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
     }
 
     return $response;
+  }
+
+  /**
+   * Renders a field.
+   *
+   * If the view mode ID is not an Entity Display view mode ID, then the field
+   * was rendered using a custom render pipeline (not the Entity/Field API
+   * render pipeline).
+   *
+   * An example could be Views' render pipeline. In that case, the view mode ID
+   * would probably contain the View's ID, display and the row index.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity being edited.
+   * @param string $field_name
+   *   The name of the field that is being edited.
+   * @param string $langcode
+   *   The name of the language for which the field is being edited.
+   * @param string $view_mode_id
+   *   The view mode the field should be rerendered in. Either an Entity Display
+   *   view mode ID, or a custom one. See hook_edit_render_field().
+   *
+   * @return string
+   *   Rendered HTML.
+   *
+   * @see hook_edit_render_field()
+   *
+   * @todo Until Drupal 8 requires PHP 5.4, we cannot call $this inside a
+   *       closure (see higher), which also means anything called from a closure
+   *       must be public. So, until https://drupal.org/node/2152073 lands, use
+   *       "public" instead of "protected".
+   */
+  public function renderField(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
+    $entity_view_mode_ids = array_keys(entity_get_view_modes($entity->entityType()));
+    if (in_array($view_mode_id, $entity_view_mode_ids)) {
+      $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
+    }
+    else {
+      // Each part of a custom (non-Entity Display) view mode ID is separated
+      // by a dash; the first part must be the module name.
+      $mode_id_parts = explode('-', $view_mode_id, 2);
+      $module = reset($mode_id_parts);
+      $args = array($entity, $field_name, $view_mode_id, $langcode);
+      $output = $this->moduleHandler->invoke($module, 'edit_render_field', $args);
+    }
+
+    return drupal_render($output);
   }
 
   /**
