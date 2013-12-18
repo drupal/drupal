@@ -5,17 +5,17 @@
  * Contains \Drupal\rest\EventSubscriber\RouteSubscriber.
  */
 
-namespace Drupal\rest\EventSubscriber;
+namespace Drupal\rest\Routing;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Routing\RouteSubscriberBase;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
-use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Subscriber for REST-style routes.
  */
-class RouteSubscriber extends RouteSubscriberBase {
+class ResourceRoutes implements ContainerInjectionInterface {
 
   /**
    * The plugin manager for REST plugins.
@@ -47,7 +47,21 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function routes(RouteCollection $collection) {
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.rest'),
+      $container->get('config.factory')
+    );
+  }
+
+  /**
+   * Returns an array of route objects.
+   *
+   * @return \Symfony\Component\Routing\Route[]
+   *   An array of route objects.
+   */
+  public function routes() {
+    $routes = array();
     $enabled_resources = $this->config->get('rest.settings')->load()->get('resources');
 
     // Iterate over all enabled resource plugins.
@@ -82,10 +96,11 @@ class RouteSubscriber extends RouteSubscriberBase {
           // The configuration seems legit at this point, so we set the
           // authentication provider and add the route.
           $route->setOption('_auth', $enabled_methods[$method]['supported_auth']);
-          $collection->add("rest.$name", $route);
+          $routes["rest.$name"] = $route;
         }
       }
     }
+    return $routes;
   }
 
 }

@@ -8,10 +8,8 @@
 namespace Drupal\field_ui\Routing;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -28,43 +26,25 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected $manager;
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
    * Constructs a RouteSubscriber object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $manager
    *   The entity type manager.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider.
    */
-  public function __construct(EntityManagerInterface $manager, RouteProviderInterface $route_provider) {
+  public function __construct(EntityManagerInterface $manager) {
     $this->manager = $manager;
-    $this->routeProvider = $route_provider;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function routes(RouteCollection $collection) {
+  protected function alterRoutes(RouteCollection $collection, $provider) {
     foreach ($this->manager->getDefinitions() as $entity_type => $entity_info) {
       $defaults = array();
       if ($entity_info['fieldable'] && isset($entity_info['links']['admin-form'])) {
-        // First try to get the route from the dynamic_routes collection.
+        // Try to get the route from the current collection.
         if (!$entity_route = $collection->get($entity_info['links']['admin-form'])) {
-          // Then try to get the route from the route provider itself, checking
-          // all previous collections.
-          try {
-            $entity_route = $this->routeProvider->getRouteByName($entity_info['links']['admin-form']);
-          }
-          // If the route was not found, skip this entity type.
-          catch (RouteNotFoundException $e) {
-            continue;
-          }
+          continue;
         }
         $path = $entity_route->getPath();
 
@@ -155,7 +135,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   public static function getSubscribedEvents() {
     $events = parent::getSubscribedEvents();
-    $events[RoutingEvents::DYNAMIC] = array('onDynamicRoutes', -100);
+    $events[RoutingEvents::ALTER] = array('onAlterRoutes', -100);
     return $events;
   }
 

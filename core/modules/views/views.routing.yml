@@ -6,3 +6,6 @@ views.ajax:
     _theme: ajax_base_page
   requirements:
     _access: 'TRUE'
+
+route_callbacks:
+  - 'views.route_subscriber:routes'

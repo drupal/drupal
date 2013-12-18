@@ -36,7 +36,14 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public function routes(RouteCollection $collection) {
+  protected function alterRoutes(RouteCollection $collection, $provider) {
+    // @todo \Drupal\config_translation\ConfigNamesMapper uses the route
+    //   provider directly, which is unsafe during rebuild. This currently only
+    //   works by coincidence; fix in https://drupal.org/node/2158571.
+    if ($provider != 'dynamic_routes') {
+      return;
+    }
+
     $mappers = $this->mapperManager->getMappers();
     foreach ($mappers as $mapper) {
       $collection->add($mapper->getOverviewRouteName(), $mapper->getOverviewRoute());

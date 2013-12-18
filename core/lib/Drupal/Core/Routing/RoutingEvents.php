@@ -23,16 +23,4 @@ final class RoutingEvents {
    */
   const ALTER = 'routing.route_alter';
 
-  /**
-   * The DYNAMIC event is fired to allow modules to register additional routes.
-   *
-   * Most routes are static, an should be defined as such. Dynamic routes are
-   * only those whose existence changes depending on the state of the system
-   * at runtime, depending on configuration.
-   *
-   * @see \Drupal\Core\Routing\RouteBuildEvent
-   *
-   * @var string
-   */
-  const DYNAMIC = 'routing.route_dynamic';
 }

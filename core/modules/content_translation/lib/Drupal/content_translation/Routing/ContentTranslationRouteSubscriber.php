@@ -8,12 +8,10 @@
 namespace Drupal\content_translation\Routing;
 
 use Drupal\content_translation\ContentTranslationManagerInterface;
-use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Subscriber for entity translation routes.
@@ -28,41 +26,23 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
   protected $contentTranslationManager;
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
    * Constructs a ContentTranslationRouteSubscriber object.
    *
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager
    *   The content translation manager.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider.
    */
-  public function __construct(ContentTranslationManagerInterface $content_translation_manager, RouteProviderInterface $route_provider) {
+  public function __construct(ContentTranslationManagerInterface $content_translation_manager) {
     $this->contentTranslationManager = $content_translation_manager;
-    $this->routeProvider = $route_provider;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function routes(RouteCollection $collection) {
+  protected function alterRoutes(RouteCollection $collection, $provider) {
     foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type => $entity_info) {
-      // First try to get the route from the dynamic_routes collection.
+      // Try to get the route from the current collection.
       if (!$entity_route = $collection->get($entity_info['links']['canonical'])) {
-        // Then try to get the route from the route provider itself, checking
-        // all previous collections.
-        try {
-          $entity_route = $this->routeProvider->getRouteByName($entity_info['links']['canonical']);
-        }
-        // If the route was not found, skip this entity type.
-        catch (RouteNotFoundException $e) {
-          continue;
-        }
+        continue;
       }
       $path = $entity_route->getPath() . '/translations';
 
@@ -167,7 +147,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
    */
   public static function getSubscribedEvents() {
     $events = parent::getSubscribedEvents();
-    $events[RoutingEvents::DYNAMIC] = array('onDynamicRoutes', -100);
+    $events[RoutingEvents::ALTER] = array('onAlterRoutes', -100);
     return $events;
   }
 

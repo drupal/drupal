@@ -49,7 +49,7 @@ class ParamConverterSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetParameterConverters', 10);
+    $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetParameterConverters', -200);
     return $events;
   }
 }

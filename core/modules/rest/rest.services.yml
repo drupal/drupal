@@ -9,11 +9,6 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [rest]
-  rest.route_subscriber:
-    class: Drupal\rest\EventSubscriber\RouteSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@plugin.manager.rest', '@config.factory']
   access_check.rest.csrf:
     class: Drupal\rest\Access\CSRFAccessCheck
     tags:

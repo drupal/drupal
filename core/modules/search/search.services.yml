@@ -14,9 +14,3 @@ services:
     arguments: ['@plugin.manager.search']
     tags:
       - { name: access_check }
-
-  route_subscriber.search:
-    class: Drupal\search\Routing\SearchRouteSubscriber
-    arguments: ['@plugin.manager.search']
-    tags:
-     - { name: event_subscriber }

@@ -5,28 +5,31 @@
  * Contains \Drupal\image\EventSubscriber\RouteSubscriber.
  */
 
-namespace Drupal\image\EventSubscriber;
+namespace Drupal\image\Routing;
 
-use Drupal\Core\Routing\RouteSubscriberBase;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Defines a route subscriber to register a url for serving image styles.
  */
-class RouteSubscriber extends RouteSubscriberBase {
+class ImageStyleRoutes {
 
   /**
-   * {@inheritdoc}
+   * Returns an array of route objects.
+   *
+   * @return \Symfony\Component\Routing\Route[]
+   *   An array of route objects.
    */
-  protected function routes(RouteCollection $collection) {
+  public function routes() {
+    $routes = array();
     // Generate image derivatives of publicly available files. If clean URLs are
     // disabled image derivatives will always be served through the menu system.
     // If clean URLs are enabled and the image derivative already exists, PHP
     // will be bypassed.
     $directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
 
-    $route = new Route('/' . $directory_path . '/styles/{image_style}/{scheme}',
+    $routes['image.style_public'] = new Route(
+      '/' . $directory_path . '/styles/{image_style}/{scheme}',
       array(
         '_controller' => 'Drupal\image\Controller\ImageStyleDownloadController::deliver',
       ),
@@ -34,7 +37,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         '_access' => 'TRUE',
       )
     );
-    $collection->add('image.style_public', $route);
+    return $routes;
   }
 
 }

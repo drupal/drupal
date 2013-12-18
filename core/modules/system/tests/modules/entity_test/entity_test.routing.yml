@@ -22,3 +22,6 @@ entity_test.render_no_view_mode:
     _entity_view: 'entity_test'
   requirements:
     _access: 'TRUE'
+
+route_callbacks:
+  - '\Drupal\entity_test\Routing\EntityTestRoutes::routes'

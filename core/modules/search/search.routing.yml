@@ -25,3 +25,6 @@ search.view:
     keys: '.+'
     _permission: 'search content'
     _search_access: 'TRUE'
+
+route_callbacks:
+  - '\Drupal\search\Routing\SearchPluginRoutes::routes'

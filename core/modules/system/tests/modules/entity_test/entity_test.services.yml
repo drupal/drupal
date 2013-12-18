@@ -1,5 +1,0 @@
-services:
-  entity_test.subscriber:
-    class: Drupal\entity_test\Routing\RouteSubscriber
-    tags:
-     - { name: event_subscriber }

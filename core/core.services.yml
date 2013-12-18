@@ -313,7 +313,7 @@ services:
     arguments: ['@database']
   router.builder:
     class: Drupal\Core\Routing\RouteBuilder
-    arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler']
+    arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver']
   path.alias_manager.cached:
     class: Drupal\Core\CacheDecorator\AliasManagerCacheDecorator
     arguments: ['@path.alias_manager', '@cache.path']

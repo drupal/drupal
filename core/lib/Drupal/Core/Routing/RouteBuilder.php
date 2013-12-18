@@ -8,6 +8,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Component\Discovery\YamlDiscovery;
+use Drupal\Core\Controller\ControllerResolverInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Routing\RouteCollection;
@@ -60,6 +61,13 @@ class RouteBuilder {
   protected $moduleHandler;
 
   /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   */
+  protected $controllerResolver;
+
+  /**
    * Construcs the RouteBuilder using the passed MatcherDumperInterface.
    *
    * @param \Drupal\Core\Routing\MatcherDumperInterface $dumper
@@ -70,12 +78,15 @@ class RouteBuilder {
    *   The event dispatcher to notify of routes.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver.
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler) {
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver) {
     $this->dumper = $dumper;
     $this->lock = $lock;
     $this->dispatcher = $dispatcher;
     $this->moduleHandler = $module_handler;
+    $this->controllerResolver = $controller_resolver;
   }
 
   /**
@@ -98,6 +109,23 @@ class RouteBuilder {
     foreach ($yaml_discovery->findAll() as $provider => $routes) {
       $collection = new RouteCollection();
 
+      // The top-level 'routes_callback' is a list of methods in controller
+      // syntax, see \Drupal\Core\Controller\ControllerResolver. These methods
+      // should return a set of \Symfony\Component\Routing\Route objects, either
+      // in an associative array keyed by the route name, or as a new
+      // \Symfony\Component\Routing\RouteCollection, which will be iterated over
+      // and added to the collection for this provider.
+      if (isset($routes['route_callbacks'])) {
+        foreach ($routes['route_callbacks'] as $route_callback) {
+          $callback = $this->controllerResolver->getControllerFromDefinition($route_callback);
+          if ($callback_routes = call_user_func($callback)) {
+            foreach ($callback_routes as $name => $callback_route) {
+              $collection->add($name, $callback_route);
+            }
+          }
+        }
+        unset($routes['route_callbacks']);
+      }
       foreach ($routes as $name => $route_info) {
         $route_info += array(
           'defaults' => array(),
@@ -115,8 +143,8 @@ class RouteBuilder {
     }
 
     // Now allow modules to register additional, dynamic routes.
+    // @todo Either remove this alter or the per-provider alter.
     $collection = new RouteCollection();
-    $this->dispatcher->dispatch(RoutingEvents::DYNAMIC, new RouteBuildEvent($collection, 'dynamic_routes'));
     $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection, 'dynamic_routes'));
     $this->dumper->addRoutes($collection);
     $this->dumper->dump(array('provider' => 'dynamic_routes'));

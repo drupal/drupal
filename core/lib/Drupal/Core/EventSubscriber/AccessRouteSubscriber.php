@@ -53,7 +53,7 @@ class AccessRouteSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     // Setting very low priority to ensure access checks are run after alters.
-    $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetAccessCheck', -50);
+    $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetAccessCheck', -1000);
 
     return $events;
   }

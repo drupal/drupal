@@ -17,18 +17,6 @@ use Symfony\Component\Routing\RouteCollection;
 abstract class RouteSubscriberBase implements EventSubscriberInterface {
 
   /**
-   * Provides new routes by adding them to the collection.
-   *
-   * Subclasses should use this method and add \Symfony\Component\Routing\Route
-   * objects with $collection->add('route_name', $route);.
-   *
-   * @param \Symfony\Component\Routing\RouteCollection $collection
-   *   The route collection for adding routes.
-   */
-  protected function routes(RouteCollection $collection) {
-  }
-
-  /**
    * Alters existing routes for a specific collection.
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
@@ -44,20 +32,8 @@ abstract class RouteSubscriberBase implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[RoutingEvents::DYNAMIC] = 'onDynamicRoutes';
     $events[RoutingEvents::ALTER] = 'onAlterRoutes';
     return $events;
-  }
-
-  /**
-   * Delegates the route gathering to self::routes().
-   *
-   * @param \Drupal\Core\Routing\RouteBuildEvent $event
-   *   The route build event.
-   */
-  public function onDynamicRoutes(RouteBuildEvent $event) {
-    $collection = $event->getRouteCollection();
-    $this->routes($collection);
   }
 
   /**

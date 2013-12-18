@@ -1,8 +1,4 @@
 services:
-  image.route_subscriber:
-    class: Drupal\image\EventSubscriber\RouteSubscriber
-    tags:
-      - { name: 'event_subscriber' }
   path_processor.image_styles:
     class: Drupal\image\PathProcessor\PathProcessorImageStyles
     tags:

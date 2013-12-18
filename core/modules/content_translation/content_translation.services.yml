@@ -5,7 +5,7 @@ services:
 
   content_translation.subscriber:
     class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber
-    arguments: ['@content_translation.manager', '@router.route_provider']
+    arguments: ['@content_translation.manager']
     tags:
       - { name: event_subscriber }
 

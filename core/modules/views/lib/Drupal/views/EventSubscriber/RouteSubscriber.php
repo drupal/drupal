@@ -95,9 +95,13 @@ class RouteSubscriber extends RouteSubscriberBase implements DestructableInterfa
   }
 
   /**
-   * {@inheritdoc}
+   * Returns a set of route objects.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   *   A route collection.
    */
-  protected function routes(RouteCollection $collection) {
+  public function routes() {
+    $collection = new RouteCollection();
     foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
       list($view_id, $display_id) = explode('.', $pair);
       $view = $this->viewStorageController->load($view_id);
@@ -105,9 +109,7 @@ class RouteSubscriber extends RouteSubscriberBase implements DestructableInterfa
       if (($view = $view->getExecutable()) && $view instanceof ViewExecutable) {
         if ($view->setDisplay($display_id) && $display = $view->displayHandlers->get($display_id)) {
           if ($display instanceof DisplayRouterInterface) {
-            $view_route_names = (array) $display->collectRoutes($collection);
-
-            $this->viewRouteNames += $view_route_names;
+            $this->viewRouteNames += (array) $display->collectRoutes($collection);
           }
         }
         $view->destroy();
@@ -115,12 +117,13 @@ class RouteSubscriber extends RouteSubscriberBase implements DestructableInterfa
     }
 
     $this->state->set('views.view_route_names', $this->viewRouteNames);
+    return $collection;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $module) {
+  protected function alterRoutes(RouteCollection $collection, $provider) {
     foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
       list($view_id, $display_id) = explode('.', $pair);
       $view = $this->viewStorageController->load($view_id);
@@ -131,7 +134,7 @@ class RouteSubscriber extends RouteSubscriberBase implements DestructableInterfa
             // If the display returns TRUE a route item was found, so it does not
             // have to be added.
             $view_route_names = $display->alterRoutes($collection);
-            $this->viewRouteNames += $view_route_names;
+            $this->viewRouteNames = $view_route_names + $this->viewRouteNames;
             foreach ($view_route_names as $id_display => $route_name) {
               unset($this->viewsDisplayPairs[$id_display]);
             }
