@@ -690,7 +690,7 @@ function toolbar_user_role_update(RoleInterface $role) {
  *   A unique cache ID for the user.
  */
 function _toolbar_get_user_cid($uid) {
-  return $uid . ':' . \Drupal::languageManager()->getLanguage(Language::TYPE_INTERFACE)->id;
+  return 'toolbar_' . $uid . ':' . \Drupal::languageManager()->getLanguage(Language::TYPE_INTERFACE)->id;
 }
 
 /**
