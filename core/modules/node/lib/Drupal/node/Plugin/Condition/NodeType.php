@@ -8,8 +8,6 @@
 namespace Drupal\node\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Core\Condition\Annotation\Condition;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Node Type' condition.

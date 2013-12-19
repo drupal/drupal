@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
-use Drupal\views\Annotation\ViewsArgumentDefault;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * The fixed argument default handler.
  *

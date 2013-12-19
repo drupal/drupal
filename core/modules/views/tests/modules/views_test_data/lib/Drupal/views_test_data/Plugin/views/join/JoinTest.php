@@ -8,8 +8,6 @@
 namespace Drupal\views_test_data\Plugin\views\join;
 
 use Drupal\views\Plugin\views\join\JoinPluginBase;
-use Drupal\Component\Annotation\PluginID;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a join test plugin.

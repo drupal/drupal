@@ -7,11 +7,8 @@
 
 namespace Drupal\user\Plugin\views\access;
 
-
-use Drupal\views\Annotation\ViewsAccess;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
-use Drupal\Core\Annotation\Translation;
 use Symfony\Component\Routing\Route;
 
 /**

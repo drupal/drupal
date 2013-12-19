@@ -8,8 +8,6 @@
 namespace Drupal\search\Plugin\views\row;
 
 use Drupal\views\Plugin\views\row\RowPluginBase;
-use Drupal\views\Annotation\ViewsRow;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Plugin which performs a node_view on the resulting object.

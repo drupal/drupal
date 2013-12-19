@@ -7,9 +7,6 @@
 
 namespace Drupal\plugin_test\Plugin\plugin_test\fruit;
 
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * @Plugin(
  *   id = "banana",

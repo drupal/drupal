@@ -7,7 +7,6 @@
 
 namespace Drupal\file\Plugin\views\filter;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**

@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\exposed_form;
 
-use Drupal\views\Annotation\ViewsExposedForm;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Exposed form plugin that provides a basic exposed form.
  *

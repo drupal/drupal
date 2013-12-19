@@ -8,7 +8,6 @@
 namespace Drupal\aggregator\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Xss as XssBase;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filters htmls tags from item.

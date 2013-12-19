@@ -8,8 +8,6 @@
 namespace Drupal\system\Plugin\Archiver;
 
 use Drupal\Component\Archiver\Zip as BaseZip;
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a archiver implementation for .zip files.

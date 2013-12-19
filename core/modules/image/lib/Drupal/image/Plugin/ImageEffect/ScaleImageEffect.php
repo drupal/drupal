@@ -7,10 +7,8 @@
 
 namespace Drupal\image\Plugin\ImageEffect;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Component\Utility\Image;
 use Drupal\Core\Image\ImageInterface;
-use Drupal\image\Annotation\ImageEffect;
 
 /**
  * Scales an image resource.

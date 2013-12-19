@@ -7,10 +7,8 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\views\Annotation\ViewsDisplay;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * The plugin that handles a full page.

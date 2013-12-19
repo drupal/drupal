@@ -8,7 +8,6 @@
 namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\Numeric;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler to accept a node id.

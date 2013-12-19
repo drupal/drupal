@@ -8,7 +8,6 @@
 namespace Drupal\views_test_data\Plugin\views\area;
 
 use Drupal\views\Plugin\views\area\AreaPluginBase;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Test area plugin.

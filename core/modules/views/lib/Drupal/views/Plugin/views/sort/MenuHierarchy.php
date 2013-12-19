@@ -7,9 +7,7 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Views;
-
 
 /**
  * Sort in menu hierarchy order.

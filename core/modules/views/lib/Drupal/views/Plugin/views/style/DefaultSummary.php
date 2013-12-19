@@ -8,8 +8,6 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\views\Plugin\views\style\StylePluginBase;
-use Drupal\views\Annotation\ViewsStyle;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * The default style plugin for summaries.

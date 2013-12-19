@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\argument_validator;
 
-use Drupal\views\Annotation\ViewsArgumentValidator;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Do not validate the argument.
  *

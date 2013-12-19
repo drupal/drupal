@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Simple handler for arguments using group by.
  *

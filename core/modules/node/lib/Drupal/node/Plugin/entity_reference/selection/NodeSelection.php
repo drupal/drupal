@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Plugin\entity_reference\selection;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
 /**

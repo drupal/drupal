@@ -8,9 +8,6 @@
 namespace Drupal\field_test\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraints\NotEqualTo;
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
-
 
 /**
  * Checks if a value is not equal.

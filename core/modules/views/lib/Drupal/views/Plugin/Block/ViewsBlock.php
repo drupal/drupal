@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\Block;
 
-use Drupal\block\Annotation\Block;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\Query\Query;
 use Drupal\Component\Utility\Xss;
 use Symfony\Component\DependencyInjection\ContainerInterface;

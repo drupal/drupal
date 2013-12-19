@@ -10,7 +10,6 @@ namespace Drupal\views\Plugin\views\argument;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ManyToOneHelper;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Basic argument handler to implement string arguments that may have length

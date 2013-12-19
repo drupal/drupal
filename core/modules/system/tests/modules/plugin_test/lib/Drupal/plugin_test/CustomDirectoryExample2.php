@@ -7,8 +7,6 @@
 
 namespace Drupal\plugin_test;
 
-use Drupal\Component\Annotation\Plugin;
-
 /**
  * Provides a test plugin within a custom directory.
  *

@@ -10,7 +10,6 @@ namespace Drupal\taxonomy\Plugin\views\field;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\PrerenderList;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to display all taxonomy terms of a node.

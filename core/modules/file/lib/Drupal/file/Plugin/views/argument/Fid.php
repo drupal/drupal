@@ -7,7 +7,6 @@
 
 namespace Drupal\file\Plugin\views\argument;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\views\Plugin\views\argument\Numeric;

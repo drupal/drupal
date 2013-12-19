@@ -7,8 +7,6 @@
 
 namespace Drupal\taxonomy\Plugin\views\filter;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Filter handler for taxonomy terms with depth.
  *

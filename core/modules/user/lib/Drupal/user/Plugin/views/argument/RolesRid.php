@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Plugin\views\argument;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\argument\ManyToOne;

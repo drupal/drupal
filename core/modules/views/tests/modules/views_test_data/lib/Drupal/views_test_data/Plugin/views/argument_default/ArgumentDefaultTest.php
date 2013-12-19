@@ -8,8 +8,6 @@
 namespace Drupal\views_test_data\Plugin\views\argument_default;
 
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
-use Drupal\views\Annotation\ViewsArgumentDefault;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a argument default test plugin.

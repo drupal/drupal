@@ -7,8 +7,6 @@
 
 namespace Drupal\entity_reference\Plugin\views\display;
 
-use Drupal\views\Annotation\ViewsDisplay;
-use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**

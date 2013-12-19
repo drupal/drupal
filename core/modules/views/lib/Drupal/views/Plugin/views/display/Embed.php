@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\views\Annotation\ViewsDisplay;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * The plugin that handles an embed display.
  *

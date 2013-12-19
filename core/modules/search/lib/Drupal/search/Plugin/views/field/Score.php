@@ -8,7 +8,6 @@
 namespace Drupal\search\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Numeric;
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\ResultRow;
 
 /**

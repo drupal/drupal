@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\style;
 
-use Drupal\views\Annotation\ViewsStyle;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Default style plugin to render an RSS feed.
  *

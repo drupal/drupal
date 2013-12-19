@@ -7,11 +7,9 @@
 
 namespace Drupal\aggregator\Plugin\aggregator\processor;
 
-use Drupal\aggregator\Annotation\AggregatorProcessor;
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\Entity\Feed;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

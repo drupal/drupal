@@ -7,8 +7,6 @@
 
 namespace Drupal\views_test_data\Plugin\views\style;
 
-use Drupal\views\Annotation\ViewsStyle;
-use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 
 /**

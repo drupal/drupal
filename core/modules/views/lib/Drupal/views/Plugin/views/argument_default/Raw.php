@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
-use Drupal\views\Annotation\ViewsArgumentDefault;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Path\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;

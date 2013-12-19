@@ -8,7 +8,6 @@
 namespace Drupal\edit_test\Plugin\InPlaceEditor;
 
 use Drupal\edit\EditorBase;
-use Drupal\edit\Annotation\InPlaceEditor;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**

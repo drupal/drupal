@@ -8,8 +8,6 @@
 namespace Drupal\editor\Plugin\InPlaceEditor;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\edit\Annotation\InPlaceEditor;
-use Drupal\Core\Annotation\Translation;
 use Drupal\edit\EditPluginInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 

@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * A special handler to take the place of missing or broken handlers.
  *

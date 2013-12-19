@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Plugin\views\field;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;

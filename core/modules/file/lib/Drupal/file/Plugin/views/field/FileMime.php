@@ -7,7 +7,6 @@
 
 namespace Drupal\file\Plugin\views\field;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\ResultRow;
 
 /**

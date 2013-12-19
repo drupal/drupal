@@ -8,7 +8,6 @@
 namespace Drupal\search\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument that accepts query keys for search.

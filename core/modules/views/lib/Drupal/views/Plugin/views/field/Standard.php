@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Default implementation of the base field plugin.
  *

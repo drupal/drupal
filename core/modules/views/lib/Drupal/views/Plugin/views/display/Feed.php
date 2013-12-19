@@ -10,8 +10,6 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\views\Annotation\ViewsDisplay;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * The plugin that handles a feed, such as RSS or atom.

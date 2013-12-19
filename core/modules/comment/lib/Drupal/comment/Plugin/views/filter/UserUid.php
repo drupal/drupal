@@ -8,7 +8,6 @@
 namespace Drupal\comment\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler to accept a user id to check for nodes that user posted or

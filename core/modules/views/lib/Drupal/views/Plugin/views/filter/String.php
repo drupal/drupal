@@ -8,7 +8,6 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Database\Database;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Basic textfield filter to handle string filtering commands

@@ -7,10 +7,8 @@
 
 namespace Drupal\tour\Plugin\tour\tip;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
-use Drupal\tour\Annotation\Tip;
 use Drupal\tour\TipPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

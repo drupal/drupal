@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\display_extender;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * @todo.

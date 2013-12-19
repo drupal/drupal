@@ -7,10 +7,8 @@
 
 namespace Drupal\comment\Plugin\entity_reference\selection;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\comment\CommentInterface;
-use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
 /**

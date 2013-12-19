@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\ManyToOneHelper;
 
 /**

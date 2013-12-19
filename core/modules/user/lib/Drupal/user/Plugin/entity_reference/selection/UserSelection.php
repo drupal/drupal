@@ -7,11 +7,9 @@
 
 namespace Drupal\user\Plugin\entity_reference\selection;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
 /**

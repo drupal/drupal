@@ -7,7 +7,6 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Database\Connection;
 use Drupal\comment\CommentInterface;
 use Drupal\views\Plugin\views\field\Numeric;

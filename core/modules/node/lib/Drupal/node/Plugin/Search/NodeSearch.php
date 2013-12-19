@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Plugin\Search;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
@@ -20,7 +19,6 @@ use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
-use Drupal\search\Annotation\SearchPlugin;
 use Drupal\search\Plugin\SearchPluginBase;
 use Drupal\search\Plugin\SearchIndexingInterface;
 

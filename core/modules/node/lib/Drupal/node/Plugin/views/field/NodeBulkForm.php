@@ -9,7 +9,6 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\field\ActionBulkForm;
-use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Cache\Cache;
 
 /**

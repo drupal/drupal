@@ -9,7 +9,6 @@ namespace Drupal\search\Plugin\views\filter;
 
 use Drupal\search\SearchQuery;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.

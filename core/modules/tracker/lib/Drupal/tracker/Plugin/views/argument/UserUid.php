@@ -7,7 +7,6 @@
 
 namespace Drupal\tracker\Plugin\views\argument;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\comment\Plugin\views\argument\UserUid as CommentUserUid;
 
 /**

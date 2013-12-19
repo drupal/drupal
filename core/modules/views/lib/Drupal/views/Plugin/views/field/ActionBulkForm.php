@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\field;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\system\Plugin\views\field\BulkFormBase;
 
 /**

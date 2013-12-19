@@ -10,8 +10,6 @@ namespace Drupal\aggregator_test\Plugin\aggregator\processor;
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\Entity\Feed;
-use Drupal\aggregator\Annotation\AggregatorProcessor;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

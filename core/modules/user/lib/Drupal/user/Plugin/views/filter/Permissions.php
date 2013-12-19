@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Plugin\views\filter;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\views\Plugin\views\filter\ManyToOne;

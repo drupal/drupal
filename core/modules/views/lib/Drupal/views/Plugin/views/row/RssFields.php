@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\row;
 
-use Drupal\views\Annotation\ViewsRow;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Renders an RSS item based on fields.
  *

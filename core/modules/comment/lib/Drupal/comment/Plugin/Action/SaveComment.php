@@ -7,8 +7,6 @@
 
 namespace Drupal\comment\Plugin\Action;
 
-use Drupal\Core\Annotation\Action;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Action\ActionBase;
 

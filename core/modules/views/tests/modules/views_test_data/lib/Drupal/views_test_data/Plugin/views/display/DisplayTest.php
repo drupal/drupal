@@ -8,8 +8,6 @@
 namespace Drupal\views_test_data\Plugin\views\display;
 
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Annotation\ViewsDisplay;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a Display test plugin.

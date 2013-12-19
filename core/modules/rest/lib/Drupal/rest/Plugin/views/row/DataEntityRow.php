@@ -9,8 +9,6 @@ namespace Drupal\rest\Plugin\views\row;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\row\RowPluginBase;
-use Drupal\views\Annotation\ViewsRow;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Plugin which displays entities as raw data.

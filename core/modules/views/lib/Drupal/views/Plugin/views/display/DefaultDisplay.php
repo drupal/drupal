@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\views\Annotation\ViewsDisplay;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * A plugin to handle defaults on a view.
  *

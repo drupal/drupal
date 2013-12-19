@@ -8,9 +8,6 @@
 namespace Drupal\user\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;
-use Drupal\Component\Annotation\Plugin;
-use Drupal\Core\Annotation\Translation;
-
 
 /**
  * Checks if a user's e-mail address is unique on the site.

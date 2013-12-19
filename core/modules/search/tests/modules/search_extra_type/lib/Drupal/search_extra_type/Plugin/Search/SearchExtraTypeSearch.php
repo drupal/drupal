@@ -7,11 +7,9 @@
 
 namespace Drupal\search_extra_type\Plugin\Search;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search\Plugin\SearchPluginBase;
-use Drupal\search\Annotation\SearchPlugin;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

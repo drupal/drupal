@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
-use Drupal\views\Annotation\ViewsCache;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Caching plugin that provides no caching at all.
  *

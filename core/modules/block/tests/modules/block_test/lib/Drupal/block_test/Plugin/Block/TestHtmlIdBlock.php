@@ -7,9 +7,6 @@
 
 namespace Drupal\block_test\Plugin\Block;
 
-use Drupal\block\Annotation\Block;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Provides a block to test HTML IDs.
  *

@@ -24,11 +24,6 @@ use Drupal\Component\Annotation\AnnotationInterface;
  * Remove spaces after @ in your actual plugin - these are put into this sample
  * code so that it is not recognized as annotation.
  *
- * You will also need to make sure that your class file includes the line:
- * @code
- *   use Drupal\Core\Annotation\Translation;
- * @endcode
- *
  * It is also possible to provide a context with the text, similar to t():
  * @code
  *   title = @ Translation("Bundle", context = "Validation"),

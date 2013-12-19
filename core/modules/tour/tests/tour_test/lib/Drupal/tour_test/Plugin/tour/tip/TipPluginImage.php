@@ -7,8 +7,6 @@
 
 namespace Drupal\tour_test\Plugin\tour\tip;
 
-use Drupal\Core\Annotation\Translation;
-use Drupal\tour\Annotation\Tip;
 use Drupal\tour\TipPluginBase;
 
 /**

@@ -8,7 +8,6 @@
 namespace Drupal\comment\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\Date;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Sort handler for the newer of last comment / entity updated.

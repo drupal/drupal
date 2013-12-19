@@ -7,8 +7,6 @@
 
 namespace Drupal\user\Plugin\views\argument_default;
 
-use Drupal\views\Annotation\ViewsArgumentDefault;
-use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**

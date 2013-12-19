@@ -7,7 +7,6 @@
 
 namespace Drupal\node\Plugin\views\area;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 
 /**

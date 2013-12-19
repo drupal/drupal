@@ -10,8 +10,6 @@ namespace Drupal\rest\Plugin\views\display;
 
 use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
-use Drupal\views\Annotation\ViewsDisplay;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\ContentNegotiation;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\PathPluginBase;

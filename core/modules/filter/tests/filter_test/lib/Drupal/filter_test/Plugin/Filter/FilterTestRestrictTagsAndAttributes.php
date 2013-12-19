@@ -7,8 +7,6 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
-use Drupal\filter\Annotation\Filter;
-use Drupal\Core\Annotation\Translation;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\Component\Utility\Xss;
 

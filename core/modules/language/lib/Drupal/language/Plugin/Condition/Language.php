@@ -8,8 +8,6 @@
 namespace Drupal\language\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Core\Condition\Annotation\Condition;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language as Lang;
 
 /**

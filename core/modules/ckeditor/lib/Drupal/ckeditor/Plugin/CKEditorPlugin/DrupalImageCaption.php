@@ -9,10 +9,8 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\editor\Entity\Editor;
-use Drupal\Core\Annotation\Translation;
 use Drupal\ckeditor\CKEditorPluginInterface;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
-use Drupal\ckeditor\Annotation\CKEditorPlugin;
 
 /**
  * Defines the "drupalimagecaption" plugin.

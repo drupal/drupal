@@ -9,8 +9,6 @@ namespace Drupal\views\Plugin\views\pager;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Annotation\ViewsPager;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Plugin for views without pagers.

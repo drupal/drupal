@@ -9,8 +9,6 @@ namespace Drupal\aggregator\Plugin\aggregator\parser;
 
 use Drupal\aggregator\Plugin\ParserInterface;
 use Drupal\aggregator\Entity\Feed;
-use Drupal\aggregator\Annotation\AggregatorParser;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Cache\Cache;
 use Zend\Feed\Reader\Reader;
 use Zend\Feed\Reader\Exception\ExceptionInterface;

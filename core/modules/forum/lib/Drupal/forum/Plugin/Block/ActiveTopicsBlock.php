@@ -7,9 +7,6 @@
 
 namespace Drupal\forum\Plugin\Block;
 
-use Drupal\block\Annotation\Block;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Provides an 'Active forum topics' block.
  *

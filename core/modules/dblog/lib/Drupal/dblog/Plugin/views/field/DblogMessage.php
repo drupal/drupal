@@ -9,7 +9,6 @@ namespace Drupal\dblog\Plugin\views\field;
 
 use Drupal\Component\Utility\String;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;

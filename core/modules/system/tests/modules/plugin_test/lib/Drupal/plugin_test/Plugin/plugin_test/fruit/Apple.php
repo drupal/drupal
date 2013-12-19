@@ -7,8 +7,6 @@
 
 namespace Drupal\plugin_test\Plugin\plugin_test\fruit;
 
-use Drupal\Component\Annotation\Plugin;
-
 /**
  * @Plugin(
  *   id = "apple",
@@ -17,4 +15,3 @@ use Drupal\Component\Annotation\Plugin;
  * )
  */
 class Apple {}
-

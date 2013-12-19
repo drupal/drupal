@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
-use Drupal\views\Annotation\ViewsWizard;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * @ViewsWizard(
  *   id = "standard",

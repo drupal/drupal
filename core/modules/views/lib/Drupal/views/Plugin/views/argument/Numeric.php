@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Basic argument handler for arguments that are numeric. Incorporates
  * break_phrase.

@@ -8,7 +8,6 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Date;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to display the newer of last comment / node updated.

@@ -7,10 +7,8 @@
 
 namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 
-use Drupal\aggregator\Annotation\AggregatorFetcher;
 use Drupal\aggregator\Plugin\FetcherInterface;
 use Drupal\aggregator\Entity\Feed;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Exception\BadResponseException;

@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\display_extender;
 
-use Drupal\views\Annotation\ViewsDisplayExtender;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * @todo
  *

@@ -9,8 +9,6 @@
 namespace Drupal\block\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
-use Drupal\views\Annotation\ViewsDisplay;
-use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;

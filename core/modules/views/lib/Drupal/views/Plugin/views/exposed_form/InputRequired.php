@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\exposed_form;
 
-use Drupal\views\Annotation\ViewsExposedForm;
-use Drupal\Core\Annotation\Translation;
 use Drupal\views\Views;
 
 /**

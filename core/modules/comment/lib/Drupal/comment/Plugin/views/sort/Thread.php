@@ -8,7 +8,6 @@
 namespace Drupal\comment\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\SortPluginBase;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Sort handler for ordering by thread.

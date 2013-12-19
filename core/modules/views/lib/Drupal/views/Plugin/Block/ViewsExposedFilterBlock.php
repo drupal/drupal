@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\Block;
 
-use Drupal\block\Annotation\Block;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Provides a 'Views Exposed Filter' block.
  *

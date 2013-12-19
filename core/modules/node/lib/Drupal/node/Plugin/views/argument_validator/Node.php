@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Plugin\views\argument_validator;
 
-use Drupal\views\Annotation\ViewsArgumentValidator;
-use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**

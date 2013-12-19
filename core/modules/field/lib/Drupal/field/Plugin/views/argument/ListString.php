@@ -10,7 +10,6 @@ namespace Drupal\field\Plugin\views\argument;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument\String;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Argument handler for list field to show the human readable name in the

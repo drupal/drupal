@@ -7,7 +7,6 @@
 
 namespace Drupal\tracker\Plugin\views\filter;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\user\Plugin\views\filter\Name;
 
 /**

@@ -8,7 +8,6 @@
 namespace Drupal\comment\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\Date;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler for the newer of last comment / node updated.

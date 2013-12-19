@@ -7,9 +7,7 @@
 
 namespace Drupal\image\Plugin\ImageEffect;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Image\ImageInterface;
-use Drupal\image\Annotation\ImageEffect;
 use Drupal\image\ImageEffectBase;
 
 /**

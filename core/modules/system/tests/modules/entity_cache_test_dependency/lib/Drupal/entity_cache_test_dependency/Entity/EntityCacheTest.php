@@ -8,8 +8,6 @@
 namespace Drupal\entity_cache_test_dependency\Entity;
 
 use Drupal\Core\Entity\Entity;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the EntityCacheTest class.

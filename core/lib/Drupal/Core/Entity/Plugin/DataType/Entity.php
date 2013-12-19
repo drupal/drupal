@@ -7,9 +7,6 @@
 
 namespace Drupal\Core\Entity\Plugin\DataType;
 
-use Drupal\Core\TypedData\Annotation\DataType;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Defines the base plugin for deriving data types for entity types.
  *

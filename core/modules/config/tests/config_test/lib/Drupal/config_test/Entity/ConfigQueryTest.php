@@ -7,9 +7,6 @@
 
 namespace Drupal\config_test\Entity;
 
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Defines the ConfigQueryTest configuration entity used by the query test.
  *

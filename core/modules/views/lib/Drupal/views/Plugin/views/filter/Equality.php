@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Simple filter to handle equal to / not equal to filters
  *

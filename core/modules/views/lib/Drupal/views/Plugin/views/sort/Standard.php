@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Default implementation of the base sort plugin.
  *

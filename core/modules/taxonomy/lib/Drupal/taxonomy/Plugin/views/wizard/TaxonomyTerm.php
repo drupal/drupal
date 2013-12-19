@@ -8,8 +8,6 @@
 namespace Drupal\taxonomy\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
-use Drupal\views\Annotation\ViewsWizard;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Tests creating taxonomy views with the wizard.

@@ -10,8 +10,6 @@ namespace Drupal\filter\Plugin\Filter;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Annotation\Translation;
-use Drupal\filter\Annotation\Filter;
 use Drupal\filter\Plugin\FilterBase;
 
 /**

@@ -8,8 +8,6 @@
 namespace Drupal\field_ui_test\Entity;
 
 use Drupal\Core\Entity\Entity;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the test Field UI class.

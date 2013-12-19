@@ -7,9 +7,6 @@
 
 namespace Drupal\forum\Plugin\Block;
 
-use Drupal\block\Annotation\Block;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Provides a 'New forum topics' block.
  *

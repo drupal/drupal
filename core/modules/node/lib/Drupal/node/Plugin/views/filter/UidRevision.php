@@ -8,7 +8,6 @@
 namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\user\Plugin\views\filter\Name;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler to check for revisions a certain user has created.

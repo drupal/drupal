@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Filter to handle dates stored as a timestamp.
  *

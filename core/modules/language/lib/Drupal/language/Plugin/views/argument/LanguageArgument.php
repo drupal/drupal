@@ -8,7 +8,6 @@
 namespace Drupal\language\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Defines an argument handler to accept a language.

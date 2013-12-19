@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\style;
 
-use Drupal\views\Annotation\ViewsStyle;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Style plugin to render each item in a grid cell.
  *

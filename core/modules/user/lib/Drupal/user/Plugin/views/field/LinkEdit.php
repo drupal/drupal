@@ -8,7 +8,6 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\ResultRow;
 
 /**

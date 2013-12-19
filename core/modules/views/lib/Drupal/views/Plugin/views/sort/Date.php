@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
-use Drupal\Component\Annotation\PluginID;
-
 /**
  * Basic sort handler for dates.
  *

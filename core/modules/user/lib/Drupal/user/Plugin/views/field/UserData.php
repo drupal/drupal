@@ -12,7 +12,6 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\user\UserDataInterface;
-use Drupal\Component\Annotation\PluginID;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

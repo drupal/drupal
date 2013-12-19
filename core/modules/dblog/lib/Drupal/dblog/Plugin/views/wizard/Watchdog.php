@@ -7,8 +7,6 @@
 
 namespace Drupal\dblog\Plugin\views\wizard;
 
-use Drupal\views\Annotation\ViewsWizard;
-use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**

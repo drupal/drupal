@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\row;
 
-use Drupal\views\Annotation\ViewsRow;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * The basic 'fields' row plugin
  *

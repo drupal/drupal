@@ -8,8 +8,6 @@
 namespace Drupal\aggregator\Plugin\views\row;
 
 use Drupal\views\Plugin\views\row\RowPluginBase;
-use Drupal\views\Annotation\ViewsRow;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a row plugin which loads an aggregator item and renders as RSS.

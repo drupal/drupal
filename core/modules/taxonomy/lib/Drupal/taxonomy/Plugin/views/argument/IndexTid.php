@@ -7,7 +7,6 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\argument\ManyToOne;
 
 /**

@@ -7,7 +7,6 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
-use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Database\Database;
 
 /**

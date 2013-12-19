@@ -8,8 +8,6 @@
 namespace Drupal\action\Plugin\Action;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Annotation\Action;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;

@@ -7,9 +7,7 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
-use Drupal\views\Annotation\ViewsCache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Simple caching of query results for Views displays.

@@ -9,7 +9,6 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\comment\CommentInterface;
 use Drupal\views\ResultRow;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Provides a comment approve link.
