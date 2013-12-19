@@ -1,7 +1,7 @@
 Place downloaded and custom modules and themes or plugins that extend your site functionality beyond
 Drupal core in this directory to ensure clean separation from core modules and
 to facilitate safe, self-contained code updates. 
-Of course, you can also create folders to distinguish modules, themes and plugins.
+Of course, you can also create folders to distinguish modules, themes and plugins,Or third-party libraries.
 Contributed modules from theDrupal community may be downloaded at http://drupal.org/project/modules.
 
 It is safe to organize modules into subdirectories, such as "contrib" for
