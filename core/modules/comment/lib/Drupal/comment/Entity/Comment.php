@@ -57,6 +57,11 @@ use Drupal\Core\TypedData\DataDefinition;
 class Comment extends ContentEntityBase implements CommentInterface {
 
   /**
+   * The thread for which a lock was acquired.
+   */
+  protected $threadLock = '';
+
+  /**
    * The comment ID.
    *
    * @var \Drupal\Core\Field\FieldItemListInterface
@@ -273,12 +278,13 @@ class Comment extends ContentEntityBase implements CommentInterface {
           }
         }
         // Finally, build the thread field for this new comment. To avoid
-        // race conditions, get a lock on the thread. If aother process already
+        // race conditions, get a lock on the thread. If another process already
         // has the lock, just move to the next integer.
         do {
           $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
-        } while (!lock()->acquire("comment:{$this->entity_id->value}:$thread"));
-        $this->threadLock = $thread;
+          $lock_name = "comment:{$this->entity_id->value}:$thread";
+        } while (!\Drupal::lock()->acquire($lock_name));
+        $this->threadLock = $lock_name;
       }
       if (empty($this->created->value)) {
         $this->created->value = REQUEST_TIME;
@@ -316,7 +322,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
    */
   protected function releaseThreadLock() {
     if ($this->threadLock) {
-      lock()->release($this->threadLock);
+      \Drupal::lock()->release($this->threadLock);
       $this->threadLock = '';
     }
   }

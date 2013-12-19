@@ -20,11 +20,6 @@ use Drupal\Core\Entity\EntityChangedInterface;
 class CommentStorageController extends FieldableDatabaseStorageController implements CommentStorageControllerInterface {
 
   /**
-   * The thread for which a lock was acquired.
-   */
-  protected $threadLock = '';
-
-  /**
    * {@inheritdoc}
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
