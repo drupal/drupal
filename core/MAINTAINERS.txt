@@ -213,6 +213,10 @@ Module maintainers
 Aggregator module
 - Paris Liakos 'rootatwc' http://drupal.org/user/1011436
 
+Basic Auth module
+- Klaus Purer 'klausi' http://drupal.org/user/262198
+- Juampy Novillo Requena 'juampy' https://drupal.org/user/682736
+
 Block module
 - Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 - Ben Dougherty 'benjy' http://drupal.org/user/1852732
