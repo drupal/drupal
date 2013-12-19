@@ -88,7 +88,7 @@ class EditEntityFieldAccessCheck implements StaticAccessCheckInterface, EditEnti
       throw new NotFoundHttpException();
     }
     $langcode = $request->attributes->get('langcode');
-    if (!$langcode || (field_valid_language($langcode) !== $langcode)) {
+    if (!$langcode || !$entity->hasTranslation($langcode)) {
       throw new NotFoundHttpException();
     }
   }
