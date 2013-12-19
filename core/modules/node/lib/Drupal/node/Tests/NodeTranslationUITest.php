@@ -70,7 +70,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * {@inheritdoc}
    */
   protected function getAdministratorPermissions() {
-    return array_merge(parent::getAdministratorPermissions(), array('access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access'));
+    return array_merge(parent::getAdministratorPermissions(), array('access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access', 'administer languages'));
   }
 
   /**

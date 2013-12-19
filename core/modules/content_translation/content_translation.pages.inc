@@ -23,7 +23,7 @@ function content_translation_overview(EntityInterface $entity) {
   $languages = language_list();
   $original = $entity->getUntranslated()->language()->id;
   $translations = $entity->getTranslationLanguages();
-  $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') && user_access('administer ' . $entity->entityType() . ' fields');
+  $administrator = \Drupal::currentUser()->hasPermission('administer languages');
 
   $rel = array();
   foreach (array('canonical', 'edit-form', 'drupal:content-translation-overview') as $name) {
@@ -122,12 +122,8 @@ function content_translation_overview(EntityInterface $entity) {
             $links['add'] = isset($add_links->links[$langcode]['href']) ? $add_links->links[$langcode] : array('href' => $add_path, 'language' => $language);
             $links['add']['title'] = t('Add');
           }
-          elseif ($field_ui) {
-            $entity_path = $entity_manager->getAdminPath($entity->entityType(), $entity->bundle());
-            // Link directly to the fields tab to make it easier to find the
-            // setting to enable translation on fields.
-            $path = $entity_path . '/fields';
-            $links['nofields'] = array('title' => t('No translatable fields'), 'href' => $path, 'language' => $language);
+          elseif ($administrator) {
+            $links['nofields'] = array('title' => t('No translatable fields'), 'route_name' => 'language.content_settings_page', 'language' => $language);
           }
         }
 
