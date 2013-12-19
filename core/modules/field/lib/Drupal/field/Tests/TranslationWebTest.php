@@ -70,7 +70,7 @@ class TranslationWebTest extends FieldTestBase {
       'translatable' => TRUE,
     );
     entity_create('field_entity', $field)->save();
-    $this->field = field_read_field($this->entity_type, $this->field_name);
+    $this->field = entity_load('field_entity', $this->entity_type . '.' . $this->field_name);
 
     $instance = array(
       'field_name' => $this->field_name,
@@ -78,7 +78,7 @@ class TranslationWebTest extends FieldTestBase {
       'bundle' => $this->entity_type,
     );
     entity_create('field_instance', $instance)->save();
-    $this->instance = field_read_instance($this->entity_type, $this->field_name, $this->entity_type);
+    $this->instance = entity_load('field_instance', 'entity_test.' . $instance['bundle'] . '.' . $this->field_name);
 
     entity_get_form_display($this->entity_type, $this->entity_type, 'default')
       ->setComponent($this->field_name)

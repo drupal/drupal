@@ -164,8 +164,6 @@ class FieldInstanceStorageController extends ConfigStorageController {
         }
       }
 
-      $this->moduleHandler->invokeAll('field_read_instance', $instance);
-
       $matching_instances[] = $instance;
     }
 

@@ -39,5 +39,5 @@ function node_access_test_language_install() {
  * Implements hook_uninstall().
  */
 function node_access_test_language_uninstall() {
-  field_read_instance('node', 'field_private', 'page')->delete();
+  entity_load('field_instance', 'node.page.field_private')->delete();
 }

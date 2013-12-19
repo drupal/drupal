@@ -231,7 +231,7 @@ class FieldInfo {
     }
     else {
       // Collect and prepare fields.
-      foreach (field_read_fields(array(), array('include_deleted' => TRUE)) as $field) {
+      foreach (entity_load_multiple_by_properties('field_entity', array('include_deleted' => TRUE)) as $field) {
         $this->fieldsById[$field->uuid()] = $this->prepareField($field);
       }
 
@@ -277,7 +277,7 @@ class FieldInfo {
         // be set by subsequent getBundleInstances() calls.
         $this->getFields();
 
-        foreach (field_read_instances() as $instance) {
+        foreach (entity_load_multiple('field_instance') as $instance) {
           $instance = $this->prepareInstance($instance);
           $this->bundleInstances[$instance->entity_type][$instance->bundle][$instance->getName()] = $instance;
         }
@@ -359,7 +359,7 @@ class FieldInfo {
     // bundle.
 
     // Cache miss: read from definition.
-    if ($fields = field_read_fields(array('uuid' => $field_id), array('include_deleted' => TRUE))) {
+    if ($fields = entity_load_multiple_by_properties('field_entity', array('uuid' => $field_id, 'include_deleted' => TRUE))) {
       $field = current($fields);
       $field = $this->prepareField($field);
 

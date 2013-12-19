@@ -94,7 +94,7 @@ class TranslationTest extends FieldUnitTestBase {
       'translatable' => TRUE,
     );
     entity_create('field_entity', $this->field_definition)->save();
-    $this->field = field_read_field($this->entity_type, $this->field_name);
+    $this->field = entity_load('field_entity', $this->entity_type . '.' . $this->field_name);
 
     $this->instance_definition = array(
       'field_name' => $this->field_name,
@@ -102,7 +102,7 @@ class TranslationTest extends FieldUnitTestBase {
       'bundle' => 'entity_test',
     );
     entity_create('field_instance', $this->instance_definition)->save();
-    $this->instance = field_read_instance($this->entity_type, $this->field_name, $this->entity_type);
+    $this->instance = entity_load('field_instance', 'entity_test.' . $this->instance_definition['bundle'] . '.' . $this->field_name);
 
     for ($i = 0; $i < 3; ++$i) {
       $language = new Language(array(

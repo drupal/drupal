@@ -75,7 +75,7 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
         'entity_type' => $entity_type,
         'bundle' => $entity_type,
       ))->save();
-      $this->instance[$entity_type] = field_read_instance($entity_type, $this->field_name, $entity_type);
+      $this->instance[$entity_type] = entity_load('field_instance', $entity_type . '.' . $entity_type . '.' . $this->field_name);;
 
       entity_create('field_entity', array(
         'name' => $this->untranslatable_field_name,

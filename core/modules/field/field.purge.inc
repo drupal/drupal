@@ -72,7 +72,7 @@ use Drupal\field\FieldException;
 function field_purge_batch($batch_size) {
   // Retrieve all deleted field instances. We cannot use field_info_instances()
   // because that function does not return deleted instances.
-  $instances = field_read_instances(array('deleted' => TRUE), array('include_deleted' => TRUE));
+  $instances = entity_load_multiple_by_properties('field_instance', array('deleted' => TRUE, 'include_deleted' => TRUE));
   $factory = \Drupal::service('entity.query');
   $info = entity_get_info();
   foreach ($instances as $instance) {
@@ -130,7 +130,7 @@ function field_purge_batch($batch_size) {
       continue;
     }
 
-    $instances = field_read_instances(array('field_id' => $field->uuid()), array('include_deleted' => 1));
+    $instances = entity_load_multiple_by_properties('field_instance', array('field_id' => $field->uuid(), 'include_deleted' => TRUE));
     if (empty($instances)) {
       field_purge_field($field);
     }
@@ -169,7 +169,7 @@ function field_purge_instance($instance) {
  *   The field record to purge.
  */
 function field_purge_field($field) {
-  $instances = field_read_instances(array('field_id' => $field->uuid()), array('include_deleted' => 1));
+  $instances = entity_load_multiple_by_properties('field_instance', array('field_id' => $field->uuid(), 'include_deleted' => TRUE));
   if (count($instances) > 0) {
     throw new FieldException(t('Attempt to purge a field @field_name that still has instances.', array('@field_name' => $field->getName())));
   }

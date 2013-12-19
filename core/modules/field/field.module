@@ -153,9 +153,10 @@ function field_cron() {
  * required if there are any active fields of that type.
  */
 function field_system_info_alter(&$info, $file, $type) {
-  // It is not safe to call field_read_fields() during maintenance mode.
+  // It is not safe to call entity_load_multiple_by_properties() during
+  // maintenance mode.
   if ($type == 'module' && !defined('MAINTENANCE_MODE')) {
-    $fields = field_read_fields(array('module' => $file->name), array('include_deleted' => TRUE));
+    $fields = entity_load_multiple_by_properties('field_entity', array('module' => $file->name, 'include_deleted' => TRUE));
     if ($fields) {
       $info['required'] = TRUE;
 
@@ -222,10 +223,10 @@ function field_entity_bundle_create($entity_type, $bundle) {
  * Implements hook_entity_bundle_rename().
  */
 function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
-  $instances = field_read_instances();
+  $instances = entity_load_multiple_by_properties('field_instance', array('entity_type' => $entity_type, 'bundle' => $bundle_old));
   foreach ($instances as $instance) {
     if ($instance->entity_type == $entity_type && $instance->bundle == $bundle_old) {
-      $id_new = $instance->entity_type . '.' . $bundle_new . '.' . $instance->getName();
+      $id_new = $instance->entity_type . '.' . $bundle_new . '.' . $instance->field_name;
       $instance->id = $id_new;
       $instance->bundle = $bundle_new;
       $instance->allowBundleRename();
@@ -248,10 +249,10 @@ function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
  * simple DELETE query).
  */
 function field_entity_bundle_delete($entity_type, $bundle) {
-  // Get the instances on the bundle. field_read_instances() must be used
-  // here since field_info_instances() does not return instances for disabled
-  // entity types or bundles.
-  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle));
+  // Get the instances on the bundle. entity_load_multiple_by_properties() must
+  // be used here since field_info_instances() does not return instances for
+  // disabled entity types or bundles.
+  $instances = entity_load_multiple_by_properties('field_instance', array('entity_type' => $entity_type, 'bundle' => $bundle));
   foreach ($instances as $instance) {
     $instance->delete();
   }

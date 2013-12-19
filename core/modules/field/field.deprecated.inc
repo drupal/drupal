@@ -198,10 +198,8 @@ function field_info_field_map() {
  *   non-deleted field. For deleted fields, use field_info_field_by_id().
  *
  * @return
- *   The field array, as returned by field_read_fields(), with an
- *   additional element 'bundles', whose value is an array of all the bundles
- *   this field belongs to keyed by entity type. NULL if the field was not
- *   found.
+ *   The \Drupal\field\FieldInterface field definition, as returned by
+ *   entity_load_multiple_by_properties(), NULL if the field was not found.
  *
  * @see field_info_field_by_id()
 
@@ -219,9 +217,8 @@ function field_info_field($entity_type, $field_name) {
  *   The ID of the field to retrieve. $field_id can refer to a deleted field.
  *
  * @return
- *   The field array, as returned by field_read_fields(), with an additional
- *   element 'bundles', whose value is an array of all the bundles this field
- *   belongs to.
+ *   The \Drupal\field\FieldInterface field definition, as returned by
+ *   entity_load_multiple_by_properties(), NULL if the field was not found.
  *
  * @see field_info_field()
  *
@@ -239,13 +236,11 @@ function field_info_field_by_id($field_id) {
  * statically caches a potentially large array of information.
  *
  * When iterating over the fields present in a given bundle after a call to
- * field_info_instances($entity_type, $bundle), it is recommended to use
- * field_info_field() on each individual field instead.
+ * field_info_instances($entity_type, $bundle), it is recommended to use the
+ * getField() method on each $instance instead.
  *
- * @return
- *   An array, each key is a field ID and the values are field arrays as
- *   returned by field_read_fields(), with an additional element 'bundles',
- *   whose value is an array of all the bundle this field belongs to.
+ * @return \Drupal\field\FieldInterface[]
+ *   An array of FieldInterface configuration entities, keyed by UUID.
  *
  * @see field_info_field()
  * @see field_info_field_by_id()

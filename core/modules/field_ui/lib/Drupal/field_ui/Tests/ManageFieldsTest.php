@@ -444,7 +444,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     entity_get_form_display('node', $this->type, 'default')
       ->setComponent($field_name)
       ->save();
-    $this->assertTrue(field_read_instance('node', $field_name, $this->type), format_string('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
+    $this->assertTrue(entity_load('field_instance', 'node.' . $this->type . '.' . $field_name), format_string('An instance of the field %field was created programmatically.', array('%field' => $field_name)));
 
     // Check that the newly added instance appears on the 'Manage Fields'
     // screen.
