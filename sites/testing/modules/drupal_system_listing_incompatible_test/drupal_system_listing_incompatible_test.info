@@ -1,0 +1,9 @@
+name = "Drupal system listing incompatible test"
+description = "Support module for testing the drupal_system_listing function."
+package = Testing
+version = VERSION
+; This deliberately has the wrong core version, to test that it does not take
+; precedence over the version of the same module that is in the
+; modules/simpletest/tests directory.
+core = 6.x
+hidden = TRUE
