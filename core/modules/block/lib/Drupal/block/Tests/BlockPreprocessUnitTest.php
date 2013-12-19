@@ -10,7 +10,7 @@ namespace Drupal\block\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Unit tests for template_preprocess_block().
+ * Web tests for template_preprocess_block().
  */
 class BlockPreprocessUnitTest extends WebTestBase {
 
@@ -45,9 +45,13 @@ class BlockPreprocessUnitTest extends WebTestBase {
 
     $variables = array();
     $variables['elements']['#block'] = $block;
-    $variables['elements']['#configuration'] = $block->getPlugin()->getConfiguration();
-    $variables['elements']['#plugin_id'] = $block->get('plugin');
+    $plugin = $block->getPlugin();
+    $variables['elements']['#configuration'] = $plugin->getConfiguration();
+    $variables['elements']['#plugin_id'] = $plugin->getPluginId();
+    $variables['elements']['#base_plugin_id'] = $plugin->getBasePluginId();
+    $variables['elements']['#derivative_plugin_id'] = $plugin->getDerivativeId();
     $variables['elements']['content'] = array();
+
     // Test adding a class to the block content.
     $variables['content_attributes']['class'][] = 'test-class';
     template_preprocess_block($variables);

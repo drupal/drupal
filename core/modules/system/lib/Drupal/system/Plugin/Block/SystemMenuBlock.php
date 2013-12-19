@@ -28,8 +28,7 @@ class SystemMenuBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    // @todo Clean up when http://drupal.org/node/1874498 lands.
-    list( , $derivative) = explode(':', $this->getPluginId());
+    $derivative = $this->getDerivativeId();
     return ($account->isAuthenticated() || in_array($derivative, array('main', 'tools', 'footer')));
   }
 
@@ -37,8 +36,7 @@ class SystemMenuBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    // @todo Clean up when http://drupal.org/node/1874498 lands.
-    list(, $menu) = explode(':', $this->getPluginId());
+    $menu = $this->getDerivativeId();
     return menu_tree($menu);
   }
 

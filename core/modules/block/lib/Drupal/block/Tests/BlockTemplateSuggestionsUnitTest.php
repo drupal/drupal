@@ -45,8 +45,11 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
 
     $variables = array();
     $variables['elements']['#block'] = $block;
-    $variables['elements']['#configuration'] = $block->getPlugin()->getConfiguration();
-    $variables['elements']['#plugin_id'] = $block->get('plugin');
+    $plugin = $block->getPlugin();
+    $variables['elements']['#configuration'] = $plugin->getConfiguration();
+    $variables['elements']['#plugin_id'] = $plugin->getPluginId();
+    $variables['elements']['#base_plugin_id'] = $plugin->getBasePluginId();
+    $variables['elements']['#derivative_plugin_id'] = $plugin->getDerivativeId();
     $variables['elements']['content'] = array();
     $suggestions = block_theme_suggestions_block($variables);
     $this->assertEqual($suggestions, array('block__system', 'block__system_menu_block', 'block__system_menu_block__admin', 'block__machinename'));

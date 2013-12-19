@@ -315,8 +315,7 @@ function _menu_parents_recurse($tree, $menu_name, $indent, &$options, $exclude, 
 function menu_block_view_system_menu_block_alter(array &$build, BlockPluginInterface $block) {
   // Add contextual links for system menu blocks.
   $menus = menu_list_system_menus();
-  // @todo Clean up when http://drupal.org/node/1874498 lands.
-  list(, $menu_name) = explode(':', $block->getPluginId());
+  $menu_name = $block->getDerivativeId();
   if (isset($menus[$menu_name]) && isset($build['content'])) {
     foreach (element_children($build['content']) as $key) {
       $build['content']['#contextual_links']['menu'] = array(

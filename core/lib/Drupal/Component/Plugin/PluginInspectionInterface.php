@@ -30,4 +30,5 @@ interface PluginInspectionInterface {
    *   plugin manager.
    */
   public function getPluginDefinition();
+
 }

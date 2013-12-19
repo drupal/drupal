@@ -479,6 +479,8 @@ function template_preprocess_block(&$variables) {
 
   $variables['configuration'] = $variables['elements']['#configuration'];
   $variables['plugin_id'] = $variables['elements']['#plugin_id'];
+  $variables['base_plugin_id'] = $variables['elements']['#base_plugin_id'];
+  $variables['derivative_plugin_id'] = $variables['elements']['#derivative_plugin_id'];
   $variables['label'] = !empty($variables['configuration']['label_display']) ? $variables['configuration']['label'] : '';
   $variables['content'] = $variables['elements']['content'];
 
