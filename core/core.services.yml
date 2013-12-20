@@ -93,7 +93,7 @@ services:
     class: Drupal\Core\Config\ConfigFactory
     tags:
       - { name: persist }
-    arguments: ['@config.storage', '@config.context']
+    arguments: ['@config.storage', '@config.context', '@config.typed']
   config.storage.staging:
     class: Drupal\Core\Config\FileStorage
     factory_class: Drupal\Core\Config\FileStorageFactory

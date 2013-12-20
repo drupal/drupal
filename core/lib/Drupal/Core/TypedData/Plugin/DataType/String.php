@@ -23,4 +23,10 @@ use Drupal\Core\TypedData\Type\StringInterface;
  */
 class String extends PrimitiveBase implements StringInterface {
 
+  /**
+   * @inheritdoc
+   */
+  public function getCastedValue() {
+    return $this->getString();
+  }
 }

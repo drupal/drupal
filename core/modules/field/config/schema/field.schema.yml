@@ -24,6 +24,9 @@ field.field.*.*:
     langcode:
       type: string
       label: 'Default language'
+    name:
+      type: string
+      label: 'Name'
     entity_type:
       type: string
       label: 'Entity type'

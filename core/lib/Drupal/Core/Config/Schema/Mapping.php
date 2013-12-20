@@ -27,7 +27,7 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
   protected function parse() {
     $elements = array();
     foreach ($this->definition['mapping'] as $key => $definition) {
-      if (isset($this->value[$key])) {
+      if (isset($this->value[$key]) || array_key_exists($key, $this->value)) {
         $elements[$key] = $this->parseElement($key, $this->value[$key], $definition);
       }
     }

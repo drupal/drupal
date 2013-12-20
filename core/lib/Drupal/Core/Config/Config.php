@@ -8,8 +8,12 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\Context\ContextInterface;
+use Drupal\Core\TypedData\PrimitiveInterface;
+use Drupal\Core\TypedData\Type\FloatInterface;
+use Drupal\Core\TypedData\Type\IntegerInterface;
 
 /**
  * Defines the default configuration object.
@@ -78,6 +82,20 @@ class Config {
   protected $isLoaded = FALSE;
 
   /**
+   * The config schema wrapper object for this configuration object.
+   *
+   * @var \Drupal\Core\Config\Schema\Element
+   */
+  protected $schemaWrapper;
+
+  /**
+   * The typed config manager.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManager
+   */
+  protected $typedConfigManager;
+
+  /**
    * Constructs a configuration object.
    *
    * @param string $name
@@ -87,11 +105,14 @@ class Config {
    *   configuration data.
    * @param \Drupal\Core\Config\Context\ContextInterface $context
    *   The configuration context used for this configuration object.
+   * @param \Drupal\Core\Config\TypedConfigManager $typed_config
+   *   The typed configuration manager service.
    */
-  public function __construct($name, StorageInterface $storage, ContextInterface $context) {
+  public function __construct($name, StorageInterface $storage, ContextInterface $context, TypedConfigManager $typed_config) {
     $this->name = $name;
     $this->storage = $storage;
     $this->context = $context;
+    $this->typedConfigManager = $typed_config;
   }
 
   /**
@@ -404,6 +425,17 @@ class Config {
   public function save() {
     // Validate the configuration object name before saving.
     static::validateName($this->name);
+
+    // If there is a schema for this configuration object, cast all values to
+    // conform to the schema.
+    if ($this->typedConfigManager->hasConfigSchema($this->name)) {
+      // Ensure that the schema wrapper has the latest data.
+      $this->schemaWrapper = NULL;
+      foreach ($this->data as $key => $value) {
+        $this->data[$key] = $this->castValue($key, $value);
+      }
+    }
+
     if (!$this->isLoaded) {
       $this->load();
     }
@@ -466,4 +498,110 @@ class Config {
     $this->replaceData(NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE));
     return $this;
   }
+
+  /**
+   * Gets the schema wrapper for the whole configuration object.
+   *
+   * The schema wrapper is dependent on the configuration name and the whole
+   * data structure, so if the name or the data changes in any way, the wrapper
+   * should be reset.
+   *
+   * @return \Drupal\Core\Config\Schema\Element
+   */
+  protected function getSchemaWrapper() {
+    if (!isset($this->schemaWrapper)) {
+      $definition = $this->typedConfigManager->getDefinition($this->name);
+      $this->schemaWrapper = $this->typedConfigManager->create($definition, $this->data);
+    }
+    return $this->schemaWrapper;
+  }
+
+  /**
+   * Gets the definition for the configuration key.
+   *
+   * @param string $key
+   *   A string that maps to a key within the configuration data.
+   *
+   * @return \Drupal\Core\Config\Schema\Element
+   *
+   * @throws \Drupal\Core\Config\ConfigException
+   *   Thrown when schema is incomplete.
+   */
+  protected function getSchemaForKey($key) {
+    $parts = explode('.', $key);
+    $schema_wrapper = $this->getSchemaWrapper();
+    if (count($parts) == 1) {
+      $schema = $schema_wrapper->get($key);
+    }
+    else {
+      $schema = clone $schema_wrapper;
+      foreach ($parts as $nested_key) {
+        if (!is_object($schema) || !method_exists($schema, 'get')) {
+          throw new ConfigException(String::format("Incomplete schema for !key key in configuration object !name.", array('!name' => $this->name, '!key' => $key)));
+        }
+        else {
+          $schema = $schema->get($nested_key);
+        }
+      }
+    }
+    return $schema;
+  }
+
+  /**
+   * Casts the value to correct data type using the configuration schema.
+   *
+   * @param string $key
+   *   A string that maps to a key within the configuration data.
+   * @param string $value
+   *   Value to associate with the key.
+   *
+   * @return mixed
+   *   The value cast to the type indicated in the schema.
+   */
+  protected function castValue($key, $value) {
+    if ($value === NULL) {
+      $value = NULL;
+    }
+    elseif (is_scalar($value)) {
+      try {
+        $element = $this->getSchemaForKey($key);
+        if ($element instanceof PrimitiveInterface) {
+          // Special handling for integers and floats since the configuration
+          // system is primarily concerned with saving values from the Form API
+          // we have to special case the meaning of an empty string for numeric
+          // types. In PHP this would be casted to a 0 but for the purposes of
+          // configuration we need to treat this as a NULL.
+          if ($value === '' && ($element instanceof IntegerInterface || $element instanceof FloatInterface)) {
+            $value = NULL;
+          }
+          else {
+            $value = $element->getCastedValue();
+          }
+        }
+        else {
+          // Config only supports primitive data types. If the config schema
+          // does define a type $element will be an instance of
+          // \Drupal\Core\Config\Schema\Property. Convert it to string since it
+          // is the safest possible type.
+          $value = $element->getString();
+        }
+      }
+      catch (\Exception $e) {
+        // @todo throw an exception due to an incomplete schema. Only possible
+        //   once https://drupal.org/node/1910624 is complete.
+      }
+    }
+    else {
+      // Any non-scalar value must be an array.
+      if (!is_array($value)) {
+        $value = (array) $value;
+      }
+      // Recurse into any nested keys.
+      foreach ($value as $nested_value_key => $nested_value) {
+        $value[$nested_value_key] = $this->castValue($key . '.' . $nested_value_key, $nested_value);
+      }
+    }
+    return $value;
+  }
+
 }

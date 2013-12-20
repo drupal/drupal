@@ -6,6 +6,9 @@ image.style.*:
   mapping:
     name:
       type: string
+    uuid:
+      type: string
+      label: 'UUID'
     label:
       type: label
     effects:
@@ -24,6 +27,9 @@ image.style.*:
     langcode:
       type: string
       label: 'Default language'
+    status:
+      type: boolean
+      label: 'Enabled'
 
 image.effect.image_crop:
   type: image_size

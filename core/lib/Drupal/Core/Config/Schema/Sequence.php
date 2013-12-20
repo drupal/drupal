@@ -49,4 +49,19 @@ class Sequence extends ArrayElement implements ListInterface {
       $this->parent->onChange($this->name);
     }
   }
+
+  /**
+   * Gets a typed configuration element from the sequence.
+   *
+   * @param string $key
+   *   The key of the sequence to get.
+   *
+   * @return \Drupal\Core\Config\Schema\Element
+   *   Typed configuration element.
+   */
+  public function get($key) {
+    $elements = $this->parse();
+    return $elements[$key];
+  }
+
 }

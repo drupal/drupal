@@ -15,11 +15,9 @@ field.list_integer.settings:
       label: 'Allowed values function'
 
 field.list_integer.instance_settings:
-  type: mapping
   label: 'List (integer)'
-  sequence:
-    - type: string
-      label: 'setting'
+  type: mapping
+  mapping: {  }
 
 field.list_integer.value:
   type: sequence
@@ -47,11 +45,9 @@ field.list_float.settings:
       label: 'Allowed values function'
 
 field.list_float.instance_settings:
-  type: mapping
   label: 'List (float)'
-  sequence:
-    - type: string
-      label: 'setting'
+  type: mapping
+  mapping: {  }
 
 field.list_float.value:
   type: sequence
@@ -79,11 +75,9 @@ field.list_text.settings:
       label: 'Allowed values function'
 
 field.list_text.instance_settings:
-  type: mapping
   label: 'List (float)'
-  sequence:
-    - type: string
-      label: 'setting'
+  type: mapping
+  mapping: {  }
 
 field.list_text.value:
   type: sequence
@@ -111,11 +105,9 @@ field.list_boolean.settings:
       label: 'Allowed values function'
 
 field.list_boolean.instance_settings:
-  type: mapping
   label: 'List (boolean)'
-  sequence:
-    - type: string
-      label: 'setting'
+  type: mapping
+  mapping: {  }
 
 field.list_boolean.value:
   type: sequence

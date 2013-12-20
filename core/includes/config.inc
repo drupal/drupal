@@ -67,6 +67,7 @@ function config_install_default_config($type, $name) {
     $config_factory = Drupal::service('config.factory');
     $context = new FreeConfigContext(Drupal::service('event_dispatcher'), Drupal::service('uuid'));
     $target_storage = Drupal::service('config.storage');
+    $typed_config = Drupal::service('config.typed');
     $config_factory->enterContext($context);
     foreach ($config_to_install as $name) {
       // Only import new config.
@@ -74,7 +75,7 @@ function config_install_default_config($type, $name) {
         continue;
       }
 
-      $new_config = new Config($name, $target_storage, $context);
+      $new_config = new Config($name, $target_storage, $context, $typed_config);
       $data = $source_storage->read($name);
       if ($data !== FALSE) {
         $new_config->setData($data);
@@ -214,7 +215,7 @@ function config_get_entity_type_by_name($name) {
  *
  * @see \Drupal\Core\TypedData\TypedDataManager::create()
  *
- * @return \Drupal\Core\TypedData\TypedConfigManager
+ * @return \Drupal\Core\Config\TypedConfigManager
  */
 function config_typed() {
   return drupal_container()->get('config.typed');

@@ -28,4 +28,10 @@ interface PrimitiveInterface {
    */
   public function setValue($value);
 
+  /**
+   * Gets the primitive data value casted to the correct PHP type.
+   *
+   * @return mixed
+   */
+  public function getCastedValue();
 }

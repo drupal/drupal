@@ -91,3 +91,43 @@ config_test.dynamic.*:
     protected_property:
       type: string
       label: 'Protected property'
+
+config_test_integer:
+  type: integer
+  label: 'Config test integer'
+
+config_test.schema_data_types:
+  type: mapping
+  label: 'Config test schema'
+  mapping:
+    config_test_integer:
+      type: config_test_integer
+    config_test_integer_empty_string:
+      type: config_test_integer
+    integer:
+      type: integer
+    null_integer:
+      type: integer
+    float:
+      type: float
+    null_float:
+      type: float
+    string:
+      type: string
+    null_string:
+      type: string
+    empty_string:
+      type: string
+    boolean:
+      type: boolean
+    no_type:
+      label: 'No label'
+    mapping:
+      type: mapping
+      mapping:
+        string:
+          type: string
+    sequence:
+      type: sequence
+      sequence:
+        - type: boolean

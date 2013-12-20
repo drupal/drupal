@@ -386,9 +386,16 @@ function install_begin_request(&$install_state) {
       ->setFactoryService(new Reference('config.context.factory'))
       ->setFactoryMethod('get');
 
+    $container->register('config.storage.schema', 'Drupal\Core\Config\Schema\SchemaStorage');
+
+    $container->register('config.typed', 'Drupal\Core\Config\TypedConfigManager')
+      ->addArgument(new Reference('config.storage'))
+      ->addArgument(new Reference('config.storage.schema'));
+
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('config.context'));
+      ->addArgument(new Reference('config.context'))
+      ->addArgument(new Reference('config.typed'));
 
     // Register the 'language_manager' service.
     $container

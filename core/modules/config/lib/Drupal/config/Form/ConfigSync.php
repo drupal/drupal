@@ -16,6 +16,7 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -73,6 +74,13 @@ class ConfigSync extends FormBase {
   protected $uuidService;
 
   /**
+   * The typed config manager.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManager
+   */
+  protected $typedConfigManager;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\Config\StorageInterface $sourceStorage
@@ -90,9 +98,11 @@ class ConfigSync extends FormBase {
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
-   * The UUID Service.
+   *   The UUID Service.
+   * @param \Drupal\Core\Config\TypedConfigManager $typed_config
+   *   The typed configuration manager.
    */
-  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManagerInterface $entity_manager, UrlGeneratorInterface $url_generator, UuidInterface $uuid_service) {
+  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManagerInterface $entity_manager, UrlGeneratorInterface $url_generator, UuidInterface $uuid_service, TypedConfigManager $typed_config) {
     $this->sourceStorage = $sourceStorage;
     $this->targetStorage = $targetStorage;
     $this->lock = $lock;
@@ -101,6 +111,7 @@ class ConfigSync extends FormBase {
     $this->entity_manager = $entity_manager;
     $this->urlGenerator = $url_generator;
     $this->uuidService = $uuid_service;
+    $this->typedConfigManager = $typed_config;
   }
 
   /**
@@ -115,7 +126,8 @@ class ConfigSync extends FormBase {
       $container->get('config.factory'),
       $container->get('entity.manager'),
       $container->get('url_generator'),
-      $container->get('uuid')
+      $container->get('uuid'),
+      $container->get('config.typed')
     );
   }
 
@@ -222,7 +234,8 @@ class ConfigSync extends FormBase {
       $this->configFactory,
       $this->entity_manager,
       $this->lock,
-      $this->uuidService
+      $this->uuidService,
+      $this->typedConfigManager
     );
     if ($config_importer->alreadyImporting()) {
       drupal_set_message($this->t('Another request may be synchronizing configuration already.'));

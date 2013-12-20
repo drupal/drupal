@@ -87,4 +87,11 @@ class Binary extends PrimitiveBase implements BinaryInterface {
     }
     return $contents;
   }
+
+  /**
+   * @inheritdoc
+   */
+  public function getCastedValue() {
+    return $this->getValue();
+  }
 }

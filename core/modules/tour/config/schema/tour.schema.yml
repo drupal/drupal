@@ -7,9 +7,18 @@ tour.tour.*:
     id:
       type: string
       label: 'ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    module:
+      type: string
+      label: 'Providing module'
     label:
       type: label
       label: 'Label'
+    status:
+      type: boolean
+      label: 'Enabled'
     langcode:
       type: string
       label: 'Default language'
@@ -42,6 +51,9 @@ tour.tip:
     weight:
       type: integer
       label: 'Weight'
+    location:
+      type: string
+      label: 'Location'
     attributes:
       type: sequence
       label: 'Attributes'

@@ -552,7 +552,7 @@ function _editor_get_processed_text_fields(ContentEntityInterface $entity) {
     $settings = Field::fieldInfo()
       ->getInstance($entity->entityType(), $entity->bundle(), $field)
       ->getSettings();
-    return isset($settings['text_processing']) && $settings['text_processing'] === '1';
+    return isset($settings['text_processing']) && $settings['text_processing'] === TRUE;
   });
 }
 

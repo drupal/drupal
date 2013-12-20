@@ -23,4 +23,10 @@ use Drupal\Core\TypedData\Type\FloatInterface;
  */
 class Float extends PrimitiveBase implements FloatInterface {
 
+  /**
+   * @inheritdoc
+   */
+  public function getCastedValue() {
+    return (float) $this->value;
+  }
 }

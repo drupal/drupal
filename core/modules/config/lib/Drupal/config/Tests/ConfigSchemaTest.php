@@ -7,7 +7,6 @@
 
 namespace Drupal\config\Tests;
 
-use Drupal\Core\Config\TypedConfig;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
@@ -102,6 +101,8 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['label'] = 'Image style';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
     $expected['mapping']['name']['type'] = 'string';
+    $expected['mapping']['uuid']['label'] = 'UUID';
+    $expected['mapping']['uuid']['type'] = 'string';
     $expected['mapping']['label']['type'] = 'label';
     $expected['mapping']['effects']['type'] = 'sequence';
     $expected['mapping']['effects']['sequence'][0]['type'] = 'mapping';
@@ -111,6 +112,8 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['mapping']['effects']['sequence'][0]['mapping']['uuid']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Default language';
     $expected['mapping']['langcode']['type'] = 'string';
+    $expected['mapping']['status']['label'] = 'Enabled';
+    $expected['mapping']['status']['type'] = 'boolean';
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for image.style.large');
 
@@ -240,6 +243,65 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $wrapper->set('slogan', $new_slogan);
     $site_slogan = $wrapper->get('slogan');
     $this->assertEqual($site_slogan->getValue(), $new_slogan, 'Successfully updated the contained configuration data');
+  }
+
+  /**
+   * Test configuration value data type enforcement using schemas.
+   */
+  public function testConfigSaveWithSchema() {
+    $untyped_values = array(
+      'string' => 1,
+      'empty_string' => '',
+      'null_string' => NULL,
+      'integer' => '100',
+      'null_integer' => '',
+      'boolean' => 1,
+      // If the config schema doesn't have a type it should be casted to string.
+      'no_type' => 1,
+      'mapping' => array(
+        'string' => 1
+      ),
+      'float' => '3.14',
+      'null_float' => '',
+      'sequence' => array (1, 0, 1),
+      // Not in schema and therefore should be left untouched.
+      'not_present_in_schema' => TRUE,
+      // Test a custom type.
+      'config_test_integer' => '1',
+      'config_test_integer_empty_string' => '',
+    );
+    $untyped_to_typed = $untyped_values;
+
+    $typed_values = array(
+      'string' => '1',
+      'empty_string' => '',
+      'null_string' => NULL,
+      'integer' => 100,
+      'null_integer' => NULL,
+      'boolean' => TRUE,
+      'no_type' => '1',
+      'mapping' => array(
+        'string' => '1'
+      ),
+      'float' => 3.14,
+      'null_float' => NULL,
+      'sequence' => array (TRUE, FALSE, TRUE),
+      'not_present_in_schema' => TRUE,
+      'config_test_integer' => 1,
+      'config_test_integer_empty_string' => NULL,
+    );
+
+    // Save config which has a schema that enforces types.
+    \Drupal::config('config_test.schema_data_types')
+      ->setData($untyped_to_typed)
+      ->save();
+    $this->assertIdentical(\Drupal::config('config_test.schema_data_types')->get(), $typed_values);
+
+    // Save config which does not have a schema that enforces types.
+    \Drupal::config('config_test.no_schema_data_types')
+      ->setData($untyped_values)
+      ->save();
+    $this->assertIdentical(\Drupal::config('config_test.no_schema_data_types')->get(), $untyped_values);
   }
 
 }

@@ -51,10 +51,10 @@ field.number_decimal.instance_settings:
   label: 'Decimal'
   mapping:
     min:
-      type: integer
+      type: float
       label: 'Minimum'
     max:
-      type: integer
+      type: float
       label: 'Maximum'
     prefix:
       type: string
@@ -71,7 +71,7 @@ field.number_decimal.value:
        label: 'Default value'
        mapping:
          value:
-           type: integer
+           type: float
            label: 'Value'
 
 field.number_float.settings:
@@ -86,10 +86,10 @@ field.number_float.instance_settings:
   label: 'Float'
   mapping:
     min:
-      type: integer
+      type: float
       label: 'Minimum'
     max:
-      type: integer
+      type: float
       label: 'Maximum'
     prefix:
       type: string
@@ -106,5 +106,5 @@ field.number_float.value:
       label: 'Default value'
       mapping:
         value:
-          type: integer
+          type: float
           label: 'Value'

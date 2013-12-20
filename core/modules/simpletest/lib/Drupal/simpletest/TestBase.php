@@ -1400,7 +1400,8 @@ abstract class TestBase {
         $this->container->get('config.factory'),
         $this->container->get('entity.manager'),
         $this->container->get('lock'),
-        $this->container->get('uuid')
+        $this->container->get('uuid'),
+        $this->container->get('config.typed')
       );
     }
     // Always recalculate the changelist when called.

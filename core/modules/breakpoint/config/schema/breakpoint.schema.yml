@@ -36,6 +36,9 @@ breakpoint.breakpoint.*.*.*:
     langcode:
       type: string
       label: 'Default language'
+    status:
+      type: boolean
+      label: 'Enabled'
 
 breakpoint.breakpoint_group.*.*.*:
   type: mapping
@@ -65,3 +68,9 @@ breakpoint.breakpoint_group.*.*.*:
     sourceType:
       type: string
       label: 'Group source type'
+    langcode:
+      type: string
+      label: 'Default language'
+    status:
+      type: boolean
+      label: 'Enabled'

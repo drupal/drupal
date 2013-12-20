@@ -128,30 +128,5 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#states' => $show_if_image_uploads_enabled,
   );
 
-  $form['#element_validate'] = array(
-    'editor_image_upload_settings_validate',
-  );
-
   return $form;
-}
-
-/**
- * #element_validate handler for editor_image_upload_settings_validate().
- *
- * Ensures each form item's value is cast to the proper type.
- *
- * @see \Drupal\editor\Form\EditorImageDialog
- * @ingroup forms
- */
-function editor_image_upload_settings_validate(array $element, array &$form_state) {
-  $cast_value = function($type, $element) use (&$form_state) {
-    $section = $element['#parents'];
-    $value = NestedArray::getValue($form_state['values'], $section);
-    settype($value, $type);
-    NestedArray::setValue($form_state['values'], $section, $value);
-  };
-
-  $cast_value('bool', $element['status']);
-  $cast_value('int', $element['max_dimensions']['width']);
-  $cast_value('int', $element['max_dimensions']['height']);
 }

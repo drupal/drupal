@@ -21,6 +21,9 @@ filter.format.*:
     name:
       type: label
       label: 'Name'
+    uuid:
+      type: string
+      label: 'UUID'
     status:
       type: boolean
       label: 'Enabled'

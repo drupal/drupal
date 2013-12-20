@@ -137,6 +137,9 @@ user.role.*:
       sequence:
         - type: string
           label: 'Permission'
+    status:
+      type: boolean
+      label: 'Status'
     langcode:
       type: string
       label: 'Default language'

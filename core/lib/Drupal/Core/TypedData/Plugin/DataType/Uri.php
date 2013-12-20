@@ -21,6 +21,6 @@ use Drupal\Core\TypedData\TypedData;
  *   label = @Translation("URI")
  * )
  */
-class Uri extends PrimitiveBase implements UriInterface {
+class Uri extends String implements UriInterface {
 
 }

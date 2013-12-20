@@ -21,6 +21,9 @@ taxonomy.vocabulary.*:
     vid:
       type: string
       label: 'Machine name'
+    uuid:
+      type: string
+      label: 'UUID'
     name:
       type: label
       label: 'Name'
@@ -28,7 +31,7 @@ taxonomy.vocabulary.*:
       type: label
       label: 'Description'
     hierarchy:
-      type: boolean
+      type: integer
       label: 'Hierarchy'
     weight:
       type: integer

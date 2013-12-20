@@ -23,4 +23,10 @@ use Drupal\Core\TypedData\Type\IntegerInterface;
  */
 class Integer extends PrimitiveBase implements IntegerInterface {
 
+  /**
+   * @inheritdoc
+   */
+  public function getCastedValue() {
+    return (int) $this->value;
+  }
 }

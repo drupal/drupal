@@ -87,6 +87,9 @@ block.block.*:
         view_mode:
           type: string
           label: 'View mode'
+        module:
+          type: string
+          label: 'Module'
     langcode:
       type: string
       label: 'Default language'

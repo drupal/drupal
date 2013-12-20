@@ -8,6 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Config\Context\ContextInterface;
+use Drupal\Core\Config\TypedConfigManager;
 
 /**
  * Defines the configuration object factory.
@@ -52,15 +53,25 @@ class ConfigFactory {
   protected $cache = array();
 
   /**
+   * The typed config manager.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManager
+   */
+  protected $typedConfigManager;
+
+  /**
    * Constructs the Config factory.
    *
-   * @param \Drupal\Core\Config\StorageInterface
+   * @param \Drupal\Core\Config\StorageInterface $storage
    *   The configuration storage engine.
-   * @param \Drupal\Core\Config\Context\ContextInterface
+   * @param \Drupal\Core\Config\Context\ContextInterface $context
    *   Configuration context object.
+   * @param \Drupal\Core\Config\TypedConfigManager $typed_config
+   *   The typed configuration manager.
    */
-  public function __construct(StorageInterface $storage, ContextInterface $context) {
+  public function __construct(StorageInterface $storage, ContextInterface $context, TypedConfigManager $typed_config) {
     $this->storage = $storage;
+    $this->typedConfigManager = $typed_config;
     $this->enterContext($context);
   }
 
@@ -80,7 +91,7 @@ class ConfigFactory {
       return $this->cache[$cache_key];
     }
 
-    $this->cache[$cache_key] = new Config($name, $this->storage, $context);
+    $this->cache[$cache_key] = new Config($name, $this->storage, $context, $this->typedConfigManager);
     return $this->cache[$cache_key]->init();
   }
 
@@ -115,7 +126,7 @@ class ConfigFactory {
       $storage_data = $this->storage->readMultiple($names);
       foreach ($storage_data as $name => $data) {
         $cache_key = $this->getCacheKey($name, $context);
-        $this->cache[$cache_key] = new Config($name, $this->storage, $context);
+        $this->cache[$cache_key] = new Config($name, $this->storage, $context, $this->typedConfigManager);
         $this->cache[$cache_key]->initWithData($data);
         $list[$name] = $this->cache[$cache_key];
       }
@@ -172,7 +183,7 @@ class ConfigFactory {
     }
     else {
       // Create the config object if it's not yet loaded into the static cache.
-      $config = new Config($old_name, $this->storage, $context);
+      $config = new Config($old_name, $this->storage, $context, $this->typedConfigManager);
     }
 
     $this->cache[$new_cache_key] = $config;
