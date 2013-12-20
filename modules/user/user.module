@@ -3677,7 +3677,14 @@ function user_action_info() {
 }
 
 /**
- * Blocks the current user.
+ * Blocks a specific user or the current user, if one is not specified.
+ *
+ * @param $entity
+ *   (optional) An entity object; if it is provided and it has a uid property,
+ *   the user with that ID is blocked.
+ * @param $context
+ *   (optional) An associative array; if no user ID is found in $entity, the
+ *   'uid' element of this array determines the user to block.
  *
  * @ingroup actions
  */
