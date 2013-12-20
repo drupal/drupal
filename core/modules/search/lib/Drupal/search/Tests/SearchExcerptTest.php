@@ -19,7 +19,7 @@ class SearchExcerptTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('search');
+  public static $modules = array('search', 'search_langcode_test');
 
   public static function getInfo() {
     return array(
@@ -48,10 +48,19 @@ class SearchExcerptTest extends WebTestBase {
     $this->assertEqual(preg_replace('| +|', ' ', $result), $expected, 'Entire string is returned when keyword is not found in short string');
 
     $result = preg_replace('| +|', ' ', search_excerpt('fox', $text));
-    $this->assertEqual($result, 'The quick brown <strong>fox</strong> &amp; jumps over the lazy dog ...', 'Found keyword is highlighted');
+    $this->assertEqual($result, 'The quick brown <strong>fox</strong> &amp; jumps over the lazy dog', 'Found keyword is highlighted');
+
+    $expected = '<strong>The</strong> quick brown fox &amp; jumps over <strong>the</strong> lazy dog';
+    $result = preg_replace('| +|', ' ', search_excerpt('The', $text));
+    $this->assertEqual(preg_replace('| +|', ' ', $result), $expected, 'Keyword is highlighted at beginning of short string');
+
+    $expected = 'The quick brown fox &amp; jumps over the lazy <strong>dog</strong>';
+    $result = preg_replace('| +|', ' ', search_excerpt('dog', $text));
+    $this->assertEqual(preg_replace('| +|', ' ', $result), $expected, 'Keyword is highlighted at end of short string');
 
     $longtext = str_repeat($text . ' ', 10);
     $result = preg_replace('| +|', ' ', search_excerpt('nothing', $longtext));
+    $expected = 'The quick brown fox &amp; jumps over the lazy dog';
     $this->assertTrue(strpos($result, $expected) === 0, 'When keyword is not found in long string, return value starts as expected');
 
     $entities = str_repeat('k&eacute;sz&iacute;t&eacute;se ', 20);
@@ -101,10 +110,10 @@ class SearchExcerptTest extends WebTestBase {
 
     // Test phrases with characters which are being truncated.
     $result = preg_replace('| +|', ' ', search_excerpt('"ipsum _"', $text));
-    $this->assertTrue(strpos($result, '<strong>ipsum </strong>') !== FALSE, 'Only valid part of the phrase is highlighted and invalid part containing "_" is ignored.');
+    $this->assertTrue(strpos($result, '<strong>ipsum</strong>') !== FALSE, 'Only valid part of the phrase is highlighted and invalid part containing "_" is ignored.');
 
     $result = preg_replace('| +|', ' ', search_excerpt('"ipsum 0000"', $text));
-    $this->assertTrue(strpos($result, '<strong>ipsum </strong>') !== FALSE, 'Only valid part of the phrase is highlighted and invalid part "0000" is ignored.');
+    $this->assertTrue(strpos($result, '<strong>ipsum</strong>') !== FALSE, 'Only valid part of the phrase is highlighted and invalid part "0000" is ignored.');
 
     // Test combination of the valid keyword and keyword containing only
     // characters which are being truncated during simplification.
@@ -113,5 +122,43 @@ class SearchExcerptTest extends WebTestBase {
 
     $result = preg_replace('| +|', ' ', search_excerpt('ipsum 0000', $text));
     $this->assertTrue(strpos($result, '<strong>ipsum</strong>') !== FALSE, 'Only valid keyword is highlighted and invalid keyword "0000" is ignored.');
+
+    // Test using the hook_search_preprocess() from the test module.
+    // The hook replaces "finding" or "finds" with "find".
+    // So, if we search for "find" or "finds" or "finding", we should
+    // highlight "finding".
+    $text = "this tests finding a string";
+    $result = preg_replace('| +|', ' ', search_excerpt('finds', $text, 'ex'));
+    $this->assertTrue(strpos($result, '<strong>finding</strong>') !== FALSE, 'Search excerpt works with preprocess hook, search for finds');
+    $result = preg_replace('| +|', ' ', search_excerpt('find', $text, 'ex'));
+    $this->assertTrue(strpos($result, '<strong>finding</strong>') !== FALSE, 'Search excerpt works with preprocess hook, search for find');
+
+    // Just to be sure, test with the replacement at the beginning and end.
+    $text = "finding at the beginning";
+    $result = preg_replace('| +|', ' ', search_excerpt('finds', $text, 'ex'));
+    $this->assertTrue(strpos($result, '<strong>finding</strong>') !== FALSE, 'Search excerpt works with preprocess hook, text at start');
+
+    $text = "at the end finding";
+    $result = preg_replace('| +|', ' ', search_excerpt('finds', $text, 'ex'));
+    $this->assertTrue(strpos($result, '<strong>finding</strong>') !== FALSE, 'Search excerpt works with preprocess hook, text at end');
+
+    // Testing with a one-to-many replacement: the test module replaces DIC
+    // with Dependency Injection Container.
+    $text = "something about the DIC is happening";
+    $result = preg_replace('| +|', ' ', search_excerpt('Dependency', $text, 'ex'));
+    $this->assertTrue(strpos($result, '<strong>DIC</strong>') !== FALSE, 'Search excerpt works with preprocess hook, acronym first word');
+
+    $result = preg_replace('| +|', ' ', search_excerpt('Injection', $text, 'ex'));
+    $this->assertTrue(strpos($result, '<strong>DIC</strong>') !== FALSE, 'Search excerpt works with preprocess hook, acronym second word');
+
+    $result = preg_replace('| +|', ' ', search_excerpt('Container', $text, 'ex'));
+    $this->assertTrue(strpos($result, '<strong>DIC</strong>') !== FALSE, 'Search excerpt works with preprocess hook, acronym third word');
+
+    // Testing with a many-to-one replacement: the test module replaces
+    // hypertext markup language with HTML.
+    $text = "we always use hypertext markup language to describe things";
+    $result = preg_replace('| +|', ' ', search_excerpt('html', $text, 'ex'));
+    $this->assertTrue(strpos($result, '<strong>hypertext markup language</strong>') !== FALSE, 'Search excerpt works with preprocess hook, acronym many to one');
+
   }
 }

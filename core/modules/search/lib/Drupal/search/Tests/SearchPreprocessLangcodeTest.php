@@ -53,11 +53,13 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
     // function manually is needed to finish the indexing process.
     search_update_totals();
 
-    // Search for the title of the node with a POST query.
-    $edit = array('or' => $node->label());
+    // Search for the additional text that is added by the preprocess
+    // function. If you search for text that is in the node, preprocess is
+    // not invoked on the node during the search excerpt generation.
+    $edit = array('or' => 'Additional text');
     $this->drupalPostForm('search/node', $edit, t('Advanced search'));
 
-    // Checks if the langcode has been passed by hook_search_preprocess().
+    // Checks if the langcode message has been set by hook_search_preprocess().
     $this->assertText('Langcode Preprocess Test: en');
   }
 
