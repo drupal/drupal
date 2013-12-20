@@ -249,6 +249,9 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
 function comment_field_instance_update(FieldInstanceInterface $instance) {
   if ($instance->getType() == 'comment') {
     \Drupal::entityManager()->getViewBuilder($instance->entity_type)->resetCache();
+    // Comment field settings also affects the rendering of *comment* entities,
+    // not only the *commented* entities.
+    \Drupal::entityManager()->getViewBuilder('comment')->resetCache();
   }
 }
 
@@ -414,6 +417,23 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
   }
 
   return $pagenum;
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function comment_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  // Add the comment page number to the cache key if render caching is enabled.
+  if (isset($build['#cache']) && isset($build['#cache']['keys']) && \Drupal::request()->query->has('page')) {
+    foreach ($entity->getPropertyDefinitions() as $field_name => $definition) {
+      if (isset($build[$field_name]) && $definition->getType() === 'comment') {
+        $display_options = $display->getComponent($field_name);
+        $pager_id = $display_options['settings']['pager_id'];
+        $page = pager_find_page($pager_id);
+        $build['#cache']['keys'][] = $field_name . '-pager-' . $page;
+      }
+    }
+  }
 }
 
 /**
