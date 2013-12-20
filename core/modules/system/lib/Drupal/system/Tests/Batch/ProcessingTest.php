@@ -35,7 +35,7 @@ class ProcessingTest extends WebTestBase {
   function testBatchNoForm() {
     // Displaying the page triggers batch 1.
     $this->drupalGet('batch-test/no-form');
-    $this->assertBatchMessages($this->_resultMessages(1), 'Batch for step 2 performed successfully.');
+    $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
   }
@@ -153,7 +153,7 @@ class ProcessingTest extends WebTestBase {
   function testBatchLargePercentage() {
     // Displaying the page triggers batch 5.
     $this->drupalGet('batch-test/large-percentage');
-    $this->assertBatchMessages($this->_resultMessages(1), 'Batch for step 2 performed successfully.');
+    $this->assertBatchMessages($this->_resultMessages('batch_5'), 'Batch for step 2 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_5'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
   }
@@ -271,7 +271,7 @@ class ProcessingTest extends WebTestBase {
         break;
 
       case 'batch_5':
-        $messages[] = 'results for batch 5<br />op 1: processed 10 elements. $context[\'finished\'] > 1 returned from batch process, with success.';
+        $messages[] = 'results for batch 5<br />op 5: processed 10 elements';
         break;
 
       case 'chained':
