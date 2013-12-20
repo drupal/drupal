@@ -17,17 +17,16 @@
  * Contributed modules may use the information to perform actions based on the
  * information entered into the menu system.
  *
- * @param \Drupal\system\Entity\Menu $menu
- *   A menu entity.
+ * @param \Drupal\system\MenuInterface $menu
+ *   The menu entity that was created.
  *
  * @see hook_menu_update()
  * @see hook_menu_delete()
  */
-function hook_menu_insert($menu) {
-  // For example, we track available menus in a variable.
-  $my_menus = variable_get('my_module_menus', array());
-  $my_menus[$menu->id()] = $menu->id();
-  variable_set('my_module_menus', $my_menus);
+function hook_menu_insert(\Drupal\system\MenuInterface $menu) {
+  drupal_set_message(t('You have just created a menu with a machine name %id.', array(
+    '%id' => $menu->id(),
+  )));
 }
 
 /**
@@ -37,17 +36,19 @@ function hook_menu_insert($menu) {
  * Contributed modules may use the information to perform actions based on the
  * information entered into the menu system.
  *
- * @param \Drupal\system\Entity\Menu $menu
- *   A menu entity.
+ * @param \Drupal\system\MenuInterface $menu
+ *   The menu entity that was updated.
  *
  * @see hook_menu_insert()
  * @see hook_menu_delete()
  */
-function hook_menu_update($menu) {
-  // For example, we track available menus in a variable.
-  $my_menus = variable_get('my_module_menus', array());
-  $my_menus[$menu->id()] = $menu->id();
-  variable_set('my_module_menus', $my_menus);
+function hook_menu_update(\Drupal\system\MenuInterface $menu) {
+  if ($type->original->id() != $type->id()) {
+    drupal_set_message(t('You have just changed the machine name of the menu %old_id to %id.', array(
+      '%old_id' => $menu->original->id(),
+      '%id' => $menu->id(),
+    )));
+  }
 }
 
 /**
@@ -58,17 +59,16 @@ function hook_menu_update($menu) {
  * information to perform actions based on the information entered into the menu
  * system.
  *
- * @param \Drupal\system\Entity\Menu $menu
- *   A menu entity.
+ * @param \Drupal\system\MenuInterface $menu
+ *   The menu entity that was deleted.
  *
  * @see hook_menu_insert()
  * @see hook_menu_update()
  */
-function hook_menu_delete($menu) {
-  // Delete the record from our variable.
-  $my_menus = variable_get('my_module_menus', array());
-  unset($my_menus[$menu->id()]);
-  variable_set('my_module_menus', $my_menus);
+function hook_menu_delete(\Drupal\system\MenuInterface $menu) {
+  drupal_set_message(t('You have just deleted the menu with machine name %id.', array(
+    '%id' => $menu->id(),
+  )));
 }
 
 /**
