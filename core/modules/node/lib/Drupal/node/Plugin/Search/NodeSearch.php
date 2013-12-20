@@ -289,7 +289,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
   public function updateIndex() {
     $limit = (int) $this->searchSettings->get('index.cron_limit');
 
-    $result = $this->database->queryRange("SELECT DISTINCT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = :type AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit, array(':type' => $this->getPluginId()), array('target' => 'slave'));
+    $result = $this->database->queryRange("SELECT DISTINCT n.nid, d.reindex FROM {node} n LEFT JOIN {search_dataset} d ON d.type = :type AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit, array(':type' => $this->getPluginId()), array('target' => 'slave'));
     $nids = $result->fetchCol();
     if (!$nids) {
       return;
