@@ -282,10 +282,6 @@ class StandardProfileTest extends WebTestBase {
    * displayed in teaser view, so it is tested in the front page tests.
    */
   protected function doPageRdfaTests() {
-    // The standard profile hides the created date on pages. Revert display to
-    // true for testing.
-    variable_set('node_submitted_page', TRUE);
-
     // Feed the HTML into the parser.
     $uri_info = $this->page->uri();
     $path = $uri_info['path'];

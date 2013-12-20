@@ -458,7 +458,6 @@ function node_uninstall() {
 
   // Delete remaining general module variables.
   \Drupal::state()->delete('node.node_access_needs_rebuild');
-  variable_del('node_recent_block_count');
 
   // Delete any stored state.
   \Drupal::state()->delete('node.cron_last');

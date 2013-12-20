@@ -323,7 +323,7 @@ function update_prepare_d8_bootstrap() {
       // Required to run before drupal_install_config_directories(), since that
       // triggers a call into system_stream_wrappers(), which calls t(), which
       // calls into language_default().
-      $language_default = variable_get('language_default');
+      $language_default = update_variable_get('language_default');
       if (!empty($language_default) && (isset($language_default->id) || isset($language_default->language))) {
         if (!isset($language_default->id)) {
           $language_default->id = $language_default->language;
@@ -332,7 +332,7 @@ function update_prepare_d8_bootstrap() {
         // In D8, the 'language_default' is not anymore an object, but an array,
         // so make sure that the new value that is saved into this variable is an
         // array.
-        variable_set('language_default', (array) $language_default);
+        update_variable_set('language_default', (array) $language_default);
       }
 
       $module_config = \Drupal::config('system.module');
@@ -570,7 +570,7 @@ function update_prepare_d8_language() {
     }
 
     // Update the 'language_default' system variable with the langcode change.
-    $language_default = variable_get('language_default');
+    $language_default = update_variable_get('language_default');
     if (!empty($language_default)) {
       if (isset($language_default->language)) {
         $language_default->id = $language_default->language;
@@ -582,7 +582,7 @@ function update_prepare_d8_language() {
       // array.
       $language_default = (array) $language_default;
       $language_default['langcode'] = 'en';
-      variable_set('language_default', $language_default);
+      update_variable_set('language_default', $language_default);
     }
 
     // Convert languages to config entities.

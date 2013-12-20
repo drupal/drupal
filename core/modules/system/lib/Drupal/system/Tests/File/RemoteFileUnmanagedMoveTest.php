@@ -27,6 +27,6 @@ class RemoteFileUnmanagedMoveTest extends UnmanagedMoveTest {
 
   function setUp() {
     parent::setUp();
-    variable_set('file_default_scheme', 'dummy-remote');
+    \Drupal::config('system.file')->set('default_scheme', 'dummy-remote')->save();
   }
 }
