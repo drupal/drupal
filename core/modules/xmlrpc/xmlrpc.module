@@ -12,10 +12,8 @@ function xmlrpc_help($path, $args) {
   switch ($path) {
     case 'admin/help#xmlrpc':
       $output = '';
-      $output .= '<p>' . t('The XML-RPC module gives external systems the opportunity to communicate with the site through the XML-RPC protocol. Pointing an XML-RPC client at <a href="@xmlrpc">xmlrpc.php</a> allows this communication to take place. For more information, see the online handbook entry for <a href="@xmlrpcapi">XML-RPC API</a>.', array(
-        '@xmlrpc' => url('xmlrpc.php', array('absolute' => TRUE)),
-        '@xmlrpcapi' => 'http://drupal.org/node/44895',
-      )) . '</p>';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The XML-RPC module gives external systems the opportunity to communicate with the site through the <a href="http://en.wikipedia.org/wiki/XML-RPC">XML-RPC protocol</a>. An XML-RPC client can communicate with the site by making a request to <a href="!xrphp">xmlrpc.php</a>. For more information, see <a href="!xrdocs">the online documentation for the XML-RPC module</a>.', array('!xrphp' => \Drupal::url('xmlrpc.php'),'!xrdocs' => 'https://drupal.org/documentation/modules/xmlrpc')) . '</p>';
       return $output;
   }
 }
