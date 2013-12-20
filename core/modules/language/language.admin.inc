@@ -214,16 +214,22 @@ function theme_language_negotiation_configure_form($variables) {
     }
 
     $build = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#attributes' => array('id' => "language-negotiation-methods-$type"),
+      '#tabledrag' => array(
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => "language-method-weight-$type",
+        ),
+      ),
     );
+
     $table  = drupal_render($form[$type]['configurable']);
     $table .= drupal_render($build);
     $table .= drupal_render_children($form[$type]);
-
-    drupal_add_tabledrag("language-negotiation-methods-$type", 'order', 'sibling', "language-method-weight-$type");
 
     $output .= '<div class="form-item table-language-group table-' . $type . '-wrapper">' . $title . $description . $table . '</div>';
   }

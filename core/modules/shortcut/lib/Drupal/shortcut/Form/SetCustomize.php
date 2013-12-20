@@ -58,7 +58,11 @@ class SetCustomize extends EntityFormController {
       '#empty' => $this->t('No shortcuts available. <a href="@link">Add a shortcut</a>', array('@link' => $this->urlGenerator()->generateFromRoute('shortcut.link_add', array('shortcut_set' => $this->entity->id())))),
       '#attributes' => array('id' => 'shortcuts'),
       '#tabledrag' => array(
-        array('order', 'sibling', 'shortcut-weight'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'shortcut-weight',
+        ),
       ),
     );
 

@@ -585,10 +585,10 @@ function system_element_info() {
     '#process' => array('form_process_table'),
     '#element_validate' => array('form_validate_table'),
     // Properties for tabledrag support.
-    // The value is a list of arrays that are passed to drupal_add_tabledrag().
-    // drupal_pre_render_table() prepends the HTML ID of the table to each set
-    // of arguments.
-    // @see drupal_add_tabledrag()
+    // The value is a list of arrays that are passed to
+    // drupal_attach_tabledrag(). drupal_pre_render_table() prepends the HTML ID
+    // of the table to each set of options.
+    // @see drupal_attach_tabledrag()
     '#tabledrag' => array(),
     // Render properties.
     '#pre_render' => array('drupal_pre_render_table'),

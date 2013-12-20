@@ -413,14 +413,19 @@ function theme_file_widget_multiple($variables) {
     );
   }
 
-  drupal_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
-
   $build = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $headers,
     '#rows' => $rows,
     '#attributes' => array(
       'id' => $table_id,
+    ),
+    '#tabledrag' => array(
+      array(
+        'action' => 'order',
+        'relationship' => 'sibling',
+        'group' => $weight_class,
+      ),
     ),
   );
 

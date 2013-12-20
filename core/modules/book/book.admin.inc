@@ -22,9 +22,6 @@ use Drupal\Core\Language\Language;
 function theme_book_admin_table($variables) {
   $form = $variables['form'];
 
-  drupal_add_tabledrag('book-outline', 'match', 'parent', 'book-plid', 'book-plid', 'book-mlid', TRUE, MENU_MAX_DEPTH - 2);
-  drupal_add_tabledrag('book-outline', 'order', 'sibling', 'book-weight');
-
   $header = array(t('Title'), t('Weight'), t('Parent'), t('Operations'));
 
   $rows = array();
@@ -77,6 +74,28 @@ function theme_book_admin_table($variables) {
     $row['class'][] = 'draggable';
     $rows[] = $row;
   }
-  $table = array('#theme' => 'table', '#header' => $header, '#rows' => $rows, '#attributes' => array('id' => 'book-outline'), '#empty' => t('No book content available.'));
+  $table = array(
+    '#type' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#attributes' => array('id' => 'book-outline'),
+    '#empty' => t('No book content available.'),
+    '#tabledrag' => array(
+      array(
+        'action' => 'match',
+        'relationship' => 'parent',
+        'group' => 'book-plid',
+        'subgroup' => 'book-plid',
+        'source' => 'book-mlid',
+        'hidden' => TRUE,
+        'limit' => MENU_MAX_DEPTH - 2,
+      ),
+      array(
+        'action' => 'order',
+        'relationship' => 'sibling',
+        'group' => 'book-weight',
+      ),
+    ),
+  );
   return drupal_render($table);
 }

@@ -200,18 +200,17 @@ class BlockListController extends ConfigEntityListController implements FormInte
     // Loop over each region and build blocks.
     foreach ($block_regions_with_disabled as $region => $title) {
       $form['blocks']['#tabledrag'][] = array(
-        'match',
-        'sibling',
-        'block-region-select',
-        'block-region-' . $region,
-        NULL,
-        FALSE,
+        'action' => 'match',
+        'relationship' => 'sibling',
+        'group' => 'block-region-select',
+        'subgroup' => 'block-region-' . $region,
+        'hidden' => FALSE,
       );
       $form['blocks']['#tabledrag'][] = array(
-        'order',
-        'sibling',
-        'block-weight',
-        'block-weight-' . $region,
+        'action' => 'order',
+        'relationship' => 'sibling',
+        'group' => 'block-weight',
+        'subgroup' => 'block-weight-' . $region,
       );
 
       $form['blocks'][$region] = array(

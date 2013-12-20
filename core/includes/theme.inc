@@ -1368,7 +1368,11 @@ function theme_image($variables) {
  *   '#header' => array(t('Title'), array('data' => t('Operations'), 'colspan' => '1')),
  *   // Optionally, to add tableDrag support:
  *   '#tabledrag' => array(
- *     array('order', 'sibling', 'thing-weight'),
+ *     array(
+ *       'action' => 'order',
+ *       'relationship' => 'sibling',
+ *       'group' => 'thing-weight',
+ *     ),
  *   ),
  * );
  * foreach ($things as $row => $thing) {
@@ -1402,14 +1406,14 @@ function theme_image($variables) {
  *
  * @param array $element
  *   A structured array containing two sub-levels of elements. Properties used:
- *   - #tabledrag: The value is a list of arrays that are passed to
- *     drupal_add_tabledrag(). The HTML ID of the table is prepended to each set
- *     of arguments.
+ *   - #tabledrag: The value is a list of $options arrays that are passed to
+ *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
+ *     $options array.
  *
  * @see system_element_info()
  * @see theme_table()
  * @see drupal_process_attached()
- * @see drupal_add_tabledrag()
+ * @see drupal_attach_tabledrag()
  */
 function drupal_pre_render_table(array $element) {
   foreach (element_children($element) as $first) {
@@ -1440,13 +1444,13 @@ function drupal_pre_render_table(array $element) {
   // Take over $element['#id'] as HTML ID attribute, if not already set.
   element_set_attributes($element, array('id'));
 
-  // If the custom #tabledrag is set and there is a HTML ID, inject the table's
-  // HTML ID as first callback argument and attach the behavior.
+  // If the custom #tabledrag is set and there is a HTML ID, add the table's
+  // HTML ID to the options and attach the behavior.
   if (!empty($element['#tabledrag']) && isset($element['#attributes']['id'])) {
-    foreach ($element['#tabledrag'] as &$args) {
-      array_unshift($args, $element['#attributes']['id']);
+    foreach ($element['#tabledrag'] as $options) {
+      $options['table_id'] = $element['#attributes']['id'];
+      drupal_attach_tabledrag($element, $options);
     }
-    $element['#attached']['drupal_add_tabledrag'] = $element['#tabledrag'];
   }
 
   return $element;

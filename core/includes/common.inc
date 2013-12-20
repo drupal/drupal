@@ -2800,7 +2800,7 @@ function drupal_get_library($module, $name = NULL) {
 }
 
 /**
- * Assists in adding the tableDrag JavaScript behavior to a themed table.
+ * Assists in attaching the tableDrag JavaScript behavior to a themed table.
  *
  * Draggable tables should be used wherever an outline or list of sortable items
  * needs to be arranged by an end-user. Draggable tables are very flexible and
@@ -2839,9 +2839,13 @@ function drupal_get_library($module, $name = NULL) {
  * - Rows with the 'tabledrag-leaf' class cannot have child rows.
  * - Rows with the 'tabledrag-root' class cannot be nested under a parent row.
  *
- * Calling drupal_add_tabledrag() would then be written as such:
+ * Calling drupal_attach_tabledrag() would then be written as such:
  * @code
- * drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight');
+ * drupal_attach_tabledrag('my-module-table', array(
+ *   'action' => 'order',
+ *   'relationship' => 'sibling',
+ *   'group' => 'my-elements-weight',
+ * );
  * @endcode
  *
  * In a more complex case where there are several groups in one column (such as
@@ -2851,13 +2855,19 @@ function drupal_get_library($module, $name = NULL) {
  * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = array('my-elements-weight', 'my-elements-weight-' . $region);
  * @endcode
  *
- * $group is still 'my-element-weight', and the additional $subgroup variable
- * will be passed in as 'my-elements-weight-' . $region. This also means that
- * you'll need to call drupal_add_tabledrag() once for every region added.
+ * The 'group' option is still 'my-element-weight', and the additional
+ * 'subgroup' option will be passed in as 'my-elements-weight-' . $region. This
+ * also means that you'll need to call drupal_attach_tabledrag() once for every
+ * region added.
  *
  * @code
  * foreach ($regions as $region) {
- *   drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight', 'my-elements-weight-' . $region);
+ *   drupal_attach_tabledrag('my-module-table', array(
+ *     'action' => 'order',
+ *     'relationship' => sibling',
+ *     'group' => 'my-elements-weight',
+ *     'subgroup' => my-elements-weight-' . $region,
+ *   ));
  * }
  * @endcode
  *
@@ -2867,69 +2877,71 @@ function drupal_get_library($module, $name = NULL) {
  * theme_menu_overview_form() for an example creating a table containing parent
  * relationships.
  *
- * Note that this function should be called from the theme layer, such as in a
- * .html.twig file, theme_ function, or in a template_preprocess function, not
- * in a form declaration. Though the same JavaScript could be added to the page
- * using drupal_add_js() directly, this function helps keep template files
- * clean and readable. It also prevents tabledrag.js from being added twice
- * accidentally.
+ * @param $element
+ *   A form element to attach the tableDrag behavior to.
+ * @param array $options
+ *   These options are used to generate JavaScript settings necessary to
+ *   configure the tableDrag behavior appropriately for this particular table.
+ *   An associative array containing the following keys:
+ *   - 'table_id': String containing the target table's id attribute.
+ *     If the table does not have an id, one will need to be set,
+ *     such as <table id="my-module-table">.
+ *   - 'action': String describing the action to be done on the form item.
+ *      Either 'match' 'depth', or 'order':
+ *     - 'match' is typically used for parent relationships.
+ *     - 'order' is typically used to set weights on other form elements with
+ *       the same group.
+ *     - 'depth' updates the target element with the current indentation.
+ *   - 'relationship': String describing where the "action" option
+ *     should be performed. Either 'parent', 'sibling', 'group', or 'self':
+ *     - 'parent' will only look for fields up the tree.
+ *     - 'sibling' will look for fields in the same group in rows above and
+ *       below it.
+ *     - 'self' affects the dragged row itself.
+ *     - 'group' affects the dragged row, plus any children below it (the entire
+ *       dragged group).
+ *   - 'group': A class name applied on all related form elements for this action.
+ *   - 'subgroup': (optional) If the group has several subgroups within it, this
+ *     string should contain the class name identifying fields in the same
+ *     subgroup.
+ *   - 'source': (optional) If the $action is 'match', this string should contain
+ *     the classname identifying what field will be used as the source value
+ *     when matching the value in $subgroup.
+ *   - 'hidden': (optional) The column containing the field elements may be
+ *     entirely hidden from view dynamically when the JavaScript is loaded. Set
+ *     to FALSE if the column should not be hidden.
+ *   - 'limit': (optional) Limit the maximum amount of parenting in this table.
  *
- * @param $table_id
- *   String containing the target table's id attribute. If the table does not
- *   have an id, one will need to be set, such as <table id="my-module-table">.
- * @param $action
- *   String describing the action to be done on the form item. Either 'match'
- *   'depth', or 'order'. Match is typically used for parent relationships.
- *   Order is typically used to set weights on other form elements with the same
- *   group. Depth updates the target element with the current indentation.
- * @param $relationship
- *   String describing where the $action variable should be performed. Either
- *   'parent', 'sibling', 'group', or 'self'. Parent will only look for fields
- *   up the tree. Sibling will look for fields in the same group in rows above
- *   and below it. Self affects the dragged row itself. Group affects the
- *   dragged row, plus any children below it (the entire dragged group).
- * @param $group
- *   A class name applied on all related form elements for this action.
- * @param $subgroup
- *   (optional) If the group has several subgroups within it, this string should
- *   contain the class name identifying fields in the same subgroup.
- * @param $source
- *   (optional) If the $action is 'match', this string should contain the class
- *   name identifying what field will be used as the source value when matching
- *   the value in $subgroup.
- * @param $hidden
- *   (optional) The column containing the field elements may be entirely hidden
- *   from view dynamically when the JavaScript is loaded. Set to FALSE if the
- *   column should not be hidden.
- * @param $limit
- *   (optional) Limit the maximum amount of parenting in this table.
  * @see theme_menu_overview_form()
  */
-function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgroup = NULL, $source = NULL, $hidden = TRUE, $limit = 0) {
-  $js_added = &drupal_static(__FUNCTION__, FALSE);
-  $tabledrag_id = &drupal_static(__FUNCTION__  . '_setting', FALSE);
+function drupal_attach_tabledrag(&$element, array $options) {
+  // Add default values to elements.
+  $options = $options + array(
+    'subgroup' => NULL,
+    'source' => NULL,
+    'hidden' => TRUE,
+    'limit' => 0
+  );
+
+  $group = $options['group'];
+
+  $tabledrag_id = &drupal_static(__FUNCTION__);
   $tabledrag_id = (!isset($tabledrag_id)) ? 0 : $tabledrag_id + 1;
 
-  if (!$js_added) {
-    // Add the table drag JavaScript to the page before the module JavaScript
-    // to ensure that table drag behaviors are registered before any module
-    // uses it.
-    drupal_add_library('system', 'drupal.tabledrag');
-    $js_added = TRUE;
-  }
-
   // If a subgroup or source isn't set, assume it is the same as the group.
-  $target = isset($subgroup) ? $subgroup : $group;
-  $source = isset($source) ? $source : $target;
-  $settings['tableDrag'][$table_id][$group][$tabledrag_id] = array(
+  $target = isset($options['subgroup']) ? $options['subgroup'] : $group;
+  $source = isset($options['source']) ? $options['source'] : $target;
+  $settings['tableDrag'][$options['table_id']][$group][$tabledrag_id] = array(
     'target' => $target,
     'source' => $source,
-    'relationship' => $relationship,
-    'action' => $action,
-    'hidden' => $hidden,
-    'limit' => $limit,
+    'relationship' => $options['relationship'],
+    'action' => $options['action'],
+    'hidden' => $options['hidden'],
+    'limit' => $options['limit'],
   );
-  drupal_add_js($settings, 'setting');
+
+  $element['#attached']['library'][] = array('system', 'drupal.tabledrag');
+  $element['#attached']['js'][] = array('data' => $settings, 'type' => 'setting');
 }
 
 /**

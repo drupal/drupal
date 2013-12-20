@@ -101,7 +101,11 @@ abstract class DraggableListController extends ConfigEntityListController implem
       '#header' => $this->buildHeader(),
       '#empty' => t('There is no @label yet.', array('@label' => $this->entityInfo['label'])),
       '#tabledrag' => array(
-        array('order', 'sibling', 'weight'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'weight',
+        ),
       ),
     );
 

@@ -60,7 +60,11 @@ class ReorderDisplays extends ViewsFormBase {
       '#header' => array($this->t('Display'), $this->t('Weight'), $this->t('Remove')),
       '#empty' => $this->t('No displays available.'),
       '#tabledrag' => array(
-        array('order', 'sibling', 'weight'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'weight',
+        )
       ),
       '#tree' => TRUE,
       '#prefix' => '<div class="scroll" data-drupal-views-scroll>',

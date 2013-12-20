@@ -307,20 +307,18 @@ class OverviewTerms extends FormBase {
 
     if ($parent_fields) {
       $form['terms']['#tabledrag'][] = array(
-        'match',
-        'parent',
-        'term-parent',
-        'term-parent',
-        'term-id',
-        FALSE,
+        'action' => 'match',
+        'relationship' => 'parent',
+        'group' => 'term-parent',
+        'subgroup' => 'term-parent',
+        'source' => 'term-id',
+        'hidden' => FALSE,
       );
       $form['terms']['#tabledrag'][] = array(
-        'depth',
-        'group',
-        'term-depth',
-        NULL,
-        NULL,
-        FALSE
+        'action' => 'depth',
+        'relationship' => 'group',
+        'group' => 'term-depth',
+        'hidden' => FALSE,
       );
       $form['terms']['#attached']['library'][] = array('taxonomy', 'drupal.taxonomy');
       $form['terms']['#attached']['js'][] = array(
@@ -328,7 +326,11 @@ class OverviewTerms extends FormBase {
         'type' => 'setting',
       );
     }
-    $form['terms']['#tabledrag'][] = array('order', 'sibling', 'term-weight');
+    $form['terms']['#tabledrag'][] = array(
+      'action' => 'order',
+      'relationship' => 'sibling',
+      'group' => 'term-weight',
+    );
 
     if ($taxonomy_vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE && count($tree) > 1) {
       $form['actions'] = array('#type' => 'actions', '#tree' => FALSE);

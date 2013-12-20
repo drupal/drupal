@@ -70,12 +70,19 @@ function theme_field_multiple_value_form($variables) {
     }
 
     $table = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#attributes' => array(
         'id' => $table_id,
         'class' => array('field-multiple-table'),
+      ),
+      '#tabledrag' => array(
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => $order_class,
+        ),
       ),
     );
     $output = '<div class="form-item">';
@@ -83,8 +90,6 @@ function theme_field_multiple_value_form($variables) {
     $output .= $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '';
     $output .= '<div class="clearfix">' . drupal_render($add_more_button) . '</div>';
     $output .= '</div>';
-
-    drupal_add_tabledrag($table_id, 'order', 'sibling', $order_class);
   }
   else {
     foreach (element_children($element) as $key) {

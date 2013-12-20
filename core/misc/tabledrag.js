@@ -11,9 +11,9 @@ var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'))
 /**
  * Drag and drop table rows with field manipulation.
  *
- * Using the drupal_add_tabledrag() function, any table with weights or parent
- * relationships may be made into draggable tables. Columns containing a field
- * may optionally be hidden, providing a better user experience.
+ * Using the drupal_attach_tabledrag() function, any table with weights or
+ * parent relationships may be made into draggable tables. Columns containing a
+ * field may optionally be hidden, providing a better user experience.
  *
  * Created tableDrag instances may be modified with custom behaviors by
  * overriding the .onDrag, .onDrop, .row.onSwap, and .row.onIndent methods.

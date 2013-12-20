@@ -123,6 +123,20 @@ abstract class DisplayOverviewBase extends OverviewBase {
       // Add Ajax wrapper.
       '#prefix' => '<div id="field-display-overview-wrapper">',
       '#suffix' => '</div>',
+      '#tabledrag' => array(
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'field-weight',
+        ),
+        array(
+          'action' => 'match',
+          'relationship' => 'parent',
+          'group' => 'field-parent',
+          'subgroup' => 'field-parent',
+          'source' => 'field-name',
+        ),
+      ),
     );
 
     // Field rows.
@@ -193,10 +207,6 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save'));
 
     $form['#attached']['library'][] = array('field_ui', 'drupal.field_ui');
-
-    // Add tabledrag behavior.
-    $form['#attached']['drupal_add_tabledrag'][] = array('field-display-overview', 'order', 'sibling', 'field-weight');
-    $form['#attached']['drupal_add_tabledrag'][] = array('field-display-overview', 'match', 'parent', 'field-parent', 'field-parent', 'field-name');
 
     return $form;
   }

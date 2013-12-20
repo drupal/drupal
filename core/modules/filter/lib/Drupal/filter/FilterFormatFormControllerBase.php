@@ -137,7 +137,11 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
       '#attributes' => array('id' => 'filter-order'),
       '#title' => t('Filter processing order'),
       '#tabledrag' => array(
-        array('order', 'sibling', 'filter-order-weight'),
+        array(
+         'action' => 'order',
+         'relationship' => 'sibling',
+         'group' => 'filter-order-weight',
+        ),
       ),
       '#tree' => FALSE,
       '#input' => FALSE,
