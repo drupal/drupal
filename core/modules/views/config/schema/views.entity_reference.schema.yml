@@ -1,0 +1,22 @@
+# Schema for the views entity reference selection plugins.
+
+entity_reference.views.handler_settings:
+  type: mapping
+  label: 'View handler settings'
+  mapping:
+    view:
+      type: mapping
+      label: 'View used to select the entities'
+      mapping:
+        view_name:
+          type: string
+          label: 'View name'
+        display_name:
+          type: string
+          label: 'Display name'
+        arguments:
+          type: sequence
+          label: 'View arguments'
+          sequence:
+            - type: string
+              label: 'Argument'
