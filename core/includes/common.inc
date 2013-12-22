@@ -2782,7 +2782,6 @@ function drupal_get_library($module, $name = NULL) {
             // key.
             unset($module_libraries[$key]['js'][$file]);
             $file = $options;
-            $options = array();
           }
           $module_libraries[$key]['js'][$file]['version'] = $module_libraries[$key]['version'];
         }
