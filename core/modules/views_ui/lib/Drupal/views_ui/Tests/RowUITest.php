@@ -40,10 +40,10 @@ class RowUITest extends UITestBase {
     $row_options_url = "admin/structure/views/nojs/display/$view_name/default/row_options";
 
     $this->drupalGet($row_plugin_url);
-    $this->assertFieldByName('row', 'fields', 'The default row plugin selected in the UI should be fields.');
+    $this->assertFieldByName('row[type]', 'fields', 'The default row plugin selected in the UI should be fields.');
 
     $edit = array(
-      'row' => 'test_row'
+      'row[type]' => 'test_row'
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->assertFieldByName('row_options[test_option]', NULL, 'Make sure the custom settings form from the test plugin appears.');
@@ -65,10 +65,10 @@ class RowUITest extends UITestBase {
     $this->assertEqual($row['options']['test_option'], $random_name, 'Make sure that the custom settings field got saved as expected.');
 
     // Change the row plugin to fields using ajax.
-    $this->drupalPostAjaxForm($row_plugin_url, array('row' => 'fields'), array('op' => 'Apply'), str_replace('/nojs/', '/ajax/', $row_plugin_url));
+    $this->drupalPostAjaxForm($row_plugin_url, array('row[type]' => 'fields'), array('op' => 'Apply'), str_replace('/nojs/', '/ajax/', $row_plugin_url));
     $this->drupalPostAjaxForm(NULL, array(), array('op' => 'Apply'));
     $this->assertResponse(200);
-    $this->assertFieldByName('row', 'fields', 'Make sure that the fields got saved as used row plugin.');
+    $this->assertFieldByName('row[type]', 'fields', 'Make sure that the fields got saved as used row plugin.');
   }
 
 }

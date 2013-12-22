@@ -107,7 +107,6 @@ class PagerTest extends PluginTestBase {
     $this->assertText('10 items', 'The default value has been changed.');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
     $this->assertText('20 items', 'The original value remains unchanged.');
-
   }
 
   /**

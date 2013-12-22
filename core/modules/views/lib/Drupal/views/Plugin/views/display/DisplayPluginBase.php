@@ -1632,7 +1632,12 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'style':
         $form['#title'] .= t('How should this view be styled');
         $style_plugin = $this->getPlugin('style');
-        $form['style'] =  array(
+        $form['style'] = array(
+          '#prefix' => '<div class="clearfix">',
+          '#suffix' => '</div>',
+          '#tree' => TRUE,
+        );
+        $form['style']['type'] = array(
           '#title' => t('Style'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
@@ -1676,7 +1681,12 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'row':
         $form['#title'] .= t('How should each row in this view be styled');
         $row_plugin_instance = $this->getPlugin('row');
-        $form['row'] =  array(
+        $form['row'] = array(
+          '#prefix' => '<div class="clearfix">',
+          '#suffix' => '</div>',
+          '#tree' => TRUE,
+        );
+        $form['row']['type'] = array(
           '#title' => t('Row'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
@@ -2167,52 +2177,6 @@ abstract class DisplayPluginBase extends PluginBase {
         $this->display['display_title'] = $form_state['values']['display_title'];
         $this->setOption('display_description', $form_state['values']['display_description']);
         break;
-      case 'access':
-        $access = $this->getOption('access');
-        if ($access['type'] != $form_state['values']['access']['type']) {
-          $plugin = Views::pluginManager('access')->createInstance($form_state['values']['access']['type']);
-          if ($plugin) {
-            $access = array('type' => $form_state['values']['access']['type']);
-            $this->setOption('access', $access);
-            if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], 'access_options');
-            }
-          }
-        }
-
-        break;
-      case 'access_options':
-        $plugin = $this->getPlugin('access');
-        if ($plugin) {
-          $access = $this->getOption('access');
-          $plugin->submitOptionsForm($form['access_options'], $form_state);
-          $access['options'] = $form_state['values'][$section];
-          $this->setOption('access', $access);
-        }
-        break;
-      case 'cache':
-        $cache = $this->getOption('cache');
-        if ($cache['type'] != $form_state['values']['cache']['type']) {
-          $plugin = Views::pluginManager('cache')->createInstance($form_state['values']['cache']['type']);
-          if ($plugin) {
-            $cache = array('type' => $form_state['values']['cache']['type']);
-            $this->setOption('cache', $cache);
-            if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], 'cache_options');
-            }
-          }
-        }
-
-        break;
-      case 'cache_options':
-        $plugin = $this->getPlugin('cache');
-        if ($plugin) {
-          $cache = $this->getOption('cache');
-          $plugin->submitOptionsForm($form['cache_options'], $form_state);
-          $cache['options'] = $form_state['values'][$section];
-          $this->setOption('cache', $cache);
-        }
-        break;
       case 'query':
         $plugin = $this->getPlugin('query');
         if ($plugin) {
@@ -2226,6 +2190,8 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'title':
       case 'css_class':
       case 'display_comment':
+      case 'distinct':
+      case 'group_by':
         $this->setOption($section, $form_state['values'][$section]);
         break;
       case 'field_language':
@@ -2235,120 +2201,50 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'use_ajax':
       case 'hide_attachment_summary':
       case 'show_admin_links':
+      case 'exposed_block':
         $this->setOption($section, (bool) $form_state['values'][$section]);
         break;
       case 'use_more':
         $this->setOption($section, intval($form_state['values'][$section]));
         $this->setOption('use_more_always', intval($form_state['values']['use_more_always']));
         $this->setOption('use_more_text', $form_state['values']['use_more_text']);
-      case 'distinct':
-        $this->setOption($section, $form_state['values'][$section]);
         break;
-      case 'group_by':
-        $this->setOption($section, $form_state['values'][$section]);
-        break;
-      case 'row':
-        // This if prevents resetting options to default if they don't change
-        // the plugin.
-        $row = $this->getOption('row');
-        if ($row['type'] != $form_state['values'][$section]) {
-          $plugin = Views::pluginManager('row')->createInstance($form_state['values'][$section]);
-          if ($plugin) {
-            $row = array('type' => $form_state['values'][$section]);
-            $this->setOption($section, $row);
 
-            // send ajax form to options page if we use it.
-            if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], 'row_options');
-            }
-          }
-        }
-        break;
-      case 'style':
-        // This if prevents resetting options to default if they don't change
-        // the plugin.
-        $style = $this->getOption('style');
-        if ($style['type'] != $form_state['values'][$section]) {
-          $plugin = views::pluginManager('style')->createInstance($form_state['values'][$section]);
-          if ($plugin) {
-            $row = array('type' => $form_state['values'][$section]);
-            $this->setOption($section, $row);
-            // send ajax form to options page if we use it.
-            if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], 'style_options');
-            }
-          }
-        }
-        break;
-      case 'style_options':
-        $plugin = $this->getPlugin('style');
-        if ($plugin) {
-          $style = $this->getOption('style');
-          $plugin->submitOptionsForm($form['style_options'], $form_state);
-          $style['options'] = $form_state['values'][$section];
-          $this->setOption('style', $style);
-        }
-        break;
-      case 'row_options':
-        $plugin = $this->getPlugin('row');
-        if ($plugin) {
-          $row = $this->getOption('row');
-          $plugin->submitOptionsForm($form['row_options'], $form_state);
-          $row['options'] = $form_state['values'][$section];
-          $this->setOption('row', $row);
-        }
-        break;
-      case 'exposed_block':
-        $this->setOption($section, (bool) $form_state['values'][$section]);
-        break;
+      case 'access':
+      case 'cache':
       case 'exposed_form':
-        $exposed_form = $this->getOption('exposed_form');
-        if ($exposed_form['type'] != $form_state['values']['exposed_form']['type']) {
-          $plugin = Views::pluginManager('exposed_form')->createInstance($form_state['values']['exposed_form']['type']);
-          if ($plugin) {
-            $exposed_form = array('type' => $form_state['values']['exposed_form']['type'], 'options' => array());
-            $this->setOption('exposed_form', $exposed_form);
-            if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], 'exposed_form_options');
-            }
-          }
-        }
-
-        break;
-      case 'exposed_form_options':
-        $plugin = $this->getPlugin('exposed_form');
-        if ($plugin) {
-          $exposed_form = $this->getOption('exposed_form');
-          $plugin->submitOptionsForm($form['exposed_form_options'], $form_state);
-          $exposed_form['options'] = $form_state['values'][$section];
-          $this->setOption('exposed_form', $exposed_form);
-        }
-        break;
       case 'pager':
-        $pager = $this->getOption('pager');
-        if ($pager['type'] != $form_state['values']['pager']['type']) {
-          $plugin = Views::pluginManager('pager')->createInstance($form_state['values']['pager']['type']);
+      case 'row':
+      case 'style':
+        $plugin_type = $section;
+        $plugin_options = $this->getOption($plugin_type);
+        if ($plugin_options['type'] != $form_state['values'][$plugin_type]['type']) {
+          $plugin = Views::pluginManager($plugin_type)->createInstance($form_state['values'][$plugin_type]['type']);
           if ($plugin) {
-            // Because pagers have very similar options, let's allow pagers to
-            // try to carry the options over.
-            $plugin->init($this->view, $this, $pager['options']);
-
-            $pager = array('type' => $form_state['values']['pager']['type'], 'options' => $plugin->options);
-            $this->setOption('pager', $pager);
+            $plugin->init($this->view, $this, $plugin_options['options']);
+            $plugin_options = array('type' => $form_state['values'][$plugin_type]['type'], 'options' => $plugin->options);
+            $this->setOption($plugin_type, $plugin_options);
             if ($plugin->usesOptions()) {
-              $form_state['view']->addFormToStack('display', $this->display['id'], 'pager_options');
+              $form_state['view']->addFormToStack('display', $this->display['id'], $plugin_type . '_options');
             }
           }
         }
-
         break;
+
+      case 'access_options':
+      case 'cache_options':
+      case 'exposed_form_options':
       case 'pager_options':
-        $plugin = $this->getPlugin('pager');
-        if ($plugin) {
-          $pager = $this->getOption('pager');
-          $plugin->submitOptionsForm($form['pager_options'], $form_state);
-          $pager['options'] = $form_state['values'][$section];
-          $this->setOption('pager', $pager);
+      case 'row_options':
+      case 'style_options':
+        // Submit plugin options. Every section with "_options" in it, belongs to
+        // a plugin type, like "style_options".
+        $plugin_type = str_replace('_options', '', $form_state['section']);
+        if ($plugin = $this->getPlugin($plugin_type)) {
+          $plugin_options = $this->getOption($plugin_type);
+          $plugin->submitOptionsForm($form[$plugin_type . '_options'], $form_state);
+          $plugin_options['options'] = $form_state['values'][$section];
+          $this->setOption($plugin_type, $plugin_options);
         }
         break;
     }

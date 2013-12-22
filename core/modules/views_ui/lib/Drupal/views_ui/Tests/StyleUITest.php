@@ -40,10 +40,10 @@ class StyleUITest extends UITestBase {
     $style_options_url = "admin/structure/views/nojs/display/$view_name/default/style_options";
 
     $this->drupalGet($style_plugin_url);
-    $this->assertFieldByName('style', 'default', 'The default style plugin selected in the UI should be unformatted list.');
+    $this->assertFieldByName('style[type]', 'default', 'The default style plugin selected in the UI should be unformatted list.');
 
     $edit = array(
-      'style' => 'test_style'
+      'style[type]' => 'test_style'
     );
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->assertFieldByName('style_options[test_option]', NULL, 'Make sure the custom settings form from the test plugin appears.');
@@ -67,7 +67,7 @@ class StyleUITest extends UITestBase {
     // Test that fields are working correctly in the UI for style plugins when
     // a field row plguin is selected.
     $this->drupalPostForm("admin/structure/views/view/$view_name/edit", array(), 'Add Page');
-    $this->drupalPostForm("admin/structure/views/nojs/display/$view_name/page_1/row", array('row' => 'fields'), t('Apply'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/$view_name/page_1/row", array('row[type]' => 'fields'), t('Apply'));
     // If fields are being used this text will not be shown.
     $this->assertNoText(t('The selected style or row format does not utilize fields.'));
   }
