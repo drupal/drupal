@@ -104,7 +104,6 @@ class LinkItem extends ConfigFieldItemBase {
    * {@inheritdoc}
    */
   public function preSave() {
-    $item = $this->getValue();
     // Trim any spaces around the URL and link text.
     $this->url = trim($this->url);
     $this->title = trim($this->title);
