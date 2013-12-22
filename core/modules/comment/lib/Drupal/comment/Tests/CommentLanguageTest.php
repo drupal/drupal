@@ -76,7 +76,7 @@ class CommentLanguageTest extends WebTestBase {
     $field = field_info_field('comment', 'comment_body');
     $field->translatable = TRUE;
     $field->save();
-    $this->assertTrue(field_is_translatable('comment', $field), 'Comment body is translatable.');
+    $this->assertTrue($field->isTranslatable(), 'Comment body is translatable.');
   }
 
   /**

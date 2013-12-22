@@ -252,7 +252,7 @@ class Field extends FieldPluginBase {
 
       // Filter by langcode, if field translation is enabled.
       $field = $this->field_info;
-      if (field_is_translatable($entity_type, $field) && !empty($this->view->display_handler->options['field_langcode_add_to_query'])) {
+      if ($field->isTranslatable() && !empty($this->view->display_handler->options['field_langcode_add_to_query'])) {
         $column = $this->tableAlias . '.langcode';
         // By the same reason as field_language the field might be Language::LANGCODE_NOT_SPECIFIED in reality so allow it as well.
         // @see this::field_langcode()
@@ -855,7 +855,7 @@ class Field extends FieldPluginBase {
    * according to the settings.
    */
   function field_langcode(EntityInterface $entity) {
-    if (field_is_translatable($entity->entityType(), $this->field_info)) {
+    if ($this->field_info->isTranslatable()) {
       $default_langcode = language_default()->id;
       $langcode = str_replace(
         array('***CURRENT_LANGUAGE***', '***DEFAULT_LANGUAGE***'),
