@@ -36,7 +36,6 @@ class SyslogTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
 
-    $edit = array();
     // If we're on Windows, there is no configuration form.
     if (defined('LOG_LOCAL6')) {
       $this->drupalPostForm('admin/config/development/logging', array('syslog_facility' => LOG_LOCAL6), t('Save configuration'));
