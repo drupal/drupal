@@ -3,7 +3,7 @@
  * @file
  * Default theme implementation to present the source of the feed.
  *
- * The contents are rendered above feed listings when browsing source feeds.
+ * The contents are rendered below feed listings when browsing source feeds.
  * For example, "example.com/aggregator/sources/1".
  *
  * Available variables:
@@ -19,16 +19,14 @@
  * @ingroup themeable
  */
 #}
-<div{{ attributes}}>
+<div{{ attributes }}>
   {{ source_icon }}
   {{ source_image }}
-  <div class="feed-description">
-    {{ source_description }}
-  </div>
-  <div class="feed-url">
-    <em>{{ 'URL'|t }}:</em> <a href="{{ source_url }}">{{ source_url }}</a>
-  </div>
-  <div class="feed-updated">
-    <em>{{ 'Updated'|t }}:</em> {{ last_checked }}
-  </div>
+  <p class="feed-description">{{ source_description }}</p>
+  <dl class="feed-details">
+    <dt class="feed-url">{{ 'URL'|t }}</dt>
+    <dd>{{ source_url }}</dd>
+    <dt class="feed-updated">{{ 'Updated'|t }}</dt>
+    <dd>{{ last_checked }}</dd>
+  </dl>
 </div>
