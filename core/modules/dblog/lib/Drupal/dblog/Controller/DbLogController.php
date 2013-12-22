@@ -129,27 +129,27 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
       // Icon column.
       '',
       array(
-        'data' => t('Type'),
+        'data' => $this->t('Type'),
         'field' => 'w.type',
         'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
       array(
-        'data' => t('Date'),
+        'data' => $this->t('Date'),
         'field' => 'w.wid',
         'sort' => 'desc',
         'class' => array(RESPONSIVE_PRIORITY_LOW)),
-      t('Message'),
+      $this->t('Message'),
       array(
-        'data' => t('User'),
+        'data' => $this->t('User'),
         'field' => 'u.name',
         'class' => array(RESPONSIVE_PRIORITY_MEDIUM)),
       array(
-        'data' => t('Operations'),
+        'data' => $this->t('Operations'),
         'class' => array(RESPONSIVE_PRIORITY_LOW)),
     );
 
     $query = $this->database->select('watchdog', 'w')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-      ->extend('Drupal\Core\Database\Query\TableSortExtender');
+      ->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend('\Drupal\Core\Database\Query\TableSortExtender');
     $query->fields('w', array(
       'wid',
       'uid',
@@ -178,7 +178,7 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
         }
         // Message to translate with injected variables.
         else {
-          $message = t($dblog->message, unserialize($dblog->variables));
+          $message = $this->t($dblog->message, unserialize($dblog->variables));
         }
         if (isset($dblog->wid)) {
           // Truncate link_text to 56 chars of message.
@@ -194,7 +194,7 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
         'data' => array(
           // Cells.
           array('class' => array('icon')),
-          t($dblog->type),
+          $this->t($dblog->type),
           $this->date->format($dblog->timestamp, 'short'),
           $message,
           array('data' => $username),
@@ -210,7 +210,7 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
       '#header' => $header,
       '#rows' => $rows,
       '#attributes' => array('id' => 'admin-dblog', 'class' => array('admin-dblog')),
-      '#empty' => t('No log messages available.'),
+      '#empty' => $this->t('No log messages available.'),
     );
     $build['dblog_pager'] = array('#theme' => 'pager');
 
@@ -236,7 +236,7 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
       // Check for required properties.
       if (isset($dblog->message) && isset($dblog->variables)) {
         // Inject variables into the message if required.
-        $message = $dblog->variables === 'N;' ? $dblog->message : t($dblog->message, unserialize($dblog->variables));
+        $message = $dblog->variables === 'N;' ? $dblog->message : $this->t($dblog->message, unserialize($dblog->variables));
       }
       $username = array(
         '#theme' => 'username',
@@ -244,39 +244,39 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
       );
       $rows = array(
         array(
-          array('data' => t('Type'), 'header' => TRUE),
-          t($dblog->type),
+          array('data' => $this->t('Type'), 'header' => TRUE),
+          $this->t($dblog->type),
         ),
         array(
-          array('data' => t('Date'), 'header' => TRUE),
+          array('data' => $this->t('Date'), 'header' => TRUE),
           $this->date->format($dblog->timestamp, 'long'),
         ),
         array(
-          array('data' => t('User'), 'header' => TRUE),
+          array('data' => $this->t('User'), 'header' => TRUE),
           array('data' => $username),
         ),
         array(
-          array('data' => t('Location'), 'header' => TRUE),
+          array('data' => $this->t('Location'), 'header' => TRUE),
           l($dblog->location, $dblog->location),
         ),
         array(
-          array('data' => t('Referrer'), 'header' => TRUE),
+          array('data' => $this->t('Referrer'), 'header' => TRUE),
           l($dblog->referer, $dblog->referer),
         ),
         array(
-          array('data' => t('Message'), 'header' => TRUE),
+          array('data' => $this->t('Message'), 'header' => TRUE),
           $message,
         ),
         array(
-          array('data' => t('Severity'), 'header' => TRUE),
+          array('data' => $this->t('Severity'), 'header' => TRUE),
           $severity[$dblog->severity],
         ),
         array(
-          array('data' => t('Hostname'), 'header' => TRUE),
+          array('data' => $this->t('Hostname'), 'header' => TRUE),
           String::checkPlain($dblog->hostname),
         ),
         array(
-          array('data' => t('Operations'), 'header' => TRUE),
+          array('data' => $this->t('Operations'), 'header' => TRUE),
           $dblog->link,
         ),
       );
@@ -326,27 +326,68 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
   }
 
   /**
-   * @todo Remove dblog_top().
+   * Shows the most frequent log messages of a given event type.
+   *
+   * Messages are not truncated on this page because events detailed herein do
+   * not have links to a detailed view.
+   *
+   * Use one of the above *Report() methods.
+   *
+   * @param string $type
+   *   Type of database log events to display (e.g., 'search').
+   *
+   * @return array
+   *   A build array in the format expected by drupal_render().
    */
-  public function pageNotFound() {
-    module_load_include('admin.inc', 'dblog');
-    return dblog_top('page not found');
-  }
+  public function topLogMessages($type) {
+    $header = array(
+      array('data' => $this->t('Count'), 'field' => 'count', 'sort' => 'desc'),
+      array('data' => $this->t('Message'), 'field' => 'message'),
+    );
 
-  /**
-   * @todo Remove dblog_top().
-   */
-  public function accessDenied() {
-    module_load_include('admin.inc', 'dblog');
-    return dblog_top('access denied');
-  }
+    $count_query = $this->database->select('watchdog');
+    $count_query->addExpression('COUNT(DISTINCT(message))');
+    $count_query->condition('type', $type);
 
-  /**
-   * @todo Remove dblog_top().
-   */
-  public function search() {
-    module_load_include('admin.inc', 'dblog');
-    return dblog_top('search');
+    $query = $this->database->select('watchdog', 'w')
+      ->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend('\Drupal\Core\Database\Query\TableSortExtender');
+    $query->addExpression('COUNT(wid)', 'count');
+    $query = $query
+      ->fields('w', array('message', 'variables'))
+      ->condition('w.type', $type)
+      ->groupBy('message')
+      ->groupBy('variables')
+      ->limit(30)
+      ->orderByHeader($header);
+    $query->setCountQuery($count_query);
+    $result = $query->execute();
+
+    $rows = array();
+    foreach ($result as $dblog) {
+      // Check for required properties.
+      if (isset($dblog->message) && isset($dblog->variables)) {
+        // Messages without variables or user specified text.
+        if ($dblog->variables === 'N;') {
+          $message = $dblog->message;
+        }
+        // Message to translate with injected variables.
+        else {
+          $message = $this->t($dblog->message, unserialize($dblog->variables));
+        }
+      }
+      $rows[] = array($dblog->count, $message);
+    }
+
+    $build['dblog_top_table']  = array(
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#empty' => $this->t('No log messages available.'),
+    );
+    $build['dblog_top_pager'] = array('#theme' => 'pager');
+
+    return $build;
   }
 
 }
