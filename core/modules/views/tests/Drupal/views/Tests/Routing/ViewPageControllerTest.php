@@ -87,7 +87,7 @@ class ViewPageControllerTest extends UnitTestCase {
       ->with('default', array())
       ->will($this->returnValue(array('#markup' => 'example output')));
 
-    $this->executableFactory->staticExpects($this->any())
+    $this->executableFactory->expects($this->any())
       ->method('get')
       ->with($view)
       ->will($this->returnValue($executable));
@@ -131,7 +131,7 @@ class ViewPageControllerTest extends UnitTestCase {
       ->method('executeDisplay')
       ->with('page_1', array('test-argument'));
 
-    $this->executableFactory->staticExpects($this->any())
+    $this->executableFactory->expects($this->any())
       ->method('get')
       ->with($view)
       ->will($this->returnValue($executable));
@@ -177,7 +177,7 @@ class ViewPageControllerTest extends UnitTestCase {
       ->method('executeDisplay')
       ->with('page_1', array('test-argument'));
 
-    $this->executableFactory->staticExpects($this->any())
+    $this->executableFactory->expects($this->any())
       ->method('get')
       ->with($view)
       ->will($this->returnValue($executable));
@@ -227,7 +227,7 @@ class ViewPageControllerTest extends UnitTestCase {
       ->method('executeDisplay')
       ->with('page_1', array('example_id'));
 
-    $this->executableFactory->staticExpects($this->any())
+    $this->executableFactory->expects($this->any())
       ->method('get')
       ->with($view)
       ->will($this->returnValue($executable));

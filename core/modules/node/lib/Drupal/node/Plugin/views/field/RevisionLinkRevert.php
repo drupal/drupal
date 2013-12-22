@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\field;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Plugin\views\field\RevisionLink;
 use Drupal\views\ResultRow;
 
@@ -19,8 +20,11 @@ use Drupal\views\ResultRow;
  */
 class RevisionLinkRevert extends RevisionLink {
 
-  public function access() {
-    return user_access('revert revisions') || user_access('administer nodes');
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account) {
+    return $account->hasPermission('revert revisions') || $account->hasPermission('administer nodes');
   }
 
   /**

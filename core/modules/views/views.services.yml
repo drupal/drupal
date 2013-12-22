@@ -64,6 +64,7 @@ services:
     arguments: ['@views.views_data']
   views.executable:
     class: Drupal\views\ViewExecutableFactory
+    arguments: ['@current_user']
   views.analyzer:
     class: Drupal\views\Analyzer
     arguments: ['@module_handler']

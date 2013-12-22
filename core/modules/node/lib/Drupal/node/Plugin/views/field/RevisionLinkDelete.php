@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\field;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Plugin\views\field\RevisionLink;
 use Drupal\views\ResultRow;
 
@@ -19,8 +20,11 @@ use Drupal\views\ResultRow;
  */
 class RevisionLinkDelete extends RevisionLink {
 
-  public function access() {
-    return user_access('delete revisions') || user_access('administer nodes');
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account) {
+    return $account->hasPermission('delete revisions') || $account->hasPermission('administer nodes');
   }
 
   /**

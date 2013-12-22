@@ -94,8 +94,9 @@ class ViewsBlockTest extends UnitTestCase {
       ->getMock();
 
     $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')
+      ->disableOriginalConstructor()
       ->getMock();
-    $this->executableFactory->staticExpects($this->any())
+    $this->executableFactory->expects($this->any())
       ->method('get')
       ->with($this->view)
       ->will($this->returnValue($this->executable));

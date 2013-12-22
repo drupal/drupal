@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\ResultRow;
 
 /**
@@ -18,9 +19,12 @@ use Drupal\views\ResultRow;
  */
 class LinkReply extends Link {
 
-  public function access() {
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account) {
     //check for permission to reply to comments
-    return user_access('post comments');
+    return $account->hasPermission('post comments');
   }
 
   /**

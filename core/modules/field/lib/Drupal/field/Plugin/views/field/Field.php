@@ -17,6 +17,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterPluginManager;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -167,15 +168,12 @@ class Field extends FieldPluginBase {
   }
 
   /**
-   * Check whether current user has access to this handler.
-   *
-   * @return bool
-   *   Return TRUE if the user has access to view this field.
+   * {@inheritdoc}
    */
-  public function access() {
+  public function access(AccountInterface $account) {
     $base_table = $this->get_base_table();
     $access_controller = $this->entityManager->getAccessController($this->definition['entity_tables'][$base_table]);
-    return $access_controller->fieldAccess('view', $this->field_info);
+    return $access_controller->fieldAccess('view', $this->field_info, $account);
   }
 
   /**

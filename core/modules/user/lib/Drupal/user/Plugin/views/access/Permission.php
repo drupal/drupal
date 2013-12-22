@@ -33,7 +33,7 @@ class Permission extends AccessPluginBase {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    return user_access($this->options['perm'], $account) || user_access('access all views', $account);
+    return $account->hasPermission($this->options['perm']) || $account->hasPermission('access all views');
   }
 
   /**

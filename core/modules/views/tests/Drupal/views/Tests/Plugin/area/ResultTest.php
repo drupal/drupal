@@ -51,7 +51,8 @@ class ResultTest extends UnitTestCase {
       ->method('label')
       ->will($this->returnValue('ResultTest'));
 
-    $this->view = new ViewExecutable($storage);
+    $user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $this->view = new ViewExecutable($storage, $user);
 
     $this->resultHandler = new Result(array(), 'result', array());
     $this->resultHandler->view = $this->view;

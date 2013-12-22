@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -53,9 +54,11 @@ class Link extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  // An example of field level access control.
-  public function access() {
-    return user_access('administer users') || user_access('access user profiles');
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account) {
+    return $account->hasPermission('administer users') || $account->hasPermission('access user profiles');
   }
 
   public function query() {

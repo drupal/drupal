@@ -9,6 +9,7 @@ namespace Drupal\contact\Plugin\views\field;
 
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\user\Plugin\views\field\Link;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -93,7 +94,7 @@ class ContactLink extends Link {
   /**
    * {@inheritdoc}
    */
-  public function access() {
+  public function access(AccountInterface $account) {
     // The access logic is implemented per row.
     return TRUE;
   }

@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Url;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
@@ -461,14 +462,15 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Check whether current user has access to this handler.
    *
+   * @param AccountInterface $account
    * @return boolean
    */
-  public function access() {
+  public function access(AccountInterface $account) {
     if (isset($this->definition['access callback']) && function_exists($this->definition['access callback'])) {
       if (isset($this->definition['access arguments']) && is_array($this->definition['access arguments'])) {
-        return call_user_func_array($this->definition['access callback'], $this->definition['access arguments']);
+        return call_user_func_array($this->definition['access callback'], array($account) + $this->definition['access arguments']);
       }
-      return $this->definition['access callback']();
+      return $this->definition['access callback']($account);
     }
 
     return TRUE;

@@ -8,6 +8,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\views\ResultRow;
 
 /**
@@ -19,9 +20,12 @@ use Drupal\views\ResultRow;
  */
 class LinkApprove extends Link {
 
-  public function access() {
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account) {
     //needs permission to administer comments in general
-    return user_access('administer comments');
+    return $account->hasPermission('administer comments');
   }
 
   /**

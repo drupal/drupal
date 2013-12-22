@@ -114,7 +114,8 @@ class ViewListControllerTest extends UnitTestCase {
       )));
 
     $container = new ContainerBuilder();
-    $executable_factory = new ViewExecutableFactory();
+    $user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $executable_factory = new ViewExecutableFactory($user);
     $container->set('views.executable', $executable_factory);
     $container->set('plugin.manager.views.display', $display_manager);
     $container->set('string_translation', $this->getStringTranslationStub());

@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
@@ -874,6 +875,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
   /**
    * Get a full array of handlers for $type. This caches them.
+   *
+   * @return \Drupal\views\Plugin\views\HandlerBase[]
    */
   public function getHandlers($type) {
     if (!isset($this->handlers[$type])) {
@@ -2406,17 +2409,18 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * Determine if the user has access to this display of the view.
    */
-  public function access($account = NULL) {
+  public function access(AccountInterface $account = NULL) {
     if (!isset($account)) {
       $account = \Drupal::currentUser();
     }
 
     // Full override.
-    if (user_access('access all views', $account)) {
+    if ($account->hasPermission('access all views')) {
       return TRUE;
     }
 
     $plugin = $this->getPlugin('access');
+      /** @var \Drupal\views\Plugin\views\access\AccessPluginBase $plugin */
     if ($plugin) {
       return $plugin->access($account);
     }

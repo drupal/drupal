@@ -43,7 +43,8 @@ class ViewExecutableUnitTest extends UnitTestCase {
     );
 
     $storage = new View($config, 'view');
-    $view = new ViewExecutable($storage);
+    $user = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $view = new ViewExecutable($storage, $user);
 
     $expected = array(
       'test_hook__test_view',

@@ -24,7 +24,7 @@ class Language extends User {
   protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_user'])) {
       $uid = $this->getValue($values, 'uid');
-      if (user_access('access user profiles') && $uid) {
+      if ($this->view->getUser()->hasPermission('access user profiles') && $uid) {
         $this->options['alter']['make_link'] = TRUE;
         $this->options['alter']['path'] = 'user/' . $uid;
       }

@@ -33,7 +33,7 @@ class Role extends AccessPluginBase {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    return user_access('access all views', $account) || array_intersect(array_filter($this->options['role']), $account->getRoles());
+    return $account->hasPermission('access all views') || array_intersect(array_filter($this->options['role']), $account->getRoles());
   }
 
   /**

@@ -115,7 +115,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('access')
       ->will($this->returnValue(FALSE));
 
-    $this->executableFactory->staticExpects($this->once())
+    $this->executableFactory->expects($this->once())
       ->method('get')
       ->with($view)
       ->will($this->returnValue($executable));
@@ -162,7 +162,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('preview')
       ->will($this->returnValue(array('#markup' => 'View result')));
 
-    $this->executableFactory->staticExpects($this->once())
+    $this->executableFactory->expects($this->once())
       ->method('get')
       ->with($view)
       ->will($this->returnValue($executable));
