@@ -76,7 +76,6 @@ class DateTimeDatelistWidget extends WidgetBase {
     switch ($this->getFieldSetting('datetime_type')) {
       case 'date':
         $storage_format = DATETIME_DATE_STORAGE_FORMAT;
-        $type_type = 'none';
         break;
 
       default:
