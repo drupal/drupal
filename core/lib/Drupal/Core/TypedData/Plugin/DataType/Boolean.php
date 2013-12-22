@@ -24,7 +24,7 @@ use Drupal\Core\TypedData\Type\BooleanInterface;
 class Boolean extends PrimitiveBase implements BooleanInterface {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getCastedValue() {
     return (bool) $this->value;

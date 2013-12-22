@@ -24,7 +24,7 @@ use Drupal\Core\TypedData\Type\StringInterface;
 class String extends PrimitiveBase implements StringInterface {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getCastedValue() {
     return $this->getString();
