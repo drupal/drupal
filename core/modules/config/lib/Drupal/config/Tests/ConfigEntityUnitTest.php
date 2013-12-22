@@ -83,7 +83,11 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
 
     $entities = $this->storage->loadByProperties(array('style' => $style));
     $this->assertEqual(count($entities), 2, 'Two entities are loaded when the style property is specified.');
-    $this->assertEqual(reset($entities)->get('style'), $style, 'The loaded entities have the style value specified.');
+
+    // Assert that both returned entities have a matching style property.
+    foreach ($entities as $entity) {
+      $this->assertIdentical($entity->get('style'), $style, 'The loaded entity has the correct style value specified.');
+    }
   }
 
   /**
