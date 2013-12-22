@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\Core\Entity;
+use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
  * A base entity storage controller class.
@@ -176,6 +177,32 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
       $function = $module . '_' . $this->entityType . '_load';
       $function($queried_entities);
     }
+  }
+
+  /**
+   * Builds an entity query.
+   *
+   * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
+   *   EntityQuery instance.
+   * @param array $values
+   *   An associative array of properties of the entity, where the keys are the
+   *   property names and the values are the values those properties must have.
+   */
+  protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
+    foreach ($values as $name => $value) {
+      $entity_query->condition($name, $value);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadByProperties(array $values = array()) {
+    // Build a query to fetch the entity IDs.
+    $entity_query = \Drupal::entityQuery($this->entityType);
+    $this->buildPropertyQuery($entity_query, $values);
+    $result = $entity_query->execute();
+    return $result ? $this->loadMultiple($result) : array();
   }
 
 }

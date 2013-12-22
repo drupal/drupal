@@ -186,19 +186,6 @@ class ConfigStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::loadByProperties().
-   */
-  public function loadByProperties(array $values = array()) {
-    $entities = $this->loadMultiple();
-    foreach ($values as $key => $value) {
-      $entities = array_filter($entities, function($entity) use ($key, $value) {
-        return $value === $entity->get($key);
-      });
-    }
-    return $entities;
-  }
-
-  /**
    * Returns an entity query instance.
    *
    * @param string $conjunction

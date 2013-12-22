@@ -417,24 +417,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::loadByProperties().
-   */
-  public function loadByProperties(array $values = array()) {
-    // Build a query to fetch the entity IDs.
-    $entity_query = \Drupal::entityQuery($this->entityType);
-    $this->buildPropertyQuery($entity_query, $values);
-    $result = $entity_query->execute();
-    return $result ? $this->loadMultiple($result) : array();
-  }
-
-  /**
-   * Builds an entity query.
-   *
-   * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
-   *   EntityQuery instance.
-   * @param array $values
-   *   An associative array of properties of the entity, where the keys are the
-   *   property names and the values are the values those properties must have.
+   * {@inheritdoc}
    */
   protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
     if ($this->dataTable) {
@@ -452,9 +435,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       }
     }
 
-    foreach ($values as $name => $value) {
-      $entity_query->condition($name, $value);
-    }
+    parent::buildPropertyQuery($entity_query, $values);
   }
 
   /**
