@@ -149,4 +149,5 @@ class CommentStorageController extends FieldableDatabaseStorageController implem
       ->execute()
       ->fetchCol();
   }
+
 }

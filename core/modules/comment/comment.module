@@ -13,7 +13,6 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\comment\CommentInterface;
-use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\FieldInterface;
@@ -124,7 +123,7 @@ function comment_entity_bundle_info() {
 /**
  * Entity URI callback.
  */
-function comment_uri(Comment $comment) {
+function comment_uri(CommentInterface $comment) {
   return array(
     'path' => 'comment/' . $comment->id(),
     'options' => array('fragment' => 'comment-' . $comment->id()),
@@ -307,10 +306,10 @@ function comment_permission() {
 /**
  * Finds the most recent comments that are available to the current user.
  *
- * @param integer $number
+ * @param int $number
  *   (optional) The maximum number of comments to find. Defaults to 10.
  *
- * @return
+ * @return \Drupal\comment\CommentInterface[]|array
  *   An array of comment objects or an empty array if there are no recent
  *   comments visible to the current user.
  */
@@ -353,8 +352,8 @@ function comment_get_recent($number = 10) {
  * @param string $field_name
  *   The field name on the entity to which comments are attached to.
  *
- * @return
- *   "page=X" if the page number is greater than zero; empty string otherwise.
+ * @return array|NULL
+ *   An array "page=X" if the page number is greater than zero; NULL otherwise.
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
   $instance = \Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
@@ -623,7 +622,7 @@ function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NU
  *   (optional) Pager id to use in case of multiple pagers on the one page.
  *   Defaults to 0.
  *
- * @return
+ * @return int[]
  *   An array of the IDs of the comment to be displayed.
  *
  * To display threaded comments in the correct order we keep a 'thread' field
@@ -774,7 +773,7 @@ function comment_prepare_thread(&$comments) {
  *   (optional) A language code to use for rendering. Defaults to the global
  *   content language of the current request.
  *
- * @return
+ * @return array
  *   An array as expected by drupal_render().
  */
 function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode = NULL) {
@@ -793,7 +792,7 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  *   in. If no language is provided the current content language is used.
  *   Defaults to NULL.
  *
- * @return
+ * @return array
  *   An array in the format expected by drupal_render().
  *
  * @see drupal_render()
@@ -1135,7 +1134,7 @@ function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
  * @param bool $reset
  *   (optional) Whether to reset the internal static entity cache.
  *
- * @return
+ * @return \Drupal\comment\CommentInterface
  *   The comment object.
  */
 function comment_load($cid, $reset = FALSE) {
@@ -1152,10 +1151,9 @@ function comment_load($cid, $reset = FALSE) {
  * @param string $field_name
  *   (optional) The field_name to count comments for. Defaults to NULL.
  * @param $timestamp
- *   Time to count from (defaults to time of last user access
- *   to node).
+ *   Time to count from (defaults to time of last user access to node).
  *
- * @return
+ * @return int|FALSE
  *   The number of new comments or FALSE if the user is not logged in.
  */
 function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestamp = 0) {
@@ -1211,7 +1209,7 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
  * @param array $instance
  *   Field instance as returned from field_info_instance().
  *
- * @return
+ * @return int
  *   The display ordinal for the comment.
  *
  * @see comment_get_display_page()
@@ -1250,12 +1248,12 @@ function comment_get_display_ordinal($cid, $instance) {
  * Finds the correct page number for a comment taking into account display
  * and paging settings.
  *
- * @param $cid
+ * @param int $cid
  *   The comment ID.
  * @param array $instance
  *   Field instance as returned from field_info_instance().
  *
- * @return
+ * @return int
  *   The page number.
  */
 function comment_get_display_page($cid, $instance) {
@@ -1268,6 +1266,10 @@ function comment_get_display_page($cid, $instance) {
  * Generates a comment preview.
  *
  * @param \Drupal\comment\CommentInterface $comment
+ *   The comment entity to preview.
+ *
+ * @return array
+ *   An array as expected by drupal_render().
  */
 function comment_preview(CommentInterface $comment, array &$form_state) {
   $preview_build = array();
@@ -1349,7 +1351,7 @@ function comment_preprocess_block(&$variables) {
  * @param \Drupal\comment\CommentInterface $comment
  *   The comment to which the author replied.
  *
- * @return \Drupal\user\Entity\User
+ * @return \Drupal\user\UserInterface
  *   A user account, for use with theme_username() or the user_picture template.
  */
 function comment_prepare_author(CommentInterface $comment) {
