@@ -132,9 +132,13 @@ function user_js_alter(&$javascript) {
   // Provide the user ID in drupalSettings to allow JavaScript code to customize
   // the experience for the end user, rather than the server side, which would
   // break the render cache.
+  // Similarly, provide a permissions hash, so that permission-dependent data
+  // can be reliably cached on the client side.
+  $user = \Drupal::currentUser();
   $javascript['settings']['data'][] = array(
     'user' => array(
-      'uid' => \Drupal::currentUser()->id(),
+      'uid' => $user->id(),
+      'permissionsHash' => \Drupal::service('user.permissions_hash')->generate($user),
     ),
   );
 }

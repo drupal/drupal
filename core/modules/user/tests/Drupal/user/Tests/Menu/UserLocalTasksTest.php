@@ -26,7 +26,7 @@ class UserLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array('user' => 'core/modules/user/user.module');
+    $this->directoryList = array('user' => 'core/modules/user');
     parent::setUp();
   }
 

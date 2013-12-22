@@ -35,3 +35,6 @@ services:
     arguments: ['@current_user', '@config.factory', '@entity.manager']
     tags:
       - { name: theme_negotiator, priority: -40 }
+  user.permissions_hash:
+    class: Drupal\user\PermissionsHash
+    arguments: ['@private_key', '@cache.cache']

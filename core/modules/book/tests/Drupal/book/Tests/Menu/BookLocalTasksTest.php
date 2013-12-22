@@ -26,9 +26,9 @@ class BookLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array(
-      'book' => 'core/modules/book/book.module',
-      'node' => 'core/modules/node/node.module',
+    $this->directoryList = array(
+      'book' => 'core/modules/book',
+      'node' => 'core/modules/node',
     );
     parent::setUp();
   }

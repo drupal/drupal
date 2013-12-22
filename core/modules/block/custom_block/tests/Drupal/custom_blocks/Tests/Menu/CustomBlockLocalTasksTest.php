@@ -26,9 +26,9 @@ class CustomBlockLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array(
-      'block' => 'core/modules/block/block.module',
-      'custom_block' => 'core/modules/block/custom_block/custom_block.module',
+    $this->directoryList = array(
+      'block' => 'core/modules/block',
+      'custom_block' => 'core/modules/block/custom_block',
     );
     parent::setUp();
   }

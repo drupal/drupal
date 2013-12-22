@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
@@ -27,11 +26,18 @@ if (!defined('DRUPAL_ROOT')) {
 abstract class LocalTaskIntegrationTest extends UnitTestCase {
 
   /**
-   * A list of modules used for yaml searching.
+   * A list of module directories used for YAML searching.
    *
    * @var array
    */
-  protected $moduleList;
+  protected $directoryList;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $moduleHandler;
 
   protected function setUp() {
     $container = new ContainerBuilder();
@@ -49,7 +55,7 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
   /**
    * Sets up the local task manager for the test.
    */
-  protected function getLocalTaskManager($modules, $route_name, $route_params) {
+  protected function getLocalTaskManager($module_dirs, $route_name, $route_params) {
     $manager = $this
       ->getMockBuilder('Drupal\Core\Menu\LocalTaskManager')
       ->disableOriginalConstructor()
@@ -73,8 +79,11 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($manager, $accessManager);
 
-    $module_handler = new ModuleHandler($modules);
-    $pluginDiscovery = new YamlDiscovery('local_tasks', $module_handler->getModuleDirectories());
+    $this->moduleHandler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandlerInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $pluginDiscovery = new YamlDiscovery('local_tasks', $module_dirs);
     $pluginDiscovery = new ContainerDerivativeDiscoveryDecorator($pluginDiscovery);
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setAccessible(TRUE);
@@ -82,7 +91,7 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
 
     $method = new \ReflectionMethod('Drupal\Core\Menu\LocalTaskManager', 'alterInfo');
     $method->setAccessible(TRUE);
-    $method->invoke($manager, $module_handler, 'local_tasks');
+    $method->invoke($manager, $this->moduleHandler, 'local_tasks');
 
     $plugin_stub = $this->getMock('Drupal\Core\Menu\LocalTaskInterface');
     $factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
@@ -118,7 +127,12 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
    */
   protected function assertLocalTasks($route_name, $expected_tasks, $route_params = array()) {
 
-    $manager = $this->getLocalTaskManager($this->moduleList, $route_name, $route_params);
+    $directory_list = array();
+    foreach ($this->directoryList as $key => $value) {
+      $directory_list[$key] = DRUPAL_ROOT . '/' . $value;
+    }
+
+    $manager = $this->getLocalTaskManager($directory_list, $route_name, $route_params);
 
     $tmp_tasks = $manager->getLocalTasksForRoute($route_name);
 

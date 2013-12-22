@@ -17,7 +17,7 @@
  *     is not yet known whether the user has permission to edit at >=1 of them.
  */
 
-(function ($, _, Backbone, Drupal, drupalSettings) {
+(function ($, _, Backbone, Drupal, drupalSettings, JSON, storage) {
 
 "use strict";
 
@@ -68,6 +68,12 @@ Drupal.behaviors.edit = {
     // Initialize the Edit app once per page load.
     $('body').once('edit-init', initEdit);
 
+    // Find all in-place editable fields, if any.
+    var $fields = $(context).find('[data-edit-field-id]').once('edit');
+    if ($fields.length === 0) {
+      return;
+    }
+
     // Process each entity element: identical entities that appear multiple
     // times will get a numeric identifier, starting at 0.
     $(context).find('[data-edit-entity-id]').once('edit').each(function (index, entityElement) {
@@ -89,8 +95,15 @@ Drupal.behaviors.edit = {
     // immediately. New fields will be unable to be processed immediately, but
     // will instead be queued to have their metadata fetched, which occurs below
     // in fetchMissingMetaData().
-    $(context).find('[data-edit-field-id]').once('edit').each(function (index, fieldElement) {
+    $fields.each(function (index, fieldElement) {
       processField(fieldElement);
+    });
+
+    // Entities and fields on the page have been detected, try to set up the
+    // contextual links for those entities that already have the necessary meta-
+    // data in the client-side cache.
+    contextualLinksQueue = _.filter(contextualLinksQueue, function (contextualLink) {
+      return !initializeEntityContextualLink(contextualLink);
     });
 
     // Fetch metadata for any fields that are queued to retrieve it.
@@ -128,16 +141,46 @@ Drupal.edit = {
   // Per-field metadata that indicates whether in-place editing is allowed,
   // which in-place editor should be used, etc.
   metadata: {
-    has: function (fieldID) { return _.has(this.data, fieldID); },
-    add: function (fieldID, metadata) { this.data[fieldID] = metadata; },
-    get: function (fieldID, key) {
-      return (key === undefined) ? this.data[fieldID] : this.data[fieldID][key];
+    has: function (fieldID) {
+      return storage.getItem(this._prefixFieldID(fieldID)) !== null;
     },
-    intersection: function (fieldIDs) { return _.intersection(fieldIDs, _.keys(this.data)); },
-    // Contains the actual metadata, keyed by field ID.
-    data: {}
+    add: function (fieldID, metadata) {
+      storage.setItem(this._prefixFieldID(fieldID), JSON.stringify(metadata));
+    },
+    get: function (fieldID, key) {
+      var metadata = JSON.parse(storage.getItem(this._prefixFieldID(fieldID)));
+      return (key === undefined) ? metadata : metadata[key];
+    },
+    _prefixFieldID: function (fieldID) {
+      return 'Drupal.edit.metadata.' + fieldID;
+    },
+    _unprefixFieldID: function (fieldID) {
+      // Strip "Drupal.edit.metadata.", which is 21 characters long.
+      return fieldID.substring(21);
+    },
+    intersection: function (fieldIDs) {
+      var prefixedFieldIDs = _.map(fieldIDs, this._prefixFieldID);
+      var intersection = _.intersection(prefixedFieldIDs, _.keys(sessionStorage));
+      return _.map(intersection, this._unprefixFieldID);
+    }
   }
 };
+
+// Clear the Edit metadata cache whenever the current user's set of permissions
+// changes.
+var permissionsHashKey = Drupal.edit.metadata._prefixFieldID('permissionsHash');
+var permissionsHashValue = storage.getItem(permissionsHashKey);
+var permissionsHash = drupalSettings.user.permissionsHash;
+if (permissionsHashValue !== permissionsHash) {
+  if (typeof permissionsHash === 'string') {
+    _.chain(storage).keys().each(function (key) {
+      if (key.substring(0, 21) === 'Drupal.edit.metadata.') {
+        storage.removeItem(key);
+      }
+    });
+  }
+  storage.setItem(permissionsHashKey, permissionsHash);
+}
 
 /**
  * Detect contextual links on entities annotated by Edit; queue these to be
@@ -291,7 +334,7 @@ function fetchMissingMetadata (callback) {
     var fieldElementsWithoutMetadata = _.pluck(fieldsMetadataQueue, 'el');
     var entityIDs = _.uniq(_.pluck(fieldsMetadataQueue, 'entityID'), true);
     // Ensure we only request entityIDs for which we don't have metadata yet.
-    entityIDs = _.difference(entityIDs, _.keys(Drupal.edit.metadata.data));
+    entityIDs = _.difference(entityIDs, Drupal.edit.metadata.intersection(entityIDs));
     fieldsMetadataQueue = [];
 
     $.ajax({
@@ -520,4 +563,4 @@ function deleteContainedModelsAndQueues($context) {
   });
 }
 
-})(jQuery, _, Backbone, Drupal, drupalSettings);
+})(jQuery, _, Backbone, Drupal, drupalSettings, window.JSON, window.sessionStorage);

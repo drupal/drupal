@@ -26,7 +26,7 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array('block' => 'core/modules/block/block.module');
+    $this->directoryList = array('block' => 'core/modules/block');
     parent::setUp();
 
     $config_factory = $this->getConfigFactoryStub(array('system.theme' => array(

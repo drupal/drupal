@@ -26,8 +26,8 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTest {
   }
 
   public function setUp() {
-    $this->moduleList = array(
-      'locale' => 'core/modules/locale/locale.module',
+    $this->directoryList = array(
+      'locale' => 'core/modules/locale',
     );
     parent::setUp();
   }
