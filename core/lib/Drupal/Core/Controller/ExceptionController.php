@@ -12,9 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Drupal\Component\Utility\String;
-
+use Symfony\Component\Debug\Exception\FlattenException;
 use Drupal\Core\ContentNegotiation;
 
 /**
@@ -43,13 +42,13 @@ class ExceptionController extends ContainerAware {
   /**
    * Handles an exception on a request.
    *
-   * @param \Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
    *   The flattened exception.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request that generated the exception.
    *
    * @return \Symfony\Component\HttpFoundation\Response
-   *   A response object to be sent to the server.
+   *   A response object.
    */
   public function execute(FlattenException $exception, Request $request) {
     $method = 'on' . $exception->getStatusCode() . $this->negotiation->getContentType($request);
@@ -64,10 +63,13 @@ class ExceptionController extends ContainerAware {
   /**
    * Processes a MethodNotAllowed exception into an HTTP 405 response.
    *
-   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
    *   The flattened exception.
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   A response object.
    */
   public function on405Html(FlattenException $exception, Request $request) {
     return new Response('Method Not Allowed', 405);
@@ -76,10 +78,13 @@ class ExceptionController extends ContainerAware {
   /**
    * Processes an AccessDenied exception into an HTTP 403 response.
    *
-   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
    *   The flattened exception.
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   A response object.
    */
   public function on403Html(FlattenException $exception, Request $request) {
     $system_path = $request->attributes->get('_system_path');
@@ -131,10 +136,13 @@ class ExceptionController extends ContainerAware {
   /**
    * Processes a NotFound exception into an HTTP 404 response.
    *
-   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
    *   The flattened exception.
-   * @param Sonfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   A response object.
    */
   public function on404Html(FlattenException $exception, Request $request) {
     watchdog('page not found', String::checkPlain($request->attributes->get('_system_path')), NULL, WATCHDOG_WARNING);
@@ -203,10 +211,13 @@ class ExceptionController extends ContainerAware {
   /**
    * Processes a generic exception into an HTTP 500 response.
    *
-   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
    *   Metadata about the exception that was thrown.
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   A response object.
    */
   public function on500Html(FlattenException $exception, Request $request) {
     $error = $this->decodeException($exception);
@@ -271,10 +282,13 @@ class ExceptionController extends ContainerAware {
   /**
    * Processes an AccessDenied exception that occurred on a JSON request.
    *
-   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
    *   The flattened exception.
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A JSON response object.
    */
   public function on403Json(FlattenException $exception, Request $request) {
     $response = new JsonResponse();
@@ -285,10 +299,13 @@ class ExceptionController extends ContainerAware {
   /**
    * Processes a NotFound exception that occurred on a JSON request.
    *
-   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
    *   The flattened exception.
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A JSON response object.
    */
   public function on404Json(FlattenException $exception, Request $request) {
     $response = new JsonResponse();
@@ -299,10 +316,13 @@ class ExceptionController extends ContainerAware {
   /**
    * Processes a MethodNotAllowed exception that occurred on a JSON request.
    *
-   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
    *   The flattened exception.
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object that triggered this exception.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A JSON response object.
    */
   public function on405Json(FlattenException $exception, Request $request) {
     $response = new JsonResponse();
@@ -317,7 +337,12 @@ class ExceptionController extends ContainerAware {
    * @todo This should get refactored. FlattenException could use some
    *   improvement as well.
    *
+   * @param \Symfony\Component\Debug\Exception\FlattenException $exception
+   *  The flattened exception.
+   *
    * @return array
+   *   An array of string-substitution tokens for formatting a message about the
+   *   exception.
    */
   protected function decodeException(FlattenException $exception) {
     $message = $exception->getMessage();
@@ -372,7 +397,7 @@ class ExceptionController extends ContainerAware {
    * @param $backtrace
    *   A standard PHP backtrace.
    *
-   * @return
+   * @return array
    *   An associative array with keys 'file', 'line' and 'function'.
    */
   protected function getLastCaller($backtrace) {
