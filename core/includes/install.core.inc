@@ -2206,8 +2206,8 @@ function install_finished(&$install_state) {
   drupal_cron_run();
 
   // Save a snapshot of the initially installed configuration.
-  $active = drupal_container()->get('config.storage');
-  $snapshot = drupal_container()->get('config.storage.snapshot');
+  $active = \Drupal::service('config.storage');
+  $snapshot = \Drupal::service('config.storage.snapshot');
   config_import_create_snapshot($active, $snapshot);
 
   return $output;

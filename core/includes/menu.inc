@@ -3092,7 +3092,7 @@ function _menu_router_build($callbacks, $save = FALSE) {
     // if the list has changed.
     if ($path_roots != \Drupal::state()->get('menu_path_roots')) {
       \Drupal::state()->set('menu_path_roots', array_values($path_roots));
-      drupal_container()->get('path.alias_manager')->cacheClear();
+      \Drupal::service('path.alias_manager')->cacheClear();
     }
     _menu_router_save($menu, $masks);
   }

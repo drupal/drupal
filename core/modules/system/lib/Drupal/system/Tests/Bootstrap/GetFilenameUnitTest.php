@@ -33,7 +33,7 @@ class GetFilenameUnitTest extends UnitTestBase {
 
     // Assert that the test is meaningful by making sure the keyvalue service
     // does not exist.
-    $this->assertFalse(drupal_container()->has('keyvalue'), 'The container has no keyvalue service.');
+    $this->assertFalse(\Drupal::getContainer()->has('keyvalue'), 'The container has no keyvalue service.');
     // Retrieving the location of a module.
     $this->assertIdentical(drupal_get_filename('module', 'xmlrpc'), 'core/modules/xmlrpc/xmlrpc.module', 'Retrieve module location.');
 

@@ -82,8 +82,8 @@ function current_path() {
   // @todo Remove the check for whether the request service exists and the
   // fallback code below, once the path alias logic has been figured out in
   // http://drupal.org/node/1269742.
-  if (drupal_container()->isScopeActive('request')) {
-    $path = drupal_container()->get('request')->attributes->get('_system_path');
+  if (\Drupal::getContainer()->isScopeActive('request')) {
+    $path = \Drupal::request()->attributes->get('_system_path');
     if ($path !== NULL) {
       return $path;
     }
@@ -112,7 +112,7 @@ function path_load($conditions) {
   elseif (!is_array($conditions)) {
     return FALSE;
   }
-  return drupal_container()->get('path.crud')->load($conditions);
+  return \Drupal::service('path.crud')->load($conditions);
 }
 
 /**

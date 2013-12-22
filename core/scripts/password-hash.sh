@@ -83,7 +83,7 @@ $core = dirname(__DIR__);
 include_once $core . '/includes/password.inc';
 include_once $core . '/includes/bootstrap.inc';
 
-$password_hasher = drupal_container()->get('password');
+$password_hasher = \Drupal::service('password');
 
 foreach ($passwords as $password) {
   print("\npassword: $password \t\thash: ". $password_hasher->hash($password) ."\n");

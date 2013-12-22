@@ -193,8 +193,9 @@ function update_info_page() {
   // Change query-strings on css/js files to enforce reload for all users.
   _drupal_flush_css_js();
   // Flush the cache of all data for the update status module.
-  drupal_container()->get('keyvalue.expirable')->get('update')->deleteAll();
-  drupal_container()->get('keyvalue.expirable')->get('update_available_release')->deleteAll();
+  $keyvalue = \Drupal::service('keyvalue.expirable');
+  $keyvalue->get('update')->deleteAll();
+  $keyvalue->get('update_available_release')->deleteAll();
 
   update_task_list('info');
   drupal_set_title('Drupal database update');
@@ -254,7 +255,7 @@ function update_access_allowed() {
     $module_filenames['user'] = 'core/modules/user/user.module';
     $module_handler->setModuleList($module_filenames);
     $module_handler->reload();
-    drupal_container()->get('kernel')->updateModules($module_filenames, $module_filenames);
+    \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
     return user_access('administer software updates');
   }
   catch (\Exception $e) {

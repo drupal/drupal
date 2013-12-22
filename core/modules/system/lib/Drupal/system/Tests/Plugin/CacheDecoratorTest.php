@@ -47,7 +47,7 @@ class CacheDecoratorTest extends DiscoveryTestBase {
     // Use a non-db cache backend, so that we can use DiscoveryTestBase (which
     // extends UnitTestBase).
     // @todo switch to injecting the MemoryBackend http://drupal.org/node/1903346
-    drupal_container()->set("cache.$this->cacheBin", new MemoryBackend($this->cacheBin));
+    \Drupal::getContainer()->set("cache.$this->cacheBin", new MemoryBackend($this->cacheBin));
 
     // Create discovery objects to test.
     $this->emptyDiscovery = new StaticDiscovery();

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\ServiceProvider\ServiceProviderTest.
+ * Contains \Drupal\system\Tests\ServiceProvider\ServiceProviderTest.
  */
 
 namespace Drupal\system\Tests\ServiceProvider;
@@ -33,8 +33,9 @@ class ServiceProviderTest extends WebTestBase {
    * Tests that services provided by module service providers get registered to the DIC.
    */
   function testServiceProviderRegistration() {
-    $this->assertTrue(drupal_container()->getDefinition('file.usage')->getClass() == 'Drupal\\service_provider_test\\TestFileUsage', 'Class has been changed');
-    $this->assertTrue(drupal_container()->has('service_provider_test_class'), 'The service_provider_test_class service has been registered to the DIC');
+    $container = \Drupal::getContainer();
+    $this->assertTrue($container->getDefinition('file.usage')->getClass() == 'Drupal\\service_provider_test\\TestFileUsage', 'Class has been changed');
+    $this->assertTrue($container->has('service_provider_test_class'), 'The service_provider_test_class service has been registered to the DIC');
     // The event subscriber method in the test class calls drupal_set_message with
     // a message saying it has fired. This will fire on every page request so it
     // should show up on the front page.
@@ -48,11 +49,11 @@ class ServiceProviderTest extends WebTestBase {
   function testServiceProviderRegistrationDynamic() {
     // Uninstall the module and ensure the service provider's service is not registered.
     \Drupal::moduleHandler()->uninstall(array('service_provider_test'));
-    $this->assertFalse(drupal_container()->has('service_provider_test_class'), 'The service_provider_test_class service does not exist in the DIC.');
+    $this->assertFalse(\Drupal::getContainer()->has('service_provider_test_class'), 'The service_provider_test_class service does not exist in the DIC.');
 
     // Install the module and ensure the service provider's service is registered.
     \Drupal::moduleHandler()->install(array('service_provider_test'));
-    $this->assertTrue(drupal_container()->has('service_provider_test_class'), 'The service_provider_test_class service exists in the DIC.');
+    $this->assertTrue(\Drupal::getContainer()->has('service_provider_test_class'), 'The service_provider_test_class service exists in the DIC.');
   }
 
 }

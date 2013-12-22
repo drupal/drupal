@@ -2128,20 +2128,6 @@ function drupal_get_bootstrap_phase() {
 }
 
 /**
- * Retrieves the Drupal Container to standardize object construction.
- *
- * @deprecated This function has been replaced by the \Drupal class. Use that
- *   instead.
- *
- * @return Symfony\Component\DependencyInjection\ContainerInterface|bool
- *   The instance of the ContainerInterface used to set up and maintain
- *   object instances or FALSE if none exist yet.
- */
-function drupal_container() {
-  return \Drupal::getContainer();
-}
-
-/**
  * Returns the list of enabled modules.
  *
  * @deprecated as of Drupal 8.0. Use

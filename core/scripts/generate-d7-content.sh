@@ -44,7 +44,7 @@ drupal_cron_run();
 
 // Create six users
 $query = db_insert('users')->fields(array('uid', 'name', 'pass', 'mail', 'status', 'created', 'access'));
-$password_hasher = drupal_container()->get('password');
+$password_hasher = \Drupal::service('password');
 for ($i = 0; $i < 6; $i++) {
   $name = "test user $i";
   $pass = md5("test PassW0rd $i !(.)");
@@ -252,7 +252,7 @@ for ($i = 0; $i < 12; $i++) {
     'alias' => "content/poll/$i/results",
     'source' => "node/$node->nid/results",
   );
-  drupal_container()->get('path.crud')->save($path['source'], $path['alias']);
+  \Drupal::service('path.crud')->save($path['source'], $path['alias']);
 
   // Add some votes
   $node = node_load($node->nid);
