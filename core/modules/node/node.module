@@ -959,21 +959,6 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
 }
 
 /**
- * Access callback: Checks whether the user has permission to add a node.
- *
- * @return
- *   TRUE if the user has add permission, otherwise FALSE.
- *
- * @see node_menu()
- *
- * @deprecated
- *   Use \Drupal::service('access_manager')->checkNamedRoute('node.add_page');
- */
-function _node_add_access() {
-  return \Drupal::service('access_manager')->checkNamedRoute('node.add_page', array(), \Drupal::currentUser());
-}
-
-/**
  * Implements hook_menu().
  */
 function node_menu() {

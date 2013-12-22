@@ -14,37 +14,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\node\NodeInterface;
 
 /**
- * Page callback: Displays add content links for available content types.
- *
- * Redirects to node/add/[type] if only one content type is available.
- *
- * @return array
- *   A render array for a list of the node types that can be added; however, if
- *   there is only one node type defined for the site, the function redirects
- *   to the node add page for that one node type and does not return at all.
- *
- * @see node_menu()
- *
- * @deprecated Use \Drupal\node\Controller\NodeController::addPage()
- */
-function node_add_page() {
-  $content = array();
-  // Only use node types the user has access to.
-  $access_controller = Drupal::entityManager()->getAccessController('node');
-  foreach (node_type_get_types() as $type) {
-    if ($access_controller->createAccess($type->type)) {
-      $content[$type->type] = $type;
-    }
-  }
-  // Bypass the node/add listing if only one content type is available.
-  if (count($content) == 1) {
-    $type = array_shift($content);
-    return new RedirectResponse(url('node/add/' . $type->type, array('absolute' => TRUE)));
-  }
-  return array('#theme' => 'node_add_list', '#content' => $content);
-}
-
-/**
  * Returns HTML for a list of available node types for node creation.
  *
  * @param $variables
@@ -70,34 +39,6 @@ function theme_node_add_list($variables) {
     $output = '<p>' . t('You have not created any content types yet. Go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
   }
   return $output;
-}
-
-
-/**
- * Page callback: Provides the node submission form.
- *
- * @param $node_type
- *   The node type object for the submitted node.
- *
- * @return array
- *   A node submission form.
- *
- * @see node_menu()
- *
- * @deprecated Use \Drupal\node\Controller\NodeController::add()
- */
-function node_add($node_type) {
-  $user = \Drupal::currentUser();
-
-  $type = $node_type->type;
-  $langcode = module_invoke('language', 'get_default_langcode', 'node', $type);
-  $node = entity_create('node', array(
-    'uid' => $user->id(),
-    'name' => $user->getUsername(),
-    'type' => $type,
-    'langcode' => $langcode ? $langcode : language_default()->id,
-  ));
-  return \Drupal::entityManager()->getForm($node);
 }
 
 /**
