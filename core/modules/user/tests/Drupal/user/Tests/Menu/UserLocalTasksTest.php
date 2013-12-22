@@ -44,7 +44,9 @@ class UserLocalTasksTest extends LocalTaskIntegrationTest {
    */
   public function getUserAdminRoutes() {
     return array(
-      array('user.role_list', array(array('user.role_list_tab'))),
+      array('user.admin_account', array(array('user.admin_account', 'user.admin_permissions', 'user.role_list'))),
+      array('user.admin_permissions', array(array('user.admin_account', 'user.admin_permissions', 'user.role_list'))),
+      array('user.role_list', array(array('user.admin_account', 'user.admin_permissions', 'user.role_list'))),
       array('user.account_settings', array(array('user.account_settings_tab'))),
     );
   }
