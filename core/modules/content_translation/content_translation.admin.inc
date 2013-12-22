@@ -299,7 +299,7 @@ function content_translation_form_language_content_settings_submit(array $form, 
   // marked as non-translatable. Similarly, if a bundle is made non-translatable
   // all of its fields will be not translatable.
   foreach ($settings as $entity_type => &$entity_settings) {
-    foreach ($entity_settings as $bundle => &$bundle_settings) {
+    foreach ($entity_settings as &$bundle_settings) {
       if (!empty($bundle_settings['translatable'])) {
         $bundle_settings['translatable'] = $bundle_settings['translatable'] && $entity_types[$entity_type];
       }
@@ -338,7 +338,7 @@ function _content_translation_update_field_translatability($settings) {
   //   track translatability. See https://drupal.org/node/2018685.
   foreach ($settings as $entity_type => $entity_settings) {
     $fields = array();
-    foreach ($entity_settings as $bundle => $bundle_settings) {
+    foreach ($entity_settings as $bundle_settings) {
       // Collapse field settings since here we have per instance settings, but
       // translatability has per-field scope. We assume that all the field
       // instances have the same value.
