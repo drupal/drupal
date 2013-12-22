@@ -265,6 +265,16 @@ class DisplayTest extends UITestBase {
     // Test setting the link display in the UI form.
     $path = 'admin/structure/views/view/test_display/edit/block_1';
     $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
+
+    // Test the link text displays 'None' and not 'Block 1'
+    $this->drupalGet($path);
+    $result = $this->xpath("//a[contains(@href, :path)]", array(':path' => $link_display_path));
+    $this->assertEqual($result[0], t('None'), 'Make sure that the link option summary shows "None" by default.');
+
+    $this->drupalGet($link_display_path);
+    $this->assertFieldChecked('edit-link-display-0');
+
+    // Test the default radio option on the link display form.
     $this->drupalPostForm($link_display_path, array('link_display' => 'page_1'), t('Apply'));
     // The form redirects to the master display.
     $this->drupalGet($path);
@@ -272,7 +282,6 @@ class DisplayTest extends UITestBase {
     $result = $this->xpath("//a[contains(@href, :path)]", array(':path' => $link_display_path));
     $this->assertEqual($result[0], 'Page', 'Make sure that the link option summary shows the right linked display.');
 
-    $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
     $this->drupalPostForm($link_display_path, array('link_display' => 'custom_url', 'link_url' => 'a-custom-url'), t('Apply'));
     // The form redirects to the master display.
     $this->drupalGet($path);

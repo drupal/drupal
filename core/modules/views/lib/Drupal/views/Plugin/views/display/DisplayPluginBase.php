@@ -1298,10 +1298,20 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     if ($this->usesLinkDisplay()) {
-      $display_id = $this->getLinkDisplay();
-      $displays = $this->view->storage->get('display');
-      $link_display = empty($displays[$display_id]) ? t('None') : check_plain($displays[$display_id]['display_title']);
-      $link_display = $this->getOption('link_display') == 'custom_url' ? t('Custom URL') : $link_display;
+      $link_display_option = $this->getOption('link_display');
+      $link_display = $this->t('None');
+
+      if ($link_display_option == 'custom_url') {
+        $link_display = $this->t('Custom URL');
+      }
+      elseif (!empty($link_display_option)) {
+        $display_id = $this->getLinkDisplay();
+        $displays = $this->view->storage->get('display');
+        if (!empty($displays[$display_id])) {
+          $link_display = String::checkPlain($displays[$display_id]['display_title']);
+        }
+      }
+
       $options['link_display'] = array(
         'category' => 'pager',
         'title' => t('Link display'),
@@ -1708,21 +1718,20 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'link_display':
         $form['#title'] .= t('Which display to use for path');
+        $options = array(FALSE => $this->t('None'), 'custom_url' => $this->t('Custom URL'));
+
         foreach ($this->view->storage->get('display') as $display_id => $display) {
           if ($this->view->displayHandlers->get($display_id)->hasPath()) {
             $options[$display_id] = $display['display_title'];
           }
         }
-        $options['custom_url'] = t('Custom URL');
-        if (count($options)) {
-          $form['link_display'] = array(
-            '#title' => t('Custom URL'),
-            '#type' => 'radios',
-            '#options' => $options,
-            '#description' => t("Which display to use to get this display's path for things like summary links, rss feed links, more links, etc."),
-            '#default_value' => $this->getOption('link_display'),
-          );
-        }
+
+        $form['link_display'] = array(
+          '#type' => 'radios',
+          '#options' => $options,
+          '#description' => t("Which display to use to get this display's path for things like summary links, rss feed links, more links, etc."),
+          '#default_value' => $this->getOption('link_display'),
+        );
 
         $options = array();
         $count = 0; // This lets us prepare the key as we want it printed.
