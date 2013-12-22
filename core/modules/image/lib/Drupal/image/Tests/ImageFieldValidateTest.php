@@ -49,9 +49,9 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
         break;
       }
     }
-    $nid = $this->uploadNodeImage($image_that_is_too_small, $field_name, 'article');
+    $this->uploadNodeImage($image_that_is_too_small, $field_name, 'article');
     $this->assertText(t('The specified file ' . $image_that_is_too_small->filename . ' could not be uploaded. The image is too small; the minimum dimensions are 50x50 pixels.'), 'Node save failed when minimum image resolution was not met.');
-    $nid = $this->uploadNodeImage($image_that_is_too_big, $field_name, 'article');
+    $this->uploadNodeImage($image_that_is_too_big, $field_name, 'article');
     $this->assertText(t('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.'), 'Image exceeding max resolution was properly resized.');
   }
 
@@ -70,7 +70,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $images = $this->drupalGetTestFiles('image');
     // Let's just use the first image.
     $image = $images[0];
-    $nid = $this->uploadNodeImage($image, $field_name, 'article');
+    $this->uploadNodeImage($image, $field_name, 'article');
     $this->assertText(t('The field Alternate text is required'), 'Node save failed when alt text required was set and alt text was left empty.');
     $this->assertText(t('The field Title is required'), 'Node save failed when title text required was set and title text was left empty.');
   }
