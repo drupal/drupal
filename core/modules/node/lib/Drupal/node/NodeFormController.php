@@ -388,7 +388,6 @@ class NodeFormController extends ContentEntityFormController {
     // @todo Remove this: we should not have explicit includes in autoloaded
     //   classes.
     module_load_include('inc', 'node', 'node.pages');
-    drupal_set_title(t('Preview'), PASS_THROUGH);
     $form_state['node_preview'] = node_preview($this->entity, $form_state);
     $form_state['rebuild'] = TRUE;
   }
