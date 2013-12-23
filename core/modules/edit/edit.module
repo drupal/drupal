@@ -36,6 +36,12 @@ function edit_page_build(&$page) {
     return;
   }
 
+  // In-place editing is only supported on the front-end.
+  $path = \Drupal::request()->attributes->get('_system_path');
+  if (path_is_admin($path)) {
+    return;
+  }
+
   $page['#attached']['library'][] = array('edit', 'edit');
 }
 
