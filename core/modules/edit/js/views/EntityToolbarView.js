@@ -13,9 +13,9 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
 
   events: function () {
     var map = {
-      'click.edit button.action-save': 'onClickSave',
-      'click.edit button.action-cancel': 'onClickCancel',
-      'mouseenter.edit': 'onMouseenter'
+      'click button.action-save': 'onClickSave',
+      'click button.action-cancel': 'onClickCancel',
+      'mouseenter': 'onMouseenter'
     };
     return map;
   },
@@ -117,7 +117,15 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
    * {@inheritdoc}
    */
   remove: function () {
+    // Remove additional DOM elements controlled by this View.
     this.$fence.remove();
+
+    // Stop listening to additional events.
+    this.appModel.off(null, null, this);
+    this.model.get('fields').off(null, null, this);
+    $(window).off('resize.edit scroll.edit');
+    $(document).off('drupalViewportOffsetChange.edit');
+
     Backbone.View.prototype.remove.call(this);
   },
 

@@ -35,7 +35,7 @@ Drupal.edit.ContextualLinkView = Backbone.View.extend({
    */
   initialize: function (options) {
     // Insert the text of the quick edit toggle.
-    this.$el.find('a').text(this.options.strings.quickEdit);
+    this.$el.find('a').text(options.strings.quickEdit);
     // Initial render.
     this.render();
     // Re-render whenever this entity's isActive attribute changes.

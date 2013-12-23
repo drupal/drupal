@@ -436,31 +436,48 @@ Drupal.edit.AppView = Backbone.View.extend({
     var $fieldWrapper = $(fieldModel.get('el'));
     var $context = $fieldWrapper.parent();
 
+    var renderField = function () {
+      // Destroy the field model; this will cause all attached views to be
+      // destroyed too, and removal from all collections in which it exists.
+      fieldModel.destroy();
+
+      // Replace the old content with the new content.
+      $fieldWrapper.replaceWith(html);
+
+      // Attach behaviors again to the modified piece of HTML; this will
+      // create a new field model and call rerenderedFieldToCandidate() with
+      // it.
+      Drupal.attachBehaviors($context);
+    };
+
     // When propagating the changes of another instance of this field, this
     // field is not being actively edited and hence no state changes are
     // necessary. So: only update the state of this field when the rerendering
-    // of this field happens not because of propagation, but because it is being
-    // edited itself.
+    // of this field happens not because of propagation, but because it is
+    // being edited itself.
     if (!options.propagation) {
-      // First set the state to 'candidate', to allow all attached views to
-      // clean up all their "active state"-related changes.
-      fieldModel.set('state', 'candidate');
+      // Deferred because renderUpdatedField is reacting to a field model change
+      // event, and we want to make sure that event fully propagates before
+      // making another change to the same model.
+      _.defer(function () {
+        // First set the state to 'candidate', to allow all attached views to
+        // clean up all their "active state"-related changes.
+        fieldModel.set('state', 'candidate');
 
-      // Set the field's state to 'inactive', to enable the updating of its DOM
-      // value.
-      fieldModel.set('state', 'inactive', { reason: 'rerender' });
+        // Similarly, the above .set() call's change event must fully propagate
+        // before calling it again.
+        _.defer(function () {
+          // Set the field's state to 'inactive', to enable the updating of its
+          // DOM value.
+          fieldModel.set('state', 'inactive', { reason: 'rerender' });
+
+          renderField();
+        });
+      });
     }
-
-    // Destroy the field model; this will cause all attached views to be
-    // destroyed too, and removal from all collections in which it exists.
-    fieldModel.destroy();
-
-    // Replace the old content with the new content.
-    $fieldWrapper.replaceWith(html);
-
-    // Attach behaviors again to the modified piece of HTML; this will create
-    // a new field model and call rerenderedFieldToCandidate() with it.
-    Drupal.attachBehaviors($context);
+    else {
+      renderField();
+    }
   },
 
   /**

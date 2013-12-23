@@ -183,7 +183,9 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
       fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
       // Finally, set the 'html' attribute on the field model. This will cause
       // the field to be rerendered.
-      fieldModel.set('html', response.data);
+      _.defer(function () {
+        fieldModel.set('html', response.data);
+      });
     };
 
     // Unsuccessfully saved; validation errors.

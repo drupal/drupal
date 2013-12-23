@@ -82,7 +82,7 @@ Drupal.edit.FieldModel = Backbone.Model.extend({
     if (this.get('state') !== 'inactive') {
       throw new Error("FieldModel cannot be destroyed if it is not inactive state.");
     }
-    Backbone.Model.prototype.destroy.apply(this, options);
+    Backbone.Model.prototype.destroy.call(this, options);
   },
 
   /**
@@ -97,11 +97,6 @@ Drupal.edit.FieldModel = Backbone.Model.extend({
    * {@inheritdoc}
    */
   validate: function (attrs, options) {
-    // We only care about validating the 'state' attribute.
-    if (!_.has(attrs, 'state')) {
-      return;
-    }
-
     var current = this.get('state');
     var next = attrs.state;
     if (current !== next) {
