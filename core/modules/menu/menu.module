@@ -563,7 +563,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
     '#title' => t('Weight'),
     '#delta' => $delta,
     '#default_value' => $link['weight'],
-    '#description' => t('Menu links with smaller weights are displayed before links with larger weights.'),
+    '#description' => t('Menu links with lower weights are displayed before links with higher weights.'),
   );
 }
 
