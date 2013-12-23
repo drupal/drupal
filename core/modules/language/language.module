@@ -91,7 +91,7 @@ function language_menu() {
  * @deprecated Use \Drupal\language\LanguageAccessController instead.
  */
 function language_access_language_edit_or_delete($language) {
-  return !$language->locked && user_access('administer languages');
+  return !$language->locked && \Drupal::currentUser()->hasPermission('administer languages');
 }
 
 /**
