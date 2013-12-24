@@ -12,8 +12,6 @@ use Drupal\Core\Field\ConfigFieldItemInterface;
 use Drupal\field\FieldInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Plugin implementation of the 'term_reference' field type.
@@ -45,7 +43,7 @@ class TaxonomyTermReferenceItem extends ConfigEntityReferenceItemBase implements
   public function getPossibleValues(AccountInterface $account = NULL) {
     // Flatten options firstly, because Possible Options may contain group
     // arrays.
-    $flatten_options = $this->flattenOptions($this->getPossibleOptions($account));
+    $flatten_options = \Drupal::formBuilder()->flattenOptions($this->getPossibleOptions($account));
     return array_keys($flatten_options);
   }
 
@@ -60,9 +58,9 @@ class TaxonomyTermReferenceItem extends ConfigEntityReferenceItemBase implements
    * {@inheritdoc}
    */
   public function getSettableValues(AccountInterface $account = NULL) {
-   // Flatten options firstly, because Settable Options may contain group
-   // arrays.
-    $flatten_options = $this->flattenOptions($this->getSettableOptions($account));
+    // Flatten options firstly, because Settable Options may contain group
+    // arrays.
+    $flatten_options = \Drupal::formBuilder()->flattenOptions($this->getSettableOptions($account));
     return array_keys($flatten_options);
   }
 
@@ -70,10 +68,22 @@ class TaxonomyTermReferenceItem extends ConfigEntityReferenceItemBase implements
    * {@inheritdoc}
    */
   public function getSettableOptions(AccountInterface $account = NULL) {
-    $instance = $this->getFieldDefinition();
-    $entity = $this->getParent()->getParent();
-    $function = $this->getFieldSetting('options_list_callback') ? $this->getFieldSetting('options_list_callback') : array($this, 'getDefaultOptions');
-    return call_user_func_array($function, array($instance, $entity));
+    if ($callback = $this->getFieldSetting('options_list_callback')) {
+      return call_user_func_array($callback, array($this->getFieldDefinition(), $this->getEntity()));
+    }
+    else {
+      $options = array();
+      foreach ($this->getFieldSetting('allowed_values') as $tree) {
+        if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
+          if ($terms = taxonomy_get_tree($vocabulary->id(), $tree['parent'], NULL, TRUE)) {
+            foreach ($terms as $term) {
+              $options[$term->id()] = str_repeat('-', $term->depth) . $term->label();
+            }
+          }
+        }
+      }
+      return $options;
+    }
   }
 
   /**
@@ -112,18 +122,16 @@ class TaxonomyTermReferenceItem extends ConfigEntityReferenceItemBase implements
    * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state, $has_data) {
-    // Get proper values for 'allowed_values_function', which is a core setting.
     $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $options = array();
     foreach ($vocabularies as $vocabulary) {
       $options[$vocabulary->id()] = $vocabulary->name;
     }
 
-    $settings = $this->getFieldSettings();
     $element = array();
     $element['#tree'] = TRUE;
 
-    foreach ($settings['allowed_values'] as $delta => $tree) {
+    foreach ($this->getFieldSetting('allowed_values') as $delta => $tree) {
       $element['allowed_values'][$delta]['vocabulary'] = array(
         '#type' => 'select',
         '#title' => t('Vocabulary'),
@@ -147,53 +155,6 @@ class TaxonomyTermReferenceItem extends ConfigEntityReferenceItemBase implements
    */
   public function instanceSettingsForm(array $form, array &$form_state) {
     return array();
-  }
-
-  /**
-  * Flattens an array of allowed values.
-  *
-  * @todo Define this function somewhere else, so we don't have to redefine it
-  *   when other field type classes, e.g. list option, need it too.
-  *   https://drupal.org/node/2138803
-  *
-  * @param array $array
-  *   A single or multidimensional array.
-  *
-  * @return array
-  *   The flattened array.
-  */
-  protected function flattenOptions(array $array) {
-    $result = array();
-    array_walk_recursive($array, function($a, $b) use (&$result) { $result[$b] = $a; });
-    return $result;
-  }
-
-  /**
-   * Returns default set of valid terms for a taxonomy field.
-   *
-   * Contrib code could make use of field setting's "options_list_callback" to
-   * provide custom options for taxonomy term reference field.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object the field is attached to.
-   *
-   * @return array
-   *   The array of valid terms for this field, keyed by term id.
-   */
-  public function getDefaultOptions(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
-    $options = array();
-    foreach ($field_definition->getSetting('allowed_values') as $tree) {
-      if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
-        if ($terms = taxonomy_get_tree($vocabulary->id(), $tree['parent'], NULL, TRUE)) {
-          foreach ($terms as $term) {
-            $options[$term->id()] = str_repeat('-', $term->depth) . $term->label();
-          }
-        }
-      }
-    }
-    return $options;
   }
 
 }
