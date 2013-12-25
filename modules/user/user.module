@@ -2122,7 +2122,7 @@ function user_login_default_validators() {
  * A FAPI validate handler. Sets an error if supplied username has been blocked.
  */
 function user_login_name_validate($form, &$form_state) {
-  if (isset($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
+  if (!empty($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
     // Blocked in user administration.
     form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
   }
