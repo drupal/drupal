@@ -484,7 +484,7 @@ function rdf_preprocess_node(&$variables) {
     $element = array(
       '#tag' => 'meta',
       '#attributes' => array(
-        'content' => $variables['title'],
+        'content' => $variables['node']->title,
         'about' => $variables['node_url'],
       ),
     );
