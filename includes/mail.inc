@@ -339,13 +339,13 @@ interface MailSystemInterface {
  *
  * We deliberately use LF rather than CRLF, see drupal_mail().
  *
- * @param $text
+ * @param string $text
  *   The plain text to process.
- * @param $indent (optional)
+ * @param string $indent (optional)
  *   A string to indent the text with. Only '>' characters are repeated on
  *   subsequent wrapped lines. Others are replaced by spaces.
  *
- * @return
+ * @return string
  *   The content of the email as a string with formatting applied.
  */
 function drupal_wrap_mail($text, $indent = '') {
@@ -356,8 +356,9 @@ function drupal_wrap_mail($text, $indent = '') {
   $soft = strpos($clean_indent, ' ') === FALSE;
   // Check if the string has line breaks.
   if (strpos($text, "\n") !== FALSE) {
-    // Remove trailing spaces to make existing breaks hard.
-    $text = preg_replace('/ +\n/m', "\n", $text);
+    // Remove trailing spaces to make existing breaks hard, but leave signature
+    // marker untouched (RFC 3676, Section 4.3).
+    $text = preg_replace('/(?(?<!^--) +\n|  +\n)/m', "\n", $text);
     // Wrap each line at the needed width.
     $lines = explode("\n", $text);
     array_walk($lines, '_drupal_wrap_mail_line', array('soft' => $soft, 'length' => strlen($indent)));
