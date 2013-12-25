@@ -3833,7 +3833,14 @@ function drupal_clean_css_identifier($identifier, $filter = array(' ' => '-', '_
  *   The cleaned class name.
  */
 function drupal_html_class($class) {
-  return drupal_clean_css_identifier(drupal_strtolower($class));
+  // The output of this function will never change, so this uses a normal
+  // static instead of drupal_static().
+  static $classes = array();
+
+  if (!isset($classes[$class])) {
+    $classes[$class] = drupal_clean_css_identifier(drupal_strtolower($class));
+  }
+  return $classes[$class];
 }
 
 /**
