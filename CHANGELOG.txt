@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Added a link to the drupal.org documentation page for cron to the Cron
+  settings page (string change).
 - Added a 'drupal_anonymous_user_object' variable to allow the anonymous user
   object returned by drupal_anonymous_user() to be overridden with a classed
   object (API addition).
