@@ -2149,7 +2149,7 @@ function drupal_array_merge_deep_array($arrays) {
  * @return Object - the user object.
  */
 function drupal_anonymous_user() {
-  $user = new stdClass();
+  $user = variable_get('drupal_anonymous_user_object', new stdClass);
   $user->uid = 0;
   $user->hostname = ip_address();
   $user->roles = array();

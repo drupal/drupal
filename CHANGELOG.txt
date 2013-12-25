@@ -1,6 +1,9 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Added a 'drupal_anonymous_user_object' variable to allow the anonymous user
+  object returned by drupal_anonymous_user() to be overridden with a classed
+  object (API addition).
 - Changed the database API to allow inserts based on a SELECT * query to work
   correctly.
 - Changed the database schema of the {file_managed} table to allow Drupal to
