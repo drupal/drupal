@@ -687,6 +687,31 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests removing charset when rendering stylesheets with preprocessing on.
+   */
+  function testRenderRemoveCharsetPreprocess() {
+    $cases = array(
+      array(
+        'asset' => '@charset "UTF-8";html{font-family:"sans-serif";}',
+        'expected' => 'html{font-family:"sans-serif";}',
+      ),
+      // This asset contains extra \n character.
+      array(
+        'asset' => "@charset 'UTF-8';\nhtml{font-family:'sans-serif';}",
+        'expected' => "\nhtml{font-family:'sans-serif';}",
+      ),
+    );
+
+    foreach ($cases as $case) {
+      $this->assertEqual(
+        $case['expected'],
+        drupal_load_stylesheet_content($case['asset']),
+        'CSS optimizing correctly removes the charset declaration.'
+      );
+    }
+  }
+
+  /**
    * Tests rendering inline stylesheets with preprocessing off.
    */
   function testRenderInlineNoPreprocess() {

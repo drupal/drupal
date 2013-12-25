@@ -3700,7 +3700,7 @@ function drupal_load_stylesheet($file, $optimize = NULL, $reset_basepath = TRUE)
  */
 function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
   // Remove multiple charset declarations for standards compliance (and fixing Safari problems).
-  $contents = preg_replace('/^@charset\s+[\'"](\S*)\b[\'"];/i', '', $contents);
+  $contents = preg_replace('/^@charset\s+[\'"](\S*?)\b[\'"];/i', '', $contents);
 
   if ($optimize) {
     // Perform some safe CSS optimizations.
