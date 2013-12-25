@@ -41,7 +41,8 @@ class InsertQuery_sqlite extends InsertQuery {
     // If we're selecting from a SelectQuery, finish building the query and
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
-      return $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $this->insertFields) . ') ' . $this->fromQuery;
+      $insert_fields_string = $this->insertFields ? ' (' . implode(', ', $this->insertFields) . ') ' : ' ';
+      return $comments . 'INSERT INTO {' . $this->table . '}' . $insert_fields_string . $this->fromQuery;
     }
 
     return $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $this->insertFields) . ') VALUES (' . implode(', ', $placeholders) . ')';

@@ -23,6 +23,7 @@ class DatabaseTestCase extends DrupalWebTestCase {
 
     $schema['test'] = drupal_get_schema('test');
     $schema['test_people'] = drupal_get_schema('test_people');
+    $schema['test_people_copy'] = drupal_get_schema('test_people_copy');
     $schema['test_one_blob'] = drupal_get_schema('test_one_blob');
     $schema['test_two_blobs'] = drupal_get_schema('test_two_blobs');
     $schema['test_task'] = drupal_get_schema('test_task');
@@ -603,9 +604,9 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Test that the INSERT INTO ... SELECT ... syntax works.
+   * Test that the INSERT INTO ... SELECT (fields) ... syntax works.
    */
-  function testInsertSelect() {
+  function testInsertSelectFields() {
     $query = db_select('test_people', 'tp');
     // The query builder will always append expressions after fields.
     // Add the expression first to test that the insert fields are correctly
@@ -625,6 +626,27 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
       ->execute();
 
     $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Meredith'))->fetchField();
+    $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
+  }
+
+  /**
+   * Tests that the INSERT INTO ... SELECT * ... syntax works.
+   */
+  function testInsertSelectAll() {
+    $query = db_select('test_people', 'tp')
+      ->fields('tp')
+      ->condition('tp.name', 'Meredith');
+
+    // The resulting query should be equivalent to:
+    // INSERT INTO test_people_copy
+    // SELECT *
+    // FROM test_people tp
+    // WHERE tp.name = 'Meredith'
+    db_insert('test_people_copy')
+      ->from($query)
+      ->execute();
+
+    $saved_age = db_query('SELECT age FROM {test_people_copy} WHERE name = :name', array(':name' => 'Meredith'))->fetchField();
     $this->assertIdentical($saved_age, '30', 'Can retrieve after inserting.');
   }
 }

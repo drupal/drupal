@@ -87,6 +87,9 @@ function database_test_schema() {
     ),
   );
 
+  $schema['test_people_copy'] = $schema['test_people'];
+  $schema['test_people_copy']['description'] = 'A duplicate version of the test_people table, used for additional tests.';
+
   $schema['test_one_blob'] = array(
     'description' => 'A simple table including a BLOB field for testing BLOB behavior.',
     'fields' => array(

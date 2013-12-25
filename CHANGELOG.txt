@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Changed the database API to allow inserts based on a SELECT * query to work
+  correctly.
 - Changed the database schema of the {file_managed} table to allow Drupal to
   manage files larger than 4 GB.
 - Changed the File module's hook_field_load() implementation to prevent file

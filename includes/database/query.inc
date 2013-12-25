@@ -710,10 +710,11 @@ class InsertQuery extends Query {
       // first call to fields() does have an effect.
       $this->fields(array_merge(array_keys($this->fromQuery->getFields()), array_keys($this->fromQuery->getExpressions())));
     }
-
-    // Don't execute query without fields.
-    if (count($this->insertFields) + count($this->defaultFields) == 0) {
-      throw new NoFieldsException('There are no fields available to insert with.');
+    else {
+      // Don't execute query without fields.
+      if (count($this->insertFields) + count($this->defaultFields) == 0) {
+        throw new NoFieldsException('There are no fields available to insert with.');
+      }
     }
 
     // If no values have been added, silently ignore this query. This can happen
