@@ -858,6 +858,7 @@ function system_schema() {
       'filesize' => array(
         'description' => 'The size of the file in bytes.',
         'type' => 'int',
+        'size' => 'big',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
@@ -3132,6 +3133,21 @@ function system_update_7078() {
     'not null' => TRUE,
     'binary' => TRUE,
   ), array('unique keys' => array('formats' => array('format', 'type'))));
+}
+
+/*
+ * Convert the 'filesize' column in {file_managed} to a bigint.
+ */
+function system_update_7079() {
+  $spec = array(
+    'description' => 'The size of the file in bytes.',
+    'type' => 'int',
+    'size' => 'big',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  );
+  db_change_field('file_managed', 'filesize', 'filesize', $spec);
 }
 
 /**

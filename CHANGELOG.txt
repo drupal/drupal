@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Changed the database schema of the {file_managed} table to allow Drupal to
+  manage files larger than 4 GB.
 - Changed the File module's hook_field_load() implementation to prevent file
   entity properties which have the same name as file or image field properties
   from overwriting the field properties (minor API change).
