@@ -152,6 +152,11 @@ class FileWidget extends WidgetBase {
       $elements['#field_name'] = $element['#field_name'];
       $elements['#language'] = $element['#language'];
       $elements['#display_field'] = (bool) $this->getFieldSetting('display_field');
+      // The field settings include defaults for the field type. However, this
+      // widget is a base class for other widgets (e.g., ImageWidget) that may
+      // act on field types without these expected settings.
+      $field_settings = $this->getFieldSettings() + array('display_field' => NULL);
+      $elements['#display_field'] = (bool) $field_settings['display_field'];
 
       // Add some properties that will eventually be added to the file upload
       // field. These are added here so that they may be referenced easily

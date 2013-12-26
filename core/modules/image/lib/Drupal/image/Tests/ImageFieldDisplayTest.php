@@ -7,6 +7,8 @@
 
 namespace Drupal\image\Tests;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+
 /**
  * Test class to check that formatters and display settings are working.
  */
@@ -221,6 +223,19 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '%max' => $schema['columns']['title']['length'],
       '%length' => $test_size,
     )));
+
+    // Set cardinality to unlimited and add upload a second image.
+    // The image widget is extending on the file widget, but the image field
+    // type does not have the 'display_field' setting which is expected by
+    // the file widget. This resulted in notices before when cardinality is not
+    // 1, so we need to make sure the file widget prevents these notices by
+    // providing all settings, even if they are not used.
+    // @see FileWidget::formMultipleElements().
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/field', array('field[cardinality]' => FieldDefinitionInterface::CARDINALITY_UNLIMITED), t('Save field settings'));
+    $edit = array();
+    $edit['files[' . $field_name . '_1][]'] = drupal_realpath($test_image->uri);
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->assertText(format_string('Article @title has been updated.', array('@title' => $node->getTitle())));
   }
 
   /**

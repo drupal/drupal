@@ -81,6 +81,7 @@ class ImageWidget extends FileWidget {
     $cardinality = $this->fieldDefinition->getCardinality();
     $file_upload_help = array(
       '#theme' => 'file_upload_help',
+      '#description' => '',
       '#upload_validators' => $elements[0]['#upload_validators'],
       '#cardinality' => $cardinality,
     );
@@ -92,7 +93,7 @@ class ImageWidget extends FileWidget {
       }
     }
     else {
-      $elements['#file_upload_description'] = drupal_render($file_upload_help);
+      $elements['#file_upload_description'] = $file_upload_help;
     }
 
     return $elements;
