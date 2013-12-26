@@ -366,8 +366,8 @@ class Drupal {
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
-  public static function typedData() {
-    return static::$container->get('typed_data');
+  public static function typedDataManager() {
+    return static::$container->get('typed_data_manager');
   }
 
   /**

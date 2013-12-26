@@ -46,7 +46,7 @@ class FieldEditForm extends FormBase {
    *
    * @var \Drupal\Core\TypedData\TypedDataManager
    */
-  protected $typedData;
+  protected $typedDataManager;
 
   /**
    * {@inheritdoc}
@@ -62,13 +62,13 @@ class FieldEditForm extends FormBase {
    *   The entity manager.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
-   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data
+   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data_manager
    *   The typed data manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldInfo $field_info, TypedDataManager $typed_data) {
+  public function __construct(EntityManagerInterface $entity_manager, FieldInfo $field_info, TypedDataManager $typed_data_manager) {
     $this->entityManager = $entity_manager;
     $this->fieldInfo = $field_info;
-    $this->typedData = $typed_data;
+    $this->typedDataManager = $typed_data_manager;
   }
 
   /**
@@ -78,7 +78,7 @@ class FieldEditForm extends FormBase {
     return new static(
       $container->get('entity.manager'),
       $container->get('field.info'),
-      $container->get('typed_data')
+      $container->get('typed_data_manager')
     );
   }
 

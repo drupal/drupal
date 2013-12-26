@@ -193,7 +193,7 @@ class FilterAPITest extends EntityUnitTestBase {
    */
   function testTypedDataAPI() {
     $definition = DataDefinition::create('filter_format');
-    $data = \Drupal::typedData()->create($definition);
+    $data = \Drupal::typedDataManager()->create($definition);
 
     $this->assertTrue($data instanceof AllowedValuesInterface, 'Typed data object implements \Drupal\Core\TypedData\AllowedValuesInterface');
 

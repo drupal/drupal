@@ -62,14 +62,14 @@ class ListNormalizerTest extends UnitTestCase {
       ->method('getPropertyInstance')
       ->will($this->returnValue($typed_data));
 
-    // Set up a mock container as ItemList() will call for the 'typed_data'
+    // Set up a mock container as ItemList() will call for the 'typed_data_manager'
     // service.
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
       ->setMethods(array('get'))
       ->getMock();
     $container->expects($this->any())
       ->method('get')
-      ->with($this->equalTo('typed_data'))
+      ->with($this->equalTo('typed_data_manager'))
       ->will($this->returnValue($typed_data_manager));
 
     \Drupal::setContainer($container);

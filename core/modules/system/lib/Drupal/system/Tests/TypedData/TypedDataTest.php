@@ -23,7 +23,7 @@ class TypedDataTest extends DrupalUnitTestBase {
    *
    * @var \Drupal\Core\TypedData\TypedDataManager
    */
-  protected $typedData;
+  protected $typedDataManager;
 
   /**
    * Modules to enable.
@@ -44,7 +44,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     parent::setup();
 
     $this->installSchema('file', array('file_managed', "file_usage"));
-    $this->typedData = $this->container->get('typed_data');
+    $this->typedDataManager = $this->container->get('typed_data_manager');
   }
 
   /**
@@ -56,7 +56,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     if (is_array($definition)) {
       $definition = DataDefinition::create($definition['type']);
     }
-    $data = $this->typedData->create($definition, $value, $name);
+    $data = $this->typedDataManager->create($definition, $value, $name);
     $this->assertTrue($data instanceof \Drupal\Core\TypedData\TypedDataInterface, 'Typed data object is an instance of the typed data interface.');
     return $data;
   }
@@ -507,10 +507,10 @@ class TypedDataTest extends DrupalUnitTestBase {
       ->setConstraints(array(
         'Range' => array('min' => 5),
       ));
-    $violations = $this->typedData->create($definition, 10)->validate();
+    $violations = $this->typedDataManager->create($definition, 10)->validate();
     $this->assertEqual($violations->count(), 0);
 
-    $integer = $this->typedData->create($definition, 1);
+    $integer = $this->typedDataManager->create($definition, 1);
     $violations = $integer->validate();
     $this->assertEqual($violations->count(), 1);
 
@@ -525,7 +525,7 @@ class TypedDataTest extends DrupalUnitTestBase {
       ->setConstraints(array(
         'Length' => array('min' => 10),
       ));
-    $violations = $this->typedData->create($definition, "short")->validate();
+    $violations = $this->typedDataManager->create($definition, "short")->validate();
     $this->assertEqual($violations->count(), 1);
     $message = t('This value is too short. It should have %limit characters or more.', array('%limit' => 10));
     $this->assertEqual($violations[0]->getMessage(), $message, 'Translated violation message retrieved.');
@@ -536,46 +536,46 @@ class TypedDataTest extends DrupalUnitTestBase {
         'Range' => array('min' => 5),
         'Null' => array(),
       ));
-    $violations = $this->typedData->create($definition, 10)->validate();
+    $violations = $this->typedDataManager->create($definition, 10)->validate();
     $this->assertEqual($violations->count(), 1);
-    $violations = $this->typedData->create($definition, 1)->validate();
+    $violations = $this->typedDataManager->create($definition, 1)->validate();
     $this->assertEqual($violations->count(), 2);
 
     // Test validating property containers and make sure the NotNull and Null
     // constraints work with typed data containers.
     $definition = FieldDefinition::create('integer')
       ->setConstraints(array('NotNull' => array()));
-    $field_item = $this->typedData->create($definition, array('value' => 10));
+    $field_item = $this->typedDataManager->create($definition, array('value' => 10));
     $violations = $field_item->validate();
     $this->assertEqual($violations->count(), 0);
 
-    $field_item = $this->typedData->create($definition, array('value' => 'no integer'));
+    $field_item = $this->typedDataManager->create($definition, array('value' => 'no integer'));
     $violations = $field_item->validate();
     $this->assertEqual($violations->count(), 1);
     $this->assertEqual($violations[0]->getPropertyPath(), '0.value');
 
     // Test that the field item may not be empty.
-    $field_item = $this->typedData->create($definition);
+    $field_item = $this->typedDataManager->create($definition);
     $violations = $field_item->validate();
     $this->assertEqual($violations->count(), 1);
 
     // Test the Null constraint with typed data containers.
     $definition = FieldDefinition::create('float')
       ->setConstraints(array('Null' => array()));
-    $field_item = $this->typedData->create($definition, array('value' => 11.5));
+    $field_item = $this->typedDataManager->create($definition, array('value' => 11.5));
     $violations = $field_item->validate();
     $this->assertEqual($violations->count(), 1);
-    $field_item = $this->typedData->create($definition);
+    $field_item = $this->typedDataManager->create($definition);
     $violations = $field_item->validate();
     $this->assertEqual($violations->count(), 0);
 
     // Test getting constraint definitions by type.
-    $definitions = $this->typedData->getValidationConstraintManager()->getDefinitionsByType('entity');
+    $definitions = $this->typedDataManager->getValidationConstraintManager()->getDefinitionsByType('entity');
     $this->assertTrue(isset($definitions['EntityType']), 'Constraint plugin found for type entity.');
     $this->assertTrue(isset($definitions['Null']), 'Constraint plugin found for type entity.');
     $this->assertTrue(isset($definitions['NotNull']), 'Constraint plugin found for type entity.');
 
-    $definitions = $this->typedData->getValidationConstraintManager()->getDefinitionsByType('string');
+    $definitions = $this->typedDataManager->getValidationConstraintManager()->getDefinitionsByType('string');
     $this->assertFalse(isset($definitions['EntityType']), 'Constraint plugin not found for type string.');
     $this->assertTrue(isset($definitions['Null']), 'Constraint plugin found for type string.');
     $this->assertTrue(isset($definitions['NotNull']), 'Constraint plugin found for type string.');
@@ -583,17 +583,17 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Test automatic 'required' validation.
     $definition = DataDefinition::create('integer')
       ->setRequired(TRUE);
-    $violations = $this->typedData->create($definition)->validate();
+    $violations = $this->typedDataManager->create($definition)->validate();
     $this->assertEqual($violations->count(), 1);
-    $violations = $this->typedData->create($definition, 0)->validate();
+    $violations = $this->typedDataManager->create($definition, 0)->validate();
     $this->assertEqual($violations->count(), 0);
 
     // Test validating a list of a values and make sure property paths starting
     // with "0" are created.
     $definition = FieldDefinition::create('integer');
-    $violations = $this->typedData->create($definition, array(array('value' => 10)))->validate();
+    $violations = $this->typedDataManager->create($definition, array(array('value' => 10)))->validate();
     $this->assertEqual($violations->count(), 0);
-    $violations = $this->typedData->create($definition, array(array('value' => 'string')))->validate();
+    $violations = $this->typedDataManager->create($definition, array(array('value' => 'string')))->validate();
     $this->assertEqual($violations->count(), 1);
 
     $this->assertEqual($violations[0]->getInvalidValue(), 'string');

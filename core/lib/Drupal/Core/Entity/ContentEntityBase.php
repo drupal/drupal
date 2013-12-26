@@ -261,7 +261,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public function validate() {
     // @todo: Add the typed data manager as proper dependency.
-    return \Drupal::typedData()->getValidator()->validate($this);
+    return \Drupal::typedDataManager()->getValidator()->validate($this);
   }
 
   /**
@@ -414,7 +414,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
         if (isset($this->values[$name][$langcode])) {
           $value = $this->values[$name][$langcode];
         }
-        $field = \Drupal::typedData()->getPropertyInstance($this, $name, $value);
+        $field = \Drupal::typedDataManager()->getPropertyInstance($this, $name, $value);
         if ($default) {
           // $this->defaultLangcode might not be set if we are initializing the
           // default language code cache, in which case there is no valid

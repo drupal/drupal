@@ -28,7 +28,7 @@ use Drupal\Component\Annotation\Plugin;
  * type, is ordered and may contain duplicates. The class used for a list of
  * items of a certain type may be specified using the 'list class' key.
  *
- * @see \Drupal::typedData()
+ * @see \Drupal::typedDataManager()
  * @see \Drupal\Core\TypedData\TypedDataManager::create()
  * @see hook_data_type_info_alter()
  *

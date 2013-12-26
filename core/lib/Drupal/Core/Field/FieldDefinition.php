@@ -108,7 +108,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    * {@inheritdoc}
    */
   public function getPropertyNames() {
-    return array_keys(\Drupal::typedData()->create($this->getItemDefinition())->getPropertyDefinitions());
+    return array_keys(\Drupal::typedDataManager()->create($this->getItemDefinition())->getPropertyDefinitions());
   }
 
   /**

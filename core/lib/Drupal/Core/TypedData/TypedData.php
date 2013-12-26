@@ -73,7 +73,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    * {@inheritdoc}
    */
   public function getPluginDefinition() {
-    return \Drupal::typedData()->getDefinition($this->definition->getDataType());
+    return \Drupal::typedDataManager()->getDefinition($this->definition->getDataType());
   }
 
   /**
@@ -113,7 +113,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    */
   public function getConstraints() {
     // @todo: Add the typed data manager as proper dependency.
-    return \Drupal::typedData()->getConstraints($this->definition);
+    return \Drupal::typedDataManager()->getConstraints($this->definition);
   }
 
   /**
@@ -121,7 +121,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    */
   public function validate() {
     // @todo: Add the typed data manager as proper dependency.
-    return \Drupal::typedData()->getValidator()->validate($this);
+    return \Drupal::typedDataManager()->getValidator()->validate($this);
   }
 
   /**

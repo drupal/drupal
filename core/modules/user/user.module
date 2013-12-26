@@ -337,7 +337,7 @@ function user_load_by_name($name) {
 function user_validate_name($name) {
   $definition = DataDefinition::create('string')
     ->setConstraints(array('UserName' => array()));
-  $data = \Drupal::typedData()->create($definition);
+  $data = \Drupal::typedDataManager()->create($definition);
   $data->setValue($name);
   $violations = $data->validate();
   if (count($violations) > 0) {

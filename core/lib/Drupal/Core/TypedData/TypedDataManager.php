@@ -109,7 +109,7 @@ class TypedDataManager extends DefaultPluginManager {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The instantiated typed data object.
    *
-   * @see \Drupal::typedData()
+   * @see \Drupal::typedDataManager()
    * @see \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance()
    * @see \Drupal\Core\TypedData\Plugin\DataType\Integer
    * @see \Drupal\Core\TypedData\Plugin\DataType\Float

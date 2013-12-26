@@ -66,7 +66,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
     // widgets.
     $cardinality = $this->getFieldDefinition()->getCardinality();
     if ($cardinality != FieldDefinitionInterface::CARDINALITY_UNLIMITED) {
-      $constraints[] = \Drupal::typedData()
+      $constraints[] = \Drupal::typedDataManager()
         ->getValidationConstraintManager()
         ->create('Count', array(
           'max' => $cardinality,

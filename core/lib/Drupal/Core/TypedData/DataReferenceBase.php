@@ -43,7 +43,7 @@ abstract class DataReferenceBase extends TypedData implements DataReferenceInter
    * {@inheritdoc}
    */
   public function setValue($value, $notify = TRUE) {
-    $this->target = \Drupal::typedData()->create($this->getTargetDefinition(), $value);
+    $this->target = \Drupal::typedDataManager()->create($this->getTargetDefinition(), $value);
     // Notify the parent of any changes.
     if ($notify && isset($this->parent)) {
       $this->parent->onChange($this->name);

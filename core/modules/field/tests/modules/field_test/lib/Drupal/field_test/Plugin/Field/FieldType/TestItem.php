@@ -128,7 +128,7 @@ class TestItem extends ConfigFieldItemBase implements PrepareCacheInterface {
    * {@inheritdoc}
    */
   public function getConstraints() {
-    $constraint_manager = \Drupal::typedData()->getValidationConstraintManager();
+    $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
     $constraints = parent::getConstraints();
 
     $constraints[] = $constraint_manager->create('ComplexData', array(

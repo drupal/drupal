@@ -69,7 +69,7 @@ class ListDefinition extends DataDefinition implements ListDefinitionInterface {
     else {
       // If a list definition is used but no class has been specified, derive
       // the default list class from the item type.
-      $item_type_definition = \Drupal::typedData()
+      $item_type_definition = \Drupal::typedDataManager()
         ->getDefinition($this->getItemDefinition()->getDataType());
       return $item_type_definition['list_class'];
     }
