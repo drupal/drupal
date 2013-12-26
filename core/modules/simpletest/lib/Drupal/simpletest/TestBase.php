@@ -1390,12 +1390,12 @@ abstract class TestBase {
   public function configImporter() {
     if (!$this->configImporter) {
       // Set up the ConfigImporter object for testing.
-      $config_comparer = new StorageComparer(
+      $storage_comparer = new StorageComparer(
         $this->container->get('config.storage.staging'),
         $this->container->get('config.storage')
       );
       $this->configImporter = new ConfigImporter(
-        $config_comparer,
+        $storage_comparer,
         $this->container->get('event_dispatcher'),
         $this->container->get('config.factory'),
         $this->container->get('entity.manager'),

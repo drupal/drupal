@@ -51,12 +51,12 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     unset($GLOBALS['hook_config_test']);
 
     // Set up the ConfigImporter object for testing.
-    $config_comparer = new StorageComparer(
+    $storage_comparer = new StorageComparer(
       $this->container->get('config.storage.staging'),
       $this->container->get('config.storage')
     );
     $this->configImporter = new ConfigImporter(
-      $config_comparer->createChangelist(),
+      $storage_comparer->createChangelist(),
       $this->container->get('event_dispatcher'),
       $this->container->get('config.factory'),
       $this->container->get('entity.manager'),
