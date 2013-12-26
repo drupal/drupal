@@ -1,0 +1,50 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views_test_data
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views_test_data
+      header:
+        view:
+          field: view
+          id: view
+          table: views
+          view_to_insert: test_simple_argument:default
+          inherit_arguments: 1
+          plugin_id: view
+          provider: views
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+label: ''
+id: test_area_view
+tag: ''
