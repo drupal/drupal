@@ -143,9 +143,9 @@ class DataFieldRow extends RowPluginBase {
       if (($field->field_alias != 'unknown') && !empty($this->rawOutputOptions[$id])) {
         $value = $field->sanitizeValue($field->getValue($row), 'xss_admin');
       }
-      // Otherwise, pass this through the field render() method.
+      // Otherwise, pass this through the field advancedRender() method.
       else {
-        $value = $field->render($row);
+        $value = $field->advancedRender($row);
       }
 
       $output[$this->getFieldKeyAlias($id)] = $value;

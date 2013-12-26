@@ -25,14 +25,14 @@ class StyleSerializerTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'entity_test', 'hal', 'rest_test_views');
+  public static $modules = array('views_ui', 'entity_test', 'hal', 'rest_test_views', 'node', 'text', 'field');
 
   /**
    * Views used by this test.
    *
    * @var array
    */
-  public static $testViews = array('test_serializer_display_field', 'test_serializer_display_entity');
+  public static $testViews = array('test_serializer_display_field', 'test_serializer_display_entity', 'test_serializer_node_display_field');
 
   /**
    * A user with administrative privileges to look at test entity and configure views.
@@ -287,6 +287,18 @@ class StyleSerializerTest extends PluginTestBase {
     $build = $view->preview();
     $rendered_json = $build['#markup'];
     $this->assertEqual($rendered_json, $expected, 'Ensure the previewed json is escaped.');
+  }
+
+  /**
+   * Tests the field row style using fieldapi fields.
+   */
+  public function testFieldapiField() {
+    $this->drupalCreateContentType(array('type' => 'page'));
+    $node = $this->drupalCreateNode();
+
+    $result = $this->drupalGetJSON('test/serialize/node-field');
+    $this->assertEqual($result[0]['nid'], $node->id());
+    $this->assertEqual($result[0]['body'], $node->body->processed);
   }
 
 }
