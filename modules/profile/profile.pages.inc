@@ -27,7 +27,7 @@ function profile_browse() {
     }
 
     // Compile a list of fields to show.
-    $fields = db_query('SELECT name, title, type, weight, page FROM {profile_field} WHERE fid <> :fid AND visibility = :visibility ORDER BY weight', array(
+    $fields = db_query('SELECT name, title, type, weight, page, visibility FROM {profile_field} WHERE fid <> :fid AND visibility = :visibility ORDER BY weight', array(
       ':fid' => $field->fid,
       ':visibility' => PROFILE_PUBLIC_LISTINGS,
     ))->fetchAll();
