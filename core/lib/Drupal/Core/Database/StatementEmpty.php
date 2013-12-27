@@ -21,6 +21,13 @@ namespace Drupal\Core\Database;
  */
 class StatementEmpty implements \Iterator, StatementInterface {
 
+  /**
+   * Is rowCount() execution allowed.
+   *
+   * @var bool
+   */
+  public $allowRowCount = FALSE;
+
   public function execute($args = array(), $options = array()) {
     return FALSE;
   }
@@ -30,7 +37,10 @@ class StatementEmpty implements \Iterator, StatementInterface {
   }
 
   public function rowCount() {
-    return 0;
+    if ($this->allowRowCount) {
+      return 0;
+    }
+    throw new RowCountException();
   }
 
   public function setFetchMode($mode, $a1 = NULL, $a2 = array()) {

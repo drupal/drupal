@@ -150,7 +150,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
 
     // The database should now contain 6 customized strings (two imported
     // strings are not translated).
-    $count = db_query('SELECT lid FROM {locales_target} WHERE customized = :custom', array(':custom' => 1))->rowCount();
+    $count = db_query('SELECT COUNT(*) FROM {locales_target} WHERE customized = :custom', array(':custom' => 1))->fetchField();
     $this->assertEqual($count, 6, 'Customized translations successfully imported.');
 
     // Try importing a .po file with overriding strings, and ensure existing

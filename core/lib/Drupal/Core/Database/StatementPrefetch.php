@@ -128,6 +128,13 @@ class StatementPrefetch implements \Iterator, StatementInterface {
     'column' => 0,
   );
 
+  /**
+   * Is rowCount() execution allowed.
+   *
+   * @var bool
+   */
+  public $allowRowCount = FALSE;
+
   public function __construct(\PDO $dbh, Connection $connection, $query, array $driver_options = array()) {
     $this->dbh = $dbh;
     $this->connection = $connection;
@@ -174,9 +181,11 @@ class StatementPrefetch implements \Iterator, StatementInterface {
       $this->throwPDOException();
     }
 
+    if ($options['return'] == Database::RETURN_AFFECTED) {
+      $this->rowCount = $statement->rowCount();
+    }
     // Fetch all the data from the reply, in order to release any lock
     // as soon as possible.
-    $this->rowCount = $statement->rowCount();
     $this->data = $statement->fetchAll(\PDO::FETCH_ASSOC);
     // Destroy the statement as soon as possible. See
     // DatabaseConnection_sqlite::PDOPrepare() for explanation.

@@ -29,6 +29,13 @@ class Statement extends \PDOStatement implements StatementInterface {
    */
   public $dbh;
 
+  /**
+   * Is rowCount() execution allowed.
+   *
+   * @var bool
+   */
+  public $allowRowCount = FALSE;
+
   protected function __construct(Connection $dbh) {
     $this->dbh = $dbh;
     $this->setFetchMode(\PDO::FETCH_OBJ);
@@ -106,4 +113,18 @@ class Statement extends \PDOStatement implements StatementInterface {
     // Call \PDOStatement::fetch to fetch the row.
     return $this->fetch(\PDO::FETCH_ASSOC);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rowCount() {
+    // SELECT query should not use the method.
+    if ($this->allowRowCount) {
+      return parent::rowCount();
+    }
+    else {
+      throw new RowCountException();
+    }
+  }
+
 }

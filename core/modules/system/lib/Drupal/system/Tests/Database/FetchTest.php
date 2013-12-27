@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\FetchTest.
+ * Contains \Drupal\system\Tests\Database\FetchTest.
  */
 
 namespace Drupal\system\Tests\Database;
 
+use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementInterface;
 
 /**
@@ -136,4 +137,20 @@ class FetchTest extends DatabaseTestBase {
       $this->assertIdentical($record->name, $column[$i++], 'Column matches direct accesss.');
     }
   }
+
+  /**
+   * Tests that rowCount() throws exception on SELECT query.
+   */
+  public function testRowCount() {
+    $result = db_query('SELECT name FROM {test}');
+    try {
+      $result->rowCount();
+      $exception = FALSE;
+    }
+    catch (RowCountException $e) {
+      $exception = TRUE;
+    }
+    $this->assertTrue($exception, 'Exception was thrown');
+  }
+
 }

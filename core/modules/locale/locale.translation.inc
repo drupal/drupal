@@ -54,17 +54,17 @@ function locale_translation_get_projects($project_names = array()) {
 
   if (empty($projects)) {
     // Get project data from the database.
-    $result = db_query('SELECT name, project_type, core, version, server_pattern, status FROM {locale_project}');
+    $row_count = db_query_range('SELECT 1 FROM {locale_project}', 0, 1)->fetchField();
 
     // http://drupal.org/node/1777106 is a follow-up issue to make the check for
     // possible out-of-date project information more robust.
-    if ($result->rowCount() == 0 && \Drupal::moduleHandler()->moduleExists('update')) {
+    if ($row_count == 0 && \Drupal::moduleHandler()->moduleExists('update')) {
       module_load_include('compare.inc', 'locale');
       // At least the core project should be in the database, so we build the
       // data if none are found.
       locale_translation_build_projects();
-      $result = db_query('SELECT name, project_type, core, version, server_pattern, status FROM {locale_project}');
     }
+    $result = db_query('SELECT name, project_type, core, version, server_pattern, status FROM {locale_project}');
 
     foreach ($result as $project) {
       $projects[$project->name] = $project;

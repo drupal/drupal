@@ -2,10 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\SelectComplexTest.
+ * Contains \Drupal\system\Tests\Database\SelectComplexTest.
  */
 
 namespace Drupal\system\Tests\Database;
+
+use \Drupal\Core\Database\RowCountException;
 
 /**
  * Tests more complex select statements.
@@ -156,9 +158,9 @@ class SelectComplexTest extends DatabaseTestBase {
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
     $query->range(0, 2);
-    $result = $query->execute();
+    $query_result = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($result->rowCount(), 2, 'Returned the correct number of rows.');
+    $this->assertEqual($query_result, 2, 'Returned the correct number of rows.');
   }
 
   /**
@@ -168,9 +170,9 @@ class SelectComplexTest extends DatabaseTestBase {
     $query = db_select('test_task');
     $query->addField('test_task', 'task');
     $query->distinct();
-    $result = $query->execute();
+    $query_result = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($result->rowCount(), 6, 'Returned the correct number of rows.');
+    $this->assertEqual($query_result, 6, 'Returned the correct number of rows.');
   }
 
   /**
@@ -363,4 +365,22 @@ class SelectComplexTest extends DatabaseTestBase {
     $pos2 = strpos($str, 'db_condition_placeholder_0', $pos + 1);
     $this->assertFalse($pos2, 'Condition placeholder is not repeated.');
   }
+
+  /**
+   * Tests that rowCount() throws exception on SELECT query.
+   */
+  function testSelectWithRowCount() {
+    $query = db_select('test');
+    $query->addField('test', 'name');
+    $result = $query->execute();
+    try {
+      $result->rowCount();
+      $exception = FALSE;
+    }
+    catch (RowCountException $e) {
+      $exception = TRUE;
+    }
+    $this->assertTrue($exception, 'Exception was thrown');
+  }
+
 }

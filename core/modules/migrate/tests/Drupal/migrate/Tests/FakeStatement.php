@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate\Tests;
 
+use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementInterface;
 
 /**
@@ -32,7 +33,7 @@ class FakeStatement extends \ArrayIterator implements StatementInterface {
    * {@inheritdoc}
    */
   public function rowCount() {
-    return $this->count();
+    throw new RowCountException();
   }
 
   /**

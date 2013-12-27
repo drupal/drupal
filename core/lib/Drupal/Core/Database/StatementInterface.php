@@ -74,7 +74,10 @@ interface StatementInterface extends \Traversable {
    *
    * @return
    *   The number of rows affected by the last DELETE, INSERT, or UPDATE
-   *   statement executed.
+   *   statement executed or throws \Drupal\Core\Database\RowCountException
+   *   if the last executed statement was SELECT.
+   *
+   * @throws \Drupal\Core\Database\RowCountException
    */
   public function rowCount();
 
