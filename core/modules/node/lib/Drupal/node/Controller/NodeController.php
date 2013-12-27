@@ -43,7 +43,7 @@ class NodeController extends ControllerBase {
     // Bypass the node/add listing if only one content type is available.
     if (count($content) == 1) {
       $type = array_shift($content);
-      return $this->redirect('node_add', array('node_type' => $type->type));
+      return $this->redirect('node.add', array('node_type' => $type->type));
     }
 
     return array(

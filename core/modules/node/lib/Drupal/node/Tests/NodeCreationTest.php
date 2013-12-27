@@ -43,6 +43,11 @@ class NodeCreationTest extends NodeTestBase {
    * Creates a "Basic page" node and verifies its consistency in the database.
    */
   function testNodeCreation() {
+    // Test /node/add page with only one content type.
+    entity_load('node_type', 'article')->delete();
+    $this->drupalGet('node/add');
+    $this->assertResponse(200);
+    $this->assertUrl('node/add/page');
     // Create a node.
     $edit = array();
     $edit['title[0][value]'] = $this->randomName(8);
