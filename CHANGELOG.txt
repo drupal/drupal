@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Changed the Bartik theme to render content contained in <pre>, <code> and
+  similar tags in a larger font size, so it is easier to read.
 - Fixed a bug in the Node module which caused fatal errors on preview when a
   field is displayed in the node teaser but hidden in the full node view. The
   fix removes a field_attach_prepare_view() call from the node_preview()
