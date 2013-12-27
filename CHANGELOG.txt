@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a regression in the Image module that made image_style_url() not work
+  when a relative path (rather than a complete file URI) was passed to it.
 - Added an optional feature to the Statistics module to allow node views to be
   tracked by Ajax requests rather than during the server-side generation of the
   page. This allows the node counter to work on sites that use external page
