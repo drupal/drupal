@@ -105,6 +105,8 @@ class SearchQuery extends SelectQueryExtender {
    * Stores score expressions.
    *
    * @var array
+   *
+   * @see addScore()
    */
   protected $scores = array();
 
@@ -116,7 +118,7 @@ class SearchQuery extends SelectQueryExtender {
   protected $scoresArguments = array();
 
   /**
-   * Total value of all the multipliers.
+   * Stores multipliers for score expressions.
    *
    * @var array
    */
@@ -391,21 +393,39 @@ class SearchQuery extends SelectQueryExtender {
   /**
    * Adds a custom score expression to the search query.
    *
-   * Each score expression can optionally use a multiplier, and multiple
-   * expressions are combined.
+   * Score expressions are used to order search results. If no calls to
+   * addScore() have taken place, a default keyword relevance score will be
+   * used. However, if at least one call to addScore() has taken place, the
+   * keyword relevance score is not automatically added.
+   *
+   * Also note that if you call orderBy() directly on the query, search scores
+   * will not automatically be used to order search results. Your orderBy()
+   * expression can reference 'calculated_score', which will be the total
+   * calculated score value.
    *
    * @param $score
-   *   The score expression.
+   *   The score expression, which should evaluate to a number between 0 and 1.
+   *   The string 'i.relevance' in a score expression will be replaced by a
+   *   measure of keyword relevance between 0 and 1.
    * @param $arguments
-   *   Custom query arguments for that expression.
+   *   Query arguments needed to provide values to the score expression.
    * @param $multiply
-   *   If set, the score is multiplied with that value. Search query ensures
-   *   that the search scores are still normalized.
+   *   If set, the score is multiplied with this value. However, all scores
+   *   with multipliers are then divided by the total of all multipliers, so
+   *   that overall, the normalization is maintained.
+   *
+   * @return object
+   *   The updated query object.
    */
   public function addScore($score, $arguments = array(), $multiply = FALSE) {
     if ($multiply) {
       $i = count($this->multiply);
+      // Modify the score expression so it is multiplied by the multiplier,
+      // with a divisor to renormalize.
       $score = "CAST(:multiply_$i AS DECIMAL) * COALESCE(( " . $score . "), 0) / CAST(:total_$i AS DECIMAL)";
+      // Add an argument for the multiplier. The :total_$i argument is taken
+      // care of in the execute() method, which is when the total divisor is
+      // calculated.
       $arguments[':multiply_' . $i] = $multiply;
       $this->multiply[] = $multiply;
     }
@@ -446,8 +466,9 @@ class SearchQuery extends SelectQueryExtender {
     }
 
     if (count($this->multiply)) {
-      // Add the total multiplicator as many times as requested to maintain
-      // normalization as far as possible.
+      // Re-normalize scores with multipliers by dividing by the total of all
+      // multipliers. The expressions were altered in addScore(), so here just
+      // add the arguments for the total.
       $i = 0;
       $sum = array_sum($this->multiply);
       foreach ($this->multiply as $total) {
@@ -456,13 +477,20 @@ class SearchQuery extends SelectQueryExtender {
       }
     }
 
-    // Replace i.relevance pseudo-field with the actual, normalized value.
-    $this->scores = str_replace('i.relevance', '(' . (1.0 / $this->normalize) . ' * i.score * t.count)', $this->scores);
-    // Convert scores to an expression.
+    // Replace the pseudo-expression 'i.relevance' with a measure of keyword
+    // relevance in all score expressions, using string replacement. Careful
+    // though! If you just print out a float, some locales use ',' as the
+    // decimal separator in PHP, while SQL always uses '.'. So, make sure to
+    // set the number format correctly.
+    $relevance = number_format((1.0 / $this->normalize), 10, '.', '');
+    $this->scores = str_replace('i.relevance', '(' . $relevance . ' * i.score * t.count)', $this->scores);
+
+    // Add all scores together to form a query field.
     $this->addExpression('SUM(' . implode(' + ', $this->scores) . ')', 'calculated_score', $this->scoresArguments);
 
+    // If an order has not yet been set for this query, add a default order
+    // that sorts by the calculated sum of scores.
     if (count($this->getOrderBy()) == 0) {
-      // Add default order after adding the expression.
       $this->orderBy('calculated_score', 'DESC');
     }
 

@@ -1,6 +1,9 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug in the Search module that caused exceptions to be thrown during
+  searches if the server was not configured to represent decimal points as a
+  period.
 - Fixed a regression in the Image module that made image_style_url() not work
   when a relative path (rather than a complete file URI) was passed to it.
 - Added an optional feature to the Statistics module to allow node views to be

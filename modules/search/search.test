@@ -2036,3 +2036,45 @@ class SearchNodeAccessTest extends DrupalWebTestCase {
     $this->assertText($node->title);
   }
 }
+
+/**
+ * Tests searching with locale values set.
+ */
+class SearchSetLocaleTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Search with numeric locale set',
+      'description' => 'Check that search works with numeric locale settings',
+      'group' => 'Search',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('search');
+
+    // Create a simple node so something will be put in the index.
+    $info = array(
+      'body' => array(LANGUAGE_NONE => array(array('value' => 'Tapir'))),
+    );
+    $this->drupalCreateNode($info);
+
+    // Run cron to index.
+    $this->cronRun();
+  }
+
+  /**
+   * Verify that search works with a numeric locale set.
+   */
+  public function testSearchWithNumericLocale() {
+    // French decimal point is comma.
+    setlocale(LC_NUMERIC, 'fr_FR');
+
+    // An exception will be thrown if a float in the wrong format occurs in the
+    // query to the database, so an assertion is not necessary here.
+    db_select('search_index', 'i')
+      ->extend('searchquery')
+      ->searchexpression('tapir', 'node')
+      ->execute();
+  }
+}
