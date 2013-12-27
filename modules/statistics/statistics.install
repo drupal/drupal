@@ -11,6 +11,7 @@
 function statistics_uninstall() {
   // Remove variables.
   variable_del('statistics_count_content_views');
+  variable_del('statistics_count_content_views_ajax');
   variable_del('statistics_enable_access_log');
   variable_del('statistics_flush_accesslog_timer');
   variable_del('statistics_day_timestamp');

@@ -118,6 +118,22 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
     $node_counter = statistics_get($this->node->nid);
     $this->assertIdentical($node_counter['totalcount'], '3');
 
+    // Test that Ajax logging doesn't occur when disabled.
+    $post = http_build_query(array('nid' => $this->node->nid));
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    global $base_url;
+    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $node_counter = statistics_get($this->node->nid);
+    $this->assertIdentical($node_counter['totalcount'], '3', 'Page request was not counted via Ajax.');
+
+    // Test that Ajax logging occurs when enabled.
+    variable_set('statistics_count_content_views_ajax', 1);
+    drupal_http_request($stats_path, array('method' => 'POST', 'data' => $post, 'headers' => $headers, 'timeout' => 10000));
+    $node_counter = statistics_get($this->node->nid);
+    $this->assertIdentical($node_counter['totalcount'], '4', 'Page request was counted via Ajax.');
+    variable_set('statistics_count_content_views_ajax', 0);
+
     // Visit edit page to generate a title greater than 255.
     $path = 'node/' . $this->node->nid . '/edit';
     $expected = array(
@@ -142,7 +158,6 @@ class StatisticsLoggingTestCase extends DrupalWebTestCase {
     $log = db_query('SELECT * FROM {accesslog}')->fetchAll(PDO::FETCH_ASSOC);
     $this->assertTrue(is_array($log) && count($log) == 8, 'Page request was logged for a path over 255 characters.');
     $this->assertEqual($log[7]['path'], truncate_utf8($long_path, 255));
-
   }
 }
 
