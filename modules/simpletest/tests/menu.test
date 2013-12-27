@@ -1025,8 +1025,8 @@ class MenuTreeOutputTestCase extends DrupalWebTestCase {
     $output = menu_tree_output($this->tree_data);
 
     // Validate that the - in main-menu is changed into an underscore
-    $this->assertEqual( $output['1']['#theme'], 'menu_link__main_menu', 'Hyphen is changed to a dash on menu_link');
-    $this->assertEqual( $output['#theme_wrappers'][0], 'menu_tree__main_menu', 'Hyphen is changed to a dash on menu_tree wrapper');
+    $this->assertEqual($output['1']['#theme'], 'menu_link__main_menu', 'Hyphen is changed to an underscore on menu_link');
+    $this->assertEqual($output['#theme_wrappers'][0], 'menu_tree__main_menu', 'Hyphen is changed to an underscore on menu_tree wrapper');
     // Looking for child items in the data
     $this->assertEqual( $output['1']['#below']['2']['#href'], 'a/b', 'Checking the href on a child item');
     $this->assertTrue( in_array('active-trail',$output['1']['#below']['2']['#attributes']['class']) , 'Checking the active trail class');
