@@ -307,4 +307,18 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
       && $this->thirdBackend->get('test_cid_clear3'),
       'Cached item matching the tag was removed from all backends.');
   }
+
+  /**
+   * Test that removing bin propagates to all backends.
+   */
+  public function testRemoveBin() {
+    $chain = new BackendChain('foo');
+    for ($i = 0; $i < 3; $i++) {
+      $backend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+      $backend->expects($this->once())->method('removeBin');
+      $chain->appendBackend($backend);
+    }
+
+    $chain->removeBin();
+  }
 }

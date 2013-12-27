@@ -228,7 +228,7 @@ class BackendChain implements CacheBackendInterface {
    */
   public function removeBin() {
     foreach ($this->backends as $backend) {
-      $this->removeBin();
+      $backend->removeBin();
     }
   }
 
