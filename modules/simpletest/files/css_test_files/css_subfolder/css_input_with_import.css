@@ -1,17 +1,7 @@
 
 
-
-ul, select {
-  font: 1em/160% Verdana, sans-serif;
-  color: #494949;
-}
-.ui-icon{background-image: url(images/icon.png);}
-
-p, select {
-  font: 1em/160% Verdana, sans-serif;
-  color: #494949;
-}
-
+@import "../import1.css";
+@import "../import2.css";
 
 body {
   margin: 0;
@@ -37,4 +27,3 @@ textarea, select {
   font: 1em/160% Verdana, sans-serif;
   color: #494949;
 }
-
