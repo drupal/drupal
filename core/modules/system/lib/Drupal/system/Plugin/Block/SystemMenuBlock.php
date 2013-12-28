@@ -25,14 +25,6 @@ class SystemMenuBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account) {
-    $derivative = $this->getDerivativeId();
-    return ($account->isAuthenticated() || in_array($derivative, array('main', 'tools', 'footer')));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function build() {
     $menu = $this->getDerivativeId();
     return menu_tree($menu);
