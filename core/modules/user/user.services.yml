@@ -25,11 +25,6 @@ services:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
     tags:
       - { name: event_subscriber }
-  theme.negotiator.user:
-    class: Drupal\user\Theme\UserNegotiator
-    arguments: ['@entity.manager', '@current_user']
-    tags:
-      - { name: theme_negotiator, priority: -50 }
   theme.negotiator.admin_theme:
     class: Drupal\user\Theme\AdminNegotiator
     arguments: ['@current_user', '@config.factory', '@entity.manager']

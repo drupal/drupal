@@ -125,10 +125,6 @@ class UserValidationTest extends DrupalUnitTestBase {
     $this->assertLengthViolation($user, 'signature', 255);
     $user->set('signature', NULL);
 
-    $user->set('theme', $this->randomString(DRUPAL_EXTENSION_NAME_MAX_LENGTH + 1));
-    $this->assertLengthViolation($user, 'theme', DRUPAL_EXTENSION_NAME_MAX_LENGTH);
-    $user->set('theme', NULL);
-
     $user->set('timezone', $this->randomString(33));
     $this->assertLengthViolation($user, 'timezone', 32);
     $user->set('timezone', NULL);

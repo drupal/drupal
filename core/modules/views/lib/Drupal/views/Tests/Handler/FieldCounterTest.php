@@ -19,7 +19,7 @@ class FieldCounterTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'field');
+  public static $modules = array('user');
 
   /**
    * Views used by this test.
@@ -34,12 +34,6 @@ class FieldCounterTest extends ViewUnitTestBase {
       'description' => 'Tests the Drupal\views\Plugin\views\field\Counter handler.',
       'group' => 'Views Handlers',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->installSchema('user', 'users');
   }
 
   function testSimple() {

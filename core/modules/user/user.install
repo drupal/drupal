@@ -58,13 +58,6 @@ function user_schema() {
         'default' => '',
         'description' => "User's e-mail address.",
       ),
-      'theme' => array(
-        'type' => 'varchar',
-        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "User's default theme.",
-      ),
       'signature' => array(
         'type' => 'varchar',
         'length' => 255,
@@ -998,16 +991,6 @@ function user_update_8019() {
     db_change_field('users_data', 'module', 'module', $spec);
   }
 
-  if (db_field_exists('users', 'theme')) {
-    $spec = array(
-      'type' => 'varchar',
-      'length' => 50,
-      'not null' => TRUE,
-      'default' => '',
-      'description' => "User's default theme.",
-    );
-    db_change_field('users', 'theme', 'theme', $spec);
-  }
 }
 
 /**

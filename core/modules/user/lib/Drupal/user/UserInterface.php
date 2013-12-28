@@ -84,14 +84,6 @@ interface UserInterface extends ContentEntityInterface, AccountInterface {
   public function setEmail($mail);
 
   /**
-   * Returns the default theme of the user.
-   *
-   * @return string
-   *   Name of the theme.
-   */
-  public function getDefaultTheme();
-
-  /**
    * Returns the user signature.
    *
    * @todo: Convert this to a configurable field.

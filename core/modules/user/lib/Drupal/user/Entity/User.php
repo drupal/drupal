@@ -269,13 +269,6 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultTheme() {
-    return $this->get('theme')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getSignature() {
     return $this->get('signature')->value;
   }
@@ -481,11 +474,6 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['signature_format'] = FieldDefinition::create('string')
       ->setLabel(t('Signature format'))
       ->setDescription(t('The signature format of this user.'));
-
-    $fields['theme'] = FieldDefinition::create('string')
-      ->setLabel(t('Theme'))
-      ->setDescription(t('The default theme of this user.'))
-      ->setPropertyConstraints('value', array('Length' => array('max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH)));
 
     $fields['timezone'] = FieldDefinition::create('string')
       ->setLabel(t('Timezone'))
