@@ -126,8 +126,6 @@ class EntityQueryTest extends EntityUnitTestBase {
       'name' => $this->randomString(),
     ));
     language_save($langcode);
-    $field_langcodes = &drupal_static('field_available_languages');
-    $field_langcodes['entity_test_mulrev'][$greetings] = array('tr', 'pl');
     // Calculate the cartesian product of the unit array by looking at the
     // bits of $i and add the unit at the bits that are 1. For example,
     // decimal 13 is binary 1101 so unit 3,2 and 0 will be added to the

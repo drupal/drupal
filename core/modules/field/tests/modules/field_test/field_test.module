@@ -50,19 +50,6 @@ function field_test_menu() {
 }
 
 /**
- * Implements hook_field_available_languages_alter().
- */
-function field_test_field_available_languages_alter(&$langcodes, $context) {
-  if (\Drupal::state()->get('field_test.field_available_languages_alter')) {
-    // Add an unavailable language code.
-    $langcodes[] = 'xx';
-    // Remove an available language code.
-    $index = array_search('en', $langcodes);
-    unset($langcodes[$index]);
-  }
-}
-
-/**
  * Store and retrieve keyed data for later verification by unit tests.
  *
  * This function is a simple in-memory key-value store with the

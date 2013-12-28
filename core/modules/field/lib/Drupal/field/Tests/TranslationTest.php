@@ -12,8 +12,7 @@ use Drupal\Core\Language\Language;
 /**
  * Unit test class for the multilanguage fields logic.
  *
- * The following tests will check the multilanguage logic in field handling, and
- * that only the correct values are returned by field_available_languages().
+ * The following tests will check the multilanguage logic in field handling.
  */
 class TranslationTest extends FieldUnitTestBase {
 
@@ -114,38 +113,6 @@ class TranslationTest extends FieldUnitTestBase {
   }
 
   /**
-   * Ensures that only valid values are returned by field_available_languages().
-   */
-  function testFieldAvailableLanguages() {
-    // Test 'translatable' fieldable info.
-    field_test_entity_info_translatable('entity_test', FALSE);
-    $field = clone($this->field);
-    $field->field_name .= '_untranslatable';
-    $field->save();
-
-    // Enable field translations for the entity.
-    field_test_entity_info_translatable('entity_test', TRUE);
-
-    // Test hook_field_languages() invocation on a translatable field.
-    \Drupal::state()->set('field_test.field_available_languages_alter', TRUE);
-    $langcodes = field_content_languages();
-    $available_langcodes = field_available_languages($this->entity_type, $this->field);
-    foreach ($available_langcodes as $langcode) {
-      if ($langcode != 'xx' && $langcode != 'en') {
-        $this->assertTrue(in_array($langcode, $langcodes), format_string('%language is an enabled language.', array('%language' => $langcode)));
-      }
-    }
-    $this->assertTrue(in_array('xx', $available_langcodes), format_string('%language was made available.', array('%language' => 'xx')));
-    $this->assertFalse(in_array('en', $available_langcodes), format_string('%language was made unavailable.', array('%language' => 'en')));
-
-    // Test field_available_languages() behavior for untranslatable fields.
-    $this->field->translatable = FALSE;
-    $this->field->save();
-    $available_langcodes = field_available_languages($this->entity_type, $this->field);
-    $this->assertTrue(count($available_langcodes) == 1 && $available_langcodes[0] === Language::LANGCODE_DEFAULT, 'For untranslatable fields only Language::LANGCODE_DEFAULT is available.');
-  }
-
-  /**
    * Test translatable fields storage/retrieval.
    */
   function testTranslatableFieldSaveLoad() {
@@ -159,8 +126,6 @@ class TranslationTest extends FieldUnitTestBase {
     field_test_entity_info_translatable($entity_type, TRUE);
     $entity = entity_create($entity_type, array('type' => $this->instance->bundle));
     $field_translations = array();
-    $available_langcodes = field_available_languages($entity_type, $this->field);
-    $this->assertTrue(count($available_langcodes) > 1, 'Field is translatable.');
     $available_langcodes = array_keys(language_list());
     $entity->langcode->value = reset($available_langcodes);
     foreach ($available_langcodes as $langcode) {

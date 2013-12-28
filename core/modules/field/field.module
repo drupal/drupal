@@ -7,8 +7,6 @@
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\field\FieldInterface;
-use Drupal\field\FieldInstanceInterface;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -16,7 +14,6 @@ use Drupal\field\FieldInstanceInterface;
  * every page request.
  */
 require_once __DIR__ . '/field.info.inc';
-require_once __DIR__ . '/field.multilingual.inc';
 require_once __DIR__ . '/field.attach.inc';
 require_once __DIR__ . '/field.form.inc';
 require_once __DIR__ . '/field.purge.inc';
@@ -348,13 +345,15 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
   $output = array();
 
   if ($field = field_info_field($entity->entityType(), $field_name)) {
-    // Determine the langcode that will be used by language fallback.
-    $langcode = field_language($entity, $field_name, $langcode);
+    // Clone the entity since we are going to modify field values.
+    $clone = clone $entity;
+
+    // Apply language fallback.
+    $clone = \Drupal::entityManager()->getTranslationFromContext($clone, $langcode);
 
     // Push the item as the single value for the field, and defer to
     // field_view_field() to build the render array for the whole field.
-    $clone = clone $entity;
-    $clone->getTranslation($langcode)->{$field_name}->setValue(array($item));
+    $clone->{$field_name}->setValue(array($item));
     $elements = field_view_field($clone, $field_name, $display, $langcode);
 
     // Extract the part of the render array we need.
@@ -419,8 +418,6 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
  */
 function field_view_field(ContentEntityInterface $entity, $field_name, $display_options = array(), $langcode = NULL) {
   $output = array();
-  $bundle = $entity->bundle();
-  $entity_type = $entity->entityType();
 
   // Return nothing if the field doesn't exist.
   if (!$entity->hasField($field_name)) {
@@ -448,10 +445,11 @@ function field_view_field(ContentEntityInterface $entity, $field_name, $display_
   }
 
   if ($formatter) {
-    $display_langcode = field_language($entity, $field_name, $langcode);
+    // Apply language fallback.
+    $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
+    $items = $entity->get($field_name);
 
-    // Invoke the formatter's prepareView() and view() methods.
-    $items = $entity->getTranslation($display_langcode)->get($field_name);
+    // Run the formatter.
     $formatter->prepareView(array($entity->id() => $items));
     $result = $formatter->view($items);
 
@@ -461,7 +459,7 @@ function field_view_field(ContentEntityInterface $entity, $field_name, $display_
       'entity' => $entity,
       'view_mode' => $view_mode,
       'display_options' => $display_options,
-      'langcode' => $display_langcode,
+      'langcode' => $entity->language()->id,
     );
     drupal_alter('field_attach_view', $result, $context);
 
