@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Config\Entity\Query;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryBase;
@@ -32,6 +33,13 @@ class Query extends QueryBase implements QueryInterface {
   protected $configStorage;
 
   /**
+   * The config factory used by the config entity query.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory;
+   */
+  protected $configFactory;
+
+  /**
    * Constructs a Query object.
    *
    * @param string $entity_type
@@ -46,10 +54,11 @@ class Query extends QueryBase implements QueryInterface {
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  function __construct($entity_type, $conjunction, EntityManagerInterface $entity_manager, StorageInterface $config_storage, array $namespaces) {
+  function __construct($entity_type, $conjunction, EntityManagerInterface $entity_manager, StorageInterface $config_storage, ConfigFactory $config_factory, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
     $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -81,8 +90,9 @@ class Query extends QueryBase implements QueryInterface {
     $prefix_length = strlen($prefix);
     $names = $this->configStorage->listAll($prefix);
     $configs = array();
-    foreach ($names as $name) {
-      $configs[substr($name, $prefix_length)] = \Drupal::config($name)->get();
+    $config_objects = $this->configFactory->loadMultiple($names);
+    foreach ($config_objects as $config) {
+      $configs[substr($config->getName(), $prefix_length)] = $config->get();
     }
 
     $result = $this->condition->compile($configs);
