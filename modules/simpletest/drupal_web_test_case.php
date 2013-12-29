@@ -730,6 +730,10 @@ class DrupalUnitTestCase extends DrupalTestCase {
     // subsequently will fail as the database is not accessible.
     $module_list = module_list();
     if (isset($module_list['locale'])) {
+      // Transform the list into the format expected as input to module_list().
+      foreach ($module_list as &$module) {
+        $module = array('filename' => drupal_get_filename('module', $module));
+      }
       $this->originalModuleList = $module_list;
       unset($module_list['locale']);
       module_list(TRUE, FALSE, FALSE, $module_list);
