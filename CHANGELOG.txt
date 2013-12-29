@@ -1,6 +1,10 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Made the File and Image modules more robust when saving entities that have
+  deleted files attached. The code in file_field_presave() will now remove the
+  record of the deleted file from the entity before saving (minor data
+  structure change).
 - Standardized menu callback functions throughout Drupal core to return
   MENU_NOT_FOUND and MENU_ACCESS_DENIED rather than printing their own "page
   not found" or "access denied" pages (minor API change in the return value of

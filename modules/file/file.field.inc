@@ -215,8 +215,16 @@ function file_field_presave($entity_type, $entity, $field, $instance, $langcode,
   // Make sure that each file which will be saved with this object has a
   // permanent status, so that it will not be removed when temporary files are
   // cleaned up.
-  foreach ($items as $item) {
+  foreach ($items as $delta => $item) {
+    if (empty($item['fid'])) {
+      unset($items[$delta]);
+      continue;
+    }
     $file = file_load($item['fid']);
+    if (empty($file)) {
+      unset($items[$delta]);
+      continue;
+    }
     if (!$file->status) {
       $file->status = FILE_STATUS_PERMANENT;
       file_save($file);
