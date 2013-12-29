@@ -309,7 +309,7 @@ function system_theme_enable() {
     }
     drupal_goto('admin/appearance');
   }
-  return drupal_access_denied();
+  return MENU_ACCESS_DENIED;
 }
 
 /**
@@ -337,7 +337,7 @@ function system_theme_disable() {
     }
     drupal_goto('admin/appearance');
   }
-  return drupal_access_denied();
+  return MENU_ACCESS_DENIED;
 }
 
 /**
@@ -383,7 +383,7 @@ function system_theme_default() {
     }
     drupal_goto('admin/appearance');
   }
-  return drupal_access_denied();
+  return MENU_ACCESS_DENIED;
 }
 
 /**

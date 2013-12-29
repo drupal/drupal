@@ -159,6 +159,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
       // Deny access, no more clues.
       // Everything will be in the watchdog's URL for the administrator to check.
       drupal_access_denied();
+      drupal_exit();
     }
   }
 }
@@ -534,7 +535,7 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
       drupal_goto("user/$account->uid/cancel");
     }
   }
-  drupal_access_denied();
+  return MENU_ACCESS_DENIED;
 }
 
 /**

@@ -263,9 +263,7 @@ function statistics_access_log($aid) {
     );
     return $build;
   }
-  else {
-    drupal_not_found();
-  }
+  return MENU_NOT_FOUND;
 }
 
 /**

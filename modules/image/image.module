@@ -835,7 +835,7 @@ function image_style_deliver($style, $scheme) {
     else {
       $headers = module_invoke_all('file_download', $image_uri);
       if (in_array(-1, $headers) || empty($headers)) {
-        return drupal_access_denied();
+        return MENU_ACCESS_DENIED;
       }
       if (count($headers)) {
         foreach ($headers as $name => $value) {

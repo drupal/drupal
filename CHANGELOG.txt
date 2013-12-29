@@ -1,6 +1,10 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Standardized menu callback functions throughout Drupal core to return
+  MENU_NOT_FOUND and MENU_ACCESS_DENIED rather than printing their own "page
+  not found" or "access denied" pages (minor API change in the return value of
+  these functions under some circumstances).
 - Fixed a bug in which caches were not properly cleared when a node was deleted
   via the administrative interface.
 - Changed the Bartik theme to render content contained in <pre>, <code> and
