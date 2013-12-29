@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug in which caches were not properly cleared when a node was deleted
+  via the administrative interface.
 - Changed the Bartik theme to render content contained in <pre>, <code> and
   similar tags in a larger font size, so it is easier to read.
 - Fixed a bug in the Search module that caused exceptions to be thrown during
