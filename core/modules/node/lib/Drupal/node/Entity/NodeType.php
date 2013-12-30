@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Entity;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\node\NodeTypeInterface;
@@ -207,6 +208,28 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
     foreach ($entities as $entity) {
       entity_invoke_bundle_hook('delete', 'node', $entity->id());
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    parent::preCreate($storage_controller, $values);
+
+    // Ensure default values are set.
+    if (!isset($values['settings']['node'])) {
+      $values['settings']['node'] = array();
+    }
+    $values['settings']['node'] = NestedArray::mergeDeep(array(
+      'options' => array(
+        'status' => TRUE,
+        'promote' => TRUE,
+        'sticky' => FALSE,
+        'revision' => FALSE,
+      ),
+      'preview' => DRUPAL_OPTIONAL,
+      'submitted' => TRUE,
+    ), $values['settings']['node']);
   }
 
 }

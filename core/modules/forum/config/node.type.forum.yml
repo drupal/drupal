@@ -9,7 +9,7 @@ settings:
   node:
     preview: 1
     options:
-      status: status
+      status: true
       # Not promoted to front page.
       promote: false
       sticky: false

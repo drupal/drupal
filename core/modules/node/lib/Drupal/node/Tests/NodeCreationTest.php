@@ -60,6 +60,19 @@ class NodeCreationTest extends NodeTestBase {
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertTrue($node, 'Node found in database.');
+
+    // Verify that pages do not show submitted information by default.
+    $submitted_by = t('Submitted by !username on !datetime', array('!username' => $this->loggedInUser->getUsername(), '!datetime' => format_date($node->getCreatedTime())));
+    $this->drupalGet('node/' . $node->id());
+    $this->assertNoText($submitted_by);
+
+    // Change the node type setting to show submitted by information.
+    $node_type = entity_load('node_type', 'page');
+    $node_type->settings['node']['submitted'] = TRUE;
+    $node_type->save();
+
+    $this->drupalGet('node/' . $node->id());
+    $this->assertText($submitted_by);
   }
 
   /**

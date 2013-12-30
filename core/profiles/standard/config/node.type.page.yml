@@ -9,10 +9,10 @@ settings:
   node:
     preview: '1'
     options:
-      status: status
-      promote: '0'
-      sticky: '0'
-      revision: '0'
-    submitted: '0'
+      status: true
+      promote: false
+      sticky: false
+      revision: false
+    submitted: false
 status: '1'
 langcode: en

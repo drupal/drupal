@@ -245,7 +245,9 @@ class EditLoadingTest extends WebTestBase {
       // then again retrieve the field form, fill it, submit it (so it ends up
       // in TempStore) and then save the entity. Now there should be two
       // revisions.
-      $this->container->get('config.factory')->get('node.type.article')->set('settings.node.options', array('status', 'revision'))->save();
+      $node_type = entity_load('node_type', 'article');
+      $node_type->settings['node']['options']['revision'] = TRUE;
+      $node_type->save();
 
       // Retrieve field form.
       $post = array('nocssjs' => 'true', 'reset' => 'true');

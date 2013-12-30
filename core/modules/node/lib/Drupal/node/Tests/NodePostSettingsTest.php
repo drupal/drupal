@@ -61,6 +61,7 @@ class NodePostSettingsTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
-    $this->assertNoRaw('<span class="submitted">', 'Post information is not displayed.');
+    $elements = $this->xpath('//*[contains(@class,:class)]', array(':class' => 'submitted'));
+    $this->assertEqual(count($elements), 0, 'Post information is not displayed.');
   }
 }

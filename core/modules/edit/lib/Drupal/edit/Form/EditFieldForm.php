@@ -119,7 +119,7 @@ class EditFieldForm extends FormBase {
     if ($entity->entityType() == 'node') {
       $node_type_settings = $this->nodeTypeStorage->load($entity->bundle())->getModuleSettings('node');
       $options = (isset($node_type_settings['options'])) ? $node_type_settings['options'] : array();
-      $entity->setNewRevision(in_array('revision', $options));
+      $entity->setNewRevision(!empty($options['revision']));
       $entity->log = NULL;
     }
 

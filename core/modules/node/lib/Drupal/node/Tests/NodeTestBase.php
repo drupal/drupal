@@ -34,7 +34,13 @@ abstract class NodeTestBase extends WebTestBase {
 
     // Create Basic page and Article node types.
     if ($this->profile != 'standard') {
-      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
+      $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page', 'settings' => array(
+        // Set proper default options for the page content type.
+        'node' => array(
+          'options' => array('promote' => FALSE),
+          'submitted' => FALSE,
+        ),
+      )));
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
     }
     $this->accessController = \Drupal::entityManager()->getAccessController('node');

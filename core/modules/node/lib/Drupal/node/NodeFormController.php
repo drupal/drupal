@@ -44,7 +44,7 @@ class NodeFormController extends ContentEntityFormController {
       foreach (array('status', 'promote', 'sticky') as $key) {
         // Multistep node forms might have filled in something already.
         if ($node->$key->isEmpty()) {
-          $node->$key = (int) in_array($key, $this->settings['options']);
+          $node->$key = (int) !empty($this->settings['options'][$key]);
         }
       }
       $node->setAuthorId(\Drupal::currentUser()->id());
@@ -56,7 +56,7 @@ class NodeFormController extends ContentEntityFormController {
       $node->log = NULL;
     }
     // Always use the default revision setting.
-    $node->setNewRevision(in_array('revision', $this->settings['options']));
+    $node->setNewRevision(!empty($this->settings['options']['revision']));
   }
 
   /**
