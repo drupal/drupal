@@ -1,6 +1,7 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Fixed broken tests on PHP 5.5.
 - Made the File and Image modules more robust when saving entities that have
   deleted files attached. The code in file_field_presave() will now remove the
   record of the deleted file from the entity before saving (minor data
