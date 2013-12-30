@@ -5282,6 +5282,10 @@ function drupal_cron_run() {
   }
 
   foreach ($queues as $queue_name => $info) {
+    if (!empty($info['skip on cron'])) {
+      // Do not run if queue wants to skip.
+      continue;
+    }
     $function = $info['worker callback'];
     $end = time() + (isset($info['time']) ? $info['time'] : 15);
     $queue = DrupalQueue::get($queue_name);

@@ -610,6 +610,9 @@ function hook_cron() {
  *     with one argument, the item created via DrupalQueue::createItem().
  *   - 'time': (optional) How much time Drupal should spend on calling this
  *     worker in seconds. Defaults to 15.
+ *   - 'skip on cron': (optional) Set to TRUE to avoid being processed during
+ *     cron runs (for example, if you want to control all queue execution
+ *     manually).
  *
  * @see hook_cron()
  * @see hook_cron_queue_info_alter()

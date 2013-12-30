@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Added an optional 'skip on cron' parameter to hook_cron_queue_info() to allow
+  queues to avoid being automatically processed on cron runs (API addition).
 - Fixed a bug which caused hook_block_view_MODULE_DELTA_alter() to never be
   invoked if the block delta had a hyphen in it. To implement the hook when the
   block delta has a hyphen, modules should now replace hyphens with underscores
