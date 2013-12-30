@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug in node_save() which prevented the saved node from being updated
+  in hook_node_insert() and other similar hooks.
 - Added a meta tag to install.php to prevent it from being indexed by search
   engines even when Drupal is installed in a subfolder (minor markup change).
 - Fixed a bug in the database API that caused frequent deadlock errors when
