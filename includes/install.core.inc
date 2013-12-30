@@ -692,6 +692,21 @@ function install_full_redirect_url($install_state) {
  */
 function install_display_output($output, $install_state) {
   drupal_page_header();
+
+  // Prevent install.php from being indexed when installed in a sub folder.
+  // robots.txt rules are not read if the site is within domain.com/subfolder
+  // resulting in /subfolder/install.php being found through search engines.
+  // When settings.php is writeable this can be used via an external database
+  // leading a malicious user to gain php access to the server.
+  $noindex_meta_tag = array(
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'name' => 'robots',
+      'content' => 'noindex, nofollow',
+    ),
+  );
+  drupal_add_html_head($noindex_meta_tag, 'install_meta_robots');
+
   // Only show the task list if there is an active task; otherwise, the page
   // request has ended before tasks have even been started, so there is nothing
   // meaningful to show.
