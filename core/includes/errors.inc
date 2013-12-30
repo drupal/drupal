@@ -373,12 +373,14 @@ function format_backtrace(array $backtrace) {
     else {
       $call['function'] = 'main';
     }
-    foreach ($trace['args'] as $arg) {
-      if (is_scalar($arg)) {
-        $call['args'][] = is_string($arg) ? '\'' . filter_xss($arg) . '\'' : $arg;
-      }
-      else {
-        $call['args'][] = ucfirst(gettype($arg));
+    if (isset($trace['args'])) {
+      foreach ($trace['args'] as $arg) {
+        if (is_scalar($arg)) {
+          $call['args'][] = is_string($arg) ? '\'' . filter_xss($arg) . '\'' : $arg;
+        }
+        else {
+          $call['args'][] = ucfirst(gettype($arg));
+        }
       }
     }
     $return .= $call['function'] . '(' . implode(', ', $call['args']) . ")\n";
