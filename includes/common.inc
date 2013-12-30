@@ -5176,6 +5176,10 @@ function drupal_page_set_cache() {
   global $base_root;
 
   if (drupal_page_is_cacheable()) {
+
+    // Check whether the current page might be compressed.
+    $page_compressed = variable_get('page_compression', TRUE) && extension_loaded('zlib');
+
     $cache = (object) array(
       'cid' => $base_root . request_uri(),
       'data' => array(
@@ -5183,6 +5187,9 @@ function drupal_page_set_cache() {
         'body' => ob_get_clean(),
         'title' => drupal_get_title(),
         'headers' => array(),
+        // We need to store whether page was compressed or not,
+        // because by the time it is read, the configuration might change.
+        'page_compressed' => $page_compressed,
       ),
       'expire' => CACHE_TEMPORARY,
       'created' => REQUEST_TIME,
@@ -5200,7 +5207,7 @@ function drupal_page_set_cache() {
     }
 
     if ($cache->data['body']) {
-      if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
+      if ($page_compressed) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
       cache_set($cache->cid, $cache->data, 'cache_page', $cache->expire);
