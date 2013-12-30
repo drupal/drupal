@@ -82,9 +82,8 @@ class InstallerTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), 'Save and continue');
     // Reload config directories.
     include $this->public_files_directory . '/settings.php';
-    $prefix = substr($this->public_files_directory, strlen(conf_path() . '/files/'));
-    foreach ($config_directories as $type => $data) {
-      $GLOBALS['config_directories'][$type]['path'] = $prefix . '/files/' . $data['path'];
+    foreach ($config_directories as $type => $path) {
+      $GLOBALS['config_directories'][$type] = $path;
     }
     $this->rebuildContainer();
 

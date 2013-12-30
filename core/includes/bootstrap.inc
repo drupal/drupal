@@ -418,18 +418,9 @@ function config_get_config_directory($type = CONFIG_ACTIVE_DIRECTORY) {
   global $config_directories;
 
   if (!empty($config_directories[$type])) {
-    // Allow a configuration directory path to be outside of webroot.
-    if (empty($config_directories[$type]['absolute'])) {
-      $path = conf_path() . '/files/' . $config_directories[$type]['path'];
-    }
-    else {
-      $path = $config_directories[$type]['path'];
-    }
+    return $config_directories[$type];
   }
-  else {
-    throw new Exception(format_string('The configuration directory type %type does not exist.', array('%type' => $type)));
-  }
-  return $path;
+  throw new Exception(format_string('The configuration directory type %type does not exist.', array('%type' => $type)));
 }
 
 /**
@@ -2293,7 +2284,7 @@ function _drupal_load_test_overrides($test_prefix) {
   $path_prefix = 'simpletest/' . substr($test_prefix, 10);
   $config_directories = array();
   foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
-    $config_directories[$type] = array('path' => $path_prefix . '/config_' . $type);
+    $config_directories[$type] = conf_path() . '/files/' . $path_prefix . '/config_' . $type;
   }
 
   // Check for and load a settings.php file in the simpletest files directory.

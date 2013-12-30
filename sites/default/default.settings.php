@@ -246,14 +246,8 @@ $drupal_hash_salt = '';
  * Example:
  * @code
  *   $config_directories = array(
- *     CONFIG_ACTIVE_DIRECTORY => array(
- *       'path' => '/some/directory/outside/webroot',
- *       'absolute' => TRUE,
- *     ),
- *     CONFIG_STAGING_DIRECTORY => array(
- *       'path' => '/another/directory/outside/webroot',
- *       'absolute' => TRUE,
- *     ),
+ *     CONFIG_ACTIVE_DIRECTORY => '/some/directory/outside/webroot',
+ *     CONFIG_STAGING_DIRECTORY => '/another/directory/outside/webroot',
  *   );
  * @endcode
  */

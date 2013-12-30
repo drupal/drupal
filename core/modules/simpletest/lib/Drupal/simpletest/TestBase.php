@@ -1012,14 +1012,14 @@ abstract class TestBase {
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
     foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
       // Assign the relative path to the global variable.
-      $path = 'simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
-      $GLOBALS['config_directories'][$type]['path'] = $path;
+      $path = conf_path() . '/files/simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
+      $GLOBALS['config_directories'][$type] = $path;
       // Ensure the directory can be created and is writeable.
       if (!install_ensure_config_directory($type)) {
         return FALSE;
       }
       // Provide the already resolved path for tests.
-      $this->configDirectories[$type] = $this->originalFileDirectory . '/' . $path;
+      $this->configDirectories[$type] = $path;
     }
   }
 
