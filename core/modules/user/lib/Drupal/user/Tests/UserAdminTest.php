@@ -159,7 +159,8 @@ class UserAdminTest extends WebTestBase {
     // Notification E-mail address.
     $user_mail = $this->drupalGetMails(array(
       'to' => $edit['mail'],
-      'from' => $notify_address,
+      'from' => $server_address,
+      'reply-to' => $notify_address,
       'subject' => $subject,
     ));
     $this->assertTrue(count($user_mail), 'New user mail to user is sent from configured Notification E-mail address');

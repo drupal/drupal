@@ -78,24 +78,29 @@ class MailTest extends WebTestBase implements MailInterface {
   }
 
   /**
-   * Checks for the site name in an auto-generated From: header.
+   * Checks the From: and Reply-to: headers.
    */
-  function testFromHeader() {
+  public function testFromAndReplyToHeader() {
     global $language;
 
     // Reset the class variable holding a copy of the last sent message.
     self::$sent_message = NULL;
-    // Send an e-mail with a sender address specified.
-    $from_email = 'someone_else@example.com';
-    drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language, array(), $from_email);
-    // Test that the from e-mail is just the e-mail and not the site name and
+    // Send an e-mail with a reply-to address specified.
+    $from_email = 'Drupal <simpletest@example.com>';
+    $reply_email = 'someone_else@example.com';
+    drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language, array(), $reply_email);
+    // Test that the reply-to e-mail is just the e-mail and not the site name and
     // default sender e-mail.
-    $this->assertEqual($from_email, self::$sent_message['headers']['From']);
+    $this->assertEqual($from_email, self::$sent_message['headers']['From'], 'Message is sent from the site email account.');
+    $this->assertEqual($reply_email, self::$sent_message['headers']['Reply-to'], 'Message reply-to headers are set.');
+    $this->assertFalse(isset(self::$sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
 
     self::$sent_message = NULL;
     // Send an e-mail and check that the From-header contains the site name.
     drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language);
-    $this->assertEqual('Drupal <simpletest@example.com>', self::$sent_message['headers']['From']);
+    $this->assertEqual($from_email, self::$sent_message['headers']['From'], 'Message is sent from the site email account.');
+    $this->assertFalse(isset(self::$sent_message['headers']['Reply-to']), 'Message reply-to is not set if not specified.');
+    $this->assertFalse(isset(self::$sent_message['headers']['Errors-To']), 'Errors-to header must not be set, it is deprecated.');
   }
 
   /**

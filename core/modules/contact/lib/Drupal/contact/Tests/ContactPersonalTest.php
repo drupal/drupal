@@ -73,7 +73,8 @@ class ContactPersonalTest extends WebTestBase {
     $this->assertEqual(1, count($mails));
     $mail = $mails[0];
     $this->assertEqual($mail['to'], $this->contact_user->getEmail());
-    $this->assertEqual($mail['from'], $this->web_user->getEmail());
+    $this->assertEqual($mail['from'], \Drupal::config('system.site')->get('mail'));
+    $this->assertEqual($mail['reply-to'], $this->web_user->getEmail());
     $this->assertEqual($mail['key'], 'user_mail');
     $variables = array(
       '!site-name' => \Drupal::config('system.site')->get('name'),
