@@ -7,6 +7,8 @@
 
 namespace Drupal\file\Tests;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+
 /**
  * Tests that formatters are working properly.
  */
@@ -29,6 +31,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $field_settings = array(
       'display_field' => '1',
       'display_default' => '1',
+      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     );
     $instance_settings = array(
       'description_field' => '1',
@@ -80,5 +83,17 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $this->assertText($description);
+
+    // Test that fields appear as expected after during the preview.
+    // Add a second file.
+    $name = 'files[' . $field_name . '_1][]';
+    $edit[$name] = drupal_realpath($test_file->getFileUri());
+
+    // Uncheck the display checkboxes and go to the preview.
+    $edit[$field_name . '[0][display]'] = FALSE;
+    $edit[$field_name . '[1][display]'] = FALSE;
+    $this->drupalPostForm("node/$nid/edit", $edit, t('Preview'));
+    $this->assertRaw($field_name . '[0][display]', 'First file appears as expected.');
+    $this->assertRaw($field_name . '[1][display]', 'Second file appears as expected.');
   }
 }
