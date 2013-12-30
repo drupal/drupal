@@ -193,7 +193,7 @@ class BlockTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test block visibility when using "pages" restriction but leaving 
+   * Test block visibility when using "pages" restriction but leaving
    * "pages" textarea empty
    */
   function testBlockVisibilityListedEmpty() {
@@ -897,5 +897,83 @@ class BlockInvalidRegionTestCase extends DrupalWebTestCase {
     // Clear the cache to check if the warning message is not triggered.
     $this->drupalPost('admin/config/development/performance', array(), 'Clear all caches');
     $this->assertNoRaw($warning_message, 'Disabled block in the invalid region will not trigger the warning.');
+  }
+}
+
+/**
+ * Tests that block rehashing works correctly.
+ */
+class BlockHashTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Block rehash',
+      'description' => 'Checks _block_rehash() functionality.',
+      'group' => 'Block',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('block'));
+  }
+
+  /**
+   * Tests that block rehashing does not write to the database too often.
+   */
+  function testBlockRehash() {
+    // No hook_block_info_alter(), no save.
+    $this->doRehash();
+    module_enable(array('block_test'), FALSE);
+    // Save the new blocks, check that the new blocks exist by checking weight.
+    _block_rehash();
+    $this->assertWeight(0);
+    // Now hook_block_info_alter() exists but no blocks are saved on a second
+    // rehash.
+    $this->doRehash();
+    $this->assertWeight(0);
+    // Now hook_block_info_alter() exists and is changing one block which
+    // should be saved.
+    $GLOBALS['conf']['block_test_info_alter'] = 1;
+    $this->doRehash(TRUE);
+    $this->assertWeight(10000);
+    // Now hook_block_info_alter() exists but already changed the block's
+    // weight before, so it should not be saved again.
+    $this->doRehash();
+    $this->assertWeight(10000);
+  }
+
+  /**
+   * Performs a block rehash and checks several related assertions.
+   *
+   * @param $alter_active
+   *   Set to TRUE if the block_test module's hook_block_info_alter()
+   *   implementation is expected to make a change that results in an existing
+   *   block needing to be resaved to the database. Defaults to FALSE.
+   */
+  function doRehash($alter_active = FALSE) {
+    $saves = 0;
+    foreach (_block_rehash() as $block) {
+      $module = $block['module'];
+      $delta = $block['delta'];
+      if ($alter_active && $module == 'block_test' && $delta == 'test_html_id') {
+        $this->assertFalse(empty($block['saved']), "$module $delta saved");
+        $saves++;
+      }
+      else {
+        $this->assertTrue(empty($block['saved']), "$module $delta not saved");
+      }
+    }
+    $this->assertEqual($alter_active, $saves);
+  }
+
+  /**
+   * Asserts that the block_test module's block has a given weight.
+   *
+   * @param $weight
+   *   The expected weight.
+   */
+  function assertWeight($weight) {
+    $db_weight = db_query('SELECT weight FROM {block} WHERE module = :module AND delta = :delta', array(':module' => 'block_test', ':delta' => 'test_html_id'))->fetchField();
+    // By casting to string the assert fails on FALSE.
+    $this->assertIdentical((string) $db_weight, (string) $weight);
   }
 }

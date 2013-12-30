@@ -56,3 +56,12 @@ function block_test_block_view_block_test_test_underscore_alter(&$data, $block) 
 function block_test_block_view_block_test_test_hyphen_alter(&$data, $block) {
   $data['content'] = 'hook_block_view_MODULE_DELTA_alter';
 }
+
+/**
+ * Implements hook_block_info_alter().
+ */
+function block_test_block_info_alter(&$blocks) {
+  if (variable_get('block_test_info_alter')) {
+    $blocks['block_test']['test_html_id']['weight'] = 10000;
+  }
+}

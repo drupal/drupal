@@ -401,23 +401,27 @@ function _block_rehash($theme = NULL) {
   }
   // Save the blocks defined in code for alter context.
   $code_blocks = $current_blocks;
-  $database_blocks = db_select('block', 'b')
+  $database_blocks = db_select('block', 'b', array('fetch' => PDO::FETCH_ASSOC))
     ->fields('b')
     ->condition($or)
     ->condition('theme', $theme)
     ->execute();
+  $original_database_blocks = array();
   foreach ($database_blocks as $block) {
-    // Preserve info which is not in the database.
-    $block->info = $current_blocks[$block->module][$block->delta]['info'];
+    $module = $block['module'];
+    $delta = $block['delta'];
+    $original_database_blocks[$module][$delta] = $block;
     // The cache mode can only by set from hook_block_info(), so that has
     // precedence over the database's value.
-    if (isset($current_blocks[$block->module][$block->delta]['cache'])) {
-      $block->cache = $current_blocks[$block->module][$block->delta]['cache'];
+    if (isset($current_blocks[$module][$delta]['cache'])) {
+      $block['cache'] = $current_blocks[$module][$delta]['cache'];
     }
+    // Preserve info which is not in the database.
+    $block['info'] = $current_blocks[$module][$delta]['info'];
     // Blocks stored in the database override the blocks defined in code.
-    $current_blocks[$block->module][$block->delta] = get_object_vars($block);
+    $current_blocks[$module][$delta] = $block;
     // Preserve this block.
-    $bids[$block->bid] = $block->bid;
+    $bids[$block['bid']] = $block['bid'];
   }
   drupal_alter('block_info', $current_blocks, $theme, $code_blocks);
   foreach ($current_blocks as $module => $module_blocks) {
@@ -456,7 +460,15 @@ function _block_rehash($theme = NULL) {
       else {
         $primary_keys = array();
       }
-      drupal_write_record('block', $block, $primary_keys);
+      // If the block is new or differs from the original database block, save
+      // it. To determine whether there was a change it is enough to examine
+      // the values for the keys in the original database record as that
+      // contained every database field.
+      if (!$primary_keys || array_diff_assoc($original_database_blocks[$module][$delta], $block)) {
+        drupal_write_record('block', $block, $primary_keys);
+        // Make it possible to test this.
+        $block['saved'] = TRUE;
+      }
       // Add to the list of blocks we return.
       $blocks[] = $block;
     }

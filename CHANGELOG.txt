@@ -1,6 +1,11 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Performance improvement: Prevent block rehashing from writing blocks to the
+  database on every cache clear and cron run when the blocks have not changed.
+  This fix results in an extra 'saved' key which is added and set to TRUE for
+  each block returned by _block_rehash() that actually is saved to the database
+  (data structure change).
 - Added an optional 'skip on cron' parameter to hook_cron_queue_info() to allow
   queues to avoid being automatically processed on cron runs (API addition).
 - Fixed a bug which caused hook_block_view_MODULE_DELTA_alter() to never be
