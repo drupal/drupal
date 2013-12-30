@@ -1,6 +1,8 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug in the database API that caused frequent deadlock errors when
+  running merge queries on some servers.
 - Performance improvement: Prevent block rehashing from writing blocks to the
   database on every cache clear and cron run when the blocks have not changed.
   This fix results in an extra 'saved' key which is added and set to TRUE for
