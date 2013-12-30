@@ -13,7 +13,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 /**
  * Tests Datetime field functionality.
  */
-class DatetimeFieldTest extends WebTestBase {
+class DateTimeFieldTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -48,9 +48,11 @@ class DatetimeFieldTest extends WebTestBase {
     parent::setUp();
 
     $web_user = $this->drupalCreateUser(array(
+      'access content',
       'view test entity',
       'administer entity_test content',
       'administer content types',
+      'administer node fields',
     ));
     $this->drupalLogin($web_user);
 
@@ -66,9 +68,6 @@ class DatetimeFieldTest extends WebTestBase {
       'field_name' => $this->field->name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
-      'settings' => array(
-        'default_value' => 'blank',
-      ),
     ));
     $this->instance->save();
 
@@ -292,40 +291,67 @@ class DatetimeFieldTest extends WebTestBase {
    * Test default value functionality.
    */
   function testDefaultValue() {
+    // Create a test content type.
+    $this->drupalCreateContentType(array('type' => 'date_content'));
 
-    // Change the field to a datetime field.
-    $this->field->settings['datetime_type'] = 'datetime';
-    $this->field->save();
-    $field_name = $this->field->name;
+    // Create a field with settings to validate.
+    $field = entity_create('field_entity', array(
+      'name' => drupal_strtolower($this->randomName()),
+      'entity_type' => 'node',
+      'type' => 'datetime',
+      'settings' => array('datetime_type' => 'date'),
+    ));
+    $field->save();
 
-    // Set the default value to 'now'.
-    $this->instance->settings['default_value'] = 'now';
-    $this->instance->default_value_function = 'datetime_default_value';
-    $this->instance->save();
+    $instance = entity_create('field_instance', array(
+      'field_name' => $field->name,
+      'entity_type' => 'node',
+      'bundle' => 'date_content',
+    ));
+    $instance->save();
 
-    // Display creation form.
-    $date = new DrupalDateTime();
-    $date_format = 'Y-m-d';
-    $this->drupalGet('entity_test/add');
+    // Set now as default_value.
+    $instance_edit = array(
+      'default_value_input[default_date]' => 'now',
+    );
+    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field->name, $instance_edit, t('Save settings'));
 
-    // See if current date is set. We cannot test for the precise time because
-    // it may be a few seconds between the time the comparison date is created
-    // and the form date, so we just test the date and that the time is not
-    // empty.
-    $this->assertFieldByName("{$field_name}[0][value][date]", $date->format($date_format), 'Date element found.');
-    $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
+    // Check that default value is selected in default value form.
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field->name);
+    $this->assertRaw('<option value="now" selected="selected">The current date</option>', 'The default value is selected in instance settings page');
 
-    // Set the default value to 'blank'.
-    $this->instance->settings['default_value'] = 'blank';
-    $this->instance->default_value_function = 'datetime_default_value';
-    $this->instance->save();
+    // Check if default_date has been stored successfully.
+    $config_entity = $this->container->get('config.factory')->get('field.instance.node.date_content.' . $field->name)->get();
+    $this->assertEqual($config_entity['default_value'][0]['default_date'], 'now', 'Default value has been stored succesfully');
 
-    // Display creation form.
-    $this->drupalGet('entity_test/add');
+    // Clean field_info cache in order to avoid stale cache values.
+    field_info_cache_clear();
 
-    // See that no date is set.
-    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
+    // Create a new node to check that datetime field default value is today.
+    $new_node = entity_create('node', array('type' => 'date_content'));
+    $expected_date = new DrupalDateTime('now', DATETIME_STORAGE_TIMEZONE);
+    $this->assertEqual($new_node->get($field->name)->offsetGet(0)->value, $expected_date->format(DATETIME_DATE_STORAGE_FORMAT));
+
+    // Remove default value.
+    $instance_edit = array(
+      'default_value_input[default_date]' => '',
+    );
+    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field->name, $instance_edit, t('Save settings'));
+
+    // Check that default value is selected in default value form.
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field->name);
+    $this->assertRaw('<option value="" selected="selected">' . t('- None -') . '</option>', 'The default value is selected in instance settings page');
+
+    // Check if default_date has been stored successfully.
+    $config_entity = $this->container->get('config.factory')->get('field.instance.node.date_content.' . $field->name)->get();
+    $this->assertTrue(empty($config_entity['default_value']), 'Empty default value has been stored succesfully');
+
+    // Clean field_info cache in order to avoid stale cache values.
+    field_info_cache_clear();
+
+    // Create a new node to check that datetime field default value is today.
+    $new_node = entity_create('node', array('type' => 'date_content'));
+    $this->assertNull($new_node->get($field->name)->offsetGet(0)->value, 'Default value is not set');
   }
 
   /**

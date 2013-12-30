@@ -9,15 +9,10 @@ field.datetime.settings:
       label: 'Date type'
 
 field.datetime.instance_settings:
-  type: mapping
-  label: 'Datetime settings'
-  mapping:
-    default_value:
-      type: string
-      label: 'Default date'
-    user_register_form:
-      type: boolean
-      label: 'Display on user registration form.'
+  type: sequence
+  label: 'Settings'
+  sequence:
+    - type: string
 
 field.datetime.value:
   type: sequence

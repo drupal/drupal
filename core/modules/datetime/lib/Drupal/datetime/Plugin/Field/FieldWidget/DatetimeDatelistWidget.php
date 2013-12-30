@@ -8,9 +8,7 @@ namespace Drupal\datetime\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\field\FieldInstanceInterface;
-use Drupal\datetime\DateHelper;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 
 /**
  * Plugin implementation of the 'datetime_datelist' widget.
@@ -33,29 +31,6 @@ class DateTimeDatelistWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
-    // Identify the function used to set the default value.
-    // @todo Make this work for both configurable and nonconfigurable fields:
-    //   https://drupal.org/node/1989468.
-    if ($field_definition instanceof FieldInstanceInterface) {
-      $field_definition->default_value_function = $this->defaultValueFunction();
-    }
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
-  }
-
-  /**
-   * Returns the callback used to set a date default value.
-   *
-   * @return string
-   *   The name of the callback to use when setting a default date value.
-   */
-  public function defaultValueFunction() {
-    return 'datetime_default_value';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $date_order = $this->getSetting('date_order');
     $time_type = $this->getSetting('time_type');
@@ -74,7 +49,7 @@ class DateTimeDatelistWidget extends WidgetBase {
 
     // Identify the type of date and time elements to use.
     switch ($this->getFieldSetting('datetime_type')) {
-      case 'date':
+      case DateTimeItem::DATETIME_TYPE_DATE:
         $storage_format = DATETIME_DATE_STORAGE_FORMAT;
         break;
 

@@ -168,48 +168,6 @@ function datetime_datelist_widget_validate(&$element, &$form_state) {
 }
 
 /**
- * Sets a default value for an empty date field.
- *
- * Callback for $instance['default_value_function'], as implemented by
- * Drupal\datetime\Plugin\Field\FieldWidget\DateTimeDatepicker.
- *
- * @param $entity_type
- *
- * @param $entity
- *
- * @param array $field
- *
- * @param array $instance
- *
- * @param $langcode
- *
- *
- * @return array
- *
- */
-function datetime_default_value($entity, $field, $instance, $langcode) {
-
-  $value = '';
-  $date = '';
-  if ($instance->getSetting('default_value') == 'now') {
-    // A default value should be in the format and timezone used for date
-    // storage.
-    $date = new DrupalDateTime('now', DATETIME_STORAGE_TIMEZONE);
-    $storage_format = $field->getSetting('datetime_type') == 'date' ? DATETIME_DATE_STORAGE_FORMAT: DATETIME_DATETIME_STORAGE_FORMAT;
-    $value = $date->format($storage_format);
-  }
-
-  // We only provide a default value for the first item, as do all fields.
-  // Otherwise, there is no way to clear out unwanted values on multiple value
-  // fields.
-  $item = array();
-  $item[0]['value'] = $value;
-  $item[0]['date'] = $date;
-
-  return $item;
-}
-
-/**
  * Sets a consistent time on a date without time.
  *
  * The default time for a date without time can be anything, so long as it is

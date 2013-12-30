@@ -9,7 +9,7 @@ namespace Drupal\datetime\Plugin\Field\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\field\FieldInstanceInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 
 /**
  * Plugin implementation of the 'datetime_default' widget.
@@ -35,26 +35,10 @@ class DateTimeDefaultWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
-    // Identify the function used to set the default value.
-    // @todo Make this work for both configurable and nonconfigurable fields:
-    //   https://drupal.org/node/1989468.
-    if ($field_definition instanceof FieldInstanceInterface) {
-      $field_definition->default_value_function = $this->defaultValueFunction();
-    }
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
 
     // @todo Inject this once https://drupal.org/node/2035317 is in.
     $this->dateStorage = \Drupal::entityManager()->getStorageController('date_format');
-  }
-
-  /**
-   * Return the callback used to set a date default value.
-   *
-   * @return string
-   *   The name of the callback to use when setting a default date value.
-   */
-  public function defaultValueFunction() {
-    return 'datetime_default_value';
   }
 
   /**
@@ -75,7 +59,7 @@ class DateTimeDefaultWidget extends WidgetBase {
 
     // Identify the type of date and time elements to use.
     switch ($this->getFieldSetting('datetime_type')) {
-      case 'date':
+      case DateTimeItem::DATETIME_TYPE_DATE:
         $date_type = 'date';
         $time_type = 'none';
         $date_format = $this->dateStorage->load('html_date')->getPattern($format_type);
@@ -117,7 +101,7 @@ class DateTimeDefaultWidget extends WidgetBase {
       // The date was created and verified during field_load(), so it is safe to
       // use without further inspection.
       $date->setTimezone(new \DateTimeZone($element['value']['#date_timezone']));
-      if ($this->getFieldSetting('datetime_type') == 'date') {
+      if ($this->getFieldSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE) {
         // A date without time will pick up the current time, use the default
         // time.
         datetime_date_default_time($date);
