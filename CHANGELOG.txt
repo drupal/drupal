@@ -1,6 +1,10 @@
 
 Drupal 7.25, xxxx-xx-xx (development version)
 -----------------------
+- Fixed a bug which caused hook_block_view_MODULE_DELTA_alter() to never be
+  invoked if the block delta had a hyphen in it. To implement the hook when the
+  block delta has a hyphen, modules should now replace hyphens with underscores
+  when constructing the function name for the hook implementation.
 - Fixed a bug which caused cached pages to sometimes be sent to the browser
   with incorrect compression. The fix adds a new 'page_compressed' key to the
   $cache->data array returned by drupal_page_get_cache() (minor data structure

@@ -753,6 +753,48 @@ class BlockTemplateSuggestionsUnitTest extends DrupalUnitTestCase {
 }
 
 /**
+ * Tests for hook_block_view_MODULE_DELTA_alter().
+ */
+class BlockViewModuleDeltaAlterWebTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Block view module delta alter',
+      'description' => 'Test the hook_block_view_MODULE_DELTA_alter() hook.',
+      'group' => 'Block',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp(array('block_test'));
+  }
+
+  /**
+   * Tests that the alter hook is called, even if the delta contains a hyphen.
+   */
+  public function testBlockViewModuleDeltaAlter() {
+    $block = new stdClass;
+    $block->module = 'block_test';
+    $block->delta = 'test_underscore';
+    $block->title = '';
+    $render_array = _block_render_blocks(array('region' => $block));
+    $render = array_pop($render_array);
+    $test_underscore = $render->content['#markup'];
+    $this->assertEqual($test_underscore, 'hook_block_view_MODULE_DELTA_alter', 'Found expected altered block content for delta with underscore');
+
+    $block = new stdClass;
+    $block->module = 'block_test';
+    $block->delta = 'test-hyphen';
+    $block->title = '';
+    $render_array = _block_render_blocks(array('region' => $block));
+    $render = array_pop($render_array);
+    $test_hyphen = $render->content['#markup'];
+    $this->assertEqual($test_hyphen, 'hook_block_view_MODULE_DELTA_alter', 'Hyphens (-) in block delta were replaced by underscore (_)');
+  }
+
+}
+
+/**
  * Tests that hidden regions do not inherit blocks when a theme is enabled.
  */
 class BlockHiddenRegionTestCase extends DrupalWebTestCase {
