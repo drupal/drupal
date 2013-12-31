@@ -2222,8 +2222,8 @@ function node_last_changed($nid) {
 /**
  * Returns a list of all the existing revision numbers.
  *
- * @param Drupal\node\Node $node
- *   The node entity.
+ * @param $node
+ *   The node object.
  *
  * @return
  *   An associative array keyed by node revision number.
