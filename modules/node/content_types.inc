@@ -255,11 +255,11 @@ function _node_characters($length) {
  */
 function node_type_form_validate($form, &$form_state) {
   $type = new stdClass();
-  $type->type = trim($form_state['values']['type']);
+  $type->type = $form_state['values']['type'];
   $type->name = trim($form_state['values']['name']);
 
   // Work out what the type was before the user submitted this form
-  $old_type = trim($form_state['values']['old_type']);
+  $old_type = $form_state['values']['old_type'];
 
   $types = node_type_get_names();
 
@@ -288,7 +288,7 @@ function node_type_form_submit($form, &$form_state) {
 
   $type = node_type_set_defaults();
 
-  $type->type = trim($form_state['values']['type']);
+  $type->type = $form_state['values']['type'];
   $type->name = trim($form_state['values']['name']);
   $type->orig_type = trim($form_state['values']['orig_type']);
   $type->old_type = isset($form_state['values']['old_type']) ? $form_state['values']['old_type'] : $type->type;
