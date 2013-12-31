@@ -7,7 +7,7 @@ Drupal 7.25, xxxx-xx-xx (development version)
   engines even when Drupal is installed in a subfolder (minor markup change).
 - Fixed a bug in the database API that caused frequent deadlock errors when
   running merge queries on some servers.
-- Performance improvement: Prevent block rehashing from writing blocks to the
+- Performance improvement: Prevented block rehashing from writing blocks to the
   database on every cache clear and cron run when the blocks have not changed.
   This fix results in an extra 'saved' key which is added and set to TRUE for
   each block returned by _block_rehash() that actually is saved to the database
