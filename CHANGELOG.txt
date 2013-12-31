@@ -57,6 +57,9 @@ Drupal 7.25, xxxx-xx-xx (development version)
 - Changed the File module's hook_field_load() implementation to prevent file
   entity properties which have the same name as file or image field properties
   from overwriting the field properties (minor API change).
+- Numerous small bug fixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.24, 2013-11-20
 ----------------------
