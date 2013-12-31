@@ -44,14 +44,8 @@ class ToolkitGdTest extends DrupalUnitTestBase {
   }
 
   protected function checkRequirements() {
-    $gd_available = FALSE;
-    if ($check = get_extension_funcs('gd')) {
-      if (in_array('imagegd2', $check)) {
-        // GD2 support is available.
-        $gd_available =  TRUE;
-      }
-    }
-    if (!$gd_available) {
+    // GD2 support is available.
+    if (!function_exists('imagegd2')) {
       return array(
         'Image manipulations for the GD toolkit cannot run because the GD toolkit is not available.',
       );

@@ -326,13 +326,8 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
    * {@inheritdoc}
    */
   public static function isAvailable() {
-    if ($check = get_extension_funcs('gd')) {
-      if (in_array('imagegd2', $check)) {
-        // GD2 support is available.
-        return TRUE;
-      }
-    }
-    return FALSE;
+    // GD2 support is available.
+    return function_exists('imagegd2');
   }
 
   /**
