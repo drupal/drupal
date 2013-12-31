@@ -976,6 +976,12 @@ function field_attach_insert($entity_type, $entity) {
 /**
  * Save field data for an existing entity.
  *
+ * When calling this function outside an entity save operation be sure to
+ * clear caches for the entity:
+ * @code
+ * entity_get_controller($entity_type)->resetCache(array($entity_id))
+ * @endcode
+ *
  * @param $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param $entity
