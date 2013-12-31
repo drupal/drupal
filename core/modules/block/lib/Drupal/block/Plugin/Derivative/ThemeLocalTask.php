@@ -56,8 +56,8 @@ class ThemeLocalTask extends DerivativeBase implements ContainerDerivativeInterf
       // Default task!
       if ($default_theme == $theme_name) {
         $this->derivatives[$theme_name]['route_name'] = 'block.admin_display';
-        // Emulate default logic because without the base plugin id we can't set the
-        // change the tab_root_id.
+        // Emulate default logic because without the base plugin id we can't
+        // change the base_route.
         $this->derivatives[$theme_name]['weight'] = -10;
 
         unset($this->derivatives[$theme_name]['route_parameters']);

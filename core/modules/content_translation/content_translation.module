@@ -262,15 +262,6 @@ function content_translation_menu_alter(array &$items) {
 }
 
 /**
- * Implements hook_local_tasks_alter().
- */
-function content_translation_local_tasks_alter(&$local_tasks) {
-  // Alters in tab_root_id onto the content translation local task.
-  $derivative = ContentTranslationLocalTasks::create(\Drupal::getContainer(), 'content_translation.local_tasks');
-  $derivative->alterLocalTasks($local_tasks);
-}
-
-/**
  * Convert an entity canonical link to a router path.
  *
  * @param string $link

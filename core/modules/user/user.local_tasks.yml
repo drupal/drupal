@@ -2,54 +2,53 @@
 user.role_edit:
   title: 'Edit'
   route_name: user.role_edit
-  tab_root_id: user.role_edit
+  base_route: user.role_edit
 
 user.account_settings_tab:
   route_name: user.account_settings
   title: 'Settings'
-  tab_root_id: user.account_settings_tab
+  base_route: user.account_settings
 
 user.page:
   route_name: user.page
-  tab_root_id: user.page
+  base_route: user.page
   title: 'Log in'
   weight: -10
 user.register:
   route_name: user.register
-  tab_root_id: user.page
+  base_route: user.page
   title: 'Create new account'
 user.pass:
   route_name: user.pass
-  tab_root_id: user.page
+  base_route: user.page
   title: 'Request new password'
 # Other authentication methods may add pages below user/login/.
 user.login:
   route_name: user.login
-  tab_root_id: user.page
-  tab_parent_id: user.page
+  parent_id: user.page
   title: 'Username and password'
 
 user.view:
   route_name: user.view
-  tab_root_id: user.view
+  base_route: user.view
   title: View
 user.edit:
   route_name: user.edit
-  tab_root_id: user.view
+  base_route: user.view
   title: Edit
 
 user.admin_account:
   title: List
   route_name: user.admin_account
-  tab_root_id: user.admin_account
+  base_route: user.admin_account
 
 user.admin_permissions:
   title: Permissions
   route_name: user.admin_permissions
-  tab_root_id: user.admin_account
+  base_route: user.admin_account
 
 user.role_list:
   title: 'Roles'
   route_name: user.role_list
-  tab_root_id: user.admin_account
+  base_route: user.admin_account
   weight: 10

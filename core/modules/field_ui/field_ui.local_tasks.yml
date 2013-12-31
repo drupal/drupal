@@ -1,7 +1,7 @@
 field_ui.list:
   title: Entities
   route_name: field_ui.list
-  tab_root_id: field_ui.list
+  base_route: field_ui.list
 field_ui.fields:
   class: \Drupal\Core\Menu\LocalTaskDefault
   derivative: \Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask

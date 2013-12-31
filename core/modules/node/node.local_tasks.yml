@@ -1,30 +1,30 @@
 node.view:
   route_name: node.view
-  tab_root_id: node.view
+  base_route: node.view
   title: 'View'
 node.page_edit:
   route_name: node.page_edit
-  tab_root_id: node.view
+  base_route: node.view
   title: Edit
 node.delete_confirm:
   route_name: node.delete_confirm
-  tab_root_id: node.view
+  base_route: node.view
   title: Delete
   weight: 10
 node.content_overview:
   title: Content
   route_name: node.content_overview
-  tab_root_id: node.content_overview
+  base_route: node.content_overview
 node.revision_overview:
   route_name: node.revision_overview
-  tab_root_id: node.view
+  base_route: node.view
   title: 'Revisions'
   weight: 20
 node.type_edit:
   title: 'Edit'
   route_name: node.type_edit
-  tab_root_id: node.type_edit
+  base_route: node.type_edit
 node.overview_types:
   title: List
   route_name: node.overview_types
-  tab_root_id: node.overview_types
+  base_route: node.overview_types

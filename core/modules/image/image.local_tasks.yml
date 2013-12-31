@@ -1,9 +1,9 @@
 image.style_edit:
   title: 'Edit'
   route_name: image.style_edit
-  tab_root_id: image.style_edit
+  base_route: image.style_edit
 
 image.style_list:
   title: List
   route_name: image.style_list
-  tab_root_id: image.style_list
+  base_route: image.style_list

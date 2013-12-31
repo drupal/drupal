@@ -193,19 +193,21 @@ class LocalTaskDefaultTest extends UnitTestCase {
     return array(
       // Manually specify a weight, so this is used.
       array(array('weight' => 314), 'test_id', 314),
-      // Ensure that a default tab get a lower weight.
+      // Ensure that a default tab gets a lower weight.
       array(
         array(
-          'tab_root_id' => 'local_task_default',
+          'base_route' => 'local_task_default',
+          'route_name' => 'local_task_default',
           'id' => 'local_task_default'
         ),
         'local_task_default',
         -10
       ),
-      // If the root ID is different to the ID of the tab, ignore it.
+      // If the base route is different from the route of the tab, ignore it.
       array(
         array(
-          'tab_root_id' => 'local_task_example',
+          'base_route' => 'local_task_example',
+          'route_name' => 'local_task_other',
           'id' => 'local_task_default'
         ),
         'local_task_default',
@@ -214,8 +216,9 @@ class LocalTaskDefaultTest extends UnitTestCase {
       // Ensure that a default tab of a derivative gets the default value.
       array(
         array(
-          'tab_root_id' => 'local_task_derivative_default:example_id',
-          'id' => 'local_task_derivative_default'
+          'base_route' => 'local_task_example',
+          'id' => 'local_task_derivative_default:example_id',
+          'route_name' => 'local_task_example',
         ),
         'local_task_derivative_default:example_id',
         -10,

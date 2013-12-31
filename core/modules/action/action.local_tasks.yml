@@ -1,4 +1,4 @@
 action.admin:
   route_name: action.admin
   title: 'Manage actions'
-  tab_root_id: action.admin
+  base_route: action.admin

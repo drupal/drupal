@@ -175,12 +175,3 @@ function config_translation_library_info() {
   );
   return $libraries;
 }
-
-/**
- * Implements hook_local_tasks_alter().
- */
-function config_translation_local_tasks_alter(&$local_tasks) {
-  // Alters in tab_root_ids onto the config translation local tasks.
-  $derivative = ConfigTranslationLocalTasks::create(\Drupal::getContainer(), 'config_translation.local_tasks');
-  $derivative->alterLocalTasks($local_tasks);
-}

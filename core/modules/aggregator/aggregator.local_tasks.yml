@@ -1,19 +1,19 @@
 aggregator.admin_overview:
   route_name: aggregator.admin_overview
   title: 'List'
-  tab_root_id: aggregator.admin_overview
+  base_route: aggregator.admin_overview
 aggregator.admin_settings:
   route_name: aggregator.admin_settings
   title: 'Settings'
   weight: 100
-  tab_root_id: aggregator.admin_overview
+  base_route: aggregator.admin_overview
 
 aggregator.feed_view:
   route_name: aggregator.feed_view
-  tab_root_id: aggregator.feed_view
+  base_route: aggregator.feed_view
   title: View
 aggregator.feed_configure:
   route_name: aggregator.feed_configure
-  tab_root_id: aggregator.feed_view
+  base_route: aggregator.feed_view
   title: 'Configure'
   weight: 10

@@ -139,7 +139,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $this->assertEquals(12, $definitions['view.example_view.page_1']['weight']);
     $this->assertEquals('Example title', $definitions['view.example_view.page_1']['title']);
     $this->assertEquals($this->baseDefinition['class'], $definitions['view.example_view.page_1']['class']);
-    $this->assertTrue(empty($definitions['view.example_view.page_1']['tab_root_id']));
+    $this->assertTrue(empty($definitions['view.example_view.page_1']['base_route']));
   }
 
   /**
@@ -226,7 +226,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $this->assertEquals(12, $plugin['weight']);
     $this->assertEquals('Example title', $plugin['title']);
     $this->assertEquals($this->baseDefinition['class'], $plugin['class']);
-    $this->assertEquals('views_view:view.example_view.page_1', $plugin['tab_root_id']);
+    $this->assertEquals('view.example_view.page_1', $plugin['base_route']);
 
     // Setup the prefix of the derivative.
     $definitions['views_view:view.example_view.page_1'] = $definitions['view.example_view.page_1'];
@@ -239,7 +239,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $this->assertEquals(12, $plugin['weight']);
     $this->assertEquals('Example title', $plugin['title']);
     $this->assertEquals($this->baseDefinition['class'], $plugin['class']);
-    $this->assertEquals('views_view:view.example_view.page_1', $plugin['tab_root_id']);
+    $this->assertEquals('view.example_view.page_1', $plugin['base_route']);
   }
 
   /**
@@ -295,7 +295,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $definitions['test_route_tab'] = $other_tab = array(
       'route_name' => 'test_route',
       'title' => 'Test route',
-      'tab_root_id' => 'test_route_tab',
+      'base_route' => 'test_route',
     );
 
     $definitions += $this->localTaskDerivative->getDerivativeDefinitions($this->baseDefinition);
@@ -315,7 +315,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $this->assertEquals(12, $plugin['weight']);
     $this->assertEquals('Example title', $plugin['title']);
     $this->assertEquals($this->baseDefinition['class'], $plugin['class']);
-    $this->assertEquals('test_route_tab', $plugin['tab_root_id']);
+    $this->assertEquals('test_route', $plugin['base_route']);
   }
 
 }

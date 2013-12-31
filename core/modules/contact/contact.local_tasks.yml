@@ -1,10 +1,10 @@
 contact.category_edit:
   title: 'Edit'
   route_name: contact.category_edit
-  tab_root_id: contact.category_edit
+  base_route: contact.category_edit
 
 contact.personal_page:
   title: 'Contact'
   route_name: contact.personal_page
   weight: 2
-  tab_root_id: user.view
+  base_route: user.view

@@ -1,5 +1,5 @@
 picture.mapping_page_edit:
   title: Edit
   route_name: picture.mapping_page_edit
-  tab_root_id: picture.mapping_page_edit
+  base_route: picture.mapping_page_edit
   weight: -10

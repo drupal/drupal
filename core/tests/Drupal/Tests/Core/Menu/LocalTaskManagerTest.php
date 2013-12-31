@@ -122,13 +122,31 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');
 
-    $result = array(
-      0 => array(
-        'menu_local_task_test_tasks_settings' => $mock_plugin,
-        'menu_local_task_test_tasks_view' => $mock_plugin,
-        'menu_local_task_test_tasks_edit' => $mock_plugin,
-      )
-    );
+    $result = $this->getLocalTasksForRouteResult($mock_plugin);
+
+    $this->assertEquals($result, $local_tasks);
+  }
+
+  /**
+   * Tests the getLocalTasksForRoute method on a child.
+   *
+   * @see \Drupal\system\Plugin\Type\MenuLocalTaskManager::getLocalTasksForRoute()
+   */
+  public function testGetLocalTasksForRouteForChild() {
+    $definitions = $this->getLocalTaskFixtures();
+
+    $this->pluginDiscovery->expects($this->once())
+      ->method('getDefinitions')
+      ->will($this->returnValue($definitions));
+
+    $mock_plugin = $this->getMock('Drupal\Core\Menu\LocalTaskInterface');
+
+    $this->setupFactory($mock_plugin);
+    $this->setupLocalTaskManager();
+
+    $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_child1_page');
+
+    $result = $this->getLocalTasksForRouteResult($mock_plugin);
 
     $this->assertEquals($result, $local_tasks);
   }
@@ -266,33 +284,45 @@ class LocalTaskManagerTest extends UnitTestCase {
   protected function getLocalTaskFixtures() {
     $definitions = array();
     $definitions['menu_local_task_test_tasks_settings'] = array(
-      'id' => 'menu_local_task_test_tasks_settings',
       'route_name' => 'menu_local_task_test_tasks_settings',
       'title' => 'Settings',
-      'tab_root_id' => 'menu_local_task_test_tasks_view',
+      'base_route' => 'menu_local_task_test_tasks_view',
     );
     $definitions['menu_local_task_test_tasks_edit'] = array(
-      'id' => 'menu_local_task_test_tasks_edit',
       'route_name' => 'menu_local_task_test_tasks_edit',
       'title' => 'Settings',
-      'tab_root_id' => 'menu_local_task_test_tasks_view',
+      'base_route' => 'menu_local_task_test_tasks_view',
       'weight' => 20,
     );
-    $definitions['menu_local_task_test_tasks_view'] = array(
-      'id' => 'menu_local_task_test_tasks_view',
+    // Make this ID different from the route name to catch code that
+    // confuses them.
+    $definitions['menu_local_task_test_tasks_view.tab'] = array(
       'route_name' => 'menu_local_task_test_tasks_view',
       'title' => 'Settings',
-      'tab_root_id' => 'menu_local_task_test_tasks_view',
+      'base_route' => 'menu_local_task_test_tasks_view',
     );
-    // Add the defaults from the LocalTaskManager.
+
+    $definitions['menu_local_task_test_tasks_view_child1'] = array(
+      'route_name' => 'menu_local_task_test_tasks_child1_page',
+      'title' => 'Settings child #1',
+      'parent_id' => 'menu_local_task_test_tasks_view.tab',
+    );
+    $definitions['menu_local_task_test_tasks_view_child2'] = array(
+      'route_name' => 'menu_local_task_test_tasks_child2_page',
+      'title' => 'Settings child #2',
+      'parent_id' => 'menu_local_task_test_tasks_view.tab',
+      'base_route' => 'this_should_be_replaced',
+    );
+    // Add the ID and defaults from the LocalTaskManager.
     foreach ($definitions as $id => &$info) {
+      $info['id'] = $id;
       $info += array(
         'id' => '',
         'route_name' => '',
         'route_parameters' => array(),
         'title' => '',
-        'tab_root_id' => '',
-        'tab_parent_id' => NULL,
+        'base_route' => '',
+        'parent_id' => NULL,
         'weight' => 0,
         'options' => array(),
         'class' => 'Drupal\Core\Menu\LocalTaskDefault',
@@ -308,11 +338,10 @@ class LocalTaskManagerTest extends UnitTestCase {
    *   The mock plugin.
    */
   protected function setupFactory($mock_plugin) {
-    $map = array(
-      array('menu_local_task_test_tasks_settings', array(), $mock_plugin),
-      array('menu_local_task_test_tasks_edit', array(), $mock_plugin),
-      array('menu_local_task_test_tasks_view', array(), $mock_plugin),
-    );
+    $map = array();
+    foreach ($this->getLocalTaskFixtures() as $info) {
+      $map[] = array($info['id'], array(), $mock_plugin);
+    }
     $this->factory->expects($this->any())
       ->method('createInstance')
       ->will($this->returnValueMap($map));
@@ -325,15 +354,19 @@ class LocalTaskManagerTest extends UnitTestCase {
    *   The mock plugin.
    *
    * @return array
-   *   The expected result, keyed by local task leve.
+   *   The expected result, keyed by local task level.
    */
   protected function getLocalTasksForRouteResult($mock_plugin) {
     $result = array(
       0 => array(
         'menu_local_task_test_tasks_settings' => $mock_plugin,
-        'menu_local_task_test_tasks_view' => $mock_plugin,
+        'menu_local_task_test_tasks_view.tab' => $mock_plugin,
         'menu_local_task_test_tasks_edit' => $mock_plugin,
-      )
+      ),
+      1 => array(
+        'menu_local_task_test_tasks_view_child1' => $mock_plugin,
+        'menu_local_task_test_tasks_view_child2' => $mock_plugin,
+      ),
     );
     return $result;
   }
@@ -344,16 +377,26 @@ class LocalTaskManagerTest extends UnitTestCase {
    * @return array
    */
   protected function getLocalTasksCache() {
+    $local_task_fixtures = $this->getLocalTaskFixtures();
     return array(
-      'tab_root_ids' => array(
+      'base_routes' => array(
         'menu_local_task_test_tasks_view' => 'menu_local_task_test_tasks_view',
       ),
       'parents' => array(
-        'menu_local_task_test_tasks_view' => 1,
+        'menu_local_task_test_tasks_view.tab' => TRUE,
       ),
       'children' => array(
-        '> menu_local_task_test_tasks_view' => $this->getLocalTaskFixtures(),
-      )
+        '> menu_local_task_test_tasks_view' => array(
+          'menu_local_task_test_tasks_settings' => $local_task_fixtures['menu_local_task_test_tasks_settings'],
+          'menu_local_task_test_tasks_edit' => $local_task_fixtures['menu_local_task_test_tasks_edit'],
+          'menu_local_task_test_tasks_view.tab' => $local_task_fixtures['menu_local_task_test_tasks_view.tab'],
+        ),
+        'menu_local_task_test_tasks_view.tab' => array(
+          // The manager will fill in the base_route before caching.
+          'menu_local_task_test_tasks_view_child1' => array('base_route' => 'menu_local_task_test_tasks_view') + $local_task_fixtures['menu_local_task_test_tasks_view_child1'],
+          'menu_local_task_test_tasks_view_child2' => array('base_route' => 'menu_local_task_test_tasks_view') + $local_task_fixtures['menu_local_task_test_tasks_view_child2'],
+        ),
+      ),
     );
   }
 

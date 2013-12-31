@@ -8,14 +8,14 @@
 namespace Drupal\content_translation\Plugin\Derivative;
 
 use Drupal\content_translation\ContentTranslationManagerInterface;
-use Drupal\Core\Menu\LocalTaskDerivativeBase;
+use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic local tasks for content translation.
  */
-class ContentTranslationLocalTasks extends LocalTaskDerivativeBase implements ContainerDerivativeInterface {
+class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDerivativeInterface {
 
   /**
    * The base plugin ID
@@ -67,25 +67,10 @@ class ContentTranslationLocalTasks extends LocalTaskDerivativeBase implements Co
         'entity_type' => $entity_type,
         'title' => 'Translate',
         'route_name' => $translation_route_name,
+        'base_route' => $entity_info['links']['canonical'],
       ) + $base_plugin_definition;
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);
-  }
-
-  /**
-   * Alters the local tasks to find the proper tab_root_id for each task.
-   */
-  public function alterLocalTasks(array &$local_tasks) {
-    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_info) {
-      // Find the route name for the entity page.
-      $entity_route_name = $entity_info['links']['canonical'];
-
-      // Find the route name for the translation overview.
-      $translation_route_name = $entity_info['links']['drupal:content-translation-overview'];
-      $translation_tab = $this->basePluginId . ':' . $translation_route_name;
-
-      $local_tasks[$translation_tab]['tab_root_id'] = $this->getPluginIdFromRoute($entity_route_name, $local_tasks);
-    }
   }
 
 }

@@ -8,7 +8,6 @@
 namespace Drupal\content_translation\Tests\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
-use Drupal\content_translation\Plugin\Derivative\ContentTranslationLocalTasks;;
 
 /**
  * Tests existence of block local tasks.
@@ -46,24 +45,6 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTest {
         ),
       )));
     \Drupal::getContainer()->set('content_translation.manager', $content_translation_manager);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getLocalTaskManager($modules, $route_name, $route_params) {
-    $manager = parent::getLocalTaskManager($modules, $route_name, $route_params);
-
-    // Duplicate content_translation_local_tasks_alter()'s code here to avoid
-    // having to load the .module file.
-    $this->moduleHandler->expects($this->once())
-      ->method('alter')
-      ->will($this->returnCallback(function ($hook, &$local_tasks) {
-          // Alters in tab_root_id onto the content translation local task.
-          $derivative = ContentTranslationLocalTasks::create(\Drupal::getContainer(), 'content_translation.local_tasks');
-          $derivative->alterLocalTasks($local_tasks);
-      }));
-    return $manager;
   }
 
   /**

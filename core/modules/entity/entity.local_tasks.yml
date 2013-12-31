@@ -1,19 +1,19 @@
 entity.view_mode_edit:
   title: 'Edit'
   route_name: entity.view_mode_edit
-  tab_root_id: entity.view_mode_edit
+  base_route: entity.view_mode_edit
 
 entity.form_mode_edit:
   title: 'Edit'
   route_name: entity.form_mode_edit
-  tab_root_id: entity.form_mode_edit
+  base_route: entity.form_mode_edit
 
 entity.view_mode_list:
   title: List
   route_name: entity.view_mode_list
-  tab_root_id: entity.view_mode_list
+  base_route: entity.view_mode_list
 
 entity.form_mode_list:
   title: List
   route_name: entity.form_mode_list
-  tab_root_id: entity.form_mode_list
+  base_route: entity.form_mode_list

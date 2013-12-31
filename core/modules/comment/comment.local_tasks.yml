@@ -1,33 +1,31 @@
 comment.permalink_tab:
   route_name: comment.permalink
   title: 'View comment'
-  tab_root_id: comment.permalink_tab
+  base_route: comment.permalink
 comment.edit_page_tab:
   route_name: comment.edit_page
   title: 'Edit'
-  tab_root_id: comment.permalink_tab
+  base_route: comment.permalink
   weight: 0
 comment.confirm_delete_tab:
   route_name: comment.confirm_delete
   title: 'Delete'
-  tab_root_id: comment.permalink_tab
+  base_route: comment.permalink
   weight: 10
 
 comment.admin:
   title: Comments
   route_name: comment.admin
-  tab_root_id: node.content_overview
+  base_route: node.content_overview
 
 comment.admin_new:
   title: 'Published comments'
   route_name: comment.admin
-  tab_root_id: node.content_overview
-  tab_parent_id: comment.admin
+  parent_id: comment.admin
 
 comment.admin_approval:
   title: 'Unapproved comments'
   route_name: comment.admin_approval
   class: Drupal\comment\Plugin\Menu\LocalTask\UnapprovedComments
-  tab_root_id: node.content_overview
-  tab_parent_id: comment.admin
+  parent_id: comment.admin
   weight: 1

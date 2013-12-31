@@ -92,7 +92,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
   public function getWeight() {
     // By default the weight is 0, or -10 for the root tab.
     if (!isset($this->pluginDefinition['weight'])) {
-      if ($this->pluginDefinition['tab_root_id'] == $this->pluginId) {
+      if ($this->pluginDefinition['base_route'] == $this->pluginDefinition['route_name']) {
         $this->pluginDefinition['weight'] = -10;
       }
       else {

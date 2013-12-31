@@ -1,15 +1,15 @@
 tracker.page_tab:
   route_name: tracker.page
   title: 'Recent content'
-  tab_root_id: tracker.page_tab
+  base_route: tracker.page
 
 tracker.users_recent_tab:
   route_name: tracker.users_recent_content
   title: 'My recent content'
-  tab_root_id: tracker.page_tab
+  base_route: tracker.page
   class: '\Drupal\tracker\Plugin\Menu\UserTrackerTab'
 
 tracker.user_tab:
   route_name: tracker.user_tab
-  tab_root_id: user.view
+  base_route: user.view
   title: 'Track'

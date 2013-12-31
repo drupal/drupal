@@ -26,7 +26,7 @@ class SearchLocalTask extends DerivativeBase {
         $this->derivatives[$plugin_id] = array(
           'title' => $search_info['title'],
           'route_name' => 'search.view_' . $plugin_id,
-          'tab_root_id' => 'search.plugins:' . $default_info['id'],
+          'base_route' => 'search.view_' . $default_info['id'],
         );
         if ($plugin_id == $default_info['id']) {
           $this->derivatives[$plugin_id]['weight'] = -10;

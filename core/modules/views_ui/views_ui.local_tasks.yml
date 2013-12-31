@@ -1,32 +1,30 @@
 views_ui.settings_tab:
   route_name: views_ui.settings_basic
   title: Settings
-  tab_root_id: views_ui.list_tab
+  base_route: views_ui.list
 
 views_ui.settings_basic_tab:
   route_name: views_ui.settings_basic
   title: Basic
-  tab_root_id: views_ui.list_tab
-  tab_parent_id: views_ui.settings_tab
+  parent_id: views_ui.settings_tab
 
 views_ui.settings_advanced_tab:
   route_name: views_ui.settings_advanced
   title: Advanced
-  tab_root_id: views_ui.list_tab
-  tab_parent_id: views_ui.settings_tab
+  parent_id: views_ui.settings_tab
   weight: 10
 
 views_ui.list_tab:
   route_name: views_ui.list
   title: List
-  tab_root_id: views_ui.list_tab
+  base_route: views_ui.list
 
 views_ui.reports_fields:
   route_name: views_ui.reports_fields
   title: 'Used in views'
-  tab_root_id: field_ui.list
+  base_route: field_ui.list
 
 views_ui.edit:
   title: 'Edit'
   route_name: views_ui.edit
-  tab_root_id: views_ui.edit
+  base_route: views_ui.edit

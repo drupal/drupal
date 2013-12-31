@@ -8,14 +8,14 @@
 namespace Drupal\config_translation\Plugin\Derivative;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
-use Drupal\Core\Menu\LocalTaskDerivativeBase;
+use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic local tasks for config translation.
  */
-class ConfigTranslationLocalTasks extends LocalTaskDerivativeBase implements ContainerDerivativeInterface {
+class ConfigTranslationLocalTasks extends DerivativeBase implements ContainerDerivativeInterface {
 
   /**
    * The mapper plugin discovery service.
@@ -62,32 +62,16 @@ class ConfigTranslationLocalTasks extends LocalTaskDerivativeBase implements Con
     foreach ($mappers as $plugin_id => $mapper) {
       /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
       $route_name = $mapper->getOverviewRouteName();
-      $this->derivatives[$route_name] = $base_plugin_definition;
-      $this->derivatives[$route_name]['config_translation_plugin_id'] = $plugin_id;
-      $this->derivatives[$route_name]['class'] = '\Drupal\config_translation\Plugin\Menu\LocalTask\ConfigTranslationLocalTask';
-      $this->derivatives[$route_name]['route_name'] = $route_name;
+      $base_route = $mapper->getBaseRouteName();
+      if (!empty($base_route)) {
+        $this->derivatives[$route_name] = $base_plugin_definition;
+        $this->derivatives[$route_name]['config_translation_plugin_id'] = $plugin_id;
+        $this->derivatives[$route_name]['class'] = '\Drupal\config_translation\Plugin\Menu\LocalTask\ConfigTranslationLocalTask';
+        $this->derivatives[$route_name]['route_name'] = $route_name;
+        $this->derivatives[$route_name]['base_route'] = $base_route;
+      }
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);
   }
-
-  /**
-   * Alters the local tasks to find the proper tab_root_id for each task.
-   */
-  public function alterLocalTasks(array &$local_tasks) {
-    $mappers = $this->mapperManager->getMappers();
-    foreach ($mappers as $mapper) {
-      /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
-      $route_name = $mapper->getOverviewRouteName();
-      $translation_tab = $this->basePluginId . ':' . $route_name;
-      $tab_root_id = $this->getPluginIdFromRoute($mapper->getBaseRouteName(), $local_tasks);
-      if (!empty($tab_root_id)) {
-        $local_tasks[$translation_tab]['tab_root_id'] = $tab_root_id;
-      }
-      else {
-        unset($local_tasks[$translation_tab]);
-      }
-    }
-  }
-
 
 }

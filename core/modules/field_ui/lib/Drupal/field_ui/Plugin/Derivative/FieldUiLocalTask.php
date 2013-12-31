@@ -8,7 +8,7 @@
 namespace Drupal\field_ui\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Menu\LocalTaskDerivativeBase;
+use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides local task definitions for all entity bundles.
  */
-class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDerivativeInterface {
+class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInterface {
 
   /**
    * The route provider.
@@ -79,7 +79,7 @@ class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDeriv
           'route_name' => "field_ui.overview_$entity_type",
           'weight' => 1,
           'title' => $this->t('Manage fields'),
-          'tab_root_id' => "field_ui.fields:overview_$entity_type",
+          'base_route' => "field_ui.overview_$entity_type",
         );
 
         // 'Manage form display' tab.
@@ -87,7 +87,7 @@ class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDeriv
           'route_name' => "field_ui.form_display_overview_$entity_type",
           'weight' => 2,
           'title' => $this->t('Manage form display'),
-          'tab_root_id' => "field_ui.fields:overview_$entity_type",
+          'base_route' => "field_ui.overview_$entity_type",
         );
 
         // 'Manage display' tab.
@@ -95,21 +95,21 @@ class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDeriv
           'route_name' => "field_ui.display_overview_$entity_type",
           'weight' => 3,
           'title' => $this->t('Manage display'),
-          'tab_root_id' => "field_ui.fields:overview_$entity_type",
+          'base_route' => "field_ui.overview_$entity_type",
         );
 
         // Field instance edit tab.
         $this->derivatives["instance_edit_$entity_type"] = array(
           'route_name' => "field_ui.instance_edit_$entity_type",
           'title' => $this->t('Edit'),
-          'tab_root_id' => "field_ui.fields:instance_edit_$entity_type",
+          'base_route' => "field_ui.instance_edit_$entity_type",
         );
 
         // Field settings tab.
         $this->derivatives["field_edit_$entity_type"] = array(
           'route_name' => "field_ui.field_edit_$entity_type",
           'title' => $this->t('Field settings'),
-          'tab_root_id' => "field_ui.fields:instance_edit_$entity_type",
+          'base_route' => "field_ui.instance_edit_$entity_type",
         );
 
         // View and form modes secondary tabs.
@@ -122,14 +122,12 @@ class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDeriv
         $this->derivatives['field_form_display_default_' . $entity_type] = array(
           'title' => 'Default',
           'route_name' => "field_ui.form_display_overview_$entity_type",
-          'tab_root_id' => "field_ui.fields:overview_$entity_type",
-          'tab_parent_id' => "field_ui.fields:form_display_overview_$entity_type",
+          'parent_id' => "field_ui.fields:form_display_overview_$entity_type",
         );
         $this->derivatives['field_display_default_' . $entity_type] = array(
           'title' => 'Default',
           'route_name' => "field_ui.display_overview_$entity_type",
-          'tab_root_id' => "field_ui.fields:overview_$entity_type",
-          'tab_parent_id' => "field_ui.fields:display_overview_$entity_type",
+          'parent_id' => "field_ui.fields:display_overview_$entity_type",
         );
 
         // One local task for each form mode.
@@ -141,8 +139,7 @@ class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDeriv
             'route_parameters' => array(
               'form_mode_name' => $form_mode,
             ),
-            'tab_root_id' => "field_ui.fields:overview_$entity_type",
-            'tab_parent_id' => "field_ui.fields:form_display_overview_$entity_type",
+            'parent_id' => "field_ui.fields:form_display_overview_$entity_type",
             'weight' => $weight++,
           );
         }
@@ -156,8 +153,7 @@ class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDeriv
             'route_parameters' => array(
               'view_mode_name' => $view_mode,
             ),
-            'tab_root_id' => "field_ui.fields:overview_$entity_type",
-            'tab_parent_id' => "field_ui.fields:display_overview_$entity_type",
+            'parent_id' => "field_ui.fields:display_overview_$entity_type",
             'weight' => $weight++,
           );
         }
@@ -172,7 +168,7 @@ class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDeriv
   }
 
   /**
-   * Alters the tab_root_id definition for field_ui local tasks.
+   * Alters the base_route definition for field_ui local tasks.
    *
    * @param array $local_tasks
    *   An array of local tasks plugin definitions, keyed by plugin ID.
@@ -180,20 +176,18 @@ class FieldUiLocalTask extends LocalTaskDerivativeBase implements ContainerDeriv
   public function alterLocalTasks(&$local_tasks) {
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
       if ($entity_info['fieldable'] && isset($entity_info['links']['admin-form'])) {
-        if ($parent_task = $this->getPluginIdFromRoute($entity_info['links']['admin-form'], $local_tasks)) {
-          $local_tasks["field_ui.fields:overview_$entity_type"]['tab_root_id'] = $parent_task;
-          $local_tasks["field_ui.fields:form_display_overview_$entity_type"]['tab_root_id'] = $parent_task;
-          $local_tasks["field_ui.fields:display_overview_$entity_type"]['tab_root_id'] = $parent_task;
-          $local_tasks["field_ui.fields:field_form_display_default_$entity_type"]['tab_root_id'] = $parent_task;
-          $local_tasks["field_ui.fields:field_display_default_$entity_type"]['tab_root_id'] = $parent_task;
+        $local_tasks["field_ui.fields:overview_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
+        $local_tasks["field_ui.fields:form_display_overview_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
+        $local_tasks["field_ui.fields:display_overview_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
+        $local_tasks["field_ui.fields:field_form_display_default_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
+        $local_tasks["field_ui.fields:field_display_default_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
 
-          foreach (entity_get_form_modes($entity_type) as $form_mode => $form_mode_info) {
-            $local_tasks['field_ui.fields:field_form_display_' . $form_mode . '_' . $entity_type]['tab_root_id'] = $parent_task;
-          }
+        foreach (entity_get_form_modes($entity_type) as $form_mode => $form_mode_info) {
+          $local_tasks['field_ui.fields:field_form_display_' . $form_mode . '_' . $entity_type]['base_route'] = $entity_info['links']['admin-form'];
+        }
 
-          foreach (entity_get_view_modes($entity_type) as $view_mode => $form_mode_info) {
-            $local_tasks['field_ui.fields:field_display_' . $view_mode . '_' . $entity_type]['tab_root_id'] = $parent_task;
-          }
+        foreach (entity_get_view_modes($entity_type) as $view_mode => $form_mode_info) {
+          $local_tasks['field_ui.fields:field_display_' . $view_mode . '_' . $entity_type]['base_route'] = $entity_info['links']['admin-form'];
         }
       }
     }
