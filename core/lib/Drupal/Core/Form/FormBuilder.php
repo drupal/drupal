@@ -192,9 +192,12 @@ class FormBuilder implements FormBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm($form_id, &$form_state) {
+  public function buildForm($form_id, array &$form_state) {
     // Ensure some defaults; if already set they will not be overridden.
     $form_state += $this->getFormStateDefaults();
+
+    // Ensure the form ID is prepared.
+    $form_id = $this->getFormId($form_id, $form_state);
 
     if (!isset($form_state['input'])) {
       $form_state['input'] = $form_state['method'] == 'get' ? $_GET : $_POST;

@@ -73,7 +73,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    *   can implement hook_forms(), which maps different $form_id values to the
    *   proper form constructor function. Examples may be found in node_forms(),
    *   and search_forms().
-   * @param $form_state
+   * @param array $form_state
    *   An array which stores information about the form. This is passed as a
    *   reference so that the caller can use it to examine what in the form
    *   changed when the form submission process is complete. Furthermore, it may
@@ -230,7 +230,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    *
    * @see self::redirectForm()
    */
-  public function buildForm($form_id, &$form_state);
+  public function buildForm($form_id, array &$form_state);
 
   /**
    * Retrieves default values for the $form_state array.

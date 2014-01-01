@@ -92,3 +92,5 @@ services:
     class: Drupal\views\ViewsAccessCheck
     tags:
       - { name: 'access_check' }
+  views.exposed_form_cache:
+    class: Drupal\views\ExposedFormCache

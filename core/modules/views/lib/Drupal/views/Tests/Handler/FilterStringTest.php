@@ -86,7 +86,7 @@ class FilterStringTest extends ViewUnitTestBase {
 
     // In order to test exposed filters, we have to disable
     // the exposed forms cache.
-    drupal_static_reset('views_exposed_form_cache');
+    \Drupal::service('views.exposed_form_cache')->reset();
 
     $view->newDisplay('page', 'Page', 'page_1');
     return $view;
