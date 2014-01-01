@@ -187,6 +187,11 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       $definition = $container->getDefinition('path_processor_alias');
       $definition->clearTag('path_processor_inbound')->clearTag('path_processor_outbound');
     }
+
+    if ($container->hasDefinition('password')) {
+      $container->getDefinition('password')->setArguments(array(1));
+    }
+
     $request = Request::create('/');
     $this->container->set('request', $request);
   }
