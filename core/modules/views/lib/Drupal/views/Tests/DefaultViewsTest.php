@@ -22,7 +22,7 @@ class DefaultViewsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('views', 'node', 'search', 'comment', 'taxonomy', 'block');
+  public static $modules = array('views', 'node', 'search', 'comment', 'taxonomy', 'block', 'user');
 
   /**
    * An array of argument arrays to use for default views.

@@ -1,0 +1,166 @@
+base_field: uid
+base_table: users
+core: 8.x
+description: 'Shows a list of the newest user accounts on the site.'
+status: '1'
+display:
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: 'Who''s new'
+    position: '1'
+    display_options:
+      display_description: 'A list of new users'
+      block_description: 'Who''s new'
+      block_category: 'User'
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: '1'
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+        perm: 'access user profiles'
+      cache:
+        type: none
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: '0'
+          distinct: '0'
+          slave: '0'
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: '0'
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: '1'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: some
+        options:
+          items_per_page: '5'
+          offset: '0'
+      style:
+        type: html_list
+      row:
+        type: fields
+      fields:
+        name:
+          id: name
+          table: users
+          field: name
+          label: ''
+          alter:
+            alter_text: '0'
+            make_link: '0'
+            absolute: '0'
+            trim: '0'
+            word_boundary: '0'
+            ellipsis: '0'
+            strip_tags: '0'
+            html: '0'
+          hide_empty: '0'
+          empty_zero: '0'
+          link_to_user: '1'
+          overwrite_anonymous: '0'
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_alter_empty: '1'
+          anonymous_text: ''
+          format_username: '1'
+      filters:
+        status:
+          value: '1'
+          table: users
+          field: status
+          id: status
+          expose:
+            operator: '0'
+          group: '1'
+        access:
+          id: access
+          table: users
+          field: access
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '>'
+          value:
+            min: ''
+            max: ''
+            value: '1970-01-01'
+            type: date
+          group: '1'
+          exposed: '0'
+          expose:
+            operator_id: '0'
+            label: ''
+            description: ''
+            use_operator: '0'
+            operator: ''
+            identifier: ''
+            required: '0'
+            remember: '0'
+            multiple: '0'
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: '0'
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: '1'
+            widget: select
+            multiple: '0'
+            remember: '0'
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: date
+      sorts:
+        created:
+          id: created
+          table: users
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: '0'
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: date
+      title: 'Who''s new'
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }
+label: 'Who''s new'
+module: views
+id: who_s_new
+tag: 'default'
+uuid: 8b2c05e3-046b-447f-922b-43a832220667
+langcode: en
