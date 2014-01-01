@@ -1,0 +1,55 @@
+id: d6_user_role
+sourceIds:
+  rid:
+    type: int
+    "not null": true
+    default: 0
+destinationIds:
+  id:
+    type: varchar
+    length: 255
+source:
+  plugin: drupal6_user_role
+process:
+  id:
+    -
+      plugin: machine_name
+      source: name
+    -
+      plugin: dedupe_entity
+      entity_type: user_role
+      field: id
+  label: name
+# permissions start as array(array('perm' => array('perm1', 'perm2'))), array('perm' => array('perm3', 'perm4')))
+  permissions:
+    # extract gets array('perm' => array('perm1', 'perm2')) first
+    -
+      plugin: extract
+      source: permissions
+      index:
+        - perm
+    # the pipeline is now array(array('perm1', 'perm2'))
+    - plugin: flatten
+    # the pipeline is now array('perm1', 'perm2')
+    -
+      plugin: static_map
+      bypass: true
+      map:
+        'use PHP for block visibility': 'use PHP for settings'
+        'administer site-wide contact form': 'administer contact forms'
+        'post comments without approval': 'skip comment approval'
+        'edit own blog entries' : 'edit own blog content'
+        'edit any blog entry' : 'edit any blog content'
+        'delete own blog entries' : 'delete own blog content'
+        'delete any blog entry' : 'delete any blog content'
+        'create forum topics' : 'create forum content'
+        'delete any forum topic' : 'delete any forum content'
+        'delete own forum topics' : 'delete own forum content'
+        'edit any forum topic' : 'edit any forum content'
+        'edit own forum topics' : 'edit own forum content'
+    - plugin: system_update_7000
+    - plugin: node_update_7008
+    - plugin: flatten
+destination:
+  plugin: entity
+  entity_type: user_role
