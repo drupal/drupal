@@ -44,7 +44,7 @@ class CrudTest extends DrupalUnitTestBase {
     // Save bundle mapping config.
     rdf_get_mapping($this->entity_type, $this->bundle)->save();
     // Test that config file was saved.
-    $mapping_config = config_get_storage_names_with_prefix('rdf.mapping');
+    $mapping_config = config_get_storage_names_with_prefix('rdf.mapping.');
     $this->assertTrue(in_array($mapping_config_name, $mapping_config), 'Rdf mapping config saved.');
   }
 

@@ -1643,7 +1643,7 @@ function update_language_list($flags = Language::STATE_CONFIGURABLE) {
     if (language_multilingual() || \Drupal::moduleHandler()->moduleExists('language')) {
       // Use language module configuration if available. We can not use
       // entity_load_multiple() because this breaks during updates.
-      $language_entities = config_get_storage_names_with_prefix('language.entity');
+      $language_entities = config_get_storage_names_with_prefix('language.entity.');
 
       // Initialize default property so callers have an easy reference and can
       // save the same object without data loss.

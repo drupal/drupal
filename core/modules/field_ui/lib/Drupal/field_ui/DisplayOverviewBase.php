@@ -742,7 +742,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $display_entity_type = $this->getDisplayType();
     $entity_info = $this->entityManager->getDefinition($display_entity_type);
     $config_prefix = $entity_info['config_prefix'];
-    $ids = config_get_storage_names_with_prefix($config_prefix . '.' . $this->entity_type . '.' . $this->bundle);
+    $ids = config_get_storage_names_with_prefix($config_prefix . '.' . $this->entity_type . '.' . $this->bundle . '.');
     foreach ($ids as $id) {
       $config_id = str_replace($config_prefix . '.', '', $id);
       list(,, $display_mode) = explode('.', $config_id);

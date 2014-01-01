@@ -462,7 +462,7 @@ function field_update_8005() {
     'mode' => 'register',
     'content' => array(),
   );
-  foreach (config_get_storage_names_with_prefix('field.instance') as $config_id) {
+  foreach (config_get_storage_names_with_prefix('field.instance.') as $config_id) {
     $instance_config = \Drupal::config($config_id);
     if ($instance_config->get('entity_type') == 'user' && $instance_config->get('settings.user_register_form')) {
       list(, , $field_id) = explode('.', $instance_config->get('id'));
@@ -485,7 +485,7 @@ function field_update_8005() {
  */
 function field_update_8006(&$sandbox) {
   // Get field definitions from config, and deleted fields from state system.
-  $config_names = config_get_storage_names_with_prefix('field.field');
+  $config_names = config_get_storage_names_with_prefix('field.field.');
   $deleted_fields = \Drupal::state()->get('field.field.deleted') ?: array();
   // Ditch UUID keys, we will iterate through deleted fields using a numeric
   // index.

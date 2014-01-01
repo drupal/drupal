@@ -256,7 +256,7 @@ function image_update_8002() {
 function image_update_8003() {
   $image_factory = \Drupal::service('image.factory');
   foreach (array('field', 'instance') as $type) {
-    $prefix = "field.$type";
+    $prefix = 'field.' . $type . '.';
     foreach (config_get_storage_names_with_prefix($prefix) as $config_id) {
       $config = \Drupal::config($config_id);
       $is_image = ($type == 'field' && $config->get('type') == 'image') || ($type == 'instance' && $config->get('field_type') == 'image');
