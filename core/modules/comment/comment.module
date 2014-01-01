@@ -1575,19 +1575,6 @@ function template_preprocess_comment_wrapper(&$variables) {
 }
 
 /**
- * Returns an array of viewing modes for comment listings.
- *
- * We can't use a global variable array because the locale system
- * is not initialized yet when the Comment module is loaded.
- */
-function _comment_get_modes() {
-  return array(
-    COMMENT_MODE_FLAT => t('Flat list'),
-    COMMENT_MODE_THREADED => t('Threaded list')
-  );
-}
-
-/**
  * Returns an array of "comments per page" values that users can select from.
  */
 function _comment_per_page() {
