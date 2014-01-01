@@ -1153,7 +1153,7 @@ function comment_load($cid, $reset = FALSE) {
  * @param $timestamp
  *   Time to count from (defaults to time of last user access to node).
  *
- * @return int|FALSE
+ * @return int|false
  *   The number of new comments or FALSE if the user is not logged in.
  */
 function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestamp = 0) {
