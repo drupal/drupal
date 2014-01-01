@@ -713,7 +713,7 @@ function content_translation_entity_insert(EntityInterface $entity) {
 
     $translation += array(
       'source' => '',
-      'uid' => $GLOBALS['user']->id(),
+      'uid' => \Drupal::currentUser()->id(),
       'outdated' => FALSE,
       'status' => TRUE,
       'created' => REQUEST_TIME,
