@@ -56,6 +56,11 @@ class ViewsBlock extends ViewsBlockBase {
       $settings += $this->view->display_handler->blockSettings($settings);
     }
 
+    // Set custom cache settings.
+    if (isset($this->pluginDefinition['cache'])) {
+      $settings['cache'] = $this->pluginDefinition['cache'];
+    }
+
     return $settings;
   }
 

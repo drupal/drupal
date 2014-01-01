@@ -175,6 +175,19 @@ class DisplayBlockTest extends ViewTestBase {
   }
 
   /**
+   * Tests views block plugin definitions.
+   */
+  public function testViewsBlockPlugins() {
+    // Ensures that the cache setting gets to the block settings.
+    $instance = $this->container->get('plugin.manager.block')->createInstance('views_block:test_view_block2-block_2');
+    $configuration = $instance->getConfiguration();
+    $this->assertEqual($configuration['cache'], DRUPAL_NO_CACHE);
+    $instance = $this->container->get('plugin.manager.block')->createInstance('views_block:test_view_block2-block_3');
+    $configuration = $instance->getConfiguration();
+    $this->assertEqual($configuration['cache'], DRUPAL_CACHE_PER_USER);
+  }
+
+  /**
    * Test the block form for a Views block.
    */
   public function testViewsBlockForm() {

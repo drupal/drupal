@@ -51,6 +51,16 @@ display:
       field:
         title:
           link_to_node: '1'
+  block_3:
+    display_plugin: block
+    id: block_3
+    display_title: Block
+    position: ''
+    display_options:
+      block_caching: '2'
+      field:
+        title:
+          link_to_node: '1'
 label: test_view_block2
 module: views
 id: test_view_block2
