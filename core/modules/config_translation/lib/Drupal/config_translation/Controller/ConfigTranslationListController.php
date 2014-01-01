@@ -76,7 +76,7 @@ class ConfigTranslationListController extends ControllerBase implements Containe
     // list controller.
     $class = $this->mapperDefinition['list_controller'];
     /** @var \Drupal\config_translation\Controller\ConfigTranslationEntityListControllerInterface $controller */
-    $controller = new $class($entity_type, $this->entityManager()->getDefinition($entity_type), $this->entityManager()->getStorageController($entity_type), $this->moduleHandler(), $this->entityManager(), $this->mapperDefinition);
+    $controller = new $class($this->entityManager()->getDefinition($entity_type), $this->entityManager()->getStorageController($entity_type), $this->moduleHandler(), $this->entityManager(), $this->mapperDefinition);
     $build = $controller->render();
     $build['#title'] = $this->mapper->getTypeLabel();
     return $build;

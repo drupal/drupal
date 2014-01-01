@@ -9,7 +9,7 @@ namespace Drupal\taxonomy\Plugin\views\argument_validator;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\argument_validator\Entity;
 
 /**
@@ -33,7 +33,7 @@ class TermName extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_manager);
     // Not handling exploding term names.
     $this->multipleCapable = FALSE;

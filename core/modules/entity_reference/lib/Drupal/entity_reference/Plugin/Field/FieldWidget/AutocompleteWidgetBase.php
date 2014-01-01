@@ -169,8 +169,8 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
     }
 
     $entity_info = $entity_manager->getDefinition($target_type);
-    $bundle_key = $entity_info['entity_keys']['bundle'];
-    $label_key = $entity_info['entity_keys']['label'];
+    $bundle_key = $entity_info->getKey('bundle');
+    $label_key = $entity_info->getKey('label');
 
     return $entity_manager->getStorageController($target_type)->create(array(
       $label_key => $label,
@@ -201,7 +201,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   protected function isContentReferenced() {
     $target_type = $this->getFieldSetting('target_type');
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
-    return is_subclass_of($target_type_info['class'], '\Drupal\Core\Entity\ContentEntityInterface');
+    return $target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface');
   }
 
 }

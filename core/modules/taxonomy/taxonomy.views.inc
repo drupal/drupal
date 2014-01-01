@@ -437,21 +437,21 @@ function taxonomy_field_views_data(FieldInterface $field) {
 function taxonomy_field_views_data_views_data_alter(array &$data, FieldInterface $field) {
   $field_name = $field->getName();
   $entity_type = $field->entity_type;
-  $entity_info = entity_get_info($entity_type);
+  $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type;
 
   list($label) = field_views_field_label($entity_type, $field_name);
 
   $data['taxonomy_term_data'][$pseudo_field_name]['relationship'] = array(
-    'title' => t('@entity using @field', array('@entity' => $entity_info['label'], '@field' => $label)),
-    'help' => t('Relate each @entity with a @field set to the term.', array('@entity' => $entity_info['label'], '@field' => $label)),
+    'title' => t('@entity using @field', array('@entity' => $entity_info->getLabel(), '@field' => $label)),
+    'help' => t('Relate each @entity with a @field set to the term.', array('@entity' => $entity_info->getLabel(), '@field' => $label)),
     'id' => 'entity_reverse',
     'field_name' => $field_name,
     'entity_type' => $entity_type,
     'field table' => FieldableDatabaseStorageController::_fieldTableName($field),
     'field field' => $field_name . '_target_id',
-    'base' => $entity_info['base_table'],
-    'base field' => $entity_info['entity_keys']['id'],
+    'base' => $entity_info->getBaseTable(),
+    'base field' => $entity_info->getKey('id'),
     'label' => t('!field_name', array('!field_name' => $field_name)),
     'join_extra' => array(
       0 => array(

@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity_test\EntityTestListController;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -21,7 +23,7 @@ class EntityListControllerTest extends UnitTestCase {
   /**
    * The entity used to construct the EntityListController.
    *
-   * @var \Drupal\user\Entity\Role
+   * @var \Drupal\user\RoleInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $role;
 
@@ -41,49 +43,16 @@ class EntityListControllerTest extends UnitTestCase {
   }
 
   /**
-   * Entity info used by the test.
-   *
-   * @var array
-   *
-   * @see entity_get_info()
-   */
-  public static $entityInfo = array(
-    'entity_keys' => array(
-      'id' => 'id',
-      'label' => 'label',
-    ),
-    'config_prefix' => 'user.role',
-    'class' => 'Drupal\user\Entity\Role',
-  );
-
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
-    $this->role = $this
-      ->getMockBuilder('Drupal\user\Entity\Role')
-      ->setConstructorArgs(array('entityInfo' => static::$entityInfo, 'user_role'))
-      ->getMock();
-
-    // Creates a stub role storage controller and replace the buildOperations()
-    // method with an empty version, because buildOperations() relies on hooks.
-    $role_storage_controller = $this->getMockBuilder('Drupal\user\RoleStorageController')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $this->entityListController = $this->getMock('Drupal\entity_test\EntityTestListController', array('buildOperations'), array('user_role', static::$entityInfo, $role_storage_controller, $module_handler));
-
-    $this->entityListController->expects($this->any())
-      ->method('buildOperations')
-      ->will($this->returnValue(array()));
-
+    $this->role = $this->getMock('Drupal\user\RoleInterface');
+    $role_storage_controller = $this->getMock('Drupal\user\RoleStorageControllerInterface');
+    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $this->entityListController = new TestEntityListController($entity_type, $role_storage_controller, $module_handler);
   }
 
   /**
@@ -146,3 +115,8 @@ class EntityListControllerTest extends UnitTestCase {
 
 }
 
+class TestEntityListController extends EntityTestListController {
+  public function buildOperations(EntityInterface $entity) {
+    return array();
+  }
+}

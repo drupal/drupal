@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -35,7 +36,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
   /**
    * The entity info array.
    *
-   * @var array
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityInfo;
 
@@ -49,13 +50,11 @@ class EntityAccessController implements EntityAccessControllerInterface {
   /**
    * Constructs an access controller instance.
    *
-   * @param string $entity_type
-   *   The entity type of the access controller instance.
-   * @param array $entity_info
-   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+   *   The entity info for the entity type.
    */
-  public function __construct($entity_type, array $entity_info) {
-    $this->entityType = $entity_type;
+  public function __construct(EntityTypeInterface $entity_info) {
+    $this->entityType = $entity_info->id();
     $this->entityInfo = $entity_info;
   }
 
@@ -137,8 +136,8 @@ class EntityAccessController implements EntityAccessControllerInterface {
    *   could not be determined.
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    if (!empty($this->entityInfo['admin_permission'])) {
-      return $account->hasPermission($this->entityInfo['admin_permission']);
+    if ($admin_permission = $this->entityInfo->getAdminPermission()) {
+      return $account->hasPermission($admin_permission);
     }
     else {
       return NULL;
@@ -258,8 +257,8 @@ class EntityAccessController implements EntityAccessControllerInterface {
    *   could not be determined.
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    if (!empty($this->entityInfo['admin_permission'])) {
-      return $account->hasPermission($this->entityInfo['admin_permission']);
+    if ($admin_permission = $this->entityInfo->getAdminPermission()) {
+      return $account->hasPermission($admin_permission);
     }
     else {
       return NULL;

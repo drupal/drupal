@@ -47,13 +47,14 @@ class NodeAdminTest extends NodeTestBase {
   function testContentAdminSort() {
     $this->drupalLogin($this->admin_user);
 
-    // Create nodes that have different node.changed values.
-    $this->container->get('state')->set('node_test.storage_controller', TRUE);
-    \Drupal::moduleHandler()->install(array('node_test'));
     $changed = REQUEST_TIME;
     foreach (array('dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB') as $prefix) {
       $changed += 1000;
-      $this->drupalCreateNode(array('title' => $prefix . $this->randomName(6), 'changed' => $changed));
+      $node = $this->drupalCreateNode(array('title' => $prefix . $this->randomName(6)));
+      db_update('node_field_data')
+        ->fields(array('changed' => $changed))
+        ->condition('nid', $node->id())
+        ->execute();
     }
 
     // Test that the default sort by node.changed DESC actually fires properly.

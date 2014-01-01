@@ -228,7 +228,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns the info of the type of the entity.
    *
-   * @see entity_get_info()
+   * @return \Drupal\Core\Entity\EntityTypeInterface
    */
   public function entityInfo();
 

@@ -362,12 +362,12 @@ function language_content_settings_page() {
  * @ingroup forms
  */
 function language_content_settings_form(array $form, array $form_state, array $supported) {
-  $entity_info = entity_get_info();
+  $entity_info = \Drupal::entityManager()->getDefinitions();
   $labels = array();
   $default = array();
 
   foreach ($supported as $entity_type) {
-    $labels[$entity_type] = isset($entity_info[$entity_type]['label']) ? $entity_info[$entity_type]['label'] : $entity_type;
+    $labels[$entity_type] = $entity_info[$entity_type]->getLabel() ?: $entity_type;
     $default[$entity_type] = FALSE;
 
     // Check whether we have any custom setting.
@@ -407,7 +407,7 @@ function language_content_settings_form(array $form, array $form_state, array $s
       '#type' => 'container',
       '#entity_type' => $entity_type,
       '#theme' => 'language_content_settings_table',
-      '#bundle_label' => isset($info['bundle_label']) ? $info['bundle_label'] : $label,
+      '#bundle_label' => $info->getBundleLabel() ?: $label,
       '#states' => array(
         'visible' => array(
           ':input[name="entity_types[' . $entity_type . ']"]' => array('checked' => TRUE),

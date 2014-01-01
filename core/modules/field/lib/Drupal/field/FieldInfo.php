@@ -437,7 +437,7 @@ class FieldInfo {
     $fields = array();
 
     // Do not return anything for unknown entity types.
-    if (entity_get_info($entity_type) && !empty($field_map[$entity_type])) {
+    if (\Drupal::entityManager()->getDefinition($entity_type) && !empty($field_map[$entity_type])) {
 
       // Collect names of fields and instances involved in the bundle, using the
       // field map. The field map is already filtered to non-deleted fields and

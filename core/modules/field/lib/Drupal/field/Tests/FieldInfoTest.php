@@ -70,10 +70,10 @@ class FieldInfoTest extends FieldUnitTestBase {
     $instance = entity_create('field_instance', $instance_definition);
     $instance->save();
 
-    $info = entity_get_info('entity_test');
+    $info = \Drupal::entityManager()->getDefinition('entity_test');
     $instances = field_info_instances('entity_test', $instance->bundle);
     $this->assertEqual(count($instances), 1, format_string('One instance shows up in info when attached to a bundle on a @label.', array(
-      '@label' => $info['label']
+      '@label' => $info->getLabel(),
     )));
     $this->assertTrue($instance_definition < $instances[$instance->getName()], 'Instance appears in info correctly');
 

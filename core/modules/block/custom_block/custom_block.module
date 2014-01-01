@@ -125,10 +125,13 @@ function custom_block_load($id) {
 /**
  * Implements hook_entity_info_alter().
  */
-function custom_block_entity_info_alter(&$types) {
+function custom_block_entity_info_alter(&$entity_info) {
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   // Add a translation handler for fields if the language module is enabled.
   if (\Drupal::moduleHandler()->moduleExists('language')) {
-    $types['custom_block']['translation']['custom_block'] = TRUE;
+    $translation = $entity_info['custom_block']->get('translation');
+    $translation['custom_block'] = TRUE;
+    $entity_info['custom_block']->set('translation', $translation);
   }
 }
 

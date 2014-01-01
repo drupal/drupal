@@ -51,7 +51,7 @@ class EntityReferenceItem extends FieldItemBase {
 
     if (!isset(static::$propertyDefinitions[$key])) {
       $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
-      if (is_subclass_of($target_type_info['class'], '\Drupal\Core\Entity\ContentEntityInterface')) {
+      if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
         // @todo: Lookup the entity type's ID data type and use it here.
         // https://drupal.org/node/2107249
         static::$propertyDefinitions[$key]['target_id'] = DataDefinition::create('integer')

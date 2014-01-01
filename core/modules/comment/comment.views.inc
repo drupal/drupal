@@ -353,19 +353,19 @@ function comment_views_data() {
 
   // Provide a relationship for each entity type except comment.
   foreach ($entities_info as $type => $entity_info) {
-    if ($type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
+    if ($type == 'comment' || !$entity_info->isFieldable() || !$entity_info->getBaseTable()) {
       continue;
     }
     if ($fields = \Drupal::service('comment.manager')->getFields($type)) {
       $data['comment'][$type] = array(
         'relationship' => array(
-          'title' => $entity_info['label'],
-          'help' => t('The @entity_type to which the comment is a reply to.', array('@entity_type' => $entity_info['label'])),
-          'base' => $entity_info['base_table'],
-          'base field' => $entity_info['entity_keys']['id'],
+          'title' => $entity_info->getLabel(),
+          'help' => t('The @entity_type to which the comment is a reply to.', array('@entity_type' => $entity_info->getLabel())),
+          'base' => $entity_info->getBaseTable(),
+          'base field' => $entity_info->getKey('id'),
           'relationship field' => 'entity_id',
           'id' => 'standard',
-          'label' => $entity_info['label'],
+          'label' => $entity_info->getLabel(),
           'extra' => array(
             array(
               'field' => 'entity_type',
@@ -432,7 +432,7 @@ function comment_views_data() {
 
   // Provide a relationship for each entity type except comment.
   foreach ($entities_info as $type => $entity_info) {
-    if ($type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
+    if ($type == 'comment' || !$entity_info->isFieldable() || !$entity_info->getBaseTable()) {
       continue;
     }
     // This relationship does not use the 'field id' column, if the entity has
@@ -442,9 +442,9 @@ function comment_views_data() {
     // {comment_entity_statistics} for each field as multiple joins between
     // the same two tables is not supported.
     if (\Drupal::service('comment.manager')->getFields($type)) {
-      $data['comment_entity_statistics']['table']['join'][$entity_info['base_table']] = array(
+      $data['comment_entity_statistics']['table']['join'][$entity_info->getBaseTable()] = array(
         'type' => 'INNER',
-        'left_field' => $entity_info['entity_keys']['id'],
+        'left_field' => $entity_info->getKey('id'),
         'field' => 'entity_id',
         'extra' => array(
           array(
@@ -604,11 +604,11 @@ function comment_views_data_alter(&$data) {
 
   // Provide a integration for each entity type except comment.
   foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
-    if ($entity_type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
+    if ($entity_type == 'comment' || !$entity_info->isFieldable() || !$entity_info->getBaseTable()) {
       continue;
     }
     $fields = \Drupal::service('comment.manager')->getFields($entity_type);
-    $base_table = $entity_info['base_table'];
+    $base_table = $entity_info->getBaseTable();
     $args = array('@entity_type' => $entity_type);
 
     if ($fields) {
@@ -620,9 +620,9 @@ function comment_views_data_alter(&$data) {
         ),
       );
 
-      if ($entity_info['id'] == 'node') {
+      if ($entity_type == 'node') {
         // Node properties lives in data_table.
-        $table = $entity_info['data_table'];
+        $table = $entity_info->getDataTable();
       }
       else {
         $table = $base_table;
@@ -637,7 +637,7 @@ function comment_views_data_alter(&$data) {
           'id' => 'argument_comment_user_uid',
           'no group by' => TRUE,
           'entity_type' => $entity_type,
-          'entity_id' => $entity_info['entity_keys']['id'],
+          'entity_id' => $entity_info->getKey('id'),
         ),
         'filter' => array(
           'field' => 'uid',
@@ -645,7 +645,7 @@ function comment_views_data_alter(&$data) {
           'name field' => 'name',
           'id' => 'comment_user_uid',
           'entity_type' => $entity_type,
-          'entity_id' => $entity_info['entity_keys']['id'],
+          'entity_id' => $entity_info->getKey('id'),
         ),
       );
 
@@ -658,7 +658,7 @@ function comment_views_data_alter(&$data) {
             'label' => t('Comments'),
             'base' => 'comment',
             'base field' => 'entity_id',
-            'relationship field' => $entity_info['entity_keys']['id'],
+            'relationship field' => $entity_info->getKey('id'),
             'id' => 'standard',
             'extra' => array(
               array(

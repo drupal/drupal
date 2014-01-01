@@ -90,7 +90,7 @@ function config_translation_config_translation_info(&$info) {
       }
 
       // Make sure entity type is fieldable and has a base route.
-      if ($entity_info['fieldable'] && !empty($base_route)) {
+      if ($entity_info->isFieldable() && !empty($base_route)) {
         $info[$entity_type . '_fields'] = array(
           'base_route_name' => 'field_ui.instance_edit_' . $entity_type,
           'entity_type' => 'field_instance',
@@ -109,8 +109,8 @@ function config_translation_config_translation_info(&$info) {
     // Determine base path for entities automatically if provided via the
     // configuration entity.
     if (
-      !in_array('Drupal\Core\Config\Entity\ConfigEntityInterface', class_implements($entity_info['class'])) ||
-      !isset($entity_info['links']['edit-form'])
+      !$entity_info->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface') ||
+      !$entity_info->hasLinkTemplate('edit-form')
     ) {
       // Do not record this entity mapper if the entity type does not
       // provide a base route. We'll surely not be able to do anything with
@@ -122,7 +122,7 @@ function config_translation_config_translation_info(&$info) {
     // Use the entity type as the plugin ID.
     $info[$entity_type] = array(
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
-      'base_route_name' => $entity_info['links']['edit-form'],
+      'base_route_name' => $entity_info->getLinkTemplate('edit-form'),
       'title' => '!label !entity_type',
       'names' => array(),
       'entity_type' => $entity_type,

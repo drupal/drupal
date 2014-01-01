@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Views;
 
@@ -52,8 +53,8 @@ class AreaEntityTest extends ViewTestBase {
     $data = $this->container->get('views.views_data')->get('views');
     $entity_info = $this->container->get('entity.manager')->getDefinitions();
 
-    $expected_entities = array_filter($entity_info, function($info) {
-      return !empty($info['controllers']['view_builder']);
+    $expected_entities = array_filter($entity_info, function (EntityTypeInterface $info) {
+      return $info->hasController('view_builder');
     });
 
     // Test that all expected entity types have data.
@@ -63,8 +64,8 @@ class AreaEntityTest extends ViewTestBase {
       $this->assertEqual($entity, $data['entity_' . $entity]['area']['entity_type'], format_string('Correct entity_type set for @entity', array('@entity' => $entity)));
     }
 
-    $expected_entities = array_filter($entity_info, function($info) {
-      return empty($info['controllers']['view_builder']);
+    $expected_entities = array_filter($entity_info, function (EntityTypeInterface $info) {
+      return !$info->hasController('view_builder');
     });
 
     // Test that no configuration entity types have data.

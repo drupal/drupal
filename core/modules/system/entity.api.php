@@ -98,19 +98,19 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
  *
  * Modules may implement this hook to add information to defined entity types.
  *
- * @param array $entity_info
+ * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
  *   An associative array of all entity type definitions, keyed by the entity
  *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
  * @see \Drupal\Core\Entity\EntityManagerInterface
- * @see entity_get_info()
+ * @see \Drupal\Core\Entity\EntityTypeInterface
  */
 function hook_entity_info(&$entity_info) {
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   // Add a form controller for a custom node form without overriding the default
-  // node form. To override the default node form, use hook_entity_info_alter()
-  // to alter $entity_info['node']['controllers']['form']['default'].
-  $entity_info['node']['controllers']['form']['mymodule_foo'] = 'Drupal\mymodule\NodeFooFormController';
+  // node form. To override the default node form, use hook_entity_info_alter().
+  $entity_info['node']->setForm('mymodule_foo', 'Drupal\mymodule\NodeFooFormController');
 }
 
 /**
@@ -230,18 +230,19 @@ function hook_entity_bundle_delete($entity_type, $bundle) {
  * Do not use this hook to add information to entity types. Use
  * hook_entity_info() for that instead.
  *
- * @param array $entity_info
+ * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
  *   An associative array of all entity type definitions, keyed by the entity
  *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
  * @see \Drupal\Core\Entity\EntityManagerInterface
- * @see entity_get_info()
+ * @see \Drupal\Core\Entity\EntityTypeInterface
  */
 function hook_entity_info_alter(&$entity_info) {
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageControllerInterface interface.
-  $entity_info['node']['controllers']['storage'] = 'Drupal\mymodule\MyCustomNodeStorageController';
+  $entity_info['node']->setController('storage', 'Drupal\mymodule\MyCustomNodeStorageController');
 }
 
 /**

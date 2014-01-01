@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -31,10 +32,9 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
     return new static(
-      $entity_type,
-      $container->get('entity.manager')->getStorageController($entity_type),
+      $container->get('entity.manager')->getStorageController($entity_info->id()),
       $entity_info,
       $container->get('plugin.manager.views.display'),
       $container->get('module_handler')
@@ -44,19 +44,17 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   /**
    * Constructs a new EntityListController object.
    *
-   * @param string $entity_type.
-   *   The type of entity to be listed.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage.
    *   The entity storage controller class.
-   * @param array $entity_info
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
    *   An array of entity info for this entity type.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $display_manager
    *   The views display plugin manager to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct($entity_type, EntityStorageControllerInterface $storage, $entity_info, PluginManagerInterface $display_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct($entity_type, $entity_info, $storage, $module_handler);
+  public function __construct(EntityStorageControllerInterface $storage, EntityTypeInterface $entity_info, PluginManagerInterface $display_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct($entity_info, $storage, $module_handler);
 
     $this->displayManager = $display_manager;
   }

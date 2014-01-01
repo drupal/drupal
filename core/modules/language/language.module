@@ -132,8 +132,8 @@ function language_theme() {
  */
 function language_entity_supported() {
   $supported = array();
-  foreach (entity_get_info() as $entity_type => $info) {
-    if (!empty($info['translatable'])) {
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
+    if ($info->isTranslatable()) {
       $supported[$entity_type] = $entity_type;
     }
   }

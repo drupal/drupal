@@ -11,10 +11,13 @@ use Drupal\comment\CommentInterface;
 /**
  * Implements hook_entity_info_alter().
  */
-function comment_test_entity_info_alter(&$info) {
+function comment_test_entity_info_alter(&$entity_info) {
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   if (language_multilingual()) {
     // Enable language handling for comment fields.
-    $info['comment']['translation']['comment_test'] = TRUE;
+    $translation = $entity_info['comment']->get('translation');
+    $translation['comment_test'] = TRUE;
+    $entity_info['comment']->set('translation', $translation);
   }
 }
 

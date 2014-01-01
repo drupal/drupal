@@ -77,7 +77,7 @@ abstract class OverviewBase extends FormBase {
     if (!isset($form_state['bundle'])) {
       if (!$bundle) {
         $entity_info = $this->entityManager->getDefinition($entity_type);
-        $bundle = $this->getRequest()->attributes->get('_raw_variables')->get($entity_info['bundle_entity_type']);
+        $bundle = $this->getRequest()->attributes->get('_raw_variables')->get($entity_info->getBundleEntityType());
       }
       $form_state['bundle'] = $bundle;
     }

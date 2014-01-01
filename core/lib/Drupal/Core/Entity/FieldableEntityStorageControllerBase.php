@@ -44,8 +44,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
     // Only the most current revision of non-deleted fields for cacheable entity
     // types can be cached.
     $load_current = $age == static::FIELD_LOAD_CURRENT;
-    $info = entity_get_info($this->entityType);
-    $use_cache = $load_current && $info['field_cache'];
+    $use_cache = $load_current && $this->entityInfo->isFieldDataCacheable();
 
     // Assume all entities will need to be queried. Entities found in the cache
     // will be removed from the list.
@@ -130,7 +129,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
 
     if ($update) {
       $entity_info = $entity->entityInfo();
-      if ($entity_info['field_cache']) {
+      if ($entity_info->isFieldDataCacheable()) {
         cache('field')->delete('field:' . $entity->entityType() . ':' . $entity->id());
       }
     }
@@ -150,7 +149,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
     $this->doDeleteFieldItems($entity);
 
     $entity_info = $entity->entityInfo();
-    if ($entity_info['field_cache']) {
+    if ($entity_info->isFieldDataCacheable()) {
       cache('field')->delete('field:' . $entity->entityType() . ':' . $entity->id());
     }
   }

@@ -14,6 +14,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -55,10 +56,8 @@ class BlockListController extends ConfigEntityListController implements FormInte
   /**
    * Constructs a new BlockListController object.
    *
-   * @param string $entity_type
-   *   The type of entity to be listed.
-   * @param array $entity_info
-   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+   *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -66,8 +65,8 @@ class BlockListController extends ConfigEntityListController implements FormInte
    * @param \Drupal\Component\Plugin\PluginManagerInterface $block_manager
    *   The block manager.
    */
-  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, PluginManagerInterface $block_manager) {
-    parent::__construct($entity_type, $entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, PluginManagerInterface $block_manager) {
+    parent::__construct($entity_info, $storage, $module_handler);
 
     $this->blockManager = $block_manager;
   }
@@ -75,11 +74,10 @@ class BlockListController extends ConfigEntityListController implements FormInte
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
     return new static(
-      $entity_type,
       $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_type),
+      $container->get('entity.manager')->getStorageController($entity_info->id()),
       $container->get('module_handler'),
       $container->get('plugin.manager.block')
     );
@@ -102,7 +100,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     $entities = _block_rehash($this->theme);
 
     // Sort the blocks using \Drupal\block\Entity\Block::sort().
-    uasort($entities, array($this->entityInfo['class'], 'sort'));
+    uasort($entities, array($this->entityInfo->getClass(), 'sort'));
     return $entities;
   }
 

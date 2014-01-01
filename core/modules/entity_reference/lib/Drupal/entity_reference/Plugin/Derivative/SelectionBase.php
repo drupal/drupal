@@ -24,10 +24,10 @@ class SelectionBase extends DerivativeBase {
       'taxonomy_term',
       'user'
     );
-    foreach (entity_get_info() as $entity_type => $info) {
+    foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
       if (!in_array($entity_type, $supported_entities)) {
         $this->derivatives[$entity_type] = $base_plugin_definition;
-        $this->derivatives[$entity_type]['label'] = t('@entity_type selection', array('@entity_type' => $info['label']));
+        $this->derivatives[$entity_type]['label'] = t('@entity_type selection', array('@entity_type' => $info->getLabel()));
       }
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);

@@ -53,7 +53,7 @@ class LocaleAdminPathConfigEntityConverter extends EntityConverter {
       // out whether the current entity is a ConfigEntity.
       $entity_type = substr($definition['type'], strlen('entity:'));
       $info = $this->entityManager->getDefinition($entity_type);
-      if (is_subclass_of($info['class'], '\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+      if ($info->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
         // path_is_admin() needs the path without the leading slash.
         $path = ltrim($route->getPath(), '/');
         return path_is_admin($path);

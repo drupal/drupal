@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\Core\Entity\Annotation\EntityType
  * @see \Drupal\Core\Entity\EntityInterface
- * @see entity_get_info()
+ * @see \Drupal\Core\Entity\EntityTypeInterface
  * @see hook_entity_info_alter()
  */
 class EntityManager extends PluginManagerBase implements EntityManagerInterface {
@@ -160,28 +160,26 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    * {@inheritdoc}
    */
   public function hasController($entity_type, $controller_type) {
-    $definition = $this->getDefinition($entity_type);
-    return !empty($definition['controllers'][$controller_type]);
+    if ($definition = $this->getDefinition($entity_type)) {
+      return $definition->hasController($controller_type);
+    }
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getControllerClass($entity_type, $controller_type, $nested = NULL) {
-    $definition = $this->getDefinition($entity_type);
-    if (!$definition) {
+    $info = $this->getDefinition($entity_type);
+    if (!$info) {
       throw new \InvalidArgumentException(sprintf('The %s entity type does not exist.', $entity_type));
     }
-    $definition = $definition['controllers'];
-    if (!$definition) {
-      throw new \InvalidArgumentException(sprintf('The entity type (%s) does not exist.', $entity_type));
-    }
 
-    if (empty($definition[$controller_type])) {
+    if (!$info->hasController($controller_type)) {
       throw new \InvalidArgumentException(sprintf('The entity type (%s) did not specify a %s controller.', $entity_type, $controller_type));
     }
 
-    $class = $definition[$controller_type];
+    $class = $info->getController($controller_type);
 
     // Some class definitions can be nested.
     if (isset($nested)) {
@@ -213,7 +211,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     if (!isset($this->controllers['listing'][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'list');
       if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers['listing'][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+        $this->controllers['listing'][$entity_type] = $class::createInstance($this->container, $this->getDefinition($entity_type));
       }
       else {
         $this->controllers['listing'][$entity_type] = new $class($entity_type, $this->getStorageController($entity_type));
@@ -277,10 +275,10 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     if (!isset($this->controllers[$controller_type][$entity_type])) {
       $class = $this->getControllerClass($entity_type, $controller_type);
       if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers[$controller_type][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+        $this->controllers[$controller_type][$entity_type] = $class::createInstance($this->container, $this->getDefinition($entity_type));
       }
       else {
-        $this->controllers[$controller_type][$entity_type] = new $class($entity_type, $this->getDefinition($entity_type));
+        $this->controllers[$controller_type][$entity_type] = new $class($this->getDefinition($entity_type));
       }
     }
     return $this->controllers[$controller_type][$entity_type];
@@ -302,9 +300,9 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $admin_path = '';
     $entity_info = $this->getDefinition($entity_type);
     // Check for an entity type's admin base path.
-    if (isset($entity_info['links']['admin-form'])) {
-      $route_parameters[$entity_info['bundle_entity_type']] = $bundle;
-      $admin_path = \Drupal::urlGenerator()->getPathFromRoute($entity_info['links']['admin-form'], $route_parameters);
+    if ($admin_form = $entity_info->getLinkTemplate('admin-form')) {
+      $route_parameters[$entity_info->getBundleEntityType()] = $bundle;
+      $admin_path = \Drupal::urlGenerator()->getPathFromRoute($admin_form, $route_parameters);
     }
 
     return $admin_path;
@@ -318,7 +316,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     return array(
       'route_name' => "field_ui.overview_$entity_type",
       'route_parameters' => array(
-        $entity_info['bundle_entity_type'] => $bundle,
+        $entity_info->getBundleEntityType() => $bundle,
       )
     );
   }
@@ -336,7 +334,9 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
       else {
         // @todo: Refactor to allow for per-bundle overrides.
         // See https://drupal.org/node/2114707.
-        $class = $this->factory->getPluginClass($entity_type, $this->getDefinition($entity_type));
+        $entity_info = $this->getDefinition($entity_type);
+        $definition = array('class' => $entity_info->getClass());
+        $class = $this->factory->getPluginClass($entity_type, $definition);
 
         $this->entityFieldInfo[$entity_type] = array(
           'definitions' => $class::baseFieldDefinitions($entity_type),
@@ -367,8 +367,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         $this->moduleHandler->alter($hooks, $this->entityFieldInfo[$entity_type], $entity_type);
 
         // Ensure all basic fields are not defined as translatable.
-        $entity_info = $this->getDefinition($entity_type);
-        $keys = array_intersect_key(array_filter($entity_info['entity_keys']), array_flip(array('id', 'revision', 'uuid', 'bundle')));
+        $keys = array_intersect_key(array_filter($entity_info->getKeys()), array_flip(array('id', 'revision', 'uuid', 'bundle')));
         $untranslatable_fields = array_flip(array('langcode') + $keys);
         foreach (array('definitions', 'optional') as $key) {
           foreach ($this->entityFieldInfo[$entity_type][$key] as $field_name => &$definition) {
@@ -436,7 +435,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         // If no bundles are provided, use the entity type name and label.
         foreach ($this->getDefinitions() as $type => $entity_info) {
           if (!isset($this->bundleInfo[$type])) {
-            $this->bundleInfo[$type][$type]['label'] = $entity_info['label'];
+            $this->bundleInfo[$type][$type]['label'] = $entity_info->getLabel();
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
@@ -453,7 +452,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   public function getEntityTypeLabels() {
     $options = array();
     foreach ($this->getDefinitions() as $entity_type => $definition) {
-      $options[$entity_type] = $definition['label'];
+      $options[$entity_type] = $definition->getLabel();
     }
 
     return $options;

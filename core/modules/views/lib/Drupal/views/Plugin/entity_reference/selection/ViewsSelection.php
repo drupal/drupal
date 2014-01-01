@@ -66,7 +66,7 @@ class ViewsSelection implements SelectionInterface {
     $options = array();
     foreach ($displays as $data) {
       list($view, $display_id) = $data;
-      if ($view->storage->get('base_table') == $entity_info['base_table']) {
+      if ($view->storage->get('base_table') == $entity_info->getBaseTable()) {
         $name = $view->storage->get('id');
         $display = $view->storage->get('display');
         $options[$name . ':' . $display_id] = $name . ' - ' . $display[$display_id]['display_title'];

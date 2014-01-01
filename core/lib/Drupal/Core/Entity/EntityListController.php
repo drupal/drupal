@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,9 +42,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
   /**
    * The entity info array.
    *
-   * @var array
-   *
-   * @see entity_get_info()
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityInfo;
 
@@ -57,11 +56,10 @@ class EntityListController implements EntityListControllerInterface, EntityContr
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
     return new static(
-      $entity_type,
       $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_type),
+      $container->get('entity.manager')->getStorageController($entity_info->id()),
       $container->get('module_handler')
     );
   }
@@ -69,17 +67,15 @@ class EntityListController implements EntityListControllerInterface, EntityContr
   /**
    * Constructs a new EntityListController object.
    *
-   * @param string $entity_type
-   *   The type of entity to be listed.
-   * @param array $entity_info
-   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+   *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke hooks on.
    */
-  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler) {
-    $this->entityType = $entity_type;
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler) {
+    $this->entityType = $entity_info->id();
     $this->storage = $storage;
     $this->entityInfo = $entity_info;
     $this->moduleHandler = $module_handler;
@@ -204,7 +200,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
       '#header' => $this->buildHeader(),
       '#title' => $this->getTitle(),
       '#rows' => array(),
-      '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityInfo['label'])),
+      '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityInfo->getLabel())),
     );
     foreach ($this->load() as $entity) {
       if ($row = $this->buildRow($entity)) {

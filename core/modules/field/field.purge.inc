@@ -74,7 +74,7 @@ function field_purge_batch($batch_size) {
   // because that function does not return deleted instances.
   $instances = entity_load_multiple_by_properties('field_instance', array('deleted' => TRUE, 'include_deleted' => TRUE));
   $factory = \Drupal::service('entity.query');
-  $info = entity_get_info();
+  $info = \Drupal::entityManager()->getDefinitions();
   foreach ($instances as $instance) {
     $entity_type = $instance->entity_type;
 
@@ -100,8 +100,8 @@ function field_purge_batch($batch_size) {
       ->condition('id:' . $instance->getField()->uuid() . '.deleted', 1)
       ->range(0, $batch_size);
     // If there's no bundle key, all results will have the same bundle.
-    if (!empty($info[$entity_type]['entity_keys']['bundle'])) {
-      $query->condition($info[$entity_type]['entity_keys']['bundle'], $ids->bundle);
+    if ($bundle_key = $info[$entity_type]->getKey('bundle')) {
+      $query->condition($bundle_key, $ids->bundle);
     }
     $results = $query->execute();
     if ($results) {

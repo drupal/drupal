@@ -26,7 +26,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     $this->entityType = $entity_type;
     $form = parent::buildForm($form, $form_state);
     $definition = $this->entityManager->getDefinition($this->entityType);
-    $form['#title'] = $this->t('Add new %label @entity-type', array('%label' => $definition['label'], '@entity-type' => strtolower($this->entityInfo['label'])));
+    $form['#title'] = $this->t('Add new %label @entity-type', array('%label' => $definition->getLabel(), '@entity-type' => $this->entityInfo->getLowercaseLabel()));
     return $form;
   }
 
@@ -44,7 +44,7 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
    */
   protected function prepareEntity() {
     $definition = $this->entityManager->getDefinition($this->entityType);
-    if (!$definition['fieldable'] || !isset($definition['controllers']['view_builder'])) {
+    if (!$definition->isFieldable() || !$definition->hasController('view_builder')) {
       throw new NotFoundHttpException();
     }
 

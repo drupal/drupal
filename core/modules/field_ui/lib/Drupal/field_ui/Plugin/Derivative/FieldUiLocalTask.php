@@ -74,7 +74,7 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
     $this->derivatives = array();
 
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info['fieldable'] && isset($entity_info['links']['admin-form'])) {
+      if ($entity_info->isFieldable() && $entity_info->hasLinkTemplate('admin-form')) {
         $this->derivatives["overview_$entity_type"] = array(
           'route_name' => "field_ui.overview_$entity_type",
           'weight' => 1,
@@ -175,19 +175,20 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
    */
   public function alterLocalTasks(&$local_tasks) {
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info['fieldable'] && isset($entity_info['links']['admin-form'])) {
-        $local_tasks["field_ui.fields:overview_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
-        $local_tasks["field_ui.fields:form_display_overview_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
-        $local_tasks["field_ui.fields:display_overview_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
-        $local_tasks["field_ui.fields:field_form_display_default_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
-        $local_tasks["field_ui.fields:field_display_default_$entity_type"]['base_route'] = $entity_info['links']['admin-form'];
+      if ($entity_info->isFieldable() && $entity_info->hasLinkTemplate('admin-form')) {
+        $admin_form = $entity_info->getLinkTemplate('admin-form');
+        $local_tasks["field_ui.fields:overview_$entity_type"]['base_route'] = $admin_form;
+        $local_tasks["field_ui.fields:form_display_overview_$entity_type"]['base_route'] = $admin_form;
+        $local_tasks["field_ui.fields:display_overview_$entity_type"]['base_route'] = $admin_form;
+        $local_tasks["field_ui.fields:field_form_display_default_$entity_type"]['base_route'] = $admin_form;
+        $local_tasks["field_ui.fields:field_display_default_$entity_type"]['base_route'] = $admin_form;
 
         foreach (entity_get_form_modes($entity_type) as $form_mode => $form_mode_info) {
-          $local_tasks['field_ui.fields:field_form_display_' . $form_mode . '_' . $entity_type]['base_route'] = $entity_info['links']['admin-form'];
+          $local_tasks['field_ui.fields:field_form_display_' . $form_mode . '_' . $entity_type]['base_route'] = $admin_form;
         }
 
         foreach (entity_get_view_modes($entity_type) as $view_mode => $form_mode_info) {
-          $local_tasks['field_ui.fields:field_display_' . $view_mode . '_' . $entity_type]['base_route'] = $entity_info['links']['admin-form'];
+          $local_tasks['field_ui.fields:field_display_' . $view_mode . '_' . $entity_type]['base_route'] = $admin_form;
         }
       }
     }

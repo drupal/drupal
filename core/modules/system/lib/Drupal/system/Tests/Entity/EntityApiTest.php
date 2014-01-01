@@ -94,12 +94,12 @@ class EntityApiTest extends EntityUnitTestBase {
 
     // Verify that all data got deleted.
     $definition = \Drupal::entityManager()->getDefinition($entity_type);
-    $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition['base_table'] . '}')->fetchField(), 'Base table was emptied');
-    if (isset($definition['data_table'])) {
-      $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition['data_table'] . '}')->fetchField(), 'Data table was emptied');
+    $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition->getBaseTable() . '}')->fetchField(), 'Base table was emptied');
+    if ($data_table = $definition->getDataTable()) {
+      $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $data_table . '}')->fetchField(), 'Data table was emptied');
     }
-    if (isset($definition['revision_table'])) {
-      $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $definition['revision_table'] . '}')->fetchField(), 'Data table was emptied');
+    if ($revision_table = $definition->getRevisionTable()) {
+      $this->assertEqual(0, db_query('SELECT COUNT(*) FROM {' . $revision_table . '}')->fetchField(), 'Data table was emptied');
     }
   }
 

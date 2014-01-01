@@ -118,8 +118,8 @@ class TranslationTest extends FieldUnitTestBase {
   function testTranslatableFieldSaveLoad() {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
-    $entity_info = entity_get_info('node');
-    $this->assertTrue(count($entity_info['translatable']), 'Nodes are translatable.');
+    $entity_info = \Drupal::entityManager()->getDefinition('node');
+    $this->assertTrue($entity_info->isTranslatable(), 'Nodes are translatable.');
 
     // Prepare the field translations.
     $entity_type = 'entity_test';

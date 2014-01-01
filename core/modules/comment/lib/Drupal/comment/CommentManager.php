@@ -58,7 +58,7 @@ class CommentManager implements CommentManagerInterface {
    */
   public function getFields($entity_type) {
     $info = $this->entityManager->getDefinition($entity_type);
-    if (!is_subclass_of($info['class'], '\Drupal\Core\Entity\ContentEntityInterface')) {
+    if (!$info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
       return array();
     }
 

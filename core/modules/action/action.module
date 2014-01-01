@@ -60,9 +60,11 @@ function action_menu() {
  * Implements hook_entity_info().
  */
 function action_entity_info(&$entity_info) {
-  $entity_info['action']['controllers']['form']['add'] = 'Drupal\action\ActionAddFormController';
-  $entity_info['action']['controllers']['form']['edit'] = 'Drupal\action\ActionEditFormController';
-  $entity_info['action']['controllers']['form']['delete'] = 'Drupal\action\Form\ActionDeleteForm';
-  $entity_info['action']['controllers']['list'] = 'Drupal\action\ActionListController';
-  $entity_info['action']['links']['edit-form'] = 'action.admin_configure';
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_info['action']
+    ->setForm('add', 'Drupal\action\ActionAddFormController')
+    ->setForm('edit', 'Drupal\action\ActionEditFormController')
+    ->setForm('delete', 'Drupal\action\Form\ActionDeleteForm')
+    ->setList('Drupal\action\ActionListController')
+    ->setLinkTemplate('edit-form', 'action.admin_configure');
 }

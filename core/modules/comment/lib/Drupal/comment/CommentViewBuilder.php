@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
@@ -47,9 +48,8 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
     return new static(
-      $entity_type,
       $entity_info,
       $container->get('entity.manager'),
       $container->get('field.info'),
@@ -61,9 +61,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
   /**
    * Constructs a new CommentViewBuilder.
    *
-   * @param string $entity_type
-   *   The entity type.
-   * @param array $entity_info
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
    *   The entity information array.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
@@ -74,8 +72,8 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
    */
-  public function __construct($entity_type, array $entity_info, EntityManagerInterface $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
-    parent::__construct($entity_type, $entity_info, $entity_manager);
+  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
+    parent::__construct($entity_info, $entity_manager);
     $this->fieldInfo = $field_info;
     $this->moduleHandler = $module_handler;
     $this->csrfToken = $csrf_token;

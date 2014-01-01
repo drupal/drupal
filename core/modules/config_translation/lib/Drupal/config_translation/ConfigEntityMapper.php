@@ -7,10 +7,9 @@
 
 namespace Drupal\config_translation;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\locale\LocaleConfigManager;
@@ -25,7 +24,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -69,10 +68,10 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    *   The route provider.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The string translation manager.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct($plugin_id, array $plugin_definition, ConfigFactory $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager, EntityManager $entity_manager) {
+  public function __construct($plugin_id, array $plugin_definition, ConfigFactory $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager, EntityManagerInterface $entity_manager) {
     parent::__construct($plugin_id, $plugin_definition, $config_factory, $locale_config_manager, $config_mapper_manager, $route_provider, $translation_manager);
     $this->setType($plugin_definition['entity_type']);
 
@@ -134,7 +133,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
     // entity. This is not a Drupal 8 best practice (ideally the configuration
     // would have pluggable components), but this may happen as well.
     $entity_type_info = $this->entityManager->getDefinition($this->entityType);
-    $this->addConfigName($entity_type_info['config_prefix'] . '.' . $entity->id());
+    $this->addConfigName($entity_type_info->getConfigPrefix() . '.' . $entity->id());
 
     return TRUE;
   }
@@ -147,7 +146,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
     // current page language. The title placeholder is later escaped for
     // display.
     $entity_type_info = $this->entityManager->getDefinition($this->entityType);
-    return $this->t($this->pluginDefinition['title'], array('!label' => $this->entity->label(), '!entity_type' => Unicode::strtolower($entity_type_info['label'])));
+    return $this->t($this->pluginDefinition['title'], array('!label' => $this->entity->label(), '!entity_type' => $entity_type_info->getLowercaseLabel()));
   }
 
   /**
@@ -194,7 +193,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    */
   public function getTypeName() {
     $entity_type_info = $this->entityManager->getDefinition($this->entityType);
-    return $entity_type_info['label'];
+    return $entity_type_info->getLabel();
   }
 
   /**
@@ -202,7 +201,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    */
   public function getTypeLabel() {
     $entityType = $this->entityManager->getDefinition($this->entityType);
-    return $entityType['label'];
+    return $entityType->getLabel();
   }
 
   /**

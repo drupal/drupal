@@ -1852,11 +1852,11 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
     $usage_list = \Drupal::service('file.usage')->listUsage($file);
     $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : array();
     foreach ($file_usage_list as $entity_type => $entity_ids) {
-      $entity_info = entity_get_info($entity_type);
+      $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
       // The usage table contains usage of every revision. If we are looking
       // for every revision or the entity does not support revisions then
       // every usage is already a match.
-      $match_entity_type = $age == EntityStorageControllerInterface::FIELD_LOAD_REVISION || !isset($entity_info['entity_keys']['revision']);
+      $match_entity_type = $age == EntityStorageControllerInterface::FIELD_LOAD_REVISION || !$entity_info->hasKey('revision');
       $entities = entity_load_multiple($entity_type, array_keys($entity_ids));
       foreach ($entities as $entity) {
         $bundle = $entity->bundle();

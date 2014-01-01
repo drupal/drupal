@@ -36,7 +36,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface {
    */
   public function isSupported($entity_type) {
     $info = $this->entityManager->getDefinition($entity_type);
-    return !empty($info['translatable']) && !empty($info['links']['drupal:content-translation-overview']);
+    return $info->isTranslatable() && $info->hasLinkTemplate('drupal:content-translation-overview');
   }
 
   /**

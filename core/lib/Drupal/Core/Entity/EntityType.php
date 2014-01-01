@@ -1,0 +1,537 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\Core\Entity\EntityType.
+ */
+
+namespace Drupal\Core\Entity;
+
+use Drupal\Component\Utility\Unicode;
+
+/**
+ * Provides an implementation of an entity type and its metadata.
+ */
+class EntityType implements EntityTypeInterface {
+
+  /**
+   * Indicates whether entities should be statically cached.
+   *
+   * @var bool
+   */
+  protected $static_cache;
+
+  /**
+   * Indicates whether the rendered output of entities should be cached.
+   *
+   * @var bool
+   */
+  protected $render_cache;
+
+  /**
+   * Indicates if the persistent cache of field data should be used.
+   *
+   * @var bool
+   */
+  protected $field_cache;
+
+  /**
+   * An array of entity keys.
+   *
+   * @var array
+   */
+  protected $entity_keys = array();
+
+  /**
+   * The unique identifier of this entity type.
+   *
+   * @var string
+   */
+  protected $id;
+
+  /**
+   * The name of the provider of this entity type.
+   *
+   * @var string
+   */
+  protected $provider;
+
+  /**
+   * The name of the entity type class.
+   *
+   * @var string
+   */
+  protected $class;
+
+  /**
+   * An array of controllers.
+   *
+   * @var array
+   */
+  protected $controllers = array();
+
+  /**
+   * The name of the default administrative permission.
+   *
+   * @var string
+   */
+  protected $admin_permission;
+
+  /**
+   * The permission granularity level.
+   *
+   * The allowed values are respectively "entity_type", "bundle" or FALSE.
+   *
+   * @var string|bool
+   */
+  protected $permission_granularity;
+
+  /**
+   * An array describing how the Field API can extract the information it needs
+   * from the bundle objects for this type (e.g Vocabulary objects for terms;
+   * not applicable for nodes):
+   * - bundle: The name of the property that contains the name of the bundle
+   *   object.
+   *
+   * This entry can be omitted if this type's bundles do not exist as standalone
+   * objects.
+   *
+   * @var array
+   */
+  protected $bundle_keys = array();
+
+  /**
+   * Indicates whether fields can be attached to entities of this type.
+   *
+   * @var bool (optional)
+   */
+  protected $fieldable;
+
+  /**
+   * Link templates using the URI template syntax.
+   *
+   * @var array
+   */
+  protected $links = array();
+
+  /**
+   * The name of a callback that returns the label of the entity.
+   *
+   * @var string
+   */
+  protected $label_callback;
+
+  /**
+   * The name of the entity type which provides bundles.
+   *
+   * @var string
+   */
+  protected $bundle_entity_type;
+
+  /**
+   * The name of the entity type for which bundles are provided.
+   *
+   * @var string
+   */
+  protected $bundle_of;
+
+  /**
+   * The human-readable name of the entity bundles, e.g. Vocabulary.
+   *
+   * @var string
+   */
+  protected $bundle_label;
+
+  /**
+   * The name of the entity type's base table.
+   *
+   * @var string
+   */
+  protected $base_table;
+
+  /**
+   * The name of the entity type's revision data table.
+   *
+   * @var string
+   */
+  protected $revision_data_table;
+
+  /**
+   * The name of the entity type's revision table.
+   *
+   * @var string
+   */
+  protected $revision_table;
+
+  /**
+   * The name of the entity type's data table.
+   *
+   * @var string
+   */
+  protected $data_table;
+
+  /**
+   * Indicates whether entities of this type have multilingual support.
+   *
+   * @var bool
+   */
+  protected $translatable = FALSE;
+
+  /**
+   * Returns the config prefix used by the configuration entity type.
+   *
+   * @var string
+   */
+  protected $config_prefix;
+
+  /**
+   * The human-readable name of the type.
+   *
+   * @var string
+   */
+  protected $label;
+
+  /**
+   * A callable that can be used to provide the entity URI.
+   *
+   * @var callable
+   */
+  protected $uri_callback;
+
+  /**
+   * Constructs a new EntityType.
+   *
+   * @param array $definition
+   *   An array of values from the annotation.
+   */
+  public function __construct($definition) {
+    foreach ($definition as $property => $value) {
+      $this->{$property} = $value;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function get($property) {
+    return isset($this->{$property}) ? $this->{$property} : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function set($property, $value) {
+    $this->{$property} = $value;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isStaticallyCacheable() {
+    return isset($this->static_cache) ? $this->static_cache: TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRenderCacheable() {
+    return isset($this->render_cache) ? $this->render_cache: TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldDataCacheable() {
+    return isset($this->field_cache) ? $this->field_cache: TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getKeys() {
+    return $this->entity_keys + array('revision' => '', 'bundle' => '');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getKey($key) {
+    $keys = $this->getKeys();
+    return isset($keys[$key]) ? $keys[$key] : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasKey($key) {
+    $keys = $this->getKeys();
+    return !empty($keys[$key]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    return $this->id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProvider() {
+    return $this->provider;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getClass() {
+    return $this->class;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setClass($class) {
+    $this->class = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSubclassOf($class) {
+    return is_subclass_of($this->getClass(), $class);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getControllers() {
+    return $this->controllers + array(
+      'access' => 'Drupal\Core\Entity\EntityAccessController',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getController($controller_type) {
+    $controllers = $this->getControllers();
+    return $controllers[$controller_type];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setController($controller_type, $value) {
+    $this->controllers[$controller_type] = $value;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasController($controller_type) {
+    $controllers = $this->getControllers();
+    return isset($controllers[$controller_type]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setForm($operation, $class) {
+    $this->controllers['form'][$operation] = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setList($class) {
+    $this->controllers['list'] = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAdminPermission() {
+    return $this->admin_permission ?: FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPermissionGranularity() {
+    return isset($this->permission_granularity) ? $this->permission_granularity : 'entity_type';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleKeys() {
+    return isset($this->bundle_keys) ? $this->bundle_keys : array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleKey($name) {
+    return isset($this->bundle_keys[$name]) ? $this->bundle_keys[$name] : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isFieldable() {
+    return isset($this->fieldable) ? $this->fieldable : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLinkTemplates() {
+    return isset($this->links) ? $this->links : array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLinkTemplate($key) {
+    $links = $this->getLinkTemplates();
+    return isset($links[$key]) ? $links[$key] : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasLinkTemplate($key) {
+    $links = $this->getLinkTemplates();
+    return isset($links[$key]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLinkTemplate($key, $route_name) {
+    $this->links[$key] = $route_name;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLabelCallback() {
+    return isset($this->label_callback) ? $this->label_callback : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLabelCallback($callback) {
+    $this->label_callback = $callback;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasLabelCallback() {
+    return isset($this->label_callback);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleEntityType() {
+    return isset($this->bundle_entity_type) ? $this->bundle_entity_type : 'bundle';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleOf() {
+    return isset($this->bundle_of) ? $this->bundle_of : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleLabel() {
+    return isset($this->bundle_label) ? $this->bundle_label : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBaseTable() {
+    return isset($this->base_table) ? $this->base_table : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isTranslatable() {
+    return !empty($this->translatable);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigPrefix() {
+    return isset($this->config_prefix) ? $this->config_prefix : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionDataTable() {
+    return isset($this->revision_data_table) ? $this->revision_data_table : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionTable() {
+    return isset($this->revision_table) ? $this->revision_table : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataTable() {
+    return isset($this->data_table) ? $this->data_table : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLabel() {
+    return isset($this->label) ? $this->label : '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLowercaseLabel() {
+    return Unicode::strtolower($this->getLabel());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUriCallback() {
+    return isset($this->uri_callback) ? $this->uri_callback : FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUriCallback($callback) {
+    $this->uri_callback = $callback;
+    return $this;
+  }
+
+}

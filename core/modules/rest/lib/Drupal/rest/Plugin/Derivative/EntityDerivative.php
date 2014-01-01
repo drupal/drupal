@@ -71,8 +71,8 @@ class EntityDerivative implements ContainerDerivativeInterface {
         $this->derivatives[$entity_type] = array(
           'id' => 'entity:' . $entity_type,
           'entity_type' => $entity_type,
-          'serialization_class' => $entity_info['class'],
-          'label' => $entity_info['label'],
+          'serialization_class' => $entity_info->getClass(),
+          'label' => $entity_info->getLabel(),
         );
         $this->derivatives[$entity_type] += $base_plugin_definition;
       }

@@ -75,11 +75,12 @@ function breakpoint_modules_uninstalled($modules) {
  */
 function _breakpoint_delete_breakpoints($list, $source_type) {
   $ids = config_get_storage_names_with_prefix('breakpoint.breakpoint_group.' . $source_type . '.');
-  $entity_info = \Drupal::service('entity.manager')->getDefinition('breakpoint_group');
+  $entity_manager = \Drupal::entityManager();
+  $entity_info = $entity_manager->getDefinition('breakpoint_group');
 
   // Remove the breakpoint.breakpoint part of the breakpoint identifier.
   foreach ($ids as &$id) {
-    $id = ConfigStorageController::getIDFromConfigName($id, $entity_info['config_prefix']);
+    $id = ConfigStorageController::getIDFromConfigName($id, $entity_info->getConfigPrefix());
   }
   $breakpoint_groups = entity_load_multiple('breakpoint_group', $ids);
 
@@ -90,11 +91,11 @@ function _breakpoint_delete_breakpoints($list, $source_type) {
 
       // Get all breakpoints defined by this theme/module.
       $breakpoint_ids = \Drupal::service('config.storage')->listAll('breakpoint.breakpoint.' . $source_type . '.' . $breakpoint_group->id() . '.');
-      $entity_info = \Drupal::service('entity.manager')->getDefinition('breakpoint');
+      $entity_info = $entity_manager->getDefinition('breakpoint');
 
       // Remove the breakpoint.breakpoint part of the breakpoint identifier.
       foreach ($breakpoint_ids as &$breakpoint_id) {
-        $breakpoint_id = ConfigStorageController::getIDFromConfigName($breakpoint_id, $entity_info['config_prefix']);
+        $breakpoint_id = ConfigStorageController::getIDFromConfigName($breakpoint_id, $entity_info->getConfigPrefix());
       }
       $breakpoints = entity_load_multiple('breakpoint', $breakpoint_ids);
 

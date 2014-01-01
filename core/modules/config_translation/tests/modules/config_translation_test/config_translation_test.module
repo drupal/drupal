@@ -8,10 +8,10 @@
 /**
  * Implements hook_entity_info_alter().
  */
-function config_translation_test_entity_info_alter(&$info) {
+function config_translation_test_entity_info_alter(&$entity_info) {
   // Remove entity definition for these entity types from config_test module.
-  unset($info['config_test_no_status']);
-  unset($info['config_query_test']);
+  unset($entity_info['config_test_no_status']);
+  unset($entity_info['config_query_test']);
 }
 
 /**

@@ -1609,8 +1609,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
         $translatable_entity_tables = array();
         foreach (\Drupal::entityManager()->getDefinitions() as $entity_info) {
-          if (isset($entity_info['base_table']) && !empty($entity_info['translatable'])) {
-            $translatable_entity_tables[] = $entity_info['base_table'];
+          if ($entity_info->isTranslatable() && $base_table = $entity_info->getBaseTable()) {
+            $translatable_entity_tables[] = $base_table;
           }
         }
 

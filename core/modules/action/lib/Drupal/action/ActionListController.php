@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,10 +36,8 @@ class ActionListController extends ConfigEntityListController implements EntityC
   /**
    * Constructs a new ActionListController object.
    *
-   * @param string $entity_type
-   *   The entity type.
-   * @param array $entity_info
-   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+   *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The action storage controller.
    * @param \Drupal\Core\Action\ActionManager $action_manager
@@ -46,8 +45,8 @@ class ActionListController extends ConfigEntityListController implements EntityC
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke hooks on.
    */
-  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ActionManager $action_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct($entity_type, $entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ActionManager $action_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct($entity_info, $storage, $module_handler);
 
     $this->actionManager = $action_manager;
   }
@@ -55,11 +54,10 @@ class ActionListController extends ConfigEntityListController implements EntityC
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
     return new static(
-      $entity_type,
       $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_type),
+      $container->get('entity.manager')->getStorageController($entity_info->id()),
       $container->get('plugin.manager.action'),
       $container->get('module_handler')
     );

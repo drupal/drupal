@@ -14,7 +14,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class EntityDisplayTest extends DrupalUnitTestBase {
 
-  public static $modules = array('entity', 'field', 'entity_test');
+  public static $modules = array('entity', 'field', 'entity_test', 'user');
 
   public static function getInfo() {
     return array(

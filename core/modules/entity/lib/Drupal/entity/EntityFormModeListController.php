@@ -23,7 +23,7 @@ class EntityFormModeListController extends EntityDisplayModeListController {
    *   doesn't has the correct controller.
    */
   protected function isValidEntity($entity_type) {
-    return isset($this->entityInfoComplete[$entity_type]['controllers']['form']);
+    return $this->entityInfoComplete[$entity_type]->hasController('form');
   }
 
 }

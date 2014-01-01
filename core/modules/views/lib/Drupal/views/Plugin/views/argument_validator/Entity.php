@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\argument_validator;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,7 +27,7 @@ class Entity extends ArgumentValidatorPluginBase {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -45,10 +45,10 @@ class Entity extends ArgumentValidatorPluginBase {
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityManager = $entity_manager;
     $this->multipleCapable = TRUE;
@@ -90,8 +90,8 @@ class Entity extends ArgumentValidatorPluginBase {
     // Derivative IDs are all entity:entity_type. Sanitized for js.
     // The ID is converted back on submission.
     $sanitized_id = ArgumentPluginBase::encodeValidatorId($this->definition['id']);
-    $entity_definitions = $this->entityManager->getDefinitions();
-    $bundle_type = $entity_definitions[$entity_type]['entity_keys']['bundle'];
+    $entity_info = $this->entityManager->getDefinition($entity_type);
+    $bundle_type = $entity_info->getKey('bundle');
 
     // If the entity has bundles, allow option to restrict to bundle(s).
     if ($bundle_type) {
@@ -100,8 +100,8 @@ class Entity extends ArgumentValidatorPluginBase {
       foreach ($bundles as $bundle_id => $bundle_info) {
         $bundle_options[$bundle_id] = $bundle_info['label'];
       }
-      $bundles_title = empty($entity_definitions[$entity_type]['bundle_label']) ? t('Bundles') : $entity_definitions[$entity_type]['bundle_label'];
-      if (in_array('Drupal\Core\Entity\ContentEntityInterface', class_implements($entity_definitions[$entity_type]['class']))) {
+      $bundles_title = $entity_info->getBundleLabel() ?: $this->t('Bundles');
+      if ($entity_info->isSubclassOf('Drupal\Core\Entity\ContentEntityInterface')) {
         $fields = $this->entityManager->getFieldDefinitions($entity_type);
       }
       $bundle_name = (empty($fields) || empty($fields[$bundle_type]['label'])) ? t('bundles') : $fields[$bundle_type]['label'];
@@ -117,7 +117,7 @@ class Entity extends ArgumentValidatorPluginBase {
     // Offer the option to filter by access to the entity in the argument.
     $form['access'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Validate user has access to the %name', array('%name' => $entity_definitions[$entity_type]['label'])),
+      '#title' => t('Validate user has access to the %name', array('%name' => $entity_info->getLabel())),
       '#default_value' => $this->options['access'],
     );
     $form['operation'] = array(
@@ -138,8 +138,8 @@ class Entity extends ArgumentValidatorPluginBase {
         '#type' => 'radios',
         '#title' => t('Multiple arguments'),
         '#options' => array(
-          0 => t('Single ID', array('%type' => $entity_definitions[$entity_type]['label'])),
-          1 => t('One or more IDs separated by , or +', array('%type' => $entity_definitions[$entity_type]['label'])),
+          0 => t('Single ID', array('%type' => $entity_info->getLabel())),
+          1 => t('One or more IDs separated by , or +', array('%type' => $entity_info->getLabel())),
         ),
         '#default_value' => (string) $this->options['multiple'],
       );

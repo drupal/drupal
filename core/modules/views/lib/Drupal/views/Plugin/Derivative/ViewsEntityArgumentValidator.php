@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -31,7 +31,7 @@ class ViewsEntityArgumentValidator extends DerivativeBase implements ContainerDe
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -54,12 +54,12 @@ class ViewsEntityArgumentValidator extends DerivativeBase implements ContainerDe
    *
    * @param string $base_plugin_id
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The string translation.
    */
-  public function __construct($base_plugin_id, EntityManager $entity_manager, TranslationInterface $translation_manager) {
+  public function __construct($base_plugin_id, EntityManagerInterface $entity_manager, TranslationInterface $translation_manager) {
     $this->basePluginId = $base_plugin_id;
     $this->entityManager = $entity_manager;
     $this->translationManager = $translation_manager;
@@ -86,8 +86,8 @@ class ViewsEntityArgumentValidator extends DerivativeBase implements ContainerDe
       $this->derivatives[$entity_type] = array(
         'id' => 'entity:' . $entity_type,
         'provider' => 'views',
-        'title' => $entity_info['label'],
-        'help' => $this->t('Validate @label', array('@label' => $entity_info['label'])),
+        'title' => $entity_info->getLabel(),
+        'help' => $this->t('Validate @label', array('@label' => $entity_info->getLabel())),
         'entity_type' => $entity_type,
         'class' => $base_plugin_definition['class'],
       );

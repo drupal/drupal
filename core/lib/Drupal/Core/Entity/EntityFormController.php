@@ -138,8 +138,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     $entity = $this->entity;
     // @todo Exploit the Field API to generate the default widgets for the
     // entity properties.
-    $info = $entity->entityInfo();
-    if (!empty($info['fieldable'])) {
+    if ($entity->entityInfo()->isFieldable()) {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
 

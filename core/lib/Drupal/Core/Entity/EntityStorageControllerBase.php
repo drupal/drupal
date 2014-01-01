@@ -39,9 +39,7 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
   /**
    * Array of information about the entity.
    *
-   * @var array
-   *
-   * @see entity_get_info()
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityInfo;
 
@@ -64,16 +62,14 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
   /**
    * Constructs an EntityStorageControllerBase instance.
    *
-   * @param string $entity_type
-   *   The entity type for which the instance is created.
-   * @param array $entity_info
-   *   An array of entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+   *   The entity info for the entity type.
    */
-  public function __construct($entity_type, $entity_info) {
-    $this->entityType = $entity_type;
+  public function __construct(EntityTypeInterface $entity_info) {
+    $this->entityType = $entity_info->id();
     $this->entityInfo = $entity_info;
     // Check if the entity type supports static caching of loaded entities.
-    $this->cache = !empty($this->entityInfo['static_cache']);
+    $this->cache = $this->entityInfo->isStaticallyCacheable();
   }
 
   /**
@@ -165,7 +161,7 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
    *   Associative array of query results, keyed on the entity ID.
    */
   protected function postLoad(array &$queried_entities) {
-    $entity_class = $this->entityInfo['class'];
+    $entity_class = $this->entityInfo->getClass();
     $entity_class::postLoad($this, $queried_entities);
     // Call hook_entity_load().
     foreach (\Drupal::moduleHandler()->getImplementations('entity_load') as $module) {

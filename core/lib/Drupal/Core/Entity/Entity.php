@@ -109,11 +109,12 @@ abstract class Entity implements EntityInterface {
   public function label($langcode = NULL) {
     $label = NULL;
     $entity_info = $this->entityInfo();
-    if (isset($entity_info['label_callback']) && function_exists($entity_info['label_callback'])) {
-      $label = $entity_info['label_callback']($this, $langcode);
+    // @todo Convert to is_callable() and call_user_func().
+    if (($label_callback = $entity_info->getLabelCallback()) && function_exists($label_callback)) {
+      $label = $label_callback($this, $langcode);
     }
-    elseif (!empty($entity_info['entity_keys']['label']) && isset($this->{$entity_info['entity_keys']['label']})) {
-      $label = $this->{$entity_info['entity_keys']['label']};
+    elseif (($label_key = $entity_info->getKey('label')) && isset($this->{$label_key})) {
+      $label = $this->{$label_key};
     }
     return $label;
   }
@@ -150,7 +151,7 @@ abstract class Entity implements EntityInterface {
     $entity_info = $this->entityInfo();
 
     // The links array might contain URI templates set in annotations.
-    $link_templates = isset($entity_info['links']) ? $entity_info['links'] : array();
+    $link_templates = $entity_info->getLinkTemplates();
 
     $template = NULL;
     if (isset($link_templates[$rel])) {
@@ -185,12 +186,13 @@ abstract class Entity implements EntityInterface {
     if (isset($bundles[$bundle]['uri_callback'])) {
       $uri_callback = $bundles[$bundle]['uri_callback'];
     }
-    elseif (isset($entity_info['uri_callback'])) {
-      $uri_callback = $entity_info['uri_callback'];
+    elseif ($entity_uri_callback = $entity_info->getUriCallback()) {
+      $uri_callback = $entity_uri_callback;
     }
 
     // Invoke the callback to get the URI. If there is no callback, use the
     // default URI format.
+    // @todo Convert to is_callable() and call_user_func().
     if (isset($uri_callback) && function_exists($uri_callback)) {
       $uri = $uri_callback($this);
     }
@@ -243,8 +245,7 @@ abstract class Entity implements EntityInterface {
    *   An array of link relationships supported by this entity.
    */
   public function uriRelationships() {
-    $entity_info = $this->entityInfo();
-    return isset($entity_info['links']) ? array_keys($entity_info['links']) : array();
+    return array_keys($this->entityInfo()->getLinkTemplates());
   }
 
 
@@ -296,12 +297,12 @@ abstract class Entity implements EntityInterface {
   public function createDuplicate() {
     $duplicate = clone $this;
     $entity_info = $this->entityInfo();
-    $duplicate->{$entity_info['entity_keys']['id']} = NULL;
+    $duplicate->{$entity_info->getKey('id')} = NULL;
 
     // Check if the entity type supports UUIDs and generate a new one if so.
-    if (!empty($entity_info['entity_keys']['uuid'])) {
+    if ($entity_info->hasKey('uuid')) {
       // @todo Inject the UUID service into the Entity class once possible.
-      $duplicate->{$entity_info['entity_keys']['uuid']} = \Drupal::service('uuid')->generate();
+      $duplicate->{$entity_info->getKey('uuid')} = \Drupal::service('uuid')->generate();
     }
     return $duplicate;
   }

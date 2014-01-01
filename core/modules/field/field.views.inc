@@ -132,14 +132,13 @@ function field_views_field_default_views_data(FieldInterface $field) {
   $entity_manager = \Drupal::entityManager();
   $entity_type = $field->entity_type;
   $entity_info = $entity_manager->getDefinition($entity_type);
-  if (!isset($entity_info['base_table'])) {
+  if (!$entity_table = $entity_info->getBaseTable()) {
     return $data;
   }
-  $entity_table = $entity_info['base_table'];
   $entity_tables = array($entity_table => $entity_type);
-  $supports_revisions = !empty($entity_info['entity_keys']['revision']) && !empty($entity_info['revision_table']);
+  $entity_revision_table = $entity_info->getRevisionTable();
+  $supports_revisions = $entity_info->hasKey('revision') && $entity_revision_table;
   if ($supports_revisions) {
-    $entity_revision_table = $entity_info['revision_table'];
     $entity_tables[$entity_revision_table] = $entity_type;
   }
 
@@ -160,7 +159,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
   // Build the relationships between the field table and the entity tables.
   $table_alias = $field_tables[EntityStorageControllerInterface::FIELD_LOAD_CURRENT]['alias'];
   $data[$table_alias]['table']['join'][$entity_table] = array(
-    'left_field' => $entity_info['entity_keys']['id'],
+    'left_field' => $entity_info->getKey('id'),
     'field' => 'entity_id',
     'extra' => array(
       array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
@@ -169,7 +168,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
   if ($supports_revisions) {
     $table_alias = $field_tables[EntityStorageControllerInterface::FIELD_LOAD_REVISION]['alias'];
     $data[$table_alias]['table']['join'][$entity_revision_table] = array(
-      'left_field' => $entity_info['entity_keys']['revision'],
+      'left_field' => $entity_info->getKey('revision'),
       'field' => 'revision_id',
       'extra' => array(
         array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
@@ -177,7 +176,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
     );
   }
 
-  $group_name = $entity_info['label'];
+  $group_name = $entity_info->getLabel();
   // Get the list of bundles the field appears in.
   $bundles_names = $field->getBundles();
   // Build the list of additional fields to add to queries.

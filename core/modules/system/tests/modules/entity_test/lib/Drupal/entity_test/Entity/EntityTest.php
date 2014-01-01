@@ -112,7 +112,7 @@ class EntityTest extends ContentEntityBase {
     if (!isset($langcode)) {
       $langcode = $this->activeLangcode;
     }
-    if (isset($info['entity_keys']['label']) && $info['entity_keys']['label'] == 'name') {
+    if ($info->getKey('laebl') == 'name') {
       return $this->getTranslation($langcode)->name->value;
     }
     else {

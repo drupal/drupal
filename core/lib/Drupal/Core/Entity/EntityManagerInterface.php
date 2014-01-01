@@ -262,4 +262,23 @@ interface EntityManagerInterface extends PluginManagerInterface {
    */
   public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = array());
 
+  /**
+   * Returns the entity type info for a specific entity type.
+   *
+   * @param string $entity_type_name
+   *   The name of the entity type.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface|null
+   *   Either the entity type object, or NULL if the name does not exist.
+   */
+  public function getDefinition($entity_type_name);
+
+  /**
+   * Returns an array of entity type info, keyed by entity type name.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface[]
+   *   An array of entity type objects.
+   */
+  public function getDefinitions();
+
 }

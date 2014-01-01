@@ -115,7 +115,8 @@ function book_permission() {
  * Implements hook_entity_info().
  */
 function book_entity_info(&$entity_info) {
-  $entity_info['node']['controllers']['form']['book_outline'] = '\Drupal\book\Form\BookOutlineForm';
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_info['node']->setForm('book_outline', 'Drupal\book\Form\BookOutlineForm');
 }
 
 /**

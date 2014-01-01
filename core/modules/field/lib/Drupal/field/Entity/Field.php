@@ -326,7 +326,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
     // collisions with existing entity properties, but some is better than
     // none.
     foreach ($entity_manager->getDefinitions() as $type => $info) {
-      if (in_array($this->name, $info['entity_keys'])) {
+      if (in_array($this->name, $info->getKeys())) {
         throw new FieldException(format_string('Attempt to create field %name which is reserved by entity type %type.', array('%name' => $this->name, '%type' => $type)));
       }
     }
@@ -654,7 +654,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
       $factory = \Drupal::service('entity.query');
       // Entity Query throws an exception if there is no base table.
       $entity_info = \Drupal::entityManager()->getDefinition($this->entity_type);
-      if (!isset($entity_info['base_table'])) {
+      if (!$entity_info->getBaseTable()) {
         return FALSE;
       }
       $query = $factory->get($this->entity_type);

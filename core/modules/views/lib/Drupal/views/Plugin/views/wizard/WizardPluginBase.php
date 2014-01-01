@@ -43,9 +43,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Contains the information from entity_get_info of the $entity_type.
    *
-   * @var array
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entity_info = array();
+  protected $entity_info;
 
   /**
    * An array of validated view objects, keyed by a hash.
@@ -118,9 +118,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $this->base_table = $this->definition['base_table'];
 
-    $entities = entity_get_info();
+    $entities = \Drupal::entityManager()->getDefinitions();
     foreach ($entities as $entity_type => $entity_info) {
-      if (isset($entity_info['base_table']) && $this->base_table == $entity_info['base_table']) {
+      if ($this->base_table == $entity_info->getBaseTable()) {
         $this->entity_info = $entity_info;
         $this->entity_type = $entity_type;
       }
@@ -563,7 +563,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $bundles = entity_get_bundles($this->entity_type);
     // If the current base table support bundles and has more than one (like user).
-    if (isset($this->entity_info['bundle_keys']) && !empty($bundles)) {
+    if (!empty($bundles) && $this->entity_info && $this->entity_info->getBundleKeys()) {
       // Get all bundles and their human readable names.
       $options = array('all' => t('All'));
       foreach ($bundles as $type => $bundle) {
@@ -837,7 +837,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $filters = array();
 
     if (!empty($form_state['values']['show']['type']) && $form_state['values']['show']['type'] != 'all') {
-      $bundle_key = $this->entity_info['bundle_keys']['bundle'];
+      $bundle_key = $this->entity_info->getBundleKey('bundle');
       // Figure out the table where $bundle_key lives. It may not be the same as
       // the base table for the view; the taxonomy vocabulary machine_name, for
       // example, is stored in taxonomy_vocabulary, not taxonomy_term_data.

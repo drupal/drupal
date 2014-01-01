@@ -212,7 +212,7 @@ class FieldInstanceEditForm extends FormBase {
     $form_state['redirect_route'] = array(
       'route_name' => 'field_ui.delete_' . $this->instance->entity_type,
       'route_parameters' => array(
-        $entity_info['bundle_entity_type'] => $this->instance->bundle,
+        $entity_info->getBundleEntityType() => $this->instance->bundle,
         'field_instance' => $this->instance->id(),
       ),
       'options' => array(

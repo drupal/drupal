@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Plugin\Discovery;
 
+use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery as ComponentAnnotatedClassDiscovery;
 
 /**
@@ -71,15 +72,12 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
   /**
    * {@inheritdoc}
    */
-  public function getDefinitions() {
-    $definitions = parent::getDefinitions();
-    foreach ($definitions as &$definition) {
-      // Extract the module name from the class namespace if it's not set.
-      if (!isset($definition['provider'])) {
-        $definition['provider'] = $this->getProviderFromNamespace($definition['class']);
-      }
+  protected function prepareAnnotationDefinition(AnnotationInterface $annotation, $class) {
+    parent::prepareAnnotationDefinition($annotation, $class);
+
+    if (!$annotation->getProvider()) {
+      $annotation->setProvider($this->getProviderFromNamespace($class));
     }
-    return $definitions;
   }
 
   /**

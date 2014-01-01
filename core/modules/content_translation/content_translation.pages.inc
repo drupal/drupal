@@ -191,13 +191,11 @@ function content_translation_add_page(EntityInterface $entity, Language $source 
   $target = !empty($target) ? $target : language(Language::TYPE_CONTENT);
   // @todo Exploit the upcoming hook_entity_prepare() when available.
   content_translation_prepare_translation($entity, $source, $target);
-  $info = $entity->entityInfo();
-  $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
   $form_state['langcode'] = $target->id;
   $form_state['content_translation']['source'] = $source;
   $form_state['content_translation']['target'] = $target;
   $form_state['content_translation']['translation_form'] = !$entity->access('update');
-  return \Drupal::entityManager()->getForm($entity, $operation, $form_state);
+  return \Drupal::entityManager()->getForm($entity, 'default', $form_state);
 }
 
 /**
@@ -216,11 +214,9 @@ function content_translation_add_page(EntityInterface $entity, Language $source 
  */
 function content_translation_edit_page(EntityInterface $entity, Language $language = NULL) {
   $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
-  $info = $entity->entityInfo();
-  $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
   $form_state['langcode'] = $language->id;
   $form_state['content_translation']['translation_form'] = TRUE;
-  return \Drupal::entityManager()->getForm($entity, $operation, $form_state);
+  return \Drupal::entityManager()->getForm($entity, 'default', $form_state);
 }
 
 /**

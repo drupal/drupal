@@ -44,7 +44,7 @@ class FormModeAccessCheck implements AccessInterface {
 
       if (!($bundle = $request->attributes->get('bundle'))) {
         $entity_info = $this->entityManager->getDefinition($entity_type);
-        $bundle = $request->attributes->get('_raw_variables')->get($entity_info['bundle_entity_type']);
+        $bundle = $request->attributes->get('_raw_variables')->get($entity_info->getBundleEntityType());
       }
 
       $visibility = FALSE;

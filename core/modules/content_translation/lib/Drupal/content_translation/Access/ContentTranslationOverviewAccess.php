@@ -45,15 +45,16 @@ class ContentTranslationOverviewAccess implements AccessInterface {
       $bundle = $entity->bundle();
 
       // Get entity access callback.
-      $definitions = $this->entityManager->getDefinitions();
-      $access_callback = $definitions[$entity_type]['translation']['content_translation']['access_callback'];
+      $definition = $this->entityManager->getDefinition($entity_type);
+      $translation = $definition->get('translation');
+      $access_callback = $translation['content_translation']['access_callback'];
       if (call_user_func($access_callback, $entity)) {
         return static::ALLOW;
       }
 
       // Check per entity permission.
       $permission = "translate {$entity_type}";
-      if ($definitions[$entity_type]['permission_granularity'] == 'bundle') {
+      if ($definition->getPermissionGranularity() == 'bundle') {
         $permission = "translate {$bundle} {$entity_type}";
       }
       if ($account->hasPermission($permission)) {

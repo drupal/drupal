@@ -18,7 +18,7 @@
  */
 function entity_cache_test_watchdog($log_entry) {
   if ($log_entry['type'] == 'system' && $log_entry['message'] == '%module module installed.') {
-    $info = entity_get_info('entity_cache_test');
+    $info = \Drupal::entityManager()->getDefinition('entity_cache_test');
     // Store the information in a system variable to analyze it later in the
     // test case.
     \Drupal::state()->set('entity_cache_test', $info);

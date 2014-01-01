@@ -7,6 +7,7 @@ use Drupal\Core\Config\ExtensionInstallStorage;
 use Drupal\Core\Config\Context\FreeConfigContext;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\Yaml\Dumper;
 
 /**
@@ -202,8 +203,8 @@ function config_context_leave() {
  *   Either the entity type name, or NULL if none match.
  */
 function config_get_entity_type_by_name($name) {
-  $entities = array_filter(entity_get_info(), function($entity_info) use ($name) {
-    return (isset($entity_info['config_prefix']) && strpos($name, $entity_info['config_prefix'] . '.') === 0);
+  $entities = array_filter(\Drupal::entityManager()->getDefinitions(), function (EntityTypeInterface $entity_info) use ($name) {
+    return ($config_prefix = $entity_info->getConfigPrefix()) && strpos($name, $config_prefix . '.') === 0;
   });
   return key($entities);
 }

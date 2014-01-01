@@ -23,7 +23,7 @@ class ConfigEntityListController extends EntityListController {
 
     // Sort the entities using the entity class's sort() method.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
-    uasort($entities, array($this->entityInfo['class'], 'sort'));
+    uasort($entities, array($this->entityInfo->getClass(), 'sort'));
     return $entities;
   }
 
@@ -41,7 +41,7 @@ class ConfigEntityListController extends EntityListController {
       $operations['edit']['href'] = $uri['path'];
     }
 
-    if (isset($this->entityInfo['entity_keys']['status'])) {
+    if ($this->entityInfo->hasKey('status')) {
       if (!$entity->status()) {
         $operations['enable'] = array(
           'title' => t('Enable'),

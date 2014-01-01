@@ -121,7 +121,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
           }
         }
 
-        $row['data']['type']['data'] = String::checkPlain($entity_types[$entity_type]['label']);
+        $row['data']['type']['data'] = String::checkPlain($entity_types[$entity_type]->getLabel());
 
         if ($field_ui_enabled) {
           if ($this->currentUser()->hasPermission('administer comment fields')) {
@@ -189,7 +189,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
 
     $build['usage'] = array(
       '#theme' => 'item_list',
-      '#title' => String::checkPlain($entity_type_info['label']),
+      '#title' => String::checkPlain($entity_type_info->getLabel()),
       '#items' => array(),
     );
     // Loop over all of bundles to which this comment field is attached.

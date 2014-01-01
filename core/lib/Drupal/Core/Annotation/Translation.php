@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Annotation;
 
-use Drupal\Component\Annotation\AnnotationInterface;
+use Drupal\Component\Annotation\AnnotationBase;
 
 /**
  * @defgroup plugin_translatable Translatable plugin metadata
@@ -45,7 +45,7 @@ use Drupal\Component\Annotation\AnnotationInterface;
  *
  * @ingroup plugin_translatable
  */
-class Translation implements AnnotationInterface {
+class Translation extends AnnotationBase {
 
   /**
    * The translation of the value passed to the constructor of the class.

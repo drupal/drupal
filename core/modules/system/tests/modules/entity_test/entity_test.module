@@ -60,11 +60,14 @@ function entity_test_entity_types($filter = NULL) {
 /**
  * Implements hook_entity_info_alter().
  */
-function entity_test_entity_info_alter(&$info) {
+function entity_test_entity_info_alter(&$entity_info) {
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   foreach (entity_test_entity_types() as $entity_type) {
     // Optionally specify a translation handler for testing translations.
     if (\Drupal::state()->get('entity_test.translation')) {
-      $info[$entity_type]['translation'][$entity_type] = TRUE;
+      $translation = $entity_info[$entity_type]->get('translation');
+      $translation[$entity_type] = TRUE;
+      $entity_info[$entity_type]->set('translation', $translation);
     }
   }
 }
@@ -142,9 +145,9 @@ function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
  */
 function entity_test_entity_bundle_info() {
   $bundles = array();
-  $entity_info = entity_get_info();
+  $entity_info = \Drupal::entityManager()->getDefinitions();
   foreach ($entity_info as $entity_type => $info) {
-    if ($info['provider'] == 'entity_test') {
+    if ($info->getProvider() == 'entity_test') {
       $bundles[$entity_type] = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
     }
   }
@@ -155,9 +158,9 @@ function entity_test_entity_bundle_info() {
  * Implements hook_entity_view_mode_info_alter().
  */
 function entity_test_entity_view_mode_info_alter(&$view_modes) {
-  $entity_info = entity_get_info();
+  $entity_info = \Drupal::entityManager()->getDefinitions();
   foreach ($entity_info as $entity_type => $info) {
-    if ($entity_info[$entity_type]['provider'] == 'entity_test' && !isset($view_modes[$entity_type])) {
+    if ($entity_info[$entity_type]->getProvider() == 'entity_test' && !isset($view_modes[$entity_type])) {
       $view_modes[$entity_type] = array(
         'full' => array(
           'label' => t('Full object'),
@@ -178,9 +181,9 @@ function entity_test_entity_view_mode_info_alter(&$view_modes) {
  * Implements hook_entity_form_mode_info_alter().
  */
 function entity_test_entity_form_mode_info_alter(&$form_modes) {
-  $entity_info = entity_get_info();
+  $entity_info = \Drupal::entityManager()->getDefinitions();
   foreach ($entity_info as $entity_type => $info) {
-    if ($entity_info[$entity_type]['provider'] == 'entity_test') {
+    if ($entity_info[$entity_type]->getProvider() == 'entity_test') {
       $form_modes[$entity_type] = array(
         'compact' => array(
           'label' => t('Compact version'),

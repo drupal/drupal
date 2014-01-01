@@ -36,9 +36,11 @@ use Drupal\entity\Entity\EntityFormDisplay;
  *
  * The Field API reads the bundle name for a given entity from a particular
  * property of the entity object, and hook_entity_info_alter() defines which
- * property to use. For instance, node_entity_info_alter() specifies:
+ * property to use. For instance, \Drupal\node\Entity\Node specifies:
  * @code
- *   $info['entity_keys']['bundle'] = 'type'
+ *   entity_keys = {
+ *     "bundle" = "type"
+ *   }
  * @endcode
  * This indicates that for a particular node object, the bundle name can be
  * found in $node->type. This property can be omitted if the entity type only

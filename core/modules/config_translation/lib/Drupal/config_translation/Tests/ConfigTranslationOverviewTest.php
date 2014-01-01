@@ -8,7 +8,6 @@
 namespace Drupal\config_translation\Tests;
 
 use Drupal\Component\Utility\String;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
@@ -97,13 +96,13 @@ class ConfigTranslationOverviewTest extends WebTestBase {
       $entity_info = \Drupal::entityManager()->getDefinition($test_entity->entityType());
       $this->drupalGet($base_url . '/translate');
 
-      $title = t('!label !entity_type', array('!label' => $test_entity->label(), '!entity_type' => Unicode::strtolower($entity_info['label'])));
+      $title = t('!label !entity_type', array('!label' => $test_entity->label(), '!entity_type' => $entity_info->getLowercaseLabel()));
       $title = t('Translations for %label', array('%label' => $title));
       $this->assertRaw($title);
       $this->assertRaw('<th>' . t('Language') . '</th>');
 
       $this->drupalGet($base_url);
-      $this->assertLink(t('Translate @title', array('@title' => Unicode::strtolower($entity_info['label']))));
+      $this->assertLink(t('Translate @title', array('@title' => $entity_info->getLowercaseLabel())));
     }
   }
 

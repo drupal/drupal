@@ -289,8 +289,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    * {@inheritdoc}
    */
   public function isNewRevision() {
-    $info = $this->entityInfo();
-    return $this->newRevision || (!empty($info['entity_keys']['revision']) && !$this->getRevisionId());
+    return $this->newRevision || ($this->entityInfo()->hasKey('revision') && !$this->getRevisionId());
   }
 
   /**

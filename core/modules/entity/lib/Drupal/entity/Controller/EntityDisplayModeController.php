@@ -7,8 +7,8 @@
 
 namespace Drupal\entity\Controller;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,17 +19,17 @@ class EntityDisplayModeController implements ContainerInjectionInterface {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
   /**
    * Constructs a new EntityDisplayModeFormBase.
    *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(PluginManagerInterface $entity_manager) {
+  public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
   }
 
@@ -51,9 +51,9 @@ class EntityDisplayModeController implements ContainerInjectionInterface {
   public function viewModeTypeSelection() {
     $entity_types = array();
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info['fieldable'] && isset($entity_info['controllers']['view_builder'])) {
+      if ($entity_info->isFieldable() && $entity_info->hasController('view_builder')) {
         $entity_types[$entity_type] = array(
-          'title' => $entity_info['label'],
+          'title' => $entity_info->getLabel(),
           'href' => 'admin/structure/display-modes/view/add/' . $entity_type,
           'localized_options' => array(),
         );
@@ -74,9 +74,9 @@ class EntityDisplayModeController implements ContainerInjectionInterface {
   public function formModeTypeSelection() {
     $entity_types = array();
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info['fieldable'] && isset($entity_info['controllers']['form'])) {
+      if ($entity_info->isFieldable() && $entity_info->hasController('form')) {
         $entity_types[$entity_type] = array(
-          'title' => $entity_info['label'],
+          'title' => $entity_info->getLabel(),
           'href' => 'admin/structure/display-modes/form/add/' . $entity_type,
           'localized_options' => array(),
         );

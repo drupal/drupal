@@ -71,19 +71,19 @@ function field_ui_menu() {
 function field_ui_permission() {
   $permissions = array();
 
-  foreach (entity_get_info() as $entity_type => $entity_info) {
-    if ($entity_info['fieldable']) {
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
+    if ($entity_info->isFieldable()) {
       // Create a permission for each fieldable entity to manage
       // the fields and the display.
       $permissions['administer ' . $entity_type . ' fields'] = array(
-        'title' => t('%entity_label: Administer fields', array('%entity_label' => $entity_info['label'])),
+        'title' => t('%entity_label: Administer fields', array('%entity_label' => $entity_info->getLabel())),
         'restrict access' => TRUE,
       );
       $permissions['administer ' . $entity_type . ' form display'] = array(
-        'title' => t('%entity_label: Administer form display', array('%entity_label' => $entity_info['label']))
+        'title' => t('%entity_label: Administer form display', array('%entity_label' => $entity_info->getLabel()))
       );
       $permissions['administer ' . $entity_type . ' display'] = array(
-        'title' => t('%entity_label: Administer display', array('%entity_label' => $entity_info['label']))
+        'title' => t('%entity_label: Administer display', array('%entity_label' => $entity_info->getLabel()))
       );
     }
   }
@@ -118,8 +118,9 @@ function field_ui_element_info() {
  * Implements hook_entity_info().
  */
 function field_ui_entity_info(&$entity_info) {
-  $entity_info['field_instance']['controllers']['form']['delete'] = 'Drupal\field_ui\Form\FieldDeleteForm';
-  $entity_info['field_entity']['controllers']['list'] = 'Drupal\field_ui\FieldListController';
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_info['field_instance']->setForm('delete', 'Drupal\field_ui\Form\FieldDeleteForm');
+  $entity_info['field_entity']->setList('Drupal\field_ui\FieldListController');
 }
 
 /**
@@ -167,8 +168,7 @@ function field_ui_entity_operation_alter(array &$operations, EntityInterface $en
   $info = $entity->entityInfo();
   // Add manage fields and display links if this entity type is the bundle
   // of another.
-  if (!empty($info['bundle_of'])) {
-    $bundle_of = $info['bundle_of'];
+  if ($bundle_of = $info->getBundleOf()) {
     $uri = $entity->uri();
     if (user_access('administer '. $bundle_of . ' fields')) {
       $operations['manage-fields'] = array(

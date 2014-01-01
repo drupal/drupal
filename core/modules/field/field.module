@@ -488,9 +488,9 @@ function field_extract_bundle($entity_type, $bundle) {
     return $bundle;
   }
 
-  $info = entity_get_info($entity_type);
-  if (is_object($bundle) && isset($info['bundle_keys']['bundle']) && isset($bundle->{$info['bundle_keys']['bundle']})) {
-    return $bundle->{$info['bundle_keys']['bundle']};
+  $info = \Drupal::entityManager()->getDefinition($entity_type);
+  if (is_object($bundle) && ($bundle_key = $info->getBundleKey('bundle')) && isset($bundle->{$bundle_key})) {
+    return $bundle->{$bundle_key};
   }
 }
 
@@ -700,15 +700,15 @@ function theme_field($variables) {
  */
 function _field_create_entity_from_ids($ids) {
   $id_properties = array();
-  $info = entity_get_info($ids->entity_type);
-  if (isset($info['entity_keys']['id'])) {
-    $id_properties[$info['entity_keys']['id']] = $ids->entity_id;
+  $info = \Drupal::entityManager()->getDefinition($ids->entity_type);
+  if ($id_key = $info->getKey('id')) {
+    $id_properties[$id_key] = $ids->entity_id;
   }
-  if (!empty($info['entity_keys']['revision']) && isset($ids->revision_id)) {
-    $id_properties[$info['entity_keys']['revision']] = $ids->revision_id;
+  if (isset($ids->revision_id) && $revision_key = $info->getKey('revision')) {
+    $id_properties[$revision_key] = $ids->revision_id;
   }
-  if (!empty($info['entity_keys']['bundle']) && isset($ids->bundle)) {
-    $id_properties[$info['entity_keys']['bundle']] = $ids->bundle;
+  if (isset($ids->bundle) && $bundle_key = $info->getKey('bundle')) {
+    $id_properties[$bundle_key] = $ids->bundle;
   }
   return entity_create($ids->entity_type, $id_properties);
 }

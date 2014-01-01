@@ -26,9 +26,7 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
   /**
    * The entity info array.
    *
-   * @var array
-   *
-   * @see entity_get_info()
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityInfo;
 
@@ -60,25 +58,26 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
   /**
    * Constructs a new EntityViewBuilder.
    *
-   * @param string $entity_type
-   *   The entity type.
-   * @param array $entity_info
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
    *   The entity information array.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    */
-  public function __construct($entity_type, array $entity_info, EntityManager $entity_manager) {
-    $this->entityType = $entity_type;
+  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager) {
+    $this->entityType = $entity_info->id();
     $this->entityInfo = $entity_info;
     $this->entityManager = $entity_manager;
-    $this->viewModesInfo = entity_get_view_modes($entity_type);
+    $this->viewModesInfo = entity_get_view_modes($this->entityType);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
-    return new static($entity_type, $entity_info, $container->get('entity.manager'));
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+    return new static(
+      $entity_info,
+      $container->get('entity.manager')
+    );
   }
 
   /**
@@ -140,7 +139,7 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
     // type configuration. The isset() checks below are necessary because
     // 'default' is not an actual view mode.
     $view_mode_is_cacheable = !isset($this->viewModesInfo[$view_mode]) || (isset($this->viewModesInfo[$view_mode]) && $this->viewModesInfo[$view_mode]['cache']);
-    if ($view_mode_is_cacheable && !$entity->isNew() && !isset($entity->in_preview) && $this->entityInfo['render_cache']) {
+    if ($view_mode_is_cacheable && !$entity->isNew() && !isset($entity->in_preview) && $this->entityInfo->isRenderCacheable()) {
       $return['#cache'] = array(
         'keys' => array('entity_view', $this->entityType, $entity->id(), $view_mode),
         'granularity' => DRUPAL_CACHE_PER_ROLE,

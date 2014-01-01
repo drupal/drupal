@@ -41,9 +41,9 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected function alterRoutes(RouteCollection $collection, $provider) {
     foreach ($this->manager->getDefinitions() as $entity_type => $entity_info) {
       $defaults = array();
-      if ($entity_info['fieldable'] && isset($entity_info['links']['admin-form'])) {
+      if ($entity_info->isFieldable() && $entity_info->hasLinkTemplate('admin-form')) {
         // Try to get the route from the current collection.
-        if (!$entity_route = $collection->get($entity_info['links']['admin-form'])) {
+        if (!$entity_route = $collection->get($entity_info->getLinkTemplate('admin-form'))) {
           continue;
         }
         $path = $entity_route->getPath();
@@ -74,7 +74,7 @@ class RouteSubscriber extends RouteSubscriberBase {
 
         // If the entity type has no bundles, use the entity type.
         $defaults['entity_type'] = $entity_type;
-        if (empty($entity_info['entity_keys']['bundle'])) {
+        if (!$entity_info->hasKey('bundle')) {
           $defaults['bundle'] = $entity_type;
         }
         $route = new Route(

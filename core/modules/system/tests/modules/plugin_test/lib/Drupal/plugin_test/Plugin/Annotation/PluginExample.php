@@ -7,14 +7,14 @@
 
 namespace Drupal\plugin_test\Plugin\Annotation;
 
-use Drupal\Component\Annotation\AnnotationInterface;
+use Drupal\Component\Annotation\AnnotationBase;
 
 /**
  * Defines a custom Plugin annotation.
  *
  * @Annotation
  */
-class PluginExample implements AnnotationInterface {
+class PluginExample extends AnnotationBase {
 
   /**
    * The plugin ID.
@@ -37,6 +37,8 @@ class PluginExample implements AnnotationInterface {
     return array(
       'id' => $this->id,
       'custom' => $this->custom,
+      'class' => $this->class,
+      'provider' => $this->provider,
     );
   }
 

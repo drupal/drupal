@@ -10,6 +10,7 @@ namespace Drupal\config_translation\Controller;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
@@ -27,8 +28,8 @@ class ConfigTranslationBlockListController extends ConfigTranslationEntityListCo
   /**
    * {@inheritdoc}
    */
-  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler) {
-    parent::__construct($entity_type, $entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler) {
+    parent::__construct($entity_info, $storage, $module_handler);
     $this->themes = list_themes();
   }
 

@@ -41,7 +41,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
   protected function alterRoutes(RouteCollection $collection, $provider) {
     foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type => $entity_info) {
       // Try to get the route from the current collection.
-      if (!$entity_route = $collection->get($entity_info['links']['canonical'])) {
+      if (!$entity_route = $collection->get($entity_info->getLinkTemplate('canonical'))) {
         continue;
       }
       $path = $entity_route->getPath() . '/translations';
@@ -67,7 +67,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           ),
         )
       );
-      $collection->add($entity_info['links']['drupal:content-translation-overview'], $route);
+      $collection->add($entity_info->getLinkTemplate('drupal:content-translation-overview'), $route);
 
       $route = new Route(
         $path . '/add/{source}/{target}',

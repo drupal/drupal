@@ -31,7 +31,6 @@ class ViewListControllerTest extends UnitTestCase {
     $storage_controller = $this->getMockBuilder('Drupal\views\ViewStorageController')
       ->disableOriginalConstructor()
       ->getMock();
-    $entity_info = array();
     $display_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
@@ -121,13 +120,12 @@ class ViewListControllerTest extends UnitTestCase {
     $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
 
-    $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     // Setup a view list controller with a mocked buildOperations method,
     // because t() is called on there.
-    $view_list_controller = $this->getMock('Drupal\views_ui\ViewListController', array('buildOperations'), array('view', $storage_controller, $entity_info, $display_manager, $module_handler));
+    $entity_type = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $view_list_controller = $this->getMock('Drupal\views_ui\ViewListController', array('buildOperations'), array($storage_controller, $entity_type, $display_manager, $module_handler));
     $view_list_controller->expects($this->any())
       ->method('buildOperations')
       ->will($this->returnValue(array()));

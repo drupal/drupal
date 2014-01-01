@@ -12,7 +12,7 @@ namespace Drupal\Component\Annotation;
  *
  * @Annotation
  */
-class PluginID implements AnnotationInterface {
+class PluginID extends AnnotationBase {
 
   /**
    * The plugin ID.
@@ -29,7 +29,16 @@ class PluginID implements AnnotationInterface {
   public function get() {
     return array(
       'id' => $this->value,
+      'class' => $this->class,
+      'provider' => $this->provider,
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getId() {
+    return $this->value;
   }
 
 }
