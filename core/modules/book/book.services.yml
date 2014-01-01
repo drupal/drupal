@@ -15,4 +15,4 @@ services:
     class: Drupal\book\Access\BookNodeIsRemovableAccessCheck
     arguments: ['@book.manager']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_book_removable }

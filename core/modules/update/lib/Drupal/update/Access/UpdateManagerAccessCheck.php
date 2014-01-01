@@ -8,7 +8,7 @@
 namespace Drupal\update\Access;
 
 use Drupal\Component\Utility\Settings;
-use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Determines whether allow authorized operations is set.
  */
-class UpdateManagerAccessCheck implements StaticAccessCheckInterface {
+class UpdateManagerAccessCheck implements AccessInterface {
 
   /**
    * Settings Service.
@@ -28,18 +28,11 @@ class UpdateManagerAccessCheck implements StaticAccessCheckInterface {
   /**
    * Constructs a UpdateManagerAccessCheck object.
    *
-   * @param \Drupal\update\updateManager $update_manager
-   *   update Manager Service.
+   * @param \Drupal\Component\Utility\Settings $settings
+   *   The read-only settings container.
    */
   public function __construct(Settings $settings) {
     $this->settings = $settings;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_access_update_manager');
   }
 
   /**

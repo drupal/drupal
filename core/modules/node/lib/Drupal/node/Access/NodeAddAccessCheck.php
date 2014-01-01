@@ -7,7 +7,8 @@
 
 namespace Drupal\node\Access;
 
-use Drupal\Core\Entity\EntityCreateAccessCheck;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +16,24 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Determines access to for node add pages.
  */
-class NodeAddAccessCheck extends EntityCreateAccessCheck {
+class NodeAddAccessCheck implements AccessInterface {
 
   /**
-   * {@inheritdoc}
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $requirementsKey = '_node_add_access';
+  protected $entityManager;
+
+  /**
+   * Constructs a EntityCreateAccessCheck object.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(EntityManagerInterface $entity_manager) {
+    $this->entityManager = $entity_manager;
+  }
 
   /**
    * {@inheritdoc}

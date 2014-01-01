@@ -6,9 +6,9 @@ services:
     class: Drupal\node\Access\NodeRevisionAccessCheck
     arguments: ['@entity.manager', '@database']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_node_revision }
   access_check.node.add:
     class: Drupal\node\Access\NodeAddAccessCheck
     arguments: ['@entity.manager']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _node_add_access }

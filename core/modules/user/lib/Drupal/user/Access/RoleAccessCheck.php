@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Access;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -19,14 +19,7 @@ use Symfony\Component\Routing\Route;
  * single role, users with that role with have access. If you specify multiple
  * ones you can conjunct them with AND by using a "+" and with OR by using ",".
  */
-class RoleAccessCheck implements StaticAccessCheckInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_role');
-  }
+class RoleAccessCheck implements AccessInterface {
 
   /**
    * {@inheritdoc}

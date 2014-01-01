@@ -7,8 +7,8 @@
 
 namespace Drupal\field_ui\Access;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Allows access to routes to be controlled by an '_access' boolean parameter.
  */
-class FormModeAccessCheck implements StaticAccessCheckInterface {
+class FormModeAccessCheck implements AccessInterface {
 
   /**
    * The entity manager.
@@ -33,13 +33,6 @@ class FormModeAccessCheck implements StaticAccessCheckInterface {
    */
   public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_field_ui_form_mode_access');
   }
 
   /**

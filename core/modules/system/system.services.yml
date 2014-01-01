@@ -2,7 +2,7 @@ services:
   access_check.cron:
     class: Drupal\system\Access\CronAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_system_cron }
   system.manager:
     class: Drupal\system\SystemManager
     arguments: ['@module_handler', '@database', '@entity.manager']

@@ -7,7 +7,7 @@
 
 namespace Drupal\filter\Access;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,14 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Checks access for disabling text formats.
  */
-class FormatDisableCheck implements StaticAccessCheckInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_filter_disable_format_access');
-  }
+class FormatDisableCheck implements AccessInterface {
 
   /**
    * {@inheritdoc}

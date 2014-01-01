@@ -7,9 +7,9 @@
 
 namespace Drupal\content_translation\Access;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Access check for entity translation CRUD operation.
  */
-class ContentTranslationManageAccessCheck implements StaticAccessCheckInterface {
+class ContentTranslationManageAccessCheck implements AccessInterface {
 
   /**
    * The entity type manager.
@@ -34,13 +34,6 @@ class ContentTranslationManageAccessCheck implements StaticAccessCheckInterface 
    */
   public function __construct(EntityManagerInterface $manager) {
     $this->entityManager = $manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_access_content_translation_manage');
   }
 
   /**

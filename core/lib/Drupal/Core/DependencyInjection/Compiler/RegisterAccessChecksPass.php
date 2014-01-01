@@ -26,7 +26,13 @@ class RegisterAccessChecksPass implements CompilerPassInterface {
     }
     $access_manager = $container->getDefinition('access_manager');
     foreach ($container->findTaggedServiceIds('access_check') as $id => $attributes) {
-      $access_manager->addMethodCall('addCheckService', array($id));
+      $applies = array();
+      foreach ($attributes as $attribute) {
+        if (isset($attribute['applies_to'])) {
+          $applies[] = $attribute['applies_to'];
+        }
+      }
+      $access_manager->addMethodCall('addCheckService', array($id, $applies));
     }
   }
 }

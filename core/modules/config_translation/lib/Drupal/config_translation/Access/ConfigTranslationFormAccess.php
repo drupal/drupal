@@ -19,13 +19,6 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
   /**
    * {@inheritdoc}
    */
-  public function appliesTo() {
-    return array('_config_translation_form_access');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function access(Route $route, Request $request, AccountInterface $account) {
     // For the translation forms we have a target language, so we need some
     // checks in addition to the checks performed for the translation overview.

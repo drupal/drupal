@@ -7,10 +7,10 @@ services:
     class: Drupal\search\Access\SearchAccessCheck
     arguments: ['@plugin.manager.search']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _search_access }
 
   access_check.search_plugin:
     class: Drupal\search\Access\SearchPluginAccessCheck
     arguments: ['@plugin.manager.search']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _search_plugin_view_access }

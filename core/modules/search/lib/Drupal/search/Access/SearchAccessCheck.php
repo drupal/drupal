@@ -7,7 +7,7 @@
 
 namespace Drupal\search\Access;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\search\SearchPluginManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Checks access for viewing search.
  */
-class SearchAccessCheck implements StaticAccessCheckInterface {
+class SearchAccessCheck implements AccessInterface {
 
   /**
    * The search plugin manager.
@@ -33,13 +33,6 @@ class SearchAccessCheck implements StaticAccessCheckInterface {
    */
   public function __construct(SearchPluginManager $search_plugin_manager) {
     $this->searchManager = $search_plugin_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_search_access');
   }
 
   /**

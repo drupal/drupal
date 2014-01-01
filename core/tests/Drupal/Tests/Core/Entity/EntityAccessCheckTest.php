@@ -29,14 +29,6 @@ class EntityAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Tests the appliesTo method for the access checker.
-   */
-  public function testAppliesTo() {
-    $entity_access = new EntityAccessCheck();
-    $this->assertEquals($entity_access->appliesTo(), array('_entity_access'), 'Access checker returned the expected appliesTo() array.');
-  }
-
-  /**
    * Tests the method for checking access to routes.
    */
   public function testAccess() {

@@ -52,14 +52,6 @@ class DefaultAccessCheckTest extends UnitTestCase {
     $this->accessChecker = new DefaultAccessCheck();
   }
 
-
-  /**
-   * Tests the appliesTo method.
-   */
-  public function testAppliesTo() {
-    $this->assertEquals($this->accessChecker->appliesTo(), array('_access'), 'Access checker returned the expected appliesTo() array.');
-  }
-
   /**
    * Test the access method.
    */

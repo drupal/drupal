@@ -7,23 +7,15 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Access\StaticAccessCheckInterface;
 
 /**
  * Provides a generic access checker for entities.
  */
-class EntityAccessCheck implements StaticAccessCheckInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_entity_access');
-  }
+class EntityAccessCheck implements AccessInterface {
 
   /**
    * Implements \Drupal\Core\Access\AccessCheckInterface::access().

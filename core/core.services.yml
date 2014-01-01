@@ -447,29 +447,29 @@ services:
   access_check.default:
     class: Drupal\Core\Access\DefaultAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access }
   access_check.entity:
     class: Drupal\Core\Entity\EntityAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _entity_access }
   access_check.entity_create:
     class: Drupal\Core\Entity\EntityCreateAccessCheck
     arguments: ['@entity.manager']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _entity_create_access }
   access_check.theme:
     class: Drupal\Core\Theme\ThemeAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_theme }
   access_check.custom:
     class: Drupal\Core\Access\CustomAccessCheck
     arguments: ['@controller_resolver']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _custom_access }
   access_check.csrf:
     class: Drupal\Core\Access\CsrfAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _csrf_token }
     arguments: ['@csrf_token']
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber

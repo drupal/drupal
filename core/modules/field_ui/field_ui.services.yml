@@ -8,9 +8,9 @@ services:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
     arguments: ['@entity.manager']
     tags:
-     - { name: access_check }
+     - { name: access_check, applies_to: _field_ui_view_mode_access }
   access_check.field_ui.form_mode:
     class: Drupal\field_ui\Access\FormModeAccessCheck
     arguments: ['@entity.manager']
     tags:
-     - { name: access_check }
+     - { name: access_check, applies_to: _field_ui_form_mode_access }

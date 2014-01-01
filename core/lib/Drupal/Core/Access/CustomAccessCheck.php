@@ -8,6 +8,7 @@
 namespace Drupal\Core\Access;
 
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Route;
  * cannot reuse any stored property of your actual controller instance used
  * to generate the output.
  */
-class CustomAccessCheck implements StaticAccessCheckInterface {
+class CustomAccessCheck implements RoutingAccessInterface {
 
   /**
    * The controller resolver.
@@ -39,13 +40,6 @@ class CustomAccessCheck implements StaticAccessCheckInterface {
    */
   public function __construct(ControllerResolverInterface $controller_resolver) {
     $this->controllerResolver = $controller_resolver;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_custom_access');
   }
 
   /**

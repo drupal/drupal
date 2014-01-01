@@ -45,15 +45,6 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Tests the appliesTo method for the access checker.
-   */
-  public function testAppliesTo() {
-    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-
-    $entity_access = new EntityCreateAccessCheck($entity_manager);
-    $this->assertEquals($entity_access->appliesTo(), array('_entity_create_access'), 'Access checker returned the expected appliesTo() array.');
-  }
-  /**
    * Provides test data for testAccess.
    *
    * @return array

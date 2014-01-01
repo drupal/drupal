@@ -352,7 +352,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->setupAccessChecker();
     $access_check = new DefinedTestAccessCheck();
     $this->container->register('test_access_defined', $access_check);
-    $this->accessManager->addCheckService('test_access_defined');
+    $this->accessManager->addCheckService('test_access_defined', array('_test_access'));
 
     $request = new Request();
 
@@ -368,21 +368,6 @@ class AccessManagerTest extends UnitTestCase {
 
     $this->accessManager->setChecks($route_collection);
     $this->assertSame($this->accessManager->check($route, $request, $this->account), $expected_access);
-  }
-
-  /**
-   * Tests the static access checker interface.
-   */
-  public function testStaticAccessCheckInterface() {
-    $mock_static = $this->getMock('Drupal\Core\Access\StaticAccessCheckInterface');
-    $mock_static->expects($this->once())
-      ->method('appliesTo')
-      ->will($this->returnValue(array('_access')));
-
-    $this->container->set('test_static_access', $mock_static);
-    $this->accessManager->addCheckService('test_static_access');
-
-    $this->accessManager->setChecks($this->routeCollection);
   }
 
   /**
@@ -593,7 +578,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->accessManager->setContainer($this->container);
     $access_check = new DefaultAccessCheck();
     $this->container->register('test_access_default', $access_check);
-    $this->accessManager->addCheckService('test_access_default');
+    $this->accessManager->addCheckService('test_access_default', array('_access'));
   }
 
 }

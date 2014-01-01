@@ -7,8 +7,8 @@
 
 namespace Drupal\edit\Access;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +18,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Access check for editing entities.
  */
-class EditEntityAccessCheck implements StaticAccessCheckInterface {
+class EditEntityAccessCheck implements AccessInterface {
 
   /**
    * The entity manager.
@@ -35,14 +35,6 @@ class EditEntityAccessCheck implements StaticAccessCheckInterface {
    */
   public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    // @see edit.routing.yml
-    return array('_access_edit_entity');
   }
 
   /**

@@ -63,13 +63,6 @@ class CsrfAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Tests CsrfAccessCheck::appliesTo().
-   */
-  public function testAppliesTo() {
-    $this->assertEquals($this->accessCheck->appliesTo(), array('_csrf_token'), 'Access checker returned the expected appliesTo() array.');
-  }
-
-  /**
    * Tests the access() method with a valid token.
    */
   public function testAccessTokenPass() {

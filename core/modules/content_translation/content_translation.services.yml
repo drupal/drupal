@@ -13,13 +13,13 @@ services:
     class: Drupal\content_translation\Access\ContentTranslationOverviewAccess
     arguments: ['@entity.manager']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_content_translation_overview }
 
   content_translation.manage_access:
     class: Drupal\content_translation\Access\ContentTranslationManageAccessCheck
     arguments: ['@entity.manager']
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_content_translation_manage }
 
   content_translation.manager:
     class: Drupal\content_translation\ContentTranslationManager

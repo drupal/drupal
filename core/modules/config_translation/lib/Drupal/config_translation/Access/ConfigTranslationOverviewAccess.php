@@ -8,7 +8,7 @@
 namespace Drupal\config_translation\Access;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
-use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Checks access for displaying the configuration translation overview.
  */
-class ConfigTranslationOverviewAccess implements StaticAccessCheckInterface {
+class ConfigTranslationOverviewAccess implements AccessInterface {
 
   /**
    * The mapper plugin discovery service.
@@ -40,13 +40,6 @@ class ConfigTranslationOverviewAccess implements StaticAccessCheckInterface {
    */
   public function __construct(ConfigMapperManagerInterface $config_mapper_manager) {
     $this->configMapperManager = $config_mapper_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_config_translation_overview_access');
   }
 
   /**

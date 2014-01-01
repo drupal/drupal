@@ -2,19 +2,19 @@ services:
   access_check.permission:
     class: Drupal\user\Access\PermissionAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _permission }
   access_check.user.register:
     class: Drupal\user\Access\RegisterAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_user_register }
   access_check.user.role:
     class: Drupal\user\Access\RoleAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _role }
   access_check.user.login_status:
     class: Drupal\user\Access\LoginStatusCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _user_is_logged_in }
   user.data:
     class: Drupal\user\UserData
     arguments: ['@database']

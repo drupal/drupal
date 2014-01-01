@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Access;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,14 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Access check for cron routes.
  */
-class CronAccessCheck implements StaticAccessCheckInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_access_system_cron');
-  }
+class CronAccessCheck implements AccessInterface {
 
   /**
    * Implements AccessCheckInterface::access().

@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Theme;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -15,14 +15,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Access check for a theme.
  */
-class ThemeAccessCheck implements StaticAccessCheckInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array('_access_theme');
-  }
+class ThemeAccessCheck implements AccessInterface {
 
   /**
    * {@inheritdoc}

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Access;
 
 use Drupal\Core\ParamConverter\ParamConverterManager;
+use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -16,7 +17,6 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -118,9 +118,15 @@ class AccessManager extends ContainerAware {
    *
    * @param string $service_id
    *   The ID of the service in the Container that provides a check.
+   * @param array $applies_checks
+   *   (optional) An array of route requirement keys the checker service applies
+   *   to.
    */
-  public function addCheckService($service_id) {
+  public function addCheckService($service_id, array $applies_checks = array()) {
     $this->checkIds[] = $service_id;
+    foreach ($applies_checks as $applies_check) {
+      $this->staticRequirementMap[$applies_check][] = $service_id;
+    }
   }
 
   /**
@@ -130,7 +136,7 @@ class AccessManager extends ContainerAware {
    *   A collection of routes to apply checks to.
    */
   public function setChecks(RouteCollection $routes) {
-    $this->loadAccessRequirementMap();
+    $this->loadDynamicRequirementMap();
     foreach ($routes as $route) {
       if ($checks = $this->applies($route)) {
         $route->setOption('_access_checks', $checks);
@@ -329,19 +335,24 @@ class AccessManager extends ContainerAware {
       throw new \InvalidArgumentException(sprintf('No check has been registered for %s', $service_id));
     }
 
-    $this->checks[$service_id] = $this->container->get($service_id);
+    $check = $this->container->get($service_id);
+
+    if (!($check instanceof RoutingAccessInterface)) {
+      throw new AccessException('All access checks must implement AccessInterface.');
+    }
+
+    $this->checks[$service_id] = $check;
   }
 
   /**
    * Compiles a mapping of requirement keys to access checker service IDs.
    */
-  public function loadAccessRequirementMap() {
-    if (isset($this->staticRequirementMap, $this->dynamicRequirementMap)) {
+  public function loadDynamicRequirementMap() {
+    if (isset($this->dynamicRequirementMap)) {
       return;
     }
 
     // Set them here, so we can use the isset() check above.
-    $this->staticRequirementMap = array();
     $this->dynamicRequirementMap = array();
 
     foreach ($this->checkIds as $service_id) {
@@ -349,14 +360,8 @@ class AccessManager extends ContainerAware {
         $this->loadCheck($service_id);
       }
 
-      // Empty arrays will not register anything.
-      if (is_subclass_of($this->checks[$service_id], 'Drupal\Core\Access\StaticAccessCheckInterface')) {
-        foreach ((array) $this->checks[$service_id]->appliesTo() as $key) {
-          $this->staticRequirementMap[$key][] = $service_id;
-        }
-      }
-      // Add the service ID to a the regular that will be iterated over.
-      else {
+      // Add the service ID to an array that will be iterated over.
+      if ($this->checks[$service_id] instanceof AccessCheckInterface) {
         $this->dynamicRequirementMap[] = $service_id;
       }
     }

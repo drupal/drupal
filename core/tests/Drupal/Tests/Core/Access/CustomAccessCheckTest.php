@@ -52,14 +52,6 @@ class CustomAccessCheckTest extends UnitTestCase {
     $this->accessChecker = new CustomAccessCheck($this->controllerResolver);
   }
 
-
-  /**
-   * Tests the appliesTo method.
-   */
-  public function testAppliesTo() {
-    $this->assertEquals($this->accessChecker->appliesTo(), array('_custom_access'));
-  }
-
   /**
    * Test the access method.
    */

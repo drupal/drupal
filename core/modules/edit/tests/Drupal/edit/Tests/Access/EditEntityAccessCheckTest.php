@@ -66,13 +66,6 @@ class EditEntityAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Tests the appliesTo method for the access checker.
-   */
-  public function testAppliesTo() {
-    $this->assertEquals($this->editAccessCheck->appliesTo(), array('_access_edit_entity'), 'Access checker returned the expected appliesTo() array.');
-  }
-
-  /**
    * Provides test data for testAccess().
    *
    * @see \Drupal\edit\Tests\edit\Access\EditEntityAccessCheckTest::testAccess()

@@ -1,10 +1,15 @@
 services:
+  access_check.shortcut.link:
+    class: Drupal\shortcut\Access\LinkAccessCheck
+    tags:
+      - { name: access_check, applies_to: _access_shortcut_link }
+
   access_check.shortcut.shortcut_set_edit:
     class: Drupal\shortcut\Access\ShortcutSetEditAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_shortcut_set_edit }
 
   access_check.shortcut.shortcut_set_switch:
     class: Drupal\shortcut\Access\ShortcutSetSwitchAccessCheck
     tags:
-      - { name: access_check }
+      - { name: access_check, applies_to: _access_shortcut_set_switch }

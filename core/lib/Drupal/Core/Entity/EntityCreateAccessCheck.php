@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Access\StaticAccessCheckInterface;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Defines an access checker for entity creation.
  */
-class EntityCreateAccessCheck implements StaticAccessCheckInterface {
+class EntityCreateAccessCheck implements AccessInterface {
 
   /**
    * The entity manager.
@@ -39,13 +39,6 @@ class EntityCreateAccessCheck implements StaticAccessCheckInterface {
    */
   public function __construct(EntityManagerInterface $entity_manager) {
     $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function appliesTo() {
-    return array($this->requirementsKey);
   }
 
   /**
