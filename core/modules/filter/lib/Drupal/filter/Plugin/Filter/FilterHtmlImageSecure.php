@@ -14,7 +14,6 @@ use Drupal\filter\Plugin\FilterBase;
  *
  * @Filter(
  *   id = "filter_html_image_secure",
- *   module = "filter",
  *   title = @Translation("Restrict images to this site"),
  *   description = @Translation("Disallows usage of &lt;img&gt; tag sources that are not hosted on this site by replacing them with a placeholder image."),
  *   type = FILTER_TYPE_HTML_RESTRICTOR,

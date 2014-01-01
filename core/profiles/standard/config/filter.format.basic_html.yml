@@ -9,7 +9,7 @@ cache: true
 filters:
   filter_html:
     id: filter_html
-    module: filter
+    provider: filter
     status: true
     weight: -10
     settings:
@@ -18,19 +18,19 @@ filters:
       filter_html_nofollow: false
   filter_caption:
     id: filter_caption
-    module: filter
+    provider: filter
     status: 1
     weight: 8
     settings: {  }
   filter_html_image_secure:
     id: filter_html_image_secure
-    module: filter
+    provider: filter
     status: true
     weight: 9
     settings: {  }
   filter_htmlcorrector:
     id: filter_htmlcorrector
-    module: filter
+    provider: filter
     status: true
     weight: 10
     settings: {  }

@@ -9,7 +9,7 @@ cache: true
 filters:
   filter_html:
     id: filter_html
-    module: filter
+    provider: filter
     status: true
     weight: -10
     settings:
@@ -18,20 +18,20 @@ filters:
       filter_html_nofollow: false
   filter_autop:
     id: filter_autop
-    module: filter
+    provider: filter
     status: true
     weight: 0
     settings: {  }
   filter_url:
     id: filter_url
-    module: filter
+    provider: filter
     status: true
     weight: 0
     settings:
       filter_url_length: 72
   filter_htmlcorrector:
     id: filter_htmlcorrector
-    module: filter
+    provider: filter
     status: true
     weight: 10
     settings: {  }

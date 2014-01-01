@@ -14,7 +14,6 @@ use Drupal\filter\Plugin\FilterBase;
  *
  * @Filter(
  *   id = "filter_test_replace",
- *   module = "filter_test",
  *   title = @Translation("Testing filter"),
  *   description = @Translation("Replaces all content with filter and text format information."),
  *   type = FILTER_TYPE_TRANSFORM_IRREVERSIBLE

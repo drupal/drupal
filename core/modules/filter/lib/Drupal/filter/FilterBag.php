@@ -101,8 +101,8 @@ class FilterBag extends DefaultPluginBag {
     if ($a->weight != $b->weight) {
       return $a->weight < $b->weight ? -1 : 1;
     }
-    if ($a->module != $b->module) {
-      return strnatcasecmp($a->module, $b->module);
+    if ($a->provider != $b->provider) {
+      return strnatcasecmp($a->provider, $b->provider);
     }
     return parent::sortHelper($aID, $bID);
   }

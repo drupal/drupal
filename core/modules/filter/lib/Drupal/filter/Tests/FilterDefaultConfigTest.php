@@ -63,15 +63,15 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
     $filters = $format->get('filters');
     $this->assertEqual($filters['filter_html_escape']['status'], 1);
     $this->assertEqual($filters['filter_html_escape']['weight'], -10);
-    $this->assertEqual($filters['filter_html_escape']['module'], 'filter');
+    $this->assertEqual($filters['filter_html_escape']['provider'], 'filter');
     $this->assertEqual($filters['filter_html_escape']['settings'], array());
     $this->assertEqual($filters['filter_autop']['status'], 1);
     $this->assertEqual($filters['filter_autop']['weight'], 0);
-    $this->assertEqual($filters['filter_autop']['module'], 'filter');
+    $this->assertEqual($filters['filter_autop']['provider'], 'filter');
     $this->assertEqual($filters['filter_autop']['settings'], array());
     $this->assertEqual($filters['filter_url']['status'], 1);
     $this->assertEqual($filters['filter_url']['weight'], 0);
-    $this->assertEqual($filters['filter_url']['module'], 'filter');
+    $this->assertEqual($filters['filter_url']['provider'], 'filter');
     $this->assertEqual($filters['filter_url']['settings'], array(
       'filter_url_length' => 72,
     ));

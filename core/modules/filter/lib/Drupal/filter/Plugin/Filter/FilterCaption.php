@@ -17,7 +17,6 @@ use Drupal\filter\Plugin\FilterBase;
  *
  * @Filter(
  *   id = "filter_caption",
- *   module = "filter",
  *   title = @Translation("Display image captions and align images"),
  *   description = @Translation("Uses data-caption and data-align attributes on &lt;img&gt; tags to caption and align images."),
  *   type = FILTER_TYPE_TRANSFORM_REVERSIBLE

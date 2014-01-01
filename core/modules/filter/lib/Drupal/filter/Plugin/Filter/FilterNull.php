@@ -18,7 +18,6 @@ use Drupal\filter\Plugin\FilterBase;
  *
  * @Filter(
  *   id = "filter_null",
- *   module = "filter",
  *   title = @Translation("Provides a fallback for missing filters. Do not use."),
  *   type = FILTER_TYPE_HTML_RESTRICTOR,
  *   weight = -10

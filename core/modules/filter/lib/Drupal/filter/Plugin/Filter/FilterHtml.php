@@ -14,7 +14,6 @@ use Drupal\filter\Plugin\FilterBase;
  *
  * @Filter(
  *   id = "filter_html",
- *   module = "filter",
  *   title = @Translation("Limit allowed HTML tags"),
  *   type = FILTER_TYPE_HTML_RESTRICTOR,
  *   settings = {

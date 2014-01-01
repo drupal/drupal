@@ -14,7 +14,6 @@ use Drupal\filter\Plugin\FilterBase;
  *
  * @Filter(
  *   id = "filter_htmlcorrector",
- *   module = "filter",
  *   title = @Translation("Correct faulty and chopped off HTML"),
  *   type = FILTER_TYPE_HTML_RESTRICTOR,
  *   weight = 10

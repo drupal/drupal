@@ -15,14 +15,14 @@ filters:
   # Escape all HTML.
   filter_html_escape:
     id: filter_html_escape
-    module: filter
+    provider: filter
     status: true
     weight: -10
     settings: {  }
   # Convert URLs into links.
   filter_url:
     id: filter_url
-    module: filter
+    provider: filter
     status: true
     weight: 0
     settings:
@@ -30,7 +30,7 @@ filters:
   # Convert linebreaks into paragraphs.
   filter_autop:
     id: filter_autop
-    module: filter
+    provider: filter
     status: true
     weight: 0
     settings: {  }

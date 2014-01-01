@@ -9,13 +9,13 @@ cache: true
 filters:
   filter_caption:
     id: filter_caption
-    module: filter
+    provider: filter
     status: true
     weight: 9
     settings: {  }
   filter_htmlcorrector:
     id: filter_htmlcorrector
-    module: filter
+    provider: filter
     status: true
     weight: 10
     settings: {  }

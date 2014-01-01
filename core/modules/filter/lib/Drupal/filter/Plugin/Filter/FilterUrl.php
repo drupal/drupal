@@ -14,7 +14,6 @@ use Drupal\filter\Plugin\FilterBase;
  *
  * @Filter(
  *   id = "filter_url",
- *   module = "filter",
  *   title = @Translation("Convert URLs into links"),
  *   type = FILTER_TYPE_MARKUP_LANGUAGE,
  *   settings = {

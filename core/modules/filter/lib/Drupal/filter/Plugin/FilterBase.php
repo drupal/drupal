@@ -26,7 +26,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
    *
    * @var string
    */
-  public $module;
+  public $provider;
 
   /**
    * A Boolean indicating whether this filter is enabled.
@@ -71,7 +71,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->module = $this->pluginDefinition['module'];
+    $this->provider = $this->pluginDefinition['provider'];
     $this->cache = $this->pluginDefinition['cache'];
 
     $this->setConfiguration($configuration);
@@ -99,7 +99,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   public function getConfiguration() {
     return array(
       'id' => $this->getPluginId(),
-      'module' => $this->pluginDefinition['module'],
+      'provider' => $this->pluginDefinition['provider'],
       'status' => $this->status,
       'weight' => $this->weight,
       'settings' => $this->settings,
