@@ -377,12 +377,21 @@ system.admin_config:
   requirements:
     _permission: 'access administration pages'
 
-system.batch_page:
+# @todo system.batch_page.html does not work due to some ordering issues.
+system.batch_page.normal:
+  path: '/batch'
+  defaults:
+    _content: '\Drupal\system\Controller\BatchController::batchPage'
+  requirements:
+    _access: 'TRUE'
+
+system.batch_page.json:
   path: '/batch'
   defaults:
     _controller: '\Drupal\system\Controller\BatchController::batchPage'
   requirements:
     _access: 'TRUE'
+    _format: 'json'
 
 system.update:
   path: '/core/update.php'

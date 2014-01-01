@@ -10,6 +10,7 @@ namespace Drupal\user\Controller;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\user\UserInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller routines for user routes.
@@ -22,17 +23,24 @@ class UserController extends ControllerBase {
    * Displays user profile if user is logged in, or login form for anonymous
    * users.
    *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
    *   Returns either a redirect to the user page or the render
    *   array of the login form.
    */
-  public function userPage() {
+  public function userPage(Request $request) {
     $user = $this->currentUser();
     if ($user->id()) {
       $response = $this->redirect('user.view', array('user' => $user->id()));
     }
     else {
-      $response = drupal_get_form('Drupal\user\Form\UserLoginForm');
+      // Sets the proper request.
+      // @todo Remove when the request object is synchronized.
+      $form_builder = \Drupal::formBuilder();
+      $form_builder->setRequest($request);
+      $response = $form_builder->getForm('Drupal\user\Form\UserLoginForm');
     }
     return $response;
   }

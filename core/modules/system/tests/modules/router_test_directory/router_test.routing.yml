@@ -30,7 +30,7 @@ router_test.4:
 router_test.6:
   path: '/router_test/test6'
   defaults:
-    _controller: '\Drupal\router_test\TestControllers::test1'
+    _content: '\Drupal\router_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 

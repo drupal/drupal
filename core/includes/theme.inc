@@ -2054,15 +2054,22 @@ function _template_preprocess_default_variables() {
  * @see system_elements()
  */
 function template_preprocess_html(&$variables) {
-  $language_interface = language(Language::TYPE_INTERFACE);
+  /** @var $page \Drupal\Core\Page\HtmlPage */
+  $page = $variables['page_object'];
+
+  $variables['html_attributes'] = $page->getHtmlAttributes();
+  $variables['attributes'] = $page->getBodyAttributes();
+  $variables['page'] = $page->getContent();
 
   // Compile a list of classes that are going to be applied to the body element.
   // This allows advanced theming based on context (home page, node of certain type, etc.).
-  $variables['attributes']['class'][] = 'html';
+  $body_classes = $variables['attributes']['class'];
+  $body_classes[] = 'html';
   // Add a class that tells us whether we're on the front page or not.
-  $variables['attributes']['class'][] = $variables['is_front'] ? 'front' : 'not-front';
+  $body_classes[] = $variables['is_front'] ? 'front' : 'not-front';
   // Add a class that tells us whether the page is viewed by an authenticated user or not.
-  $variables['attributes']['class'][] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
+  $body_classes[] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
+  $variables['attributes']['class'] = $body_classes;
 
   // Populate the body classes.
   if ($suggestions = theme_get_suggestions(arg(), 'page', '-')) {
@@ -2080,6 +2087,7 @@ function template_preprocess_html(&$variables) {
   $variables['html_attributes'] = new Attribute;
 
   // HTML element attributes.
+  $language_interface = \Drupal::service('language_manager')->getLanguage();
   $variables['html_attributes']['lang'] = $language_interface->id;
   $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
@@ -2097,9 +2105,9 @@ function template_preprocess_html(&$variables) {
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.
-  if (!empty($variables['page']['#title'])) {
+  if ($page->hasTitle()) {
     $head_title = array(
-      'title' => strip_tags($variables['page']['#title']),
+      'title' => strip_tags($page->getTitle()),
       'name' => String::checkPlain($site_config->get('name')),
     );
   }
@@ -2149,15 +2157,8 @@ function template_preprocess_html(&$variables) {
 
   drupal_add_library('system', 'html5shiv', TRUE);
 
-  // Render page_top and page_bottom into top level variables.
-  $variables['page_top'] = array();
-  if (isset($variables['page']['page_top'])) {
-    $variables['page_top'] = drupal_render($variables['page']['page_top']);
-  }
-  $variables['page_bottom'] = array();
-  if (isset($variables['page']['page_bottom'])) {
-    $variables['page_bottom'][]['#markup'] = drupal_render($variables['page']['page_bottom']);
-  }
+  $variables['page_top'][] = array('#markup' => $page->getBodyTop());
+  $variables['page_bottom'][] = array('#markup' => $page->getBodyBottom());
 
   // Add footer scripts as '#markup' so they can be rendered with other
   // elements in page_bottom.
@@ -2557,7 +2558,7 @@ function drupal_common_theme() {
   return array(
     // From theme.inc.
     'html' => array(
-      'render element' => 'page',
+      'variables' => array('page_object' => NULL),
       'template' => 'html',
     ),
     'page' => array(
@@ -2631,7 +2632,7 @@ function drupal_common_theme() {
     ),
     // From theme.maintenance.inc.
     'maintenance_page' => array(
-      'variables' => array('content' => NULL, 'show_messages' => TRUE),
+      'variables' => array('content' => NULL, 'show_messages' => TRUE, 'page' => array()),
       'template' => 'maintenance-page',
     ),
     'install_page' => array(

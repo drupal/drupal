@@ -384,16 +384,16 @@ services:
     class: Drupal\Core\Routing\Enhancer\AjaxEnhancer
     arguments: ['@content_negotiation']
     tags:
-      - { name: route_enhancer, priority: 20 }
-      - { name: legacy_route_enhancer, priority: 20 }
+      - { name: route_enhancer, priority: 15 }
+      - { name: legacy_route_enhancer, priority: 15 }
   route_enhancer.entity:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
-    arguments: ['@content_negotiation']
+    arguments: ['@controller_resolver', '@entity.manager', '@form_builder']
     tags:
-      - { name: route_enhancer, priority: 15 }
+      - { name: route_enhancer, priority: 20 }
   route_enhancer.form:
     class: Drupal\Core\Routing\Enhancer\FormEnhancer
-    arguments: ['@content_negotiation']
+    arguments: ['@service_container', '@controller_resolver', '@form_builder']
     tags:
       - { name: route_enhancer, priority: 10 }
   route_special_attributes_subscriber:
@@ -402,10 +402,16 @@ services:
       - { name: event_subscriber }
   controller.page:
     class: Drupal\Core\Controller\HtmlPageController
-    arguments: ['@http_kernel', '@controller_resolver', '@string_translation', '@title_resolver']
+    arguments: ['@controller_resolver', '@string_translation', '@title_resolver']
+  controller.ajax:
+    class: Drupal\Core\Controller\AjaxController
+    arguments: ['@controller_resolver']
+  controller.entityform:
+    class: Drupal\Core\Entity\HtmlEntityFormController
+    arguments: ['@controller_resolver', '@service_container', '@entity.manager']
   controller.dialog:
     class: Drupal\Core\Controller\DialogController
-    arguments: ['@http_kernel', '@title_resolver']
+    arguments: ['@controller_resolver', '@title_resolver']
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:
@@ -418,6 +424,14 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@content_negotiation', '@title_resolver']
+  html_view_subscriber:
+    class: Drupal\Core\EventSubscriber\HtmlViewSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@html_page_renderer']
+  html_page_renderer:
+    class: Drupal\Core\Page\DefaultHtmlPageRenderer
+    arguments: ['@language_manager']
   private_key:
     class: Drupal\Core\PrivateKey
     arguments: ['@state']
@@ -521,7 +535,7 @@ services:
     arguments: ['@language_manager', '@string_translation']
   exception_controller:
     class: Drupal\Core\Controller\ExceptionController
-    arguments: ['@content_negotiation']
+    arguments: ['@content_negotiation', '@string_translation', '@title_resolver', '@html_page_renderer']
     calls:
       - [setContainer, ['@service_container']]
   exception_listener:

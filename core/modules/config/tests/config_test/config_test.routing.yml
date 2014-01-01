@@ -15,7 +15,7 @@ config_test.entity_add:
 config_test.entity:
   path: '/admin/structure/config_test/manage/{config_test}'
   defaults:
-    _controller: '\Drupal\config_test\ConfigTestController::edit'
+    _content: '\Drupal\config_test\ConfigTestController::edit'
     entity_type: 'config_test'
   requirements:
     _access: 'TRUE'

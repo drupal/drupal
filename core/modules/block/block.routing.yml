@@ -32,7 +32,7 @@ block.admin_display:
 block.admin_display_theme:
   path: 'admin/structure/block/list/{theme}'
   defaults:
-    _controller: '\Drupal\block\Controller\BlockListController::listing'
+    _content: '\Drupal\block\Controller\BlockListController::listing'
   requirements:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'

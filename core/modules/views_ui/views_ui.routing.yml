@@ -127,7 +127,7 @@ views_ui.form_add_item:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\AddItem::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\AddItem::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -139,7 +139,7 @@ views_ui.form_edit_details:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\EditDetails::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\EditDetails::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -151,7 +151,7 @@ views_ui.form_reorder_displays:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\ReorderDisplays::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\ReorderDisplays::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -163,7 +163,7 @@ views_ui.form_analyze:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\Analyze::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\Analyze::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -175,7 +175,7 @@ views_ui.form_rearrange:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\Rearrange::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\Rearrange::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -187,7 +187,7 @@ views_ui.form_rearrange_filter:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\RearrangeFilter::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\RearrangeFilter::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -199,7 +199,7 @@ views_ui.form_display:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\Display::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\Display::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -211,7 +211,7 @@ views_ui.form_config_item:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\ConfigItem::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\ConfigItem::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -223,7 +223,7 @@ views_ui.form_config_item_extra:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\ConfigItemExtra::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\ConfigItemExtra::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -235,7 +235,7 @@ views_ui.form_config_item_group:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Form\Ajax\ConfigItemGroup::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\ConfigItemGroup::getForm'
     form_state: NULL
   requirements:
     _permission: 'administer views'

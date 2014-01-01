@@ -354,7 +354,7 @@ function _drupal_default_html_head() {
 
 /**
  * Retrieves output to be displayed in the HEAD tag of the HTML page.
- */
+  */
 function drupal_get_html_head() {
   $elements = drupal_add_html_head();
   drupal_alter('html_head', $elements);
@@ -3408,7 +3408,12 @@ function drupal_pre_render_html_tag($element) {
     }
     $markup .= '</' . $element['#tag'] . ">\n";
   }
-  $element['#markup'] = $markup;
+  if (!empty($element['#noscript'])) {
+    $element['#markup'] = '<noscript>' . $markup . '</noscript>';
+  }
+  else {
+    $element['#markup'] = $markup;
+  }
   return $element;
 }
 
@@ -3592,7 +3597,7 @@ function drupal_pre_render_dropbutton($element) {
 }
 
 /**
- * Renders the page, including all theming.
+ * Processes the page render array, enhancing it as necessary.
  *
  * @param $page
  *   A string or array representing the content of a page. The array consists of
@@ -3602,10 +3607,13 @@ function drupal_pre_render_dropbutton($element) {
  *   - #show_messages: Suppress drupal_get_message() items. Used by Batch
  *     API (optional).
  *
+ * @return array
+ *   The processed render array for the page.
+ *
  * @see hook_page_alter()
  * @see element_info()
  */
-function drupal_render_page($page) {
+function drupal_prepare_page($page) {
   $main_content_display = &drupal_static('system_main_content_added', FALSE);
 
   // Pull out the page title to set it back later.
@@ -3642,6 +3650,28 @@ function drupal_render_page($page) {
     $page['#title'] = $title;
   }
 
+  return $page;
+}
+
+/**
+ * Renders the page, including all theming.
+ *
+ * @param string|array $page
+ *   A string or array representing the content of a page. The array consists of
+ *   the following keys:
+ *   - #type: Value is always 'page'. This pushes the theming through
+ *     the page template (required).
+ *   - #show_messages: Suppress drupal_get_message() items. Used by Batch
+ *     API (optional).
+ *
+ * @return string
+ *   Returns the rendered string.
+ *
+ * @see hook_page_alter()
+ * @see element_info()
+ */
+function drupal_render_page($page) {
+  $page = drupal_prepare_page($page);
   return drupal_render($page);
 }
 

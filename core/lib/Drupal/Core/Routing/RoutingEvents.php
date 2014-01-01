@@ -23,4 +23,9 @@ final class RoutingEvents {
    */
   const ALTER = 'routing.route_alter';
 
+  /**
+   * The FINISHED event is fired when the route building ended.
+   */
+  const FINISHED = 'routing.route_finished';
+
 }

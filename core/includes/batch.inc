@@ -150,30 +150,46 @@ function _batch_progress_page() {
   $batch['url_options']['query']['op'] = $new_op;
 
   $url = url($batch['url'], $batch['url_options']);
-  $element = array(
-    // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
-    '#prefix' => '<noscript>',
-    '#suffix' => '</noscript>',
-    '#tag' => 'meta',
-    '#attributes' => array(
-      'http-equiv' => 'Refresh',
-      'content' => '0; URL=' . $url,
+
+  $build = array(
+    '#theme' => 'progress_bar',
+    '#percent' => $percentage,
+    '#message' => $message,
+    '#label' => $label,
+    '#attached' => array(
+      'drupal_add_html_head' => array(
+        array(
+          array(
+            // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
+            '#tag' => 'meta',
+            '#noscript' => TRUE,
+            '#attributes' => array(
+              'http-equiv' => 'Refresh',
+              'content' => '0; URL=' . $url,
+            ),
+          ),
+          'batch_progress_meta_refresh',
+        ),
+      ),
+      // Adds JavaScript code and settings for clients where JavaScript is enabled.
+      'js' => array(
+        array(
+          'type' => 'setting',
+          'data' => array(
+            'batch' => array(
+              'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
+              'initMessage' => $current_set['init_message'],
+              'uri' => $url,
+            ),
+          ),
+        ),
+      ),
+      'library' => array(
+        array('system', 'drupal.batch'),
+      ),
     ),
   );
-  drupal_add_html_head($element, 'batch_progress_meta_refresh');
-
-  // Adds JavaScript code and settings for clients where JavaScript is enabled.
-  $js_setting = array(
-    'batch' => array(
-      'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],
-      'initMessage' => $current_set['init_message'],
-      'uri' => $url,
-    ),
-  );
-  drupal_add_js($js_setting, 'setting');
-  drupal_add_library('system', 'drupal.batch');
-
-  return theme('progress_bar', array('percent' => $percentage, 'message' => $message, 'label' => $label));
+  return drupal_render($build);
 }
 
 /**

@@ -135,13 +135,6 @@ class PageTitleTest extends WebTestBase {
     $result = $this->xpath('//h1');
     $this->assertEqual('Foo', (string) $result[0]);
 
-    // Test a controller using _controller instead of _content.
-    $this->drupalGet('test-render-title-controller');
-
-    $this->assertTitle('Foo | Drupal');
-    $result = $this->xpath('//h1');
-    $this->assertEqual('Foo', (string) $result[0]);
-
     // Test forms
     $this->drupalGet('form-test/object-builder');
 

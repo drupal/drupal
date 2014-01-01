@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Utility\Xss;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -67,6 +68,22 @@ class Page extends PathPluginBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getRoute($view_id, $display_id) {
+    $route = parent::getRoute($view_id, $display_id);
+
+    // Move _controller to _content for page displays, which will return a
+    // normal Drupal HTML page.
+    $defaults = $route->getDefaults();
+    $defaults['_content'] = $defaults['_controller'];
+    unset($defaults['_controller']);
+    $route->setDefaults($defaults);
+
+    return $route;
+  }
+
+  /**
    * Overrides \Drupal\views\Plugin\views\display\PathPluginBase::execute().
    */
   public function execute() {
@@ -80,12 +97,14 @@ class Page extends PathPluginBase {
 
     // First execute the view so it's possible to get tokens for the title.
     // And the title, which is much easier.
-    $render['#title'] = filter_xss_admin($this->view->getTitle());
-
-    $response = $this->view->getResponse();
-    $response->setContent(drupal_render_page($render));
-
-    return $response;
+    // @todo Figure out how to support custom response objects. Maybe for pages
+    //   it should be dropped.
+    if (is_array($render)) {
+      $render += array(
+        '#title' => Xss::filterAdmin($this->view->getTitle()),
+      );
+    }
+    return $render;
   }
 
   /**

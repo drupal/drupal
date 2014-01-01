@@ -257,7 +257,6 @@ function system_element_info() {
     '#post_render' => array('drupal_post_render_cache_tags_page_set'),
     '#show_messages' => TRUE,
     '#theme' => 'page',
-    '#theme_wrappers' => array('html'),
   );
   // By default, we don't want Ajax commands being rendered in the context of an
   // HTML page, so we don't provide defaults for #theme or #theme_wrappers.
@@ -2108,6 +2107,19 @@ function system_page_build(&$page) {
     $page['#attached']['css'][$path . '/css/system.admin.css'] = array(
       'weight' => CSS_COMPONENT - 10,
     );
+  }
+}
+
+/**
+ * Implements hook_custom_theme().
+ */
+function system_custom_theme() {
+  if (drupal_container()->isScopeActive('request')) {
+    $request = \Drupal::request();
+    $path = $request->attributes->get('_system_path');
+    if (user_access('view the administration theme') && path_is_admin($path)) {
+      return \Drupal::config('system.theme')->get('admin');
+    }
   }
 }
 

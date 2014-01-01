@@ -87,7 +87,6 @@ services:
     arguments: ['@entity.manager', '@state']
     tags:
       - { name: 'event_subscriber' }
-      - { name: 'needs_destruction' }
   views.route_access_check:
     class: Drupal\views\ViewsAccessCheck
     tags:

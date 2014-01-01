@@ -5,9 +5,8 @@
  * Contains \Drupal\Tests\Core\Controller\ExceptionControllerTest
  */
 
-namespace Drupal\Tests\Core\Controller;
+namespace Drupal\Tests\Core\Controller {
 
-use Drupal\Core\ContentNegotiation;
 use Drupal\Core\Controller\ExceptionController;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,10 +35,32 @@ class ExceptionControllerTest extends UnitTestCase {
   public function test405HTML() {
     $exception = new \Exception('Test exception');
     $flat_exception = FlattenException::create($exception, 405);
-    $exception_controller = new ExceptionController(new ContentNegotiation());
+    $translation_manager = $this->getStringTranslationStub();
+    $renderer = $this->getMock('Drupal\Core\Page\HtmlPageRendererInterface');
+    $title_resolver = $this->getMock('Drupal\Core\Controller\TitleResolverInterface');
+
+    $content_negotiation = $this->getMock('Drupal\Core\ContentNegotiation');
+    $content_negotiation->expects($this->any())
+      ->method('getContentType')
+      ->will($this->returnValue('html'));
+
+    $exception_controller = new ExceptionController($content_negotiation, $translation_manager, $title_resolver, $renderer);
     $response = $exception_controller->execute($flat_exception, new Request());
     $this->assertEquals($response->getStatusCode(), 405, 'HTTP status of response is correct.');
     $this->assertEquals($response->getContent(), 'Method Not Allowed', 'HTTP response body is correct.');
   }
 
+}
+
+}
+
+namespace {
+  use Drupal\Core\Language\Language;
+
+  if (!function_exists('language_default')) {
+    function language_default() {
+      $language = new Language(array('langcode' => 'en'));
+      return $language;
+    }
+  }
 }

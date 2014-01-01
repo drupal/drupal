@@ -9,8 +9,8 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 
@@ -150,6 +150,7 @@ class RouteBuilder {
     $this->dumper->dump(array('provider' => 'dynamic_routes'));
 
     $this->lock->release('router_rebuild');
+    $this->dispatcher->dispatch(RoutingEvents::FINISHED, new Event());
     return TRUE;
   }
 

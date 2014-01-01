@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewStorageInterface;
 use Drupal\Component\Utility\Tags;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -333,6 +334,13 @@ class ViewExecutable {
    * @var Symfony\Component\HttpFoundation\Response
    */
   protected $response = NULL;
+
+  /**
+   * Stores the current request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
 
   /**
    * Does this view already have loaded it's handlers.
@@ -1569,7 +1577,7 @@ class ViewExecutable {
   /**
    * Gets the response object used by the view.
    *
-   * @return Symfony\Component\HttpFoundation\Response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   The response object of the view.
    */
   public function getResponse() {
@@ -1577,6 +1585,26 @@ class ViewExecutable {
       $this->response = new Response();
     }
     return $this->response;
+  }
+
+  /**
+   * Sets the request object.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function setRequest(Request $request) {
+    $this->request = $request;
+  }
+
+  /**
+   * Gets the request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\Request $request
+   *   Returns the request object.
+   */
+  public function getRequest() {
+    return $this->request;
   }
 
   /**

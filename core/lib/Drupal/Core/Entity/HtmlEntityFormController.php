@@ -7,22 +7,39 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Controller\HtmlFormController;
+use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Controller\FormController;
+use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Wrapping controller for entity forms that serve as the main page body.
  */
-class HtmlEntityFormController extends HtmlFormController {
+class HtmlEntityFormController extends FormController {
 
   /**
-   * {@inheritdoc}
+   * The entity manager service.
    *
-   * Due to reflection, the argument must be named $_entity_form. The parent
-   * method has $request and $_form, but the parameter must match the route.
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  public function content(Request $request, $_entity_form) {
-    return parent::content($request, $_entity_form);
+  protected $manager;
+
+  /**
+   * Constructs a new \Drupal\Core\Routing\Enhancer\FormEnhancer object.
+   *
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $resolver
+   *   The controller resolver.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
+   *   The entity manager.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
+   * @param string $form_definition
+   *   The definition of this form, usually found in $defaults['_entity_form'].
+   */
+  public function __construct(ControllerResolverInterface $resolver, EntityManagerInterface $manager, FormBuilderInterface $form_builder, $form_definition) {
+    parent::__construct($resolver, $form_builder);
+    $this->manager = $manager;
+    $this->formDefinition = $form_definition;
   }
 
   /**
@@ -46,8 +63,6 @@ class HtmlEntityFormController extends HtmlFormController {
    * @endcode
    */
   protected function getFormObject(Request $request, $form_arg) {
-    $manager = $this->container->get('entity.manager');
-
     // If no operation is provided, use 'default'.
     $form_arg .= '.default';
     list ($entity_type, $operation) = explode('.', $form_arg);
@@ -56,10 +71,10 @@ class HtmlEntityFormController extends HtmlFormController {
       $entity = $request->attributes->get($entity_type);
     }
     else {
-      $entity = $manager->getStorageController($entity_type)->create(array());
+      $entity = $this->manager->getStorageController($entity_type)->create(array());
     }
 
-    return $manager->getFormController($entity_type, $operation)->setEntity($entity);
+    return $this->manager->getFormController($entity_type, $operation)->setEntity($entity);
   }
 
 }

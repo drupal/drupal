@@ -40,8 +40,6 @@ class BulkFormTest extends UserTestBase {
       'action' => 'user_block_user_action',
     );
     $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply'));
-    // @todo Validation errors are only shown on page refresh.
-    $this->drupalGet('test-user-bulk-form');
     $this->assertText(t('No users selected.'));
 
     // Assign a role to a user.

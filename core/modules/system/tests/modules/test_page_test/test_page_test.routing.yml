@@ -35,10 +35,3 @@ test_page_test.admin_render_title:
     _content: 'Drupal\test_page_test\Controller\Test::renderTitle'
   requirements:
     _access: 'TRUE'
-
-test_page_test.render_title_controller:
-  path: '/test-render-title-controller'
-  defaults:
-    _controller: 'Drupal\test_page_test\Controller\Test::renderTitle'
-  requirements:
-    _access: 'TRUE'

@@ -85,7 +85,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertFalse(in_array($module, $list), "{$module}_permission() in \Drupal::moduleHandler()->getImplementations() not found.");
 
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
-    $schema = drupal_get_schema($table);
+    $schema = drupal_get_schema($table, TRUE);
     $this->assertFalse($schema, "'$table' table schema not found.");
 
     // Install the module.

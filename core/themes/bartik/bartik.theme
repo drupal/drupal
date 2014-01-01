@@ -8,49 +8,51 @@
 use Drupal\Core\Template\RenderWrapper;
 
 /**
- * Implements hook_preprocess_HOOK() for HTML document templates.
+ * Implements hook_preprocess_HOOK() for page templates.
  *
  * Adds body classes if certain regions have content.
  */
-function bartik_preprocess_html(&$variables) {
+function bartik_preprocess_page(&$variables) {
   // Add information about the number of sidebars.
+  /** @var \Drupal\Core\Page\HtmlPage $page_object */
+  $page_object = $variables['page']['#page'];
+  $attributes = $page_object->getBodyAttributes();
+  $classes = $attributes['class'];
   if (!empty($variables['page']['sidebar_first']) && !empty($variables['page']['sidebar_second'])) {
-    $variables['attributes']['class'][] = 'two-sidebars';
+    $classes[] = 'two-sidebars';
   }
   elseif (!empty($variables['page']['sidebar_first'])) {
-    $variables['attributes']['class'][] = 'one-sidebar';
-    $variables['attributes']['class'][] = 'sidebar-first';
+    $classes[] = 'one-sidebar';
+    $classes[] = 'sidebar-first';
   }
   elseif (!empty($variables['page']['sidebar_second'])) {
-    $variables['attributes']['class'][] = 'one-sidebar';
-    $variables['attributes']['class'][] = 'sidebar-second';
+    $classes[] = 'one-sidebar';
+    $classes[] = 'sidebar-second';
   }
   else {
-    $variables['attributes']['class'][] = 'no-sidebars';
+    $classes[] = 'no-sidebars';
   }
 
   if (!empty($variables['page']['featured'])) {
-    $variables['attributes']['class'][] = 'featured';
+    $classes[] = 'featured';
   }
 
   if (!empty($variables['page']['triptych_first'])
     || !empty($variables['page']['triptych_middle'])
     || !empty($variables['page']['triptych_last'])) {
-    $variables['attributes']['class'][] = 'triptych';
+    $classes[] = 'triptych';
   }
 
   if (!empty($variables['page']['footer_firstcolumn'])
     || !empty($variables['page']['footer_secondcolumn'])
     || !empty($variables['page']['footer_thirdcolumn'])
     || !empty($variables['page']['footer_fourthcolumn'])) {
-    $variables['attributes']['class'][] = 'footer-columns';
+    $classes[] = 'footer-columns';
   }
-}
 
-/**
- * Implements hook_preprocess_HOOK() for page templates.
- */
-function bartik_preprocess_page(&$variables) {
+  // Store back the classes to the htmlpage object.
+  $attributes['class'] = $classes;
+
   // Pass the main menu and secondary menu to the template as render arrays.
   if (!empty($variables['main_menu'])) {
     $variables['main_menu']['#attributes']['id'] = 'main-menu-links';

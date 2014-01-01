@@ -37,9 +37,9 @@ class AjaxEnhancer implements RouteEnhancerInterface {
    * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
-    if (empty($defaults['_content']) && $this->negotiation->getContentType($request) == 'drupal_ajax') {
+    if (empty($defaults['_content']) && $defaults['_controller'] != 'controller.ajax:content' && $this->negotiation->getContentType($request) == 'drupal_ajax') {
       $defaults['_content'] = isset($defaults['_controller']) ? $defaults['_controller'] : NULL;
-      $defaults['_controller'] = '\Drupal\Core\Controller\AjaxController::content';
+      $defaults['_controller'] = 'controller.ajax:content';
     }
     return $defaults;
   }

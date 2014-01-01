@@ -17,4 +17,9 @@ class Title {
    */
   const CHECK_PLAIN = 0;
 
+  /**
+   * For controller titles, for sanitizing via Xss::filterAdmin.
+   */
+  const FILTER_XSS_ADMIN = 1;
+
 }

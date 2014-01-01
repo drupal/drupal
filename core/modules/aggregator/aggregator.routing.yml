@@ -82,7 +82,7 @@ aggregator.feed_view:
 aggregator.page_last:
   path: '/aggregator'
   defaults:
-    _controller: '\Drupal\aggregator\Controller\AggregatorController::pageLast'
+    _content: '\Drupal\aggregator\Controller\AggregatorController::pageLast'
     _title: 'Feed aggregator'
   requirements:
     _permission: 'access news feeds'

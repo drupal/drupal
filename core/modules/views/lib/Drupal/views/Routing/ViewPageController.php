@@ -69,6 +69,7 @@ class ViewPageController implements ContainerInjectionInterface {
       throw new NotFoundHttpException(String::format('Page controller for view %id requested, but view was not found.', array('%id' => $view_id)));
     }
     $view = $this->executableFactory->get($entity);
+    $view->setRequest($request);
     $view->setDisplay($display_id);
     $view->initHandlers();
 

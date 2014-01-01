@@ -8,6 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Controller\TitleResolverInterface;
+use Drupal\Core\Page\HtmlPage;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -85,28 +86,14 @@ class ViewSubscriber implements EventSubscriberInterface {
         $event->setResponse(new Response('Not Acceptable', 406));
       }
     }
-    elseif ($request->attributes->get('_legacy')) {
-      // This is an old hook_menu-based subrequest, which means we assume
-      // the body is supposed to be the complete page.
-      $page_result = $event->getControllerResult();
-      if (!is_array($page_result)) {
-        $page_result = array(
-          '#markup' => $page_result,
-        );
-      }
-
-      // If no title was returned fall back to one defined in the route.
-      if (!isset($page_result['#title'])) {
-        $page_result['#title'] = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
-      }
-
-      $event->setResponse(new Response(drupal_render_page($page_result)));
-    }
     else {
       // This is a new-style Symfony-esque subrequest, which means we assume
       // the body is not supposed to be a complete page but just a page
       // fragment.
       $page_result = $event->getControllerResult();
+      if ($page_result instanceof HtmlPage || $page_result instanceof Response) {
+        return $page_result;
+      }
       if (!is_array($page_result)) {
         $page_result = array(
           '#markup' => $page_result,

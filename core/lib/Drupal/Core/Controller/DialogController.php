@@ -9,9 +9,10 @@ namespace Drupal\Core\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenDialogCommand;
+use Drupal\Core\Page\HtmlPage;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Defines a default controller for dialog requests.
@@ -19,11 +20,11 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class DialogController {
 
   /**
-   * The HttpKernel object to use for subrequests.
+   * The controller resolver service.
    *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
    */
-  protected $httpKernel;
+  protected $controllerResolver;
 
   /**
    * The title resolver.
@@ -35,112 +36,126 @@ class DialogController {
   /**
    * Constructs a new DialogController.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
-   *   The kernel.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver service.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
    */
-  public function __construct(HttpKernelInterface $kernel, TitleResolverInterface $title_resolver) {
-    $this->httpKernel = $kernel;
+  public function __construct(ControllerResolverInterface $controller_resolver, TitleResolverInterface $title_resolver) {
+    $this->controllerResolver = $controller_resolver;
     $this->titleResolver = $title_resolver;
-  }
-
-  /**
-   * Forwards request to a subrequest.
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestRequest $request
-   *   The request object.
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   A response object.
-   */
-  protected function forward(Request $request) {
-    // @todo When we have a Generator, we can replace the forward() call with
-    // a render() call, which would handle ESI and hInclude as well.  That will
-    // require an _internal route.  For examples, see:
-    // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Resources/config/routing/internal.xml
-    // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/InternalController.php
-    $attributes = clone $request->attributes;
-    // We need to clean up the derived information and such so that the
-    // subrequest can be processed properly without leaking data through.
-    $attributes->remove('_system_path');
-    $attributes->set('dialog', TRUE);
-
-    // Remove the accept header so the subrequest does not end up back in this
-    // controller.
-    $request->headers->remove('accept');
-    // Remove the X-Requested-With header so the subrequest is not mistaken for
-    // an ajax request.
-    $request->headers->remove('x-requested-with');
-
-    return $this->httpKernel->forward(NULL, $attributes->all(), $request->query->all());
   }
 
   /**
    * Displays content in a modal dialog.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestRequest $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
+   * @param mixed $_content
+   *   A controller definition string, or a callable object/closure.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   AjaxResponse to return the content wrapper in a modal dialog.
    */
-  public function modal(Request $request) {
-    return $this->dialog($request, TRUE);
+  public function modal(Request $request, $_content) {
+    return $this->dialog($request, $_content, TRUE);
   }
 
   /**
    * Displays content in a dialog.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestRequest $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
+   * @param mixed $_content
+   *   A controller definition string, or a callable object/closure.
    * @param bool $modal
    *   (optional) TRUE to render a modal dialog. Defaults to FALSE.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   AjaxResponse to return the content wrapper in a dialog.
    */
-  public function dialog(Request $request, $modal = FALSE) {
-    $subrequest = $this->forward($request);
-    if ($subrequest->isOk()) {
-      $content = $subrequest->getContent();
-      if (!$title = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT))) {
-        // @todo Remove use of drupal_get_title() when
-        //  http://drupal.org/node/1871596 is in.
-        $title = drupal_get_title();
-      }
-      $response = new AjaxResponse();
-      // Fetch any modal options passed in from data-dialog-options.
-      if (!($options = $request->request->get('dialogOptions'))) {
-        $options = array();
-      }
-      // Set modal flag and re-use the modal ID.
-      if ($modal) {
-        $options['modal'] = TRUE;
-        $target = '#drupal-modal';
+  public function dialog(Request $request, $_content, $modal = FALSE) {
+    $page_content = $this->getContentResult($request, $_content);
+
+    // Allow controllers to return a HtmlPage or a Response object directly.
+    if ($page_content instanceof HtmlPage) {
+      $page_content = $page_content->getContent();
+    }
+    if ($page_content instanceof Response) {
+      $page_content = $page_content->getContent();
+    }
+
+    // Most controllers return a render array, but some return a string.
+    if (!is_array($page_content)) {
+      $page_content = array(
+        '#markup' => $page_content,
+      );
+    }
+
+    $content = drupal_render($page_content);
+
+    // @todo Remove use of drupal_get_title() when
+    //  http://drupal.org/node/1871596 is in.
+    if (!$title = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT))) {
+      // @todo Remove use of drupal_get_title() when
+      //  http://drupal.org/node/1871596 is in.
+      $title = drupal_get_title();
+    }
+    $response = new AjaxResponse();
+    // Fetch any modal options passed in from data-dialog-options.
+    if (!($options = $request->request->get('dialogOptions'))) {
+      $options = array();
+    }
+    // Set modal flag and re-use the modal ID.
+    if ($modal) {
+      $options['modal'] = TRUE;
+      $target = '#drupal-modal';
+    }
+    else {
+      // Generate the target wrapper for the dialog.
+      if (isset($options['target'])) {
+        // If the target was nominated in the incoming options, use that.
+        $target = $options['target'];
+        // Ensure the target includes the #.
+        if (substr($target, 0, 1) != '#') {
+          $target = '#' . $target;
+        }
+        // This shouldn't be passed on to jQuery.ui.dialog.
+        unset($options['target']);
       }
       else {
-        // Generate the target wrapper for the dialog.
-        if (isset($options['target'])) {
-          // If the target was nominated in the incoming options, use that.
-          $target = $options['target'];
-          // Ensure the target includes the #.
-          if (substr($target, 0, 1) != '#') {
-            $target = '#' . $target;
-          }
-          // This shouldn't be passed on to jQuery.ui.dialog.
-          unset($options['target']);
-        }
-        else {
-          // Generate a target based on the route id.
-          $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
-          $target = '#' . drupal_html_id("drupal-dialog-$route_name");
-        }
+        // Generate a target based on the route id.
+        $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
+        $target = '#' . drupal_html_id("drupal-dialog-$route_name");
       }
-      $response->addCommand(new OpenDialogCommand($target, $title, $content, $options));
-      return $response;
     }
-    // An error occurred in the subrequest, return that.
-    return $subrequest;
+    $response->addCommand(new OpenDialogCommand($target, $title, $content, $options));
+    return $response;
   }
+
+  /**
+   * Returns the result of invoking the sub-controller.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param mixed $controller_definition
+   *   A controller definition string, or a callable object/closure.
+   *
+   * @return mixed
+   *   The result of invoking the controller. Render arrays, strings, HtmlPage,
+   *   and HtmlFragment objects are possible.
+   */
+  public function getContentResult(Request $request, $controller_definition) {
+    if ($controller_definition instanceof \Closure) {
+      $callable = $controller_definition;
+    }
+    else {
+      $callable = $this->controllerResolver->getControllerFromDefinition($controller_definition);
+    }
+    $arguments = $this->controllerResolver->getArguments($request, $callable);
+    $page_content = call_user_func_array($callable, $arguments);
+
+    return $page_content;
+  }
+
 }

@@ -7,9 +7,12 @@
 
 namespace Drupal\Core\Routing\Enhancer;
 
+use Drupal\Core\Controller\HtmlFormController;
+use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Form\FormBuilderInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
-use Drupal\Core\ContentNegotiation;
 
 /**
  * Enhances a form route with the appropriate controller.
@@ -17,28 +20,49 @@ use Drupal\Core\ContentNegotiation;
 class FormEnhancer implements RouteEnhancerInterface {
 
   /**
-   * Content negotiation library.
+   * The service container.
    *
-   * @var \Drupal\CoreContentNegotiation
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
-  protected $negotiation;
+  protected $container;
+
+  /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   */
+  protected $resolver;
+
+  /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
 
   /**
    * Constructs a new \Drupal\Core\Routing\Enhancer\FormEnhancer object.
    *
-   * @param \Drupal\Core\ContentNegotiation $negotiation
-   *   The Content Negotiation service.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $resolver
+   *   The controller resolver.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
    */
-  public function __construct(ContentNegotiation $negotiation) {
-    $this->negotiation = $negotiation;
+  public function __construct(ContainerInterface $container, ControllerResolverInterface $resolver, FormBuilderInterface $form_builder) {
+    $this->container = $container;
+    $this->resolver = $resolver;
+    $this->formBuilder = $form_builder;
   }
 
   /**
-   * {@inhertdoc}
+   * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
-    if (empty($defaults['_controller']) && !empty($defaults['_form']) && $this->negotiation->getContentType($request) === 'html') {
-      $defaults['_controller'] = '\Drupal\Core\Controller\HtmlFormController::content';
+    if (!empty($defaults['_form'])) {
+      $wrapper = new HtmlFormController($this->resolver, $this->container, $defaults['_form'], $this->formBuilder);
+      $defaults['_content'] = array($wrapper, 'getContentResult');
     }
     return $defaults;
   }

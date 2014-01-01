@@ -7,10 +7,13 @@
 
 namespace Drupal\Core\Entity\Enhancer;
 
+use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\HtmlEntityFormController;
+use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Drupal\Core\ContentNegotiation;
 
 /**
  * Enhances an entity form route with the appropriate controller.
@@ -18,38 +21,57 @@ use Drupal\Core\ContentNegotiation;
 class EntityRouteEnhancer implements RouteEnhancerInterface {
 
   /**
-   * Content negotiation library.
+   * The controller resolver.
    *
-   * @var \Drupal\Core\ContentNegotiation
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
    */
-  protected $negotiation;
+  protected $resolver;
 
   /**
-   * Constructs a new \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer.
+   * The entity manager service.
    *
-   * @param \Drupal\Core\ContentNegotiation $negotiation
-   *   The content negotiation library.
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  public function __construct(ContentNegotiation $negotiation) {
-    $this->negotiation = $negotiation;
+  protected $manager;
+
+  /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
+   * Constructs a new EntityRouteEnhancer object.
+   *
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $resolver
+   *   The controller resolver.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
+   *   The entity manager.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
+   */
+  public function __construct(ControllerResolverInterface $resolver, EntityManagerInterface $manager, FormBuilderInterface $form_builder) {
+    $this->resolver = $resolver;
+    $this->manager = $manager;
+    $this->formBuilder = $form_builder;
   }
 
   /**
    * {@inheritdoc}
    */
   public function enhance(array $defaults, Request $request) {
-    if (empty($defaults['_controller']) && $this->negotiation->getContentType($request) === 'html') {
+    if (empty($defaults['_content'])) {
       if (!empty($defaults['_entity_form'])) {
-        $defaults['_controller'] = '\Drupal\Core\Entity\HtmlEntityFormController::content';
+        $wrapper = new HtmlEntityFormController($this->resolver, $this->manager, $this->formBuilder, $defaults['_entity_form']);
+        $defaults['_content'] = array($wrapper, 'getContentResult');
       }
       elseif (!empty($defaults['_entity_list'])) {
-        $defaults['_controller'] = 'controller.page:content';
         $defaults['_content'] = '\Drupal\Core\Entity\Controller\EntityListController::listing';
         $defaults['entity_type'] = $defaults['_entity_list'];
         unset($defaults['_entity_list']);
       }
       elseif (!empty($defaults['_entity_view'])) {
-        $defaults['_controller'] = 'controller.page:content';
         $defaults['_content'] = '\Drupal\Core\Entity\Controller\EntityViewController::view';
         if (strpos($defaults['_entity_view'], '.') !== FALSE) {
           // The _entity_view entry is of the form entity_type.view_mode.

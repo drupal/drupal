@@ -49,7 +49,7 @@ class SessionTestSubscriber implements EventSubscriberInterface {
       // https.php because form submissions would otherwise redirect to a
       // non-existent HTTPS site.
       if (!empty($is_https_mock)) {
-        $path = $base_insecure_url . '/' . $event->getTargetUrl();
+        $path = $base_insecure_url . '/' . $response->getTargetUrl();
         $response->setTargetUrl($path);
       }
     }
