@@ -75,6 +75,30 @@ function content_translation_language_types_info_alter(array &$language_types) {
 
 /**
  * Implements hook_entity_info_alter().
+ *
+ * The content translation UI relies on the entity info to provide its features.
+ * See the documentation of hook_entity_info() in the Entity API documentation
+ * for more details on all the entity info keys that may be defined.
+ *
+ * To make Content Translation automatically support an entity type some keys
+ * may need to be defined, but none of them is required unless the entity path
+ * is different from the usual /ENTITY_TYPE/{ENTITY_TYPE} pattern (for instance
+ * "/taxonomy/term/{taxonomy_term}"), in which case at least the 'canonical' key
+ * in the 'links' entity info property must be defined.
+ *
+ * Every entity type needs a translation controller to be translated. This can
+ * be specified through the 'translation' key in the 'controllers' entity info
+ * property. If an entity type is translatable and no translation controller is
+ * defined, \Drupal\content_translation\ContentTranslationController will be
+ * assumed. Every translation controller class must implement
+ * \Drupal\content_translation\ContentTranslationControllerInterface.
+ *
+ * If the entity paths match the default pattern above and there is no need for
+ * an entity-specific translation controller class, Content Translation will
+ * provide built-in support for the entity. However enabling translation for
+ * each translatable bundle will be required.
+ *
+ * @see \Drupal\Core\Entity\Annotation\EntityType
  */
 function content_translation_entity_info_alter(array &$entity_info) {
   // Provide defaults for translation info.
@@ -95,6 +119,8 @@ function content_translation_entity_info_alter(array &$entity_info) {
         if (!$info->hasLinkTemplate('drupal:content-translation-overview')) {
           $info->setLinkTemplate('drupal:content-translation-overview', "content_translation.translation_overview_$entity_type");
         }
+        // @todo Remove this as soon as menu access checks rely on the
+        //   controller. See https://drupal.org/node/2155787.
         $translation['content_translation'] += array(
           'access_callback' => 'content_translation_translate_access',
         );

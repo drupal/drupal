@@ -96,14 +96,14 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
 /**
  * Add to entity type definitions.
  *
- * Modules may implement this hook to add information to defined entity types.
+ * Modules may implement this hook to add information to defined entity types,
+ * as defined in \Drupal\Core\Entity\EntityTypeInterface.
  *
  * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
  *   An associative array of all entity type definitions, keyed by the entity
  *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
- * @see \Drupal\Core\Entity\EntityManagerInterface
  * @see \Drupal\Core\Entity\EntityTypeInterface
  */
 function hook_entity_info(&$entity_info) {
@@ -111,6 +111,31 @@ function hook_entity_info(&$entity_info) {
   // Add a form controller for a custom node form without overriding the default
   // node form. To override the default node form, use hook_entity_info_alter().
   $entity_info['node']->setForm('mymodule_foo', 'Drupal\mymodule\NodeFooFormController');
+}
+
+/**
+ * Alter the entity type definitions.
+ *
+ * Modules may implement this hook to alter the information that defines an
+ * entity type. All properties that are available in
+ * \Drupal\Core\Entity\Annotation\EntityType and all the ones additionally
+ * provided by modules can be altered here.
+ *
+ * Do not use this hook to add information to entity types, unless you are just
+ * filling-in default values. Use hook_entity_info() instead.
+ *
+ * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+ *   An associative array of all entity type definitions, keyed by the entity
+ *   type name. Passed by reference.
+ *
+ * @see \Drupal\Core\Entity\Entity
+ * @see \Drupal\Core\Entity\EntityTypeInterface
+ */
+function hook_entity_info_alter(&$entity_info) {
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+  // Set the controller class for nodes to an alternate implementation of the
+  // Drupal\Core\Entity\EntityStorageControllerInterface interface.
+  $entity_info['node']->setController('storage', 'Drupal\mymodule\MyCustomNodeStorageController');
 }
 
 /**
@@ -218,31 +243,6 @@ function hook_entity_bundle_delete($entity_type, $bundle) {
     unset($bundle_settings[$entity_type][$bundle]);
     $config->set('bundle_settings', $bundle_settings);
   }
-}
-
-/**
- * Alter the entity type definitions.
- *
- * Modules may implement this hook to alter the information that defines an
- * entity type. All properties that are available in
- * \Drupal\Core\Entity\EntityManagerInterface can be altered here.
- *
- * Do not use this hook to add information to entity types. Use
- * hook_entity_info() for that instead.
- *
- * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
- *   An associative array of all entity type definitions, keyed by the entity
- *   type name. Passed by reference.
- *
- * @see \Drupal\Core\Entity\Entity
- * @see \Drupal\Core\Entity\EntityManagerInterface
- * @see \Drupal\Core\Entity\EntityTypeInterface
- */
-function hook_entity_info_alter(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  // Set the controller class for nodes to an alternate implementation of the
-  // Drupal\Core\Entity\EntityStorageControllerInterface interface.
-  $entity_info['node']->setController('storage', 'Drupal\mymodule\MyCustomNodeStorageController');
 }
 
 /**

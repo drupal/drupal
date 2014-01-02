@@ -26,14 +26,6 @@ class EntityType extends Plugin {
   public $entity_type_class = 'Drupal\Core\Entity\EntityType';
 
   /**
-   * @todo content_translation_entity_info_alter() uses this but it is
-   *   undocumented. Fix in https://drupal.org/node/1968970.
-   *
-   * @var array
-   */
-  public $translation = array();
-
-  /**
    * {@inheritdoc}
    */
   public function get() {

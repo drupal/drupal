@@ -14,31 +14,6 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * Defines a set of methods to allow any entity to be processed by the entity
  * translation UI.
- *
- * The content translation UI relies on the entity info to provide its features.
- * See the documentation of hook_entity_info() in the Entity API documentation
- * for more details on all the entity info keys that may be defined.
- *
- * To make Content Translation automatically support an entity type some keys
- * may need to be defined, but none of them is required unless the entity path
- * is different from ENTITY_TYPE/%ENTITY_TYPE (e.g. taxonomy/term/1), in which
- * case at least the 'canonical' key in the 'links' entity info property must be
- * defined.
- *
- * Every entity type needs a translation controller to be translated. This can
- * be specified through the "controllers['translation']" key in the entity
- * info. If an entity type is enabled for translation and no translation
- * controller is defined,
- * \Drupal\content_translation\ContentTranslationController will be assumed.
- * Every translation controller class must implement
- * \Drupal\content_translation\ContentTranslationControllerInterface.
- *
- * If the entity paths match the default patterns above and there is no need for
- * an entity-specific translation controller class, Content Translation will
- * provide built-in support for the entity. It will still be required to enable
- * translation for each translatable bundle.
- *
- * @see \Drupal\Core\Entity\EntityManagerInterface
  */
 interface ContentTranslationControllerInterface {
 

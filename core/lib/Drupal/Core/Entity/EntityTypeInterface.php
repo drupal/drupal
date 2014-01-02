@@ -9,6 +9,11 @@ namespace Drupal\Core\Entity;
 
 /**
  * Provides an interface for an entity type and its metadata.
+ *
+ * Additional information can be provided by modules: hook_entity_info() can be
+ * implemented to define new properties, while hook_entity_info_alter() can be
+ * implemented to alter existing data and fill-in defaults. Module-specific
+ * properties should be documented in the hook implementations defining them.
  */
 interface EntityTypeInterface {
 
@@ -193,9 +198,6 @@ interface EntityTypeInterface {
    *   - access: The name of the class that is used for access checks. The class
    *     must implement \Drupal\Core\Entity\EntityAccessControllerInterface.
    *     Defaults to \Drupal\Core\Entity\EntityAccessController.
-   *   - translation: The name of the controller class that should be used to
-   *     handle the translation process. The class must implement
-   *     \Drupal\content_translation\ContentTranslationControllerInterface.
    */
   public function getControllers();
 
