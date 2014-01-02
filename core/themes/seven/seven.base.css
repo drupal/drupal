@@ -1,0 +1,135 @@
+/**
+ * Generic elements.
+ */
+body {
+  color: #000;
+  background: #fff;
+  font: normal 81.3%/1.538em "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+}
+a,
+.link {
+  color: #0074bd;
+  text-decoration: none;
+}
+a:hover,
+.link:hover {
+  text-decoration: underline;
+}
+hr {
+  margin: 0;
+  padding: 0;
+  border: none;
+  height: 1px;
+  background: #cccccc;
+}
+summary,
+legend {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  margin: 10px 0;
+}
+h1 {
+  font-size: 1.538em;
+}
+h2 {
+  font-size: 1.385em;
+}
+h3 {
+  font-size: 1.231em;
+}
+h4 {
+  font-size: 1.154em;
+}
+h5,
+h6 {
+  font-size: 1.077em;
+}
+p {
+  margin: 1em 0;
+}
+dl {
+  margin: 0 0 20px;
+}
+dl dd,
+dl dl {
+  margin-left: 20px; /* LTR */
+  margin-bottom: 10px;
+}
+[dir="rtl"] dl dd,
+[dir="rtl"] dl dl {
+  margin-right: 20px;
+}
+blockquote {
+  margin: 1em 40px;
+}
+address {
+  font-style: italic;
+}
+u,
+ins {
+  text-decoration: underline;
+}
+s,
+strike,
+del {
+  text-decoration: line-through;
+}
+big {
+  font-size: larger;
+}
+small {
+  font-size: smaller;
+}
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+  line-height: normal;
+}
+sup {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: normal;
+}
+nobr {
+  white-space: nowrap;
+}
+abbr,
+acronym {
+  border-bottom: dotted 1px;
+}
+ul {
+  list-style-type: disc;
+  list-style-image: none;
+  margin: 0.25em 0 0.25em 1.5em; /* LTR */
+}
+[dir="rtl"] ul {
+  margin: 0.25em 1.5em 0.25em 0;
+}
+ol {
+  list-style-type: decimal;
+  margin: 0.25em 0 0.25em 2em; /* LTR */
+}
+[dir="rtl"] ol {
+  margin: 0.25em 2em 0.25em 0;
+}
+quote,
+code {
+  margin: .5em 0;
+}
+code,
+pre,
+kbd {
+  font-size: 1.231em;
+}
+pre {
+  margin: 0.5em 0;
+  white-space: pre-wrap;
+}

@@ -268,6 +268,7 @@ class ThemeHandlerTest extends UnitTestCase {
     // Ensure that the css paths are set with the proper prefix.
     $this->assertEquals(array(
       'screen' => array(
+        'seven.base.css' => DRUPAL_ROOT . '/core/themes/seven/seven.base.css',
         'style.css' => DRUPAL_ROOT . '/core/themes/seven/style.css',
         'css/components/buttons.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.css',
         'css/components/buttons.theme.css' => DRUPAL_ROOT . '/core/themes/seven/css/components/buttons.theme.css',
