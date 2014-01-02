@@ -524,7 +524,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
     );
     $form['content_ranking']['#theme'] = 'node_search_admin';
     $form['content_ranking']['info'] = array(
-      '#value' => '<em>' . t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em>'
+      '#value' => '<em>' . t('Influence is a numeric multiplier used in ordering search results. A higher number means the corresponding factor has more influence on search results; zero means the factor is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em>'
     );
 
     // Note: reversed to reflect that higher number = higher ranking.

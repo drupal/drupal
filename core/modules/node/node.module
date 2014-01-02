@@ -911,7 +911,7 @@ function theme_node_search_admin($variables) {
 
   $output = drupal_render($form['info']);
 
-  $header = array(t('Factor'), t('Weight'));
+  $header = array(t('Factor'), t('Influence'));
   foreach (element_children($form['factors']) as $key) {
     $row = array();
     $row[] = $form['factors'][$key]['#title'];
