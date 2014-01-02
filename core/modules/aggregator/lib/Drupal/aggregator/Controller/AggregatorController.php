@@ -228,7 +228,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
             ->viewMultiple($items, 'summary');
         }
       }
-      $feed->url = $this->urlGenerator()->generateFromRoute('aggregator.feed_view', array('aggregator_feed' => $feed->id()));
+      $feed->url = $this->url('aggregator.feed_view', array('aggregator_feed' => $feed->id()));
       $build[$feed->id()] = array(
         '#theme' => 'aggregator_summary_items',
         '#summary_items' => $summary_items,
