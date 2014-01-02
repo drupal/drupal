@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\Form\DeleteConfirmMultiple.
+ * Contains \Drupal\comment\Form\ConfirmDeleteMultiple.
  */
 
 namespace Drupal\comment\Form;
@@ -70,6 +70,9 @@ class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectio
    * {@inheritdoc}
    */
   public function getCancelRoute() {
+    return array(
+      'route_name' => 'comment.admin',
+    );
   }
 
   /**
@@ -110,11 +113,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectio
       $form_state['redirect_route']['route_name'] = 'comment.admin';
     }
 
-    $form = parent::buildForm($form, $form_state);
-
-    // @todo Convert to getCancelRoute() after http://drupal.org/node/1986606.
-    $form['actions']['cancel']['#href'] = 'admin/content/comment';
-    return $form;
+    return parent::buildForm($form, $form_state);
   }
 
   /**

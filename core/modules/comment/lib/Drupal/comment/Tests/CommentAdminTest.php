@@ -93,6 +93,12 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertText(t('Are you sure you want to delete these comments and all their children?'), 'Confirmation required.');
     $this->drupalPostForm(NULL, $edit, t('Delete comments'));
     $this->assertText(t('No comments available.'), 'All comments were deleted.');
+    // Test message when no comments selected.
+    $edit = array(
+      'operation' => 'delete',
+    );
+    $this->drupalPostForm(NULL, $edit, t('Update'));
+    $this->assertText(t('Select one or more comments to perform the update on.'));
   }
 
   /**
