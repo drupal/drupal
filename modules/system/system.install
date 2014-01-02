@@ -3135,7 +3135,7 @@ function system_update_7078() {
   ), array('unique keys' => array('formats' => array('format', 'type'))));
 }
 
-/*
+/**
  * Convert the 'filesize' column in {file_managed} to a bigint.
  */
 function system_update_7079() {
