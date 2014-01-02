@@ -272,7 +272,7 @@ system.theme_enable:
 system.status:
   path: '/admin/reports/status'
   defaults:
-    _controller: 'Drupal\system\Controller\SystemInfoController::status'
+    _content: 'Drupal\system\Controller\SystemInfoController::status'
     _title: 'Status report'
   requirements:
     _permission: 'administer site configuration'
