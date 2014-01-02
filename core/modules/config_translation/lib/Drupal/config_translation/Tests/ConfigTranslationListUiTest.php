@@ -80,6 +80,12 @@ class ConfigTranslationListUiTest extends WebTestBase {
     // Create and log in user.
     $this->adminUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->adminUser);
+
+    // Enable import of translations. By default this is disabled for automated
+    // tests.
+    \Drupal::config('locale.settings')
+      ->set('translation.import_enabled', TRUE)
+      ->save();
   }
 
   /**

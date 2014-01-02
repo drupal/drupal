@@ -51,6 +51,12 @@ class LocaleUpdateBase extends WebTestBase {
     $this->timestamp_medium = REQUEST_TIME - 200;
     $this->timestamp_new = REQUEST_TIME - 100;
     $this->timestamp_now = REQUEST_TIME;
+
+    // Enable import of translations. By default this is disabled for automated
+    // tests.
+    \Drupal::config('locale.settings')
+      ->set('translation.import_enabled', TRUE)
+      ->save();
   }
 
   /**

@@ -43,6 +43,12 @@ class LocaleImportFunctionalTest extends WebTestBase {
 
     $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
+
+    // Enable import of translations. By default this is disabled for automated
+    // tests.
+    \Drupal::config('locale.settings')
+      ->set('translation.import_enabled', TRUE)
+      ->save();
   }
 
   /**

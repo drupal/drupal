@@ -35,6 +35,12 @@ class LocaleConfigTranslationTest extends WebTestBase {
     parent::setUp();
     // Add a default locale storage for all these tests.
     $this->storage = $this->container->get('locale.storage');
+
+    // Enable import of translations. By default this is disabled for automated
+    // tests.
+    \Drupal::config('locale.settings')
+      ->set('translation.import_enabled', TRUE)
+      ->save();
   }
 
   /**

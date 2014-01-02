@@ -566,6 +566,12 @@ class ConfigTranslationUiTest extends WebTestBase {
    * Test translation storage in locale storage.
    */
   public function testLocaleDBStorage() {
+    // Enable import of translations. By default this is disabled for automated
+    // tests.
+    \Drupal::config('locale.settings')
+      ->set('translation.import_enabled', TRUE)
+      ->save();
+
     $this->drupalLogin($this->admin_user);
 
     $langcode = 'xx';
