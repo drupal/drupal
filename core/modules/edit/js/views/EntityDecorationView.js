@@ -15,7 +15,7 @@ Drupal.edit.EntityDecorationView = Backbone.View.extend({
    * Associated with the DOM root node of an editable entity.
    */
   initialize: function () {
-    this.model.on('change', this.render, this);
+    this.listenTo(this.model, 'change', this.render);
   },
 
   /**

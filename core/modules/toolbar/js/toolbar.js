@@ -257,8 +257,8 @@ Drupal.toolbar = {
     initialize: function (options) {
       this.strings = options.strings;
 
-      this.model.on('change:orientation', this.onOrientationChange, this);
-      this.model.on('change:activeTray', this.onActiveTrayChange, this);
+      this.listenTo(this.model, 'change:orientation', this.onOrientationChange);
+      this.listenTo(this.model, 'change:activeTray', this.onActiveTrayChange);
     },
 
     /**
@@ -311,9 +311,9 @@ Drupal.toolbar = {
     initialize: function (options) {
       this.strings = options.strings;
 
-      this.model.on('change:activeTab change:orientation change:isOriented change:isTrayToggleVisible', this.render, this);
-      this.model.on('change:mqMatches', this.onMediaQueryChange, this);
-      this.model.on('change:offsets', this.adjustPlacement, this);
+      this.listenTo(this.model, 'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible', this.render);
+      this.listenTo(this.model, 'change:mqMatches', this.onMediaQueryChange);
+      this.listenTo(this.model, 'change:offsets', this.adjustPlacement);
 
       // Add the tray orientation toggles.
       this.$el
@@ -576,7 +576,7 @@ Drupal.toolbar = {
      * {@inheritdoc}
      */
     initialize: function () {
-      this.model.on('change:subtrees', this.render, this);
+      this.listenTo(this.model, 'change:subtrees', this.render);
     },
 
     /**
@@ -611,7 +611,7 @@ Drupal.toolbar = {
      * {@inheritdoc}
      */
     initialize: function () {
-      this.model.on('change:orientation change:offsets change:activeTray change:isOriented change:isFixed change:isViewportOverflowConstrained', this.render, this);
+      this.listenTo(this.model, 'change:orientation change:offsets change:activeTray change:isOriented change:isFixed change:isViewportOverflowConstrained', this.render);
     },
 
     /**

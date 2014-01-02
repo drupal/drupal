@@ -269,7 +269,7 @@ Drupal.contextual = {
      * {@inheritdoc}
      */
     initialize: function () {
-      this.model.on('change', this.render, this);
+      this.listenTo(this.model, 'change', this.render);
     },
 
     /**
@@ -308,7 +308,9 @@ Drupal.contextual = {
      * {@inheritdoc}
      */
     initialize: function (options) {
-      this.model.on('change', this.render, this);
+      this.options = options;
+
+      this.listenTo(this.model, 'change', this.render);
 
       // Use aria-role form so that the number of items in the list is spoken.
       this.$el.attr('role', 'form');
@@ -399,7 +401,7 @@ Drupal.contextual = {
      * {@inheritdoc}
      */
     initialize: function () {
-      this.model.on('change:hasFocus', this.render, this);
+      this.listenTo(this.model, 'change:hasFocus', this.render);
     },
 
     /**

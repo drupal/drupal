@@ -39,7 +39,7 @@ Drupal.edit.ContextualLinkView = Backbone.View.extend({
     // Initial render.
     this.render();
     // Re-render whenever this entity's isActive attribute changes.
-    this.model.on('change:isActive', this.render, this);
+    this.listenTo(this.model, 'change:isActive', this.render);
   },
 
   /**

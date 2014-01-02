@@ -29,8 +29,8 @@ Drupal.edit.FieldDecorationView = Backbone.View.extend({
   initialize: function (options) {
     this.editorView = options.editorView;
 
-    this.model.on('change:state', this.stateChange, this);
-    this.model.on('change:isChanged change:inTempStore', this.renderChanged, this);
+    this.listenTo(this.model, 'change:state', this.stateChange);
+    this.listenTo(this.model, 'change:isChanged change:inTempStore', this.renderChanged);
   },
 
   /**

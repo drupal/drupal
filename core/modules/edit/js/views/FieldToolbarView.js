@@ -28,7 +28,7 @@ Drupal.edit.FieldToolbarView = Backbone.View.extend({
     // Generate a DOM-compatible ID for the form container DOM element.
     this._id = 'edit-toolbar-for-' + this.model.id.replace(/[\/\[\]]/g, '_');
 
-    this.model.on('change:state', this.stateChange, this);
+    this.listenTo(this.model, 'change:state', this.stateChange)
   },
 
   /**

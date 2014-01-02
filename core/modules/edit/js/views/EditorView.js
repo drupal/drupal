@@ -40,7 +40,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
    */
   initialize: function (options) {
     this.fieldModel = options.fieldModel;
-    this.fieldModel.on('change:state', this.stateChange, this);
+    this.listenTo(this.fieldModel, 'change:state', this.stateChange);
   },
 
   /**
@@ -50,7 +50,6 @@ Drupal.edit.EditorView = Backbone.View.extend({
     // The el property is the field, which should not be removed. Remove the
     // pointer to it, then call Backbone.View.prototype.remove().
     this.setElement();
-    this.fieldModel.off(null, null, this);
     Backbone.View.prototype.remove.call(this);
   },
 

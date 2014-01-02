@@ -120,8 +120,8 @@ Drupal.ckeditor = {
       this.getCKEditorFeatures(this.model.get('hiddenEditorConfig'), this.disableFeaturesDisallowedByFilters.bind(this));
 
       // Push the active editor configuration to the textarea.
-      this.model.on('change:activeEditorConfig', this.model.sync, this.model);
-      this.model.on('change:isDirty', this.parseEditorDOM, this);
+      this.model.listenTo(this.model, 'change:activeEditorConfig', this.model.sync);
+      this.listenTo(this.model, 'change:isDirty', this.parseEditorDOM);
     },
 
     /**
@@ -462,7 +462,7 @@ Drupal.ckeditor = {
      * {@inheritdoc}
      */
     initialize: function () {
-      this.model.on('change:isDirty change:groupNamesVisible', this.render, this);
+      this.listenTo(this.model, 'change:isDirty change:groupNamesVisible', this.render);
 
       // Add a toggle for the button group names.
       $(Drupal.theme('ckeditorButtonGroupNamesToggle'))
@@ -959,7 +959,7 @@ Drupal.ckeditor = {
     initialize: function () {
       // Announce the button and group positions when the model is no longer
       // dirty.
-      this.model.on('change:isDirty', this.announceMove, this);
+      this.listenTo(this.model, 'change:isDirty', this.announceMove);
     },
 
     /**

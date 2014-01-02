@@ -74,8 +74,8 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
    * Implements Backbone Views' initialize().
    */
   initialize: function () {
-    this.model.on('change:tour change:isActive', this.render, this);
-    this.model.on('change:isActive', this.toggleTour, this);
+    this.listenTo(this.model, 'change:tour change:isActive', this.render);
+    this.listenTo(this.model, 'change:isActive', this.toggleTour);
   },
 
   /**

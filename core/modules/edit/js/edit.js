@@ -275,7 +275,7 @@ function processField (fieldElement) {
 
   // If an EntityModel for this field already exists (and hence also a "Quick
   // edit" contextual link), then initialize it immediately.
-  if (Drupal.edit.collections.entities.where({ entityID: entityID, entityInstanceID: entityInstanceID }).length > 0) {
+  if (Drupal.edit.collections.entities.findWhere({ entityID: entityID, entityInstanceID: entityInstanceID })) {
     initializeField(fieldElement, fieldID, entityID, entityInstanceID);
   }
   // Otherwise: queue the field. It is now available to be set up when its
@@ -298,10 +298,10 @@ function processField (fieldElement) {
  *   The field's entity's instance ID.
  */
 function initializeField (fieldElement, fieldID, entityID, entityInstanceID) {
-  var entity = Drupal.edit.collections.entities.where({
+  var entity = Drupal.edit.collections.entities.findWhere({
     entityID: entityID,
     entityInstanceID: entityInstanceID
-  })[0];
+  });
 
   $(fieldElement).addClass('edit-field');
 
@@ -528,17 +528,15 @@ function initializeEntityContextualLink (contextualLink) {
 function deleteContainedModelsAndQueues($context) {
   $context.find('[data-edit-entity-id]').addBack('[data-edit-entity-id]').each(function (index, entityElement) {
     // Delete entity model.
-    // @todo change to findWhere() as soon as we have Backbone 1.0 in Drupal
-    // core. @see https://drupal.org/node/1800022
-    var entityModels = Drupal.edit.collections.entities.where({el: entityElement});
-    if (entityModels.length) {
-      var contextualLinkView = entityModels[0].get('contextualLinkView');
+    var entityModel = Drupal.edit.collections.entities.findWhere({el: entityElement});
+    if (entityModel) {
+      var contextualLinkView = entityModel.get('contextualLinkView');
       contextualLinkView.undelegateEvents();
       contextualLinkView.remove();
       // Remove the EntityDecorationView.
-      entityModels[0].get('entityDecorationView').remove();
+      entityModel.get('entityDecorationView').remove();
       // Destroy the EntityModel; this will also destroy its FieldModels.
-      entityModels[0].destroy();
+      entityModel.destroy();
     }
 
     // Filter queue.

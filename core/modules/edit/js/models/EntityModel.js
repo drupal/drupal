@@ -7,7 +7,7 @@
 
 "use strict";
 
-Drupal.edit.EntityModel = Backbone.Model.extend({
+Drupal.edit.EntityModel = Drupal.edit.BaseModel.extend({
 
   defaults: {
     // The DOM element that represents this entity. It may seem bizarre to
@@ -62,11 +62,14 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
     this.set('fields', new Drupal.edit.FieldCollection());
 
     // Respond to entity state changes.
-    this.on('change:state', this.stateChange, this);
+    this.listenTo(this, 'change:state', this.stateChange);
 
     // The state of the entity is largely dependent on the state of its
     // fields.
-    this.get('fields').on('change:state', this.fieldStateChange, this);
+    this.listenTo(this.get('fields'), 'change:state', this.fieldStateChange);
+
+    // Call Drupal.edit.BaseModel's initialize() method.
+    Drupal.edit.BaseModel.prototype.initialize.call(this);
   },
 
   /**
@@ -511,9 +514,9 @@ Drupal.edit.EntityModel = Backbone.Model.extend({
    * @inheritdoc
    */
   destroy: function (options) {
-    Backbone.Model.prototype.destroy.apply(this, options);
+    Drupal.edit.BaseModel.prototype.destroy.call(this, options);
 
-    this.off(null, null, this);
+    this.stopListening();
 
     // Destroy all fields of this entity.
     this.get('fields').each(function (fieldModel) {

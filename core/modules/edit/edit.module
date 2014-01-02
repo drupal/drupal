@@ -61,6 +61,7 @@ function edit_library_info() {
       $path . '/js/edit.js' => $options,
       $path . '/js/util.js' => $options,
       // Models.
+      $path . '/js/models/BaseModel.js' => $options,
       $path . '/js/models/AppModel.js' => $options,
       $path . '/js/models/EntityModel.js' => $options,
       $path . '/js/models/FieldModel.js' => $options,
