@@ -134,7 +134,7 @@ function content_translation_overview(EntityInterface $entity) {
     }
   }
 
-  drupal_set_title(t('Translations of %label', array('%label' => $entity->label())), PASS_THROUGH);
+  $build['#title'] = t('Translations of %label', array('%label' => $entity->label()));
 
   // Add metadata to the build render array to let other modules know about
   // which entity this is.
