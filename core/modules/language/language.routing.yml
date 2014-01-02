@@ -54,7 +54,7 @@ language.delete:
 language.negotiation:
   path: '/admin/config/regional/language/detection'
   defaults:
-    _content: '\Drupal\language\Form\LanguageForm::negotiation'
+    _form: '\Drupal\language\Form\NegotiationConfigureForm'
     _title: 'Detection and selection'
   requirements:
     _permission: 'administer languages'
