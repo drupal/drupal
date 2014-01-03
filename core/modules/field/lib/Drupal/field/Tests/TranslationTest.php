@@ -81,7 +81,7 @@ class TranslationTest extends FieldUnitTestBase {
 
     $this->installConfig(array('language'));
 
-    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->field_name = drupal_strtolower($this->randomName());
 
     $this->entity_type = 'entity_test';
 
@@ -92,16 +92,16 @@ class TranslationTest extends FieldUnitTestBase {
       'cardinality' => 4,
       'translatable' => TRUE,
     );
-    entity_create('field_entity', $this->field_definition)->save();
-    $this->field = entity_load('field_entity', $this->entity_type . '.' . $this->field_name);
+    $this->field = entity_create('field_entity', $this->field_definition);
+    $this->field->save();
 
     $this->instance_definition = array(
       'field_name' => $this->field_name,
       'entity_type' => $this->entity_type,
       'bundle' => 'entity_test',
     );
-    entity_create('field_instance', $this->instance_definition)->save();
-    $this->instance = entity_load('field_instance', 'entity_test.' . $this->instance_definition['bundle'] . '.' . $this->field_name);
+    $this->instance = entity_create('field_instance', $this->instance_definition);
+    $this->instance->save();
 
     for ($i = 0; $i < 3; ++$i) {
       $language = new Language(array(
