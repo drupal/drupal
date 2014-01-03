@@ -8,7 +8,6 @@
 namespace Drupal\custom_block\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a confirmation form for deleting a custom block entity.
@@ -41,8 +40,7 @@ class CustomBlockDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    $form = parent::buildForm($form, $form_state, $request);
+  public function buildForm(array $form, array &$form_state) {
     $instances = $this->entity->getInstances();
 
     $form['message'] = array(
@@ -50,7 +48,7 @@ class CustomBlockDeleteForm extends ContentEntityConfirmFormBase {
       '#access' => !empty($instances),
     );
 
-    return $form;
+    return parent::buildForm($form, $form_state);
   }
 
   /**
