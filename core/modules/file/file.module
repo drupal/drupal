@@ -860,7 +860,7 @@ function file_save_upload($form_field_name, array &$form_state, $validators = ar
     // evaluates to TRUE.
     if (!\Drupal::config('system.file')->get('allow_insecure_uploads') && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->getFilename()) && (substr($file->getFilename(), -4) != '.txt')) {
       $file->setMimeType('text/plain');
-      $file->setFileUri($file->getFileUri() . '.txt');
+      // The destination filename will also later be used to create the URI.
       $file->setFilename($file->getFilename() . '.txt');
       // The .txt extension may not be in the allowed list of extensions. We have
       // to add it here or else the file upload will fail.
