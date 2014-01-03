@@ -77,6 +77,21 @@ class PreviewTest extends UITestBase {
     $this->assertText('Test header text', 'Rendered header text found');
     $this->assertText('Test footer text', 'Rendered footer text found.');
     $this->assertText('Test empty text', 'Rendered empty text found.');
+
+    // Test feed preview.
+    $view = array();
+    $view['label'] = $this->randomName(16);
+    $view['id'] = strtolower($this->randomName(16));
+    $view['page[create]'] = 1;
+    $view['page[title]'] = $this->randomName(16);
+    $view['page[path]'] = $this->randomName(16);
+    $view['page[feed]'] = 1;
+    $view['page[feed_properties][path]'] = $this->randomName(16);
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->clickLink(t('Feed'));
+    $this->drupalPostForm(NULL, array(), t('Update preview'));
+    $result = $this->xpath('//div[@id="views-live-preview"]/pre');
+    $this->assertTrue(strpos($result[0], '<title>' . $view['page[title]'] . '</title>'), 'The Feed RSS preview was rendered.');
   }
 
   /**
