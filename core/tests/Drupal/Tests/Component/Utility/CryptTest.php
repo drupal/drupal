@@ -73,6 +73,21 @@ class CryptTest extends UnitTestCase {
   }
 
   /**
+   * Tests the hmacBase64 method with invalid parameters.
+   *
+   * @param string $data
+   *   Data to hash.
+   * @param string $key
+   *   Key to use in hashing process.
+   *
+   * @dataProvider providerTestHmacBase64Invalid
+   * @expectedException InvalidArgumentException
+   */
+  public function testHmacBase64Invalid($data, $key) {
+    Crypt::hmacBase64($data, $key);
+  }
+
+  /**
    * Provides data for self::testHashBase64().
    *
    * @return array Test data.
@@ -102,6 +117,41 @@ class CryptTest extends UnitTestCase {
         'key' => 'secret-key',
         'expected_hmac' => '2AaH63zwjhekWZlEpAiufyfhAHIzbQhl9Hd9oCi3_c8',
       ),
+    );
+  }
+
+  /**
+   * Provides data for self::testHmacBase64().
+   *
+   * @return array Test data.
+   */
+  public function providerTestHmacBase64Invalid() {
+    return array(
+      array(new \stdClass(), new \stdClass()),
+      array(new \stdClass(), 'string'),
+      array(new \stdClass(), 1),
+      array(new \stdClass(), 0),
+      array(NULL, new \stdClass()),
+      array('string', new \stdClass()),
+      array(1, new \stdClass()),
+      array(0, new \stdClass()),
+      array(array(), array()),
+      array(array(), NULL),
+      array(array(), 'string'),
+      array(array(), 1),
+      array(array(), 0),
+      array(NULL, array()),
+      array(1, array()),
+      array(0, array()),
+      array('string', array()),
+      array(array(), NULL),
+      array(NULL, NULL),
+      array(NULL, 'string'),
+      array(NULL, 1),
+      array(NULL, 0),
+      array(1, NULL),
+      array(0, NULL),
+      array('string', NULL),
     );
   }
 

@@ -97,33 +97,58 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    *   The token to be validated.
    * @param mixed $value
    *   (optional) An additional value to base the token on.
-   * @param mixed $expected
-   *   (optional) The expected result of validate(). Defaults to FALSE.
    *
    * @dataProvider providerTestValidateParameterTypes
    */
-  public function testValidateParameterTypes($token, $value = '', $expected = FALSE) {
+  public function testValidateParameterTypes($token, $value) {
     // The following check might throw PHP fatals and notices, so we disable
     // error assertions.
     set_error_handler(function () {return TRUE;});
-    $this->assertSame($expected, $this->generator->validate($token, $value));
+    $this->assertFalse($this->generator->validate($token, $value));
     restore_error_handler();
   }
 
   /**
-   * Provides data for the validate test.
+   * Provides data for testValidateParameterTypes.
    *
    * @return array
    *   An array of data used by the test.
    */
   public function providerTestValidateParameterTypes() {
     return array(
+      array(array(), ''),
+      array(TRUE, 'foo'),
+      array(0, 'foo'),
+    );
+  }
+
+  /**
+   * Tests CsrfTokenGenerator::validate() with invalid parameter types.
+   *
+   * @param mixed $token
+   *   The token to be validated.
+   * @param mixed $value
+   *   (optional) An additional value to base the token on.
+   *
+   * @dataProvider providerTestInvalidParameterTypes
+   * @expectedException InvalidArgumentException
+   */
+  public function testInvalidParameterTypes($token, $value = '') {
+    $this->generator->validate($token, $value);
+  }
+
+  /**
+   * Provides data for testInvalidParameterTypes.
+   *
+   * @return array
+   *   An array of data used by the test.
+   */
+  public function providerTestInvalidParameterTypes() {
+    return array(
       array(NULL, new \stdClass()),
       array(0, array()),
       array('', array()),
-      array(array()),
-      array(TRUE, 'foo'),
-      array(0, 'foo'),
+      array(array(), array()),
     );
   }
 
