@@ -7,9 +7,8 @@
 
 namespace Drupal\image_test\Plugin\ImageToolkit;
 
-use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Image\ImageInterface;
-use Drupal\Core\ImageToolkit\ImageToolkitInterface;
+use Drupal\Core\ImageToolkit\ImageToolkitBase;
 
 /**
  * Defines a Test toolkit for image manipulation within Drupal.
@@ -19,7 +18,7 @@ use Drupal\Core\ImageToolkit\ImageToolkitInterface;
  *   title = @Translation("A dummy toolkit that works")
  * )
  */
-class TestToolkit extends PluginBase implements ImageToolkitInterface {
+class TestToolkit extends ImageToolkitBase {
 
   /**
    * {@inheritdoc}
