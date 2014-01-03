@@ -42,7 +42,7 @@ class Item extends ContentEntityBase implements ItemInterface {
   /**
    * Implements Drupal\Core\Entity\EntityInterface::label().
    */
-  public function label($langcode = NULL) {
+  public function label() {
     return $this->get('title')->value;
   }
 

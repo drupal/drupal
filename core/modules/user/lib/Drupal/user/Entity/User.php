@@ -445,6 +445,8 @@ class User extends ContentEntityBase implements UserInterface {
       ->setLabel(t('Preferred language code'))
       ->setDescription(t("The user's preferred language code for viewing administration pages."));
 
+    // The name should not vary per language. The username is the visual
+    // identifier for a user and needs to be consistent in all languages.
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of this user.'))

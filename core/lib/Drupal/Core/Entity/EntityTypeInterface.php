@@ -371,15 +371,15 @@ interface EntityTypeInterface {
   /**
    * Gets the callback for the label of the entity.
    *
-   * The function takes an entity and optional langcode argument, and returns
-   * the label of the entity. If langcode is omitted, the entity's default
-   * language is used. The entity label is the main string associated with an
-   * entity; for example, the title of a node or the subject of a comment. If
-   * there is an entity object property that defines the label, use the 'label'
-   * element of the 'entity_keys' return value component to provide this
-   * information (see below). If more complex logic is needed to determine the
-   * label of an entity, you can instead specify a callback function here, which
-   * will be called to determine the entity label. See also the
+   * The function takes an entity and returns the label of the entity. Use
+   * language() on the entity to get information on the requested language. The
+   * entity label is the main string associated with an entity; for example, the
+   * title of a node or the subject of a comment. If there is an entity object
+   * property that defines the label, use the 'label' element of the
+   * 'entity_keys' return value component to provide this information (see
+   * below). If more complex logic is needed to determine the label of an
+   * entity, you can instead specify a callback function here, which will be
+   * called to determine the entity label. See also the
    * \Drupal\Core\Entity\EntityInterface::label() method, which implements this
    * logic.
    *

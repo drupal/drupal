@@ -945,17 +945,14 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
-   * Overrides Entity::label() to access the label field with the new API.
+   * {@inheritdoc}
    */
-  public function label($langcode = NULL) {
+  public function label() {
     $label = NULL;
     $entity_info = $this->entityInfo();
-    if (!isset($langcode)) {
-      $langcode = $this->activeLangcode;
-    }
     // @todo Convert to is_callable() and call_user_func().
     if (($label_callback = $entity_info->getLabelCallback()) && function_exists($label_callback)) {
-      $label = $label_callback($this, $langcode);
+      $label = $label_callback($this);
     }
     elseif (($label_key = $entity_info->getKey('label')) && isset($this->{$label_key})) {
       $label = $this->{$label_key}->value;

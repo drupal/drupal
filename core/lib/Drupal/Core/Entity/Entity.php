@@ -106,12 +106,12 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function label($langcode = NULL) {
+  public function label() {
     $label = NULL;
     $entity_info = $this->entityInfo();
     // @todo Convert to is_callable() and call_user_func().
     if (($label_callback = $entity_info->getLabelCallback()) && function_exists($label_callback)) {
-      $label = $label_callback($this, $langcode);
+      $label = $label_callback($this);
     }
     elseif (($label_key = $entity_info->getKey('label')) && isset($this->{$label_key})) {
       $label = $this->{$label_key};

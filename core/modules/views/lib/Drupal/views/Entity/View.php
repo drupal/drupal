@@ -147,7 +147,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * When a certain view doesn't have a label return the ID.
    */
-  public function label($langcode = NULL) {
+  public function label() {
     if (!$label = $this->get('label')) {
       $label = $this->id();
     }

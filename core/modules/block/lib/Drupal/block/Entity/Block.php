@@ -117,7 +117,7 @@ class Block extends ConfigEntityBase implements BlockInterface {
   /**
    * Overrides \Drupal\Core\Entity\Entity::label();
    */
-  public function label($langcode = NULL) {
+  public function label() {
     $settings = $this->get('settings');
     if ($settings['label']) {
       return $settings['label'];

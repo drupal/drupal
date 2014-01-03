@@ -89,15 +89,10 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns the label of the entity.
    *
-   * @param $langcode
-   *   (optional) The language code of the language that should be used for
-   *   getting the label. If set to NULL, the entity's active language is
-   *   used.
-   *
    * @return
    *   The label of the entity, or NULL if there is no label defined.
    */
-  public function label($langcode = NULL);
+  public function label();
 
   /**
    * Returns the URI elements of the entity.

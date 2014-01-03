@@ -897,8 +897,8 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::label().
    */
-  public function label($langcode = NULL) {
-    return $this->storage->label($langcode);
+  public function label() {
+    return $this->storage->label();
   }
 
   /**
