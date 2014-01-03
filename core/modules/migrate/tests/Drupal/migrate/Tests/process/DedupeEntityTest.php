@@ -10,8 +10,12 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\migrate\Plugin\migrate\process\DedupeEntity;
 
 /**
+ * Test the deduplication entity process plugin.
+ *
  * @group migrate
  * @group Drupal
+ *
+ * @see \Drupal\migrate\Plugin\migrate\process\DedupeEntity
  */
 class DedupeEntityTest extends MigrateProcessTestCase {
 
@@ -44,65 +48,43 @@ class DedupeEntityTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests the entity deduplication plugin when there is no duplication.
+   * Tests entity based deduplication based on providerTestDedupe() values.
+   *
+   * @dataProvider providerTestDedupe
    */
-  public function testDedupeEntityNoDuplication() {
+  public function testDedupe($count, $postfix = '') {
     $configuration = array(
       'entity_type' => 'test_entity_type',
       'field' => 'test_field',
     );
+    if ($postfix) {
+      $configuration['postfix'] = $postfix;
+    }
     $plugin = new TestDedupeEntity($configuration, 'dedupe_entity', array());
-    $this->entityQueryExpects(0);
+    $this->entityQueryExpects($count);
     $plugin->setEntityQuery($this->entityQuery);
     $return = $plugin->transform('test', $this->migrateExecutable, $this->row, 'testpropertty');
-    $this->assertSame($return, 'test');
+    $this->assertSame($return, 'test' . ($count ? $postfix . $count : ''));
   }
 
   /**
-   * Tests the entity deduplication plugin when there is duplication.
+   * Data provider for testDedupe().
    */
-  public function testDedupeEntityDuplication() {
-    $configuration = array(
-      'entity_type' => 'test_entity_type',
-      'field' => 'test_field',
+  public function providerTestDedupe() {
+    return array(
+      // Tests the entity deduplication plugin when there is no duplication
+      // and no postfix.
+      array(0),
+      // Tests the entity deduplication plugin when there is duplication but
+      // no postfix.
+      array(3),
+      // Tests the entity deduplication plugin when there is no duplication
+      // but there is a postfix.
+      array(0, '_'),
+      // Tests the entity deduplication plugin when there is duplication and
+      // there is a postfix.
+      array(2, '_'),
     );
-    $plugin = new TestDedupeEntity($configuration, 'dedupe_entity', array());
-    $this->entityQueryExpects(3);
-    $plugin->setEntityQuery($this->entityQuery);
-    $return = $plugin->transform('test', $this->migrateExecutable, $this->row, 'testpropertty');
-    $this->assertSame($return, 'test3');
-  }
-
-  /**
-   * Tests the entity deduplication plugin when there is no duplication.
-   */
-  public function testDedupeEntityNoDuplicationWithPostfix() {
-    $configuration = array(
-      'entity_type' => 'test_entity_type',
-      'field' => 'test_field',
-      'postfix' => '_',
-    );
-    $plugin = new TestDedupeEntity($configuration, 'dedupe_entity', array());
-    $this->entityQueryExpects(0);
-    $plugin->setEntityQuery($this->entityQuery);
-    $return = $plugin->transform('test', $this->migrateExecutable, $this->row, 'testpropertty');
-    $this->assertSame($return, 'test');
-  }
-
-  /**
-   * Tests the entity deduplication plugin when there is duplication.
-   */
-  public function testDedupeEntityDuplicationWithPostfix() {
-    $configuration = array(
-      'entity_type' => 'test_entity_type',
-      'field' => 'test_field',
-      'postfix' => '_',
-    );
-    $plugin = new TestDedupeEntity($configuration, 'dedupe_entity', array());
-    $this->entityQueryExpects(2);
-    $plugin->setEntityQuery($this->entityQuery);
-    $return = $plugin->transform('test', $this->migrateExecutable, $this->row, 'testpropertty');
-    $this->assertSame($return, 'test_2');
   }
 
   /**
