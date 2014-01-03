@@ -352,7 +352,7 @@ function comment_get_recent($number = 10) {
  * @param string $field_name
  *   The field name on the entity to which comments are attached to.
  *
- * @return array|NULL
+ * @return array|null
  *   An array "page=X" if the page number is greater than zero; NULL otherwise.
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
