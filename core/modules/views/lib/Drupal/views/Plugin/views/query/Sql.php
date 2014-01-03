@@ -1374,6 +1374,13 @@ class Sql extends QueryPluginBase {
         $query->addTag($access_tag);
         $count_query->addTag($access_tag);
       }
+
+      if (isset($base_table_data['table']['base']['query metadata'])) {
+        foreach ($base_table_data['table']['base']['query metadata'] as $key => $value) {
+          $query->addMetaData($key, $value);
+          $count_query->addMetaData($key, $value);
+        }
+      }
     }
 
     if ($query) {
