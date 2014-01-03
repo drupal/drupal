@@ -132,7 +132,12 @@ function theme_simpletest_test_table($variables) {
   }
 
   // Add js array of settings.
-  drupal_add_js(array('simpleTest' => $js), 'setting');
+  $attached = array();
+  $attached['#attached']['js'][] = array(
+    'data' => array('simpleTest' => $js),
+    'type' => 'setting',
+  );
+  drupal_render($attached);
 
   if (empty($rows)) {
     return '<strong>' . t('No tests to display.') . '</strong>';
