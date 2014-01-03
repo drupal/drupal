@@ -1,5 +1,5 @@
 
-Drupal 7.25, xxxx-xx-xx (development version)
+Drupal 7.25, 2014-01-02
 -----------------------
 - Fixed a bug in node_save() which prevented the saved node from being updated
   in hook_node_insert() and other similar hooks.
