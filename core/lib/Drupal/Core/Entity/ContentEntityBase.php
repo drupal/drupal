@@ -333,14 +333,27 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    // Get the values of instantiated field objects, only serialize the values.
+    foreach ($this->fields as $name => $fields) {
+      foreach ($fields as $langcode => $field) {
+        $this->values[$name][$langcode] = $field->getValue();
+      }
+    }
+    $this->fields = array();
+    $this->fieldDefinitions = NULL;
+    $this->clearTranslationCache();
+    return array_keys(get_object_vars($this));
+  }
+
+
+  /**
    * Magic __wakeup() implementation.
    */
   public function __wakeup() {
     $this->init();
-    // @todo This should be done before serializing the entity, but we would
-    //   need to provide the full list of data to be serialized. See the
-    //   dedicated issue at https://drupal.org/node/2027795.
-    $this->clearTranslationCache();
   }
 
   /**

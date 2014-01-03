@@ -36,6 +36,20 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
+  public function getValue() {
+    $values = parent::getValue();
+
+    // If there is an unsaved entity, return it as part of the field item values
+    // to ensure idempotency of getValue() / setValue().
+    if (empty($this->target_id) && !empty($this->entity)) {
+      $values['entity'] = $this->entity;
+    }
+    return $values;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave() {
     $entity = $this->get('entity')->getValue();
     $target_id = $this->get('target_id')->getValue();
