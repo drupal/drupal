@@ -2103,12 +2103,13 @@ function install_configure_form($form, &$form_state, &$install_state) {
     drupal_set_message(t('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, consult the <a href="@handbook_url">online handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'warning');
   }
 
-  drupal_add_library('system', 'drupal.system');
+  $form['#attached']['library'][] = array('system', 'drupal.system');
   // Add JavaScript time zone detection.
-  drupal_add_library('system', 'drupal.timezone');
+  $form['#attached']['library'][] = array('system', 'drupal.timezone');
   // We add these strings as settings because JavaScript translation does not
   // work during installation.
-  drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
+  $js = array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')));
+  $form['#attached']['js'][] = array('data' => $js, 'type' => 'setting');
 
   // Cache a fully-built schema. This is necessary for any invocation of
   // index.php because: (1) setting cache table entries requires schema
