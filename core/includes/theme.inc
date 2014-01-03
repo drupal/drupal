@@ -237,9 +237,15 @@ function _drupal_theme_initialize($theme, $base_theme = array()) {
   }
 
   // Add scripts used by this theme.
+  $js = array();
   foreach ($final_scripts as $script) {
-    drupal_add_js($script, array('group' => JS_THEME, 'every_page' => TRUE));
+    $js['#attached']['js'][] = array(
+      'data' => $script,
+      'group' => JS_THEME,
+      'every_page' => TRUE,
+    );
   }
+  drupal_render($js);
 
   $theme_engine = NULL;
 
