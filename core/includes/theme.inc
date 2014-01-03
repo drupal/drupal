@@ -91,7 +91,6 @@ function drupal_theme_initialize() {
     return;
   }
 
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
   $themes = list_themes();
 
   // @todo Let the theme.negotiator listen to the kernel request event.

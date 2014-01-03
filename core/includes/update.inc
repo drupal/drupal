@@ -142,7 +142,7 @@ function update_prepare_d8_bootstrap() {
   }
 
   // Bootstrap the database.
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+  require_once __DIR__ . '/database.inc';
 
   // module.inc is not yet loaded but there are calls to module_config_sort()
   // below.
