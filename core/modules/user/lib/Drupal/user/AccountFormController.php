@@ -99,6 +99,7 @@ abstract class AccountFormController extends ContentEntityFormController {
         '#type' => 'password_confirm',
         '#size' => 25,
         '#description' => $this->t('To change the current user password, enter the new password in both fields.'),
+        '#pre_render' => array('user_form_pre_render_password_confirm'),
       );
 
       // To skip the current password field, the user must have logged in via a
@@ -146,6 +147,7 @@ abstract class AccountFormController extends ContentEntityFormController {
         '#type' => 'password_confirm',
         '#size' => 25,
         '#description' => $this->t('Provide a password for the new account in both fields.'),
+        '#pre_render' => array('user_form_pre_render_password_confirm'),
         '#required' => TRUE,
       );
     }
