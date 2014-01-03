@@ -515,10 +515,10 @@ class Field extends ConfigEntityBase implements FieldInterface {
    * {@inheritdoc}
    */
   public function getSettings() {
-    // @todo field_info_field_types() calls _field_info_collate_types() which
-    //   maintains its own static cache. However, do some CPU and memory
-    //   profiling to see if it's worth statically caching $field_type_info, or
-    //   the default field and instance settings, within $this.
+    // @todo FieldTypePluginManager maintains its own static cache. However, do
+    //   some CPU and memory profiling to see if it's worth statically caching
+    //   $field_type_info, or the default field and instance settings, within
+    //   $this.
     $field_type_info = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->type);
 
     $settings = $this->settings + $field_type_info['settings'] + $field_type_info['instance_settings'];
