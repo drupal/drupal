@@ -1,0 +1,24 @@
+id: d6_aggregator_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - aggregator_fetcher
+    - aggregator_parser
+    - aggregator_processors
+    - aggregator_allowed_html_tags
+    - aggregator_teaser_length
+    - aggregator_clear
+    - aggregator_summary_items
+    - aggregator_category_selector
+process:
+  fetcher: aggregator_fetcher
+  parser: aggregator_parser
+  processors: aggregator_processors
+  'items:allowed_html': aggregator_allowed_html_tags
+  'items:teaser_length': aggregator_teaser_length
+  'items:expire': aggregator_clear
+  'source:list_max': aggregator_summary_items
+  'source:category_selector': aggregator_category_selector
+destination:
+  plugin: d8_config
+  config_name: aggregator.settings

@@ -1,0 +1,20 @@
+id: d6_statistics_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - statistics_enable_access_log
+    - statistics_flush_accesslog_timer
+    - statistics_count_content_views
+    - statistics_block_top_day_num
+    - statistics_block_top_all_num
+    - statistics_block_top_last_num
+process:
+  'access_log:enable': statistics_enable_access_log
+  'access_log:max_lifetime': statistics_flush_accesslog_timer
+  'count_content_views': statistics_count_content_views
+  'block:popular:top_day_limit': statistics_block_top_day_num
+  'block:popular:top_all_limit': statistics_block_top_all_num
+  'block:popular:top_recent_limit': statistics_block_top_last_num
+destination:
+  plugin: d8_config
+  config_name: statistics.settings

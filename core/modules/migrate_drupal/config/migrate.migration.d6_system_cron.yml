@@ -1,13 +1,13 @@
 id: d6_system_cron
 source:
-    plugin: drupal6_variable
-    variables:
-        - cron_threshold_warning
-        - cron_threshold_error
-        - cron_last
+  plugin: drupal6_variable
+  variables:
+    - cron_threshold_warning
+    - cron_threshold_error
+    - cron_last
 process:
-    'threshold:warning': cron_threshold_warning
-    'threshold:error': cron_threshold_error
+  'threshold:warning': cron_threshold_warning
+  'threshold:error': cron_threshold_error
 destination:
-    plugin: d8_config
-    config_name: system.cron
+  plugin: d8_config
+  config_name: system.cron

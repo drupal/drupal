@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\Drupal6SystemCron.
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemCron.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
@@ -21,27 +21,7 @@ class Drupal6SystemCron {
    *   The database connection.
    */
   public static function load(Connection $database) {
-    $database->schema()->createTable('variable', array(
-      'fields' => array(
-        'name' => array(
-          'type' => 'varchar',
-          'length' => 128,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'value' => array(
-          'type' => 'blob',
-          'not null' => TRUE,
-          'size' => 'big',
-          'translatable' => TRUE,
-        ),
-      ),
-      'primary key' => array(
-        'name',
-      ),
-      'module' => 'system',
-      'name' => 'variable',
-    ));
+    Drupal6DumpCommon::createVariable($database);
     $database->insert('variable')->fields(array(
       'name',
       'value',

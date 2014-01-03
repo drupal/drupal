@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemSite.
+ */
+
 namespace Drupal\migrate_drupal\Tests\Dump;
 
 use Drupal\Core\Database\Connection;
@@ -10,41 +15,24 @@ use Drupal\Core\Database\Connection;
 class Drupal6SystemSite {
 
   /**
+   * Sample database schema and values.
+   *
    * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
    */
   public static function load(Connection $database) {
-    $database->schema()->createTable('variable', array(
-      'fields' => array(
-        'name' => array(
-          'type' => 'varchar',
-          'length' => 128,
-          'not null' => TRUE,
-          'default' => '',
-        ),
-        'value' => array(
-          'type' => 'blob',
-          'not null' => TRUE,
-          'size' => 'big',
-          'translatable' => TRUE,
-        ),
-      ),
-      'primary key' => array(
-        'name',
-      ),
-      'module' => 'system',
-      'name' => 'variable',
-    ));
+    Drupal6DumpCommon::createVariable($database);
     $database->insert('variable')->fields(array(
       'name',
       'value',
     ))
     ->values(array(
       'name' => 'site_name',
-      'value' => 's:6:"drupal";',
+      'value' => 's:9:"site_name";',
     ))
     ->values(array(
       'name' => 'site_mail',
-      'value' => 's:17:"admin@example.com";',
+      'value' => 's:21:"site_mail@example.com";',
     ))
     ->values(array(
       'name' => 'site_slogan',
@@ -52,7 +40,7 @@ class Drupal6SystemSite {
     ))
     ->values(array(
       'name' => 'site_frontpage',
-      'value' => 's:12:"anonymous-hp";',
+      'value' => 's:4:"node";',
     ))
     ->values(array(
       'name' => 'site_403',
@@ -61,10 +49,6 @@ class Drupal6SystemSite {
     ->values(array(
       'name' => 'site_404',
       'value' => 's:14:"page-not-found";',
-    ))
-    ->values(array(
-      'name' => 'drupal_weight_select_max',
-      'value' => 'i:99;',
     ))
     ->values(array(
       'name' => 'admin_compact_mode',

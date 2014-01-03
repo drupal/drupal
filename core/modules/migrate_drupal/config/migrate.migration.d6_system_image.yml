@@ -1,0 +1,10 @@
+id: d6_system_image
+source:
+  plugin: drupal6_variable
+  variables:
+    - image_toolkit
+process:
+  toolkit: image_toolkit
+destination:
+  plugin: d8_config
+  config_name: system.image

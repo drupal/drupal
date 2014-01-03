@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemPerformance.
+ * Contains \Drupal\migrate\Tests\Drupal6SearchSettings.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
@@ -10,15 +10,15 @@ namespace Drupal\migrate_drupal\Tests\Dump;
 use Drupal\Core\Database\Connection;
 
 /**
- * Database dump for testing system.performance.yml migration.
+ * Database dump for testing forum.site.yml migration.
  */
-class Drupal6SystemPerformance {
+class Drupal6SearchSettings {
 
   /**
-   * Sample database schema and values.
+   * Mock the database schema and values.
    *
    * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
+   *   The mocked database connection.
    */
   public static function load(Connection $database) {
     Drupal6DumpCommon::createVariable($database);
@@ -27,18 +27,17 @@ class Drupal6SystemPerformance {
       'value',
     ))
     ->values(array(
-      'name' => 'preprocess_css',
-      'value' => 'i:0;',
+      'name' => 'minimum_word_size',
+      'value' => 's:1:"3";',
     ))
     ->values(array(
-      'name' => 'preprocess_js',
-      'value' => 'i:0;',
+      'name' => 'overlap_cjk',
+      'value' => 'i:1;',
     ))
     ->values(array(
-      'name' => 'cache_lifetime',
-      'value' => 'i:0;',
+      'name' => 'search_cron_limit',
+      'value' => 's:3:"100";',
     ))
     ->execute();
   }
-
 }

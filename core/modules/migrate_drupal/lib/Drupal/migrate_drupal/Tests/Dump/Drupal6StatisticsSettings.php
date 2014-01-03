@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemPerformance.
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6StatisticsSettings.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
@@ -10,9 +10,9 @@ namespace Drupal\migrate_drupal\Tests\Dump;
 use Drupal\Core\Database\Connection;
 
 /**
- * Database dump for testing system.performance.yml migration.
+ * Database dump for testing statistics.settings.yml migration.
  */
-class Drupal6SystemPerformance {
+class Drupal6StatisticsSettings {
 
   /**
    * Sample database schema and values.
@@ -27,18 +27,29 @@ class Drupal6SystemPerformance {
       'value',
     ))
     ->values(array(
-      'name' => 'preprocess_css',
+      'name' => 'statistics_enable_access_log',
       'value' => 'i:0;',
     ))
     ->values(array(
-      'name' => 'preprocess_js',
+      'name' => 'statistics_flush_accesslog_timer',
+      'value' => 'i:259200;',
+    ))
+    ->values(array(
+      'name' => 'statistics_count_content_view',
       'value' => 'i:0;',
     ))
     ->values(array(
-      'name' => 'cache_lifetime',
+      'name' => 'statistics_block_top_day_num',
+      'value' => 'i:0;',
+    ))
+    ->values(array(
+      'name' => 'statistics_block_top_all_num',
+      'value' => 'i:0;',
+    ))
+    ->values(array(
+      'name' => 'statistics_block_top_last_num',
       'value' => 'i:0;',
     ))
     ->execute();
   }
-
 }

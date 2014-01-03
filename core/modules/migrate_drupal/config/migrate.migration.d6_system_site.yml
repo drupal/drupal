@@ -1,24 +1,24 @@
 id: d6_system_site
 source:
-    plugin: drupal6_variable
-    variables:
-        - site_name
-        - site_mail
-        - site_slogan
-        - site_frontpage
-        - site_403
-        - site_404
-        - drupal_weight_select_max
-        - admin_compact_mode
+  plugin: drupal6_variable
+  variables:
+    - site_name
+    - site_mail
+    - site_slogan
+    - site_frontpage
+    - site_403
+    - site_404
+    - drupal_weight_select_max
+    - admin_compact_mode
 process:
-    name: site_name
-    mail: site_mail
-    slogan: site_slogan
-    'page:front': site_frontpage
-    'page:403': site_403
-    'page:404': site_404
-    weight_select_max: drupal_weight_select_max
-    admin_compact_mode: admin_compact_mode
+  name: site_name
+  mail: site_mail
+  slogan: site_slogan
+  'page:front': site_frontpage
+  'page:403': site_403
+  'page:404': site_404
+  weight_select_max: drupal_weight_select_max
+  admin_compact_mode: admin_compact_mode
 destination:
-    plugin: d8_config
-    config_name: system.site
+  plugin: d8_config
+  config_name: system.site

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemPerformance.
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6MenuSettings.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
@@ -10,15 +10,14 @@ namespace Drupal\migrate_drupal\Tests\Dump;
 use Drupal\Core\Database\Connection;
 
 /**
- * Database dump for testing system.performance.yml migration.
+ * Database dump for testing menu.settings.yml migration.
  */
-class Drupal6SystemPerformance {
+class Drupal6MenuSettings {
 
   /**
    * Sample database schema and values.
    *
    * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
    */
   public static function load(Connection $database) {
     Drupal6DumpCommon::createVariable($database);
@@ -27,18 +26,17 @@ class Drupal6SystemPerformance {
       'value',
     ))
     ->values(array(
-      'name' => 'preprocess_css',
-      'value' => 'i:0;',
+      'name' => 'menu_primary_links_source',
+      'value' => 's:13:"primary-links";',
     ))
     ->values(array(
-      'name' => 'preprocess_js',
-      'value' => 'i:0;',
+      'name' => 'menu_secondary_links_source',
+      'value' => 's:15:"secondary-links";',
     ))
     ->values(array(
-      'name' => 'cache_lifetime',
-      'value' => 'i:0;',
+      'name' => 'menu_override_parent_selector',
+      'value' => 'b:0;',
     ))
     ->execute();
   }
-
 }

@@ -1,0 +1,10 @@
+id: d6_node_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - node_admin_theme
+process:
+  use_admin_theme: node_admin_theme
+destination:
+  plugin: d8_config
+  config_name: node.settings

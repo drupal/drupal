@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemPerformance.
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6UpdateSettings.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
@@ -10,9 +10,9 @@ namespace Drupal\migrate_drupal\Tests\Dump;
 use Drupal\Core\Database\Connection;
 
 /**
- * Database dump for testing system.performance.yml migration.
+ * Database dump for testing update.settings.yml migration.
  */
-class Drupal6SystemPerformance {
+class Drupal6UpdateSettings {
 
   /**
    * Sample database schema and values.
@@ -27,18 +27,21 @@ class Drupal6SystemPerformance {
       'value',
     ))
     ->values(array(
-      'name' => 'preprocess_css',
-      'value' => 'i:0;',
+      'name' => 'update_max_fetch_attempts',
+      'value' => 'i:2;',
     ))
     ->values(array(
-      'name' => 'preprocess_js',
-      'value' => 'i:0;',
+      'name' => 'update_fetch_url',
+      'value' => 's:41:"http://updates.drupal.org/release-history";',
     ))
     ->values(array(
-      'name' => 'cache_lifetime',
-      'value' => 'i:0;',
+      'name' => 'update_notification_threshold',
+      'value' => 's:3:"all";',
+    ))
+    ->values(array(
+      'name' => 'update_notify_emails',
+      'value' => 'a:0:{}',
     ))
     ->execute();
   }
-
 }

@@ -1,0 +1,10 @@
+id: d6_system_image_gd
+source:
+  plugin: drupal6_variable
+  variables:
+    - image_jpeg_quality
+process:
+  jpeg_quality: image_jpeg_quality
+destination:
+  plugin: d8_config
+  config_name: system.image.gd

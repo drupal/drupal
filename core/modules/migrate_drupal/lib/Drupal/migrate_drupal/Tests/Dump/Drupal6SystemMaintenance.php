@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemPerformance.
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemMaintenance.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
@@ -10,9 +10,9 @@ namespace Drupal\migrate_drupal\Tests\Dump;
 use Drupal\Core\Database\Connection;
 
 /**
- * Database dump for testing system.performance.yml migration.
+ * Database dump for testing system.maintenance.yml migration.
  */
-class Drupal6SystemPerformance {
+class Drupal6SystemMaintenance {
 
   /**
    * Sample database schema and values.
@@ -27,18 +27,13 @@ class Drupal6SystemPerformance {
       'value',
     ))
     ->values(array(
-      'name' => 'preprocess_css',
+      'name' => 'site_offline',
       'value' => 'i:0;',
     ))
     ->values(array(
-      'name' => 'preprocess_js',
-      'value' => 'i:0;',
-    ))
-    ->values(array(
-      'name' => 'cache_lifetime',
-      'value' => 'i:0;',
+      'name' => 'site_offline_message',
+      'value' => 's:94:"Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.";',
     ))
     ->execute();
   }
-
 }

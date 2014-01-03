@@ -1,0 +1,16 @@
+id: d6_update_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - update_max_fetch_attempts
+    - update_fetch_url
+    - update_notification_threshold
+    - update_notify_emails
+process:
+  'fetch:max_attempts': update_max_fetch_attempts
+  'fetch:url': update_fetch_url
+  'notification:threshold': update_notification_threshold
+  'notification:mails': update_notify_emails
+destination:
+  plugin: d8_config
+  config_name: update.settings

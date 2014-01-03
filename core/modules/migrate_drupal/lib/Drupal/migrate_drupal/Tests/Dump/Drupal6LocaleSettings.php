@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemPerformance.
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6LocaleSettings.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
@@ -10,9 +10,9 @@ namespace Drupal\migrate_drupal\Tests\Dump;
 use Drupal\Core\Database\Connection;
 
 /**
- * Database dump for testing system.performance.yml migration.
+ * Database dump for testing locale.settings.yml migration.
  */
-class Drupal6SystemPerformance {
+class Drupal6LocaleSettings {
 
   /**
    * Sample database schema and values.
@@ -27,16 +27,12 @@ class Drupal6SystemPerformance {
       'value',
     ))
     ->values(array(
-      'name' => 'preprocess_css',
-      'value' => 'i:0;',
+      'name' => 'locale_cache_strings',
+      'value' => 'i:1;',
     ))
     ->values(array(
-      'name' => 'preprocess_js',
-      'value' => 'i:0;',
-    ))
-    ->values(array(
-      'name' => 'cache_lifetime',
-      'value' => 'i:0;',
+      'name' => 'locale_js_directory',
+      'value' => 's:9:"languages";',
     ))
     ->execute();
   }

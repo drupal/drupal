@@ -1,0 +1,12 @@
+id: d6_system_theme
+source:
+  plugin: drupal6_variable
+  variables:
+    - admin_theme
+    - theme_default
+process:
+  admin: admin_theme
+  default: theme_default
+destination:
+  plugin: d8_config
+  config_name: system.theme

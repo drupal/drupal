@@ -1,0 +1,14 @@
+id: d6_book_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - book_child_type
+    - book_block_mode
+    - book_allowed_types
+process:
+  child_type: book_child_type
+  'block:navigation:mode': book_block_mode
+  allowed_types: book_allowed_types
+destination:
+  plugin: d8_config
+  config_name: book.settings

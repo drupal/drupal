@@ -1,0 +1,12 @@
+id: d6_syslog_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - syslog_identity
+    - syslog_facility
+process:
+  identity: syslog_identity
+  facility: syslog_facility
+destination:
+  plugin: d8_config
+  config_name: syslog.settings

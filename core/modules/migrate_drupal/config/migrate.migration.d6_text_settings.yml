@@ -1,0 +1,10 @@
+id: d6_text_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - teaser_length
+process:
+  default_summary_length: teaser_length
+destination:
+  plugin: d8_config
+  config_name: text.settings

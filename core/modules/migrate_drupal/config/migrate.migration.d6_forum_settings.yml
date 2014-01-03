@@ -1,0 +1,18 @@
+id: d6_forum_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - forum_hot_topic
+    - forum_per_page
+    - forum_order
+    - forum_block_num_0
+    - forum_block_num_1
+process:
+  'block:active:limit': forum_block_num_0
+  'block:new:limit': forum_block_num_1
+  'topics:hot_threshold': forum_hot_topic
+  'topics:page_limit': forum_per_page
+  'topics:order': forum_order
+destination:
+  plugin: d8_config
+  config_name: forum.settings

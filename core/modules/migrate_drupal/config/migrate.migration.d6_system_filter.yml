@@ -1,0 +1,10 @@
+id: d6_system_filter
+source:
+  plugin: drupal6_variable
+  variables:
+    - filter_allowed_protocols
+process:
+  protocols: filter_allowed_protocols
+destination:
+  plugin: d8_config
+  config_name: system.filter

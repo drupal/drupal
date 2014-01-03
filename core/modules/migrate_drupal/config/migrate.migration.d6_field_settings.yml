@@ -1,0 +1,10 @@
+id: d6_field_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - field_language_fallback
+process:
+  language_fallback: field_language_fallback
+destination:
+  plugin: d8_config
+  config_name: field.settings

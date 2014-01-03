@@ -1,0 +1,10 @@
+id: d6_dblog_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - dblog_row_limit
+process:
+  row_limit: dblog_row_limit
+destination:
+  plugin: d8_config
+  config_name: dblog.settings

@@ -1,0 +1,18 @@
+id: d6_simpletest_settings
+source:
+  plugin: drupal6_variable
+  variables:
+    - simpletest_clear_results
+    - simpletest_httpauth_method
+    - simpletest_httpauth_password
+    - simpletest_httpauth_username
+    - simpletest_verbose
+process:
+  clear_results: simpletest_clear_results
+  'httpauth:method': simpletest_httpauth_method
+  'httpauth:password': simpletest_httpauth_password
+  'httpauth:username': simpletest_httpauth_username
+  verbose: simpletest_verbose
+destination:
+  plugin: d8_config
+  config_name: simpletest.settings

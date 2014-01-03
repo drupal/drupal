@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6SystemPerformance.
+ * Contains \Drupal\migrate_drupal\Tests\Dump\Drupal6FileSettings.
  */
 
 namespace Drupal\migrate_drupal\Tests\Dump;
@@ -10,9 +10,9 @@ namespace Drupal\migrate_drupal\Tests\Dump;
 use Drupal\Core\Database\Connection;
 
 /**
- * Database dump for testing system.performance.yml migration.
+ * Database dump for testing file.settings.yml migration.
  */
-class Drupal6SystemPerformance {
+class Drupal6FileSettings {
 
   /**
    * Sample database schema and values.
@@ -27,18 +27,17 @@ class Drupal6SystemPerformance {
       'value',
     ))
     ->values(array(
-      'name' => 'preprocess_css',
-      'value' => 'i:0;',
+      'name' => 'file_description_type',
+        'value' => 's:9:"textfield";',
     ))
     ->values(array(
-      'name' => 'preprocess_js',
-      'value' => 'i:0;',
+      'name' => 'file_description_length',
+        'value' => 'i:128;',
     ))
     ->values(array(
-      'name' => 'cache_lifetime',
-      'value' => 'i:0;',
+      'name' => 'file_icon_directory',
+      'value' => 's:25:"sites/default/files/icons";',
     ))
     ->execute();
   }
-
 }
