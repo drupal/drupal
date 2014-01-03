@@ -116,6 +116,23 @@ class ConfigImportUITest extends WebTestBase {
   }
 
   /**
+   * Tests verification of site UUID before importing configuration.
+   */
+  function testImportSiteUuidValidation() {
+    $staging = \Drupal::service('config.storage.staging');
+    // Create updated configuration object.
+    $config_data = \Drupal::config('system.site')->get();
+    // Generate a new site UUID.
+    $config_data['uuid'] = \Drupal::service('uuid')->generate();
+    $staging->write('system.site', $config_data);
+
+    // Verify that there are configuration differences to import.
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertText(t('The staged configuration cannot be imported, because it originates from a different site than this site. You can only synchronize configuration between cloned instances of this site.'));
+    $this->assertNoFieldById('edit-submit', t('Import all'));
+  }
+
+  /**
    * Tests the screen that shows differences between active and staging.
    */
   function testImportDiff() {

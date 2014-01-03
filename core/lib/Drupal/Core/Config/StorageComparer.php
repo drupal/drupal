@@ -195,4 +195,13 @@ class StorageComparer implements StorageComparerInterface {
     return $this->targetNames;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function validateSiteUuid() {
+    $source = $this->sourceStorage->read('system.site');
+    $target = $this->targetStorage->read('system.site');
+    return $source['uuid'] === $target['uuid'];
+  }
+
 }

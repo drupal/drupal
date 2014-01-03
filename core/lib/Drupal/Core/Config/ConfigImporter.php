@@ -263,6 +263,9 @@ class ConfigImporter {
    */
   public function validate() {
     if (!$this->validated) {
+      if (!$this->storageComparer->validateSiteUuid()) {
+        throw new ConfigImporterException('Site UUID in source storage does not match the target storage.');
+      }
       $this->notify('validate');
       $this->validated = TRUE;
     }

@@ -160,6 +160,11 @@ class ConfigSync extends FormBase {
       $form['actions']['#access'] = FALSE;
       return $form;
     }
+    elseif (!$storage_comparer->validateSiteUuid()) {
+      drupal_set_message($this->t('The staged configuration cannot be imported, because it originates from a different site than this site. You can only synchronize configuration between cloned instances of this site.'), 'error');
+      $form['actions']['#access'] = FALSE;
+      return $form;
+    }
     else {
       // Store the comparer for use in the submit.
       $form_state['storage_comparer'] = $storage_comparer;

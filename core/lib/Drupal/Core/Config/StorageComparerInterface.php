@@ -117,4 +117,12 @@ interface StorageComparerInterface {
    */
   public function hasChanges($ops = array('delete', 'create', 'update'));
 
+  /**
+   * Validates that the system.site::uuid in the source and target match.
+   *
+   * @return bool
+   *   TRUE if identical, FALSE if not.
+   */
+  public function validateSiteUuid();
+
 }

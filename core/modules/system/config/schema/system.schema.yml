@@ -4,6 +4,9 @@ system.site:
   type: mapping
   label: 'Site information'
   mapping:
+    uuid:
+      type: string
+      label: 'Site UUID'
     name:
       type: label
       label: 'Site name'

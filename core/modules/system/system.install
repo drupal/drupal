@@ -565,6 +565,11 @@ function system_install() {
   // Populate the cron key state variable.
   $cron_key = Crypt::randomStringHashed(55);
   \Drupal::state()->set('system.cron_key', $cron_key);
+
+  // Populate the site UUID.
+  \Drupal::config('system.site')
+    ->set('uuid', \Drupal::service('uuid')->generate())
+    ->save();
 }
 
 /**

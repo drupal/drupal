@@ -21,6 +21,13 @@ use Drupal\simpletest\WebTestBase;
 class ConfigExportImportUITest extends WebTestBase {
 
   /**
+   * The site UUID.
+   *
+   * @var string
+   */
+  protected $siteUuid;
+
+  /**
    * The slogan value, for a simple export test case.
    *
    * @var string
@@ -69,6 +76,8 @@ class ConfigExportImportUITest extends WebTestBase {
    * Tests a simple site configuration export case: site slogan.
    */
   function testExport() {
+    $this->siteUuid = \Drupal::config('system.site')->get('uuid');
+
     // Create a role for second round.
     $this->admin_role = $this->drupalCreateRole(array('synchronize configuration', 'import configuration'));
     $this->slogan = $this->randomString(16);
@@ -104,6 +113,9 @@ class ConfigExportImportUITest extends WebTestBase {
    *   The name of the tarball containing the configuration to be imported.
    */
   protected function doImport($filename) {
+    // The site UUIDs must match for the import to work.
+    \Drupal::config('system.site')->set('uuid', $this->siteUuid)->save();
+
     $this->assertNotEqual($this->slogan, \Drupal::config('system.site')->get('slogan'));
     $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
     $this->drupalPostForm(NULL, array(), 'Import all');

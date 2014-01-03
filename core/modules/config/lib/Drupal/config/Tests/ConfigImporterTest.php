@@ -97,6 +97,25 @@ class ConfigImporterTest extends DrupalUnitTestBase {
   }
 
   /**
+   * Tests verification of site UUID before importing configuration.
+   */
+  function testSiteUuidValidate() {
+    $staging = \Drupal::service('config.storage.staging');
+    // Create updated configuration object.
+    $config_data = \Drupal::config('system.site')->get();
+    // Generate a new site UUID.
+    $config_data['uuid'] = \Drupal::service('uuid')->generate();
+    $staging->write('system.site', $config_data);
+    try {
+      $this->configImporter->reset()->import();
+      $this->assertFalse(FALSE, 'ConfigImporterException not thrown, invalid import was not stopped due to mis-matching site UUID.');
+    }
+    catch (ConfigImporterException $e) {
+      $this->assertEqual($e->getMessage(), 'Site UUID in source storage does not match the target storage.');
+    }
+  }
+
+  /**
    * Tests deletion of configuration during import.
    */
   function testDeleted() {
