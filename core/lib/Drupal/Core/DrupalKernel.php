@@ -249,7 +249,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     return $serviceProviders;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -681,7 +680,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Returns the file name for each enabled module.
+   * Gets the file name for each enabled module.
+   *
+   * @return array
+   *   Array where each key is a module name, and each value is a path to the
+   *   respective *.module or *.profile file.
    */
   protected function getModuleFileNames() {
     $filenames = array();
@@ -694,18 +697,31 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Gets the namespaces of each enabled module.
+   * Gets the PSR-0 base directories for module namespaces.
+   *
+   * @param array $module_file_names
+   *   Array where each key is a module name, and each value is a path to the
+   *   respective *.module or *.profile file.
+   *
+   * @return array
+   *   Array where each key is a module namespace like 'Drupal\system', and each
+   *   value is a PSR-0 base directory associated with the module namespace.
    */
-  protected function getModuleNamespaces($moduleFileNames) {
+  protected function getModuleNamespaces($module_file_names) {
     $namespaces = array();
-    foreach ($moduleFileNames as $module => $filename) {
+    foreach ($module_file_names as $module => $filename) {
       $namespaces["Drupal\\$module"] = DRUPAL_ROOT . '/' . dirname($filename) . '/lib';
     }
     return $namespaces;
   }
 
   /**
-   * Registers a list of namespaces.
+   * Registers a list of namespaces with PSR-0 directories for class loading.
+   *
+   * @param array $namespaces
+   *   Array where each key is a namespace like 'Drupal\system', and each value
+   *   is either a PSR-0 base directory, or an array of PSR-0 base directories
+   *   associated with this namespace.
    */
   protected function registerNamespaces(array $namespaces = array()) {
     foreach ($namespaces as $prefix => $path) {
