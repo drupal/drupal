@@ -160,18 +160,6 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     // TODO:
     // - check display order with several fields
-
-    // Preprocess template.
-    $variables = array();
-    field_attach_preprocess($entity, $entity->content, $variables);
-    $result = TRUE;
-    foreach ($values as $delta => $item) {
-      if ($variables[$this->field_name][$delta]['value'] !== $item['value']) {
-        $result = FALSE;
-        break;
-      }
-    }
-    $this->assertTrue($result, format_string('Variable $@field_name correctly populated.', array('@field_name' => $this->field_name)));
   }
 
   /**

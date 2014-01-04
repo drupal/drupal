@@ -400,12 +400,6 @@ function template_preprocess_taxonomy_term(&$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
-  // field_attach_preprocess() overwrites the $[field_name] variables with the
-  // values of the field in the language that was selected for display, instead
-  // of the raw values in $term->[field_name], which contain all values in all
-  // languages.
-  field_attach_preprocess($term, $variables['content'], $variables);
-
   // Gather classes, and clean up name so there are no underscores.
   $variables['attributes']['class'][] = 'taxonomy-term';
   $vocabulary_name_css = str_replace('_', '-', $term->bundle());

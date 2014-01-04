@@ -1456,9 +1456,6 @@ function template_preprocess_comment(&$variables) {
     $variables['parent'] = '';
   }
 
-  // Preprocess fields.
-  field_attach_preprocess($comment, $variables['elements'], $variables);
-
   // Helpful $content variable for templates.
   foreach (element_children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];

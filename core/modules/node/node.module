@@ -688,9 +688,6 @@ function template_preprocess_node(&$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
-  // Make the field variables available with the appropriate language.
-  field_attach_preprocess($node, $variables['content'], $variables);
-
   // Display post information only on certain node types.
   // Avoid loading the entire node type config entity here that may not exist.
   $node_type_config = \Drupal::config('node.type.' . $node->bundle());

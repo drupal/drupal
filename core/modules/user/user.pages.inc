@@ -113,9 +113,6 @@ function template_preprocess_user(&$variables) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 
-  // Preprocess fields.
-  field_attach_preprocess($account, $variables['elements'], $variables);
-
   // Set up attributes.
   $variables['attributes']['class'][] = 'profile';
 }
