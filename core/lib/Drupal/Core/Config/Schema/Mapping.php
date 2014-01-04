@@ -7,10 +7,8 @@
 
 namespace Drupal\Core\Config\Schema;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
-use \InvalidArgumentException;
+use Drupal\Component\Utility\String;
 
 /**
  * Defines a mapping configuration element.
@@ -36,17 +34,29 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
 
   /**
    * Implements Drupal\Core\TypedData\ComplexDataInterface::get().
+   *
+   * Since all configuration objects are mappings the function will except a dot
+   * delimited key to access nested values, for example, 'page.front'.
    */
   public function get($property_name) {
+    $parts = explode('.', $property_name);
+    $root_key = array_shift($parts);
     $elements = $this->getElements();
-    if (isset($elements[$property_name])) {
-      return $elements[$property_name];
+    if (isset($elements[$root_key])) {
+      $element = $elements[$root_key];
     }
     else {
-      throw new InvalidArgumentException(format_string("The configuration property @key doesn't exist.", array(
-          '@key' => $property_name,
-      )));
+      throw new SchemaIncompleteException(String::format("The configuration property @key doesn't exist.", array('@key' => $property_name)));
     }
+
+    // If $property_name contained a dot recurse into the keys.
+    foreach ($parts as $key) {
+     if (!is_object($element) || !method_exists($element, 'get')) {
+        throw new SchemaIncompleteException(String::format("The configuration property @key does not exist.", array('@key' => $property_name)));
+      }
+      $element = $element->get($key);
+    }
+    return $element;
   }
 
   /**

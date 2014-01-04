@@ -11,6 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\Context\ContextInterface;
+use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
@@ -517,37 +518,6 @@ class Config {
   }
 
   /**
-   * Gets the definition for the configuration key.
-   *
-   * @param string $key
-   *   A string that maps to a key within the configuration data.
-   *
-   * @return \Drupal\Core\Config\Schema\Element
-   *
-   * @throws \Drupal\Core\Config\ConfigException
-   *   Thrown when schema is incomplete.
-   */
-  protected function getSchemaForKey($key) {
-    $parts = explode('.', $key);
-    $schema_wrapper = $this->getSchemaWrapper();
-    if (count($parts) == 1) {
-      $schema = $schema_wrapper->get($key);
-    }
-    else {
-      $schema = clone $schema_wrapper;
-      foreach ($parts as $nested_key) {
-        if (!is_object($schema) || !method_exists($schema, 'get')) {
-          throw new ConfigException(String::format("Incomplete schema for !key key in configuration object !name.", array('!name' => $this->name, '!key' => $key)));
-        }
-        else {
-          $schema = $schema->get($nested_key);
-        }
-      }
-    }
-    return $schema;
-  }
-
-  /**
    * Casts the value to correct data type using the configuration schema.
    *
    * @param string $key
@@ -564,7 +534,7 @@ class Config {
     }
     elseif (is_scalar($value)) {
       try {
-        $element = $this->getSchemaForKey($key);
+        $element = $this->getSchemaWrapper()->get($key);
         if ($element instanceof PrimitiveInterface) {
           // Special handling for integers and floats since the configuration
           // system is primarily concerned with saving values from the Form API
@@ -586,7 +556,7 @@ class Config {
           $value = $element->getString();
         }
       }
-      catch (\Exception $e) {
+      catch (SchemaIncompleteException $e) {
         // @todo throw an exception due to an incomplete schema. Only possible
         //   once https://drupal.org/node/1910624 is complete.
       }

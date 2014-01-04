@@ -18,7 +18,7 @@ class Sequence extends ArrayElement implements ListInterface {
    * Overrides ArrayElement::parse()
    */
   protected function parse() {
-    $definition = $definition = $this->getItemDefinition();
+    $definition = $this->getItemDefinition();
     $elements = array();
     foreach ($this->value as $key => $value) {
       $elements[$key] = $this->parseElement($key, $value, $definition);
@@ -60,7 +60,7 @@ class Sequence extends ArrayElement implements ListInterface {
    *   Typed configuration element.
    */
   public function get($key) {
-    $elements = $this->parse();
+    $elements = $this->getElements();
     return $elements[$key];
   }
 

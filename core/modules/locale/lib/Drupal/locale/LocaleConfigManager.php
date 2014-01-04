@@ -7,6 +7,7 @@
 
 namespace Drupal\locale;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\Config\StorageInterface;
@@ -47,10 +48,12 @@ class LocaleConfigManager extends TypedConfigManager {
    *   data.
    * @param \Drupal\locale\StringStorageInterface $localeStorage
    *   The locale storage to use for reading string translations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend to use for caching the definitions.
    */
-  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage) {
+  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage, CacheBackendInterface $cache) {
     // Note we use the install storage for the parent constructor.
-    parent::__construct($configStorage, $schemaStorage);
+    parent::__construct($configStorage, $schemaStorage, $cache);
     $this->installStorage = $installStorage;
     $this->localeStorage = $localeStorage;
   }

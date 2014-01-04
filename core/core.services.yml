@@ -107,7 +107,7 @@ services:
     class: Drupal\Core\Config\InstallStorage
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
-    arguments: ['@config.storage', '@config.storage.schema']
+    arguments: ['@config.storage', '@config.storage.schema', '@cache.config']
   database:
     class: Drupal\Core\Database\Connection
     factory_class: Drupal\Core\Database\Database

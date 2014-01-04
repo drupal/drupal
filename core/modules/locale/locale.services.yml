@@ -11,7 +11,7 @@ services:
     arguments: ['@entity.manager']
   locale.config.typed:
     class: Drupal\locale\LocaleConfigManager
-    arguments: ['@config.storage', '@config.storage.schema', '@config.storage.installer', '@locale.storage']
+    arguments: ['@config.storage', '@config.storage.schema', '@config.storage.installer', '@locale.storage', '@cache.config']
   locale.storage:
     class: Drupal\locale\StringDatabaseStorage
     arguments: ['@database']
