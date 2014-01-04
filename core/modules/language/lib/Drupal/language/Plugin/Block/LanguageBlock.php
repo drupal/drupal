@@ -47,6 +47,7 @@ class LanguageBlock extends BlockBase {
             "language-switcher-{$links->method_id}",
           ),
         ),
+        '#set_active_class' => TRUE,
       );
     }
     return $build;

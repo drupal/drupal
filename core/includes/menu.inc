@@ -1704,6 +1704,7 @@ function theme_menu_link(array $variables) {
   if ($element['#below']) {
     $sub_menu = drupal_render($element['#below']);
   }
+  $element['#localized_options']['set_active_class'] = TRUE;
   $output = l($element['#title'], $element['#href'], $element['#localized_options']);
   return '<li' . new Attribute($element['#attributes']) . '>' . $output . $sub_menu . "</li>\n";
 }
@@ -1739,6 +1740,8 @@ function theme_menu_local_task($variables) {
     $link['localized_options']['html'] = TRUE;
     $link_text = t('!local-task-title!active', array('!local-task-title' => $link['title'], '!active' => $active));
   }
+  $link['localized_options']['set_active_class'] = TRUE;
+
   if (!empty($link['href'])) {
     // @todo - remove this once all pages are converted to routes.
     $a_tag = l($link_text, $link['href'], $link['localized_options']);
@@ -1770,6 +1773,7 @@ function theme_menu_local_action($variables) {
   );
   $link['localized_options']['attributes']['class'][] = 'button';
   $link['localized_options']['attributes']['class'][] = 'button-action';
+  $link['localized_options']['set_active_class'] = TRUE;
 
   $output = '<li>';
   // @todo Remove this check and the call to l() when all pages are converted to

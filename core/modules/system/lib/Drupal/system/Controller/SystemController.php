@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -159,6 +160,71 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
   public function themeSetDefault() {
     module_load_include('admin.inc', 'system');
     return system_theme_default();
+  }
+
+  /**
+   * #post_render_cache callback; sets the "active" class on relevant links.
+   *
+   * This is a PHP implementation of the drupal.active-link JavaScript library.
+   *
+   * @param array $element
+   *  A renderable array with the following keys:
+   *    - #markup
+   *    - #attached
+   * @param array $context
+   *   An array with the following keys:
+   *   - path: the system path of the currently active page
+   *   - front: whether the current page is the front page (which implies the
+   *     current path might also be <front>)
+   *   - language: the language code of the currently active page
+   *   - query: the query string for the currently active page
+   *
+   * @return array
+   *   The updated renderable array.
+   */
+  public static function setLinkActiveClass(array $element, array $context) {
+    // If none of the HTML in the current page contains even just the current
+    // page's attribute, return early.
+    if (strpos($element['#markup'], 'data-drupal-link-system-path="' . $context['path'] . '"') === FALSE && (!$context['front'] || strpos($element['#markup'], 'data-drupal-link-system-path="&lt;front&gt;"') === FALSE)) {
+      return $element;
+    }
+
+    // Build XPath query to find links that should get the "active" class.
+    $query = "//*[";
+    // An active link's path is equal to the current path.
+    $query .= "@data-drupal-link-system-path='" . $context['path'] . "'";
+    if ($context['front']) {
+      $query .= " or @data-drupal-link-system-path='<front>'";
+    }
+    // The language of an active link is equal to the current language.
+    if ($context['language']) {
+      $query .= " and (not(@hreflang) or @hreflang='" . $context['language'] . "')";
+    }
+    // The query parameters of an active link are equal to the current
+    // parameters.
+    if ($context['query']) {
+      $query .= " and @data-drupal-link-query='" . Json::encode($context['query']) . "'";
+    }
+    else {
+      $query .= " and not(@data-drupal-link-query)";
+    }
+    $query .= "]";
+
+    // Set the "active" class on all matching HTML elements.
+    $dom = new \DOMDocument();
+    @$dom->loadHTML($element['#markup']);
+    $xpath = new \DOMXPath($dom);
+    foreach ($xpath->query($query) as $node) {
+      $class = $node->getAttribute('class');
+      if (strlen($class) > 0) {
+        $class .= ' ';
+      }
+      $class .= 'active';
+      $node->setAttribute('class', $class);
+    }
+    $element['#markup'] = $dom->saveHTML();
+
+    return $element;
   }
 
 }
