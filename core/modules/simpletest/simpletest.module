@@ -466,21 +466,25 @@ function simpletest_test_get_all($module = NULL) {
       }
       $classes = array();
       foreach ($all_data as $name => $data) {
-        // Build directory in which the test files would reside.
-        $tests_dir = DRUPAL_ROOT . '/' . $data->getPath() . '/lib/Drupal/' . $name . '/Tests';
+        $extension_dir = DRUPAL_ROOT . '/' . $data->getPath();
+
+        // Build directories in which the test files would reside.
+        $tests_dirs = array(
+          $extension_dir . '/lib/Drupal/' . $name . '/Tests',
+          $extension_dir . '/src/Tests',
+        );
+
+        $namespace = 'Drupal\\' . $name . '\Tests\\';
         // Scan it for test files if it exists.
-        if (is_dir($tests_dir)) {
-          $files = file_scan_directory($tests_dir, '/\.php$/');
-          if (!empty($files)) {
-            $basedir = DRUPAL_ROOT . '/' . $data->getPath() . '/lib/';
-            foreach ($files as $file) {
-              // Convert the file name into the namespaced class name.
-              $replacements = array(
-                '/' => '\\',
-                $basedir => '',
-                '.php' => '',
-              );
-              $classes[] = strtr($file->uri, $replacements);
+        foreach ($tests_dirs as $tests_dir) {
+          if (is_dir($tests_dir)) {
+            $files = file_scan_directory($tests_dir, '/\.php$/');
+            if (!empty($files)) {
+              $strlen = strlen($tests_dir) + 1;
+              // Convert the file names into the namespaced class names.
+              foreach ($files as $file) {
+                $classes[] = $namespace . str_replace('/', '\\', substr($file->uri, $strlen, -4));
+              }
             }
           }
         }
@@ -569,7 +573,10 @@ function simpletest_classloader_register() {
   foreach ($types as $type) {
     foreach ($extensions[$type] as $name => $uri) {
       drupal_classloader_register($name, dirname($uri));
-      $classloader->add('Drupal\\' . $name . '\\Tests', DRUPAL_ROOT . '/' . dirname($uri) . '/tests');
+      $classloader->addPsr4('Drupal\\' . $name . '\\Tests\\', array(
+        DRUPAL_ROOT . '/' . dirname($uri) . '/tests/Drupal/' . $name . '/Tests',
+        DRUPAL_ROOT . '/' . dirname($uri) . '/tests/src',
+      ));
       // While being there, prime drupal_get_filename().
       drupal_get_filename($type, $name, $uri);
     }

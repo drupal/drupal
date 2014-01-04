@@ -56,6 +56,8 @@ function drupal_phpunit_contrib_extension_directory_roots() {
  */
 function drupal_phpunit_register_extension_dirs(Composer\Autoload\ClassLoader $loader, $dirs) {
   foreach ($dirs as $extension => $dir) {
+    // Register PSR-0 test directories.
+    // @todo Remove this, when the transition to PSR-4 is complete.
     $lib_path = $dir . '/lib';
     if (is_dir($lib_path)) {
       $loader->add('Drupal\\' . $extension, $lib_path);
@@ -63,6 +65,13 @@ function drupal_phpunit_register_extension_dirs(Composer\Autoload\ClassLoader $l
     $tests_path = $dir . '/tests';
     if (is_dir($tests_path)) {
       $loader->add('Drupal\\' . $extension, $tests_path);
+    }
+    // Register PSR-4 test directories.
+    if (is_dir($dir . '/src')) {
+      $loader->addPsr4('Drupal\\' . $extension . '\\', $dir . '/src');
+    }
+    if (is_dir($dir . '/tests/src')) {
+      $loader->addPsr4('Drupal\\' . $extension . '\Tests\\', $dir . '/tests/src');
     }
   }
 }

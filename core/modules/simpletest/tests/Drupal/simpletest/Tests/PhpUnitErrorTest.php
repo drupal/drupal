@@ -22,7 +22,14 @@ class PhpUnitErrorTest extends UnitTestCase {
    * Test errors reported.
    */
   public function testPhpUnitXmlParsing() {
-    require_once __DIR__ . '/../../../../simpletest.module';
+    // This test class could be either in tests/Drupal/simpletest/Tests/, or in
+    // tests/src/, after the PSR-4 transition.
+    if (file_exists(__DIR__ . '/../../simpletest.module')) {
+      require_once __DIR__ . '/../../simpletest.module';
+    }
+    else {
+      require_once __DIR__ . '/../../../../simpletest.module';
+    }
     $phpunit_error_xml = __DIR__ . '/phpunit_error.xml';
     $res = simpletest_phpunit_xml_to_rows(1, $phpunit_error_xml);
     $this->assertEquals(count($res), 4, 'All testcases got extracted');

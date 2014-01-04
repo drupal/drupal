@@ -49,10 +49,9 @@ class MigrateUserRoleTest extends MigrateDrupalTestBase {
 
     /** @var \Drupal\migrate\entity\Migration $migration */
     $migration = entity_load('migration', 'd6_user_role');
-    $path = drupal_get_path('module', 'migrate_drupal');
     $dumps = array(
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6UserRole.php',
-      $path . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6FilterFormat.php',
+      dirname(__DIR__) . '/Dump/Drupal6UserRole.php',
+      dirname(__DIR__) . '/Dump/Drupal6FilterFormat.php',
     );
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, $this);

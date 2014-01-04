@@ -26,10 +26,10 @@
     "zendframework/zend-feed": "2.2.*"
   },
   "autoload": {
-    "psr-0": {
-      "Drupal\\Core": "core/lib/",
-      "Drupal\\Component": "core/lib/",
-      "Drupal\\Driver": "drivers/lib/"
+    "psr-4": {
+      "Drupal\\Core\\": "core/lib/Drupal/Core",
+      "Drupal\\Component\\": "core/lib/Drupal/Component",
+      "Drupal\\Driver\\": "drivers/lib/Drupal/Driver"
     },
     "files": [
       "core/lib/Drupal.php"

@@ -2124,7 +2124,10 @@ function drupal_classloader($class_loader = NULL) {
  */
 function drupal_classloader_register($name, $path) {
   $loader = drupal_classloader();
-  $loader->add('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
+  $loader->addPsr4('Drupal\\' . $name . '\\', array(
+    DRUPAL_ROOT . '/' . $path . '/lib/Drupal/' . $name,
+    DRUPAL_ROOT . '/' . $path . '/src',
+  ));
 }
 
 /**

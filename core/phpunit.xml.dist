@@ -18,7 +18,9 @@
       <!-- Exclude Drush tests. -->
       <exclude>./drush/tests</exclude>
       <!-- Exclude special-case files from config's test modules. -->
+      <!-- @todo Remove /lib/Drupal/config_test after the transition to PSR-4. -->
       <exclude>./modules/config/tests/config_test/lib/Drupal/config_test</exclude>
+      <exclude>./modules/config/tests/config_test/src</exclude>
     </testsuite>
   </testsuites>
   <!-- Filter for coverage reports. -->

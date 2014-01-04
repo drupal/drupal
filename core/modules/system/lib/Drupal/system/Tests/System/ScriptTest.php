@@ -30,10 +30,7 @@ class ScriptTest extends UnitTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $path_parts = explode(DIRECTORY_SEPARATOR, __DIR__);
-    // This file is 8 levels below the Drupal root.
-    $root = implode(DIRECTORY_SEPARATOR, array_slice($path_parts, 0, -8));
-    chdir($root);
+    chdir(DRUPAL_ROOT);
   }
 
   /**

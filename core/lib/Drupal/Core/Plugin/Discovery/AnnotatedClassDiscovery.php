@@ -16,17 +16,23 @@ use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery as Comp
 class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
 
   /**
-   * The subdirectory within a namespace to look for plugins.
-   *
-   * If the plugins are in the top level of the namespace and not within a
-   * subdirectory, set this to an empty string.
+   * A suffix to append to each PSR-4 directory associated with a base
+   * namespace, to form the directories where plugins are found.
    *
    * @var string
    */
-  protected $subdir = '';
+  protected $directorySuffix = '';
 
   /**
-   * An object containing the namespaces to look for plugin implementations.
+   * A suffix to append to each base namespace, to obtain the namespaces where
+   * plugins are found.
+   *
+   * @var string
+   */
+  protected $namespaceSuffix = '';
+
+  /**
+   * A list of base namespaces with their PSR-4 directories.
    *
    * @var \Traversable
    */
@@ -48,7 +54,13 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    */
   function __construct($subdir, \Traversable $root_namespaces, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
     if ($subdir) {
-      $this->subdir = str_replace('/', '\\', $subdir);
+      // Prepend a directory separator to $subdir,
+      // if it does not already have one.
+      if ('/' !== $subdir[0]) {
+        $subdir = '/' . $subdir;
+      }
+      $this->directorySuffix = $subdir;
+      $this->namespaceSuffix = str_replace('/', '\\', $subdir);
     }
     $this->rootNamespacesIterator = $root_namespaces;
     $plugin_namespaces = array();
@@ -104,11 +116,28 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    */
   protected function getPluginNamespaces() {
     $plugin_namespaces = array();
-    foreach ($this->rootNamespacesIterator as $namespace => $dir) {
-      if ($this->subdir) {
-        $namespace .= "\\{$this->subdir}";
+    if ($this->namespaceSuffix) {
+      foreach ($this->rootNamespacesIterator as $namespace => $dirs) {
+        // Append the namespace suffix to the base namespace, to obtain the
+        // plugin namespace. E.g. 'Drupal\Views' may become
+        // 'Drupal\Views\Plugin\Block'.
+        $namespace .= $this->namespaceSuffix;
+        foreach ((array) $dirs as $dir) {
+          // Append the directory suffix to the PSR-4 base directory, to obtain
+          // the directory where plugins are found.
+          // E.g. DRUPAL_ROOT . '/core/modules/views/src' may become
+          // DRUPAL_ROOT . '/core/modules/views/src/Plugin/Block'.
+          $plugin_namespaces[$namespace][] = $dir . $this->directorySuffix;
+        }
       }
-      $plugin_namespaces[$namespace] = array($dir);
+    }
+    else {
+      // Both the namespace suffix and the directory suffix are empty,
+      // so the plugin namespaces and directories are the same as the base
+      // directories.
+      foreach ($this->rootNamespacesIterator as $namespace => $dirs) {
+        $plugin_namespaces[$namespace] = (array) $dirs;
+      }
     }
 
     return $plugin_namespaces;
