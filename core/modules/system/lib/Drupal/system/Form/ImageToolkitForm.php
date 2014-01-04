@@ -69,22 +69,26 @@ class ImageToolkitForm extends ConfigFormBase {
 
     $form['image_toolkit'] = array(
       '#type' => 'radios',
-      '#title' => t('Select an image processing toolkit'),
+      '#title' => $this->t('Select an image processing toolkit'),
       '#default_value' => $current_toolkit,
       '#options' => array(),
     );
 
-    // If we have available toolkits, allow the user to select the image toolkit
-    // to use and load the settings forms.
+    // If we have more than one image toolkit, allow the user to select the one
+    // to use, and load each of the toolkits' settings form.
     foreach ($this->availableToolkits as $id => $toolkit) {
       $definition = $toolkit->getPluginDefinition();
       $form['image_toolkit']['#options'][$id] = $definition['title'];
       $form['image_toolkit_settings'][$id] = array(
-        '#type' => 'fieldset',
-        '#title' => t('@toolkit settings', array('@toolkit' => $definition['title'])),
-        '#collapsible' => TRUE,
-        '#collapsed' => ($id == $current_toolkit) ? FALSE : TRUE,
+        '#type' => 'details',
+        '#title' => $this->t('@toolkit settings', array('@toolkit' => $definition['title'])),
+        '#collapsed' => FALSE,
         '#tree' => TRUE,
+        '#states' => array(
+          'visible' => array(
+            ':radio[name="image_toolkit"]' => array('value' => $id),
+          ),
+        ),
       );
       $form['image_toolkit_settings'][$id] += $toolkit->settingsForm();
     }
@@ -101,7 +105,6 @@ class ImageToolkitForm extends ConfigFormBase {
       ->save();
 
     // Call the form submit handler for each of the toolkits.
-    // Get the toolkit settings forms.
     foreach ($this->availableToolkits as $toolkit) {
       $toolkit->settingsFormSubmit($form, $form_state);
     }

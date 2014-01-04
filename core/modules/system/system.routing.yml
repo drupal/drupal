@@ -187,7 +187,7 @@ system.image_toolkit_settings:
     _form: 'Drupal\system\Form\ImageToolkitForm'
     _title: 'Image toolkit'
   requirements:
-    _permission: 'administer administration pages'
+    _permission: 'access administration pages'
 
 system.site_maintenance_mode:
   path: '/admin/config/development/maintenance'

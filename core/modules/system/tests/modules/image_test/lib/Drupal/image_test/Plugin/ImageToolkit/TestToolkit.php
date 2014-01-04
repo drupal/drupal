@@ -25,13 +25,25 @@ class TestToolkit extends ImageToolkitBase {
    */
   public function settingsForm() {
     $this->logCall('settings', array());
-    return array();
+    $form['test_parameter'] = array(
+      '#type' => 'number',
+      '#title' => $this->t('Test toolkit parameter'),
+      '#description' => $this->t('A toolkit parameter for testing purposes.'),
+      '#min' => 0,
+      '#max' => 100,
+      '#default_value' => \Drupal::config('system.image.test_toolkit')->get('test_parameter'),
+    );
+    return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function settingsFormSubmit($form, &$form_state) {}
+  public function settingsFormSubmit($form, &$form_state) {
+    \Drupal::config('system.image.test_toolkit')
+      ->set('test_parameter', $form_state['values']['test']['test_parameter'])
+      ->save();
+  }
 
   /**
    * {@inheritdoc}
