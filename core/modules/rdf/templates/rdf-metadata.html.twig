@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Default theme implementation for empty spans with RDF attributes.
+ *
+ * Available variables:
+ * - metadata: Each item within corresponds to its own set of attributes,
+ *   and therefore, needs its own 'attributes' element.
+ *
+ * @see template_preprocess_rdf_metadata()
+ *
+ * @ingroup themeable
+ */
+#}
+{% for attributes in metadata %}
+  <span{{ attributes }}></span>
+{% endfor %}
