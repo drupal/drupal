@@ -7,7 +7,6 @@
 
 namespace Drupal\edit;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,21 +17,19 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\field\FieldInfo;
-use Drupal\edit\MetadataGeneratorInterface;
-use Drupal\edit\EditorSelectorInterface;
 use Drupal\edit\Ajax\FieldFormCommand;
 use Drupal\edit\Ajax\FieldFormSavedCommand;
 use Drupal\edit\Ajax\FieldFormValidationErrorsCommand;
 use Drupal\edit\Ajax\EntitySavedCommand;
 use Drupal\edit\Ajax\MetadataCommand;
-use Drupal\edit\Form\EditFieldForm;
 use Drupal\user\TempStoreFactory;
 
 /**
  * Returns responses for Edit module routes.
  */
-class EditController extends ContainerAware implements ContainerInjectionInterface {
+class EditController implements ContainerInjectionInterface {
 
   /**
    * The TempStore factory.
@@ -70,6 +67,13 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
   protected $fieldInfo;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -89,15 +93,18 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
    *   The entity manager.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, EntityManagerInterface $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler) {
+  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, EntityManagerInterface $entity_manager, FieldInfo $field_info, FormBuilderInterface $form_builder, ModuleHandlerInterface $module_handler) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->metadataGenerator = $metadata_generator;
     $this->editorSelector = $editor_selector;
     $this->entityManager = $entity_manager;
     $this->fieldInfo = $field_info;
+    $this->formBuilder = $form_builder;
     $this->moduleHandler = $module_handler;
   }
 
@@ -111,6 +118,7 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
       $container->get('edit.editor.selector'),
       $container->get('entity.manager'),
       $container->get('field.info'),
+      $container->get('form_builder'),
       $container->get('module_handler')
     );
   }
@@ -218,16 +226,14 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
       $this->tempStoreFactory->get('edit')->set($entity->uuid(), $entity);
     }
 
-    $form_object = EditFieldForm::create($this->container);
     $form_state = array(
       'langcode' => $langcode,
       'no_redirect' => TRUE,
       'build_info' => array(
         'args' => array($entity, $field_name),
-        'callback_object' => $form_object,
       ),
     );
-    $form = drupal_build_form($form_object->getFormId(), $form_state);
+    $form = $this->formBuilder->buildForm('Drupal\edit\Form\EditFieldForm', $form_state);
 
     if (!empty($form_state['executed'])) {
       // The form submission saved the entity in TempStore. Return the
@@ -258,7 +264,7 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
     else {
       $response->addCommand(new FieldFormCommand(drupal_render($form)));
 
-      $errors = form_get_errors($form_state);
+      $errors = $this->formBuilder->getErrors($form_state);
       if (count($errors)) {
         $status_messages = array(
           '#theme' => 'status_messages'
