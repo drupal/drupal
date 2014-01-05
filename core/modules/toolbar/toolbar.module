@@ -562,16 +562,26 @@ function toolbar_get_rendered_subtrees() {
  * Implements hook_library_info().
  */
 function toolbar_library_info() {
+  $path = drupal_get_path('module', 'toolbar');
   $libraries['toolbar'] = array(
     'title' => 'Toolbar',
     'version' => \Drupal::VERSION,
     'js' => array(
-      drupal_get_path('module', 'toolbar') . '/js/toolbar.js' => array(),
+      // Core.
+      $path . '/js/toolbar.js' => array(),
+      // Models.
+      $path . '/js/models/MenuModel.js' => array(),
+      $path . '/js/models/ToolbarModel.js' => array(),
+      // Views.
+      $path . '/js/views/BodyVisualView.js' => array(),
+      $path . '/js/views/MenuVisualView.js' => array(),
+      $path . '/js/views/ToolbarAuralView.js' => array(),
+      $path . '/js/views/ToolbarVisualView.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'toolbar') . '/css/toolbar.module.css',
-      drupal_get_path('module', 'toolbar') . '/css/toolbar.theme.css',
-      drupal_get_path('module', 'toolbar') . '/css/toolbar.icons.css',
+      $path . '/css/toolbar.module.css',
+      $path . '/css/toolbar.theme.css',
+      $path . '/css/toolbar.icons.css',
     ),
     'dependencies' => array(
       array('system', 'modernizr'),
@@ -591,10 +601,10 @@ function toolbar_library_info() {
     'title' => 'Toolbar nested accordion menus.',
     'version' => \Drupal::VERSION,
     'js' => array(
-      drupal_get_path('module', 'toolbar') . '/js/toolbar.menu.js' => array(),
+      $path . '/js/toolbar.menu.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'toolbar') . '/css/toolbar.menu.css',
+      $path . '/css/toolbar.menu.css',
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -606,7 +616,7 @@ function toolbar_library_info() {
     'title' => 'Provides a button to escape the administration area.',
     'version' => \Drupal::VERSION,
     'js' => array(
-      drupal_get_path('module', 'toolbar') . '/js/escapeAdmin.js',
+      $path . '/js/escapeAdmin.js',
     ),
     'dependencies' => array(
       array('system', 'jquery'),
