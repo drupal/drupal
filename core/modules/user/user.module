@@ -1699,10 +1699,13 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
 /**
  * Form element process handler for client-side password validation.
  *
- * This #pre_render handler is added to the user registration form to add the
- * JavaScript and string translations for dynamic password validation.
+ * This #process handler is automatically invoked for 'password_confirm' form
+ * elements to add the JavaScript and string translations for dynamic password
+ * validation.
+ *
+ * @see system_element_info()
  */
-function user_form_pre_render_password_confirm($element) {
+function user_form_process_password_confirm($element) {
   $password_settings = array(
     'confirmTitle' => t('Passwords match:'),
     'confirmSuccess' => t('yes'),
