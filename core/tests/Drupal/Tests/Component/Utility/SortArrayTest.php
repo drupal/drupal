@@ -323,4 +323,106 @@ class SortArrayTest extends UnitTestCase {
     return $tests;
   }
 
+  /**
+   * Tests SortArray::sortByWeightAndTitleKey() input against expected output.
+   *
+   * @dataProvider providerTestSortByWeightAndTitleKey
+   *
+   * @param array $a
+   *   The first input item for comparison.
+   * @param array $b
+   *   The second item for comparison.
+   * @param integer $expected
+   *   The expected output from calling the method.
+   */
+  public function testSortByWeightAndTitleKey($a, $b, $expected) {
+    $result = SortArray::sortByWeightAndTitleKey($a, $b);
+    $this->assertEquals($expected, $result);
+  }
+
+  /**
+   * Data provider for testSortByWeightAndTitleKey.
+   *
+   * @return array
+   *   An array of test data.
+   */
+  public function providerTestSortByWeightAndTitleKey() {
+    $stdclass_title_1 = new \stdClass();
+    $stdclass_title_1->title = 'a';
+
+    $stdclass_title_2 = new \stdClass();
+    $stdclass_title_2->title = 'b';
+
+    $stdclass_weight_1 = new \stdClass();
+    $stdclass_weight_1->weight = 1;
+
+    $stdclass_weight_2 = new \stdClass();
+    $stdclass_weight_2->weight = 2;
+
+    $stdclass_weight_3 = clone $stdclass_weight_1;
+
+    return array(
+      array(
+        array(),
+        array(),
+        0
+      ),
+      array(
+        array('weight' => 1),
+        array('weight' => 2),
+        -1
+      ),
+      array(
+        array('weight' => 2),
+        array('weight' => 1),
+        1
+      ),
+      array(
+        array('title' => 'b', 'weight' => 1),
+        array('title' => 'a', 'weight' => 2),
+        -1
+      ),
+      array(
+        array('title' => 'a', 'weight' => 2),
+        array('title' => 'b', 'weight' => 1),
+        1
+      ),
+      array(
+        array('title' => 'a', 'weight' => 1),
+        array('title' => 'b', 'weight' => 1),
+        -1
+      ),
+      array(
+        array('title' => 'b', 'weight' => 1),
+        array('title' => 'a', 'weight' => 1),
+        1
+      ),
+      array(
+        array('title' => 'a'),
+        array('title' => 'b'),
+        -1
+      ),
+      array(
+        array('title' => 'A'),
+        array('title' => 'a'),
+        0
+      ),
+      array(
+        $stdclass_title_1,
+        $stdclass_title_2,
+        -1
+      ),
+      array(
+        $stdclass_weight_1,
+        $stdclass_weight_2,
+        -1
+      ),
+      array(
+        $stdclass_weight_1,
+        $stdclass_weight_3,
+        0
+      ),
+    );
+  }
+
 }

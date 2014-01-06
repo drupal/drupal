@@ -205,14 +205,7 @@ class Language {
    *   The array of language objects keyed by langcode.
    */
   public static function sort(&$languages) {
-    uasort($languages, function ($a, $b) {
-      $a_weight = isset($a->weight) ? $a->weight : 0;
-      $b_weight = isset($b->weight) ? $b->weight : 0;
-      if ($a_weight == $b_weight) {
-        return strnatcasecmp($a->name, $b->name);
-      }
-      return ($a_weight < $b_weight) ? -1 : 1;
-    });
+    uasort($languages, 'Drupal\Component\Utility\SortArray::sortByWeightAndTitleKey');
   }
 
 }

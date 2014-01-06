@@ -91,6 +91,34 @@ class SortArray {
    }
 
   /**
+   * Sorts a structured array firstly by weight, then by title.
+   *
+   * @param array $a
+   *   The first item to compare.
+   * @param array $b
+   *   The second item to compare.
+   * @param string $weight_key
+   *   (optional) The weight key to use. Defaults to 'weight'.
+   * @param string $title_key
+   *   (optional) The title key to use. Defaults to 'title'.
+   *
+   * @return int
+   *   The comparison result for uasort().
+   */
+  public static function sortByWeightAndTitleKey($a, $b, $weight_key = 'weight', $title_key = 'title') {
+    $a = (array) $a;
+    $b = (array) $b;
+
+    $weight_cmp = static::sortByKeyInt($a, $b, $weight_key);
+
+    if ($weight_cmp === 0) {
+      return static::sortByKeyString($a, $b, $title_key);
+    }
+
+    return $weight_cmp;
+  }
+
+  /**
    * Sorts a string array item by an arbitrary key.
    *
    * @param array $a
