@@ -844,7 +844,7 @@ abstract class WebTestBase extends TestBase {
     }
 
     // Use the test mail class instead of the default mail handler class.
-    \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();
+    \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\TestMailCollector')->save();
 
     drupal_set_time_limit($this->timeLimit);
     // Temporary fix so that when running from run-tests.sh we don't get an
@@ -2452,7 +2452,7 @@ abstract class WebTestBase extends TestBase {
    *   An array containing e-mail messages captured during the current test.
    */
   protected function drupalGetMails($filter = array()) {
-    $captured_emails = \Drupal::state()->get('system.test_email_collector') ?: array();
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector') ?: array();
     $filtered_emails = array();
 
     foreach ($captured_emails as $message) {
@@ -3449,7 +3449,7 @@ abstract class WebTestBase extends TestBase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertMail($name, $value = '', $message = '', $group = 'E-mail') {
-    $captured_emails = \Drupal::state()->get('system.test_email_collector') ?: array();
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector') ?: array();
     $email = end($captured_emails);
     return $this->assertTrue($email && isset($email[$name]) && $email[$name] == $value, $message, $group);
   }

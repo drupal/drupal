@@ -1075,7 +1075,7 @@ abstract class TestBase {
     drupal_static_reset();
 
     if ($this->container->has('state') && $state = $this->container->get('state')) {
-      $captured_emails = $state->get('system.test_email_collector') ?: array();
+      $captured_emails = $state->get('system.test_mail_collector') ?: array();
       $emailCount = count($captured_emails);
       if ($emailCount) {
         $message = format_plural($emailCount, '1 e-mail was sent during this test.', '@count e-mails were sent during this test.');

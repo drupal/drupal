@@ -132,7 +132,7 @@ class InstallerTranslationTest extends InstallerTest {
     ), $submit_value);
 
     // Use the test mail class instead of the default mail handler class.
-    \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();
+    \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\TestMailCollector')->save();
 
     drupal_set_time_limit($this->timeLimit);
     // When running from run-tests.sh we don't get an empty current path which

@@ -62,7 +62,7 @@ class MailFactory {
    * @code
    * array(
    *   'default' => 'Drupal\Core\Mail\PhpMail',
-   *   'user' => 'DevelMailLog',
+   *   'user' => 'Drupal\devel\DevelMailLog',
    * );
    * @endcode
    *
@@ -72,8 +72,8 @@ class MailFactory {
    * @code
    * array(
    *   'default' => 'Drupal\Core\Mail\PhpMail',
-   *   'user' => 'DevelMailLog',
-   *   'contact_page_autoreply' => 'DrupalDevNullMailSend',
+   *   'user' => 'Drupal\devel\DevelMailLog',
+   *   'contact_page_autoreply' => 'Drupal\example\NullMail',
    * );
    * @endcode
    *
