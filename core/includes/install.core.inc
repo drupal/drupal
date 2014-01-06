@@ -341,7 +341,7 @@ function install_begin_request(&$install_state) {
 
   // If it is not, replace the configuration storage with the InstallStorage
   // implementation, for the following reasons:
-  // - The first call into drupal_container() will try to set up the regular
+  // - The first call to $kernel->getContainer() will try to set up the regular
   //   runtime configuration storage, using the CachedStorage by default. It
   //   calls config_get_config_directory() to retrieve the config directory to
   //   use, but that throws an exception, since $config_directories is not
