@@ -1414,7 +1414,7 @@ function template_preprocess_comment(&$variables) {
 
   $uri = $comment->uri();
   $permalink_uri = $comment->permalink();
-  $uri['options'] += array('attributes' => array('class' => 'permalink', 'rel' => 'bookmark'));
+  $uri['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
 
   $variables['title'] = l($comment->subject->value, $uri['path'], $uri['options']);
   $variables['permalink'] = l(t('Permalink'), $permalink_uri['path'], $permalink_uri['options']);
