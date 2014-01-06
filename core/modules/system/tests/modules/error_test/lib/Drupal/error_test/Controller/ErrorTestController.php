@@ -7,12 +7,40 @@
 namespace Drupal\error_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for error_test routes.
  */
+class ErrorTestController extends ControllerBase implements ContainerInjectionInterface {
 
-class ErrorTestController extends ControllerBase {
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection;
+   */
+  protected $database;
+
+  /**
+   * Constructs a \Drupal\error_test\Controller\ErrorTestController object.
+   *
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
+   */
+  public function __construct(Connection $database) {
+    $this->database = $database;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('database')
+    );
+  }
 
   /**
    * Generate warnings to test the error handler.
@@ -42,7 +70,7 @@ class ErrorTestController extends ControllerBase {
    */
   public function triggerPDOException() {
     define('SIMPLETEST_COLLECT_ERRORS', FALSE);
-    $this->container()->get('database')->query('SELECT * FROM bananas_are_awesome');
+    $this->database->query('SELECT * FROM bananas_are_awesome');
   }
 
 }
