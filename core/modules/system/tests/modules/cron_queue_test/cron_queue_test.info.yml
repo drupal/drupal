@@ -1,0 +1,7 @@
+name: 'Cron Queue test'
+type: module
+description: 'Support module for the cron queue runner.'
+package: Testing
+version: VERSION
+core: 8.x
+hidden: true

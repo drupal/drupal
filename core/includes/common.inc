@@ -3247,8 +3247,15 @@ function drupal_cron_run() {
       $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
       $queue = \Drupal::queue($queue_name);
       while (time() < $end && ($item = $queue->claimItem())) {
-        call_user_func_array($callback, array($item->data));
-        $queue->deleteItem($item);
+        try {
+          call_user_func_array($callback, array($item->data));
+          $queue->deleteItem($item);
+        }
+        catch (Exception $e) {
+          // In case of exception log it and leave the item in the queue
+          // to be processed again later.
+          watchdog_exception('cron', $e);
+        }
       }
     }
   }

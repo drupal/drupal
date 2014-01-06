@@ -1,0 +1,17 @@
+<?php
+
+function cron_queue_test_queue_info() {
+  $queues['cron_queue_test_exception'] = array(
+    'title' => t('Exception test'),
+    'worker callback' => 'cron_queue_test_exception',
+    // Only needed if this queue should be processed by cron.
+    'cron' => array(
+      'time' => 60,
+    ),
+  );
+  return $queues;
+}
+
+function cron_queue_test_exception($item) {
+  throw new Exception('That is not supposed to happen.');
+}
