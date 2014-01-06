@@ -179,7 +179,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // If this is to be a default tab, create the route for the parent path.
     if ($this->isDefaultTabPath()) {
       $bit = array_pop($bits);
-      if ($bit == '%views_arg' || empty($bits)) {
+      if (empty($bits)) {
         $bits[] = $bit;
       }
     }
@@ -284,18 +284,6 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $this->view->initHandlers();
     $view_arguments = $this->view->argument;
 
-    // Replace % with %views_arg for menu autoloading and add to the
-    // page arguments so the argument actually comes through.
-    foreach ($bits as $pos => $bit) {
-      if ($bit == '%') {
-        $argument = array_shift($view_arguments);
-        if (!empty($argument->options['specify_validation']) && $argument->options['validate']['type'] != 'none') {
-          $bits[$pos] = '%views_arg';
-        }
-        $page_arguments[] = $pos;
-      }
-    }
-
     $path = implode('/', $bits);
 
     $view_route_names = $this->state->get('views.view_route_names') ?: array();
@@ -366,7 +354,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
         // we can't do this if they tried to make the last path bit variable.
         // @todo: We can validate this.
-        if ($bit != '%views_arg' && !empty($bits)) {
+        if (!empty($bits)) {
           // Assign the route name to the parent route, not the default tab.
           $default_route_name = $items[$path]['route_name'];
           unset($items[$path]['route_name']);
