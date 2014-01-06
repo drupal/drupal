@@ -7,14 +7,15 @@
 
 "use strict";
 
+var pathInfo = drupalSettings.path;
 var escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
 
 // Saves the last non-administrative page in the browser to be able to link back
 // to it when browsing administrative pages. If there is a destination parameter
 // there is not need to save the current path because the page is loaded within
 // an existing "workflow".
-if (!drupalSettings.currentPathIsAdmin && !/destination=/.test(window.location.search)) {
-  sessionStorage.setItem('escapeAdminPath', drupalSettings.currentPath);
+if (!pathInfo.currentPathIsAdmin && !/destination=/.test(window.location.search)) {
+  sessionStorage.setItem('escapeAdminPath', pathInfo.currentPath);
 }
 
 /**
@@ -27,7 +28,7 @@ Drupal.behaviors.escapeAdmin = {
   attach: function () {
     var $toolbarEscape = $('[data-toolbar-escape-admin]').once('escapeAdmin');
     if ($toolbarEscape.length) {
-      if (drupalSettings.currentPathIsAdmin && escapeAdminPath) {
+      if (pathInfo.currentPathIsAdmin && escapeAdminPath) {
         $toolbarEscape.attr('href', Drupal.url(escapeAdminPath));
         $toolbarEscape.closest('.toolbar-tab').removeClass('hidden');
       }
