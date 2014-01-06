@@ -106,7 +106,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
    * @see block_test_block_insert()
    */
   public function testCustomBlockSaveOnInsert() {
-    // custom_block_test_custom_block_insert() tiggers a save on insert if the
+    // custom_block_test_custom_block_insert() triggers a save on insert if the
     // title equals 'new'.
     $block = $this->createCustomBlock('new');
     $this->assertEqual($block->label(), 'CustomBlock ' . $block->id(), 'Custom block saved on block insert.');
