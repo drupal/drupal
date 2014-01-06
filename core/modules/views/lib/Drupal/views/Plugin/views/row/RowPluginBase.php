@@ -47,7 +47,9 @@ abstract class RowPluginBase extends PluginBase {
     return $this->usesFields;
   }
 
-
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     if (isset($this->base_table)) {
@@ -117,6 +119,9 @@ abstract class RowPluginBase extends PluginBase {
    */
   public function submitOptionsForm(&$form, &$form_state) { }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     if (isset($this->base_table)) {
       if (isset($this->options['relationship']) && isset($this->view->relationship[$this->options['relationship']])) {
