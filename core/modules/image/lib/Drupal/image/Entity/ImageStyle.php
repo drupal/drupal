@@ -127,9 +127,9 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
       // Check whether field instance settings need to be updated.
       // In case no replacement style was specified, all image fields that are
       // using the deleted style are left in a broken state.
-      if ($new_id = $style->get('replacementID')) {
+      if ($new_id = $style->getReplacementID()) {
         // The deleted ID is still set as originalID.
-        $style->set('name', $new_id);
+        $style->setName($new_id);
         static::replaceImageStyle($style);
       }
     }
@@ -372,4 +372,25 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
     return $properties;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getReplacementID() {
+    return $this->get('replacementID');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return $this->get('name');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setName($name) {
+    $this->set('name', $name);
+    return $this;
+  }
 }

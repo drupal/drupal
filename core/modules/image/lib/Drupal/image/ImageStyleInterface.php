@@ -16,6 +16,34 @@ use Drupal\image\ImageEffectInterface;
 interface ImageStyleInterface extends ConfigEntityInterface {
 
   /**
+   * Returns the replacement ID.
+   *
+   * @return string
+   *   The name of the image style to use as replacement upon delete.
+   */
+  public function getReplacementID();
+
+  /**
+   * Returns the image style.
+   *
+   * @return string
+   *   The name of the image style.
+   */
+  public function getName();
+
+  /**
+   * Sets the name of the image style.
+   *
+   * @param string $name
+   *   The name of the image style.
+   *
+   * @return \Drupal\image\ImageEffectInterface
+   *   The class instance this method is called on.
+   */
+  public function setName($name);
+
+
+  /**
    * Returns the URI of this image when using this style.
    *
    * The path returned by this function may not exist. The default generation
