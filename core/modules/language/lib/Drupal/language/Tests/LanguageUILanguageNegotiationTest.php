@@ -411,11 +411,6 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Enable the language switcher block.
     $this->drupalPlaceBlock('language_block:' . Language::TYPE_INTERFACE, array('id' => 'test_language_block'));
 
-    // Log out, because for anonymous users, the "active" class is set by PHP
-    // (which means we can easily test it here), whereas for authenticated users
-    // it is set by JavaScript.
-    $this->drupalLogout();
-
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.
     $http_header = array("Accept-Language: $langcode_browser_fallback;q=1");
@@ -469,7 +464,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $italian_url = url('admin', array('language' => $languages['it'], 'script' => ''));
     $url_scheme = $this->request->isSecure() ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
-    $this->assertEqual($italian_url, $correct_link, format_string('The url() function returns the right URL (@url) in accordance with the chosen language', array('@url' => $italian_url)));
+    $this->assertTrue($italian_url == $correct_link, format_string('The url() function returns the right URL (@url) in accordance with the chosen language', array('@url' => $italian_url)));
 
     // Test HTTPS via options.
     $this->settingsSet('mixed_mode_sessions', TRUE);

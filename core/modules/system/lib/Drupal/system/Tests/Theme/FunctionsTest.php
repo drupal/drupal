@@ -2,15 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Theme\FunctionsTest.
+ * Definition of Drupal\system\Tests\Theme\FunctionsTest.
  */
 
 namespace Drupal\system\Tests\Theme;
 
-use Drupal\Core\Session\UserSession;
 use Drupal\simpletest\WebTestBase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests for common theme functions.
@@ -162,6 +159,12 @@ class FunctionsTest extends WebTestBase {
     $expected = '';
     $this->assertThemeOutput('links', $variables, $expected, 'Empty %callback with heading generates no output.');
 
+    // Set the current path to the front page path.
+    // Required to verify the "active" class in expected links below, and
+    // because the current path is different when running tests manually via
+    // simpletest.module ('batch') and via the testing framework ('').
+    _current_path(\Drupal::config('system.site')->get('page.front'));
+
     // Verify that a list of links is properly rendered.
     $variables = array();
     $variables['attributes'] = array('id' => 'somelinks');
@@ -188,7 +191,7 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<ul id="somelinks">';
     $expected_links .= '<li class="a-link odd first"><a href="' . url('a/link') . '">' . check_plain('A <link>') . '</a></li>';
     $expected_links .= '<li class="plain-text even">' . check_plain('Plain "text"') . '</li>';
-    $expected_links .= '<li class="front-page odd"><a href="' . url('<front>') . '">' . check_plain('Front page') . '</a></li>';
+    $expected_links .= '<li class="front-page odd active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
     $expected_links .= '<li class="router-test even last"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . check_plain('Test route') . '</a></li>';
     $expected_links .= '</ul>';
 
@@ -221,21 +224,8 @@ class FunctionsTest extends WebTestBase {
     $expected_links .= '<ul id="somelinks">';
     $expected_links .= '<li class="a-link odd first"><a href="' . url('a/link') . '" class="a/class">' . check_plain('A <link>') . '</a></li>';
     $expected_links .= '<li class="plain-text even"><span class="a/class">' . check_plain('Plain "text"') . '</span></li>';
-    $expected_links .= '<li class="front-page odd"><a href="' . url('<front>') . '">' . check_plain('Front page') . '</a></li>';
+    $expected_links .= '<li class="front-page odd active"><a href="' . url('<front>') . '" class="active">' . check_plain('Front page') . '</a></li>';
     $expected_links .= '<li class="router-test even last"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . check_plain('Test route') . '</a></li>';
-    $expected_links .= '</ul>';
-    $expected = $expected_heading . $expected_links;
-    $this->assertThemeOutput('links', $variables, $expected);
-
-    // Verify the data- attributes for setting the "active" class on links.
-    $this->container->set('current_user', new UserSession(array('uid' => 1)));
-    $variables['set_active_class'] = TRUE;
-    $expected_links = '';
-    $expected_links .= '<ul id="somelinks">';
-    $expected_links .= '<li class="a-link odd first" data-drupal-link-system-path="a/link"><a href="' . url('a/link') . '" class="a/class">' . check_plain('A <link>') . '</a></li>';
-    $expected_links .= '<li class="plain-text even"><span class="a/class">' . check_plain('Plain "text"') . '</span></li>';
-    $expected_links .= '<li class="front-page odd" data-drupal-link-system-path="&lt;front&gt;"><a href="' . url('<front>') . '">' . check_plain('Front page') . '</a></li>';
-    $expected_links .= '<li class="router-test even last" data-drupal-link-system-path="router_test/test1"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . check_plain('Test route') . '</a></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);

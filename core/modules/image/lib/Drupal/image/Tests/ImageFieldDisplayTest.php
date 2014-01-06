@@ -113,7 +113,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     );
-    $default_output = l($image, 'node/' . $nid, array('html' => TRUE));
+    $default_output = l($image, 'node/' . $nid, array('html' => TRUE, 'attributes' => array('class' => 'active')));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image linked to content formatter displaying correctly on full node view.');
 

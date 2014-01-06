@@ -267,7 +267,7 @@ Drupal.t = function (str, args, options) {
  * Returns the URL to a Drupal page.
  */
 Drupal.url = function (path) {
-  return drupalSettings.path.basePath + drupalSettings.path.scriptPath + path;
+  return drupalSettings.basePath + drupalSettings.scriptPath + path;
 };
 
 /**

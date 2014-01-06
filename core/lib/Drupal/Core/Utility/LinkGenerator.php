@@ -7,15 +7,12 @@
 
 namespace Drupal\Core\Utility;
 
-use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Routing\UrlGeneratorInterface;
-use Drupal\Core\Session\AccountInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,6 +20,13 @@ use Symfony\Component\HttpFoundation\Request;
  * Provides a class which generates a link with route names and parameters.
  */
 class LinkGenerator implements LinkGeneratorInterface {
+
+  /**
+   * Stores some information about the current request, like the language.
+   *
+   * @var array
+   */
+  protected $active;
 
   /**
    * The url generator.
@@ -46,13 +50,6 @@ class LinkGenerator implements LinkGeneratorInterface {
   protected $languageManager;
 
   /**
-   * The path alias manager.
-   *
-   * @var \Drupal\Core\Path\AliasManagerInterface
-   */
-  protected $aliasManager;
-
-  /**
    * Constructs a LinkGenerator instance.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
@@ -61,14 +58,11 @@ class LinkGenerator implements LinkGeneratorInterface {
    *   The module handler.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
-   *   The path alias manager.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, LanguageManager $language_manager, AliasManagerInterface $alias_manager) {
+  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, LanguageManager $language_manager) {
     $this->urlGenerator = $url_generator;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
-    $this->aliasManager = $alias_manager;
   }
 
   /**
@@ -99,15 +93,6 @@ class LinkGenerator implements LinkGeneratorInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * For anonymous users, the "active" class will be calculated on the server,
-   * because most sites serve each anonymous user the same cached page anyway.
-   * For authenticated users, the "active" class will be calculated on the
-   * client (through JavaScript), only data- attributes are added to links to
-   * prevent breaking the render cache. The JavaScript is added in
-   * system_page_build().
-   *
-   * @see system_page_build()
    */
   public function generate($text, $route_name, array $parameters = array(), array $options = array()) {
     // Start building a structured representation of our link to be altered later.
@@ -125,31 +110,30 @@ class LinkGenerator implements LinkGeneratorInterface {
       'query' => array(),
       'html' => FALSE,
       'language' => NULL,
-      'set_active_class' => FALSE,
     );
-
     // Add a hreflang attribute if we know the language of this link's url and
     // hreflang has not already been set.
     if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
       $variables['options']['attributes']['hreflang'] = $variables['options']['language']->id;
     }
 
-    // Set the "active" class if the 'set_active_class' option is not empty.
-    if (!empty($variables['options']['set_active_class'])) {
-      // Add a "data-drupal-link-query" attribute to let the
-      // drupal.active-link library know the query in a standardized manner.
-      if (!empty($variables['options']['query'])) {
-        $query = $variables['options']['query'];
-        ksort($query);
-        $variables['options']['attributes']['data-drupal-link-query'] = Json::encode($query);
-      }
+    // This is only needed for the active class. The generator also combines
+    // the parameters and $options['query'] and adds parameters that are not
+    // path slugs as query strings.
+    $full_parameters = $parameters + (array) $variables['options']['query'];
 
-      // Add a "data-drupal-link-system-path" attribute to let the
-      // drupal.active-link library know the path in a standardized manner.
-      if (!isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
-        $path = $this->urlGenerator->getPathFromRoute($route_name, $parameters);
-        $variables['options']['attributes']['data-drupal-link-system-path'] = $this->aliasManager->getSystemPath($path);
-      }
+    // Determine whether this link is "active", meaning that it has the same
+    // URL path and query string as the current page. Note that this may be
+    // removed from l() in https://drupal.org/node/1979468 and would be removed
+    // or altered here also.
+    $variables['url_is_active'] = $route_name == $this->active['route_name']
+      // The language of an active link is equal to the current language.
+      && (empty($variables['options']['language']) || $variables['options']['language']->id == $this->active['language'])
+      && $full_parameters == $this->active['parameters'];
+
+    // Add the "active" class if appropriate.
+    if ($variables['url_is_active']) {
+      $variables['options']['attributes']['class'][] = 'active';
     }
 
     // Remove all HTML and PHP tags from a tooltip, calling expensive strip_tags()

@@ -58,7 +58,6 @@ class LanguageTestController implements ContainerInjectionInterface {
           'attributes' => array(
             'id' => 'no_lang_link',
           ),
-          'set_active_class' => TRUE,
         ),
       ),
       'fr' => array(
@@ -70,7 +69,6 @@ class LanguageTestController implements ContainerInjectionInterface {
           'attributes' => array(
             'id' => 'fr_link',
           ),
-          'set_active_class' => TRUE,
         ),
       ),
       'en' => array(
@@ -82,7 +80,6 @@ class LanguageTestController implements ContainerInjectionInterface {
           'attributes' => array(
             'id' => 'en_link',
           ),
-          'set_active_class' => TRUE,
         ),
       ),
     );

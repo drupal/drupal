@@ -597,7 +597,7 @@ Drupal.AjaxCommands.prototype = {
       case 'empty':
       case 'remove':
         settings = response.settings || ajax.settings || drupalSettings;
-        Drupal.detachBehaviors(wrapper.get(0), settings);
+        Drupal.detachBehaviors(wrapper, settings);
     }
 
     // Add the new content to the page.
@@ -625,7 +625,7 @@ Drupal.AjaxCommands.prototype = {
     if (new_content.parents('html').length > 0) {
       // Apply any settings from the returned JSON if available.
       settings = response.settings || ajax.settings || drupalSettings;
-      Drupal.attachBehaviors(new_content.get(0), settings);
+      Drupal.attachBehaviors(new_content, settings);
     }
   },
 

@@ -35,9 +35,6 @@ class CommonTestController implements ContainerInjectionInterface {
         '#type' => 'link',
         '#title' => t('Link with no query string'),
         '#href' => current_path(),
-        '#options' => array(
-          'set_active_class' => TRUE,
-        ),
       ),
       'with_query' => array(
         '#type' => 'link',
@@ -48,7 +45,6 @@ class CommonTestController implements ContainerInjectionInterface {
             'foo' => 'bar',
             'one' => 'two',
           ),
-          'set_active_class' => TRUE,
         ),
       ),
       'with_query_reversed' => array(
@@ -60,7 +56,6 @@ class CommonTestController implements ContainerInjectionInterface {
             'one' => 'two',
             'foo' => 'bar',
           ),
-          'set_active_class' => TRUE,
         ),
       ),
     );

@@ -399,7 +399,6 @@ function language_switcher_url($type, $path) {
       'title'      => $language->name,
       'language'   => $language,
       'attributes' => array('class' => array('language-link')),
-      'set_active_class' => TRUE,
     );
   }
 
