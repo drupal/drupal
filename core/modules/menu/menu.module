@@ -633,13 +633,6 @@ function menu_form_node_type_form_alter(&$form, $form_state) {
     '#attributes' => array('class' => array('menu-title-select')),
   );
 
-  // Call Drupal.menuUpdateParentList() to filter the list of
-  // available default parent menu items based on the selected menus.
-  drupal_add_js(
-    '(function ($) { Drupal.menuUpdateParentList(); })(jQuery);',
-    array('scope' => 'footer', 'type' => 'inline')
-  );
-
   $form['actions']['submit']['#submit'][] = 'menu_form_node_type_form_submit';
 }
 

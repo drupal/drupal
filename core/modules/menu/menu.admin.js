@@ -4,8 +4,15 @@
 
 Drupal.behaviors.menuChangeParentItems = {
   attach: function (context, settings) {
-    // Update list of available parent menu items.
-    $('#edit-menu').on('change', 'input', Drupal.menuUpdateParentList);
+    var $menu = $('#edit-menu');
+    $menu.once('menu-parent', function () {
+      // Update the list of available parent menu items to match the initial
+      // available menus.
+      Drupal.menuUpdateParentList();
+
+      // Update list of available parent menu items.
+      $menu.on('change', 'input', Drupal.menuUpdateParentList);
+    });
   }
 };
 
