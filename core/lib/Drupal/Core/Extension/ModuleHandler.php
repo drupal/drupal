@@ -426,7 +426,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     $hook_info = $this->getHookInfo();
     foreach ($this->moduleList as $module => $filename) {
       $include_file = isset($hook_info[$hook]['group']) && $this->loadInclude($module, 'inc', $module . '.' . $hook_info[$hook]['group']);
-      // Since $this->hookImplements() may needlessly try to load the include
+      // Since $this->implementsHook() may needlessly try to load the include
       // file again, function_exists() is used directly here.
       if (function_exists($module . '_' . $hook)) {
         $this->implementations[$hook][$module] = $include_file ? $hook_info[$hook]['group'] : FALSE;
