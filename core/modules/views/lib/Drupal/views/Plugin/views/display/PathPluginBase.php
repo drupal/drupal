@@ -145,6 +145,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $argument_ids = array_keys($view_arguments);
     $total_arguments = count($argument_ids);
 
+    $argument_map = array();
+
     // Replace arguments in the views UI (defined via %) with parameters in
     // routes (defined via {}). As a name for the parameter use arg_$key, so
     // it can be pulled in the views controller from the request.
@@ -154,6 +156,13 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         // handler.
         $arg_id = 'arg_' . $argument_ids[$arg_counter++];
         $bits[$pos] = '{' . $arg_id . '}';
+      }
+      elseif (strpos($bit, '%') === 0) {
+        // Use the name defined in the path.
+        $parameter_name = substr($bit, 1);
+        $arg_id = 'arg_' . $argument_ids[$arg_counter++];
+        $argument_map[$arg_id] = $parameter_name;
+        $bits[$pos] = '{' . $parameter_name . '}';
       }
     }
 
@@ -189,6 +198,9 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // @todo Figure out whether _access_mode ANY is the proper one. This is
     //   particular important for altering routes.
     $route->setOption('_access_mode', 'ANY');
+
+    // Set the argument map, in order to support named parameters.
+    $route->setDefault('_view_argument_map', $argument_map);
 
     return $route;
   }
@@ -445,7 +457,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $form['path'] = array(
           '#type' => 'textfield',
           '#title' => t('Path'),
-          '#description' => t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed".'),
+          '#description' => t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed". If needed you can even specify named route parameters like taxonomy/term/%taxonomy_term'),
           '#default_value' => $this->getOption('path'),
           '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)),
           '#field_suffix' => '</span>&lrm;',

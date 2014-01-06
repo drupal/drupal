@@ -180,6 +180,42 @@ class PathPluginBaseTest extends UnitTestCase {
   }
 
   /**
+   * Tests the collectRoutes method with a path containing named parameters.
+   *
+   * @see \Drupal\views\Plugin\views\display\PathPluginBase::collectRoutes()
+   */
+  public function testCollectRoutesWithNamedParameters() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    list($view) = $this->setupViewExecutableAccessPlugin();
+
+    $view->expects($this->once())
+      ->method('initHandlers');
+    $view->argument = array();
+    $view->argument['nid'] = $this->getMockBuilder('Drupal\views\Plugin\views\argument\ArgumentPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $display = array();
+    $display['display_plugin'] = 'page';
+    $display['id'] = 'page_1';
+    $display['display_options'] = array(
+      'path' => 'test_route/%node/example',
+    );
+    $this->pathPlugin->initDisplay($view, $display);
+
+    $collection = new RouteCollection();
+    $result = $this->pathPlugin->collectRoutes($collection);
+    $this->assertEquals(array('test_id.page_1' => 'view.test_id.page_1'), $result);
+
+    $route = $collection->get('view.test_id.page_1');
+    $this->assertTrue($route instanceof Route);
+    $this->assertEquals('/test_route/{node}/example', $route->getPath());
+    $this->assertEquals('test_id', $route->getDefault('view_id'));
+    $this->assertEquals('page_1', $route->getDefault('display_id'));
+    $this->assertEquals(array('arg_nid' => 'node'), $route->getDefault('_view_argument_map'));
+  }
+
+  /**
    * Tests alter routes with parameters in the overriding route.
    */
   public function testAlterRoutesWithParameters() {
