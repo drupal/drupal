@@ -446,9 +446,9 @@ class UnicodeTest extends UnitTestCase {
    */
   public function providerTestConvertToUtf8() {
     return array(
-      array(chr(0x97), 'Windows-1250', '—'),
-      array(chr(0x99), 'Windows-1250', '™'),
-      array(chr(0x80), 'Windows-1250', '€'),
+      array(chr(0x97), 'Windows-1252', '—'),
+      array(chr(0x99), 'Windows-1252', '™'),
+      array(chr(0x80), 'Windows-1252', '€'),
     );
   }
 
