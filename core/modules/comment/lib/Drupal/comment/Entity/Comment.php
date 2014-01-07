@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Entity;
 
+use Drupal\Component\Utility\Number;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
@@ -245,7 +246,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
           $max = rtrim($max, '/');
           // We need to get the value at the correct depth.
           $parts = explode('.', $max);
-          $n = comment_alphadecimal_to_int($parts[0]);
+          $n = Number::alphadecimalToInt($parts[0]);
           $prefix = '';
         }
         else {
@@ -272,14 +273,14 @@ class Comment extends ContentEntityBase implements CommentInterface {
             // Get the value at the correct depth.
             $parts = explode('.', $max);
             $parent_depth = count(explode('.', $parent->thread->value));
-            $n = comment_alphadecimal_to_int($parts[$parent_depth]);
+            $n = Number::alphadecimalToInt($parts[$parent_depth]);
           }
         }
         // Finally, build the thread field for this new comment. To avoid
         // race conditions, get a lock on the thread. If another process already
         // has the lock, just move to the next integer.
         do {
-          $thread = $prefix . comment_int_to_alphadecimal(++$n) . '/';
+          $thread = $prefix . Number::intToAlphadecimal(++$n) . '/';
           $lock_name = "comment:{$this->entity_id->value}:$thread";
         } while (!\Drupal::lock()->acquire($lock_name));
         $this->threadLock = $lock_name;

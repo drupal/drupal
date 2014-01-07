@@ -57,4 +57,47 @@ class Number {
     return $computed_acceptable_error >= $remainder || $remainder >= ($step - $computed_acceptable_error);
   }
 
+  /**
+   * Generates a sorting code from an integer.
+   *
+   * Consists of a leading character indicating length, followed by N digits
+   * with a numerical value in base 36 (alphadecimal). These codes can be sorted
+   * as strings without altering numerical order.
+   *
+   * It goes:
+   * 00, 01, 02, ..., 0y, 0z,
+   * 110, 111, ... , 1zy, 1zz,
+   * 2100, 2101, ..., 2zzy, 2zzz,
+   * 31000, 31001, ...
+   *
+   * @param int $i
+   *   The integer value to convert.
+   *
+   * @return string
+   *   The alpha decimal value.
+   *
+   * @see \Drupal\Component\Utility\Number::alphadecimalToInt
+   */
+  public static function intToAlphadecimal($i = 0) {
+    $num = base_convert((int) $i, 10, 36);
+    $length = strlen($num);
+
+    return chr($length + ord('0') - 1) . $num;
+  }
+
+  /**
+   * Decodes a sorting code back to an integer.
+   *
+   * @param string $string
+   *   The alpha decimal value to convert
+   *
+   * @return int
+   *   The integer value.
+   *
+   * @see \Drupal\Component\Utility\Number::intToAlphadecimal
+   */
+  public static function alphadecimalToInt($string = '00') {
+    return (int) base_convert(substr($string, 1), 36, 10);
+  }
+
 }

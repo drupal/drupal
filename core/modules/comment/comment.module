@@ -10,6 +10,7 @@
  * book page, user etc.
  */
 
+use Drupal\Component\Utility\Number;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\comment\CommentInterface;
@@ -1590,21 +1591,20 @@ function _comment_per_page() {
  * 110, 111, ... , 1zy, 1zz,
  * 2100, 2101, ..., 2zzy, 2zzz,
  * 31000, 31001, ...
+ *
+ * @deprecated Use \Drupal\Component\Utility\Number::intToAlphadecimal() instead.
  */
 function comment_int_to_alphadecimal($i = 0) {
-  $num = base_convert((int) $i, 10, 36);
-  $length = strlen($num);
-
-  return chr($length + ord('0') - 1) . $num;
+  return Number::alphadecimalToInt($i);
 }
 
 /**
  * Decodes a sorting code back to an integer.
  *
- * @see comment_int_to_alphadecimal()
+ * @deprecated Use \Drupal\Component\Utility\Number::alphadecimalToInt() instead.
  */
 function comment_alphadecimal_to_int($c = '00') {
-  return base_convert(substr($c, 1), 36, 10);
+  return Number::alphadecimalToInt($c);
 }
 
 /**

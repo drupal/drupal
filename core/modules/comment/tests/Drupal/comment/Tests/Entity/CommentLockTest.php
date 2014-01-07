@@ -37,7 +37,7 @@ class CommentLockTest extends UnitTestCase {
     $container->register('request', 'Symfony\Component\HttpFoundation\Request');
     $lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
     $cid = 2;
-    $lock_name = "comment:$cid:./";
+    $lock_name = "comment:$cid:01.00/";
     $lock->expects($this->at(0))
       ->method('acquire')
       ->with($lock_name, 30)
@@ -65,9 +65,10 @@ class CommentLockTest extends UnitTestCase {
     $comment->status->value = 1;
     $comment->entity_id->value = $cid;
     $comment->uid->target_id = 3;
+    // Parent comment is the first in thread.
     $comment->pid->target_id = 42;
     $comment->pid->entity = new \stdClass();
-    $comment->pid->entity->thread = (object) array('value' => '');
+    $comment->pid->entity->thread = (object) array('value' => '01/');
     $storage_controller = $this->getMock('Drupal\comment\CommentStorageControllerInterface');
     $comment->preSave($storage_controller);
     $comment->postSave($storage_controller);
@@ -85,9 +86,6 @@ class CommentLockTest extends UnitTestCase {
 }
 }
 namespace {
-if (!function_exists('comment_int_to_alphadecimal')) {
-  function comment_int_to_alphadecimal() {}
-}
 if (!function_exists('module_invoke_all')) {
   function module_invoke_all() {}
 }
