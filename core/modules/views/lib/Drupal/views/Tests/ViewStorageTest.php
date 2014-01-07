@@ -142,6 +142,8 @@ class ViewStorageTest extends ViewUnitTestBase {
 
     // Create a new View instance with config values.
     $values = \Drupal::config('views.view.test_view_storage')->get();
+    $values['id'] = 'test_view_storage_new';
+    unset($values['uuid']);
     $created = $this->controller->create($values);
 
     $this->assertTrue($created instanceof View, 'Created object is a View.');
@@ -157,7 +159,6 @@ class ViewStorageTest extends ViewUnitTestBase {
     }
 
     // Check the UUID of the loaded View.
-    $created->set('id', 'test_view_storage_new');
     $created->save();
     $created_loaded = entity_load('view', 'test_view_storage_new');
     $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created UUID has been saved correctly.');

@@ -346,10 +346,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     if ($this->isNew()) {
-      // Ensure the field instance is unique within the bundle.
-      if ($prior_instance = $storage_controller->load($this->id())) {
-        throw new FieldException(format_string('Attempt to create an instance of field %name on bundle @bundle that already has an instance of that field.', array('%name' => $this->field->name, '@bundle' => $this->bundle)));
-      }
       // Set the default instance settings.
       $this->settings += $field_type_manager->getDefaultInstanceSettings($this->field->type);
       // Notify the entity storage controller.

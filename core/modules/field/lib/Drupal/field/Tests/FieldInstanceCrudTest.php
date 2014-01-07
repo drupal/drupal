@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\field\FieldException;
 
 class FieldInstanceCrudTest extends FieldUnitTestBase {
@@ -90,7 +91,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
       entity_create('field_instance', $this->instance_definition)->save();
       $this->fail(t('Cannot create two instances with the same field / bundle combination.'));
     }
-    catch (FieldException $e) {
+    catch (EntityStorageException $e) {
       $this->pass(t('Cannot create two instances with the same field / bundle combination.'));
     }
 

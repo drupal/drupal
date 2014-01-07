@@ -8,6 +8,7 @@
 namespace Drupal\config\Tests;
 
 use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
@@ -135,24 +136,18 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertIdentical($config_test->isNew(), FALSE);
     $this->assertIdentical($config_test->getOriginalId(), $expected['id']);
 
-    // Re-create the entity with the same ID and verify updated status.
+    // Ensure that creating an entity with the same id as an existing one is not
+    // possible.
     $same_id = entity_create('config_test', array(
       'id' => $config_test->id(),
     ));
     $this->assertIdentical($same_id->isNew(), TRUE);
-    $status = $same_id->save();
-    $this->assertIdentical($status, SAVED_UPDATED);
-
-    // Verify that the entity was overwritten.
-    $same_id = entity_load('config_test', $config_test->id());
-    $this->assertIdentical($same_id->id(), $config_test->id());
-    $this->assertIdentical($same_id->label(), NULL);
-    $this->assertNotEqual($same_id->uuid(), $config_test->uuid());
-
-    // Delete the overridden entity first.
-    $same_id->delete();
-    // Revert to previous state.
-    $config_test->save();
+    try {
+      $same_id->save();
+      $this->fail('Not possible to overwrite an entity entity.');
+    } catch (EntityStorageException $e) {
+      $this->pass('Not possible to overwrite an entity entity.');
+    }
 
     // Verify that renaming the ID returns correct status and properties.
     $ids = array($expected['id'], 'second_' . $this->randomName(4), 'third_' . $this->randomName(4));

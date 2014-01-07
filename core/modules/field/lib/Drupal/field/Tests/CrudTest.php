@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\field\FieldException;
 
 class CrudTest extends FieldUnitTestBase {
@@ -70,7 +71,7 @@ class CrudTest extends FieldUnitTestBase {
       entity_create('field_entity', $field_definition)->save();
       $this->fail(t('Cannot create two fields with the same name.'));
     }
-    catch (FieldException $e) {
+    catch (EntityStorageException $e) {
       $this->pass(t('Cannot create two fields with the same name.'));
     }
 

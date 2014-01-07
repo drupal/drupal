@@ -316,12 +316,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
       ));
     }
 
-    // Ensure the field name is unique (we do not care about deleted fields).
-    if ($prior_field = $storage_controller->load($this->id)) {
-      $message = 'Attempt to create field name %name which already exists.';
-      throw new FieldException(format_string($message, array('%name' => $this->name)));
-    }
-
     // Disallow reserved field names. This can't prevent all field name
     // collisions with existing entity properties, but some is better than
     // none.
