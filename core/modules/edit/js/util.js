@@ -41,7 +41,8 @@ Drupal.edit.util.buildUrl = function (id, urlFormat) {
  *   The message to use in the modal dialog.
  */
 Drupal.edit.util.networkErrorModal = function (title, message) {
-  var networkErrorModal = Drupal.dialog('<div>' + message + '</div>', {
+  var $message = $('<div>' + message + '</div>');
+  var networkErrorModal = Drupal.dialog($message.get(0), {
     title: title,
     dialogClass: 'edit-network-error',
     buttons: [

@@ -1345,7 +1345,8 @@ function openGroupNameDialog (view, $group, callback) {
   }
 
   // Create a Drupal dialog that will get a button group name from the user.
-  var dialog = Drupal.dialog(Drupal.theme('ckeditorButtonGroupNameForm'), {
+  var $ckeditorButtonGroupNameForm = $(Drupal.theme('ckeditorButtonGroupNameForm'));
+  var dialog = Drupal.dialog($ckeditorButtonGroupNameForm.get(0), {
     title: Drupal.t('Button group name'),
     dialogClass: 'ckeditor-name-toolbar-group',
     resizable: false,

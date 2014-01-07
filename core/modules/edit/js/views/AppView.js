@@ -350,7 +350,8 @@ Drupal.edit.AppView = Backbone.View.extend({
 
     // Only instantiate if there isn't a modal instance visible yet.
     if (!this.model.get('activeModal')) {
-      discardDialog = Drupal.dialog('<div>' + Drupal.t('You have unsaved changes') + '</div>', {
+      var $unsavedChanges = $('<div>' + Drupal.t('You have unsaved changes') + '</div>');
+      discardDialog = Drupal.dialog($unsavedChanges.get(0), {
         title: Drupal.t('Discard changes?'),
         dialogClass: 'edit-discard-modal',
         resizable: false,
