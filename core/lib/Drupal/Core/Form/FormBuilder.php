@@ -14,8 +14,7 @@ use Drupal\Component\Utility\Url;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\HttpKernel;
-use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -124,7 +123,7 @@ class FormBuilder implements FormBuilderInterface {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_expirable_factory
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The keyvalue expirable factory.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
@@ -137,7 +136,7 @@ class FormBuilder implements FormBuilderInterface {
    * @param \Drupal\Core\HttpKernel $http_kernel
    *   The HTTP kernel.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, UrlGeneratorInterface $url_generator, TranslationInterface $translation_manager, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueExpirableFactoryInterface $key_value_expirable_factory, EventDispatcherInterface $event_dispatcher, UrlGeneratorInterface $url_generator, TranslationInterface $translation_manager, CsrfTokenGenerator $csrf_token = NULL, HttpKernel $http_kernel = NULL) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->eventDispatcher = $event_dispatcher;

@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines the key/value store factory.
  */
-class KeyValueExpirableFactory extends KeyValueFactory {
+class KeyValueExpirableFactory extends KeyValueFactory implements KeyValueExpirableFactoryInterface {
 
   const DEFAULT_SERVICE = 'keyvalue.expirable.database';
 

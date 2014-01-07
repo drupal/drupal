@@ -10,7 +10,7 @@ namespace Drupal\Core\KeyValueStore;
 /**
  * Defines the key/value store factory for the null backend.
  */
-class KeyValueNullExpirableFactory implements KeyValueFactoryInterface {
+class KeyValueNullExpirableFactory implements KeyValueExpirableFactoryInterface {
 
   /**
    * {@inheritdoc}
