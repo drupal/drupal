@@ -14,7 +14,7 @@ use Drupal\Component\Utility\Settings;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class CacheFactory extends ContainerAware {
+class CacheFactory extends ContainerAware implements CacheFactoryInterface {
 
   /**
    * The settings array.

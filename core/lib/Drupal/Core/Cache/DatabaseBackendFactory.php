@@ -9,7 +9,7 @@ namespace Drupal\Core\Cache;
 
 use Drupal\Core\Database\Connection;
 
-class DatabaseBackendFactory {
+class DatabaseBackendFactory implements CacheFactoryInterface {
 
   /**
    * The database connection.
