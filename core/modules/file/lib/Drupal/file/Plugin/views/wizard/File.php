@@ -23,7 +23,7 @@ class File extends WizardPluginBase {
   /**
    * Set the created column.
    */
-  protected $createdColumn = 'timestamp';
+  protected $createdColumn = 'created';
 
   /**
    * Set default values for the path field options.

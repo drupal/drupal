@@ -776,7 +776,8 @@ db_insert('file_managed')->fields(array(
   'filemime',
   'filesize',
   'status',
-  'timestamp'
+  'created',
+  'changed',
 ))
 ->values(array(
   'fid' => '1',
@@ -786,6 +787,7 @@ db_insert('file_managed')->fields(array(
   'filemime' => 'text/plain',
   'filesize' => 0,
   'status' => 1,
-  'timestamp' => '1314997642',
+  'created' => '1314997642',
+  'changed' => '1314997642',
 ))
 ->execute();

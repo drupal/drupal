@@ -111,8 +111,15 @@ class File extends ContentEntityBase implements FileInterface {
   /**
    * {@inheritdoc}
    */
+  public function getCreatedTime() {
+    return $this->get('created')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getChangedTime() {
-    return $this->get('timestamp')->value;
+    return $this->get('changed')->value;
   }
 
   /**
@@ -178,7 +185,11 @@ class File extends ContentEntityBase implements FileInterface {
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     parent::preSave($storage_controller);
 
-    $this->timestamp = REQUEST_TIME;
+    $this->changed->value = REQUEST_TIME;
+    if (empty($this->created->value)) {
+      $this->created->value = REQUEST_TIME;
+    }
+
     $this->setSize(filesize($this->getFileUri()));
     if (!isset($this->langcode->value)) {
       // Default the file's language code to none, because files are language
@@ -253,9 +264,13 @@ class File extends ContentEntityBase implements FileInterface {
       ->setLabel(t('Status'))
       ->setDescription(t('The status of the file, temporary (0) and permanent (1).'));
 
-    $fields['timestamp'] = FieldDefinition::create('integer')
+    $fields['created'] = FieldDefinition::create('integer')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the node was created.'));
+      ->setDescription(t('The timestamp that the file was created.'));
+
+    $fields['changed'] = FieldDefinition::create('integer')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The timestamp that the file was last changed.'));
 
     return $fields;
   }

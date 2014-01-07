@@ -224,7 +224,8 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'filemime' => 'text/plain',
       'filesize' => filesize($url),
       'status' => 1,
-      'timestamp' => REQUEST_TIME,
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
     ));
 
     $this->assertHookMessageOrder(array(

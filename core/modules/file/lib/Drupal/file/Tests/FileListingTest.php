@@ -158,7 +158,8 @@ class FileListingTest extends FileFieldTestBase {
       'filename' => 'druplicon.txt',
       'uri' => 'public://druplicon.txt',
       'filemime' => 'text/plain',
-      'timestamp' => 1,
+      'created' => 1,
+      'changed' => 1,
       'status' => FILE_STATUS_PERMANENT,
     ));
     file_put_contents($file->getFileUri(), 'hello world');

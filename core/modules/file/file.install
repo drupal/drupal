@@ -78,8 +78,15 @@ function file_schema() {
         'default' => 0,
         'size' => 'tiny',
       ),
-      'timestamp' => array(
-        'description' => 'UNIX timestamp for when the file was added.',
+      'created' => array(
+        'description' => 'UNIX timestamp for when the file added.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'description' => 'UNIX timestamp for when the file was last changed.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -89,7 +96,7 @@ function file_schema() {
     'indexes' => array(
       'uid' => array('uid'),
       'status' => array('status'),
-      'timestamp' => array('timestamp'),
+      'changed' => array('changed'),
     ),
     'unique keys' => array(
       'uuid' => array('uuid'),
@@ -320,4 +327,3 @@ function file_update_8004() {
   );
   db_change_field('file_managed', 'filesize', 'filesize', $spec);
 }
-

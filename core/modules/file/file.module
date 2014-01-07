@@ -1036,7 +1036,11 @@ function file_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         // These tokens are default variations on the chained tokens handled below.
-        case 'timestamp':
+        case 'created':
+          $replacements[$original] = format_date($file->getCreatedTime(), 'medium', '', NULL, $langcode);
+          break;
+
+        case 'changed':
           $replacements[$original] = format_date($file->getChangedTime(), 'medium', '', NULL, $langcode);
           break;
 
@@ -1047,7 +1051,11 @@ function file_tokens($type, $tokens, array $data = array(), array $options = arr
       }
     }
 
-    if ($date_tokens = $token_service->findWithPrefix($tokens, 'timestamp')) {
+    if ($date_tokens = $token_service->findWithPrefix($tokens, 'created')) {
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->getCreatedTime()), $options);
+    }
+
+    if ($date_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
       $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->getChangedTime()), $options);
     }
 
@@ -1094,8 +1102,13 @@ function file_token_info() {
     'name' => t("URL"),
     'description' => t("The web-accessible URL for the file."),
   );
-  $file['timestamp'] = array(
-    'name' => t("Timestamp"),
+  $file['created'] = array(
+    'name' => t("Created"),
+    'description' => t("The date the file created."),
+    'type' => 'date',
+  );
+  $file['changed'] = array(
+    'name' => t("Changed"),
     'description' => t("The date the file was most recently changed."),
     'type' => 'date',
   );

@@ -127,4 +127,11 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface {
    */
   public function setOwner(UserInterface $user);
 
+  /**
+   * Returns the node creation timestamp.
+   *
+   * @return int
+   *   Creation timestamp of the node.
+   */
+  public function getCreatedTime();
 }

@@ -71,7 +71,8 @@ display:
             filemime: filemime
             filesize: filesize
             status: status
-            timestamp: timestamp
+            created: created
+            changed: changed
             count: count
           info:
             fid:
@@ -109,7 +110,14 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            timestamp:
+            created:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            changed:
               sortable: true
               default_sort_order: desc
               align: ''
@@ -123,7 +131,7 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-medium
-          default: timestamp
+          default: changed
           empty_table: true
       row:
         type: fields
@@ -340,14 +348,66 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: file_status
-        timestamp:
-          id: timestamp
+        created:
+          id: created
           table: file_managed
-          field: timestamp
+          field: created
           relationship: none
           group_type: group
           admin_label: ''
           label: 'Upload date'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: ''
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: medium
+          custom_date_format: ''
+          timezone: ''
+          plugin_id: date
+        changed:
+          id: changed
+          table: file_managed
+          field: changed
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Changed date'
           exclude: false
           alter:
             alter_text: false

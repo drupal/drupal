@@ -33,9 +33,9 @@ class FileStorageController extends FieldableDatabaseStorageController implement
   public function retrieveTemporaryFiles() {
     // Use separate placeholders for the status to avoid a bug in some versions
     // of PHP. See http://drupal.org/node/352956.
-    return $this->database->query('SELECT fid FROM {' . $this->entityInfo->getBaseTable() . '} WHERE status <> :permanent AND timestamp < :timestamp', array(
+    return $this->database->query('SELECT fid FROM {' . $this->entityInfo->getBaseTable() . '} WHERE status <> :permanent AND changed < :changed', array(
       ':permanent' => FILE_STATUS_PERMANENT,
-      ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE
+      ':changed' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE
     ));
   }
 }

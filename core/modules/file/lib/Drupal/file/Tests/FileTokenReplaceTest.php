@@ -53,8 +53,10 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:mime]'] = check_plain($file->getMimeType());
     $tests['[file:size]'] = format_size($file->getSize());
     $tests['[file:url]'] = check_plain(file_create_url($file->getFileUri()));
-    $tests['[file:timestamp]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->id);
-    $tests['[file:timestamp:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->id);
+    $tests['[file:created]'] = format_date($file->getCreatedTime(), 'medium', '', NULL, $language_interface->id);
+    $tests['[file:created:short]'] = format_date($file->getCreatedTime(), 'short', '', NULL, $language_interface->id);
+    $tests['[file:changed]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->id);
+    $tests['[file:changed:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->id);
     $tests['[file:owner]'] = check_plain(user_format_name($this->admin_user));
     $tests['[file:owner:uid]'] = $file->getOwner()->id();
 

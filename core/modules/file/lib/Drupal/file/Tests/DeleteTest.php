@@ -65,7 +65,7 @@ class DeleteTest extends FileManagedTestBase {
     // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
     db_update('file_managed')
       ->fields(array(
-        'timestamp' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
+        'changed' => REQUEST_TIME - (DRUPAL_MAXIMUM_TEMP_FILE_AGE + 1),
       ))
       ->condition('fid', $file->id())
       ->execute();

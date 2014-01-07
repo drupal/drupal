@@ -134,7 +134,7 @@ class UsageTest extends FileManagedTestBase {
     db_update('file_managed')
       ->fields(array(
         'status' => 0,
-        'timestamp' => 1,
+        'changed' => 1,
       ))
       ->condition('fid', $temp_old->id())
       ->execute();
@@ -151,7 +151,7 @@ class UsageTest extends FileManagedTestBase {
     // Permanent file that is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
     $perm_old = file_save_data('');
     db_update('file_managed')
-      ->fields(array('timestamp' => 1))
+      ->fields(array('changed' => 1))
       ->condition('fid', $temp_old->id())
       ->execute();
     $this->assertTrue(file_exists($perm_old->getFileUri()), 'Old permanent file was created correctly.');

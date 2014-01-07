@@ -555,7 +555,8 @@ function user_update_8011() {
         'langcode' => Language::LANGCODE_NOT_SPECIFIED,
         'filesize' => filesize($destination),
         'filemime' => file_get_mimetype($destination),
-        'timestamp' => REQUEST_TIME,
+        'created' => REQUEST_TIME,
+        'changed' => REQUEST_TIME,
       ))
       ->execute();
     $default_image_fid = db_query('SELECT fid FROM {file_managed} WHERE uri = :uri', array(':uri' => $destination))->fetchField();

@@ -154,15 +154,30 @@ function file_views_data() {
     ),
   );
 
-  // timestamp field
-  $data['file_managed']['timestamp'] = array(
+  // The created field.
+  $data['file_managed']['created'] = array(
     'title' => t('Upload date'),
     'help' => t('The date the file was uploaded.'),
     'field' => array(
       'id' => 'date',
     ),
     'sort' => array(
-      'id' => 'date'
+      'id' => 'date',
+    ),
+    'filter' => array(
+      'id' => 'date',
+    ),
+  );
+
+  // The changed field.
+  $data['file_managed']['changed'] = array(
+    'title' => t('Modified date'),
+    'help' => t('The date the file was last changed.'),
+    'field' => array(
+      'id' => 'date',
+    ),
+    'sort' => array(
+      'id' => 'date',
     ),
     'filter' => array(
       'id' => 'date',
