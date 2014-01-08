@@ -443,79 +443,11 @@ function entity_access_controller($entity_type) {
 }
 
 /**
- * Returns an entity form controller for the given operation.
- *
- * Since there might be different scenarios in which an entity is edited,
- * multiple form controllers suitable to the different operations may be defined.
- * If no controller is found for the default operation, the base class will be
- * used. If a non-existing non-default operation is specified an exception will
- * be thrown.
- *
- * @see \Drupal\Core\Entity\EntityManagerInterface
- *
- * @param $entity_type
- *   The type of the entity.
- * @param $operation
- *   (optional) The name of an operation, such as creation, editing or deletion,
- *   identifying the controlled form. Defaults to 'default' which is the usual
- *   create/edit form.
- *
- * @return \Drupal\Core\Entity\EntityFormControllerInterface
- *   An entity form controller instance.
- *
- * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getFormController().
- */
-function entity_form_controller($entity_type, $operation = 'default') {
-  return \Drupal::entityManager()
-    ->getFormController($entity_type, $operation);
-}
-
-/**
- * Returns the default form state for the given entity and operation.
- *
- * @param EntityInterface $entity
- *   The entity to be created or edited.
- * @param $operation
- *   (optional) The operation identifying the form to be processed.
- *
- * @return
- *   A $form_state array already filled the entity form controller.
- */
-function entity_form_state_defaults(EntityInterface $entity, $operation = 'default') {
-  $form_state = array();
-  $controller = \Drupal::entityManager()->getFormController($entity->entityType(), $operation);
-  $controller->setEntity($entity);
-  $form_state['build_info']['callback_object'] = $controller;
-  $form_state['build_info']['base_form_id'] = $controller->getBaseFormID();
-  $form_state['build_info']['args'] = array();
-  return $form_state;
-}
-
-/**
- * Retrieves, populates, and processes an entity form.
- *
- * @param EntityInterface $entity
- *   The entity to be created or edited.
- * @param $operation
- *   (optional) The operation identifying the form to be submitted.
- * @param $form_state
- *   (optional) A keyed array containing the current state of the form.
- *
- * @return
- *   A $form_state array already filled with the entity form controller.
- */
-function entity_form_submit(EntityInterface $entity, $operation = 'default', &$form_state = array()) {
-  $form_state += entity_form_state_defaults($entity, $operation);
-  $form_id = $form_state['build_info']['callback_object']->getFormId();
-  drupal_form_submit($form_id, $form_state);
-}
-
-/**
  * Returns the built and processed entity form for the given entity.
  *
- * @param EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to be created or edited.
- * @param $operation
+ * @param string $operation
  *   (optional) The operation identifying the form variation to be returned.
  * @param array $form_state
  *   (optional) An associative array containing the current state of the form.
@@ -525,7 +457,7 @@ function entity_form_submit(EntityInterface $entity, $operation = 'default', &$f
  *   $form = entity_get_form($entity, 'default', $form_state);
  *   @endcode
  *
- * @return
+ * @return array
  *   The processed form for the given entity and operation.
  *
  * @deprecated Use \Drupal::entityManager()->getForm() or _entity_form from a

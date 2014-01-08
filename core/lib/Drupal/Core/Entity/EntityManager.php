@@ -288,9 +288,16 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    * {@inheritdoc}
    */
   public function getForm(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
-    $form_state += entity_form_state_defaults($entity, $operation);
-    $form_id = $form_state['build_info']['callback_object']->getFormId();
-    return drupal_build_form($form_id, $form_state);
+    $form_state['build_info'] = isset($form_state['build_info']) ? $form_state['build_info'] : array();
+    $controller = $this->getFormController($entity->entityType(), $operation);
+    $controller->setEntity($entity);
+    $form_state['build_info'] += array(
+      'callback_object' => $controller,
+      'base_form_id' => $controller->getBaseFormID(),
+      'args' => array(),
+    );
+    $form_id = $controller->getFormID();
+    return \Drupal::formBuilder()->buildForm($form_id, $form_state);
   }
 
   /**
