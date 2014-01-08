@@ -13,8 +13,8 @@ ABOUT DRUPAL
 
 Drupal is an open source content management platform supporting a variety of
 websites ranging from personal weblogs to large community-driven websites. For
-more information, see the Drupal website at http://drupal.org/, and join the
-Drupal community at http://drupal.org/community.
+more information, see the Drupal website at https://drupal.org/, and join the
+Drupal community at https://drupal.org/community.
 
 Legal information about Drupal:
  * Know your rights when using Drupal:
@@ -26,7 +26,7 @@ CONFIGURATION AND FEATURES
 --------------------------
 
 Drupal core (what you get when you download and extract a drupal-x.y.tar.gz or
-drupal-x.y.zip file from http://drupal.org/project/drupal) has what you need to
+drupal-x.y.zip file from https://drupal.org/project/drupal) has what you need to
 get started with your website. It includes several modules (extensions that add
 functionality) for common website features, such as managing content, user
 accounts, image uploading, and search. Core comes with many options that allow
@@ -38,9 +38,11 @@ More about configuration:
  * Install, upgrade, and maintain Drupal:
    See INSTALL.txt and UPGRADE.txt in the "core" directory.
  * Learn about how to use Drupal to create your site:
-   http://drupal.org/documentation
+   https://drupal.org/documentation
+ * Follow best practices:
+   https://drupal.org/best-practices
  * Download contributed modules to /modules to extend Drupal's functionality:
-   http://drupal.org/project/modules
+   https://drupal.org/project/modules
  * See also: "Developing for Drupal" for writing your own modules, below.
 
 
@@ -65,11 +67,11 @@ the required extensions separately; place the downloaded profile in the
 
 More about installation profiles and distributions:
 * Read about the difference between installation profiles and distributions:
-  http://drupal.org/node/1089736
+  https://drupal.org/node/1089736
 * Download contributed installation profiles and distributions:
-  http://drupal.org/project/distributions
+  https://drupal.org/project/distributions
 * Develop your own installation profile or distribution:
-  http://drupal.org/developing/distributions
+  https://drupal.org/developing/distributions
 
 
 APPEARANCE
@@ -82,9 +84,9 @@ custom theme.
 
 More about themes:
  * Download contributed themes to /themes to modify Drupal's appearance:
-   http://drupal.org/project/themes
+   https://drupal.org/project/themes
  * Develop your own theme:
-   http://drupal.org/documentation/theme
+   https://drupal.org/documentation/theme
 
 DEVELOPING FOR DRUPAL
 ---------------------
@@ -105,12 +107,12 @@ when nothing existing comes close to what you need.
 
 More about developing:
  * Search for existing contributed modules:
-   http://drupal.org/project/modules
+   https://drupal.org/project/modules
  * Contribute a patch:
-   http://drupal.org/patch/submit
+   https://drupal.org/patch/submit
  * Develop your own module:
-   http://drupal.org/developing/modules
- * Follow best practices:
-   http://drupal.org/best-practices
+   https://drupal.org/developing/modules
+ * Follow programming best practices:
+   https://drupal.org/developing/best-practices
  * Refer to the API documentation:
-   http://api.drupal.org/api/drupal/8
+   https://api.drupal.org/api/drupal/8
