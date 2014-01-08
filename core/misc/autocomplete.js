@@ -71,6 +71,7 @@ function searchHandler (event) {
  * @param {Function} response
  */
 function sourceData (request, response) {
+  /*jshint validthis:true */
   var elementId = this.element.attr('id');
 
   if (!(elementId in autocomplete.cache)) {
