@@ -8,7 +8,7 @@
 namespace Drupal\number\Plugin\Field\FieldType;
 
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field\FieldInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Plugin implementation of the 'number_float' field type.
@@ -43,7 +43,7 @@ class FloatItem extends NumberItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldInterface $field) {
+  public static function schema(FieldDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'value' => array(

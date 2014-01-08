@@ -677,4 +677,19 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     }
     return $this->itemDefinition;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSchema() {
+    return $this->field->getSchema();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getColumns() {
+    return $this->field->getColumns();
+  }
+
 }

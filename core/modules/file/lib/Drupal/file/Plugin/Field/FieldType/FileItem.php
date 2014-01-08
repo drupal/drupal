@@ -7,9 +7,9 @@
 
 namespace Drupal\file\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field\FieldInterface;
 use Drupal\Core\Field\ConfigFieldItemInterface;
 
 /**
@@ -49,7 +49,7 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldInterface $field) {
+  public static function schema(FieldDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'target_id' => array(

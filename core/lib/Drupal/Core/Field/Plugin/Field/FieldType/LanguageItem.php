@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\DataDefinition;
@@ -53,6 +54,21 @@ class LanguageItem extends FieldItemBase {
         ->setReadOnly(FALSE);
     }
     return static::$propertyDefinitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function schema(FieldDefinitionInterface $field_definition) {
+    return array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => 12,
+          'not null' => FALSE,
+        ),
+      ),
+    );
   }
 
   /**

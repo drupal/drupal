@@ -25,11 +25,6 @@ use Drupal\menu_link\Entity\MenuLink;
 const USERNAME_MAX_LENGTH = 60;
 
 /**
- * Maximum length of user e-mail text field.
- */
-const EMAIL_MAX_LENGTH = 255;
-
-/**
  * Only administrators can create user accounts.
  */
 const USER_REGISTER_ADMINISTRATORS_ONLY = 'admin_only';

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -40,6 +41,21 @@ class BooleanItem extends FieldItemBase {
         ->setLabel(t('Boolean value'));
     }
     return static::$propertyDefinitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function schema(FieldDefinitionInterface $field_definition) {
+    return array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+        ),
+      ),
+    );
   }
 
 }

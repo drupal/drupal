@@ -66,6 +66,18 @@ const REGIONS_VISIBLE = 'visible';
 const REGIONS_ALL = 'all';
 
 /**
+ * Defines the max length for an email address
+ *
+ * The maximum length of an e-mail address is 254 characters. RFC 3696
+ * specifies a total length of 320 characters, but mentions that
+ * addresses longer than 256 characters are not normally useful. Erratum
+ * 1690 was then released which corrected this value to 254 characters.
+ * @see http://tools.ietf.org/html/rfc3696#section-3
+ * @see http://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
+ */
+const EMAIL_MAX_LENGTH = 254;
+
+/**
  * Implements hook_help().
  */
 function system_help($path, $arg) {
@@ -337,8 +349,7 @@ function system_element_info() {
   $types['email'] = array(
     '#input' => TRUE,
     '#size' => 60,
-    // user.module is not loaded in case of early bootstrap errors.
-    '#maxlength' => defined('EMAIL_MAX_LENGTH') ? EMAIL_MAX_LENGTH : 255,
+    '#maxlength' => EMAIL_MAX_LENGTH,
     '#autocomplete_route_name' => FALSE,
     '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
     '#element_validate' => array('form_validate_email'),

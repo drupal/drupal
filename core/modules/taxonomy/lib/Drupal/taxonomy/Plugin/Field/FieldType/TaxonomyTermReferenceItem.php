@@ -9,7 +9,7 @@ namespace Drupal\taxonomy\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\ConfigEntityReferenceItemBase;
 use Drupal\Core\Field\ConfigFieldItemInterface;
-use Drupal\field\FieldInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
 
@@ -97,7 +97,7 @@ class TaxonomyTermReferenceItem extends ConfigEntityReferenceItemBase implements
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldInterface $field) {
+  public static function schema(FieldDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'target_id' => array(

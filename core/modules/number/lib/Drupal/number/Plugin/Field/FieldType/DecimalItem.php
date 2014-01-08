@@ -8,7 +8,7 @@
 namespace Drupal\number\Plugin\Field\FieldType;
 
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field\FieldInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Component\Utility\MapArray;
 
 /**
@@ -48,13 +48,13 @@ class DecimalItem extends NumberItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldInterface $field) {
+  public static function schema(FieldDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'value' => array(
           'type' => 'numeric',
-          'precision' => $field->settings['precision'],
-          'scale' => $field->settings['scale'],
+          'precision' => $field_definition->settings['precision'],
+          'scale' => $field_definition->settings['scale'],
           'not null' => FALSE
         )
       ),

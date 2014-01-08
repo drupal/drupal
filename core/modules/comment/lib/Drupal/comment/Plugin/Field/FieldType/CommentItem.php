@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\Field\FieldType;
 
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field\FieldInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\ConfigFieldItemBase;
 
 /**
@@ -71,7 +71,7 @@ class CommentItem extends ConfigFieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldInterface $field) {
+  public static function schema(FieldDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'status' => array(

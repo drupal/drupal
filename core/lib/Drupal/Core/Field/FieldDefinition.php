@@ -10,11 +10,19 @@ namespace Drupal\Core\Field;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDefinition;
+use Drupal\field\FieldException;
 
 /**
  * A class for defining entity fields.
  */
 class FieldDefinition extends ListDefinition implements FieldDefinitionInterface {
+
+  /**
+   * The field schema.
+   *
+   * @var array
+   */
+  protected $schema;
 
   /**
    * Creates a new field definition.
@@ -199,6 +207,56 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    */
   public function getDefaultValue(EntityInterface $entity) {
     return $this->getSetting('default_value');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSchema() {
+    if (!isset($this->schema)) {
+      // Get the schema from the field item class.
+      $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getFieldType());
+      $class = $definition['class'];
+      $schema = $class::schema($this);
+      // Fill in default values for optional entries.
+      $schema += array('indexes' => array(), 'foreign keys' => array());
+
+      // Check that the schema does not include forbidden column names.
+      if (array_intersect(array_keys($schema['columns']), static::getReservedColumns())) {
+        throw new FieldException('Illegal field type columns.');
+      }
+
+      // Merge custom indexes with those specified by the field type. Custom
+      // indexes prevail.
+      $schema['indexes'] = $this->indexes + $schema['indexes'];
+
+      $this->schema = $schema;
+    }
+
+    return $this->schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getColumns() {
+    $schema = $this->getSchema();
+    // A typical use case for the method is to iterate on the columns, while
+    // some other use cases rely on identifying the first column with the key()
+    // function. Since the schema is persisted in the Field object, we take care
+    // of resetting the array pointer so that the former does not interfere with
+    // the latter.
+    reset($schema['columns']);
+    return $schema['columns'];
+  }
+
+  /**
+   * A list of columns that can not be used as field type columns.
+   *
+   * @return array
+   */
+  public static function getReservedColumns() {
+    return array('deleted');
   }
 
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\path\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -43,6 +44,13 @@ class PathItem extends FieldItemBase {
         ->setLabel(t('Path id'));
     }
     return static::$propertyDefinitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function schema(FieldDefinitionInterface $field_definition) {
+    return array();
   }
 
 }

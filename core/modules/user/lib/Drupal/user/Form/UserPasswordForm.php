@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Form;
 
+use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;

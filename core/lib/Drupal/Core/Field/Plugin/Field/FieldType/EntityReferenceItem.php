@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -80,6 +81,43 @@ class EntityReferenceItem extends FieldItemBase {
       }
     }
     return static::$propertyDefinitions[$key];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function schema(FieldDefinitionInterface $field_definition) {
+    $target_type = $field_definition->getSetting('target_type');
+    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
+
+    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+      $columns = array(
+        'target_id' => array(
+          'description' => 'The ID of the target entity.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+      );
+    }
+    else {
+      $columns = array(
+        'target_id' => array(
+          'description' => 'The ID of the target entity.',
+          'type' => 'varchar',
+          'length' => '255',
+        ),
+      );
+    }
+
+    $schema = array(
+      'columns' => $columns,
+      'indexes' => array(
+        'target_id' => array('target_id'),
+      ),
+    );
+
+    return $schema;
   }
 
   /**

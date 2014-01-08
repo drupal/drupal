@@ -7,46 +7,10 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\field\FieldInterface;
-
 /**
  * Interface definition for 'configurable field type' plugins.
  */
 interface ConfigFieldItemInterface extends FieldItemInterface {
-
-  /**
-   * Returns the schema for the field.
-   *
-   * This method is static, because the field schema information is needed on
-   * creation of the field. No field instances exist by then, and it is not
-   * possible to instantiate a FieldItemInterface object yet.
-   *
-   * @param \Drupal\field\FieldInterface $field
-   *   The field definition.
-   *
-   * @return array
-   *   An associative array with the following key/value pairs:
-   *   - columns: An array of Schema API column specifications, keyed by column
-   *     name. This specifies what comprises a value for a given field. For
-   *     example, a value for a number field is simply 'value', while a value
-   *     for a formatted text field is the combination of 'value' and 'format'.
-   *     It is recommended to avoid having the column definitions depend on
-   *     field settings when possible. No assumptions should be made on how
-   *     storage engines internally use the original column name to structure
-   *     their storage.
-   *   - indexes: (optional) An array of Schema API index definitions. Only
-   *     columns that appear in the 'columns' array are allowed. Those indexes
-   *     will be used as default indexes. Callers of field_create_field() can
-   *     specify additional indexes or, at their own risk, modify the default
-   *     indexes specified by the field-type module. Some storage engines might
-   *     not support indexes.
-   *   - foreign keys: (optional) An array of Schema API foreign key
-   *     definitions. Note, however, that the field data is not necessarily
-   *     stored in SQL. Also, the possible usage is limited, as you cannot
-   *     specify another field as related, only existing SQL tables,
-   *     such as {taxonomy_term_data}.
-   */
-  public static function schema(FieldInterface $field);
 
   /**
    * Returns a form for the field-level settings.

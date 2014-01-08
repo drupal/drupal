@@ -9,7 +9,7 @@ namespace Drupal\link\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\ConfigFieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field\FieldInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Plugin implementation of the 'link' field type.
@@ -54,7 +54,7 @@ class LinkItem extends ConfigFieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldInterface $field) {
+  public static function schema(FieldDefinitionInterface $field_definition) {
     return array(
       'columns' => array(
         'url' => array(
