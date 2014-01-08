@@ -17,14 +17,14 @@ class ChainEntityResolver implements EntityResolverInterface {
   /**
    * The concrete resolvers.
    *
-   * @var array
+   * @var \Drupal\serialization\EntityResolver\EntityResolverInterface[]
    */
   protected $resolvers;
 
   /**
-   * Constructor.
+   * Constructs a ChainEntityResolver object.
    *
-   * @param array $resolvers
+   * @param \Drupal\serialization\EntityResolver\EntityResolverInterface[] $resolvers
    *   The array of concrete resolvers.
    */
   public function __construct(array $resolvers = array()) {
@@ -32,7 +32,7 @@ class ChainEntityResolver implements EntityResolverInterface {
   }
 
   /**
-   * Implements \Drupal\serialization\EntityResolver\EntityResolverInterface::resolve().
+   * {@inheritdoc}
    */
   public function resolve(NormalizerInterface $normalizer, $data, $entity_type) {
     foreach ($this->resolvers as $resolver) {
@@ -40,7 +40,6 @@ class ChainEntityResolver implements EntityResolverInterface {
         return $resolved;
       }
     }
-    return NULL;
   }
 
 }
