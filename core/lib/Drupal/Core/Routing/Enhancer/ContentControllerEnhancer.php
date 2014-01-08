@@ -56,12 +56,6 @@ class ContentControllerEnhancer implements RouteEnhancerInterface {
         $defaults['_controller'] = $this->types[$type];
       }
     }
-
-    // When the dialog attribute is TRUE this is a DialogController sub-request.
-    // Route the sub-request to the _content callable.
-    //if ($request->attributes->get('dialog') && !empty($defaults['_content'])) {
-    //  $defaults['_controller'] = $defaults['_content'];
-    //}
     return $defaults;
   }
 }
