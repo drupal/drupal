@@ -122,11 +122,11 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
 
     // With the below logic, we may end up rendering a form twice (or two forms
     // each sharing the same element ids), potentially resulting in
-    // drupal_add_js() being called twice to add the same setting. drupal_get_js()
+    // _drupal_add_js() being called twice to add the same setting. drupal_get_js()
     // is ok with that, but until ajax_render() is (http://drupal.org/node/208611),
-    // reset the drupal_add_js() static before rendering the second time.
-    $drupal_add_js_original = drupal_add_js();
-    $drupal_add_js = &drupal_static('drupal_add_js');
+    // reset the _drupal_add_js() static before rendering the second time.
+    $drupal_add_js_original = _drupal_add_js();
+    $drupal_add_js = &drupal_static('_drupal_add_js');
     $response = views_ajax_form_wrapper($form_state['form_id'], $form_state);
 
     // If the form has not been submitted, or was not set for rerendering, stop.

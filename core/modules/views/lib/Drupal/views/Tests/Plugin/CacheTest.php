@@ -142,17 +142,17 @@ class CacheTest extends PluginTestBase {
     $output = $view->preview();
     drupal_render($output);
     unset($view->pre_render_called);
-    drupal_static_reset('drupal_add_css');
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_css');
+    drupal_static_reset('_drupal_add_js');
     $view->destroy();
 
     $view->setDisplay();
     $output = $view->preview();
     drupal_render($output);
-    $css = drupal_add_css();
+    $css = _drupal_add_css();
     $css_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.css';
     $js_path = drupal_get_path('module', 'views_test_data') . '/views_cache.test.js';
-    $js = drupal_add_js();
+    $js = _drupal_add_js();
 
     $this->assertTrue(isset($css[basename($css_path)]), 'Make sure the css is added for cached views.');
     $this->assertTrue(isset($js[$js_path]), 'Make sure the js is added for cached views.');
@@ -176,15 +176,15 @@ class CacheTest extends PluginTestBase {
 
     $output = $view->preview();
     drupal_render($output);
-    drupal_static_reset('drupal_add_css');
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_css');
+    drupal_static_reset('_drupal_add_js');
     $view->destroy();
 
     $output = $view->preview();
     drupal_render($output);
 
-    $css = drupal_add_css();
-    $js = drupal_add_js();
+    $css = _drupal_add_css();
+    $js = _drupal_add_js();
 
     $this->assertFalse(isset($css['system.maintenance.css']), 'Make sure that unrelated css is not added.');
     $this->assertFalse(isset($js[drupal_get_path('module', 'user') . '/user.permissions.js']), 'Make sure that unrelated js is not added.');

@@ -270,7 +270,7 @@ function hook_element_info_alter(&$type) {
  * @param $javascript
  *   An array of all JavaScript being presented on the page.
  *
- * @see drupal_add_js()
+ * @see _drupal_add_js()
  * @see drupal_get_js()
  * @see drupal_js_defaults()
  */
@@ -293,11 +293,11 @@ function hook_js_alter(&$javascript) {
  *   version_compare() to compare different versions.
  * - 'js': An array of JavaScript elements; each element's key is used as $data
  *   argument, each element's value is used as $options array for
- *   drupal_add_js(). To add library-specific (not module-specific) JavaScript
+ *   _drupal_add_js(). To add library-specific (not module-specific) JavaScript
  *   settings, the key may be skipped, the value must specify
  *   'type' => 'setting', and the actual settings must be contained in a 'data'
  *   element of the value.
- * - 'css': Like 'js', an array of CSS elements passed to drupal_add_css().
+ * - 'css': Like 'js', an array of CSS elements passed to _drupal_add_css().
  * - 'dependencies': An array of libraries that are required for a library. Each
  *   element is an array listing the module and name of another library. Note
  *   that all dependencies for each dependent library will also be added when
@@ -390,7 +390,7 @@ function hook_library_info_alter(&$libraries, $module) {
  * @param $css
  *   An array of all CSS items (files and inline CSS) being requested on the page.
  *
- * @see drupal_add_css()
+ * @see _drupal_add_css()
  * @see drupal_get_css()
  */
 function hook_css_alter(&$css) {
@@ -2572,7 +2572,7 @@ function hook_install_tasks(&$install_state) {
  *
  * Elements available to be altered are only those added using
  * drupal_add_html_head_link() or drupal_add_html_head(). CSS and JS files
- * are handled using drupal_add_css() and drupal_add_js(), so the head links
+ * are handled using _drupal_add_css() and _drupal_add_js(), so the head links
  * for those files will not appear in the $head_elements array.
  *
  * @param $head_elements

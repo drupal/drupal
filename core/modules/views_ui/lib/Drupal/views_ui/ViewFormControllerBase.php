@@ -73,8 +73,8 @@ abstract class ViewFormControllerBase extends EntityFormController {
    *
    * This returns an array of arrays. Each array represents a single
    * file. The array format is:
-   * - file: The fully qualified name of the file to send to drupal_add_css
-   * - options: An array of options to pass to drupal_add_css.
+   * - file: The fully qualified name of the file to send to _drupal_add_css
+   * - options: An array of options to pass to _drupal_add_css.
    */
   public static function getAdminCSS() {
     $module_path = drupal_get_path('module', 'views_ui');

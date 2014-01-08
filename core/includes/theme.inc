@@ -2495,7 +2495,7 @@ function template_preprocess_maintenance_page(&$variables) {
   // While this code is used in the installer, the language module may not be
   // enabled yet (even maybe no database set up yet), but an RTL language
   // selected should result in RTL stylesheets loaded properly already.
-  $css = drupal_add_css();
+  $css = _drupal_add_css();
   include_once DRUPAL_ROOT . '/core/modules/language/language.module';
   // Wrapping drupal_get_css() and drupal_get_js() in an object so they can
   // be called when printed.

@@ -369,7 +369,7 @@ class RenderTest extends DrupalUnitTestBase {
 
     // Load the element from cache and verify the presence of the #attached
     // JavaScript.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = array('#cache' => array('keys' => array('simpletest', 'drupal_render', 'children_attached')));
     $this->assertTrue(strlen(drupal_render($element)) > 0, 'The element was retrieved from cache.');
     $scripts = drupal_get_js();
@@ -461,7 +461,7 @@ class RenderTest extends DrupalUnitTestBase {
     );
 
     // #cache disabled.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $element['#markup'] = '<p>#cache disabled</p>';
     $output = drupal_render($element);
@@ -477,7 +477,7 @@ class RenderTest extends DrupalUnitTestBase {
     \Drupal::request()->setMethod('GET');
 
     // GET request: #cache enabled, cache miss.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $element['#cache'] = array('cid' => 'post_render_cache_test_GET');
     $element['#markup'] = '<p>#cache enabled, GET</p>';
@@ -501,7 +501,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
     // GET request: #cache enabled, cache hit.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element['#cache'] = array('cid' => 'post_render_cache_test_GET');
     $element['#markup'] = '<p>#cache enabled, GET</p>';
     $output = drupal_render($element);
@@ -518,7 +518,7 @@ class RenderTest extends DrupalUnitTestBase {
     \Drupal::request()->setMethod('POST');
 
     // POST request: #cache enabled, cache miss.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $element['#cache'] = array('cid' => 'post_render_cache_test_POST');
     $element['#markup'] = '<p>#cache enabled, POST</p>';
@@ -551,7 +551,7 @@ class RenderTest extends DrupalUnitTestBase {
     // Test case 1.
     // Create an element with a child and subchild. Each element has the same
     // #post_render_cache callback, but with different contexts.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $context_1 = array('foo' => $this->randomString());
     $context_2 = array('bar' => $this->randomString());
     $context_3 = array('baz' => $this->randomString());
@@ -621,7 +621,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
     // GET request: #cache enabled, cache hit.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $output = drupal_render($element);
     $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
@@ -639,7 +639,7 @@ class RenderTest extends DrupalUnitTestBase {
     // #post_render_cache callbacks. I.e. the #post_render_cache callbacks may
     // not yet have run, or otherwise the cached parent element would contain
     // personalized data, thereby breaking the render cache.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $element['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_parent');
     $element['child']['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_child');
@@ -699,7 +699,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($cached_child_element, $expected_child_element, 'The correct data is cached for the child: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
     // GET request: #cache enabled, cache hit, parent element.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $element['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_parent');
     $output = drupal_render($element);
@@ -711,7 +711,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($settings['common_test'], $expected_settings, '#attached is modified; JavaScript settings for each #post_render_cache callback are added to page.');
 
     // GET request: #cache enabled, cache hit, child element.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $element['child']['#cache']['keys'] = array('simpletest', 'drupal_render', 'children_post_render_cache', 'nested_cache_child');
     $element = $element['child'];
@@ -744,7 +744,7 @@ class RenderTest extends DrupalUnitTestBase {
     $expected_output = '<foo><bar>' . $context['bar'] . '</bar></foo>';
 
     // #cache disabled.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $output = drupal_render($element);
     $this->assertIdentical($output, $expected_output, 'Placeholder was replaced in output');
@@ -756,7 +756,7 @@ class RenderTest extends DrupalUnitTestBase {
     \Drupal::request()->setMethod('GET');
 
     // GET request: #cache enabled, cache miss.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $element['#cache'] = array('cid' => 'render_cache_placeholder_test_GET');
     $output = drupal_render($element);
@@ -785,7 +785,7 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
 
     // GET request: #cache enabled, cache hit.
-    drupal_static_reset('drupal_add_js');
+    drupal_static_reset('_drupal_add_js');
     $element = $test_element;
     $element['#cache'] = array('cid' => 'render_cache_placeholder_test_GET');
     $output = drupal_render($element);

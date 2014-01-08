@@ -245,14 +245,14 @@ function ajax_render($commands = array()) {
       $items[$type] = array();
     }
     else {
-      $function = 'drupal_add_' . $type;
+      $function = '_drupal_add_' . $type;
       $items[$type] = $function();
       drupal_alter($type, $items[$type]);
       // @todo Inline CSS and JS items are indexed numerically. These can't be
       //   reliably diffed with array_diff_key(), since the number can change
       //   due to factors unrelated to the inline content, so for now, we strip
       //   the inline items from Ajax responses, and can add support for them
-      //   when drupal_add_css() and drupal_add_js() are changed to use a hash
+      //   when _drupal_add_css() and _drupal_add_js() are changed to use a hash
       //   of the inline content as the array key.
       foreach ($items[$type] as $key => $item) {
         if (is_numeric($key)) {
@@ -290,7 +290,7 @@ function ajax_render($commands = array()) {
   }
 
   // Now add a command to merge changes and additions to drupalSettings.
-  $scripts = drupal_add_js();
+  $scripts = _drupal_add_js();
   if (!empty($scripts['settings'])) {
     $settings = drupal_merge_js_settings($scripts['settings']['data']);
     array_unshift($commands, ajax_command_settings($settings, TRUE));

@@ -24,7 +24,7 @@ function ajax_test_system_theme_info() {
  * Menu callback: Returns an element suitable for use by ajax_render().
  *
  * Additionally ensures that ajax_render() incorporates JavaScript settings
- * generated during the page request by invoking drupal_add_js() with a dummy
+ * generated during the page request by invoking _drupal_add_js() with a dummy
  * setting.
  *
  * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::render()

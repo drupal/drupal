@@ -32,15 +32,15 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
 
   function setUp() {
     parent::setUp();
-    // Reset drupal_add_css() before each test.
-    drupal_static_reset('drupal_add_css');
+    // Reset _drupal_add_css() before each test.
+    drupal_static_reset('_drupal_add_css');
   }
 
   /**
    * Checks that default stylesheets are empty.
    */
   function testDefault() {
-    $this->assertEqual(array(), drupal_add_css(), 'Default CSS is empty.');
+    $this->assertEqual(array(), _drupal_add_css(), 'Default CSS is empty.');
   }
 
   /**
@@ -48,7 +48,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    */
   function testAddFile() {
     $path = drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css';
-    $css = drupal_add_css($path);
+    $css = _drupal_add_css($path);
     $this->assertEqual($css['simpletest.module.css']['data'], $path);
   }
 
@@ -57,7 +57,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    */
   function testAddExternal() {
     $path = 'http://example.com/style.css';
-    $css = drupal_add_css($path, 'external');
+    $css = _drupal_add_css($path, 'external');
     $this->assertEqual($css[$path]['type'], 'external', 'Adding an external CSS file caches it properly.');
   }
 
@@ -65,8 +65,8 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    * Makes sure that resetting the CSS empties the cache.
    */
   function testReset() {
-    drupal_static_reset('drupal_add_css');
-    $this->assertEqual(array(), drupal_add_css(), 'Resetting the CSS empties the cache.');
+    drupal_static_reset('_drupal_add_css');
+    $this->assertEqual(array(), _drupal_add_css(), 'Resetting the CSS empties the cache.');
   }
 
   /**
@@ -74,7 +74,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    */
   function testRenderFile() {
     $css = drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css';
-    drupal_add_css($css);
+    _drupal_add_css($css);
     $styles = drupal_get_css();
     $this->assertTrue(strpos($styles, $css) > 0, 'Rendered CSS includes the added stylesheet.');
     // Verify that newlines are properly added inside style tags.
@@ -88,7 +88,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    */
   function testRenderExternal() {
     $css = 'http://example.com/style.css';
-    drupal_add_css($css, 'external');
+    _drupal_add_css($css, 'external');
     $styles = drupal_get_css();
     // Stylesheet URL may be the href of a LINK tag or in an @import statement
     // of a STYLE tag.
@@ -105,7 +105,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
 
     $css = 'body { padding: 0px; }';
     $css_preprocessed = '<style media="all">' . "\n/* <![CDATA[ */\n" . "body{padding:0px;}\n" . "\n/* ]]> */\n" . '</style>';
-    drupal_add_css($css, array('type' => 'inline'));
+    _drupal_add_css($css, array('type' => 'inline'));
     $styles = drupal_get_css();
     $this->assertEqual(trim($styles), $css_preprocessed, 'Rendering preprocessed inline CSS adds it to the page.');
   }
@@ -115,7 +115,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    */
   function testRenderInlineNoPreprocess() {
     $css = 'body { padding: 0px; }';
-    drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
+    _drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
     $styles = drupal_get_css();
     $this->assertTrue(strpos($styles, $css) > 0, 'Rendering non-preprocessed inline CSS adds it to the page.');
   }
@@ -125,12 +125,12 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    */
   function testRenderOrder() {
     // Load a module CSS file.
-    drupal_add_css(drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css');
+    _drupal_add_css(drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css');
     // Load a few system CSS files in a custom, early-loading aggregate group.
     $test_aggregate_group = -100;
     $system_path = drupal_get_path('module', 'system');
-    drupal_add_css($system_path . '/css/system.module.css', array('group' => $test_aggregate_group, 'weight' => -10));
-    drupal_add_css($system_path . '/css/system.theme.css', array('group' => $test_aggregate_group));
+    _drupal_add_css($system_path . '/css/system.module.css', array('group' => $test_aggregate_group, 'weight' => -10));
+    _drupal_add_css($system_path . '/css/system.theme.css', array('group' => $test_aggregate_group));
 
     $expected = array(
       $system_path . '/css/system.module.css',
@@ -157,16 +157,16 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
   function testRenderOverride() {
     $system = drupal_get_path('module', 'system');
 
-    drupal_add_css($system . '/css/system.module.css');
-    drupal_add_css($system . '/tests/css/system.module.css');
+    _drupal_add_css($system . '/css/system.module.css');
+    _drupal_add_css($system . '/tests/css/system.module.css');
 
     // The dummy stylesheet should be the only one included.
     $styles = drupal_get_css();
     $this->assert(strpos($styles, $system . '/tests/css/system.module.css') !== FALSE, 'The overriding CSS file is output.');
     $this->assert(strpos($styles, $system . '/css/system.module.css') === FALSE, 'The overridden CSS file is not output.');
 
-    drupal_add_css($system . '/tests/css/system.module.css');
-    drupal_add_css($system . '/css/system.module.css');
+    _drupal_add_css($system . '/tests/css/system.module.css');
+    _drupal_add_css($system . '/css/system.module.css');
 
     // The standard stylesheet should be the only one included.
     $styles = drupal_get_css();
@@ -180,8 +180,8 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
   function testAddCssFileWithQueryString() {
     $css_without_query_string = drupal_get_path('module', 'node') . '/css/node.admin.css';
     $css_with_query_string = '/' . drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&arg2=value2';
-    drupal_add_css($css_without_query_string);
-    drupal_add_css($css_with_query_string);
+    _drupal_add_css($css_without_query_string);
+    _drupal_add_css($css_with_query_string);
 
     $styles = drupal_get_css();
     $query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';

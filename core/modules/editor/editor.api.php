@@ -91,7 +91,7 @@ function hook_editor_default_settings_alter(&$default_settings, $editor) {
  * Modifies JavaScript settings that are added for text editors.
  *
  * @param array $settings
- *   All the settings that will be added to the page via drupal_add_js() for
+ *   All the settings that will be added to the page via _drupal_add_js() for
  *   the text formats to which a user has access.
  * @param array $formats
  *   The list of format objects for which settings are being added.

@@ -104,14 +104,14 @@ class AjaxResponse extends JsonResponse {
         $items[$type] = array();
       }
       else {
-        $function = 'drupal_add_' . $type;
+        $function = '_drupal_add_' . $type;
         $items[$type] = $function();
         drupal_alter($type, $items[$type]);
         // @todo Inline CSS and JS items are indexed numerically. These can't be
         //   reliably diffed with array_diff_key(), since the number can change
         //   due to factors unrelated to the inline content, so for now, we
         //   strip the inline items from Ajax responses, and can add support for
-        //   them when drupal_add_css() and drupal_add_js() are changed to use
+        //   them when _drupal_add_css() and _drupal_add_js() are changed to use
         //   a hash of the inline content as the array key.
         foreach ($items[$type] as $key => $item) {
           if (is_numeric($key)) {
@@ -150,7 +150,7 @@ class AjaxResponse extends JsonResponse {
     }
 
     // Prepend a command to merge changes and additions to drupalSettings.
-    $scripts = drupal_add_js();
+    $scripts = _drupal_add_js();
     if (!empty($scripts['settings'])) {
       $settings = drupal_merge_js_settings($scripts['settings']['data']);
       // During Ajax requests basic path-specific settings are excluded from
@@ -158,7 +158,7 @@ class AjaxResponse extends JsonResponse {
       // from already has the right values for the keys below. An Ajax request
       // would update them with values for the Ajax request and incorrectly
       // override the page's values.
-      // @see drupal_add_js
+      // @see _drupal_add_js()
       foreach (array('basePath', 'currentPath', 'scriptPath', 'pathPrefix') as $item) {
         unset($settings[$item]);
       }

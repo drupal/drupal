@@ -275,8 +275,8 @@ class EditController implements ContainerInjectionInterface {
 
     // When working with a hidden form, we don't want any CSS or JS to be loaded.
     if ($request->request->get('nocssjs') === 'true') {
-      drupal_static_reset('drupal_add_css');
-      drupal_static_reset('drupal_add_js');
+      drupal_static_reset('_drupal_add_css');
+      drupal_static_reset('_drupal_add_js');
     }
 
     return $response;
