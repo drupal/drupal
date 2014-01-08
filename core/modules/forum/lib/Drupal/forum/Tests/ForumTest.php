@@ -118,7 +118,7 @@ class ForumTest extends WebTestBase {
     // Do the admin tests.
     $this->doAdminTests($this->admin_user);
 
-    $this->generateForumTopics($this->forum);
+    $this->generateForumTopics();
 
     // Login an unprivileged user to view the forum topics and generate an
     // active forum topics list.
@@ -140,7 +140,7 @@ class ForumTest extends WebTestBase {
     // Create a forum node authored by this user.
     $own_topics_user_node = $this->createForumTopic($this->forum, FALSE);
     // Verify that this user cannot edit forum content authored by another user.
-    $this->verifyForums($this->edit_any_topics_user, $any_topics_user_node, FALSE, 403);
+    $this->verifyForums($any_topics_user_node, FALSE, 403);
 
     // Verify that this user is shown a local task to add new forum content.
     $this->drupalGet('forum');
@@ -151,7 +151,7 @@ class ForumTest extends WebTestBase {
     // Login a user with permission to edit any forum content.
     $this->drupalLogin($this->edit_any_topics_user);
     // Verify that this user can edit forum content authored by another user.
-    $this->verifyForums($this->edit_own_topics_user, $own_topics_user_node, TRUE);
+    $this->verifyForums($own_topics_user_node, TRUE);
 
     // Verify the topic and post counts on the forum page.
     $this->drupalGet('forum');
@@ -245,9 +245,6 @@ class ForumTest extends WebTestBase {
   private function doAdminTests($user) {
     // Login the user.
     $this->drupalLogin($user);
-
-    // Retrieve forum menu id.
-    $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'forum' AND menu_name = 'tools' AND module = 'system' ORDER BY mlid ASC", 0, 1)->fetchField();
 
     // Add forum to the Tools menu.
     $edit = array();
@@ -438,7 +435,7 @@ class ForumTest extends WebTestBase {
     // Create forum node.
     $node = $this->createForumTopic($this->forum, FALSE);
     // Verify the user has access to all the forum nodes.
-    $this->verifyForums($user, $node, $admin);
+    $this->verifyForums($node, $admin);
   }
 
   /**
@@ -522,8 +519,6 @@ class ForumTest extends WebTestBase {
   /**
    * Verifies that the logged in user has access to a forum node.
    *
-   * @param $node_user
-   *   The user who creates the node.
    * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node being checked.
    * @param $admin
@@ -531,7 +526,7 @@ class ForumTest extends WebTestBase {
    * @param $response
    *   The exptected HTTP response code.
    */
-  private function verifyForums($node_user, EntityInterface $node, $admin, $response = 200) {
+  private function verifyForums(EntityInterface $node, $admin, $response = 200) {
     $response2 = ($admin) ? 200 : 403;
 
     // View forum help node.
@@ -628,11 +623,8 @@ class ForumTest extends WebTestBase {
 
   /**
    * Generates forum topics.
-   *
-   * @param array $forum
-   *   The forum array (a row from taxonomy_term_data table).
    */
-  private function generateForumTopics($forum) {
+  private function generateForumTopics() {
     $this->nids = array();
     for ($i = 0; $i < 5; $i++) {
       $node = $this->createForumTopic($this->forum, FALSE);

@@ -6,10 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\Language;
-use Drupal\taxonomy\Entity\Term;
 use Drupal\field\Field;
-use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_help().
