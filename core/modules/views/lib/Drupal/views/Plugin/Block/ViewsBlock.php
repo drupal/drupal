@@ -36,7 +36,6 @@ class ViewsBlock extends ViewsBlockBase {
       else {
         $this->configuration['label'] = $this->configuration['views_label'];
       }
-      $this->configuration['label_display'] = TRUE;
       // Before returning the block output, convert it to a renderable array
       // with contextual links.
       $this->addContextualLinks($output);

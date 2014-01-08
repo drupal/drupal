@@ -265,6 +265,14 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
     $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
     $this->assertEqual((string) $result[0], 'test_view_block');
+
+    // Hide the title.
+    $block->getPlugin()->setConfigurationValue('label_display', FALSE);
+    $block->save();
+
+    $this->drupalGet('');
+    $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
+    $this->assertTrue(empty($result), 'The title is not visible.');
   }
 
   /**
