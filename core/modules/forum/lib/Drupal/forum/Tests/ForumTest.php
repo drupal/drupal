@@ -253,7 +253,7 @@ class ForumTest extends WebTestBase {
 
     // Edit forum taxonomy.
     // Restoration of the settings fails and causes subsequent tests to fail.
-    $this->forumContainer = $this->editForumVocabulary();
+    $this->editForumVocabulary();
     // Create forum container.
     $this->forumContainer = $this->createForum('container');
     // Verify "edit container" link exists and functions correctly.
