@@ -7,7 +7,6 @@
 
 namespace Drupal\serialization\Normalizer;
 
-use Symfony\Component\Serializer\Exception\RuntimeException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
 
@@ -27,7 +26,7 @@ abstract class NormalizerBase extends SerializerAwareNormalizer implements Norma
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::supportsNormalization().
    */
   public function supportsNormalization($data, $format = NULL) {
-    return is_object($data) && ($data instanceof $this->supportedInterfaceOrClass);
+    return is_object($data) && (isset($this->supportedInterfaceOrClass) && ($data instanceof $this->supportedInterfaceOrClass));
   }
 
 }
