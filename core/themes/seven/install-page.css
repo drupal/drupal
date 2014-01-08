@@ -23,170 +23,187 @@
   background-position: left top, 50% 50%;
   min-height: 100%;
 }
-body.install-page {
+.install-page {
   background: none;
 }
+.name-and-slogan h1 {
+  font-size: 2em;
+  line-height: 1.2em;
+  color: #0074bd;
+}
+
+/**
+ * Layout
+ */
+.install-page .l-container {
+  background: #fff;
+  width: auto;
+  margin-left: 1.25em;
+  margin-right: 1.25em;
+}
+.install-page .l-container:after { /* no reason for a clearfix in the markup */
+  content: "";
+  display: table;
+  clear: both;
+}
+@media all and (max-width: 48em) { /* 768px */
+  .install-page .l-container {
+    margin-top: 1.25em;
+    padding: 10px 20px 0;
+  }
+  .install-page .name-and-slogan {
+    margin: 0 0 1.45em 0;
+  }
+}
+
 @media all and (min-width: 48em) { /* 768px */
   html {
     display: table;
   }
-  body {
+  .install-page {
     display: table-cell;
     padding: 1em 0;
     vertical-align: middle;
   }
-  html, body {
+  html, .install-page {
     margin: 0;
     width: 100%;
     height: 100%;
   }
-  body.install-page #page {
+  .install-page .l-container {
     margin: 0 auto;
     max-width: 770px;
     width: 75%;
     border-radius: 5px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 20px 0 40px 0;
   }
-  body.install-page #content {
+
+  /* Positioning sidebar & content */
+  .install-page [role="main"] {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     clear: none;
     float: left;
-    padding-left: 50px;
-    padding-right: 50px;
+    padding-left: 3.85em;
+    padding-right: 3.85em;
     width: 65%;
   }
-  [dir="rtl"] body.install-page #content {
+  [dir="rtl"] .install-page [role="main"] {
     float: right;
   }
-  ul{
+  ul {
     padding: 15px;
-    margin: 0.25em 0 0.25em 0;
+    margin: 0.25em 0;
   }
-  body.install-page #sidebar-first {
+  .install-page .l-sidebar-first {
     float: left;
     width: 35%;
   }
-  [dir="rtl"] body.install-page #sidebar-first {
+  [dir="rtl"] .install-page .l-sidebar-first {
     float: right;
   }
-}
-body.install-page #site-name {
-  font-size: 2em;
-  line-height: 1.2em;
-  color: #0074bd;
-  margin: 0.75em 0 0.75em 50px; /* LTR */
-}
-[dir="rtl"] body.install-page #site-name {
-  margin: 0.75em 50px 0.75em 0;
-}
-body.install-page #page-title {
-  background: transparent;
-  padding-top: 0;
-}
-body.install-page .site-slogan {
-  margin: 0.75em 0 0.75em 50px; /* LTR */
-}
-[dir="rtl"] body.install-page .site-slogan {
-  margin: 0.75em 50px 0.75em 0;
-}
-@media all and  (max-width: 48em) { /* 768px */
-  body.install-page #site-name {
-    margin-left: 0;
+
+  /* Margins for sitename */
+  .install-page .name-and-slogan h1 {
+    margin: 0.75em 0 0.75em 1.9em; /* LTR */
   }
-  body.install-page .site-slogan {
-    margin: 0.75em 0 1.5em;
-  }
-  body.install-page {
-    padding: 0;
-  }
-  body.install-page #page {
-    width: auto;
-    padding: 10px 20px 0;
+  [dir="rtl"] .install-page .name-and-slogan h1 {
+    margin: 0.75em 1.9em 0.75em 0;
   }
 }
-.install-task-list {
-  margin-left: 0; /* LTR */
-  list-style-type: none;
-  list-style-image: none;
-  padding-left: 0; /* LTR */
-  padding-bottom: 1em;
-}
-[dir="rtl"] .install-task-list {
-  margin-right: 0;
-  padding-right: 0;
-}
-.install-task-list li {
-  padding: 0.5em 1em 0.5em 50px; /* LTR */
-  color: #1a1a1a;
-}
-[dir="rtl"] .install-task-list li {
-  padding: 0.5em 20px 0.5em 1em;
-}
-.install-task-list li.active {
-  background: #ebeae4;
-  position: relative;
-  font-weight: normal;
-}
-.install-task-list li.active:after {
-  left: 100%; /* LTR */
-  border: solid transparent;
-  border-color: rgba(235, 234, 228, 0);
-  border-left-color: #ebeae4; /* LTR */
-  border-width: 17px;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  top: 50%;
-  margin-top: -17px;
-}
-[dir="rtl"] .install-task-list li.active:after {
-  left: auto;
-  right: 100%;
-  border-left-color: transparent;
-  border-right-color: #ebeae4;
-}
-.install-task-list li.done {
-  color: #adadad;
-}
-.step-indicator {
-  display: none;
-}
+
+/**
+ * Task list & step indicator
+ */
 @media all and (max-width: 48em) { /* 768px */
-  .install-task-list {
-    display: none;
-  }
-  body.in-maintenance #branding h1 {
-    float: left; /* LTR */
-    width: auto;
+  header[role="banner"] {
+    position: relative;
   }
   .step-indicator {
     display: block;
     font-size: 1.385em;
     position: absolute;
-    top: 1.9em;
-    right: 40px;
+    top: 0.2em;
+    right: 0.5em;
   }
   [dir="rtl"] .step-indicator {
-  left: 40px;
-  right: auto;
+    left: 2em;
+    right: auto;
+  }
+  .install-task-list {
+    display: none;
   }
 }
+
+@media all and (min-width: 48em) { /* 768px */
+  .step-indicator {
+    display: none;
+  }
+  .install-task-list {
+    margin-left: 0; /* LTR */
+    list-style-type: none;
+    list-style-image: none;
+    padding-left: 0; /* LTR */
+    padding-bottom: 1em;
+  }
+  [dir="rtl"] .install-task-list {
+    margin-right: 0;
+    padding-right: 0;
+  }
+  .install-task-list li {
+    padding: 0.5em 1em 0.5em 3.85em; /* LTR */
+    color: #1a1a1a;
+  }
+  [dir="rtl"] .install-task-list li {
+    padding: 0.5em 1em 0.5em 1em;
+  }
+  .install-task-list .active {
+    background: #ebeae4;
+    position: relative;
+    font-weight: normal;
+  }
+  .install-task-list .active:after {
+    left: 100%; /* LTR */
+    border: solid transparent;
+    border-color: rgba(235, 234, 228, 0);
+    border-left-color: #ebeae4; /* LTR */
+    border-width: 1.35em;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    top: 50%;
+    margin-top: -1.32em;
+  }
+  [dir="rtl"] .install-task-list .active:after {
+    left: auto;
+    right: 100%;
+    border-left-color: transparent;
+    border-right-color: #ebeae4;
+  }
+  .install-task-list .done {
+    color: #adadad;
+  }
+}
+
+/**
+ * Password widget
+ */
 .install-page .password-parent,
 .install-page .confirm-parent {
   width: auto;
 }
-.install-page div.form-item div.password-suggestions {
+.install-page .form-item .password-suggestions {
   float: none;
   width: auto;
 }
 @media all and (max-width: 1010px) and (min-width: 48em) {
   .install-page .password-strength,
   .install-page .confirm-parent,
-  .install-page div.password-confirm {
+  .install-page .password-confirm {
     float: none;
     width: auto;
   }
