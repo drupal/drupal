@@ -154,7 +154,7 @@ $.extend(Drupal.theme, {
    *   A string representing a DOM fragment.
    */
   dropbuttonToggle: function (options) {
-    return '<li class="dropbutton-toggle"><button type="button" role="button"><span class="dropbutton-arrow"><span class="visually-hidden">' + options.title + '</span></span></button></li>';
+    return '<li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">' + options.title + '</span></span></button></li>';
   }
 });
 
