@@ -18,6 +18,7 @@ function contextual_toolbar() {
   }
 
   $tab['contextual'] = array(
+    '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'html_tag',
       '#tag' => 'button',
@@ -28,7 +29,6 @@ function contextual_toolbar() {
         'aria-pressed' => 'false',
       ),
     ),
-    '#theme_wrappers' => array('toolbar_tab_wrapper'),
     '#wrapper_attributes' => array(
       'class' => array('hidden', 'contextual-toolbar-tab'),
     ),

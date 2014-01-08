@@ -17,8 +17,7 @@
  * components.
  *
  * The toolbar provides a common styling for items denoted by the
- * .toolbar-tab class. The theme wrapper toolbar_tab_wrapper is provided to wrap
- * a toolbar item with the appropriate markup to apply the styling.
+ * .toolbar-tab class.
  *
  * The toolbar provides a construct called a 'tray'. The tray is a container
  * for content. The tray may be associated with a toggle in the administration
