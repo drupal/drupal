@@ -68,8 +68,8 @@
   border-right: 1px solid #aaaaaa; /* LTR */
   box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
 }
-  border-left: 1px solid #aaaaaa;
 [dir="rtl"] .toolbar .toolbar-tray-vertical {
+  border-left: 1px solid #aaaaaa;
   border-right: 0 none;
   box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
 }
