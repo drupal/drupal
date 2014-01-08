@@ -25,7 +25,7 @@ use Drupal\aggregator\FeedInterface;
  *     "form" = {
  *       "default" = "Drupal\aggregator\FeedFormController",
  *       "delete" = "Drupal\aggregator\Form\FeedDeleteForm",
- *       "remove_items" = "Drupal\aggregator\Form\FeedItemsRemoveForm"
+ *       "remove_items" = "Drupal\aggregator\Form\FeedItemsRemoveForm",
  *     }
  *   },
  *   base_table = "aggregator_feed",
@@ -33,6 +33,7 @@ use Drupal\aggregator\FeedInterface;
  *   entity_keys = {
  *     "id" = "fid",
  *     "label" = "title",
+ *     "uuid" = "uuid",
  *   }
  * )
  */
@@ -233,8 +234,10 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ->setDescription(t('The ID of the aggregator feed.'))
       ->setReadOnly(TRUE);
 
-    // @todo Add a UUID field for this entity type in
-    // https://drupal.org/node/2149841.
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The aggregator feed UUID.'))
+      ->setReadOnly(TRUE);
 
     $fields['title'] = FieldDefinition::create('string')
       ->setLabel(t('Title'))

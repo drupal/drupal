@@ -35,6 +35,12 @@ function aggregator_schema() {
         'not null' => TRUE,
         'description' => 'Primary Key: Unique feed ID.',
       ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
       'title' => array(
         'type' => 'varchar',
         'length' => 255,
