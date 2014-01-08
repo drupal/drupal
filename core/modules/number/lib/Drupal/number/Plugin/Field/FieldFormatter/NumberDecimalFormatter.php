@@ -46,7 +46,7 @@ class NumberDecimalFormatter extends DefaultNumberFormatter {
     );
     $elements['scale'] = array(
       '#type' => 'select',
-      '#title' => t('Scale'),
+      '#title' => t('Scale', array(), array('decimal places')),
       '#options' => drupal_map_assoc(range(0, 10)),
       '#default_value' => $this->getSetting('scale'),
       '#description' => t('The number of digits to the right of the decimal.'),

@@ -78,7 +78,7 @@ class DecimalItem extends NumberItemBase {
     );
     $element['scale'] = array(
       '#type' => 'select',
-      '#title' => t('Scale'),
+      '#title' => t('Scale', array(), array('decimal places')),
       '#options' => MapArray::copyValuesToKeys(range(0, 10)),
       '#default_value' => $settings['scale'],
       '#description' => t('The number of digits to the right of the decimal.'),
