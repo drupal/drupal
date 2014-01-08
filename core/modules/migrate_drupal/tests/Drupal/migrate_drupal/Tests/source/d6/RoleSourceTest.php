@@ -27,7 +27,7 @@ class RoleSourceTest extends MigrateSqlSourceTestCase {
     'id' => 'test',
     // Leave it empty for now.
     'idlist' => array(),
-    // This needs to be the identifier of the actual key: rid for comment, nid
+    // This needs to be the identifier of the actual key: cid for comment, nid
     // for node and so on.
     'source' => array(
       'plugin' => 'drupal6_user_role',
