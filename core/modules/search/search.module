@@ -5,10 +5,7 @@
  * Enables site-wide keyword searching.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\search\SearchExpression;
-use Drupal\search\Plugin\SearchInterface;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)
@@ -171,23 +168,6 @@ function search_menu() {
 }
 
 /**
- * Returns information about the default search plugin.
- *
- * @return array
- *   The search plugin definition for the default search plugin, if any.
- */
-function search_get_default_plugin_info() {
-  $info = \Drupal::service('plugin.manager.search')->getActiveDefinitions();
-  $default = \Drupal::config('search.settings')->get('default_plugin');
-  if (isset($info[$default])) {
-    return $info[$default];
-  }
-  // The config setting does not match any active plugin, so just return
-  // the info for the first active plugin (if any).
-  return reset($info);
-}
-
-/**
  * Clears either a part of, or the entire search index.
  *
  * @param $sid
@@ -201,12 +181,14 @@ function search_get_default_plugin_info() {
  *   (optional) Boolean to specify whether reindexing happens.
  * @param $langcode
  *   (optional) Language code for the operation. If not provided, all
- *   index records for the $sid will be deleted.
+ *   index records for the $sid and $type will be deleted.
  */
 function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE, $langcode = NULL) {
   if ($type == NULL && $sid == NULL) {
-    foreach (\Drupal::service('plugin.manager.search')->getActiveIndexingPlugins() as $plugin) {
-      $plugin->resetIndex();
+    /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+    $search_page_repository = \Drupal::service('search.search_page_repository');
+    foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
+      $entity->getPlugin()->resetIndex();
     }
   }
   else {
@@ -247,7 +229,8 @@ function search_dirty($word = NULL) {
 /**
  * Implements hook_cron().
  *
- * Fires updateIndex() in all plugins and cleans up dirty words.
+ * Fires updateIndex() in the plugins for all indexable active search pages,
+ * and cleans up dirty words.
  *
  * @see search_dirty()
  */
@@ -256,8 +239,10 @@ function search_cron() {
   // to date.
   drupal_register_shutdown_function('search_update_totals');
 
-  foreach (\Drupal::service('plugin.manager.search')->getActiveIndexingPlugins() as $plugin) {
-    $plugin->updateIndex();
+  /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+  $search_page_repository = \Drupal::service('search.search_page_repository');
+  foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
+    $entity->getPlugin()->updateIndex();
   }
 }
 
@@ -598,7 +583,8 @@ function search_mark_for_reindex($type, $sid) {
  *
  * To be discovered, the plugins must implement
  * \Drupal\search\Plugin\SearchInterface and be annotated as
- * \Drupal\search\Annotation\SearchPlugin plugins.
+ * \Drupal\search\Annotation\SearchPlugin plugins. Defining a plugin will allow
+ * administrators to set up one or more search pages using this plugin.
  *
  * There are three ways to interact with the search system:
  * - Specifically for searching nodes, you can implement
@@ -609,10 +595,11 @@ function search_mark_for_reindex($type, $sid) {
  *   additional, non-visible data to be indexed.
  * - Define a plugin implementing \Drupal\search\Plugin\SearchInterface and
  *   annotated as \Drupal\search\Annotation\SearchPlugin. This will create a
- *   search tab for your plugin on the /search page with a simple keyword
- *   search form. You will also need to implement the execute() method
- *   from the interface to perform the search. A base class is provided in
- *   \Drupal\search\Plugin\SearchPluginBase.
+ *   search page type that users can use to set up one or more search pages.
+ *   Each of these corresponds to a tab on the /search page, which can be
+ *   used to perform searches. You will also need to implement the execute()
+ *   method from the interface to perform the search. A base class is provided
+ *   in \Drupal\search\Plugin\SearchPluginBase.
  *
  * If your module needs to provide a more complicated search form, then you
  * need to implement it yourself. In that case, you may wish to define it as a
@@ -850,4 +837,12 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
 
   // If we get here, we couldn't find a match.
   return NULL;
+}
+
+/**
+ * Implements hook_module_preinstall().
+ */
+function search_module_preinstall() {
+  // @todo Remove in https://drupal.org/node/2155635.
+  \Drupal::service('plugin.manager.search')->clearCachedDefinitions();
 }

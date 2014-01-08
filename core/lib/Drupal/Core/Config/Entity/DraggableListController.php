@@ -40,6 +40,13 @@ abstract class DraggableListController extends ConfigEntityListController implem
   protected $weightKey = FALSE;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler) {
@@ -88,7 +95,7 @@ abstract class DraggableListController extends ConfigEntityListController implem
    */
   public function render() {
     if (!empty($this->weightKey)) {
-      return drupal_get_form($this);
+      return $this->formBuilder()->getForm($this);
     }
     return parent::render();
   }
@@ -147,6 +154,19 @@ abstract class DraggableListController extends ConfigEntityListController implem
         $this->entities[$id]->save();
       }
     }
+  }
+
+  /**
+   * Returns the form builder.
+   *
+   * @return \Drupal\Core\Form\FormBuilderInterface
+   *   The form builder.
+   */
+  protected function formBuilder() {
+    if (!$this->formBuilder) {
+      $this->formBuilder = \Drupal::formBuilder();
+    }
+    return $this->formBuilder;
   }
 
 }

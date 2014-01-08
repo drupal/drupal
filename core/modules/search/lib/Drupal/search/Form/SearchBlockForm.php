@@ -8,11 +8,39 @@
 namespace Drupal\search\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\search\SearchPageRepositoryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds the search form for the search block.
  */
 class SearchBlockForm extends FormBase {
+
+  /**
+   * The search page repository.
+   *
+   * @var \Drupal\search\SearchPageRepositoryInterface
+   */
+  protected $searchPageRepository;
+
+  /**
+   * Constructs a new SearchBlockForm.
+   *
+   * @param \Drupal\search\SearchPageRepositoryInterface $search_page_repository
+   *   The search page repository.
+   */
+  public function __construct(SearchPageRepositoryInterface $search_page_repository) {
+    $this->searchPageRepository = $search_page_repository;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('search.search_page_repository')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -62,17 +90,17 @@ class SearchBlockForm extends FormBase {
     }
 
     $form_id = $form['form_id']['#value'];
-    $info = search_get_default_plugin_info();
-    if ($info) {
+    if ($entity_id = $this->searchPageRepository->getDefaultSearchPage()) {
       $form_state['redirect_route'] = array(
-        'route_name' => 'search.view_' . $info['id'],
+        'route_name' => 'search.view_' . $entity_id,
         'route_parameters' => array(
           'keys' => trim($form_state['values'][$form_id]),
         ),
       );
     }
     else {
-      $this->setFormError('', $form_state, $this->t('Search is currently disabled.'), 'error');
+      $this->setFormError('', $form_state, $this->t('Search is currently disabled.'));
     }
   }
+
 }

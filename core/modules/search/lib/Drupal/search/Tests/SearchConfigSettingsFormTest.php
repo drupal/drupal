@@ -19,7 +19,18 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
    */
   public static $modules = array('block', 'search_extra_type');
 
+  /**
+   * User who can search and administer search.
+   *
+   * @var \Drupal\user\UserInterface
+   */
   public $search_user;
+
+  /**
+   * Node indexed for searching.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
   public $search_node;
 
   public static function getInfo() {
@@ -86,28 +97,8 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
    * Verifies plugin-supplied settings form.
    */
   function testSearchModuleSettingsPage() {
-
-    // Test that the settings form displays the correct count of items left to index.
     $this->drupalGet('admin/config/search/settings');
-
-    // Ensure that the settings fieldset for the test plugin is not present on
-    // the page
-    $this->assertNoText(t('Extra type settings'));
-    $this->assertNoText(t('Boost method'));
-
-    // Ensure that the test plugin is listed as an option
-    $this->assertTrue($this->xpath('//input[@id="edit-active-plugins-search-extra-type-search"]'), 'Checkbox for activating search for an extra plugin is visible');
-    $this->assertTrue($this->xpath('//input[@id="edit-default-plugin-search-extra-type-search"]'), 'Radio button for setting extra plugin as default search plugin is visible');
-
-    // Enable search for the test plugin
-    $edit['active_plugins[search_extra_type_search]'] = 'search_extra_type_search';
-    $edit['default_plugin'] = 'search_extra_type_search';
-    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
-
-    // Ensure that the settings fieldset is visible after enabling search for
-    // the test plugin
-    $this->assertText(t('Extra type settings'));
-    $this->assertText(t('Boost method'));
+    $this->clickLink(t('Edit'), 1);
 
     // Ensure that the default setting was picked up from the default config
     $this->assertTrue($this->xpath('//select[@id="edit-extra-type-settings-boost"]//option[@value="bi" and @selected="selected"]'), 'Module specific settings are picked up from the default config');
@@ -115,66 +106,60 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // Change extra type setting and also modify a common search setting.
     $edit = array(
       'extra_type_settings[boost]' => 'ii',
-      'minimum_word_size' => 5,
     );
-    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save search page'));
 
     // Ensure that the modifications took effect.
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertRaw(t('The %label search page has been updated.', array('%label' => 'Dummy search type')));
+    $this->drupalGet('admin/config/search/settings/manage/dummy_search_type');
     $this->assertTrue($this->xpath('//select[@id="edit-extra-type-settings-boost"]//option[@value="ii" and @selected="selected"]'), 'Module specific settings can be changed');
-    $this->assertTrue($this->xpath('//input[@id="edit-minimum-word-size" and @value="5"]'), 'Common search settings can be modified if a plugin-specific form is active');
   }
 
   /**
    * Verifies that you can disable individual search plugins.
    */
   function testSearchModuleDisabling() {
-    // Array of search plugins to test: 'path' is the search path, 'title' is
-    // the tab title, 'keys' are the keywords to search for, and 'text' is
-    // the text to assert is on the results page.
+    // Array of search plugins to test: 'keys' are the keywords to search for,
+    // and 'text' is the text to assert is on the results page.
     $plugin_info = array(
       'node_search' => array(
-        'path' => 'node',
-        'title' => 'Content',
         'keys' => 'pizza',
         'text' => $this->search_node->label(),
       ),
       'user_search' => array(
-        'path' => 'user',
-        'title' => 'User',
         'keys' => $this->search_user->getUsername(),
         'text' => $this->search_user->getEmail(),
       ),
-      'search_extra_type_search' => array(
-        'path' => 'dummy_path',
-        'title' => 'Dummy search type',
+      'dummy_search_type' => array(
         'keys' => 'foo',
         'text' => 'Dummy search snippet to display',
       ),
     );
     $plugins = array_keys($plugin_info);
+    /** @var $entities \Drupal\search\SearchPageInterface[] */
+    $entities = entity_load_multiple('search_page');
+    // Disable all of the search pages.
+    foreach ($entities as $entity) {
+      $entity->disable()->save();
+    }
 
     // Test each plugin if it's enabled as the only search plugin.
-    foreach ($plugins as $plugin) {
-      // Enable the one plugin and disable other ones.
-      $info = $plugin_info[$plugin];
-      $edit = array();
-      foreach ($plugins as $other) {
-        $edit['active_plugins[' . $other . ']'] = (($other == $plugin) ? $plugin : FALSE);
-      }
-      $edit['default_plugin'] = $plugin;
-      $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
+    foreach ($entities as $entity_id => $entity) {
+      // Set this as default.
+      $this->drupalGet("admin/config/search/settings/manage/$entity_id/set-default");
 
       // Run a search from the correct search URL.
-      $this->drupalGet('search/' . $info['path'] . '/' . $info['keys']);
-      $this->assertNoText('no results', $info['title'] . ' search found results');
+      $info = $plugin_info[$entity_id];
+      $this->drupalGet('search/' . $entity->getPath() . '/' . $info['keys']);
+      $this->assertResponse(200);
+      $this->assertNoText('no results', $entity->label() . ' search found results');
       $this->assertText($info['text'], 'Correct search text found');
 
-      // Verify that other plugin search tab titles are not visible.
+      // Verify that other plugin search tab labels are not visible.
       foreach ($plugins as $other) {
-        if ($other != $plugin) {
-          $title = $plugin_info[$other]['title'];
-          $this->assertNoText($title, $title . ' search tab is not shown');
+        if ($other != $entity_id) {
+          $label = $entities[$other]->label();
+          $this->assertNoText($label, $label . ' search tab is not shown');
         }
       }
 
@@ -184,33 +169,194 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       $this->drupalPostForm('node', $terms, t('Search'));
       $this->assertEqual(
         $this->getURL(),
-        url('search/' . $info['path'] . '/' . $info['keys'], array('absolute' => TRUE)),
+        \Drupal::url('search.view_' . $entity->id(), array('keys' => $info['keys']), array('absolute' => TRUE)),
         'Block redirected to right search page');
 
-      // Try an invalid search path. Should redirect to our active plugin.
+      // Try an invalid search path, which should 404.
       $this->drupalGet('search/not_a_plugin_path');
-      $this->assertEqual(
-        $this->getURL(),
-        url('search/' . $info['path'], array('absolute' => TRUE)),
-        'Invalid search path redirected to default search page');
+      $this->assertResponse(404);
+
+      $entity->disable()->save();
     }
 
     // Test with all search plugins enabled. When you go to the search
     // page or run search, all plugins should be shown.
-    $edit = array();
-    foreach ($plugins as $plugin) {
-      $edit['active_plugins[' . $plugin . ']'] = $plugin;
+    foreach ($entities as $entity) {
+      $entity->enable()->save();
     }
-    $edit['default_plugin'] = 'node_search';
-
-    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
+    // Set the node search as default.
+    $this->drupalGet('admin/config/search/settings/manage/node_search/set-default');
 
     foreach (array('search/node/pizza', 'search/node') as $path) {
       $this->drupalGet($path);
-      foreach ($plugins as $plugin) {
-        $title = $plugin_info[$plugin]['title'];
-        $this->assertText($title, format_string('%title search tab is shown', array('%title' => $title)));
+      foreach ($plugins as $entity_id) {
+        $label = $entities[$entity_id]->label();
+        $this->assertText($label, format_string('%label search tab is shown', array('%label' => $label)));
       }
     }
   }
+
+  /**
+   * Tests the ordering of search pages on a clean install.
+   */
+  public function testDefaultSearchPageOrdering() {
+    $this->drupalGet('search');
+    $elements = $this->xpath('//*[contains(@class, :class)]//a', array(':class' => 'tabs primary'));
+    $this->assertIdentical((string) $elements[0]['href'], url('search/node'));
+    $this->assertIdentical((string) $elements[1]['href'], url('search/user'));
+  }
+
+  /**
+   * Tests multiple search pages of the same type.
+   */
+  public function testMultipleSearchPages() {
+    $this->assertDefaultSearch('node_search', 'The default page is set to the installer default.');
+    $search_storage = \Drupal::entityManager()->getStorageController('search_page');
+    $entities = $search_storage->loadMultiple();
+    $search_storage->delete($entities);
+    $this->assertDefaultSearch(FALSE);
+
+    // Ensure that no search pages are configured.
+    $this->drupalGet('admin/config/search/settings');
+    $this->assertText(t('No search pages have been configured.'));
+
+    // Add a search page.
+    $edit = array();
+    $edit['search_type'] = 'search_extra_type_search';
+    $this->drupalPostForm(NULL, $edit, t('Add new page'));
+    $this->assertTitle('Add new search page | Drupal');
+
+    $first = array();
+    $first['label'] = $this->randomString();
+    $first_id = $first['id'] = strtolower($this->randomName(8));
+    $first['path'] = strtolower($this->randomName(8));
+    $this->drupalPostForm(NULL, $first, t('Add search page'));
+    $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
+    $this->assertRaw(t('The %label search page has been added.', array('%label' => $first['label'])));
+
+    // Attempt to add a search page with an existing path.
+    $edit = array();
+    $edit['search_type'] = 'search_extra_type_search';
+    $this->drupalPostForm(NULL, $edit, t('Add new page'));
+    $edit = array();
+    $edit['label'] = $this->randomString();
+    $edit['id'] = strtolower($this->randomName(8));
+    $edit['path'] = $first['path'];
+    $this->drupalPostForm(NULL, $edit, t('Add search page'));
+    $this->assertText(t('The search page path must be unique.'));
+
+    // Add a second search page.
+    $second = array();
+    $second['label'] = $this->randomString();
+    $second_id = $second['id'] = strtolower($this->randomName(8));
+    $second['path'] = strtolower($this->randomName(8));
+    $this->drupalPostForm(NULL, $second, t('Add search page'));
+    $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
+
+    // Ensure both search pages have their tabs displayed.
+    $this->drupalGet('search');
+    $elements = $this->xpath('//*[contains(@class, :class)]//a', array(':class' => 'tabs primary'));
+    $this->assertIdentical((string) $elements[0]['href'], url('search/' . $first['path']));
+    $this->assertIdentical((string) $elements[1]['href'], url('search/' . $second['path']));
+
+    // Switch the weight of the search pages and check the order of the tabs.
+    $edit = array(
+      'entities[' . $first_id . '][weight]' => 10,
+      'entities[' . $second_id . '][weight]' => -10,
+    );
+    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
+    $this->drupalGet('search');
+    $elements = $this->xpath('//*[contains(@class, :class)]//a', array(':class' => 'tabs primary'));
+    $this->assertIdentical((string) $elements[0]['href'], url('search/' . $second['path']));
+    $this->assertIdentical((string) $elements[1]['href'], url('search/' . $first['path']));
+
+    // Check the initial state of the search pages.
+    $this->drupalGet('admin/config/search/settings');
+    $this->verifySearchPageOperations($first_id, TRUE, FALSE, FALSE, FALSE);
+    $this->verifySearchPageOperations($second_id, TRUE, TRUE, TRUE, FALSE);
+
+    // Change the default search page.
+    $this->clickLink(t('Set as default'));
+    $this->assertRaw(t('The default search page is now %label. Be sure to check the ordering of your search pages.', array('%label' => $second['label'])));
+    $this->verifySearchPageOperations($first_id, TRUE, TRUE, TRUE, FALSE);
+    $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);
+
+    // Disable the first search page.
+    $this->clickLink(t('Disable'));
+    $this->assertResponse(200);
+    $this->assertNoLink(t('Disable'));
+    $this->verifySearchPageOperations($first_id, TRUE, TRUE, FALSE, TRUE);
+    $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);
+
+    // Enable the first search page.
+    $this->clickLink(t('Enable'));
+    $this->assertResponse(200);
+    $this->verifySearchPageOperations($first_id, TRUE, TRUE, TRUE, FALSE);
+    $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);
+
+    // Test deleting.
+    $this->clickLink(t('Delete'));
+    $this->assertRaw(t('Are you sure you want to delete the %label search page?', array('%label' => $first['label'])));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
+    $this->assertRaw(t('The %label search page has been deleted.', array('%label' => $first['label'])));
+    $this->verifySearchPageOperations($first_id, FALSE, FALSE, FALSE, FALSE);
+  }
+
+  /**
+   * Checks that the search page operations match expectations.
+   *
+   * @param string $id
+   *   The search page ID to check.
+   * @param bool $edit
+   *   Whether the edit link is expected.
+   * @param bool $delete
+   *   Whether the delete link is expected.
+   * @param bool $disable
+   *   Whether the disable link is expected.
+   * @param bool $enable
+   *   Whether the enable link is expected.
+   */
+  protected function verifySearchPageOperations($id, $edit, $delete, $disable, $enable) {
+    if ($edit) {
+      $this->assertLinkByHref("admin/config/search/settings/manage/$id");
+    }
+    else {
+      $this->assertNoLinkByHref("admin/config/search/settings/manage/$id");
+    }
+    if ($delete) {
+      $this->assertLinkByHref("admin/config/search/settings/manage/$id/delete");
+    }
+    else {
+      $this->assertNoLinkByHref("admin/config/search/settings/manage/$id/delete");
+    }
+    if ($disable) {
+      $this->assertLinkByHref("admin/config/search/settings/manage/$id/disable");
+    }
+    else {
+      $this->assertNoLinkByHref("admin/config/search/settings/manage/$id/disable");
+    }
+    if ($enable) {
+      $this->assertLinkByHref("admin/config/search/settings/manage/$id/enable");
+    }
+    else {
+      $this->assertNoLinkByHref("admin/config/search/settings/manage/$id/enable");
+    }
+  }
+
+  /**
+   * Checks that the default search page matches expectations.
+   *
+   * @param string $expected
+   *   The expected search page.
+   * @param string $message
+   *   (optional) A message to display with the assertion.
+   * @param string $group
+   *   (optional) The group this message is in.
+   */
+  protected function assertDefaultSearch($expected, $message = '', $group = 'Other') {
+    /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+    $search_page_repository = \Drupal::service('search.search_page_repository');
+    $this->assertIdentical($search_page_repository->getDefaultSearchPage(), $expected, $message, $group);
+  }
+
 }

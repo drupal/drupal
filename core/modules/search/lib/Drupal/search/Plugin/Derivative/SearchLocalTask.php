@@ -8,11 +8,40 @@
 namespace Drupal\search\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\search\SearchPageRepositoryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides local tasks for each search plugin.
+ * Provides local tasks for each search page.
  */
-class SearchLocalTask extends DerivativeBase {
+class SearchLocalTask extends DerivativeBase implements ContainerDerivativeInterface {
+
+  /**
+   * The search page repository.
+   *
+   * @var \Drupal\search\SearchPageRepositoryInterface
+   */
+  protected $searchPageRepository;
+
+  /**
+   * Constructs a new SearchLocalTask.
+   *
+   * @param \Drupal\search\SearchPageRepositoryInterface $search_page_repository
+   *   The search page repository.
+   */
+  public function __construct(SearchPageRepositoryInterface $search_page_repository) {
+    $this->searchPageRepository = $search_page_repository;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, $base_plugin_id) {
+    return new static(
+      $container->get('search.search_page_repository')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -20,20 +49,15 @@ class SearchLocalTask extends DerivativeBase {
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     $this->derivatives = array();
 
-    $default_info = search_get_default_plugin_info();
-    if ($default_info) {
-      foreach (\Drupal::service('plugin.manager.search')->getActiveDefinitions() as $plugin_id => $search_info) {
-        $this->derivatives[$plugin_id] = array(
-          'title' => $search_info['title'],
-          'route_name' => 'search.view_' . $plugin_id,
-          'base_route' => 'search.view_' . $default_info['id'],
+    if ($default = $this->searchPageRepository->getDefaultSearchPage()) {
+      $active_search_pages = $this->searchPageRepository->getActiveSearchPages();
+      foreach ($this->searchPageRepository->sortSearchPages($active_search_pages) as $entity_id => $entity) {
+        $this->derivatives[$entity_id] = array(
+          'title' => $entity->label(),
+          'route_name' => 'search.view_' . $entity_id,
+          'base_route' => 'search.plugins:' . $default,
+          'weight' => $entity->getWeight(),
         );
-        if ($plugin_id == $default_info['id']) {
-          $this->derivatives[$plugin_id]['weight'] = -10;
-        }
-        else {
-          $this->derivatives[$plugin_id]['weight'] = 0;
-        }
       }
     }
     return $this->derivatives;

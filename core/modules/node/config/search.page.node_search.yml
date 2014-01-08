@@ -1,0 +1,10 @@
+id: node_search
+label: Content
+uuid: 25687eeb-4bb5-469c-ad05-5eb24cd7012c
+status: true
+langcode: en
+path: node
+weight: -10
+plugin: node_search
+configuration:
+  rankings: {  }

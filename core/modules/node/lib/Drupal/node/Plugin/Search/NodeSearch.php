@@ -15,13 +15,11 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
-use Drupal\search\Plugin\SearchPluginBase;
+use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 use Drupal\search\Plugin\SearchIndexingInterface;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,11 +27,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @SearchPlugin(
  *   id = "node_search",
- *   title = @Translation("Content"),
- *   path = "node"
+ *   title = @Translation("Content")
  * )
  */
-class NodeSearch extends SearchPluginBase implements AccessibleInterface, SearchIndexingInterface, PluginFormInterface {
+class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInterface, SearchIndexingInterface {
 
   /**
    * A database connection object.
@@ -76,6 +73,13 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $account;
+
+  /**
+   * An array of additional rankings from hook_ranking().
+   *
+   * @var array
+   */
+  protected $rankings;
 
   /**
    * The list of options and info for advanced search filters.
@@ -261,17 +265,17 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
   }
 
   /**
-   * Gathers the rankings from the the hook_ranking() implementations.
+   * Adds the configured rankings to the search query.
    *
    * @param $query
    *   A query object that has been extended with the Search DB Extender.
    */
   protected function addNodeRankings(SelectExtender $query) {
-    if ($ranking = $this->moduleHandler->invokeAll('ranking')) {
+    if ($ranking = $this->getRankings()) {
       $tables = &$query->getTables();
       foreach ($ranking as $rank => $values) {
-        // @todo - move rank out of drupal variables.
-        if ($node_rank = variable_get('node_rank_' . $rank, 0)) {
+        if (isset($this->configuration['rankings'][$rank]) && !empty($this->configuration['rankings'][$rank])) {
+          $node_rank = $this->configuration['rankings'][$rank];
           // If the table defined in the ranking isn't already joined, then add it.
           if (isset($values['join']) && !isset($tables[$values['join']['alias']])) {
             $query->addJoin($values['join']['type'], $values['join']['table'], $values['join']['alias'], $values['join']['on']);
@@ -404,7 +408,6 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
     );
 
     // Add node types.
-    $node_types = $this->entityManager->getStorageController('node_type')->loadMultiple();
     $types = array_map('check_plain', node_type_get_names());
     $form['advanced']['types-fieldset'] = array(
       '#type' => 'fieldset',
@@ -504,13 +507,41 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
     if (!empty($keys)) {
       form_set_value($form['basic']['processed_keys'], trim($keys), $form_state);
     }
-    $path = $form_state['action'] . '/' . $keys;
     $options = array();
     if ($filters) {
       $options['query'] = array('f' => $filters);
     }
 
-    $form_state['redirect'] = array($path, $options);
+    $form_state['redirect_route'] = array(
+      'route_name' => 'search.view_' . $form_state['search_page_id'],
+      'route_parameters' => array(
+        'keys' => $keys,
+      ),
+      'options' => $options,
+    );
+  }
+
+  /**
+   * Gathers ranking definitions from hook_ranking().
+   *
+   * @return array
+   *   An array of ranking definitions.
+   */
+  protected function getRankings() {
+    if (!$this->rankings) {
+      $this->rankings = $this->moduleHandler->invokeAll('ranking');
+    }
+    return $this->rankings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    $configuration = array(
+      'rankings' => array(),
+    );
+    return $configuration;
   }
 
   /**
@@ -524,17 +555,17 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
     );
     $form['content_ranking']['#theme'] = 'node_search_admin';
     $form['content_ranking']['info'] = array(
-      '#value' => '<em>' . t('Influence is a numeric multiplier used in ordering search results. A higher number means the corresponding factor has more influence on search results; zero means the factor is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em>'
+      '#value' => '<em>' . $this->t('Influence is a numeric multiplier used in ordering search results. A higher number means the corresponding factor has more influence on search results; zero means the factor is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em>'
     );
 
     // Note: reversed to reflect that higher number = higher ranking.
     $options = drupal_map_assoc(range(0, 10));
-    foreach ($this->moduleHandler->invokeAll('ranking') as $var => $values) {
-      $form['content_ranking']['factors']['node_rank_' . $var] = array(
+    foreach ($this->getRankings() as $var => $values) {
+      $form['content_ranking']['factors']["rankings_$var"] = array(
         '#title' => $values['title'],
         '#type' => 'select',
         '#options' => $options,
-        '#default_value' => variable_get('node_rank_' . $var, 0),
+        '#default_value' => isset($this->configuration['rankings'][$var]) ? $this->configuration['rankings'][$var] : 0,
       );
     }
     return $form;
@@ -543,18 +574,15 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, array &$form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitConfigurationForm(array &$form, array &$form_state) {
-    foreach ($this->moduleHandler->invokeAll('ranking') as $var => $values) {
-      if (isset($form_state['values']['node_rank_' . $var])) {
-        // @todo Fix when https://drupal.org/node/1831632 is in.
-        variable_set('node_rank_' . $var, $form_state['values']['node_rank_' . $var]);
+    foreach ($this->getRankings() as $var => $values) {
+      if (!empty($form_state['values']["rankings_$var"])) {
+        $this->configuration['rankings'][$var] = $form_state['values']["rankings_$var"];
+      }
+      else {
+        unset($this->configuration['rankings'][$var]);
       }
     }
   }
+
 }

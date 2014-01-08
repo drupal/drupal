@@ -450,12 +450,6 @@ function node_uninstall() {
     \Drupal::config('language.settings')->clear('node. ' . $type . '.language.default_configuration')->save();
   }
 
-  // Delete node search ranking variables.
-  variable_del('node_rank_relevance');
-  variable_del('node_rank_sticky');
-  variable_del('node_rank_promote');
-  variable_del('node_rank_recent');
-
   // Delete remaining general module variables.
   \Drupal::state()->delete('node.node_access_needs_rebuild');
 

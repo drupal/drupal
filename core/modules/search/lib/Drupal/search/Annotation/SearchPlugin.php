@@ -13,8 +13,7 @@ use Drupal\Component\Annotation\Plugin;
  * Defines a SearchPlugin type annotation object.
  *
  * SearchPlugin classes define search types for the core Search module. Each
- * active search type is displayed in a tab on the Search page, and each has a
- * path suffix after "search/".
+ * search type can be used to create search pages from the Search settings page.
  *
  * @see SearchPluginBase
  *
@@ -30,13 +29,6 @@ class SearchPlugin extends Plugin {
   public $id;
 
   /**
-   * The path fragment to be added to search/ for the search page.
-   *
-   * @var string
-   */
-  public $path;
-
-  /**
    * The title for the search page tab.
    *
    * @todo This will potentially be translated twice or cached with the wrong
@@ -47,4 +39,5 @@ class SearchPlugin extends Plugin {
    * @var \Drupal\Core\Annotation\Translation
    */
   public $title;
+
 }

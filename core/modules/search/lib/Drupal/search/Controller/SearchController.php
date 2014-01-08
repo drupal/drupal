@@ -9,8 +9,8 @@ namespace Drupal\search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\search\SearchPluginManager;
+use Drupal\search\SearchPageInterface;
+use Drupal\search\SearchPageRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,30 +20,20 @@ use Symfony\Component\HttpFoundation\Request;
 class SearchController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
-   * The search plugin manager.
+   * The search page repository.
    *
-   * @var \Drupal\search\SearchPluginManager
+   * @var \Drupal\search\SearchPageRepositoryInterface
    */
-  protected $searchManager;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
+  protected $searchPageRepository;
 
   /**
    * Constructs a new search controller.
    *
-   * @param \Drupal\search\SearchPluginManager $search_plugin_manager
-   *   The search plugin manager.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
-   *   The form builder.
+   * @param \Drupal\search\SearchPageRepositoryInterface $search_page_repository
+   *   The search page repository.
    */
-  public function __construct(SearchPluginManager $search_plugin_manager, FormBuilderInterface $form_builder) {
-    $this->searchManager = $search_plugin_manager;
-    $this->formBuilder = $form_builder;
+  public function __construct(SearchPageRepositoryInterface $search_page_repository) {
+    $this->searchPageRepository = $search_page_repository;
   }
 
   /**
@@ -51,8 +41,7 @@ class SearchController extends ControllerBase implements ContainerInjectionInter
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.search'),
-      $container->get('form_builder')
+      $container->get('search.search_page_repository')
     );
   }
 
@@ -61,46 +50,24 @@ class SearchController extends ControllerBase implements ContainerInjectionInter
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
-   * @param string $plugin_id
-   *   The ID of a search plugin.
+   * @param \Drupal\search\SearchPageInterface $entity
+   *   The search page entity.
    * @param string $keys
-   *   Search keywords.
+   *   (optional) Search keywords, defaults to an empty string.
    *
    * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
    *   The search form and search results or redirect response.
    */
-  public function view(Request $request, $plugin_id = NULL, $keys = NULL) {
-    $info = FALSE;
-    $keys = trim($keys);
+  public function view(Request $request, SearchPageInterface $entity, $keys = '') {
     // Also try to pull search keywords from the request to support old GET
     // format of searches for existing links.
     if (!$keys && $request->query->has('keys')) {
-      $keys = trim($request->query->get('keys'));
+      $keys = $request->query->get('keys');
     }
+    $keys = trim($keys);
     $build['#title'] = $this->t('Search');
 
-    if (!empty($plugin_id)) {
-      $active_plugin_info = $this->searchManager->getActiveDefinitions();
-      if (isset($active_plugin_info[$plugin_id])) {
-        $info = $active_plugin_info[$plugin_id];
-      }
-    }
-
-    if (empty($plugin_id) || empty($info)) {
-      // No path or invalid path: find the default plugin. Note that if there
-      // are no enabled search plugins, this function should never be called,
-      // since hook_menu() would not have defined any search paths.
-      $info = search_get_default_plugin_info();
-      // Redirect from bare /search or an invalid path to the default search
-      // path.
-      $path = 'search/' . $info['path'];
-      if ($keys) {
-        $path .= '/' . $keys;
-      }
-
-      return $this->redirect('search.view_' . $info['id']);
-    }
-    $plugin = $this->searchManager->createInstance($plugin_id);
+    $plugin = $entity->getPlugin();
     $plugin->setSearch($keys, $request->query->all(), $request->attributes->all());
     // Default results output is an empty string.
     $results = array('#markup' => '');
@@ -114,16 +81,85 @@ class SearchController extends ControllerBase implements ContainerInjectionInter
       // Only search if there are keywords or non-empty conditions.
       if ($plugin->isSearchExecutable()) {
         // Log the search keys.
-        watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
+        watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $entity->label()), WATCHDOG_NOTICE, $this->l(t('results'), 'search.view_' . $entity->id(), array('keys' => $keys)));
 
         // Collect the search results.
         $results = $plugin->buildResults();
       }
     }
     // The form may be altered based on whether the search was run.
-    $build['search_form'] = $this->formBuilder->getForm('\Drupal\search\Form\SearchForm', $plugin);
+    $build['search_form'] = $this->entityManager()->getForm($entity, 'search');
     $build['search_results'] = $results;
     return $build;
+  }
+
+  /**
+   * Redirects to a search page.
+   *
+   * This is used to redirect from /search to the default search page.
+   *
+   * @param \Drupal\search\SearchPageInterface $entity
+   *   The search page entity.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect to the search page.
+   */
+  public function redirectSearchPage(SearchPageInterface $entity) {
+    return $this->redirect('search.view_' . $entity->id());
+  }
+
+  /**
+   * Route title callback.
+   *
+   * @param \Drupal\search\SearchPageInterface $search_page
+   *   The search page entity.
+   *
+   * @return string
+   *   The title for the search page edit form.
+   */
+  public function editTitle(SearchPageInterface $search_page) {
+    return $this->t('Edit %label search page', array('%label' => $search_page->label()));
+  }
+
+  /**
+   * Performs an operation on the search page entity.
+   *
+   * @param \Drupal\search\SearchPageInterface $search_page
+   *   The search page entity.
+   * @param string $op
+   *   The operation to perform, usually 'enable' or 'disable'.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect back to the search settings page.
+   */
+  public function performOperation(SearchPageInterface $search_page, $op) {
+    $search_page->$op()->save();
+
+    if ($op == 'enable') {
+      drupal_set_message($this->t('The %label search page has been enabled.', array('%label' => $search_page->label())));
+    }
+    elseif ($op == 'disable') {
+      drupal_set_message($this->t('The %label search page has been disabled.', array('%label' => $search_page->label())));
+    }
+
+    return $this->redirect('search.settings');
+  }
+
+  /**
+   * Sets the search page as the default.
+   *
+   * @param \Drupal\search\SearchPageInterface $search_page
+   *   The search page entity.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect to the search settings page.
+   */
+  public function setAsDefault(SearchPageInterface $search_page) {
+    // Set the default page to this search page.
+    $this->searchPageRepository->setDefaultSearchPage($search_page);
+
+    drupal_set_message($this->t('The default search page is now %label. Be sure to check the ordering of your search pages.', array('%label' => $search_page->label())));
+    return $this->redirect('search.settings');
   }
 
 }

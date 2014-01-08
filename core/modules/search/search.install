@@ -170,7 +170,7 @@ function _search_update_8000_modules_mapto_plugins(array $map) {
   }
   $default_module = update_variable_get('search_default_module', 'node');
   if (isset($map[$default_module])) {
-    $config->set('default_plugin', $map[$default_module]);
+    $config->set('default_page', $map[$default_module]);
     update_variable_del('search_default_module');
   }
   $config->save();

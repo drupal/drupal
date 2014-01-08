@@ -7,55 +7,17 @@
 
 namespace Drupal\search_extra_type\Plugin\Search;
 
-use Drupal\Core\Config\Config;
-use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\search\Plugin\SearchPluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 
 /**
  * Executes a keyword search against the search index.
  *
  * @SearchPlugin(
  *   id = "search_extra_type_search",
- *   title = @Translation("Dummy search type"),
- *   path = "dummy_path"
+ *   title = @Translation("Dummy search type")
  * )
  */
-class SearchExtraTypeSearch extends SearchPluginBase implements PluginFormInterface {
-
-  /**
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $configSettings;
-
-  /**
-   * {@inheritdoc}
-   */
-  static public function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
-    return new static(
-      $container->get('config.factory')->get('search_extra_type.settings'),
-      $configuration,
-      $plugin_id,
-      $plugin_definition
-    );
-  }
-
-  /**
-   * Creates a SearchExtraTypeSearch object.
-   *
-   * @param Config $config_settings
-   *   The extra config settings.
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param array $plugin_definition
-   *   The plugin implementation definition.
-   */
-  public function __construct(Config $config_settings, array $configuration, $plugin_id, array $plugin_definition) {
-    $this->configSettings = $config_settings;
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
+class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
 
   /**
    * {@inheritdoc}
@@ -138,7 +100,7 @@ class SearchExtraTypeSearch extends SearchPluginBase implements PluginFormInterf
         'bi' => t('Bistromathic'),
         'ii' => t('Infinite Improbability'),
       ),
-      '#default_value' => $this->configSettings->get('boost'),
+      '#default_value' => $this->configuration['boost'],
     );
     return $form;
   }
@@ -146,16 +108,17 @@ class SearchExtraTypeSearch extends SearchPluginBase implements PluginFormInterf
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, array &$form_state) {
+    $this->configuration['boost'] = $form_state['values']['extra_type_settings']['boost'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
-    $this->configSettings
-      ->set('boost', $form_state['values']['extra_type_settings']['boost'])
-      ->save();
+  public function defaultConfiguration() {
+    return array(
+      'boost' => 'bi',
+    );
   }
 
 }

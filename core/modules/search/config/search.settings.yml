@@ -1,8 +1,5 @@
-active_plugins:
-  node_search: node_search
-  user_search: user_search
 and_or_limit: 7
-default_plugin: node_search
+default_page: node_search
 index:
   cron_limit: 100
   overlap_cjk: true

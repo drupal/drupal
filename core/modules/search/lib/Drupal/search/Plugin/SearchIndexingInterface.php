@@ -14,6 +14,11 @@ namespace Drupal\search\Plugin;
  * search_cron() and via the search module administration form. Plugins not
  * implementing this interface are assumed to use alternate mechanisms for
  * indexing the data used to provide search results.
+ *
+ * Multiple search pages can be created for each search plugin, so you will need
+ * to choose whether these search pages should share an index (in which case
+ * they must not use any search page-specific configuration while indexing) or
+ * they will have separate indexes (which will use additional server resources).
  */
 interface SearchIndexingInterface {
 

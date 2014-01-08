@@ -1,0 +1,14 @@
+/**
+ * @file
+ * Styles for administration pages.
+ */
+
+/**
+ * Add search page select/submit.
+ */
+#search-admin-settings #edit-add-page {
+  margin-bottom: 1em;
+}
+#search-admin-settings #edit-add-page label {
+  display: block;
+}

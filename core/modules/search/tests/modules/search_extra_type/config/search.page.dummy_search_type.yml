@@ -1,0 +1,8 @@
+id: dummy_search_type
+label: 'Dummy search type'
+uuid: b55858d4-f428-474c-8200-ef47a4597aef
+status: true
+langcode: en
+path: dummy_path
+plugin: search_extra_type_search
+configuration: {  }

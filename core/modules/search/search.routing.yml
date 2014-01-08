@@ -1,7 +1,7 @@
 search.settings:
   path: '/admin/config/search/settings'
   defaults:
-    _form: '\Drupal\search\Form\SearchSettingsForm'
+    _entity_list: 'search_page'
     _title: 'Search settings'
   requirements:
     _permission: 'administer search'
@@ -14,17 +14,51 @@ search.reindex_confirm:
   requirements:
     _permission: 'administer search'
 
-search.view:
-  path: '/search/{plugin_id}'
+search.add_type:
+  path: '/admin/config/search/settings/add/{search_plugin_id}'
   defaults:
-    _title: 'Search'
-    _content: '\Drupal\search\Controller\SearchController::view'
-    plugin_id: NULL
-    keys: ''
+    _entity_form: 'search_page.add'
+    _title: 'Add new search page'
   requirements:
-    keys: '.+'
-    _permission: 'search content'
-    _search_access: 'TRUE'
+    _entity_create_access: 'search_page'
+
+search.edit:
+  path: '/admin/config/search/settings/manage/{search_page}'
+  defaults:
+    _entity_form: 'search_page.edit'
+    _title_callback: '\Drupal\search\Controller\SearchController::editTitle'
+  requirements:
+    _entity_access: 'search_page.update'
+
+search.enable:
+  path: '/admin/config/search/settings/manage/{search_page}/enable'
+  defaults:
+    _controller: '\Drupal\search\Controller\SearchController::performOperation'
+    op: 'enable'
+  requirements:
+    _entity_access: 'search_page.update'
+
+search.disable:
+  path: '/admin/config/search/settings/manage/{search_page}/disable'
+  defaults:
+    _controller: '\Drupal\search\Controller\SearchController::performOperation'
+    op: 'disable'
+  requirements:
+    _entity_access: 'search_page.disable'
+
+search.set_default:
+  path: '/admin/config/search/settings/manage/{search_page}/set-default'
+  defaults:
+    _controller: '\Drupal\search\Controller\SearchController::setAsDefault'
+  requirements:
+    _entity_access: 'search_page.update'
+
+search.delete:
+  path: '/admin/config/search/settings/manage/{search_page}/delete'
+  defaults:
+    _entity_form: 'search_page.delete'
+  requirements:
+    _entity_access: 'search_page.delete'
 
 route_callbacks:
-  - '\Drupal\search\Routing\SearchPluginRoutes::routes'
+  - '\Drupal\search\Routing\SearchPageRoutes::routes'

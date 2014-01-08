@@ -480,6 +480,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     if (\Drupal::state()->get('menu_rebuild_needed') || !\Drupal::state()->get('menu.masks')) {
       menu_router_rebuild();
       \Drupal::service('router.builder')->rebuild();
+      \Drupal::cache()->deleteTags(array('local_task' => 1));
     }
     $original_map = arg(NULL, $path);
 
