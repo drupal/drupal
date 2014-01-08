@@ -33,7 +33,7 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   /**
    * The injection container that should be injected into all controllers.
    *
-   * @var Symfony\Component\DependencyInjection\ContainerInterface
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 
@@ -47,9 +47,9 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
   /**
    * Constructs a new ControllerResolver.
    *
-   * @param Symfony\Component\DependencyInjection\ContainerInterface $container
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   A ContainerInterface instance.
-   * @param Symfony\Component\HttpKernel\Log\LoggerInterface $logger
+   * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
    *   (optional) A LoggerInterface instance.
    */
   public function __construct(ContainerInterface $container, LoggerInterface $logger = NULL) {
