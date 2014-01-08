@@ -6,7 +6,7 @@ langcode: en
 region: -1
 plugin: test_html_id
 settings:
-  label: 'Test block html id"'
+  label: 'Test block html id'
   module: block_test
   label_display: false
   cache: true
