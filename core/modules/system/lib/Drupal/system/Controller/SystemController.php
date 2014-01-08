@@ -10,9 +10,11 @@ namespace Drupal\system\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Theme\ThemeAccessCheck;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Returns responses for System routes.
@@ -34,16 +36,46 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
   protected $systemManager;
 
   /**
+   * The theme access checker service.
+   *
+   * @var \Drupal\Core\Theme\ThemeAccessCheck
+   */
+  protected $themeAccess;
+
+  /**
+   * The form builder service.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
+   * The theme handler service.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * Constructs a new SystemController.
    *
    * @param \Drupal\system\SystemManager $systemManager
    *   System manager service.
    * @param \Drupal\Core\Entity\Query\QueryFactory $queryFactory
    *   The entity query object.
+   * @param \Drupal\Core\Theme\ThemeAccessCheck $theme_access
+   *   The theme access checker service.
+   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The form builder.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
    */
-  public function __construct(SystemManager $systemManager, QueryFactory $queryFactory) {
+  public function __construct(SystemManager $systemManager, QueryFactory $queryFactory, ThemeAccessCheck $theme_access, FormBuilderInterface $form_builder, ThemeHandlerInterface $theme_handler) {
     $this->systemManager = $systemManager;
     $this->queryFactory = $queryFactory;
+    $this->themeAccess = $theme_access;
+    $this->formBuilder = $form_builder;
+    $this->themeHandler = $theme_handler;
   }
 
   /**
@@ -52,7 +84,10 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('system.manager'),
-      $container->get('entity.query')
+      $container->get('entity.query'),
+      $container->get('access_check.theme'),
+      $container->get('form_builder'),
+      $container->get('theme_handler')
     );
   }
 
@@ -146,11 +181,144 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
   }
 
   /**
-   * @todo Remove system_themes_page().
+   * Returns a theme listing.
+   *
+   * @return string
+   *   An HTML string of the theme listing page.
    */
   public function themesPage() {
-    module_load_include('admin.inc', 'system');
-    return system_themes_page();
+    $config = $this->config('system.theme');
+    // Get current list of themes.
+    $themes = $this->themeHandler->listInfo();
+    uasort($themes, 'system_sort_modules_by_info_name');
+
+    $theme_default = $config->get('default');
+    $theme_groups  = array();
+    $admin_theme = $config->get('admin');
+
+    foreach ($themes as &$theme) {
+      if (!empty($theme->info['hidden'])) {
+        continue;
+      }
+      $theme->is_default = ($theme->name == $theme_default);
+
+      // Identify theme screenshot.
+      $theme->screenshot = NULL;
+      // Create a list which includes the current theme and all its base themes.
+      if (isset($themes[$theme->name]->base_themes)) {
+        $theme_keys = array_keys($themes[$theme->name]->base_themes);
+        $theme_keys[] = $theme->name;
+      }
+      else {
+        $theme_keys = array($theme->name);
+      }
+      // Look for a screenshot in the current theme or in its closest ancestor.
+      foreach (array_reverse($theme_keys) as $theme_key) {
+        if (isset($themes[$theme_key]) && file_exists($themes[$theme_key]->info['screenshot'])) {
+          $theme->screenshot = array(
+            'uri' => $themes[$theme_key]->info['screenshot'],
+            'alt' => $this->t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
+            'title' => $this->t('Screenshot for !theme theme', array('!theme' => $theme->info['name'])),
+            'attributes' => array('class' => array('screenshot')),
+          );
+          break;
+        }
+      }
+
+      if (empty($theme->status)) {
+        // Ensure this theme is compatible with this version of core.
+        // Require the 'content' region to make sure the main page
+        // content has a common place in all themes.
+        $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != \DRUPAL::CORE_COMPATIBILITY) || !isset($theme->info['regions']['content']);
+        $theme->incompatible_php = version_compare(phpversion(), $theme->info['php']) < 0;
+        // Confirmed that the base theme is available.
+        $theme->incompatible_base = isset($theme->info['base theme']) && !isset($themes[$theme->info['base theme']]);
+        // Confirm that the theme engine is available.
+        $theme->incompatible_engine = isset($theme->info['engine']) && !isset($theme->owner);
+      }
+      $theme->operations = array();
+      if (!empty($theme->status) || !$theme->incompatible_core && !$theme->incompatible_php && !$theme->incompatible_base && !$theme->incompatible_engine) {
+        // Create the operations links.
+        $query['theme'] = $theme->name;
+        if ($this->themeAccess->checkAccess($theme->name)) {
+          $theme->operations[] = array(
+            'title' => $this->t('Settings'),
+            'route_name' => 'system.theme_settings_theme',
+            'route_parameters' => array('theme' => $theme->name),
+            'attributes' => array('title' => $this->t('Settings for !theme theme', array('!theme' => $theme->info['name']))),
+          );
+        }
+        if (!empty($theme->status)) {
+          if (!$theme->is_default) {
+            if ($theme->name != $admin_theme) {
+              $theme->operations[] = array(
+                'title' => $this->t('Disable'),
+                'route_name' => 'system.theme_disable',
+                'query' => $query,
+                'attributes' => array('title' => $this->t('Disable !theme theme', array('!theme' => $theme->info['name']))),
+              );
+            }
+            $theme->operations[] = array(
+              'title' => $this->t('Set default'),
+              'route_name' => 'system.theme_set_default',
+              'query' => $query,
+              'attributes' => array('title' => $this->t('Set !theme as default theme', array('!theme' => $theme->info['name']))),
+            );
+          }
+          $admin_theme_options[$theme->name] = $theme->info['name'];
+        }
+        else {
+          $theme->operations[] = array(
+            'title' => $this->t('Enable'),
+            'route_name' => 'system.theme_enable',
+            'query' => $query,
+            'attributes' => array('title' => $this->t('Enable !theme theme', array('!theme' => $theme->info['name']))),
+          );
+          $theme->operations[] = array(
+            'title' => $this->t('Enable and set default'),
+            'route_name' => 'system.theme_set_default',
+            'query' => $query,
+            'attributes' => array('title' => $this->t('Enable !theme as default theme', array('!theme' => $theme->info['name']))),
+          );
+        }
+      }
+
+      // Add notes to default and administration theme.
+      $theme->notes = array();
+      $theme->classes = array();
+      if ($theme->is_default) {
+        $theme->classes[] = 'theme-default';
+        $theme->notes[] = $this->t('default theme');
+      }
+      if ($theme->name == $admin_theme || ($theme->is_default && $admin_theme == '0')) {
+        $theme->classes[] = 'theme-admin';
+        $theme->notes[] = $this->t('admin theme');
+      }
+
+      // Sort enabled and disabled themes into their own groups.
+      $theme_groups[$theme->status ? 'enabled' : 'disabled'][] = $theme;
+    }
+
+    // There are two possible theme groups.
+    $theme_group_titles = array(
+      'enabled' => $this->translationManager()->formatPlural(count($theme_groups['enabled']), 'Enabled theme', 'Enabled themes'),
+    );
+    if (!empty($theme_groups['disabled'])) {
+      $theme_group_titles['disabled'] = $this->translationManager()->formatPlural(count($theme_groups['disabled']), 'Disabled theme', 'Disabled themes');
+    }
+
+    uasort($theme_groups['enabled'], 'system_sort_themes');
+    $this->moduleHandler()->alter('system_themes_page', $theme_groups);
+
+    $build = array();
+    $build[] = array(
+      '#theme' => 'system_themes_page',
+      '#theme_groups' => $theme_groups,
+      '#theme_group_titles' => $theme_group_titles,
+    );
+    $build[] = $this->formBuilder->getForm('Drupal\system\Form\ThemeAdminForm', $admin_theme_options);
+
+    return $build;
   }
 
   /**

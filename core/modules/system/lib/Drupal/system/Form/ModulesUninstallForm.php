@@ -85,7 +85,6 @@ class ModulesUninstallForm extends FormBase {
     $profile = drupal_get_profile();
 
     // Sort all modules by their name.
-    $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');
     uasort($uninstallable, 'system_sort_modules_by_info_name');
 
     $form['uninstall'] = array('#tree' => TRUE);

@@ -2509,6 +2509,26 @@ function system_region_list($theme_key, $show = REGIONS_ALL) {
 }
 
 /**
+ * Array sorting callback; sorts modules by their name.
+ */
+function system_sort_modules_by_info_name($a, $b) {
+  return strcasecmp($a->info['name'], $b->info['name']);
+}
+
+/**
+ * Array sorting callback; sorts modules or themes by their name.
+ */
+function system_sort_themes($a, $b) {
+  if ($a->is_default) {
+    return -1;
+  }
+  if ($b->is_default) {
+    return 1;
+  }
+  return strcasecmp($a->info['name'], $b->info['name']);
+}
+
+/**
  * Implements hook_system_info_alter().
  */
 function system_system_info_alter(&$info, $file, $type) {

@@ -55,8 +55,6 @@ class AdminController implements ContainerInjectionInterface {
       $module_info[$module]->info = $info;
     }
 
-    $this->moduleHandler->loadInclude('system', 'admin.inc');
-
     uasort($module_info, 'system_sort_modules_by_info_name');
     $menu_items = array();
 
