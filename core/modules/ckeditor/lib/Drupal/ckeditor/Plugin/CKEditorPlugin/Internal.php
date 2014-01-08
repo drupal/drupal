@@ -258,7 +258,7 @@ class Internal extends CKEditorPluginBase {
     $possible_format_tags = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre');
     foreach ($possible_format_tags as $tag) {
       $input = '<' . $tag . '>TEST</' . $tag . '>';
-      $output = trim(check_markup($input, $editor->format));
+      $output = trim(check_markup($input, $editor->format, '', TRUE));
       if ($input == $output) {
         $format_tags[] = $tag;
       }
