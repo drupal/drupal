@@ -35,6 +35,7 @@ class UpdateModuleHandler extends ModuleHandler {
       // Allow logging.
       case 'watchdog':
         return parent::getImplementations($hook);
+
       // Forms and pages do not render without the basic elements defined in
       // system_element_info().
       case 'element_info':
@@ -44,6 +45,7 @@ class UpdateModuleHandler extends ModuleHandler {
       // user_update_8011() uses public:// to create the image style directory.
       case 'stream_wrappers':
         return array('system');
+
       // This is called during rebuild to find testing themes.
       case 'system_theme_info':
       // Those are needed by user_access() to check access on update.php.
@@ -51,10 +53,12 @@ class UpdateModuleHandler extends ModuleHandler {
       case 'entity_load':
       case 'user_role_load':
         return array();
+
       // t() in system_stream_wrappers() needs this. Other schema calls aren't
       // supported.
       case 'schema':
         return array('locale');
+
       default:
         throw new \LogicException("Invoking hooks $hook is not supported during updates");
     }
