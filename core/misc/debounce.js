@@ -7,7 +7,7 @@
  * is limiting the invocation of a callback attached to the window resize event.
  *
  * Before using the debounce function wrapper, consider first whether the
- * callback could be attache to an event that fires less frequently or if the
+ * callback could be attached to an event that fires less frequently or if the
  * function can be written in such a way that it is only invoked under specific
  * conditions.
  *
