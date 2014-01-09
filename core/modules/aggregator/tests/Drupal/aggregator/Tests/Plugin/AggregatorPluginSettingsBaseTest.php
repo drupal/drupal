@@ -67,7 +67,6 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
 
     $this->settingsForm = new SettingsForm(
       $this->configFactory,
-      $this->getMock('Drupal\Core\Config\Context\ContextInterface'),
       $this->managers['fetcher'],
       $this->managers['parser'],
       $this->managers['processor'],

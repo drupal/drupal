@@ -61,16 +61,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($data['baz']));
     $this->assertIdentical($data['404'], $expected_original_data['404']);
 
-    // Enter an override-free context to ensure the original data remains.
-    config_context_enter('config.context.free');
-    $config = \Drupal::config('config_test.system');
-    $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
-    $this->assertIdentical($config->get('baz'), $expected_original_data['baz']);
-    $this->assertIdentical($config->get('404'), $expected_original_data['404']);
-    config_context_leave();
-
-    // Get the configuration object in an overriden context (the one set by
-    // default).
+    // Get the configuration object in with overrides.
     $config = \Drupal::config('config_test.system');
 
     // Verify that it contains the overridden data from $conf.
@@ -100,14 +91,6 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->get('baz'), $conf['config_test.system']['baz']);
     $this->assertIdentical($config->get('404'), $conf['config_test.system']['404']);
 
-    // Enter an override-free context to ensure the original data remains saved.
-    config_context_enter('config.context.free');
-    $config = \Drupal::config('config_test.system');
-    $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
-    $this->assertIdentical($config->get('baz'), $expected_original_data['baz']);
-    $this->assertIdentical($config->get('404'), $expected_original_data['404']);
-    config_context_leave();
-
     // Write file to staging.
     $staging = $this->container->get('config.storage.staging');
     $expected_new_data = array(
@@ -131,6 +114,28 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->get('foo'), $conf['config_test.system']['foo']);
     $this->assertIdentical($config->get('baz'), $conf['config_test.system']['baz']);
     $this->assertIdentical($config->get('404'), $conf['config_test.system']['404']);
+
+    // Test overrides of completely new configuration objects. In normal runtime
+    // this should only happen for configuration entities as we should not be
+    // creating simple configuration objects on the fly.
+    $conf['config_test.new']['key'] = 'override';
+    $config = \Drupal::config('config_test.new');
+    $this->assertTrue($config->isNew(), 'The configuration object config_test.new is new');
+    $this->assertIdentical($config->get('key'), 'override');
+    \Drupal::configFactory()->disableOverrides();
+    $config_raw = \Drupal::config('config_test.new');
+    $this->assertIdentical($config_raw->get('key'), NULL);
+    $config_raw
+      ->set('key', 'raw')
+      ->set('new_key', 'new_value')
+      ->save();
+    \Drupal::configFactory()->enableOverrides();
+    // Ensure override is preserved but all other data has been updated
+    // accordingly.
+    $this->assertIdentical($config->get('key'), 'override');
+    $this->assertIdentical($config->get('new_key'), 'new_value');
+    $raw_data = $config->getRawData();
+    $this->assertIdentical($raw_data['key'], 'raw');
   }
 
 }

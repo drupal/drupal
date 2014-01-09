@@ -378,13 +378,6 @@ function install_begin_request(&$install_state) {
     $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
 
     $container->register('config.storage', 'Drupal\Core\Config\InstallStorage');
-    $container->register('config.context.factory', 'Drupal\Core\Config\Context\ConfigContextFactory')
-      ->addArgument(new Reference('event_dispatcher'))
-      ->addArgument(new Reference('uuid'));
-
-    $container->register('config.context', 'Drupal\Core\Config\Context\ContextInterface')
-      ->setFactoryService(new Reference('config.context.factory'))
-      ->setFactoryMethod('get');
 
     $container->register('config.storage.schema', 'Drupal\Core\Config\Schema\SchemaStorage');
 
@@ -395,7 +388,7 @@ function install_begin_request(&$install_state) {
 
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('config.context'))
+      ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('config.typed'));
 
     // Register the 'language_manager' service.

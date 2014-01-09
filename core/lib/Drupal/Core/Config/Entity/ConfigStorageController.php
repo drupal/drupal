@@ -362,7 +362,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
       // - Storage controller needs to access the original object.
       // - The object needs to be renamed/copied in ConfigFactory and reloaded.
       // - All instances of the object need to be renamed.
-      $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
+      $config = $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
     }
 
     // Build an ID if none is set.

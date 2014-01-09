@@ -3,12 +3,13 @@
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigException;
+use Drupal\Core\Language\Language;
 use Drupal\Core\Config\ExtensionInstallStorage;
-use Drupal\Core\Config\Context\FreeConfigContext;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @file
@@ -66,17 +67,18 @@ function config_install_default_config($type, $name) {
   if (!empty($config_to_install)) {
     $entity_manager = Drupal::service('entity.manager');
     $config_factory = Drupal::service('config.factory');
-    $context = new FreeConfigContext(Drupal::service('event_dispatcher'), Drupal::service('uuid'));
     $target_storage = Drupal::service('config.storage');
     $typed_config = Drupal::service('config.typed');
-    $config_factory->enterContext($context);
+    $event_dispatcher = Drupal::service('event_dispatcher');
+
+    $config_factory->disableOverrides();
     foreach ($config_to_install as $name) {
       // Only import new config.
       if ($target_storage->exists($name)) {
         continue;
       }
 
-      $new_config = new Config($name, $target_storage, $context, $typed_config);
+      $new_config = new Config($name, $target_storage, $event_dispatcher, $typed_config);
       $data = $source_storage->read($name);
       if ($data !== FALSE) {
         $new_config->setData($data);
@@ -90,11 +92,8 @@ function config_install_default_config($type, $name) {
       else {
         $new_config->save();
       }
-
-      // Reset static cache on the config factory.
-      $config_factory->reset($name);
+      $config_factory->enableOverrides();
     }
-    $config_factory->leaveContext();
   }
 }
 
@@ -143,54 +142,6 @@ function config_get_storage_names_with_prefix($prefix = '') {
  */
 function config($name) {
   return \Drupal::config($name);
-}
-
-/**
- * Sets the config context on the config factory.
- *
- * This allows configuration objects to be created using special configuration
- * contexts eg. global override free or locale using a user preferred language.
- * Calling this function affects all subsequent calls to \Drupal::config() until
- * config_context_leave() is called.
- *
- * @see config_context_leave()
- * @see \Drupal\Core\Config\ConfigFactory
- *
- * @param string $context_name
- *   The name of the config context service on the container or a fully
- *   qualified class implementing \Drupal\Core\Config\Context\ContextInterface.
- *
- * @return \Drupal\Core\Config\Context\ContextInterface
- *   The configuration context object.
- */
-function config_context_enter($context_name) {
-  $container = \Drupal::getContainer();
-  if ($container->has($context_name)) {
-    $context = $container->get($context_name);
-  }
-  elseif (class_exists($context_name) && in_array('Drupal\Core\Config\Context\ContextInterface', class_implements($context_name))) {
-    $context = $container
-      ->get('config.context.factory')
-      ->get($context_name);
-  }
-  else {
-    throw new ConfigException(sprintf('Unknown config context service or class: %s', $context_name));
-  }
-  $container
-    ->get('config.factory')
-    ->enterContext($context);
-  return $context;
-}
-
-/**
- * Leaves the current config context returning to the previous context.
- *
- * @see config_context_enter()
- * @see \Drupal\Core\Config\ConfigFactory
- */
-function config_context_leave() {
-  \Drupal::service('config.factory')
-    ->leaveContext();
 }
 
 /**

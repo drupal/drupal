@@ -947,9 +947,9 @@ function locale_update_8016() {
   // Fetch all date types from {date_format_type}.
   $result = db_query('SELECT * FROM {date_format_locale}');
   foreach ($result as $format) {
-    $language = $format->language;
     // Create config objects for the language if not yet done.
-    \Drupal::config("locale.config.$language.system.date_format." . $format->type)
+    $config_name = \Drupal::configFactory()->getLanguageConfigName($format->language, 'system.date_format.' . $format->type);
+    \Drupal::config($config_name)
       ->set('pattern.php', $format->format)
       ->save();
   }

@@ -1,0 +1,9 @@
+services:
+  config_override_config_subscriber:
+    class: Drupal\config_override\EventSubscriber\ConfigModuleOverrideSubscriber
+    tags:
+      - { name: event_subscriber }
+  config_override_low_priority_config_subscriber:
+    class: Drupal\config_override\EventSubscriber\ConfigModuleLowPriorityOverrideSubscriber
+    tags:
+      - { name: event_subscriber }

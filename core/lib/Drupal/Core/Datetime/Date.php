@@ -8,6 +8,7 @@
 namespace Drupal\Core\Datetime;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
@@ -39,6 +40,13 @@ class Date {
    * @var \Drupal\Core\Language\LanguageManager
    */
   protected $languageManager;
+
+  /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
 
   protected $country = NULL;
   protected $dateFormats = array();
@@ -72,10 +80,11 @@ class Date {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The string translation.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LanguageManager $language_manager, TranslationInterface $translation) {
+  public function __construct(EntityManagerInterface $entity_manager, LanguageManager $language_manager, TranslationInterface $translation, ConfigFactory $config_factory) {
     $this->dateFormatStorage = $entity_manager->getStorageController('date_format');
     $this->languageManager = $language_manager;
     $this->stringTranslation = $translation;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -205,11 +214,10 @@ class Date {
   protected function dateFormat($format, $langcode) {
     if (!isset($this->dateFormats[$format][$langcode])) {
       // Enter a language specific context so the right date format is loaded.
-      $language_context = config_context_enter('Drupal\Core\Config\Context\LanguageConfigContext');
-      $language_context->setLanguage(new Language(array('id' => $langcode)));
-
+      $original_language = $this->configFactory->getLanguage();
+      $this->configFactory->setLanguage(new Language(array('id' => $langcode)));
       $this->dateFormats[$format][$langcode] = $this->dateFormatStorage->load($format);
-      config_context_leave();
+      $this->configFactory->setLanguage($original_language);
     }
     return $this->dateFormats[$format][$langcode];
   }

@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 
@@ -33,13 +32,11 @@ class ThemeSettingsForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Config\Context\ContextInterface $context
-   *   The configuration context to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler instance to use.
    */
-  public function __construct(ConfigFactory $config_factory, ContextInterface $context, ModuleHandlerInterface $module_handler) {
-    parent::__construct($config_factory, $context);
+  public function __construct(ConfigFactory $config_factory, ModuleHandlerInterface $module_handler) {
+    parent::__construct($config_factory);
 
     $this->moduleHandler = $module_handler;
   }
@@ -50,7 +47,6 @@ class ThemeSettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('config.context.free'),
       $container->get('module_handler')
     );
   }

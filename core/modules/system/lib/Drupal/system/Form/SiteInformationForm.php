@@ -8,7 +8,6 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,13 +29,11 @@ class SiteInformationForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Config\Context\ContextInterface $context
-   *   The configuration context used for this configuration object.
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
    *   The path alias manager.
    */
-  public function __construct(ConfigFactory $config_factory, ContextInterface $context, AliasManagerInterface $alias_manager) {
-    parent::__construct($config_factory, $context);
+  public function __construct(ConfigFactory $config_factory, AliasManagerInterface $alias_manager) {
+    parent::__construct($config_factory);
 
     $this->aliasManager = $alias_manager;
   }
@@ -47,7 +44,6 @@ class SiteInformationForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('config.context.free'),
       $container->get('path.alias_manager')
     );
   }

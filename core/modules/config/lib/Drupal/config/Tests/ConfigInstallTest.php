@@ -47,6 +47,8 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $this->installConfig(array('config_test'));
 
     // Verify that default module config exists.
+    \Drupal::configFactory()->reset($default_config);
+    \Drupal::configFactory()->reset($default_configuration_entity);
     $config = \Drupal::config($default_config);
     $this->assertIdentical($config->isNew(), FALSE);
     $config = \Drupal::config($default_configuration_entity);

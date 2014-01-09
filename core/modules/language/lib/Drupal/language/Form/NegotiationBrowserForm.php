@@ -8,7 +8,6 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -31,8 +30,8 @@ class NegotiationBrowserForm extends ConfigFormBase {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler
    */
-  public function __construct(ConfigFactory $config_factory, ContextInterface $context, ModuleHandlerInterface $module_handler) {
-    parent::__construct($config_factory, $context);
+  public function __construct(ConfigFactory $config_factory, ModuleHandlerInterface $module_handler) {
+    parent::__construct($config_factory);
     $this->moduleHandler = $module_handler;
   }
 
@@ -42,7 +41,6 @@ class NegotiationBrowserForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('config.context.free'),
       $container->get('module_handler')
     );
   }
@@ -196,5 +194,5 @@ class NegotiationBrowserForm extends ConfigFormBase {
     }
     return $config->get();
   }
-
 }
+

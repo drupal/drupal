@@ -65,7 +65,7 @@ class DateTest extends UnitTestCase {
       ->getMock();
     $this->stringTranslation = $this->getMock('Drupal\Core\StringTranslation\TranslationInterface');
 
-    $this->date = new Date($this->entityManager, $this->languageManager, $this->stringTranslation);
+    $this->date = new Date($this->entityManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub());
   }
 
   /**

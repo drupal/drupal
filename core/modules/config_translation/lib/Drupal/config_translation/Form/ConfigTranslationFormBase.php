@@ -9,6 +9,7 @@ namespace Drupal\config_translation\Form;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Schema\Element;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -92,12 +93,15 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    *   The translation storage object.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook.
+   * @param \Drupal\Core\Config\ConfigFactory
+   *   The config factory.
    */
-  public function __construct(TypedConfigManager $typed_config_manager, ConfigMapperManagerInterface $config_mapper_manager, StringStorageInterface $locale_storage, ModuleHandlerInterface $module_handler) {
+  public function __construct(TypedConfigManager $typed_config_manager, ConfigMapperManagerInterface $config_mapper_manager, StringStorageInterface $locale_storage, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory) {
     $this->typedConfigManager = $typed_config_manager;
     $this->configMapperManager = $config_mapper_manager;
     $this->localeStorage = $locale_storage;
     $this->moduleHandler = $module_handler;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -108,7 +112,8 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       $container->get('config.typed'),
       $container->get('plugin.manager.config_translation.mapper'),
       $container->get('locale.storage'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('config.factory')
     );
   }
 
@@ -158,20 +163,16 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     $this->language = $language;
     $this->sourceLanguage = $this->mapper->getLanguageWithFallback();
 
-    // Make sure we are in the override free configuration context. For example,
-    // visiting the configuration page in another language would make those
-    // language overrides active by default. But we need the original values.
-    config_context_enter('config.context.free');
     // Get base language configuration to display in the form before entering
     // into the language context for the form. This avoids repetitively going
     // in and out of the language context to get original values later.
+    $this->configFactory->disableOverrides();
     $this->baseConfigData = $this->mapper->getConfigData();
-    // Leave override free context.
-    config_context_leave();
+    $this->configFactory->enableOverrides();
 
-    // Enter context for the translation target language requested and generate
-    // form with translation data in that language.
-    config_context_enter('Drupal\Core\Config\Context\LanguageConfigContext')->setLanguage($this->language);
+    // Set the translation target language on the configuration factory.
+    $original_language = $this->configFactory->getLanguage();
+    $this->configFactory->setLanguage($this->language);
 
     // Add some information to the form state for easier form altering.
     $form_state['config_translation_mapper'] = $this->mapper;
@@ -196,9 +197,8 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       '#button_type' => 'primary',
     );
 
-    // Leave the language context so that configuration accessed later in the
-    // request is displayed in the correct language.
-    config_context_leave();
+    // Set the configuration language back.
+    $this->configFactory->setLanguage($original_language);
 
     return $form;
   }
@@ -209,13 +209,13 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   public function submitForm(array &$form, array &$form_state) {
     $form_values = $form_state['values']['config_names'];
 
-    // For the form submission handling, use the override free context.
-    config_context_enter('config.context.free');
-
+    // For the form submission handling, use the raw data.
+    $this->configFactory->disableOverrides();
     foreach ($this->mapper->getConfigNames() as $name) {
       // Set configuration values based on form submission and source values.
       $base_config = $this->config($name);
-      $translation_config = $this->config('locale.config.' . $this->language->id . '.' . $name);
+      $translation_config_name = $this->configFactory->getLanguageConfigName($this->language->id, $name);
+      $translation_config = $this->config($translation_config_name);
       $locations = $this->localeStorage->getLocations(array('type' => 'configuration', 'name' => $name));
 
       $this->setConfig($this->language, $base_config, $translation_config, $form_values[$name], !empty($locations));
@@ -229,8 +229,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
         $translation_config->save();
       }
     }
-
-    config_context_leave();
+    $this->configFactory->enableOverrides();
 
     $form_state['redirect_route'] = array(
       'route_name' => $this->mapper->getOverviewRoute(),

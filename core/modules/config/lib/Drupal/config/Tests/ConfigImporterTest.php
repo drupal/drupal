@@ -62,7 +62,8 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       $this->container->get('entity.manager'),
       $this->container->get('lock'),
       $this->container->get('uuid'),
-      $this->container->get('config.typed')
+      $this->container->get('config.typed'),
+      $this->container->get('module_handler')
     );
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }
@@ -229,6 +230,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $this->configImporter->reset()->import();
 
     // Verify the values were updated.
+    \Drupal::configFactory()->reset($name);
     $config = \Drupal::config($name);
     $this->assertIdentical($config->get('foo'), 'beer');
     $config = \Drupal::config($dynamic_name);

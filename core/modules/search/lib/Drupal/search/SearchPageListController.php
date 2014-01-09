@@ -9,7 +9,6 @@ namespace Drupal\search;
 
 use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Config\Entity\DraggableListController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
@@ -57,15 +56,10 @@ class SearchPageListController extends DraggableListController implements FormIn
    *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Config\Context\ContextInterface $context
-   *   The configuration context to use.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, SearchPluginManager $search_manager, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, ContextInterface $context) {
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, SearchPluginManager $search_manager, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory) {
     parent::__construct($entity_info, $storage, $module_handler);
-
     $this->configFactory = $config_factory;
-    $this->configFactory->enterContext($context);
-
     $this->searchManager = $search_manager;
   }
 
@@ -78,8 +72,7 @@ class SearchPageListController extends DraggableListController implements FormIn
       $container->get('entity.manager')->getStorageController($entity_info->id()),
       $container->get('plugin.manager.search'),
       $container->get('module_handler'),
-      $container->get('config.factory'),
-      $container->get('config.context.free')
+      $container->get('config.factory')
     );
   }
 
@@ -149,7 +142,8 @@ class SearchPageListController extends DraggableListController implements FormIn
    */
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
-    $search_settings = $this->configFactory->get('search.settings');
+    $search_settings = $this->configFactory->disableOverrides()->get('search.settings');
+    $this->configFactory->enableOverrides();
     // Collect some stats.
     $remaining = 0;
     $total = 0;

@@ -49,6 +49,8 @@ class ConfigInstallWebTest extends WebTestBase {
     \Drupal::moduleHandler()->install(array('config_integration_test'));
 
     // Verify that default module config exists.
+    \Drupal::configFactory()->reset($default_config);
+    \Drupal::configFactory()->reset($default_configuration_entity);
     $config_static = \Drupal::config($default_config);
     $this->assertIdentical($config_static->isNew(), FALSE);
     $this->assertIdentical($config_static->get('foo'), 'default setting');
@@ -82,6 +84,8 @@ class ConfigInstallWebTest extends WebTestBase {
     \Drupal::moduleHandler()->install(array('config_integration_test'));
 
     // Verify the integration module's config was re-installed.
+    \Drupal::configFactory()->reset($default_config);
+    \Drupal::configFactory()->reset($default_configuration_entity);
     $config_static = \Drupal::config($default_config);
     $this->assertIdentical($config_static->isNew(), FALSE);
     $this->assertIdentical($config_static->get('foo'), 'default setting');

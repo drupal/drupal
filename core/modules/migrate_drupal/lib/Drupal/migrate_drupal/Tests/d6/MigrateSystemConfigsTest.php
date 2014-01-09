@@ -181,11 +181,11 @@ class MigrateSystemConfigsTest extends MigrateDrupalTestBase {
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     $executable->import();
-    config_context_enter('config.context.free');
+    \Drupal::configFactory()->disableOverrides();
     $config = \Drupal::config('system.file');
     $this->assertIdentical($config->get('path.private'), 'files/test');
     $this->assertIdentical($config->get('path.temporary'), 'files/temp');
-    config_context_leave();
+    \Drupal::configFactory()->enableOverrides();
   }
 
 }

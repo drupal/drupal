@@ -5,3 +5,8 @@ services:
     tags:
       - { name: path_processor_inbound, priority: 300 }
       - { name: path_processor_outbound, priority: 100 }
+  language_config_subscriber:
+    class: Drupal\language\LanguageConfigSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@language_manager', '@config.factory']

@@ -48,11 +48,6 @@ class ConfigExportImportUITest extends WebTestBase {
    */
   protected $admin_role;
 
-  /**
-   * Sort methods alphabetically in order to allow for a predictable sequence.
-   */
-  const SORT_METHODS = TRUE;
-
   public static $modules = array('config');
 
   public static function getInfo() {
@@ -73,52 +68,31 @@ class ConfigExportImportUITest extends WebTestBase {
   }
 
   /**
-   * Tests a simple site configuration export case: site slogan.
+   * Tests a simple site export import case.
    */
-  function testExport() {
-    $this->siteUuid = \Drupal::config('system.site')->get('uuid');
-
-    // Create a role for second round.
-    $this->admin_role = $this->drupalCreateRole(array('synchronize configuration', 'import configuration'));
-    $this->slogan = $this->randomString(16);
+  public function testExportImport() {
+    $this->originalSlogan = \Drupal::config('system.site')->get('slogan');
+    $this->newSlogan = $this->randomString(16);
+    $this->assertNotEqual($this->newSlogan, $this->originalSlogan);
     \Drupal::config('system.site')
-      ->set('slogan', $this->slogan)
+      ->set('slogan', $this->newSlogan)
       ->save();
+    $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->newSlogan);
+
     $this->drupalPostForm('admin/config/development/configuration/full/export', array(), 'Export');
     $this->tarball = $this->drupalGetContent();
-  }
 
-  /**
-   * Tests importing the tarball to ensure changes made it over.
-   */
-  function testImport() {
+    \Drupal::config('system.site')
+      ->set('slogan', $this->originalSlogan)
+      ->save();
+    $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->originalSlogan);
+
     $filename = 'temporary://' . $this->randomName();
     file_put_contents($filename, $this->tarball);
-    $this->doImport($filename);
-    // Now that the role is imported, change the slogan and re-import with a non-root user.
-    $web_user = $this->drupalCreateUser();
-    $web_user->addRole($this->admin_role);
-    $web_user->save();
-    $this->drupalLogin($web_user);
-    \Drupal::config('system.site')
-      ->set('slogan', $this->randomString(16))
-      ->save();
-    $this->doImport($filename);
-  }
-
-  /**
-   * Import a tarball and assert the data is correct.
-   *
-   * @param string $filename
-   *   The name of the tarball containing the configuration to be imported.
-   */
-  protected function doImport($filename) {
-    // The site UUIDs must match for the import to work.
-    \Drupal::config('system.site')->set('uuid', $this->siteUuid)->save();
-
-    $this->assertNotEqual($this->slogan, \Drupal::config('system.site')->get('slogan'));
     $this->drupalPostForm('admin/config/development/configuration/full/import', array('files[import_tarball]' => $filename), 'Upload');
     $this->drupalPostForm(NULL, array(), 'Import all');
-    $this->assertEqual($this->slogan, \Drupal::config('system.site')->get('slogan'));
+
+    $this->assertEqual(\Drupal::config('system.site')->get('slogan'), $this->newSlogan);
   }
 }
+

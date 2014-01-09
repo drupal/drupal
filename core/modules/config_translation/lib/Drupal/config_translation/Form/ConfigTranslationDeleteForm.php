@@ -10,6 +10,7 @@ namespace Drupal\config_translation\Form;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,11 +66,14 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
    *   The configuration mapper manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The configuration factory.
    */
-  public function __construct(StorageInterface $config_storage, ConfigMapperManagerInterface $config_mapper_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(StorageInterface $config_storage, ConfigMapperManagerInterface $config_mapper_manager, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory) {
     $this->configStorage = $config_storage;
     $this->configMapperManager = $config_mapper_manager;
     $this->moduleHandler = $module_handler;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -79,7 +83,8 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
     return new static(
       $container->get('config.storage'),
       $container->get('plugin.manager.config_translation.mapper'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('config.factory')
     );
   }
 
@@ -137,7 +142,8 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     foreach ($this->mapper->getConfigNames() as $name) {
-      $this->configStorage->delete('locale.config.' . $this->language->id . '.' . $name);
+      $config_name = $this->configFactory->getLanguageConfigName($this->language->id, $name);
+      $this->configStorage->delete($config_name);
     }
 
     // Flush all persistent caches.

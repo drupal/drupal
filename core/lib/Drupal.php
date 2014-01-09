@@ -242,6 +242,19 @@ class Drupal {
   }
 
   /**
+   * Retrieves the configuration factory.
+   *
+   * This is mostly used to change the override settings on the configuration
+   * factory. For example, changing the language, or turning all overrides on
+   * or off.
+   *
+   * @return \Drupal\Core\Config\ConfigFactory
+   */
+  public static function configFactory() {
+    return static::$container->get('config.factory');
+  }
+
+  /**
    * Returns a queue for the given queue name.
    *
    * The following values can be set in your settings.php file's $settings

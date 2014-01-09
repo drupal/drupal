@@ -178,7 +178,8 @@ class ConfigTranslationUiTest extends WebTestBase {
 
     // Read overridden file from active config.
     $file_storage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
-    $config_parsed = $file_storage->read('locale.config.fr.system.site');
+    $language_config_name = \Drupal::configFactory()->getLanguageConfigName('fr', 'system.site');
+    $config_parsed = $file_storage->read($language_config_name);
 
     // Expect both name and slogan in language specific file.
     $expected = array(
@@ -199,7 +200,7 @@ class ConfigTranslationUiTest extends WebTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Save translation'));
     $this->assertRaw(t('Successfully updated @language translation.', array('@language' => 'French')));
-    $config_parsed = $file_storage->read('locale.config.fr.system.site');
+    $config_parsed = $file_storage->read($language_config_name);
 
     // Expect only slogan in language specific file.
     $expected = array('slogan' => 'FR ' . $site_slogan);
@@ -213,7 +214,7 @@ class ConfigTranslationUiTest extends WebTestBase {
       'config_names[system.site][slogan][translation]' => $site_slogan,
     );
     $this->drupalPostForm(NULL, $edit, t('Save translation'));
-    $config_parsed = $file_storage->read('locale.config.fr.system.site');
+    $config_parsed = $file_storage->read($language_config_name);
 
     // Expect no language specific file.
     $this->assertFalse($config_parsed);
@@ -284,7 +285,8 @@ class ConfigTranslationUiTest extends WebTestBase {
       $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
 
       // Expect translated values in language specific file.
-      $config_parsed = $file_storage->read('locale.config.'. $langcode . '.contact.category.feedback');
+      $language_config_name = \Drupal::configFactory()->getLanguageConfigName($langcode, 'contact.category.feedback');
+      $config_parsed = $file_storage->read($language_config_name);
       $expected = array(
         'label' => 'Website feedback - ' . $langcode,
         'reply' => 'Thank you for your mail - ' . $langcode,
@@ -347,7 +349,8 @@ class ConfigTranslationUiTest extends WebTestBase {
       $this->assertNoLinkByHref("$translation_base_url/$langcode/delete");
 
       // Expect no language specific file present anymore.
-      $config_parsed = $file_storage->read('locale.config.'. $langcode . '.config.category.feedback');
+      $language_config_name = \Drupal::configFactory()->getLanguageConfigName($langcode, 'contact.category.feedback');
+      $config_parsed = $file_storage->read($language_config_name);
       $this->assertFalse($config_parsed);
     }
 
@@ -414,7 +417,8 @@ class ConfigTranslationUiTest extends WebTestBase {
       $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
 
       // Get translation and check we've got the right value.
-      $config_parsed = $file_storage->read('locale.config.fr.system.date_format.' . $id);
+      $language_config_name = \Drupal::configFactory()->getLanguageConfigName('fr', 'system.date_format.' . $id);
+      $config_parsed = $file_storage->read($language_config_name);
       $expected = array(
         'label' => $id . ' - FR',
         'pattern' => array('php' => 'D'),

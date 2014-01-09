@@ -79,6 +79,7 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
     $this->configImporter()->import();
 
     // Verify changed config was properly imported.
+    \Drupal::configFactory()->reset($config_name);
     $this->assertIdentical(\Drupal::config($config_name)->get($config_key), $new_data);
 
     // Verify that a new snapshot was created which and that it matches

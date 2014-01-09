@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\config\Tests\ConfigLocaleOverrideWebTest.
+ * Contains \Drupal\config\Tests\ConfigLanguageOverrideWebTest.
  */
 
 namespace Drupal\config\Tests;
@@ -12,14 +12,14 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests language overrides in configuration through the request.
  */
-class ConfigLocaleOverrideWebTest extends WebTestBase {
+class ConfigLanguageOverrideWebTest extends WebTestBase {
 
-  public static $modules = array('locale', 'language', 'system');
+  public static $modules = array('language', 'system');
 
   public static function getInfo() {
     return array(
-      'name' => 'Locale overrides through the request',
-      'description' => 'Tests locale overrides applied through the website.',
+      'name' => 'Language overrides through the request',
+      'description' => 'Tests language overrides applied through the website.',
       'group' => 'Configuration',
     );
   }
@@ -47,7 +47,8 @@ class ConfigLocaleOverrideWebTest extends WebTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Save an override for the XX language.
-    \Drupal::config('locale.config.xx.system.site')->set('name', 'XX site name')->save();
+    $config_name = \Drupal::configFactory()->getLanguageConfigName('xx', 'system.site');
+    \Drupal::config($config_name)->set('name', 'XX site name')->save();
 
     $this->drupalLogout();
 

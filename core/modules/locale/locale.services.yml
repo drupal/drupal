@@ -1,17 +1,12 @@
 services:
-  locale_config_subscriber:
-    class: Drupal\locale\LocaleConfigSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@language_manager', '@config.context']
   paramconverter.configentity_admin:
     class: Drupal\locale\ParamConverter\LocaleAdminPathConfigEntityConverter
     tags:
       - { name: paramconverter, priority: 5 }
-    arguments: ['@entity.manager']
+    arguments: ['@entity.manager', '@config.factory']
   locale.config.typed:
     class: Drupal\locale\LocaleConfigManager
-    arguments: ['@config.storage', '@config.storage.schema', '@config.storage.installer', '@locale.storage', '@cache.config']
+    arguments: ['@config.storage', '@config.storage.schema', '@config.storage.installer', '@locale.storage', '@cache.config', '@config.factory']
   locale.storage:
     class: Drupal\locale\StringDatabaseStorage
     arguments: ['@database']

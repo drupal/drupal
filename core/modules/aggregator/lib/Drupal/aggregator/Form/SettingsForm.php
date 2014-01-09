@@ -9,7 +9,6 @@ namespace Drupal\aggregator\Form;
 
 use Drupal\aggregator\Plugin\AggregatorPluginManager;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -51,8 +50,6 @@ class SettingsForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Config\Context\ContextInterface $context
-   *   The configuration context to use.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $fetcher_manager
    *   The aggregator fetcher plugin manager.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $parser_manager
@@ -62,8 +59,8 @@ class SettingsForm extends ConfigFormBase {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The string translation manager.
    */
-  public function __construct(ConfigFactory $config_factory, ContextInterface $context, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, TranslationInterface $translation_manager) {
-    parent::__construct($config_factory, $context);
+  public function __construct(ConfigFactory $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, TranslationInterface $translation_manager) {
+    parent::__construct($config_factory);
     $this->translationManager = $translation_manager;
     $this->managers = array(
       'fetcher' => $fetcher_manager,
@@ -84,7 +81,6 @@ class SettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('config.context.free'),
       $container->get('plugin.manager.aggregator.fetcher'),
       $container->get('plugin.manager.aggregator.parser'),
       $container->get('plugin.manager.aggregator.processor'),

@@ -236,7 +236,7 @@ class LanguageManager {
    * @return \Drupal\Core\Language\Language
    *   A language object.
    */
-  protected function getLanguageDefault() {
+  public function getLanguageDefault() {
     $default_info = variable_get('language_default', array(
       'id' => 'en',
       'name' => 'English',

@@ -48,8 +48,7 @@ class MenuRouterRebuildTest extends WebTestBase {
    */
   public function testMenuRouterRebuildContext() {
     // Enter a language context before rebuilding the menu router tables.
-    $language_context = config_context_enter('Drupal\Core\Config\Context\LanguageConfigContext');
-    $language_context->setLanguage(language_load('nl'));
+    \Drupal::configFactory()->setLanguage(language_load('nl'));
     menu_router_rebuild();
 
     // Check that the language context was not used for building the menu item.
