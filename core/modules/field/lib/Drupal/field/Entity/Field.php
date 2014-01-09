@@ -225,13 +225,13 @@ class Field extends ConfigEntityBase implements FieldInterface {
       throw new FieldException('Attempt to create an unnamed field.');
     }
     if (!preg_match('/^[_a-z]+[_a-z0-9]*$/', $values['name'])) {
-      throw new FieldException('Attempt to create a field with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character');
+      throw new FieldException(format_string('Attempt to create a field @field_name with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character', array('@field_name' => $values['name'])));
     }
     if (empty($values['type'])) {
-      throw new FieldException('Attempt to create a field with no type.');
+      throw new FieldException(format_string('Attempt to create field @field_name with no type.', array('@field_name' => $values['name'])));
     }
     if (empty($values['entity_type'])) {
-      throw new FieldException('Attempt to create a field with no entity_type.');
+      throw new FieldException(format_string('Attempt to create a field @field_name with no entity_type.', array('@field_name' => $values['name'])));
     }
 
     parent::__construct($values, $entity_type);
@@ -451,7 +451,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
 
       // Check that the schema does not include forbidden column names.
       if (array_intersect(array_keys($schema['columns']), static::getReservedColumns())) {
-        throw new FieldException('Illegal field type columns.');
+        throw new FieldException(format_string('Illegal field type @field_type on @field_name.', array('@field_type' => $this->type, '@field_name' => $this->name)));
       }
 
       // Merge custom indexes with those specified by the field type. Custom
