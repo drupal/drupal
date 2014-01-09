@@ -5,6 +5,7 @@
  * Functions for error handling.
  */
 
+use Drupal\Core\Utility\Error;
 use Drupal\Component\Utility\String;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -58,7 +59,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
     $types = drupal_error_levels();
     list($severity_msg, $severity_level) = $types[$error_level];
     $backtrace = debug_backtrace();
-    $caller = _drupal_get_last_caller($backtrace);
+    $caller = Error::getLastCaller($backtrace);
 
     if (!function_exists('filter_xss_admin')) {
       require_once __DIR__ . '/common.inc';
@@ -77,69 +78,6 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
       'backtrace' => $backtrace,
     ), $error_level == E_RECOVERABLE_ERROR);
   }
-}
-
-/**
- * Decodes an exception and retrieves the correct caller.
- *
- * @param $exception
- *   The exception object that was thrown.
- *
- * @return
- *   An error in the format expected by _drupal_log_error().
- */
-function _drupal_decode_exception($exception) {
-  $message = $exception->getMessage();
-
-  $backtrace = $exception->getTrace();
-  // Add the line throwing the exception to the backtrace.
-  array_unshift($backtrace, array('line' => $exception->getLine(), 'file' => $exception->getFile()));
-
-  // For PDOException errors, we try to return the initial caller,
-  // skipping internal functions of the database layer.
-  if ($exception instanceof PDOException) {
-    // The first element in the stack is the call, the second element gives us the caller.
-    // We skip calls that occurred in one of the classes of the database layer
-    // or in one of its global functions.
-    $db_functions = array('db_query',  'db_query_range');
-    while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
-        ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE || strpos($caller['class'], 'PDO') !== FALSE)) ||
-        in_array($caller['function'], $db_functions))) {
-      // We remove that call.
-      array_shift($backtrace);
-    }
-    if (isset($exception->query_string, $exception->args)) {
-      $message .= ": " . $exception->query_string . "; " . print_r($exception->args, TRUE);
-    }
-  }
-  $caller = _drupal_get_last_caller($backtrace);
-
-  return array(
-    '%type' => get_class($exception),
-    // The standard PHP exception handler considers that the exception message
-    // is plain-text. We mimick this behavior here.
-    '!message' => String::checkPlain($message),
-    '%function' => $caller['function'],
-    '%file' => $caller['file'],
-    '%line' => $caller['line'],
-    'severity_level' => WATCHDOG_ERROR,
-    'backtrace' => $backtrace,
-  );
-}
-
-/**
- * Renders an exception error message without further exceptions.
- *
- * @param $exception
- *   The exception object that was thrown.
- *
- * @return
- *   An error message.
- */
-function _drupal_render_exception_safe($exception) {
-  $decode = _drupal_decode_exception($exception);
-  unset($decode['backtrace']);
-  return String::checkPlain(strtr('%type: !message in %function (line %line of %file).', $decode));
 }
 
 /**
@@ -313,43 +251,6 @@ function _drupal_get_error_level() {
 }
 
 /**
- * Gets the last caller from a backtrace.
- *
- * @param $backtrace
- *   A standard PHP backtrace. Passed by reference.
- *
- * @return
- *   An associative array with keys 'file', 'line' and 'function'.
- */
-function _drupal_get_last_caller(&$backtrace) {
-  // Errors that occur inside PHP internal functions do not generate
-  // information about file and line. Ignore black listed functions.
-  $blacklist = array('debug', '_drupal_error_handler', '_drupal_exception_handler');
-  while (($backtrace && !isset($backtrace[0]['line'])) ||
-         (isset($backtrace[1]['function']) && in_array($backtrace[1]['function'], $blacklist))) {
-    array_shift($backtrace);
-  }
-
-  // The first trace is the call itself.
-  // It gives us the line and the file of the last call.
-  $call = $backtrace[0];
-
-  // The second call give us the function where the call originated.
-  if (isset($backtrace[1])) {
-    if (isset($backtrace[1]['class'])) {
-      $call['function'] = $backtrace[1]['class'] . $backtrace[1]['type'] . $backtrace[1]['function'] . '()';
-    }
-    else {
-      $call['function'] = $backtrace[1]['function'] . '()';
-    }
-  }
-  else {
-    $call['function'] = 'main()';
-  }
-  return $call;
-}
-
-/**
  * Formats a backtrace into a plain-text string.
  *
  * The calls show values for scalar arguments and type names for complex ones.
@@ -359,31 +260,9 @@ function _drupal_get_last_caller(&$backtrace) {
  *
  * @return string
  *   A plain-text line-wrapped string ready to be put inside <pre>.
+ *
+ * @deprecated Use \Drupal\Core\Utility\Error::formatBacktrace() instead.
  */
 function format_backtrace(array $backtrace) {
-  $return = '';
-  foreach ($backtrace as $trace) {
-    $call = array('function' => '', 'args' => array());
-    if (isset($trace['class'])) {
-      $call['function'] = $trace['class'] . $trace['type'] . $trace['function'];
-    }
-    elseif (isset($trace['function'])) {
-      $call['function'] = $trace['function'];
-    }
-    else {
-      $call['function'] = 'main';
-    }
-    if (isset($trace['args'])) {
-      foreach ($trace['args'] as $arg) {
-        if (is_scalar($arg)) {
-          $call['args'][] = is_string($arg) ? '\'' . filter_xss($arg) . '\'' : $arg;
-        }
-        else {
-          $call['args'][] = ucfirst(gettype($arg));
-        }
-      }
-    }
-    $return .= $call['function'] . '(' . implode(', ', $call['args']) . ")\n";
-  }
-  return $return;
+  return Error::formatBacktrace($backtrace);
 }

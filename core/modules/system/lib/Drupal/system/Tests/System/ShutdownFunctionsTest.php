@@ -39,8 +39,8 @@ class ShutdownFunctionsTest extends WebTestBase {
     $this->assertText(t('First shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2)));
     $this->assertText(t('Second shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2)));
 
-    // Make sure exceptions displayed through _drupal_render_exception_safe()
-    // are correctly escaped.
-    $this->assertRaw('Drupal is &amp;lt;blink&amp;gt;awesome&amp;lt;/blink&amp;gt;.');
+    // Make sure exceptions displayed through
+    // \Drupal\Core\Utility\Error::renderExceptionSafe() are correctly escaped.
+    $this->assertRaw('Drupal is &lt;blink&gt;awesome&lt;/blink&gt;.');
   }
 }

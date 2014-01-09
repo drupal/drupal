@@ -17,8 +17,8 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-
 use Drupal\Core\Session\UserSession;
+use Drupal\Core\Utility\Error;
 
 /**
  * Session handler assigned by session_set_save_handler().
@@ -228,7 +228,7 @@ function _drupal_session_write($sid, $value) {
     // uncaught exception being thrown.
     if (error_displayable()) {
       print '<h1>Uncaught exception thrown in session handler.</h1>';
-      print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';
+      print '<p>' . Error::renderExceptionSafe($exception) . '</p><hr />';
     }
     return FALSE;
   }

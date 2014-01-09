@@ -11,6 +11,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Utility\Title;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -1456,7 +1457,7 @@ function request_uri($omit_query_string = FALSE) {
  *   A link to associate with the message.
  *
  * @see watchdog()
- * @see _drupal_decode_exception()
+ * @see \Drupal\Core\Utility\Error::decodeException()
  */
 function watchdog_exception($type, Exception $exception, $message = NULL, $variables = array(), $severity = WATCHDOG_ERROR, $link = NULL) {
 
@@ -1464,7 +1465,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
    if (empty($message)) {
      // The exception message is run through
      // \Drupal\Component\Utility\String::checkPlain() by
-     // _drupal_decode_exception().
+     // \Drupal\Core\Utility\Error:decodeException().
      $message = '%type: !message in %function (line %line of %file).';
    }
    // $variables must be an array so that we can add the exception information.
@@ -1472,8 +1473,7 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
      $variables = array();
    }
 
-   require_once __DIR__ . '/errors.inc';
-   $variables += _drupal_decode_exception($exception);
+   $variables += Error::decodeException($exception);
    watchdog($type, $message, $variables, $severity, $link);
 }
 
@@ -1934,15 +1934,15 @@ function _drupal_exception_handler($exception) {
 
   try {
     // Log the message to the watchdog and return an error page to the user.
-    _drupal_log_error(_drupal_decode_exception($exception), TRUE);
+    _drupal_log_error(Error::decodeException($exception), TRUE);
   }
   catch (Exception $exception2) {
     // Another uncaught exception was thrown while handling the first one.
     // If we are displaying errors, then do so with no possibility of a further uncaught exception being thrown.
     if (error_displayable()) {
       print '<h1>Additional uncaught exception thrown while handling exception.</h1>';
-      print '<h2>Original</h2><p>' . _drupal_render_exception_safe($exception) . '</p>';
-      print '<h2>Additional</h2><p>' . _drupal_render_exception_safe($exception2) . '</p><hr />';
+      print '<h2>Original</h2><p>' . Error::renderExceptionSafe($exception) . '</p>';
+      print '<h2>Additional</h2><p>' . Error::renderExceptionSafe($exception2) . '</p><hr />';
     }
   }
 }
@@ -2977,7 +2977,7 @@ function _drupal_shutdown_function() {
     require_once __DIR__ . '/errors.inc';
     if (error_displayable()) {
       print '<h1>Uncaught exception thrown in shutdown function.</h1>';
-      print '<p>' . _drupal_render_exception_safe($exception) . '</p><hr />';
+      print '<p>' . Error::renderExceptionSafe($exception) . '</p><hr />';
     }
     error_log($exception);
   }

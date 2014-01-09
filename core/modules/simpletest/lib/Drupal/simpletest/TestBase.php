@@ -18,6 +18,7 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -397,7 +398,7 @@ abstract class TestBase {
       array_shift($backtrace);
     }
 
-    return _drupal_get_last_caller($backtrace);
+    return Error::getLastCaller($backtrace);
   }
 
   /**
@@ -1177,10 +1178,10 @@ abstract class TestBase {
       if ($severity !== E_USER_NOTICE) {
         $verbose_backtrace = $backtrace;
         array_shift($verbose_backtrace);
-        $message .= '<pre class="backtrace">' . format_backtrace($verbose_backtrace) . '</pre>';
+        $message .= '<pre class="backtrace">' . Error::formatBacktrace($verbose_backtrace) . '</pre>';
       }
 
-      $this->error($message, $error_map[$severity], _drupal_get_last_caller($backtrace));
+      $this->error($message, $error_map[$severity], Error::getLastCaller($backtrace));
     }
     return TRUE;
   }
@@ -1199,14 +1200,15 @@ abstract class TestBase {
       'line' => $exception->getLine(),
       'file' => $exception->getFile(),
     ));
-    // The exception message is run through check_plain()
-    // by _drupal_decode_exception().
-    $decoded_exception = _drupal_decode_exception($exception);
+    // The exception message is run through
+    // \Drupal\Component\Utility\checkPlain() by
+    // \Drupal\Core\Utility\decodeException().
+    $decoded_exception = Error::decodeException($exception);
     unset($decoded_exception['backtrace']);
     $message = format_string('%type: !message in %function (line %line of %file). <pre class="backtrace">!backtrace</pre>', $decoded_exception + array(
-      '!backtrace' => format_backtrace($verbose_backtrace),
+      '!backtrace' => Error::formatBacktrace($verbose_backtrace),
     ));
-    $this->error($message, 'Uncaught exception', _drupal_get_last_caller($backtrace));
+    $this->error($message, 'Uncaught exception', Error::getLastCaller($backtrace));
   }
 
   /**

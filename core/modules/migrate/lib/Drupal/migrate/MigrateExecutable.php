@@ -7,6 +7,7 @@
 
 namespace Drupal\migrate;
 
+use Drupal\Core\Utility\Error;
 use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 
@@ -539,7 +540,7 @@ class MigrateExecutable {
    *  in contexts where this doesn't make sense.
    */
   public function handleException($exception, $save = TRUE) {
-    $result = _drupal_decode_exception($exception);
+    $result = Error::decodeException($exception);
     $message = $result['!message'] . ' (' . $result['%file'] . ':' . $result['%line'] . ')';
     if ($save) {
       $this->saveMessage($message);

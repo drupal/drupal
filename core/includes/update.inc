@@ -14,6 +14,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Utility\Error;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\HttpFoundation\Request;
@@ -815,12 +816,11 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     catch (Exception $e) {
       watchdog_exception('update', $e);
 
-      require_once __DIR__ . '/errors.inc';
-      $variables = _drupal_decode_exception($e);
+      $variables = Error::decodeException($e);
       unset($variables['backtrace']);
       // The exception message is run through
       // \Drupal\Component\Utility\String::checkPlain() by
-      // _drupal_decode_exception().
+      // \Drupal\Core\Utility\Error::decodeException().
       $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
     }
   }
