@@ -30,9 +30,10 @@ abstract class MigrateTestCase extends UnitTestCase {
    *   The mocked migration.
    */
   protected function getMigration() {
-    $idmap = $this->getMock('Drupal\migrate\Plugin\MigrateIdMapInterface');
+    $this->idMap = $this->getMock('Drupal\migrate\Plugin\MigrateIdMapInterface');
+
     if ($this->mapJoinable) {
-      $idmap->expects($this->once())
+      $this->idMap->expects($this->once())
         ->method('getQualifiedMapTableName')
         ->will($this->returnValue('test_map'));
     }
@@ -40,10 +41,13 @@ abstract class MigrateTestCase extends UnitTestCase {
     $migration = $this->getMock('Drupal\migrate\Entity\MigrationInterface');
     $migration->expects($this->any())
       ->method('getIdMap')
-      ->will($this->returnValue($idmap));
-    $configuration = $this->migrationConfiguration;
-    $migration->expects($this->any())->method('get')->will($this->returnCallback(function ($argument) use ($configuration) {
+      ->will($this->returnValue($this->idMap));
+    $configuration = &$this->migrationConfiguration;
+    $migration->expects($this->any())->method('get')->will($this->returnCallback(function ($argument) use (&$configuration) {
       return isset($configuration[$argument]) ? $configuration[$argument] : '';
+    }));
+    $migration->expects($this->any())->method('set')->will($this->returnCallback(function ($argument, $value) use (&$configuration) {
+      $configuration[$argument] = $value;
     }));
     $migration->expects($this->any())
       ->method('id')
@@ -52,45 +56,21 @@ abstract class MigrateTestCase extends UnitTestCase {
   }
 
   /**
-   * @return \Drupal\Core\Database\Connection
+   * Get a fake database connection object for use in tests.
+   *
+   * @param array $database_contents
+   *   The database contents faked as an array. Each key is a table name, each
+   *   value is a list of table rows, an associative array of field => value.
+   * @param array $connection_options
+   *   (optional) The array of connection options for the database.
+   * @param string $prefix
+   *   (optional) The table prefix on the database.
+   *
+   * @return \Drupal\migrate\Tests\FakeConnection
+   *   The database connection.
    */
-  protected function getDatabase($database_contents) {
-    $database = $this->getMockBuilder('Drupal\Core\Database\Connection')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $database->databaseContents = &$database_contents;
-
-    // Although select doesn't modify the contents of the database, it still
-    // needs to be a reference so that we can select previously inserted or
-    // updated rows.
-    $database->expects($this->any())
-      ->method('select')->will($this->returnCallback(function ($base_table, $base_alias) use (&$database_contents) {
-      return new FakeSelect($base_table, $base_alias, $database_contents);
-    }));
-    $database->expects($this->any())
-      ->method('schema')
-      ->will($this->returnCallback(function () use (&$database_contents) {
-      return new FakeDatabaseSchema($database_contents);
-    }));
-    $database->expects($this->any())
-      ->method('insert')
-      ->will($this->returnCallback(function ($table) use (&$database_contents) {
-      return new FakeInsert($database_contents, $table);
-    }));
-    $database->expects($this->any())
-      ->method('update')
-      ->will($this->returnCallback(function ($table) use (&$database_contents) {
-      return new FakeUpdate($database_contents, $table);
-    }));
-    $database->expects($this->any())
-      ->method('merge')
-      ->will($this->returnCallback(function ($table) use (&$database_contents) {
-      return new FakeMerge($database_contents, $table);
-    }));
-    $database->expects($this->any())
-      ->method('query')
-      ->will($this->throwException(new \Exception('Query is not supported')));
-    return $database;
+  protected function getDatabase(array $database_contents, $connection_options = array(), $prefix = '') {
+    return new FakeConnection($database_contents, $connection_options, $prefix);
   }
 
   /**

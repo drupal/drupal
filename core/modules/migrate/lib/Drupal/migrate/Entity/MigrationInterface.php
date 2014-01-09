@@ -63,8 +63,9 @@ interface MigrationInterface extends ConfigEntityInterface {
    * @param array $process
    *   A process configuration array.
    *
-   * @return array
-   *   A list of process plugins.
+   * @return \Drupal\migrate\Plugin\MigrateProcessInterface[][]
+   *   An associative array. The keys are the destination property names. Values
+   *   are process pipelines. Each pipeline contains an array of plugins.
    */
   public function getProcessPlugins(array $process = NULL);
 

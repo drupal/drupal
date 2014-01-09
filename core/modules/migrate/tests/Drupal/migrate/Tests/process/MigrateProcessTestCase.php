@@ -12,7 +12,7 @@ use Drupal\migrate\Tests\MigrateTestCase;
 abstract class MigrateProcessTestCase extends MigrateTestCase {
 
   /**
-   * @var \Drupal\migrate\Plugin\migrate\process\TestGet
+   * @var \Drupal\migrate\Plugin\MigrateProcessInterface
    */
   protected $plugin;
 

@@ -38,7 +38,7 @@ class MigrateUserRoleTest extends MigrateDrupalTestBase {
     $migrate_test_role_1 = entity_load('user_role', $rid);
     $this->assertEqual($migrate_test_role_1->id(), $rid);
     $this->assertEqual($migrate_test_role_1->getPermissions(), array(0 => 'migrate test role 1 test permission'));
-    $this->assertEqual(array($rid), $migration->getIdMap()->lookupDestinationID(array(3)));
+    $this->assertEqual(array($rid), $migration->getIdMap()->lookupDestinationId(array(3)));
     $rid = 'migrate_test_role_2';
     $migrate_test_role_2 = entity_load('user_role', $rid);
     $this->assertEqual($migrate_test_role_2->getPermissions(), array(
@@ -59,7 +59,7 @@ class MigrateUserRoleTest extends MigrateDrupalTestBase {
       'access content overview',
     ));
     $this->assertEqual($migrate_test_role_2->id(), $rid);
-    $this->assertEqual(array($rid), $migration->getIdMap()->lookupDestinationID(array(4)));
+    $this->assertEqual(array($rid), $migration->getIdMap()->lookupDestinationId(array(4)));
   }
 
 }

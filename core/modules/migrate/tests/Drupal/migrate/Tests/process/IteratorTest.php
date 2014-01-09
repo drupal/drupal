@@ -9,6 +9,7 @@ namespace Drupal\migrate\Tests\process;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\migrate\process\Get;
 use Drupal\migrate\Plugin\migrate\process\Iterator;
+use Drupal\migrate\Plugin\migrate\process\StaticMap;
 use Drupal\migrate\Row;
 use Drupal\migrate\Tests\MigrateTestCase;
 
@@ -53,7 +54,7 @@ class IteratorTest extends MigrateTestCase {
   /**
    * Tests the iterator process plugin.
    */
-  function testIterator() {
+  public function testIterator() {
     $migration = $this->getMigration();
     // Set up the properties for the iterator.
     $configuration = array(

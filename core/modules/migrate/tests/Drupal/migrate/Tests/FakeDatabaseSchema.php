@@ -2,9 +2,8 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\FakeSelect.
+ * Contains \Drupal\migrate\Tests\FakeDatabaseSchema.
  */
-
 
 namespace Drupal\migrate\Tests;
 
@@ -19,11 +18,18 @@ class FakeDatabaseSchema extends Schema {
    */
   public $databaseContents;
 
-  public function __construct($database_contents) {
+  /**
+   * Constructs a fake database schema.
+   *
+   * @param array $database_contents
+   *   The database contents faked as an array. Each key is a table name, each
+   *   value is a list of table rows.
+   */
+  public function __construct(array &$database_contents) {
     $this->uniqueIdentifier = uniqid('', TRUE);
 
     // @todo Maybe we can generate an internal representation.
-    $this->databaseContents = $database_contents;
+    $this->databaseContents = &$database_contents;
   }
 
   public function tableExists($table) {

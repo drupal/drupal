@@ -207,7 +207,7 @@ interface MigrateIdMapInterface extends PluginInspectionInterface {
    * @return array
    *   The destination identifier values of the record, or NULL on failure.
    */
-  public function lookupDestinationID(array $source_id_values);
+  public function lookupDestinationId(array $source_id_values);
 
   /**
    * Removes any persistent storage used by this map.

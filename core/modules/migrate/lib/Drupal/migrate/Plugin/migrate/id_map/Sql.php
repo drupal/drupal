@@ -381,13 +381,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
     }
     $result = $query->execute();
     $source_id = $result->fetchAssoc();
-    return array_values($source_id);
+    return array_values($source_id ?: array());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function lookupDestinationID(array $source_id) {
+  public function lookupDestinationId(array $source_id) {
     $query = $this->getDatabase()->select($this->mapTableName, 'map')
               ->fields('map', $this->destinationIdFields);
     foreach ($this->sourceIdFields as $key_name) {
@@ -395,7 +395,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
     }
     $result = $query->execute();
     $destination_id = $result->fetchAssoc();
-    return array_values($destination_id);
+    return array_values($destination_id ?: array());
   }
 
   /**
@@ -444,9 +444,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
     $count = 1;
     foreach ($source_id_values as $id_value) {
       $fields['sourceid' . $count++] = $id_value;
-      // If any key value is empty, we can't save - print out and abort.
-      if (empty($id_value)) {
-        print($message);
+      // If any key value is not set, we can't save.
+      if (!isset($id_value)) {
         return;
       }
     }
@@ -579,7 +578,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
    * {@inheritdoc}
    */
   public function setUpdate(array $source_id) {
-    if (empty($source_ids)) {
+    if (empty($source_id)) {
       throw new MigrateException('No source identifiers provided to update.');
     }
     $query = $this->getDatabase()
@@ -695,16 +694,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
    * from rewind().
    */
   public function next() {
-    $this->currentRow = $this->result->fetchObject();
+    $this->currentRow = $this->result->fetchAssoc();
     $this->currentKey = array();
-    if (!is_object($this->currentRow)) {
-      $this->currentRow = NULL;
-    }
-    else {
+    if ($this->currentRow) {
       foreach ($this->sourceIdFields as $map_field) {
-        $this->currentKey[$map_field] = $this->currentRow->$map_field;
+        $this->currentKey[$map_field] = $this->currentRow[$map_field];
         // Leave only destination fields.
-        unset($this->currentRow->$map_field);
+        unset($this->currentRow[$map_field]);
       }
     }
   }
@@ -717,7 +713,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
    */
   public function valid() {
     // @todo Check numProcessed against itemlimit.
-    return !is_null($this->currentRow);
+    return $this->currentRow !== FALSE;
   }
 
 }

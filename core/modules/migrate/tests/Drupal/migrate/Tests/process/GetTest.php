@@ -25,11 +25,17 @@ class GetTest extends MigrateProcessTestCase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function setUp() {
     $this->plugin = new TestGet();
     parent::setUp();
   }
 
+  /**
+   * Tests the Get plugin when source is a string.
+   */
   function testTransformSourceString() {
     $this->row->expects($this->once())
       ->method('getSourceProperty')
@@ -40,6 +46,9 @@ class GetTest extends MigrateProcessTestCase {
     $this->assertSame($value, 'source_value');
   }
 
+  /**
+   * Tests the Get plugin when source is an array.
+   */
   function testTransformSourceArray() {
     $map = array(
       'test1' => 'source_value1',
@@ -53,6 +62,9 @@ class GetTest extends MigrateProcessTestCase {
     $this->assertSame($value, array('source_value1', 'source_value2'));
   }
 
+  /**
+   * Tests the Get plugin when source is a string pointing to destination.
+   */
   function testTransformSourceStringAt() {
     $this->row->expects($this->once())
       ->method('getSourceProperty')
@@ -63,6 +75,9 @@ class GetTest extends MigrateProcessTestCase {
     $this->assertSame($value, 'source_value');
   }
 
+  /**
+   * Tests the Get plugin when source is an array pointing to destination.
+   */
   function testTransformSourceArrayAt() {
     $map = array(
       'test1' => 'source_value1',
