@@ -387,7 +387,7 @@ function toolbar_toolbar() {
     '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'link',
-      '#title' => t('Menu'),
+      '#title' => t('Manage'),
       '#href' => 'admin',
       '#options' => array(
         'attributes' => array(
