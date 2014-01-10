@@ -2405,7 +2405,7 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
   // Initialize master language list.
   if (!isset($languages)) {
     // Initialize local language list cache.
-   $languages = array();
+    $languages = array();
 
     // Fill in master language list based on current configuration.
     $default = language_default();
@@ -2429,7 +2429,10 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
       }
       Language::sort($languages);
     }
-    else {
+    // If the language module is enable but the configuration has not been
+    // written yet the returning an empty language list will cause errors. For
+    // example the cache clear in search_module_preinstall().
+    if (empty($languages)) {
       // No language module, so use the default language only.
       $languages = array($default->id => $default);
       // Add the special languages, they will be filtered later if needed.
