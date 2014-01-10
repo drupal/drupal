@@ -33,8 +33,8 @@ class LanguageListModuleInstallTest extends WebTestBase {
    * Tests enabling Language.
    */
   function testModuleInstallLanguageList() {
-    // Since language_list uses static caches we need to do this be enabling
-    // the module using a the UI.
+    // Since language_list uses static caches we need to do this by enabling
+    // the module using the UI.
     $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($admin_user);
     $edit = array();

@@ -2429,8 +2429,8 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
       }
       Language::sort($languages);
     }
-    // If the language module is enable but the configuration has not been
-    // written yet the returning an empty language list will cause errors. For
+    // If the language module is enabled but the configuration has not been
+    // written yet, returning an empty language list will cause errors. For
     // example the cache clear in search_module_preinstall().
     if (empty($languages)) {
       // No language module, so use the default language only.
