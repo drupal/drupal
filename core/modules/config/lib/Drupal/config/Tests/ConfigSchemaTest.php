@@ -33,9 +33,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
 
   public function setUp() {
     parent::setUp();
-    config_install_default_config('module', 'system');
-    config_install_default_config('module', 'image');
-    config_install_default_config('module', 'config_test');
+    $this->installConfig(array('system', 'image', 'config_test'));
   }
 
   /**

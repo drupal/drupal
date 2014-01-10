@@ -37,7 +37,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    config_install_default_config('module', 'system');
+    $this->installConfig(array('system'));
 
     $manager = $this->container->get('plugin.manager.filter');
     $bag = new FilterBag($manager, array());

@@ -639,8 +639,8 @@ function drupal_install_system() {
   \Drupal::keyValue('system.schema')->set('system', $system_version);
 
   // System module needs to be enabled and the system/module lists need to be
-  // reset first in order to allow config_install_default_config() to invoke
-  // config import callbacks.
+  // reset first in order to allow installation of default configuration to
+  // invoke config import callbacks.
   // @todo Installation profiles may override the system.module config object.
   \Drupal::config('system.module')
     ->set('enabled.system', 0)
@@ -649,7 +649,7 @@ function drupal_install_system() {
   // Update the module list to include it.
   \Drupal::moduleHandler()->setModuleList(array('system' => $system_path . '/system.module'));
 
-  config_install_default_config('module', 'system');
+  \Drupal::service('config.installer')->installDefaultConfig('module', 'system');
 
   module_invoke('system', 'install');
 }

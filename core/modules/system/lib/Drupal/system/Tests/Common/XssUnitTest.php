@@ -20,7 +20,7 @@ class XssUnitTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('filter');
+  public static $modules = array('filter', 'system');
 
   public static function getInfo() {
     return array(
@@ -32,7 +32,7 @@ class XssUnitTest extends DrupalUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    config_install_default_config('module', 'system');
+    $this->installConfig(array('system'));
   }
 
   /**

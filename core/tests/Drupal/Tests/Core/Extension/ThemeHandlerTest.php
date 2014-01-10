@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\ThemeHandler;
+use Drupal\Core\Config\ConfigInstaller;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -57,6 +58,13 @@ class ThemeHandlerTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
+   * The mocked config installer.
+   *
+   * @var \Drupal\Core\Config\ConfigInstaller|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $configInstaller;
+
+  /**
    * The system listing info.
    *
    * @var \Drupal\Core\SystemListingInfo|\PHPUnit_Framework_MockObject_MockObject
@@ -89,14 +97,14 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->infoParser = $this->getMock('Drupal\Core\Extension\InfoParserInterface');
+    $this->configInstaller = $this->getMock('Drupal\Core\Config\ConfigInstallerInterface');
     $this->routeBuilder = $this->getMockBuilder('Drupal\Core\Routing\RouteBuilder')
       ->disableOriginalConstructor()
       ->getMock();
     $this->systemListingInfo = $this->getMockBuilder('Drupal\Core\SystemListingInfo')
       ->disableOriginalConstructor()
       ->getMock();
-
-    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->cacheBackend, $this->infoParser, $this->routeBuilder, $this->systemListingInfo);
+    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->cacheBackend, $this->infoParser, $this->configInstaller, $this->routeBuilder, $this->systemListingInfo);
   }
 
   /**
@@ -149,11 +157,15 @@ class ThemeHandlerTest extends UnitTestCase {
       ->method('invokeAll')
       ->with('themes_enabled', array($theme_list));
 
+    // Ensure the config installer will be called.
+    $this->configInstaller->expects($this->once())
+      ->method('installDefaultConfig')
+      ->with('theme', $theme_list[0]);
+
     $this->themeHandler->enable($theme_list);
 
     $this->assertTrue($this->themeHandler->clearedCssCache);
     $this->assertTrue($this->themeHandler->registryRebuild);
-    $this->assertTrue($this->themeHandler->installedDefaultConfig['theme_test']);
   }
 
   /**
@@ -391,13 +403,6 @@ class TestThemeHandler extends ThemeHandler {
    */
   protected function themeRegistryRebuild() {
     $this->registryRebuild = TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function configInstallDefaultConfig($theme) {
-    $this->installedDefaultConfig[$theme] = TRUE;
   }
 
   /**

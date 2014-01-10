@@ -102,6 +102,13 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     $this->kernel = new DrupalKernel('unit_testing', drupal_classloader(), FALSE);
     $this->kernel->boot();
 
+    // Create a minimal system.module configuration object so that the list of
+    // enabled modules can be maintained allowing
+    // \Drupal\Core\Config\ConfigInstaller::installDefaultConfig() to work.
+    // Write directly to active storage to avoid early instantiation of
+    // the event dispatcher which can prevent modules from registering events.
+    \Drupal::service('config.storage')->write('system.module', array('enabled' => array()));
+
     // Collect and set a fixed module list.
     $class = get_class($this);
     $modules = array();
@@ -209,7 +216,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
           '@module' => $module,
         )));
       }
-      config_install_default_config('module', $module);
+      \Drupal::service('config.installer')->installDefaultConfig('module', $module);
     }
     $this->pass(format_string('Installed default config: %modules.', array(
       '%modules' => implode(', ', $modules),
@@ -268,9 +275,16 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     // Set the list of modules in the extension handler.
     $module_handler = $this->container->get('module_handler');
     $module_filenames = $module_handler->getModuleList();
+    // Write directly to active storage to avoid early instantiation of
+    // the event dispatcher which can prevent modules from registering events.
+    $active_storage =  \Drupal::service('config.storage');
+    $system_config = $active_storage->read('system.module');
     foreach ($modules as $module) {
       $module_filenames[$module] = drupal_get_filename('module', $module);
+      // Maintain the list of enabled modules in configuration.
+      $system_config['enabled'][$module] = 0;
     }
+    $active_storage->write('system.module', $system_config);
     $module_handler->setModuleList($module_filenames);
     $module_handler->resetImplementations();
     // Update the kernel to make their services available.
@@ -299,9 +313,12 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     // Unset the list of modules in the extension handler.
     $module_handler = $this->container->get('module_handler');
     $module_filenames = $module_handler->getModuleList();
+    $system_config = $this->container->get('config.factory')->get('system.module');
     foreach ($modules as $module) {
       unset($module_filenames[$module]);
+      $system_config->clear('enabled.' . $module);
     }
+    $system_config->save();
     $module_handler->setModuleList($module_filenames);
     $module_handler->resetImplementations();
     // Update the kernel to remove their services.

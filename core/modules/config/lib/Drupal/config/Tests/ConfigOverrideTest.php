@@ -51,7 +51,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $conf['config_test.system']['baz'] = 'injected';
     $conf['config_test.system']['404'] = 'derp';
 
-    config_install_default_config('module', 'config_test');
+    $this->installConfig(array('config_test'));
 
     // Verify that the original configuration data exists. Have to read storage
     // directly otherwise overrides will apply.

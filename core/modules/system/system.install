@@ -557,7 +557,7 @@ function system_requirements($phase) {
 function system_install() {
   // Enable and set the default theme. Can't use theme_enable() this early in
   // installation.
-  config_install_default_config('theme', 'stark');
+  \Drupal::service('config.installer')->installDefaultConfig('theme', 'stark');
   \Drupal::config('system.theme')
     ->set('default', 'stark')
     ->save();

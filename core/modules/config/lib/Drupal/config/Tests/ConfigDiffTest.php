@@ -47,7 +47,7 @@ class ConfigDiffTest extends DrupalUnitTestBase {
     );
 
     // Install the default config.
-    config_install_default_config('module', 'config_test');
+    $this->installConfig(array('config_test'));
 
     // Change a configuration value in staging.
     $staging_data = $original_data;

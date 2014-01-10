@@ -10,6 +10,7 @@ namespace Drupal\Core\Extension;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Routing\RouteBuilder;
 use Drupal\Core\SystemListingInfo;
 
@@ -64,6 +65,13 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $cacheBackend;
 
   /**
+   *  The config installer to install configuration.
+   *
+   * @var \Drupal\Core\Config\ConfigInstallerInterface
+   */
+  protected $configInstaller;
+
+  /**
    * The info parser to parse the theme.info.yml files.
    *
    * @var \Drupal\Core\Extension\InfoParserInterface
@@ -95,16 +103,21 @@ class ThemeHandler implements ThemeHandlerInterface {
    *   The cache backend to clear the local tasks cache.
    * @param \Drupal\Core\Extension\InfoParserInterface $info_parser
    *   The info parser to parse the theme.info.yml files.
+   * @param \Drupal\Core\Config\ConfigInstallerInterface $config_installer
+   *   (optional) The config installer to install configuration. This optional
+   *   to allow the theme handler to work before Drupal is installed and has a
+   *   database.
    * @param \Drupal\Core\Routing\RouteBuilder $route_builder
    *   (optional) The route builder to rebuild the routes if a theme is enabled.
    * @param \Drupal\Core\SystemListingInfo $system_list_info
    *   (optional) The system listing info.
    */
-  public function __construct(ConfigFactory $config_factory, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, InfoParserInterface $info_parser, RouteBuilder $route_builder = NULL, SystemListingInfo $system_list_info = NULL) {
+  public function __construct(ConfigFactory $config_factory, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, InfoParserInterface $info_parser, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, SystemListingInfo $system_list_info = NULL) {
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->cacheBackend = $cache_backend;
     $this->infoParser = $info_parser;
+    $this->configInstaller = $config_installer;
     $this->routeBuilder = $route_builder;
     $this->systemListingInfo = $system_list_info;
   }
@@ -129,11 +142,11 @@ class ThemeHandler implements ThemeHandlerInterface {
       $theme_config->set("enabled.$key", 0)->save();
       $disabled_themes->clear($key)->save();
 
-      // Refresh the theme list as config_install_default_config() needs an
-      // updated list to work.
+      // Refresh the theme list as installation of default configuration needs
+      // an updated list to work.
       $this->reset();
       // Install default configuration of the theme.
-      $this->configInstallDefaultConfig($key);
+      $this->configInstaller->installDefaultConfig('theme', $key);
     }
 
     $this->resetSystem();
@@ -439,16 +452,6 @@ class ThemeHandler implements ThemeHandlerInterface {
       $this->systemListingInfo = new SystemListingInfo();
     }
     return $this->systemListingInfo;
-  }
-
-  /**
-   * Installs the default theme config.
-   *
-   * @param string $theme
-   *   The theme to install config for.
-   */
-  protected function configInstallDefaultConfig($theme) {
-    config_install_default_config('theme', $theme);
   }
 
   /**

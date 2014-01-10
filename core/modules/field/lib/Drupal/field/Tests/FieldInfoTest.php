@@ -173,6 +173,11 @@ class FieldInfoTest extends FieldUnitTestBase {
    * Test that instances on disabled entity types are filtered out.
    */
   function testInstanceDisabledEntityType() {
+    // Disabling the comment module invokes user_modules_uninstalled() and calls
+    // drupal_flush_all_caches(). Install the necessary schema to support this.
+    $this->installSchema('user', array('users_data'));
+    $this->installSchema('system', array('router'));
+
     // For this test the field type and the entity type must be exposed by
     // different modules.
     $this->enableModules(array('node', 'comment'));
@@ -187,9 +192,10 @@ class FieldInfoTest extends FieldUnitTestBase {
       'entity_type' => 'comment',
       'bundle' => 'comment_node_article',
     );
-    entity_create('field_instance', $instance_definition);
+    entity_create('field_instance', $instance_definition)->save();
 
-    // Disable coment module. This clears field_info cache.
+    $this->assertNotNull(field_info_instance('comment', 'field', 'comment_node_article'), 'Instance is returned on enabled entity types.');
+    // Disable comment module. This clears field_info cache.
     module_uninstall(array('comment'));
     $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), 'No instances are returned on disabled entity types.');
   }

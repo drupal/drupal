@@ -39,7 +39,7 @@ class TourPluginTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    config_install_default_config('module', 'tour');
+    $this->installConfig(array('tour'));
     $this->pluginManager = $this->container->get('plugin.manager.tour.tip');
   }
 
