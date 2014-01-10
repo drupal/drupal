@@ -169,7 +169,7 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
     parent::postSave($storage_controller, $update);
 
-    if (\Drupal::entityManager()->hasController($this->targetEntityType, 'render')) {
+    if (\Drupal::entityManager()->hasController($this->targetEntityType, 'view_builder')) {
       \Drupal::entityManager()->getViewBuilder($this->targetEntityType)->resetCache();
     }
   }

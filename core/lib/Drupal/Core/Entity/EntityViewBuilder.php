@@ -38,14 +38,6 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
   protected $entityManager;
 
   /**
-   * An array of view mode info for the type of entities for which this
-   * controller is instantiated.
-   *
-   * @var array
-   */
-  protected $viewModesInfo;
-
-  /**
    * The cache bin used to store the render cache.
    *
    * @todo Defaults to 'cache' for now, until http://drupal.org/node/1194136 is
@@ -67,7 +59,6 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
     $this->entityType = $entity_info->id();
     $this->entityInfo = $entity_info;
     $this->entityManager = $entity_manager;
-    $this->viewModesInfo = entity_get_view_modes($this->entityType);
   }
 
   /**
@@ -136,10 +127,8 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
     );
 
     // Cache the rendered output if permitted by the view mode and global entity
-    // type configuration. The isset() checks below are necessary because
-    // 'default' is not an actual view mode.
-    $view_mode_is_cacheable = !isset($this->viewModesInfo[$view_mode]) || (isset($this->viewModesInfo[$view_mode]) && $this->viewModesInfo[$view_mode]['cache']);
-    if ($view_mode_is_cacheable && !$entity->isNew() && !isset($entity->in_preview) && $this->entityInfo->isRenderCacheable()) {
+    // type configuration.
+    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && !isset($entity->in_preview) && $this->entityInfo->isRenderCacheable()) {
       $return['#cache'] = array(
         'keys' => array('entity_view', $this->entityType, $entity->id(), $view_mode),
         'granularity' => DRUPAL_CACHE_PER_ROLE,
@@ -265,4 +254,23 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
       \Drupal::cache($this->cacheBin)->deleteTags(array($this->entityType . '_view' => TRUE));
     }
   }
+
+  /**
+   * Returns TRUE if the view mode is cacheable.
+   *
+   * @param string $view_mode
+   *   Name of the view mode that should be rendered.
+   *
+   * @return bool
+   *   TRUE if the view mode can be cached, FALSE otherwise.
+   */
+  protected function isViewModeCacheable($view_mode) {
+    if ($view_mode == 'default') {
+      // The 'default' is not an actual view mode.
+      return TRUE;
+    }
+    $view_modes_info = entity_get_view_modes($this->entityType);
+    return !empty($view_modes_info[$view_mode]['cache']);
+  }
+
 }

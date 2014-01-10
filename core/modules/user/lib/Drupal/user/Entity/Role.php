@@ -141,6 +141,8 @@ class Role extends ConfigEntityBase implements RoleInterface {
     parent::postSave($storage_controller, $update);
 
     Cache::invalidateTags(array('role' => $this->id()));
+    // Clear render cache.
+    entity_render_cache_clear();
   }
 
   /**

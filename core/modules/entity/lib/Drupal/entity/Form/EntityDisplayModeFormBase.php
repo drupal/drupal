@@ -109,6 +109,10 @@ abstract class EntityDisplayModeFormBase extends EntityFormController {
    *   TRUE if the display mode exists, FALSE otherwise.
    */
   public function exists($entity_id, array $element, array $form_state) {
+    // Do not allow to add internal 'default' view mode.
+    if ($entity_id == 'default') {
+      return TRUE;
+    }
     return (bool) $this->queryFactory
       ->get($this->entity->entityType())
       ->condition('id', $element['#field_prefix'] . $entity_id)

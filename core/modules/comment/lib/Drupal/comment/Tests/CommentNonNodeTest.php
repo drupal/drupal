@@ -305,9 +305,6 @@ class CommentNonNodeTest extends WebTestBase {
       'view test entity' => TRUE,
       'skip comment approval' => FALSE,
     ));
-    // We've changed role permissions, so need to reset render cache.
-    // @todo Revisit after https://drupal.org/node/2099105
-    \Drupal::entityManager()->getViewBuilder('entity_test')->resetCache(array($this->entity));
     $this->drupalGet('entity_test/' . $this->entity->id());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
     $this->assertLink('Log in', 0, 'Link to log in was found.');
@@ -324,9 +321,6 @@ class CommentNonNodeTest extends WebTestBase {
       'skip comment approval' => TRUE,
       'view test entity' => TRUE,
     ));
-    // We've changed role permissions, so need to reset render cache.
-    // @todo Revisit after https://drupal.org/node/2099105
-    \Drupal::entityManager()->getViewBuilder('entity_test')->resetCache(array($this->entity));
     $this->drupalGet('entity_test/' . $this->entity->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertFieldByName('subject', '', 'Subject field found.');

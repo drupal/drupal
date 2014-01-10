@@ -14,7 +14,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class FilterDefaultConfigTest extends DrupalUnitTestBase {
 
-  public static $modules = array('system', 'user', 'filter', 'filter_test');
+  public static $modules = array('system', 'user', 'filter', 'filter_test', 'entity');
 
   public static function getInfo() {
     return array(

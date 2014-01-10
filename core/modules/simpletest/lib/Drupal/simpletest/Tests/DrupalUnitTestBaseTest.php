@@ -19,7 +19,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity_test');
+  public static $modules = array('entity', 'entity_test');
 
   public static function getInfo() {
     return array(
@@ -33,14 +33,14 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
    * Tests expected behavior of setUp().
    */
   function testSetUp() {
-    $module = 'entity_test';
+    $modules = array('entity', 'entity_test');
     $table = 'entity_test';
 
     // Verify that specified $modules have been loaded.
-    $this->assertTrue(function_exists('entity_test_permission'), "$module.module was loaded.");
+    $this->assertTrue(function_exists('entity_test_permission'), 'entity_test.module was loaded.');
     // Verify that there is a fixed module list.
-    $this->assertIdentical(array_keys(\Drupal::moduleHandler()->getModuleList()), array($module));
-    $this->assertIdentical(\Drupal::moduleHandler()->getImplementations('permission'), array($module));
+    $this->assertIdentical(array_keys(\Drupal::moduleHandler()->getModuleList()), $modules);
+    $this->assertIdentical(\Drupal::moduleHandler()->getImplementations('permission'), $modules);
 
     // Verify that no modules have been installed.
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
