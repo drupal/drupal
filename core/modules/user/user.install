@@ -685,9 +685,7 @@ function user_update_8011() {
       'weight' => 0,
     ))
     ->set('status', 1)
-    ->set('content.member_for', array(
-      'visible' => FALSE,
-    ));
+    ->set('hidden.member_for', TRUE);
   $display->save();
 
   // Add file usage for the default field.

@@ -582,6 +582,21 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
+  public function isDisplayConfigurable($context) {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayOptions($display_context) {
+    // Hide configurable fields by default.
+    return array('type' => 'hidden');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isQueryable() {
     return TRUE;
   }

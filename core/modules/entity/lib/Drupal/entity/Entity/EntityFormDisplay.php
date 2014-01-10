@@ -33,9 +33,13 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
   /**
    * {@inheritdoc}
    */
+  protected $displayContext = 'form';
+
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(array $values, $entity_type) {
     $this->pluginManager = \Drupal::service('plugin.manager.field.widget');
-    $this->displayContext = 'form';
 
     parent::__construct($values, $entity_type);
   }

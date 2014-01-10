@@ -7,15 +7,19 @@
 
 namespace Drupal\field_ui;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\field\FieldInstanceInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field UI form display overview form.
  */
 class FormDisplayOverview extends DisplayOverviewBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $displayContext = 'form';
 
   /**
    * {@inheritdoc}
@@ -49,12 +53,14 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function buildFieldRow($field_id, FieldInstanceInterface $instance, EntityDisplayInterface $entity_display, array $form, array &$form_state) {
-    $field_row = parent::buildFieldRow($field_id, $instance, $entity_display, $form, $form_state);
+  protected function buildFieldRow(FieldDefinitionInterface $field_definition, EntityDisplayInterface $entity_display, array $form, array &$form_state) {
+    $field_row = parent::buildFieldRow($field_definition, $entity_display, $form, $form_state);
+
+    $field_name = $field_definition->getName();
 
     // Update the (invisible) title of the 'plugin' column.
-    $field_row['plugin']['#title'] = $this->t('Formatter for @title', array('@title' => $instance->getLabel()));
-    if (!empty($field_row['plugin']['settings_edit_form']) && ($plugin = $entity_display->getRenderer($field_id))) {
+    $field_row['plugin']['#title'] = $this->t('Formatter for @title', array('@title' => $field_definition->getLabel()));
+    if (!empty($field_row['plugin']['settings_edit_form']) && ($plugin = $entity_display->getRenderer($field_name))) {
       $plugin_type_info = $plugin->getPluginDefinition();
       $field_row['plugin']['settings_edit_form']['label']['#markup'] = $this->t('Widget settings:') . ' <span class="plugin-name">' . $plugin_type_info['label'] . '</span>';
     }
@@ -72,19 +78,12 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExtraFields() {
-    return field_info_extra_fields($this->entity_type, $this->bundle, 'form');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getPlugin($instance, $configuration) {
+  protected function getPlugin(FieldDefinitionInterface $field_definition, $configuration) {
     $plugin = NULL;
 
     if ($configuration && $configuration['type'] != 'hidden') {
       $plugin = $this->pluginManager->getInstance(array(
-        'field_definition' => $instance,
+        'field_definition' => $field_definition,
         'form_mode' => $this->mode,
         'configuration' => $configuration
       ));
@@ -143,11 +142,10 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterSettingsForm(array &$settings_form, $plugin, FieldInstanceInterface $instance, array $form, array &$form_state) {
+  protected function alterSettingsForm(array &$settings_form, $plugin, FieldDefinitionInterface $field_definition, array $form, array &$form_state) {
     $context = array(
       'widget' => $plugin,
-      'field' => $instance->getField(),
-      'instance' => $instance,
+      'field_definition' => $field_definition,
       'form_mode' => $this->mode,
       'form' => $form,
     );
@@ -157,11 +155,10 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterSettingsSummary(array &$summary, $plugin, FieldInstanceInterface $instance) {
+  protected function alterSettingsSummary(array &$summary, $plugin, FieldDefinitionInterface $field_definition) {
     $context = array(
       'widget' => $plugin,
-      'field' => $instance->getField(),
-      'instance' => $instance,
+      'field_definition' => $field_definition,
       'form_mode' => $this->mode,
     );
     drupal_alter('field_widget_settings_summary', $summary, $context);

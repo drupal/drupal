@@ -10,14 +10,21 @@ namespace Drupal\field_ui;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManager;
-use Drupal\field\FieldInstanceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Field UI display overview base class.
  */
 abstract class DisplayOverviewBase extends OverviewBase {
+
+  /**
+   * The display context. Either 'view' or 'form'.
+   *
+   * @var string
+   */
+  protected $displayContext;
 
   /**
    * The widget or formatter plugin manager.
@@ -79,6 +86,28 @@ abstract class DisplayOverviewBase extends OverviewBase {
   }
 
   /**
+   * Collects the definitions of fields whose display is configurable.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   *   The array of field definitions
+   */
+  protected function getFieldDefinitions() {
+    // @todo Replace this entire implementation with
+    //   \Drupal::entityManager()->getFieldDefinition() when it can hand the
+    //   $instance objects - https://drupal.org/node/2114707
+    $entity = _field_create_entity_from_ids((object) array('entity_type' => $this->entity_type, 'bundle' => $this->bundle, 'entity_id' => NULL));
+    $field_definitions = array();
+    foreach ($entity as $field_name => $items) {
+      $field_definitions[$field_name] = $items->getFieldDefinition();
+    }
+
+    $context = $this->displayContext;
+    return array_filter($field_definitions, function(FieldDefinitionInterface $field_definition) use ($context) {
+      return $field_definition->isDisplayConfigurable($context);
+    });
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL) {
@@ -88,8 +117,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       $this->mode = 'default';
     }
 
-    // Gather type information.
-    $instances = field_info_instances($this->entity_type, $this->bundle);
+    $field_definitions = $this->getFieldDefinitions();
     $extra_fields = $this->getExtraFields();
     $entity_display = $this->getEntityDisplay($this->mode);
 
@@ -101,11 +129,11 @@ abstract class DisplayOverviewBase extends OverviewBase {
       '#entity_type' => $this->entity_type,
       '#bundle' => $this->bundle,
       '#mode' => $this->mode,
-      '#fields' => array_keys($instances),
+      '#fields' => array_keys($field_definitions),
       '#extra' => array_keys($extra_fields),
     );
 
-    if (empty($instances) && empty($extra_fields)) {
+    if (empty($field_definitions) && empty($extra_fields)) {
       drupal_set_message($this->t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url($this->adminPath . '/fields'))), 'warning');
       return $form;
     }
@@ -140,8 +168,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
     );
 
     // Field rows.
-    foreach ($instances as $field_id => $instance) {
-      $table[$field_id] = $this->buildFieldRow($field_id, $instance, $entity_display, $form, $form_state);
+    foreach ($field_definitions as $field_name => $field_definition) {
+      $table[$field_name] = $this->buildFieldRow($field_definition, $entity_display, $form, $form_state);
     }
 
     // Non-field elements.
@@ -214,10 +242,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
   /**
    * Builds the table row structure for a single field.
    *
-   * @param string $field_id
-   *   The field ID.
-   * @param \Drupal\field\FieldInstanceInterface $instance
-   *   The field instance.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
    * @param \Drupal\Core\Entity\Display\EntityDisplayInterface $entity_display
    *   The entity display.
    * @param array $form
@@ -228,9 +254,10 @@ abstract class DisplayOverviewBase extends OverviewBase {
    * @return array
    *   A table row array.
    */
-  protected function buildFieldRow($field_id, FieldInstanceInterface $instance, EntityDisplayInterface $entity_display, array $form, array &$form_state) {
-    $display_options = $entity_display->getComponent($field_id);
-    $label = $instance->getLabel();
+  protected function buildFieldRow(FieldDefinitionInterface $field_definition, EntityDisplayInterface $entity_display, array $form, array &$form_state) {
+    $field_name = $field_definition->getName();
+    $display_options = $entity_display->getComponent($field_name);
+    $label = $field_definition->getLabel();
 
     $field_row = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
@@ -238,7 +265,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       '#region_callback' => array($this, 'getRowRegion'),
       '#js_settings' => array(
         'rowHandler' => 'field',
-        'defaultPlugin' => $this->getDefaultPlugin($instance->getType()),
+        'defaultPlugin' => $this->getDefaultPlugin($field_definition->getType()),
       ),
       'human_name' => array(
         '#markup' => check_plain($label),
@@ -259,11 +286,11 @@ abstract class DisplayOverviewBase extends OverviewBase {
           '#options' => drupal_map_assoc(array_keys($this->getRegions())),
           '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
-          '#parents' => array('fields', $field_id, 'parent'),
+          '#parents' => array('fields', $field_name, 'parent'),
         ),
         'hidden_name' => array(
           '#type' => 'hidden',
-          '#default_value' => $field_id,
+          '#default_value' => $field_name,
           '#attributes' => array('class' => array('field-name')),
         ),
       ),
@@ -275,9 +302,9 @@ abstract class DisplayOverviewBase extends OverviewBase {
         '#type' => 'select',
         '#title' => $this->t('Plugin for @title', array('@title' => $label)),
         '#title_display' => 'invisible',
-        '#options' => $this->getPluginOptions($instance->getType()),
+        '#options' => $this->getPluginOptions($field_definition->getType()),
         '#default_value' => $display_options ? $display_options['type'] : 'hidden',
-        '#parents' => array('fields', $field_id, 'type'),
+        '#parents' => array('fields', $field_name, 'type'),
         '#attributes' => array('class' => array('field-plugin-type')),
       ),
       'settings_edit_form' => array(),
@@ -285,15 +312,15 @@ abstract class DisplayOverviewBase extends OverviewBase {
 
     // Check the currently selected plugin, and merge persisted values for its
     // settings.
-    if (isset($form_state['values']['fields'][$field_id]['type'])) {
-      $display_options['type'] = $form_state['values']['fields'][$field_id]['type'];
+    if (isset($form_state['values']['fields'][$field_name]['type'])) {
+      $display_options['type'] = $form_state['values']['fields'][$field_name]['type'];
     }
-    if (isset($form_state['plugin_settings'][$field_id])) {
-      $display_options['settings'] = $form_state['plugin_settings'][$field_id];
+    if (isset($form_state['plugin_settings'][$field_name])) {
+      $display_options['settings'] = $form_state['plugin_settings'][$field_name];
     }
 
     // Get the corresponding plugin object.
-    $plugin = $this->getPlugin($instance, $display_options);
+    $plugin = $this->getPlugin($field_definition, $display_options);
 
     // Base button element for the various plugin settings actions.
     $base_button = array(
@@ -303,10 +330,10 @@ abstract class DisplayOverviewBase extends OverviewBase {
         'wrapper' => 'field-display-overview-wrapper',
         'effect' => 'fade',
       ),
-      '#field_name' => $field_id,
+      '#field_name' => $field_name,
     );
 
-    if ($form_state['plugin_settings_edit'] == $field_id) {
+    if ($form_state['plugin_settings_edit'] == $field_name) {
       // We are currently editing this field's plugin settings. Display the
       // settings form and submit buttons.
       $field_row['plugin']['settings_edit_form'] = array();
@@ -314,14 +341,14 @@ abstract class DisplayOverviewBase extends OverviewBase {
       if ($plugin) {
         // Generate the settings form and allow other modules to alter it.
         $settings_form = $plugin->settingsForm($form, $form_state);
-        $this->alterSettingsForm($settings_form, $plugin, $instance, $form, $form_state);
+        $this->alterSettingsForm($settings_form, $plugin, $field_definition, $form, $form_state);
 
         if ($settings_form) {
           $field_row['plugin']['#cell_attributes'] = array('colspan' => 3);
           $field_row['plugin']['settings_edit_form'] = array(
             '#type' => 'container',
             '#attributes' => array('class' => array('field-plugin-settings-edit-form')),
-            '#parents' => array('fields', $field_id, 'settings_edit_form'),
+            '#parents' => array('fields', $field_name, 'settings_edit_form'),
             'label' => array(
               '#markup' => $this->t('Plugin settings'),
             ),
@@ -330,18 +357,18 @@ abstract class DisplayOverviewBase extends OverviewBase {
               '#type' => 'actions',
               'save_settings' => $base_button + array(
                 '#type' => 'submit',
-                '#name' => $field_id . '_plugin_settings_update',
+                '#name' => $field_name . '_plugin_settings_update',
                 '#value' => $this->t('Update'),
                 '#op' => 'update',
               ),
               'cancel_settings' => $base_button + array(
                 '#type' => 'submit',
-                '#name' => $field_id . '_plugin_settings_cancel',
+                '#name' => $field_name . '_plugin_settings_cancel',
                 '#value' => $this->t('Cancel'),
                 '#op' => 'cancel',
                 // Do not check errors for the 'Cancel' button, but make sure we
                 // get the value of the 'plugin type' select.
-                '#limit_validation_errors' => array(array('fields', $field_id, 'type')),
+                '#limit_validation_errors' => array(array('fields', $field_name, 'type')),
               ),
             ),
           );
@@ -359,7 +386,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
         $summary = $plugin->settingsSummary();
 
         // Allow other modules to alter the summary.
-        $this->alterSettingsSummary($summary, $plugin, $instance);
+        $this->alterSettingsSummary($summary, $plugin, $field_definition);
 
         if (!empty($summary)) {
           $field_row['settings_summary'] = array(
@@ -373,13 +400,13 @@ abstract class DisplayOverviewBase extends OverviewBase {
         if ($plugin_definition['settings']) {
           $field_row['settings_edit'] = $base_button + array(
             '#type' => 'image_button',
-            '#name' => $field_id . '_settings_edit',
+            '#name' => $field_name . '_settings_edit',
             '#src' => 'core/misc/configure-dark.png',
             '#attributes' => array('class' => array('field-plugin-settings-edit'), 'alt' => $this->t('Edit')),
             '#op' => 'edit',
             // Do not check errors for the 'Edit' button, but make sure we get
             // the value of the 'plugin type' select.
-            '#limit_validation_errors' => array(array('fields', $field_id, 'type')),
+            '#limit_validation_errors' => array(array('fields', $field_name, 'type')),
             '#prefix' => '<div class="field-plugin-settings-edit-wrapper">',
             '#suffix' => '</div>',
           );
@@ -646,12 +673,14 @@ abstract class DisplayOverviewBase extends OverviewBase {
    * @return array
    *   An array of extra field info, as provided by field_info_extra_fields().
    */
-  abstract protected function getExtraFields();
+  protected function getExtraFields() {
+    return field_info_extra_fields($this->entity_type, $this->bundle, ($this->displayContext == 'view' ? 'display' : $this->displayContext));
+  }
 
   /**
    * Returns the widget or formatter plugin for a field.
    *
-   * @param \Drupal\field\FieldInstanceInterface $instance
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field instance.
    * @param array $configuration
    *   The plugin configuration
@@ -659,7 +688,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
    * @return object
    *   The corresponding plugin.
    */
-  abstract protected function getPlugin($instance, $configuration);
+  abstract protected function getPlugin(FieldDefinitionInterface $field_definition, $configuration);
 
   /**
    * Returns an array of widget or formatter options for a field type.
@@ -808,14 +837,14 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   The widget or formatter settings form.
    * @param object $plugin
    *   The widget or formatter.
-   * @param FieldInstanceInterface $instance
-   *   The field instance.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
    * @param array $form
    *   The The (entire) configuration form array.
    * @param array $form_state
    *   The form state.
    */
-  abstract protected function alterSettingsForm(array &$settings_form, $plugin, FieldInstanceInterface $instance, array $form, array &$form_state);
+  abstract protected function alterSettingsForm(array &$settings_form, $plugin, FieldDefinitionInterface $field_definition, array $form, array &$form_state);
 
   /**
    * Alters the widget or formatter settings summary.
@@ -824,9 +853,9 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   The widget or formatter settings summary.
    * @param object $plugin
    *   The widget or formatter.
-   * @param FieldInstanceInterface $instance
-   *   The field instance.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
    */
-  abstract protected function alterSettingsSummary(array &$summary, $plugin, FieldInstanceInterface $instance);
+  abstract protected function alterSettingsSummary(array &$summary, $plugin, FieldDefinitionInterface $field_definition);
 
 }

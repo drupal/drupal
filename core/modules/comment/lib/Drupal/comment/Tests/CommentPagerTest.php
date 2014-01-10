@@ -281,7 +281,7 @@ class CommentPagerTest extends CommentTestBase {
       ->setComponent('comment_2', array(
         'label' => 'hidden',
         'type' => 'comment_default',
-        'weight' => 20,
+        'weight' => 30,
         'settings' => array(
           'pager_id' => 1,
         )

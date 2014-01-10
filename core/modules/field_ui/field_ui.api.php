@@ -20,8 +20,7 @@
  * @param $context
  *   An associative array with the following elements:
  *   - formatter: The formatter object.
- *   - field: The field structure being configured.
- *   - instance: The instance structure being configured.
+ *   - field_definition: The field definition.
  *   - view_mode: The view mode being configured.
  *   - form: The (entire) configuration form array.
  *
@@ -49,8 +48,7 @@ function hook_field_formatter_settings_form_alter(&$element, &$form_state, $cont
  * @param array $context
  *   An associative array with the following elements:
  *   - formatter: The formatter object.
- *   - field: The field structure being configured.
- *   - instance: The instance structure being configured.
+ *   - field_definition: The field definition.
  *   - form_mode: The form mode being configured.
  *   - form: The (entire) configuration form array.
  *
@@ -75,8 +73,7 @@ function hook_field_widget_settings_form_alter(&$element, &$form_state, $context
  * @param $context
  *   An associative array with the following elements:
  *   - formatter: The formatter object.
- *   - field: The field structure being configured.
- *   - instance: The instance structure being configured.
+ *   - field_definition: The field definition.
  *   - view_mode: The view mode being configured.
  *
  * @see \Drupal\field_ui\DisplayOverView.
@@ -99,8 +96,7 @@ function hook_field_formatter_settings_summary_alter(&$summary, $context) {
  * @param array $context
  *   An associative array with the following elements:
  *   - widget: The widget object.
- *   - field: The field structure being configured.
- *   - instance: The instance structure being configured.
+ *   - field_definition: The field definition.
  *   - form_mode: The form mode being configured.
  *
  * @see \Drupal\field_ui\FormDisplayOverView.

@@ -196,6 +196,69 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   }
 
   /**
+   * Sets the display options for the field in forms or rendered entities.
+   *
+   * This enables generic rendering of the field with widgets / formatters,
+   * including automated support for "In place editing", and with optional
+   * configurability in the "Manage display" / "Manage form display" UI screens.
+   *
+   * Unless this method is called, the field remains invisible (or requires
+   * ad-hoc rendering logic).
+   *
+   * @param string $display_context
+   *   The display context. Either 'view' or 'form'.
+   * @param array $options
+   *   An array of display options. Refer to
+   *   \Drupal\Core\Field\FieldDefinitionInterface::getDisplayOptions() for
+   *   a list of supported keys. The options should include at least a 'weight',
+   *   or specify 'type' = 'hidden'. The 'default_widget' / 'default_formatter'
+   *   for the field type will be used if no 'type' is specified.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setDisplayOptions($display_context, array $options) {
+    $this->definition['display'][$display_context]['options'] = $options;
+    return $this;
+  }
+
+  /**
+   * Sets whether the display for the field can be configured.
+   *
+   * @param string $display_context
+   *   The display context. Either 'view' or 'form'.
+   * @param bool $configurable
+   *   Whether the display options can be configured (e.g., via the "Manage
+   *   display" / "Manage form display" UI screens). If TRUE, the options
+   *   specified via getDisplayOptions() act as defaults.
+   *
+   * @return static
+   *   The object itself for chaining.
+   */
+  public function setDisplayConfigurable($display_context, $configurable) {
+    // If no explicit display options have been specified, default to 'hidden'.
+    if (empty($this->definition['display'][$display_context])) {
+      $this->definition['display'][$display_context]['options'] = array('type' => 'hidden');
+    }
+    $this->definition['display'][$display_context]['configurable'] = $configurable;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayOptions($display_context) {
+    return isset($this->definition['display'][$display_context]['options']) ? $this->definition['display'][$display_context]['options'] : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDisplayConfigurable($display_context) {
+    return isset($this->definition['display'][$display_context]['configurable']) ? $this->definition['display'][$display_context]['configurable'] : FALSE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function isConfigurable() {

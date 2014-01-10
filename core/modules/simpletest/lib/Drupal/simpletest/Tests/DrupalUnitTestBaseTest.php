@@ -212,7 +212,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 
     // Install some other modules; entity_test should still exist.
-    $this->container->get('module_handler')->install(array('field', 'field_test'), FALSE);
+    $this->container->get('module_handler')->install(array('user', 'field', 'field_test'), FALSE);
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == $entity_manager->getDefinition('entity_test'));
 

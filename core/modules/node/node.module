@@ -203,12 +203,6 @@ function node_entity_display_alter(EntityViewDisplayInterface $display, $context
         }
       }
     }
-    // @todo Manage base field displays in the YAML:
-    //   https://drupal.org/node/2144919.
-    $display->setComponent('title', array(
-      'label' => 'hidden',
-      'type' => 'text_default',
-    ));
   }
 }
 
@@ -217,16 +211,10 @@ function node_entity_display_alter(EntityViewDisplayInterface $display, $context
  */
 function node_entity_form_display_alter(EntityFormDisplayInterface $form_display, $context) {
   if ($context['entity_type'] == 'node') {
-    // @todo Manage base field displays in the YAML:
-    //   https://drupal.org/node/2144919.
     $node_type = node_type_load($context['bundle']);
-    if ($node_type->has_title) {
-      // Title is also registered in node_field_extra_fields().
-      $options = $form_display->getComponent('title') ?: array('weight' => -5);
-      $options['type'] = 'text_textfield';
-      $form_display->setComponent('title', $options);
-    }
-    else {
+    // @todo Reconsider when per-bundle overrides of field definitions are
+    //   possible - https://drupal.org/node/2114707.
+    if (!$node_type->has_title) {
       $form_display->removeComponent('title');
     }
   }
@@ -477,16 +465,8 @@ function node_field_extra_fields() {
   $description = t('Node module element');
 
   foreach (node_type_get_types() as $bundle) {
-    if ($bundle->has_title) {
-      $extra['node'][$bundle->type]['form']['title'] = array(
-        'label' => check_plain($bundle->title_label),
-        'description' => $description,
-        'weight' => -5,
-      );
-    }
-
-    // Add also the 'language' select if Language module is enabled and the
-    // bundle has multilingual support.
+    // Add the 'language' select if Language module is enabled and the bundle
+    // has multilingual support.
     // Visibility of the ordering of the language selector is the same as on the
     // node/add form.
     if ($module_language_enabled) {

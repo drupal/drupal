@@ -127,12 +127,58 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
   public function isTranslatable();
 
   /**
-   * Determines whether the field is configurable via field.module.
+   * Returns whether the field is configurable via field.module.
    *
    * @return bool
    *   TRUE if the field is configurable.
    */
   public function isConfigurable();
+
+  /**
+   * Returns whether the display for the field can be configured.
+   *
+   * @param string $display_context
+   *   The display context. Either 'view' or 'form'.
+   *
+   * @return bool
+   *   TRUE if the display for this field is configurable in the given context.
+   *   If TRUE, the display options returned by getDisplayOptions() may be
+   *   overridden via the respective EntityDisplay.
+   *
+   * @see \Drupal\Core\Entity\Display\EntityDisplayInterface
+   */
+  public function isDisplayConfigurable($display_context);
+
+  /**
+   * Returns the default display options for the field.
+   *
+   * If the field's display is configurable, the returned display options act
+   * as default values and may be overridden via the respective EntityDisplay.
+   * Otherwise, the display options will be applied to entity displays as is.
+   *
+   * @param string $display_context
+   *   The display context. Either 'view' or 'form'.
+   *
+   * @return array|null
+   *   The array of display options for the field, or NULL if the field is not
+   *   displayed. The following key/value pairs may be present:
+   *   - label: (string) Position of the field label. The default 'field' theme
+   *     implementation supports the values 'inline', 'above' and 'hidden'.
+   *     Defaults to 'above'. Only applies to 'view' context.
+   *   - type: (string) The plugin (widget or formatter depending on
+   *     $display_context) to use, or 'hidden'. If not specified or if the
+   *     requested plugin is unknown, the 'default_widget' / 'default_formatter'
+   *     for the field type will be used.
+   *   - settings: (array) Settings for the plugin specified above. The default
+   *     settings for the plugin will be used for settings left unspecified.
+   *   - weight: (float) The weight of the element. Not needed if 'type' is
+   *     'hidden'.
+   *   The defaults of the various display options above get applied by the used
+   *   entity display.
+   *
+   * @see \Drupal\Core\Entity\Display\EntityDisplayInterface
+   */
+  public function getDisplayOptions($display_context);
 
   /**
    * Determines whether the field is queryable via QueryInterface.

@@ -7,7 +7,5 @@ status: true
 content:
   name:
     weight: -5
-    visible: true
   description:
     weight: 0
-    visible: true
