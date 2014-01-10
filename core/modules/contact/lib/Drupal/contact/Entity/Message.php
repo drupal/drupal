@@ -18,7 +18,7 @@ use Drupal\Core\Field\FieldDefinition;
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
+ *     "storage" = "Drupal\Core\Entity\FieldableNullStorageController",
  *     "view_builder" = "Drupal\contact\MessageViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\contact\MessageFormController"

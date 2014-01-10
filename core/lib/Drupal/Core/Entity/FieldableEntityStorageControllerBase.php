@@ -7,13 +7,90 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\PrepareCacheInterface;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\Core\Field\ConfigFieldItemListInterface;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class FieldableEntityStorageControllerBase extends EntityStorageControllerBase implements FieldableEntityStorageControllerInterface {
+
+  /**
+   * The entity bundle key.
+   *
+   * @var string|bool
+   */
+  protected $bundleKey = FALSE;
+
+  /**
+   * Name of the entity class.
+   *
+   * @var string
+   */
+  protected $entityClass;
+
+  /**
+   * Constructs a FieldableEntityStorageControllerBase object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+   *   The entity info for the entity type.
+   */
+  public function __construct(EntityTypeInterface $entity_info) {
+    parent::__construct($entity_info);
+
+    $this->bundleKey = $this->entityInfo->getKey('bundle');
+    $this->entityClass = $this->entityInfo->getClass();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+    return new static(
+      $entity_info
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function create(array $values) {
+    $entity_class = $this->entityInfo->getClass();
+    $entity_class::preCreate($this, $values);
+
+    // We have to determine the bundle first.
+    $bundle = FALSE;
+    if ($this->bundleKey) {
+      if (!isset($values[$this->bundleKey])) {
+        throw new EntityStorageException(String::format('Missing bundle for entity type @type', array('@type' => $this->entityType)));
+      }
+      $bundle = $values[$this->bundleKey];
+    }
+    $entity = new $entity_class(array(), $this->entityType, $bundle);
+
+    foreach ($entity as $name => $field) {
+      if (isset($values[$name])) {
+        $entity->$name = $values[$name];
+      }
+      elseif (!array_key_exists($name, $values)) {
+        $entity->get($name)->applyDefaultValue();
+      }
+      unset($values[$name]);
+    }
+
+    // Set any passed values for non-defined fields also.
+    foreach ($values as $name => $value) {
+      $entity->$name = $value;
+    }
+    $entity->postCreate($this);
+
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+    $this->invokeHook('create', $entity);
+
+    return $entity;
+  }
 
   /**
    * Loads values of configurable fields for a group of entities.

@@ -84,20 +84,6 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   protected $fieldInfo;
 
   /**
-   * The entity bundle key.
-   *
-   * @var string|bool
-   */
-  protected $bundleKey = FALSE;
-
-  /**
-   * Name of the entity class.
-   *
-   * @var string
-   */
-  protected $entityClass;
-
-  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
@@ -123,8 +109,6 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
 
     $this->database = $database;
     $this->fieldInfo = $field_info;
-    $this->bundleKey = $this->entityInfo->getKey('bundle');
-    $this->entityClass = $this->entityInfo->getClass();
 
     // Check if the entity type supports IDs.
     if ($this->entityInfo->hasKey('id')) {
@@ -149,46 +133,6 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
         $this->revisionDataTable = $revision_data_table;
       }
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function create(array $values) {
-    $entity_class = $this->entityClass;
-    $entity_class::preCreate($this, $values);
-
-    // We have to determine the bundle first.
-    $bundle = FALSE;
-    if ($this->bundleKey) {
-      if (!isset($values[$this->bundleKey])) {
-        throw new EntityStorageException(format_string('Missing bundle for entity type @type', array('@type' => $this->entityType)));
-      }
-      $bundle = $values[$this->bundleKey];
-    }
-    $entity = new $entity_class(array(), $this->entityType, $bundle);
-
-    foreach ($entity as $name => $field) {
-      if (isset($values[$name])) {
-        $entity->$name = $values[$name];
-      }
-      elseif (!array_key_exists($name, $values)) {
-        $entity->get($name)->applyDefaultValue();
-      }
-      unset($values[$name]);
-    }
-
-    // Set any passed values for non-defined fields also.
-    foreach ($values as $name => $value) {
-      $entity->$name = $value;
-    }
-    $entity->postCreate($this);
-
-    // Modules might need to add or change the data initially held by the new
-    // entity object, for instance to fill-in default values.
-    $this->invokeHook('create', $entity);
-
-    return $entity;
   }
 
   /**
@@ -1243,6 +1187,50 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       $description_revision = "Revision archive storage for {$field->entity_type} field {$field->getName()}.";
     }
 
+    $entity_type = $field->entity_type;
+    $entity_manager = \Drupal::entityManager();
+    $info = $entity_manager->getDefinition($entity_type);
+    $definitions = $entity_manager->getFieldDefinitions($entity_type);
+
+    // Define the entity ID schema based on the field definitions.
+    $id_definition = $definitions[$info->getKey('id')];
+    if ($id_definition->getType() == 'integer') {
+      $id_schema = array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The entity id this data is attached to',
+      );
+    }
+    else {
+      $id_schema = array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'description' => 'The entity id this data is attached to',
+      );
+    }
+
+    // Define the revision ID schema, default to integer if there is no revision
+    // ID.
+    $revision_id_definition = $info->hasKey('revision_id') ? $definitions[$info->getKey('revision_id')] : NULL;
+    if (!$revision_id_definition || $revision_id_definition->getType() == 'integer') {
+      $revision_id_schema = array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
+      );
+    }
+    else {
+      $revision_id_schema = array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+        'description' => 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
+      );
+    }
+
     $current = array(
       'description' => $description_current,
       'fields' => array(
@@ -1260,18 +1248,8 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
           'default' => 0,
           'description' => 'A boolean indicating whether this data item has been deleted'
         ),
-        'entity_id' => array(
-          'type' => 'int',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-          'description' => 'The entity id this data is attached to',
-        ),
-        'revision_id' => array(
-          'type' => 'int',
-          'unsigned' => TRUE,
-          'not null' => FALSE,
-          'description' => 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
-        ),
+        'entity_id' => $id_schema,
+        'revision_id' => $revision_id_schema,
         'langcode' => array(
           'type' => 'varchar',
           'length' => 32,
