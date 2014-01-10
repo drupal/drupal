@@ -8,9 +8,9 @@
 namespace Drupal\content_translation\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\content_translation\ContentTranslationManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,20 +21,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentTranslationContextualLinks extends DerivativeBase implements ContainerDerivativeInterface {
 
   /**
-   * The entity manager.
+   * The content translation manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\content_translation\ContentTranslationManagerInterface
    */
-  protected $entityManager;
+  protected $contentTranslationManager;
 
   /**
    * Constructs a new ContentTranslationContextualLinks.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager
+   *   The content translation manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(ContentTranslationManagerInterface $content_translation_manager) {
+    $this->contentTranslationManager = $content_translation_manager;
   }
 
   /**
@@ -42,7 +42,7 @@ class ContentTranslationContextualLinks extends DerivativeBase implements Contai
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
-      $container->get('entity.manager')
+      $container->get('content_translation.manager')
     );
   }
 
@@ -50,13 +50,11 @@ class ContentTranslationContextualLinks extends DerivativeBase implements Contai
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
-    // Create contextual links for all possible entity types.
-    foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info->isTranslatable()) {
-        $this->derivatives[$entity_type]['title'] = t('Translate');
-        $this->derivatives[$entity_type]['route_name'] = $entity_info->getLinkTemplate('drupal:content-translation-overview');
-        $this->derivatives[$entity_type]['group'] = $entity_type;
-      }
+    // Create contextual links for translatable entity types.
+    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type => $entity_info) {
+      $this->derivatives[$entity_type]['title'] = t('Translate');
+      $this->derivatives[$entity_type]['route_name'] = $entity_info->getLinkTemplate('drupal:content-translation-overview');
+      $this->derivatives[$entity_type]['group'] = $entity_type;
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);
   }
