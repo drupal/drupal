@@ -2138,7 +2138,7 @@ abstract class DisplayPluginBase extends PluginBase {
             form_error($form['display_id'], $form_state, t('Display name must be letters, numbers, or underscores only.'));
           }
 
-          foreach ($this->view->display as $id => $display) {
+          foreach ($this->view->displayHandlers as $id => $display) {
             if ($id != $this->view->current_display && ($form_state['values']['display_id'] == $id || (isset($display->new_id) && $form_state['values']['display_id'] == $display->new_id))) {
               form_error($form['display_id'], $form_state, t('Display id should be unique.'));
             }

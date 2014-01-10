@@ -46,6 +46,49 @@ class ViewEditTest extends UITestBase {
   }
 
   /**
+   * Tests the machine name form.
+   */
+  public function testMachineNameOption() {
+    $this->drupalGet('admin/structure/views/view/test_view');
+    // Add a new attachment display.
+    $this->drupalPostForm(NULL, array(), 'Add Attachment');
+
+    // Change the machine name for the display from page_1 to test_1.
+    $edit = array('display_id' => 'test_1');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/attachment_1/display_id', $edit, 'Apply');
+    $this->assertLink(t('test_1'));
+
+    // Save the view, and test the new id has been saved.
+    $this->drupalPostForm(NULL, array(), 'Save');
+    $view = \Drupal::entityManager()->getStorageController('view')->load('test_view');
+    $displays = $view->get('display');
+    $this->assertTrue(!empty($displays['test_1']), 'Display data found for new display ID key.');
+    $this->assertIdentical($displays['test_1']['id'], 'test_1', 'New display ID matches the display ID key.');
+    $this->assertFalse(array_key_exists('attachment_1', $displays), 'Old display ID not found.');
+
+    // Test the form validation with invalid IDs.
+    $machine_name_edit_url = 'admin/structure/views/nojs/display/test_view/test_1/display_id';
+    $error_text = t('Display name must be letters, numbers, or underscores only.');
+
+    $edit = array('display_id' => 'test 1');
+    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
+    $this->assertText($error_text);
+
+    $edit = array('display_id' => 'test_1#');
+    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
+    $this->assertText($error_text);
+
+    // Test using an existing display ID.
+    $edit = array('display_id' => 'default');
+    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
+    $this->assertText(t('Display id should be unique.'));
+
+    // Test that the display ID has not been changed.
+    $this->drupalGet('admin/structure/views/view/test_view/edit/test_1');
+    $this->assertLink(t('test_1'));
+  }
+
+  /**
    * Tests the 'Other' options category on the views edit form.
    */
   public function testEditFormOtherOptions() {
