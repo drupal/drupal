@@ -1566,7 +1566,8 @@ function theme_tableselect($variables) {
     // checkboxes/radios in the first table column.
     if ($element['#js_select']) {
       // Add a "Select all" checkbox.
-      drupal_add_library('system', 'drupal.tableselect');
+      $attached['#attached']['library'][] = array('system', 'drupal.tableselect');
+      drupal_render($attached);
       array_unshift($header, array('class' => array('select-all')));
     }
     else {

@@ -1260,6 +1260,7 @@ function system_library_info() {
     'version' => '3.6.2',
     'js' => array(
       'core/assets/vendor/html5shiv/html5.js' => array(
+        'every_page' => TRUE,
         'group' => JS_LIBRARY,
         'weight' => -22,
         'browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE),
@@ -2183,7 +2184,7 @@ function system_user_timezone(&$form, &$form_state) {
   if (!$account->getTimezone() && $account->id() == $user->id() && empty($form_state['input']['timezone'])) {
     $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Confirm the selection and click save.');
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
-    drupal_add_library('system', 'drupal.timezone');
+    $form['#attached']['library'][] = array('system', 'drupal.timezone');
   }
 }
 

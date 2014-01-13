@@ -17,8 +17,6 @@
 function theme_simpletest_test_table($variables) {
   $table = $variables['table'];
 
-  drupal_add_library('simpletest', 'drupal.simpletest');
-
   // Create header for test selection table.
   $header = array(
     array('class' => array('select-all')),
@@ -133,6 +131,7 @@ function theme_simpletest_test_table($variables) {
 
   // Add js array of settings.
   $attached = array();
+  $attached['#attached']['library'][] = array('simpletest', 'drupal.simpletest');
   $attached['#attached']['js'][] = array(
     'data' => array('simpleTest' => $js),
     'type' => 'setting',

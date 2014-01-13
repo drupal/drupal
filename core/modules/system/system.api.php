@@ -311,7 +311,7 @@ function hook_js_alter(&$javascript) {
  *   An array defining libraries associated with a module.
  *
  * @see system_library_info()
- * @see drupal_add_library()
+ * @see _drupal_add_library()
  * @see drupal_get_library()
  */
 function hook_library_info() {

@@ -5,7 +5,7 @@
  * Contains \Drupal\Tests\Core\Ajax\AjaxCommandsTest.
  */
 
-namespace Drupal\Tests\Core\Ajax {
+namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Ajax\AddCssCommand;
@@ -423,14 +423,4 @@ class AjaxCommandsTest extends UnitTestCase {
     $this->assertEquals($command->render(), $expected, "RedirectCommand::render() didn't return the expected command array.");
   }
 
-}
-
-}
-
-namespace {
-  if (!function_exists('drupal_add_library')) {
-    function drupal_add_library() {
-      return TRUE;
-    }
-  }
 }
