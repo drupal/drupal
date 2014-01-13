@@ -42,10 +42,6 @@ class FieldTypePluginManager extends DefaultPluginManager {
     parent::__construct('Plugin/Field/FieldType', $namespaces, 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo($module_handler, 'field_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'field_types_plugins');
-
-    // @todo Remove once all core field types have been converted (see
-    // http://drupal.org/node/2014671).
-    $this->discovery = new LegacyFieldTypeDiscoveryDecorator($this->discovery, $module_handler);
   }
 
   /**
