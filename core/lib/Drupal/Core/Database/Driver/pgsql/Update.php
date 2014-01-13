@@ -65,8 +65,8 @@ class Update extends QueryUpdate {
 
     $options = $this->queryOptions;
     $options['already_prepared'] = TRUE;
-    $this->connection->query($stmt, $options);
-
-    return $stmt->rowCount();
+    $options['return'] = Database::RETURN_AFFECTED;
+    return $this->connection->query($stmt, array(), $options);
   }
+
 }

@@ -130,9 +130,9 @@ class Connection extends DatabaseConnection {
 
       switch ($options['return']) {
         case Database::RETURN_STATEMENT:
-          $stmt->allowRowCount = FALSE;
           return $stmt;
         case Database::RETURN_AFFECTED:
+          $stmt->allowRowCount = TRUE;
           return $stmt->rowCount();
         case Database::RETURN_INSERT_ID:
           return $this->connection->lastInsertId($options['sequence_name']);
