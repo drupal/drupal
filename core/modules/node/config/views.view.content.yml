@@ -353,6 +353,7 @@ display:
           value: ''
           plugin_id: node_status
           provider: node
+          group: '1'
         status:
           id: status
           table: node_field_data
@@ -402,8 +403,12 @@ display:
           id: type
           table: node_field_data
           field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
           operator: in
           value: {  }
+          group: '1'
           exposed: true
           expose:
             operator_id: type_op
@@ -417,8 +422,61 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
             reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: 0
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
           plugin_id: bundle
+          provider: views
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: ''
+          group: '1'
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: title_op
+            identifier: title
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: 0
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
           provider: views
         langcode:
           id: langcode
@@ -460,6 +518,10 @@ display:
           plugin_id: standard
           provider: views
       show_admin_links: '0'
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
     display_plugin: default
     display_title: Master
     id: default
