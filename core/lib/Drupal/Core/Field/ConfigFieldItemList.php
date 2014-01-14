@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Field\Plugin\DataType\FieldInstanceInterface;
+use Drupal\field\FieldInstanceInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\field\Field;
 
@@ -19,7 +19,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
   /**
    * The Field instance definition.
    *
-   * @var \Drupal\field\Entity\FieldInstance
+   * @var \Drupal\field\FieldInstanceInterface
    */
   protected $instance;
 
