@@ -52,8 +52,24 @@ class FieldUIRouteTest extends WebTestBase {
 
     $this->drupalGet('admin/structure/types/manage/article/fields');
     $this->assertTitle('Manage fields | Drupal');
+    $this->assertLocalTasks();
 
     $this->drupalGet('admin/structure/types/manage/article');
+    $this->assertLocalTasks();
+
+    $this->drupalGet('admin/structure/types/manage/article/form-display');
+    $this->assertLocalTasks();
+
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->assertLocalTasks();
+  }
+
+  /**
+   * Asserts that local tasks exists.
+   */
+  public function assertLocalTasks() {
+    $this->assertLink('Edit');
+    $this->assertLink('Manage fields');
     $this->assertLink('Manage display');
     $this->assertLink('Manage form display');
   }
