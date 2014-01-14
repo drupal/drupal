@@ -620,7 +620,7 @@ class FormBuilder implements FormBuilderInterface {
         // possibly ending execution. We make sure we do not react to the batch
         // that is already being processed (if a batch operation performs a
         // self::submitForm).
-        if ($batch =& batch_get() && !isset($batch['current_set'])) {
+        if ($batch = &$this->batchGet() && !isset($batch['current_set'])) {
           // Store $form_state information in the batch definition.
           // We need the full $form_state when either:
           // - Some submit handlers were saved to be called during batch
@@ -1195,7 +1195,7 @@ class FormBuilder implements FormBuilderInterface {
       // Check if a previous _submit handler has set a batch, but make sure we
       // do not react to a batch that is already being processed (for instance
       // if a batch operation performs a self::submitForm()).
-      if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['id'])) {
+      if ($type == 'submit' && ($batch = &$this->batchGet()) && !isset($batch['id'])) {
         // Some previous submit handler has set a batch. To ensure correct
         // execution order, store the call in a special 'control' batch set.
         // See _batch_next_set().
@@ -1835,6 +1835,13 @@ class FormBuilder implements FormBuilderInterface {
    */
   public function setRequest(Request $request) {
     $this->request = $request;
+  }
+
+  /**
+   * Wraps batch_get().
+   */
+  protected function &batchGet() {
+    return batch_get();
   }
 
 }

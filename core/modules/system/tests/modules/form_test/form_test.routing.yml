@@ -77,14 +77,6 @@ form_test.wrapper:
   requirements:
     _access: 'TRUE'
 
-form_test.double_form:
-  path: '/form-test/double-form'
-  defaults:
-    _title: 'Double form test'
-    _content: '\Drupal\form_test\Controller\FormTestController::doubleForm'
-  requirements:
-    _access: 'TRUE'
-
 form_test.alter_form:
   path: '/form-test/alter'
   defaults:

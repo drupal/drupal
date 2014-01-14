@@ -2057,34 +2057,6 @@ function form_test_required_attribute($form, &$form_state) {
 }
 
 /**
- * Menu callback returns two instances of the same form.
- *
- * @deprecated \Drupal\form_test\Controller\FormTestController::doubleForm()
- */
-function form_test_double_form() {
-  return array(
-    'form1' => drupal_get_form('form_test_html_id'),
-    'form2' => drupal_get_form('form_test_html_id'),
-  );
-}
-
-/**
- * Builds a simple form to test duplicate HTML IDs.
- */
-function form_test_html_id($form, &$form_state) {
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => 'name',
-    '#required' => TRUE,
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Save',
-  );
-  return $form;
-}
-
-/**
  * Builds a simple form to test form button classes.
  *
  * @deprecated Use \Drupal\form_test\testButtonClass()

@@ -42,11 +42,4 @@ class FormTestController extends ControllerBase {
     return form_test_wrapper_callback($form_id);
   }
 
-  /**
-   * @todo Remove form_test_double_form().
-   */
-  public function doubleForm() {
-    return form_test_double_form();
-  }
-
 }

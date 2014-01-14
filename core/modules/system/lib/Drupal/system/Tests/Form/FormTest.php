@@ -657,17 +657,6 @@ class FormTest extends WebTestBase {
   }
 
   /**
-   *  Tests error border of multiple fields with same name in a page.
-   */
-  function testMultiFormSameNameErrorClass() {
-    $this->drupalGet('form-test/double-form');
-    $edit = array();
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertFieldByXpath('//input[@id="edit-name" and contains(@class, "error")]', NULL, 'Error input form element class found for first element.');
-    $this->assertNoFieldByXpath('//input[@id="edit-name--2" and contains(@class, "error")]', NULL, 'No error input form element class found for second element.');
-  }
-
-  /**
    * Tests a form with a form state storing a database connection.
    */
   public function testFormStateDatabaseConnection() {
