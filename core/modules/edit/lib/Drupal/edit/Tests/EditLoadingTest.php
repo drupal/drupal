@@ -189,8 +189,7 @@ class EditLoadingTest extends WebTestBase {
     $this->assertIdentical('<form ', Unicode::substr($ajax_commands[0]['data'], 0, 6), 'The editFieldForm command contains a form.');
 
     // Prepare form values for submission. drupalPostAjaxForm() is not suitable
-    // for handling pages with JSON responses, so we need our own solution
-    // here.
+    // for handling pages with JSON responses, so we need our own solution here.
     $form_tokens_found = preg_match('/\sname="form_token" value="([^"]+)"/', $ajax_commands[0]['data'], $token_match) && preg_match('/\sname="form_build_id" value="([^"]+)"/', $ajax_commands[0]['data'], $build_id_match);
     $this->assertTrue($form_tokens_found, 'Form tokens found in output.');
 
@@ -208,8 +207,8 @@ class EditLoadingTest extends WebTestBase {
       );
       $post += $edit + $this->getAjaxPageStatePostData();
 
-      // Submit field form and check response. This should store the
-      // updated entity in TempStore on the server.
+      // Submit field form and check response. This should store the updated
+      // entity in TempStore on the server.
       $response = $this->drupalPost('edit/form/' . 'node/1/body/und/full', 'application/vnd.drupal-ajax', $post);
       $this->assertResponse(200);
       $ajax_commands = drupal_json_decode($response);
@@ -455,6 +454,7 @@ class EditLoadingTest extends WebTestBase {
 
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost('edit/form/' . 'node/1/body/und/full', 'application/vnd.drupal-ajax', $post);
+    $this->assertResponse(200);
     $ajax_commands = drupal_json_decode($response);
 
     // Prepare form values for submission. drupalPostAJAX() is not suitable for
