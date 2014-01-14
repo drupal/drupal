@@ -37,17 +37,11 @@ function ckeditor_help($path, $arg) {
 function ckeditor_library_info() {
   $module_path = drupal_get_path('module', 'ckeditor');
 
-  $settings = array(
-    'ckeditor' => array(
-      'modulePath' => drupal_get_path('module', 'ckeditor'),
-    ),
-  );
   $libraries['drupal.ckeditor'] = array(
     'title' => 'Drupal behavior to enable CKEditor on textareas.',
     'version' => \Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.js' => array(),
-      array('data' => $settings, 'type' => 'setting'),
     ),
     'css' => array(
       $module_path . '/css/ckeditor.css' => array(),
