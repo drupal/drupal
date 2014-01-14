@@ -335,17 +335,32 @@ tr .ajax-progress-throbber .throbber {
 }
 
 /**
- * Content display classes.
+ * Text alignment classes.
  */
-.align-left {
+.text-align-left {
   text-align: left;
 }
-.align-right {
+.text-align-right {
   text-align: right;
 }
-.align-center {
+.text-align-center {
   text-align: center;
 }
-.align-justify {
+.text-align-justify {
   text-align: justify;
+}
+
+/**
+ * Alignment classes (images, videos, blockquotes …).
+ */
+.align-left {
+  float: left;
+}
+.align-right {
+  float: right;
+}
+.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }

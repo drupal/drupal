@@ -57,9 +57,16 @@ class FilterCaption extends FilterBase {
           }
         }
 
-        // If neither attribute has a value after validation, then don't
-        // transform the HTML.
-        if ($caption === NULL && $align === NULL) {
+        // Don't transform the HTML if there isn't a caption after validation.
+        if ($caption === NULL) {
+          // If there is a valid alignment, then transform the data-align
+          // attribute to a corresponding alignment class.
+          if ($align !== NULL) {
+            $classes = $node->getAttribute('class');
+            $classes = (strlen($classes) > 0) ? explode(' ', $classes) : array();
+            $classes[] = 'align-' . $align;
+            $node->setAttribute('class', implode(' ', $classes));
+          }
           continue;
         }
 

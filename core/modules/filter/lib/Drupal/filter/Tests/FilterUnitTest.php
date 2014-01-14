@@ -93,13 +93,13 @@ class FilterUnitTest extends DrupalUnitTestBase {
 
     // Only data-align attribute: all 3 allowed values.
     $input = '<img src="llama.jpg" data-align="left" />';
-    $expected = '<figure class="caption caption-img caption-left"><img src="llama.jpg" /></figure>';
+    $expected = '<img src="llama.jpg" class="align-left" />';
     $this->assertIdentical($expected, $test($input));
     $input = '<img src="llama.jpg" data-align="center" />';
-    $expected = '<figure class="caption caption-img caption-center"><img src="llama.jpg" /></figure>';
+    $expected = '<img src="llama.jpg" class="align-center" />';
     $this->assertIdentical($expected, $test($input));
     $input = '<img src="llama.jpg" data-align="right" />';
-    $expected = '<figure class="caption caption-img caption-right"><img src="llama.jpg" /></figure>';
+    $expected = '<img src="llama.jpg" class="align-right" />';
     $this->assertIdentical($expected, $test($input));
 
     // Only data-align attribute: a disallowed value.
@@ -112,7 +112,14 @@ class FilterUnitTest extends DrupalUnitTestBase {
     $expected = '<img src="llama.jpg" />';
     $this->assertIdentical($expected, $test($input));
 
-    // Both data-caption and data-align attributes.
+    // Both data-caption and data-align attributes: all 3 allowed values for the
+    // data-align attribute.
+    $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="left" />';
+    $expected = '<figure class="caption caption-img caption-left"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+    $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="center" />';
+    $expected = '<figure class="caption caption-img caption-center"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="right" />';
     $expected = '<figure class="caption caption-img caption-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $this->assertIdentical($expected, $test($input));

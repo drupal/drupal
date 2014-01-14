@@ -5,14 +5,12 @@
  * Available variables
  * - string node: The complete HTML tag whose contents are being captioned.
  * - string tag: The name of the HTML tag whose contents are being captioned.
- * - string|NULL caption: (optional) The caption text, or NULL.
+ * - string caption: The caption text.
  * - string|NULL align: (optional) The alignment: 'left', 'center', 'right' or
  *   NULL.
  */
 #}
 <figure class="caption caption-{{ tag }} {%- if align %} caption-{{ align }} {%- endif %}">
 {{ node }}
-{% if caption %}
-  <figcaption>{{ caption }}</figcaption>
-{% endif %}
+<figcaption>{{ caption }}</figcaption>
 </figure>

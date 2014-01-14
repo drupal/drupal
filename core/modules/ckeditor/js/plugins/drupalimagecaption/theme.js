@@ -67,7 +67,7 @@ CKEDITOR.on('instanceCreated', function (event) {
           // The image is not wrapped in <figure>.
           else if (this.element.is('img')) {
             // The image is not wrapped in <figure>, but it should be.
-            if (this.data.hasCaption || this.data.data_align !== null) {
+            if (this.data.hasCaption) {
               // Destroy this widget, so we can wrap the <img>.
               editor.widgets.destroy(this);
               // Replace the widget's element (the <img>) with the template (a
@@ -79,6 +79,9 @@ CKEDITOR.on('instanceCreated', function (event) {
               this.element.replace(figure.findOne('img'));
               // Reinitialize this widget with the current data.
               editor.widgets.initOn(figure, 'drupalimagecaption', this.data);
+            }
+            else if (this.data.data_align !== null) {
+              this.element.addClass('align-' + this.data.data_align);
             }
           }
         };
@@ -94,8 +97,8 @@ CKEDITOR.on('instanceCreated', function (event) {
             var captionValue = el.attributes['data-caption'];
             var alignValue = el.attributes['data-align'];
 
-            // Wrap image in <figure> only if data-caption or data-align is set.
-            if (captionValue !== undefined || alignValue !== undefined) {
+            // Wrap image in <figure> only if data-caption is set.
+            if (captionValue !== undefined) {
               var classes = 'caption caption-img';
               if (alignValue !== null) {
                 classes += ' caption-' + alignValue;
@@ -103,6 +106,12 @@ CKEDITOR.on('instanceCreated', function (event) {
               figure = el.wrapWith(new CKEDITOR.htmlParser.element('figure', { 'class' : classes }));
               var caption = CKEDITOR.htmlParser.fragment.fromHtml(captionValue || '', 'figcaption');
               figure.add(caption);
+            }
+            else if (alignValue !== undefined) {
+              if (el.attributes['class'] === undefined) {
+                el.attributes['class'] = '';
+              }
+              el.attributes['class'] += 'align-' + alignValue;
             }
 
             return figure || el;
@@ -147,9 +156,8 @@ CKEDITOR.on('instanceCreated', function (event) {
             if (typeof returnValues.hasCaption === 'number') {
               returnValues.hasCaption = !!returnValues.hasCaption;
             }
-            // Use the original save callback if the image has neither a caption
-            // nor alignment.
-            if (returnValues.hasCaption === false && returnValues.attributes.data_align === null) {
+            // Use the original save callback if the image has no caption.
+            if (returnValues.hasCaption === false) {
               widgetDefinition._insertSaveCallback.apply(this, arguments);
               return;
             }

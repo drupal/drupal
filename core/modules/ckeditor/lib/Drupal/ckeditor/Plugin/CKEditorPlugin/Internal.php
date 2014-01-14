@@ -45,7 +45,7 @@ class Internal extends CKEditorPluginBase {
       'customConfig' => '', // Don't load CKEditor's config.js file.
       'pasteFromWordPromptCleanup' => TRUE,
       'resize_dir' => 'vertical',
-      'justifyClasses' => array('align-left', 'align-center', 'align-right', 'align-justify'),
+      'justifyClasses' => array('text-align-left', 'text-align-center', 'text-align-right', 'text-align-justify'),
     );
 
     // Add the allowedContent setting, which ensures CKEditor only allows tags
