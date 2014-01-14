@@ -12,7 +12,6 @@
 namespace Symfony\Component\DependencyInjection;
 
 use Symfony\Component\Config\Util\XmlUtils;
-use Symfony\Component\ExpressionLanguage\Expression;
 
 /**
  * SimpleXMLElement class.
@@ -22,7 +21,7 @@ use Symfony\Component\ExpressionLanguage\Expression;
 class SimpleXMLElement extends \SimpleXMLElement
 {
     /**
-     * Converts an attribute as a PHP type.
+     * Converts an attribute as a php type.
      *
      * @param string $name
      *
@@ -34,7 +33,7 @@ class SimpleXMLElement extends \SimpleXMLElement
     }
 
     /**
-     * Returns arguments as valid PHP types.
+     * Returns arguments as valid php types.
      *
      * @param string  $name
      * @param Boolean $lowercase
@@ -78,9 +77,6 @@ class SimpleXMLElement extends \SimpleXMLElement
 
                     $arguments[$key] = new Reference((string) $arg['id'], $invalidBehavior, $strict);
                     break;
-                case 'expression':
-                    $arguments[$key] = new Expression((string) $arg);
-                    break;
                 case 'collection':
                     $arguments[$key] = $arg->getArgumentsAsPhp($name, false);
                     break;
@@ -99,7 +95,7 @@ class SimpleXMLElement extends \SimpleXMLElement
     }
 
     /**
-     * Converts an xml value to a PHP type.
+     * Converts an xml value to a php type.
      *
      * @param mixed $value
      *

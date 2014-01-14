@@ -75,6 +75,10 @@ class ValidatorBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testEnableAnnotationMapping()
     {
+        if (!class_exists('Doctrine\Common\Annotations\AnnotationReader')) {
+            $this->markTestSkipped('Annotations is required for this test');
+        }
+
         $this->assertSame($this->builder, $this->builder->enableAnnotationMapping());
     }
 

@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Validator;
 
+use Symfony\Component\Validator\Constraint;
+
 /**
  * Validates values and graphs of objects and arrays.
  *

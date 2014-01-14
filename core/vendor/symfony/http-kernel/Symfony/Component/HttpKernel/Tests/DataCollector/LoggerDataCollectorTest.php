@@ -13,9 +13,18 @@ namespace Symfony\Component\HttpKernel\Tests\DataCollector;
 
 use Symfony\Component\HttpKernel\DataCollector\LoggerDataCollector;
 use Symfony\Component\HttpKernel\Debug\ErrorHandler;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoggerDataCollectorTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        if (!class_exists('Symfony\Component\HttpFoundation\Request')) {
+            $this->markTestSkipped('The "HttpFoundation" component is not available');
+        }
+    }
+
     /**
      * @dataProvider getCollectTestData
      */
@@ -26,7 +35,7 @@ class LoggerDataCollectorTest extends \PHPUnit_Framework_TestCase
         $logger->expects($this->exactly(2))->method('getLogs')->will($this->returnValue($logs));
 
         $c = new LoggerDataCollector($logger);
-        $c->lateCollect();
+        $c->collect(new Request(), new Response());
 
         $this->assertSame('logger', $c->getName());
         $this->assertSame($nb, $c->countErrors());

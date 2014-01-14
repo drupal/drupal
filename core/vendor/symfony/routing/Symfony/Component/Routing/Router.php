@@ -16,11 +16,7 @@ use Symfony\Component\Config\ConfigCache;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\ConfigurableRequirementsInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Generator\Dumper\GeneratorDumperInterface;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
-use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The Router class is an example of the integration of all pieces of the
@@ -28,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Router implements RouterInterface, RequestMatcherInterface
+class Router implements RouterInterface
 {
     /**
      * @var UrlMatcherInterface|null
@@ -84,7 +80,7 @@ class Router implements RouterInterface, RequestMatcherInterface
         $this->loader = $loader;
         $this->resource = $resource;
         $this->logger = $logger;
-        $this->context = $context ?: new RequestContext();
+        $this->context = null === $context ? new RequestContext() : $context;
         $this->setOptions($options);
     }
 
@@ -220,20 +216,6 @@ class Router implements RouterInterface, RequestMatcherInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function matchRequest(Request $request)
-    {
-        $matcher = $this->getMatcher();
-        if (!$matcher instanceof RequestMatcherInterface) {
-            // fallback to the default UrlMatcherInterface
-            return $matcher->match($request->getPathInfo());
-        }
-
-        return $matcher->matchRequest($request);
-    }
-
-    /**
      * Gets the UrlMatcher instance associated with this Router.
      *
      * @return UrlMatcherInterface A UrlMatcherInterface instance
@@ -250,8 +232,8 @@ class Router implements RouterInterface, RequestMatcherInterface
 
         $class = $this->options['matcher_cache_class'];
         $cache = new ConfigCache($this->options['cache_dir'].'/'.$class.'.php', $this->options['debug']);
-        if (!$cache->isFresh()) {
-            $dumper = $this->getMatcherDumperInstance();
+        if (!$cache->isFresh($class)) {
+            $dumper = new $this->options['matcher_dumper_class']($this->getRouteCollection());
 
             $options = array(
                 'class'      => $class,
@@ -282,8 +264,8 @@ class Router implements RouterInterface, RequestMatcherInterface
         } else {
             $class = $this->options['generator_cache_class'];
             $cache = new ConfigCache($this->options['cache_dir'].'/'.$class.'.php', $this->options['debug']);
-            if (!$cache->isFresh()) {
-                $dumper = $this->getGeneratorDumperInstance();
+            if (!$cache->isFresh($class)) {
+                $dumper = new $this->options['generator_dumper_class']($this->getRouteCollection());
 
                 $options = array(
                     'class'      => $class,
@@ -303,21 +285,5 @@ class Router implements RouterInterface, RequestMatcherInterface
         }
 
         return $this->generator;
-    }
-
-    /**
-     * @return GeneratorDumperInterface
-     */
-    protected function getGeneratorDumperInstance()
-    {
-        return new $this->options['generator_dumper_class']($this->getRouteCollection());
-    }
-
-    /**
-     * @return MatcherDumperInterface
-     */
-    protected function getMatcherDumperInstance()
-    {
-        return new $this->options['matcher_dumper_class']($this->getRouteCollection());
     }
 }

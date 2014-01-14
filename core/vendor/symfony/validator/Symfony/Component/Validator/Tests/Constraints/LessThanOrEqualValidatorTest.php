@@ -39,8 +39,6 @@ class LessThanOrEqualValidatorTest extends AbstractComparisonValidatorTestCase
             array(1, 1),
             array(new \DateTime('2000-01-01'), new \DateTime('2000-01-01')),
             array(new \DateTime('2000-01-01'), new \DateTime('2020-01-01')),
-            array(new ComparisonTest_Class(4), new ComparisonTest_Class(5)),
-            array(new ComparisonTest_Class(5), new ComparisonTest_Class(5)),
             array('a', 'a'),
             array('a', 'z'),
             array(null, 1),
@@ -55,7 +53,6 @@ class LessThanOrEqualValidatorTest extends AbstractComparisonValidatorTestCase
         return array(
             array(2, 1, '1', 'integer'),
             array(new \DateTime('2010-01-01'), new \DateTime('2000-01-01'), '2000-01-01 00:00:00', 'DateTime'),
-            array(new ComparisonTest_Class(5), new ComparisonTest_Class(4), '4', __NAMESPACE__.'\ComparisonTest_Class'),
             array('c', 'b', "'b'", 'string')
         );
     }

@@ -22,6 +22,17 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class TraceableEventDispatcherTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        if (!class_exists('Symfony\Component\EventDispatcher\EventDispatcher')) {
+            $this->markTestSkipped('The "EventDispatcher" component is not available');
+        }
+
+        if (!class_exists('Symfony\Component\HttpFoundation\Request')) {
+            $this->markTestSkipped('The "HttpFoundation" component is not available');
+        }
+    }
+
     public function testAddRemoveListener()
     {
         $dispatcher = new EventDispatcher();
@@ -146,22 +157,6 @@ class TraceableEventDispatcherTest extends \PHPUnit_Framework_TestCase
         });
 
         $dispatcher->dispatch('foo');
-    }
-
-    public function testDispatchReusedEventNested()
-    {
-        $nestedCall = false;
-        $dispatcher = new TraceableEventDispatcher(new EventDispatcher(), new Stopwatch());
-        $dispatcher->addListener('foo', function (Event $e) use ($dispatcher) {
-            $dispatcher->dispatch('bar', $e);
-        });
-        $dispatcher->addListener('bar', function (Event $e) use (&$nestedCall) {
-            $nestedCall = true;
-        });
-
-        $this->assertFalse($nestedCall);
-        $dispatcher->dispatch('foo');
-        $this->assertTrue($nestedCall);
     }
 
     public function testStopwatchSections()

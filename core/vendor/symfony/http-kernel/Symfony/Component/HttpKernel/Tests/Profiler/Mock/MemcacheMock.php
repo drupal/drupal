@@ -18,8 +18,14 @@ namespace Symfony\Component\HttpKernel\Tests\Profiler\Mock;
  */
 class MemcacheMock
 {
-    private $connected = false;
-    private $storage = array();
+    private $connected;
+    private $storage;
+
+    public function __construct()
+    {
+        $this->connected = false;
+        $this->storage = array();
+    }
 
     /**
      * Open memcached server connection

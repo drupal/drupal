@@ -125,9 +125,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
     // URLs as well.
     $index_php = strpos(url('', array('absolute' => TRUE)), 'index.php') !== FALSE;
 
-    $request = Request::createFromGlobals();
-    $server = $request->server->all();
-    $request = $this->prepareRequestForGenerator(TRUE, array('HTTP_HOST' => $server['HTTP_HOST'] . ':88'));
+    $request = $this->prepareRequestForGenerator(TRUE, array('SERVER_PORT' => '88'));
 
     // Create an absolute French link.
     $language = language_load('fr');

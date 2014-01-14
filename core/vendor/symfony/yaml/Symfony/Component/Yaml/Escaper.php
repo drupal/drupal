@@ -2,7 +2,6 @@
 
 /*
  * This file is part of the Symfony package.
- *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -72,7 +71,7 @@ class Escaper
      */
     public static function requiresSingleQuoting($value)
     {
-        return preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \# \?] | \A[ \- ? | < > = ! % @ ` ]/x', $value);
+        return preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \# \?] | \A[ - ? | < > = ! % @ ` ]/x', $value);
     }
 
     /**

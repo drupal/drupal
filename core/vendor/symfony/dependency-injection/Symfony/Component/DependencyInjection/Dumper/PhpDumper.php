@@ -23,8 +23,6 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\DumperInterface as ProxyDumper;
 use Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\NullDumper;
-use Symfony\Component\DependencyInjection\ExpressionLanguage;
-use Symfony\Component\ExpressionLanguage\Expression;
 
 /**
  * PhpDumper dumps a service container as a PHP class.
@@ -53,7 +51,6 @@ class PhpDumper extends Dumper
     private $referenceVariables;
     private $variableCount;
     private $reservedVariables = array('instance', 'class');
-    private $expressionLanguage;
 
     /**
      * @var \Symfony\Component\DependencyInjection\LazyProxy\PhpDumper\DumperInterface
@@ -89,7 +86,6 @@ class PhpDumper extends Dumper
      *
      *  * class:      The class name
      *  * base_class: The base class name
-     *  * namespace:  The class namespace
      *
      * @param array $options An array of options
      *
@@ -102,10 +98,9 @@ class PhpDumper extends Dumper
         $options = array_merge(array(
             'class'      => 'ProjectServiceContainer',
             'base_class' => 'Container',
-            'namespace' => '',
         ), $options);
 
-        $code = $this->startClass($options['class'], $options['base_class'], $options['namespace']);
+        $code = $this->startClass($options['class'], $options['base_class']);
 
         if ($this->container->isFrozen()) {
             $code .= $this->addFrozenConstructor();
@@ -193,7 +188,7 @@ class PhpDumper extends Dumper
      */
     private function addProxyClasses()
     {
-        /* @var $definitions Definition[] */
+        /* @var $proxyDefinitions Definition[] */
         $definitions = array_filter(
             $this->container->getDefinitions(),
             array($this->getProxyDumper(), 'isProxyCandidate')
@@ -444,12 +439,6 @@ class PhpDumper extends Dumper
 
             if (!$this->hasReference($id, $iDefinition->getMethodCalls(), true) && !$this->hasReference($id, $iDefinition->getProperties(), true)) {
                 continue;
-            }
-
-            // if the instance is simple, the return statement has already been generated
-            // so, the only possible way to get there is because of a circular reference
-            if ($this->isSimpleInstance($id, $definition)) {
-                throw new ServiceCircularReferenceException($id, array($id));
             }
 
             $name = (string) $this->definitionVariables->offsetGet($iDefinition);
@@ -711,24 +700,24 @@ EOF;
      *
      * @param string $class     Class name
      * @param string $baseClass The name of the base class
-     * @param string $namespace The class namespace
      *
      * @return string
      */
-    private function startClass($class, $baseClass, $namespace)
+    private function startClass($class, $baseClass)
     {
         $bagClass = $this->container->isFrozen() ? 'use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;' : 'use Symfony\Component\DependencyInjection\ParameterBag\\ParameterBag;';
-        $namespaceLine = $namespace ? "namespace $namespace;\n" : '';
 
         return <<<EOF
 <?php
-$namespaceLine
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Parameter;
 $bagClass
 
 /**
@@ -980,8 +969,6 @@ EOF;
                 throw new InvalidArgumentException(sprintf('You cannot dump a container with parameters that contain service definitions. Definition for "%s" found in "%s".', $value->getClass(), $path.'/'.$key));
             } elseif ($value instanceof Reference) {
                 throw new InvalidArgumentException(sprintf('You cannot dump a container with parameters that contain references to other services (reference to service "%s" found in "%s").', $value, $path.'/'.$key));
-            } elseif ($value instanceof Expression) {
-                throw new InvalidArgumentException(sprintf('You cannot dump a container with parameters that contain expressions. Expression "%s" found in "%s".', $value, $path.'/'.$key));
             } else {
                 $value = var_export($value, true);
             }
@@ -1118,7 +1105,7 @@ EOF;
      *
      * @return Boolean
      */
-    private function hasReference($id, array $arguments, $deep = false, array $visited = array())
+    private function hasReference($id, array $arguments, $deep = false, $visited = array())
     {
         foreach ($arguments as $argument) {
             if (is_array($argument)) {
@@ -1126,15 +1113,14 @@ EOF;
                     return true;
                 }
             } elseif ($argument instanceof Reference) {
-                $argumentId = (string) $argument;
-                if ($id === $argumentId) {
+                if ($id === (string) $argument) {
                     return true;
                 }
 
-                if ($deep && !isset($visited[$argumentId])) {
-                    $visited[$argumentId] = true;
+                if ($deep && !isset($visited[(string) $argument])) {
+                    $visited[(string) $argument] = true;
 
-                    $service = $this->container->getDefinition($argumentId);
+                    $service = $this->container->getDefinition((string) $argument);
                     $arguments = array_merge($service->getMethodCalls(), $service->getArguments(), $service->getProperties());
 
                     if ($this->hasReference($id, $arguments, $deep, $visited)) {
@@ -1206,8 +1192,6 @@ EOF;
             }
 
             return $this->getServiceCall((string) $value, $value);
-        } elseif ($value instanceof Expression) {
-            return $this->getExpressionLanguage()->compile((string) $value, array('container'));
         } elseif ($value instanceof Parameter) {
             return $this->dumpParameter($value);
         } elseif (true === $interpolate && is_string($value)) {
@@ -1329,17 +1313,5 @@ EOF;
 
             return $name;
         }
-    }
-
-    private function getExpressionLanguage()
-    {
-        if (null === $this->expressionLanguage) {
-            if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
-                throw new RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
-            }
-            $this->expressionLanguage = new ExpressionLanguage();
-        }
-
-        return $this->expressionLanguage;
     }
 }

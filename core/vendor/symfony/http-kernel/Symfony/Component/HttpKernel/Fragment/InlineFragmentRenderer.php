@@ -32,8 +32,7 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
     /**
      * Constructor.
      *
-     * @param HttpKernelInterface      $kernel     A HttpKernelInterface instance
-     * @param EventDispatcherInterface $dispatcher A EventDispatcherInterface instance
+     * @param HttpKernelInterface $kernel A HttpKernelInterface instance
      */
     public function __construct(HttpKernelInterface $kernel, EventDispatcherInterface $dispatcher = null)
     {
@@ -61,15 +60,14 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
             $attributes = $reference->attributes;
             $reference->attributes = array();
 
-            // The request format and locale might have been overridden by the user
+            // The request format and locale might have been overriden by the user
             foreach (array('_format', '_locale') as $key) {
                 if (isset($attributes[$key])) {
                     $reference->attributes[$key] = $attributes[$key];
                 }
             }
 
-            $uri = $this->generateFragmentUri($uri, $request, false, false);
-
+            $uri = $this->generateFragmentUri($uri, $request);
             $reference->attributes = array_merge($attributes, $reference->attributes);
         }
 
@@ -132,7 +130,7 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
 
         $server['REMOTE_ADDR'] = '127.0.0.1';
 
-        $subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
+        $subRequest = $request::create($uri, 'get', array(), $cookies, array(), $server);
         if ($request->headers->has('Surrogate-Capability')) {
             $subRequest->headers->set('Surrogate-Capability', $request->headers->get('Surrogate-Capability'));
         }

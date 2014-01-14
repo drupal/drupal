@@ -17,6 +17,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EsiTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        if (!class_exists('Symfony\Component\HttpFoundation\Request')) {
+            $this->markTestSkipped('The "HttpFoundation" component is not available');
+        }
+    }
+
     public function testHasSurrogateEsiCapability()
     {
         $esi = new Esi();
@@ -126,7 +133,7 @@ class EsiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException RuntimeException
      */
     public function testProcessWhenNoSrcInAnEsi()
     {
@@ -166,7 +173,7 @@ class EsiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException RuntimeException
      */
     public function testHandleWhenResponseIsNot200()
     {

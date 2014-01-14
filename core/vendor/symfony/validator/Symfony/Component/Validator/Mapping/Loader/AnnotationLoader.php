@@ -12,7 +12,6 @@
 namespace Symfony\Component\Validator\Mapping\Loader;
 
 use Doctrine\Common\Annotations\Reader;
-use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Exception\MappingException;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints\GroupSequence;
@@ -64,12 +63,7 @@ class AnnotationLoader implements LoaderInterface
         foreach ($reflClass->getMethods() as $method) {
             if ($method->getDeclaringClass()->name ==  $className) {
                 foreach ($this->reader->getMethodAnnotations($method) as $constraint) {
-                    if ($constraint instanceof Callback) {
-                        $constraint->callback = $method->getName();
-                        $constraint->methods = null;
-
-                        $metadata->addConstraint($constraint);
-                    } elseif ($constraint instanceof Constraint) {
+                    if ($constraint instanceof Constraint) {
                         if (preg_match('/^(get|is)(.+)$/i', $method->name, $matches)) {
                             $metadata->addGetterConstraint(lcfirst($matches[2]), $constraint);
                         } else {

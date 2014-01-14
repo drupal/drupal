@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-2.4.0
------
-
- * added `$context` support for XMLEncoder.
-
 2.3.0
 -----
 

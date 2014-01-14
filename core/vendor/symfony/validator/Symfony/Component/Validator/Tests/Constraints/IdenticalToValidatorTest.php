@@ -13,6 +13,7 @@ namespace Symfony\Component\Validator\Tests\Constraints;
 
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\IdenticalToValidator;
+use Symfony\Component\Validator\Tests\Constraints\AbstractComparisonValidatorTestCase;
 
 /**
  * @author Daniel Holmes <daniel@danielholmes.org>
@@ -35,13 +36,11 @@ class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
     public function provideValidComparisons()
     {
         $date = new \DateTime('2000-01-01');
-        $object = new ComparisonTest_Class(2);
 
         return array(
             array(3, 3),
             array('a', 'a'),
             array($date, $date),
-            array($object, $object),
             array(null, 1),
         );
     }
@@ -56,8 +55,7 @@ class IdenticalToValidatorTest extends AbstractComparisonValidatorTestCase
             array(2, '2', "'2'", 'string'),
             array('22', '333', "'333'", 'string'),
             array(new \DateTime('2001-01-01'), new \DateTime('2001-01-01'), '2001-01-01 00:00:00', 'DateTime'),
-            array(new \DateTime('2001-01-01'), new \DateTime('1999-01-01'), '1999-01-01 00:00:00', 'DateTime'),
-            array(new ComparisonTest_Class(4), new ComparisonTest_Class(5), '5', __NAMESPACE__.'\ComparisonTest_Class'),
+            array(new \DateTime('2001-01-01'), new \DateTime('1999-01-01'), '1999-01-01 00:00:00', 'DateTime')
         );
     }
 }

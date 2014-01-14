@@ -117,16 +117,12 @@ class InlineServiceDefinitionsPass implements RepeatablePassInterface
             return true;
         }
 
-        if ($definition->isPublic() || $definition->isLazy()) {
+        if ($definition->isPublic()) {
             return false;
         }
 
         if (!$this->graph->hasNode($id)) {
             return true;
-        }
-
-        if ($this->currentId == $id) {
-            return false;
         }
 
         $ids = array();

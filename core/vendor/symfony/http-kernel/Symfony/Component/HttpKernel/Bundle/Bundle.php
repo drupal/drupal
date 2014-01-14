@@ -29,8 +29,8 @@ use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 abstract class Bundle extends ContainerAware implements BundleInterface
 {
     protected $name;
+    protected $reflected;
     protected $extension;
-    protected $path;
 
     /**
      * Boots the Bundle.
@@ -109,9 +109,11 @@ abstract class Bundle extends ContainerAware implements BundleInterface
      */
     public function getNamespace()
     {
-        $class = get_class($this);
+        if (null === $this->reflected) {
+            $this->reflected = new \ReflectionObject($this);
+        }
 
-        return substr($class, 0, strrpos($class, '\\'));
+        return $this->reflected->getNamespaceName();
     }
 
     /**
@@ -123,12 +125,11 @@ abstract class Bundle extends ContainerAware implements BundleInterface
      */
     public function getPath()
     {
-        if (null === $this->path) {
-            $reflected = new \ReflectionObject($this);
-            $this->path = dirname($reflected->getFileName());
+        if (null === $this->reflected) {
+            $this->reflected = new \ReflectionObject($this);
         }
 
-        return $this->path;
+        return dirname($this->reflected->getFileName());
     }
 
     /**
@@ -159,7 +160,7 @@ abstract class Bundle extends ContainerAware implements BundleInterface
         $name = get_class($this);
         $pos = strrpos($name, '\\');
 
-        return $this->name = false === $pos ? $name : substr($name, $pos + 1);
+        return $this->name = false === $pos ? $name :  substr($name, $pos + 1);
     }
 
     /**
@@ -187,14 +188,7 @@ abstract class Bundle extends ContainerAware implements BundleInterface
             if ($relativePath = $file->getRelativePath()) {
                 $ns .= '\\'.strtr($relativePath, '/', '\\');
             }
-            $class = $ns.'\\'.$file->getBasename('.php');
-            if ($this->container) {
-                $alias = 'console.command.'.strtolower(str_replace('\\', '_', $class));
-                if ($this->container->has($alias)) {
-                    continue;
-                }
-            }
-            $r = new \ReflectionClass($class);
+            $r = new \ReflectionClass($ns.'\\'.$file->getBasename('.php'));
             if ($r->isSubclassOf('Symfony\\Component\\Console\\Command\\Command') && !$r->isAbstract() && !$r->getConstructor()->getNumberOfRequiredParameters()) {
                 $application->add($r->newInstance());
             }

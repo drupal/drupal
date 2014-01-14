@@ -23,9 +23,9 @@ class TestHttpKernel extends HttpKernel implements ControllerResolverInterface
     protected $body;
     protected $status;
     protected $headers;
-    protected $called = false;
+    protected $called;
     protected $customizer;
-    protected $catch = false;
+    protected $catch;
     protected $backendRequest;
 
     public function __construct($body, $status, $headers, \Closure $customizer = null)
@@ -34,6 +34,8 @@ class TestHttpKernel extends HttpKernel implements ControllerResolverInterface
         $this->status = $status;
         $this->headers = $headers;
         $this->customizer = $customizer;
+        $this->called = false;
+        $this->catch = false;
 
         parent::__construct(new EventDispatcher(), $this);
     }

@@ -24,7 +24,6 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\InstantiatorInterface;
 use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\RealServiceInstantiator;
-use Symfony\Component\ExpressionLanguage\Expression;
 
 /**
  * ContainerBuilder is a DI container that provides an API to easily describe services.
@@ -78,11 +77,6 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @var InstantiatorInterface|null
      */
     private $proxyInstantiator;
-
-    /**
-     * @var ExpressionLanguage|null
-     */
-    private $expressionLanguage;
 
     /**
      * Sets the track resources flag.
@@ -311,7 +305,11 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     public function addCompilerPass(CompilerPassInterface $pass, $type = PassConfig::TYPE_BEFORE_OPTIMIZATION)
     {
-        $this->getCompiler()->addPass($pass, $type);
+        if (null === $this->compiler) {
+            $this->compiler = new Compiler();
+        }
+
+        $this->compiler->addPass($pass, $type);
 
         $this->addObjectResource($pass);
 
@@ -327,7 +325,11 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     public function getCompilerPassConfig()
     {
-        return $this->getCompiler()->getPassConfig();
+        if (null === $this->compiler) {
+            $this->compiler = new Compiler();
+        }
+
+        return $this->compiler->getPassConfig();
     }
 
     /**
@@ -608,23 +610,23 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     public function compile()
     {
-        $compiler = $this->getCompiler();
-
-        if ($this->trackResources) {
-            foreach ($compiler->getPassConfig()->getPasses() as $pass) {
-                $this->addObjectResource($pass);
-            }
+        if (null === $this->compiler) {
+            $this->compiler = new Compiler();
         }
 
-        $compiler->compile($this);
-
         if ($this->trackResources) {
+            foreach ($this->compiler->getPassConfig()->getPasses() as $pass) {
+                $this->addObjectResource($pass);
+            }
+
             foreach ($this->definitions as $definition) {
                 if ($definition->isLazy() && ($class = $definition->getClass()) && class_exists($class)) {
                     $this->addClassResource(new \ReflectionClass($class));
                 }
             }
         }
+
+        $this->compiler->compile($this);
 
         $this->extensionConfigs = array();
 
@@ -991,12 +993,11 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     }
 
     /**
-     * Replaces service references by the real service instance and evaluates expressions.
+     * Replaces service references by the real service instance.
      *
      * @param mixed $value A value
      *
-     * @return mixed The same value with all service references replaced by
-     *               the real service instances and all expressions evaluated
+     * @return mixed The same value with all service references replaced by the real service instances
      */
     public function resolveServices($value)
     {
@@ -1008,8 +1009,6 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             $value = $this->get((string) $value, $value->getInvalidBehavior());
         } elseif ($value instanceof Definition) {
             $value = $this->createService($value, null);
-        } elseif ($value instanceof Expression) {
-            $value = $this->getExpressionLanguage()->evaluate($value, array('container' => $this));
         }
 
         return $value;
@@ -1159,17 +1158,5 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
                 $this->scopedServices[$scope][$lowerId] = $service;
             }
         }
-    }
-
-    private function getExpressionLanguage()
-    {
-        if (null === $this->expressionLanguage) {
-            if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
-                throw new RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
-            }
-            $this->expressionLanguage = new ExpressionLanguage();
-        }
-
-        return $this->expressionLanguage;
     }
 }

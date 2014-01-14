@@ -27,6 +27,5 @@
     <parameter key="MixedCase" type="collection"> <!-- Should be lower cased -->
       <parameter key="MixedCaseKey">value</parameter> <!-- Should stay mixed case -->
     </parameter>
-    <parameter key="constant" type="constant">PHP_EOL</parameter>
   </parameters>
 </container>

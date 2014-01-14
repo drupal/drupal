@@ -20,14 +20,20 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class TestMultipleHttpKernel extends HttpKernel implements ControllerResolverInterface
 {
-    protected $bodies = array();
-    protected $statuses = array();
-    protected $headers = array();
-    protected $call = false;
+    protected $bodies;
+    protected $statuses;
+    protected $headers;
+    protected $catch;
+    protected $call;
     protected $backendRequest;
 
     public function __construct($responses)
     {
+        $this->bodies   = array();
+        $this->statuses = array();
+        $this->headers  = array();
+        $this->call     = false;
+
         foreach ($responses as $response) {
             $this->bodies[]   = $response['body'];
             $this->statuses[] = $response['status'];

@@ -40,10 +40,17 @@ class ControllerResolver implements ControllerResolverInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the Controller instance associated with a Request.
      *
      * This method looks for a '_controller' request attribute that represents
      * the controller name (a string like ClassName::MethodName).
+     *
+     * @param Request $request A Request instance
+     *
+     * @return mixed|Boolean A PHP callable representing the Controller,
+     *                       or false if this resolver is not able to determine the controller
+     *
+     * @throws \InvalidArgumentException|\LogicException If the controller can't be found
      *
      * @api
      */
@@ -79,7 +86,14 @@ class ControllerResolver implements ControllerResolverInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the arguments to pass to the controller.
+     *
+     * @param Request $request    A Request instance
+     * @param mixed   $controller A PHP callable
+     *
+     * @return array
+     *
+     * @throws \RuntimeException When value for argument given is not provided
      *
      * @api
      */

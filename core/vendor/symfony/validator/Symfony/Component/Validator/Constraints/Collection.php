@@ -12,6 +12,8 @@
 namespace Symfony\Component\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\Required;
+use Symfony\Component\Validator\Constraints\Optional;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 /**
@@ -23,7 +25,7 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
  */
 class Collection extends Constraint
 {
-    public $fields = array();
+    public $fields;
     public $allowExtraFields = false;
     public $allowMissingFields = false;
     public $extraFieldsMessage = 'This field was not expected.';

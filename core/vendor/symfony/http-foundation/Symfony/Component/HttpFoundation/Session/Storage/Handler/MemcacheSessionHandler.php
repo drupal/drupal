@@ -106,14 +106,4 @@ class MemcacheSessionHandler implements \SessionHandlerInterface
         // not required here because memcache will auto expire the records anyhow.
         return true;
     }
-
-    /**
-     * Return a Memcache instance
-     *
-     * @return \Memcache
-     */
-    protected function getMemcache()
-    {
-        return $this->memcache;
-    }
 }

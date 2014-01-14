@@ -43,23 +43,27 @@ class MetadataBagTest extends \PHPUnit_Framework_TestCase
 
     public function testInitialize()
     {
-        $sessionMetadata = array();
+        $p = new \ReflectionProperty('Symfony\Component\HttpFoundation\Session\Storage\MetadataBag', 'meta');
+        $p->setAccessible(true);
 
         $bag1 = new MetadataBag();
-        $bag1->initialize($sessionMetadata);
+        $array = array();
+        $bag1->initialize($array);
         $this->assertGreaterThanOrEqual(time(), $bag1->getCreated());
         $this->assertEquals($bag1->getCreated(), $bag1->getLastUsed());
 
         sleep(1);
         $bag2 = new MetadataBag();
-        $bag2->initialize($sessionMetadata);
+        $array2 = $p->getValue($bag1);
+        $bag2->initialize($array2);
         $this->assertEquals($bag1->getCreated(), $bag2->getCreated());
         $this->assertEquals($bag1->getLastUsed(), $bag2->getLastUsed());
         $this->assertEquals($bag2->getCreated(), $bag2->getLastUsed());
 
         sleep(1);
         $bag3 = new MetadataBag();
-        $bag3->initialize($sessionMetadata);
+        $array3 = $p->getValue($bag2);
+        $bag3->initialize($array3);
         $this->assertEquals($bag1->getCreated(), $bag3->getCreated());
         $this->assertGreaterThan($bag2->getLastUsed(), $bag3->getLastUsed());
         $this->assertNotEquals($bag3->getCreated(), $bag3->getLastUsed());
@@ -99,37 +103,5 @@ class MetadataBagTest extends \PHPUnit_Framework_TestCase
     public function testClear()
     {
         $this->bag->clear();
-    }
-
-    public function testSkipLastUsedUpdate()
-    {
-        $bag = new MetadataBag('', 30);
-        $timeStamp = time();
-
-        $created = $timeStamp - 15;
-        $sessionMetadata = array(
-            MetadataBag::CREATED => $created,
-            MetadataBag::UPDATED => $created,
-            MetadataBag::LIFETIME => 1000
-        );
-        $bag->initialize($sessionMetadata);
-
-        $this->assertEquals($created, $sessionMetadata[MetadataBag::UPDATED]);
-    }
-
-    public function testDoesNotSkipLastUsedUpdate()
-    {
-        $bag = new MetadataBag('', 30);
-        $timeStamp = time();
-
-        $created = $timeStamp - 45;
-        $sessionMetadata = array(
-            MetadataBag::CREATED => $created,
-            MetadataBag::UPDATED => $created,
-            MetadataBag::LIFETIME => 1000
-        );
-        $bag->initialize($sessionMetadata);
-
-        $this->assertEquals($timeStamp, $sessionMetadata[MetadataBag::UPDATED]);
     }
 }

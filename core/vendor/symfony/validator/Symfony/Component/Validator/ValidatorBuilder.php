@@ -11,8 +11,6 @@
 
 namespace Symfony\Component\Validator;
 
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Mapping\Loader\LoaderChain;
@@ -85,11 +83,6 @@ class ValidatorBuilder implements ValidatorBuilderInterface
      * @var null|string
      */
     private $translationDomain;
-
-    /**
-     * @var PropertyAccessorInterface
-     */
-    private $propertyAccessor;
 
     /**
      * {@inheritdoc}
@@ -205,8 +198,8 @@ class ValidatorBuilder implements ValidatorBuilderInterface
         }
 
         if (null === $annotationReader) {
-            if (!class_exists('Doctrine\Common\Annotations\AnnotationReader') || !class_exists('Doctrine\Common\Cache\ArrayCache')) {
-                throw new \RuntimeException('Enabling annotation based constraint mapping requires the packages doctrine/annotations and doctrine/cache to be installed.');
+            if (!class_exists('Doctrine\Common\Annotations\AnnotationReader')) {
+                throw new \RuntimeException('Requested a ValidatorFactory with an AnnotationLoader, but the AnnotationReader was not found. You should add Doctrine Common to your project.');
             }
 
             $annotationReader = new CachedReader(new AnnotationReader(), new ArrayCache());
@@ -260,10 +253,6 @@ class ValidatorBuilder implements ValidatorBuilderInterface
      */
     public function setConstraintValidatorFactory(ConstraintValidatorFactoryInterface $validatorFactory)
     {
-        if (null !== $this->propertyAccessor) {
-            throw new ValidatorException('You cannot set a validator factory after setting a custom property accessor. Remove the call to setPropertyAccessor() if you want to call setConstraintValidatorFactory().');
-        }
-
         $this->validatorFactory = $validatorFactory;
 
         return $this;
@@ -285,20 +274,6 @@ class ValidatorBuilder implements ValidatorBuilderInterface
     public function setTranslationDomain($translationDomain)
     {
         $this->translationDomain = $translationDomain;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPropertyAccessor(PropertyAccessorInterface $propertyAccessor)
-    {
-        if (null !== $this->validatorFactory) {
-            throw new ValidatorException('You cannot set a property accessor after setting a custom validator factory. Configure your validator factory instead.');
-        }
-
-        $this->propertyAccessor = $propertyAccessor;
 
         return $this;
     }
@@ -344,8 +319,7 @@ class ValidatorBuilder implements ValidatorBuilderInterface
             $metadataFactory = new ClassMetadataFactory($loader, $this->metadataCache);
         }
 
-        $propertyAccessor = $this->propertyAccessor ?: PropertyAccess::createPropertyAccessor();
-        $validatorFactory = $this->validatorFactory ?: new ConstraintValidatorFactory($propertyAccessor);
+        $validatorFactory = $this->validatorFactory ?: new ConstraintValidatorFactory();
         $translator = $this->translator ?: new DefaultTranslator();
 
         return new Validator($metadataFactory, $validatorFactory, $translator, $this->translationDomain, $this->initializers);

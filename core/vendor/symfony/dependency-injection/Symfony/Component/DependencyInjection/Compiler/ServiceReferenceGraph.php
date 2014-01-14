@@ -26,7 +26,15 @@ class ServiceReferenceGraph
     /**
      * @var ServiceReferenceGraphNode[]
      */
-    private $nodes = array();
+    private $nodes;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->nodes = array();
+    }
 
     /**
      * Checks if the graph has a specific node.

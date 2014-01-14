@@ -21,7 +21,7 @@ namespace Symfony\Component\EventDispatcher;
 class GenericEvent extends Event implements \ArrayAccess, \IteratorAggregate
 {
     /**
-     * Event subject.
+     * Observer pattern subject.
      *
      * @var mixed usually object or callable
      */

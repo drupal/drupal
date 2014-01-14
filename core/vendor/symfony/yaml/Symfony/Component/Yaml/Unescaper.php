@@ -2,7 +2,6 @@
 
 /*
  * This file is part of the Symfony package.
- *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -49,7 +48,7 @@ class Unescaper
     public function unescapeDoubleQuotedString($value)
     {
         $self = $this;
-        $callback = function ($match) use ($self) {
+        $callback = function($match) use ($self) {
             return $self->unescapeCharacter($match[0]);
         };
 
@@ -131,7 +130,7 @@ class Unescaper
      *
      * @return string The string with the new encoding
      *
-     * @throws \RuntimeException if no suitable encoding function is found (iconv or mbstring)
+     * @throws RuntimeException if no suitable encoding function is found (iconv or mbstring)
      */
     private function convertEncoding($value, $to, $from)
     {
@@ -141,6 +140,6 @@ class Unescaper
             return iconv($from, $to, $value);
         }
 
-        throw new \RuntimeException('No suitable convert encoding function (install the iconv or mbstring extension).');
+        throw new RuntimeException('No suitable convert encoding function (install the iconv or mbstring extension).');
     }
 }

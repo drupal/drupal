@@ -222,7 +222,7 @@ yaml: |
       # Following node labeled SS
       - &SS Sammy Sosa
    rbi:
-      - *SS # Subsequent occurrence
+      - *SS # Subsequent occurance
       - Ken Griffey
 php: |
    array(

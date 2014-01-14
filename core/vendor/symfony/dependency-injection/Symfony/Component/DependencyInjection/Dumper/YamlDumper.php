@@ -19,7 +19,6 @@ use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\ExpressionLanguage\Expression;
 
 /**
  * YamlDumper dumps a service container as a YAML string.
@@ -73,10 +72,6 @@ class YamlDumper extends Dumper
         $code = "    $id:\n";
         if ($definition->getClass()) {
             $code .= sprintf("        class: %s\n", $definition->getClass());
-        }
-
-        if (!$definition->isPublic()) {
-            $code .= "        public: false\n";
         }
 
         $tagsCode = '';
@@ -236,8 +231,6 @@ class YamlDumper extends Dumper
             return $this->getServiceCall((string) $value, $value);
         } elseif ($value instanceof Parameter) {
             return $this->getParameterCall((string) $value);
-        } elseif ($value instanceof Expression) {
-            return $this->getExpressionCall((string) $value);
         } elseif (is_object($value) || is_resource($value)) {
             throw new RuntimeException('Unable to dump a service container if a parameter is an object or a resource.');
         }
@@ -272,11 +265,6 @@ class YamlDumper extends Dumper
     private function getParameterCall($id)
     {
         return sprintf('%%%s%%', $id);
-    }
-
-    private function getExpressionCall($expression)
-    {
-        return sprintf('@=%s', $expression);
     }
 
     /**

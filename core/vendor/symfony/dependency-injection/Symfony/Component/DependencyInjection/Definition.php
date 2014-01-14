@@ -28,24 +28,24 @@ class Definition
     private $factoryClass;
     private $factoryMethod;
     private $factoryService;
-    private $scope = ContainerInterface::SCOPE_CONTAINER;
-    private $properties = array();
-    private $calls = array();
+    private $scope;
+    private $properties;
+    private $calls;
     private $configurator;
-    private $tags = array();
-    private $public = true;
-    private $synthetic = false;
-    private $abstract = false;
-    private $synchronized = false;
-    private $lazy = false;
+    private $tags;
+    private $public;
+    private $synthetic;
+    private $abstract;
+    private $synchronized;
+    private $lazy;
 
     protected $arguments;
 
     /**
      * Constructor.
      *
-     * @param string|null $class     The service class
-     * @param array       $arguments An array of arguments to pass to the service constructor
+     * @param string $class     The service class
+     * @param array  $arguments An array of arguments to pass to the service constructor
      *
      * @api
      */
@@ -53,6 +53,15 @@ class Definition
     {
         $this->class = $class;
         $this->arguments = $arguments;
+        $this->calls = array();
+        $this->scope = ContainerInterface::SCOPE_CONTAINER;
+        $this->tags = array();
+        $this->public = true;
+        $this->synthetic = false;
+        $this->synchronized = false;
+        $this->lazy = false;
+        $this->abstract = false;
+        $this->properties = array();
     }
 
     /**
@@ -75,7 +84,7 @@ class Definition
     /**
      * Gets the factory class.
      *
-     * @return string|null The factory class name
+     * @return string The factory class name
      *
      * @api
      */
@@ -103,7 +112,7 @@ class Definition
     /**
      * Gets the factory method.
      *
-     * @return string|null The factory method name
+     * @return string The factory method name
      *
      * @api
      */
@@ -131,7 +140,7 @@ class Definition
     /**
      * Gets the factory service id.
      *
-     * @return string|null The factory service id
+     * @return string The factory service id
      *
      * @api
      */
@@ -159,7 +168,7 @@ class Definition
     /**
      * Gets the service class.
      *
-     * @return string|null The service class
+     * @return string The service class
      *
      * @api
      */
@@ -499,7 +508,7 @@ class Definition
     /**
      * Gets the file to require before creating the service.
      *
-     * @return string|null The full pathname to include
+     * @return string The full pathname to include
      *
      * @api
      */
@@ -695,7 +704,7 @@ class Definition
     /**
      * Gets the configurator to call after the service is fully initialized.
      *
-     * @return callable|null The PHP callable to call
+     * @return callable The PHP callable to call
      *
      * @api
      */

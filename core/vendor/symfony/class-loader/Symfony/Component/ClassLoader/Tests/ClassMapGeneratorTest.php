@@ -120,6 +120,10 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateMapFinderSupport()
     {
+        if (!class_exists('Symfony\\Component\\Finder\\Finder')) {
+            $this->markTestSkipped('Finder component is not available');
+        }
+
         $finder = new \Symfony\Component\Finder\Finder();
         $finder->files()->in(__DIR__.'/Fixtures/beta/NamespaceCollision');
 

@@ -143,7 +143,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
           list( , $port) = explode(':', $normalized_base_url);
           $options['base_url'] .= ':' . $port;
         }
-        elseif (($url_scheme == 'http' && $port != 80) || ($url_scheme == 'https' && $port != 443)) {
+        elseif ($port != 80) {
           $options['base_url'] .= ':' . $port;
         }
 

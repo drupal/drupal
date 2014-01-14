@@ -187,10 +187,6 @@ class XmlFileLoader extends FileLoader
                     continue;
                 }
 
-                if (false !== strpos($name, '-') && false === strpos($name, '_') && !array_key_exists($normalizedName = str_replace('-', '_', $name), $parameters)) {
-                    $parameters[$normalizedName] = SimpleXMLElement::phpize($value);
-                }
-                // keep not normalized key for BC too
                 $parameters[$name] = SimpleXMLElement::phpize($value);
             }
 
@@ -237,11 +233,10 @@ class XmlFileLoader extends FileLoader
         if (false !== $nodes = $xml->xpath('//container:argument[@type="service"][not(@id)]|//container:property[@type="service"][not(@id)]')) {
             foreach ($nodes as $node) {
                 // give it a unique name
-                $id = sprintf('%s_%d', hash('sha256', $file), ++$count);
-                $node['id'] = $id;
+                $node['id'] = sprintf('%s_%d', md5($file), ++$count);
 
-                $definitions[$id] = array($node->service, $file, false);
-                $node->service['id'] = $id;
+                $definitions[(string) $node['id']] = array($node->service, $file, false);
+                $node->service['id'] = (string) $node['id'];
             }
         }
 
@@ -249,11 +244,10 @@ class XmlFileLoader extends FileLoader
         if (false !== $nodes = $xml->xpath('//container:services/container:service[not(@id)]')) {
             foreach ($nodes as $node) {
                 // give it a unique name
-                $id = sprintf('%s_%d', hash('sha256', $file), ++$count);
-                $node['id'] = $id;
+                $node['id'] = sprintf('%s_%d', md5($file), ++$count);
 
-                $definitions[$id] = array($node, $file, true);
-                $node->service['id'] = $id;
+                $definitions[(string) $node['id']] = array($node, $file, true);
+                $node->service['id'] = (string) $node['id'];
             }
         }
 

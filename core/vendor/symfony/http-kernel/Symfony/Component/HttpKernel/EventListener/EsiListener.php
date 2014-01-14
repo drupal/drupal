@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\HttpKernel\EventListener;
 
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\HttpCache\Esi;
@@ -42,7 +43,7 @@ class EsiListener implements EventSubscriberInterface
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (!$event->isMasterRequest() || null === $this->esi) {
+        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType() || null === $this->esi) {
             return;
         }
 

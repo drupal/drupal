@@ -116,7 +116,6 @@ abstract class AnnotationClassLoader implements LoaderInterface
             'schemes'      => array(),
             'methods'      => array(),
             'host'         => '',
-            'condition'    => '',
         );
 
         $class = new \ReflectionClass($class);
@@ -155,10 +154,6 @@ abstract class AnnotationClassLoader implements LoaderInterface
             if (null !== $annot->getHost()) {
                 $globals['host'] = $annot->getHost();
             }
-
-            if (null !== $annot->getCondition()) {
-                $globals['condition'] = $annot->getCondition();
-            }
         }
 
         $collection = new RouteCollection();
@@ -185,7 +180,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
 
         $defaults = array_replace($globals['defaults'], $annot->getDefaults());
         foreach ($method->getParameters() as $param) {
-            if (!isset($defaults[$param->getName()]) && $param->isOptional()) {
+            if ($param->isOptional()) {
                 $defaults[$param->getName()] = $param->getDefaultValue();
             }
         }
@@ -199,12 +194,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
             $host = $globals['host'];
         }
 
-        $condition = $annot->getCondition();
-        if (null === $condition) {
-            $condition = $globals['condition'];
-        }
-
-        $route = new Route($globals['path'].$annot->getPath(), $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
+        $route = new Route($globals['path'].$annot->getPath(), $defaults, $requirements, $options, $host, $schemes, $methods);
 
         $this->configureRoute($route, $class, $method, $annot);
 

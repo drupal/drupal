@@ -41,9 +41,9 @@ class GetSetMethodNormalizer extends SerializerAwareNormalizer implements Normal
     protected $camelizedAttributes = array();
 
     /**
-     * Set normalization callbacks.
+     * Set normalization callbacks
      *
-     * @param callable[] $callbacks help normalize the result
+     * @param array $callbacks help normalize the result
      *
      * @throws InvalidArgumentException if a non-callable callback is set
      */

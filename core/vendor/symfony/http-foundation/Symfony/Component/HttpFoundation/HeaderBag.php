@@ -20,8 +20,8 @@ namespace Symfony\Component\HttpFoundation;
  */
 class HeaderBag implements \IteratorAggregate, \Countable
 {
-    protected $headers = array();
-    protected $cacheControl = array();
+    protected $headers;
+    protected $cacheControl;
 
     /**
      * Constructor.
@@ -32,6 +32,8 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function __construct(array $headers = array())
     {
+        $this->cacheControl = array();
+        $this->headers = array();
         foreach ($headers as $key => $values) {
             $this->set($key, $values);
         }

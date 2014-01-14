@@ -50,27 +50,18 @@ class RegisterListenersPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition($this->dispatcherService) && !$container->hasAlias($this->dispatcherService)) {
+        if (!$container->hasDefinition($this->dispatcherService)) {
             return;
         }
 
-        $definition = $container->findDefinition($this->dispatcherService);
+        $definition = $container->getDefinition($this->dispatcherService);
 
         foreach ($container->findTaggedServiceIds($this->listenerTag) as $id => $events) {
-            $def = $container->getDefinition($id);
-            if (!$def->isPublic()) {
-                throw new \InvalidArgumentException(sprintf('The service "%s" must be public as event listeners are lazy-loaded.', $id));
-            }
-
-            if ($def->isAbstract()) {
-                throw new \InvalidArgumentException(sprintf('The service "%s" must not be abstract as event listeners are lazy-loaded.', $id));
-            }
-
             foreach ($events as $event) {
                 $priority = isset($event['priority']) ? $event['priority'] : 0;
 
                 if (!isset($event['event'])) {
-                    throw new \InvalidArgumentException(sprintf('Service "%s" must define the "event" attribute on "%s" tags.', $id, $this->listenerTag));
+                    throw new \InvalidArgumentException(sprintf('Service "%s" must define the "event" attribute on "kernel.event_listener" tags.', $id));
                 }
 
                 if (!isset($event['method'])) {
@@ -86,13 +77,8 @@ class RegisterListenersPass implements CompilerPassInterface
         }
 
         foreach ($container->findTaggedServiceIds($this->subscriberTag) as $id => $attributes) {
-            $def = $container->getDefinition($id);
-            if (!$def->isPublic()) {
-                throw new \InvalidArgumentException(sprintf('The service "%s" must be public as event subscribers are lazy-loaded.', $id));
-            }
-
             // We must assume that the class value has been correctly filled, even if the service is created by a factory
-            $class = $def->getClass();
+            $class = $container->getDefinition($id)->getClass();
 
             $refClass = new \ReflectionClass($class);
             $interface = 'Symfony\Component\EventDispatcher\EventSubscriberInterface';
