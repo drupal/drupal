@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Parameter;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 $container = new ContainerBuilder();
 $container->
@@ -15,7 +16,7 @@ $container->
     setFactoryClass('FooClass')->
     setFactoryMethod('getInstance')->
     setArguments(array('foo', new Reference('foo.baz'), array('%foo%' => 'foo is %foo%', 'foobar' => '%foo%'), true, new Reference('service_container')))->
-    setProperties(array('foo' => 'bar', 'moo' => new Reference('foo.baz')))->
+    setProperties(array('foo' => 'bar', 'moo' => new Reference('foo.baz'), 'qux' => array('%foo%' => 'foo is %foo%', 'foobar' => '%foo%')))->
     addMethodCall('setBar', array(new Reference('bar')))->
     addMethodCall('initialize')->
     setConfigurator('sc_configure')
@@ -50,7 +51,8 @@ $container->
     addMethodCall('setBar', array(new Reference('foo')))->
     addMethodCall('setBar', array(new Reference('foo2', ContainerInterface::NULL_ON_INVALID_REFERENCE)))->
     addMethodCall('setBar', array(new Reference('foo3', ContainerInterface::IGNORE_ON_INVALID_REFERENCE)))->
-    addMethodCall('setBar', array(new Reference('foobaz', ContainerInterface::IGNORE_ON_INVALID_REFERENCE)))
+    addMethodCall('setBar', array(new Reference('foobaz', ContainerInterface::IGNORE_ON_INVALID_REFERENCE)))->
+    addMethodCall('setBar', array(new Expression('service("foo").foo() ~ parameter("foo")')))
 ;
 $container->
     register('factory_service', 'Bar')->

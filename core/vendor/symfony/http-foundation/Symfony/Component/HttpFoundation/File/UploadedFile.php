@@ -252,7 +252,7 @@ class UploadedFile extends File
             return $target;
         }
 
-        throw new FileException($this->getErrorMessage($this->getError()));
+        throw new FileException($this->getErrorMessage());
     }
 
     /**
@@ -262,30 +262,37 @@ class UploadedFile extends File
      */
     public static function getMaxFilesize()
     {
-        $max = strtolower(ini_get('upload_max_filesize'));
+        $iniMax = strtolower(ini_get('upload_max_filesize'));
 
-        if ('' === $max) {
+        if ('' === $iniMax) {
             return PHP_INT_MAX;
         }
 
-        if (preg_match('#^\+?(0x?)?(.*?)([kmg]?)$#', $max, $match)) {
-            $shifts = array('' => 0, 'k' => 10, 'm' => 20, 'g' => 30);
-            $bases = array('' => 10, '0' => 8, '0x' => 16);
-
-            return intval($match[2], $bases[$match[1]]) << $shifts[$match[3]];
+        $max = ltrim($iniMax, '+');
+        if (0 === strpos($max, '0x')) {
+            $max = intval($max, 16);
+        } elseif (0 === strpos($max, '0')) {
+            $max = intval($max, 8);
+        } else {
+            $max = intval($max);
         }
 
-        return 0;
+        switch (substr($iniMax, -1)) {
+            case 't': $max *= 1024;
+            case 'g': $max *= 1024;
+            case 'm': $max *= 1024;
+            case 'k': $max *= 1024;
+        }
+
+        return $max;
     }
 
     /**
      * Returns an informative upload error message.
      *
-     * @param int $code The error code returned by an upload attempt
-     *
      * @return string The error message regarding the specified error code
      */
-    private function getErrorMessage($errorCode)
+    public function getErrorMessage()
     {
         static $errors = array(
             UPLOAD_ERR_INI_SIZE   => 'The file "%s" exceeds your upload_max_filesize ini directive (limit is %d kb).',
@@ -294,12 +301,13 @@ class UploadedFile extends File
             UPLOAD_ERR_NO_FILE    => 'No file was uploaded.',
             UPLOAD_ERR_CANT_WRITE => 'The file "%s" could not be written on disk.',
             UPLOAD_ERR_NO_TMP_DIR => 'File could not be uploaded: missing temporary directory.',
-            UPLOAD_ERR_EXTENSION  => 'File upload was stopped by a php extension.',
+            UPLOAD_ERR_EXTENSION  => 'File upload was stopped by a PHP extension.',
         );
 
+        $errorCode = $this->error;
         $maxFilesize = $errorCode === UPLOAD_ERR_INI_SIZE ? self::getMaxFilesize() / 1024 : 0;
         $message = isset($errors[$errorCode]) ? $errors[$errorCode] : 'The file "%s" was not uploaded due to an unknown error.';
 
-       return sprintf($message, $this->getClientOriginalName(), $maxFilesize);
+        return sprintf($message, $this->getClientOriginalName(), $maxFilesize);
     }
 }

@@ -12,7 +12,6 @@
 namespace Symfony\Component\HttpKernel\Tests\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterListenersPass;
 
 class RegisterListenersPassTest extends \PHPUnit_Framework_TestCase
@@ -31,6 +30,9 @@ class RegisterListenersPassTest extends \PHPUnit_Framework_TestCase
         );
 
         $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition');
+        $definition->expects($this->atLeastOnce())
+            ->method('isPublic')
+            ->will($this->returnValue(true));
         $definition->expects($this->atLeastOnce())
             ->method('getClass')
             ->will($this->returnValue('stdClass'));
@@ -61,6 +63,9 @@ class RegisterListenersPassTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition');
         $definition->expects($this->atLeastOnce())
+            ->method('isPublic')
+            ->will($this->returnValue(true));
+        $definition->expects($this->atLeastOnce())
             ->method('getClass')
             ->will($this->returnValue('Symfony\Component\HttpKernel\Tests\DependencyInjection\SubscriberService'));
 
@@ -78,8 +83,54 @@ class RegisterListenersPassTest extends \PHPUnit_Framework_TestCase
             ->method('getDefinition')
             ->will($this->returnValue($definition));
 
+        $builder->expects($this->atLeastOnce())
+            ->method('findDefinition')
+            ->will($this->returnValue($definition));
+
         $registerListenersPass = new RegisterListenersPass();
         $registerListenersPass->process($builder);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The service "foo" must be public as event listeners are lazy-loaded.
+     */
+    public function testPrivateEventListener()
+    {
+        $container = new ContainerBuilder();
+        $container->register('foo', 'stdClass')->setPublic(false)->addTag('kernel.event_listener', array());
+        $container->register('event_dispatcher', 'stdClass');
+
+        $registerListenersPass = new RegisterListenersPass();
+        $registerListenersPass->process($container);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The service "foo" must be public as event subscribers are lazy-loaded.
+     */
+    public function testPrivateEventSubscriber()
+    {
+        $container = new ContainerBuilder();
+        $container->register('foo', 'stdClass')->setPublic(false)->addTag('kernel.event_subscriber', array());
+        $container->register('event_dispatcher', 'stdClass');
+
+        $registerListenersPass = new RegisterListenersPass();
+        $registerListenersPass->process($container);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The service "foo" must not be abstract as event listeners are lazy-loaded.
+     */
+    public function testAbstractEventListener()
+    {
+        $container = new ContainerBuilder();
+        $container->register('foo', 'stdClass')->setAbstract(true)->addTag('kernel.event_listener', array());
+        $container->register('event_dispatcher', 'stdClass');
+
+        $registerListenersPass = new RegisterListenersPass();
+        $registerListenersPass->process($container);
     }
 }
 

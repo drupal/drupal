@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2.4.0
+-----
+
+ * added event listeners for the session
+ * added the KernelEvents::FINISH_REQUEST event
+
 2.3.0
 -----
 
