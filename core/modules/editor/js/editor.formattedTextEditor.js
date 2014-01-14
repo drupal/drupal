@@ -164,7 +164,7 @@ Drupal.edit.editors.editor = Drupal.edit.EditorView.extend({
 
     // Create a Drupal.ajax instance to load the form.
     var textLoaderAjax = new Drupal.ajax(fieldID, this.$el, {
-      url: Drupal.edit.util.buildUrl(fieldID, drupalSettings.editor.getUntransformedTextURL),
+      url: Drupal.edit.util.buildUrl(fieldID, Drupal.url('editor/!entity_type/!id/!field_name/!langcode/!view_mode')),
       event: 'editor-internal.editor',
       submit: { nocssjs : true },
       progress: { type : null } // No progress indicator.

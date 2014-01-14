@@ -118,14 +118,6 @@ function editor_library_info() {
         'scope' => 'footer',
         'attributes' => array('defer' => TRUE),
       ),
-      array(
-        'type' => 'setting',
-        'data' => array(
-          'editor' => array(
-            'getUntransformedTextURL' => url('editor/!entity_type/!id/!field_name/!langcode/!view_mode'),
-          )
-        )
-      ),
     ),
     'dependencies' => array(
       array('edit', 'edit'),
