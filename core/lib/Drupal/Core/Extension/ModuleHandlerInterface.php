@@ -185,7 +185,7 @@ interface ModuleHandlerInterface {
    * @return mixed
    *   The return value of the hook implementation.
    */
-  public function invoke($module, $hook, $args = array());
+  public function invoke($module, $hook, array $args = array());
 
   /**
    * Invokes a hook in all enabled modules that implement it.
@@ -199,7 +199,7 @@ interface ModuleHandlerInterface {
    *   An array of return values of the hook implementations. If modules return
    *   arrays from their implementations, those are merged into one array.
    */
-  public function invokeAll($hook, $args = array());
+  public function invokeAll($hook, array $args = array());
 
   /**
    * Passes alterable variables to specific hook_TYPE_alter() implementations.
