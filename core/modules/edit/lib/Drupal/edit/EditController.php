@@ -161,14 +161,15 @@ class EditController implements ContainerInjectionInterface {
         throw new NotFoundHttpException();
       }
 
+      $entity = $entity->getTranslation($langcode);
+
       // If the entity information for this field is requested, include it.
       $entity_id = $entity->entityType() . '/' . $entity_id;
       if (is_array($entities) && in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
-        $metadata[$entity_id] = $this->metadataGenerator->generateEntity($entity, $langcode);
+        $metadata[$entity_id] = $this->metadataGenerator->generateEntityMetadata($entity);
       }
 
-      $field_definition = $entity->get($field_name)->getFieldDefinition();
-      $metadata[$field] = $this->metadataGenerator->generateField($entity, $field_definition, $langcode, $view_mode);
+      $metadata[$field] = $this->metadataGenerator->generateFieldMetadata($entity->get($field_name), $view_mode);
     }
 
     return new JsonResponse($metadata);

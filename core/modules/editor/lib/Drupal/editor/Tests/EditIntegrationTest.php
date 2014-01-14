@@ -106,13 +106,13 @@ class EditIntegrationTest extends EditTestBase {
   }
 
   /**
-   * Retrieves the FieldInstance object for the given field and returns the
-   * editor that Edit selects.
+   * Returns the in-place editor that Edit selects.
    */
-  protected function getSelectedEditor($items, $field_name, $view_mode = 'default') {
+  protected function getSelectedEditor($entity_id, $field_name, $view_mode = 'default') {
+    $entity = entity_load('entity_test', $entity_id, TRUE);
+    $items = $entity->getTranslation(Language::LANGCODE_NOT_SPECIFIED)->get($field_name);
     $options = entity_get_display('entity_test', 'entity_test', $view_mode)->getComponent($field_name);
-    $field_instance = field_info_instance('entity_test', $field_name, 'entity_test');
-    return $this->editorSelector->getEditor($options['type'], $field_instance, $items);
+    return $this->editorSelector->getEditor($options['type'], $items);
   }
 
   /**
@@ -126,21 +126,24 @@ class EditIntegrationTest extends EditTestBase {
     $this->editorManager = new InPlaceEditorManager($this->container->get('container.namespaces'));
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
 
-    // Pretend there is an entity with these items for the field.
-    $items = array(array('value' => 'Hello, world!', 'format' => 'filtered_html'));
+    // Create an entity with values for this text field.
+    $this->entity = entity_create('entity_test', array());
+    $this->entity->{$this->field_name}->value = 'Hello, world!';
+    $this->entity->{$this->field_name}->format = 'filtered_html';
+    $this->entity->save();
 
     // Editor selection w/ cardinality 1, text format w/o associated text editor.
-    $this->assertEqual('form', $this->getSelectedEditor($items, $this->field_name), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
+    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $this->field_name), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
 
     // Editor selection w/ cardinality 1, text format w/ associated text editor.
-    $items[0]['format'] = 'full_html';
-    $this->assertEqual('editor', $this->getSelectedEditor($items, $this->field_name), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
+    $this->entity->{$this->field_name}->format = 'full_html';
+    $this->entity->save();
+    $this->assertEqual('editor', $this->getSelectedEditor($this->entity->id(), $this->field_name), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
     $this->field_textarea_field->cardinality = 2;
     $this->field_textarea_field->save();
-    $items[] = array('value' => 'Hallo, wereld!', 'format' => 'full_html');
-    $this->assertEqual('form', $this->getSelectedEditor($items, $this->field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
+    $this->assertEqual('form', $this->getSelectedEditor($this->entity->id(), $this->field_name), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
   }
 
   /**
@@ -160,8 +163,8 @@ class EditIntegrationTest extends EditTestBase {
     $entity = entity_load('entity_test', $this->entity->id());
 
     // Verify metadata.
-    $instance = field_info_instance($entity->entityType(), $this->field_name, $entity->bundle());
-    $metadata = $this->metadataGenerator->generateField($entity, $instance, Language::LANGCODE_NOT_SPECIFIED, 'default');
+    $items = $entity->getTranslation(Language::LANGCODE_NOT_SPECIFIED)->get($this->field_name);
+    $metadata = $this->metadataGenerator->generateFieldMetadata($items, 'default');
     $expected = array(
       'access' => TRUE,
       'label' => 'Long text field',

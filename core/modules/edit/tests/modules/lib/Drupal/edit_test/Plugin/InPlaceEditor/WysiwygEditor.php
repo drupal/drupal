@@ -7,8 +7,8 @@
 
 namespace Drupal\edit_test\Plugin\InPlaceEditor;
 
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\edit\EditorBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Defines the 'wysiwyg' in-place editor.
@@ -23,7 +23,9 @@ class WysiwygEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  function isCompatible(FieldDefinitionInterface $field_definition, array $items) {
+  public function isCompatible(FieldItemListInterface $items) {
+    $field_definition = $items->getFieldDefinition();
+
     // This editor is incompatible with multivalued fields.
     if ($field_definition->getCardinality() != 1) {
       return FALSE;
@@ -32,8 +34,7 @@ class WysiwygEditor extends EditorBase {
     // if there is a currently active text format and that text format is the
     // 'full_html' text format.
     elseif ($field_definition->getSetting('text_processing')) {
-      $format_id = $items[0]['format'];
-      if (isset($format_id) && $format_id === 'full_html') {
+      if ($items[0]->format === 'full_html') {
         return TRUE;
       }
       return FALSE;
@@ -43,9 +44,8 @@ class WysiwygEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  function getMetadata(FieldDefinitionInterface $field_definition, array $items) {
-    $format_id = $items[0]['format'];
-    $metadata['format'] = $format_id;
+  function getMetadata(FieldItemListInterface $items) {
+    $metadata['format'] = $items[0]->format;
     return $metadata;
   }
 

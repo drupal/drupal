@@ -96,15 +96,14 @@ class MetadataGeneratorTest extends EditTestBase {
 
     // Create an entity with values for this text field.
     $this->entity = entity_create('entity_test', array());
-    $this->is_new = TRUE;
     $this->entity->{$field_1_name}->value = 'Test';
     $this->entity->{$field_2_name}->value = 42;
     $this->entity->save();
     $entity = entity_load('entity_test', $this->entity->id());
 
     // Verify metadata for field 1.
-    $instance_1 = field_info_instance($entity->entityType(), $field_1_name, $entity->bundle());
-    $metadata_1 = $this->metadataGenerator->generateField($entity, $instance_1, Language::LANGCODE_NOT_SPECIFIED, 'default');
+    $items_1 = $entity->getTranslation(Language::LANGCODE_NOT_SPECIFIED)->get($field_1_name);
+    $metadata_1 = $this->metadataGenerator->generateFieldMetadata($items_1, 'default');
     $expected_1 = array(
       'access' => TRUE,
       'label' => 'Simple text field',
@@ -114,8 +113,8 @@ class MetadataGeneratorTest extends EditTestBase {
     $this->assertEqual($expected_1, $metadata_1, 'The correct metadata is generated for the first field.');
 
     // Verify metadata for field 2.
-    $instance_2 = field_info_instance($entity->entityType(), $field_2_name, $entity->bundle());
-    $metadata_2 = $this->metadataGenerator->generateField($entity, $instance_2, Language::LANGCODE_NOT_SPECIFIED, 'default');
+    $items_2 = $entity->getTranslation(Language::LANGCODE_NOT_SPECIFIED)->get($field_2_name);
+    $metadata_2 = $this->metadataGenerator->generateFieldMetadata($items_2, 'default');
     $expected_2 = array(
       'access' => TRUE,
       'label' => 'Simple number field',
@@ -169,8 +168,8 @@ class MetadataGeneratorTest extends EditTestBase {
     $entity = entity_load('entity_test', $this->entity->id());
 
     // Verify metadata.
-    $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
-    $metadata = $this->metadataGenerator->generateField($entity, $instance, Language::LANGCODE_NOT_SPECIFIED, 'default');
+    $items = $entity->getTranslation(Language::LANGCODE_NOT_SPECIFIED)->get($field_name);
+    $metadata = $this->metadataGenerator->generateFieldMetadata($items, 'default');
     $expected = array(
       'access' => TRUE,
       'label' => 'Rich text field',

@@ -7,8 +7,8 @@
 
 namespace Drupal\edit\Plugin\InPlaceEditor;
 
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\edit\EditorBase;
-use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Defines the plain text in-place editor.
@@ -25,7 +25,9 @@ class PlainTextEditor extends EditorBase {
    * @todo The processed text logic is too coupled to text fields. Figure out
    *   how to generalize to other textual field types.
    */
-  function isCompatible(FieldDefinitionInterface $field_definition, array $items) {
+  public function isCompatible(FieldItemListInterface $items) {
+    $field_definition = $items->getFieldDefinition();
+
     // This editor is incompatible with multivalued fields.
     if ($field_definition->getCardinality() != 1) {
       return FALSE;

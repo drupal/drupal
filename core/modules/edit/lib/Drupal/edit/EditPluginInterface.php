@@ -8,7 +8,7 @@
 namespace Drupal\edit;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Defines an interface for in-place editors plugins.
@@ -16,17 +16,15 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 interface EditPluginInterface extends PluginInspectionInterface {
 
   /**
-   * Checks whether this editor is compatible with a given field instance.
+   * Checks whether this in-place editor is compatible with a given field.
    *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition of the field being edited.
-   * @param array $items
-   *   The field's item values.
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The field values to be in-place edited.
    *
    * @return bool
    *   TRUE if it is compatible, FALSE otherwise.
    */
-  public function isCompatible(FieldDefinitionInterface $field_definition, array $items);
+  public function isCompatible(FieldItemListInterface $items);
 
   /**
    * Generates metadata that is needed specifically for this editor.
@@ -34,16 +32,14 @@ interface EditPluginInterface extends PluginInspectionInterface {
    * Will only be called by \Drupal\edit\MetadataGeneratorInterface::generate()
    * when the passed in field instance & item values will use this editor.
    *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition of the field being edited.
-   * @param array $items
-   *   The field's item values.
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   The field values to be in-place edited.
    *
    * @return array
    *   A keyed array with metadata. Each key should be prefixed with the plugin
    *   ID of the editor.
    */
-  public function getMetadata(FieldDefinitionInterface $field_definition, array $items);
+  public function getMetadata(FieldItemListInterface $items);
 
   /**
    * Returns the attachments for this editor.
