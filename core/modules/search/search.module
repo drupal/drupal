@@ -177,13 +177,11 @@ function search_menu() {
  * @param $type
  *   (optional) The plugin ID or other machine-readable type for the item to
  *   remove from the search index.
- * @param $reindex
- *   (optional) Boolean to specify whether reindexing happens.
  * @param $langcode
  *   (optional) Language code for the operation. If not provided, all
  *   index records for the $sid and $type will be deleted.
  */
-function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE, $langcode = NULL) {
+function search_reindex($sid = NULL, $type = NULL, $langcode = NULL) {
   if ($type == NULL && $sid == NULL) {
     /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
     $search_page_repository = \Drupal::service('search.search_page_repository');
@@ -524,7 +522,7 @@ function search_index($sid, $type, $text, $langcode) {
     $tag = !$tag;
   }
 
-  search_reindex($sid, $type, TRUE, $langcode);
+  search_reindex($sid, $type, $langcode);
 
   // Insert cleaned up data into dataset
   db_insert('search_dataset')
