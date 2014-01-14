@@ -154,13 +154,13 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       if ($bit == '%') {
         // Generate the name of the parameter using the key of the argument
         // handler.
-        $arg_id = 'arg_' . $argument_ids[$arg_counter++];
+        $arg_id = 'arg_' . $arg_counter++;
         $bits[$pos] = '{' . $arg_id . '}';
       }
       elseif (strpos($bit, '%') === 0) {
         // Use the name defined in the path.
         $parameter_name = substr($bit, 1);
-        $arg_id = 'arg_' . $argument_ids[$arg_counter++];
+        $arg_id = 'arg_' . $arg_counter++;
         $argument_map[$arg_id] = $parameter_name;
         $bits[$pos] = '{' . $parameter_name . '}';
       }
@@ -168,7 +168,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     // Add missing arguments not defined in the path, but added as handler.
     while (($total_arguments - $arg_counter) > 0) {
-      $arg_id = 'arg_' . $argument_ids[$arg_counter++];
+      $arg_id = 'arg_' . $arg_counter++;
       $bit = '{' . $arg_id . '}';
       // In contrast to the previous loop add the defaults here, as % was not
       // specified, which means the argument is optional.
@@ -256,8 +256,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         // We assume that the numeric ids of the parameters match the one from
         // the view argument handlers.
         foreach ($parameters as $position => $parameter_name) {
-          $path = str_replace('arg_' . $argument_ids[$position], $parameter_name, $path);
-          $argument_map['arg_' . $argument_ids[$position]] = $parameter_name;
+          $path = str_replace('arg_' . $position, $parameter_name, $path);
+          $argument_map['arg_' . $position] = $parameter_name;
         }
         // Set the corrected path and the mapping to the route object.
         $route->setDefault('_view_argument_map', $argument_map);

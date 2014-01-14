@@ -87,6 +87,23 @@ display:
     display_title: Page
     id: page_4
     position: '0'
+  page_5:
+    display_options:
+      defaults:
+        arguments: '0'
+      arguments:
+        id_that_is_really_really_really_long:
+          field: id
+          id: id_that_is_really_really_really_long
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views_test_data
+      path: test_route_with_long_argument/%
+    display_plugin: page
+    display_title: Page
+    id: page_5
+    position: '0'
 label: ''
 id: test_page_display_arguments
 tag: ''

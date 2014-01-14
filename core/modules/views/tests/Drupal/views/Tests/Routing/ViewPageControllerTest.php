@@ -140,7 +140,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
-    $request->attributes->set('arg_test_id', 'test-argument');
+    $request->attributes->set('arg_0', 'test-argument');
 
     $this->pageController->handle($request);
   }
@@ -188,7 +188,7 @@ class ViewPageControllerTest extends UnitTestCase {
     // Add the argument to the request.
     $request->attributes->set('parameter', 'test-argument');
     $request->attributes->set('_view_argument_map', array(
-      'arg_test_id' => 'parameter',
+      'arg_0' => 'parameter',
     ));
 
     $this->pageController->handle($request);
@@ -241,7 +241,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('_raw_variables', $raw_variables);
 
     $request->attributes->set('_view_argument_map', array(
-      'arg_test_id' => 'test_entity',
+      'arg_0' => 'test_entity',
     ));
 
     $this->pageController->handle($request);
