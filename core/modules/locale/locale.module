@@ -1153,12 +1153,21 @@ function _locale_refresh_configuration(array $langcodes, array $lids) {
  *
  * @return array
  *   Array of string objects to update indexed by context and source.
+ *
+ * @throws Exception
+ *   If a non-local file is attempted to be parsed.
  */
 function _locale_parse_js_file($filepath) {
   // The file path might contain a query string, so make sure we only use the
   // actual file.
   $parsed_url = drupal_parse_url($filepath);
   $filepath = $parsed_url['path'];
+
+  // If there is still a protocol component in the path, reject that.
+  if (strpos($filepath, ':')) {
+    throw new Exception('Only local files should be passed to _locale_parse_js_file().');
+  }
+
   // Load the JavaScript file.
   $file = file_get_contents($filepath);
 
