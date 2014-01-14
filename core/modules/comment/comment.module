@@ -305,43 +305,6 @@ function comment_permission() {
 }
 
 /**
- * Finds the most recent comments that are available to the current user.
- *
- * @param int $number
- *   (optional) The maximum number of comments to find. Defaults to 10.
- *
- * @return \Drupal\comment\CommentInterface[]|array
- *   An array of comment objects or an empty array if there are no recent
- *   comments visible to the current user.
- */
-function comment_get_recent($number = 10) {
-  $query = db_select('comment', 'c');
-  $query->addMetaData('base_table', 'comment');
-  $query->fields('c')
-    ->condition('c.status', CommentInterface::PUBLISHED);
-  if (\Drupal::moduleHandler()->moduleExists('node')) {
-    // Special case to filter by published content.
-    $query->innerJoin('node_field_data', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
-    $query->addTag('node_access');
-    // @todo This should be actually filtering on the desired node status field
-    //   language and just fall back to the default language.
-    $query
-      ->condition('n.status', NODE_PUBLISHED)
-      ->condition('n.default_langcode', 1);
-  }
-  $comments = $query
-    ->orderBy('c.created', 'DESC')
-    // Additionally order by cid to ensure that comments with the same timestamp
-    // are returned in the exact order posted.
-    ->orderBy('c.cid', 'DESC')
-    ->range(0, $number)
-    ->execute()
-    ->fetchAll();
-
-  return $comments ? $comments : array();
-}
-
-/**
  * Calculates the page number for the first new comment.
  *
  * @param int $num_comments
