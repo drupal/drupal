@@ -31,7 +31,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('block', 'views');
 
   public static function getInfo() {
     return array(
@@ -61,7 +61,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     ));
 
     // Enable the recent content block with two items.
-    $block = $this->drupalPlaceBlock('node_recent_block', array('id' => 'test_block', 'block_count' => 2));
+    $block = $this->drupalPlaceBlock('views_block:content_recent-block_1', array('id' => 'test_block', 'items_per_page' => 2));
 
     // Test that block is not visible without nodes.
     $this->drupalGet('');
@@ -100,13 +100,13 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertText($node3->label(), 'Node found in block.');
 
     // Check to make sure nodes are in the right order.
-    $this->assertTrue($this->xpath('//div[@id="block-test-block"]/div/table/tbody/tr[position() = 1]/td/div/a[text() = "' . $node3->label() . '"]'), 'Nodes were ordered correctly in block.');
+    $this->assertTrue($this->xpath('//div[@id="block-test-block"]//table/tbody/tr[position() = 1]/td/a[text() = "' . $node3->label() . '"]'), 'Nodes were ordered correctly in block.');
 
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
 
     // Set the number of recent nodes to show to 10.
-    $block->getPlugin()->setConfigurationValue('block_count', 10);
+    $block->getPlugin()->setConfigurationValue('items_per_page', 10);
     $block->save();
 
     // Post an additional node.

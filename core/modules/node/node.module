@@ -160,12 +160,6 @@ function node_theme() {
       'variables' => array('node' => NULL),
       'file' => 'node.pages.inc',
     ),
-    'node_recent_block' => array(
-      'variables' => array('nodes' => NULL),
-    ),
-    'node_recent_content' => array(
-      'variables' => array('node' => NULL),
-    ),
     'node_edit_form' => array(
       'render element' => 'form',
       'template' => 'node-edit-form',
@@ -605,9 +599,6 @@ function node_preprocess_block(&$variables) {
     switch ($variables['elements']['#plugin_id']) {
       case 'node_syndicate_block':
         $variables['attributes']['role'] = 'complementary';
-        break;
-      case 'node_recent_block':
-        $variables['attributes']['role'] = 'navigation';
         break;
     }
   }
@@ -1095,94 +1086,6 @@ function node_get_recent($number = 10) {
   $nodes = node_load_multiple($nids);
 
   return $nodes ? $nodes : array();
-}
-
-/**
- * Returns HTML for a list of recent content.
- *
- * @param $variables
- *   An associative array containing:
- *   - nodes: An array of recent node entities.
- *
- * @ingroup themeable
- */
-function theme_node_recent_block($variables) {
-  $rows = array();
-  $output = '';
-
-  $l_options = array('query' => drupal_get_destination());
-  foreach ($variables['nodes'] as $node) {
-    $row = array();
-    $node_recent_content = array(
-      '#theme' => 'node_recent_content',
-      '#node' => $node,
-    );
-    $row[] = array(
-      'data' => drupal_render($node_recent_content),
-      'class' => 'title-author',
-    );
-    if ($node->access('update')) {
-      $row[] = array(
-        'data' => l(t('edit'), 'node/' . $node->id() . '/edit', $l_options),
-        'class' => 'edit',
-      );
-    }
-    if ($node->access('delete')) {
-      $row[] = array(
-        'data' => l(t('delete'), 'node/' . $node->id() . '/delete', $l_options),
-        'class' => 'delete',
-      );
-    }
-    $rows[] = $row;
-  }
-
-  if ($rows) {
-    $table = array(
-      '#theme' => 'table',
-      '#rows' => $rows,
-    );
-    $output = drupal_render($table);
-    if (user_access('access content overview')) {
-      $more_link = array(
-        '#theme' => 'more_link',
-        '#url' => 'admin/content',
-        '#title' => t('Show more content'),
-      );
-      $output .= drupal_render($more_link);
-    }
-  }
-
-  return $output;
-}
-
-/**
- * Returns HTML for a recent node to be displayed in the recent content block.
- *
- * @param $variable
- *   An associative array containing:
- *   - node: A node entity.
- *
- * @ingroup themeable
- */
-function theme_node_recent_content($variables) {
-  $node = $variables['node'];
-
-  $output = '<div class="node-title">';
-  $output .= l($node->label(), 'node/' . $node->id());
-  $mark = array(
-    '#theme' => 'mark',
-    '#status' => node_mark($node->id(), $node->getChangedTime()),
-  );
-  $output .= drupal_render($mark);
-  $output .= '</div><div class="node-author">';
-  $username = array(
-    '#theme' => 'username',
-    '#account' => $node->getAuthor(),
-  );
-  $output .= drupal_render($username);
-  $output .= '</div>';
-
-  return $output;
 }
 
 /**
