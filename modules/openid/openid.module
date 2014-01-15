@@ -551,7 +551,7 @@ function openid_verify_assertion($service, $response) {
   // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4
   // Verify the signatures.
   $valid = FALSE;
-  $association = db_fetch_object(db_query("SELECT * FROM {openid_association} WHERE assoc_handle = '%s'", $response['openid.assoc_handle']));
+  $association = db_fetch_object(db_query("SELECT * FROM {openid_association} WHERE idp_endpoint_uri = '%s' AND assoc_handle = '%s'", $service['uri'], $response['openid.assoc_handle']));
   if ($association && isset($association->session_type)) {
     // http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.2
     // Verification using an association.

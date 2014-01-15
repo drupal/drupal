@@ -1,6 +1,7 @@
 
-Drupal 6.30-dev, xxxx-xx-xx (development release)
+Drupal 6.30, 2014-01-15
 ----------------------
+- Fixed security issues (multiple vulnerabilities), see SA-CORE-2014-001.
 
 Drupal 6.29, 2013-11-20
 ----------------------
