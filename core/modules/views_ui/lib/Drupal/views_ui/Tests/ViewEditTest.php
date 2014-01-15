@@ -58,7 +58,7 @@ class ViewEditTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/attachment_1/display_id', $edit, 'Apply');
     $this->assertLink(t('test_1'));
 
-    // Save the view, and test the new id has been saved.
+    // Save the view, and test the new ID has been saved.
     $this->drupalPostForm(NULL, array(), 'Save');
     $view = \Drupal::entityManager()->getStorageController('view')->load('test_view');
     $displays = $view->get('display');
