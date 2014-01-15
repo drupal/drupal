@@ -56,6 +56,11 @@ class UpgradePathTaxonomyTestCase extends UpgradePathTestCase {
     $this->assertFalse(db_table_exists('taxonomy_vocabulary_node_type'), 'taxonomy_vocabulary_node_type has been removed.');
     $this->assertFalse(db_table_exists('taxonomy_term_node'), 'taxonomy_term_node has been removed.');
 
+    // Check that taxonomy_index has not stored nids of unpublished nodes.
+    $nids = db_query('SELECT nid from {node} WHERE status = :status', array(':status' => NODE_NOT_PUBLISHED))->fetchCol();
+    $indexed_nids = db_query('SELECT DISTINCT nid from {taxonomy_index}')->fetchCol();
+    $this->assertFalse(array_intersect($nids, $indexed_nids), 'No unpublished nid present in taxonomy_index');
+
     // Check that the node type 'page' has been associated to a taxonomy
     // reference field for each vocabulary.
     $voc_keys = array();

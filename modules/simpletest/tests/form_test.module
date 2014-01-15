@@ -1548,6 +1548,15 @@ function form_test_programmatic_form($form, &$form_state) {
     '#default_value' => array(1, 2),
   );
 
+  // This is used to test that programmatic form submissions can bypass #access
+  // restrictions.
+  $form['textfield_no_access'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Textfield no access',
+    '#default_value' => 'default value',
+    '#access' => FALSE,
+  );
+
   $form['field_to_validate'] = array(
     '#type' => 'radios',
     '#title' => 'Field to validate (in the case of limited validation)',

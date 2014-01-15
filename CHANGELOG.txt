@@ -1,4 +1,8 @@
 
+Drupal 7.26, 2014-01-15
+----------------------
+- Fixed security issues (multiple vulnerabilities). See SA-CORE-2014-001.
+
 Drupal 7.25, 2014-01-02
 -----------------------
 - Fixed a bug in node_save() which prevented the saved node from being updated

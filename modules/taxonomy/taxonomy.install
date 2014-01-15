@@ -638,6 +638,10 @@ function taxonomy_update_7005(&$sandbox) {
           'type' => 'int',
           'not null' => FALSE,
         ),
+        'status' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+        ),
         'is_current' => array(
           'type' => 'int',
           'unsigned' => TRUE,
@@ -670,6 +674,7 @@ function taxonomy_update_7005(&$sandbox) {
     $query->addField('n', 'type');
     $query->addField('n2', 'created');
     $query->addField('n2', 'sticky');
+    $query->addField('n2', 'status');
     $query->addField('n2', 'nid', 'is_current');
     // This query must return a consistent ordering across multiple calls.
     // We need them ordered by node vid (since we use that to decide when
@@ -698,7 +703,7 @@ function taxonomy_update_7005(&$sandbox) {
     // We do each pass in batches of 1000.
     $batch = 1000;
 
-    $result = db_query_range('SELECT vocab_id, tid, nid, vid, type, created, sticky, is_current FROM {taxonomy_update_7005} ORDER BY n', $sandbox['last'], $batch);
+    $result = db_query_range('SELECT vocab_id, tid, nid, vid, type, created, sticky, status, is_current FROM {taxonomy_update_7005} ORDER BY n', $sandbox['last'], $batch);
     if (isset($sandbox['cursor'])) {
       $values = $sandbox['cursor']['values'];
       $deltas = $sandbox['cursor']['deltas'];
@@ -765,12 +770,14 @@ function taxonomy_update_7005(&$sandbox) {
       // is_current column is a node ID if this revision is also current.
       if ($record->is_current) {
         db_insert($table_name)->fields($columns)->values($values)->execute();
-
-        // Update the {taxonomy_index} table.
-        db_insert('taxonomy_index')
-          ->fields(array('nid', 'tid', 'sticky', 'created',))
-          ->values(array($record->nid, $record->tid, $record->sticky, $record->created))
-          ->execute();
+        // Only insert a record in the taxonomy index if the node is published.
+        if ($record->status) {
+          // Update the {taxonomy_index} table.
+          db_insert('taxonomy_index')
+            ->fields(array('nid', 'tid', 'sticky', 'created',))
+            ->values(array($record->nid, $record->tid, $record->sticky, $record->created))
+            ->execute();
+        }
       }
     }
 
@@ -888,3 +895,23 @@ function taxonomy_update_7010() {
   ));
 }
 
+/**
+ * @addtogroup updates-7.x-extra
+ * @{
+ */
+
+/**
+ * Drop unpublished nodes from the index.
+ */
+function taxonomy_update_7011() {
+  $nids = db_query('SELECT nid from {node} WHERE status = :status', array(':status' => NODE_NOT_PUBLISHED))->fetchCol();
+  if (!empty($nids)) {
+    db_delete('taxonomy_index')
+      ->condition('nid', $nids)
+      ->execute();
+  }
+}
+
+/**
+ * @} End of "addtogroup updates-7.x-extra".
+ */

@@ -1486,6 +1486,16 @@ class FormsProgrammaticTestCase extends DrupalWebTestCase {
     $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => NULL, 2 => 2)), TRUE);
     $this->submitForm(array('textfield' => 'dummy value', 'checkboxes' => array(1 => NULL, 2 => NULL)), TRUE);
 
+    // Test that a programmatic form submission can successfully submit values
+    // even for fields where the #access property is FALSE.
+    $this->submitForm(array('textfield' => 'dummy value', 'textfield_no_access' => 'test value'), TRUE);
+    // Test that #access is respected for programmatic form submissions when
+    // requested to do so.
+    $submitted_values = array('textfield' => 'dummy value', 'textfield_no_access' => 'test value');
+    $expected_values = array('textfield' => 'dummy value', 'textfield_no_access' => 'default value');
+    $form_state = array('programmed_bypass_access_check' => FALSE);
+    $this->submitForm($submitted_values, TRUE, $expected_values, $form_state);
+
     // Test that a programmatic form submission can correctly click a button
     // that limits validation errors based on user input. Since we do not
     // submit any values for "textfield" here and the textfield is required, we
@@ -1508,10 +1518,18 @@ class FormsProgrammaticTestCase extends DrupalWebTestCase {
    * @param $valid_input
    *   A boolean indicating whether or not the form submission is expected to
    *   be valid.
+   * @param $expected_values
+   *   (Optional) An array of field values that are expected to be stored by
+   *   the form submit handler. If not set, the submitted $values are assumed
+   *   to also be the expected stored values.
+   * @param $form_state
+   *   (Optional) A keyed array containing the state of the form, to be sent in
+   *   the call to drupal_form_submit(). The $values parameter is added to
+   *   $form_state['values'] by default, if it is not already set.
    */
-  private function submitForm($values, $valid_input) {
+  private function submitForm($values, $valid_input, $expected_values = NULL, $form_state = array()) {
     // Programmatically submit the given values.
-    $form_state = array('values' => $values);
+    $form_state += array('values' => $values);
     drupal_form_submit('form_test_programmatic_form', $form_state);
 
     // Check that the form returns an error when expected, and vice versa.
@@ -1528,7 +1546,10 @@ class FormsProgrammaticTestCase extends DrupalWebTestCase {
       // By fetching the values from $form_state['storage'] we ensure that the
       // submission handler was properly executed.
       $stored_values = $form_state['storage']['programmatic_form_submit'];
-      foreach ($values as $key => $value) {
+      if (!isset($expected_values)) {
+        $expected_values = $values;
+      }
+      foreach ($expected_values as $key => $value) {
         $this->assertTrue(isset($stored_values[$key]) && $stored_values[$key] == $value, format_string('Submission handler correctly executed: %stored_key is %stored_value', array('%stored_key' => $key, '%stored_value' => print_r($value, TRUE))));
       }
     }
