@@ -26,7 +26,7 @@ class LanguageConditionTest extends DrupalUnitTestBase {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 

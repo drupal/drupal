@@ -20,6 +20,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Base class for Drupal tests.
@@ -969,8 +970,11 @@ abstract class TestBase {
 
     // Reset and create a new service container.
     $this->container = new ContainerBuilder();
-     // @todo Remove this once this class has no calls to t() and format_plural()
-    $this->container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager');
+
+    // @todo Remove this once this class has no calls to t() and format_plural()
+    $this->container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+    $this->container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
+      ->addArgument(new Reference('language_manager'));
 
     // Register info parser.
     $this->container->register('info_parser', 'Drupal\Core\Extension\InfoParser');

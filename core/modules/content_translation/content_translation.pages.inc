@@ -33,7 +33,7 @@ function content_translation_overview(EntityInterface $entity) {
   $header = array(t('Language'), t('Translation'), t('Source language'), t('Status'), t('Operations'));
   $rows = array();
 
-  if (language_multilingual()) {
+  if (\Drupal::languageManager()->isMultilingual()) {
     // If we have a view path defined for the current entity get the switch
     // links based on it.
     if (!empty($rel['canonical'])) {
@@ -159,12 +159,12 @@ function content_translation_overview(EntityInterface $entity) {
  *   A renderable array of language switch links.
  */
 function _content_translation_get_switch_links($path) {
-  $links = language_negotiation_get_switch_links(Language::TYPE_CONTENT, $path);
+  $links = \Drupal::languageManager()->getLanguageSwitchLinks(Language::TYPE_CONTENT, $path);
   if (empty($links)) {
     // If content language is set up to fall back to the interface language,
     // then there will be no switch links for Language::TYPE_CONTENT, ergo we
     // also need to use interface switch links.
-    $links = language_negotiation_get_switch_links(Language::TYPE_INTERFACE, $path);
+    $links = \Drupal::languageManager()->getLanguageSwitchLinks(Language::TYPE_INTERFACE, $path);
   }
   return $links;
 }

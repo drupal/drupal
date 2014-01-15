@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\UserAgent;
 use Drupal\Component\Utility\Crypt;
 
 use Drupal\Component\Utility\Settings;
@@ -300,6 +301,9 @@ function install_begin_request(&$install_state) {
     exit;
   }
 
+  // Register the 'language_manager' service.
+  $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+
   // If we have a language selected and it is not yet saved in the system
   // (eg. pre-database data screens we are unable to persistently store
   // the default language), we should set language_default so the proper
@@ -370,7 +374,6 @@ function install_begin_request(&$install_state) {
   else {
     // @todo Move into a proper Drupal\Core\DependencyInjection\InstallContainerBuilder.
     $container = new ContainerBuilder();
-
     $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
 
     $container->register('config.storage', 'Drupal\Core\Config\InstallStorage');
@@ -388,9 +391,7 @@ function install_begin_request(&$install_state) {
       ->addArgument(new Reference('config.typed'));
 
     // Register the 'language_manager' service.
-    $container
-      ->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-      ->addArgument(NULL);
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
 
     // Register the translation services.
     install_register_translation_service($container);
@@ -1505,6 +1506,7 @@ function install_register_translation_service(ContainerBuilder $container) {
   $container->register('string_translator.custom_strings', 'Drupal\Core\StringTranslation\Translator\CustomStrings')
     ->addArgument(settings());
   $container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
+    ->addArgument(new Reference('language_manager'))
     ->addMethodCall('addTranslator', array(new Reference('string_translator.file_translation')))
     ->addMethodCall('addTranslator', array(new Reference('string_translator.custom_strings')));
 }
@@ -1582,9 +1584,6 @@ function install_select_language(&$install_state) {
  * @ingroup forms
  */
 function install_select_language_form($form, &$form_state, $files = array()) {
-  include_once __DIR__ . '/../modules/language/language.module';
-  include_once __DIR__ . '/../modules/language/language.negotiation.inc';
-
   $standard_languages = LanguageManager::getStandardLanguageList();
   $select_options = array();
   $browser_options = array();
@@ -1596,22 +1595,19 @@ function install_select_language_form($form, &$form_state, $files = array()) {
     // Select lists based on available language files.
     foreach ($files as $langcode => $uri) {
       $select_options[$langcode] = isset($standard_languages[$langcode]) ? $standard_languages[$langcode][1] : $langcode;
-      $browser_options[$langcode] = new Language(array(
-        'id' => $langcode,
-      ));
+      $browser_options[] = $langcode;
     }
   }
   else {
     // Select lists based on all standard languages.
     foreach ($standard_languages as $langcode => $language_names) {
       $select_options[$langcode] = $language_names[1];
-      $browser_options[$langcode] = new Language(array(
-        'id' => $langcode,
-      ));
+      $browser_options[] = $langcode;
     }
   }
 
-  $browser_langcode = language_from_browser($browser_options);
+  $request = Request::createFromGlobals();
+  $browser_langcode = UserAgent::getBestMatchingLangcode($request->server->get('HTTP_ACCEPT_LANGUAGE'), $browser_options);
   $form['langcode'] = array(
     '#type' => 'select',
     '#title' => t('Choose language'),

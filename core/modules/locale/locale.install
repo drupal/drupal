@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 
 /**
  * Implements hook_install().
@@ -500,20 +501,10 @@ function locale_update_8004() {
   $types = update_variable_get('language_types', NULL);
   if (!empty($types)) {
     foreach ($types as $type => $configurable) {
-      // Rename the negotiation and language switch callback keys.
+      // Change the structure of the language negotiation configuration.
       $negotiation = update_variable_get('language_negotiation_' . $type, NULL);
       if (!empty($negotiation)) {
-        foreach ($negotiation as &$method) {
-          if (isset($method['callbacks']['language'])) {
-            $method['callbacks']['negotiation'] = $method['callbacks']['language'];
-            unset($method['callbacks']['language']);
-          }
-          if (isset($method['callbacks']['switcher'])) {
-            $method['callbacks']['language_switch'] = $method['callbacks']['switcher'];
-            unset($method['callbacks']['switcher']);
-          }
-        }
-        update_variable_set('language_negotiation_' . $type, $negotiation);
+        update_variable_set('language_negotiation_' . $type, array_keys($negotiation));
       }
 
       // Rename the language negotiation methods weight variable.
@@ -646,16 +637,11 @@ function locale_update_8005() {
 }
 
 /**
- * Convert language_negotiation_* variables to use the new callbacks.
+ * Convert language_negotiation_* variables.
  *
  * @ingroup config_upgrade
  */
 function locale_update_8007() {
-  $variable_names = array(
-    'language_negotiation_language_interface',
-    'language_negotiation_language_content',
-    'language_negotiation_language_url',
-  );
   // Add all language type weight variables. As the function language_types()
   // is not available its functionality is rebuild.
   $language_types = update_variable_get('language_types', array(
@@ -664,20 +650,9 @@ function locale_update_8007() {
     Language::TYPE_URL => FALSE,
   ));
   foreach ($language_types as $language_type => $configurable) {
-    $variable_names[] = 'language_negotiation_methods_weight_' . $language_type;
+    $variable_names['language_negotiation_' . $language_type] = 'language_negotiation_methods_weight_' . $language_type;
   }
-  $callback_map = array(
-    'locale_language_from_url' => 'language_from_url',
-    'locale_language_switcher_url' =>  'language_switcher_url',
-    'locale_language_url_rewrite_url' =>  'language_url_rewrite_url',
-    'locale_language_from_session' =>  'language_from_session',
-    'locale_language_switcher_session' =>  'language_switcher_session',
-    'locale_language_url_rewrite_session' => 'language_url_rewrite_session',
-    'locale_language_from_user' => 'language_from_user',
-    'locale_language_from_browser' => 'language_from_browser',
-    'locale_language_url_fallback' => 'language_url_fallback',
-    'locale_language_from_interface' => 'language_from_interface',
-  );
+
   $type_map = array(
     'locale-interface' => 'language-interface',
     'locale-url' => 'language-url',
@@ -686,37 +661,24 @@ function locale_update_8007() {
     'locale-user' => 'language-user',
     'locale-session' => 'language-session',
   );
-  foreach ($variable_names as $variable_name) {
-    $value = update_variable_get($variable_name);
+  foreach ($variable_names as $variable_name => $weight_variable_name) {
+    $value = update_variable_get($weight_variable_name);
     // Skip processing if the variable is not stored in the db.
     if ($value === NULL) {
+      update_variable_del($variable_name);
       continue;
     }
-    $new_value = $value;
-    foreach ($value as $type => $type_settings) {
-      // Convert the file.
-      if (isset($type_settings['file']) && (strpos($type_settings['file'], 'core/includes/locale.inc') !== FALSE)) {
-        $new_value[$type]['file'] = 'core/modules/language/language.negotiation.inc';
-      }
-      // Convert the callbacks.
-      if (is_array($type_settings) && isset($type_settings['callbacks'])) {
-        foreach ($type_settings['callbacks'] as $key => $callback) {
-          if (isset($callback_map[$callback])) {
-            $new_value[$type]['callbacks'][$key] = $callback_map[$callback];
-          }
-        }
-      }
+    $new_value = array();
+    foreach ($value as $type => $weight) {
       // Convert the type.
       if (isset($type_map[$type])) {
-        $new_value[$type_map[$type]] = $new_value[$type];
-        unset($new_value[$type]);
+        $type = $type_map[$type];
       }
+      $new_value[$type] = $weight;
     }
-    // If necessary maintain the order of the values / keys of the variable.
-    if (stristr($variable_name, 'language_negotiation_methods_weight_') !== FALSE) {
-      asort($new_value);
-    }
+    asort($new_value);
     update_variable_set($variable_name, $new_value);
+    update_variable_del($weight_variable_name);
   }
 }
 
@@ -845,25 +807,11 @@ function locale_update_8011() {
  * Renames language_default language negotiation method to language_selected.
  */
 function locale_update_8013() {
-  // @todo We only need language.inc here because LANGUAGE_NEGOTIATION_SELECTED
-  //   is defined there. Remove this line once that has been converted to a class
-  //   constant.
-  require_once DRUPAL_ROOT . '/core/includes/language.inc';
-  $weight = update_variable_get('language_negotiation_methods_weight_language_interface', NULL);
+  $weight = update_variable_get('language_negotiation_language_interface', NULL);
   if ($weight !== NULL) {
-    $weight[LANGUAGE_NEGOTIATION_SELECTED] = $weight['language-default'];
+    $weight[LanguageNegotiationSelected::METHOD_ID] = $weight['language-default'];
     unset($weight['language-default']);
-    update_variable_set('language_negotiation_methods_weight_language_interface', $weight);
-  }
-
-  $negotiation_interface = update_variable_get('language_negotiation_language_interface', NULL);
-  if ($negotiation_interface !== NULL) {
-    if (isset($negotiation_interface['language-default'])) {
-      $negotiation_interface[LANGUAGE_NEGOTIATION_SELECTED] = $negotiation_interface['language-default'];
-      $negotiation_interface[LANGUAGE_NEGOTIATION_SELECTED]['callbacks']['negotiation'] = 'language_from_selected';
-      unset($negotiation_interface['language-default']);
-      update_variable_set('language_negotiation_language_interface', $negotiation_interface);
-    }
+    update_variable_set('language_negotiation_language_interface', $weight);
   }
 }
 

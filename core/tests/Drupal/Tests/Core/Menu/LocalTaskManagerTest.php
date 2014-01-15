@@ -265,11 +265,9 @@ class LocalTaskManagerTest extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($this->manager, $this->factory);
 
-    $language_manager = $this->getMockBuilder('Drupal\Core\Language\LanguageManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->any())
-      ->method('getLanguage')
+      ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
     $this->manager->setCacheBackend($this->cacheBackend, $language_manager, 'local_task', array('local_task' => 1));

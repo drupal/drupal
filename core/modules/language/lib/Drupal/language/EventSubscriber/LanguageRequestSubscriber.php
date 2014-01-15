@@ -2,14 +2,16 @@
 
 /**
  * @file
- * Contains \Drupal\Core\EventSubscriber\LanguageRequestSubscriber.
+ * Contains \Drupal\language\EventSubscriber\LanguageRequestSubscriber.
  */
 
-namespace Drupal\Core\EventSubscriber;
+namespace Drupal\language\EventSubscriber;
 
 use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
+use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\language\LanguageNegotiatorInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -23,9 +25,16 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   /**
    * The language manager service.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\language\ConfigurableLanguageManagerInterface
    */
   protected $languageManager;
+
+  /**
+   * The language negotiator.
+   *
+   * @var \Drupal\language\LanguageNegotiatorInterface
+   */
+  protected $negotiator;
 
   /**
    * The translation service.
@@ -35,17 +44,29 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   protected $translation;
 
   /**
+   * The current active user.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a LanguageRequestSubscriber object.
    *
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
    *   The language manager service.
-   *
+   * @param \Drupal\language\LanguageNegotiatorInterface
+   *   The language negotiator.
    * @param \Drupal\Core\Translation\Translator\TranslatorInterface $translation
    *   The translation service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current active user.
    */
-  public function __construct(LanguageManager $language_manager, TranslatorInterface $translation) {
+  public function __construct(ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, TranslatorInterface $translation, AccountInterface $current_user) {
     $this->languageManager = $language_manager;
+    $this->negotiator = $negotiator;
     $this->translation = $translation;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -56,10 +77,17 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    */
   public function onKernelRequestLanguage(GetResponseEvent $event) {
     if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
-      $this->languageManager->setRequest($event->getRequest());
+      $request = $event->getRequest();
+      $this->negotiator->setCurrentUser($this->currentUser);
+      $this->negotiator->setRequest($request);
+      if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
+        $this->languageManager->setNegotiator($this->negotiator);
+        $this->languageManager->setRequest($request);
+        $this->languageManager->initConfigOverrides();
+      }
       // After the language manager has initialized, set the default langcode
       // for the string translations.
-      $langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id;
+      $langcode = $this->languageManager->getCurrentLanguage()->id;
       $this->translation->setDefaultLangcode($langcode);
     }
   }

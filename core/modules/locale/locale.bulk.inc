@@ -21,7 +21,7 @@ use Drupal\file\FileInterface;
  * @deprecated Use \Drupal\locale\Form\LocaleForm::import()
  */
 function locale_translate_import_form($form, &$form_state) {
-  drupal_static_reset('language_list');
+  Drupal::languageManager()->reset();
   $languages = language_list();
 
   // Initialize a language list to the ones available, including English if we

@@ -41,7 +41,7 @@ class FileTranslation extends StaticTranslation {
   /**
    * {@inheritdoc}
    */
-  protected function loadLanguage($langcode) {
+  protected function getLanguage($langcode) {
     // If the given langcode was selected, there should be at least one .po
     // file with its name in the pattern drupal-$version.$langcode.po.
     // This might or might not be the entire filename. It is also possible

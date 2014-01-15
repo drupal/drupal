@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Tests;
 
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 
@@ -99,7 +100,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $this->assertTrue($node->language()->id == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
 
     // Enable content language URL detection.
-    language_negotiation_set(Language::TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));
+    $this->container->get('language_negotiator')->saveConfiguration(Language::TYPE_CONTENT, array(LanguageNegotiationUrl::METHOD_ID => 0));
 
     // Test multilingual field language fallback logic.
     $this->drupalGet("it/node/{$node->id()}");

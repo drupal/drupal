@@ -30,7 +30,7 @@ class Language extends ConditionPluginBase {
    */
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
-    if (language_multilingual()) {
+    if (\Drupal::languageManager()->isMultilingual()) {
       // Fetch languages.
       $languages = language_list(Lang::STATE_ALL);
       $langcodes_options = array();

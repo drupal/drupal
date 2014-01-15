@@ -111,7 +111,7 @@ class CustomBlockFormController extends ContentEntityFormController {
 
       // Set the correct default language.
       if ($block->isNew()) {
-        $language_default = $this->languageManager->getLanguage($language_configuration['langcode']);
+        $language_default = $this->languageManager->getCurrentLanguage($language_configuration['langcode']);
         $block->langcode->value = $language_default->id;
       }
     }

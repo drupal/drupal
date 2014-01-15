@@ -142,7 +142,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getCurrentLanguage()->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
     $this->factory = new DefaultFactory($this->discovery);
     $this->container = $container;
   }
@@ -321,7 +321,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   public function getFieldDefinitions($entity_type, $bundle = NULL) {
     if (!isset($this->entityFieldInfo[$entity_type])) {
       // First, try to load from cache.
-      $cid = 'entity_field_definitions:' . $entity_type . ':' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id;
+      $cid = 'entity_field_definitions:' . $entity_type . ':' . $this->languageManager->getCurrentLanguage()->id;
       if ($cache = $this->cache->get($cid)) {
         $this->entityFieldInfo[$entity_type] = $cache->data;
       }
@@ -420,7 +420,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    */
   public function getAllBundleInfo() {
     if (!isset($this->bundleInfo)) {
-      $langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id;
+      $langcode = $this->languageManager->getCurrentLanguage()->id;
       if ($cache = $this->cache->get("entity_bundle_info:$langcode")) {
         $this->bundleInfo = $cache->data;
       }
@@ -460,7 +460,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
 
     if ($entity instanceof TranslatableInterface) {
       if (empty($langcode)) {
-        $langcode = $this->languageManager->getLanguage(Language::TYPE_CONTENT)->id;
+        $langcode = $this->languageManager->getCurrentLanguage(Language::TYPE_CONTENT)->id;
       }
 
       // Retrieve language fallback candidates to perform the entity language

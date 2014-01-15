@@ -193,7 +193,7 @@ function filter_formats(AccountInterface $account = NULL) {
 
   // All available formats are cached for performance.
   if (!isset($formats['all'])) {
-    $language_interface = \Drupal::languageManager()->getLanguage(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     if ($cache = \Drupal::cache()->get("filter_formats:{$language_interface->id}")) {
       $formats['all'] = $cache->data;
     }

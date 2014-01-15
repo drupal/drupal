@@ -69,6 +69,7 @@ class CacheDecoratorLanguageTest extends WebTestBase {
         $custom_strings[$definition['label']] = $langcode . ' ' . $definition['label'];
       }
       $this->addCustomTranslations($langcode, array('' => $custom_strings));
+      $this->rebuildContainer();
     }
     // Write test settings.php with new translations.
     $this->writeCustomTranslations();

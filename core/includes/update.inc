@@ -478,9 +478,7 @@ function update_prepare_stored_includes() {
   foreach ($language_types as $language_type) {
     $negotiation = update_variable_get("language_negotiation_$language_type", array());
     foreach ($negotiation as &$method) {
-      if (isset($method['file']) && $method['file'] == 'includes/locale.inc') {
-        $method['file'] = 'core/modules/language/language.negotiation.inc';
-      }
+      unset($method['file']);
     }
     update_variable_set("language_negotiation_$language_type", $negotiation);
   }
@@ -525,9 +523,6 @@ function update_prepare_d8_language() {
     db_drop_field('languages', 'native');
     db_drop_field('languages', 'enabled');
 
-    // Update language count.
-    \Drupal::state()->set('language_count', db_query('SELECT COUNT(language) FROM {languages}')->fetchField());
-
     // Rename the languages table to language.
     db_rename_table('languages', 'language');
 
@@ -556,7 +551,7 @@ function update_prepare_d8_language() {
       db_add_field('language', 'locked', $locked_spec);
 
       $max_language_weight = db_query('SELECT MAX(weight) FROM {language}')->fetchField();
-      $languages = language_default_locked_languages($max_language_weight);
+      $languages = \Drupal::languageManager()->getDefaultLockedLanguages($max_language_weight);
       foreach ($languages as $language) {
         db_insert('language')
           ->fields(array(
@@ -1640,7 +1635,7 @@ function update_language_list($flags = Language::STATE_CONFIGURABLE) {
 
     // Fill in master language list based on current configuration.
     $default = language_default();
-    if (language_multilingual() || \Drupal::moduleHandler()->moduleExists('language')) {
+    if (\Drupal::languageManager()->isMultilingual() || \Drupal::moduleHandler()->moduleExists('language')) {
       // Use language module configuration if available. We can not use
       // entity_load_multiple() because this breaks during updates.
       $language_entities = config_get_storage_names_with_prefix('language.entity.');
@@ -1665,7 +1660,7 @@ function update_language_list($flags = Language::STATE_CONFIGURABLE) {
       // No language module, so use the default language only.
       $languages = array($default->id => $default);
       // Add the special languages, they will be filtered later if needed.
-      $languages += language_default_locked_languages($default->weight);
+      $languages += \Drupal::languageManager()->getDefaultLockedLanguages($default->weight);
     }
   }
 

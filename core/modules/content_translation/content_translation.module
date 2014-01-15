@@ -41,7 +41,7 @@ function content_translation_help($path, $arg) {
 
     case 'admin/config/regional/content-language':
       $output = '';
-      if (!language_multilingual()) {
+      if (!\Drupal::languageManager()->isMultilingual()) {
         $output .= '<br/>' . t('Before you can translate content, there must be at least two languages added on the <a href="!url">languages administration</a> page.', array('!url' => url('admin/config/regional/language')));
       }
       return $output;
@@ -331,7 +331,7 @@ function _content_translation_menu_strip_loaders($path) {
  *   The entity whose translation overview should be displayed.
  */
 function content_translation_translate_access(EntityInterface $entity) {
-  return $entity instanceof ContentEntityInterface && empty($entity->getUntranslated()->language()->locked) && language_multilingual() && $entity->isTranslatable() &&
+  return $entity instanceof ContentEntityInterface && empty($entity->getUntranslated()->language()->locked) && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
     (user_access('create content translations') || user_access('update content translations') || user_access('delete content translations'));
 }
 
@@ -955,7 +955,7 @@ function content_translation_language_configuration_element_process(array $eleme
 function content_translation_language_configuration_element_validate($element, array &$form_state, array $form) {
   $key = $form_state['content_translation']['key'];
   $values = $form_state['values'][$key];
-  if (language_is_locked($values['langcode']) && !$values['language_show'] && $values['content_translation']) {
+  if (!$values['language_show'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
     foreach (language_list(Language::STATE_LOCKED) as $language) {
       $locked_languages[] = $language->name;
     }

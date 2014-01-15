@@ -90,7 +90,7 @@ class DefaultHtmlPageRenderer implements HtmlPageRendererInterface {
     $page_array['#page'] = $page;
 
     // HTML element attributes.
-    $language_interface = $this->languageManager->getLanguage(Language::TYPE_INTERFACE);
+    $language_interface = $this->languageManager->getCurrentLanguage();
     $html_attributes = $page->getHtmlAttributes();
     $html_attributes['lang'] = $language_interface->id;
     $html_attributes['dir'] = $language_interface->direction ? 'rtl' : 'ltr';

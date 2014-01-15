@@ -55,7 +55,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $response->headers->set('X-UA-Compatible', 'IE=edge,chrome=1', FALSE);
 
     // Set the Content-language header.
-    $response->headers->set('Content-language', $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id);
+    $response->headers->set('Content-language', $this->languageManager->getCurrentLanguage()->id);
 
     // Because pages are highly dynamic, set the last-modified time to now
     // since the page is in fact being regenerated right now.

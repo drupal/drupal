@@ -50,7 +50,7 @@ class NodeViewBuilder extends EntityViewBuilder {
         $entity->content['langcode'] = array(
           '#type' => 'item',
           '#title' => t('Language'),
-          '#markup' => language_name($langcode),
+          '#markup' => $this->languageManager->getLanguageName($langcode),
           '#prefix' => '<div id="field-language-display">',
           '#suffix' => '</div>'
         );

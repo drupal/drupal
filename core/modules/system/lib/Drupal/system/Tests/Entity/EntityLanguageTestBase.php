@@ -15,6 +15,18 @@ use Drupal\field\Field as FieldService;
  */
 abstract class EntityLanguageTestBase extends EntityUnitTestBase {
 
+  /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * The available language codes.
+   *
+   * @var array
+   */
   protected $langcodes;
 
   /**
@@ -35,6 +47,8 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
 
   function setUp() {
     parent::setUp();
+
+    $this->languageManager = $this->container->get('language_manager');
 
     $this->installSchema('system', 'variable');
     $this->installSchema('entity_test', array(
@@ -92,8 +106,8 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
     }
 
     // Create the default languages.
-    $default_language = language_save(language_default());
-    $languages = language_default_locked_languages($default_language->weight);
+    $default_language = language_save($this->languageManager->getDefaultLanguage());
+    $languages = $this->languageManager->getDefaultLockedLanguages($default_language->weight);
     foreach ($languages as $language) {
       language_save($language);
     }

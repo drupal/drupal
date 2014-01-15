@@ -14,6 +14,9 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\language\LanguageNegotiatorInterface;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,11 +25,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NegotiationConfigureForm extends FormBase {
 
   /**
-   * Stores the configuration object for system.language.types.
+   * Stores the configuration object for language.types.
    *
    * @var \Drupal\Core\Config\Config
    */
-  protected $languageTypesConfig;
+  protected $languageTypes;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\language\ConfigurableLanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * The language negotiator.
+   *
+   * @var \Drupal\language\LanguageNegotiatorInterface
+   */
+  protected $negotiator;
 
   /**
    * The block manager.
@@ -36,22 +53,21 @@ class NegotiationConfigureForm extends FormBase {
   protected $blockManager;
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a NegotiationConfigureForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   *   The language manager.
+   * @param \Drupal\language\LanguageNegotiatorInterface $negotiator
+   *   The language negotiation methods manager.
    * @param \Drupal\block\Plugin\Type\BlockManager $block_manager
    *   The block manager, or NULL if not available.
    */
-  public function __construct(ConfigFactory $config_factory, BlockManager $block_manager = NULL) {
-    $this->languageTypesConfig = $config_factory->get('system.language.types');
+  public function __construct(ConfigFactory $config_factory, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, BlockManager $block_manager = NULL) {
+    $this->languageTypes = $config_factory->get('language.types');
+    $this->languageManager = $language_manager;
+    $this->negotiator = $negotiator;
     $this->blockManager = $block_manager;
   }
 
@@ -61,6 +77,8 @@ class NegotiationConfigureForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('language_manager'),
+      $container->get('language_negotiator'),
       $container->has('plugin.manager.block') ? $container->get('plugin.manager.block') : NULL
     );
   }
@@ -76,14 +94,12 @@ class NegotiationConfigureForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    language_negotiation_include();
-
-    $configurable = $this->languageTypesConfig->get('configurable');
+    $configurable = $this->languageTypes->get('configurable');
 
     $form = array(
       '#theme' => 'language_negotiation_configure_form',
-      '#language_types_info' => language_types_info(),
-      '#language_negotiation_info' => language_negotiation_info(),
+      '#language_types_info' => $this->languageManager->getDefinedLanguageTypesInfo(),
+      '#language_negotiation_info' => $this->negotiator->getNegotiationMethods(),
     );
     $form['#language_types'] = array();
 
@@ -111,10 +127,9 @@ class NegotiationConfigureForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    language_negotiation_include();
     $configurable_types = $form['#language_types'];
 
-    $stored_values = $this->languageTypesConfig->get('configurable');
+    $stored_values = $this->languageTypes->get('configurable');
     $customized = array();
     $method_weights_type = array();
 
@@ -122,7 +137,7 @@ class NegotiationConfigureForm extends FormBase {
       $customized[$type] = in_array($type, $stored_values);
       $method_weights = array();
       $enabled_methods = $form_state['values'][$type]['enabled'];
-      $enabled_methods[LANGUAGE_NEGOTIATION_SELECTED] = TRUE;
+      $enabled_methods[LanguageNegotiationSelected::METHOD_ID] = TRUE;
       $method_weights_input = $form_state['values'][$type]['weight'];
       if (isset($form_state['values'][$type]['configurable'])) {
         $customized[$type] = !empty($form_state['values'][$type]['configurable']);
@@ -141,11 +156,11 @@ class NegotiationConfigureForm extends FormBase {
 
     // Update non-configurable language types and the related language
     // negotiation configuration.
-    language_types_set(array_keys(array_filter($customized)));
+    $this->negotiator->updateConfiguration(array_keys(array_filter($customized)));
 
     // Update the language negotiations after setting the configurability.
     foreach ($method_weights_type as $type => $method_weights) {
-      language_negotiation_set($type, $method_weights);
+      $this->negotiator->saveConfiguration($type, $method_weights);
     }
 
     // Clear block definitions cache since the available blocks and their names
@@ -183,7 +198,7 @@ class NegotiationConfigureForm extends FormBase {
     );
     // Only show configurability checkbox for the unlocked language types.
     if (empty($info['locked'])) {
-      $configurable = $this->languageTypesConfig->get('configurable');
+      $configurable = $this->languageTypes->get('configurable');
       $table_form['configurable'] = array(
         '#type' => 'checkbox',
         '#title' => $this->t('Customize %language_name language detection to differ from User interface text language detection settings.', array('%language_name' => $info['name'])),
@@ -246,7 +261,7 @@ class NegotiationConfigureForm extends FormBase {
           '#title_display' => 'invisible',
           '#default_value' => $enabled,
         );
-        if ($method_id === LANGUAGE_NEGOTIATION_SELECTED) {
+        if ($method_id === LanguageNegotiationSelected::METHOD_ID) {
           $table_form['enabled'][$method_id]['#default_value'] = TRUE;
           $table_form['enabled'][$method_id]['#attributes'] = array('disabled' => 'disabled');
         }
@@ -254,10 +269,10 @@ class NegotiationConfigureForm extends FormBase {
         $table_form['description'][$method_id] = array('#markup' => Xss::filterAdmin($method['description']));
 
         $config_op = array();
-        if (isset($method['config'])) {
+        if (isset($method['config_path'])) {
           $config_op['configure'] = array(
             'title' => $this->t('Configure'),
-            'href' => $method['config'],
+            'href' => $method['config_path'],
           );
           // If there is at least one operation enabled show the operation
           // column.

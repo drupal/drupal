@@ -12,6 +12,7 @@ use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -62,6 +63,13 @@ class ConfigTranslationController extends ControllerBase implements ContainerInj
   protected $account;
 
   /**
+   * The language manager.
+   *
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a ConfigTranslationController.
    *
    * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
@@ -74,13 +82,16 @@ class ConfigTranslationController extends ControllerBase implements ContainerInj
    *   The inbound path processor.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(ConfigMapperManagerInterface $config_mapper_manager, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, AccountInterface $account) {
+  public function __construct(ConfigMapperManagerInterface $config_mapper_manager, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, AccountInterface $account, LanguageManagerInterface $language_manager) {
     $this->configMapperManager = $config_mapper_manager;
     $this->accessManager = $access_manager;
     $this->router = $router;
     $this->pathProcessor = $path_processor;
     $this->account = $account;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -92,7 +103,8 @@ class ConfigTranslationController extends ControllerBase implements ContainerInj
       $container->get('access_manager'),
       $container->get('router'),
       $container->get('path_processor_manager'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('language_manager')
     );
   }
 
@@ -119,10 +131,10 @@ class ConfigTranslationController extends ControllerBase implements ContainerInj
     // not on the system. For example, the configuration shipped in English but
     // the site has no English configured. Represent the original language in
     // the table even if it is not currently configured.
-    $languages = language_list();
+    $languages = $this->languageManager->getLanguages();
     $original_langcode = $mapper->getLangcode();
     if (!isset($languages[$original_langcode])) {
-      $language_name = language_name($original_langcode);
+      $language_name = $this->languageManager->getLanguageName($original_langcode);
       if ($original_langcode == 'en') {
         $language_name = $this->t('Built-in English');
       }

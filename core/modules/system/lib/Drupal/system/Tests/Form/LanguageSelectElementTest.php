@@ -47,6 +47,8 @@ class LanguageSelectElementTest extends WebTestBase {
     ));
     language_save($language);
 
+    \Drupal::languageManager()->reset();
+
     $this->drupalGet('form-test/language_select');
     // Check that the language fields were rendered on the page.
     $ids = array('edit-languages-all' => Language::STATE_ALL,

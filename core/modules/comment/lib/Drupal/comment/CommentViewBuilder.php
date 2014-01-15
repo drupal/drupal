@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -52,6 +53,7 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
     return new static(
       $entity_info,
       $container->get('entity.manager'),
+      $container->get('language_manager'),
       $container->get('field.info'),
       $container->get('module_handler'),
       $container->get('csrf_token')
@@ -65,6 +67,8 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    *   The entity information array.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -72,8 +76,8 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
-    parent::__construct($entity_info, $entity_manager);
+  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
+    parent::__construct($entity_info, $entity_manager, $language_manager);
     $this->fieldInfo = $field_info;
     $this->moduleHandler = $module_handler;
     $this->csrfToken = $csrf_token;

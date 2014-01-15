@@ -7,13 +7,21 @@
 
 namespace Drupal\Core\StringTranslation;
 
-use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 
 /**
  * Defines a chained translation implementation combining multiple translators.
  */
 class TranslationManager implements TranslationInterface, TranslatorInterface {
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
 
   /**
    * An array of active translators keyed by priority.
@@ -46,11 +54,24 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
 
   /**
    * Constructs a TranslationManager object.
+   *
+   * @param \Drupal\Core\Language\LanguageManagerInterface
+   *   The language manager.
    */
-  public function __construct() {
-    // @todo Inject language_manager or config system after language_default
-    //   variable is converted to CMI.
-    $this->defaultLangcode = language_default()->id;
+  public function __construct(LanguageManagerInterface $language_manager) {
+    $this->languageManager = $language_manager;
+    $this->defaultLangcode = $language_manager->getDefaultLanguage()->id;
+  }
+
+  /**
+   * Initializes the injected language manager with the translation manager.
+   *
+   * This should be called right after instantiating the translation manager to
+   * make it available to the language manager without introducing a circular
+   * dependency.
+   */
+  public function initLanguageManager() {
+    $this->languageManager->setTranslation($this);
   }
 
   /**

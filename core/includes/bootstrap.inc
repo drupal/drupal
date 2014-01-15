@@ -2331,7 +2331,7 @@ function drupal_installation_attempted() {
 function drupal_language_initialize() {
   $language_manager = \Drupal::languageManager();
   $language_manager->init();
-  \Drupal::translation()->setDefaultLangcode($language_manager->getLanguage(Language::TYPE_INTERFACE)->id);
+  \Drupal::translation()->setDefaultLangcode($language_manager->getCurrentLanguage()->id);
 }
 
 /**
@@ -2343,47 +2343,10 @@ function drupal_language_initialize() {
  *   The type of language object needed, e.g. Language::TYPE_INTERFACE.
  *
  * @deprecated as of Drupal 8.0. Use
- *   \Drupal::languageManager()->getLanguage($type).
+ *   \Drupal::languageManager()->getCurrentLanguage().
  */
 function language($type) {
-  return \Drupal::languageManager()->getLanguage($type);
-}
-
-/**
- * Returns an array of the available language types.
- *
- * @return array
- *   An array of all language types where the keys of each are the language type
- *   name and its value is its configurability (TRUE/FALSE).
- */
-function language_types_get_all() {
-  $types = \Drupal::config('system.language.types')->get('all');
-  return $types ? $types : array_keys(language_types_get_default());
-}
-
-/**
- * Returns a list of the built-in language types.
- *
- * @return array
- *   An array of key-values pairs where the key is the language type name and
- *   the value is its configurability (TRUE/FALSE).
- */
-function language_types_get_default() {
-  return array(
-    Language::TYPE_INTERFACE => TRUE,
-    Language::TYPE_CONTENT => FALSE,
-    Language::TYPE_URL => FALSE,
-  );
-}
-
-/**
- * Returns TRUE if there is more than one language enabled.
- *
- * @return bool
- *   TRUE if more than one language is enabled.
- */
-function language_multilingual() {
-  return \Drupal::languageManager()->isMultilingual();
+  return \Drupal::languageManager()->getCurrentLanguage($type);
 }
 
 /**
@@ -2397,101 +2360,12 @@ function language_multilingual() {
  * @return array
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal::languageManager()->getLanguages() instead.
  */
 function language_list($flags = Language::STATE_CONFIGURABLE) {
-
-  $languages = &drupal_static(__FUNCTION__);
-
-  // Initialize master language list.
-  if (!isset($languages)) {
-    // Initialize local language list cache.
-    $languages = array();
-
-    // Fill in master language list based on current configuration.
-    $default = language_default();
-    if (language_multilingual() || \Drupal::moduleHandler()->moduleExists('language')) {
-      // Use language module configuration if available.
-      $language_entities = config_get_storage_names_with_prefix('language.entity.');
-
-      // Initialize default property so callers have an easy reference and can
-      // save the same object without data loss.
-      foreach ($language_entities as $langcode_config_name) {
-        $langcode = substr($langcode_config_name, strlen('language.entity.'));
-        $info = \Drupal::config($langcode_config_name)->get();
-        $languages[$langcode] = new Language(array(
-          'default' => ($info['id'] == $default->id),
-          'name' => $info['label'],
-          'id' => $info['id'],
-          'direction' => $info['direction'],
-          'locked' => $info['locked'],
-          'weight' => $info['weight'],
-        ));
-      }
-      Language::sort($languages);
-    }
-    // If the language module is enabled but the configuration has not been
-    // written yet, returning an empty language list will cause errors. For
-    // example the cache clear in search_module_preinstall().
-    if (empty($languages)) {
-      // No language module, so use the default language only.
-      $languages = array($default->id => $default);
-      // Add the special languages, they will be filtered later if needed.
-      $languages += language_default_locked_languages($default->weight);
-    }
-  }
-
-  // Filter the full list of languages based on the value of the $all flag. By
-  // default we remove the locked languages, but the caller may request for
-  // those languages to be added as well.
-  $filtered_languages = array();
-
-  // Add the site's default language if flagged as allowed value.
-  if ($flags & Language::STATE_SITE_DEFAULT) {
-    $default = isset($default) ? $default : language_default();
-    // Rename the default language.
-    $default->name = t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
-    $filtered_languages['site_default'] = $default;
-  }
-
-  foreach ($languages as $langcode => $language) {
-    if (($language->locked && !($flags & Language::STATE_LOCKED)) || (!$language->locked && !($flags & Language::STATE_CONFIGURABLE))) {
-      continue;
-     }
-    $filtered_languages[$langcode] = $language;
-  }
-
-  return $filtered_languages;
-}
-
-/**
- * Returns a list of the default locked languages.
- *
- * @param int $weight
- *   An integer value that is used as the start value for the weights of the
- *   locked languages.
- *
- * @return array
- *   An array of language objects.
- */
-function language_default_locked_languages($weight = 0) {
-  $locked_language = array(
-    'default' => FALSE,
-    'locked' => TRUE,
-    'enabled' => TRUE,
-  );
-
-  $languages = array();
-  $languages[Language::LANGCODE_NOT_SPECIFIED] = new Language(array(
-    'id' => Language::LANGCODE_NOT_SPECIFIED,
-    'name' => t('Not specified'),
-    'weight' => ++$weight,
-  ) + $locked_language);
-  $languages[Language::LANGCODE_NOT_APPLICABLE] = new Language(array(
-    'id' => Language::LANGCODE_NOT_APPLICABLE,
-    'name' => t('Not applicable'),
-    'weight' => ++$weight,
-  ) + $locked_language);
-  return $languages;
+  return \Drupal::languageManager()->getLanguages($flags);
 }
 
 /**
@@ -2502,47 +2376,14 @@ function language_default_locked_languages($weight = 0) {
  *
  * @return \Drupal\core\Language\Language|null
  *   A fully-populated language object or NULL.
+ *
+ * @see \Drupal\Core\Language\LanguageManager::getLanguage()
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal::languageManager()->getLanguage()
+ *   instead.
  */
 function language_load($langcode) {
-  $languages = language_list(Language::STATE_ALL);
-  return isset($languages[$langcode]) ? $languages[$langcode] : NULL;
-}
-
-/**
- * Produced the printed name for a language for display.
- *
- * @param string $langcode
- *   The language code.
- *
- * @return string
- *   The printed name of the language.
- */
-function language_name($langcode) {
-  if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
-    return t('None');
-  }
-
-  if ($language = language_load($langcode)) {
-    return $language->name;
-  }
-  if (empty($langcode)) {
-    return t('Unknown');
-  }
-  return t('Unknown (@langcode)', array('@langcode' => $langcode));
-}
-
-/**
- * Checks if a language is locked.
- *
- * @param string $langcode
- *   The language code.
- *
- * @return bool
- *   Returns whether the language is locked.
- */
-function language_is_locked($langcode) {
-  $language = language_load($langcode);
-  return ($language ? $language->locked : FALSE);
+  return \Drupal::languageManager()->getLanguage($langcode);
 }
 
 /**
@@ -2550,35 +2391,12 @@ function language_is_locked($langcode) {
  *
  * @return \Drupal\Core\Language\Language
  *   A language object.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal::languageManager()->getDefaultLanguage() instead.
  */
 function language_default() {
-  $info = variable_get('language_default', array(
-    'id' => 'en',
-    'name' => 'English',
-    'direction' => 0,
-    'weight' => 0,
-    'locked' => 0,
-  ));
-  $info['default'] = TRUE;
-  return new Language($info);
-}
-
-/**
- * Stores or retrieves the path derived during language negotiation.
- *
- * @param string $new_path
- *   The altered path.
- *
- * @todo Replace this with a path processor in language module. See
- *   http://drupal.org/node/1888424.
- */
-function _language_resolved_path($new_path = NULL) {
-  $path = &drupal_static(__FUNCTION__, NULL);
-  if ($new_path === NULL) {
-    return $path;
-  }
-  $path = $new_path;
-  return $path;
+  return \Drupal::languageManager()->getDefaultLanguage();
 }
 
 /**

@@ -1,12 +1,9 @@
 services:
-  path_processor_language:
-    class: Drupal\language\HttpKernel\PathProcessorLanguage
-    arguments: ['@config.factory', '@settings', '@language_manager']
-    tags:
-      - { name: path_processor_inbound, priority: 300 }
-      - { name: path_processor_outbound, priority: 100 }
-  language_config_subscriber:
-    class: Drupal\language\LanguageConfigSubscriber
-    tags:
-      - { name: event_subscriber }
-    arguments: ['@language_manager', '@config.factory']
+  plugin.manager.language_negotiation_method:
+    class: Drupal\language\LanguageNegotiationMethodManager
+    arguments: ['@container.namespaces', '@cache.cache', '@module_handler']
+  language_negotiator:
+    class: Drupal\language\LanguageNegotiator
+    arguments: ['@language_manager', '@plugin.manager.language_negotiation_method', '@config.factory', '@settings']
+    calls:
+      - [initLanguageManager]

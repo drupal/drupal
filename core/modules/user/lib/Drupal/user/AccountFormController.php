@@ -10,7 +10,10 @@ namespace Drupal\user;
 use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin;
+use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,7 +24,7 @@ abstract class AccountFormController extends ContentEntityFormController {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -30,10 +33,10 @@ abstract class AccountFormController extends ContentEntityFormController {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LanguageManager $language_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
     parent::__construct($entity_manager);
     $this->languageManager = $language_manager;
   }
@@ -214,9 +217,12 @@ abstract class AccountFormController extends ContentEntityFormController {
 
     $user_preferred_admin_langcode = $register ? $language_interface->id : $account->getPreferredAdminLangcode();
 
-    // Is default the interface language?
-    include_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $interface_language_is_default = language_negotiation_method_get_first(Language::TYPE_INTERFACE) != LANGUAGE_NEGOTIATION_SELECTED;
+    // Is the user preferred language enabled?
+    $user_language_enabled = FALSE;
+    if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
+      $negotiator = $this->languageManager->getNegotiator();
+      $user_language_enabled = $negotiator && $negotiator->isNegotiationMethodEnabled(LanguageNegotiationUser::METHOD_ID, Language::TYPE_INTERFACE);
+    }
     $form['language'] = array(
       '#type' => $this->languageManager->isMultilingual() ? 'details' : 'container',
       '#title' => $this->t('Language settings'),
@@ -230,26 +236,22 @@ abstract class AccountFormController extends ContentEntityFormController {
       '#title' => $this->t('Site language'),
       '#languages' => Language::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_langcode,
-      '#description' => $interface_language_is_default ? $this->t("This account's preferred language for e-mails and site presentation.") : $this->t("This account's preferred language for e-mails."),
+      '#description' => $user_language_enabled ? $this->t("This account's preferred language for e-mails and site presentation.") : $this->t("This account's preferred language for e-mails."),
     );
 
     // Only show the account setting for Administration pages language to users
     // if one of the detection and selection methods uses it.
     $show_admin_language = FALSE;
-    if ($this->moduleHandler->moduleExists('language') && $this->languageManager->isMultilingual()) {
-      foreach (language_types_info() as $type_key => $language_type) {
-        $negotiation_settings = variable_get("language_negotiation_{$type_key}", array());
-        if ($show_admin_language = isset($negotiation_settings[LANGUAGE_NEGOTIATION_USER_ADMIN])) {
-          break;
-        }
-      }
+    if ($account->hasPermission('access administration pages') && $this->languageManager instanceof ConfigurableLanguageManagerInterface) {
+      $negotiator = $this->languageManager->getNegotiator();
+      $show_admin_language = $negotiator && $negotiator->isNegotiationMethodEnabled(LanguageNegotiationUserAdmin::METHOD_ID);
     }
     $form['language']['preferred_admin_langcode'] = array(
       '#type' => 'language_select',
       '#title' => $this->t('Administration pages language'),
       '#languages' => Language::STATE_CONFIGURABLE,
       '#default_value' => $user_preferred_admin_langcode,
-      '#access' => $show_admin_language && user_access('access administration pages', $account),
+      '#access' => $show_admin_language,
     );
     // User entities contain both a langcode property (for identifying the
     // language of the entity data) and a preferred_langcode property (see

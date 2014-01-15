@@ -1,5 +1,22 @@
 # Schema for the configuration files of the Language module.
 
+language.types:
+  type: mapping
+  label: 'Language types'
+  mapping:
+    all:
+      type: sequence
+      label: 'All language types'
+      sequence:
+        - type: string
+          label: 'Language type'
+    configurable:
+      type: sequence
+      label: 'Configurable language types'
+      sequence:
+        - type: string
+          label: 'Language type'
+
 language.detection:
   type: mapping
   label: 'Language detection settings'

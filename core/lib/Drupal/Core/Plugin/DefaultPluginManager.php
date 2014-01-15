@@ -14,7 +14,7 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
@@ -84,7 +84,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -115,7 +115,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManager
+   * @param \Drupal\Core\Language\LanguageManagerInterface
    *   The language manager.
    * @param string $cache_key_prefix
    *   Cache key prefix to use, the language code will be appended
@@ -129,11 +129,11 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   clearCachedDefinitions() method. Only use cache tags when cached plugin
    *   definitions should be cleared along with other, related cache entries.
    */
-  public function setCacheBackend(CacheBackendInterface $cache_backend, LanguageManager $language_manager, $cache_key_prefix, array $cache_tags = array()) {
+  public function setCacheBackend(CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, $cache_key_prefix, array $cache_tags = array()) {
     $this->languageManager = $language_manager;
     $this->cacheBackend = $cache_backend;
     $this->cacheKeyPrefix = $cache_key_prefix;
-    $this->cacheKey = $cache_key_prefix . ':' . $language_manager->getLanguage(Language::TYPE_INTERFACE)->id;
+    $this->cacheKey = $cache_key_prefix . ':' . $language_manager->getCurrentLanguage()->id;
     $this->cacheTags = $cache_tags;
   }
 
@@ -186,13 +186,15 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
         // Use the cache tags to clear the cache.
         $this->cacheBackend->deleteTags($this->cacheTags);
       }
-      else {
+      elseif ($this->languageManager) {
         $cache_keys = array();
-        // @todo: Use $this->languageManager->languageList() after http://drupal.org/node/1862202 is in.
-        foreach (language_list() as $langcode => $language) {
-          $cache_keys[] = $this->cacheKeyPrefix . ':' .$langcode;
+        foreach ($this->languageManager->getLanguages() as $langcode => $language) {
+          $cache_keys[] = $this->cacheKeyPrefix . ':' . $langcode;
         }
         $this->cacheBackend->deleteMultiple($cache_keys);
+      }
+      else {
+        $this->cacheBackend->delete($this->cacheKey);
       }
     }
     $this->definitions = NULL;

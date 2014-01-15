@@ -57,7 +57,7 @@ function path_admin_overview($keys = NULL) {
       'attributes' => array('title' => $data->source),
     ));
     if ($multilanguage) {
-      $row['data']['language_name'] = language_name($data->langcode);
+      $row['data']['language_name'] = \Drupal::languageManager()->getLanguageName($data->langcode);
     }
 
     $operations = array();

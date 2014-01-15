@@ -5,8 +5,13 @@
  * Add language handling functionality to Drupal.
  */
 
-use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Language\Language;
+use Drupal\language\ConfigurableLanguageManager;
+use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
+use Drupal\node\NodeTypeInterface;
 
 /**
  * Implements hook_help().
@@ -451,6 +456,7 @@ function language_save($language) {
   $language_entity->weight = isset($language->weight) ? $language->weight : 0;
 
   // Save the record and inform others about the change.
+  $multilingual = \Drupal::languageManager()->isMultilingual();
   $language_entity->save();
   $t_args = array('%language' => $language->name, '%langcode' => $language->id);
   if ($language->is_new) {
@@ -467,39 +473,23 @@ function language_save($language) {
     variable_set('language_default', (array) $language);
   }
 
-  // Kill the static cache in language_list().
-  drupal_static_reset('language_list');
-
-  // Update language count based on unlocked language count.
-  language_update_count();
-
-  // Update weight of locked system languages.
-  language_update_locked_weights();
-
-  language_negotiation_include();
+  $language_manager = \Drupal::languageManager();
+  $language_manager->reset();
+  if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+    $language_manager->updateLockedLanguageWeights();
+  }
 
   // Update URL Prefixes for all languages after the new default language is
   // propagated and the language_list() cache is flushed.
   language_negotiation_url_prefixes_update();
 
-  return $language;
-}
-
-/**
- * Updates the language_count state.
- *
- * This is used to check if a site is multilingual or not.
- *
- * @see language_multilingual()
- */
-function language_update_count() {
-  $count = 0;
-  foreach (entity_load_multiple('language_entity') as $language) {
-    if (!$language->locked) {
-      $count++;
-    }
+  // If after adding this language the site will become multilingual, we need to
+  // rebuild language services.
+  if (!$multilingual && $language->is_new) {
+    ConfigurableLanguageManager::rebuildServices();
   }
-  \Drupal::state()->set('language_count', $count);
+
+  return $language;
 }
 
 /**
@@ -521,12 +511,17 @@ function language_delete($langcode) {
     // Remove the language.
     entity_delete_multiple('language_entity', array($language->id));
 
-    drupal_static_reset('language_list');
+    $language_manager = \Drupal::languageManager();
+    $language_manager->reset();
+    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+      $language_manager->updateLockedLanguageWeights();
+    }
 
-    language_update_count();
-
-    // Update weight of locked system languages.
-    language_update_locked_weights();
+    // If after deleting this language the site will become monolingual, we need
+    // to rebuild language services.
+    if (!\Drupal::languageManager()->isMultilingual()) {
+      ConfigurableLanguageManager::rebuildServices();
+    }
 
     $t_args = array('%language' => $language->name, '%langcode' => $language->id);
     watchdog('language', 'The %language (%langcode) language has been removed.', $t_args);
@@ -570,8 +565,6 @@ function language_library_info() {
  *   language if none is specified.
  */
 function language_language_types_info() {
-  language_negotiation_include();
-
   return array(
     Language::TYPE_INTERFACE => array(
       'name' => t('User interface text'),
@@ -581,114 +574,75 @@ function language_language_types_info() {
     Language::TYPE_CONTENT => array(
       'name' => t('Content'),
       'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
-      'fixed' => array(LANGUAGE_NEGOTIATION_INTERFACE),
+      'fixed' => array(LanguageNegotiationUI::METHOD_ID),
       'locked' => TRUE,
     ),
     Language::TYPE_URL => array(
-      'fixed' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_URL_FALLBACK),
+      'fixed' => array(LanguageNegotiationUrl::METHOD_ID, LanguageNegotiationUrlFallback::METHOD_ID),
       'locked' => TRUE,
     ),
   );
 }
 
 /**
- * Implements hook_language_negotiation_info().
+ * Reads language prefixes and uses the langcode if no prefix is set.
  */
-function language_language_negotiation_info() {
-  language_negotiation_include();
-  $file = drupal_get_path('module', 'language') . '/language.negotiation.inc';
-
-  $negotiation_info = array();
-  $negotiation_info[LANGUAGE_NEGOTIATION_URL] = array(
-    'types' => array(Language::TYPE_CONTENT, Language::TYPE_INTERFACE, Language::TYPE_URL),
-    'callbacks' => array(
-      'negotiation' => 'language_from_url',
-      'language_switch' => 'language_switcher_url',
-    ),
-    'file' => $file,
-    'weight' => -8,
-    'name' => t('URL'),
-    'description' => t('Language from the URL (Path prefix or domain).'),
-    'config' => 'admin/config/regional/language/detection/url',
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_SESSION] = array(
-    'callbacks' => array(
-      'negotiation' => 'language_from_session',
-      'language_switch' => 'language_switcher_session',
-      'url_rewrite' => 'language_url_rewrite_session',
-    ),
-    'file' => $file,
-    'weight' => -6,
-    'name' => t('Session'),
-    'description' => t('Language from a request/session parameter.'),
-    'config' => 'admin/config/regional/language/detection/session',
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_USER] = array(
-    'callbacks' => array('negotiation' => 'language_from_user'),
-    'file' => $file,
-    'weight' => -4,
-    'name' => t('Account preference for site'),
-    'description' => t("The language setting for the site in the user's account."),
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_BROWSER] = array(
-    'callbacks' => array('negotiation' => 'language_from_browser'),
-    'file' => $file,
-    'weight' => -2,
-    'cache' => 0,
-    'name' => t('Browser'),
-    'description' => t("Language from the browser's language settings."),
-    'config' => 'admin/config/regional/language/detection/browser',
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_INTERFACE] = array(
-    'types' => array(Language::TYPE_CONTENT),
-    'callbacks' => array('negotiation' => 'language_from_interface'),
-    'file' => $file,
-    'weight' => 8,
-    'name' => t('Interface'),
-    'description' => t('Use the detected interface language.'),
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_URL_FALLBACK] = array(
-    'types' => array(Language::TYPE_URL),
-    'callbacks' => array('negotiation' => 'language_url_fallback'),
-    'file' => $file,
-    'weight' => 8,
-    'name' => t('URL fallback'),
-    'description' => t('Use an already detected language for URLs if none is found.'),
-  );
-
-  $negotiation_info[LANGUAGE_NEGOTIATION_USER_ADMIN] = array(
-    'types' => array(Language::TYPE_INTERFACE),
-    'callbacks' => array('negotiation' => 'language_from_user_admin'),
-    'file' => $file,
-    'weight' => 10,
-    'name' => t('Account preference for administration pages'),
-    'description' => t("The language setting for account administration pages in the user's account."),
-  );
-
-  return $negotiation_info;
+function language_negotiation_url_prefixes() {
+  return \Drupal::config('language.negotiation')->get('url.prefixes');
 }
 
 /**
- * Include negotiation backend functionality.
+ * Update the list of prefixes from the installed languages.
  */
-function language_negotiation_include() {
-  include_once DRUPAL_ROOT . '/core/includes/language.inc';
-  include_once __DIR__ . '/language.negotiation.inc';
+function language_negotiation_url_prefixes_update() {
+  $prefixes = language_negotiation_url_prefixes();
+  foreach (language_list() as $language) {
+    // The prefix for this language should be updated if it's not assigned yet
+    // or the prefix is set to the empty string.
+    if (empty($prefixes[$language->id])) {
+      // For the default language, set the prefix to the empty string,
+      // otherwise use the langcode.
+      $prefixes[$language->id] = !empty($language->default) ? '' : $language->id;
+    }
+    // Otherwise we keep the configured prefix.
+  }
+  language_negotiation_url_prefixes_save($prefixes);
+}
+
+/**
+ * Saves language prefix settings.
+ */
+function language_negotiation_url_prefixes_save(array $prefixes) {
+  \Drupal::config('language.negotiation')
+  ->set('url.prefixes', $prefixes)
+  ->save();
+}
+
+/**
+ * Reads language domains.
+ */
+function language_negotiation_url_domains() {
+  return \Drupal::config('language.negotiation')->get('url.domains');
+}
+
+/**
+ * Saves the language domain settings.
+ */
+function language_negotiation_url_domains_save(array $domains) {
+  \Drupal::config('language.negotiation')
+  ->set('url.domains', $domains)
+  ->save();
 }
 
 /**
  * Implements hook_modules_installed().
  */
 function language_modules_installed($modules) {
-  include_once DRUPAL_ROOT . '/core/includes/language.inc';
-  // Load configurability options from configuration.
-  language_types_set(array());
-  language_negotiation_purge();
+  if (!in_array('language', $modules)) {
+    $negotiator = \Drupal::service('language_negotiator');
+    $negotiator->updateConfiguration(array());
+    $negotiator->purgeConfiguration();
+  }
 }
 
 /**
@@ -706,8 +660,6 @@ function language_language_insert($language) {
     return;
   }
 
-  language_negotiation_include();
-
   // Add language to the list of language domains.
   $domains = language_negotiation_url_domains();
   $domains[$language->id] = '';
@@ -718,8 +670,6 @@ function language_language_insert($language) {
  * Implements hook_language_delete().
  */
 function language_language_delete($language) {
-  language_negotiation_include();
-
   // Remove language from language prefix list.
   $prefixes = language_negotiation_url_prefixes();
   unset($prefixes[$language->id]);
@@ -766,29 +716,6 @@ function language_set_browser_drupal_langcode_mappings($mappings) {
   $config = \Drupal::config('language.mappings');
   $config->setData($mappings);
   $config->save();
-}
-
-/**
- * Updates locked system language weights.
- */
-function language_update_locked_weights() {
-  $max_weight = 0;
-
-  // Get maximum weight to update the system languages to keep them on bottom.
-  foreach (language_list(Language::STATE_CONFIGURABLE) as $language) {
-    if (!$language->locked && $language->weight > $max_weight) {
-      $max_weight = $language->weight;
-    }
-  }
-
-  // Loop locked languages to maintain the existing order.
-  foreach (language_list(Language::STATE_LOCKED) as $language) {
-    $max_weight++;
-    // Update system languages weight.
-    \Drupal::config('language.entity.' . $language->id)
-      ->set('weight', $max_weight)
-      ->save();
-  }
 }
 
 /**

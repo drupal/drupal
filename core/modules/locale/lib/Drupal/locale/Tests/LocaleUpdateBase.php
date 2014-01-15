@@ -80,7 +80,7 @@ class LocaleUpdateBase extends WebTestBase {
   protected function addLanguage($langcode) {
     $edit = array('predefined_langcode' => $langcode);
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
-    drupal_static_reset('language_list');
+    $this->container->get('language_manager')->reset();
     $this->assertTrue(language_load($langcode), String::format('Language %langcode added.', array('%langcode' => $langcode)));
   }
 

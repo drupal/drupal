@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -48,17 +49,27 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
   protected $cacheBin = 'cache';
 
   /**
+   * The language manager.
+   *
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   */
+  protected $languageManager;
+
+  /**
    * Constructs a new EntityViewBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
    *   The entity information array.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager) {
+  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
     $this->entityType = $entity_info->id();
     $this->entityInfo = $entity_info;
     $this->entityManager = $entity_manager;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -67,7 +78,8 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
     return new static(
       $entity_info,
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('language_manager')
     );
   }
 
@@ -174,7 +186,7 @@ class EntityViewBuilder implements EntityControllerInterface, EntityViewBuilderI
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
     if (!isset($langcode)) {
-      $langcode = language(Language::TYPE_CONTENT)->id;
+      $langcode = $this->languageManager->getCurrentLanguage(Language::TYPE_CONTENT)->id;
     }
 
     // Build the view modes and display objects.

@@ -79,7 +79,7 @@ class LinkGeneratorTest extends UnitTestCase {
 
     $this->urlGenerator = $this->getMock('\Drupal\Core\Routing\UrlGenerator', array(), array(), '', FALSE);
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManager');
+    $this->languageManager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
     $this->linkGenerator = new LinkGenerator($this->urlGenerator, $this->moduleHandler, $this->languageManager);
   }
@@ -89,7 +89,7 @@ class LinkGeneratorTest extends UnitTestCase {
    */
   public function setUpLanguageManager() {
     $this->languageManager->expects($this->any())
-      ->method('getLanguage')
+      ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
   }
 

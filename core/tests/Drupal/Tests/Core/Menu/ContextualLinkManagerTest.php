@@ -113,11 +113,9 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($this->contextualLinkManager, $this->accessManager);
 
-    $language_manager = $this->getMockBuilder('Drupal\Core\Language\LanguageManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->any())
-      ->method('getLanguage')
+      ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
     $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');

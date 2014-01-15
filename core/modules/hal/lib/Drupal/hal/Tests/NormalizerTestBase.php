@@ -73,6 +73,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
     $german = new Language(array(
       'id' => 'de',
       'name' => 'Deutsch',
+      'weight' => -1,
     ));
     language_save($german);
 

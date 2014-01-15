@@ -66,7 +66,7 @@ class CommentFormController extends ContentEntityFormController {
     // Make the comment inherit the current content language unless specifically
     // set.
     if ($comment->isNew()) {
-      $language_content = \Drupal::languageManager()->getLanguage(Language::TYPE_CONTENT);
+      $language_content = \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
       $comment->langcode->value = $language_content->id;
     }
 

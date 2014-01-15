@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
 /**
  * Implements hook_install().
@@ -14,15 +16,16 @@ use Drupal\Core\Language\Language;
  * system on multilingual sites without needing any preliminary configuration.
  */
 function language_install() {
-  // Enable URL language detection for each configurable language type.
-  require_once DRUPAL_ROOT . '/core/includes/language.inc';
-  foreach (language_types_get_configurable() as $type) {
-    module_load_include('inc', 'language', 'language.negotiation');
-    language_negotiation_set($type, array(LANGUAGE_NEGOTIATION_URL => 0));
+  $language_manager = \Drupal::languageManager();
+  if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+    $negotiator = \Drupal::service('language_negotiator');
+    $types = $language_manager->getLanguageTypes();
+    $negotiator->updateConfiguration($types);
+    // Enable URL language detection for each configurable language type.
+    foreach ($types as $type) {
+      $negotiator->saveConfiguration($type, array(LanguageNegotiationUrl::METHOD_ID => 0));
+    }
   }
-
-  // Update the language count.
-  language_update_count();
 }
 
 /**
@@ -31,12 +34,9 @@ function language_install() {
 function language_uninstall() {
   // Clear variables.
   variable_del('language_default');
-  \Drupal::state()->delete('language_count');
 
   // Clear variables.
-  variable_del('language_types');
-
-  foreach (language_types_get_all() as $type) {
+  foreach (\Drupal::languageManager()->getDefinedLanguageTypes() as $type) {
     variable_del("language_negotiation_$type");
     variable_del("language_negotiation_methods_weight_$type");
   }
@@ -44,19 +44,4 @@ function language_uninstall() {
   // Re-initialize the language system so successive calls to t() and other
   // functions will not expect languages to be present.
   drupal_language_initialize();
-
-  // Force the language_count state to be 1, so that when checking if the
-  // site is multilingual (for example in language_multilingual()), the result
-  // will be FALSE, because the language module is not installed.
-  \Drupal::state()->set('language_count', 1);
-}
-
-/**
- * Implements hook_requirements().
- */
-function language_requirements($phase) {
-  if ($phase == 'update') {
-    // Load the include files to make constants available for updates.
-    language_negotiation_include();
-  }
 }

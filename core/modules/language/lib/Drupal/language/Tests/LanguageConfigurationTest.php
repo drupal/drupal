@@ -72,7 +72,7 @@ class LanguageConfigurationTest extends WebTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertOptionSelected('edit-site-default-language', 'fr', 'Default language updated.');
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/settings', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertEqual($this->getUrl(), url('fr/admin/config/regional/settings', array('absolute' => TRUE)), 'Correct page redirection.');
 
     // Check if a valid language prefix is added after changing the default
     // language.
@@ -156,10 +156,10 @@ class LanguageConfigurationTest extends WebTestBase {
    */
   protected function checkConfigurableLanguageWeight($state = 'by default') {
     // Reset language list.
-    drupal_static_reset('language_list');
+    \Drupal::languageManager()->reset();
     $max_configurable_language_weight = $this->getHighestConfigurableLanguageWeight();
     $replacements = array('@event' => $state);
-    foreach (language_list(Language::STATE_LOCKED) as $locked_language) {
+    foreach (\Drupal::languageManager()->getLanguages(Language::STATE_LOCKED) as $locked_language) {
       $replacements['%language'] = $locked_language->name;
       $this->assertTrue($locked_language->weight > $max_configurable_language_weight, format_string('System language %language has higher weight than configurable languages @event', $replacements));
     }

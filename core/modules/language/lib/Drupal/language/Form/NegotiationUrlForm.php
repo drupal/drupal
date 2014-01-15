@@ -8,6 +8,7 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
 /**
  * Configure the URL language negotiation method for this site.
@@ -27,14 +28,13 @@ class NegotiationUrlForm extends ConfigFormBase {
   public function buildForm(array $form, array &$form_state) {
     global $base_url;
     $config = $this->configFactory->get('language.negotiation');
-    language_negotiation_include();
 
     $form['language_negotiation_url_part'] = array(
       '#title' => t('Part of the URL that determines language'),
       '#type' => 'radios',
       '#options' => array(
-        LANGUAGE_NEGOTIATION_URL_PREFIX => t('Path prefix'),
-        LANGUAGE_NEGOTIATION_URL_DOMAIN => t('Domain'),
+        LanguageNegotiationUrl::CONFIG_PATH_PREFIX => t('Path prefix'),
+        LanguageNegotiationUrl::CONFIG_DOMAIN => t('Domain'),
       ),
       '#default_value' => $config->get('url.source'),
     );
@@ -47,7 +47,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       '#states' => array(
         'visible' => array(
           ':input[name="language_negotiation_url_part"]' => array(
-            'value' => (string) LANGUAGE_NEGOTIATION_URL_PREFIX,
+            'value' => (string) LanguageNegotiationUrl::CONFIG_PATH_PREFIX,
           ),
         ),
       ),
@@ -60,7 +60,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       '#states' => array(
         'visible' => array(
           ':input[name="language_negotiation_url_part"]' => array(
-            'value' => (string) LANGUAGE_NEGOTIATION_URL_DOMAIN,
+            'value' => (string) LanguageNegotiationUrl::CONFIG_DOMAIN,
           ),
         ),
       ),
@@ -103,7 +103,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       $value = $form_state['values']['prefix'][$langcode];
 
       if ($value === '') {
-        if (!$language->default && $form_state['values']['language_negotiation_url_part'] == LANGUAGE_NEGOTIATION_URL_PREFIX) {
+        if (!$language->default && $form_state['values']['language_negotiation_url_part'] == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
           // Throw a form error if the prefix is blank for a non-default language,
           // although it is required for selected negotiation type.
           $this->setFormError("prefix][$langcode", $form_state, t('The prefix may only be left blank for the default language.'));
@@ -127,7 +127,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       $value = $form_state['values']['domain'][$langcode];
 
       if ($value === '') {
-        if (!$language->default && $form_state['values']['language_negotiation_url_part'] == LANGUAGE_NEGOTIATION_URL_DOMAIN) {
+        if (!$language->default && $form_state['values']['language_negotiation_url_part'] == LanguageNegotiationUrl::CONFIG_DOMAIN) {
           // Throw a form error if the domain is blank for a non-default language,
           // although it is required for selected negotiation type.
           $this->setFormError("domain][$langcode", $form_state, t('The domain may only be left blank for the default language.'));

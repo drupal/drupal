@@ -7,8 +7,10 @@
 
 namespace Drupal\language\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Component\Utility\UserAgent;
 use Drupal\Core\Language\Language;
+use Drupal\simpletest\WebTestBase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Test browser language detection.
@@ -153,9 +155,9 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
       'zh-cht' => 'zh-hant',
     );
 
+    $mappings = $this->container->get('config.factory')->get('language.mappings')->get();
     foreach ($test_cases as $accept_language => $expected_result) {
-      \Drupal::request()->server->set('HTTP_ACCEPT_LANGUAGE', $accept_language);
-      $result = language_from_browser($languages);
+      $result = UserAgent::getBestMatchingLangcode($accept_language, array_keys($languages), $mappings);
       $this->assertIdentical($result, $expected_result, format_string("Language selection '@accept-language' selects '@result', result = '@actual'", array('@accept-language' => $accept_language, '@result' => $expected_result, '@actual' => isset($result) ? $result : 'none')));
     }
   }

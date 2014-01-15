@@ -66,9 +66,7 @@ class BlockFormControllerTest extends UnitTestCase {
       ->method('getStorageController')
       ->will($this->returnValue($block_storage));
 
-    $language_manager = $this->getMockBuilder('Drupal\Core\Language\LanguageManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
     $config_factory = $this->getMockBuilder('Drupal\Core\Config\ConfigFactory')
       ->disableOriginalConstructor()

@@ -83,7 +83,6 @@ class CommentLanguageTest extends WebTestBase {
    * Test that comment language is properly set.
    */
   function testCommentLanguage() {
-    drupal_static_reset('language_list');
 
     // Create two nodes, one for english and one for french, and comment each
     // node using both english and french as content language by changing URL

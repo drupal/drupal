@@ -7,9 +7,13 @@
 
 namespace Drupal\locale\Tests;
 
-use Drupal\simpletest\WebTestBase;
-use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+use Drupal\simpletest\WebTestBase;
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 /**
  * Locale uninstall with English UI functional test.
@@ -90,14 +94,18 @@ class LocaleUninstallTest extends WebTestBase {
 
     // Change language negotiation options.
     drupal_load('module', 'locale');
-    \Drupal::config('system.language.types')->set('configurable', language_types_get_default() + array('language_custom' => TRUE))->save();
-    variable_set('language_negotiation_' . Language::TYPE_INTERFACE, language_language_negotiation_info());
-    variable_set('language_negotiation_' . Language::TYPE_CONTENT, language_language_negotiation_info());
-    variable_set('language_negotiation_' . Language::TYPE_URL, language_language_negotiation_info());
+    // Pick only core language types.
+    $language_manager = new LanguageManager();
+    $default_types = $language_manager->getLanguageTypes();
+    \Drupal::config('language.types')->set('configurable', $default_types + array('language_custom' => TRUE))->save();
+    $config = array_flip(array_keys(\Drupal::service('plugin.manager.language_negotiation_method')->getDefinitions()));
+    variable_set('language_negotiation_' . Language::TYPE_INTERFACE, $config);
+    variable_set('language_negotiation_' . Language::TYPE_CONTENT, $config);
+    variable_set('language_negotiation_' . Language::TYPE_URL, $config);
 
     // Change language negotiation settings.
     \Drupal::config('language.negotiation')
-      ->set('url.source', LANGUAGE_NEGOTIATION_URL_PREFIX)
+      ->set('url.source', LanguageNegotiationUrl::CONFIG_PATH_PREFIX)
       ->set('session.parameter', TRUE)
       ->save();
 
@@ -113,19 +121,16 @@ class LocaleUninstallTest extends WebTestBase {
     // Check JavaScript files deletion.
     $this->assertTrue($result = !file_exists($js_file), String::format('JavaScript file deleted: %file', array('%file' => $result ? $js_file : 'found')));
 
-    // Check language count.
-    $language_count = $this->container->get('state')->get('language_count') ?: 1;
-    $this->assertEqual($language_count, 1, String::format('Language count: %count', array('%count' => $language_count)));
-
     // Check language negotiation.
-    require_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $this->assertTrue(count(language_types_get_all()) == count(language_types_get_default()), 'Language types reset');
-    $language_negotiation = language_negotiation_method_get_first(Language::TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_SELECTED;
-    $this->assertTrue($language_negotiation, String::format('Interface language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
-    $language_negotiation = language_negotiation_method_get_first(Language::TYPE_CONTENT) == LANGUAGE_NEGOTIATION_SELECTED;
-    $this->assertTrue($language_negotiation, String::format('Content language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
-    $language_negotiation = language_negotiation_method_get_first(Language::TYPE_URL) == LANGUAGE_NEGOTIATION_SELECTED;
-    $this->assertTrue($language_negotiation, String::format('URL language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
+    try {
+      $message = 'Language negotiation is not available.';
+      $this->assertTrue(count($this->container->get('language_manager')->getLanguageTypes()) == count($default_types), 'Language types reset');
+      \Drupal::service('language_negotiator');
+      $this->fail($message);
+    }
+    catch (InvalidArgumentException $e) {
+      $this->pass($message);
+    }
 
     // Check language negotiation method settings.
     $this->assertFalse(\Drupal::config('language.negotiation')->get('url.source'), 'URL language negotiation method indicator settings cleared.');

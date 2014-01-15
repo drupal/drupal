@@ -104,7 +104,7 @@ class PathLanguageTest extends PathTestBase {
     $this->container->get('path.alias_manager')->cacheClear();
 
     // Languages are cached on many levels, and we need to clear those caches.
-    drupal_static_reset('language_list');
+    $this->container->get('language_manager')->reset();
     $this->rebuildContainer();
     $languages = language_list();
 
@@ -117,7 +117,10 @@ class PathLanguageTest extends PathTestBase {
     $this->drupalGet('fr/' . $edit['path[alias]']);
     $this->assertText($french_node->body->value, 'Alias for French translation works.');
 
-    // Confirm that the alias is returned by url().
+    // Confirm that the alias is returned by url(). Languages are cached on
+    // many levels, and we need to clear those caches.
+    $this->container->get('language_manager')->reset();
+    $languages = language_list();
     $url = $this->container->get('url_generator')->generateFromPath('node/' . $french_node->id(), array('language' => $languages['fr']));
 
     $this->assertTrue(strpos($url, $edit['path[alias]']), 'URL contains the path alias.');

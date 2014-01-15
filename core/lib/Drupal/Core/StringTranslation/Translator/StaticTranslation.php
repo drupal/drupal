@@ -37,7 +37,7 @@ class StaticTranslation implements TranslatorInterface {
    */
   public function getStringTranslation($langcode, $string, $context) {
     if (!isset($this->translations[$langcode])) {
-      $this->translations[$langcode] = $this->loadLanguage($langcode);
+      $this->translations[$langcode] = $this->getLanguage($langcode);
     }
     if (isset($this->translations[$langcode][$context][$string])) {
       return $this->translations[$langcode][$context][$string];
@@ -60,7 +60,7 @@ class StaticTranslation implements TranslatorInterface {
    * @param string $langcode
    *   The langcode of the language.
    */
-  protected function loadLanguage($langcode) {
+  protected function getLanguage($langcode) {
     // This class is usually a base class but we do not declare as abstract
     // because it can be used on its own, by passing a simple array on the
     // constructor. This can be useful while testing, but it does not support

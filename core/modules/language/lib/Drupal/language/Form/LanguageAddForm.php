@@ -98,6 +98,7 @@ class LanguageAddForm extends LanguageFormBase {
     }
     // Save the language and inform the user that it happened.
     $language = language_save($language);
+
     drupal_set_message($this->t('The language %language has been created and can now be used.', array('%language' => $language->name)));
 
     // Tell the user they have the option to add a language switcher block

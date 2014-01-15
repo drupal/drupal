@@ -13,7 +13,8 @@ use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\language\ConfigurableLanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -45,7 +46,7 @@ class BlockFormController extends EntityFormController {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -63,12 +64,12 @@ class BlockFormController extends EntityFormController {
    *   The entity manager.
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
    *   The entity query factory.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, QueryFactory $entity_query_factory, LanguageManager $language_manager, ConfigFactory $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, QueryFactory $entity_query_factory, LanguageManagerInterface $language_manager, ConfigFactory $config_factory) {
     $this->storageController = $entity_manager->getStorageController('block');
     $this->entityQueryFactory = $entity_query_factory;
     $this->languageManager = $language_manager;
@@ -168,11 +169,11 @@ class BlockFormController extends EntityFormController {
     }
 
     // Configure the block visibility per language.
-    if ($this->moduleHandler->moduleExists('language') && $this->languageManager->isMultilingual()) {
-      $configurable_language_types = language_types_get_configurable();
+    if ($this->languageManager->isMultilingual() && $this->languageManager instanceof ConfigurableLanguageManagerInterface) {
+      $language_types = $this->languageManager->getLanguageTypes();
 
       // Fetch languages.
-      $languages = language_list(Language::STATE_ALL);
+      $languages = $this->languageManager->getLanguages(Language::STATE_ALL);
       $langcodes_options = array();
       foreach ($languages as $language) {
         // @todo $language->name is not wrapped with t(), it should be replaced
@@ -189,16 +190,16 @@ class BlockFormController extends EntityFormController {
       // If there are multiple configurable language types, let the user pick
       // which one should be applied to this visibility setting. This way users
       // can limit blocks by interface language or content language for example.
-      $language_types = language_types_info();
+      $info = $this->languageManager->getDefinedLanguageTypesInfo();
       $language_type_options = array();
-      foreach ($configurable_language_types as $type_key) {
-        $language_type_options[$type_key] = $language_types[$type_key]['name'];
+      foreach ($language_types as $type_key) {
+        $language_type_options[$type_key] = $info[$type_key]['name'];
       }
       $form['visibility']['language']['language_type'] = array(
         '#type' => 'radios',
         '#title' => $this->t('Language type'),
         '#options' => $language_type_options,
-        '#default_value' => !empty($visibility['language']['language_type']) ? $visibility['language']['language_type'] : $configurable_language_types[0],
+        '#default_value' => !empty($visibility['language']['language_type']) ? $visibility['language']['language_type'] : reset($language_types),
         '#access' => count($language_type_options) > 1,
       );
       $form['visibility']['language']['langcodes'] = array(

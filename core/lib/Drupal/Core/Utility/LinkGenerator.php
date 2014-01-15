@@ -10,7 +10,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -45,7 +45,7 @@ class LinkGenerator implements LinkGeneratorInterface {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManager
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -56,10 +56,10 @@ class LinkGenerator implements LinkGeneratorInterface {
    *   The url generator.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, LanguageManager $language_manager) {
+  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
     $this->urlGenerator = $url_generator;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
@@ -79,7 +79,7 @@ class LinkGenerator implements LinkGeneratorInterface {
     $parameters = $raw_variables ? $raw_variables->all() : array();
     $this->active = array(
       'route_name' => $request->attributes->get(RouteObjectInterface::ROUTE_NAME),
-      'language' => $this->languageManager->getLanguage(Language::TYPE_URL)->id,
+      'language' => $this->languageManager->getCurrentLanguage(Language::TYPE_URL)->id,
       'parameters' => $parameters + (array) $request->query->all(),
     );
   }
