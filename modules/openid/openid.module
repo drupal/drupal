@@ -839,7 +839,7 @@ function openid_verify_assertion($service, $response) {
   // direct verification: ignore the openid.assoc_handle, even if present.
   // See http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.1
   if (!empty($response['openid.assoc_handle']) && empty($response['openid.invalidate_handle'])) {
-    $association = db_query("SELECT * FROM {openid_association} WHERE assoc_handle = :assoc_handle", array(':assoc_handle' => $response['openid.assoc_handle']))->fetchObject();
+    $association = db_query("SELECT * FROM {openid_association} WHERE idp_endpoint_uri = :endpoint AND assoc_handle = :assoc_handle", array(':endpoint' => $service['uri'], ':assoc_handle' => $response['openid.assoc_handle']))->fetchObject();
   }
 
   if ($association && isset($association->session_type)) {
@@ -871,6 +871,7 @@ function openid_verify_assertion($service, $response) {
           // database to avoid reusing it again on a subsequent authentication request.
           // See http://openid.net/specs/openid-authentication-2_0.html#rfc.section.11.4.2.2
           db_delete('openid_association')
+            ->condition('idp_endpoint_uri', $service['uri'])
             ->condition('assoc_handle', $response['invalidate_handle'])
             ->execute();
         }

@@ -235,6 +235,12 @@ function drupal_get_form($form_id) {
  *     likely to occur during Ajax operations.
  *   - programmed: If TRUE, the form was submitted programmatically, usually
  *     invoked via drupal_form_submit(). Defaults to FALSE.
+ *   - programmed_bypass_access_check: If TRUE, programmatic form submissions
+ *     are processed without taking #access into account. Set this to FALSE
+ *     when submitting a form programmatically with values that may have been
+ *     input by the user executing the current request; this will cause #access
+ *     to be respected as it would on a normal form submission. Defaults to
+ *     TRUE.
  *   - process_input: Boolean flag. TRUE signifies correct form submission.
  *     This is always TRUE for programmed forms coming from drupal_form_submit()
  *     (see 'programmed' key), or if the form_id coming from the $_POST data is
@@ -402,6 +408,7 @@ function form_state_defaults() {
     'submitted' => FALSE,
     'executed' => FALSE,
     'programmed' => FALSE,
+    'programmed_bypass_access_check' => TRUE,
     'cache'=> FALSE,
     'method' => 'post',
     'groups' => array(),
@@ -1985,7 +1992,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
   // #access=FALSE on an element usually allow access for some users, so forms
   // submitted with drupal_form_submit() may bypass access restriction and be
   // treated as high-privilege users instead.
-  $process_input = empty($element['#disabled']) && ($form_state['programmed'] || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])));
+  $process_input = empty($element['#disabled']) && (($form_state['programmed'] && $form_state['programmed_bypass_access_check']) || ($form_state['process_input'] && (!isset($element['#access']) || $element['#access'])));
 
   // Set the element's #value property.
   if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
