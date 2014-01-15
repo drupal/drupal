@@ -185,7 +185,7 @@ namespace {
   // @todo Remove once drupal_render is converted to autoloadable code.
   if (!function_exists('drupal_render')) {
     function drupal_render($array) {
-      return isset($array['#markup']) ? $array['#markup'] : (string) $array;
+      return isset($array['#markup']) ? $array['#markup'] : '';
     }
   }
 
