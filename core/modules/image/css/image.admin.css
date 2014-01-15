@@ -70,8 +70,7 @@
 .image-anchor {
   width: auto;
 }
-.image-anchor .even,
-.image-anchor .odd {
+.image-anchor tr {
   background: none;
 }
 .image-anchor td {

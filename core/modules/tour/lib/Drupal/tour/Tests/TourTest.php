@@ -55,7 +55,7 @@ class TourTest extends TourTestBasic {
     // Navigate to tour-test-1 and verify the tour_test_1 tip is found with appropriate classes.
     $this->drupalGet('tour-test-1');
     $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./h2[contains(., :text)]]', array(
-      ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1 odd first',
+      ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
       ':data_id' => 'tour-test-1',
       ':text' => 'The first tip',
     ));
@@ -69,7 +69,7 @@ class TourTest extends TourTestBasic {
     $this->assertTourTips();
 
     $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./p//a[@href=:href and contains(., :text)]]', array(
-      ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1 odd first',
+      ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
       ':data_id' => 'tour-test-1',
       ':href' =>  url('<front>', array('absolute' => TRUE)),
       ':text' => 'Drupal',

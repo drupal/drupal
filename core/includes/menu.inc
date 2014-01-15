@@ -1108,14 +1108,8 @@ function menu_tree_output($tree) {
 
   $router_item = menu_get_item();
   $num_items = count($items);
-  foreach ($items as $i => $data) {
+  foreach ($items as $data) {
     $class = array();
-    if ($i == 0) {
-      $class[] = 'first';
-    }
-    if ($i == $num_items - 1) {
-      $class[] = 'last';
-    }
     // Set a class for the <li>-tag. Since $data['below'] may contain local
     // tasks, only set 'expanded' class if the link also has children within
     // the current menu.

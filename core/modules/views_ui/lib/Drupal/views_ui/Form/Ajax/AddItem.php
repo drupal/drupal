@@ -132,15 +132,13 @@ class AddItem extends ViewsFormBase {
       }
 
       foreach ($grouped_options as $group => $group_options) {
-        $zebra = 0;
         foreach ($group_options as $key => $option) {
-          $zebra_class = ($zebra % 2) ? 'odd' : 'even';
           $form['options']['name'][$key] = array(
             '#type' => 'checkbox',
             '#title' => $this->t('!group: !field', array('!group' => $option['group'], '!field' => $option['title'])),
             '#description' => $option['help'],
             '#return_value' => $key,
-            '#prefix' => "<div class='$zebra_class filterable-option'>",
+            '#prefix' => "<div class='filterable-option'>",
             '#suffix' => '</div>',
             '#states' => array(
               'visible' => array(
@@ -153,7 +151,6 @@ class AddItem extends ViewsFormBase {
               )
             )
           );
-          $zebra++;
         }
       }
 

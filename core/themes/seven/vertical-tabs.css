@@ -50,7 +50,7 @@
   text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
   text-decoration: none;
 }
-.vertical-tab-button.last a {
+.vertical-tab-button:last-child a {
   border-bottom: 0;
 }
 .vertical-tab-button.selected a,

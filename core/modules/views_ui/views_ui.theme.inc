@@ -24,14 +24,10 @@ use Drupal\Core\Template\Attribute;
  *     appended to the setting's description.
  */
 function template_preprocess_views_ui_display_tab_setting(&$variables) {
-  static $zebra = 0;
 
   // Add default class attributes.
   $variables['attributes']['class'][] = 'views-display-setting';
-  $variables['attributes']['class'][] = ($zebra % 2 === 0 ? 'odd' : 'even');
   $variables['attributes']['class'][] = 'clearfix';
-
-  $zebra++;
 
   // Put the primary link to the left side.
   array_unshift($variables['settings_links'], $variables['link']);

@@ -78,9 +78,9 @@ class ContextualDynamicContextTest extends WebTestBase {
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertResponse(200);
     $json = drupal_json_decode($response);
-    $this->assertIdentical($json[$ids[0]], '<ul class="contextual-links"><li class="nodepage-edit odd first last"><a href="' . base_path() . 'node/1/edit?destination=node">Edit</a></li></ul>');
+    $this->assertIdentical($json[$ids[0]], '<ul class="contextual-links"><li class="nodepage-edit"><a href="' . base_path() . 'node/1/edit?destination=node">Edit</a></li></ul>');
     $this->assertIdentical($json[$ids[1]], '');
-    $this->assertIdentical($json[$ids[2]], '<ul class="contextual-links"><li class="nodepage-edit odd first last"><a href="' . base_path() . 'node/3/edit?destination=node">Edit</a></li></ul>');
+    $this->assertIdentical($json[$ids[2]], '<ul class="contextual-links"><li class="nodepage-edit"><a href="' . base_path() . 'node/3/edit?destination=node">Edit</a></li></ul>');
     $this->assertIdentical($json[$ids[3]], '');
 
     // Authenticated user: can access contextual links, cannot edit articles.

@@ -1234,14 +1234,10 @@ function theme_links($variables) {
 
     $output .= '<ul' . new Attribute($attributes) . '>';
 
-    $num_links = count($links);
-    $i = 0;
     $active = \Drupal::linkGenerator()->getActive();
     $language_url = \Drupal::languageManager()->getLanguage(Language::TYPE_URL);
 
     foreach ($links as $key => $link) {
-      $i++;
-
       $link += array(
         'href' => NULL,
         'route_name' => NULL,
@@ -1252,14 +1248,6 @@ function theme_links($variables) {
       $class = array();
       // Use the array key as class name.
       $class[] = drupal_html_class($key);
-      // Add odd/even, first, and last classes.
-      $class[] = ($i % 2 ? 'odd' : 'even');
-      if ($i == 1) {
-        $class[] = 'first';
-      }
-      if ($i == $num_links) {
-        $class[] = 'last';
-      }
 
       $link_element = array(
         '#type' => 'link',
@@ -1810,23 +1798,13 @@ function theme_item_list($variables) {
   if ($items) {
     $output .= '<' . $list_type . new Attribute($list_attributes) . '>';
 
-    $num_items = count($items);
-    $i = 0;
     foreach ($items as &$item) {
-      $i++;
       $attributes = array();
       if (is_array($item)) {
         if (isset($item['#wrapper_attributes'])) {
           $attributes = $item['#wrapper_attributes'];
         }
         $item = drupal_render($item);
-      }
-      $attributes['class'][] = ($i % 2 ? 'odd' : 'even');
-      if ($i == 1) {
-        $attributes['class'][] = 'first';
-      }
-      if ($i == $num_items) {
-        $attributes['class'][] = 'last';
       }
       $output .= '<li' . new Attribute($attributes) . '>' . $item . '</li>';
     }

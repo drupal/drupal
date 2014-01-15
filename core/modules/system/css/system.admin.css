@@ -405,18 +405,18 @@ table.system-status-report .status-title {
   border-left: 1px solid #cdcdcd;
   border-right: none;
 }
-.theme-selector .operations li.last {
+.theme-selector .operations li:last-child {
   padding: 0 0 0 0.7em; /* LTR */
   border-right: none; /* LTR */
 }
-[dir="rtl"] .theme-selector .operations li.last {
+[dir="rtl"] .theme-selector .operations li:last-child {
   padding: 0 0.7em 0 0;
   border-left: none;
 }
-.theme-selector .operations li.first {
+.theme-selector .operations li:first-child {
   padding: 0 0.7em 0 0; /* LTR */
 }
-[dir="rtl"] .theme-selector .operations li.first {
+[dir="rtl"] .theme-selector .operations li:first-child {
   padding: 0 0 0 0.7em;
 }
 #system-themes-admin-form {

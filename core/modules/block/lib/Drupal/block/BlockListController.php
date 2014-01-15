@@ -213,7 +213,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
 
       $form['blocks'][$region] = array(
         '#attributes' => array(
-          'class' => array('region-title', 'region-title-' . $region, 'odd'),
+          'class' => array('region-title', 'region-title-' . $region),
           'no_striping' => TRUE,
         ),
       );

@@ -353,16 +353,13 @@ $.extend(Drupal.viewsUi.OptionsSearch.prototype, {
    * Keyup handler for the search box that hides or shows the relevant options.
    */
   handleKeyup: function (event) {
-    var found, i, j, option, search, words, wordsLength, zebraClass, zebraCounter;
+    var found, i, j, option, search, words, wordsLength;
 
     // Determine the user's search query. The search text has been converted to
     // lowercase.
     search = this.$searchBox.val().toLowerCase();
     words = search.split(' ');
     wordsLength = words.length;
-
-    // Start the counter for restriping rows.
-    zebraCounter = 0;
 
     // Search through the search texts in the form for matching text.
     var length = this.options.length;
@@ -379,11 +376,8 @@ $.extend(Drupal.viewsUi.OptionsSearch.prototype, {
       }
       if (found) {
         // Show the checkbox row, and restripe it.
-        zebraClass = (zebraCounter % 2) ? 'odd' : 'even';
         option.$div.show();
         option.$div.removeClass('even odd');
-        option.$div.addClass(zebraClass);
-        zebraCounter++;
       }
       else {
         // The search string wasn't found; hide this item.

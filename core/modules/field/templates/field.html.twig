@@ -42,7 +42,7 @@ HTML comment.
   {% endif %}
   <div class="field-items"{{ content_attributes }}>
     {% for delta, item in items %}
-      <div class="field-item {{ cycle(["even", "odd"], delta) }}"{{ item_attributes[delta] }}>{{ item }}</div>
+      <div class="field-item"{{ item_attributes[delta] }}>{{ item }}</div>
     {% endfor %}
   </div>
 </div>
