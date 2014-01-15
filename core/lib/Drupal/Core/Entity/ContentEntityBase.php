@@ -73,13 +73,6 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
   protected $fieldDefinitions;
 
   /**
-   * Local cache for URI placeholder substitution values.
-   *
-   * @var array
-   */
-  protected $uriPlaceholderReplacements;
-
-  /**
    * Local cache for the available language objects.
    *
    * @var array

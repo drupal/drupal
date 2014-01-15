@@ -7,7 +7,7 @@
 
 namespace Drupal\field_ui;
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Utility\Url;
 
 /**
  * Static service container wrapper for Field UI.
@@ -15,18 +15,51 @@ use Symfony\Component\HttpFoundation\Request;
 class FieldUI {
 
   /**
-   * Returns the next redirect path in a multipage sequence.
+   * Returns the route info for the field overview of a given entity bundle.
+   *
+   * @param string $entity_type
+   *   An entity type.
+   * @param string $bundle
+   *   The entity bundle.
    *
    * @return array
-   *   An array of redirect paths.
+   *   An associative array with the following keys:
+   *   - route_name: The name of the route.
+   *   - route_parameters: (optional) An associative array of parameter names
+   *     and values.
+   *   - options: (optional) An associative array of additional options. See
+   *     \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
+   *     comprehensive documentation.
    */
-  public static function getNextDestination(Request $request) {
-    $next_destination = array();
-    $destinations = $request->query->get('destinations');
-    if (!empty($destinations)) {
-      $request->query->remove('destinations');
-      $path = array_shift($destinations);
-      $options = drupal_parse_url($path);
+  public static function getOverviewRouteInfo($entity_type, $bundle) {
+    $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
+    if ($entity_info->hasLinkTemplate('admin-form')) {
+      return array(
+        'route_name' => "field_ui.overview_$entity_type",
+        'route_parameters' => array(
+          $entity_info->getBundleEntityType() => $bundle,
+        ),
+        'options' => array(),
+      );
+    }
+  }
+
+  /**
+   * Returns the next redirect path in a multipage sequence.
+   *
+   * @param array $destinations
+   *   An array of destinations to redirect to.
+   *
+   * @return array
+   *   The next destination to redirect to.
+   */
+  public static function getNextDestination(array $destinations) {
+    $next_destination = array_shift($destinations);
+    if (is_array($next_destination)) {
+      $next_destination['options']['query']['destinations'] = $destinations;
+    }
+    else {
+      $options = Url::parse($next_destination);
       if ($destinations) {
         $options['query']['destinations'] = $destinations;
       }

@@ -507,21 +507,25 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  public function uri() {
-    $path = \Drupal::entityManager()->getAdminPath($this->entity_type, $this->bundle);
-
-    // Use parent URI as fallback, if path is empty.
-    if (empty($path)) {
-      return parent::uri();
+  protected function linkTemplates() {
+    $link_templates = parent::linkTemplates();
+    if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
+      $link_templates['edit-form'] = 'field_ui.instance_edit_' . $this->entity_type;
     }
+    return $link_templates;
+  }
 
-    return array(
-      'path' => $path . '/fields/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
+  /**
+   * {@inheritdoc}
+   */
+  protected function uriPlaceholderReplacements() {
+    if (empty($this->uriPlaceholderReplacements)) {
+      parent::uriPlaceholderReplacements();
+      $entity_info = \Drupal::entityManager()->getDefinition($this->entity_type);
+      $key = '{' . $entity_info->getBundleEntityType() . '}';
+      $this->uriPlaceholderReplacements[$key] = $this->bundle;
+    }
+    return $this->uriPlaceholderReplacements;
   }
 
   /**

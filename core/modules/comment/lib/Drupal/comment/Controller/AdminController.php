@@ -13,6 +13,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\field_ui\FieldUI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -125,7 +126,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
         foreach ($field_info_map['bundles'] as $bundle) {
           if (isset($entity_bundles[$entity_type][$bundle])) {
             // Add the current instance.
-            if ($field_ui_enabled && ($route_info = $this->entityManager()->getAdminRouteInfo($entity_type, $bundle))) {
+            if ($field_ui_enabled && $route_info = FieldUI::getOverviewRouteInfo($entity_type, $bundle)) {
               $row['data']['usage']['data']['#items'][] = $this->l($entity_bundles[$entity_type][$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);
             }
             else {
@@ -208,7 +209,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
     // Loop over all of bundles to which this comment field is attached.
     foreach ($field_info->getBundles() as $bundle) {
       // Add the current instance to the list of bundles.
-      if ($field_ui_enabled && ($route_info = $this->entityManager()->getAdminRouteInfo($commented_entity_type, $bundle))) {
+      if ($field_ui_enabled && $route_info = FieldUI::getOverviewRouteInfo($commented_entity_type, $bundle)) {
         // Add a link to configure the fields on the given bundle and entity
         // type combination.
         $build['usage']['#items'][] = $this->l($entity_bundle_info[$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);

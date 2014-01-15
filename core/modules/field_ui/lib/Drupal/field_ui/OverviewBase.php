@@ -31,18 +31,18 @@ abstract class OverviewBase extends FormBase {
   protected $bundle = '';
 
   /**
+   * The entity type of the entity bundle.
+   *
+   * @var string
+   */
+  protected $bundleEntityType;
+
+  /**
    * The entity view or form mode.
    *
    * @var string
    */
   protected $mode = '';
-
-  /**
-   * The admin path of the overview page.
-   *
-   * @var string
-   */
-  protected $adminPath = NULL;
 
   /**
    * The entity manager.
@@ -74,17 +74,17 @@ abstract class OverviewBase extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL) {
+    $entity_info = $this->entityManager->getDefinition($entity_type);
+    $this->bundleEntityType = $entity_info->getBundleEntityType();
     if (!isset($form_state['bundle'])) {
       if (!$bundle) {
-        $entity_info = $this->entityManager->getDefinition($entity_type);
-        $bundle = $this->getRequest()->attributes->get('_raw_variables')->get($entity_info->getBundleEntityType());
+        $bundle = $this->getRequest()->attributes->get('_raw_variables')->get($this->bundleEntityType);
       }
       $form_state['bundle'] = $bundle;
     }
 
     $this->entity_type = $entity_type;
     $this->bundle = $form_state['bundle'];
-    $this->adminPath = $this->entityManager->getAdminPath($this->entity_type, $this->bundle);
 
     // When displaying the form, make sure the list of fields is up-to-date.
     if (empty($form_state['post'])) {

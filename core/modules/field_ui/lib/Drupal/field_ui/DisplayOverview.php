@@ -169,8 +169,15 @@ class DisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function getOverviewPath($mode) {
-    return $this->entityManager->getAdminPath($this->entity_type, $this->bundle) . "/display/$mode";
+  protected function getOverviewRoute($mode) {
+    return array(
+      'route_name' => 'field_ui.display_overview_view_mode_' . $this->entity_type,
+      'route_parameters' => array(
+        $this->bundleEntityType => $this->bundle,
+        'view_mode_name' => $mode,
+      ),
+      'options' => array(),
+    );
   }
 
   /**

@@ -111,8 +111,12 @@ class FieldListController extends ConfigEntityListController {
 
     $usage = array();
     foreach ($field->getBundles() as $bundle) {
-      $admin_path = $this->entityManager->getAdminPath($field->entity_type, $bundle);
-      $usage[] = $admin_path ? l($this->bundles[$field->entity_type][$bundle]['label'], $admin_path . '/fields') : $this->bundles[$field->entity_type][$bundle]['label'];
+      if ($route_info = FieldUI::getOverviewRouteInfo($field->entity_type, $bundle)) {
+        $usage[] = \Drupal::l($this->bundles[$field->entity_type][$bundle]['label'], $route_info['route_name'], $route_info['route_parameters'], $route_info['options']);
+      }
+      else {
+        $usage[] = $this->bundles[$field->entity_type][$bundle]['label'];
+      }
     }
     $row['data']['usage'] = implode(', ', $usage);
     return $row;

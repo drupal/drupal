@@ -45,6 +45,13 @@ abstract class Entity implements EntityInterface {
   protected $routeProvider;
 
   /**
+   * Local cache for URI placeholder substitution values.
+   *
+   * @var array
+   */
+  protected $uriPlaceholderReplacements;
+
+  /**
    * Constructs an Entity object.
    *
    * @param array $values
@@ -151,7 +158,7 @@ abstract class Entity implements EntityInterface {
     $entity_info = $this->entityInfo();
 
     // The links array might contain URI templates set in annotations.
-    $link_templates = $entity_info->getLinkTemplates();
+    $link_templates = $this->linkTemplates();
 
     $template = NULL;
     if (isset($link_templates[$rel])) {
@@ -214,6 +221,16 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
+   * Returns an array link templates.
+   *
+   * @return array
+   *   An array of link templates containing route names.
+   */
+  protected function linkTemplates() {
+    return $this->entityInfo()->getLinkTemplates();
+  }
+
+  /**
    * Returns an array of placeholders for this entity.
    *
    * Individual entity classes may override this method to add additional
@@ -245,9 +262,8 @@ abstract class Entity implements EntityInterface {
    *   An array of link relationships supported by this entity.
    */
   public function uriRelationships() {
-    return array_keys($this->entityInfo()->getLinkTemplates());
+    return array_keys($this->linkTemplates());
   }
-
 
   /**
    * {@inheritdoc}

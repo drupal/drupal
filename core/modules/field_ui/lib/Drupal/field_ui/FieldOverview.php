@@ -122,7 +122,10 @@ class FieldOverview extends OverviewBase {
     // Fields.
     foreach ($instances as $name => $instance) {
       $field = $instance->getField();
-      $admin_field_path = $this->adminPath . '/fields/' . $instance->id();
+      $route_parameters = array(
+        $this->bundleEntityType => $this->bundle,
+        'field_instance' => $instance->id(),
+      );
       $table[$name] = array(
         '#attributes' => array(
           'id' => drupal_html_class($name),
@@ -136,7 +139,8 @@ class FieldOverview extends OverviewBase {
         'type' => array(
           '#type' => 'link',
           '#title' => $field_types[$field->getType()]['label'],
-          '#href' => $admin_field_path . '/field',
+          '#route_name' => 'field_ui.field_edit_' . $this->entity_type,
+          '#route_parameters' => $route_parameters,
           '#options' => array('attributes' => array('title' => $this->t('Edit field settings.'))),
         ),
       );
@@ -144,17 +148,20 @@ class FieldOverview extends OverviewBase {
       $links = array();
       $links['edit'] = array(
         'title' => $this->t('Edit'),
-        'href' => $admin_field_path,
+        'route_name' => 'field_ui.instance_edit_' . $this->entity_type,
+        'route_parameters' => $route_parameters,
         'attributes' => array('title' => $this->t('Edit instance settings.')),
       );
       $links['field-settings'] = array(
         'title' => $this->t('Field settings'),
-        'href' => $admin_field_path . '/field',
+        'route_name' => 'field_ui.field_edit_' . $this->entity_type,
+        'route_parameters' => $route_parameters,
         'attributes' => array('title' => $this->t('Edit field settings.')),
       );
       $links['delete'] = array(
         'title' => $this->t('Delete'),
-        'href' => "$admin_field_path/delete",
+        'route_name' => 'field_ui.delete_' . $this->entity_type,
+        'route_parameters' => $route_parameters,
         'attributes' => array('title' => $this->t('Delete instance.')),
       );
       // Allow altering the operations on this entity listing.
@@ -419,8 +426,12 @@ class FieldOverview extends OverviewBase {
 
         // Always show the field settings step, as the cardinality needs to be
         // configured for new fields.
-        $destinations[] = $this->adminPath. '/fields/' . $new_instance->id() . '/field';
-        $destinations[] = $this->adminPath . '/fields/' . $new_instance->id();
+        $route_parameters = array(
+          $this->bundleEntityType => $this->bundle,
+          'field_instance' => $new_instance->id(),
+        );
+        $destinations[] = array('route_name' => 'field_ui.field_edit_' . $this->entity_type, 'route_parameters' => $route_parameters);
+        $destinations[] = array('route_name' => 'field_ui.instance_edit_' . $this->entity_type, 'route_parameters' => $route_parameters);
 
         // Store new field information for any additional submit handlers.
         $form_state['fields_added']['_add_new_field'] = $values['field_name'];
@@ -464,7 +475,13 @@ class FieldOverview extends OverviewBase {
             ->setComponent($field_name)
             ->save();
 
-          $destinations[] = $this->adminPath . '/fields/' . $new_instance->id();
+          $destinations[] = array(
+            'route_name' => 'field_ui.instance_edit_' . $this->entity_type,
+            'route_parameters' => array(
+              $this->bundleEntityType => $this->bundle,
+              'field_instance' => $new_instance->id(),
+            ),
+          );
           // Store new field information for any additional submit handlers.
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
         }
@@ -477,11 +494,7 @@ class FieldOverview extends OverviewBase {
     if ($destinations) {
       $destination = drupal_get_destination();
       $destinations[] = $destination['destination'];
-      $this->getRequest()->query->remove('destination');
-      $path = array_shift($destinations);
-      $options = drupal_parse_url($path);
-      $options['query']['destinations'] = $destinations;
-      $form_state['redirect'] = array($options['path'], $options);
+      $form_state['redirect_route'] = FieldUI::getNextDestination($destinations, $form_state);
     }
     else {
       drupal_set_message($this->t('Your settings have been saved.'));

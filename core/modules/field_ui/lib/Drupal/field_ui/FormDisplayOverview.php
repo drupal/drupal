@@ -135,8 +135,15 @@ class FormDisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function getOverviewPath($mode) {
-    return $this->entityManager->getAdminPath($this->entity_type, $this->bundle) . "/form-display/$mode";
+  protected function getOverviewRoute($mode) {
+    return array(
+      'route_name' => 'field_ui.form_display_overview_form_mode_' . $this->entity_type,
+      'route_parameters' => array(
+        $this->bundleEntityType => $this->bundle,
+        'form_mode_name' => $mode,
+      ),
+      'options' => array(),
+    );
   }
 
   /**

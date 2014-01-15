@@ -133,8 +133,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
       '#extra' => array_keys($extra_fields),
     );
 
-    if (empty($field_definitions) && empty($extra_fields)) {
-      drupal_set_message($this->t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url($this->adminPath . '/fields'))), 'warning');
+    if (empty($field_definitions) && empty($extra_fields) && $route_info = FieldUI::getOverviewRouteInfo($this->entity_type, $this->bundle)) {
+      drupal_set_message($this->t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => $this->url($route_info['route_name'], $route_info['route_parameters'], $route_info['options']))), 'warning');
       return $form;
     }
 
@@ -566,8 +566,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
           }
 
           $display_mode_label = $display_modes[$mode]['label'];
-          $path = $this->getOverviewPath($mode);
-          drupal_set_message($this->t('The %display_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%display_mode' => $display_mode_label, '@url' => url($path))));
+          $route = $this->getOverviewRoute($mode);
+          drupal_set_message($this->t('The %display_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%display_mode' => $display_mode_label, '@url' => $this->url($route['route_name'], $route['route_parameters'], $route['options']))));
         }
         $statuses[$mode] = !empty($value);
       }
@@ -820,15 +820,21 @@ abstract class DisplayOverviewBase extends OverviewBase {
   abstract protected function getTableHeader();
 
   /**
-   * Returns the path of a specific form or view mode form.
+   * Returns the route info of a specific form or view mode form.
    *
    * @param string $mode
    *   The form or view mode.
    *
-   * @return string
-   *   An internal path.
+   * @return array
+   *   An associative array with the following keys:
+   *   - route_name: The name of the route.
+   *   - route_parameters: (optional) An associative array of parameter names
+   *     and values.
+   *   - options: (optional) An associative array of additional options. See
+   *     \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
+   *     comprehensive documentation.
    */
-  abstract protected function getOverviewPath($mode);
+  abstract protected function getOverviewRoute($mode);
 
   /**
    * Alters the widget or formatter settings form.
