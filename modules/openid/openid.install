@@ -26,13 +26,14 @@ function openid_schema() {
       'idp_endpoint_uri' => array(
         'type' => 'varchar',
         'length' => 255,
-        'description' => 'URI of the OpenID Provider endpoint.',
+        'not null' => TRUE,
+        'description' => 'Primary Key: URI of the OpenID Provider endpoint.',
       ),
       'assoc_handle' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'description' => 'Primary Key: Used to refer to this association in subsequent messages.',
+        'description' => 'Used to refer to this association in subsequent messages.',
       ),
       'assoc_type' => array(
         'type' => 'varchar',
@@ -62,7 +63,10 @@ function openid_schema() {
         'description' => 'The lifetime, in seconds, of this association.',
       ),
     ),
-    'primary key' => array('assoc_handle'),
+    'primary key' => array('idp_endpoint_uri'),
+    'unique keys' => array(
+      'assoc_handle' => array('assoc_handle'),
+    ),
   );
 
   $schema['openid_nonce'] = array(
@@ -134,6 +138,68 @@ function openid_update_6000() {
   );
 
   db_create_table($ret, 'openid_nonce', $schema['openid_nonce']);
+
+  return $ret;
+}
+
+/**
+ * Bind associations to their providers.
+ */
+function openid_update_6001() {
+  $ret = array();
+
+  db_drop_table($ret, 'openid_association');
+
+  $schema['openid_association'] = array(
+    'description' => 'Stores temporary shared key association information for OpenID authentication.',
+    'fields' => array(
+      'idp_endpoint_uri' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Primary Key: URI of the OpenID Provider endpoint.',
+      ),
+      'assoc_handle' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Used to refer to this association in subsequent messages.',
+      ),
+      'assoc_type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'description' => 'The signature algorithm used: one of HMAC-SHA1 or HMAC-SHA256.',
+      ),
+      'session_type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'description' => 'Valid association session types: "no-encryption", "DH-SHA1", and "DH-SHA256".',
+      ),
+      'mac_key' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => 'The MAC key (shared secret) for this association.',
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'UNIX timestamp for when the association was created.',
+      ),
+      'expires_in' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The lifetime, in seconds, of this association.',
+      ),
+    ),
+    'primary key' => array('idp_endpoint_uri'),
+    'unique keys' => array(
+      'assoc_handle' => array('assoc_handle'),
+    ),
+  );
+
+  db_create_table($ret, 'openid_association', $schema['openid_association']);
 
   return $ret;
 }
