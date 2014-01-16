@@ -3969,14 +3969,18 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
   $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
 
-  // Cache the processed element if #cache is set.
-  if (isset($elements['#cache'])) {
-    // Collect all #post_render_cache callbacks associated with this element.
+  // Collect all #post_render_cache callbacks associated with this element when:
+  // - about to store this element in the render cache, or when;
+  // - about to apply #post_render_cache callbacks.
+  if (isset($elements['#cache']) || !$is_recursive_call) {
     $post_render_cache = drupal_render_collect_post_render_cache($elements);
     if ($post_render_cache) {
       $elements['#post_render_cache'] = $post_render_cache;
     }
+  }
 
+  // Cache the processed element if #cache is set.
+  if (isset($elements['#cache'])) {
     drupal_render_cache_set($elements['#markup'], $elements);
   }
 

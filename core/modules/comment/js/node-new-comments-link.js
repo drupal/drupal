@@ -99,23 +99,32 @@ function processNodeNewCommentLinks($placeholders) {
   if (nodeIDs.length === 0) {
     return;
   }
-  $.ajax({
-    url: Drupal.url('comments/render_new_comments_node_links'),
-    type: 'POST',
-    data: { 'node_ids[]' : nodeIDs, 'field_name' : fieldName },
-    dataType: 'json',
-    success: function (results) {
-      for (var nodeID in results) {
-        if (results.hasOwnProperty(nodeID) && $placeholdersToUpdate.hasOwnProperty(nodeID)) {
-          $placeholdersToUpdate[nodeID]
-            .attr('href', results[nodeID].first_new_comment_link)
-            .text(Drupal.formatPlural(results[nodeID].new_comment_count, '1 new comment', '@count new comments'))
-            .removeClass('hidden');
-          show($placeholdersToUpdate[nodeID]);
-        }
+
+  // Render the "X new comments" links. Either use the data embedded in the page
+  // or perform an AJAX request to retrieve the same data.
+  function render (results) {
+    for (var nodeID in results) {
+      if (results.hasOwnProperty(nodeID) && $placeholdersToUpdate.hasOwnProperty(nodeID)) {
+        $placeholdersToUpdate[nodeID]
+          .attr('href', results[nodeID].first_new_comment_link)
+          .text(Drupal.formatPlural(results[nodeID].new_comment_count, '1 new comment', '@count new comments'))
+          .removeClass('hidden');
+        show($placeholdersToUpdate[nodeID]);
       }
     }
-  });
+  }
+  if (drupalSettings.comment && drupalSettings.comment.newCommentsLinks) {
+    render(drupalSettings.comment.newCommentsLinks.node[fieldName]);
+  }
+  else {
+    $.ajax({
+      url: Drupal.url('comments/render_new_comments_node_links'),
+      type: 'POST',
+      data: { 'node_ids[]' : nodeIDs, 'field_name' : fieldName },
+      dataType: 'json',
+      success: render
+    });
+  }
 }
 
 })(jQuery, Drupal);

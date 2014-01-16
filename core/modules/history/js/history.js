@@ -13,6 +13,12 @@ var currentUserID = parseInt(drupalSettings.user.uid, 10);
 // so for these we don't need to perform a request at all!
 var thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - 30 * 24 * 60 * 60;
 
+// Use the data embedded in the page, if available.
+var embeddedLastReadTimestamps = false;
+if (drupalSettings.history && drupalSettings.history.lastReadTimestamps) {
+  embeddedLastReadTimestamps = drupalSettings.history.lastReadTimestamps;
+}
+
 Drupal.history = {
 
   /**
@@ -24,6 +30,12 @@ Drupal.history = {
    *   A callback that is called after the requested timestamps were fetched.
    */
   fetchTimestamps: function (nodeIDs, callback) {
+    // Use the data embedded in the page, if available.
+    if (embeddedLastReadTimestamps) {
+      callback();
+      return;
+    }
+
     $.ajax({
       url: Drupal.url('history/get_node_read_timestamps'),
       type: 'POST',
@@ -50,6 +62,10 @@ Drupal.history = {
    *   A UNIX timestamp.
    */
   getLastRead: function (nodeID) {
+    // Use the data embedded in the page, if available.
+    if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
+      return parseInt(embeddedLastReadTimestamps[nodeID], 10);
+    }
     return parseInt(storage.getItem('Drupal.history.' + currentUserID + '.' + nodeID) || 0, 10);
   },
 
@@ -65,6 +81,11 @@ Drupal.history = {
       type: 'POST',
       dataType: 'json',
       success: function (timestamp) {
+        // If the data is embedded in the page, don't store on the client side.
+        if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
+          return;
+        }
+
         storage.setItem('Drupal.history.' + currentUserID + '.' + nodeID, timestamp);
       }
     });
@@ -90,6 +111,12 @@ Drupal.history = {
     if (contentTimestamp < thirtyDaysAgo) {
       return false;
     }
+
+    // Use the data embedded in the page, if available.
+    if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
+      return contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10);
+    }
+
     var minLastReadTimestamp = parseInt(storage.getItem('Drupal.history.' + currentUserID + '.' + nodeID) || 0, 10);
     return contentTimestamp > minLastReadTimestamp;
   }

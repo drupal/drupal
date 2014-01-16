@@ -533,6 +533,14 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
     );
     if ($view_mode == 'teaser' && \Drupal::moduleHandler()->moduleExists('history') && \Drupal::currentUser()->isAuthenticated()) {
       $entity->content['links']['#attached']['library'][] = array('comment', 'drupal.node-new-comments-link');
+
+      // Embed the metadata for the "X new comments" link (if any) on this node.
+      $entity->content['links']['#post_render_cache']['history_attach_timestamp'] = array(
+        array('node_id' => $entity->id()),
+      );
+      $entity->content['links']['#post_render_cache']['Drupal\comment\CommentViewBuilder::attachNewCommentsLinkMetadata'] = array(
+        array('entity_type' => $entity->entityType(), 'entity_id' => $entity->id(), 'field_name' => $field_name),
+      );
     }
   }
 }

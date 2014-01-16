@@ -203,3 +203,32 @@ function history_library_info() {
 
   return $libraries;
 }
+
+/**
+ * #post_render_cache callback; attaches the last read timestamp for a node.
+ *
+ * @param array $element
+ *  A render array with the following keys:
+ *    - #markup
+ *    - #attached
+ * @param array $context
+ *  An array with the following keys:
+ *    - node_id: the node ID for which to attach the last read timestamp.
+ *
+ * @return array $element
+ *   The updated $element.
+ */
+function history_attach_timestamp(array $element, array $context) {
+  $element['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array(
+      'history' => array(
+        'lastReadTimestamps' => array(
+          $context['node_id'] => (int) history_read($context['node_id']),
+        )
+      ),
+    ),
+  );
+
+  return $element;
+}

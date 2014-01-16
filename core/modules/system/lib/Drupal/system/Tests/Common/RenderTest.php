@@ -632,6 +632,20 @@ class RenderTest extends DrupalUnitTestBase {
     $this->assertIdentical($settings['common_test'], $expected_settings, '#attached is modified; JavaScript settings for each #post_render_cache callback are added to page.');
 
     // Test case 2.
+    // Use the exact same element, but now unset #cache.
+    drupal_static_reset('drupal_add_js');
+    unset($test_element['#cache']);
+    $element = $test_element;
+    $output = drupal_render($element);
+    $this->assertIdentical($output, '<p>overridden</p>', 'Output is overridden.');
+    $this->assertIdentical($element['#markup'], '<p>overridden</p>', '#markup is overridden.');
+    $this->assertTrue(!isset($element['#context_test']), '#context_test is not set: impossible to modify $element itself, only possible to modify its #markup and #attached properties.');
+    $settings = $this->parseDrupalSettings(drupal_get_js());
+    $expected_settings = $context_1 + $context_2 + $context_3;
+    $this->assertIdentical($settings['foo'], 'bar', 'Original JavaScript setting is added to the page.');
+    $this->assertIdentical($settings['common_test'], $expected_settings, '#attached is modified; JavaScript settings for each #post_render_cache callback are added to page.');
+
+    // Test case 3.
     // Create an element with a child and subchild. Each element has the same
     // #post_render_cache callback, but with different contexts. Both the
     // parent and the child elements have #cache set. The cached parent element

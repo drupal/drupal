@@ -147,6 +147,11 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
       $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-by-viewer');
       if ($this->moduleHandler->moduleExists('history') &&  \Drupal::currentUser()->isAuthenticated()) {
         $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-new-indicator');
+
+        // Embed the metadata for the comment "new" indicators on this node.
+        $entity->content['#post_render_cache']['history_attach_timestamp'] = array(
+          array('node_id' => $commented_entity->id()),
+        );
       }
     }
   }
@@ -297,6 +302,57 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
         $build['#suffix'] = str_repeat('</div>', $comment->divs_final);
       }
     }
+  }
+
+  /**
+   * #post_render_cache callback; attaches "X new comments" link metadata.
+   *
+   * @param array $element
+   *   A render array with the following keys:
+   *   - #markup
+   *   - #attached
+   * @param array $context
+   *   An array with the following keys:
+   *   - entity_type: an entity type
+   *   - entity_id: an entity ID
+   *   - field_name: a comment field name
+   *
+   * @return array $element
+   *   The updated $element.
+   */
+  public static function attachNewCommentsLinkMetadata(array $element, array $context) {
+    // Build "X new comments" link metadata.
+    $new = (int)comment_num_new($context['entity_id'], $context['entity_type']);
+    // Early-return if there are zero new comments for the current user.
+    if ($new === 0) {
+      return $element;
+    }
+    $entity = \Drupal::entityManager()
+      ->getStorageController($context['entity_type'])
+      ->load($context['entity_id']);
+    $field_name = $context['field_name'];
+    $query = comment_new_page_count($entity->{$field_name}->comment_count, $new, $entity);
+
+    // Attach metadata.
+    $element['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array(
+        'comment' => array(
+          'newCommentsLinks' => array(
+            $context['entity_type'] => array(
+              $context['field_name'] => array(
+                $context['entity_id'] => array(
+                  'new_comment_count' => (int)$new,
+                  'first_new_comment_link' => \Drupal::urlGenerator()->generateFromPath('node/' . $entity->id(), array('query' => $query, 'fragment' => 'new')),
+                )
+              )
+            ),
+          )
+        ),
+      ),
+    );
+
+    return $element;
   }
 
 }
