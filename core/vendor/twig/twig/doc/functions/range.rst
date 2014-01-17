@@ -9,7 +9,7 @@ Returns a list containing an arithmetic progression of integers:
         {{ i }},
     {% endfor %}
 
-    {# returns 0, 1, 2, 3 #}
+    {# outputs 0, 1, 2, 3, #}
 
 When step is given (as the third parameter), it specifies the increment (or
 decrement):
@@ -20,7 +20,7 @@ decrement):
         {{ i }},
     {% endfor %}
 
-    {# returns 0, 2, 4, 6 #}
+    {# outputs 0, 2, 4, 6, #}
 
 The Twig built-in ``..`` operator is just syntactic sugar for the ``range``
 function (with a step of 1):
@@ -38,8 +38,8 @@ function (with a step of 1):
 Arguments
 ---------
 
- * ``low``:  The first value of the sequence.
- * ``high``: The highest possible value of the sequence.
- * ``step``: The increment between elements of the sequence.
+* ``low``:  The first value of the sequence.
+* ``high``: The highest possible value of the sequence.
+* ``step``: The increment between elements of the sequence.
 
 .. _`range`: http://php.net/range

@@ -17,7 +17,7 @@
 class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
 {
     private $hasSourceCache = array();
-    protected $loaders;
+    protected $loaders = array();
 
     /**
      * Constructor.
@@ -26,7 +26,6 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
      */
     public function __construct(array $loaders = array())
     {
-        $this->loaders = array();
         foreach ($loaders as $loader) {
             $this->addLoader($loader);
         }
@@ -76,8 +75,12 @@ class Twig_Loader_Chain implements Twig_LoaderInterface, Twig_ExistsLoaderInterf
         }
 
         foreach ($this->loaders as $loader) {
-            if ($loader instanceof Twig_ExistsLoaderInterface && $loader->exists($name)) {
-                return $this->hasSourceCache[$name] = true;
+            if ($loader instanceof Twig_ExistsLoaderInterface) {
+                if ($loader->exists($name)) {
+                    return $this->hasSourceCache[$name] = true;
+                }
+
+                continue;
             }
 
             try {

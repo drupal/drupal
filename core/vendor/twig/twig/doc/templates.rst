@@ -47,7 +47,7 @@ IDEs Integration
 Many IDEs support syntax highlighting and auto-completion for Twig:
 
 * *Textmate* via the `Twig bundle`_
-* *Vim* via the `Jinja syntax plugin`_
+* *Vim* via the `Jinja syntax plugin`_ or the `vim-twig plugin`_
 * *Netbeans* via the `Twig syntax plugin`_ (until 7.1, native as of 7.2)
 * *PhpStorm* (native as of 2.1)
 * *Eclipse* via the `Twig plugin`_
@@ -167,7 +167,7 @@ To apply a filter on a section of code, wrap it with the
 .. code-block:: jinja
 
     {% filter upper %}
-      This text becomes uppercase
+        This text becomes uppercase
     {% endfilter %}
 
 Go to the :doc:`filters<filters/index>` page to learn more about the built-in
@@ -197,8 +197,6 @@ Named Arguments
 .. versionadded:: 1.12
     Support for named arguments was added in Twig 1.12.
 
-Arguments for filters and functions can also be passed as *named arguments*:
-
 .. code-block:: jinja
 
     {% for i in range(low=1, high=10, step=2) %}
@@ -227,14 +225,12 @@ to change the default value:
     {# or skip the format value by using a named argument for the timezone #}
     {{ "now"|date(timezone="Europe/Paris") }}
 
-You can also use both positional and named arguments in one call, which is not
-recommended as it can be confusing:
+You can also use both positional and named arguments in one call, in which
+case positional arguments must always come before named arguments:
 
 .. code-block:: jinja
 
-    {# both work #}
     {{ "now"|date('d/m/Y H:i', timezone="Europe/Paris") }}
-    {{ "now"|date(timezone="Europe/Paris", 'd/m/Y H:i') }}
 
 .. tip::
 
@@ -544,6 +540,8 @@ macro call:
         <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
     {% endmacro %}
 
+.. _twig-expressions:
+
 Expressions
 -----------
 
@@ -554,8 +552,19 @@ even if you're not working with PHP you should feel comfortable with it.
 
     The operator precedence is as follows, with the lowest-precedence
     operators listed first: ``b-and``, ``b-xor``, ``b-or``, ``or``, ``and``,
-    ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``..``, ``+``,
-    ``-``, ``~``, ``*``, ``/``, ``//``, ``%``, ``is``, and ``**``.
+    ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``, ``matches``,
+    ``starts with``, ``ends with``, ``..``, ``+``, ``-``, ``~``, ``*``, ``/``,
+    ``//``, ``%``, ``is``, ``**``, ``|``, ``[]``, and ``.``:
+
+    .. code-block:: jinja
+
+        {% set greeting = 'Hello' %}
+        {% set name = 'Fabien' %}
+
+        {{ greeting ~ name|lower }}   {# Hello fabien #}
+
+        {# use parenthesis to change precedence #}
+        {{ (greeting ~ name)|lower }} {# hello fabien #}
 
 Literals
 ~~~~~~~~
@@ -632,8 +641,9 @@ but exists for completeness' sake. The following operators are supported:
 * ``%``: Calculates the remainder of an integer division. ``{{ 11 % 7 }}`` is
   ``4``.
 
-* ``//``: Divides two numbers and returns the truncated integer result. ``{{
-  20 // 7 }}`` is ``2``.
+* ``//``: Divides two numbers and returns the floored integer result. ``{{ 20
+  // 7 }}`` is ``2``, ``{{ -20  // 7 }}`` is ``-3``(this is just syntactic
+  sugar for the :doc:`round<filters/round>` filter).
 
 * ``*``: Multiplies the left operand with the right one. ``{{ 2 * 2 }}`` would
   return ``4``.
@@ -663,6 +673,27 @@ Comparisons
 
 The following comparison operators are supported in any expression: ``==``,
 ``!=``, ``<``, ``>``, ``>=``, and ``<=``.
+
+You can also check if a string ``starts with`` or ``ends with`` another
+string:
+
+.. code-block:: jinja
+
+    {% if 'Fabien' starts with 'F' %}
+    {% endif %}
+
+    {% if 'Fabien' ends with 'n' %}
+    {% endif %}
+
+.. note::
+
+    For complex string comparisons, the ``matches`` operator allows you to use
+    `regular expressions`_:
+
+    .. code-block:: jinja
+
+        {% if phone matches '{^[\d\.]+$}' %}
+        {% endif %}
 
 Containment Operator
 ~~~~~~~~~~~~~~~~~~~~
@@ -709,16 +740,16 @@ Tests can accept arguments too:
 
 .. code-block:: jinja
 
-    {% if loop.index is divisibleby(3) %}
+    {% if post.status is constant('Post::PUBLISHED') %}
 
 Tests can be negated by using the ``is not`` operator:
 
 .. code-block:: jinja
 
-    {% if loop.index is not divisibleby(3) %}
+    {% if post.status is not constant('Post::PUBLISHED') %}
 
     {# is equivalent to #}
-    {% if not (loop.index is divisibleby(3)) %}
+    {% if not (post.status is constant('Post::PUBLISHED')) %}
 
 Go to the :doc:`tests<tests/index>` page to learn more about the built-in
 tests.
@@ -751,8 +782,8 @@ categories:
       {{ foo ? 'yes' : 'no' }}
 
       {# as of Twig 1.12.0 #}
-      {{ foo ?: 'no' }} == {{ foo ? foo : 'no' }}
-      {{ foo ? 'yes' }} == {{ foo ? 'yes' : '' }}
+      {{ foo ?: 'no' }} is the same as {{ foo ? foo : 'no' }}
+      {{ foo ? 'yes' }} is the same as {{ foo ? 'yes' : '' }}
 
 String Interpolation
 ~~~~~~~~~~~~~~~~~~~~
@@ -785,11 +816,11 @@ Use the ``spaceless`` tag to remove whitespace *between HTML tags*:
 
     {% spaceless %}
         <div>
-            <strong>foo</strong>
+            <strong>foo bar</strong>
         </div>
     {% endspaceless %}
 
-    {# output will be <div><strong>foo</strong></div> #}
+    {# output will be <div><strong>foo bar</strong></div> #}
 
 In addition to the spaceless tag you can also control whitespace on a per tag
 level. By using the whitespace control modifier on your tags, you can trim
@@ -829,7 +860,8 @@ If you want to create your own, read the :ref:`Creating an
 Extension<creating_extensions>` chapter.
 
 .. _`Twig bundle`:                https://github.com/Anomareh/PHP-Twig.tmbundle
-.. _`Jinja syntax plugin`:        http://jinja.pocoo.org/2/documentation/integration
+.. _`Jinja syntax plugin`:        http://jinja.pocoo.org/docs/integration/#vim
+.. _`vim-twig plugin`:            https://github.com/evidens/vim-twig
 .. _`Twig syntax plugin`:         http://plugins.netbeans.org/plugin/37069/php-twig
 .. _`Twig plugin`:                https://github.com/pulse00/Twig-Eclipse-Plugin
 .. _`Twig language definition`:   https://github.com/gabrielcorpse/gedit-twig-template-language
@@ -838,3 +870,4 @@ Extension<creating_extensions>` chapter.
 .. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig
 .. _`web-mode.el`:                http://web-mode.org/
+.. _`regular expressions`:        http://php.net/manual/en/pcre.pattern.php

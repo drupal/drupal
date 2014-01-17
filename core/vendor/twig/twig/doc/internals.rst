@@ -3,11 +3,11 @@ Twig Internals
 
 Twig is very extensible and you can easily hack it. Keep in mind that you
 should probably try to create an extension before hacking the core, as most
-features and enhancements can be done with extensions. This chapter is also
+features and enhancements can be handled with extensions. This chapter is also
 useful for people who want to understand how Twig works under the hood.
 
-How Twig works?
----------------
+How does Twig work?
+-------------------
 
 The rendering of a Twig template can be summarized into four key steps:
 
@@ -18,7 +18,7 @@ The rendering of a Twig template can be summarized into four key steps:
     for easier processing;
   * Then, the **parser** converts the token stream into a meaningful tree
     of nodes (the Abstract Syntax Tree);
-  * Eventually, the *compiler* transforms the AST into PHP code;
+  * Eventually, the *compiler* transforms the AST into PHP code.
 
 * **Evaluate** the template: It basically means calling the ``display()``
   method of the compiled template and passing it the context.
@@ -42,7 +42,7 @@ an instance of ``Twig_Token``, and the stream is an instance of
 * ``Twig_Token::EOF_TYPE``: Ends of template.
 
 You can manually convert a source code into a token stream by calling the
-``tokenize()`` of an environment::
+``tokenize()`` method of an environment::
 
     $stream = $twig->tokenize($source, $identifier);
 
@@ -63,7 +63,7 @@ Here is the output for the ``Hello {{ name }}`` template:
 
 .. note::
 
-    You can change the default lexer use by Twig (``Twig_Lexer``) by calling
+    The default lexer (``Twig_Lexer``) can be changed by calling
     the ``setLexer()`` method::
 
         $twig->setLexer($lexer);
@@ -97,7 +97,7 @@ Here is the output for the ``Hello {{ name }}`` template:
 
 .. note::
 
-    The default parser (``Twig_TokenParser``) can be also changed by calling the
+    The default parser (``Twig_TokenParser``) can be changed by calling the
     ``setParser()`` method::
 
         $twig->setParser($parser);
@@ -108,12 +108,10 @@ The Compiler
 The last step is done by the compiler. It takes a node tree as an input and
 generates PHP code usable for runtime execution of the template.
 
-You can call the compiler by hand with the ``compile()`` method of an
-environment::
+You can manually compile a node tree to PHP code with the ``compile()`` method
+of an environment::
 
     $php = $twig->compile($nodes);
-
-The ``compile()`` method returns the PHP source code representing the node.
 
 The generated template for a ``Hello {{ name }}`` template reads as follows
 (the actual output can differ depending on the version of Twig you are
@@ -134,7 +132,7 @@ using)::
 
 .. note::
 
-    As for the lexer and the parser, the default compiler (``Twig_Compiler``) can
-    be changed by calling the ``setCompiler()`` method::
+    The default compiler (``Twig_Compiler``) can be changed by calling the
+    ``setCompiler()`` method::
 
         $twig->setCompiler($compiler);

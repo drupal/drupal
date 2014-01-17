@@ -186,7 +186,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     {
         $twig = new Twig_Environment(new Twig_Loader_String());
         $twig->addExtension(new Twig_Tests_EnvironmentTest_Extension());
-        $twig->removeExtension('test');
+        $twig->removeExtension('environment_test');
 
         $this->assertFalse(array_key_exists('test', $twig->getTags()));
         $this->assertFalse(array_key_exists('foo_filter', $twig->getFilters()));
@@ -218,21 +218,21 @@ class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension
     public function getFilters()
     {
         return array(
-            'foo_filter' => new Twig_Filter_Function('foo_filter'),
+            new Twig_SimpleFilter('foo_filter', 'foo_filter'),
         );
     }
 
     public function getTests()
     {
         return array(
-            'foo_test' => new Twig_Test_Function('foo_test'),
+            new Twig_SimpleTest('foo_test', 'foo_test'),
         );
     }
 
     public function getFunctions()
     {
         return array(
-            'foo_function' => new Twig_Function_Function('foo_function'),
+            new Twig_SimpleFunction('foo_function', 'foo_function'),
         );
     }
 
@@ -253,7 +253,7 @@ class Twig_Tests_EnvironmentTest_Extension extends Twig_Extension
 
     public function getName()
     {
-        return 'test';
+        return 'environment_test';
     }
 }
 

@@ -13,15 +13,21 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
     public function getSafe(Twig_NodeInterface $node)
     {
         $hash = spl_object_hash($node);
-        if (isset($this->data[$hash])) {
-            foreach ($this->data[$hash] as $bucket) {
-                if ($bucket['key'] === $node) {
-                    return $bucket['value'];
-                }
-            }
+        if (!isset($this->data[$hash])) {
+            return;
         }
 
-        return null;
+        foreach ($this->data[$hash] as $bucket) {
+            if ($bucket['key'] !== $node) {
+                continue;
+            }
+
+            if (in_array('html_attr', $bucket['value'])) {
+                $bucket['value'][] = 'html';
+            }
+
+            return $bucket['value'];
+        }
     }
 
     protected function setSafe(Twig_NodeInterface $node, array $safe)

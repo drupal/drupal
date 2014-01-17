@@ -11,7 +11,7 @@ Converts an argument to a date to allow date comparison:
 
 .. code-block:: jinja
 
-    {% if date(user.created_at) < date('+2days') %}
+    {% if date(user.created_at) < date('-2days') %}
         {# do something #}
     {% endif %}
 
@@ -21,7 +21,7 @@ You can pass a timezone as the second argument:
 
 .. code-block:: jinja
 
-    {% if date(user.created_at) < date('+2days', 'Europe/Paris') %}
+    {% if date(user.created_at) < date('-2days', 'Europe/Paris') %}
         {# do something #}
     {% endif %}
 
@@ -46,7 +46,7 @@ If no argument is passed, the function returns the current date:
 Arguments
 ---------
 
- * ``date``:     The date
- * ``timezone``: The timezone
+* ``date``:     The date
+* ``timezone``: The timezone
 
 .. _`date`: http://www.php.net/date

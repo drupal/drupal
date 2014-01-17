@@ -80,12 +80,64 @@ class Twig_Tests_Loader_FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("named path (final)\n", $loader->getSource('@named/index.html'));
     }
 
+    public function testEmptyConstructor()
+    {
+        $loader = new Twig_Loader_Filesystem();
+        $this->assertEquals(array(), $loader->getPaths());
+    }
+
     public function testGetNamespaces()
     {
         $loader = new Twig_Loader_Filesystem(sys_get_temp_dir());
-        $this->assertEquals(array('__main__'), $loader->getNamespaces());
+        $this->assertEquals(array(Twig_Loader_Filesystem::MAIN_NAMESPACE), $loader->getNamespaces());
 
         $loader->addPath(sys_get_temp_dir(), 'named');
-        $this->assertEquals(array('__main__', 'named'), $loader->getNamespaces());
+        $this->assertEquals(array(Twig_Loader_Filesystem::MAIN_NAMESPACE, 'named'), $loader->getNamespaces());
+    }
+
+    public function testFindTemplateExceptionNamespace()
+    {
+        $basePath = dirname(__FILE__).'/Fixtures';
+
+        $loader = new Twig_Loader_Filesystem(array($basePath.'/normal'));
+        $loader->addPath($basePath.'/named', 'named');
+
+        try {
+            $loader->getSource('@named/nowhere.html');
+        } catch (Exception $e) {
+            $this->assertInstanceof('Twig_Error_Loader', $e);
+            $this->assertContains('Unable to find template "@named/nowhere.html"', $e->getMessage());
+        }
+    }
+
+    public function testFindTemplateWithCache()
+    {
+        $basePath = dirname(__FILE__).'/Fixtures';
+
+        $loader = new Twig_Loader_Filesystem(array($basePath.'/normal'));
+        $loader->addPath($basePath.'/named', 'named');
+
+        // prime the cache for index.html in the named namespace
+        $namedSource = $loader->getSource('@named/index.html');
+        $this->assertEquals("named path\n", $namedSource);
+
+        // get index.html from the main namespace
+        $this->assertEquals("path\n", $loader->getSource('index.html'));
+    }
+
+    public function testLoadTemplateAndRenderBlockWithCache()
+    {
+        $loader = new Twig_Loader_Filesystem(array());
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme2');
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme1');
+        $loader->addPath(dirname(__FILE__).'/Fixtures/themes/theme1', 'default_theme');
+
+        $twig = new Twig_Environment($loader);
+
+        $template = $twig->loadTemplate('blocks.html.twig');
+        $this->assertSame('block from theme 1', $template->renderBlock('b1', array()));
+
+        $template = $twig->loadTemplate('blocks.html.twig');
+        $this->assertSame('block from theme 2', $template->renderBlock('b2', array()));
     }
 }

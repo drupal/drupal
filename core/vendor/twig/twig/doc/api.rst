@@ -348,10 +348,10 @@ tag, ``autoescape``, and a filter, ``raw``.
 When creating the escaper extension, you can switch on or off the global
 output escaping strategy::
 
-    $escaper = new Twig_Extension_Escaper(true);
+    $escaper = new Twig_Extension_Escaper('html');
     $twig->addExtension($escaper);
 
-If set to ``true``, all variables in templates are escaped (using the ``html``
+If set to ``html``, all variables in templates are escaped (using the ``html``
 escaping strategy), except those using the ``raw`` filter:
 
 .. code-block:: jinja
@@ -417,15 +417,15 @@ The escaping rules are implemented as follows:
         {{ var|upper|raw }} {# won't be escaped #}
 
 * Automatic escaping is not applied if the last filter in the chain is marked
-  safe for the current context (e.g. ``html`` or ``js``). ``escaper`` and
-  ``escaper('html')`` are marked safe for html, ``escaper('js')`` is marked
-  safe for javascript, ``raw`` is marked safe for everything.
+  safe for the current context (e.g. ``html`` or ``js``). ``escape`` and
+  ``escape('html')`` are marked safe for HTML, ``escape('js')`` is marked
+  safe for JavaScript, ``raw`` is marked safe for everything.
 
   .. code-block:: jinja
 
         {% autoescape 'js' %}
-            {{ var|escape('html') }} {# will be escaped for html and javascript #}
-            {{ var }} {# will be escaped for javascript #}
+            {{ var|escape('html') }} {# will be escaped for HTML and JavaScript #}
+            {{ var }} {# will be escaped for JavaScript #}
             {{ var|escape('js') }} {# won't be double-escaped #}
         {% endautoescape %}
 
@@ -499,16 +499,16 @@ to enable by passing them to the constructor::
 Twig supports the following optimizations:
 
 * ``Twig_NodeVisitor_Optimizer::OPTIMIZE_ALL``, enables all optimizations
-(this is the default value).
+  (this is the default value).
 * ``Twig_NodeVisitor_Optimizer::OPTIMIZE_NONE``, disables all optimizations.
-This reduces the compilation time, but it can increase the execution time
-and the consumed memory.
+  This reduces the compilation time, but it can increase the execution time
+  and the consumed memory.
 * ``Twig_NodeVisitor_Optimizer::OPTIMIZE_FOR``, optimizes the ``for`` tag by
-removing the ``loop`` variable creation whenever possible.
+  removing the ``loop`` variable creation whenever possible.
 * ``Twig_NodeVisitor_Optimizer::OPTIMIZE_RAW_FILTER``, removes the ``raw``
-filter whenever possible.
+  filter whenever possible.
 * ``Twig_NodeVisitor_Optimizer::OPTIMIZE_VAR_ACCESS``, simplifies the creation
-and access of variables in the compiled templates whenever possible.
+  and access of variables in the compiled templates whenever possible.
 
 Exceptions
 ----------

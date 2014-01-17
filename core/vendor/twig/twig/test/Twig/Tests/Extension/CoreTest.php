@@ -16,8 +16,10 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testRandomFunction($value, $expectedInArray)
     {
+        $env = new Twig_Environment();
+
         for ($i = 0; $i < 100; $i++) {
-            $this->assertTrue(in_array(twig_random(new Twig_Environment(), $value), $expectedInArray, true)); // assertContains() would not consider the type
+            $this->assertTrue(in_array(twig_random($env, $value), $expectedInArray, true)); // assertContains() would not consider the type
         }
     }
 
@@ -112,4 +114,25 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($output, 'éÄ');
     }
+
+    public function testCustomEscaper()
+    {
+        $twig = new Twig_Environment();
+        $twig->getExtension('core')->setEscaper('foo', 'foo_escaper_for_test');
+
+        $this->assertEquals('fooUTF-8', twig_escape_filter($twig, 'foo', 'foo'));
+    }
+
+    /**
+     * @expectedException Twig_Error_Runtime
+     */
+    public function testUnknownCustomEscaper()
+    {
+        twig_escape_filter(new Twig_Environment(), 'foo', 'bar');
+    }
+}
+
+function foo_escaper_for_test(Twig_Environment $env, $string, $charset)
+{
+    return $string.$charset;
 }

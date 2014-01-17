@@ -12,24 +12,24 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
 {
     public function testNameLabelForTag()
     {
-        $template = '{% ☃ %}';
+        $template = '{% § %}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $stream = $lexer->tokenize($template);
 
         $stream->expect(Twig_Token::BLOCK_START_TYPE);
-        $this->assertSame('☃', $stream->expect(Twig_Token::NAME_TYPE)->getValue());
+        $this->assertSame('§', $stream->expect(Twig_Token::NAME_TYPE)->getValue());
     }
 
     public function testNameLabelForFunction()
     {
-        $template = '{{ ☃() }}';
+        $template = '{{ §() }}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $stream = $lexer->tokenize($template);
 
         $stream->expect(Twig_Token::VAR_START_TYPE);
-        $this->assertSame('☃', $stream->expect(Twig_Token::NAME_TYPE)->getValue());
+        $this->assertSame('§', $stream->expect(Twig_Token::NAME_TYPE)->getValue());
     }
 
     public function testBracketsNesting()
@@ -62,11 +62,11 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
     public function testLineDirective()
     {
         $template = "foo\n"
-            . "bar\n"
-            . "{% line 10 %}\n"
-            . "{{\n"
-            . "baz\n"
-            . "}}\n";
+            ."bar\n"
+            ."{% line 10 %}\n"
+            ."{{\n"
+            ."baz\n"
+            ."}}\n";
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $stream = $lexer->tokenize($template);
@@ -84,9 +84,9 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
     public function testLineDirectiveInline()
     {
         $template = "foo\n"
-            . "bar{% line 10 %}{{\n"
-            . "baz\n"
-            . "}}\n";
+            ."bar{% line 10 %}{{\n"
+            ."baz\n"
+            ."}}\n";
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $stream = $lexer->tokenize($template);
@@ -141,13 +141,17 @@ class Twig_Tests_LexerTest extends PHPUnit_Framework_TestCase
 
     public function testBigNumbers()
     {
+        if ('hiphop' === substr(PHP_VERSION, -6)) {
+            $this->markTestSkipped('hhvm thinks that the number is actually a T_CONSTANT_ENCAPSED_STRING!');
+        }
+
         $template = '{{ 922337203685477580700 }}';
 
         $lexer = new Twig_Lexer(new Twig_Environment());
         $stream = $lexer->tokenize($template);
         $node = $stream->next();
         $node = $stream->next();
-        $this->assertEquals(922337203685477580700, $node->getValue());
+        $this->assertEquals("922337203685477580700", $node->getValue());
     }
 
     public function testStringWithEscapedDelimiter()
