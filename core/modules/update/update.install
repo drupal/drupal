@@ -68,9 +68,8 @@ function update_install() {
  * Implements hook_uninstall().
  */
 function update_uninstall() {
-  // @todo D8: Convert to new state storage.
-  variable_del('update_last_check');
-  variable_del('update_last_email_notification');
+  \Drupal::state()->delete('update.last_check');
+  \Drupal::state()->delete('update.last_email_notification');
 
   $queue = \Drupal::queue('update_fetch_tasks');
   $queue->deleteQueue();
