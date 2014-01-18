@@ -65,7 +65,7 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
     return $response;
   }
 
-  return $output;
+  return (!empty($form_state['title'])) ? array('#title' => $form_state['title'], '#markup' => $output) : $output;
 }
 
 /**

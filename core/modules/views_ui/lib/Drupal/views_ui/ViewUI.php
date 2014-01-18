@@ -372,11 +372,6 @@ class ViewUI implements ViewStorageInterface {
     }
     // Finally, we never want these cached -- our object cache does that for us.
     $form['#no_cache'] = TRUE;
-
-    // If this isn't an ajaxy form, then we want to set the title.
-    if (!empty($form['#title'])) {
-      drupal_set_title($form['#title']);
-    }
   }
 
   /**
