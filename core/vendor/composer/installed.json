@@ -96,57 +96,6 @@
         ]
     },
     {
-        "name": "twig/twig",
-        "version": "v1.12.3",
-        "version_normalized": "1.12.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/fabpot/Twig.git",
-            "reference": "v1.12.3"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.12.3",
-            "reference": "v1.12.3",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.4"
-        },
-        "time": "2013-04-08 12:40:11",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.12-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com"
-            }
-        ],
-        "description": "Twig, the flexible, fast, and secure template language for PHP",
-        "homepage": "http://twig.sensiolabs.org",
-        "keywords": [
-            "templating"
-        ]
-    },
-    {
         "name": "kriswallsmith/assetic",
         "version": "v1.1.1",
         "version_normalized": "1.1.1.0",
@@ -2042,30 +1991,70 @@
         ]
     },
     {
-        "name": "doctrine/common",
-        "version": "dev-bmaster",
-        "version_normalized": "dev-bmaster",
+        "name": "twig/twig",
+        "version": "v1.15.0",
+        "version_normalized": "1.15.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/dawehner/common.git",
-            "reference": "99b44f52a1b844f9c4c34e618b160664d5c27daf"
+            "url": "https://github.com/fabpot/Twig.git",
+            "reference": "85e4ff98000157ff753d934b9f13659a953f5666"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/dawehner/common/zipball/99b44f52a1b844f9c4c34e618b160664d5c27daf",
-            "reference": "99b44f52a1b844f9c4c34e618b160664d5c27daf",
+            "url": "https://api.github.com/repos/fabpot/Twig/zipball/85e4ff98000157ff753d934b9f13659a953f5666",
+            "reference": "85e4ff98000157ff753d934b9f13659a953f5666",
             "shasum": ""
         },
-        "archive": {
-            "exclude": [
-                "!vendor",
-                "tests",
-                "*phpunit.xml",
-                ".travis.yml",
-                "build.xml",
-                "build.properties",
-                "composer.phar"
-            ]
+        "require": {
+            "php": ">=5.2.4"
+        },
+        "time": "2013-12-06 07:47:10",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.15-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
+    },
+    {
+        "name": "doctrine/common",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/common.git",
+            "reference": "a45d110f71c323e29f41eb0696fa230e3fa1b1b5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/common/zipball/a45d110f71c323e29f41eb0696fa230e3fa1b1b5",
+            "reference": "a45d110f71c323e29f41eb0696fa230e3fa1b1b5",
+            "shasum": ""
         },
         "require": {
             "doctrine/annotations": "1.*",
@@ -2075,7 +2064,10 @@
             "doctrine/lexer": "1.*",
             "php": ">=5.3.2"
         },
-        "time": "2013-12-12 18:37:37",
+        "require-dev": {
+            "phpunit/phpunit": "~3.7"
+        },
+        "time": "2014-01-12 22:00:08",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2088,13 +2080,21 @@
                 "Doctrine\\Common\\": "lib/"
             }
         },
+        "notification-url": "https://packagist.org/downloads/",
         "license": [
             "MIT"
         ],
         "authors": [
             {
+                "name": "Jonathan Wage",
+                "email": "jonwage@gmail.com",
+                "homepage": "http://www.jwage.com/",
+                "role": "Creator"
+            },
+            {
                 "name": "Guilherme Blanco",
-                "email": "guilhermeblanco@gmail.com"
+                "email": "guilhermeblanco@gmail.com",
+                "homepage": "http://www.instaclick.com"
             },
             {
                 "name": "Roman Borschel",
@@ -2105,12 +2105,10 @@
                 "email": "kontakt@beberlei.de"
             },
             {
-                "name": "Jonathan Wage",
-                "email": "jonwage@gmail.com"
-            },
-            {
                 "name": "Johannes Schmitt",
-                "email": "schmittjoh@gmail.com"
+                "email": "schmittjoh@gmail.com",
+                "homepage": "http://jmsyst.com",
+                "role": "Developer of wrapped JMSSerializerBundle"
             }
         ],
         "description": "Common Library for Doctrine projects",
@@ -2121,9 +2119,6 @@
             "eventmanager",
             "persistence",
             "spl"
-        ],
-        "support": {
-            "source": "https://github.com/dawehner/common/tree/bmaster"
-        }
+        ]
     }
 ]
