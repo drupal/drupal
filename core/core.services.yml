@@ -274,8 +274,6 @@ services:
     calls:
       - [setRequest, ['@?request']]
       - [setContext, ['@?router.request_context']]
-    tags:
-      - { name: persist }
   link_generator:
     class: Drupal\Core\Utility\LinkGenerator
     arguments: ['@url_generator', '@module_handler', '@language_manager']

@@ -108,6 +108,7 @@ function update_prepare_d8_bootstrap() {
   // Enable UpdateServiceProvider service overrides.
   // @see update_flush_all_caches()
   $GLOBALS['conf']['container_service_providers']['UpdateServiceProvider'] = 'Drupal\Core\DependencyInjection\UpdateServiceProvider';
+  $GLOBALS['conf']['update_service_provider_overrides'] = TRUE;
 
   // Check whether settings.php needs to be rewritten.
   $settings_exist = !empty($GLOBALS['config_directories']);

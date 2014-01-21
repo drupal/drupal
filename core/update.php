@@ -86,7 +86,7 @@ function update_helpful_links() {
  * while updates are running.
  */
 function update_flush_all_caches() {
-  unset($GLOBALS['conf']['container_service_providers']['UpdateServiceProvider']);
+  $GLOBALS['conf']['update_service_provider_overrides'] = FALSE;
   \Drupal::service('kernel')->updateModules(\Drupal::moduleHandler()->getModuleList());
 
   // No updates to run, so caches won't get flushed later.  Clear them now.
