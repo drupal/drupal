@@ -6,8 +6,6 @@ use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 /**
@@ -125,6 +123,7 @@ class ProjectServiceContainer extends Container
         $instance->initialize();
         $instance->foo = 'bar';
         $instance->moo = $a;
+        $instance->qux = array($this->getParameter('foo') => 'foo is '.$this->getParameter('foo').'', 'foobar' => $this->getParameter('foo'));
         sc_configure($instance);
 
         return $instance;
@@ -198,6 +197,7 @@ class ProjectServiceContainer extends Container
         if ($this->has('foobaz')) {
             $instance->setBar($this->get('foobaz', ContainerInterface::NULL_ON_INVALID_REFERENCE));
         }
+        $instance->setBar(($this->get("foo")->foo() . $this->getParameter("foo")));
 
         return $instance;
     }

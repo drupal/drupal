@@ -162,7 +162,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
           list(, $port) = explode(':', $normalized_base_url);
           $options['base_url'] .= ':' . $port;
         }
-        elseif ($port != 80) {
+        elseif (($url_scheme == 'http' && $port != 80) || ($url_scheme == 'https' && $port != 443)) {
           $options['base_url'] .= ':' . $port;
         }
 

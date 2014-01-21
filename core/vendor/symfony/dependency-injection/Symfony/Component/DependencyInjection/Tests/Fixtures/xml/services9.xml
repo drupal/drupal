@@ -19,6 +19,10 @@
       <argument type="service" id="service_container"/>
       <property name="foo">bar</property>
       <property name="moo" type="service" id="foo.baz"/>
+      <property name="qux" type="collection">
+        <property key="%foo%">foo is %foo%</property>
+        <property key="foobar">%foo%</property>
+      </property>
       <call method="setBar">
         <argument type="service" id="bar"/>
       </call>
@@ -48,6 +52,9 @@
       </call>
       <call method="setBar">
         <argument type="service" id="foobaz" on-invalid="ignore"/>
+      </call>
+      <call method="setBar">
+        <argument type="expression">service("foo").foo() ~ parameter("foo")</argument>
       </call>
     </service>
     <service id="factory_service" class="Bar" factory-method="getInstance" factory-service="foo.baz"/>
