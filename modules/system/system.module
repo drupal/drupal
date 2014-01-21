@@ -2793,7 +2793,11 @@ function system_settings_form_submit($form, &$form_state) {
 function _system_sort_requirements($a, $b) {
   if (!isset($a['weight'])) {
     if (!isset($b['weight'])) {
-      return strcmp($a['title'], $b['title']);
+      if(is_array($a['title']) || is_array($b['title'])) { 
+        return false;
+      } else {
+        return strcmp($a['title'], $b['title']);
+      }
     }
     return -$b['weight'];
   }
