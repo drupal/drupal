@@ -98,7 +98,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
     $this->drupalLogin($admin_user);
 
-    $path = 'admin/structure/views/nojs/config-item/test_user_name/default/filter/uid';
+    $path = 'admin/structure/views/nojs/handler/test_user_name/default/filter/uid';
     $this->drupalGet($path);
 
     // Pass in an invalid username, the validation should catch it.

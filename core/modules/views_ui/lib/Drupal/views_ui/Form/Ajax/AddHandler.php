@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\Form\Ajax\AddItem.
+ * Contains \Drupal\views_ui\Form\Ajax\AddHandler.
  */
 
 namespace Drupal\views_ui\Form\Ajax;
@@ -14,10 +14,10 @@ use Drupal\views\Views;
 /**
  * Provides a form for adding an item in the Views UI.
  */
-class AddItem extends ViewsFormBase {
+class AddHandler extends ViewsFormBase {
 
   /**
-   * Constucts a new AddItem object.
+   * Constucts a new AddHandler object.
    */
   public function __construct($type = NULL) {
     $this->setType($type);
@@ -27,7 +27,7 @@ class AddItem extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function getFormKey() {
-    return 'add-item';
+    return 'add-handler';
   }
 
   /**
@@ -42,7 +42,7 @@ class AddItem extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'views_ui_add_item_form';
+    return 'views_ui_add_handler_form';
   }
 
   /**
@@ -73,7 +73,7 @@ class AddItem extends ViewsFormBase {
     }
 
     $form['#title'] = $this->t('Add @type', array('@type' => $ltitle));
-    $form['#section'] = $display_id . 'add-item';
+    $form['#section'] = $display_id . 'add-handler';
 
     // Add the display override dropdown.
     views_ui_standard_display_dropdown($form, $form_state, $section);
@@ -171,7 +171,7 @@ class AddItem extends ViewsFormBase {
         'data-drupal-views-offset' => 'bottom',
       ),
     );
-    $view->getStandardButtons($form, $form_state, 'views_ui_add_item_form', $this->t('Add and configure @types', array('@types' => $ltitle)));
+    $view->getStandardButtons($form, $form_state, 'views_ui_add_handler_form', $this->t('Add and configure @types', array('@types' => $ltitle)));
 
     // Remove the default submit function.
     $form['actions']['submit']['#submit'] = array_filter($form['actions']['submit']['#submit'], function($var) {

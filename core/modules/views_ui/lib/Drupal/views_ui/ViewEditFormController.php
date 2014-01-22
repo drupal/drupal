@@ -971,7 +971,7 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $actions['add'] = array(
       'title' => $add_text,
-      'href' => "admin/structure/views/nojs/add-item/{$view->id()}/{$display['id']}/$type",
+      'href' => "admin/structure/views/nojs/add-handler/{$view->id()}/{$display['id']}/$type",
       'attributes' => array('class' => array('icon compact add', 'views-ajax-link'), 'id' => 'views-add-' . $type),
       'html' => TRUE,
     );
@@ -1039,7 +1039,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       if ($handler->broken()) {
         $build['fields'][$id]['#class'][] = 'broken';
         $field_name = $handler->adminLabel();
-        $build['fields'][$id]['#link'] = l($field_name, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
+        $build['fields'][$id]['#link'] = l($field_name, "admin/structure/views/nojs/handler/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
         continue;
       }
 
@@ -1056,15 +1056,15 @@ class ViewEditFormController extends ViewFormControllerBase {
         // Add a [hidden] marker, if the field is excluded.
         $link_text .= ' [' . $this->t('hidden') . ']';
       }
-      $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
+      $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/handler/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
       $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . $this->t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => $this->t('Aggregation settings')), 'html' => TRUE));
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . $this->t('Aggregation settings') . '</span>', "admin/structure/views/nojs/handler-group/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => $this->t('Aggregation settings')), 'html' => TRUE));
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . $this->t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Settings')), 'html' => TRUE));
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . $this->t('Settings') . '</span>', "admin/structure/views/nojs/handler-extra/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Settings')), 'html' => TRUE));
       }
 
       if ($grouping) {

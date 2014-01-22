@@ -78,7 +78,7 @@ class HandlerTest extends ViewTestBase {
     $this->drupalLogin($admin_user);
     menu_router_rebuild();
 
-    $path = 'admin/structure/views/nojs/config-item/test_filter_in_operator_ui/default/filter/type';
+    $path = 'admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type';
     $this->drupalGet($path);
     $this->assertFieldByName('options[expose][reduce]', FALSE);
 
@@ -244,7 +244,7 @@ class HandlerTest extends ViewTestBase {
     $this->drupalLogin($views_admin);
 
     // Make sure the link to the field options exists.
-    $handler_options_path = 'admin/structure/views/nojs/config-item/test_handler_relationships/default/field/title';
+    $handler_options_path = 'admin/structure/views/nojs/handler/test_handler_relationships/default/field/title';
     $view_edit_path = 'admin/structure/views/view/test_handler_relationships/edit';
     $this->drupalGet($view_edit_path);
     $this->assertLinkByHref($handler_options_path);
@@ -270,7 +270,7 @@ class HandlerTest extends ViewTestBase {
     $this->assertEqual($options, $expected_options);
 
     // Remove the relationship and make sure no relationship option appears.
-    $this->drupalPostForm('admin/structure/views/nojs/config-item/test_handler_relationships/default/relationship/nid', array(), t('Remove'));
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid', array(), t('Remove'));
     $this->drupalGet($handler_options_path);
     $this->assertNoFieldByName($relationship_name, 'Make sure that no relationship option is available');
   }
@@ -282,9 +282,9 @@ class HandlerTest extends ViewTestBase {
     $view = views_get_view('test_handler_relationships');
     $view->setDisplay();
     // Setup a broken relationship.
-    $view->addItem('default', 'relationship', $this->randomName(), $this->randomName(), array(), 'broken_relationship');
+    $view->addHandler('default', 'relationship', $this->randomName(), $this->randomName(), array(), 'broken_relationship');
     // Setup a valid relationship.
-    $view->addItem('default', 'relationship', 'comment', 'node', array('relationship' => 'cid'), 'valid_relationship');
+    $view->addHandler('default', 'relationship', 'comment', 'node', array('relationship' => 'cid'), 'valid_relationship');
     $view->initHandlers();
     $field = $view->field['title'];
 

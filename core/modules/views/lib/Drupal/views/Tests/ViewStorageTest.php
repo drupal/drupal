@@ -257,11 +257,11 @@ class ViewStorageTest extends ViewUnitTestBase {
 
     $display_id = 'default';
     $expected_items = array();
-    // Tests addItem with getItem.
+    // Tests addHandler with getItem.
     // Therefore add one item without any optioins and one item with some
     // options.
-    $id1 = $view->addItem($display_id, 'field', 'views_test_data', 'id');
-    $item1 = $view->getItem($display_id, 'field', 'id');
+    $id1 = $view->addHandler($display_id, 'field', 'views_test_data', 'id');
+    $item1 = $view->getHandler($display_id, 'field', 'id');
     $expected_items[$id1] = $expected_item = array(
       'id' => 'id',
       'table' => 'views_test_data',
@@ -276,8 +276,8 @@ class ViewStorageTest extends ViewUnitTestBase {
         'text' => $this->randomName()
       )
     );
-    $id2 = $view->addItem($display_id, 'field', 'views_test_data', 'name', $options);
-    $item2 = $view->getItem($display_id, 'field', 'name');
+    $id2 = $view->addHandler($display_id, 'field', 'views_test_data', 'name', $options);
+    $item2 = $view->getHandler($display_id, 'field', 'name');
     $expected_items[$id2] = $expected_item = array(
       'id' => 'name',
       'table' => 'views_test_data',
@@ -288,7 +288,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     $this->assertEqual($item2, $expected_item);
 
     // Tests the expected fields from the previous additions.
-    $this->assertEqual($view->getItems('field', $display_id), $expected_items);
+    $this->assertEqual($view->getHandlers('field', $display_id), $expected_items);
 
     // Alter an existing item via setItem and check the result via getItem
     // and getItems.
@@ -298,14 +298,14 @@ class ViewStorageTest extends ViewUnitTestBase {
       )
     ) + $item1;
     $expected_items[$id1] = $item;
-    $view->setItem($display_id, 'field', $id1, $item);
-    $this->assertEqual($view->getItem($display_id, 'field', 'id'), $item);
-    $this->assertEqual($view->getItems('field', $display_id), $expected_items);
+    $view->setHandler($display_id, 'field', $id1, $item);
+    $this->assertEqual($view->getHandler($display_id, 'field', 'id'), $item);
+    $this->assertEqual($view->getHandlers('field', $display_id), $expected_items);
 
     // Test removeItem method.
     unset($expected_items[$id2]);
-    $view->removeItem($display_id, 'field', $id2);
-    $this->assertEqual($view->getItems('field', $display_id), $expected_items);
+    $view->removeHandler($display_id, 'field', $id2);
+    $this->assertEqual($view->getHandlers('field', $display_id), $expected_items);
   }
 
   /**

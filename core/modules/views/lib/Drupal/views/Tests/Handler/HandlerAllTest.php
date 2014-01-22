@@ -85,7 +85,7 @@ class HandlerAllTest extends HandlerTestBase {
                   $options['value'] = array(1);
                 }
               }
-              $view->addItem('default', $type, $base_table, $field, $options);
+              $view->addHandler('default', $type, $base_table, $field, $options);
             }
           }
         }

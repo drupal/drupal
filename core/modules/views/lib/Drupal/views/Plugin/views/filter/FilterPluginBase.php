@@ -426,7 +426,7 @@ abstract class FilterPluginBase extends HandlerBase {
       $this->buildGroupOptions();
     }
 
-    $form_state['view']->getExecutable()->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $form_state['view']->getExecutable()->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
     $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $form_state['type'], $form_state['id'], TRUE, TRUE);
 
@@ -1089,7 +1089,7 @@ abstract class FilterPluginBase extends HandlerBase {
     // Add a new row.
     $item['group_info']['group_items'][] = array();
 
-    $form_state['view']->getExecutable()->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $form_state['view']->getExecutable()->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
     $form_state['view']->cacheSet();
     $form_state['rerender'] = TRUE;

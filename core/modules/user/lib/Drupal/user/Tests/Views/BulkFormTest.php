@@ -82,7 +82,7 @@ class BulkFormTest extends UserTestBase {
 
     // Remove the user status filter from the view.
     $view = views_get_view('test_user_bulk_form');
-    $view->removeItem('default', 'filter', 'status');
+    $view->removeHandler('default', 'filter', 'status');
     $view->storage->save();
 
     // Ensure the anonymous user is found.

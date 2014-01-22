@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\Form\Ajax\ConfigItem.
+ * Contains \Drupal\views_ui\Form\Ajax\ConfigHandler.
  */
 
 namespace Drupal\views_ui\Form\Ajax;
@@ -14,10 +14,10 @@ use Drupal\views\Views;
 /**
  * Provides a form for configuring an item in the Views UI.
  */
-class ConfigItem extends ViewsFormBase {
+class ConfigHandler extends ViewsFormBase {
 
   /**
-   * Constucts a new ConfigItem object.
+   * Constucts a new ConfigHandler object.
    */
   public function __construct($type = NULL, $id = NULL) {
     $this->setType($type);
@@ -28,7 +28,7 @@ class ConfigItem extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function getFormKey() {
-    return 'config-item';
+    return 'handler';
   }
 
   /**
@@ -66,7 +66,7 @@ class ConfigItem extends ViewsFormBase {
     $executable = $view->getExecutable();
     $save_ui_cache = FALSE;
     $executable->setDisplay($display_id);
-    $item = $executable->getItem($display_id, $type, $id);
+    $item = $executable->getHandler($display_id, $type, $id);
 
     if ($item) {
       $handler = $executable->display_handler->getHandler($type, $id);
@@ -124,7 +124,7 @@ class ConfigItem extends ViewsFormBase {
             $rel = key($relationship_options);
             // We want this relationship option to get saved even if the user
             // skips submitting the form.
-            $executable->setItemOption($display_id, $type, $id, 'relationship', $rel);
+            $executable->setHandlerOption($display_id, $type, $id, 'relationship', $rel);
             $save_ui_cache = TRUE;
           }
 
@@ -239,7 +239,7 @@ class ConfigItem extends ViewsFormBase {
     $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
     // Store the item back on the view
-    $executable->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $handler->options);
+    $executable->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $handler->options);
 
     // Ensure any temporary options are removed.
     if (isset($form_state['view']->temporary_options[$type][$form_state['id']])) {
@@ -262,7 +262,7 @@ class ConfigItem extends ViewsFormBase {
       $display = &$executable->displayHandlers->get($form_state['display_id']);
       $display->optionsOverride($form, $form_state);
     }
-    $executable->removeItem($form_state['display_id'], $form_state['type'], $form_state['id']);
+    $executable->removeHandler($form_state['display_id'], $form_state['type'], $form_state['id']);
 
     // Write to cache
     $form_state['view']->cacheSet();

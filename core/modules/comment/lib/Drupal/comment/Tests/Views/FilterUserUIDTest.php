@@ -32,7 +32,7 @@ class FilterUserUIDTest extends CommentTestBase {
   function testCommentUserUIDTest() {
     $view = views_get_view('test_comment_user_uid');
     $view->setDisplay();
-    $view->removeItem('default', 'argument', 'uid_touch');
+    $view->removeHandler('default', 'argument', 'uid_touch');
 
     $options = array(
       'id' => 'uid_touch',
@@ -40,7 +40,7 @@ class FilterUserUIDTest extends CommentTestBase {
       'field' => 'uid_touch',
       'value' => array($this->loggedInUser->id()),
     );
-    $view->addItem('default', 'filter', 'node_field_data', 'uid_touch', $options);
+    $view->addHandler('default', 'filter', 'node_field_data', 'uid_touch', $options);
     $this->executeView($view, array($this->account->id()));
     $result_set = array(
       array(

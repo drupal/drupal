@@ -153,7 +153,7 @@ class FilterDateTest extends HandlerTestBase {
     $this->drupalLogin($this->drupalCreateUser(array('administer views', 'administer site configuration')));
     menu_router_rebuild();
     $this->drupalGet('admin/structure/views/view/test_filter_date_between/edit');
-    $this->drupalGet('admin/structure/views/nojs/config-item/test_filter_date_between/default/filter/created');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
 
     $edit = array();
     // Generate a definitive wrong value, which should be checked by validation.

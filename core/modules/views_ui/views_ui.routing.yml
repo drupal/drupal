@@ -120,14 +120,14 @@ views_ui.break_lock:
   requirements:
     _permission: 'administer views'
 
-views_ui.form_add_item:
-  path: '/admin/structure/views/{js}/add-item/{view}/{display_id}/{type}'
+views_ui.form_add_handler:
+  path: '/admin/structure/views/{js}/add-handler/{view}/{display_id}/{type}'
   options:
     parameters:
       view:
         tempstore: TRUE
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\AddItem::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\AddHandler::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
@@ -204,38 +204,38 @@ views_ui.form_display:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form_config_item:
-  path: '/admin/structure/views/{js}/config-item/{view}/{display_id}/{type}/{id}'
+views_ui.form_handler:
+  path: '/admin/structure/views/{js}/handler/{view}/{display_id}/{type}/{id}'
   options:
     parameters:
       view:
         tempstore: TRUE
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\ConfigItem::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\ConfigHandler::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form_config_item_extra:
-  path: '/admin/structure/views/{js}/config-item-extra/{view}/{display_id}/{type}/{id}'
+views_ui.form_handler_extra:
+  path: '/admin/structure/views/{js}/handler-extra/{view}/{display_id}/{type}/{id}'
   options:
     parameters:
       view:
         tempstore: TRUE
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\ConfigItemExtra::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\ConfigHandlerExtra::getForm'
   requirements:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form_config_item_group:
-  path: '/admin/structure/views/{js}/config-item-group/{view}/{display_id}/{type}/{id}'
+views_ui.form_handler_group:
+  path: '/admin/structure/views/{js}/handler-group/{view}/{display_id}/{type}/{id}'
   options:
     parameters:
       view:
         tempstore: TRUE
   defaults:
-    _content: '\Drupal\views_ui\Form\Ajax\ConfigItemGroup::getForm'
+    _content: '\Drupal\views_ui\Form\Ajax\ConfigHandlerGroup::getForm'
     form_state: NULL
   requirements:
     _permission: 'administer views'

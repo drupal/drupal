@@ -164,12 +164,12 @@ Drupal.behaviors.addItemForm = {
   attach: function (context) {
     var $context = $(context);
     var $form = $context;
-    // The add item form may have an id of views-ui-add-item-form--n.
-    if (!$context.is('form[id^="views-ui-add-item-form"]')) {
-      $form = $context.find('form[id^="views-ui-add-item-form"]');
+    // The add handler form may have an id of views-ui-add-handler-form--n.
+    if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
+      $form = $context.find('form[id^="views-ui-add-handler-form"]');
     }
-    if ($form.once('views-ui-add-item-form').length) {
-      // If we we have an unprocessed views-ui-add-item-form, let's instantiate.
+    if ($form.once('views-ui-add-handler-form').length) {
+      // If we we have an unprocessed views-ui-add-handler-form, let's instantiate.
       new Drupal.viewsUi.AddItemForm($form);
     }
   }
@@ -285,9 +285,9 @@ Drupal.behaviors.viewsUiSearchOptions = {
   attach: function (context) {
     var $context = $(context);
     var $form = $context;
-    // The add item form may have an id of views-ui-add-item-form--n.
-    if (!$context.is('form[id^="views-ui-add-item-form"]')) {
-      $form = $context.find('form[id^="views-ui-add-item-form"]');
+    // The add handler form may have an id of views-ui-add-handler-form--n.
+    if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
+      $form = $context.find('form[id^="views-ui-add-handler-form"]');
     }
     // Make sure we don't add more than one event handler to the same form.
     if ($form.once('views-ui-filter-options').length) {
@@ -764,7 +764,7 @@ $.extend(Drupal.viewsUi.RearrangeFilterHandler.prototype, {
 Drupal.behaviors.viewsFilterConfigSelectAll = {
   attach: function (context) {
     // Show the select all checkbox.
-    $(context).find('#views-ui-config-item-form div.form-item-options-value-all').once('filterConfigSelectAll')
+    $(context).find('#views-ui-handler-form div.form-item-options-value-all').once('filterConfigSelectAll')
       .show()
       .find('input[type=checkbox]')
       .on('click', function () {
@@ -775,7 +775,7 @@ Drupal.behaviors.viewsFilterConfigSelectAll = {
         });
       });
     // Uncheck the select all checkbox if any of the others are unchecked.
-    $('#views-ui-config-item-form').find('div.form-type-checkbox').not($('.form-item-options-value-all'))
+    $('#views-ui-handler-form').find('div.form-type-checkbox').not($('.form-item-options-value-all'))
       .find('input[type=checkbox]')
       .on('click', function () {
         if ($(this).is('checked') === false) {

@@ -16,8 +16,8 @@ interface ViewsFormInterface extends FormInterface {
    * Returns the key that represents this form.
    *
    * @return string
-   *   The form key used in the URL, e.g., the string 'add-item' in
-   *   'admin/structure/views/%/add-item/%/%/%'.
+   *   The form key used in the URL, e.g., the string 'add-handler' in
+   *   'admin/structure/views/%/add-handler/%/%/%'.
    */
   public function getFormKey();
 

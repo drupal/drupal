@@ -78,23 +78,23 @@ class HandlerTest extends UITestBase {
     $handler_types = ViewExecutable::viewsHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       // Test adding handlers.
-      $add_handler_url = "admin/structure/views/nojs/add-item/test_view_empty/default/$type";
+      $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/$type";
 
       // Area handler types need to use a different handler.
       if (in_array($type, array('header', 'footer', 'empty'))) {
         $this->drupalPostForm($add_handler_url, array('name[views.area]' => TRUE), t('Add and configure @handler', array('@handler' => $type_info['ltitle'])));
         $id = 'area';
-        $edit_handler_url = "admin/structure/views/nojs/config-item/test_view_empty/default/$type/$id";
+        $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       elseif ($type == 'relationship') {
         $this->drupalPostForm($add_handler_url, array('name[views_test_data.uid]' => TRUE), t('Add and configure @handler', array('@handler' => $type_info['ltitle'])));
         $id = 'uid';
-        $edit_handler_url = "admin/structure/views/nojs/config-item/test_view_empty/default/$type/$id";
+        $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       else {
         $this->drupalPostForm($add_handler_url, array('name[views_test_data.job]' => TRUE), t('Add and configure @handler', array('@handler' => $type_info['ltitle'])));
         $id = 'job';
-        $edit_handler_url = "admin/structure/views/nojs/config-item/test_view_empty/default/$type/$id";
+        $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
 
       $this->assertUrl($edit_handler_url, array(), 'The user got redirected to the handler edit form.');
@@ -125,14 +125,14 @@ class HandlerTest extends UITestBase {
 
     // Test adding a field of the user table using the uid relationship.
     $type_info = $handler_types['relationship'];
-    $add_handler_url = "admin/structure/views/nojs/add-item/test_view_empty/default/relationship";
+    $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/relationship";
     $this->drupalPostForm($add_handler_url, array('name[views_test_data.uid]' => TRUE), t('Add and configure @handler', array('@handler' => $type_info['ltitle'])));
 
-    $add_handler_url = "admin/structure/views/nojs/add-item/test_view_empty/default/field";
+    $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/field";
     $type_info = $handler_types['field'];
     $this->drupalPostForm($add_handler_url, array('name[users.signature]' => TRUE), t('Add and configure @handler', array('@handler' => $type_info['ltitle'])));
     $id = 'signature';
-    $edit_handler_url = "admin/structure/views/nojs/config-item/test_view_empty/default/field/$id";
+    $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/field/$id";
 
     $this->assertUrl($edit_handler_url, array(), 'The user got redirected to the handler edit form.');
     $this->assertFieldByName('options[relationship]', 'uid', 'Ensure the relationship select is filled with the UID relationship.');
@@ -152,7 +152,7 @@ class HandlerTest extends UITestBase {
     foreach ($handler_types as $type => $type_info) {
       $this->drupalGet('admin/structure/views/view/test_view_broken/edit');
 
-      $href = "admin/structure/views/nojs/config-item/test_view_broken/default/$type/id_broken";
+      $href = "admin/structure/views/nojs/handler/test_view_broken/default/$type/id_broken";
 
       $result = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
       $this->assertEqual(count($result), 1, String::format('Handler (%type) edit link found.', array('%type' => $type)));
@@ -186,7 +186,7 @@ class HandlerTest extends UITestBase {
     foreach ($handler_types as $type => $type_info) {
       $this->drupalGet('admin/structure/views/view/test_view_optional/edit');
 
-      $href = "admin/structure/views/nojs/config-item/test_view_optional/default/$type/id_optional";
+      $href = "admin/structure/views/nojs/handler/test_view_optional/default/$type/id_optional";
 
       $result = $this->xpath('//a[contains(@href, :href)]', array(':href' => $href));
       $this->assertEqual(count($result), 1, String::format('Handler (%type) edit link found.', array('%type' => $type)));

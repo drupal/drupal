@@ -1958,14 +1958,14 @@ class ViewExecutable {
    * @return string
    *   The unique ID for this handler instance.
    */
-  public function addItem($display_id, $type, $table, $field, $options = array(), $id = NULL) {
+  public function addHandler($display_id, $type, $table, $field, $options = array(), $id = NULL) {
     $types = $this::viewsHandlerTypes();
     $this->setDisplay($display_id);
 
     $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
 
     if (empty($id)) {
-      $id = $this->generateItemId($field, $fields);
+      $id = $this->generateHandlerId($field, $fields);
     }
 
     // If the desired type is not found, use the original value directly.
@@ -2008,7 +2008,7 @@ class ViewExecutable {
    *   integer to make it unique, e.g., "{$requested_id}_1",
    *   "{$requested_id}_2", etc.
    */
-  public static function generateItemId($requested_id, $existing_items) {
+  public static function generateHandlerId($requested_id, $existing_items) {
     $count = 0;
     $id = $requested_id;
     while (!empty($existing_items[$id])) {
@@ -2029,7 +2029,7 @@ class ViewExecutable {
    * @return array
    *   An array of handler instances of a given type for this display.
    */
-  public function getItems($type, $display_id = NULL) {
+  public function getHandlers($type, $display_id = NULL) {
     $this->setDisplay($display_id);
 
     if (!isset($display_id)) {
@@ -2055,7 +2055,7 @@ class ViewExecutable {
    *   Either the handler instance's configuration, or NULL if the handler is
    *   not used on the display.
    */
-  public function getItem($display_id, $type, $id) {
+  public function getHandler($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
     $types = static::viewsHandlerTypes();
     // Initialize the display
@@ -2081,7 +2081,7 @@ class ViewExecutable {
    *
    * @see set_item_option()
    */
-  public function setItem($display_id, $type, $id, $item) {
+  public function setHandler($display_id, $type, $id, $item) {
     // Get info about the types so we can get the right data.
     $types = static::viewsHandlerTypes();
     // Initialize the display.
@@ -2107,7 +2107,7 @@ class ViewExecutable {
    * @param string $id
    *   The ID of the handler being removed.
    */
-  public function removeItem($display_id, $type, $id) {
+  public function removeHandler($display_id, $type, $id) {
     // Get info about the types so we can get the right data.
     $types = static::viewsHandlerTypes();
     // Initialize the display.
@@ -2142,10 +2142,10 @@ class ViewExecutable {
    *
    * @see set_item()
    */
-  public function setItemOption($display_id, $type, $id, $option, $value) {
-    $item = $this->getItem($display_id, $type, $id);
+  public function setHandlerOption($display_id, $type, $id, $option, $value) {
+    $item = $this->getHandler($display_id, $type, $id);
     $item[$option] = $value;
-    $this->setItem($display_id, $type, $id, $item);
+    $this->setHandler($display_id, $type, $id, $item);
   }
 
   /**

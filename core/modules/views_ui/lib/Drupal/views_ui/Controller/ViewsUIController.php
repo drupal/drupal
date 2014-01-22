@@ -103,7 +103,7 @@ class ViewsUIController implements ContainerInjectionInterface {
       foreach ($executable->displayHandlers as $display_id => $display) {
         if ($executable->setDisplay($display_id)) {
           foreach ($handler_types as $type => $info) {
-            foreach ($executable->getItems($type, $display_id) as $item) {
+            foreach ($executable->getHandlers($type, $display_id) as $item) {
               $table_data = $this->viewsData->get($item['table']);
               if (isset($table_data[$item['field']]) && isset($table_data[$item['field']][$type])
                 && $field_data = $table_data[$item['field']][$type]) {

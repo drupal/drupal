@@ -39,24 +39,24 @@ class FieldUITest extends UITestBase {
     $this->assertNoText('Views test: Name (Name) [' . t('hidden') . ']');
 
     // Hides the field and check whether the hidden label is appended.
-    $edit_handler_url = 'admin/structure/views/nojs/config-item/test_view/default/field/name';
+    $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
     $this->drupalPostForm($edit_handler_url, array('options[exclude]' => TRUE), t('Apply'));
 
     $this->assertText('Views test: Name (Name) [' . t('hidden') . ']');
 
     // Ensure that the expected tokens appear in the UI.
-    $edit_handler_url = 'admin/structure/views/nojs/config-item/test_view/default/field/age';
+    $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/age';
     $this->drupalGet($edit_handler_url);
     $result = $this->xpath('//details[@id="edit-options-alter-help"]/div[@class="details-wrapper"]/div[@class="item-list"]/fields/li');
     $this->assertEqual((string) $result[0], '[age] == Age');
 
-    $edit_handler_url = 'admin/structure/views/nojs/config-item/test_view/default/field/id';
+    $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/id';
     $this->drupalGet($edit_handler_url);
     $result = $this->xpath('//details[@id="edit-options-alter-help"]/div[@class="details-wrapper"]/div[@class="item-list"]/fields/li');
     $this->assertEqual((string) $result[0], '[age] == Age');
     $this->assertEqual((string) $result[1], '[id] == ID');
 
-    $edit_handler_url = 'admin/structure/views/nojs/config-item/test_view/default/field/name';
+    $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
     $this->drupalGet($edit_handler_url);
     $result = $this->xpath('//details[@id="edit-options-alter-help"]/div[@class="details-wrapper"]/div[@class="item-list"]/fields/li');
     $this->assertEqual((string) $result[0], '[age] == Age');

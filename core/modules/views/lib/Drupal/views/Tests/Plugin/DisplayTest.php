@@ -297,26 +297,26 @@ class DisplayTest extends PluginTestBase {
       'id' => 'id',
       'value' => array('value' => 7297)
     );
-    $view->setItem('default', 'filter', 'id', $item);
+    $view->setHandler('default', 'filter', 'id', $item);
     $this->executeView($view);
     $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
     $this->assertFalse($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as not empty, because the empty text still appears.');
     $view->destroy();
 
     // Remove the empty area, but mark the header area to still appear.
-    $view->removeItem('default', 'empty', 'area');
-    $item = $view->getItem('default', 'header', 'area');
+    $view->removeHandler('default', 'empty', 'area');
+    $item = $view->getHandler('default', 'header', 'area');
     $item['empty'] = TRUE;
-    $view->setItem('default', 'header', 'area', $item);
+    $view->setHandler('default', 'header', 'area', $item);
     $this->executeView($view);
     $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
     $this->assertFalse($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as not empty, because the header text still appears.');
     $view->destroy();
 
     // Hide the header on empty results.
-    $item = $view->getItem('default', 'header', 'area');
+    $item = $view->getHandler('default', 'header', 'area');
     $item['empty'] = FALSE;
-    $view->setItem('default', 'header', 'area', $item);
+    $view->setHandler('default', 'header', 'area', $item);
     $this->executeView($view);
     $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
     $this->assertTrue($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as empty.');

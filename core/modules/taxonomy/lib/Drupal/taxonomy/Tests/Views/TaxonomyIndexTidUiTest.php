@@ -76,7 +76,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       }
     }
 
-    $this->drupalGet('admin/structure/views/nojs/config-item/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
 
     $result = $this->xpath('//select[@id="edit-options-value"]/option');
 
@@ -100,7 +100,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $display =& $view->getDisplay('default');
     $display['display_options']['filters']['tid']['type'] = 'textfield';
     $view->save();
-    $this->drupalGet('admin/structure/views/nojs/config-item/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $result = $this->xpath('//input[@id="edit-options-value"]/@data-autocomplete-path');
     $this->assertEqual((string) $result[0], url('taxonomy/autocomplete_vid/tags'));
   }

@@ -60,7 +60,7 @@ class TrackerUserUidTest extends TrackerTestBase {
     $view->destroy();
 
     // Remove the filter now, so only the argument will affect the query.
-    $view->removeItem('default', 'filter', 'uid_touch_tracker');
+    $view->removeHandler('default', 'filter', 'uid_touch_tracker');
 
     // Test the incorrect argument UID.
     $view->initHandlers();

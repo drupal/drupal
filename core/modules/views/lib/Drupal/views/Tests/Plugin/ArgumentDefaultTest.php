@@ -59,7 +59,7 @@ class ArgumentDefaultTest extends PluginTestBase {
       ),
       'default_action' => 'default'
     );
-    $id = $view->addItem('default', 'argument', 'views_test_data', 'name', $options);
+    $id = $view->addHandler('default', 'argument', 'views_test_data', 'name', $options);
     $view->initHandlers();
     $plugin = $view->argument[$id]->getPlugin('argument_default');
     $this->assertTrue($plugin instanceof ArgumentDefaultTestPlugin, 'The correct argument default plugin is used.');
@@ -94,7 +94,7 @@ class ArgumentDefaultTest extends PluginTestBase {
     $edit = array(
       'options[default_argument_type]' => $argument_type,
     );
-    $this->drupalPostForm('admin/structure/views/nojs/config-item/test_argument_default_current_user/default/argument/uid', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_argument_default_current_user/default/argument/uid', $edit, t('Apply'));
 
     // Note, the undefined index error has two spaces after it.
     $error = array(

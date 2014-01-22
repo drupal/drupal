@@ -103,9 +103,9 @@ class AreaEntityTest extends ViewTestBase {
 
     // Change the view mode of the area handler.
     $view = views_get_view('test_entity_area');
-    $item = $view->getItem('default', 'header', 'entity_entity_test');
+    $item = $view->getHandler('default', 'header', 'entity_entity_test');
     $item['view_mode'] = 'test';
-    $view->setItem('default', 'header', 'entity_entity_test', $item);
+    $view->setHandler('default', 'header', 'entity_entity_test', $item);
 
     $preview = $view->preview('default', array($entities[1]->id()));
     $this->drupalSetContent(drupal_render($preview));

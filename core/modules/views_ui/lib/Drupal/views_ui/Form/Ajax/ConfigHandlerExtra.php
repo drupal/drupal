@@ -2,22 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\Form\Ajax\ConfigItemGroup.
+ * Contains \Drupal\views_ui\Form\Ajax\ConfigHandlerExtra.
  */
 
 namespace Drupal\views_ui\Form\Ajax;
 
-use Drupal\views\Views;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
 
 /**
- * Provides a form for configuring grouping information for a Views UI item.
+ * Provides a form for configuring extra information for a Views UI item.
  */
-class ConfigItemGroup extends ViewsFormBase {
+class ConfigHandlerExtra extends ViewsFormBase {
 
   /**
-   * Constucts a new ConfigItemGroup object.
+   * Constucts a new ConfigHandlerExtra object.
    */
   public function __construct($type = NULL, $id = NULL) {
     $this->setType($type);
@@ -28,7 +27,7 @@ class ConfigItemGroup extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function getFormKey() {
-    return 'config-item-group';
+    return 'handler-extra';
   }
 
   /**
@@ -44,7 +43,7 @@ class ConfigItemGroup extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'views_ui_config_item_group_form';
+    return 'views_ui_config_item_extra_form';
   }
 
   /**
@@ -58,19 +57,14 @@ class ConfigItemGroup extends ViewsFormBase {
 
     $form = array(
       'options' => array(
-        '#tree' => TRUE,
+        '#tree' => true,
         '#theme_wrappers' => array('container'),
         '#attributes' => array('class' => array('scroll'), 'data-drupal-views-scroll' => TRUE),
       ),
     );
     $executable = $view->getExecutable();
-    if (!$executable->setDisplay($display_id)) {
-      views_ajax_render($this->t('Invalid display id @display', array('@display' => $display_id)));
-    }
-
-    $executable->initQuery();
-
-    $item = $executable->getItem($display_id, $type, $id);
+    $executable->setDisplay($display_id);
+    $item = $executable->getHandler($display_id, $type, $id);
 
     if ($item) {
       $handler = $executable->display_handler->getHandler($type, $id);
@@ -81,13 +75,16 @@ class ConfigItemGroup extends ViewsFormBase {
         $handler->init($executable, $executable->display_handler, $item);
         $types = ViewExecutable::viewsHandlerTypes();
 
-        $form['#title'] = $this->t('Configure aggregation settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
+        $form['#title'] = $this->t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
-        $handler->buildGroupByForm($form['options'], $form_state);
+        $form['#section'] = $display_id . '-' . $type . '-' . $id;
+
+        // Get form from the handler.
+        $handler->buildExtraOptionsForm($form['options'], $form_state);
         $form_state['handler'] = $handler;
       }
 
-      $view->getStandardButtons($form, $form_state, 'views_ui_config_item_group_form');
+      $view->getStandardButtons($form, $form_state, 'views_ui_config_item_extra_form');
     }
     return $form;
   }
@@ -95,18 +92,25 @@ class ConfigItemGroup extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, array &$form_state) {
+    $form_state['handler']->validateExtraOptionsForm($form['options'], $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, array &$form_state) {
-    $item = &$form_state['handler']->options;
-    $type = $form_state['type'];
+    // Run it through the handler's submit function.
+    $form_state['handler']->submitExtraOptionsForm($form['options'], $form_state);
+    $item = $form_state['handler']->options;
 
-    $handler = Views::handlerManager($type)->getHandler($item);
-    $executable = $form_state['view']->getExecutable();
-    $handler->init($executable, $executable->display_handler, $item);
-
-    $handler->submitGroupByForm($form, $form_state);
+    // Store the data we're given.
+    foreach ($form_state['values']['options'] as $key => $value) {
+      $item[$key] = $value;
+    }
 
     // Store the item back on the view
-    $executable->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $form_state['view']->getExecutable()->setHandler($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
     // Write to cache
     $form_state['view']->cacheSet();
