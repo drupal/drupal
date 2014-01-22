@@ -17,7 +17,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Defines a default implementation for entity access controllers.
  */
-class EntityAccessController implements EntityAccessControllerInterface {
+class EntityAccessController extends EntityControllerBase implements EntityAccessControllerInterface {
 
   /**
    * Stores calculcated access check results.
@@ -39,13 +39,6 @@ class EntityAccessController implements EntityAccessControllerInterface {
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityInfo;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
 
   /**
    * Constructs an access controller instance.
@@ -79,8 +72,8 @@ class EntityAccessController implements EntityAccessControllerInterface {
     // - No modules say to deny access.
     // - At least one module says to grant access.
     $access = array_merge(
-      $this->moduleHandler->invokeAll('entity_access', array($entity, $operation, $account, $langcode)),
-      $this->moduleHandler->invokeAll($entity->entityType() . '_access', array($entity, $operation, $account, $langcode))
+      $this->moduleHandler()->invokeAll('entity_access', array($entity, $operation, $account, $langcode)),
+      $this->moduleHandler()->invokeAll($entity->entityType() . '_access', array($entity, $operation, $account, $langcode))
     );
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
@@ -226,8 +219,8 @@ class EntityAccessController implements EntityAccessControllerInterface {
     // - No modules say to deny access.
     // - At least one module says to grant access.
     $access = array_merge(
-      $this->moduleHandler->invokeAll('entity_create_access', array($account, $context['langcode'])),
-      $this->moduleHandler->invokeAll($this->entityType . '_create_access', array($account, $context['langcode']))
+      $this->moduleHandler()->invokeAll('entity_create_access', array($account, $context['langcode'])),
+      $this->moduleHandler()->invokeAll($this->entityType . '_create_access', array($account, $context['langcode']))
     );
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
@@ -284,14 +277,6 @@ class EntityAccessController implements EntityAccessControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function fieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account = NULL, FieldItemListInterface $items = NULL) {
     $account = $this->prepareUser($account);
 
@@ -301,9 +286,9 @@ class EntityAccessController implements EntityAccessControllerInterface {
     // Invoke hook and collect grants/denies for field access from other
     // modules. Our default access flag is masked under the ':default' key.
     $grants = array(':default' => $default);
-    $hook_implementations = $this->moduleHandler->getImplementations('entity_field_access');
+    $hook_implementations = $this->moduleHandler()->getImplementations('entity_field_access');
     foreach ($hook_implementations as $module) {
-      $grants = array_merge($grants, array($module => $this->moduleHandler->invoke($module, 'entity_field_access', array($operation, $field_definition, $account, $items))));
+      $grants = array_merge($grants, array($module => $this->moduleHandler()->invoke($module, 'entity_field_access', array($operation, $field_definition, $account, $items))));
     }
 
     // Also allow modules to alter the returned grants/denies.
@@ -313,7 +298,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
       'items' => $items,
       'account' => $account,
     );
-    $this->moduleHandler->alter('entity_field_access', $grants, $context);
+    $this->moduleHandler()->alter('entity_field_access', $grants, $context);
 
     // One grant being FALSE is enough to deny access immediately.
     if (in_array(FALSE, $grants, TRUE)) {

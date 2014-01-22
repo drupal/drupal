@@ -74,10 +74,10 @@ class ConfigTranslationListController extends ControllerBase implements Containe
     // list controller defined, use it. Other mappers, for examples the ones for
     // node_type and block, fallback to the generic configuration translation
     // list controller.
-    $class = $this->mapperDefinition['list_controller'];
-    /** @var \Drupal\config_translation\Controller\ConfigTranslationEntityListControllerInterface $controller */
-    $controller = new $class($this->entityManager()->getDefinition($entity_type), $this->entityManager()->getStorageController($entity_type), $this->moduleHandler(), $this->entityManager(), $this->mapperDefinition);
-    $build = $controller->render();
+    $build = $this->entityManager()
+      ->getController($entity_type, 'config_translation_list')
+      ->setMapperDefinition($this->mapperDefinition)
+      ->render();
     $build['#title'] = $this->mapper->getTypeLabel();
     return $build;
   }

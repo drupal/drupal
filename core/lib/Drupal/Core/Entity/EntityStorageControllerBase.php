@@ -7,11 +7,12 @@
 
 namespace Drupal\Core\Entity;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * A base entity storage controller class.
  */
-abstract class EntityStorageControllerBase implements EntityStorageControllerInterface, EntityControllerInterface {
+abstract class EntityStorageControllerBase extends EntityControllerBase implements EntityStorageControllerInterface, EntityControllerInterface {
 
   /**
    * Static cache of entities.
@@ -149,9 +150,9 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
    */
   protected function invokeHook($hook, EntityInterface $entity) {
     // Invoke the hook.
-    module_invoke_all($this->entityType . '_' . $hook, $entity);
+    $this->moduleHandler()->invokeAll($this->entityType . '_' . $hook, array($entity));
     // Invoke the respective entity-level hook.
-    module_invoke_all('entity_' . $hook, $entity, $this->entityType);
+    $this->moduleHandler()->invokeAll('entity_' . $hook, array($entity, $this->entityType));
   }
 
   /**
@@ -164,12 +165,12 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
     $entity_class = $this->entityInfo->getClass();
     $entity_class::postLoad($this, $queried_entities);
     // Call hook_entity_load().
-    foreach (\Drupal::moduleHandler()->getImplementations('entity_load') as $module) {
+    foreach ($this->moduleHandler()->getImplementations('entity_load') as $module) {
       $function = $module . '_entity_load';
       $function($queried_entities, $this->entityType);
     }
     // Call hook_TYPE_load().
-    foreach (\Drupal::moduleHandler()->getImplementations($this->entityType . '_load') as $module) {
+    foreach ($this->moduleHandler()->getImplementations($this->entityType . '_load') as $module) {
       $function = $module . '_' . $this->entityType . '_load';
       $function($queried_entities);
     }

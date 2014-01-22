@@ -67,13 +67,8 @@ function field_views_data_alter(&$data) {
  */
 function _field_views_is_sql_entity_type(FieldInterface $field) {
   $entity_manager = \Drupal::entityManager();
-  try {
-    if ($entity_manager->getStorageController($field->entity_type) instanceof FieldableDatabaseStorageController) {
-      return TRUE;
-    }
-  }
-  catch (\InvalidArgumentException $e) {
-    // Disabled entity type, nothing to do.
+  if ($entity_manager->getDefinition($field->entity_type) && $entity_manager->getStorageController($field->entity_type) instanceof FieldableDatabaseStorageController) {
+    return TRUE;
   }
 }
 

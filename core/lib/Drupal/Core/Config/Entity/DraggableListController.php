@@ -10,7 +10,6 @@ namespace Drupal\Core\Config\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormInterface;
 
 /**
@@ -49,8 +48,8 @@ abstract class DraggableListController extends ConfigEntityListController implem
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler) {
-    parent::__construct($entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage) {
+    parent::__construct($entity_info, $storage);
 
     // Check if the entity type supports weighting.
     if ($this->entityInfo->hasKey('weight')) {

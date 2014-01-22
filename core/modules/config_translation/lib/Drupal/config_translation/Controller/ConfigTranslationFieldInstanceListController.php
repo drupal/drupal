@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\field\Field;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -51,25 +50,14 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
   protected $entityManager;
 
   /**
-   * Instantiates a new instance of this entity controller.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The service container this object should use.
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
-   * @param array $definition
-   *   (optional) The plugin definition of the config translation mapper.
-   *
-   * @return static
-   *   A new instance of the entity controller.
+   * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info, array $definition = array()) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+    $entity_manager = $container->get('entity.manager');
     return new static(
       $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id()),
-      $container->get('module_handler'),
-      $container->get('entity.manager'),
-      $definition
+      $entity_manager->getStorageController($entity_info->id()),
+      $entity_manager
     );
   }
 
@@ -80,19 +68,22 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
    *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param array $definition
-   *   The plugin definition of the config translation mapper.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager, array $definition) {
-    parent::__construct($entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, EntityManagerInterface $entity_manager) {
+    parent::__construct($entity_info, $storage);
     $this->entityManager = $entity_manager;
-    $this->baseEntityType = $definition['base_entity_type'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMapperDefinition($mapper_definition) {
+    $this->baseEntityType = $mapper_definition['base_entity_type'];
     $this->baseEntityInfo = $this->entityManager->getDefinition($this->baseEntityType);
     $this->baseEntityBundles = $this->entityManager->getBundleInfo($this->baseEntityType);
+    return $this;
   }
 
   /**

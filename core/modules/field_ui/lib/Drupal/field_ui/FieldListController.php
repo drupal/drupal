@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldTypePluginManager;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -55,13 +54,11 @@ class FieldListController extends ConfigEntityListController {
    *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Field\FieldTypePluginManager $field_type_manager
    *   The 'field type' plugin manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, ModuleHandlerInterface $module_handler, FieldTypePluginManager $field_type_manager) {
-    parent::__construct($entity_info, $entity_manager->getStorageController($entity_info->id()), $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, FieldTypePluginManager $field_type_manager) {
+    parent::__construct($entity_info, $entity_manager->getStorageController($entity_info->id()));
 
     $this->entityManager = $entity_manager;
     $this->bundles = entity_get_bundles();
@@ -76,7 +73,6 @@ class FieldListController extends ConfigEntityListController {
     return new static(
       $entity_info,
       $container->get('entity.manager'),
-      $container->get('module_handler'),
       $container->get('plugin.manager.field.field_type')
     );
   }

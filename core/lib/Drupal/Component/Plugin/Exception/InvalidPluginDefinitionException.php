@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\config_translation\Exception\InvalidMapperDefinitionException.
+ * Contains \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException.
  */
 
-namespace Drupal\config_translation\Exception;
-
-use Drupal\Component\Plugin\Exception\PluginException;
+namespace Drupal\Component\Plugin\Exception;
 
 /**
- * Defines a class for invalid configuration mapper definition exceptions.
+ * Defines a class for invalid plugin definition exceptions.
  */
-class InvalidMapperDefinitionException extends PluginException {
+class InvalidPluginDefinitionException extends PluginException {
 
   /**
    * The plugin ID of the mapper.
@@ -22,7 +20,7 @@ class InvalidMapperDefinitionException extends PluginException {
   protected $pluginId;
 
   /**
-   * Constructs a InvalidMapperDefinitionException.
+   * Constructs a InvalidPluginDefinitionException.
    *
    * @param string $plugin_id
    *   The plugin ID of the mapper.

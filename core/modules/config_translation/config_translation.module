@@ -70,6 +70,25 @@ function config_translation_theme() {
 }
 
 /**
+ * Implements hook_entity_info().
+ */
+function config_translation_entity_info($entity_info) {
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+  foreach ($entity_info as $entity_type_id => $entity_type) {
+    if ($entity_type_id == 'block') {
+      $class = 'Drupal\config_translation\Controller\ConfigTranslationBlockListController';
+    }
+    elseif ($entity_type_id == 'field_instance') {
+      $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListController';
+    }
+    else {
+      $class = 'Drupal\config_translation\Controller\ConfigTranslationEntityListController';
+    }
+    $entity_type->setControllerClass('config_translation_list', $class);
+  }
+}
+
+/**
  * Implements hook_config_translation_info().
  */
 function config_translation_config_translation_info(&$info) {
@@ -97,7 +116,6 @@ function config_translation_config_translation_info(&$info) {
           'title' => '!label field',
           'class' => '\Drupal\config_translation\ConfigFieldInstanceMapper',
           'base_entity_type' => $entity_type,
-          'list_controller' => '\Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListController',
           'weight' => 10,
         );
       }
@@ -128,11 +146,6 @@ function config_translation_config_translation_info(&$info) {
       'entity_type' => $entity_type,
       'weight' => 10,
     );
-
-    if ($entity_type == 'block') {
-      // Blocks placements need a specific list controller.
-      $info['block']['list_controller'] = '\Drupal\config_translation\Controller\ConfigTranslationBlockListController';
-    }
   }
 }
 

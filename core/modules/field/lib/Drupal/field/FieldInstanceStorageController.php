@@ -30,13 +30,6 @@ use Drupal\Core\KeyValueStore\StateInterface;
 class FieldInstanceStorageController extends ConfigStorageController {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandler
-   */
-  protected $moduleHandler;
-
-  /**
    * The entity manager.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
@@ -65,15 +58,12 @@ class FieldInstanceStorageController extends ConfigStorageController {
    *   The UUID service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
-   *   The module handler.
    * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(EntityTypeInterface $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, UuidInterface $uuid_service, EntityManagerInterface $entity_manager, ModuleHandler $module_handler, StateInterface $state) {
+  public function __construct(EntityTypeInterface $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, UuidInterface $uuid_service, EntityManagerInterface $entity_manager, StateInterface $state) {
     parent::__construct($entity_info, $config_factory, $config_storage, $entity_query_factory, $uuid_service);
     $this->entityManager = $entity_manager;
-    $this->moduleHandler = $module_handler;
     $this->state = $state;
   }
 
@@ -88,7 +78,6 @@ class FieldInstanceStorageController extends ConfigStorageController {
       $container->get('entity.query'),
       $container->get('uuid'),
       $container->get('entity.manager'),
-      $container->get('module_handler'),
       $container->get('state')
     );
   }

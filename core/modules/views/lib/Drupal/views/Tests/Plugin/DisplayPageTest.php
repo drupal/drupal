@@ -33,7 +33,7 @@ class DisplayPageTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'menu_link', 'field');
+  public static $modules = array('system', 'user', 'menu_link', 'field', 'entity');
 
   /**
    * The router dumper to get all routes.

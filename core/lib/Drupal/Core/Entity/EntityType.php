@@ -308,7 +308,7 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getControllers() {
+  public function getControllerClasses() {
     return $this->controllers + array(
       'access' => 'Drupal\Core\Entity\EntityAccessController',
     );
@@ -317,15 +317,17 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getController($controller_type) {
-    $controllers = $this->getControllers();
-    return $controllers[$controller_type];
+  public function getControllerClass($controller_type, $nested = FALSE) {
+    if ($this->hasControllerClass($controller_type, $nested)) {
+      $controllers = $this->getControllerClasses();
+      return $nested ? $controllers[$controller_type][$nested] : $controllers[$controller_type];
+    }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setController($controller_type, $value) {
+  public function setControllerClass($controller_type, $value) {
     $this->controllers[$controller_type] = $value;
     return $this;
   }
@@ -333,15 +335,43 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasController($controller_type) {
-    $controllers = $this->getControllers();
-    return isset($controllers[$controller_type]);
+  public function hasControllerClass($controller_type, $nested = FALSE) {
+    $controllers = $this->getControllerClasses();
+    if (!isset($controllers[$controller_type]) || ($nested && !isset($controllers[$controller_type][$nested]))) {
+      return FALSE;
+    }
+    $controller = $controllers[$controller_type];
+    if ($nested) {
+      $controller = $controller[$nested];
+    }
+    return class_exists($controller);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setForm($operation, $class) {
+  public function getStorageClass() {
+    return $this->getControllerClass('storage');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStorageClass($class) {
+    $this->controllers['storage'] = $class;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormClass($operation) {
+    return $this->getControllerClass('form', $operation);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFormClass($operation, $class) {
     $this->controllers['form'][$operation] = $class;
     return $this;
   }
@@ -349,8 +379,66 @@ class EntityType implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function setList($class) {
+  public function hasFormClasses() {
+    return !empty($this->controllers['form']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getListClass() {
+    return $this->getControllerClass('list');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setListClass($class) {
     $this->controllers['list'] = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasListClass() {
+    return $this->hasControllerClass('list');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getViewBuilderClass() {
+    return $this->getControllerClass('view_builder');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setViewBuilderClass($class) {
+    $this->controllers['view_builder'] = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasViewBuilderClass() {
+    return $this->hasControllerClass('view_builder');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAccessClass() {
+    return $this->getControllerClass('access');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAccessClass($class) {
+    $this->controllers['access'] = $class;
     return $this;
   }
 

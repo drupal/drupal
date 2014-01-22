@@ -56,7 +56,6 @@ function hook_config_translation_info(&$info) {
           'title' => t('!label field'),
           'class' => '\Drupal\config_translation\ConfigFieldInstanceMapper',
           'base_entity_type' => $entity_type,
-          'list_controller' => '\Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListController',
           'weight' => 10,
         );
       }

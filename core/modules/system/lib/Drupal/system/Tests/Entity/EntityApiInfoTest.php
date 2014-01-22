@@ -54,6 +54,6 @@ class EntityApiInfoTest extends WebTestBase  {
     \Drupal::moduleHandler()->install(array('entity_cache_test'));
     $info = \Drupal::state()->get('entity_cache_test');
     $this->assertEqual($info->getLabel(), 'Entity Cache Test', 'Entity info label is correct.');
-    $this->assertEqual($info->getController('storage'), 'Drupal\Core\Entity\DatabaseStorageController', 'Entity controller class info is correct.');
+    $this->assertEqual($info->getStorageClass(), 'Drupal\Core\Entity\DatabaseStorageController', 'Entity controller class info is correct.');
   }
 }

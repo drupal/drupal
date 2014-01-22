@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests the entity route enhancer.
  *
+ * @group Drupal
+ * @group Entity
+ *
  * @see \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
  */
 class EntityRouteEnhancerTest extends UnitTestCase {

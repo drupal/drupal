@@ -13,6 +13,9 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the entity view controller.
  *
+ * @group Drupal
+ * @group Entity
+ *
  * @see \Drupal\Core\Entity\Controller\EntityViewController
  */
 class EntityViewControllerTest extends UnitTestCase{

@@ -8,7 +8,7 @@
 namespace Drupal\config_translation;
 
 use Drupal\Component\Utility\String;
-use Drupal\config_translation\Exception\InvalidMapperDefinitionException;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ArrayElement;
 use Drupal\Core\Config\TypedConfigManager;
@@ -41,7 +41,6 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     'names' => array(),
     'weight' => 20,
     'class' => '\Drupal\config_translation\ConfigNamesMapper',
-    'list_controller' => 'Drupal\config_translation\Controller\ConfigTranslationEntityListController',
   );
 
   /**
@@ -117,11 +116,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     parent::processDefinition($definition, $plugin_id);
 
     if (!isset($definition['base_route_name'])) {
-      throw new InvalidMapperDefinitionException($plugin_id, String::format("The plugin definition of the mapper '%plugin_id' does not contain a base_route_name.", array('%plugin_id' => $plugin_id)));
-    }
-
-    if (!is_subclass_of($definition['list_controller'], 'Drupal\config_translation\Controller\ConfigTranslationEntityListControllerInterface')) {
-      throw new InvalidMapperDefinitionException($plugin_id, String::format("The list_controller '%list_controller' for plugin '%plugin_id' does not implement the expected interface Drupal\config_translation\Controller\ConfigTranslationEntityListControllerInterface.", array('%list_controller' => $definition['list_controller'], '%plugin_id' => $plugin_id)));
+      throw new InvalidPluginDefinitionException($plugin_id, String::format("The plugin definition of the mapper '%plugin_id' does not contain a base_route_name.", array('%plugin_id' => $plugin_id)));
     }
   }
 

@@ -45,8 +45,7 @@ interface EntityFormControllerInterface extends BaseFormIdInterface {
    * @param string $operation
    *   The name of the current operation.
    *
-   * @return self
-   *   The entity form.
+   * @return $this
    */
   public function setOperation($operation);
 
@@ -106,6 +105,8 @@ interface EntityFormControllerInterface extends BaseFormIdInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity the current form should operate upon.
+   *
+   * @return $this
    */
   public function setEntity(EntityInterface $entity);
 
@@ -158,8 +159,7 @@ interface EntityFormControllerInterface extends BaseFormIdInterface {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The translation manager.
    *
-   * @return self
-   *   The entity form.
+   * @return $this
    */
   public function setTranslationManager(TranslationInterface $translation_manager);
 
@@ -169,8 +169,7 @@ interface EntityFormControllerInterface extends BaseFormIdInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    *
-   * @return self
-   *   The entity form.
+   * @return $this
    */
   public function setModuleHandler(ModuleHandlerInterface $module_handler);
 

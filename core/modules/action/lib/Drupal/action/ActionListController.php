@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -42,11 +41,9 @@ class ActionListController extends ConfigEntityListController implements EntityC
    *   The action storage controller.
    * @param \Drupal\Core\Action\ActionManager $action_manager
    *   The action plugin manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ActionManager $action_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct($entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ActionManager $action_manager) {
+    parent::__construct($entity_info, $storage);
 
     $this->actionManager = $action_manager;
   }
@@ -58,8 +55,7 @@ class ActionListController extends ConfigEntityListController implements EntityC
     return new static(
       $entity_info,
       $container->get('entity.manager')->getStorageController($entity_info->id()),
-      $container->get('plugin.manager.action'),
-      $container->get('module_handler')
+      $container->get('plugin.manager.action')
     );
   }
 

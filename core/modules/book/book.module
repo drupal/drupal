@@ -116,7 +116,7 @@ function book_permission() {
  */
 function book_entity_info(&$entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_info['node']->setForm('book_outline', 'Drupal\book\Form\BookOutlineForm');
+  $entity_info['node']->setFormClass('book_outline', 'Drupal\book\Form\BookOutlineForm');
 }
 
 /**

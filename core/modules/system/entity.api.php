@@ -110,7 +110,7 @@ function hook_entity_info(&$entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   // Add a form controller for a custom node form without overriding the default
   // node form. To override the default node form, use hook_entity_info_alter().
-  $entity_info['node']->setForm('mymodule_foo', 'Drupal\mymodule\NodeFooFormController');
+  $entity_info['node']->setFormClass('mymodule_foo', 'Drupal\mymodule\NodeFooFormController');
 }
 
 /**
@@ -135,7 +135,7 @@ function hook_entity_info_alter(&$entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageControllerInterface interface.
-  $entity_info['node']->setController('storage', 'Drupal\mymodule\MyCustomNodeStorageController');
+  $entity_info['node']->setStorageClass('Drupal\mymodule\MyCustomNodeStorageController');
 }
 
 /**

@@ -51,7 +51,7 @@ class EntityDisplayModeController implements ContainerInjectionInterface {
   public function viewModeTypeSelection() {
     $entity_types = array();
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info->isFieldable() && $entity_info->hasController('view_builder')) {
+      if ($entity_info->isFieldable() && $entity_info->hasViewBuilderClass()) {
         $entity_types[$entity_type] = array(
           'title' => $entity_info->getLabel(),
           'href' => 'admin/structure/display-modes/view/add/' . $entity_type,
@@ -74,7 +74,7 @@ class EntityDisplayModeController implements ContainerInjectionInterface {
   public function formModeTypeSelection() {
     $entity_types = array();
     foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info->isFieldable() && $entity_info->hasController('form')) {
+      if ($entity_info->isFieldable() && $entity_info->hasFormClasses()) {
         $entity_types[$entity_type] = array(
           'title' => $entity_info->getLabel(),
           'href' => 'admin/structure/display-modes/form/add/' . $entity_type,

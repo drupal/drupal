@@ -120,8 +120,8 @@ function field_ui_element_info() {
  */
 function field_ui_entity_info(&$entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_info['field_instance']->setForm('delete', 'Drupal\field_ui\Form\FieldDeleteForm');
-  $entity_info['field_entity']->setList('Drupal\field_ui\FieldListController');
+  $entity_info['field_instance']->setFormClass('delete', 'Drupal\field_ui\Form\FieldDeleteForm');
+  $entity_info['field_entity']->setListClass('Drupal\field_ui\FieldListController');
 }
 
 /**

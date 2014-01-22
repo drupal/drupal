@@ -85,4 +85,119 @@ class EntityTypeTest extends UnitTestCase {
     );
   }
 
+  /**
+   * Tests the getController() method.
+   */
+  public function testGetController() {
+    $controller = $this->getTestControllerClass();
+    $entity_type = $this->setUpEntityType(array(
+      'controllers' => array(
+        'storage' => $controller,
+        'form' => array(
+          'default' => $controller,
+        ),
+      ),
+    ));
+    $this->assertSame($controller, $entity_type->getControllerClass('storage'));
+    $this->assertSame($controller, $entity_type->getControllerClass('form', 'default'));
+  }
+
+  /**
+   * Tests the getStorageClass() method.
+   */
+  public function testGetStorageClass() {
+    $controller = $this->getTestControllerClass();
+    $entity_type = $this->setUpEntityType(array(
+      'controllers' => array(
+        'storage' => $controller,
+      ),
+    ));
+    $this->assertSame($controller, $entity_type->getStorageClass());
+  }
+
+  /**
+   * Tests the getListClass() method.
+   */
+  public function testGetListClass() {
+    $controller = $this->getTestControllerClass();
+    $entity_type = $this->setUpEntityType(array(
+      'controllers' => array(
+        'list' => $controller,
+      ),
+    ));
+    $this->assertSame($controller, $entity_type->getListClass());
+  }
+
+  /**
+   * Tests the getAccessClass() method.
+   */
+  public function testGetAccessClass() {
+    $controller = $this->getTestControllerClass();
+    $entity_type = $this->setUpEntityType(array(
+      'controllers' => array(
+        'access' => $controller,
+      ),
+    ));
+    $this->assertSame($controller, $entity_type->getAccessClass());
+  }
+
+  /**
+   * Tests the getFormClass() method.
+   */
+  public function testGetFormClass() {
+    $controller = $this->getTestControllerClass();
+    $operation = 'default';
+    $entity_type = $this->setUpEntityType(array(
+      'controllers' => array(
+        'form' => array(
+          $operation => $controller,
+        ),
+      ),
+    ));
+    $this->assertSame($controller, $entity_type->getFormClass($operation));
+  }
+
+  /**
+   * Tests the hasFormClasses() method.
+   */
+  public function testHasFormClasses() {
+    $controller = $this->getTestControllerClass();
+    $operation = 'default';
+    $entity_type1 = $this->setUpEntityType(array(
+      'controllers' => array(
+        'form' => array(
+          $operation => $controller,
+        ),
+      ),
+    ));
+    $entity_type2 = $this->setUpEntityType(array(
+      'controllers' => array(),
+    ));
+    $this->assertTrue($entity_type1->hasFormClasses());
+    $this->assertFalse($entity_type2->hasFormClasses());
+  }
+
+  /**
+   * Tests the getViewBuilderClass() method.
+   */
+  public function testGetViewBuilderClass() {
+    $controller = $this->getTestControllerClass();
+    $entity_type = $this->setUpEntityType(array(
+      'controllers' => array(
+        'view_builder' => $controller,
+      ),
+    ));
+    $this->assertSame($controller, $entity_type->getViewBuilderClass());
+  }
+
+  /**
+   * Gets a mock controller class name.
+   *
+   * @return string
+   *   A mock controller class name.
+   */
+  protected function getTestControllerClass() {
+    return get_class($this->getMockForAbstractClass('Drupal\Core\Entity\EntityControllerBase'));
+  }
+
 }

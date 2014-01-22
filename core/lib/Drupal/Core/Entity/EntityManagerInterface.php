@@ -105,22 +105,6 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getStorageController($entity_type);
 
   /**
-   * Returns an entity controller class.
-   *
-   * @param string $entity_type
-   *   The name of the entity type
-   * @param string $controller_type
-   *   The name of the controller.
-   * @param string|null $nested
-   *   (optional) If this controller definition is nested, the name of the key.
-   *   Defaults to NULL.
-   *
-   * @return string
-   *   The class name for this controller instance.
-   */
-  public function getControllerClass($entity_type, $controller_type, $nested = NULL);
-
-  /**
    * Get the bundle info of all entity types.
    *
    * @return array
@@ -187,6 +171,21 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function hasController($entity_type, $controller_type);
 
   /**
+   * Creates a new controller instance.
+   *
+   * @param string $entity_type
+   *   The entity type for this controller.
+   * @param string $controller_type
+   *   The controller type to create an instance for.
+   *
+   * @return mixed
+   *   A controller instance.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   */
+  public function getController($entity_type, $controller_type);
+
+  /**
    * Returns the built and processed entity form for the given entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -247,13 +246,20 @@ interface EntityManagerInterface extends PluginManagerInterface {
   /**
    * Returns the entity type info for a specific entity type.
    *
-   * @param string $entity_type_name
-   *   The name of the entity type.
+   * @param string $entity_type_id
+   *   The ID of the entity type.
+   * @param bool $exception_on_invalid
+   *   (optional) If TRUE, an invalid entity type ID will throw an exception.
+   *   Defaults to FALSE.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface|null
-   *   Either the entity type object, or NULL if the name does not exist.
+   *   Returns the entity type object, or NULL if the entity type ID is invalid
+   *   and $exception_on_invalid is TRUE.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown if $entity_type_id is invalid and $exception_on_invalid is TRUE.
    */
-  public function getDefinition($entity_type_name);
+  public function getDefinition($entity_type_id, $exception_on_invalid = FALSE);
 
   /**
    * Returns an array of entity type info, keyed by entity type name.

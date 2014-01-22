@@ -11,7 +11,6 @@ use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,13 +32,11 @@ class EntityDisplayModeListController extends ConfigEntityListController {
    *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_info_complete
    *   The entity info for all entity types.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, array $entity_info_complete) {
-    parent::__construct($entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, array $entity_info_complete) {
+    parent::__construct($entity_info, $storage);
 
     $this->entityInfoComplete = $entity_info_complete;
   }
@@ -52,7 +49,6 @@ class EntityDisplayModeListController extends ConfigEntityListController {
     return new static(
       $entity_info,
       $entity_manager->getStorageController($entity_info->id()),
-      $container->get('module_handler'),
       $entity_manager->getDefinitions()
     );
   }
@@ -144,7 +140,7 @@ class EntityDisplayModeListController extends ConfigEntityListController {
    *   doesn't has the correct controller.
    */
   protected function isValidEntity($entity_type) {
-    return $this->entityInfoComplete[$entity_type]->hasController('view_builder');
+    return $this->entityInfoComplete[$entity_type]->hasViewBuilderClass();
   }
 
 }

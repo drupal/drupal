@@ -160,20 +160,22 @@ interface EntityTypeInterface {
    *
    * @param string $controller_type
    *   The type of controller to check.
+   * @param bool $nested
+   *   (optional) If this controller has a nested definition. Defaults to FALSE.
    *
    * @return bool
    *   TRUE if a controller of this type exists, FALSE otherwise.
    */
-  public function hasController($controller_type);
+  public function hasControllerClass($controller_type, $nested = FALSE);
 
   /**
    * @param string $controller_type
    *   The controller type to get.
    *
-   * @return array|string
-   *   The controllers for a given type.
+   * @return array|string|null
+   *   The controllers for a given type, or NULL if none exist.
    */
-  public function getController($controller_type);
+  public function getControllerClass($controller_type);
 
   /**
    * Returns an array of controllers.
@@ -199,7 +201,36 @@ interface EntityTypeInterface {
    *     must implement \Drupal\Core\Entity\EntityAccessControllerInterface.
    *     Defaults to \Drupal\Core\Entity\EntityAccessController.
    */
-  public function getControllers();
+  public function getControllerClasses();
+
+  /**
+   * Returns the storage class.
+   *
+   * @return string
+   *   The class for this entity type's storage.
+   */
+  public function getStorageClass();
+
+  /**
+   * Sets the storage class.
+   *
+   * @param string $class
+   *   The class for this entity type's storage.
+   *
+   * @return $this
+   */
+  public function setStorageClass($class);
+
+  /**
+   * Returns the form class for a specific operation.
+   *
+   * @param string $operation
+   *   The name of the operation to use, e.g., 'default'.
+   *
+   * @return string
+   *   The class for this operation's form for this entity type.
+   */
+  public function getFormClass($operation);
 
   /**
    * Sets a form class for a specific operation.
@@ -211,17 +242,85 @@ interface EntityTypeInterface {
    *
    * @return static
    */
-  public function setForm($operation, $class);
+  public function setFormClass($operation, $class);
 
   /**
-   * Sets the listing class.
+   * Indicates if this entity type has any forms.
+   *
+   * @return bool
+   *   TRUE if there are any forms for this entity type, FALSE otherwise.
+   */
+  public function hasFormClasses();
+
+  /**
+   * Returns the list class.
+   *
+   * @return string
+   *   The class for this entity type's list.
+   */
+  public function getListClass();
+
+  /**
+   * Sets the list class.
    *
    * @param string $class
    *   The list class to use for the operation.
    *
    * @return static
    */
-  public function setList($class);
+  public function setListClass($class);
+
+  /**
+   * Indicates if this entity type has a list class.
+   *
+   * @return bool
+   *   TRUE if there is a list for this entity type, FALSE otherwise.
+   */
+  public function hasListClass();
+
+  /**
+   * Returns the view builder class.
+   *
+   * @return string
+   *   The class for this entity type's view builder.
+   */
+  public function getViewBuilderClass();
+
+  /**
+   * Returns the view builder class.
+   *
+   * @param string $class
+   *   The class for this entity type's view builder.
+   *
+   * @return $this
+   */
+  public function setViewBuilderClass($class);
+
+  /**
+   * Indicates if this entity type has a view builder.
+   *
+   * @return bool
+   *   TRUE if there is a view builder for this entity type, FALSE otherwise.
+   */
+  public function hasViewBuilderClass();
+
+  /**
+   * Returns the access class.
+   *
+   * @return string
+   *   The class for this entity type's access.
+   */
+  public function getAccessClass();
+
+  /**
+   * Returns the access class.
+   *
+   * @param string $class
+   *   The class for this entity type's access.
+   *
+   * @return $this
+   */
+  public function setAccessClass($class);
 
   /**
    * Indicates if the entity type is a subclass of the given class or interface.
@@ -244,7 +343,7 @@ interface EntityTypeInterface {
    *
    * @return static
    */
-  public function setController($controller_type, $value);
+  public function setControllerClass($controller_type, $value);
 
   /**
    * Returns the name of the default administrative permission.

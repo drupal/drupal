@@ -13,7 +13,6 @@ use Drupal\Core\Config\Entity\DraggableListController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -52,13 +51,11 @@ class SearchPageListController extends DraggableListController implements FormIn
    *   The entity storage controller class.
    * @param \Drupal\search\SearchPluginManager $search_manager
    *   The search plugin manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, SearchPluginManager $search_manager, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory) {
-    parent::__construct($entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, SearchPluginManager $search_manager, ConfigFactory $config_factory) {
+    parent::__construct($entity_info, $storage);
     $this->configFactory = $config_factory;
     $this->searchManager = $search_manager;
   }
@@ -71,7 +68,6 @@ class SearchPageListController extends DraggableListController implements FormIn
       $entity_info,
       $container->get('entity.manager')->getStorageController($entity_info->id()),
       $container->get('plugin.manager.search'),
-      $container->get('module_handler'),
       $container->get('config.factory')
     );
   }

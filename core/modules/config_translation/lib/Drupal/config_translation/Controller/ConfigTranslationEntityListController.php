@@ -127,4 +127,12 @@ class ConfigTranslationEntityListController extends EntityListController impleme
     return strnatcasecmp($a_value, $b_value);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setMapperDefinition($mapper_definition) {
+    // @todo Why is this method called on all config list controllers?
+    return $this;
+  }
+
 }

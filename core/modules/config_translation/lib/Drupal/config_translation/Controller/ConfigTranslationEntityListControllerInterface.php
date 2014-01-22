@@ -27,4 +27,14 @@ interface ConfigTranslationEntityListControllerInterface extends EntityListContr
    */
   public function sortRows($a, $b);
 
+  /**
+   * Sets the config translation mapper definition.
+   *
+   * @param mixed $mapper_definition
+   *   The plugin definition of the config translation mapper.
+   *
+   * @return $this
+   */
+  public function setMapperDefinition($mapper_definition);
+
 }

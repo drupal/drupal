@@ -8,13 +8,10 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\EntityViewBuilderInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\field\FieldInfo;
@@ -23,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Render controller for comments.
  */
-class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderInterface, EntityControllerInterface {
+class CommentViewBuilder extends EntityViewBuilder {
 
   /**
    * The field info service.
@@ -55,7 +52,6 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
       $container->get('entity.manager'),
       $container->get('language_manager'),
       $container->get('field.info'),
-      $container->get('module_handler'),
       $container->get('csrf_token')
     );
   }
@@ -71,15 +67,12 @@ class CommentViewBuilder extends EntityViewBuilder implements EntityViewBuilderI
    *   The language manager.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, CsrfTokenGenerator $csrf_token) {
+  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, FieldInfo $field_info, CsrfTokenGenerator $csrf_token) {
     parent::__construct($entity_info, $entity_manager, $language_manager);
     $this->fieldInfo = $field_info;
-    $this->moduleHandler = $module_handler;
     $this->csrfToken = $csrf_token;
   }
 

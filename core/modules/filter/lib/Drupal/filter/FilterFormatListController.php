@@ -14,7 +14,6 @@ use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,13 +40,11 @@ class FilterFormatListController extends DraggableListController implements Enti
    *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory) {
-    parent::__construct($entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ConfigFactory $config_factory) {
+    parent::__construct($entity_info, $storage);
 
     $this->configFactory = $config_factory;
   }
@@ -59,7 +56,6 @@ class FilterFormatListController extends DraggableListController implements Enti
     return new static(
       $entity_info,
       $container->get('entity.manager')->getStorageController($entity_info->id()),
-      $container->get('module_handler'),
       $container->get('config.factory')
     );
   }

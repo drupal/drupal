@@ -7,9 +7,11 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\UnknownPluginException;
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -143,7 +145,6 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getCurrentLanguage()->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
-    $this->factory = new DefaultFactory($this->discovery);
     $this->container = $container;
   }
 
@@ -159,9 +160,23 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   /**
    * {@inheritdoc}
    */
+  public function getDefinition($entity_type_id, $exception_on_invalid = FALSE) {
+    if (($entity_type = parent::getDefinition($entity_type_id)) && class_exists($entity_type->getClass())) {
+      return $entity_type;
+    }
+    elseif (!$exception_on_invalid) {
+      return NULL;
+    }
+
+    throw new UnknownPluginException($entity_type_id, sprintf('The "%s" entity type does not exist.', $entity_type_id));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasController($entity_type, $controller_type) {
     if ($definition = $this->getDefinition($entity_type)) {
-      return $definition->hasController($controller_type);
+      return $definition->hasControllerClass($controller_type);
     }
     return FALSE;
   }
@@ -169,55 +184,15 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   /**
    * {@inheritdoc}
    */
-  public function getControllerClass($entity_type, $controller_type, $nested = NULL) {
-    $info = $this->getDefinition($entity_type);
-    if (!$info) {
-      throw new \InvalidArgumentException(sprintf('The %s entity type does not exist.', $entity_type));
-    }
-
-    if (!$info->hasController($controller_type)) {
-      throw new \InvalidArgumentException(sprintf('The entity type (%s) did not specify a %s controller.', $entity_type, $controller_type));
-    }
-
-    $class = $info->getController($controller_type);
-
-    // Some class definitions can be nested.
-    if (isset($nested)) {
-      if (empty($class[$nested])) {
-        throw new \InvalidArgumentException(sprintf("The entity type (%s) did not specify a %s controller: %s.", $entity_type, $controller_type, $nested));
-      }
-
-      $class = $class[$nested];
-    }
-
-    if (!class_exists($class)) {
-      throw new \InvalidArgumentException(sprintf('The entity type (%s) %s controller "%s" does not exist.', $entity_type, $controller_type, $class));
-    }
-
-    return $class;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getStorageController($entity_type) {
-    return $this->getController($entity_type, 'storage');
+    return $this->getController($entity_type, 'storage', 'getStorageClass');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getListController($entity_type) {
-    if (!isset($this->controllers['listing'][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'list');
-      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers['listing'][$entity_type] = $class::createInstance($this->container, $this->getDefinition($entity_type));
-      }
-      else {
-        $this->controllers['listing'][$entity_type] = new $class($entity_type, $this->getStorageController($entity_type));
-      }
-    }
-    return $this->controllers['listing'][$entity_type];
+    return $this->getController($entity_type, 'list', 'getListClass');
   }
 
   /**
@@ -225,7 +200,9 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    */
   public function getFormController($entity_type, $operation) {
     if (!isset($this->controllers['form'][$operation][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, 'form', $operation);
+      if (!$class = $this->getDefinition($entity_type, TRUE)->getFormClass($operation)) {
+        throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type, $operation));
+      }
       if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($class))) {
         $controller = $class::create($this->container);
       }
@@ -246,40 +223,56 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    * {@inheritdoc}
    */
   public function getViewBuilder($entity_type) {
-    return $this->getController($entity_type, 'view_builder');
+    return $this->getController($entity_type, 'view_builder', 'getViewBuilderClass');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAccessController($entity_type) {
-    if (!isset($this->controllers['access'][$entity_type])) {
-      $controller = $this->getController($entity_type, 'access');
-      $controller->setModuleHandler($this->moduleHandler);
-    }
-    return $this->controllers['access'][$entity_type];
+    return $this->getController($entity_type, 'access', 'getAccessClass');
   }
 
   /**
    * Creates a new controller instance.
    *
    * @param string $entity_type
-   *   The entity type for this access controller.
+   *   The entity type for this controller.
    * @param string $controller_type
    *   The controller type to create an instance for.
+   * @param string $controller_class_getter
+   *   (optional) The method to call on the entity type object to get the controller class.
    *
-   * @return mixed.
+   * @return mixed
    *   A controller instance.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  protected function getController($entity_type, $controller_type) {
+  public function getController($entity_type, $controller_type, $controller_class_getter = NULL) {
     if (!isset($this->controllers[$controller_type][$entity_type])) {
-      $class = $this->getControllerClass($entity_type, $controller_type);
-      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers[$controller_type][$entity_type] = $class::createInstance($this->container, $this->getDefinition($entity_type));
+      $definition = $this->getDefinition($entity_type, TRUE);
+      if ($controller_class_getter) {
+        $class = $definition->{$controller_class_getter}();
       }
       else {
-        $this->controllers[$controller_type][$entity_type] = new $class($this->getDefinition($entity_type));
+        $class = $definition->getControllerClass($controller_type);
       }
+      if (!$class) {
+        throw new InvalidPluginDefinitionException($entity_type, sprintf('The "%s" entity type did not specify a %s class.', $entity_type, $controller_type));
+      }
+      if (is_subclass_of($class, 'Drupal\Core\Entity\EntityControllerInterface')) {
+        $controller = $class::createInstance($this->container, $definition);
+      }
+      else {
+        $controller = new $class($definition);
+      }
+      if (method_exists($controller, 'setModuleHandler')) {
+        $controller->setModuleHandler($this->moduleHandler);
+      }
+      if (method_exists($controller, 'setTranslationManager')) {
+        $controller->setTranslationManager($this->translationManager);
+      }
+      $this->controllers[$controller_type][$entity_type] = $controller;
     }
     return $this->controllers[$controller_type][$entity_type];
   }
@@ -304,8 +297,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    * {@inheritdoc}
    */
   public function getAdminRouteInfo($entity_type, $bundle) {
-    $entity_info = $this->getDefinition($entity_type);
-    if ($admin_form = $entity_info->getLinkTemplate('admin-form')) {
+    if (($entity_info = $this->getDefinition($entity_type)) && $admin_form = $entity_info->getLinkTemplate('admin-form')) {
       return array(
         'route_name' => $admin_form,
         'route_parameters' => array(
@@ -329,8 +321,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         // @todo: Refactor to allow for per-bundle overrides.
         // See https://drupal.org/node/2114707.
         $entity_info = $this->getDefinition($entity_type);
-        $definition = array('class' => $entity_info->getClass());
-        $class = $this->factory->getPluginClass($entity_type, $definition);
+        $class = $entity_info->getClass();
 
         $this->entityFieldInfo[$entity_type] = array(
           'definitions' => $class::baseFieldDefinitions($entity_type),
@@ -366,7 +357,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         foreach (array('definitions', 'optional') as $key) {
           foreach ($this->entityFieldInfo[$entity_type][$key] as $field_name => &$definition) {
             if (isset($untranslatable_fields[$field_name]) && $definition->isTranslatable()) {
-              throw new \LogicException(format_string('The @field field cannot be translatable.', array('@field' => $definition->getLabel())));
+              throw new \LogicException(String::format('The @field field cannot be translatable.', array('@field' => $definition->getLabel())));
             }
           }
         }

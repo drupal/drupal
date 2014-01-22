@@ -105,8 +105,8 @@ function content_translation_entity_info_alter(array &$entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   foreach ($entity_info as $entity_type => &$info) {
     if ($info->isTranslatable()) {
-      if (!$info->hasController('translation')) {
-        $info->setController('translation', 'Drupal\content_translation\ContentTranslationController');
+      if (!$info->hasControllerClass('translation')) {
+        $info->setControllerClass('translation', 'Drupal\content_translation\ContentTranslationController');
       }
 
       $translation = $info->get('translation');
@@ -537,7 +537,7 @@ function content_translation_enabled($entity_type, $bundle = NULL) {
 function content_translation_controller($entity_type) {
   $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
   // @todo Throw an exception if the key is missing.
-  $class = $entity_info->getController('translation');
+  $class = $entity_info->getControllerClass('translation');
   return new $class($entity_info);
 }
 

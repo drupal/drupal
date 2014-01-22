@@ -199,7 +199,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
    */
   function testEnableModulesFixedList() {
     // Install system module.
-    $this->container->get('module_handler')->install(array('system'));
+    $this->container->get('module_handler')->install(array('system', 'menu_link'));
     $entity_manager = \Drupal::entityManager();
 
     // entity_test is loaded via $modules; its entity type should exist.

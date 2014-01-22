@@ -11,7 +11,8 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the config translation controller for blocks.
@@ -28,9 +29,20 @@ class ConfigTranslationBlockListController extends ConfigTranslationEntityListCo
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler) {
-    parent::__construct($entity_info, $storage, $module_handler);
-    $this->themes = list_themes();
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ThemeHandlerInterface $theme_handler) {
+    parent::__construct($entity_info, $storage);
+    $this->themes = $theme_handler->listInfo();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+    return new static(
+      $entity_info,
+      $container->get('entity.manager')->getStorageController($entity_info->id()),
+      $container->get('theme_handler')
+    );
   }
 
   /**

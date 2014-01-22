@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Xss;
@@ -36,13 +35,11 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, UrlGeneratorInterface $url_generator) {
-    parent::__construct($entity_info, $storage, $module_handler);
+  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, UrlGeneratorInterface $url_generator) {
+    parent::__construct($entity_info, $storage);
     $this->urlGenerator = $url_generator;
   }
 
@@ -53,7 +50,6 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
     return new static(
       $entity_info,
       $container->get('entity.manager')->getStorageController($entity_info->id()),
-      $container->get('module_handler'),
       $container->get('url_generator')
     );
   }

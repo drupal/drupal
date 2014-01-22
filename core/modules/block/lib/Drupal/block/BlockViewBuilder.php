@@ -7,13 +7,14 @@
 
 namespace Drupal\block;
 
+use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides a Block view builder.
  */
-class BlockViewBuilder implements EntityViewBuilderInterface {
+class BlockViewBuilder extends EntityViewBuilder {
 
   /**
    * {@inheritdoc}
@@ -57,7 +58,7 @@ class BlockViewBuilder implements EntityViewBuilderInterface {
         $build[$entity_id] = array();
       }
 
-      drupal_alter(array('block_view', "block_view_$base_id"), $build[$entity_id], $plugin);
+      $this->moduleHandler()->alter(array('block_view', "block_view_$base_id"), $build[$entity_id], $plugin);
 
       // @todo Remove after fixing http://drupal.org/node/1989568.
       $build[$entity_id]['#block'] = $entity;

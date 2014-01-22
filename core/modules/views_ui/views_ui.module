@@ -66,13 +66,13 @@ function views_ui_menu() {
 function views_ui_entity_info(&$entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_info['view']
-    ->setForm('edit', 'Drupal\views_ui\ViewEditFormController')
-    ->setForm('add', 'Drupal\views_ui\ViewAddFormController')
-    ->setForm('preview', 'Drupal\views_ui\ViewPreviewFormController')
-    ->setForm('clone', 'Drupal\views_ui\ViewCloneFormController')
-    ->setForm('delete', 'Drupal\views_ui\ViewDeleteFormController')
-    ->setForm('break_lock', 'Drupal\views_ui\Form\BreakLockForm')
-    ->setList('Drupal\views_ui\ViewListController')
+    ->setFormClass('edit', 'Drupal\views_ui\ViewEditFormController')
+    ->setFormClass('add', 'Drupal\views_ui\ViewAddFormController')
+    ->setFormClass('preview', 'Drupal\views_ui\ViewPreviewFormController')
+    ->setFormClass('clone', 'Drupal\views_ui\ViewCloneFormController')
+    ->setFormClass('delete', 'Drupal\views_ui\ViewDeleteFormController')
+    ->setFormClass('break_lock', 'Drupal\views_ui\Form\BreakLockForm')
+    ->setListClass('Drupal\views_ui\ViewListController')
     ->setLinkTemplate('edit-form', 'views_ui.edit');
 }
 
