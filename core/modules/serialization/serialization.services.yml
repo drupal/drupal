@@ -2,6 +2,11 @@ services:
   serializer:
     class: Symfony\Component\Serializer\Serializer
     arguments: [{  }, {  }]
+  serializer.normalizer.entity:
+    class: Drupal\serialization\Normalizer\EntityNormalizer
+    tags:
+      - { name: normalizer }
+    arguments: ['@entity.manager']
   serializer.normalizer.complex_data:
     class: Drupal\serialization\Normalizer\ComplexDataNormalizer
     tags:

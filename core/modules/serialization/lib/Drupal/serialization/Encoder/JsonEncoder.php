@@ -7,25 +7,34 @@
 
 namespace Drupal\serialization\Encoder;
 
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder as BaseJsonEncoder;
 
 /**
  * Adds 'ajax to the supported content types of the JSON encoder'
  */
-class JsonEncoder extends BaseJsonEncoder implements EncoderInterface {
+class JsonEncoder extends BaseJsonEncoder implements EncoderInterface, DecoderInterface {
 
   /**
    * The formats that this Encoder supports.
    *
    * @var array
    */
-  static protected $format = array('json', 'ajax');
+  protected static $format = array('json', 'ajax');
 
   /**
-   * Overrides Symfony\Component\Serializer\Encoder\JsonEncoder::supportEncoding().
+   * {@inheritdoc}
    */
   public function supportsEncoding($format) {
     return in_array($format, static::$format);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function supportsDecoding($format) {
+    return in_array($format, static::$format);
+  }
+
 }
