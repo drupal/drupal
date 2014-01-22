@@ -3,7 +3,7 @@
  * Attaches behaviors for the Contextual module.
  */
 
-(function ($, Drupal, drupalSettings, Backbone) {
+(function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
 
 "use strict";
 
@@ -17,23 +17,50 @@ var options = $.extend(drupalSettings.contextual,
   }
 );
 
+// Clear the cached contextual links whenever the current user's set of
+// permissions changes.
+var cachedPermissionsHash = storage.getItem('Drupal.contextual.permissionsHash');
+var permissionsHash = drupalSettings.user.permissionsHash;
+if (cachedPermissionsHash !== permissionsHash) {
+  if (typeof permissionsHash === 'string') {
+    _.chain(storage).keys().each(function (key) {
+      if (key.substring(0, 18) === 'Drupal.contextual.') {
+        storage.removeItem(key);
+      }
+    });
+  }
+  storage.setItem('Drupal.contextual.permissionsHash', permissionsHash);
+}
+
 /**
  * Initializes a contextual link: updates its DOM, sets up model and views
  *
  * @param jQuery $contextual
  *   A contextual links placeholder DOM element, containing the actual
  *   contextual links as rendered by the server.
+ * @param string html
+ *   The server-side rendered HTML for this contextual link.
  */
-function initContextual ($contextual) {
+function initContextual ($contextual, html) {
   var $region = $contextual.closest('.contextual-region');
   var contextual = Drupal.contextual;
 
   $contextual
+    // Update the placeholder to contain its rendered contextual links.
+    .html(html)
     // Use the placeholder as a wrapper with a specific class to provide
     // positioning and behavior attachment context.
     .addClass('contextual')
     // Ensure a trigger element exists before the actual contextual links.
     .prepend(Drupal.theme('contextualTrigger'));
+
+  // Set the destination parameter on each of the contextual links.
+  var destination = 'destination=' + Drupal.encodePath(drupalSettings.currentPath);
+  $contextual.find('.contextual-links a').each(function () {
+    var url = this.getAttribute('href');
+    var glue = (url.indexOf('?') === -1) ? '?' : '&';
+    this.setAttribute('href', url + glue + destination);
+  });
 
   // Create a model and the appropriate views.
   var model = new contextual.StateModel({
@@ -128,35 +155,47 @@ Drupal.behaviors.contextual = {
       ids.push($(this).attr('data-contextual-id'));
     });
 
+    // Update all contextual links placeholders whose HTML is cached.
+    var uncachedIDs = _.filter(ids, function initIfCached (contextualID) {
+      var html = storage.getItem('Drupal.contextual.' + contextualID);
+      if (html !== null) {
+        initContextual($context.find('[data-contextual-id="' + contextualID + '"]'), html);
+        return false;
+      }
+      return true;
+    });
+
     // Perform an AJAX request to let the server render the contextual links for
     // each of the placeholders.
-    $.ajax({
-      url: Drupal.url('contextual/render') + '?destination=' + Drupal.encodePath(drupalSettings.currentPath),
-      type: 'POST',
-      data: { 'ids[]' : ids },
-      dataType: 'json',
-      success: function (results) {
-        for (var id in results) {
-          // If the rendered contextual links are empty, then the current user
-          // does not have permission to access the associated links: don't
-          // render anything.
-          if (results.hasOwnProperty(id) && results[id].length > 0) {
-            // Update the placeholders to contain its rendered contextual links.
-            // Usually there will only be one placeholder, but it's possible for
-            // multiple identical placeholders exist on the page (probably
-            // because the same content appears more than once).
-            var $placeholders = $context
-              .find('[data-contextual-id="' + id + '"]')
-              .html(results[id]);
+    if (uncachedIDs.length > 0) {
+      $.ajax({
+        url: Drupal.url('contextual/render'),
+        type: 'POST',
+        data: { 'ids[]' : uncachedIDs },
+        dataType: 'json',
+        success: function (results) {
+          _.each(results, function (html, contextualID) {
+            // Store the metadata.
+            storage.setItem('Drupal.contextual.' + contextualID, html);
+            // If the rendered contextual links are empty, then the current user
+            // does not have permission to access the associated links: don't
+            // render anything.
+            if (html.length > 0) {
+              // Update the placeholders to contain its rendered contextual links.
+              // Usually there will only be one placeholder, but it's possible for
+              // multiple identical placeholders exist on the page (probably
+              // because the same content appears more than once).
+              var $placeholders = $context.find('[data-contextual-id="' + contextualID + '"]');
 
-            // Initialize the contextual links.
-            for (var i = 0; i < $placeholders.length; i++) {
-              initContextual($placeholders.eq(i));
+              // Initialize the contextual links.
+              for (var i = 0; i < $placeholders.length; i++) {
+                initContextual($placeholders.eq(i), html);
+              }
             }
-          }
+          });
         }
-      }
-     });
+       });
+    }
   }
 };
 
@@ -183,4 +222,4 @@ Drupal.theme.contextualTrigger = function () {
   return '<button class="trigger visually-hidden focusable" type="button"></button>';
 };
 
-})(jQuery, Drupal, drupalSettings, Backbone);
+})(jQuery, Drupal, drupalSettings, _, Backbone, window.JSON, window.sessionStorage);

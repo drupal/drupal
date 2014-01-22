@@ -58,6 +58,7 @@ class TermViewBuilder extends EntityViewBuilder {
     $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/css/taxonomy.module.css';
     $build['#contextual_links']['taxonomy_term'] = array(
       'route_parameters' => array('taxonomy_term' => $entity->id()),
+      'metadata' => array('changed' => $entity->getChangedTime()),
     );
   }
 

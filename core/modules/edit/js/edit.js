@@ -77,17 +77,7 @@ Drupal.behaviors.edit = {
     // Process each entity element: identical entities that appear multiple
     // times will get a numeric identifier, starting at 0.
     $(context).find('[data-edit-entity-id]').once('edit').each(function (index, entityElement) {
-      var entityID = entityElement.getAttribute('data-edit-entity-id');
-      if (!entityInstancesTracker.hasOwnProperty(entityID)) {
-        entityInstancesTracker[entityID] = 0;
-      }
-      else {
-        entityInstancesTracker[entityID]++;
-      }
-
-      // Set the calculated entity instance ID for this element.
-      var entityInstanceID = entityInstancesTracker[entityID];
-      entityElement.setAttribute('data-edit-entity-instance-id', entityInstanceID);
+      processEntity(entityElement);
     });
 
     // Process each field element: queue to be used or to fetch metadata.
@@ -188,6 +178,12 @@ if (permissionsHashValue !== permissionsHash) {
  */
 $(document).on('drupalContextualLinkAdded', function (event, data) {
   if (data.$region.is('[data-edit-entity-id]')) {
+    // If the contextual link is cached on the client side, an entity instance
+    // will not yet have been assigned. So assign one.
+    if (!data.$region.is('[data-edit-entity-instance-id]')) {
+      data.$region.once('edit');
+      processEntity(data.$region.get(0));
+    }
     var contextualLink = {
       entityID: data.$region.attr('data-edit-entity-id'),
       entityInstanceID: data.$region.attr('data-edit-entity-instance-id'),
@@ -232,6 +228,27 @@ function initEdit (bodyElement) {
     entitiesCollection: Drupal.edit.collections.entities,
     fieldsCollection: Drupal.edit.collections.fields
   });
+}
+
+/**
+ * Assigns the entity an instance ID.
+ *
+ * @param DOM entityElement.
+ *   A Drupal Entity API entity's DOM element with a data-edit-entity-id
+ *   attribute.
+ */
+function processEntity (entityElement) {
+  var entityID = entityElement.getAttribute('data-edit-entity-id');
+  if (!entityInstancesTracker.hasOwnProperty(entityID)) {
+    entityInstancesTracker[entityID] = 0;
+  }
+  else {
+    entityInstancesTracker[entityID]++;
+  }
+
+  // Set the calculated entity instance ID for this element.
+  var entityInstanceID = entityInstancesTracker[entityID];
+  entityElement.setAttribute('data-edit-entity-instance-id', entityInstanceID);
 }
 
 /**

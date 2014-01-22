@@ -25,6 +25,7 @@ class CustomBlockViewBuilder extends EntityViewBuilder {
     if (!$entity->isNew() && $view_mode == 'full') {
       $build['#contextual_links']['custom_block'] = array(
         'route_parameters' => array('custom_block' => $entity->id()),
+        'metadata' => array('changed' => $entity->getChangedTime()),
       );
     }
   }
