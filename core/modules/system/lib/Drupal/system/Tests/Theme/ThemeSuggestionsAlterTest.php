@@ -52,24 +52,45 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
   }
 
   /**
+   * Tests hook_theme_suggestions_alter().
+   */
+  function testGeneralSuggestionsAlter() {
+    $this->drupalGet('theme-test/general-suggestion-alter');
+    $this->assertText('Original template for testing hook_theme_suggestions_alter().');
+
+    // Enable test_theme and test that themes can alter template suggestions.
+    config('system.theme')
+      ->set('default', 'test_theme')
+      ->save();
+    $this->drupalGet('theme-test/general-suggestion-alter');
+    $this->assertText('Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_alter().');
+
+    // Enable the theme_suggestions_test module to test modules implementing
+    // suggestions alter hooks.
+    \Drupal::moduleHandler()->install(array('theme_suggestions_test'));
+    $this->drupalGet('theme-test/general-suggestion-alter');
+    $this->assertText('Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_alter().');
+  }
+
+  /**
    * Tests that theme suggestion alter hooks work for templates.
    */
   function testTemplateSuggestionsAlter() {
     $this->drupalGet('theme-test/suggestion-alter');
-    $this->assertText('Original template.');
+    $this->assertText('Original template for testing hook_theme_suggestions_HOOK_alter().');
 
     // Enable test_theme and test that themes can alter template suggestions.
     config('system.theme')
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('theme-test/suggestion-alter');
-    $this->assertText('Template overridden based on new theme suggestion provided by the test_theme theme.');
+    $this->assertText('Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_HOOK_alter().');
 
     // Enable the theme_suggestions_test module to test modules implementing
     // suggestions alter hooks.
     \Drupal::moduleHandler()->install(array('theme_suggestions_test'));
     $this->drupalGet('theme-test/suggestion-alter');
-    $this->assertText('Template overridden based on new theme suggestion provided by a module.');
+    $this->assertText('Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_HOOK_alter().');
   }
 
   /**
@@ -115,6 +136,36 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     \Drupal::moduleHandler()->install(array('theme_suggestions_test'));
     $this->drupalGet('theme-test/function-suggestion-alter');
     $this->assertText('Theme function overridden based on new theme suggestion provided by a module.');
+  }
+
+  /**
+   * Tests execution order of theme suggestion alter hooks.
+   *
+   * hook_theme_suggestions_alter() should fire before
+   * hook_theme_suggestions_HOOK_alter() within an extension (module or theme).
+   */
+  function testExecutionOrder() {
+    // Enable our test theme and module.
+    config('system.theme')
+      ->set('default', 'test_theme')
+      ->save();
+    \Drupal::moduleHandler()->install(array('theme_suggestions_test'));
+
+    // Send two requests so that we get all the messages we've set via
+    // drupal_set_message().
+    $this->drupalGet('theme-test/suggestion-alter');
+    // Ensure that the order is first by extension, then for a given extension,
+    // the hook-specific one after the generic one.
+    $expected = array(
+      'theme_suggestions_test_theme_suggestions_alter() executed.',
+      'theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter() executed.',
+      'theme_test_theme_suggestions_alter() executed.',
+      'theme_test_theme_suggestions_theme_test_suggestions_alter() executed.',
+      'test_theme_theme_suggestions_alter() executed.',
+      'test_theme_theme_suggestions_theme_test_suggestions_alter() executed.',
+    );
+    $content = preg_replace('/\s+/', ' ', filter_xss($this->content, array()));
+    $this->assert(strpos($content, implode(' ', $expected)) !== FALSE, 'Suggestion alter hooks executed in the expected order.');
   }
 
 }

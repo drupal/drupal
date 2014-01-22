@@ -65,6 +65,13 @@ suggestion_alter:
   requirements:
     _permission: 'access content'
 
+theme_test.general_suggestion_alter:
+  path: '/theme-test/general-suggestion-alter'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::generalSuggestionAlter'
+  requirements:
+    _permission: 'access content'
+
 suggestion_provided:
   path: '/theme-test/suggestion-provided'
   defaults:

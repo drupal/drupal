@@ -26,6 +26,10 @@ function theme_test_theme($existing, $type, $theme, $path) {
     'template' => 'theme-test-suggestions',
     'variables' => array(),
   );
+  $items['theme_test_general_suggestions'] = array(
+    'template' => 'theme-test-general-suggestions',
+    'variables' => array(),
+  );
   $items['theme_test_function_suggestions'] = array(
     'variables' => array(),
   );
@@ -151,4 +155,18 @@ function theme_theme_test_function_suggestions($variables) {
  */
 function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables) {
   return array('theme_test_suggestion_provided__' . 'foo');
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function theme_test_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  drupal_set_message(__FUNCTION__ . '() executed.');
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function theme_test_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
+  drupal_set_message(__FUNCTION__ . '() executed.');
 }

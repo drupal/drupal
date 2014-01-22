@@ -627,8 +627,14 @@ function theme($hook, $variables = array()) {
   if (isset($info['base hook'])) {
     $suggestions[] = $hook;
   }
-  // Allow suggestions to be altered via hook_theme_suggestions_HOOK_alter().
-  Drupal::moduleHandler()->alter('theme_suggestions_' . $base_theme_hook, $suggestions, $variables);
+
+  // Invoke hook_theme_suggestions_alter() and
+  // hook_theme_suggestions_HOOK_alter().
+  $hooks = array(
+    'theme_suggestions',
+    'theme_suggestions_' . $base_theme_hook,
+  );
+  \Drupal::moduleHandler()->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
   // Check if each suggestion exists in the theme registry, and if so,
   // use it instead of the hook that theme() was called with. For example, a

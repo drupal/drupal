@@ -107,6 +107,13 @@ class ThemeTestController extends ControllerBase {
   }
 
   /**
+   * Menu callback for testing hook_theme_suggestions_alter().
+   */
+  function generalSuggestionAlter() {
+    return array('#theme' => 'theme_test_general_suggestions');
+  }
+
+  /**
    * Menu callback for testing suggestion alter hooks with specific suggestions.
    */
   function specificSuggestionAlter() {

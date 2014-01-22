@@ -190,6 +190,55 @@ function hook_theme_suggestions_HOOK(array $variables) {
 }
 
 /**
+ * Alters named suggestions for all theme hooks.
+ *
+ * This hook is invoked for all theme hooks, if you are targeting a specific
+ * theme hook it's best to use hook_theme_suggestions_HOOK_alter().
+ *
+ * The call order is as follows: all existing suggestion alter functions are
+ * called for module A, then all for module B, etc., followed by all for any
+ * base theme(s), and finally for the active theme. The order is
+ * determined by system weight, then by extension (module or theme) name.
+ *
+ * Within each module or theme, suggestion alter hooks are called in the
+ * following order: first, hook_theme_suggestions_alter(); second,
+ * hook_theme_suggestions_HOOK_alter(). So, for each module or theme, the more
+ * general hooks are called first followed by the more specific.
+ *
+ * In the following example, we provide an alternative template suggestion to
+ * node and taxonomy term templates based on the user being logged in.
+ * @code
+ * function MYMODULE_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+ *   if (\Drupal::currentUser()->isAuthenticated() && in_array($hook, array('node', 'taxonomy_term'))) {
+ *     $suggestions[] = $hook . '__' . 'logged_in';
+ *   }
+ * }
+ *
+ * @endcode
+ *
+ * @param array $suggestions
+ *   An array of alternate, more specific names for template files or theme
+ *   functions.
+ * @param array $variables
+ *   An array of variables passed to the theme hook. Note that this hook is
+ *   invoked before any variable preprocessing.
+ * @param string $hook
+ *   The base hook name. For example, if '#theme' => 'node__article' is called,
+ *   then $hook will be 'node', not 'node__article'. The specific hook called
+ *   (in this case 'node__article') is available in
+ *   $variables['theme_hook_original'].
+ *
+ * @return array
+ *   An array of theme suggestions.
+ *
+ * @see hook_theme_suggestions_HOOK_alter()
+ */
+function hook_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  // Add an interface-language specific suggestion to all theme hooks.
+  $suggestions[] = $hook . '__' . \Drupal::languageManager()->getLanguage()->id;
+}
+
+/**
  * Alters named suggestions for a specific theme hook.
  *
  * This hook allows any module or theme to provide altenative theme function or
@@ -210,6 +259,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *   An array of variables passed to the theme hook. Note that this hook is
  *   invoked before any preprocessing.
  *
+ * @see hook_theme_suggestions_alter()
  * @see hook_theme_suggestions_HOOK()
  */
 function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables) {

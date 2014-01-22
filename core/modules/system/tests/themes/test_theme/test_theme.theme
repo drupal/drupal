@@ -31,9 +31,24 @@ function test_theme_theme_test_alter_alter(&$data) {
 }
 
 /**
+ * Implements hook_theme_suggestions_alter().
+ */
+function test_theme_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  drupal_set_message(__FUNCTION__ . '() executed.');
+  // Theme alter hooks run after module alter hooks, so add this theme
+  // suggestion to the beginning of the array so that the suggestion added by
+  // the theme_suggestions_test module can be picked up when that module is
+  // enabled.
+  if ($hook == 'theme_test_general_suggestions') {
+    array_unshift($suggestions, 'theme_test_general_suggestions__' . 'theme_override');
+  }
+}
+
+/**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
+  drupal_set_message(__FUNCTION__ . '() executed.');
   // Theme alter hooks run after module alter hooks, so add this theme
   // suggestion to the beginning of the array so that the suggestion added by
   // the theme_suggestions_test module can be picked up when that module is
