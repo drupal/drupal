@@ -40,34 +40,49 @@ class FieldableDatabaseStorageControllerTest extends UnitTestCase {
    * @see \Drupal\Core\Entity\Controller\FieldableDatabaseStorageController::_fieldSqlSchema()
    */
   public function testFieldSqlSchemaForEntityWithStringIdentifier() {
+    //  @todo Add FieldTypePluginManagerInterface in https://drupal.org/node/2175415.
+    $field_type_manager = $this->getMockBuilder('Drupal\Core\Field\FieldTypePluginManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
 
-    // Mock the entity manager to return the minimal entity and field
-    // definitions for the test_entity entity.
-    $definition = new EntityType(array(
-      'entity_keys' => array(
-        'id' => 'id',
-        'revision_id' => 'revision_id',
-      ),
-    ));
+    $container = new ContainerBuilder();
+    $container->set('plugin.manager.field.field_type', $field_type_manager);
+    $container->set('entity.manager', $entity_manager);
+    \Drupal::setContainer($container);
+
+    $definition = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
+    $definition->expects($this->any())
+      ->method('getKey')
+      ->will($this->returnValueMap(array(
+        array('id', 'id'),
+        array('revision_id', 'revision_id'),
+      )));
+    $definition->expects($this->once())
+      ->method('hasKey')
+      ->with('revision_id')
+      ->will($this->returnValue(TRUE));
+
+    $field_type_manager->expects($this->exactly(2))
+      ->method('getDefaultSettings')
+      ->will($this->returnValue(array()));
+    $field_type_manager->expects($this->exactly(2))
+      ->method('getDefaultInstanceSettings')
+      ->will($this->returnValue(array()));
+
     $fields['id'] = FieldDefinition::create('string')
       ->setName('id');
     $fields['revision_id'] = FieldDefinition::create('string')
       ->setName('revision_id');
 
-    $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
     $entity_manager->expects($this->any())
       ->method('getDefinition')
       ->with('test_entity')
       ->will($this->returnValue($definition));
-
     $entity_manager->expects($this->any())
       ->method('getFieldDefinitions')
       ->with('test_entity')
       ->will($this->returnValue($fields));
-
-    $container = new ContainerBuilder();
-    $container->set('entity.manager', $entity_manager);
-    \Drupal::setContainer($container);
 
     // Define a field definition for a test_field field.
     $field = $this->getMock('\Drupal\field\FieldInterface');

@@ -34,7 +34,15 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    *   A new field definition object.
    */
   public static function create($type) {
-    return new static(array(), DataDefinition::create('field_item:' . $type));
+    // Create a definition for the items, and initialize it with the default
+    // settings for the field type.
+    // @todo Cleanup in https://drupal.org/node/2116341.
+    $item_definition = DataDefinition::create('field_item:' . $type);
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $default_settings = $field_type_manager->getDefaultSettings($type) + $field_type_manager->getDefaultInstanceSettings($type);
+    $item_definition->setSettings($default_settings);
+
+    return new static(array(), $item_definition);
   }
 
   /**

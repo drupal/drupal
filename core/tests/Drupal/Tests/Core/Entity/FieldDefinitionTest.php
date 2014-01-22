@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Tests\UnitTestCase;
 
@@ -16,6 +17,21 @@ use Drupal\Tests\UnitTestCase;
  * @group Entity
  */
 class FieldDefinitionTest extends UnitTestCase {
+
+  /**
+   * A dummy field type name.
+   *
+   * @var string
+   */
+  protected $fieldType;
+
+  /**
+   * A dummy field type definition.
+   *
+   * @var string
+   */
+  protected $fieldTypeDefinition;
+
 
   public static function getInfo() {
     return array(
@@ -28,28 +44,42 @@ class FieldDefinitionTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
-    parent::setUp();
-
-    // Prepare a container with a mock typed data object, that returns no
-    // type definitions.
-    // @todo: Overhaul how field definitions deal with dependencies and improve
-    // unit tests. See https://drupal.org/node/2143555.
-    $typed_data = $this->getMockBuilder('Drupal\Core\TypedData\TypedDataManager')
+  public function setUp() {
+    // Mock the field type manager and place it in the container.
+    //  @todo Add FieldTypePluginManagerInterface in https://drupal.org/node/2175415.
+    $field_type_manager = $this->getMockBuilder('Drupal\Core\Field\FieldTypePluginManager')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $typed_data
-      ->expects($this->any())
+    $this->fieldType = $this->randomName();
+    $this->fieldTypeDefinition = array(
+      'id' => $this->fieldType,
+      'settings' => array(
+        'some_setting' => 'value 1'
+      ),
+      'instance_settings' => array(
+        'some_instance_setting' => 'value 2',
+      ),
+    );
+
+    $field_type_manager->expects($this->any())
+      ->method('getDefinitions')
+      ->will($this->returnValue(array($this->fieldType => $this->fieldTypeDefinition)));
+    $field_type_manager->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnValue(NULL));
+      ->with($this->fieldType)
+      ->will($this->returnValue($this->fieldTypeDefinition));
+    $field_type_manager->expects($this->any())
+      ->method('getDefaultSettings')
+      ->with($this->fieldType)
+      ->will($this->returnValue($this->fieldTypeDefinition['settings']));
+    $field_type_manager->expects($this->any())
+      ->method('getDefaultInstanceSettings')
+      ->with($this->fieldType)
+      ->will($this->returnValue($this->fieldTypeDefinition['instance_settings']));
 
-    $container = $this->getMock('Drupal\Core\DependencyInjection\Container');
-    $container
-      ->expects($this->any())
-      ->method('get')
-      ->will($this->returnValue($typed_data));
-
+    $container = new ContainerBuilder();
+    $container->set('plugin.manager.field.field_type', $field_type_manager);
     \Drupal::setContainer($container);
   }
 
@@ -87,9 +117,8 @@ class FieldDefinitionTest extends UnitTestCase {
    * Tests field type methods.
    */
   public function testFieldType() {
-    $field_type = $this->randomName();
-    $definition = FieldDefinition::create($field_type);
-    $this->assertEquals($field_type, $definition->getType());
+    $definition = FieldDefinition::create($this->fieldType);
+    $this->assertEquals($this->fieldType, $definition->getType());
   }
 
   /**
@@ -102,6 +131,18 @@ class FieldDefinitionTest extends UnitTestCase {
     $definition->setSetting($setting, $value);
     $this->assertEquals($value, $definition->getSetting($setting));
     $this->assertEquals(array($setting => $value), $definition->getSettings());
+  }
+
+  /**
+   * Tests the initialization of default field settings.
+   */
+  public function testDefaultFieldSettings() {
+    $definition = FieldDefinition::create($this->fieldType);
+    $expected_settings = $this->fieldTypeDefinition['settings'] + $this->fieldTypeDefinition['instance_settings'];
+    $this->assertEquals($expected_settings, $definition->getSettings());
+    foreach ($expected_settings as $setting => $value) {
+      $this->assertEquals($value, $definition->getSetting($setting));
+    }
   }
 
   /**
