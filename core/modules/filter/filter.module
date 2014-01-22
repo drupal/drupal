@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
@@ -229,7 +230,7 @@ function filter_formats(AccountInterface $account = NULL) {
  * @see filter_formats()
  */
 function filter_formats_reset() {
-  cache()->deleteTags(array('filter_formats' => TRUE));
+  Cache::deleteTags(array('filter_formats' => TRUE));
   drupal_static_reset('filter_formats');
 }
 

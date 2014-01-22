@@ -141,7 +141,7 @@ class LocaleTranslationUiTest extends WebTestBase {
     $this->assertRaw($translation_to_en, 'English translation properly saved.');
 
     // Reset the tag cache on the tester side in order to pick up the call to
-    // cache()->deleteTags() on the tested side.
+    // Cache::deleteTags() on the tested side.
     drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
 
     $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, 't() works for non-English.');

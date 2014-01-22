@@ -5,6 +5,7 @@
  * Schema API handling functions.
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Utility\SchemaCache;
@@ -94,7 +95,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
       drupal_alter('schema', $schema);
 
       if ($rebuild) {
-        cache()->deleteTags(array('schema' => TRUE));
+        Cache::deleteTags(array('schema' => TRUE));
       }
       // If the schema is empty, avoid saving it: some database engines require
       // the schema to perform queries, and this could lead to infinite loops.

@@ -13,6 +13,7 @@ use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
@@ -395,7 +396,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   public function clearCachedFieldDefinitions() {
     unset($this->entityFieldInfo);
     unset($this->fieldDefinitions);
-    $this->cache->deleteTags(array('entity_field_info' => TRUE));
+    Cache::deleteTags(array('entity_field_info' => TRUE));
   }
 
   /**

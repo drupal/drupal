@@ -8,6 +8,7 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\ConfigInstallerInterface;
@@ -465,7 +466,7 @@ class ThemeHandler implements ThemeHandlerInterface {
 
     // @todo It feels wrong to have the requirement to clear the local tasks
     //   cache here.
-    $this->cacheBackend->deleteTags(array('local_task' => 1));
+    Cache::deleteTags(array('local_task' => 1));
     $this->themeRegistryRebuild();
   }
 

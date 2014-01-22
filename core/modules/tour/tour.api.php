@@ -73,7 +73,7 @@ function hook_tour_presave($entity) {
  */
 function hook_tour_insert($entity) {
   \Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();
-  cache('cache_tour')->deleteTags(array('tour_items'));
+  \Drupal\Core\Cache\Cache::deleteTags(array('tour_items'));
 }
 
 /**
@@ -84,5 +84,5 @@ function hook_tour_insert($entity) {
  */
 function hook_tour_update($entity) {
   \Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();
-  cache('cache_tour')->deleteTags(array('tour_items'));
+  \Drupal\Core\Cache\Cache::deleteTags(array('tour_items'));
 }

@@ -5,6 +5,7 @@
  * Administration toolbar for quick access to top level administration items.
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
@@ -652,7 +653,7 @@ function _toolbar_clear_user_cache($uid = NULL) {
     // Clear by the 'user' tag in order to delete all caches, in any language,
     // associated with this user.
     if (isset($uid)) {
-      $cache->deleteTags(array('user' => array($uid)));
+      Cache::deleteTags(array('user' => array($uid)));
     } else {
       $cache->deleteAll();
     }

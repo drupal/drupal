@@ -9,6 +9,7 @@ namespace Drupal\Core\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
@@ -157,7 +158,7 @@ class CacheDecorator implements CachedDiscoveryInterface {
   public function clearCachedDefinitions() {
     // If there are any cache tags, clear cache based on those.
     if (!empty($this->cacheTags)) {
-      $this->cache($this->cacheBin)->deleteTags($this->cacheTags);
+      Cache::deleteTags($this->cacheTags);
     }
     // Otherwise, just delete the specified cache key.
     else if (isset($this->cacheKey)) {

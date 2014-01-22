@@ -124,6 +124,7 @@ class EntityManagerTest extends UnitTestCase {
 
     $this->container = new ContainerBuilder();
     $this->container->set('cache.cache', $this->cache);
+    $this->container->setParameter('cache_bins', array('cache.cache' => 'cache'));
     $this->container->set('module_handler', $this->moduleHandler);
     $this->container->set('form_builder', $this->formBuilder);
     \Drupal::setContainer($this->container);

@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Routing\RequestHelper;
@@ -480,7 +481,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     if (\Drupal::state()->get('menu_rebuild_needed') || !\Drupal::state()->get('menu.masks')) {
       menu_router_rebuild();
       \Drupal::service('router.builder')->rebuild();
-      \Drupal::cache()->deleteTags(array('local_task' => 1));
+      Cache::deleteTags(array('local_task' => 1));
     }
     $original_map = arg(NULL, $path);
 
@@ -2480,7 +2481,7 @@ function menu_get_active_title() {
  * Clears the cached cached data for a single named menu.
  */
 function menu_cache_clear($menu_name = 'tools') {
-  cache('menu')->deleteTags(array('menu' => $menu_name));
+  Cache::deleteTags(array('menu' => $menu_name));
   // Also clear the menu system static caches.
   menu_reset_static_cache();
 }

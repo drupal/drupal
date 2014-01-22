@@ -105,6 +105,17 @@ class ThemeHandlerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->cacheBackend, $this->infoParser, $this->configInstaller, $this->routeBuilder, $this->systemListingInfo);
+
+    $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+    $container->expects($this->any())
+      ->method('getParameter')
+      ->with('cache_bins')
+      ->will($this->returnValue(array('cache.test' => 'test')));
+    $container->expects($this->any())
+      ->method('get')
+      ->with('cache.test')
+      ->will($this->returnValue($this->cacheBackend));
+    \Drupal::setContainer($container);
   }
 
   /**

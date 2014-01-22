@@ -8,6 +8,7 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\PluginManagerInterface;
@@ -184,7 +185,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     if ($this->cacheBackend) {
       if ($this->cacheTags) {
         // Use the cache tags to clear the cache.
-        $this->cacheBackend->deleteTags($this->cacheTags);
+        Cache::deleteTags($this->cacheTags);
       }
       elseif ($this->languageManager) {
         $cache_keys = array();

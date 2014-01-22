@@ -63,6 +63,17 @@ class CacheCollectorTest extends UnitTestCase {
     $this->lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
     $this->cid = $this->randomName();
     $this->collector = new CacheCollectorHelper($this->cid, $this->cache, $this->lock);
+
+    $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+    $container->expects($this->any())
+      ->method('getParameter')
+      ->with('cache_bins')
+      ->will($this->returnValue(array('cache.test' => 'test')));
+    $container->expects($this->any())
+      ->method('get')
+      ->with('cache.test')
+      ->will($this->returnValue($this->cache));
+    \Drupal::setContainer($container);
   }
 
 

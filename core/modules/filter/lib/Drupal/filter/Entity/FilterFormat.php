@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\filter\FilterFormatInterface;
@@ -183,7 +184,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
 
     // Clear the filter cache whenever a text format is disabled.
     filter_formats_reset();
-    cache('filter')->deleteTags(array('filter_format' => $this->format));
+    Cache::deleteTags(array('filter_format' => $this->format));
 
     return $this;
   }
@@ -220,7 +221,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
 
     if ($update) {
       // Clear the filter cache whenever a text format is updated.
-      cache('filter')->deleteTags(array('filter_format' => $this->id()));
+      Cache::deleteTags(array('filter_format' => $this->id()));
     }
     else {
       // Default configuration of modules and installation profiles is allowed

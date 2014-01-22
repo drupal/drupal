@@ -5,6 +5,7 @@
  * Admin page callbacks for the system module.
  */
 
+use Drupal\Core\Cache\Cache;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -37,7 +38,7 @@ function system_theme_default() {
       // enabled.
       \Drupal::service('router.builder')->rebuild();
       menu_router_rebuild();
-      \Drupal::cache('cache')->deleteTags(array('local_task' => 1));
+      Cache::deleteTags(array('local_task' => TRUE));
 
       // The status message depends on whether an admin theme is currently in use:
       // a value of 0 means the admin theme is set to be the default theme.

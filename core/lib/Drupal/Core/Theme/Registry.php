@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Theme;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -550,7 +551,7 @@ class Registry implements DestructableInterface {
     $this->runtimeRegistry = NULL;
 
     $this->registry = NULL;
-    $this->cache->invalidateTags(array('theme_registry' => TRUE));
+    Cache::invalidateTags(array('theme_registry' => TRUE));
     return $this;
   }
 

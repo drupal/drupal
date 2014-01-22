@@ -10,6 +10,7 @@
  * object files are supported.
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\Crypt;
 
@@ -1122,7 +1123,7 @@ function _locale_refresh_translations($langcodes, $lids = array()) {
     }
   }
   // Clear locale cache.
-  cache()->deleteTags(array('locale' => TRUE));
+  Cache::deleteTags(array('locale' => TRUE));
 }
 
 /**

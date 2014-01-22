@@ -7,6 +7,7 @@
 
 namespace Drupal\field;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Field\FieldTypePluginManager;
@@ -160,7 +161,7 @@ class FieldInfo {
 
     $this->bundleExtraFields = array();
 
-    $this->cacheBackend->deleteTags(array('field_info' => TRUE));
+    Cache::deleteTags(array('field_info' => TRUE));
   }
 
   /**
