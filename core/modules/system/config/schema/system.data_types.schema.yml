@@ -84,3 +84,18 @@ filter:
     status:
       type: boolean
       label: 'Enabled'
+
+# Array of routes with route_name and route_params keys.
+route:
+  type: mapping
+  label: 'Route'
+  mapping:
+    route_name:
+      type: text
+      label: 'Route Name'
+    route_params:
+      type: sequence
+      label: 'Route Params'
+      sequence:
+        - type: string
+          label: 'Param'

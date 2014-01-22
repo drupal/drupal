@@ -23,8 +23,15 @@ class TourTestController implements ContainerInjectionInterface {
 
   /**
    * Outputs some content for testing tours.
+   *
+   * @param string $locale
+   *  (optional) Dummy locale variable for testing routing parameters. Defaults
+   *   to 'foo'.
+   *
+   * @return array
+   *   Array of markup.
    */
-  public function tourTest1() {
+  public function tourTest1($locale = 'foo') {
     return array(
       'tip-1' => array(
         '#type' => 'container',
