@@ -623,8 +623,8 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
   $bundle = $entity->bundle();
   $render_view_mode = 'default';
 
-  // Look at the default display and display for the view mode, and fallback to
-  // the former if the latter does not exist is disabled.
+  // Fall back to the default display if the display for the view mode does
+  // not exist or is disabled.
   if ($view_mode != 'default') {
     $ids = array(
       'default' => $entity_type . '.' . $bundle . '.default',
