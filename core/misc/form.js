@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal, debounce) {
 
 "use strict";
 
@@ -116,6 +116,82 @@ Drupal.behaviors.formSingleSubmit = {
   }
 };
 
+
+/**
+ * Sends a 'formUpdated' event each time a form element is modified.
+ */
+function triggerFormUpdated (element) {
+ $(element).trigger('formUpdated');
+}
+
+/**
+ * Collects the IDs of all form fields in the given form.
+ *
+ * @param {HTMLFormElement} form
+ * @return {Array}
+ */
+function fieldsList (form) {
+  var $fieldList = $(form).find('[name]').map(function (index, element) {
+    // We use id to avoid name duplicates on radio fields and filter out
+    // elements with a name but no id.
+    return element.getAttribute('id');
+  });
+  // Return a true array.
+  return $.makeArray($fieldList);
+}
+
+/**
+ * Triggers the 'formUpdated' event on form elements when they are modified.
+ */
+Drupal.behaviors.formUpdated = {
+ attach: function (context) {
+   var $context = $(context);
+   var contextIsForm = $context.is('form');
+   var $forms = $context.find('form').once('form-updated');
+
+   if (contextIsForm) {
+     $forms = $context;
+   }
+
+   if ($forms.length) {
+     // Initialize form behaviors, use $.makeArray to be able to use native
+     // forEach array method and have the callback parameters in the right order.
+     $.makeArray($forms).forEach(function (form) {
+       var events = 'change.formUpdated keypress.formUpdated';
+       var eventHandler = debounce(function (event) { triggerFormUpdated(event.target); }, 300);
+       var formFields = fieldsList(form).join(',');
+
+       form.setAttribute('data-drupal-form-fields', formFields);
+       $(form).on(events, eventHandler);
+     });
+   }
+   // On ajax requests context is the form element.
+   if (contextIsForm) {
+    var formFields = fieldsList(context).join(',');
+    // @todo replace with form.getAttribute() when #1979468 is in.
+    var currentFields = $(context).attr('data-drupal-form-fields');
+    // if there has been a change in the fields or their order, trigger
+    // formUpdated.
+    if (formFields !== currentFields) {
+      triggerFormUpdated(context);
+    }
+  }
+
+ },
+ detach: function (context, settings, trigger) {
+   var $context = $(context);
+   if (trigger === 'unload') {
+     var $forms = $context.find('form').removeOnce('form-updated');
+     if ($forms.length) {
+       $.makeArray($forms).forEach(function (form) {
+         form.removeAttribute('data-drupal-form-fields');
+         $(form).off('.formUpdated');
+       });
+     }
+   }
+ }
+};
+
 /**
  * Prepopulate form fields with information from the visitor cookie.
  */
@@ -136,4 +212,4 @@ Drupal.behaviors.fillUserInfoFromCookie = {
   }
 };
 
-})(jQuery);
+})(jQuery, Drupal, Drupal.debounce);

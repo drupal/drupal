@@ -959,6 +959,7 @@ function system_library_info() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
+      array('system', 'drupal.debounce'),
       array('system', 'jquery.cookie'),
       array('system', 'jquery.once'),
     ),
