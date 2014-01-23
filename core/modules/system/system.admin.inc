@@ -33,7 +33,7 @@ function system_theme_default() {
       // Rebuild the menu. This duplicates the menu_router_rebuild() in
       // theme_enable(). However, modules must know the current default theme in
       // order to use this information in hook_menu() or hook_menu_alter()
-      // implementations, and doing the variable_set() before the theme_enable()
+      // implementations, and saving the configuration before the theme_enable()
       // could result in a race condition where the theme is default but not
       // enabled.
       \Drupal::service('router.builder')->rebuild();
