@@ -340,9 +340,6 @@ Path module
 Phone module
 - Dave Reid 'davereid' http://drupal.org/user/53892
 
-PHP module
-- ?
-
 Picture module
 - Peter Droogmans 'attiks' http://drupal.org/user/105002
 
