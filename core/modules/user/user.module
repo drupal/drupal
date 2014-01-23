@@ -790,6 +790,62 @@ function user_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function user_menu_link_defaults() {
+  // Registration and login pages.
+  $links['user'] = array(
+    'link_title' => 'My account',
+    'weight' => -10,
+    'route_name' => 'user.page',
+    'menu_name' => 'account',
+  );
+
+  $links['user.logout'] = array(
+    'link_title' => 'Log out',
+    'route_name' => 'user.logout',
+    'weight' => 10,
+    'menu_name' => 'account',
+  );
+
+  // User listing pages.
+  $links['user.admin.people'] = array(
+    'link_title' => 'People',
+    'route_name' => 'user.admin_account',
+    'description' => 'Manage user accounts, roles, and permissions.',
+    'parent' => 'system.admin',
+    'weight' => -4,
+  );
+  // Permissions and role forms.
+  $links['user.admin.people.permissions'] = array(
+    'link_title' => 'Permissions',
+    'parent' => 'user.admin.people',
+    'description' => 'Determine access to features by selecting permissions for roles.',
+    'route_name' => 'user.admin_permissions',
+  );
+
+  // Administration pages.
+  $links['user.admin.config.people'] = array(
+   'link_title' => 'People',
+   'route_name' => 'user.admin_index',
+   'parent' => 'system.admin.config',
+   'description' => 'Configure user accounts.',
+   'position' => 'left',
+   'weight' => -20,
+  );
+
+  $links['user.admin.config.people.accounts'] = array(
+    'link_title' => 'Account settings',
+    'parent' => 'user.admin.config.people',
+    'description' => 'Configure default behavior of users, including registration requirements, e-mails, and fields.',
+    'weight' => -10,
+    'route_name' => 'user.account_settings',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_menu_link_presave().
  */
 function user_menu_link_presave(MenuLink $menu_link) {
@@ -797,14 +853,8 @@ function user_menu_link_presave(MenuLink $menu_link) {
   // for authenticated users. Authenticated users should see "My account", but
   // anonymous users should not see it at all. Therefore, invoke
   // user_menu_link_load() to conditionally hide the link.
-  if ($menu_link->link_path == 'user' && $menu_link->module == 'system') {
+  if ($menu_link->machine_name == 'user' && $menu_link->module == 'system') {
     $menu_link->options['alter'] = TRUE;
-  }
-
-  // Force the Logout link to appear on the top-level of 'account' menu by
-  // default (i.e., unless it has been customized).
-  if ($menu_link->link_path == 'user/logout' && $menu_link->module == 'system' && empty($menu_link->customized)) {
-    $menu_link->plid = 0;
   }
 }
 

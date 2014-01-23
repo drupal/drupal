@@ -262,6 +262,20 @@ function taxonomy_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function taxonomy_menu_link_defaults() {
+  $links['taxonomy.admin.structure.vocabulary'] = array(
+    'link_title' => 'Taxonomy',
+    'parent' => 'system.admin.structure',
+    'description' => 'Manage tagging, categorization, and classification of your content.',
+    'route_name' => 'taxonomy.vocabulary_list',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_admin_paths().
  */
 function taxonomy_admin_paths() {

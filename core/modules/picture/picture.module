@@ -72,6 +72,21 @@ function picture_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function picture_menu_link_defaults() {
+  $links['picture.admin.config.picturemapping'] = array(
+    'link_title' => 'Picture Mappings',
+    'description' => 'Manage picture mappings',
+    'weight' => 10,
+    'route_name' => 'picture.mapping_page',
+    'parent' => 'system.admin.config.media',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_library_info().
  */
 function picture_library_info() {

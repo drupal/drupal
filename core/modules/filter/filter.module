@@ -150,6 +150,26 @@ function filter_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function filter_menu_link_defaults() {
+  $links['filter.tips'] = array(
+    'link_title' => 'Compose tips',
+    'type' => MENU_SUGGESTED_ITEM,
+    'route_name' => 'filter.tips_all',
+  );
+
+  $links['filter.admin.formats'] = array(
+    'link_title' => 'Text formats',
+    'parent' => 'system.admin.config.content',
+    'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
+    'route_name' => 'filter.admin_overview',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_permission().
  */
 function filter_permission() {

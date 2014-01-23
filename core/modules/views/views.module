@@ -316,6 +316,23 @@ function views_menu_alter(&$callbacks) {
 }
 
 /**
+ * Implements hook_menu_link_defaults_alter().
+ */
+function views_menu_link_defaults_alter(array &$links) {
+  // @todo Decide what to do with all the crazy logic in views_menu_alter() in
+  // https://drupal.org/node/2107533.
+  $views = Views::getApplicableViews('uses_hook_menu');
+  foreach ($views as $data) {
+    /** @var \Drupal\views\ViewExecutable $view */
+    list($view, $display_id) = $data;
+    $result = $view->executeHookDefaultMenuLinks($display_id, $links);
+    foreach ($result as $link_id => $link) {
+      $links[$link_id] = $link;
+    }
+  }
+}
+
+/**
  * Implements hook_page_alter().
  */
 function views_page_alter(&$page) {

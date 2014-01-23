@@ -2137,6 +2137,14 @@ function template_preprocess_html(&$variables) {
       'name' => String::checkPlain($site_config->get('name')),
     );
   }
+  // @todo Remove once views is not bypassing the view subscriber anymore.
+  //   @see http://drupal.org/node/2068471
+  elseif (drupal_is_front_page()) {
+    $head_title = array(
+      'title' => t('Home'),
+      'name' => String::checkPlain($site_config->get('name')),
+    );
+  }
   else {
     $head_title = array('name' => String::checkPlain($site_config->get('name')));
     if ($site_config->get('slogan')) {

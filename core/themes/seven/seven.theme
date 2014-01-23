@@ -121,7 +121,7 @@ function seven_admin_block_content($variables) {
       if (isset($item['description']) && !system_admin_compact_mode()) {
         $content .= '<div class="description">' . filter_xss_admin($item['description']) . '</div>';
       }
-      $output .= l($content, $item['href'], $options);
+      $output .= l($content, $item['link_path'], $options);
       $output .= '</li>';
     }
     $output .= '</ul>';

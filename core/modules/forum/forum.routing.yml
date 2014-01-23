@@ -26,6 +26,7 @@ forum.page:
   path: '/forum/{taxonomy_term}'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::forumPage'
+    _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
   requirements:
     _permission: 'access content'
 

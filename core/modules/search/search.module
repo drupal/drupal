@@ -168,6 +168,26 @@ function search_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function search_menu_link_defaults() {
+  $links['search'] = array(
+    'link_title' => 'Search',
+    'route_name' => 'search.view',
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  $links['search.admin.settings'] = array(
+    'link_title' => 'Search settings',
+    'parent' => 'system.admin.config.search',
+    'description' => 'Configure relevance settings for search and other indexing options.',
+    'route_name' => 'search.settings',
+    'weight' => -10,
+  );
+
+  return $links;
+}
+
+/**
  * Clears either a part of, or the entire search index.
  *
  * @param $sid

@@ -272,6 +272,70 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function executeHookDefaultMenuLinks(array &$existing_links) {
+    $links = array();
+
+    // Replace % with the link to our standard views argument loader
+    // views_arg_load -- which lives in views.module.
+
+    $bits = explode('/', $this->getOption('path'));
+    $page_arguments = array($this->view->storage->id(), $this->display['id']);
+    $this->view->initHandlers();
+    $view_arguments = $this->view->argument;
+
+    // Replace % with %views_arg for menu autoloading and add to the
+    // page arguments so the argument actually comes through.
+    foreach ($bits as $pos => $bit) {
+      if ($bit == '%') {
+        // If a view requires any arguments we cannot create a static menu link.
+        return array();
+      }
+    }
+
+    $view_route_names = $this->state->get('views.view_route_names') ?: array();
+
+    $path = implode('/', $bits);
+    $menu_link_id = 'views.' . str_replace('/', '.', $path);
+    $links[$menu_link_id] = array();
+
+    if ($path) {
+      // Some views might override existing paths, so we have to set the route
+      // name based upon the altering.
+      $view_id_display =  "{$this->view->storage->id()}.{$this->display['id']}";
+      $links[$menu_link_id] = array(
+        'route_name' => isset($view_route_names[$view_id_display]) ? $view_route_names[$view_id_display] : "view.$view_id_display",
+        // Identify URL embedded arguments and correlate them to a handler.
+        'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
+      );
+
+      $menu = $this->getOption('menu');
+      if (empty($menu)) {
+        $menu = array('type' => 'none');
+      }
+      // Set the title and description if we have one.
+      if ($menu['type'] != 'none') {
+        $links[$menu_link_id]['link_title'] = $menu['title'];
+        $links[$menu_link_id]['description'] = $menu['description'];
+      }
+
+      if (isset($menu['weight'])) {
+        $links[$menu_link_id]['weight'] = intval($menu['weight']);
+      }
+
+      switch ($menu['type']) {
+        case 'normal':
+          // Insert item into the proper menu.
+          $links[$menu_link_id]['menu_name'] = $menu['name'];
+          break;
+      }
+    }
+
+    return $links;
+  }
+
+  /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::executeHookMenu().
    */
   public function executeHookMenu($callbacks) {

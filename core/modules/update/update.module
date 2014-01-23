@@ -178,6 +178,21 @@ function update_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function update_menu_link_defaults() {
+  $links['update.admin.reports.updates'] = array(
+    'link_title' => 'Available updates',
+    'description' => 'Get a status report about available updates for your installed modules and themes.',
+    'route_name' => 'update.status',
+    'parent' => 'system.admin.reports',
+    'weight' => -50,
+  );
+
+  return $links;
+}
+
+/**
  * Access callback: Resolves if the current user can access updater menu items.
  *
  * It both enforces the 'administer software updates' permission and the global

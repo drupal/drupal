@@ -25,6 +25,21 @@ function help_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function help_menu_link_defaults() {
+  $links['help.main'] = array(
+    'link_title' => 'Help',
+    'description' => 'Reference for usage, configuration, and modules.',
+    'route_name' => 'help.main',
+    'weight' => 9,
+    'parent' => 'system.admin',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_help().
  */
 function help_help($path, $arg) {

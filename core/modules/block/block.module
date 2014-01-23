@@ -117,6 +117,20 @@ function block_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function block_menu_link_defaults() {
+  $links['block.admin.structure'] = array(
+    'link_title' => 'Blocks',
+    'parent' => 'system.admin.structure',
+    'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
+    'route_name' => 'block.admin_display',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_page_build().
  *
  * Renders blocks into their regions.

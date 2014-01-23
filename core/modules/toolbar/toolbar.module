@@ -489,7 +489,7 @@ function toolbar_get_rendered_subtrees() {
         $subtree = '';
       }
 
-      $id = str_replace(array('/', '<', '>'), array('-', '', ''), $item['href']);
+      $id = str_replace(array('/', '<', '>'), array('-', '', ''), $item['link_path']);
       $subtrees[$id] = $subtree;
     }
   }

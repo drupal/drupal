@@ -294,6 +294,15 @@ function content_translation_menu_alter(array &$items) {
 }
 
 /**
+ * Implements hook_menu_link_defaults_alter().
+ */
+function content_translation_menu_link_defaults_alter(array &$links) {
+  // Clarify where translation settings are located.
+  $items['admin.config.regional.language.content_settings_page']['link_title'] = 'Content language and translation';
+  $items['admin.config.regional.language.content_settings_page']['description'] = 'Configure language and translation support for content.';
+}
+
+/**
  * Convert an entity canonical link to a router path.
  *
  * @param string $link

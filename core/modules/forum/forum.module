@@ -132,6 +132,24 @@ function forum_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function forum_menu_link_defaults() {
+  $items['forum'] = array(
+    'link_title' => 'Forums',
+    'route_name' => 'forum.index',
+    'menu_name' => 'tools',
+  );
+  $items['forum.admin.overview'] = array(
+    'link_title' => 'Forums',
+    'parent' => 'system.admin.structure',
+    'description' => 'Control forum hierarchy settings.',
+    'route_name' => 'forum.overview',
+  );
+  return $items;
+}
+
+/**
  * Implements hook_menu_local_tasks().
  */
 function forum_menu_local_tasks(&$data, $route_name) {
