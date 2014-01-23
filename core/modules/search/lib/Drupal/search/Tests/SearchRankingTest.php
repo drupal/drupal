@@ -7,6 +7,9 @@
 
 namespace Drupal\search\Tests;
 
+/**
+ * Indexes content and tests ranking factors.
+ */
 class SearchRankingTest extends SearchTestBase {
 
   /**

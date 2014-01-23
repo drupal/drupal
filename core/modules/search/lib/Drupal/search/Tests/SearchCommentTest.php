@@ -28,7 +28,7 @@ class SearchCommentTest extends SearchTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Comment Search tests',
-      'description' => 'Verify text formats and filters used elsewhere.',
+      'description' => 'Test integration searching comments.',
       'group' => 'Search',
     );
   }

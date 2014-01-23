@@ -9,6 +9,9 @@ namespace Drupal\search\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Defines the common search test code.
+ */
 abstract class SearchTestBase extends WebTestBase {
 
   /**

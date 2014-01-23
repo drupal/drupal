@@ -7,7 +7,7 @@
 namespace Drupal\search\Tests;
 
 /**
- * Test search_simplify() on every Unicode character, and some other cases.
+ * Tests that the search prepocessing uses the correct language code.
  */
 class SearchPreprocessLangcodeTest extends SearchTestBase {
 
@@ -21,7 +21,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Search preprocess langcode',
-      'description' => 'Check that the hook_search_preprocess passes the correct langcode from the entity.',
+      'description' => 'Tests that the search prepocessing uses the correct language code.',
       'group' => 'Search',
     );
   }

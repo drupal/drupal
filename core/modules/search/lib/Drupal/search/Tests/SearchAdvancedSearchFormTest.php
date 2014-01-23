@@ -7,6 +7,9 @@
 
 namespace Drupal\search\Tests;
 
+/**
+ * Indexes content and tests the advanced search form.
+ */
 class SearchAdvancedSearchFormTest extends SearchTestBase {
   protected $node;
 

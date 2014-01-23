@@ -15,6 +15,9 @@ const SEARCH_TYPE = '_test_';
 const SEARCH_TYPE_2 = '_test2_';
 const SEARCH_TYPE_JPN = '_test3_';
 
+/**
+ * Indexes content and queries it.
+ */
 class SearchMatchTest extends SearchTestBase {
   public static function getInfo() {
     return array(
