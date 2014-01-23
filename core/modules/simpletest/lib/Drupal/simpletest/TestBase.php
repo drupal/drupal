@@ -1204,9 +1204,8 @@ abstract class TestBase {
       'line' => $exception->getLine(),
       'file' => $exception->getFile(),
     ));
-    // The exception message is run through
-    // \Drupal\Component\Utility\checkPlain() by
-    // \Drupal\Core\Utility\decodeException().
+    // \Drupal\Core\Utility\Error::decodeException() runs the exception
+    // message through \Drupal\Component\Utility\String::checkPlain().
     $decoded_exception = Error::decodeException($exception);
     unset($decoded_exception['backtrace']);
     $message = format_string('%type: !message in %function (line %line of %file). <pre class="backtrace">!backtrace</pre>', $decoded_exception + array(
