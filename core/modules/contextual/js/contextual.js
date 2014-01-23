@@ -55,7 +55,7 @@ function initContextual ($contextual, html) {
     .prepend(Drupal.theme('contextualTrigger'));
 
   // Set the destination parameter on each of the contextual links.
-  var destination = 'destination=' + Drupal.encodePath(drupalSettings.currentPath);
+  var destination = 'destination=' + Drupal.encodePath(drupalSettings.path.currentPath);
   $contextual.find('.contextual-links a').each(function () {
     var url = this.getAttribute('href');
     var glue = (url.indexOf('?') === -1) ? '?' : '&';

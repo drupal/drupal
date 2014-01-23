@@ -1194,6 +1194,19 @@ function template_preprocess_status_messages(&$variables) {
  *     l() as its $options parameter.
  *   - attributes: A keyed array of attributes for the UL containing the
  *     list of links.
+ *   - set_active_class: (optional) Whether theme_links() should compare the
+ *     route_name + route_parameters or href (path), language and query options
+ *     to the current URL for each of the links, to determine whether the link
+ *     is "active". If so, an "active" class will be applied to the list item
+ *     containing the link, as well as the link itself. It is important to use
+ *     this sparingly since it is usually unnecessary and requires extra
+ *     processing.
+ *     For anonymous users, the "active" class will be calculated on the server,
+ *     because most sites serve each anonymous user the same cached page anyway.
+ *     For authenticated users, the "active" class will be calculated on the
+ *     client (through JavaScript), only data- attributes are added to list
+ *     items and contained links, to prevent breaking the render cache. The
+ *     JavaScript is added in system_page_build().
  *   - heading: (optional) A heading to precede the links. May be an
  *     associative array or a string. If it's an array, it can have the
  *     following elements:
@@ -1209,6 +1222,19 @@ function template_preprocess_status_messages(&$variables) {
  *     navigate to or skip the links. See
  *     http://juicystudio.com/article/screen-readers-display-none.php and
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
+ *
+ * theme_links() unfortunately duplicates the "active" class handling of l() and
+ * LinkGenerator::generate() because it needs to be able to set the "active"
+ * class not on the links themselves ("a" tags), but on the list items ("li"
+ * tags) that contain the links. This is necessary for CSS to be able to style
+ * list items differently when the link is active, since CSS does not yet allow
+ * one to style list items only if it contains a certain element with a certain
+ * class. I.e. we cannot yet convert this jQuery selector to a CSS selector:
+ *   jQuery('li:has("a.active")')
+ *
+ * @see l()
+ * @see \Drupal\Core\Utility\LinkGenerator::generate()
+ * @see system_page_build()
  */
 function theme_links($variables) {
   $links = $variables['links'];
@@ -1240,9 +1266,6 @@ function theme_links($variables) {
 
     $output .= '<ul' . new Attribute($attributes) . '>';
 
-    $active = \Drupal::linkGenerator()->getActive();
-    $language_url = \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_URL);
-
     foreach ($links as $key => $link) {
       $link += array(
         'href' => NULL,
@@ -1251,9 +1274,9 @@ function theme_links($variables) {
         'ajax' => NULL,
       );
 
-      $class = array();
+      $li_attributes = array('class' => array());
       // Use the array key as class name.
-      $class[] = drupal_html_class($key);
+      $li_attributes['class'][] = drupal_html_class($key);
 
       $link_element = array(
         '#type' => 'link',
@@ -1265,30 +1288,38 @@ function theme_links($variables) {
         '#ajax' => $link['ajax'],
       );
 
-      // Handle links and ensure that the active class is added on the LIs.
-      if (isset($link['route_name'])) {
-        $variables = array(
-          'options' => array(),
-        );
-        if (!empty($link['language'])) {
-          $variables['options']['language'] = $link['language'];
+      // Handle links and ensure that the active class is added on the LIs, but
+      // only if the 'set_active_class' option is not empty.
+      if (isset($link['href']) || isset($link['route_name'])) {
+        if (!empty($variables['set_active_class'])) {
+
+          // Also enable set_active_class for the contained link.
+          $link_element['#options']['set_active_class'] = TRUE;
+
+          if (!empty($link['language'])) {
+            $li_attributes['hreflang'] = $link['language']->id;
+          }
+
+          // Add a "data-drupal-link-query" attribute to let the
+          // drupal.active-link library know the query in a standardized manner.
+          if (!empty($link['query'])) {
+            $query = $link['query'];
+            ksort($query);
+            $li_attributes['data-drupal-link-query'] = Json::encode($query);
+          }
+
+          if (isset($link['route_name'])) {
+            $path = \Drupal::service('url_generator')->getPathFromRoute($link['route_name'], $link['route_parameters']);
+          }
+          else {
+            $path = $link['href'];
+          }
+
+          // Add a "data-drupal-link-system-path" attribute to let the
+          // drupal.active-link library know the path in a standardized manner.
+          $li_attributes['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager.cached')->getSystemPath($path);
         }
 
-        if (($link['route_name'] == $active['route_name'])
-        // The language of an active link is equal to the current language.
-        && (empty($variables['options']['language']) || ($variables['options']['language']->id == $active['language']))
-        && ($link['route_parameters'] == $active['parameters'])) {
-          $class[] = 'active';
-        }
-
-        $item = drupal_render($link_element);
-      }
-      elseif (isset($link['href'])) {
-        $is_current_path = ($link['href'] == current_path() || ($link['href'] == '<front>' && drupal_is_front_page()));
-        $is_current_language = (empty($link['language']) || $link['language']->id == $language_url->id);
-        if ($is_current_path && $is_current_language) {
-          $class[] = 'active';
-        }
         $item = drupal_render($link_element);
       }
       // Handle title-only text items.
@@ -1303,7 +1334,7 @@ function theme_links($variables) {
         }
       }
 
-      $output .= '<li' . new Attribute(array('class' => $class)) . '>';
+      $output .= '<li' . new Attribute($li_attributes) . '>';
       $output .= $item;
       $output .= '</li>';
     }
@@ -2227,7 +2258,8 @@ function template_preprocess_page(&$variables) {
       '#heading' => array(
         'text' => t('Main menu'),
         'class' => array('visually-hidden'),
-      )
+      ),
+      '#set_active_class' => TRUE,
     );
   }
   if (!empty($variables['secondary_menu'])) {
@@ -2237,7 +2269,8 @@ function template_preprocess_page(&$variables) {
       '#heading' => array(
         'text' => t('Secondary menu'),
         'class' => array('visually-hidden'),
-      )
+      ),
+      '#set_active_class' => TRUE,
     );
   }
 
@@ -2567,7 +2600,7 @@ function drupal_common_theme() {
       'template' => 'status-messages',
     ),
     'links' => array(
-      'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),
+      'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array(), 'set_active_class' => FALSE),
     ),
     'dropbutton_wrapper' => array(
       'variables' => array('children' => NULL),

@@ -144,7 +144,7 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
 
     delete this.formSaveAjax;
     // Allow form widgets to detach properly.
-    Drupal.detachBehaviors(this.$formContainer, null, 'unload');
+    Drupal.detachBehaviors(this.$formContainer.get(0), null, 'unload');
     this.$formContainer
       .off('change.edit', ':input')
       .off('keypress.edit', 'input')

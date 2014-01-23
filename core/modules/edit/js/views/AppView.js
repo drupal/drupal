@@ -448,7 +448,7 @@ Drupal.edit.AppView = Backbone.View.extend({
       // Attach behaviors again to the modified piece of HTML; this will
       // create a new field model and call rerenderedFieldToCandidate() with
       // it.
-      Drupal.attachBehaviors($context);
+      Drupal.attachBehaviors($context.get(0));
     };
 
     // When propagating the changes of another instance of this field, this

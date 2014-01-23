@@ -12,7 +12,7 @@
 /**
  * Store the open menu tray.
  */
-var activeItem = drupalSettings.basePath + Drupal.encodePath(drupalSettings.currentPath);
+var activeItem = Drupal.url(drupalSettings.path.currentPath);
 
   $.fn.drupalToolbarMenu = function () {
 

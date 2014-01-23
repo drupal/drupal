@@ -94,7 +94,7 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations)
     $messages[] = t('An error occurred while processing @op with arguments:<br />@args', array('@op' => $error_operation[0], '@args' => print_r($error_operation[1], TRUE)));
   }
 
-  drupal_set_message(implode('<br />', $messages));
+  drupal_set_message(implode('<br>', $messages));
 }
 
 /**

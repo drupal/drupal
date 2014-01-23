@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -327,6 +328,129 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
   public function themeSetDefault() {
     module_load_include('admin.inc', 'system');
     return system_theme_default();
+  }
+
+  /**
+   * #post_render_cache callback; sets the "active" class on relevant links.
+   *
+   * This is a PHP implementation of the drupal.active-link JavaScript library.
+   *
+   * @param array $element
+   *  A renderable array with the following keys:
+   *    - #markup
+   *    - #attached
+   * @param array $context
+   *   An array with the following keys:
+   *   - path: the system path of the currently active page
+   *   - front: whether the current page is the front page (which implies the
+   *     current path might also be <front>)
+   *   - language: the language code of the currently active page
+   *   - query: the query string for the currently active page
+   *
+   * @return array
+   *   The updated renderable array.
+   *
+   * @todo Once a future version of PHP supports parsing HTML5 properly
+   *   (i.e. doesn't fail on https://drupal.org/comment/7938201#comment-7938201)
+   *   then we can get rid of this manual parsing and use DOMDocument instead.
+   */
+  public static function setLinkActiveClass(array $element, array $context) {
+    $search_key_current_path = 'data-drupal-link-system-path="' . $context['path'] . '"';
+    $search_key_front = 'data-drupal-link-system-path="&lt;front&gt;"';
+
+    // An active link's path is equal to the current path, so search the HTML
+    // for an attribute with that value.
+    $offset = 0;
+    while ((strpos($element['#markup'], 'data-drupal-link-system-path="' . $context['path'] . '"', $offset) !== FALSE || ($context['front'] && strpos($element['#markup'], 'data-drupal-link-system-path="&lt;front&gt;"', $offset) !== FALSE))) {
+      $pos_current_path = strpos($element['#markup'], $search_key_current_path, $offset);
+      $pos_front = strpos($element['#markup'], $search_key_front, $offset);
+
+      // Determine which of the two values matched: the exact path, or the
+      // <front> special case.
+      $pos_match = NULL;
+      $type_match = NULL;
+      if ($pos_current_path !== FALSE) {
+        $pos_match = $pos_current_path;
+        $type_match = 'path';
+      }
+      elseif ($context['front'] && $pos_front !== FALSE) {
+        $pos_match = $pos_front;
+        $type_match = 'front';
+      }
+
+      // Find beginning and ending of opening tag.
+      $pos_tag_start = NULL;
+      for ($i = $pos_match; $pos_tag_start === NULL && $i > 0; $i--) {
+        if ($element['#markup'][$i] === '<') {
+          $pos_tag_start = $i;
+        }
+      }
+      $pos_tag_end = NULL;
+      for ($i = $pos_match; $pos_tag_end === NULL && $i < strlen($element['#markup']); $i++) {
+        if ($element['#markup'][$i] === '>') {
+          $pos_tag_end = $i;
+        }
+      }
+
+      // Get the HTML: this will be the opening part of a single tag, e.g.:
+      //   <a href="/" data-drupal-link-system-path="&lt;front&gt;">
+      $tag = substr($element['#markup'], $pos_tag_start, $pos_tag_end - $pos_tag_start + 1);
+
+      // Parse it into a DOMDocument so we can reliably read and modify
+      // attributes.
+      $dom = new \DOMDocument();
+      @$dom->loadHTML('<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $tag . '</body></html>');
+      $node = $dom->getElementsByTagName('body')->item(0)->firstChild;
+
+      // The language of an active link is equal to the current language.
+      $is_active = TRUE;
+      if ($context['language']) {
+        if ($node->hasAttribute('hreflang') && $node->getAttribute('hreflang') !== $context['language']) {
+          $is_active = FALSE;
+        }
+      }
+      // The query parameters of an active link are equal to the current
+      // parameters.
+      if ($is_active) {
+        if ($context['query']) {
+          if (!$node->hasAttribute('data-drupal-link-query') || $node->getAttribute('data-drupal-link-query') !== Json::encode($context['query'])) {
+            $is_active = FALSE;
+          }
+        }
+        else {
+          if ($node->hasAttribute('data-drupal-link-query')) {
+            $is_active = FALSE;
+          }
+        }
+      }
+
+      // Only if the the path, the language and the query match, we set the
+      // "active" class.
+      if ($is_active) {
+        $class = $node->getAttribute('class');
+        if (strlen($class) > 0) {
+          $class .= ' ';
+        }
+        $class .= 'active';
+        $node->setAttribute('class', $class);
+
+        // Get the updated tag.
+        $updated_tag = $dom->saveXML($node, LIBXML_NOEMPTYTAG);
+        // saveXML() added a closing tag, remove it.
+        $updated_tag = substr($updated_tag, 0, strrpos($updated_tag, '<'));
+
+        $element['#markup'] = str_replace($tag, $updated_tag, $element['#markup']);
+
+        // Ensure we only search the remaining HTML.
+        $offset = $pos_tag_end - strlen($tag) + strlen($updated_tag);
+      }
+      else {
+        // Ensure we only search the remaining HTML.
+        $offset = $pos_tag_end + 1;
+      }
+    }
+
+    return $element;
   }
 
 }

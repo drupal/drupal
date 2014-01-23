@@ -180,7 +180,7 @@ Drupal.ajax = function (base, element, element_settings) {
   // If there isn't a form, jQuery.ajax() will be used instead, allowing us to
   // bind Ajax to links as well.
   if (this.element.form) {
-    this.form = $(this.element.form);
+    this.$form = $(this.element.form);
   }
 
   // If no Ajax callback URL was given, use the link href or form action.
@@ -189,7 +189,7 @@ Drupal.ajax = function (base, element, element_settings) {
       this.url = $(element).attr('href');
     }
     else if (element.form) {
-      this.url = this.form.attr('action');
+      this.url = this.$form.attr('action');
 
       // @todo If there's a file input on this form, then jQuery will submit the
       //   AJAX response with a hidden Iframe rather than the XHR object. If the
@@ -200,7 +200,7 @@ Drupal.ajax = function (base, element, element_settings) {
       //   elements that submit to the same URL as the form when there's a file
       //   input. For example, this means the Delete button on the edit form of
       //   an Article node doesn't open its confirmation form in a dialog.
-      if (this.form.find(':file').length) {
+      if (this.$form.find(':file').length) {
         return;
       }
     }
@@ -327,7 +327,7 @@ Drupal.ajax.prototype.eventResponse = function (element, event) {
   }
 
   try {
-    if (ajax.form) {
+    if (ajax.$form) {
       // If setClick is set, we must set this to ensure that the button's
       // value is passed.
       if (ajax.setClick) {
@@ -338,7 +338,7 @@ Drupal.ajax.prototype.eventResponse = function (element, event) {
         element.form.clk = element;
       }
 
-      ajax.form.ajaxSubmit(ajax.options);
+      ajax.$form.ajaxSubmit(ajax.options);
     }
     else {
       ajax.beforeSerialize(ajax.element, ajax.options);
@@ -362,12 +362,12 @@ Drupal.ajax.prototype.eventResponse = function (element, event) {
 Drupal.ajax.prototype.beforeSerialize = function (element, options) {
   // Allow detaching behaviors to update field values before collecting them.
   // This is only needed when field values are added to the POST data, so only
-  // when there is a form such that this.form.ajaxSubmit() is used instead of
+  // when there is a form such that this.$form.ajaxSubmit() is used instead of
   // $.ajax(). When there is no form and $.ajax() is used, beforeSerialize()
-  // isn't called, but don't rely on that: explicitly check this.form.
-  if (this.form) {
+  // isn't called, but don't rely on that: explicitly check this.$form.
+  if (this.$form) {
     var settings = this.settings || drupalSettings;
-    Drupal.detachBehaviors(this.form, settings, 'serialize');
+    Drupal.detachBehaviors(this.$form.get(0), settings, 'serialize');
   }
 
   // Prevent duplicate HTML ids in the returned markup.
@@ -421,7 +421,7 @@ Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
   // to the form to submit the values in options.extraData. There is no simple
   // way to know which submission mechanism will be used, so we add to extraData
   // regardless, and allow it to be ignored in the former case.
-  if (this.form) {
+  if (this.$form) {
     options.extraData = options.extraData || {};
 
     // Let the server know when the IFRAME submission mechanism is used. The
@@ -491,9 +491,9 @@ Drupal.ajax.prototype.success = function (response, status) {
   // attachBehaviors() called on the new content from processing the response
   // commands is not sufficient, because behaviors from the entire form need
   // to be reattached.
-  if (this.form) {
+  if (this.$form) {
     var settings = this.settings || drupalSettings;
-    Drupal.attachBehaviors(this.form, settings);
+    Drupal.attachBehaviors(this.$form.get(0), settings);
   }
 
   // Remove any response-specific settings so they don't get used on the next
@@ -544,9 +544,9 @@ Drupal.ajax.prototype.error = function (response, uri) {
   // Re-enable the element.
   $(this.element).removeClass('progress-disabled').prop('disabled', false);
   // Reattach behaviors, if they were detached in beforeSerialize().
-  if (this.form) {
+  if (this.$form) {
     var settings = response.settings || this.settings || drupalSettings;
-    Drupal.attachBehaviors(this.form, settings);
+    Drupal.attachBehaviors(this.$form.get(0), settings);
   }
   throw new Drupal.AjaxError(response, uri);
 };
@@ -597,7 +597,7 @@ Drupal.AjaxCommands.prototype = {
       case 'empty':
       case 'remove':
         settings = response.settings || ajax.settings || drupalSettings;
-        Drupal.detachBehaviors(wrapper, settings);
+        Drupal.detachBehaviors(wrapper.get(0), settings);
     }
 
     // Add the new content to the page.
@@ -625,7 +625,7 @@ Drupal.AjaxCommands.prototype = {
     if (new_content.parents('html').length > 0) {
       // Apply any settings from the returned JSON if available.
       settings = response.settings || ajax.settings || drupalSettings;
-      Drupal.attachBehaviors(new_content, settings);
+      Drupal.attachBehaviors(new_content.get(0), settings);
     }
   },
 
@@ -634,8 +634,10 @@ Drupal.AjaxCommands.prototype = {
    */
   remove: function (ajax, response, status) {
     var settings = response.settings || ajax.settings || drupalSettings;
-    Drupal.detachBehaviors($(response.selector), settings);
-    $(response.selector).remove();
+    $(response.selector).each(function() {
+      Drupal.detachBehaviors(this, settings);
+    })
+    .remove();
   },
 
   /**

@@ -1214,12 +1214,24 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *     internal to the site, $options['language'] is used to determine whether
  *     the link is "active", or pointing to the current page (the language as
  *     well as the path must match). This element is also used by url().
+ *   - 'set_active_class': Whether l() should compare the $path, language and
+ *     query options to the current URL to determine whether the link is
+ *     "active". Defaults to FALSE. If TRUE, an "active" class will be applied
+ *     to the link. It is important to use this sparingly since it is usually
+ *     unnecessary and requires extra processing.
+ *     For anonymous users, the "active" class will be calculated on the server,
+ *     because most sites serve each anonymous user the same cached page anyway.
+ *     For authenticated users, the "active" class will be calculated on the
+ *     client (through JavaScript), only data- attributes are added to links to
+ *     prevent breaking the render cache. The JavaScript is added in
+ *     system_page_build().
  *   - Additional $options elements used by the url() function.
  *
  * @return string
  *   An HTML string containing a link to the given path.
  *
  * @see url()
+ * @see system_page_build()
  */
 function l($text, $path, array $options = array()) {
   // Start building a structured representation of our link to be altered later.
@@ -1235,6 +1247,7 @@ function l($text, $path, array $options = array()) {
     'query' => array(),
     'html' => FALSE,
     'language' => NULL,
+    'set_active_class' => FALSE,
   );
 
   // Add a hreflang attribute if we know the language of this link's url and
@@ -1243,35 +1256,21 @@ function l($text, $path, array $options = array()) {
     $variables['options']['attributes']['hreflang'] = $variables['options']['language']->id;
   }
 
-  // Because l() is called very often we statically cache values that require an
-  // extra function call.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast['active'])) {
-    $drupal_static_fast['active'] = &drupal_static(__FUNCTION__);
-  }
-  $active = &$drupal_static_fast['active'];
-  if (!isset($active)) {
-    $active = array(
-      'path' => current_path(),
-      'front_page' => drupal_is_front_page(),
-      'language' => language(Language::TYPE_URL)->id,
-      'query' => \Drupal::service('request')->query->all(),
-    );
-  }
+  // Set the "active" class if the 'set_active_class' option is not empty.
+  if (!empty($variables['options']['set_active_class'])) {
+    // Add a "data-drupal-link-query" attribute to let the drupal.active-link
+    // library know the query in a standardized manner.
+    if (!empty($variables['options']['query'])) {
+      $query = $variables['options']['query'];
+      ksort($query);
+      $variables['options']['attributes']['data-drupal-link-query'] = Json::encode($query);
+    }
 
-  // Determine whether this link is "active', meaning that it links to the
-  // current page. It is important that we stop checking "active" conditions if
-  // we know the link is not active. This helps ensure that l() remains fast.
-  // An active link's path is equal to the current path.
-  $variables['url_is_active'] = ($path == $active['path'] || ($path == '<front>' && $active['front_page']))
-  // The language of an active link is equal to the current language.
-  && (empty($variables['options']['language']) || $variables['options']['language']->id == $active['language'])
-  // The query parameters of an active link are equal to the current parameters.
-  && ($variables['options']['query'] == $active['query']);
-
-  // Add the "active" class if appropriate.
-  if ($variables['url_is_active']) {
-    $variables['options']['attributes']['class'][] = 'active';
+    // Add a "data-drupal-link-system-path" attribute to let the
+    // drupal.active-link library know the path in a standardized manner.
+    if (!isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
+      $variables['options']['attributes']['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager.cached')->getSystemPath($path);
+    }
   }
 
   // Remove all HTML and PHP tags from a tooltip, calling expensive strip_tags()
@@ -2149,6 +2148,7 @@ function _drupal_add_js($data = NULL, $options = NULL) {
           // @todo Make this less hacky: http://drupal.org/node/1547376.
           $scriptPath = $GLOBALS['script_path'];
           $pathPrefix = '';
+          $current_query = \Drupal::service('request')->query->all();
           url('', array('script' => &$scriptPath, 'prefix' => &$pathPrefix));
           $current_path = current_path();
           $current_path_is_admin = FALSE;
@@ -2156,13 +2156,20 @@ function _drupal_add_js($data = NULL, $options = NULL) {
           if (!(defined('MAINTENANCE_MODE') && MAINTENANCE_MODE === 'update')) {
             $current_path_is_admin = path_is_admin($current_path);
           }
-          $javascript['settings']['data'][] = array(
+          $path = array(
             'basePath' => base_path(),
             'scriptPath' => $scriptPath,
             'pathPrefix' => $pathPrefix,
             'currentPath' => $current_path,
             'currentPathIsAdmin' => $current_path_is_admin,
+            'isFront' => drupal_is_front_page(),
+            'currentLanguage' => \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_URL)->id,
           );
+          if (!empty($current_query)) {
+            ksort($current_query);
+            $path['currentQuery'] = (object) $current_query;
+          }
+          $javascript['settings']['data'][] = array('path' => $path);
         }
         // All JavaScript settings are placed in the header of the page with
         // the library weight so that inline scripts appear afterwards.

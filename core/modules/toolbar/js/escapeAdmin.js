@@ -7,7 +7,7 @@
 
 "use strict";
 
-var pathInfo = drupalSettings;
+var pathInfo = drupalSettings.path;
 var escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
 
 // Saves the last non-administrative page in the browser to be able to link back

@@ -888,6 +888,20 @@ function system_library_info() {
     ),
   );
 
+  // Drupal's active link marking.
+  $libraries['drupal.active-link'] = array(
+    'title' => 'Drupal active link marking',
+    'version' => \Drupal::VERSION,
+    'js' => array(
+      'core/misc/active-link.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'classList'),
+    ),
+  );
+
   // Drupal's Ajax framework.
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
@@ -1132,6 +1146,20 @@ function system_library_info() {
     'version' => 'master',
     'js' => array(
       'core/assets/vendor/domready/ready.min.js' => array('group' => JS_LIBRARY, 'weight' => -21),
+    ),
+  );
+
+  // IE9 classList polyfill.
+  $libraries['classList'] = array(
+    'title' => 'classList.js',
+    'website' => 'https://github.com/eligrey/classList.js',
+    'version' => 'master',
+    'js' => array(
+      'core/assets/vendor/classList/classList.min.js' => array(
+        'group' => JS_LIBRARY,
+        'weight' => -21,
+        'browsers' => array('IE' => 'lte IE 9', '!IE' => FALSE),
+      ),
     ),
   );
 
@@ -2101,6 +2129,7 @@ function system_filetransfer_info() {
  * Implements hook_page_build().
  *
  * @see template_preprocess_maintenance_page()
+ * @see \Drupal\system\Controller\SystemController::setLinkActiveClass()
  */
 function system_page_build(&$page) {
   // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
@@ -2118,6 +2147,28 @@ function system_page_build(&$page) {
   if (path_is_admin(current_path())) {
     $page['#attached']['css'][$path . '/css/system.admin.css'] = array(
       'weight' => CSS_COMPONENT - 10,
+    );
+  }
+
+  // Handle setting the "active" class on links by:
+  // - loading the active-link library if the current user is authenticated;
+  // - applying a post-render cache callback if the current user is anonymous.
+  // @see l()
+  // @see \Drupal\Core\Utility\LinkGenerator::generate()
+  // @see theme_links()
+  // @see \Drupal\system\Controller\SystemController::setLinkActiveClass
+  if (\Drupal::currentUser()->isAuthenticated()) {
+    $page['#attached']['library'][] = array('system', 'drupal.active-link');
+  }
+  else {
+    $page['#post_render_cache']['\Drupal\system\Controller\SystemController::setLinkActiveClass'] = array(
+      // Collect the current state that determines whether a link is active.
+      array(
+        'path' => current_path(),
+        'front' => drupal_is_front_page(),
+        'language' => language(\Drupal\Core\Language\Language::TYPE_URL)->id,
+        'query' => \Drupal::service('request')->query->all(),
+      )
     );
   }
 }

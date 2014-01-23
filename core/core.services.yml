@@ -276,7 +276,7 @@ services:
       - [setContext, ['@?router.request_context']]
   link_generator:
     class: Drupal\Core\Utility\LinkGenerator
-    arguments: ['@url_generator', '@module_handler', '@language_manager']
+    arguments: ['@url_generator', '@module_handler', '@language_manager', '@path.alias_manager.cached']
     calls:
       - [setRequest, ['@?request']]
   router.dynamic:

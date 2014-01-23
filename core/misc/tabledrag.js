@@ -1069,9 +1069,15 @@ Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {
  *   DOM element what will be swapped with the row group.
  */
 Drupal.tableDrag.prototype.row.prototype.swap = function (position, row) {
-  Drupal.detachBehaviors(this.group, drupalSettings, 'move');
+  // Makes sure only DOM object are passed to Drupal.detachBehaviors().
+  this.group.forEach(function (row) {
+    Drupal.detachBehaviors(row, drupalSettings, 'move');
+  });
   $(row)[position](this.group);
-  Drupal.attachBehaviors(this.group, drupalSettings);
+  // Makes sure only DOM object are passed to Drupal.attachBehaviors()s.
+  this.group.forEach(function (row) {
+    Drupal.attachBehaviors(row, drupalSettings);
+  });
   this.changed = true;
   this.onSwap(row);
 };
