@@ -25,8 +25,8 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Base class for Drupal tests.
  *
- * Do not extend this class directly, use either
- * \Drupal\simpletest\WebTestBaseBase or \Drupal\simpletest\UnitTestBaseBase.
+ * Do not extend this class directly; use either
+ * \Drupal\simpletest\WebTestBase or \Drupal\simpletest\UnitTestBase.
  */
 abstract class TestBase {
   /**
