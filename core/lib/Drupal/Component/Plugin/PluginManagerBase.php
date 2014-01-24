@@ -7,7 +7,6 @@
 
 namespace Drupal\Component\Plugin;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 
 /**
@@ -35,15 +34,6 @@ abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscov
    * @var \Drupal\Component\Plugin\Mapper\MapperInterface
    */
   protected $mapper;
-
-  /**
-   * A set of defaults to be referenced by $this->processDefinition() if
-   * additional processing of plugins is necessary or helpful for development
-   * purposes.
-   *
-   * @var array
-   */
-  protected $defaults = array();
 
   /**
    * {@inheritdoc}
@@ -80,17 +70,6 @@ abstract class PluginManagerBase implements PluginManagerInterface, CachedDiscov
    */
   public function getInstance(array $options) {
     return $this->mapper->getInstance($options);
-  }
-
-  /**
-   * Performs extra processing on plugin definitions.
-   *
-   * By default we add defaults for the type to the definition. If a type has
-   * additional processing logic they can do that by replacing or extending the
-   * method.
-   */
-  public function processDefinition(&$definition, $plugin_id) {
-    $definition = NestedArray::mergeDeep($this->defaults, $definition);
   }
 
 }

@@ -90,6 +90,15 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $languageManager;
 
   /**
+   * A set of defaults to be referenced by $this->processDefinition() if
+   * additional processing of plugins is necessary or helpful for development
+   * purposes.
+   *
+   * @var array
+   */
+  protected $defaults = array();
+
+  /**
    * Creates the discovery object.
    *
    * @param string|bool $subdir
@@ -228,6 +237,20 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       $this->cacheBackend->set($this->cacheKey, $definitions, CacheBackendInterface::CACHE_PERMANENT, $this->cacheTags);
     }
     $this->definitions = $definitions;
+  }
+
+
+  /**
+   * Performs extra processing on plugin definitions.
+   *
+   * By default we add defaults for the type to the definition. If a type has
+   * additional processing logic they can do that by replacing or extending the
+   * method.
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    if (!empty($this->defaults) && is_array($this->defaults)) {
+      $definition = NestedArray::mergeDeep($this->defaults, $definition);
+    }
   }
 
   /**
