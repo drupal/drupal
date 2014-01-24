@@ -39,8 +39,7 @@ abstract class TwigTemplate extends \Twig_Template {
    * @return mixed
    *   The requested variable.
    */
-  final protected function getContextReference(&$context, $item)
-  {
+  protected function getContextReference(&$context, $item) {
     // Optimized version. NULL is a valid value for $context[$item], we only
     // want to error if it hasn't been defined at all.
     if (!isset($context[$item]) && !array_key_exists($item, $context)) {
