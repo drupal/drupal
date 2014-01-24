@@ -83,6 +83,16 @@ class UserPasswordResetTest extends WebTestBase {
     $this->assertLink(t('Log out'));
     $this->assertTitle(t('@name | @site', array('@name' => $this->account->getUsername(), '@site' => \Drupal::config('system.site')->get('name'))), 'Logged in using password reset link.');
 
+    // Change the forgotten password.
+    $password = user_password();
+    $edit = array('pass[pass1]' => $password, 'pass[pass2]' => $password);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertText(t('The changes have been saved.'), 'Forgotten password changed.');
+
+    // Verify that the password reset session has been destroyed.
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertText(t('Your current password is missing or incorrect; it\'s required to change the Password.'), 'Password needed to make profile changes.');
+
     // Log out, and try to log in again using the same one-time link.
     $this->drupalLogout();
     $this->drupalGet($resetURL);
@@ -92,7 +102,7 @@ class UserPasswordResetTest extends WebTestBase {
     $this->drupalGet('user/password');
     // Count email messages before to compare with after.
     $before = count($this->drupalGetMails(array('id' => 'user_password_reset')));
-    $edit['name'] = $this->account->getEmail();
+    $edit = array('name' => $this->account->getEmail());
     $this->drupalPostForm(NULL, $edit, t('E-mail new password'));
     $this->assertTrue( count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before + 1, 'E-mail sent when requesting password reset using e-mail address.');
 

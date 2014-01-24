@@ -289,7 +289,7 @@ abstract class AccountFormController extends ContentEntityFormController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::submit().
+   * {@inheritdoc}
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
@@ -354,4 +354,17 @@ abstract class AccountFormController extends ContentEntityFormController {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function submit(array $form, array &$form_state) {
+    parent::submit($form, $form_state);
+
+    $user = $this->getEntity($form_state);
+    // If there's a session set to the users id, remove the password reset tag
+    // since a new password was saved.
+    if (isset($_SESSION['pass_reset_'. $user->id()])) {
+      unset($_SESSION['pass_reset_'. $user->id()]);
+    }
+  }
 }
