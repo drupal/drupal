@@ -133,10 +133,88 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     list($view, $executable) = $this->setupValidMocks();
 
+    $display_handler = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    // Ensure that the pager element is not set.
+    $display_handler->expects($this->never())
+      ->method('setOption');
+
+    $display_bag = $this->getMockBuilder('Drupal\views\DisplayBag')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $display_bag->expects($this->any())
+      ->method('get')
+      ->with('page_1')
+      ->will($this->returnValue($display_handler));
+
+    $executable->displayHandlers = $display_bag;
+
     $response = $this->viewAjaxController->ajaxView($request);
     $this->assertTrue($response instanceof ViewAjaxResponse);
 
     $this->assertSame($response->getView(), $executable);
+
+    $this->assertViewResultCommand($response);
+  }
+
+  /**
+   * Tests a valid view with arguments.
+   */
+  public function testAjaxViewWithArguments() {
+    $request = new Request();
+    $request->request->set('view_name', 'test_view');
+    $request->request->set('view_display_id', 'page_1');
+    $request->request->set('view_args', 'arg1/arg2');
+
+    list($view, $executable) = $this->setupValidMocks();
+    $executable->expects($this->once())
+      ->method('preview')
+      ->with('page_1', array('arg1', 'arg2'));
+
+    $response = $this->viewAjaxController->ajaxView($request);
+    $this->assertTrue($response instanceof ViewAjaxResponse);
+
+    $this->assertViewResultCommand($response);
+  }
+
+  /**
+   * Tests a valid view with a pager.
+   */
+  public function testAjaxViewWithPager() {
+    $request = new Request();
+    $request->request->set('view_name', 'test_view');
+    $request->request->set('view_display_id', 'page_1');
+    $dom_id = $this->randomName(20);
+    $request->request->set('view_dom_id', $dom_id);
+    $request->request->set('pager_element', '0');
+
+    list($view, $executable) = $this->setupValidMocks();
+
+    $display_handler = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $display_handler->expects($this->once())
+      ->method('setOption', '0')
+      ->with($this->equalTo('pager_element'));
+
+    $display_bag = $this->getMockBuilder('Drupal\views\DisplayBag')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $display_bag->expects($this->any())
+      ->method('get')
+      ->with('page_1')
+      ->will($this->returnValue($display_handler));
+    $executable->displayHandlers = $display_bag;
+
+    $response = $this->viewAjaxController->ajaxView($request);
+    $this->assertTrue($response instanceof ViewAjaxResponse);
+
+    $commands = $this->getCommands($response);
+    $this->assertEquals('viewsScrollTop', $commands[0]['command']);
+    $this->assertEquals('.view-dom-id-' . $dom_id, $commands[0]['selector']);
+
+    $this->assertViewResultCommand($response, 1);
   }
 
   /**
@@ -168,6 +246,36 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->will($this->returnValue($executable));
 
     return array($view, $executable);
+  }
+
+  /**
+   * Gets the commands entry from the response object.
+   *
+   * @param \Drupal\views\Ajax\ViewAjaxResponse $response
+   *   The views ajax response object.
+   *
+   * @return mixed
+   *   Returns the commands.
+   */
+  protected function getCommands(ViewAjaxResponse $response) {
+    $reflection_property = new \ReflectionProperty('Drupal\views\Ajax\ViewAjaxResponse', 'commands');
+    $reflection_property->setAccessible(TRUE);
+    $commands = $reflection_property->getValue($response);
+    return $commands;
+  }
+
+  /**
+   * Ensures that the main view content command is added.
+   *
+   * @param \Drupal\views\Ajax\ViewAjaxResponse $response
+   *   The response object.
+   * @param int $position
+   *   The position where the view content command is expected.
+   */
+  protected function assertViewResultCommand(ViewAjaxResponse $response, $position = 0) {
+    $commands = $this->getCommands($response);
+    $this->assertEquals('insert', $commands[$position]['command']);
+    $this->assertEquals('View result', $commands[$position]['data']);
   }
 
 }
