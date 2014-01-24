@@ -610,6 +610,13 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
+  public function isLocked() {
+    return $this->locked;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDefaultValue(EntityInterface $entity) { }
 
   /**

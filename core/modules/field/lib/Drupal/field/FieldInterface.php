@@ -23,4 +23,12 @@ interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface
    */
   public function getBundles();
 
+  /**
+   * Returns whether the field is locked or not.
+   *
+   * @return bool
+   *   TRUE if the field is locked.
+   */
+  public function isLocked();
+
 }

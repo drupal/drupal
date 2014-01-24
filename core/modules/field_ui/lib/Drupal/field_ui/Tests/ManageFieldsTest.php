@@ -415,6 +415,8 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertFalse(in_array('edit', $edit_link), 'Edit option for locked field is not present the UI');
     $delete_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->name));
     $this->assertFalse(in_array('delete', $delete_link), 'Delete option for locked field is not present the UI');
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/node.' . $this->type . '.' . $field->name . '/delete');
+    $this->assertResponse(403);
   }
 
   /**

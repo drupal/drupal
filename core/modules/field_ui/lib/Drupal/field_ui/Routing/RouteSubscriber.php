@@ -68,7 +68,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           "$path/fields/{field_instance}/delete",
           array('_entity_form' => 'field_instance.delete'),
-          array('_permission' => 'administer ' . $entity_type . ' fields')
+          array('_field_ui_field_delete_access' => 'administer ' . $entity_type . ' fields')
         );
         $collection->add("field_ui.delete_$entity_type", $route);
 
