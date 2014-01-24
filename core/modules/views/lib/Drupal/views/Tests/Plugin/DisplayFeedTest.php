@@ -19,7 +19,7 @@ class DisplayFeedTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_feed_display');
+  public static $testViews = array('test_display_feed');
 
   /**
    * Modules to enable.
@@ -52,7 +52,7 @@ class DisplayFeedTest extends PluginTestBase {
     $this->drupalGet('admin/structure/views');
 
     // Check the attach TO interface.
-    $this->drupalGet('admin/structure/views/nojs/display/test_feed_display/feed_1/displays');
+    $this->drupalGet('admin/structure/views/nojs/display/test_display_feed/feed_1/displays');
 
     // Load all the options of the checkbox.
     $result = $this->xpath('//div[@id="edit-displays"]/div');
@@ -68,13 +68,13 @@ class DisplayFeedTest extends PluginTestBase {
     $this->assertEqual($options, array('default', 'page'), 'Make sure all displays appears as expected.');
 
     // Post and save this and check the output.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_feed_display/feed_1/displays', array('displays[page]' => 'page'), t('Apply'));
-    $this->drupalGet('admin/structure/views/view/test_feed_display/edit/feed_1');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_display_feed/feed_1/displays', array('displays[page]' => 'page'), t('Apply'));
+    $this->drupalGet('admin/structure/views/view/test_display_feed/edit/feed_1');
     $this->assertFieldByXpath('//*[@id="views-feed-1-displays"]', 'Page');
 
     // Add the default display, so there should now be multiple displays.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_feed_display/feed_1/displays', array('displays[default]' => 'default'), t('Apply'));
-    $this->drupalGet('admin/structure/views/view/test_feed_display/edit/feed_1');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_display_feed/feed_1/displays', array('displays[default]' => 'default'), t('Apply'));
+    $this->drupalGet('admin/structure/views/view/test_display_feed/edit/feed_1');
     $this->assertFieldByXpath('//*[@id="views-feed-1-displays"]', 'Multiple displays');
   }
 
@@ -92,14 +92,14 @@ class DisplayFeedTest extends PluginTestBase {
     $result = $this->xpath('//title');
     $this->assertEqual($result[0], $site_name, 'The site title is used for the feed title.');
 
-    $view = $this->container->get('entity.manager')->getStorageController('view')->load('test_feed_display');
+    $view = $this->container->get('entity.manager')->getStorageController('view')->load('test_display_feed');
     $display = &$view->getDisplay('feed_1');
     $display['display_options']['sitename_title'] = 0;
     $view->save();
 
     $this->drupalGet('test-feed-display.xml');
     $result = $this->xpath('//title');
-    $this->assertEqual($result[0], 'test_feed_display', 'The display title is used for the feed title.');
+    $this->assertEqual($result[0], 'test_display_feed', 'The display title is used for the feed title.');
   }
 
 }
