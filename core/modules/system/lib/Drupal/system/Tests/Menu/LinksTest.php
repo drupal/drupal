@@ -183,7 +183,7 @@ class LinksTest extends WebTestBase {
   }
 
   /**
-   * Tests automatic reparenting of menu links derived from hook_menu_link_defaults.
+   * Test automatic reparenting of menu links derived from menu routers.
    */
   function testMenuLinkRouterReparenting() {
     // Run all the standard parenting tests on menu links derived from
@@ -224,7 +224,8 @@ class LinksTest extends WebTestBase {
     $this->assertMenuLinkParents($links, $expected_hierarchy);
 
     // Now delete 'child-2' directly from the database, simulating a database
-    // crash. 'child-1-2' will get reparented to the top.
+    // crash. 'child-1-2' will get reparented under 'child-1' based on its
+    // path.
     // Don't do that at home.
     db_delete('menu_links')
       ->condition('mlid', $links['child-2']['mlid'])
@@ -232,7 +233,7 @@ class LinksTest extends WebTestBase {
     $expected_hierarchy = array(
       'child-1' => FALSE,
       'child-1-1' => 'child-1',
-      'child-1-2' => FALSE,
+      'child-1-2' => 'child-1',
     );
     $this->assertMenuLinkParents($links, $expected_hierarchy);
   }

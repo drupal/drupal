@@ -131,7 +131,7 @@ class BookManager {
       'menu_name' => '',
       'nid' => $nid,
       'bid' => 0,
-      'link_path' => 'node/%',
+      'router_path' => 'node/%',
       'plid' => 0,
       'mlid' => 0,
       'has_children' => 0,
@@ -211,7 +211,7 @@ class BookManager {
       ),
       '#tree' => TRUE,
     );
-    foreach (array('menu_name', 'mlid', 'nid', 'link_path', 'has_children', 'options', 'module', 'original_bid', 'parent_depth_limit') as $key) {
+    foreach (array('menu_name', 'mlid', 'nid', 'router_path', 'has_children', 'options', 'module', 'original_bid', 'parent_depth_limit') as $key) {
       $form['book'][$key] = array(
         '#type' => 'value',
         '#value' => $node->book[$key],
@@ -660,7 +660,7 @@ class BookManager {
       $element['#theme'] = 'menu_link__' . strtr($data['link']['menu_name'], '-', '_');
       $element['#attributes']['class'] = $class;
       $element['#title'] = $data['link']['title'];
-      $element['#href'] = $data['link']['link_path'];
+      $element['#href'] = $data['link']['href'];
       $element['#localized_options'] = !empty($data['link']['localized_options']) ? $data['link']['localized_options'] : array();
       $element['#below'] = $data['below'] ? $this->bookTreeOutput($data['below']) : $data['below'];
       $element['#original_link'] = $data['link'];

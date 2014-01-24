@@ -194,15 +194,10 @@ class SystemManager {
     }
 
     if (!isset($item['mlid'])) {
-      $menu_links = $this->menuLinkStorage->loadByProperties(array('link_path' => $item['path'], 'module' => 'system'));
-      if ($menu_links) {
-        $menu_link = reset($menu_links);
-        $item['mlid'] = $menu_link->id();
-        $item['menu_name'] = $menu_link->menu_name;
-      }
-      else {
-        return array();
-      }
+      $menu_links = $this->menuLinkStorage->loadByProperties(array('router_path' => $item['path'], 'module' => 'system'));
+      $menu_link = reset($menu_links);
+      $item['mlid'] = $menu_link->id();
+      $item['menu_name'] = $menu_link->menu_name;
     }
 
     if (isset($this->menuItems[$item['mlid']])) {

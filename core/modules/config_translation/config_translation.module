@@ -46,21 +46,6 @@ function config_translation_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function config_translation_menu_link_defaults() {
-  $links['config_translation.admin.config-translation'] = array(
-    'link_title' => 'Configuration translation',
-    'parent' => 'system.admin.config.regional',
-    'description' => 'Translate the configuration.',
-    'route_name' => 'config_translation.mapper_list',
-    'weight' => 30,
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_permission().
  */
 function config_translation_permission() {

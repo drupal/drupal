@@ -80,26 +80,6 @@ function contact_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function contact_menu_link_defaults() {
-  $links['contact.admin.categories'] = array(
-    'link_title' => 'Contact form categories',
-    'parent' => 'system.admin.structure',
-    'description' => 'Create a system contact form and set up categories for the form to use.',
-    'route_name' => 'contact.category_list',
-  );
-
-  $links['contact'] = array(
-    'link_title' => 'Contact',
-    'route_name' => 'contact.site_page',
-    'menu_name' => 'footer',
-    'type' => MENU_SUGGESTED_ITEM,
-  );
-  return $links;
-}
-
-/**
  * Implements hook_entity_bundle_info().
  */
 function contact_entity_bundle_info() {

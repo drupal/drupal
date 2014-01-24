@@ -73,7 +73,6 @@ class ToolbarAdminMenuTest extends WebTestBase {
       'bypass node access',
       'administer themes',
       'administer nodes',
-      'access content overview',
       'administer blocks',
       'administer menu',
       'administer modules',

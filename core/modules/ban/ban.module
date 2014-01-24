@@ -53,18 +53,3 @@ function ban_menu() {
   );
   return $items;
 }
-
-/**
- * Implements hook_menu_link_defaults().
- */
-function ban_menu_link_defaults() {
-  $links['ban.admin.config.people'] = array(
-    'link_title' => 'IP address bans',
-    'description' => 'Manage banned IP addresses.',
-    'route_name' => 'ban.admin_page',
-    'weight' => 10,
-    'parent' => 'user.admin.config.people',
-  );
-
-  return $links;
-}

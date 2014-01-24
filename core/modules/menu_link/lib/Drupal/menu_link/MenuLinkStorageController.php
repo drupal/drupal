@@ -26,18 +26,18 @@ use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 class MenuLinkStorageController extends DatabaseStorageController implements MenuLinkStorageControllerInterface {
 
   /**
-   * Contains all {menu_router} fields without weight.
-   *
-   * @var array
-   */
-  protected static $routerItemFields;
-
-  /**
    * Indicates whether the delete operation should re-parent children items.
    *
    * @var bool
    */
   protected $preventReparenting = FALSE;
+
+  /**
+   * Holds an array of router item schema fields.
+   *
+   * @var array
+   */
+  protected static $routerItemFields = array();
 
   /**
    * The route provider service.
@@ -98,7 +98,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
   protected function buildQuery($ids, $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $revision_id);
     // Specify additional fields from the {menu_router} table.
-    $query->leftJoin('menu_router', 'm', 'base.link_path = m.path');
+    $query->leftJoin('menu_router', 'm', 'base.router_path = m.path');
     $query->fields('m', static::$routerItemFields);
     return $query;
   }
@@ -358,25 +358,6 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
     } while ($parent === FALSE && $parent_path);
 
     return $parent;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function createFromDefaultLink(array $item) {
-    // Suggested items are disabled by default.
-    $item += array(
-      'type' => MENU_NORMAL_ITEM,
-      'hidden' => 0,
-      'options' => empty($item['description']) ? array() : array('attributes' => array('title' => $item['description'])),
-    );
-    if ($item['type'] == MENU_SUGGESTED_ITEM) {
-      $item['hidden'] = 1;
-    }
-    // Note, we set this as 'system', so that we can be sure to distinguish all
-    // the menu links generated automatically from hook_menu_link_defaults().
-    $item['module'] = 'system';
-    return $this->create($item);
   }
 
 }

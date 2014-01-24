@@ -21,7 +21,7 @@ class LoginStatusCheck implements AccessInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
-    return ($request->attributes->get('_menu_admin') || $account->isAuthenticated()) ? static::ALLOW : static::DENY;
+    return $account->isAuthenticated() ? static::ALLOW : static::DENY;
   }
 
 }

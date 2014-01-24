@@ -87,20 +87,6 @@ function shortcut_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function shortcut_menu_link_defaults() {
-  $links['shortcut.admin.config.user-interface.shortcut'] = array(
-    'link_title' => 'Shortcuts',
-    'description' => 'Add and modify shortcut sets.',
-    'route_name' => 'shortcut.set_admin',
-    'parent' => 'system.admin.config.user-interface',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_admin_paths().
  */
 function shortcut_admin_paths() {

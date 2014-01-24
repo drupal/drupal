@@ -2,7 +2,6 @@ config_test.list_page:
   path: '/admin/structure/config_test'
   defaults:
     _entity_list: 'config_test'
-    _title: 'Test configuration'
   requirements:
     _access: 'TRUE'
 

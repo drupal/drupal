@@ -519,7 +519,6 @@ menu_test.theme_callback_inheritance:
 menu_test.title_test_case1:
   path: '/menu-title-test/case1'
   defaults:
-    _title: 'Example title - Case 1'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
     _access: 'TRUE'
@@ -527,8 +526,6 @@ menu_test.title_test_case1:
 menu_test.title_test_case2:
   path: '/menu-title-test/case2'
   defaults:
-    _title: 'Example title'
-    _title_callback: '\Drupal\menu_test\Controller\MenuTestController::titleCallback'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
     _access: 'TRUE'
@@ -536,11 +533,13 @@ menu_test.title_test_case2:
 menu_test.title_test_case3:
   path: '/menu-title-test/case3'
   defaults:
-    _title: 'Bike sheds full of blue smurfs' # this should be ignored
-    _title_callback: '\Drupal\menu_test\Controller\MenuTestController::titleCallback'
-    _title_arguments:
-      title: 'Example title'
-      case_number: '3'
+    _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.title_test_case4:
+  path: '/menu-title-test/case4'
+  defaults:
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
     _access: 'TRUE'

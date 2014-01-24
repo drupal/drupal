@@ -73,42 +73,6 @@ function dblog_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function dblog_menu_link_defaults() {
-  $links['dblog.admin.reports.dblog'] = array(
-    'link_title' => 'Recent log messages',
-    'parent' => 'system.admin.reports',
-    'description' => 'View events that have recently been logged.',
-    'route_name' => 'dblog.overview',
-    'weight' => -1,
-  );
-  $links['dblog.admin.reports.page-not-found'] = array(
-    'link_title' => "Top 'page not found' errors",
-    'route_name' => 'dblog.page_not_found',
-    'parent' => 'system.admin.reports',
-    'description' => "View 'page not found' errors (404s).",
-  );
-  $links['dblog.admin.reports.access-denied'] = array(
-    'link_title' => "Top 'access denied' errors",
-    'route_name' => 'dblog.access_denied',
-    'description' => "View 'access denied' errors (403s).",
-    'parent' => 'system.admin.reports',
-  );
-
-  if (\Drupal::moduleHandler()->moduleExists('search')) {
-    $links['dblog.admin.reports.search'] = array(
-      'link_title' => 'Top search phrases',
-      'route_name' => 'dblog.search',
-      'description' => 'View most popular search phrases.',
-      'parent' => 'system.admin.reports',
-    );
-  }
-
-  return $links;
-}
-
-/**
  * Implements hook_page_build().
  */
 function dblog_page_build(&$page) {

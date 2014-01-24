@@ -5,7 +5,6 @@
  * Functions to handle paths in Drupal.
  */
 
-use Drupal\Core\Routing\RequestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -196,22 +195,8 @@ function drupal_valid_path($path, $dynamic_allowed = FALSE) {
   global $menu_admin;
   // We indicate that a menu administrator is running the menu access check.
   $menu_admin = TRUE;
-  /** @var $route_provider \Drupal\Core\Routing\RouteProviderInterface */
-  $route_provider = \Drupal::service('router.route_provider');
-
-  if ($dynamic_allowed && preg_match('/\/\%/', $path)) {
-    $router_path = '/' . str_replace('%', '{}', $path);
-  }
-  else {
-    $router_path = $path;
-  }
-
   if ($path == '<front>' || url_is_external($path)) {
     $item = array('access' => TRUE);
-  }
-  elseif (($collection = $route_provider->getRoutesByPattern('/' . $router_path)) && $collection->count() > 0) {
-    $routes = $collection->all();
-    $route_name = key($routes);
   }
   elseif ($dynamic_allowed && preg_match('/\/\%/', $path)) {
     // Path is dynamic (ie 'user/%'), so check directly against menu_router table.
@@ -221,22 +206,16 @@ function drupal_valid_path($path, $dynamic_allowed = FALSE) {
       $item['external']   = FALSE;
       $item['options'] = '';
       _menu_link_translate($item);
-      $route_name = $item['route_name'];
     }
   }
   else {
     $item = menu_get_item($path);
-    $route_name = $item['route_name'];
   }
   // Check the new routing system.
-  if (!empty($route_name)) {
+  if (!empty($item['route_name'])) {
     $map = array();
-    $route = \Drupal::service('router.route_provider')->getRouteByName($route_name);
-    $request = RequestHelper::duplicate(\Drupal::request(), '/' . $path);
-    $request->attributes->set('_system_path', $path);
-    $request->attributes->set('_menu_admin', TRUE);
-
-    $item['access'] = menu_item_route_access($route, $path, $map, $request);
+    $route = \Drupal::service('router.route_provider')->getRouteByName($item['route_name']);
+    $item['access'] = menu_item_route_access($route, $path, $map);
   }
   $menu_admin = FALSE;
   return $item && $item['access'];

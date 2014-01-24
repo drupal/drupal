@@ -93,19 +93,6 @@ function menu_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function menu_menu_link_defaults() {
-  $links['menu.admin.overview'] = array(
-    'link_title' => 'Menus',
-    'description' => 'Add new menus to your site, edit existing menus, and rename and reorganize menu links.',
-    'route_name' => 'menu.overview_page',
-    'parent' => 'system.admin.structure',
-  );
-  return $links;
-}
-
-/**
  * Implements hook_entity_info().
  */
 function menu_entity_info(&$entity_info) {

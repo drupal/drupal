@@ -128,30 +128,6 @@ function aggregator_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function aggregator_menu_link_defaults() {
-  $links = array();
-  $links['aggregator.admin_overview'] = array(
-    'link_title' => 'Feed aggregator',
-    'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
-    'route_name' => 'aggregator.admin_overview',
-    'weight' => 10,
-  );
-  $links['aggregator'] = array(
-    'link_title' => 'Feed aggregator',
-    'weight' => 5,
-    'route_name' => 'aggregator.page_last',
-  );
-  $links['aggregator.sources'] = array(
-    'link_title' => 'Sources',
-    'route_name' => 'aggregator.sources',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_permission().
  */
 function aggregator_permission() {

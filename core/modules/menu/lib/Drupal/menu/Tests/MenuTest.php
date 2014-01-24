@@ -752,7 +752,7 @@ class MenuTest extends MenuWebTestBase {
     // the front page.
     $query = \Drupal::entityQuery('menu_link')
       ->condition('module', 'system')
-      ->condition('link_path', 'user/logout');
+      ->condition('router_path', 'user/logout');
     $result = $query->execute();
     if (!empty($result)) {
       $mlid = reset($result);

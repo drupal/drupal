@@ -1533,30 +1533,6 @@ class ViewExecutable {
   }
 
   /**
-   * Returns default menu links from the view and the named display handler.
-   *
-   * @param string $display_id
-   *   A display ID.
-   * @param array $links
-   *   An array of default menu link items passed from
-   *   views_menu_link_defaults_alter().
-   *
-   * @return array|bool
-   */
-  public function executeHookDefaultMenuLinks($display_id = NULL, &$links = array()) {
-    // Prepare the view with the information we have. This was probably already
-    // called, but it's good to be safe.
-    if (!$this->setDisplay($display_id)) {
-      return FALSE;
-    }
-
-    // Execute the hook.
-    if (isset($this->display_handler)) {
-      return $this->display_handler->executeHookDefaultMenuLinks($links);
-    }
-  }
-
-  /**
    * Determine if the given user has access to the view. Note that
    * this sets the display handler if it hasn't been.
    */

@@ -67,20 +67,6 @@ function field_ui_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function field_ui_menu_link_defaults() {
-  $links['field_ui.admin.reports.fields'] = array(
-    'link_title' => 'Field list',
-    'description' => 'Overview of fields on all entity types.',
-    'route_name' => 'field_ui.list',
-    'parent' => 'system.admin.reports',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_permission().
  */
 function field_ui_permission() {

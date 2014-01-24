@@ -181,26 +181,6 @@ function book_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function book_menu_link_defaults() {
-  $links['book.admin.outlines'] = array(
-    'link_title' => 'Books',
-    'description' => "Manage your site's book outlines.",
-    'parent' => 'system.admin.structure',
-    'route_name' => 'book.admin',
-  );
-  $links['book'] = array(
-    'link_title' => 'Books',
-    'route_name' => 'book.render',
-    // @todo what to do about MENU_SUGGESTED_ITEM, maybe specify no menu_name?
-    'type' => MENU_SUGGESTED_ITEM,
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_admin_paths().
  */
 function book_admin_paths() {
@@ -669,7 +649,7 @@ function template_preprocess_book_navigation(&$variables) {
     $build = array();
 
     if ($prev = book_prev($book_link)) {
-      $prev_href = url($prev['link_path']);
+      $prev_href = url($prev['href']);
       $build['#attached']['drupal_add_html_head_link'][][] = array(
         'rel' => 'prev',
         'href' => $prev_href,
@@ -689,7 +669,7 @@ function template_preprocess_book_navigation(&$variables) {
     }
 
     if ($next = book_next($book_link)) {
-      $next_href = url($next['link_path']);
+      $next_href = url($next['href']);
       $build['#attached']['drupal_add_html_head_link'][][] = array(
         'rel' => 'next',
         'href' => $next_href,
