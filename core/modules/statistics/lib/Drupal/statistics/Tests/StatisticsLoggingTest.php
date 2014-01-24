@@ -52,12 +52,6 @@ class StatisticsLoggingTest extends WebTestBase {
     // Ensure we have a node page to access.
     $this->node = $this->drupalCreateNode(array('title' => $this->randomName(255), 'uid' => $this->auth_user->id()));
 
-    // Enable page caching.
-    $config = \Drupal::config('system.performance');
-    $config->set('cache.page.use_internal', 1);
-    $config->set('cache.page.max_age', 300);
-    $config->save();
-
     // Enable access logging.
     \Drupal::config('statistics.settings')
       ->set('count_content_views', 1)
@@ -71,38 +65,36 @@ class StatisticsLoggingTest extends WebTestBase {
   }
 
   /**
-   * Verifies request logging for cached and uncached pages.
+   * Verifies node hit counter logging and script placement.
    */
   function testLogging() {
+    global $base_url;
     $path = 'node/' . $this->node->id();
+    $module_path = drupal_get_path('module', 'statistics');
+    $stats_path = $base_url . '/' . $module_path . '/statistics.php';
+    $expected_library = $module_path . '/statistics.js';
+    $expected_settings = '"statistics":{"data":{"nid":"' . $this->node->id() . '"}';
 
-    // Verify logging of an uncached page.
+    // Verify that logging scripts are not found on a non-node page.
+    $this->drupalGet('node');
+    $this->assertNoRaw($expected_library, 'Statistics library JS not found on node page.');
+    $this->assertNoRaw($expected_settings, 'Statistics settings not found on node page.');
+
+    // Verify that logging scripts are not found on a non-existent node page.
+    $this->drupalGet('node/9999');
+    $this->assertNoRaw($expected_library, 'Statistics library JS not found on non-existent node page.');
+    $this->assertNoRaw($expected_settings, 'Statistics settings not found on non-existent node page.');
+
+    // Verify that logging scripts are found on a valid node page.
     $this->drupalGet($path);
-    // Manually calling statistics.php, simulating ajax behavior.
+    $this->assertRaw($expected_library, 'Found statistics library JS on node page.');
+    $this->assertRaw($expected_settings, 'Found statistics settings on node page.');
+
+    // Manually call statistics.php to simulate ajax data collection behavior.
     $nid = $this->node->id();
     $post = array('nid' => $nid);
-    global $base_url;
-    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     $this->client->post($stats_path, array(), $post)->send();
-    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Testing an uncached page.');
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '1');
-
-    // Verify logging of a cached page.
-    $this->drupalGet($path);
-    // Manually calling statistics.php, simulating ajax behavior.
-    $this->client->post($stats_path, array(), $post)->send();
-    $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Testing a cached page.');
-    $node_counter = statistics_get($this->node->id());
-    $this->assertIdentical($node_counter['totalcount'], '2');
-
-    // Test logging from authenticated users
-    $this->drupalLogin($this->auth_user);
-    $this->drupalGet($path);
-    // Manually calling statistics.php, simulating ajax behavior.
-    $this->client->post($stats_path, array(), $post)->send();
-    $node_counter = statistics_get($this->node->id());
-    $this->assertIdentical($node_counter['totalcount'], '3');
-
   }
 }

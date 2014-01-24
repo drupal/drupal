@@ -50,9 +50,9 @@ function statistics_permission() {
  */
 function statistics_node_view(EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if (!$node->isNew() && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
-    $node->content['#attached']['library'][] = array('statistics', 'drupal.statistics');
+    $node->content['statistics_content_counter']['#attached']['library'][] = array('statistics', 'drupal.statistics');
     $settings = array('data' => array('nid' => $node->id()), 'url' => url(drupal_get_path('module', 'statistics') . '/statistics.php'));
-    $node->content['#attached']['js'][] = array(
+    $node->content['statistics_content_counter']['#attached']['js'][] = array(
       'data' => array('statistics' => $settings),
       'type' => 'setting',
     );
