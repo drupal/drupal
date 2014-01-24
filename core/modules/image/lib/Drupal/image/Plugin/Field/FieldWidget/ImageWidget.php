@@ -7,8 +7,9 @@
 
 namespace Drupal\image\Plugin\Field\FieldWidget;
 
-use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 
 /**
  * Plugin implementation of the 'image_image' widget.
@@ -119,14 +120,127 @@ class ImageWidget extends FileWidget {
     $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
 
     // Add all extra functionality provided by the image widget.
-    $element['#process'][] = 'image_field_widget_process';
-    // Add properties needed by image_field_widget_process().
+    $element['#process'][] = array(get_class($this), 'process');
+    // Add properties needed by process() method.
     $element['#preview_image_style'] = $this->getSetting('preview_image_style');
     $element['#title_field'] = $field_settings['title_field'];
+    $element['#title_field_required'] = $field_settings['title_field_required'];
     $element['#alt_field'] = $field_settings['alt_field'];
     $element['#alt_field_required'] = $field_settings['alt_field_required'];
 
     return $element;
   }
+
+  /**
+   * Form API callback: Processes a image_image field element.
+   *
+   * Expands the image_image type to include the alt and title fields.
+   *
+   * This method is assigned as a #process callback in formElement() method.
+   */
+  public static function process($element, &$form_state, $form) {
+    $item = $element['#value'];
+    $item['fids'] = $element['fids']['#value'];
+
+    $element['#theme'] = 'image_widget';
+    $element['#attached']['css'][] = drupal_get_path('module', 'image') . '/css/image.theme.css';
+
+    // Add the image preview.
+    if (!empty($element['#files']) && $element['#preview_image_style']) {
+      $file = reset($element['#files']);
+      $variables = array(
+        'style_name' => $element['#preview_image_style'],
+        'uri' => $file->getFileUri(),
+      );
+
+      // Determine image dimensions.
+      if (isset($element['#value']['width']) && isset($element['#value']['height'])) {
+        $variables['width'] = $element['#value']['width'];
+        $variables['height'] = $element['#value']['height'];
+      }
+      else {
+        $image = \Drupal::service('image.factory')->get($file->getFileUri());
+        if ($image->getExtension()) {
+          $variables['width'] = $image->getWidth();
+          $variables['height'] = $image->getHeight();
+        }
+        else {
+          $variables['width'] = $variables['height'] = NULL;
+        }
+      }
+
+      $element['preview'] = array(
+        '#theme' => 'image_style',
+        '#width' => $variables['width'],
+        '#height' => $variables['height'],
+        '#style_name' => $variables['style_name'],
+        '#uri' => $variables['uri'],
+      );
+
+      // Store the dimensions in the form so the file doesn't have to be
+      // accessed again. This is important for remote files.
+      $element['width'] = array(
+        '#type' => 'hidden',
+        '#value' => $variables['width'],
+      );
+      $element['height'] = array(
+        '#type' => 'hidden',
+        '#value' => $variables['height'],
+      );
+    }
+
+    // Add the additional alt and title fields.
+    $element['alt'] = array(
+      '#title' => t('Alternate text'),
+      '#type' => 'textfield',
+      '#default_value' => isset($item['alt']) ? $item['alt'] : '',
+      '#description' => t('This text will be used by screen readers, search engines, or when the image cannot be loaded.'),
+      // @see http://www.gawds.org/show.php?contentid=28
+      '#maxlength' => 512,
+      '#weight' => -2,
+      '#access' => (bool) $item['fids'] && $element['#alt_field'],
+      '#element_validate' => $element['#alt_field_required'] == 1 ? array(array(get_called_class(), 'validateRequiredFields')) : array(),
+    );
+    $element['title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Title'),
+      '#default_value' => isset($item['title']) ? $item['title'] : '',
+      '#description' => t('The title is used as a tool tip when the user hovers the mouse over the image.'),
+      '#maxlength' => 1024,
+      '#weight' => -1,
+      '#access' => (bool) $item['fids'] && $element['#title_field'],
+      '#element_validate' => $element['#title_field_required'] == 1 ? array(array(get_called_class(), 'validateRequiredFields')) : array(),
+    );
+
+    return $element;
+  }
+
+  /**
+   * Validate callback for alt and title field, if the user wants them required.
+   *
+   * This is separated in a validate function instead of a #required flag to
+   * avoid being validated on the process callback.
+   */
+  public static function validateRequiredFields($element, &$form_state) {
+    // Only do validation if the function is triggered from other places than
+    // the image process form.
+    if (!in_array('file_managed_file_submit', $form_state['triggering_element']['#submit'])) {
+      // If the image is not there, we do not check for empty values.
+      $parents = $element['#parents'];
+      $field = array_pop($parents);
+      $image_field = NestedArray::getValue($form_state['input'], $parents);
+      // We check for the array key, so that it can be NULL (like if the user
+      // submits the form without using the "upload" button).
+      if (!array_key_exists($field, $image_field)) {
+        return;
+      }
+      // Check if field is left empty.
+      elseif (empty($image_field[$field])) {
+        \Drupal::formBuilder()->setError($element, $form_state, t('The field !title is required', array('!title' => $element['#title'])));
+        return;
+      }
+    }
+  }
+
 
 }

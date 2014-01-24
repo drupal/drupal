@@ -1544,7 +1544,7 @@ class FormBuilder implements FormBuilderInterface {
 
     // Set the element's #value property.
     if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
-      $value_callback = !empty($element['#value_callback']) ? $element['#value_callback'] : 'form_type_' . $element['#type'] . '_value';
+      $value_callable = !empty($element['#value_callback']) ? $element['#value_callback'] : 'form_type_' . $element['#type'] . '_value';
       if ($process_input) {
         // Get the input for the current element. NULL values in the input need
         // to be explicitly distinguished from missing input. (see below)
@@ -1568,8 +1568,8 @@ class FormBuilder implements FormBuilderInterface {
         // If we have input for the current element, assign it to the #value
         // property, optionally filtered through $value_callback.
         if ($input_exists) {
-          if (function_exists($value_callback)) {
-            $element['#value'] = $value_callback($element, $input, $form_state);
+          if (is_callable($value_callable)) {
+            $element['#value'] = call_user_func_array($value_callable, array(&$element, $input, &$form_state));
           }
           if (!isset($element['#value']) && isset($input)) {
             $element['#value'] = $input;
@@ -1584,8 +1584,8 @@ class FormBuilder implements FormBuilderInterface {
       if (!isset($element['#value'])) {
         // Call #type_value without a second argument to request default_value
         // handling.
-        if (function_exists($value_callback)) {
-          $element['#value'] = $value_callback($element, FALSE, $form_state);
+        if (is_callable($value_callable)) {
+          $element['#value'] = call_user_func_array($value_callable, array(&$element, FALSE, &$form_state));
         }
         // Final catch. If we haven't set a value yet, use the explicit default
         // value. Avoid image buttons (which come with garbage value), so we
