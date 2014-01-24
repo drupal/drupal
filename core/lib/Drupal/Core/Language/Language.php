@@ -204,18 +204,6 @@ class Language {
   }
 
   /**
-   * Extend $this with properties from the given object.
-   *
-   * @todo Remove this function once $GLOBALS['language'] is gone.
-   */
-  public function extend($obj) {
-    $variables = get_object_vars($obj);
-    foreach ($variables as $variable => $value) {
-      $this->$variable = $value;
-    }
-  }
-
-  /**
    * Sort language objects.
    *
    * @param array $languages
