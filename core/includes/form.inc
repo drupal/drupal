@@ -1674,7 +1674,7 @@ function form_process_table($element, &$form_state) {
     if ($element['#multiple']) {
       $value = is_array($element['#value']) ? $element['#value'] : array();
     }
-    // Advanced selection behaviour makes no sense for radios.
+    // Advanced selection behavior makes no sense for radios.
     else {
       $element['#js_select'] = FALSE;
     }

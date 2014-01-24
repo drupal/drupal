@@ -578,7 +578,7 @@ Drupal.tableDrag.prototype.dragRow = function (event, self) {
 };
 
 /**
- * Pointerup behaviour.
+ * Pointerup behavior.
  */
 Drupal.tableDrag.prototype.dropRow = function (event, self) {
   var droppedRow, $droppedRow;

@@ -62,7 +62,7 @@ class DisplayPageTest extends ViewUnitTestBase {
   }
 
   /**
-   * Checks the behavior of the page for access denied/not found behaviours.
+   * Checks the behavior of the page for access denied/not found behaviors.
    */
   public function testPageResponses() {
     // @todo Importing a route should fire a container rebuild.

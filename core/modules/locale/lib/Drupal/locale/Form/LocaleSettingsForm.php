@@ -67,7 +67,7 @@ class LocaleSettingsForm extends ConfigFormBase {
     }
     $form['overwrite'] = array(
       '#type' => 'radios',
-      '#title' => t('Import behaviour'),
+      '#title' => t('Import behavior'),
       '#default_value' => $default,
       '#options' => array(
         LOCALE_TRANSLATION_OVERWRITE_NONE => t("Don't overwrite existing translations."),

@@ -130,7 +130,7 @@ class UpdateTest extends DatabaseTestBase {
     // condition and therefore are affected by the query, even though two of
     // them actually don't have to be changed because their value was already
     // 'sleep'. Still, execute() should return 5 affected rows, not only 3,
-    // because that's cross-db expected behaviour.
+    // because that's cross-db expected behavior.
     $num_rows = db_update('test_task')
       ->condition('priority', 1, '<>')
       ->fields(array('task' => 'sleep'))

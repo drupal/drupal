@@ -354,7 +354,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache backend behaviour with requesting the same table multiple
+   * Tests the cache backend behavior with requesting the same table multiple
    */
   public function testCacheCallsWithSameTableMultipleTimes() {
     $expected_views_data = $this->viewsData();

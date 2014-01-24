@@ -22,7 +22,7 @@ Drupal.ajax = Drupal.ajax || {};
 Drupal.behaviors.AJAX = {
   attach: function (context, settings) {
 
-    function loadAjaxBehaviour(base) {
+    function loadAjaxBehavior(base) {
       var element_settings = settings.ajax[base];
       if (typeof element_settings.selector === 'undefined') {
         element_settings.selector = '#' + base;
@@ -36,7 +36,7 @@ Drupal.behaviors.AJAX = {
     // Load all Ajax behaviors specified in the settings.
     for (var base in settings.ajax) {
       if (settings.ajax.hasOwnProperty(base)) {
-        loadAjaxBehaviour(base);
+        loadAjaxBehavior(base);
       }
     }
 

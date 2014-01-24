@@ -185,7 +185,7 @@ function hook_views_data() {
   //   - filter: A description of any filter handler for the table field.
   //   - argument: A description of any argument handler for the table field.
   //   - area: A description of any handler for adding content to header,
-  //     footer or as no result behaviour.
+  //     footer or as no result behavior.
   //
   // The handler descriptions are described with examples below.
 

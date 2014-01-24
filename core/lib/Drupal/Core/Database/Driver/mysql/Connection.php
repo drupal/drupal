@@ -74,7 +74,7 @@ class Connection extends DatabaseConnection {
       \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE,
       // Make sure MySQL returns all matched rows on update queries including
       // rows that actually didn't have to be updated because the values didn't
-      // change. This matches common behaviour among other database systems.
+      // change. This matches common behavior among other database systems.
       \PDO::MYSQL_ATTR_FOUND_ROWS => TRUE,
       // Because MySQL's prepared statements skip the query cache, because it's dumb.
       \PDO::ATTR_EMULATE_PREPARES => TRUE,

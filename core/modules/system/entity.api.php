@@ -736,7 +736,7 @@ function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinition
 }
 
 /**
- * Alters the default access behaviour for a given field.
+ * Alters the default access behavior for a given field.
  *
  * Use this hook to override access grants from another module. Note that the
  * original default access flag is masked under the ':default' key.
