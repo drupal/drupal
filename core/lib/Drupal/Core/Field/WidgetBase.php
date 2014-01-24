@@ -307,7 +307,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $this->sortItems($items);
 
       // Remove empty values.
-      $items->filterEmptyValues();
+      $items->filterEmptyItems();
 
       // Put delta mapping in $form_state, so that flagErrors() can use it.
       $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);

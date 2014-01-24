@@ -154,7 +154,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $e = entity_load($entity->entityType(), $entity->id());
     $field = $values = $e->getTranslation($langcode)->$field_name;
     // Filter out empty values so that they don't mess with the assertions.
-    $field->filterEmptyValues();
+    $field->filterEmptyItems();
     $values = $field->getValue();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {

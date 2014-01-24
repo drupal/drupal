@@ -74,7 +74,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Filters out empty field items and re-numbers the item deltas.
    */
-  public function filterEmptyValues();
+  public function filterEmptyItems();
 
   /**
    * Gets a property object from the first field item.

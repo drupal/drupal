@@ -85,7 +85,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
 
       // Rekey the items array if needed.
       if ($rekey) {
-        $items->filterEmptyValues();
+        $items->filterEmptyItems();
       }
     }
   }
