@@ -7,12 +7,10 @@
 
 namespace Drupal\Core\Entity\Display;
 
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
-
 /**
  * Provides a common interface for entity displays.
  */
-interface EntityDisplayInterface extends ConfigEntityInterface {
+interface EntityDisplayInterface {
 
   /**
    * Creates a duplicate of the EntityDisplay object on a different view mode.
