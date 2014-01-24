@@ -94,6 +94,13 @@ abstract class ControllerBase {
   protected $moduleHandler;
 
   /**
+   * The form builder.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected $formBuilder;
+
+  /**
    * Retrieves the entity manager service.
    *
    * @return \Drupal\Core\Entity\EntityManagerInterface
@@ -186,6 +193,18 @@ abstract class ControllerBase {
       $this->moduleHandler = $this->container()->get('module_handler');
     }
     return $this->moduleHandler;
+  }
+
+  /**
+   * Returns the form builder service.
+   *
+   * @return \Drupal\Core\Form\FormBuilderInterface
+   */
+  protected function formBuilder() {
+    if (!$this->formBuilder) {
+      $this->formBuilder = $this->container()->get('form_builder');
+    }
+    return $this->formBuilder;
   }
 
   /**
