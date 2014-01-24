@@ -46,41 +46,74 @@ class BrokenSetUpTest extends WebTestBase {
     }
     // If the test is being run from within simpletest, set up the broken test.
     else {
-      $this->pass(t('The test setUp() method has been run.'));
-      // Don't call parent::setUp(). This should trigger an error message.
+      if (file_get_contents($this->originalFileDirectory . '/simpletest/trigger') === 'setup') {
+        throw new \Exception('Broken setup');
+      }
+      $this->pass('The setUp() method has run.');
     }
   }
 
   function tearDown() {
     // If the test is being run from the main site, tear down normally.
     if (!drupal_valid_test_ua()) {
+      unlink($this->originalFileDirectory . '/simpletest/trigger');
       parent::tearDown();
     }
+    // If the test is being run from within simpletest, output a message.
     else {
-      // If the test is being run from within simpletest, output a message.
-      $this->pass(t('The tearDown() method has run.'));
+      if (file_get_contents($this->originalFileDirectory . '/simpletest/trigger') === 'teardown') {
+        throw new \Exception('Broken teardown');
+      }
+      $this->pass('The tearDown() method has run.');
     }
   }
 
   /**
    * Runs this test case from within the simpletest child site.
    */
-  function testBreakSetUp() {
+  function testMethod() {
     // If the test is being run from the main site, run it again from the web
     // interface within the simpletest child site.
     if (!drupal_valid_test_ua()) {
+      // Verify that a broken setUp() method is caught.
+      file_put_contents($this->originalFileDirectory . '/simpletest/trigger', 'setup');
       $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
       $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
+      $this->assertRaw('Broken setup');
+      $this->assertNoRaw('The setUp() method has run.');
+      $this->assertNoRaw('Broken test');
+      $this->assertNoRaw('The test method has run.');
+      $this->assertNoRaw('Broken teardown');
+      $this->assertNoRaw('The tearDown() method has run.');
 
-      // Verify that the broken test and its tearDown() method are skipped.
-      $this->assertRaw(t('The test setUp() method has been run.'));
-      $this->assertRaw(t('The test cannot be executed because it has not been set up properly.'));
-      $this->assertNoRaw(t('The test method has run.'));
-      $this->assertNoRaw(t('The tearDown() method has run.'));
+      // Verify that a broken tearDown() method is caught.
+      file_put_contents($this->originalFileDirectory . '/simpletest/trigger', 'teardown');
+      $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
+      $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
+      $this->assertNoRaw('Broken setup');
+      $this->assertRaw('The setUp() method has run.');
+      $this->assertNoRaw('Broken test');
+      $this->assertRaw('The test method has run.');
+      $this->assertRaw('Broken teardown');
+      $this->assertNoRaw('The tearDown() method has run.');
+
+      // Verify that a broken test method is caught.
+      file_put_contents($this->originalFileDirectory . '/simpletest/trigger', 'test');
+      $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
+      $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
+      $this->assertNoRaw('Broken setup');
+      $this->assertRaw('The setUp() method has run.');
+      $this->assertRaw('Broken test');
+      $this->assertNoRaw('The test method has run.');
+      $this->assertNoRaw('Broken teardown');
+      $this->assertRaw('The tearDown() method has run.');
     }
     // If the test is being run from within simpletest, output a message.
     else {
-      $this->pass(t('The test method has run.'));
+      if (file_get_contents($this->originalFileDirectory . '/simpletest/trigger') === 'test') {
+        throw new \Exception('Broken test');
+      }
+      $this->pass('The test method has run.');
     }
   }
 }

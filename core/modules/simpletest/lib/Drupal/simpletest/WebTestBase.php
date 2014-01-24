@@ -698,60 +698,25 @@ abstract class WebTestBase extends TestBase {
   /**
    * Sets up a Drupal site for running functional and integration tests.
    *
-   * Generates a random database prefix and installs Drupal with the specified
-   * installation profile in \Drupal\simpletest\WebTestBase::$profile into the
-   * prefixed database. Afterwards, installs any additional modules specified by
-   * the test.
+   * Installs Drupal with the installation profile specified in
+   * \Drupal\simpletest\WebTestBase::$profile into the prefixed database.
+
+   * Afterwards, installs any additional modules specified in the static
+   * \Drupal\simpletest\WebTestBase::$modules property of each class in the
+   * class hierarchy.
    *
    * After installation all caches are flushed and several configuration values
    * are reset to the values of the parent site executing the test, since the
    * default values may be incompatible with the environment in which tests are
    * being executed.
-   *
-   * @param ...
-   *   List of modules to enable for the duration of the test. This can be
-   *   either a single array or a variable number of string arguments.
-   *
-   * @see \Drupal\simpletest\WebTestBase::prepareDatabasePrefix()
-   * @see \Drupal\simpletest\WebTestBase::changeDatabasePrefix()
-   * @see \Drupal\simpletest\WebTestBase::prepareEnvironment()
    */
   protected function setUp() {
-    global $conf;
-
     // When running tests through the Simpletest UI (vs. on the command line),
     // Simpletest's batch conflicts with the installer's batch. Batch API does
     // not support the concept of nested batches (in which the nested is not
     // progressive), so we need to temporarily pretend there was no batch.
     // Backup the currently running Simpletest batch.
     $this->originalBatch = batch_get();
-
-    // Create the database prefix for this test.
-    $this->prepareDatabasePrefix();
-
-    // Prepare the environment for running tests.
-    $this->prepareEnvironment();
-    if (!$this->setupEnvironment) {
-      return FALSE;
-    }
-
-    // Reset all statics and variables to perform tests in a clean environment.
-    $conf = array();
-    drupal_static_reset();
-
-    // Change the database prefix.
-    // All static variables need to be reset before the database prefix is
-    // changed, since \Drupal\Core\Utility\CacheArray implementations attempt to
-    // write back to persistent caches when they are destructed.
-    $this->changeDatabasePrefix();
-    if (!$this->setupDatabasePrefix) {
-      return FALSE;
-    }
-
-    // Set the 'simpletest_parent_profile' variable to add the parent profile's
-    // search path to the child site's search paths.
-    // @see drupal_system_listing()
-    $conf['simpletest_parent_profile'] = $this->originalProfile;
 
     // Define information about the user 1 account.
     $this->root_user = new UserSession(array(
@@ -846,14 +811,12 @@ abstract class WebTestBase extends TestBase {
     // Use the test mail class instead of the default mail handler class.
     \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\TestMailCollector')->save();
 
-    drupal_set_time_limit($this->timeLimit);
     // Temporary fix so that when running from run-tests.sh we don't get an
     // empty current path which would indicate we're on the home page.
     $path = current_path();
     if (empty($path)) {
       _current_path('run-tests');
     }
-    $this->setup = TRUE;
   }
 
   /**

@@ -72,19 +72,21 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Sets up Drupal unit test environment.
-   *
-   * @see \DrupalUnitTestBase::$modules
-   * @see \DrupalUnitTestBase
+   * Overrides TestBase::beforePrepareEnvironment().
    */
-  protected function setUp() {
+  protected function beforePrepareEnvironment() {
     // Copy/prime extension file lists once to avoid filesystem scans.
     if (!isset($this->moduleFiles)) {
       $this->moduleFiles = \Drupal::state()->get('system.module.files') ?: array();
       $this->themeFiles = \Drupal::state()->get('system.theme.files') ?: array();
       $this->themeData = \Drupal::state()->get('system.theme.data') ?: array();
     }
+  }
 
+  /**
+   * Sets up Drupal unit test environment.
+   */
+  protected function setUp() {
     $this->keyValueFactory = new KeyValueMemoryFactory();
 
     parent::setUp();
