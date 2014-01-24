@@ -4,3 +4,12 @@ services:
     arguments: ['@settings']
     tags:
       - { name: access_check, applies_to: _access_update_manager }
+  update.manager:
+    class: Drupal\update\UpdateManager
+    arguments: ['@config.factory', '@module_handler', '@update.processor', '@string_translation', '@keyvalue.expirable']
+  update.processor:
+    class: Drupal\update\UpdateProcessor
+    arguments: ['@config.factory', '@queue', '@update.fetcher', '@state', '@private_key', '@keyvalue', '@keyvalue.expirable']
+  update.fetcher:
+    class: Drupal\update\UpdateFetcher
+    arguments: ['@config.factory', '@http_default_client']

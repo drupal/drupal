@@ -14,7 +14,7 @@ use Guzzle\Http\Exception\RequestException;
 /**
  * Fetches project information from remote locations.
  */
-class UpdateFetcher {
+class UpdateFetcher implements UpdateFetcherInterface {
 
   /**
    * URL to check for updates, if a given project doesn't define its own.
@@ -27,6 +27,13 @@ class UpdateFetcher {
    * @var string
    */
   protected $fetchUrl;
+
+  /**
+   * The update settings
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $updateSettings;
 
   /**
    * The HTTP client to fetch the feed data with.
@@ -46,18 +53,11 @@ class UpdateFetcher {
   public function __construct(ConfigFactory $config_factory, ClientInterface $http_client) {
     $this->fetchUrl = $config_factory->get('update.settings')->get('fetch.url');
     $this->httpClient = $http_client;
+    $this->updateSettings = $config_factory->get('update.settings');
   }
 
   /**
-   * Retrieves the project information.
-   *
-   * @param array $project
-   *   The array of project information from update_get_projects().
-   * @param string $site_key
-   *   (optional) The anonymous site key hash. Defaults to an empty string.
-   *
-   * @return string
-   *   The project information fetched as string. Empty string upon failure.
+   * {@inheritdoc}
    */
   public function fetchProjectData(array $project, $site_key = '') {
     $url = $this->buildFetchUrl($project, $site_key);
@@ -75,23 +75,7 @@ class UpdateFetcher {
   }
 
   /**
-   * Generates the URL to fetch information about project updates.
-   *
-   * This figures out the right URL to use, based on the project's .info.yml file
-   * and the global defaults. Appends optional query arguments when the site is
-   * configured to report usage stats.
-   *
-   * @param array $project
-   *   The array of project information from update_get_projects().
-   * @param string $site_key
-   *   (optional) The anonymous site key hash. Defaults to an empty string.
-   *
-   * @return string
-   *   The URL for fetching information about updates to the specified project.
-   *
-   * @see update_fetch_data()
-   * @see _update_process_fetch_task()
-   * @see update_get_projects()
+   * {@inheritdoc}
    */
   public function buildFetchUrl(array $project, $site_key = '') {
     $name = $project['name'];
@@ -121,17 +105,7 @@ class UpdateFetcher {
   }
 
   /**
-   * Returns the base of the URL to fetch available update data for a project.
-   *
-   * @param array $project
-   *   The array of project information from update_get_projects().
-   *
-   * @return string
-   *   The base of the URL used for fetching available update data. This does
-   *   not include the path elements to specify a particular project, version,
-   *   site_key, etc.
-   *
-   * @see \Drupal\update\UpdateFetcher::getFetchBaseUrl()
+   * {@inheritdoc}
    */
   public function getFetchBaseUrl($project) {
     if (isset($project['info']['project status url'])) {

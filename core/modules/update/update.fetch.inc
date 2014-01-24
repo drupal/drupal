@@ -5,118 +5,31 @@
  * Code required only when fetching information about available updates.
  */
 
-use Drupal\Component\Utility\Crypt;
-use Drupal\update\UpdateFetcher;
-
-/**
- * Page callback: Checks for updates and displays the update status report.
- *
- * Manually checks the update status without the use of cron.
- *
- * @see update_menu()
- *
- * @deprecated Use \Drupal\update\Controller\UpdateController::updateStatusManually()
- */
-function update_manual_status() {
-  _update_refresh();
-  $batch = array(
-    'operations' => array(
-      array('update_fetch_data_batch', array()),
-    ),
-    'finished' => 'update_fetch_data_finished',
-    'title' => t('Checking available update data'),
-    'progress_message' => t('Trying to check available update data ...'),
-    'error_message' => t('Error checking available update data.'),
-    'file' => drupal_get_path('module', 'update') . '/update.fetch.inc',
-  );
-  batch_set($batch);
-  return batch_process('admin/reports/updates');
-}
-
 /**
  * Batch callback: Processes a step in batch for fetching available update data.
  *
  * @param $context
  *   Reference to an array used for Batch API storage.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal\update\UpdateManager::fetchDataBatch()
+ *
+ * @see \Drupal\update\UpdateManager::fetchDataBatch()
  */
 function update_fetch_data_batch(&$context) {
-  $queue = \Drupal::queue('update_fetch_tasks');
-  if (empty($context['sandbox']['max'])) {
-    $context['finished'] = 0;
-    $context['sandbox']['max'] = $queue->numberOfItems();
-    $context['sandbox']['progress'] = 0;
-    $context['message'] = t('Checking available update data ...');
-    $context['results']['updated'] = 0;
-    $context['results']['failures'] = 0;
-    $context['results']['processed'] = 0;
-  }
-
-  // Grab another item from the fetch queue.
-  for ($i = 0; $i < 5; $i++) {
-    if ($item = $queue->claimItem()) {
-      if (_update_process_fetch_task($item->data)) {
-        $context['results']['updated']++;
-        $context['message'] = t('Checked available update data for %title.', array('%title' => $item->data['info']['name']));
-      }
-      else {
-        $context['message'] = t('Failed to check available update data for %title.', array('%title' => $item->data['info']['name']));
-        $context['results']['failures']++;
-      }
-      $context['sandbox']['progress']++;
-      $context['results']['processed']++;
-      $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-      $queue->deleteItem($item);
-    }
-    else {
-      // If the queue is currently empty, we're done. It's possible that
-      // another thread might have added new fetch tasks while we were
-      // processing this batch. In that case, the usual 'finished' math could
-      // get confused, since we'd end up processing more tasks that we thought
-      // we had when we started and initialized 'max' with numberOfItems(). By
-      // forcing 'finished' to be exactly 1 here, we ensure that batch
-      // processing is terminated.
-      $context['finished'] = 1;
-      return;
-    }
-  }
-}
-
-/**
- * Batch callback: Performs actions when all fetch tasks have been completed.
- *
- * @param $success
- *   TRUE if the batch operation was successful; FALSE if there were errors.
- * @param $results
- *   An associative array of results from the batch operation, including the key
- *   'updated' which holds the total number of projects we fetched available
- *   update data for.
- */
-function update_fetch_data_finished($success, $results) {
-  if ($success) {
-    if (!empty($results)) {
-      if (!empty($results['updated'])) {
-        drupal_set_message(format_plural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
-      }
-      if (!empty($results['failures'])) {
-        drupal_set_message(format_plural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'), 'error');
-      }
-    }
-  }
-  else {
-    drupal_set_message(t('An error occurred trying to get available update data.'), 'error');
-  }
+  \Drupal::service('update.manager')->fetchDataBatch($context);
 }
 
 /**
  * Attempts to drain the queue of tasks for release history data to fetch.
+ *
+ *  @deprecated as of Drupal 8.0. Use
+ *   \Drupal\update\UpdateFetcher::fetchData()
+ *
+ * @see \Drupal\update\UpdateFetcher::fetchData()
  */
 function _update_fetch_data() {
-  $queue = \Drupal::queue('update_fetch_tasks');
-  $end = time() + \Drupal::config('update.settings')->get('fetch.timeout');
-  while (time() < $end && ($item = $queue->claimItem())) {
-    _update_process_fetch_task($item->data);
-    $queue->deleteItem($item);
-  }
+  \Drupal::service('update.processor')->fetchData();
 }
 
 /**
@@ -130,93 +43,26 @@ function _update_fetch_data() {
  *
  * @return
  *   TRUE if we fetched parsable XML, otherwise FALSE.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal\update\UpdateFetcher::processFetchTask()
+ *
+ * @see \Drupal\update\UpdateFetcher::processFetchTask()
  */
 function _update_process_fetch_task($project) {
-  global $base_url;
-  $update_config = \Drupal::config('update.settings');
-  $fail = &drupal_static(__FUNCTION__, array());
-  // This can be in the middle of a long-running batch, so REQUEST_TIME won't
-  // necessarily be valid.
-  $request_time_difference = time() - REQUEST_TIME;
-  if (empty($fail)) {
-    // If we have valid data about release history XML servers that we have
-    // failed to fetch from on previous attempts, load that.
-    $fail = \Drupal::keyValueExpirable('update')->get('fetch_failures');
-  }
-
-  $max_fetch_attempts = $update_config->get('fetch.max_attempts');
-
-  $success = FALSE;
-  $available = array();
-  $site_key = Crypt::hmacBase64($base_url, \Drupal::service('private_key')->get());
-  $update_fetcher = new UpdateFetcher(\Drupal::service('config.factory'), \Drupal::service('http_default_client'));
-  $fetch_url_base = $update_fetcher->getFetchBaseUrl($project);
-  $project_name = $project['name'];
-
-  if (empty($fail[$fetch_url_base]) || $fail[$fetch_url_base] < $max_fetch_attempts) {
-    $data = $update_fetcher->fetchProjectData($project, $site_key);
-  }
-
-  if (!empty($data)) {
-    $available = update_parse_xml($data);
-    // @todo: Purge release data we don't need (http://drupal.org/node/238950).
-    if (!empty($available)) {
-      // Only if we fetched and parsed something sane do we return success.
-      $success = TRUE;
-    }
-  }
-  else {
-    $available['project_status'] = 'not-fetched';
-    if (empty($fail[$fetch_url_base])) {
-      $fail[$fetch_url_base] = 1;
-    }
-    else {
-      $fail[$fetch_url_base]++;
-    }
-  }
-
-  $frequency = $update_config->get('check.interval_days');
-  $available['last_fetch'] = REQUEST_TIME + $request_time_difference;
-  \Drupal::keyValueExpirable('update_available_releases')->setWithExpire($project_name, $available, $request_time_difference + (60 * 60 * 24 * $frequency));
-
-  // Stash the $fail data back in the DB for the next 5 minutes.
-  \Drupal::keyValueExpirable('update')->setWithExpire('fetch_failures', $fail, $request_time_difference + (60 * 5));
-
-  // Whether this worked or not, we did just (try to) check for updates.
-  \Drupal::state()->set('update.last_check', REQUEST_TIME + $request_time_difference);
-
-  // Now that we processed the fetch task for this project, clear out the
-  // record for this task so we're willing to fetch again.
-  \Drupal::keyValue('update_fetch_task')->delete($project_name);
-
-  return $success;
+  return \Drupal::service('update.processor')->processFetchTask($project);
 }
 
 /**
  * Clears out all the available update data and initiates re-fetching.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal\update\UpdateManager::refreshUpdateData()
+ *
+ * @see \Drupal\update\UpdateManager::refreshUpdateData()
  */
 function _update_refresh() {
-  module_load_include('inc', 'update', 'update.compare');
-
-  // Since we're fetching new available update data, we want to clear
-  // of both the projects we care about, and the current update status of the
-  // site. We do *not* want to clear the cache of available releases just yet,
-  // since that data (even if it's stale) can be useful during
-  // update_get_projects(); for example, to modules that implement
-  // hook_system_info_alter() such as cvs_deploy.
-  \Drupal::keyValueExpirable('update')->delete('update_project_projects');
-  \Drupal::keyValueExpirable('update')->delete('update_project_data');
-
-  $projects = update_get_projects();
-
-  // Now that we have the list of projects, we should also clear the available
-  // release data, since even if we fail to fetch new data, we need to clear
-  // out the stale data at this point.
-  \Drupal::keyValueExpirable('update_available_releases')->deleteAll();
-
-  foreach ($projects as $project) {
-    update_create_fetch_task($project);
-  }
+  \Drupal::service('update.manager')->refreshUpdateData();
 }
 
 /**
@@ -230,23 +76,13 @@ function _update_refresh() {
  *   update_get_projects(), including keys such as 'name' (short name), and the
  *   'info' array with data from a .info.yml file for the project.
  *
- * @see update_get_projects()
- * @see update_get_available()
- * @see update_refresh()
- * @see update_fetch_data()
- * @see _update_process_fetch_task()
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal\update\UpdateFetcher::createFetchTask()
+ *
+ * @see \Drupal\update\UpdateFetcher::createFetchTask()
  */
 function _update_create_fetch_task($project) {
-  $fetch_tasks = &drupal_static(__FUNCTION__, array());
-  if (empty($fetch_tasks)) {
-    $fetch_tasks = \Drupal::keyValue('update_fetch_task')->getAll();
-  }
-  if (empty($fetch_tasks[$project['name']])) {
-    $queue = \Drupal::queue('update_fetch_tasks');
-    $queue->createItem($project);
-    \Drupal::keyValue('update_fetch_task')->set($project['name'], $project);
-    $fetch_tasks[$project['name']] = REQUEST_TIME;
-  }
+  \Drupal::service('update.processor')->createFetchTask($project);
 }
 
 /**

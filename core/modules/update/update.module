@@ -332,12 +332,12 @@ function update_get_available($refresh = FALSE) {
 
   // Grab whatever data we currently have.
   $available = \Drupal::keyValueExpirable('update_available_releases')->getAll();
-
-  $projects = update_get_projects();
+  $projects = \Drupal::service('update.manager')->getProjects();
   foreach ($projects as $key => $project) {
     // If there's no data at all, we clearly need to fetch some.
     if (empty($available[$key])) {
-      update_create_fetch_task($project);
+      //update_create_fetch_task($project);
+      \Drupal::service('update.processor')->createFetchTask($project);
       $needs_refresh = TRUE;
       continue;
     }
@@ -360,7 +360,7 @@ function update_get_available($refresh = FALSE) {
     // If we think this project needs to fetch, actually create the task now
     // and remember that we think we're missing some data.
     if (!empty($available[$key]['fetch_status']) && $available[$key]['fetch_status'] == UPDATE_FETCH_PENDING) {
-      update_create_fetch_task($project);
+      \Drupal::service('update.processor')->createFetchTask($project);
       $needs_refresh = TRUE;
     }
   }
@@ -408,6 +408,32 @@ function update_refresh() {
 function update_fetch_data() {
   module_load_include('inc', 'update', 'update.fetch');
   _update_fetch_data();
+}
+
+/**
+ * Batch callback: Performs actions when all fetch tasks have been completed.
+ *
+ * @param $success
+ *   TRUE if the batch operation was successful; FALSE if there were errors.
+ * @param $results
+ *   An associative array of results from the batch operation, including the key
+ *   'updated' which holds the total number of projects we fetched available
+ *   update data for.
+ */
+function update_fetch_data_finished($success, $results) {
+  if ($success) {
+    if (!empty($results)) {
+      if (!empty($results['updated'])) {
+        drupal_set_message(format_plural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
+      }
+      if (!empty($results['failures'])) {
+        drupal_set_message(format_plural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'), 'error');
+      }
+    }
+  }
+  else {
+    drupal_set_message(t('An error occurred trying to get available update data.'), 'error');
+  }
 }
 
 /**
