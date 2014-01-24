@@ -17,14 +17,6 @@ language.types:
         - type: string
           label: 'Language type'
 
-language.detection:
-  type: mapping
-  label: 'Language detection settings'
-  mapping:
-    selected_langcode:
-      type: string
-      label: 'Selected language code'
-
 language.negotiation:
   type: mapping
   label: 'Language detection methods'
