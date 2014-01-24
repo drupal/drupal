@@ -79,6 +79,7 @@ taxonomy.overview_terms:
   path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
   defaults:
     _form: 'Drupal\taxonomy\Form\OverviewTerms'
+    _title_callback: 'Drupal\taxonomy\Controller\TaxonomyController::vocabularyTitle'
   requirements:
     _entity_access: 'taxonomy_vocabulary.view'
 

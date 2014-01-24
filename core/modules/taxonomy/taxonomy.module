@@ -252,12 +252,6 @@ function taxonomy_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary'] = array(
-    'route_name' => 'taxonomy.overview_terms',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(4),
-  );
-
   return $items;
 }
 
