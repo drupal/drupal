@@ -111,20 +111,19 @@ class ImageFormatter extends ImageFormatterBase {
             'options' => array(),
           );
         }
+
+        // Extract field item attributes for the theme function, and unset them
+        // from the $item so that the field template does not re-render them.
+        $item_attributes = $item->_attributes;
+        unset($item->_attributes);
+
         $elements[$delta] = array(
           '#theme' => 'image_formatter',
-          '#item' => $item->getValue(TRUE),
+          '#item' => $item,
+          '#item_attributes' => $item_attributes,
           '#image_style' => $image_style_setting,
           '#path' => isset($uri) ? $uri : '',
         );
-        // Pass field item attributes to the theme function.
-        if (isset($item->_attributes)) {
-          $elements[$delta]['#item'] += array('attributes' => array());
-          $elements[$delta]['#item']['attributes'] += $item->_attributes;
-          // Unset field item attributes since they have been included in the
-          // formatter output and should not be rendered in the field template.
-          unset($item->_attributes);
-        }
       }
     }
 

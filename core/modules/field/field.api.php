@@ -385,7 +385,7 @@ function hook_field_attach_view_alter(&$output, $context) {
     $element = &$output[$field_name];
     if ($element['#field_type'] == 'entity_reference' && $element['#formatter'] == 'entity_reference_label') {
       foreach ($element['#items'] as $delta => $item) {
-        $term = $item['entity'];
+        $term = $item->entity;
         if (!empty($term->rdf_mapping['rdftype'])) {
           $element[$delta]['#options']['attributes']['typeof'] = $term->rdf_mapping['rdftype'];
         }

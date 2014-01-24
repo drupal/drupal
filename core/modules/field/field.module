@@ -575,7 +575,7 @@ function template_preprocess_field(&$variables, $hook) {
   // formatters leave them within $element['#items'][$delta]['_attributes'] to
   // be rendered on the item wrappers provided by theme_field().
   foreach ($variables['items'] as $delta => $item) {
-    $variables['item_attributes'][$delta] = !empty($element['#items'][$delta]['_attributes']) ? new Attribute($element['#items'][$delta]['_attributes']) : clone($default_attributes);
+    $variables['item_attributes'][$delta] = !empty($element['#items'][$delta]->_attributes) ? new Attribute($element['#items'][$delta]->_attributes) : clone($default_attributes);
   }
 }
 

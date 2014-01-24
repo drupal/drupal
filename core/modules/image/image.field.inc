@@ -51,40 +51,44 @@ function theme_image_widget($variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - item: An array of image data.
+ *   - item: An ImageItem object.
+ *   - item_attributes: An optional associative array of html attributes to be
+ *     placed in the img tag.
  *   - image_style: An optional image style.
  *   - path: An optional array containing the link 'path' and link 'options'.
  *
  * @ingroup themeable
  */
 function theme_image_formatter($variables) {
+  if ($variables['image_style']) {
+    $image = array(
+      '#theme' => 'image_style',
+      '#style_name' => $variables['image_style'],
+    );
+  }
+  else {
+    $image = array(
+      '#theme' => 'image',
+    );
+  }
+  $image['#attributes'] = $variables['item_attributes'];
+
   $item = $variables['item'];
-  $image = array();
 
   // Do not output an empty 'title' attribute.
-  if (isset($item['title']) && drupal_strlen($item['title']) != 0) {
-    $image['#title'] = $item['title'];
+  if (drupal_strlen($item->title) != 0) {
+    $image['#title'] = $item->title;
   }
 
-  if (isset($item['entity']) && empty($item['uri'])) {
-    $image['#uri'] = $item['entity']->getFileUri();
+  if (($entity = $item->entity) && empty($item->uri)) {
+    $image['#uri'] = $entity->getFileUri();
   }
   else {
-    $image['#uri'] = $item['uri'];
+    $image['#uri'] = $item->uri;
   }
 
-  foreach (array('width', 'height', 'alt', 'attributes') as $key) {
-    if (isset($item[$key]) || array_key_exists($key, $item)) {
-      $image["#$key"] = $item[$key];
-    }
-  }
-
-  if ($variables['image_style']) {
-    $image['#theme'] = 'image_style';
-    $image['#style_name'] = $variables['image_style'];
-  }
-  else {
-    $image['#theme'] = 'image';
+  foreach (array('width', 'height', 'alt') as $key) {
+    $image["#$key"] = $item->$key;
   }
 
   // The link path and link options are both optional, but for the options to be

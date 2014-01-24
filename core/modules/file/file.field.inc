@@ -248,7 +248,7 @@ function file_field_find_file_reference_column(FieldInterface $field) {
  *
  * @param $variables
  *   An associative array containing:
- *   - items: An array of file attachments.
+ *   - items: field values, as a FileFieldItemList object.
  *
  * @ingroup themeable
  */

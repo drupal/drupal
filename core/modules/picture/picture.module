@@ -163,7 +163,7 @@ function picture_theme() {
  *
  * @param array $variables
  *   An associative array containing:
- *   - item: An array of image data.
+ *   - item: An ImageItem object.
  *   - image_style: An optional image style.
  *   - path: An optional array containing the link 'path' and link 'options'.
  *   - breakpoints: An array containing breakpoints.
@@ -171,10 +171,11 @@ function picture_theme() {
  * @ingroup themeable
  */
 function theme_picture_formatter($variables) {
+  $item = $variables['item'];
   if (!isset($variables['breakpoints']) || empty($variables['breakpoints'])) {
     $image_formatter = array(
       '#theme' => 'image_formatter',
-      '#item' => $variables['item'],
+      '#item' => $item,
       '#image_style' => $variables['image_style'],
       '#path' => $variables['path'],
     );
@@ -183,23 +184,21 @@ function theme_picture_formatter($variables) {
 
   $picture = array(
     '#theme' => 'picture',
-    '#width' => $variables['item']['width'],
-    '#height' => $variables['item']['height'],
+    '#width' => $item->width,
+    '#height' => $item->height,
     '#style_name' => $variables['image_style'],
     '#breakpoints' => $variables['breakpoints'],
   );
-  if (isset($variables['item']['uri'])) {
-    $picture['#uri'] = $variables['item']['uri'];
+  if (isset($item->uri)) {
+    $picture['#uri'] = $item->uri;
   }
-  elseif (isset($variables['item']['entity'])) {
-    $picture['#uri'] = $variables['item']['entity']->getFileUri();
-    $picture['#entity'] = $variables['item']['entity'];
+  elseif ($entity = $item->entity) {
+    $picture['#uri'] = $entity->getFileUri();
+    $picture['#entity'] = $entity;
   }
-  if (isset($variables['item']['alt'])) {
-    $picture['#alt'] = $variables['item']['alt'];
-  }
-  if (isset($variables['item']['title']) && drupal_strlen($variables['item']['title']) != 0) {
-    $picture['#title'] = $variables['item']['title'];
+  $picture['#alt'] = $item->alt;
+  if (drupal_strlen($item->title) != 0) {
+    $picture['#title'] = $item->title;
   }
   if (isset($variables['path']['path'])) {
     $path = $variables['path']['path'];

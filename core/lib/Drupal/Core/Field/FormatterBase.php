@@ -89,7 +89,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
         '#entity_type' => $entity_type,
         '#bundle' => $entity->bundle(),
         '#object' => $entity,
-        '#items' => $items->getValue(TRUE),
+        '#items' => $items,
         '#formatter' => $this->getPluginId(),
         '#cache' => array('tags' => array())
       );

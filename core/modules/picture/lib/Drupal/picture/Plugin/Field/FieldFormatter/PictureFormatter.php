@@ -172,7 +172,7 @@ class PictureFormatter extends ImageFormatterBase {
         '#attached' => array('library' => array(
           array('picture', 'picturefill'),
         )),
-        '#item' => $item->getValue(TRUE),
+        '#item' => $item,
         '#image_style' => $fallback_image_style,
         '#breakpoints' => $breakpoint_styles,
         '#path' => isset($uri) ? $uri : '',
