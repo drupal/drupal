@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 
 /**
@@ -78,10 +78,12 @@ while ($param = array_shift($_SERVER['argv'])) {
   }
 }
 
-chdir('..');
 $core = dirname(__DIR__);
-include_once $core . '/includes/password.inc';
-include_once $core . '/includes/bootstrap.inc';
+require_once $core . '/vendor/autoload.php';
+require_once $core . '/includes/bootstrap.inc';
+
+// Bootstrap the code so we have the container.
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
 
 $password_hasher = \Drupal::service('password');
 
