@@ -87,20 +87,6 @@ class EntityType implements EntityTypeInterface {
   protected $permission_granularity;
 
   /**
-   * An array describing how the Field API can extract the information it needs
-   * from the bundle objects for this type (e.g Vocabulary objects for terms;
-   * not applicable for nodes):
-   * - bundle: The name of the property that contains the name of the bundle
-   *   object.
-   *
-   * This entry can be omitted if this type's bundles do not exist as standalone
-   * objects.
-   *
-   * @var array
-   */
-  protected $bundle_keys = array();
-
-  /**
    * Indicates whether fields can be attached to entities of this type.
    *
    * @var bool (optional)
@@ -454,20 +440,6 @@ class EntityType implements EntityTypeInterface {
    */
   public function getPermissionGranularity() {
     return isset($this->permission_granularity) ? $this->permission_granularity : 'entity_type';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBundleKeys() {
-    return isset($this->bundle_keys) ? $this->bundle_keys : array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBundleKey($name) {
-    return isset($this->bundle_keys[$name]) ? $this->bundle_keys[$name] : FALSE;
   }
 
   /**

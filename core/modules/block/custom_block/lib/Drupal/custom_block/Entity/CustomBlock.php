@@ -49,9 +49,6 @@ use Drupal\custom_block\CustomBlockInterface;
  *     "label" = "info",
  *     "uuid" = "uuid"
  *   },
- *   bundle_keys = {
- *     "bundle" = "type"
- *   },
  *   bundle_entity_type = "custom_block_type"
  * )
  */

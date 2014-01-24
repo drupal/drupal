@@ -37,9 +37,6 @@ use Symfony\Component\Routing\Route;
  *     "uuid" = "uuid",
  *     "bundle" = "bundle"
  *   },
- *   bundle_keys = {
- *     "bundle" = "bundle"
- *   }
  * )
  */
 class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {

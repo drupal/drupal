@@ -152,7 +152,7 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
    */
   public function displayBundle() {
     // The bundle key is explicitly defined in the entity definition.
-    if ($this->baseEntityInfo->getBundleKey('bundle')) {
+    if ($this->baseEntityInfo->getKey('bundle')) {
       return TRUE;
     }
 

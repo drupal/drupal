@@ -472,29 +472,6 @@ function field_view_field(ContentEntityInterface $entity, $field_name, $display_
 }
 
 /**
- * Extracts the bundle name from a bundle object.
- *
- * @param $entity_type
- *   The type of $entity; e.g., 'node' or 'user'.
- * @param $bundle
- *   The bundle object (or string if bundles for this entity type do not exist
- *   as standalone objects).
- *
- * @return
- *   The bundle name.
- */
-function field_extract_bundle($entity_type, $bundle) {
-  if (is_string($bundle)) {
-    return $bundle;
-  }
-
-  $info = \Drupal::entityManager()->getDefinition($entity_type);
-  if (is_object($bundle) && ($bundle_key = $info->getBundleKey('bundle')) && isset($bundle->{$bundle_key})) {
-    return $bundle->{$bundle_key};
-  }
-}
-
-/**
  * Implements hook_page_build().
  */
 function field_page_build(&$page) {

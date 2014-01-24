@@ -43,9 +43,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *     "label" = "subject",
  *     "uuid" = "uuid"
  *   },
- *   bundle_keys = {
- *     "bundle" = "field_id"
- *   },
  *   links = {
  *     "canonical" = "comment.permalink",
  *     "edit-form" = "comment.edit_page",

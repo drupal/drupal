@@ -370,29 +370,6 @@ interface EntityTypeInterface {
   public function getPermissionGranularity();
 
   /**
-   * Get all bundle keys defined on the annotation.
-   *
-   * @return array
-   *   An array describing how the Field API can extract the information it
-   *   needs from the bundle objects for this type (e.g Vocabulary objects for
-   *   terms; not applicable for nodes):
-   *   - bundle: The name of the property that contains the name of the bundle
-   *     object.
-   */
-  public function getBundleKeys();
-
-  /**
-   * Returns a single bundle key.
-   *
-   * @param string $name
-   *   The name of the bundle key.
-   *
-   * @return string|bool
-   *   The value of the bundle key.
-   */
-  public function getBundleKey($name);
-
-  /**
    * Indicates whether fields can be attached to entities of this type.
    *
    * @return bool

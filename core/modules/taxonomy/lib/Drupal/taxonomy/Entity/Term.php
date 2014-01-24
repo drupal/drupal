@@ -41,9 +41,6 @@ use Drupal\taxonomy\TermInterface;
  *     "label" = "name",
  *     "uuid" = "uuid"
  *   },
- *   bundle_keys = {
- *     "bundle" = "vid"
- *   },
  *   bundle_entity_type = "taxonomy_vocabulary",
  *   links = {
  *     "canonical" = "taxonomy.term_page",

@@ -563,7 +563,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $bundles = entity_get_bundles($this->entity_type);
     // If the current base table support bundles and has more than one (like user).
-    if (!empty($bundles) && $this->entity_info && $this->entity_info->getBundleKeys()) {
+    if (!empty($bundles) && $this->entity_info) {
       // Get all bundles and their human readable names.
       $options = array('all' => t('All'));
       foreach ($bundles as $type => $bundle) {
@@ -837,7 +837,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $filters = array();
 
     if (!empty($form_state['values']['show']['type']) && $form_state['values']['show']['type'] != 'all') {
-      $bundle_key = $this->entity_info->getBundleKey('bundle');
+      $bundle_key = $this->entity_info->getKey('bundle');
       // Figure out the table where $bundle_key lives. It may not be the same as
       // the base table for the view; the taxonomy vocabulary machine_name, for
       // example, is stored in taxonomy_vocabulary, not taxonomy_term_data.

@@ -48,9 +48,6 @@ use Drupal\node\NodeInterface;
  *     "label" = "title",
  *     "uuid" = "uuid"
  *   },
- *   bundle_keys = {
- *     "bundle" = "type"
- *   },
  *   bundle_entity_type = "node_type",
  *   permission_granularity = "bundle",
  *   links = {
