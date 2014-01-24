@@ -81,7 +81,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function filterEmptyItems() {
+  public function filterEmptyValues() {
     if (isset($this->list)) {
       $this->list = array_values(array_filter($this->list, function($item) {
         return !$item->isEmpty();
@@ -238,7 +238,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   public function preSave() {
     // Filter out empty items.
-    $this->filterEmptyItems();
+    $this->filterEmptyValues();
 
     $this->delegateMethod('presave');
   }

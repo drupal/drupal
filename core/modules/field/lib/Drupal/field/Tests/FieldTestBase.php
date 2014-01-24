@@ -56,7 +56,7 @@ abstract class FieldTestBase extends WebTestBase {
     $e = entity_load($entity->entityType(), $entity->id());
     $field = $values = $e->getTranslation($langcode)->$field_name;
     // Filter out empty values so that they don't mess with the assertions.
-    $field->filterEmptyItems();
+    $field->filterEmptyValues();
     $values = $field->getValue();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {

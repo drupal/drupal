@@ -99,7 +99,7 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
 
     if (method_exists($target, $method)) {
       $items = $entity->get($field_definition->getName());
-      $items->filterEmptyItems();
+      $items->filterEmptyValues();
 
       $result = $target->$method($items, $a, $b);
 
@@ -179,7 +179,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
       // If there is a target, group the field items.
       if ($grouped_targets[$group_key]) {
         $items = $entity->get($field_name);
-        $items->filterEmptyItems();
+        $items->filterEmptyValues();
         $grouped_items[$group_key][$id] = $items;
       }
     }

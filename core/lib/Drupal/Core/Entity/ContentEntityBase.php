@@ -802,9 +802,9 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
     foreach ($this->getPropertyDefinitions() as $name => $definition) {
       if (!$definition->isComputed() && !empty($this->fields[$name])) {
-        foreach ($this->fields[$name] as $langcode => $item) {
-          $item->filterEmptyItems();
-          $this->values[$name][$langcode] = $item->getValue();
+        foreach ($this->fields[$name] as $langcode => $field) {
+          $field->filterEmptyValues();
+          $this->values[$name][$langcode] = $field->getValue();
         }
       }
     }
