@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\comment;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Comment manager contains common functions to manage comment fields.
@@ -85,5 +86,22 @@ interface CommentManagerInterface {
    *   The human readable field name.
    */
   public function getFieldUIPageTitle($commented_entity_type, $field_name);
+
+  /**
+   * Provides a message if posting comments is forbidden.
+   *
+   * If authenticated users can post comments, a message is returned that
+   * prompts the anonymous user to log in (or register, if applicable) that
+   * redirects to entity comment form. Otherwise, no message is returned.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to which comments are attached to.
+   * @param string $field_name
+   *   The field name on the entity to which comments are attached to.
+   *
+   * @return string
+   *   HTML for a "you can't post comments" notice.
+   */
+  public function forbiddenMessage(EntityInterface $entity, $field_name);
 
 }

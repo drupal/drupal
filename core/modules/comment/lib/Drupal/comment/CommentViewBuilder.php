@@ -240,12 +240,7 @@ class CommentViewBuilder extends EntityViewBuilder {
         );
       }
       if (empty($links)) {
-        $comment_post_forbidden = array(
-          '#theme' => 'comment_post_forbidden',
-          '#commented_entity' => $commented_entity,
-          '#field_name' => $entity->field_name->value,
-        );
-        $links['comment-forbidden']['title'] = drupal_render($comment_post_forbidden);
+        $links['comment-forbidden']['title'] = \Drupal::service('comment.manager')->forbiddenMessage($commented_entity, $entity->field_name->value);
         $links['comment-forbidden']['html'] = TRUE;
       }
     }

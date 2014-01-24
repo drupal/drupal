@@ -163,19 +163,13 @@ function comment_field_extra_fields() {
  */
 function comment_theme() {
   return array(
-    'comment_preview' => array(
-      'variables' => array('comment' => NULL),
-    ),
     'comment' => array(
-      'template' => 'comment',
       'render element' => 'elements',
-    ),
-    'comment_post_forbidden' => array(
-      'variables' => array('commented_entity' => NULL, 'field_name' => 'comment'),
+      'template' => 'comment',
     ),
     'comment_wrapper' => array(
-      'template' => 'comment-wrapper',
       'render element' => 'content',
+      'template' => 'comment-wrapper',
     ),
   );
 }
@@ -491,13 +485,8 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
             }
           }
           else {
-            $comment_post_forbidden = array(
-              '#theme' => 'comment_post_forbidden',
-              '#commented_entity' => $entity,
-              '#field_name' => $field_name,
-            );
             $links['comment-forbidden'] = array(
-              'title' => drupal_render($comment_post_forbidden),
+              'title' => \Drupal::service('comment.manager')->forbiddenMessage($entity, $field_name),
               'html' => TRUE,
             );
           }
@@ -526,13 +515,8 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
             }
           }
           else {
-            $comment_post_forbidden = array(
-              '#theme' => 'comment_post_forbidden',
-              '#commented_entity' => $entity,
-              '#field_name' => $field_name,
-            );
             $links['comment-forbidden'] = array(
-              'title' => drupal_render($comment_post_forbidden),
+              'title' => \Drupal::service('comment.manager')->forbiddenMessage($entity, $field_name),
               'html' => TRUE,
             );
           }
@@ -1477,56 +1461,6 @@ function template_preprocess_comment(&$variables) {
   $variables['attributes']['data-comment-user-id'] = $comment->uid->value;
 
   $variables['content_attributes']['class'][] = 'content';
-}
-
-/**
- * Returns HTML for a "you can't post comments" notice.
- *
- * @param $variables
- *   An associative array containing:
- *   - commented_entity: The entity to which comments are attached to.
- *   - field_name: The comment field.
- *
- * @ingroup themeable
- */
-function theme_comment_post_forbidden($variables) {
-  $entity = $variables['commented_entity'];
-  $field_name = $variables['field_name'];
-
-  // Since this is expensive to compute, we cache it so that a page with many
-  // comments only has to query the database once for all the links.
-  $authenticated_post_comments = &drupal_static(__FUNCTION__, NULL);
-
-  if (\Drupal::currentUser()->isAnonymous()) {
-    if (!isset($authenticated_post_comments)) {
-      // We only output a link if we are certain that users will get permission
-      // to post comments by logging in.
-      $comment_roles = user_roles(TRUE, 'post comments');
-      $authenticated_post_comments = isset($comment_roles[DRUPAL_AUTHENTICATED_RID]);
-    }
-
-    if ($authenticated_post_comments) {
-      $instance = \Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
-      // We cannot use drupal_get_destination() because these links
-      // sometimes appear on /node and taxonomy listing pages.
-      if ($instance->getSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
-        $destination = array('destination' => 'comment/reply/' . $entity->entityType() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
-      }
-      else {
-        $uri = $entity->uri();
-        $destination = array('destination' => $uri['path'] . '#comment-form');
-      }
-
-      if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-        // Users can register themselves.
-        return t('<a href="@login">Log in</a> or <a href="@register">register</a> to post comments', array('@login' => url('user/login', array('query' => $destination)), '@register' => url('user/register', array('query' => $destination))));
-      }
-      else {
-        // Only admins can add new users, no public registration.
-        return t('<a href="@login">Log in</a> to post comments', array('@login' => url('user/login', array('query' => $destination))));
-      }
-    }
-  }
 }
 
 /**
