@@ -220,13 +220,6 @@ class NodeFormController extends ContentEntityFormController {
       '#default_value' => $node->isSticky(),
     );
 
-    // This form uses a button-level #submit handler for the form's main submit
-    // action. node_form_submit() manually invokes all form-level #submit
-    // handlers of the form. Without explicitly setting #submit, Form API would
-    // auto-detect node_form_submit() as submit handler, but that is the
-    // button-level #submit handler for the 'Save' action.
-    $form += array('#submit' => array());
-
     return parent::form($form, $form_state, $node);
   }
 
