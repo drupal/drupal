@@ -174,27 +174,27 @@ function template_preprocess_aggregator_feed_source(&$variables) {
 
   $feed_icon = array(
     '#theme' => 'feed_icon',
-    '#url' => $feed->url->value,
+    '#url' => $feed->getUrl(),
     '#title' => t('!title feed', array('!title' => $feed->label())),
   );
   $variables['source_icon'] = drupal_render($feed_icon);
 
-  if (!empty($feed->image->value) && $feed->label() && !empty($feed->link->value)) {
+  if ($feed->getImage() && $feed->label() && $feed->getWebsiteUrl()) {
     $image = array(
       '#theme' => 'image',
-      '#path' => $feed->image->value,
-      '#alt' => $feed->title->value,
+      '#path' => $feed->getImage(),
+      '#alt' => $feed->label(),
     );
-    $variables['source_image'] = l($image, $feed->link->value, array('html' => TRUE, 'attributes' => array('class' => 'feed-image')));
+    $variables['source_image'] = l($image, $feed->getWebsiteUrl(), array('html' => TRUE, 'attributes' => array('class' => 'feed-image')));
   }
   else {
     $variables['source_image'] = '';
   }
-  $variables['source_description'] = aggregator_filter_xss($feed->description->value);
-  $variables['source_url'] = check_url(url($feed->link->value, array('absolute' => TRUE)));
+  $variables['source_description'] = aggregator_filter_xss($feed->getDescription());
+  $variables['source_url'] = check_url(url($feed->getWebsiteUrl(), array('absolute' => TRUE)));
 
   if ($feed->checked) {
-    $variables['last_checked'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->checked->value)));
+    $variables['last_checked'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->getLastCheckedTime())));
   }
   else {
     $variables['last_checked'] = t('never');

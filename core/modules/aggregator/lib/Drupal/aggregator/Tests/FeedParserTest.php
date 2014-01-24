@@ -92,7 +92,7 @@ class FeedParserTest extends AggregatorTestBase {
     aggregator_refresh($feed);
 
     // Make sure that the feed URL was updated correctly.
-    $this->assertEqual($feed->url->value, url('aggregator/test-feed', array('absolute' => TRUE)));
+    $this->assertEqual($feed->getUrl(), url('aggregator/test-feed', array('absolute' => TRUE)));
   }
 
   /**

@@ -54,7 +54,7 @@ class RemoveFeedTest extends AggregatorTestBase {
     $this->assertResponse(404, 'Deleted feed source does not exists.');
 
     // Check database for feed.
-    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed1->label(), ':url' => $feed1->url->value))->fetchField();
+    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed1->label(), ':url' => $feed1->getUrl()))->fetchField();
     $this->assertFalse($result, 'Feed not found in database');
   }
 

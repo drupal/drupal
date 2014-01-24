@@ -42,7 +42,7 @@ class FeedFetcherPluginTest extends AggregatorTestBase {
     // Remove items and restore checked property to 0.
     $this->removeFeedItems($feed);
     // Change its name and try again.
-    $feed->title->value = 'Do not fetch';
+    $feed->setTitle('Do not fetch');
     $feed->save();
     $this->updateFeedItems($feed);
     // Fetch should fail due to feed name.

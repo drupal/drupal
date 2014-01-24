@@ -177,8 +177,8 @@ class OpmlFeedAdd extends FormBase {
           drupal_set_message($this->t('A feed named %title already exists.', array('%title' => $old->label())), 'warning');
           continue 2;
         }
-        if (strcasecmp($old->url->value, $feed['url']) == 0) {
-          drupal_set_message($this->t('A feed with the URL %url already exists.', array('%url' => $old->url->value)), 'warning');
+        if (strcasecmp($old->getUrl(), $feed['url']) == 0) {
+          drupal_set_message($this->t('A feed with the URL %url already exists.', array('%url' => $old->getUrl())), 'warning');
           continue 2;
         }
       }

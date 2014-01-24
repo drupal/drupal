@@ -58,15 +58,15 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function fetch(Feed $feed) {
-    $request = $this->httpClient->get($feed->url->value);
+    $request = $this->httpClient->get($feed->getUrl());
     $feed->source_string = FALSE;
 
     // Generate conditional GET headers.
-    if ($feed->etag->value) {
-      $request->addHeader('If-None-Match', $feed->etag->value);
+    if ($feed->getEtag()) {
+      $request->addHeader('If-None-Match', $feed->getEtag());
     }
-    if ($feed->modified->value) {
-      $request->addHeader('If-Modified-Since', gmdate(DATE_RFC1123, $feed->modified->value));
+    if ($feed->getLastModified()) {
+      $request->addHeader('If-Modified-Since', gmdate(DATE_RFC1123, $feed->getLastModified()));
     }
 
     try {
@@ -79,14 +79,14 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
       }
 
       $feed->source_string = $response->getBody(TRUE);
-      $feed->etag = $response->getEtag();
-      $feed->modified = strtotime($response->getLastModified());
+      $feed->setEtag($response->getEtag());
+      $feed->setLastModified(strtotime($response->getLastModified()));
       $feed->http_headers = $response->getHeaders();
 
       // Update the feed URL in case of a 301 redirect.
 
-      if ($response->getEffectiveUrl() != $feed->url->value) {
-        $feed->url->value = $response->getEffectiveUrl();
+      if ($response->getEffectiveUrl() != $feed->getUrl()) {
+        $feed->setUrl($response->getEffectiveUrl());
       }
       return TRUE;
     }

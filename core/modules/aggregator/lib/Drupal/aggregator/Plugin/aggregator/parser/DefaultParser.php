@@ -42,10 +42,10 @@ class DefaultParser implements ParserInterface {
       return FALSE;
     }
 
-    $feed->link->value = $channel->getLink();
-    $feed->description->value = $channel->getDescription();
+    $feed->setWebsiteUrl($channel->getLink());
+    $feed->setDescription($channel->getDescription());
     if ($image = $channel->getImage()) {
-      $feed->image->value = $image['uri'];
+      $feed->setImage($image['uri']);
     }
     // Initialize items array.
     $feed->items = array();

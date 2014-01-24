@@ -180,7 +180,7 @@ function aggregator_cron() {
     $feed = aggregator_feed_load($fid);
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
-      $feed->queued->value = REQUEST_TIME;
+      $feed->setQueuedTime(REQUEST_TIME);
       $feed->save();
     }
   }
@@ -214,7 +214,7 @@ function aggregator_queue_info() {
  */
 function aggregator_refresh(Feed $feed) {
   // Store feed URL to track changes.
-  $feed_url = $feed->url->value;
+  $feed_url = $feed->getUrl();
 
   $config = \Drupal::config('aggregator.settings');
   // Fetch the feed.
@@ -245,21 +245,21 @@ function aggregator_refresh(Feed $feed) {
   // data. If both are equal we say that feed is not updated.
   $hash = hash('sha256', $feed->source_string);
 
-  if ($success && ($feed->hash->value != $hash)) {
+  if ($success && ($feed->getHash() != $hash)) {
     // Parse the feed.
     $parser_manager = \Drupal::service('plugin.manager.aggregator.parser');
     try {
       if ($parser_manager->createInstance($config->get('parser'))->parse($feed)) {
-        if (empty($feed->link->value)) {
-          $feed->link->value = $feed->url->value;
+        if ($feed->getWebsiteUrl()) {
+          $feed->setWebsiteUrl($feed->getUrl());
         }
-        $feed->hash->value = $hash;
+        $feed->setHash($hash);
         // Update feed with parsed data.
         $feed->save();
 
         // Log if feed URL has changed.
-        if ($feed->url->value != $feed_url) {
-          watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->label(), '%url' => $feed->url->value));
+        if ($feed->getUrl() != $feed_url) {
+          watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed->label(), '%url' => $feed->getUrl()));
         }
 
         watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed->label()));
@@ -282,8 +282,8 @@ function aggregator_refresh(Feed $feed) {
   }
 
   // Regardless of successful or not, indicate that this feed has been checked.
-  $feed->checked->value = REQUEST_TIME;
-  $feed->queued->value = 0;
+  $feed->setLastCheckedTime(REQUEST_TIME);
+  $feed->setQueuedTime(0);
   $feed->save();
 
   // Processing is done, call postProcess on enabled processors.

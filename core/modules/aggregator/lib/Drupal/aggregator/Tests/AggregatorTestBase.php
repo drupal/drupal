@@ -154,8 +154,8 @@ abstract class AggregatorTestBase extends WebTestBase {
    */
   function updateFeedItems(Feed $feed, $expected_count = NULL) {
     // First, let's ensure we can get to the rss xml.
-    $this->drupalGet($feed->url->value);
-    $this->assertResponse(200, format_string('!url is reachable.', array('!url' => $feed->url->value)));
+    $this->drupalGet($feed->getUrl());
+    $this->assertResponse(200, format_string('!url is reachable.', array('!url' => $feed->getUrl())));
 
     // Attempt to access the update link directly without an access token.
     $this->drupalGet('admin/config/services/aggregator/update/' . $feed->id());

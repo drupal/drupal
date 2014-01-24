@@ -40,121 +40,6 @@ use Drupal\aggregator\FeedInterface;
 class Feed extends ContentEntityBase implements FeedInterface {
 
   /**
-   * The feed ID.
-   *
-   * @todo rename to id.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $fid;
-
-  /**
-   * Title of the feed.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $title;
-
-  /**
-   * The feed language code.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $langcode;
-
-  /**
-   * URL to the feed.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $url;
-
-  /**
-   * How often to check for new feed items, in seconds.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $refresh;
-
-  /**
-   * Last time feed was checked for new items, as Unix timestamp.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $checked;
-
-  /**
-   * Time when this feed was queued for refresh, 0 if not queued.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $queued;
-
-  /**
-   * The parent website of the feed; comes from the <link> element in the feed.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $link ;
-
-  /**
-   * The parent website's description;
-   * comes from the <description> element in the feed.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $description;
-
-  /**
-   * An image representing the feed.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $image;
-
-  /**
-   * Calculated hash of the feed data, used for validating cache.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $hash;
-
-  /**
-   * Entity tag HTTP response header, used for validating cache.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $etag;
-
-  /**
-   * When the feed was last modified, as a Unix timestamp.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $modified;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    parent::init();
-
-    // We unset all defined properties, so magic getters apply.
-    unset($this->fid);
-    unset($this->title);
-    unset($this->url);
-    unset($this->refresh);
-    unset($this->checked);
-    unset($this->queued);
-    unset($this->link);
-    unset($this->description);
-    unset($this->image);
-    unset($this->hash);
-    unset($this->etag);
-    unset($this->modified);
-  }
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
@@ -177,11 +62,13 @@ class Feed extends ContentEntityBase implements FeedInterface {
       $manager->createInstance($id)->remove($this);
     }
     // Reset feed.
-    $this->checked->value = 0;
-    $this->hash->value = '';
-    $this->etag->value = '';
-    $this->modified->value = 0;
+    $this->setLastCheckedTime(0);
+    $this->setHash('');
+    $this->setEtag('');
+    $this->setLastModified(0);
     $this->save();
+
+    return $this;
   }
 
   /**
@@ -291,6 +178,164 @@ class Feed extends ContentEntityBase implements FeedInterface {
       ->setDescription(t('When the feed was last modified, as a Unix timestamp.'));
 
     return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrl() {
+    return $this->get('url')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRefreshRate() {
+    return $this->get('refresh')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastCheckedTime() {
+    return $this->get('checked')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueuedTime() {
+    return $this->get('queued')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWebsiteUrl() {
+    return $this->get('link')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->get('description')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getImage() {
+    return $this->get('image')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHash() {
+    return $this->get('hash')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEtag() {
+    return $this->get('etag')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastModified() {
+    return $this->get('modified')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTitle($title) {
+    $this->set('title', $title);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUrl($url) {
+    $this->set('url', $url);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRefreshRate($refresh) {
+    $this->set('refresh', $refresh);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLastCheckedTime($checked) {
+    $this->set('checked', $checked);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setQueuedTime($queued) {
+    $this->set('queued', $queued);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWebsiteUrl($link) {
+    $this->set('link', $link);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDescription($description) {
+    $this->set('description', $description);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setImage($image) {
+    $this->set('image', $image);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setHash($hash) {
+    $this->set('hash', $hash);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setEtag($etag) {
+    $this->set('etag', $etag);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLastModified($modified) {
+    $this->set('modified', $modified);
+    return $this;
   }
 
 }

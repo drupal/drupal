@@ -27,7 +27,7 @@ class AddFeedTest extends AggregatorTestBase {
 
     // Check feed data.
     $this->assertEqual($this->getUrl(), url('admin/config/services/aggregator/add/feed', array('absolute' => TRUE)), 'Directed to correct url.');
-    $this->assertTrue($this->uniqueFeed($feed->label(), $feed->url->value), 'The feed is unique.');
+    $this->assertTrue($this->uniqueFeed($feed->label(), $feed->getUrl()), 'The feed is unique.');
 
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed->id());
@@ -53,8 +53,8 @@ class AddFeedTest extends AggregatorTestBase {
     $feed_2 = $this->createFeed($long_url_2);
 
     // Check feed data.
-    $this->assertTrue($this->uniqueFeed($feed->label(), $feed->url->value), 'The first long URL feed is unique.');
-    $this->assertTrue($this->uniqueFeed($feed_2->label(), $feed_2->url->value), 'The second long URL feed is unique.');
+    $this->assertTrue($this->uniqueFeed($feed->label(), $feed->getUrl()), 'The first long URL feed is unique.');
+    $this->assertTrue($this->uniqueFeed($feed_2->label(), $feed_2->getUrl()), 'The second long URL feed is unique.');
 
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed->id());

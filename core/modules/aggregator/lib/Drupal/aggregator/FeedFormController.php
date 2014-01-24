@@ -45,14 +45,14 @@ class FeedFormController extends ContentEntityFormController {
     $form['url'] = array(
       '#type' => 'url',
       '#title' => $this->t('URL'),
-      '#default_value' => $feed->url->value,
+      '#default_value' => $feed->getUrl(),
       '#maxlength' => NULL,
       '#description' => $this->t('The fully-qualified URL of the feed.'),
       '#required' => TRUE,
     );
     $form['refresh'] = array('#type' => 'select',
       '#title' => $this->t('Update interval'),
-      '#default_value' => $feed->refresh->value,
+      '#default_value' => $feed->getRefreshRate(),
       '#options' => $period,
       '#description' => $this->t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
     );
@@ -72,8 +72,8 @@ class FeedFormController extends ContentEntityFormController {
       if (strcasecmp($item->title, $feed->label()) == 0) {
         $this->setFormError('title', $form_state, $this->t('A feed named %feed already exists. Enter a unique title.', array('%feed' => $feed->label())));
       }
-      if (strcasecmp($item->url, $feed->url->value) == 0) {
-        $this->setFormError('url', $form_state, $this->t('A feed with this URL %url already exists. Enter a unique URL.', array('%url' => $feed->url->value)));
+      if (strcasecmp($item->url, $feed->getUrl()) == 0) {
+        $this->setFormError('url', $form_state, $this->t('A feed with this URL %url already exists. Enter a unique URL.', array('%url' => $feed->getUrl())));
       }
     }
     parent::validate($form, $form_state);

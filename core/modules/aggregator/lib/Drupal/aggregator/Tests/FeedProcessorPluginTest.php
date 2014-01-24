@@ -41,7 +41,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
     $this->updateFeedItems($feed);
     foreach ($feed->items as $iid) {
       $item = entity_load('aggregator_item', $iid);
-      $this->assertTrue(strpos($item->getTitle(), 'testProcessor') === 0);
+      $this->assertTrue(strpos($item->label(), 'testProcessor') === 0);
     }
   }
 
@@ -65,6 +65,6 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
     // Reload the feed to get new values.
     $feed = entity_load('aggregator_feed', $feed->id(), TRUE);
     // Make sure its refresh rate doubled.
-    $this->assertEqual($feed->refresh->value, 3600);
+    $this->assertEqual($feed->getRefreshRate(), 3600);
   }
 }
