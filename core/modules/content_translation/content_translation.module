@@ -825,13 +825,27 @@ function content_translation_field_extra_fields() {
  * Implements hook_form_FORM_ID_alter() for 'field_ui_field_edit_form'.
  */
 function content_translation_form_field_ui_field_edit_form_alter(array &$form, array &$form_state, $form_id) {
+  $field = $form['#field'];
+  $bundle = $form['#bundle'];
+  $bundle_is_translatable = content_translation_enabled($field->entity_type, $bundle);
   $form['field']['translatable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Users may translate this field.'),
-    '#default_value' => $form['#field']->isTranslatable(),
+    '#default_value' => $field->isTranslatable(),
     '#weight' => 20,
+    '#disabled' => !$bundle_is_translatable,
   );
   $form['#submit'][] = 'content_translation_form_field_ui_field_edit_form_submit';
+
+  // Provide helpful pointers for administrators.
+  if (\Drupal::currentUser()->hasPermission('administer content translation') &&  !$bundle_is_translatable) {
+    $toggle_url = url('admin/config/regional/content-language', array(
+      'query' => drupal_get_destination(),
+    ));
+    $form['field']['translatable']['#description'] = t('To enable translation of this field, <a href="@language-settings-url">enable language support</a> for this type.', array(
+      '@language-settings-url' => $toggle_url,
+    ));
+  }
 }
 
 /**

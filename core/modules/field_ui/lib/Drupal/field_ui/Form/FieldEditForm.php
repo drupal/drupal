@@ -91,6 +91,7 @@ class FieldEditForm extends FormBase {
 
     $field = $this->instance->getField();
     $form['#field'] = $field;
+    $form['#bundle'] = $this->instance->bundle;
 
     $description = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. These settings impact the way that data is stored in the database and cannot be changed once data has been created.', array('%field' => $this->instance->label())) . '</p>';
 
