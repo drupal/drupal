@@ -42,6 +42,17 @@ const STREAM_WRAPPERS_WRITE = 0x0008;
  */
 const STREAM_WRAPPERS_VISIBLE = 0x0010;
 
+
+/**
+ * Default mode for new directories. See drupal_chmod().
+ */
+const FILE_CHMOD_DIRECTORY = 0775;
+
+/**
+ * Default mode for new files. See drupal_chmod().
+ */
+const FILE_CHMOD_FILE = 0664;
+
 /**
  * Composite stream wrapper bit flags that are usually used as the types.
  */
@@ -518,15 +529,12 @@ function file_url_transform_relative($file_url) {
  *   A bitmask to indicate if the directory should be created if it does
  *   not exist (FILE_CREATE_DIRECTORY) or made writable if it is read-only
  *   (FILE_MODIFY_PERMISSIONS).
- * @param int $mode
- *   Octal value for the permissions. Consult PHP chmod() documentation for
- *   more information.
  *
  * @return
  *   TRUE if the directory exists (or was created) and is writable. FALSE
  *   otherwise.
  */
-function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS, $mode = NULL) {
+function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS) {
   if (!file_stream_wrapper_valid_scheme(file_uri_scheme($directory))) {
     // Only trim if we're not dealing with a stream.
     $directory = rtrim($directory, '/\\');
@@ -537,14 +545,14 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS,
     // Let mkdir() recursively create directories and use the default directory
     // permissions.
     if ($options & FILE_CREATE_DIRECTORY) {
-      return @drupal_mkdir($directory, $mode, TRUE);
+      return @drupal_mkdir($directory, NULL, TRUE);
     }
     return FALSE;
   }
   // The directory exists, so check to see if it is writable.
   $writable = is_writable($directory);
   if (!$writable && ($options & FILE_MODIFY_PERMISSIONS)) {
-    return drupal_chmod($directory, $mode);
+    return drupal_chmod($directory);
   }
 
   return $writable;
@@ -1284,8 +1292,8 @@ function file_get_mimetype($uri, $mapping = NULL) {
 /**
  * Sets the permissions on a file or directory.
  *
- * This function will use the system.file:chmod.directory and
- * system.file:chmod.file configuration for the default modes for directories
+ * This function will use the file_chmod_directory and
+ * file_chmod_file settings for the default modes for directories
  * and uploaded/generated files. By default these will give everyone read access
  * so that users accessing the files with a user account without the webserver
  * group (e.g. via FTP) can read these files, and give group write permissions
@@ -1298,8 +1306,8 @@ function file_get_mimetype($uri, $mapping = NULL) {
  *
  * @param $uri
  *   A string containing a URI file, or directory path.
- * @param int $mode
- *   Octal value for the permissions. Consult PHP chmod() documentation for
+ * @param $mode
+ *   Integer value for the permissions. Consult PHP chmod() documentation for
  *   more information.
  *
  * @return bool
@@ -1309,20 +1317,11 @@ function file_get_mimetype($uri, $mapping = NULL) {
  */
 function drupal_chmod($uri, $mode = NULL) {
   if (!isset($mode)) {
-    // Configuration system stores default modes as strings. We use octdec() so
-    // that the octal permission numbers can be expressed as integers or strings
-    // and will be converted correctly in both cases.
     if (is_dir($uri)) {
-      $mode = octdec(\Drupal::config('system.file')->get('chmod.directory'));
-      if (!$mode) {
-        $mode = 0775;
-      }
+      $mode = settings()->get('file_chmod_directory', FILE_CHMOD_DIRECTORY);
     }
     else {
-      $mode = octdec(\Drupal::config('system.file')->get('chmod.file'));
-      if (!$mode) {
-        $mode = 0664;
-      }
+      $mode = settings()->get('file_chmod_file', FILE_CHMOD_FILE);
     }
   }
 
@@ -1493,15 +1492,7 @@ function drupal_basename($uri, $suffix = NULL) {
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
   if (!isset($mode)) {
-    // Configuration system stores default mode as strings.
-    $mode = FALSE;
-    // During early update there's no container.
-    if (is_object(\Drupal::getContainer())) {
-      $mode = octdec(\Drupal::config('system.file')->get('chmod.directory'));
-    }
-    if (!$mode) {
-      $mode = 0775;
-    }
+    $mode = settings()->get('file_chmod_directory', FILE_CHMOD_DIRECTORY);
   }
 
   // If the URI has a scheme, don't override the umask - schemes can handle this

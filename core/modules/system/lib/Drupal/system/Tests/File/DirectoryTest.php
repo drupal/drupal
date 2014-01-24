@@ -85,11 +85,12 @@ class DirectoryTest extends FileTestBase {
       $this->assertFalse(file_prepare_directory($directory, 0), 'Error reported for a non-writeable directory.', 'File');
 
       // Test directory permission modification.
+      $this->settingsSet('file_chmod_directory', 0777);
       $this->assertTrue(file_prepare_directory($directory, FILE_MODIFY_PERMISSIONS), 'No error reported when making directory writeable.', 'File');
     }
 
     // Test that the directory has the correct permissions.
-    $this->assertDirectoryPermissions($directory, octdec(\Drupal::config('system.file')->get('chmod.directory')));
+    $this->assertDirectoryPermissions($directory, 0777, 'file_chmod_directory setting is respected.');
 
     // Remove .htaccess file to then test that it gets re-created.
     @drupal_unlink(file_default_scheme() . '://.htaccess');

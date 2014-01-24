@@ -24,6 +24,7 @@ class UnmanagedSaveDataTest extends FileTestBase {
    */
   function testFileSaveData() {
     $contents = $this->randomName(8);
+    $this->settingsSet('file_chmod_file', 0777);
 
     // No filename.
     $filepath = file_unmanaged_save_data($contents);
@@ -36,6 +37,6 @@ class UnmanagedSaveDataTest extends FileTestBase {
     $this->assertTrue($filepath, 'Unnamed file saved correctly.');
     $this->assertEqual('asdf.txt', drupal_basename($filepath), 'File was named correctly.');
     $this->assertEqual($contents, file_get_contents($filepath), 'Contents of the file are correct.');
-    $this->assertFilePermissions($filepath, octdec(\Drupal::config('system.file')->get('chmod.file')));
+    $this->assertFilePermissions($filepath, 0777, 'file_chmod_file setting is respected.');
   }
 }

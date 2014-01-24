@@ -110,9 +110,13 @@ class FileStorage implements StorageInterface {
    */
   public function write($name, array $data) {
     $data = $this->encode($data);
-    $status = @file_put_contents($this->getFilePath($name), $data);
+    $target = $this->getFilePath($name);
+    $status = @file_put_contents($target, $data);
     if ($status === FALSE) {
       throw new StorageException('Failed to write configuration file: ' . $this->getFilePath($name));
+    }
+    else {
+      drupal_chmod($target);
     }
     return TRUE;
   }

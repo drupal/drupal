@@ -23,7 +23,6 @@ class UnmanagedMoveTest extends FileTestBase {
    * Move a normal file.
    */
   function testNormal() {
-    $config = \Drupal::config('system.file');
     // Create a file for testing
     $uri = $this->createUri();
 
@@ -34,7 +33,7 @@ class UnmanagedMoveTest extends FileTestBase {
     $this->assertEqual($new_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($new_filepath), 'File exists at the new location.');
     $this->assertFalse(file_exists($uri), 'No file remains at the old location.');
-    $this->assertFilePermissions($new_filepath, octdec($config->get('chmod.file')));
+    $this->assertFilePermissions($new_filepath, settings()->get('file_chmod_file', FILE_CHMOD_FILE));
 
     // Moving with rename.
     $desired_filepath = 'public://' . $this->randomName();
@@ -45,7 +44,7 @@ class UnmanagedMoveTest extends FileTestBase {
     $this->assertNotEqual($newer_filepath, $desired_filepath, 'Returned expected filepath.');
     $this->assertTrue(file_exists($newer_filepath), 'File exists at the new location.');
     $this->assertFalse(file_exists($new_filepath), 'No file remains at the old location.');
-    $this->assertFilePermissions($newer_filepath, octdec($config->get('chmod.file')));
+    $this->assertFilePermissions($newer_filepath, settings()->get('file_chmod_file', FILE_CHMOD_FILE));
 
     // TODO: test moving to a directory (rather than full directory/file path)
     // TODO: test creating and moving normal files (rather than streams)

@@ -433,14 +433,10 @@ function _drupal_rewrite_settings_dump_one(\stdClass $variable, $prefix = '', $s
 /**
  * Creates the config directory and ensures it is operational.
  *
- * @param int $mode
- *   Octal value for the permissions. Consult PHP chmod() documentation for
- *   more information.
- *
  * @see install_settings_form_submit()
  * @see update_prepare_d8_bootstrap()
  */
-function drupal_install_config_directories($mode = NULL) {
+function drupal_install_config_directories() {
   global $config_directories;
 
   // Add a randomized config directory name to settings.php, unless it was
@@ -469,7 +465,7 @@ function drupal_install_config_directories($mode = NULL) {
     // public files directory, which has already been verified to be writable
     // itself. But if it somehow fails anyway, the installation cannot proceed.
     // Bail out using a similar error message as in system_requirements().
-    if (!install_ensure_config_directory($config_type, $mode)) {
+    if (!install_ensure_config_directory($config_type)) {
       throw new Exception(t('The directory %directory could not be created or could not be made writable. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see the <a href="@handbook_url">online handbook</a>.', array(
         '%directory' => config_get_config_directory($config_type),
         '@handbook_url' => 'http://drupal.org/server-permissions',
@@ -535,14 +531,10 @@ function install_verify_config_directory($type) {
  *   Type of config directory to return. Drupal core provides 'active' and
  *   'staging'.
  *
- * @param int $mode
- *   Octal value for the permissions. Consult PHP chmod() documentation for
- *   more information.
- *
  * @return bool
  *   TRUE if the config directory exists and is writable.
  */
-function install_ensure_config_directory($type, $mode = NULL) {
+function install_ensure_config_directory($type) {
   // The config directory must be defined in settings.php.
   global $config_directories;
   if (!isset($config_directories[$type])) {
@@ -552,7 +544,7 @@ function install_ensure_config_directory($type, $mode = NULL) {
   // directories that the installer creates.
   else {
     $config_directory = config_get_config_directory($type);
-    return file_prepare_directory($config_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS, $mode);
+    return file_prepare_directory($config_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
   }
 }
 

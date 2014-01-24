@@ -371,8 +371,7 @@ function system_requirements($phase) {
       continue;
     }
     if ($phase == 'install') {
-      $mode = isset($GLOBALS['install_state']['mode']) ? $GLOBALS['install_state']['mode'] : NULL;
-      file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS, $mode);
+      file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     }
     $is_writable = is_writable($directory);
     $is_directory = is_dir($directory);
@@ -1961,6 +1960,7 @@ function system_update_8047() {
   update_variables_to_config('system.file', array(
     'allow_insecure_uploads' => 'allow_insecure_uploads',
     'file_default_scheme' => 'default_scheme',
+    // Note: the chmod variables were later moved to the settings system.
     'file_chmod_directory' => 'chmod.directory',
     'file_chmod_file' => 'chmod.file',
     'file_private_path' => 'path.private',

@@ -450,6 +450,14 @@ $settings['update_free_access'] = FALSE;
 # $settings['mixed_mode_sessions'] = TRUE;
 
 /**
+ * Default mode for for directories and files written by Drupal.
+ *
+ * Value should be in PHP Octal Notation, with leading zero.
+ */
+# $settings['file_chmod_directory'] = 0775;
+# $settings['file_chmod_file'] = 0664;
+
+/**
  * Public file path:
  *
  * A local file system path where public files will be stored. This directory
