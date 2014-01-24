@@ -8,6 +8,7 @@
 namespace Drupal\Tests;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
@@ -38,6 +39,17 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     // so we simply throw an exception here if this has not been implemented by
     // a child class.
     throw new \RuntimeException("Sub-class must implement the getInfo method!");
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown() {
+    parent::tearDown();
+    if (\Drupal::getContainer()) {
+      $container = new ContainerBuilder();
+      \Drupal::setContainer($container);
+    }
   }
 
   /**

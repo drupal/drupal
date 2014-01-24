@@ -120,15 +120,6 @@ class UserSessionTest extends UnitTestCase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function tearDown() {
-    parent::tearDown();
-    $container = new ContainerBuilder();
-    \Drupal::setContainer($container);
-  }
-
-  /**
    * Tests the has permission method.
    *
    * @param string $permission

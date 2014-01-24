@@ -74,15 +74,6 @@ class CommentLockTest extends UnitTestCase {
     $comment->postSave($storage_controller);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown() {
-    parent::tearDown();
-    $container = new ContainerBuilder();
-    \Drupal::setContainer($container);
-  }
-
 }
 }
 namespace {

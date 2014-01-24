@@ -46,12 +46,6 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  protected function tearDown() {
-    // Passes in an empty container.
-    $container = new ContainerBuilder();
-    \Drupal::setContainer($container);
-  }
-
   /**
    * Sets up the local task manager for the test.
    */
