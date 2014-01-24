@@ -85,12 +85,6 @@ function field_purge_batch($batch_size) {
       continue;
     }
 
-    // EntityFieldQuery currently fails on conditions on comment bundle.
-    // Remove when http://drupal.org/node/731724 is fixed.
-    if ($entity_type == 'comment') {
-      continue;
-    }
-
     $ids = (object) array(
       'entity_type' => $entity_type,
       'bundle' => $instance->bundle,

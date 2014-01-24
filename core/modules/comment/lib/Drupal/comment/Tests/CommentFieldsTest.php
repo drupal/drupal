@@ -57,6 +57,11 @@ class CommentFieldsTest extends CommentTestBase {
     $this->assertTrue($field, 'The comment_body field exists');
     $instances = $this->container->get('field.info')->getInstances('comment');
     $this->assertTrue(isset($instances['node__comment']['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+
+    // Test adding a field that defaults to COMMENT_CLOSED.
+    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', COMMENT_CLOSED);
+    $field = entity_load('field_instance', 'node.test_node_type.who_likes_ponies');
+    $this->assertEqual($field->default_value[0]['status'], COMMENT_CLOSED);
   }
 
   /**

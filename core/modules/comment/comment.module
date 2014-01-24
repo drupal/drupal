@@ -219,21 +219,33 @@ function comment_count_unpublished() {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_insert() for 'field_instance'.
+ */
+function comment_field_instance_insert(FieldInstanceInterface $instance) {
+  if ($instance->getType() == 'comment' && !$instance->isSyncing()) {
+    \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getName());
+    \Drupal::cache()->delete('comment_entity_info');
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
  */
 function comment_field_instance_create(FieldInstanceInterface $instance) {
   if ($instance->getType() == 'comment' && !$instance->isSyncing()) {
-    \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getName());
-    \Drupal::cache()->delete('comment_entity_info');
     // Assign default values for the field instance.
-    $instance->default_value = array(array(
+    if (!isset($instance->default_value)) {
+      $instance->default_value = array();
+    }
+    $instance->default_value += array(array());
+    $instance->default_value[0] += array(
       'status' => COMMENT_OPEN,
       'cid' => 0,
       'last_comment_timestamp' => 0,
       'last_comment_name' => '',
       'last_comment_uid' => 0,
       'comment_count' => 0,
-    ));
+    );
   }
 }
 
