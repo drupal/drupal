@@ -44,7 +44,7 @@ class AliasManager implements AliasManagerInterface {
   /**
    * Holds the array of whitelisted path aliases.
    *
-   * @var \Drupal\Core\Utility\PathAliasWhitelist;
+   * @var \Drupal\Core\Path\AliasWhitelistInterface
    */
   protected $whitelist;
 
@@ -77,12 +77,12 @@ class AliasManager implements AliasManagerInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to use.
-   * @param \Drupal\Core\Path\AliasWhitelist $whitelist
+   * @param \Drupal\Core\Path\AliasWhitelistInterface $whitelist
    *   The whitelist implementation to use.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    */
-  public function __construct(Connection $connection, AliasWhitelist $whitelist, LanguageManager $language_manager) {
+  public function __construct(Connection $connection, AliasWhitelistInterface $whitelist, LanguageManager $language_manager) {
     $this->connection = $connection;
     $this->languageManager = $language_manager;
     $this->whitelist = $whitelist;

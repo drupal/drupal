@@ -10,15 +10,13 @@ namespace Drupal\Core\Path;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\DestructableInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Utility\CacheArray;
 
 /**
  * Extends CacheArray to build the path alias whitelist over time.
  */
-class AliasWhitelist extends CacheCollector {
+class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
 
   /**
    * The Key/Value Store to use for state.
