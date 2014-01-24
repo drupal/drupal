@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,16 +31,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * A namespace registry and manipulation class.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Namespace
@@ -192,7 +191,7 @@ class EasyRdf_Namespace
       */
     public static function setDefault($namespace)
     {
-        if (empty($namespace)) {
+        if (is_null($namespace) or $namespace === '') {
             self::$default = null;
         } elseif (preg_match("/^\w+$/", $namespace)) {
             if (isset(self::$namespaces[$namespace])) {
@@ -329,13 +328,15 @@ class EasyRdf_Namespace
       */
     public static function expand($shortUri)
     {
-        if (!is_string($shortUri) or empty($shortUri)) {
+        if (!is_string($shortUri) or $shortUri === '') {
             throw new InvalidArgumentException(
                 "\$shortUri should be a string and cannot be null or empty"
             );
         }
-
-        if (preg_match("/^(\w+?):([\w\-]+)$/", $shortUri, $matches)) {
+        
+        if ($shortUri === 'a') {
+            return self::$namespaces['rdf'] . 'type';
+        } elseif (preg_match("/^(\w+?):([\w\-]+)$/", $shortUri, $matches)) {
             $long = self::get($matches[1]);
             if ($long) {
                 return $long . $matches[2];

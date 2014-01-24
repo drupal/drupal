@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -44,7 +43,7 @@
  * format.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Format
@@ -247,8 +246,8 @@ class EasyRdf_Format
             }
         }
 
-        // Then try and guess by the first 255 bytes of content
-        $short = substr($data, 0, 255);
+        // Then try and guess by the first 1024 bytes of content
+        $short = substr($data, 0, 1024);
         if (preg_match("/^\s*\{/", $short)) {
             return self::getFormat('json');
         } elseif (preg_match("/<rdf:/i", $short)) {
@@ -353,7 +352,9 @@ class EasyRdf_Format
     public function getDefaultMimeType()
     {
         $types = array_keys($this->mimeTypes);
-        return $types[0];
+        if (isset($types[0])) {
+            return $types[0];
+        }
     }
 
     /** Get all the registered mime types for a format object
@@ -388,7 +389,9 @@ class EasyRdf_Format
      */
     public function getDefaultExtension()
     {
-        return $this->extensions[0];
+        if (isset($this->extensions[0])) {
+            return $this->extensions[0];
+        }
     }
 
     /** Get all the registered file extensions (filename suffix) for a format object
@@ -519,7 +522,11 @@ class EasyRdf_Format
 EasyRdf_Format::register(
     'php',
     'RDF/PHP',
-    'http://n2.talis.com/wiki/RDF_PHP_Specification'
+    'http://n2.talis.com/wiki/RDF_PHP_Specification',
+    array(
+        'application/x-httpd-php-source' => 1.0
+    ),
+    array('phps')
 );
 
 EasyRdf_Format::register(
@@ -537,9 +544,10 @@ EasyRdf_Format::register(
 EasyRdf_Format::register(
     'ntriples',
     'N-Triples',
-    'http://www.w3.org/TR/rdf-testcases/#ntriples',
+    'http://www.w3.org/TR/n-triples/',
     array(
-        'text/plain' => 1.0,
+        'application/n-triples' => 1.0,
+        'text/plain' => 0.9,
         'text/ntriples' => 0.9,
         'application/ntriples' => 0.9,
         'application/x-ntriples' => 0.9
@@ -667,6 +675,7 @@ EasyRdf_Format::registerParser('turtle', 'EasyRdf_Parser_Turtle');
 EasyRdf_Format::registerParser('rdfa', 'EasyRdf_Parser_Rdfa');
 
 EasyRdf_Format::registerSerialiser('json', 'EasyRdf_Serialiser_Json');
+EasyRdf_Format::registerSerialiser('jsonld', 'EasyRdf_Serialiser_JsonLd');
 EasyRdf_Format::registerSerialiser('n3', 'EasyRdf_Serialiser_Turtle');
 EasyRdf_Format::registerSerialiser('ntriples', 'EasyRdf_Serialiser_Ntriples');
 EasyRdf_Format::registerSerialiser('php', 'EasyRdf_Serialiser_RdfPhp');

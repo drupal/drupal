@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,25 +31,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * Class that represents an RDF resource
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Resource
 {
     /** The URI for this resource */
-    private $uri = null;
+    protected $uri = null;
 
     /** The Graph that this resource belongs to */
-    private $graph = null;
+    protected $graph = null;
 
 
     /** Constructor
@@ -80,6 +79,16 @@ class EasyRdf_Resource
         }
     }
 
+    /**
+     * Return the graph that this resource belongs to
+     *
+     * @return EasyRdf_Graph
+     */
+    public function getGraph()
+    {
+        return $this->graph;
+    }
+
     /** Returns the URI for the resource.
      *
      * @return string  URI of this resource.
@@ -93,7 +102,7 @@ class EasyRdf_Resource
      *
      * @return bool True if this resource is a blank node.
      */
-    public function isBnode()
+    public function isBNode()
     {
         if (substr($this->uri, 0, 2) == '_:') {
             return true;
@@ -108,7 +117,7 @@ class EasyRdf_Resource
      *
      * @return string The identifer for the bnode
      */
-    public function getNodeId()
+    public function getBNodeId()
     {
         if (substr($this->uri, 0, 2) == '_:') {
             return substr($this->uri, 2);
@@ -181,6 +190,12 @@ class EasyRdf_Resource
 
         $html = "<a";
         foreach ($options as $key => $value) {
+            if (!preg_match('/^[-\w]+$/', $key)) {
+                throw new InvalidArgumentException(
+                    "\$options should use valid attribute names as keys"
+                );
+            }
+
             $html .= " ".htmlspecialchars($key)."=\"".
                          htmlspecialchars($value)."\"";
         }
@@ -189,16 +204,16 @@ class EasyRdf_Resource
         return $html;
     }
 
-    /** Returns the properties of the resource as an associative array
+    /** Returns the properties of the resource as an RDF/PHP associative array
      *
      * For example:
      * array('type' => 'uri', 'value' => 'http://www.example.com/')
      *
      * @return array  The properties of the resource
      */
-    public function toArray()
+    public function toRdfPhp()
     {
-        if ($this->isBnode()) {
+        if ($this->isBNode()) {
             return array('type' => 'bnode', 'value' => $this->uri);
         } else {
             return array('type' => 'uri', 'value' => $this->uri);
@@ -207,13 +222,13 @@ class EasyRdf_Resource
 
     /** Return pretty-print view of the resource
      *
-     * @param  bool   $html  Set to true to format the dump using HTML
+     * @param  string $format Either 'html' or 'text'
      * @param  string $color The colour of the text
      * @return string
      */
-    public function dumpValue($html = true, $color = 'blue')
+    public function dumpValue($format = 'html', $color = 'blue')
     {
-        return EasyRdf_Utils::dumpResourceValue($this, $html, $color);
+        return EasyRdf_Utils::dumpResourceValue($this, $format, $color);
     }
 
     /** Magic method to return URI of resource when casted to string
@@ -438,10 +453,10 @@ class EasyRdf_Resource
      * @param  string  $lang     The language to filter by (e.g. en)
      * @return integer           The number of values associated with the property
      */
-    public function count($property, $type = null, $lang = null)
+    public function countValues($property, $type = null, $lang = null)
     {
         $this->checkHasGraph();
-        return $this->graph->count($this->uri, $property, $type, $lang);
+        return $this->graph->countValues($this->uri, $property, $type, $lang);
     }
 
     /** Concatenate all values for a property into a string.
@@ -619,13 +634,13 @@ class EasyRdf_Resource
      * This method is intended to be a debugging aid and will
      * print a resource and its properties.
      *
-     * @param  bool  $html  Set to true to format the dump using HTML
+     * @param  string $format   Either 'html' or 'text'
      * @return string
      */
-    public function dump($html = true)
+    public function dump($format = 'html')
     {
         $this->checkHasGraph();
-        return $this->graph->dumpResource($this->uri, $html);
+        return $this->graph->dumpResource($this->uri, $format);
     }
 
     /** Magic method to get a property of a resource

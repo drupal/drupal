@@ -8,7 +8,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2011 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,9 +34,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2011 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2011-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -73,6 +72,11 @@ require_once "EasyRdf/Http/Client.php";
  * @see EasyRdf_Http_Response
  */
 require_once "EasyRdf/Http/Response.php";
+
+/**
+ * @see EasyRdf_Isomorphic
+ */
+require_once "EasyRdf/Isomorphic.php";
 
 /**
  * @see EasyRdf_Namespace
@@ -135,6 +139,11 @@ require_once "EasyRdf/ParsedUri.php";
 require_once "EasyRdf/Parser.php";
 
 /**
+ * @see EasyRdf_Parser_Exception
+ */
+require_once "EasyRdf/Parser/Exception.php";
+
+/**
  * @see EasyRdf_Parser_RdfPhp
  */
 require_once "EasyRdf/Parser/RdfPhp.php";
@@ -168,6 +177,16 @@ require_once "EasyRdf/Parser/Turtle.php";
  * @see EasyRdf_Resource
  */
 require_once "EasyRdf/Resource.php";
+
+/**
+ * @see EasyRdf_Collection
+ */
+require_once "EasyRdf/Collection.php";
+
+/**
+ * @see EasyRdf_Container
+ */
+require_once "EasyRdf/Container.php";
 
 /**
  * @see EasyRdf_Serialiser

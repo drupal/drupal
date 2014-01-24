@@ -33,7 +33,6 @@
  * @package    EasyRdf
  * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -70,5 +69,3 @@ class EasyRdf_Literal_XML extends EasyRdf_Literal
         return $dom;
     }
 }
-
-EasyRdf_Literal::setDatatypeMapping('rdf:XMLLiteral', 'EasyRdf_Literal_XML');

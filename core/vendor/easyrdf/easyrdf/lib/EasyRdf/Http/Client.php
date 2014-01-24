@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  * Copyright (c) 2005-2009 Zend Technologies USA Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,10 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  *             Copyright (c) 2005-2009 Zend Technologies USA Inc.
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -44,7 +43,7 @@
  * implementation try Zend_Http_Client.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Http_Client
@@ -426,6 +425,9 @@ class EasyRdf_Http_Client
 
             // Write the request
             $path = $uri['path'];
+            if (empty($path)) {
+                $path = '/';
+            }
             if (isset($uri['query'])) {
                 $path .= '?' . $uri['query'];
             }
@@ -529,7 +531,7 @@ class EasyRdf_Http_Client
             $headers[] = "User-Agent: {$this->config['useragent']}";
         }
 
-        // If we have _rawPostData set, set the content-length header
+        // If we have rawPostData set, set the content-length header
         if (isset($this->rawPostData)) {
             $headers[] = "Content-Length: ".strlen($this->rawPostData);
         }

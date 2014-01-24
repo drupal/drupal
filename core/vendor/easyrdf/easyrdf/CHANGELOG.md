@@ -1,21 +1,49 @@
 EasyRdf 0.8.0
 =============
 
-API changes
------------
-* is_a() has been renamed to isA()
-
 Major new features
 ------------------
 * Now PSR-2 compliant
 * Added RDFa parser
+* Added SPARQL Update support to `EasyRdf_Sparql_Client`
+
+API changes
+-----------
+* `is_a()` has been renamed to `isA()`
+* `isBnode()` has been renamed to `isBNode()`
+* `getNodeId()` has been renamed to `getBNodeId()`
+* Added a `$value` property to `hasProperty()`
+* Renamed `toArray()` to `toRdfPhp()`
+* Renamed `count()` to `countValues()` in `EasyRdf_Graph` and `EasyRdf_Resource`
+* Made passing a URI to `delete()` behave more like `all()` and `get()` - you must enclose in `<>`
+* `dump(true)` has changed to `dump('html')`
+* `getUri()` in `EasyRdf_Sparql_Client` has been renamed to `getQueryUri()`
 
 Enhancements
 ------------
+* Added `EasyRdf_Container` class to help iterate through `rdf:Alt`, `rdf:Bag` and `rdf:Seq`
+* Added `EasyRdf_Collection` class to help iterate through `rdf:List`
+* Added `EasyRdf_Literal_HTML` and `EasyRdf_Literal_XML`
+* Changed formatting of `xsd:dateTime` from `DateTime::ISO8601` to `DateTime::ATOM`
+* Added `rss:title` to the list of properties that `label()` will check for
+* Added support for serialising containers to the RDF/XML serialiser
+* Added getGraph method to `EasyRdf_Resource`
+* Turtle parser improvements
+* Added the `application/n-triples` MIME type for the N-Triples format
+* Added support to `EasyRdf_Namespace` for expanding `a` to `rdf:type`
+* Added `listNamedGraphs()` function to `EasyRdf_Sparql_Client`
+* Added line and column number to exceptions in the built-in parsers
 
 Bug Fixes
 ---------
-
+* Fixed bug in `EasyRdf_Namespace::expand()` (see issue #114)
+* Fix for dumping SPARQL SELECT query with unbound result (see issue #112)
+* Sesame compatibility : avoid duplicate Content-Length header
+* Fix for for passing objects of type DateTime to $graph->add() (see issue #119)
+* Fix for SPARQL queries longer than 2KB (see issue #85)
+* Fix for dumping literal with unshortenable datatype uri (see issue #120)
+* Fix for getting default mime type or extension when there isn't one
+* Fix for missing trailing slash the HTTP client
 
 
 EasyRdf 0.7.2

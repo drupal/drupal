@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,16 +31,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * Class that represents an RDF Literal
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Literal
@@ -91,8 +90,8 @@ class EasyRdf_Literal
             $value = isset($value['value']) ? $value['value'] : null;
         }
 
-        if (empty($datatype)) {
-            if (empty($lang)) {
+        if (is_null($datatype) or $datatype === '') {
+            if (is_null($lang) or $lang === '') {
                 // Automatic datatype selection
                 $datatype = self::getDatatypeForValue($value);
             }
@@ -275,7 +274,7 @@ class EasyRdf_Literal
      *
      * @return array  The properties of the literal
      */
-    public function toArray()
+    public function toRdfPhp()
     {
         $array = array(
             'type' => 'literal',
@@ -304,12 +303,25 @@ class EasyRdf_Literal
 
     /** Return pretty-print view of the literal
      *
-     * @param  bool   $html  Set to true to format the dump using HTML
-     * @param  string $color The colour of the text
+     * @param  string $format Either 'html' or 'text'
+     * @param  string $color  The colour of the text
      * @return string
      */
-    public function dumpValue($html = true, $color = 'black')
+    public function dumpValue($format = 'html', $color = 'black')
     {
-        return EasyRdf_Utils::dumpLiteralValue($this, $html, $color);
+        return EasyRdf_Utils::dumpLiteralValue($this, $format, $color);
     }
 }
+
+/*
+   Register default set of datatype classes
+*/
+
+EasyRdf_Literal::setDatatypeMapping('xsd:boolean', 'EasyRdf_Literal_Boolean');
+EasyRdf_Literal::setDatatypeMapping('xsd:date', 'EasyRdf_Literal_Date');
+EasyRdf_Literal::setDatatypeMapping('xsd:dateTime', 'EasyRdf_Literal_DateTime');
+EasyRdf_Literal::setDatatypeMapping('xsd:decimal', 'EasyRdf_Literal_Decimal');
+EasyRdf_Literal::setDatatypeMapping('xsd:hexBinary', 'EasyRdf_Literal_HexBinary');
+EasyRdf_Literal::setDatatypeMapping('rdf:HTML', 'EasyRdf_Literal_HTML');
+EasyRdf_Literal::setDatatypeMapping('xsd:integer', 'EasyRdf_Literal_Integer');
+EasyRdf_Literal::setDatatypeMapping('rdf:XMLLiteral', 'EasyRdf_Literal_XML');

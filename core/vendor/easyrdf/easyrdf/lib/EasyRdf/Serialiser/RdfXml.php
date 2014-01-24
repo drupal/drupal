@@ -4,7 +4,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2010 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,9 +30,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2010 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -40,7 +39,7 @@
  * with no external dependancies.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2010 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
@@ -65,7 +64,7 @@ class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
             $tag = "$indent<$property";
             if ($obj->isBNode()) {
                 if ($alreadyOutput or $rpcount > 1 or $pcount == 0) {
-                    $tag .= " rdf:nodeID=\"".htmlspecialchars($obj->getNodeId()).'"';
+                    $tag .= " rdf:nodeID=\"".htmlspecialchars($obj->getBNodeId()).'"';
                 }
             } else {
                 if ($alreadyOutput or $rpcount != 1 or $pcount == 0) {
@@ -143,29 +142,35 @@ class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
         $xml = "\n$indent<$type";
         if ($res->isBNode()) {
             if ($showNodeId) {
-                $xml .= ' rdf:nodeID="'.htmlspecialchars($res->getNodeId()).'"';
+                $xml .= ' rdf:nodeID="'.htmlspecialchars($res->getBNodeId()).'"';
             }
         } else {
             $xml .= ' rdf:about="'.htmlspecialchars($res->getUri()).'"';
         }
         $xml .= ">\n";
 
-        foreach ($properties as $property) {
-            $short = EasyRdf_Namespace::shorten($property, true);
-            if ($short) {
-                $this->addPrefix($short);
-                $objects = $res->all("<$property>");
-                if ($short == 'rdf:type') {
-                    array_shift($objects);
+        if ($res instanceof EasyRdf_Container) {
+            foreach ($res as $item) {
+                $xml .= $this->rdfxmlObject('rdf:li', $item, $depth+1);
+            }
+        } else {
+            foreach ($properties as $property) {
+                $short = EasyRdf_Namespace::shorten($property, true);
+                if ($short) {
+                    $this->addPrefix($short);
+                    $objects = $res->all("<$property>");
+                    if ($short == 'rdf:type') {
+                        array_shift($objects);
+                    }
+                    foreach ($objects as $object) {
+                        $xml .= $this->rdfxmlObject($short, $object, $depth+1);
+                    }
+                } else {
+                    throw new EasyRdf_Exception(
+                        "It is not possible to serialse the property ".
+                        "'$property' to RDF/XML."
+                    );
                 }
-                foreach ($objects as $object) {
-                    $xml .= $this->rdfxmlObject($short, $object, $depth+1);
-                }
-            } else {
-                throw new EasyRdf_Exception(
-                    "It is not possible to serialse the property ".
-                    "'$property' to RDF/XML."
-                );
             }
         }
         $xml .= "$indent</$type>\n";
@@ -177,11 +182,13 @@ class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
     /**
      * Method to serialise an EasyRdf_Graph to RDF/XML
      *
-     * @param object EasyRdf_Graph $graph   An EasyRdf_Graph object.
-     * @param string  $format               The name of the format to convert to.
-     * @return string                       The RDF in the new desired format.
+     * @param EasyRdf_Graph $graph   An EasyRdf_Graph object.
+     * @param string        $format  The name of the format to convert to.
+     * @param array         $options
+     * @throws EasyRdf_Exception
+     * @return string The RDF in the new desired format.
      */
-    public function serialise($graph, $format)
+    public function serialise($graph, $format, array $options = array())
     {
         parent::checkSerialiseParams($graph, $format);
 
@@ -198,8 +205,19 @@ class EasyRdf_Serialiser_RdfXml extends EasyRdf_Serialiser
         $this->outputtedResources = array();
 
         $xml = '';
+
+        // Serialise URIs first
         foreach ($graph->resources() as $resource) {
-            $xml .= $this->rdfxmlResource($resource, true, 1);
+            if (!$resource->isBnode()) {
+                $xml .= $this->rdfxmlResource($resource, true);
+            }
+        }
+
+        // Serialise bnodes afterwards
+        foreach ($graph->resources() as $resource) {
+            if ($resource->isBnode()) {
+                $xml .= $this->rdfxmlResource($resource, true);
+            }
         }
 
         // iterate through namepsaces array prefix and output a string.

@@ -27,8 +27,8 @@
 
     $easyrdf->addResource('doap:category', 'http://dbpedia.org/resource/Resource_Description_Framework');
     $easyrdf->addResource('doap:category', 'http://dbpedia.org/resource/PHP');
-    $easyrdf->addResource('doap:category', 'http://dbpedialite.org/things/24131#id');
-    $easyrdf->addResource('doap:category', 'http://dbpedialite.org/things/53847#id');
+    $easyrdf->addResource('doap:category', 'http://www.dbpedialite.org/things/24131#id');
+    $easyrdf->addResource('doap:category', 'http://www.dbpedialite.org/things/53847#id');
 
     $repository = $doap->newBNode('doap:GitRepository');
     $repository->addResource('doap:browse', 'http://github.com/njh/easyrdf');

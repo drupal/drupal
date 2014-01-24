@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -41,7 +40,7 @@
  * with no external dependancies.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Serialiser_Ntriples extends EasyRdf_Serialiser
@@ -142,7 +141,7 @@ class EasyRdf_Serialiser_Ntriples extends EasyRdf_Serialiser
     /**
      * @ignore
      */
-    protected function ntriplesResource($res)
+    protected function serialiseResource($res)
     {
         $escaped = $this->escapeString($res);
         if (substr($res, 0, 2) == '_:') {
@@ -153,12 +152,23 @@ class EasyRdf_Serialiser_Ntriples extends EasyRdf_Serialiser
     }
 
     /**
-     * @ignore
+     * Serialise an RDF value into N-Triples
+     *
+     * The value can either be an array in RDF/PHP form, or
+     * an EasyRdf_Literal or EasyRdf_Resource object.
+     *
+     * @param array|object  $value   An associative array or an object
+     * @throws EasyRdf_Exception
+     * @return string The RDF value serialised to N-Triples
      */
-    protected function ntriplesValue($value)
+    public function serialiseValue($value)
     {
+        if (is_object($value)) {
+            $value = $value->toRdfPhp();
+        }
+
         if ($value['type'] == 'uri' or $value['type'] == 'bnode') {
-            return $this->ntriplesResource($value['value']);
+            return $this->serialiseResource($value['value']);
         } elseif ($value['type'] == 'literal') {
             $escaped = $this->escapeString($value['value']);
             if (isset($value['lang'])) {
@@ -172,7 +182,7 @@ class EasyRdf_Serialiser_Ntriples extends EasyRdf_Serialiser
             }
         } else {
             throw new EasyRdf_Exception(
-                "Unable to serialise object to ntriples: ".$value['type']
+                "Unable to serialise object of type '".$value['type']."' to ntriples: "
             );
         }
     }
@@ -180,22 +190,24 @@ class EasyRdf_Serialiser_Ntriples extends EasyRdf_Serialiser
     /**
      * Serialise an EasyRdf_Graph into N-Triples
      *
-     * @param object EasyRdf_Graph $graph   An EasyRdf_Graph object.
-     * @param string  $format               The name of the format to convert to.
-     * @return string                       The RDF in the new desired format.
+     * @param EasyRdf_Graph $graph   An EasyRdf_Graph object.
+     * @param string        $format  The name of the format to convert to.
+     * @param array         $options
+     * @throws EasyRdf_Exception
+     * @return string The RDF in the new desired format.
      */
-    public function serialise($graph, $format)
+    public function serialise($graph, $format, array $options = array())
     {
         parent::checkSerialiseParams($graph, $format);
 
         if ($format == 'ntriples') {
             $nt = '';
-            foreach ($graph->toArray() as $resource => $properties) {
+            foreach ($graph->toRdfPhp() as $resource => $properties) {
                 foreach ($properties as $property => $values) {
                     foreach ($values as $value) {
-                        $nt .= $this->ntriplesResource($resource)." ";
+                        $nt .= $this->serialiseResource($resource)." ";
                         $nt .= "<" . $this->escapeString($property) . "> ";
-                        $nt .= $this->ntriplesValue($value)." .\n";
+                        $nt .= $this->serialiseValue($value)." .\n";
                     }
                 }
             }

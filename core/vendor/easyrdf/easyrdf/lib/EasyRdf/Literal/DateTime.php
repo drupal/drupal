@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -41,7 +40,7 @@
  *
  * @package    EasyRdf
  * @link       http://www.w3.org/TR/xmlschema-2/#date
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Literal_DateTime extends EasyRdf_Literal_Date
@@ -49,6 +48,7 @@ class EasyRdf_Literal_DateTime extends EasyRdf_Literal_Date
     /** Constructor for creating a new date and time literal
      *
      * If the value is a DateTime object, then it will be converted to the xsd:dateTime format.
+     * If no value is given or is is null, then the current time is used.
      *
      * @see DateTime
      *
@@ -57,12 +57,17 @@ class EasyRdf_Literal_DateTime extends EasyRdf_Literal_Date
      * @param  string $datatype  Optional datatype (default 'xsd:dateTime')
      * @return object EasyRdf_Literal_DateTime
      */
-    public function __construct($value, $lang = null, $datatype = null)
+    public function __construct($value = null, $lang = null, $datatype = null)
     {
+        // If $value is null, use 'now'
+        if (is_null($value)) {
+            $value = new DateTime('now');
+        }
+
         // Convert DateTime objects into string
         if ($value instanceof DateTime) {
-            $iso = $value->format(DateTime::ISO8601);
-            $value = preg_replace('/[\+\-]00(\:?)00$/', 'Z', $iso);
+            $atom = $value->format(DateTime::ATOM);
+            $value = preg_replace('/[\+\-]00(\:?)00$/', 'Z', $atom);
         }
 
         EasyRdf_Literal::__construct($value, null, $datatype);
@@ -110,5 +115,3 @@ class EasyRdf_Literal_DateTime extends EasyRdf_Literal_Date
         return (int)$this->format('s');
     }
 }
-
-EasyRdf_Literal::setDatatypeMapping('xsd:dateTime', 'EasyRdf_Literal_DateTime');

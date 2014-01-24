@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,16 +31,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * Container for collection of EasyRdf_Resources.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Graph
@@ -158,21 +157,27 @@ class EasyRdf_Graph
      */
     protected function classForResource($uri)
     {
-        $resClass = 'EasyRdf_Resource';
-        $rdfType = EasyRdf_Namespace::expand('rdf:type');
+        $rdfType = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
         if (isset($this->index[$uri][$rdfType])) {
             foreach ($this->index[$uri][$rdfType] as $type) {
                 if ($type['type'] == 'uri' or $type['type'] == 'bnode') {
                     $class = EasyRdf_TypeMapper::get($type['value']);
                     if ($class != null) {
-                        $resClass = $class;
-                        break;
+                        return $class;
                     }
                 }
-
             }
         }
-        return $resClass;
+
+        // Parsers don't typically add a rdf:type to rdf:List, so we have to
+        // do a bit of 'inference' here using properties.
+        if ($uri == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil' or
+            isset($this->index[$uri]['http://www.w3.org/1999/02/22-rdf-syntax-ns#first']) or
+            isset($this->index[$uri]['http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'])
+        ) {
+            return 'EasyRdf_Collection';
+        }
+        return 'EasyRdf_Resource';
     }
 
     /**
@@ -341,7 +346,9 @@ class EasyRdf_Graph
     public function resources()
     {
         foreach ($this->index as $subject => $properties) {
-            $this->resource($subject);
+            if (!isset($this->resources[$subject])) {
+                $this->resource($subject);
+            }
         }
 
         foreach ($this->revIndex as $object => $properties) {
@@ -491,13 +498,11 @@ class EasyRdf_Graph
     {
         if (isset($value)) {
             if (is_object($value)) {
-                if (method_exists($value, 'toArray')) {
-                    $value = $value->toArray();
-                } else {
-                    throw new InvalidArgumentException(
-                        "\$value should respond to the method toArray()"
-                    );
+                if (!method_exists($value, 'toRdfPhp')) {
+                    // Convert to a literal object
+                    $value = EasyRdf_Literal::create($value);
                 }
+                $value = $value->toRdfPhp();
             } elseif (is_array($value)) {
                 if (!isset($value['type'])) {
                     throw new InvalidArgumentException(
@@ -779,7 +784,7 @@ class EasyRdf_Graph
             $objects = $results;
         }
 
-        return $objects;
+        return $results;
     }
 
     /** Get all values for a single property of a resource
@@ -866,7 +871,7 @@ class EasyRdf_Graph
         return $this->all($type, '^rdf:type');
     }
 
-    /** Count all values for a property of a resource
+    /** Count the number of values for a property of a resource
      *
      * @param  string  $resource The URI of the resource (e.g. http://example.com/joe#me)
      * @param  string  $property The name of the property (e.g. foaf:name)
@@ -874,7 +879,7 @@ class EasyRdf_Graph
      * @param  string  $lang     The language to filter by (e.g. en)
      * @return integer           The number of values for this property
      */
-    public function count($resource, $property, $type = null, $lang = null)
+    public function countValues($resource, $property, $type = null, $lang = null)
     {
         return count($this->all($resource, $property, $type, $lang));
     }
@@ -966,25 +971,10 @@ class EasyRdf_Graph
                 $added += $this->addLiteral($resource, $property, $v, $lang);
             }
             return $added;
-        } else {
-            if ($lang) {
-                $value = array(
-                    'type' => 'literal',
-                    'value' => $value,
-                    'lang' => $lang
-                );
-            } else {
-                $value = array(
-                    'type' => 'literal',
-                    'value' => $value,
-                    'datatype' => EasyRdf_Literal::getDatatypeForValue($value)
-                );
-                if (empty($value['datatype'])) {
-                    unset($value['datatype']);
-                }
-            }
-            return $this->add($resource, $property, $value);
+        } elseif (!is_object($value) or !$value instanceof EasyRdf_Literal) {
+            $value = EasyRdf_Literal::create($value, $lang);
         }
+        return $this->add($resource, $property, $value);
     }
 
     /** Add a resource as a property of another resource
@@ -1047,11 +1037,42 @@ class EasyRdf_Graph
     public function delete($resource, $property, $value = null)
     {
         $this->checkResourceParam($resource);
+
+        if (is_object($property) and $property instanceof EasyRdf_Resource) {
+            return $this->deleteSingleProperty($resource, $property->getUri(), $value);
+        } elseif (is_string($property) and preg_match('|^(\^?)<(.+)>|', $property, $matches)) {
+            return $this->deleteSingleProperty($resource, "$matches[1]$matches[2]", $value);
+        } elseif ($property === null or !is_string($property)) {
+            throw new InvalidArgumentException(
+                "\$property should be a string or EasyRdf_Resource and cannot be null"
+            );
+        } elseif ($property === '') {
+            throw new InvalidArgumentException(
+                "\$property cannot be an empty string"
+            );
+        }
+
+        // FIXME: finish implementing property paths for delete
+        return $this->deleteSingleProperty($resource, $property, $value);
+    }
+
+
+    /** Delete a property (or optionally just a specific value)
+     *
+     * @param  mixed   $resource The resource to delete the property from
+     * @param  string  $property The name of the property (e.g. foaf:name)
+     * @param  mixed   $value The value to delete (null to delete all values)
+     * @return integer The number of values deleted
+     *
+     * @ignore
+     */
+    public function deleteSingleProperty($resource, $property, $value = null)
+    {
+        $this->checkResourceParam($resource);
         $this->checkSinglePropertyParam($property, $inverse);
         $this->checkValueParam($value);
 
         $count = 0;
-        $property = EasyRdf_Namespace::expand($property);
         if (isset($this->index[$resource][$property])) {
             foreach ($this->index[$resource][$property] as $k => $v) {
                 if (!$value or $v == $value) {
@@ -1263,16 +1284,17 @@ class EasyRdf_Graph
      * Example:
      *   $turtle = $graph->serialise('turtle');
      *
-     * @param  mixed  $format  The format to serialise to
+     * @param  mixed $format  The format to serialise to
+     * @param  array $options Serialiser-specific options, for fine-tuning the output
      * @return mixed  The serialised graph
      */
-    public function serialise($format)
+    public function serialise($format, array $options = array())
     {
         if (!$format instanceof EasyRdf_Format) {
             $format = EasyRdf_Format::getFormat($format);
         }
         $serialiser = $format->newSerialiser();
-        return $serialiser->serialise($this, $format->getName());
+        return $serialiser->serialise($this, $format->getName(), $options);
     }
 
     /** Return a human readable view of all the resources in the graph
@@ -1281,13 +1303,13 @@ class EasyRdf_Graph
      * return a pretty-print view of all the resources and their
      * properties.
      *
-     * @param  boolean  $html  Set to true to format the dump using HTML
+     * @param  string  $format  Either 'html' or 'text'
      * @return string
      */
-    public function dump($html = true)
+    public function dump($format = 'html')
     {
         $result = '';
-        if ($html) {
+        if ($format == 'html') {
             $result .= "<div style='font-family:arial; font-weight: bold; padding:0.5em; ".
                    "color: black; background-color:lightgrey;border:dashed 1px grey;'>".
                    "Graph: ". $this->uri . "</div>\n";
@@ -1296,7 +1318,7 @@ class EasyRdf_Graph
         }
 
         foreach ($this->index as $resource => $properties) {
-            $result .= $this->dumpResource($resource, $html);
+            $result .= $this->dumpResource($resource, $format);
         }
         return $result;
     }
@@ -1307,10 +1329,10 @@ class EasyRdf_Graph
      * print a resource and its properties.
      *
      * @param  mixed    $resource  The resource to dump
-     * @param  boolean  $html      Set to true to format the dump using HTML
+     * @param  string   $format    Either 'html' or 'text'
      * @return string
      */
-    public function dumpResource($resource, $html = true)
+    public function dumpResource($resource, $format = 'html')
     {
         $this->checkResourceParam($resource, true);
 
@@ -1325,9 +1347,9 @@ class EasyRdf_Graph
             $olist = array();
             foreach ($values as $value) {
                 if ($value['type'] == 'literal') {
-                    $olist []= EasyRdf_Utils::dumpLiteralValue($value, $html, 'black');
+                    $olist []= EasyRdf_Utils::dumpLiteralValue($value, $format, 'black');
                 } else {
-                    $olist []= EasyRdf_Utils::dumpResourceValue($value['value'], $html, 'blue');
+                    $olist []= EasyRdf_Utils::dumpResourceValue($value['value'], $format, 'blue');
                 }
             }
 
@@ -1335,7 +1357,7 @@ class EasyRdf_Graph
             if ($pstr == null) {
                 $pstr = $property;
             }
-            if ($html) {
+            if ($format == 'html') {
                 $plist []= "<span style='font-size:130%'>&rarr;</span> ".
                            "<span style='text-decoration:none;color:green'>".
                            htmlentities($pstr) . "</span> ".
@@ -1346,11 +1368,11 @@ class EasyRdf_Graph
             }
         }
 
-        if ($html) {
-            return "<div id='".htmlentities($resource)."' " .
+        if ($format == 'html') {
+            return "<div id='".htmlentities($resource, ENT_QUOTES)."' " .
                    "style='font-family:arial; padding:0.5em; ".
                    "background-color:lightgrey;border:dashed 1px grey;'>\n".
-                   "<div>".EasyRdf_Utils::dumpResourceValue($resource, true, 'blue')." ".
+                   "<div>".EasyRdf_Utils::dumpResourceValue($resource, $format, 'blue')." ".
                    "<span style='font-size: 0.8em'>(".
                    $this->classForResource($resource).")</span></div>\n".
                    "<div style='padding-left: 3em'>\n".
@@ -1502,7 +1524,7 @@ class EasyRdf_Graph
         if ($resource) {
             return $this->get(
                 $resource,
-                'skos:prefLabel|rdfs:label|foaf:name|dc:title|dc11:title',
+                'skos:prefLabel|rdfs:label|foaf:name|rss:title|dc:title|dc11:title',
                 'literal',
                 $lang
             );
@@ -1534,7 +1556,7 @@ class EasyRdf_Graph
      *
      * @return array The contents of the graph as an array.
      */
-    public function toArray()
+    public function toRdfPhp()
     {
         return $this->index;
     }

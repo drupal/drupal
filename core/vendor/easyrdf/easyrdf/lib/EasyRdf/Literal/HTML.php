@@ -33,7 +33,6 @@
  * @package    EasyRdf
  * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -69,5 +68,3 @@ class EasyRdf_Literal_HTML extends EasyRdf_Literal
         return strip_tags($this->value, $allowableTags);
     }
 }
-
-EasyRdf_Literal::setDatatypeMapping('rdf:HTML', 'EasyRdf_Literal_HTML');
