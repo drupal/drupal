@@ -74,7 +74,7 @@ class SelectExtender implements SelectInterface {
   }
 
   public function hasAnyTag() {
-    return call_user_func_array(array($this->query, 'hasAnyTags'), func_get_args());
+    return call_user_func_array(array($this->query, 'hasAnyTag'), func_get_args());
   }
 
   public function addMetaData($key, $object) {
