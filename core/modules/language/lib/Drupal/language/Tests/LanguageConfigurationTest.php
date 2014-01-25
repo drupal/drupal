@@ -106,7 +106,8 @@ class LanguageConfigurationTest extends WebTestBase {
 
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.
-    $this->assert(language_delete('en'), 'Deleted English language.');
+    $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));
+    $this->assertRaw(t('The %language (%langcode) language has been removed.', array('%language' => 'English', '%langcode' => 'en')));
     $edit = array(
       'predefined_langcode' => 'de',
     );

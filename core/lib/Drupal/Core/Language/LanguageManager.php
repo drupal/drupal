@@ -32,9 +32,19 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * The default language object.
    *
-   * @var \Drupal\Core\Language\Language
+   * @var \Drupal\Core\Language\LanguageDefault
    */
   protected $defaultLanguage;
+
+  /**
+   * Constructs the language manager.
+   *
+   * @param \Drupal\Core\Language\Language $default_language
+   *   The default language.
+   */
+  public function __construct(LanguageDefault $default_language) {
+    $this->defaultLanguage = $default_language;
+  }
 
   /**
    * {@inheritdoc}
@@ -83,16 +93,14 @@ class LanguageManager implements LanguageManagerInterface {
    * {@inheritdoc}
    */
   public function reset($type = NULL) {
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDefaultLanguage() {
-    if (!isset($this->defaultLanguage)) {
-      $this->defaultLanguage = new Language(Language::$defaultValues);
-    }
-    return $this->defaultLanguage;
+    return $this->defaultLanguage->get();
   }
 
   /**

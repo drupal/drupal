@@ -78,9 +78,4 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
    */
   public function updateLockedLanguageWeights();
 
-  /**
-   * Initializes per-language overrides for configuration.
-   */
-  public function initConfigOverrides();
-
 }

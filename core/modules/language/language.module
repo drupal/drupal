@@ -5,6 +5,7 @@
  * Add language handling functionality to Drupal.
  */
 
+use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
@@ -469,8 +470,10 @@ function language_save($language) {
   }
 
   if (!empty($language->default)) {
-    // Set the new version of this language as default in a variable.
-    variable_set('language_default', (array) $language);
+    // Update the config. Saving the configuration fires and event that causes
+    // the container to be rebuilt.
+    \Drupal::config('system.site')->set('langcode', $language->id)->save();
+    \Drupal::service('language.default')->set($language);
   }
 
   $language_manager = \Drupal::languageManager();

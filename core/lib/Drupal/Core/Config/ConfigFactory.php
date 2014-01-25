@@ -8,6 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageDefault;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -82,16 +83,11 @@ class ConfigFactory implements EventSubscriberInterface {
    *   An event dispatcher instance to use for configuration events.
    * @param \Drupal\Core\Config\TypedConfigManager $typed_config
    *   The typed configuration manager.
-   * @param \Drupal\Core\Language\Language
-   *   (optional) The language for this configuration. The config factory will
-   *   use it to override configuration data if language overrides are
-   *   available.
    */
-  public function __construct(StorageInterface $storage, EventDispatcher $event_dispatcher, TypedConfigManager $typed_config, Language $language = NULL) {
+  public function __construct(StorageInterface $storage, EventDispatcher $event_dispatcher, TypedConfigManager $typed_config) {
     $this->storage = $storage;
     $this->eventDispatcher = $event_dispatcher;
     $this->typedConfigManager = $typed_config;
-    $this->language = $language;
   }
 
   /**
@@ -360,7 +356,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Set the language to be used in configuration overrides.
+   * Sets the language to be used in configuration overrides.
    *
    * @param \Drupal\Core\Language\Language $language
    *   The language object to be set on the config factory. Used to override
@@ -371,6 +367,22 @@ class ConfigFactory implements EventSubscriberInterface {
    */
   public function setLanguage(Language $language = NULL) {
     $this->language = $language;
+    return $this;
+  }
+
+  /**
+   * Sets the language for configuration overrides using the default language.
+   *
+   * @param \Drupal\Core\Language\LanguageDefault $language_default
+   *   The default language service. This sets the initial language on the
+   *   config factory to the site's default. The language can be used to
+   *   override configuration data if language overrides are available.
+   *
+   * @return \Drupal\Core\Config\ConfigFactory
+   *   The config factory object.
+   */
+  public function setLanguageFromDefault(LanguageDefault $language_default) {
+    $this->language = $language_default->get();
     return $this;
   }
 

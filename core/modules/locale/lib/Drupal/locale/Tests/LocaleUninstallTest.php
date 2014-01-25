@@ -9,6 +9,7 @@ namespace Drupal\locale\Tests;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationSelected;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
@@ -95,7 +96,7 @@ class LocaleUninstallTest extends WebTestBase {
     // Change language negotiation options.
     drupal_load('module', 'locale');
     // Pick only core language types.
-    $language_manager = new LanguageManager();
+    $language_manager = new LanguageManager(new LanguageDefault(Language::$defaultValues));
     $default_types = $language_manager->getLanguageTypes();
     \Drupal::config('language.types')->set('configurable', $default_types + array('language_custom' => TRUE))->save();
     $config = array_flip(array_keys(\Drupal::service('plugin.manager.language_negotiation_method')->getDefinitions()));

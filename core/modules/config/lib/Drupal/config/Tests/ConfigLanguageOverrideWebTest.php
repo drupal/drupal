@@ -65,6 +65,21 @@ class ConfigLanguageOverrideWebTest extends WebTestBase {
     // @see \Drupal\Core\PathProcessor::processInbound()
     $this->drupalGet('xx');
     $this->assertText('XX site name');
+
+    // Set the xx language to be the default language and delete the English
+    // language so the site is no longer multilingual and confirm configuration
+    // overrides still work.
+    $language_manager = \Drupal::languageManager()->reset();
+    $this->assertTrue($language_manager->isMultilingual(), 'The test site is multilingual.');
+    $language = \Drupal::languageManager()->getLanguage('xx');
+    $language->default = TRUE;
+    language_save($language);
+    language_delete('en');
+    $this->assertFalse($language_manager->isMultilingual(), 'The test site is monolingual.');
+
+    $this->drupalGet('xx');
+    $this->assertText('XX site name');
+
   }
 
 }

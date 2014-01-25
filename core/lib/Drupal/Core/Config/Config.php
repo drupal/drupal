@@ -70,6 +70,13 @@ class Config {
   protected $data;
 
   /**
+   * The original data of the configuration object.
+   *
+   * @var array
+   */
+  protected $originalData;
+
+  /**
    * The current runtime data.
    *
    * The configuration data from storage merged with language, module and
@@ -160,6 +167,7 @@ class Config {
     $this->moduleOverrides = array();
     $this->isNew = FALSE;
     $this->replaceData($data);
+    $this->originalData = $this->data;
     return $this;
   }
 
@@ -467,6 +475,7 @@ class Config {
       $this->isNew = FALSE;
       $this->replaceData($data);
     }
+    $this->originalData = $this->data;
     $this->isLoaded = TRUE;
     return $this;
   }
@@ -497,6 +506,7 @@ class Config {
     $this->storage->write($this->name, $this->data);
     $this->isNew = FALSE;
     $this->notify('save');
+    $this->originalData = $this->data;
     return $this;
   }
 
@@ -513,6 +523,7 @@ class Config {
     $this->isNew = TRUE;
     $this->resetOverriddenData();
     $this->notify('delete');
+    $this->originalData = $this->data;
     return $this;
   }
 
@@ -650,5 +661,55 @@ class Config {
     return $this->data;
   }
 
+  /**
+   * Gets original data from this configuration object.
+   *
+   * Original data is the data as it is immediately after loading from
+   * configuration storage before any changes. If this is a new configuration
+   * object it will be an empty array.
+   *
+   * @see \Drupal\Core\Config\Config::get()
+   *
+   * @param string $key
+   *   A string that maps to a key within the configuration data.
+   * @param bool $apply_overrides
+   *   Apply any overrides to the original data. Defaults to TRUE.
+   *
+   * @return mixed
+   *   The data that was requested.
+   */
+  public function getOriginal($key = '', $apply_overrides = TRUE) {
+    if (!$this->isLoaded) {
+      $this->load();
+    }
+
+    if ($apply_overrides) {
+      // Apply overrides.
+      $original_data = $this->originalData;
+      if (isset($this->languageOverrides) && is_array($this->languageOverrides)) {
+        $original_data = NestedArray::mergeDeepArray(array($original_data, $this->languageOverrides), TRUE);
+      }
+      if (isset($this->moduleOverrides) && is_array($this->moduleOverrides)) {
+        $original_data = NestedArray::mergeDeepArray(array($original_data, $this->moduleOverrides), TRUE);
+      }
+      if (isset($this->settingsOverrides) && is_array($this->settingsOverrides)) {
+        $original_data = NestedArray::mergeDeepArray(array($original_data, $this->settingsOverrides), TRUE);
+      }
+    }
+
+    if (empty($key)) {
+      return $original_data;
+    }
+    else {
+      $parts = explode('.', $key);
+      if (count($parts) == 1) {
+        return isset($original_data[$key]) ? $original_data[$key] : NULL;
+      }
+      else {
+        $value = NestedArray::getValue($original_data, $parts, $key_exists);
+        return $key_exists ? $value : NULL;
+      }
+    }
+  }
 }
 

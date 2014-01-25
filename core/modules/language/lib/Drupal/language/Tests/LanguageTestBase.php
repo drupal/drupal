@@ -14,6 +14,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 abstract class LanguageTestBase extends DrupalUnitTestBase {
 
+  public static $modules = array('system', 'language', 'language_test');
   /**
    * The language manager.
    *
@@ -34,7 +35,6 @@ abstract class LanguageTestBase extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->enableModules(array('system', 'language', 'language_test'));
     $this->installSchema('system', array('variable'));
     $this->installConfig(array('language'));
 

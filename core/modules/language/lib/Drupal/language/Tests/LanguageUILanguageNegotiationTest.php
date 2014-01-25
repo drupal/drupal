@@ -94,8 +94,14 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $language_domain = 'example.cn';
 
     // Setup the site languages by installing two languages.
+    // Set the default language in order for the translated string to be registered
+    // into database when seen by t(). Without doing this, our target string
+    // is for some reason not found when doing translate search. This might
+    // be some bug.
+    $default_language = language_default();
     $language = new Language(array(
       'id' => $langcode_browser_fallback,
+      'default' => TRUE,
     ));
     language_save($language);
     $language = new Language(array(
@@ -107,17 +113,15 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // corresponding translated string is shown.
     $default_string = 'Configure languages for content and the user interface';
 
-    // Set the default language in order for the translated string to be registered
-    // into database when seen by t(). Without doing this, our target string
-    // is for some reason not found when doing translate search. This might
-    // be some bug.
-    $this->container->get('language_manager')->reset();
-    $languages = language_list();
-    variable_set('language_default', (array) $languages['vi']);
     // First visit this page to make sure our target string is searchable.
     $this->drupalGet('admin/config');
+
     // Now the t()'ed string is in db so switch the language back to default.
-    variable_del('language_default');
+    // This will rebuild the container so we need to rebuild the container in
+    // the test environment.
+    language_save($default_language);
+    \Drupal::config('language.negotiation')->set('url.prefixes.en', '')->save();
+    $this->rebuildContainer();
 
     // Translate the string.
     $language_browser_fallback_string = "In $langcode_browser_fallback In $langcode_browser_fallback In $langcode_browser_fallback";

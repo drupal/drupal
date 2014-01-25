@@ -10,6 +10,7 @@ namespace Drupal\simpletest;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\Reference;
 use Drupal\Core\Database\Database;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -154,6 +155,9 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     global $conf;
     // Keep the container object around for tests.
     $this->container = $container;
+
+    // Set the default language on the minimal container.
+    $this->container->setParameter('language.default_values', Language::$defaultValues);
 
     $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     $this->settingsSet('cache', array('default' => 'cache.backend.memory'));

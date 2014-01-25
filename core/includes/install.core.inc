@@ -299,22 +299,20 @@ function install_begin_request(&$install_state) {
     exit;
   }
 
-  // Register the 'language_manager' service.
-  $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
-
-  // If we have a language selected and it is not yet saved in the system
-  // (eg. pre-database data screens we are unable to persistently store
-  // the default language), we should set language_default so the proper
-  // language is used to display installer pages as early as possible.
-  // The language list is stored in configuration and cannot be saved either
-  // until later in the process. Language negotiation bootstrapping needs
-  // the new default language to be in the list though, so inject it in.
-  if (!empty($install_state['parameters']['langcode']) && language_default()->id != $install_state['parameters']['langcode']) {
-    $GLOBALS['conf']['language_default'] = array('id' => $install_state['parameters']['langcode']);
-
-    $languages = &drupal_static('language_list');
-    $languages[$install_state['parameters']['langcode']] = new Language($GLOBALS['conf']['language_default']);
+  // If we have a language selected and it is not yet saved in the system (eg.
+  // pre-database data screens we are unable to persistently store the default
+  // language), we should set language_default so the proper language is used to
+  // display installer pages as early as possible.
+  $default_language_values = Language::$defaultValues;
+  if (!empty($install_state['parameters']['langcode']) && $default_language_values['id'] != $install_state['parameters']['langcode']) {
+    $default_language_values = array('id' => $install_state['parameters']['langcode']);
   }
+  // Register the 'language_manager' service.
+  $container->setParameter('language.default_values', $default_language_values);
+  $container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
+    ->addArgument('%language.default_values%');
+  $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+    ->addArgument(new Reference('language.default'));
 
   require_once __DIR__ . '/../modules/system/system.install';
   require_once __DIR__ . '/common.inc';
@@ -383,13 +381,18 @@ function install_begin_request(&$install_state) {
       ->addArgument(new Reference('config.storage.schema'))
       ->addArgument(new Reference('cache.config'));
 
+    $container->setParameter('language.default_values', Language::$defaultValues);
+    $container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
+      ->addArgument('%language.default_values%');
+
     $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
       ->addArgument(new Reference('config.storage'))
       ->addArgument(new Reference('event_dispatcher'))
       ->addArgument(new Reference('config.typed'));
 
     // Register the 'language_manager' service.
-    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+      ->addArgument(new Reference('language.default'));
 
     // Register the translation services.
     install_register_translation_service($container);
@@ -474,6 +477,12 @@ function install_begin_request(&$install_state) {
       ->addArgument(new Reference('module_handler'))
       ->addArgument(new Reference('cache.cache'))
       ->addArgument(new Reference('info_parser'));
+
+    // Overrides can not work at this point since this would cause the
+    // ConfigFactory to try to load language override configuration which is not
+    // supported by \Drupal\Core\Config\InstallStorage since loading a
+    // non-existing file would throw an exception.
+    $container->get('config.factory')->disableOverrides();
   }
 
   // Set the request in the kernel to the new created Request above
@@ -1009,7 +1018,7 @@ function install_verify_requirements(&$install_state) {
  */
 function install_base_system(&$install_state) {
   // Install system.module.
-  drupal_install_system();
+  drupal_install_system($install_state);
 
   // Call file_ensure_htaccess() to ensure that all of Drupal's standard
   // directories (e.g., the public files directory and config directory) have
@@ -2686,7 +2695,6 @@ function install_configure_form_submit($form, &$form_state) {
   \Drupal::config('system.site')
     ->set('name', $form_state['values']['site_name'])
     ->set('mail', $form_state['values']['site_mail'])
-    ->set('langcode', language_default()->id)
     ->save();
 
   \Drupal::config('system.date')

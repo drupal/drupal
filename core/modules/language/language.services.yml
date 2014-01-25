@@ -7,3 +7,7 @@ services:
     arguments: ['@language_manager', '@plugin.manager.language_negotiation_method', '@config.factory', '@settings']
     calls:
       - [initLanguageManager]
+  language.config_subscriber:
+    class: Drupal\language\EventSubscriber\ConfigSubscriber
+    tags:
+      - { name: event_subscriber }

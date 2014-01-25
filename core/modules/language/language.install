@@ -33,9 +33,6 @@ function language_install() {
  */
 function language_uninstall() {
   // Clear variables.
-  variable_del('language_default');
-
-  // Clear variables.
   foreach (\Drupal::languageManager()->getDefinedLanguageTypes() as $type) {
     variable_del("language_negotiation_$type");
     variable_del("language_negotiation_methods_weight_$type");

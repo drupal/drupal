@@ -604,8 +604,12 @@ function drupal_verify_profile($install_state) {
  *
  * Separated from the installation of other modules so core system
  * functions can be made available while other modules are installed.
+ *
+ * @param array $install_state
+ *   An array of information about the current installation state. This is used
+ *   to set the default language.
  */
-function drupal_install_system() {
+function drupal_install_system($install_state) {
   // Create tables.
   drupal_install_schema('system');
 
@@ -642,6 +646,13 @@ function drupal_install_system() {
   \Drupal::moduleHandler()->setModuleList(array('system' => $system_path . '/system.module'));
 
   \Drupal::service('config.installer')->installDefaultConfig('module', 'system');
+
+  // Ensure default language is saved.
+  if (isset($install_state['parameters']['langcode'])) {
+    \Drupal::config('system.site')
+      ->set('langcode', $install_state['parameters']['langcode'])
+      ->save();
+  }
 
   module_invoke('system', 'install');
 }

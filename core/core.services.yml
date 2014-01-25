@@ -228,6 +228,10 @@ services:
     arguments: ['@event_dispatcher', '@service_container', '@controller_resolver']
   language_manager:
     class: Drupal\Core\Language\LanguageManager
+    arguments: ['@language.default']
+  language.default:
+    class: Drupal\Core\Language\LanguageDefault
+    arguments: ['%language.default_values%']
   string_translator.custom_strings:
     class: Drupal\Core\StringTranslation\Translator\CustomStrings
     arguments: ['@settings']

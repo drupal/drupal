@@ -73,8 +73,6 @@ class BlockLanguageTest extends WebTestBase {
     );
     $this->drupalPostForm('admin/config/regional/settings', $edit, t('Save configuration'));
 
-    // Reset the static cache of the language list.
-    $this->container->get('language_manager')->reset();
     // Check that a page has a block.
     $this->drupalGet('en');
     $this->assertText('Powered by Drupal', 'The body of the custom block appears on the page.');

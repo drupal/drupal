@@ -1003,7 +1003,11 @@ abstract class TestBase {
     $this->container = new ContainerBuilder();
 
     // @todo Remove this once this class has no calls to t() and format_plural()
-    $this->container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+    $this->container->setParameter('language.default_values', Language::$defaultValues);
+    $this->container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
+      ->addArgument('%language.default_values%');
+    $this->container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+      ->addArgument(new Reference('language.default'));
     $this->container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
       ->addArgument(new Reference('language_manager'));
 
