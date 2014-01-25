@@ -10,6 +10,7 @@ namespace Drupal\views\Form;
 use Drupal\Component\Utility\Url;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\views\ViewExecutable;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  * default is \Drupal\views\Form\ViewsFormMainForm). That way it is actually
  * possible for modules to have a multistep form if they need to.
  */
-class ViewsForm implements FormInterface, ContainerInjectionInterface {
+class ViewsForm extends DependencySerialization implements FormInterface, ContainerInjectionInterface {
 
   /**
    * The controller resolver to get the subform form objects.
