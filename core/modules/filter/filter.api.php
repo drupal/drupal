@@ -24,6 +24,28 @@ function hook_filter_info_alter(&$info) {
 }
 
 /**
+ * Alters images with an invalid source.
+ *
+ * When the 'Restrict images to this site' filter is enabled, any images that
+ * are not hosted on the site will be passed through this hook, most commonly to
+ * replace the invalid image with an error indicator.
+ *
+ * @param DOMElement $image
+ *   An IMG node to format, parsed from the filtered text.
+ */
+function hook_filter_secure_image_alter(&$image) {
+  // Turn an invalid image into an error indicator.
+  $image->setAttribute('src', base_path() . 'core/misc/message-16-error.png');
+  $image->setAttribute('alt', t('Image removed.'));
+  $image->setAttribute('title', t('This image has been removed. For security reasons, only images from the local domain are allowed.'));
+
+  // Add a CSS class to aid in styling.
+  $class = ($image->getAttribute('class') ? trim($image->getAttribute('class')) . ' ' : '');
+  $class .= 'filter-image-invalid';
+  $image->setAttribute('class', $class);
+}
+
+/**
  * Perform actions when a text format has been disabled.
  *
  * @param $format

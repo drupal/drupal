@@ -23,7 +23,7 @@ class FilterController {
    * @return array
    *   A renderable array.
    *
-   * @see theme_filter_tips()
+   * @see template_preprocess_filter_tips()
    */
   function filterTips(FilterFormatInterface $filter_format = NULL) {
     $tips = $filter_format ? $filter_format->format : -1;

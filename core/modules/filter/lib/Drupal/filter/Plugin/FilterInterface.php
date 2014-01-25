@@ -262,7 +262,7 @@ interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionI
    * @param bool $long
    *   Whether this callback should return a short tip to display in a form
    *   (FALSE), or whether a more elaborate filter tips should be returned for
-   *   theme_filter_tips() (TRUE).
+   *   template_preprocess_filter_tips() (TRUE).
    *
    * @return string|null
    *   Translated text to display as a tip, or NULL if this filter has no tip.

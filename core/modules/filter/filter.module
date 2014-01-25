@@ -81,16 +81,15 @@ function filter_theme() {
   return array(
     'filter_tips' => array(
       'variables' => array('tips' => NULL, 'long' => FALSE),
-      'file' => 'filter.pages.inc',
+      'template' => 'filter-tips',
     ),
     'text_format_wrapper' => array(
-      'render element' => 'element',
+      'variables' => array('children' => NULL, 'description' => NULL),
+      'template' => 'text-format-wrapper',
     ),
     'filter_guidelines' => array(
       'variables' => array('format' => NULL),
-    ),
-    'filter_html_image_secure_image' => array(
-      'variables' => array('image' => NULL),
+      'template' => 'filter-guidelines',
     ),
     'filter_caption' => array(
       'variables' => array(
@@ -832,27 +831,6 @@ function filter_form_access_denied($element) {
 }
 
 /**
- * Returns HTML for a text format-enabled form element.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: A render element containing #children and #description.
- *
- * @ingroup themeable
- */
-function theme_text_format_wrapper($variables) {
-  $element = $variables['element'];
-  $output = '<div class="text-format-wrapper form-item">';
-  $output .= $element['#children'];
-  if (!empty($element['#description'])) {
-    $output .= '<div class="description">' . $element['#description'] . '</div>';
-  }
-  $output .= "</div>\n";
-
-  return $output;
-}
-
-/**
  * Retrieves the filter tips.
  *
  * @param string $format_id
@@ -992,27 +970,77 @@ function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, 
 }
 
 /**
- * Returns HTML for guidelines for a text format.
+ * Prepares variables for text format guideline templates.
+ *
+ * Default template: filter-guidelines.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
  *   - format: An object representing a text format.
- *
- * @ingroup themeable
  */
-function theme_filter_guidelines($variables) {
+function template_preprocess_filter_guidelines(&$variables) {
   $format = $variables['format'];
-  $attributes['class'][] = 'filter-guidelines-item';
-  $attributes['class'][] = 'filter-guidelines-' . $format->format;
-  $output = '<div' . new Attribute($attributes) . '>';
-  $output .= '<h4 class="label">' . check_plain($format->name) . '</h4>';
-  $filter_tips = array(
+  $variables['attributes']['class'][] = 'filter-guidelines-item';
+  $variables['attributes']['class'][] = 'filter-guidelines-' . $format->format;
+
+  $variables['tips'] = array(
     '#theme' => 'filter_tips',
     '#tips' => _filter_tips($format->format, FALSE),
   );
-  $output .= drupal_render($filter_tips);
-  $output .= '</div>';
-  return $output;
+}
+
+/**
+ * Prepares variables for filter tips templates.
+ *
+ * Default template: filter-tips.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - tips: An array containing descriptions and a CSS ID in the form of
+ *     'module-name/filter-id' (only used when $long is TRUE) for each
+ *     filter in one or more text formats. Example:
+ *     @code
+ *       array(
+ *         'Full HTML' => array(
+ *           0 => array(
+ *             'tip' => 'Web page addresses and e-mail addresses turn into links automatically.',
+ *             'id' => 'filter/2',
+ *           ),
+ *         ),
+ *       );
+ *     @endcode
+ *   - long: (optional) Whether the passed-in filter tips contain extended
+ *     explanations, i.e. intended to be output on the path 'filter/tips'
+ *     (TRUE), or are in a short format, i.e. suitable to be displayed below a
+ *     form element. Defaults to FALSE.
+ */
+function template_preprocess_filter_tips(&$variables) {
+  $tips = $variables['tips'];
+  $long = $variables['long'];
+
+  foreach ($variables['tips'] as $name => $tiplist) {
+    foreach ($tiplist as $tip_key => $tip) {
+      $tiplist[$tip_key]['attributes'] = new Attribute(array());
+      if ($long) {
+        $tiplist[$tip_key]['attributes']['class'] = array('filter-' . str_replace("/", "-", $tip['id']));
+      }
+    }
+
+    $attributes = array(
+      'class' => array(
+        'filter-type',
+        'filter-' . drupal_html_class($name),
+      ),
+    );
+
+    $variables['tips'][$name] = array(
+      'attributes' => new Attribute($attributes),
+      'name' => String::checkPlain($name),
+      'list' => $tiplist,
+    );
+  }
+
+  $variables['multiple'] = count($tips) > 1;
 }
 
 /**
@@ -1392,32 +1420,31 @@ function _filter_html_image_secure_process($text) {
         continue;
       }
     }
-    // Replace an invalid image with an error indicator.
-    $filter_html_image_secure_image = array(
-      '#theme' => 'filter_html_image_secure_image',
-      '#image' => $image,
-    );
-    drupal_render($filter_html_image_secure_image);
+    // Allow modules and themes to replace an invalid image with an error
+    // indicator. See filter_filter_secure_image_alter().
+    \Drupal::moduleHandler()->alter('filter_secure_image', $image);
   }
   $text = filter_dom_serialize($html_dom);
   return $text;
 }
 
 /**
+ * Implements hook_filter_secure_image_alter().
+ *
  * Formats an image DOM element that has an invalid source.
  *
  * @param DOMElement $image
  *   An IMG node to format, parsed from the filtered text.
  *
- * @return void
- *   Unlike other theme functions, the passed in $image is altered by reference.
- *
  * @see _filter_html_image_secure_process()
- * @ingroup themeable
  */
-function theme_filter_html_image_secure_image(&$variables) {
-  $image = $variables['image'];
-
+function filter_filter_secure_image_alter(&$image) {
+  t('hey hey');
+  t('hey hey');
+  t('hey hey');
+  t('hey hey');
+  t('hey hey');
+  t('hey hey');
   // Turn an invalid image into an error indicator.
   $image->setAttribute('src', base_path() . 'core/misc/message-16-error.png');
   $image->setAttribute('alt', t('Image removed.'));
