@@ -25,9 +25,9 @@ interface UserStorageControllerInterface {
   /**
    * Save the user's roles.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $user
+   * @param \Drupal\user\UserInterface $account
    */
-  public function saveRoles(EntityInterface $user);
+  public function saveRoles(UserInterface $account);
 
   /**
    * Remove the roles of a user.
@@ -36,4 +36,10 @@ interface UserStorageControllerInterface {
    */
   public function deleteUserRoles(array $uids);
 
+  /**
+   * Update the last login timestamp of the user.
+   *
+   * @param \Drupal\user\UserInterface $account
+   */
+  public function updateLastLoginTimestamp(UserInterface $account);
 }

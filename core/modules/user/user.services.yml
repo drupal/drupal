@@ -20,7 +20,7 @@ services:
     arguments: ['@database']
   user.autocomplete:
     class: Drupal\user\UserAutocomplete
-    arguments: ['@database', '@config.factory']
+    arguments: ['@database', '@config.factory', '@entity.manager', '@entity.query']
   user_maintenance_mode_subscriber:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
     tags:

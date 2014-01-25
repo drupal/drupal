@@ -443,16 +443,14 @@ function user_access($string, AccountInterface $account = NULL) {
  * @param $name
  *   A string containing a name of the user.
  *
- * @return
- *   Object with property 'name' (the user name), if the user is blocked;
- *   FALSE if the user is not blocked.
+ * @return bool
+ *   TRUE if the user is blocked, FALSE otherwise.
  */
 function user_is_blocked($name) {
-  return db_select('users')
-    ->fields('users', array('name'))
-    ->condition('name', db_like($name), 'LIKE')
+  return (bool) \Drupal::entityQuery('user')
+    ->condition('name', $name)
     ->condition('status', 0)
-    ->execute()->fetchObject();
+    ->execute();
 }
 
 /**
@@ -966,21 +964,20 @@ function user_authenticate($name, $password) {
 function user_login_finalize(UserInterface $account) {
   global $user;
   $user = $account;
-  watchdog('user', 'Session opened for %name.', array('%name' => $user->getUsername()));
+  watchdog('user', 'Session opened for %name.', array('%name' => $account->getUsername()));
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
   $account->setLastLoginTime(REQUEST_TIME);
-  db_update('users')
-    ->fields(array('login' => $user->getLastLoginTime()))
-    ->condition('uid', $user->id())
-    ->execute();
+  \Drupal::entityManager()
+    ->getStorageController('user')
+    ->updateLastLoginTimestamp($account);
 
   // Regenerate the session ID to prevent against session fixation attacks.
   // This is called before hook_user in case one of those functions fails
   // or incorrectly does a redirect which would leave the old session in place.
   drupal_session_regenerate();
 
-  \Drupal::moduleHandler()->invokeAll('user_login', array($user));
+  \Drupal::moduleHandler()->invokeAll('user_login', array($account));
 }
 
 /**

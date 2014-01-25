@@ -112,12 +112,12 @@ class UserStorageController extends FieldableDatabaseStorageController implement
   /**
    * {@inheritdoc}
    */
-  public function saveRoles(EntityInterface $user) {
+  public function saveRoles(UserInterface $account) {
     $query = $this->database->insert('users_roles')->fields(array('uid', 'rid'));
-    foreach ($user->getRoles() as $rid) {
+    foreach ($account->getRoles() as $rid) {
       if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
         $query->values(array(
-          'uid' => $user->id(),
+          'uid' => $account->id(),
           'rid' => $rid,
         ));
       }
@@ -129,7 +129,7 @@ class UserStorageController extends FieldableDatabaseStorageController implement
    * {@inheritdoc}
    */
   public function addRoles(array $users) {
-    $result = db_query('SELECT rid, uid FROM {users_roles} WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
+    $result = $this->database->query('SELECT rid, uid FROM {users_roles} WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
     foreach ($result as $record) {
       $users[$record->uid]->roles[] = $record->rid;
     }
@@ -141,6 +141,16 @@ class UserStorageController extends FieldableDatabaseStorageController implement
   public function deleteUserRoles(array $uids) {
     $this->database->delete('users_roles')
       ->condition('uid', $uids)
+      ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateLastLoginTimestamp(UserInterface $account) {
+    $this->database->update('users')
+      ->fields(array('login' => $account->getLastLoginTime()))
+      ->condition('uid', $account->id())
       ->execute();
   }
 

@@ -22,14 +22,13 @@ class UserUniqueValidator extends ConstraintValidator {
     $field = $this->context->getMetadata()->getTypedData()->getParent();
     $uid = $field->getParent()->id();
 
-    $value_taken = (bool) db_select('users')
-      ->fields('users', array('uid'))
+    $value_taken = (bool) \Drupal::entityQuery('user')
       // The UID could be NULL, so we cast it to 0 in that case.
       ->condition('uid', (int) $uid, '<>')
-      ->condition($field->getName(), db_like($value), 'LIKE')
+      ->condition($field->getName(), $value)
       ->range(0, 1)
-      ->execute()
-      ->fetchField();
+      ->count()
+      ->execute();
 
     if ($value_taken) {
       $this->context->addViolation($constraint->message, array("%value" => $value));

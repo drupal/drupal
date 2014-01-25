@@ -8,13 +8,21 @@
 namespace Drupal\user;
 
 use Drupal\Core\Cache\Cache;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Language\LanguageManager;
 
 /**
  * Form controller for the profile forms.
  */
 class ProfileFormController extends AccountFormController {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(EntityManagerInterface $entity_manager, LanguageManager $language_manager, QueryFactory $entity_query) {
+    parent::__construct($entity_manager, $language_manager, $entity_query);
+  }
 
   /**
    * {@inheritdoc}
