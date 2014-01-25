@@ -1160,11 +1160,4 @@ class ViewUI implements ViewStorageInterface {
      return $this->storage->referencedEntities();
    }
 
-   /**
-    * {@inheritdoc}
-    */
-   public function changed() {
-     return $this->storage->changed();
-   }
-
 }

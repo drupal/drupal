@@ -235,9 +235,4 @@ interface EntityInterface extends AccessibleInterface {
    */
   public function referencedEntities();
 
-  /**
-   * Acts on an entity after it was saved or deleted.
-   */
-  public function changed();
-
 }

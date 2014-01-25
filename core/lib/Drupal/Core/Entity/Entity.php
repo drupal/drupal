@@ -340,7 +340,7 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    $this->changed();
+    $this->onSaveOrDelete();
   }
 
   /**
@@ -366,7 +366,7 @@ abstract class Entity implements EntityInterface {
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
     foreach ($entities as $entity) {
-      $entity->changed();
+      $entity->onSaveOrDelete();
     }
   }
 
@@ -384,9 +384,9 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Acts on an entity after it was saved or deleted.
    */
-  public function changed() {
+  protected function onSaveOrDelete() {
     $referenced_entities = array(
       $this->entityType() => array($this->id() => $this),
     );
