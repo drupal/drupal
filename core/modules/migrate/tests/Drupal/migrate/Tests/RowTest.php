@@ -156,6 +156,11 @@ class RowTest extends UnitTestCase {
     $row->setSourceProperty('title', 'new title');
     $row->rehash();
     $this->assertSame($this->testHashMod, $row->getHash(), 'Hash changed correctly.');
+    // Check hash calculation algorithm.
+    $hash = hash('sha256', serialize($row->getSource()));
+    $this->assertSame($hash, $row->getHash());
+    // Check length of generated hash used for mapping schema.
+    $this->assertSame(64, strlen($row->getHash()));
 
     // Set the map to successfully imported.
     $test_id_map = array(

@@ -84,7 +84,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     );
     $fields['hash'] = array(
       'type' => 'varchar',
-      'length' => '32',
+      'length' => '64',
       'not null' => FALSE,
       'description' => 'Hash of source row data, for detecting changes',
     );
@@ -172,7 +172,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       ->will($this->returnValue(FALSE));
     $field_schema = array(
       'type' => 'varchar',
-      'length' => '32',
+      'length' => '64',
       'not null' => FALSE,
       'description' => 'Hash of source row data, for detecting changes',
     );

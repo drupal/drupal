@@ -258,7 +258,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
         );
         $fields['hash'] = array(
           'type' => 'varchar',
-          'length' => '32',
+          'length' => '64',
           'not null' => FALSE,
           'description' => 'Hash of source row data, for detecting changes',
         );
@@ -318,7 +318,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
         if (!$this->getDatabase()->schema()->fieldExists($this->mapTableName, 'hash')) {
           $this->getDatabase()->schema()->addField($this->mapTableName, 'hash', array(
             'type' => 'varchar',
-            'length' => '32',
+            'length' => '64',
             'not null' => FALSE,
             'description' => 'Hash of source row data, for detecting changes',
           ));
