@@ -45,7 +45,7 @@ class FieldValidationTest extends FieldUnitTestBase {
     $entity = $this->entity;
 
     for ($delta = 0; $delta < $cardinality + 1; $delta++) {
-      $entity->{$this->field_name}->offsetGet($delta)->set('value', 1);
+      $entity->{$this->field_name}->get($delta)->set('value', 1);
     }
 
     // Validate the field.
@@ -78,7 +78,7 @@ class FieldValidationTest extends FieldUnitTestBase {
         $value = -1;
         $expected_violations[$delta . '.value'][] = t('%name does not accept the value -1.', array('%name' => $this->instance->getLabel()));
       }
-      $entity->{$this->field_name}->offsetGet($delta)->set('value', $value);
+      $entity->{$this->field_name}->get($delta)->set('value', $value);
     }
 
     // Validate the field.

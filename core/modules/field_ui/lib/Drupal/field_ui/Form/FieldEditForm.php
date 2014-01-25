@@ -158,7 +158,7 @@ class FieldEditForm extends FormBase {
     // FieldItem.
     $ids = (object) array('entity_type' => $this->instance->entity_type, 'bundle' => $this->instance->bundle, 'entity_id' => NULL);
     $entity = _field_create_entity_from_ids($ids);
-    $form['field']['settings'] += $entity->get($field->getName())->offsetGet(0)->settingsForm($form, $form_state, $field->hasData());
+    $form['field']['settings'] += $entity->get($field->getName())->first()->settingsForm($form, $form_state, $field->hasData());
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save field settings'));

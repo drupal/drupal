@@ -58,7 +58,7 @@ class LinkItemTest extends FieldUnitTestBase {
     $class = $this->randomName();
     $entity->field_test->url = $url;
     $entity->field_test->title = $title;
-    $entity->field_test->get('attributes')->set('class', $class);
+    $entity->field_test->first()->get('attributes')->set('class', $class);
     $entity->name->value = $this->randomName();
     $entity->save();
 
@@ -79,7 +79,7 @@ class LinkItemTest extends FieldUnitTestBase {
     $new_class = $this->randomName();
     $entity->field_test->url = $new_url;
     $entity->field_test->title = $new_title;
-    $entity->field_test->get('attributes')->set('class', $new_class);
+    $entity->field_test->first()->get('attributes')->set('class', $new_class);
     $this->assertEqual($entity->field_test->url, $new_url);
     $this->assertEqual($entity->field_test->title, $new_title);
     $this->assertEqual($entity->field_test->attributes['class'], $new_class);

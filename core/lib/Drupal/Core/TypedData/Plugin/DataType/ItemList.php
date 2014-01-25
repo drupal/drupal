@@ -101,10 +101,49 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function get($index) {
+    if (!is_numeric($index)) {
+      throw new \InvalidArgumentException('Unable to get a value with a non-numeric delta in a list.');
+    }
+    // Allow getting not yet existing items as well.
+    // @todo: Maybe add a public createItem() method in addition?
+    elseif (!isset($this->list[$index])) {
+      $this->list[$index] = $this->createItem($index);
+    }
+    return $this->list[$index];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function set($index, $item) {
+    if (is_numeric($index)) {
+      // Support setting values via typed data objects.
+      if ($item instanceof TypedDataInterface) {
+        $item = $item->getValue();
+      }
+      $this->get($index)->setValue($item);
+      return $this;
+    }
+    else {
+      throw new \InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function first() {
+    return $this->get(0);
+  }
+
+  /**
    * Implements \ArrayAccess::offsetExists().
    */
   public function offsetExists($offset) {
-    return isset($this->list) && array_key_exists($offset, $this->list) && $this->offsetGet($offset)->getValue() !== NULL;
+    return isset($this->list) && array_key_exists($offset, $this->list) && $this->get($offset)->getValue() !== NULL;
   }
 
   /**
@@ -117,18 +156,10 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   }
 
   /**
-   * Implements \ArrayAccess::offsetGet().
+   * {@inheritdoc}
    */
   public function offsetGet($offset) {
-    if (!is_numeric($offset)) {
-      throw new \InvalidArgumentException('Unable to get a value with a non-numeric delta in a list.');
-    }
-    // Allow getting not yet existing items as well.
-    // @todo: Maybe add a public createItem() method in addition?
-    elseif (!isset($this->list[$offset])) {
-      $this->list[$offset] = $this->createItem($offset);
-    }
-    return $this->list[$offset];
+    return $this->get($offset);
   }
 
   /**
@@ -155,16 +186,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       // The [] operator has been used so point at a new entry.
       $offset = $this->list ? max(array_keys($this->list)) + 1 : 0;
     }
-    if (is_numeric($offset)) {
-      // Support setting values via typed data objects.
-      if ($value instanceof TypedDataInterface) {
-        $value = $value->getValue();
-      }
-      $this->offsetGet($offset)->setValue($value);
-    }
-    else {
-      throw new \InvalidArgumentException('Unable to set a value with a non-numeric delta in a list.');
-    }
+    $this->set($offset, $value);
   }
 
   /**

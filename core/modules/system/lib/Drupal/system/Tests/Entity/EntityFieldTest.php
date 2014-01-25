@@ -539,8 +539,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $definition = FieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
       ->setSetting('target_type', 'entity_test');
-    $reference_field_item = \Drupal::typedDataManager()->create($definition);
-    $reference = $reference_field_item->get('entity');
+    $reference_field = \Drupal::typedDataManager()->create($definition);
+    $reference = $reference_field->first()->get('entity');
     $reference->setValue($entity);
 
     // Test validation the typed data object.
@@ -565,8 +565,8 @@ class EntityFieldTest extends EntityUnitTestBase  {
         'target_type' => 'node',
         'target_bundle' => 'article',
       ));
-    $reference_field_item = \Drupal::TypedDataManager()->create($definition);
-    $reference = $reference_field_item->get('entity');
+    $reference_field = \Drupal::TypedDataManager()->create($definition);
+    $reference = $reference_field->first()->get('entity');
     $reference->setValue($node);
     $violations = $reference->validate();
     $this->assertEqual($violations->count(), 1);

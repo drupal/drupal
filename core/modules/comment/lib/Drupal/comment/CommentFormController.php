@@ -218,7 +218,7 @@ class CommentFormController extends ContentEntityFormController {
     // Add internal comment properties.
     $original = $comment->getUntranslated();
     foreach (array('cid', 'pid', 'entity_id', 'entity_type', 'field_id', 'uid', 'langcode') as $key) {
-      $key_name = key($comment->$key->offsetGet(0)->getPropertyDefinitions());
+      $key_name = key($comment->$key->first()->getPropertyDefinitions());
       $form[$key] = array('#type' => 'value', '#value' => $original->$key->{$key_name});
     }
 

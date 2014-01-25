@@ -168,7 +168,7 @@ class StandardProfileTest extends WebTestBase {
 
     // Set URIs.
     // Image.
-    $image_file = file_load($this->article->get('field_image')->offsetGet(0)->get('target_id')->getValue());
+    $image_file = $this->article->get('field_image')->entity;
     $this->imageUri = entity_load('image_style', 'large')->buildUrl($image_file->getFileUri());
     // Term.
     $term_uri_info = $this->term->uri();
@@ -233,7 +233,7 @@ class StandardProfileTest extends WebTestBase {
 
     // @todo Once the image points to the original instead of the processed
     //   image, move this to testArticleProperties().
-    $image_file = file_load($this->article->get('field_image')->offsetGet(0)->get('target_id')->getValue());
+    $image_file = $this->article->get('field_image')->entity;
     $image_uri = entity_load('image_style', 'medium')->buildUrl($image_file->getFileUri());
     $expected_value = array(
       'type' => 'uri',
@@ -340,7 +340,7 @@ class StandardProfileTest extends WebTestBase {
     // Term name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $this->term->get('name')->offsetGet(0)->get('value')->getValue(),
+      'value' => $this->term->get('name')->value,
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "Term name was found (schema:name) on term page.");
@@ -366,7 +366,7 @@ class StandardProfileTest extends WebTestBase {
     // Title.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $node->get('title')->offsetGet(0)->get('value')->getValue(),
+      'value' => $node->get('title')->value,
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/name', $expected_value), "$message_prefix title was found (schema:name).");
@@ -374,7 +374,7 @@ class StandardProfileTest extends WebTestBase {
     // Created date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date_iso8601($node->get('created')->offsetGet(0)->get('value')->getValue()),
+      'value' => date_iso8601($node->get('created')->value),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/dateCreated', $expected_value), "$message_prefix created date was found (schema:dateCreated) in teaser.");
@@ -382,7 +382,7 @@ class StandardProfileTest extends WebTestBase {
     // Body.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $node->get('body')->offsetGet(0)->get('value')->getValue(),
+      'value' => $node->get('body')->value,
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/text', $expected_value), "$message_prefix body was found (schema:text) in teaser.");
@@ -428,7 +428,7 @@ class StandardProfileTest extends WebTestBase {
     // Tag name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $this->term->get('name')->offsetGet(0)->get('value')->getValue(),
+      'value' => $this->term->get('name')->value,
       'lang' => 'en',
     );
     // @todo enable with https://drupal.org/node/2072791
@@ -455,7 +455,7 @@ class StandardProfileTest extends WebTestBase {
     // Comment title.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $this->articleComment->get('subject')->offsetGet(0)->get('value')->getValue(),
+      'value' => $this->articleComment->get('subject')->value,
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/name', $expected_value), 'Article comment title was found (schema:name).');
@@ -463,13 +463,13 @@ class StandardProfileTest extends WebTestBase {
     // Comment created date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date_iso8601($this->articleComment->get('created')->offsetGet(0)->get('value')->getValue()),
+      'value' => date_iso8601($this->articleComment->get('created')->value),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($this->articleCommentUri, 'http://schema.org/dateCreated', $expected_value), 'Article comment created date was found (schema:dateCreated).');
 
     // Comment body.
-    $text = $this->articleComment->get('comment_body')->offsetGet(0)->get('value')->getValue();
+    $text = $this->articleComment->get('comment_body')->value;
     $expected_value = array(
       'type' => 'literal',
       // There is an extra carriage return in the when parsing comments as
@@ -493,7 +493,7 @@ class StandardProfileTest extends WebTestBase {
     // Comment author name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $this->webUser->get('name')->offsetGet(0)->get('value')->getValue(),
+      'value' => $this->webUser->getUsername(),
     );
     $this->assertTrue($graph->hasProperty($this->commenterUri, 'http://schema.org/name', $expected_value), 'Comment author name was found (schema:name).');
   }

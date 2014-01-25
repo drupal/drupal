@@ -151,7 +151,7 @@ class Tables implements TablesInterface {
             // column, i.e. target_id or fid.
             // Otherwise, the code executing the relationship will throw an
             // exception anyways so no need to do it here.
-            if (!$column && isset($propertyDefinitions[$relationship_specifier]) && $entity->{$field->getName()}->get('entity') instanceof EntityReference) {
+            if (!$column && isset($propertyDefinitions[$relationship_specifier]) && $entity->{$field->getName()}->first()->get('entity') instanceof EntityReference) {
               $column = current(array_keys($propertyDefinitions));
             }
             // Prepare the next index prefix.
@@ -203,7 +203,7 @@ class Tables implements TablesInterface {
           $next_index_prefix = $relationship_specifier;
         }
         // Check for a valid relationship.
-        if (isset($propertyDefinitions[$relationship_specifier]) && $entity->{$specifier}->get('entity') instanceof EntityReference) {
+        if (isset($propertyDefinitions[$relationship_specifier]) && $entity->get($specifier)->first()->get('entity') instanceof EntityReference) {
           // If it is, use the entity type.
           $entity_type = $propertyDefinitions[$relationship_specifier]->getConstraint('EntityType');
           $entity_info = $entity_manager->getDefinition($entity_type);

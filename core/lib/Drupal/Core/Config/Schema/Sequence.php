@@ -51,17 +51,26 @@ class Sequence extends ArrayElement implements ListInterface {
   }
 
   /**
-   * Gets a typed configuration element from the sequence.
-   *
-   * @param string $key
-   *   The key of the sequence to get.
-   *
-   * @return \Drupal\Core\Config\Schema\Element
-   *   Typed configuration element.
+   * {@inheritdoc}
    */
   public function get($key) {
     $elements = $this->getElements();
     return $elements[$key];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function first() {
+    return $this->get(0);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function set($index, $item) {
+    $this->offsetSet($index, $item);
+    return $this;
   }
 
 }

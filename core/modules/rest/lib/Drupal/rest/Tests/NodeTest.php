@@ -81,7 +81,7 @@ class NodeTest extends RESTTestBase {
 
     // Reload the node from the DB and check if the title was correctly updated.
     $updated_node = entity_load('node', $node->id(), TRUE);
-    $this->assertEqual($updated_node->get('title')->get('value')->getValue(), $new_title);
+    $this->assertEqual($updated_node->getTitle(), $new_title);
     // Make sure that the UUID of the node has not changed.
     $this->assertEqual($node->get('uuid')->getValue(), $updated_node->get('uuid')->getValue(), 'UUID was not changed.');
   }

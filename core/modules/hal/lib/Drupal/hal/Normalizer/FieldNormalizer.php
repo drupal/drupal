@@ -75,7 +75,7 @@ class FieldNormalizer extends NormalizerBase {
       $count = $field->count();
       // Get the next field item instance. The offset will serve as the field
       // item name.
-      $field_item = $field->offsetGet($count);
+      $field_item = $field->get($count);
       $field_item_class = get_class($field_item);
       // Pass in the empty field item object as the target instance.
       $context['target_instance'] = $field_item;

@@ -144,49 +144,42 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function getPropertyDefinition($name) {
-    return $this->offsetGet(0)->getPropertyDefinition($name);
+    return $this->first()->getPropertyDefinition($name);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-    return $this->offsetGet(0)->getPropertyDefinitions();
+    return $this->first()->getPropertyDefinitions();
   }
 
   /**
    * {@inheritdoc}
    */
   public function __get($property_name) {
-    return $this->offsetGet(0)->__get($property_name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function get($property_name) {
-    return $this->offsetGet(0)->get($property_name);
+    return $this->first()->__get($property_name);
   }
 
   /**
    * {@inheritdoc}
    */
   public function __set($property_name, $value) {
-    $this->offsetGet(0)->__set($property_name, $value);
+    $this->first()->__set($property_name, $value);
   }
 
   /**
    * {@inheritdoc}
    */
   public function __isset($property_name) {
-    return $this->offsetGet(0)->__isset($property_name);
+    return $this->first()->__isset($property_name);
   }
 
   /**
    * {@inheritdoc}
    */
   public function __unset($property_name) {
-    return $this->offsetGet(0)->__unset($property_name);
+    return $this->first()->__unset($property_name);
   }
 
   /**
@@ -215,7 +208,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     // are valid default values.
     if (!isset($value) || (is_array($value) && empty($value))) {
       // Create one field item and apply defaults.
-      $this->offsetGet(0)->applyDefaultValue(FALSE);
+      $this->first()->applyDefaultValue(FALSE);
     }
     else {
       $this->setValue($value, $notify);
