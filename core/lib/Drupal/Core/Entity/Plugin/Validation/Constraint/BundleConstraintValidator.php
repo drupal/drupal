@@ -20,7 +20,7 @@ class BundleConstraintValidator extends ConstraintValidator {
    */
   public function validate($entity, Constraint $constraint) {
     if (!empty($entity) && !in_array($entity->bundle(), $constraint->getBundleOption())) {
-      $this->context->addViolation($constraint->message, array('%bundle', implode(', ', $constraint->getBundleOption())));
+      $this->context->addViolation($constraint->message, array('%bundle' => implode(', ', $constraint->getBundleOption())));
     }
   }
 }
