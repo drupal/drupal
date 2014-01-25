@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal) {
 
 "use strict";
 
@@ -23,4 +23,4 @@ Drupal.behaviors.importLanguageCodeSelector = {
   }
 };
 
-})(jQuery);
+})(jQuery, Drupal);

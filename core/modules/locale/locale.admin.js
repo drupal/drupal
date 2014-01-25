@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal) {
 
 "use strict";
 
@@ -16,7 +16,7 @@ Drupal.behaviors.localeTranslateDirty = {
         $marker.fadeIn('slow');
       });
       // Highlight changed row.
-      $form.on('change.localeTranslateDirty', 'tr', function (e) {
+      $form.on('change.localeTranslateDirty', 'tr', function () {
         var
           $row = $(this),
           $rowToMark = $row.once('localemark'),
@@ -83,4 +83,4 @@ $.extend(Drupal.theme, {
   }
 });
 
-})(jQuery);
+})(jQuery, Drupal);
