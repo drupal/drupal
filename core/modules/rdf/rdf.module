@@ -259,7 +259,7 @@ function rdf_preprocess_html(&$variables) {
     $variables['html_attributes']['prefix'] = array();
   }
   foreach(rdf_get_namespaces() as $prefix => $uri) {
-    $variables['html_attributes']['prefix'][] = $prefix . ': ' . $uri . "\n";
+    $variables['html_attributes']['prefix'][] = $prefix . ': ' . $uri . " ";
   }
 }
 
