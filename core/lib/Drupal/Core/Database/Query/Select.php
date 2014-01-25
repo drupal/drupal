@@ -710,7 +710,11 @@ class Select extends Query implements SelectInterface {
         $table_string = '(' . (string) $subquery . ')';
       }
       else {
-        $table_string = '{' . $this->connection->escapeTable($table['table']) . '}';
+        $table_string = $this->connection->escapeTable($table['table']);
+        // Do not attempt prefixing cross database / schema queries.
+        if (strpos($table_string, '.') === FALSE) {
+          $table_string = '{' . $table_string . '}';
+        }
       }
 
       // Don't use the AS keyword for table aliases, as some
