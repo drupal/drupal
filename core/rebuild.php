@@ -15,8 +15,9 @@ use Drupal\Component\Utility\Crypt;
 // Change the directory to the Drupal root.
 chdir('..');
 
-require_once dirname(__DIR__) . '/core/includes/bootstrap.inc';
-require_once dirname(__DIR__) . '/core/includes/utility.inc';
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/includes/bootstrap.inc';
+require_once __DIR__ . '/includes/utility.inc';
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
