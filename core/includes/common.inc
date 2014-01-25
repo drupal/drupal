@@ -4684,32 +4684,6 @@ function element_info_property($type, $property_name, $default = NULL) {
 }
 
 /**
- * Sorts a structured array by the 'weight' element.
- *
- * Note that the sorting is by the 'weight' array element, not by the render
- * element property '#weight'.
- *
- * Callback for uasort() used in various functions.
- *
- * @param $a
- *   First item for comparison. The compared items should be associative arrays
- *   that optionally include a 'weight' element. For items without a 'weight'
- *   element, a default value of 0 will be used.
- * @param $b
- *   Second item for comparison.
- *
- * @return int
- *   The comparison result for uasort().
- *
- * @see \Drupal\Component\Utility\SortArray::sortByWeightElement()
- *
- * @deprecated as of Drupal 8.0. Use SortArray::sortByWeightElement() instead.
- */
-function drupal_sort_weight($a, $b) {
-  return SortArray::sortByWeightElement((array) $a, (array) $b);
-}
-
-/**
  * Sorts a structured array by 'title' key (no # prefix).
  *
  * Callback for uasort() within system_admin_index().
@@ -5138,7 +5112,7 @@ function drupal_get_updaters() {
   if (!isset($updaters)) {
     $updaters = \Drupal::moduleHandler()->invokeAll('updater_info');
     drupal_alter('updater_info', $updaters);
-    uasort($updaters, 'drupal_sort_weight');
+    uasort($updaters, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
   }
   return $updaters;
 }
@@ -5158,7 +5132,7 @@ function drupal_get_filetransfer_info() {
   if (!isset($info)) {
     $info = \Drupal::moduleHandler()->invokeAll('filetransfer_info');
     drupal_alter('filetransfer_info', $info);
-    uasort($info, 'drupal_sort_weight');
+    uasort($info, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
   }
   return $info;
 }

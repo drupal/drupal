@@ -240,7 +240,7 @@ abstract class OverviewBase extends FormBase {
       $array[] = $a['name'];
     }
     if (!empty($a['children'])) {
-      uasort($a['children'], 'drupal_sort_weight');
+      uasort($a['children'], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
       $array = array_merge($array, array_reduce($a['children'], array($this, 'reduceOrder')));
     }
     return $array;

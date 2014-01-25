@@ -61,7 +61,7 @@ class SelectionPluginManager extends DefaultPluginManager {
     $selection_handler_groups = $this->getSelectionGroups($target_entity_type);
 
     // Sort the selection plugins by weight and select the best match.
-    uasort($selection_handler_groups[$selection_handler], 'drupal_sort_weight');
+    uasort($selection_handler_groups[$selection_handler], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
     end($selection_handler_groups[$selection_handler]);
     $plugin_id = key($selection_handler_groups[$selection_handler]);
 

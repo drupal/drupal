@@ -171,7 +171,7 @@ class WidgetPluginManager extends DefaultPluginManager {
       $options = array();
       $field_types = $this->fieldTypeManager->getDefinitions();
       $widget_types = $this->getDefinitions();
-      uasort($widget_types, 'drupal_sort_weight');
+      uasort($widget_types, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
       foreach ($widget_types as $name => $widget_type) {
         foreach ($widget_type['field_types'] as $widget_field_type) {
           // Check that the field type exists.

@@ -160,7 +160,7 @@ class EntityListController extends EntityControllerBase implements EntityListCon
     // Retrieve and sort operations.
     $operations = $this->getOperations($entity);
     $this->moduleHandler()->alter('entity_operation', $operations, $entity);
-    uasort($operations, 'drupal_sort_weight');
+    uasort($operations, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
     $build = array(
       '#type' => 'operations',
       '#links' => $operations,

@@ -665,7 +665,7 @@ abstract class FilterPluginBase extends HandlerBase {
    */
   protected function buildGroupSubmit($form, &$form_state) {
     $groups = array();
-    uasort($form_state['values']['options']['group_info']['group_items'], 'drupal_sort_weight');
+    uasort($form_state['values']['options']['group_info']['group_items'], array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
     // Filter out removed items.
 
     // Start from 1 to avoid problems with #default_value in the widget.

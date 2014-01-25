@@ -1067,7 +1067,7 @@ function update_resolve_dependencies($starting_updates) {
   // Perform the depth-first search and sort on the results.
   $graph_object = new Graph($graph);
   $graph = $graph_object->searchAndSort();
-  uasort($graph, 'drupal_sort_weight');
+  uasort($graph, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
 
   foreach ($graph as $function => &$data) {
     $module = $data['module'];
