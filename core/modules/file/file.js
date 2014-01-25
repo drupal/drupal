@@ -63,13 +63,13 @@ Drupal.behaviors.fileAutoUpload = {
 Drupal.behaviors.fileButtons = {
   attach: function (context) {
     var $context = $(context);
-    $context.find('input.form-submit').on('mousedown', Drupal.file.disableFields);
-    $context.find('div.form-managed-file input.form-submit').on('mousedown', Drupal.file.progressBar);
+    $context.find('.form-submit').on('mousedown', Drupal.file.disableFields);
+    $context.find('.form-managed-file .form-submit').on('mousedown', Drupal.file.progressBar);
   },
   detach: function (context) {
     var $context = $(context);
-    $context.find('input.form-submit').off('mousedown', Drupal.file.disableFields);
-    $context.find('div.form-managed-file input.form-submit').off('mousedown', Drupal.file.progressBar);
+    $context.find('.form-submit').off('mousedown', Drupal.file.disableFields);
+    $context.find('.form-managed-file .form-submit').off('mousedown', Drupal.file.progressBar);
   }
 };
 
@@ -128,17 +128,17 @@ Drupal.file = Drupal.file || {
    * Prevent file uploads when using buttons not intended to upload.
    */
   disableFields: function (event){
-    var clickedButton = this;
+    var $clickedButton = $(this);
 
     // Only disable upload fields for Ajax buttons.
-    if (!$(clickedButton).hasClass('ajax-processed')) {
+    if (!$clickedButton.hasClass('ajax-processed')) {
       return;
     }
 
     // Check if we're working with an "Upload" button.
     var $enabledFields = [];
-    if ($(this).closest('div.form-managed-file').length > 0) {
-      $enabledFields = $(this).closest('div.form-managed-file').find('input.form-file');
+    if ($clickedButton.closest('div.form-managed-file').length > 0) {
+      $enabledFields = $clickedButton.closest('div.form-managed-file').find('input.form-file');
     }
 
     // Temporarily disable upload fields other than the one we're currently
@@ -159,8 +159,8 @@ Drupal.file = Drupal.file || {
    * Add progress bar support if possible.
    */
   progressBar: function (event) {
-    var clickedButton = this;
-    var $progressId = $(clickedButton).closest('div.form-managed-file').find('input.file-progress');
+    var $clickedButton = $(this);
+    var $progressId = $clickedButton.closest('div.form-managed-file').find('input.file-progress');
     if ($progressId.length) {
       var originalName = $progressId.attr('name');
 
@@ -174,7 +174,7 @@ Drupal.file = Drupal.file || {
     }
     // Show the progress bar if the upload takes longer than half a second.
     setTimeout(function () {
-      $(clickedButton).closest('div.form-managed-file').find('div.ajax-progress-bar').slideDown();
+      $clickedButton.closest('div.form-managed-file').find('div.ajax-progress-bar').slideDown();
     }, 500);
   },
   /**
