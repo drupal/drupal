@@ -54,5 +54,14 @@ class TemporaryQueryTest extends DatabaseWebTestBase {
 
     $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'A temporary table was created successfully in this request.');
     $this->assertEqual($this->countTableRows($table_name_task), $this->countTableRows('test_task'), 'A second temporary table was created successfully in this request.');
+
+    // Check that leading whitespace and comments do not cause problems
+    // in the modified query.
+    $sql = "
+      -- Let's select some rows into a temporary table
+      SELECT name FROM {test}
+    ";
+    $table_name_test = db_query_temporary($sql, array());
+    $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'Leading white space and comments do not interfere with temporary table creation.');
   }
 }
