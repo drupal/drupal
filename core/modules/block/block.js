@@ -26,9 +26,7 @@ Drupal.behaviors.blockSettingsSummary = {
       return vals.join(', ');
     }
 
-    $('#edit-visibility-node-type').drupalSetSummary(checkboxesSummary);
-    $('#edit-visibility-language').drupalSetSummary(checkboxesSummary);
-    $('#edit-visibility-role').drupalSetSummary(checkboxesSummary);
+    $('#edit-visibility-node-type, #edit-visibility-language, #edit-visibility-role').drupalSetSummary(checkboxesSummary);
 
     $('#edit-visibility-path').drupalSetSummary(function (context) {
       var $pages = $(context).find('textarea[name="visibility[path][pages]"]');
