@@ -53,10 +53,16 @@ function locale_translate_import_form($form, &$form_state) {
     'file_validate_extensions' => array('po'),
     'file_validate_size' => array(file_upload_max_size()),
   );
+  $file_description = array(
+    '#theme'             => 'file_upload_help',
+    '#description'       => t('A Gettext Portable Object file.'),
+    '#upload_validators' => $validators,
+  );
+
   $form['file'] = array(
     '#type' => 'file',
     '#title' => t('Translation file'),
-    '#description' => theme('file_upload_help', array('description' => t('A Gettext Portable Object file.'), 'upload_validators' => $validators)),
+    '#description' => drupal_render($file_description),
     '#size' => 50,
     '#upload_validators' => $validators,
     '#attributes' => array('class' => array('file-import-input')),
