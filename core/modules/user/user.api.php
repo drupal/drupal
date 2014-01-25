@@ -167,8 +167,9 @@ function hook_user_cancel($edit, $account, $method) {
  * @see user_cancel_confirm_form()
  */
 function hook_user_cancel_methods_alter(&$methods) {
+  $account = \Drupal::currentUser();
   // Limit access to disable account and unpublish content method.
-  $methods['user_cancel_block_unpublish']['access'] = user_access('administer site configuration');
+  $methods['user_cancel_block_unpublish']['access'] = $account->hasPermission('administer site configuration');
 
   // Remove the content re-assigning method.
   unset($methods['user_cancel_reassign']);
@@ -178,7 +179,7 @@ function hook_user_cancel_methods_alter(&$methods) {
     'title' => t('Delete the account and remove all content.'),
     'description' => t('All your content will be replaced by empty strings.'),
     // access should be used for administrative methods only.
-    'access' => user_access('access zero-out account cancellation method'),
+    'access' => $account->hasPermission('access zero-out account cancellation method'),
   );
 }
 

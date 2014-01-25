@@ -18,11 +18,9 @@ class RegisterFormController extends AccountFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state) {
-    global $user;
+    $user = $this->currentUser();
     $account = $this->entity;
-
-    $admin = user_access('administer users');
-
+    $admin = $user->hasPermission('administer users');
     // Pass access information to the submit handler. Running an access check
     // inside the submit function interferes with form processing and breaks
     // hook_form_alter().

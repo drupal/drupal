@@ -575,7 +575,7 @@ function user_format_name(AccountInterface $account) {
  * @see user_user_logout()
  */
 function user_template_preprocess_default_variables_alter(&$variables) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // If this function is called from the installer after Drupal has been
   // installed then $user will not be set.
@@ -587,7 +587,7 @@ function user_template_preprocess_default_variables_alter(&$variables) {
   // Remove password and session IDs, $form_state, since themes should not need nor see them.
   unset($variables['user']->pass, $variables['user']->sid, $variables['user']->ssid);
 
-  $variables['is_admin'] = user_access('access administration pages');
+  $variables['is_admin'] = $user->hasPermission('access administration pages');
   $variables['logged_in'] = $user->isAuthenticated();
 }
 
@@ -619,7 +619,7 @@ function template_preprocess_username(&$variables) {
     $name = drupal_substr($name, 0, 15) . '...';
   }
   $variables['name'] = check_plain($name);
-  $variables['profile_access'] = user_access('access user profiles');
+  $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
 
   // Populate link path and attributes if appropriate.
   if ($variables['uid'] && $variables['profile_access']) {

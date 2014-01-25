@@ -55,13 +55,14 @@ abstract class AccountFormController extends ContentEntityFormController {
    * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
+    /** @var \Drupal\user\UserInterface $account */
     $account = $this->entity;
     $user = $this->currentUser();
     $config = \Drupal::config('user.settings');
 
     $language_interface = language(Language::TYPE_INTERFACE);
     $register = $account->isAnonymous();
-    $admin = user_access('administer users');
+    $admin = $user->hasPermission('administer users');
 
     // Account information.
     $form['account'] = array(
@@ -79,7 +80,7 @@ abstract class AccountFormController extends ContentEntityFormController {
       '#attributes' => array('class' => array('username'), 'autocorrect' => 'off', 'autocomplete' => 'off', 'autocapitalize' => 'off',
       'spellcheck' => 'false'),
       '#default_value' => (!$register ? $account->getUsername() : ''),
-      '#access' => ($register || ($user->id() == $account->id() && user_access('change own username')) || $admin),
+      '#access' => ($register || ($user->id() == $account->id() && $user->hasPermission('change own username')) || $admin),
       '#weight' => -10,
     );
 
@@ -90,7 +91,7 @@ abstract class AccountFormController extends ContentEntityFormController {
       '#type' => 'email',
       '#title' => $this->t('E-mail address'),
       '#description' => $this->t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
-      '#required' => !(!$account->getEmail() && user_access('administer users')),
+      '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
       '#default_value' => (!$register ? $account->getEmail() : ''),
       '#attributes' => array('autocomplete' => 'off'),
     );
@@ -187,7 +188,7 @@ abstract class AccountFormController extends ContentEntityFormController {
       '#title' => $this->t('Roles'),
       '#default_value' => (!$register ? $account->getRoles() : array()),
       '#options' => $roles,
-      '#access' => $roles && user_access('administer permissions'),
+      '#access' => $roles && $user->hasPermission('administer permissions'),
       DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
     );
 
@@ -228,7 +229,7 @@ abstract class AccountFormController extends ContentEntityFormController {
       '#title' => $this->t('Language settings'),
       // Display language selector when either creating a user on the admin
       // interface or editing a user account.
-      '#access' => !$register || user_access('administer users'),
+      '#access' => !$register || $user->hasPermission('administer users'),
     );
 
     $form['language']['preferred_langcode'] = array(

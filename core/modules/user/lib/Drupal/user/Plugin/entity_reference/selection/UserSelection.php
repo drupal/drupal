@@ -88,9 +88,9 @@ class UserSelection extends SelectionBase {
       $query->condition('name', $match, $match_operator);
     }
 
-    // Adding the 'user_access' tag is sadly insufficient for users: core
+    // Adding the permission check is sadly insufficient for users: core
     // requires us to also know about the concept of 'blocked' and 'active'.
-    if (!user_access('administer users')) {
+    if (!\Drupal::currentUser()->hasPermission('administer users')) {
       $query->condition('status', 1);
     }
     return $query;
@@ -100,7 +100,7 @@ class UserSelection extends SelectionBase {
    * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) {
-    if (user_access('administer users')) {
+    if (\Drupal::currentUser()->hasPermission('administer users')) {
       // In addition, if the user is administrator, we need to make sure to
       // match the anonymous user, that doesn't actually have a name in the
       // database.
