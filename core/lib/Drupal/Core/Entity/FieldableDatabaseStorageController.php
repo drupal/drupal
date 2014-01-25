@@ -891,7 +891,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       foreach ($langcodes as $langcode) {
         $delta_count = 0;
         $items = $entity->getTranslation($langcode)->get($field_name);
-        $items->filterEmptyValues();
+        $items->filterEmptyItems();
         foreach ($items as $delta => $item) {
           // We now know we have someting to insert.
           $do_insert = TRUE;
