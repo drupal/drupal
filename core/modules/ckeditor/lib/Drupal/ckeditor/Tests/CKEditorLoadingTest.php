@@ -103,6 +103,7 @@ class CKEditorLoadingTest extends WebTestBase {
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
       'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
+      'editorSupportsContentFiltering' => TRUE,
     )));
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
@@ -129,6 +130,7 @@ class CKEditorLoadingTest extends WebTestBase {
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
       'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
+      'editorSupportsContentFiltering' => TRUE,
     )));
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");

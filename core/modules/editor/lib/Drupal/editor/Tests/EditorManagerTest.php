@@ -104,6 +104,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
               'format'  => 'full_html',
               'editor' => 'unicorn',
               'editorSettings' => $unicorn_plugin->getJSSettings($editor),
+              'editorSupportsContentFiltering' => TRUE,
             )
           )))
         )

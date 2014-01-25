@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Editor(
  *   id = "ckeditor",
  *   label = @Translation("CKEditor"),
+ *   supports_content_filtering = TRUE,
  *   supports_inline_editing = TRUE
  * )
  */

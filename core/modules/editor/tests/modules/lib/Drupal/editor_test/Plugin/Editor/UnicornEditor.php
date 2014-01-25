@@ -16,6 +16,7 @@ use Drupal\editor\Entity\Editor as EditorEntity;
  * @Editor(
  *   id = "unicorn",
  *   label = @Translation("Unicorn Editor"),
+ *   supports_content_filtering = TRUE,
  *   supports_inline_editing = TRUE
  * )
  */

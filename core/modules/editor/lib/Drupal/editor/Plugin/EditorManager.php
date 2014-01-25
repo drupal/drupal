@@ -72,6 +72,7 @@ class EditorManager extends DefaultPluginManager {
       }
 
       $plugin = $this->createInstance($editor->editor);
+      $plugin_definition = $plugin->getPluginDefinition();
 
       // Libraries.
       $attachments['library'] = array_merge($attachments['library'], $plugin->getLibraries($editor));
@@ -81,6 +82,7 @@ class EditorManager extends DefaultPluginManager {
         'format' => $format_id,
         'editor' => $editor->editor,
         'editorSettings' => $plugin->getJSSettings($editor),
+        'editorSupportsContentFiltering' => $plugin_definition['supports_content_filtering'],
       );
     }
 

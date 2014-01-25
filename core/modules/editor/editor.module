@@ -93,6 +93,7 @@ function editor_library_info() {
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
+      array('system', 'drupal.dialog'),
     ),
   );
 

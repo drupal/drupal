@@ -33,6 +33,13 @@ class Editor extends Plugin {
   public $label;
 
   /**
+   * Whether the editor supports "allowed content only" filtering.
+   *
+   * @var boolean
+   */
+  public $supports_content_filtering;
+
+  /**
    * Whether the editor supports the inline editing provided by the Edit module.
    *
    * @var boolean
