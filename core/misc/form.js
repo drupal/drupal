@@ -147,11 +147,8 @@ Drupal.behaviors.formUpdated = {
  attach: function (context) {
    var $context = $(context);
    var contextIsForm = $context.is('form');
-   var $forms = $context.find('form').once('form-updated');
+   var $forms = (contextIsForm ? $context : $context.find('form')).once('form-updated');
 
-   if (contextIsForm) {
-     $forms = $context;
-   }
 
    if ($forms.length) {
      // Initialize form behaviors, use $.makeArray to be able to use native
@@ -180,8 +177,9 @@ Drupal.behaviors.formUpdated = {
  },
  detach: function (context, settings, trigger) {
    var $context = $(context);
+   var contextIsForm = $context.is('form');
    if (trigger === 'unload') {
-     var $forms = $context.find('form').removeOnce('form-updated');
+     var $forms = (contextIsForm ? $context : $context.find('form')).removeOnce('form-updated');
      if ($forms.length) {
        $.makeArray($forms).forEach(function (form) {
          form.removeAttribute('data-drupal-form-fields');
