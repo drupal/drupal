@@ -126,12 +126,17 @@ function _batch_progress_page() {
     // the error message.
     ob_start();
     $fallback = $current_set['error_message'] . '<br />' . $batch['error_message'];
-    $fallback = theme('maintenance_page', array('content' => $fallback, 'show_messages' => FALSE));
+    $fallback = array(
+      '#theme' => 'maintenance_page',
+      '#content' => $fallback,
+      '#show_messages' => FALSE,
+    );
 
     // We strip the end of the page using a marker in the template, so any
     // additional HTML output by PHP shows up inside the page rather than below
     // it. While this causes invalid HTML, the same would be true if we didn't,
     // as content is not allowed to appear after </html> anyway.
+    $fallback = drupal_render($fallback);
     list($fallback) = explode('<!--partial-->', $fallback);
     print $fallback;
 
