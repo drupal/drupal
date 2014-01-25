@@ -2891,7 +2891,7 @@ function system_run_automated_cron() {
   if (($threshold = \Drupal::config('system.cron')->get('threshold.autorun')) > 0 && \Drupal::state()->get('install_task') == 'done') {
     $cron_last = \Drupal::state()->get('system.cron_last') ?: NULL;
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
-      drupal_cron_run();
+      \Drupal::service('cron')->run();
     }
   }
 }

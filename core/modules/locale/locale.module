@@ -387,7 +387,6 @@ function locale_themes_disabled($themes) {
 /**
  * Implements hook_cron().
  *
- * @see drupal_cron_run()
  * @see locale_queue_info()
  */
 function locale_cron() {

@@ -2179,7 +2179,7 @@ function install_finished(&$install_state) {
   // Run cron to populate update status tables (if available) so that users
   // will be warned if they've installed an out of date Drupal version.
   // Will also trigger indexing of profile-supplied content or feeds.
-  drupal_cron_run();
+  \Drupal::service('cron')->run();
 
   // Save a snapshot of the initially installed configuration.
   $active = \Drupal::service('config.storage');

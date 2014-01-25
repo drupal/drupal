@@ -98,6 +98,9 @@ services:
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
     arguments: ['@config.storage', '@config.storage.schema', '@cache.config']
+  cron:
+    class: Drupal\Core\Cron
+    arguments: ['@module_handler', '@lock', '@queue', '@state']
   database:
     class: Drupal\Core\Database\Connection
     factory_class: Drupal\Core\Database\Database

@@ -73,7 +73,7 @@ class UserPictureTest extends WebTestBase {
       ))
       ->condition('fid', $file->id())
       ->execute();
-    drupal_cron_run();
+    \Drupal::service('cron')->run();
 
     // Verify that the image has been deleted.
     $this->assertFalse(file_load($file->id(), TRUE), 'File was removed from the database.');

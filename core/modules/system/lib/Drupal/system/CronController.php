@@ -7,13 +7,41 @@
 
 namespace Drupal\system;
 
+use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\CronInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller for Cron handling.
  */
-class CronController {
+class CronController extends ControllerBase implements ContainerInjectionInterface {
+
+  /**
+   * The cron service.
+   *
+   * @var \Drupal\Core\CronInterface
+   */
+  protected $cron;
+
+  /**
+   * Constructs a CronController object.
+   *
+   * @param \Drupal\Core\CronInterface $cron
+   *   The cron service.
+   */
+  public function __construct(CronInterface $cron) {
+    $this->cron = $cron;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('cron'));
+  }
+
 
   /**
    * Run Cron once.
@@ -22,8 +50,7 @@ class CronController {
    *   A Symfony response object.
    */
   public function run() {
-    // @todo Make this an injected object.
-    drupal_cron_run();
+    $this->cron->run();
 
     // HTTP 204 is "No content", meaning "I did what you asked and we're done."
     return new Response('', 204);
@@ -36,13 +63,14 @@ class CronController {
    *   A Symfony direct response object.
    */
   public function runManually() {
-    if (drupal_cron_run()) {
-      drupal_set_message(t('Cron ran successfully.'));
+    if ($this->cron->run()) {
+      drupal_set_message($this->t('Cron ran successfully.'));
     }
     else {
-      drupal_set_message(t('Cron run failed.'), 'error');
+      drupal_set_message($this->t('Cron run failed.'), 'error');
     }
-    return new RedirectResponse(url('admin/reports/status', array('absolute' => TRUE)));
+
+    return $this->redirect('system.status');
   }
 
 }

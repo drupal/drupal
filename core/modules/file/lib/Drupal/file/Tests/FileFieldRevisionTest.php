@@ -123,7 +123,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ))
       ->condition('fid', $node_file_r3->id())
       ->execute();
-    drupal_cron_run();
+    \Drupal::service('cron')->run();
 
     $this->assertFileNotExists($node_file_r3, 'Second file is now deleted after deleting third revision, since it is no longer being used by any other nodes.');
     $this->assertFileEntryNotExists($node_file_r3, 'Second file entry is now deleted after deleting third revision, since it is no longer being used by any other nodes.');
@@ -138,7 +138,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ))
       ->condition('fid', $node_file_r1->id())
       ->execute();
-    drupal_cron_run();
+    \Drupal::service('cron')->run();
     $this->assertFileNotExists($node_file_r1, 'Original file is deleted after deleting the entire node with two revisions remaining.');
     $this->assertFileEntryNotExists($node_file_r1, 'Original file entry is deleted after deleting the entire node with two revisions remaining.');
   }

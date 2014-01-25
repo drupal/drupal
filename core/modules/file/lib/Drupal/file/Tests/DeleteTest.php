@@ -69,7 +69,7 @@ class DeleteTest extends FileManagedTestBase {
       ))
       ->condition('fid', $file->id())
       ->execute();
-    drupal_cron_run();
+    \Drupal::service('cron')->run();
 
     // system_cron() loads
     $this->assertFileHooksCalled(array('delete'));
