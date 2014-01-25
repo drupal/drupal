@@ -8,7 +8,7 @@
 namespace Drupal\edit\Plugin\InPlaceEditor;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\edit\EditorBase;
+use Drupal\edit\Plugin\InPlaceEditorBase;
 
 /**
  * Defines the plain text in-place editor.
@@ -17,7 +17,7 @@ use Drupal\edit\EditorBase;
  *   id = "plain_text"
  * )
  */
-class PlainTextEditor extends EditorBase {
+class PlainTextEditor extends InPlaceEditorBase {
 
   /**
    * {@inheritdoc}

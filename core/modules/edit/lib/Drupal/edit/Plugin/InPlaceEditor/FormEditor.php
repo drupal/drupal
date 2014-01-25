@@ -8,7 +8,7 @@
 namespace Drupal\edit\Plugin\InPlaceEditor;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\edit\EditorBase;
+use Drupal\edit\Plugin\InPlaceEditorBase;
 
 /**
  * Defines the form in-place editor.
@@ -17,7 +17,7 @@ use Drupal\edit\EditorBase;
  *   id = "form"
  * )
  */
-class FormEditor extends EditorBase {
+class FormEditor extends InPlaceEditorBase {
 
   /**
    * {@inheritdoc}

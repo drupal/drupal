@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\edit\EditPluginInterface.
+ * Contains \Drupal\edit\Plugin\InPlaceEditorInterface.
  */
 
-namespace Drupal\edit;
+namespace Drupal\edit\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -13,7 +13,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 /**
  * Defines an interface for in-place editors plugins.
  */
-interface EditPluginInterface extends PluginInspectionInterface {
+interface InPlaceEditorInterface extends PluginInspectionInterface {
 
   /**
    * Checks whether this in-place editor is compatible with a given field.

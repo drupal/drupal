@@ -9,7 +9,7 @@ namespace Drupal\editor\Plugin\InPlaceEditor;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\edit\EditPluginInterface;
+use Drupal\edit\Plugin\InPlaceEditorInterface;
 
 /**
  * Defines the formatted text in-place editor.
@@ -19,7 +19,7 @@ use Drupal\edit\EditPluginInterface;
  *   alternativeTo = {"plain_text"}
  * )
  */
-class Editor extends PluginBase implements EditPluginInterface {
+class Editor extends PluginBase implements InPlaceEditorInterface {
 
   /**
    * {@inheritdoc}

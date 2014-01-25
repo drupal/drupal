@@ -2,19 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\edit\EditorBase.
+ * Contains \Drupal\edit\Plugin\InPlaceEditorBase.
  */
 
-namespace Drupal\edit;
+namespace Drupal\edit\Plugin;
 
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\edit\EditPluginInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
- * Defines a base editor implementation.
+ * Defines a base in-place editor implementation.
  */
-abstract class EditorBase extends PluginBase implements EditPluginInterface {
+abstract class InPlaceEditorBase extends PluginBase implements InPlaceEditorInterface {
 
   /**
    * {@inheritdoc}

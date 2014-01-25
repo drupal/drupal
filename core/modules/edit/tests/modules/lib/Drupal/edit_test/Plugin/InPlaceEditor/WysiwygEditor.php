@@ -8,7 +8,7 @@
 namespace Drupal\edit_test\Plugin\InPlaceEditor;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\edit\EditorBase;
+use Drupal\edit\Plugin\InPlaceEditorBase;
 
 /**
  * Defines the 'wysiwyg' in-place editor.
@@ -18,7 +18,7 @@ use Drupal\edit\EditorBase;
  *   alternativeTo = {"plain_text"}
  * )
  */
-class WysiwygEditor extends EditorBase {
+class WysiwygEditor extends InPlaceEditorBase {
 
   /**
    * {@inheritdoc}
@@ -44,7 +44,7 @@ class WysiwygEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  function getMetadata(FieldItemListInterface $items) {
+  public function getMetadata(FieldItemListInterface $items) {
     $metadata['format'] = $items[0]->format;
     return $metadata;
   }
