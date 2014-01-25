@@ -7,8 +7,6 @@
 
 namespace Drupal\tour\Tests;
 
-use Drupal\tour\Tests\TourTestBase;
-
 /**
  * Simple tour tips test base.
  */

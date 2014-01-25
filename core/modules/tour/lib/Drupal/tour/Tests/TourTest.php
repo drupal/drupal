@@ -8,7 +8,6 @@
 namespace Drupal\tour\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\tour\Tests\TourTestBase;
 
 /**
  * Tests tour functionality.
