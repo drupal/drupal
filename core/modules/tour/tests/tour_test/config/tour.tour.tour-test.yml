@@ -2,8 +2,11 @@ id: tour-test
 module: tour_test
 label: Tour test english
 langcode: en
-paths:
-  - tour-test-1
+routes:
+  - route_name: tour_test.1
+  - route_name: tour_test.3
+    route_params:
+      locale: foo
 tips:
   tour-test-1:
     id: tour-test-1

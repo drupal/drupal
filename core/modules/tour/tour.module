@@ -5,6 +5,7 @@
  * Main functions of the module.
  */
 use Drupal\Core\Cache\CacheBackendInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Implements hook_permission().
@@ -108,23 +109,23 @@ function tour_preprocess_page(&$variables) {
     return;
   }
 
-  // @todo replace this with http://drupal.org/node/1918768 once it is committed.
-  $path = current_path();
-  // Load all of the items and match on path.
-  $tours = entity_load_multiple('tour');
+  // Load all of the items and match on route name.
+  $request = \Drupal::request();
+  $route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME);
 
-  $path_alias = drupal_strtolower(\Drupal::service('path.alias_manager')->getPathAlias($path));
-  foreach ($tours as $tour_id => $tour) {
-    // @todo Replace this with an entity query that does path matching when
-    // http://drupal.org/node/1918768 lands.
-    $pages = implode("\n", $tour->getPaths());
-    if (!drupal_match_path($path_alias, $pages) && (($path == $path_alias) || drupal_match_path($path, $pages))) {
-      unset($tours[$tour_id]);
+  $results = \Drupal::entityQuery('tour')
+    ->condition('routes.*.route_name', $route_name)
+    ->execute();
+  if (!empty($results) && $tours = entity_load_multiple('tour', array_keys($results))) {
+    foreach ($tours as $id => $tour) {
+      // Match on params.
+      if (!$tour->hasMatchingRoute($route_name, $request->attributes->get('_raw_variables')->all())) {
+        unset($tours[$id]);
+      }
     }
-  }
-
-  if ($tours) {
-    $variables['page']['help']['tour'] = entity_view_multiple($tours, 'full');
+    if (!empty($tours)) {
+      $variables['page']['help']['tour'] = entity_view_multiple($tours, 'full');
+    }
   }
 }
 
