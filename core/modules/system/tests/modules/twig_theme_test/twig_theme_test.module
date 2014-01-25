@@ -11,6 +11,10 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
     'variables' => array(),
     'template' => 'twig_theme_test.trans',
   );
+  $items['twig_namespace_test'] = array(
+    'variables' => array(),
+    'template' => 'twig_namespace_test',
+  );
   return $items;
 }
 

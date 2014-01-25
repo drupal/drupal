@@ -134,6 +134,8 @@ class CoreServiceProvider implements ServiceProviderInterface  {
         'debug' => settings()->get('twig_debug', FALSE),
         'auto_reload' => settings()->get('twig_auto_reload', NULL),
       ))
+      ->addArgument(new Reference('module_handler'))
+      ->addArgument(new Reference('theme_handler'))
       ->addMethodCall('addExtension', array(new Definition('Drupal\Core\Template\TwigExtension')))
       // @todo Figure out what to do about debugging functions.
       // @see http://drupal.org/node/1804998
