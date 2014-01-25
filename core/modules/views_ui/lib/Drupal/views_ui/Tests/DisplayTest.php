@@ -336,4 +336,27 @@ class DisplayTest extends UITestBase {
     $this->assertTrue($elements, 'The disabled class was found on the form wrapper.');
   }
 
+  /**
+   * Tests the action links on the edit display UI.
+   */
+  public function testActionLinks() {
+    // Change the display title of a display so it contains characters that will
+    // be escaped when rendered.
+    $display_title = "'<test>'";
+    $this->drupalGet('admin/structure/views/view/test_display');
+    $display_title_path = 'admin/structure/views/nojs/display/test_display/block_1/display_title';
+    $this->drupalPostForm($display_title_path, array('display_title' => $display_title), t('Apply'));
+
+    $placeholder = array('!display_title' => $display_title);
+    // Ensure that the dropdown buttons are displayed correctly.
+    $this->assertFieldByXpath('//input[@type="submit"]', t('Clone !display_title', $placeholder));
+    $this->assertFieldByXpath('//input[@type="submit"]', t('Delete !display_title', $placeholder));
+    $this->assertFieldByXpath('//input[@type="submit"]', t('Disable !display_title', $placeholder));
+    $this->assertNoFieldByXpath('//input[@type="submit"]', t('Enable !display_title', $placeholder));
+
+    // Disable the display so we can test the rendering of the "Enable" button.
+    $this->drupalPostForm(NULL, NULL, t('Disable !display_title', $placeholder));
+    $this->assertFieldByXpath('//input[@type="submit"]', t('Enable !display_title', $placeholder));
+    $this->assertNoFieldByXpath('//input[@type="submit"]', t('Disable !display_title', $placeholder));
+  }
 }

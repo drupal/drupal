@@ -386,7 +386,7 @@ class ViewEditFormController extends ViewFormControllerBase {
         if (!$is_enabled) {
           $build['top']['actions']['enable'] = array(
             '#type' => 'submit',
-            '#value' => $this->t('Enable @display_title', array('@display_title' => $display_title)),
+            '#value' => $this->t('Enable !display_title', array('!display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayEnable'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="enable">',
@@ -400,7 +400,7 @@ class ViewEditFormController extends ViewFormControllerBase {
           if ($path && (strpos($path, '%') === FALSE)) {
             $build['top']['actions']['path'] = array(
               '#type' => 'link',
-              '#title' => $this->t('View @display', array('@display' => $display['display_title'])),
+              '#title' => $this->t('View !display_title', array('!display_title' => $display_title)),
               '#options' => array('alt' => array($this->t("Go to the real page for this display"))),
               '#href' => $path,
               '#prefix' => '<li class="view">',
@@ -411,7 +411,7 @@ class ViewEditFormController extends ViewFormControllerBase {
         if (!$is_default) {
           $build['top']['actions']['duplicate'] = array(
             '#type' => 'submit',
-            '#value' => $this->t('Clone @display_title', array('@display_title' => $display_title)),
+            '#value' => $this->t('Clone !display_title', array('!display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayDuplicate'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="duplicate">',
@@ -421,7 +421,7 @@ class ViewEditFormController extends ViewFormControllerBase {
         // Always allow a display to be deleted.
         $build['top']['actions']['delete'] = array(
           '#type' => 'submit',
-          '#value' => $this->t('Delete @display_title', array('@display_title' => $display_title)),
+          '#value' => $this->t('Delete !display_title', array('!display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayDelete'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="delete">',
@@ -435,7 +435,7 @@ class ViewEditFormController extends ViewFormControllerBase {
 
           $build['top']['actions']['clone_as'][$type] = array(
             '#type' => 'submit',
-            '#value' => $this->t('Clone as @type', array('@type' => $label)),
+            '#value' => $this->t('Clone as !type', array('!type' => $label)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitCloneDisplayAsType'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="duplicate">',
@@ -446,7 +446,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       else {
         $build['top']['actions']['undo_delete'] = array(
           '#type' => 'submit',
-          '#value' => $this->t('Undo delete of @display_title', array('@display_title' => $display_title)),
+          '#value' => $this->t('Undo delete of !display_title', array('!display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayUndoDelete'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="undo-delete">',
@@ -456,7 +456,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       if ($is_enabled) {
         $build['top']['actions']['disable'] = array(
           '#type' => 'submit',
-          '#value' => $this->t('Disable @display_title', array('@display_title' => $display_title)),
+          '#value' => $this->t('Disable !display_title', array('!display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="disable">',
