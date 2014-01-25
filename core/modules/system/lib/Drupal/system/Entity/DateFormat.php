@@ -34,6 +34,7 @@ use Drupal\system\DateFormatInterface;
  *     "label" = "label",
  *     "uuid" = "uuid"
  *   },
+ *   admin_permission = "administer site configuration",
  *   links = {
  *     "edit-form" = "system.date_format_edit"
  *   }

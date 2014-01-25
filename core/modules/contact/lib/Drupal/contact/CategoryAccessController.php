@@ -31,9 +31,8 @@ class CategoryAccessController extends EntityAccessController {
       // the personal contact form.
       return $account->hasPermission('administer contact forms') && $entity->id() !== 'personal';
     }
-    else {
-      return $account->hasPermission('administer contact forms');
-    }
+
+    return parent::checkAccess($entity, $operation, $langcode, $account);
   }
 
 }

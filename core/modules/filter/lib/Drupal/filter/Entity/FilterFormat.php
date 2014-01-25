@@ -30,6 +30,7 @@ use Drupal\filter\FilterBag;
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
  *   config_prefix = "filter.format",
+ *   admin_permission = "administer filters",
  *   entity_keys = {
  *     "id" = "format",
  *     "label" = "name",

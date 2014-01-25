@@ -23,23 +23,12 @@ class MenuAccessController extends EntityAccessController {
     if ($operation === 'view') {
       return TRUE;
     }
-    elseif ($operation == 'delete') {
-      // Locked menus could not be deleted.
-      if ($entity->isLocked()) {
-        return FALSE;
-      }
+    // Locked menus could not be deleted.
+    elseif ($operation == 'delete' && $entity->isLocked()) {
+      return FALSE;
     }
 
-    if (in_array($operation, array('update', 'delete'))) {
-      return $account->hasPermission('administer menu');
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return $account->hasPermission('administer menu');
+    return parent::checkAccess($entity, $operation, $langcode, $account);
   }
 
 }

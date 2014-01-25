@@ -56,7 +56,7 @@ class BlockAccessController extends EntityAccessController implements EntityCont
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     if ($operation != 'view') {
-      return $account->hasPermission('administer blocks');
+      return parent::checkAccess($entity, $operation, $langcode, $account);
     }
 
     // Deny access to disabled blocks.

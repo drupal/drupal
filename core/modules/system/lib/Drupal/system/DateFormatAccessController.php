@@ -25,10 +25,11 @@ class DateFormatAccessController extends EntityAccessController {
       return TRUE;
     }
     // Locked date formats cannot be updated or deleted.
-    if (in_array($operation, array('update', 'delete')) && $entity->isLocked()) {
+    elseif (in_array($operation, array('update', 'delete')) && $entity->isLocked()) {
       return FALSE;
     }
-    return user_access('administer site configuration', $account);
+
+    return parent::checkAccess($entity, $operation, $langcode, $account);
   }
 
 }
