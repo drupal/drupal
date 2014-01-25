@@ -72,8 +72,8 @@ class RequestHandler extends ContainerAware {
     // Invoke the operation on the resource plugin.
     // All REST routes are restricted to exactly one format, so instead of
     // parsing it out of the Accept headers again, we can simply retrieve the
-    // format requirement. If there is no format associated, just pick HAL.
-    $format = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getRequirement('_format') ?: 'hal_json';
+    // format requirement. If there is no format associated, just pick JSON.
+    $format = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getRequirement('_format') ?: 'json';
     try {
       $response = $resource->{$method}($id, $unserialized, $request);
     }
