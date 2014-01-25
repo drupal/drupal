@@ -25,6 +25,11 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   protected $schema;
 
   /**
+   * @var array
+   */
+  protected $indexes = array();
+
+  /**
    * Creates a new field definition.
    *
    * @param string $type
@@ -286,7 +291,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   public function getSchema() {
     if (!isset($this->schema)) {
       // Get the schema from the field item class.
-      $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getFieldType());
+      $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->getType());
       $class = $definition['class'];
       $schema = $class::schema($this);
       // Fill in default values for optional entries.

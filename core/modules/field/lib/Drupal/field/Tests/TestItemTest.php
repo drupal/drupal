@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Tests;
 
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 
@@ -83,6 +84,23 @@ class TestItemTest extends FieldUnitTestBase {
     $entity->save();
     $entity = entity_load('entity_test', $id);
     $this->assertEqual($entity->{$this->field_name}->value, $new_value);
+
+    // Test the schema for this field type.
+    $expected_schema = array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'int',
+          'size' => 'medium',
+          'not null' => FALSE,
+        ),
+      ),
+      'indexes' => array(
+        'value' => array('value'),
+      ),
+      'foreign keys' => array(),
+    );
+    $field_schema = FieldDefinition::create('test_field')->getSchema();
+    $this->assertEqual($field_schema, $expected_schema);
   }
 
 }
