@@ -208,7 +208,8 @@ class FileStorage implements StorageInterface {
       throw new StorageException($this->directory . '/ not found.');
     }
     $extension = '.' . static::getFileExtension();
-    $files = new \GlobIterator($this->directory . '/' . $prefix . '*' . $extension);
+    // \GlobIterator on Windows requires an absolute path.
+    $files = new \GlobIterator(realpath($this->directory) . '/' . $prefix . '*' . $extension);
 
     $names = array();
     foreach ($files as $file) {
