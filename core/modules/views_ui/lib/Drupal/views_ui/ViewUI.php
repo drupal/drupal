@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\Timer;
 use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\views\ViewExecutable;
@@ -612,7 +613,7 @@ class ViewUI implements ViewStorageInterface {
 
       $show_additional_queries = $config->get('ui.show.additional_queries');
 
-      timer_start('views_ui.preview');
+      Timer::start('views_ui.preview');
 
       if ($show_additional_queries) {
         $this->startQueryCapture();
@@ -626,7 +627,7 @@ class ViewUI implements ViewStorageInterface {
         $this->endQueryCapture();
       }
 
-      $this->render_time = timer_stop('views_ui.preview');
+      $this->render_time = Timer::stop('views_ui.preview');
 
       views_ui_contextual_links_suppress_pop();
 

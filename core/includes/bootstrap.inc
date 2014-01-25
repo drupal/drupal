@@ -223,30 +223,6 @@ const CONFIG_STAGING_DIRECTORY = 'staging';
 define('DRUPAL_ROOT', dirname(dirname(__DIR__)));
 
 /**
- * @deprecated as of Drupal 8.0.
- * @see \Drupal\Component\Utility\Timer::start
- */
-function timer_start($name) {
-  Timer::start($name);
-}
-
-/**
- * @deprecated as of Drupal 8.0.
- * @see \Drupal\Component\Utility\Timer::read
- */
-function timer_read($name) {
-  return Timer::read($name);
-}
-
-/**
- * @deprecated as of Drupal 8.0.
- * @see \Drupal\Component\Utility\Timer::stop
- */
-function timer_stop($name) {
-  return Timer::stop($name);
-}
-
-/**
  * Returns the appropriate configuration directory.
  *
  * Returns the configuration path based on the site's hostname, port, and
