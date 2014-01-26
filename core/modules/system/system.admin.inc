@@ -268,9 +268,7 @@ function theme_system_admin_index($variables) {
 }
 
 /**
- * Prepares variables for status report template.
- *
- * Default template: status-report.html.twig.
+ * Returns HTML for the status report.
  *
  * This theme function is dependent on install.inc being loaded, because
  * that's where the constants are defined.
@@ -290,7 +288,8 @@ function theme_system_admin_index($variables) {
  *
  * @ingroup themeable
  */
-function template_preprocess_status_report(&$variables) {
+function theme_status_report($variables) {
+  $requirements = $variables['requirements'];
   $severities = array(
     REQUIREMENT_INFO => array(
       'title' => t('Info'),
@@ -309,8 +308,11 @@ function template_preprocess_status_report(&$variables) {
       'class' => 'error',
     ),
   );
+  $output = '<table class="system-status-report"><thead><tr class="visually-hidden">';
+  $output .= '<th>' . t('Status') . '</th><th>' . t('Component') . '</th><th>' . t('Details') . '</th>';
+  $output .= '</tr></thead><tbody>';
 
-  foreach ($variables['requirements'] as $i => $requirement) {
+  foreach ($requirements as $requirement) {
     // Always use the explicit requirement severity, if defined. Otherwise,
     // default to REQUIREMENT_OK in the installer to visually confirm that
     // installation requirements are met. And default to REQUIREMENT_INFO to
@@ -324,9 +326,29 @@ function template_preprocess_status_report(&$variables) {
     else {
       $severity = $severities[REQUIREMENT_INFO];
     }
-    $variables['requirements'][$i]['severity_class'] = $severity['class'];
-    $variables['requirements'][$i]['severity_title'] = $severity['title'];
+    // hook_requirements does not require value to be set. Set to null if not:
+    if (isset($requirement['value'])) {
+      $value = $requirement['value'];
+    }
+    else {
+      $value = NULL;
+    }
+
+    $severity['icon'] = '<div title="' . $severity['title'] . '"><span class="visually-hidden">' . $severity['title'] . '</span></div>';
+
+    // Output table rows.
+    $output .= '<tr class="' . $severity['class'] . '">';
+    $output .= '<td class="status-icon">' . $severity['icon'] . '</td>';
+    $output .= '<td class="status-title">' . $requirement['title'] . '</td>';
+    $output .= '<td class="status-value">' . $value;
+    if (!empty($requirement['description'])) {
+      $output .= '<div class="description">' . $requirement['description'] . '</div>';
+    }
+    $output .= '</td></tr>';
   }
+
+  $output .= '</tbody></table>';
+  return $output;
 }
 
 /**
