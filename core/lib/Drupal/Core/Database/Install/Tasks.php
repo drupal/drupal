@@ -253,7 +253,7 @@ abstract class Tasks {
 
     $profile = drupal_get_profile();
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
-    $form['advanced_options']['db_prefix'] = array(
+    $form['advanced_options']['prefix'] = array(
       '#type' => 'textfield',
       '#title' => t('Table name prefix'),
       '#default_value' => '',

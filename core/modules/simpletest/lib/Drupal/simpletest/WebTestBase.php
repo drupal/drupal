@@ -827,6 +827,11 @@ abstract class WebTestBase extends TestBase {
    */
   protected function installParameters() {
     $connection_info = Database::getConnectionInfo();
+    $driver = $connection_info['default']['driver'];
+    unset($connection_info['default']['driver']);
+    unset($connection_info['default']['namespace']);
+    unset($connection_info['default']['pdo']);
+    unset($connection_info['default']['init_commands']);
     $parameters = array(
       'interactive' => FALSE,
       'parameters' => array(
@@ -834,7 +839,10 @@ abstract class WebTestBase extends TestBase {
         'langcode' => 'en',
       ),
       'forms' => array(
-        'install_settings_form' => $connection_info['default'],
+        'install_settings_form' => array(
+          'driver' => $driver,
+          $driver => $connection_info['default'],
+        ),
         'install_configure_form' => array(
           'site_name' => 'Drupal',
           'site_mail' => 'simpletest@example.com',

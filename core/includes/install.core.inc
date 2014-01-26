@@ -1173,13 +1173,6 @@ function install_settings_form_validate($form, &$form_state) {
   $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
   $database['driver'] = $driver;
 
-  // @todo PIFR uses 'db_prefix' instead of 'prefix'. Remove this when it gets
-  //   fixed.
-  if (!$test_prefix) {
-    $database['prefix'] = $database['db_prefix'];
-  }
-  unset($database['db_prefix']);
-
   $form_state['storage']['database'] = $database;
   $errors = install_database_errors($database, $form_state['values']['settings_file']);
   foreach ($errors as $name => $message) {
