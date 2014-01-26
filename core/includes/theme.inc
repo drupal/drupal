@@ -2733,6 +2733,7 @@ function drupal_common_theme() {
     ),
     'vertical_tabs' => array(
       'render element' => 'element',
+      'template' => 'vertical-tabs',
     ),
     'container' => array(
       'render element' => 'element',

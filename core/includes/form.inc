@@ -2108,18 +2108,19 @@ function form_pre_render_vertical_tabs($element) {
 }
 
 /**
- * Returns HTML for an element's children details as vertical tabs.
+ * Prepares variables for vertical tabs templates.
  *
- * @param $variables
+ * Default template: vertical-tabs.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties and children of
  *     the details element. Properties used: #children.
  *
- * @ingroup themeable
  */
-function theme_vertical_tabs($variables) {
+function template_preprocess_vertical_tabs(&$variables) {
   $element = $variables['element'];
-  return '<div data-vertical-tabs-panes ' . new Attribute($element['#attributes']) . '>' . $element['#children'] . '</div>';
+  $variables['children'] = (!empty($element['#children'])) ? $element['#children'] : '';
 }
 
 /**
