@@ -7,13 +7,12 @@
 
 namespace Drupal\shortcut;
 
-use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\shortcut\ShortcutSetInterface;
+use Drupal\Core\Config\Entity\ConfigStorageControllerInterface;
 
 /**
  * Defines a common interface for shortcut entity controller classes.
  */
-interface ShortcutSetStorageControllerInterface extends EntityStorageControllerInterface {
+interface ShortcutSetStorageControllerInterface extends ConfigStorageControllerInterface {
 
   /**
    * Assigns a user to a particular shortcut set.

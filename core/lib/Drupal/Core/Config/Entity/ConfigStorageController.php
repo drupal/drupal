@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   after the config_prefix in a config name forms the entity ID. Additional or
  *   custom suffixes are not possible.
  */
-class ConfigStorageController extends EntityStorageControllerBase {
+class ConfigStorageController extends EntityStorageControllerBase implements ConfigStorageControllerInterface {
 
   /**
    * Name of the entity's UUID property.
@@ -180,42 +180,21 @@ class ConfigStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * Returns an entity query instance.
-   *
-   * @param string $conjunction
-   *   - AND: all of the conditions on the query need to match.
-   *   - OR: at least one of the conditions on the query need to match.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   The query instance.
-   *
-   * @see \Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServicename()
+   * {@inheritdoc}
    */
   public function getQuery($conjunction = 'AND') {
     return $this->entityQueryFactory->get($this->entityType, $conjunction);
   }
 
   /**
-   * Returns the config prefix used by the configuration entity type.
-   *
-   * @return string
-   *   The full configuration prefix, for example 'views.view.'.
+   * {@inheritdoc}
    */
   public function getConfigPrefix() {
     return $this->entityInfo->getConfigPrefix() . '.';
   }
 
   /**
-   * Extracts the configuration entity ID from the full configuration name.
-   *
-   * @param string $config_name
-   *   The full configuration name to extract the ID from. E.g.
-   *   'views.view.archive'.
-   * @param string $config_prefix
-   *   The config prefix of the configuration entity. E.g. 'views.view'
-   *
-   * @return string
-   *   The ID of the configuration entity.
+   * {@inheritdoc}
    */
   public static function getIDFromConfigName($config_name, $config_prefix) {
     return substr($config_name, strlen($config_prefix . '.'));
@@ -423,17 +402,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * Create configuration upon synchronizing configuration changes.
-   *
-   * This callback is invoked when configuration is synchronized between storages
-   * and allows a module to take over the synchronization of configuration data.
-   *
-   * @param string $name
-   *   The name of the configuration object.
-   * @param \Drupal\Core\Config\Config $new_config
-   *   A configuration object containing the new configuration data.
-   * @param \Drupal\Core\Config\Config $old_config
-   *   A configuration object containing the old configuration data.
+   * {@inheritdoc}
    */
   public function importCreate($name, Config $new_config, Config $old_config) {
     $entity = $this->create($new_config->get());
@@ -443,17 +412,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * Updates configuration upon synchronizing configuration changes.
-   *
-   * This callback is invoked when configuration is synchronized between storages
-   * and allows a module to take over the synchronization of configuration data.
-   *
-   * @param string $name
-   *   The name of the configuration object.
-   * @param \Drupal\Core\Config\Config $new_config
-   *   A configuration object containing the new configuration data.
-   * @param \Drupal\Core\Config\Config $old_config
-   *   A configuration object containing the old configuration data.
+   * {@inheritdoc}
    */
   public function importUpdate($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityInfo->getConfigPrefix());
@@ -474,17 +433,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * Delete configuration upon synchronizing configuration changes.
-   *
-   * This callback is invoked when configuration is synchronized between storages
-   * and allows a module to take over the synchronization of configuration data.
-   *
-   * @param string $name
-   *   The name of the configuration object.
-   * @param \Drupal\Core\Config\Config $new_config
-   *   A configuration object containing the new configuration data.
-   * @param \Drupal\Core\Config\Config $old_config
-   *   A configuration object containing the old configuration data.
+   * {@inheritdoc}
    */
   public function importDelete($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityInfo->getConfigPrefix());

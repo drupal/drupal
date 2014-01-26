@@ -38,7 +38,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * The search page storage.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageController|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $storage;
 
@@ -66,9 +66,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   public function setUp() {
     $this->query = $this->getMock('Drupal\Core\Entity\Query\QueryInterface');
 
-    $this->storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->storage = $this->getMock('Drupal\Core\Config\Entity\ConfigStorageControllerInterface');
     $this->storage->expects($this->any())
       ->method('getQuery')
       ->will($this->returnValue($this->query));

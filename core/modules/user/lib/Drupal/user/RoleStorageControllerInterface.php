@@ -7,12 +7,12 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Config\Entity\ConfigStorageControllerInterface;
 
 /**
  * Defines a common interface for roel entity controller classes.
  */
-interface RoleStorageControllerInterface extends EntityStorageControllerInterface {
+interface RoleStorageControllerInterface extends ConfigStorageControllerInterface {
 
   /**
    * Delete role references.

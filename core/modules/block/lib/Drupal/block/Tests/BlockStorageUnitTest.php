@@ -29,7 +29,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
   /**
    * The block storage controller.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageController.
+   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface.
    */
   protected $controller;
 

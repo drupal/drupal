@@ -9,7 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\Config\Entity\ConfigStorageController;
+use Drupal\Core\Config\Entity\ConfigStorageControllerInterface;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,7 +46,7 @@ abstract class DateFormatFormBase extends EntityFormController {
   /**
    * The date format storage controller.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageController
+   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface
    */
   protected $dateFormatStorage;
 
@@ -57,10 +57,10 @@ abstract class DateFormatFormBase extends EntityFormController {
    *   The entity query factory.
    * @param \Drupal\Core\Datetime\Date $date_service
    *   The date service.
-   * @param \Drupal\Core\Config\Entity\ConfigStorageController $date_format_storage
+   * @param \Drupal\Core\Config\Entity\ConfigStorageControllerInterface $date_format_storage
    *   The date format storage controller.
    */
-  public function __construct(QueryFactory $query_factory, Date $date_service, ConfigStorageController $date_format_storage) {
+  public function __construct(QueryFactory $query_factory, Date $date_service, ConfigStorageControllerInterface $date_format_storage) {
     $date = new DrupalDateTime();
     $this->patternType = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
 

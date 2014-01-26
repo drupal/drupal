@@ -42,7 +42,7 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * The menu storage controller.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigStorageController
+   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface
    */
   protected $menuStorage;
 

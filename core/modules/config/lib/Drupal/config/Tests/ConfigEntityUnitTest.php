@@ -25,7 +25,7 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
   /**
    * The config_test entity storage controller.
    *
-   * @var \Drupal\config_test\ConfigTestStorageController
+   * @var \Drupal\Core\Config\Entity\ConfigStorageControllerInterface
    */
   protected $storage;
 
