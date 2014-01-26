@@ -83,7 +83,7 @@ class MemoryBackend implements CacheBackendInterface {
     }
 
     // Check expire time.
-    $cache->valid = $cache->expire == CacheBackendInterface::CACHE_PERMANENT || $cache->expire >= REQUEST_TIME;
+    $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= REQUEST_TIME;
 
     if (!$allow_invalid && !$cache->valid) {
       return FALSE;
@@ -95,7 +95,7 @@ class MemoryBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
     $this->cache[$cid] = (object) array(
       'cid' => $cid,
       'data' => $data,

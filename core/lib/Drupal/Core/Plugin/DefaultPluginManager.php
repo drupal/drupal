@@ -8,11 +8,11 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -234,7 +234,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   protected function setCachedDefinitions($definitions) {
     if ($this->cacheBackend) {
-      $this->cacheBackend->set($this->cacheKey, $definitions, CacheBackendInterface::CACHE_PERMANENT, $this->cacheTags);
+      $this->cacheBackend->set($this->cacheKey, $definitions, Cache::PERMANENT, $this->cacheTags);
     }
     $this->definitions = $definitions;
   }

@@ -10,7 +10,6 @@ namespace Drupal\Core\Plugin\Discovery;
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
  * Enables static and persistent caching of discovered plugin definitions.
@@ -76,7 +75,7 @@ class CacheDecorator implements CachedDiscoveryInterface {
    * @param array $cache_tags
    *   The cache tags associated with the definition list.
    */
-  public function __construct(DiscoveryInterface $decorated, $cache_key, $cache_bin = 'cache', $cache_expire = CacheBackendInterface::CACHE_PERMANENT, array $cache_tags = array()) {
+  public function __construct(DiscoveryInterface $decorated, $cache_key, $cache_bin = 'cache', $cache_expire = Cache::PERMANENT, array $cache_tags = array()) {
     $this->decorated = $decorated;
     $this->cacheKey = $cache_key;
     $this->cacheBin = $cache_bin;

@@ -36,7 +36,7 @@ class MemoryCounterBackend extends MemoryBackend {
   /**
    * Implements \Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
     $this->increaseCounter(__FUNCTION__, $cid);
     parent::set($cid, $data, $expire, $tags);
   }

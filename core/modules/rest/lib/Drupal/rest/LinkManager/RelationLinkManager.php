@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\LinkManager;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 class RelationLinkManager implements RelationLinkManagerInterface{
@@ -88,6 +89,6 @@ class RelationLinkManager implements RelationLinkManagerInterface{
     }
     // These URIs only change when field info changes, so cache it permanently
     // and only clear it when field_info is cleared.
-    $this->cache->set('rest:links:relations', $data, CacheBackendInterface::CACHE_PERMANENT, array('field_info' => TRUE));
+    $this->cache->set('rest:links:relations', $data, Cache::PERMANENT, array('field_info' => TRUE));
   }
 }

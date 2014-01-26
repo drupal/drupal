@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Utility;
 
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Provides a caching wrapper to be used in place of large array structures.
@@ -205,7 +205,7 @@ abstract class CacheArray implements \ArrayAccess {
       if ($cached = cache($this->bin)->get($this->cid)) {
         $data = $cached->data + $data;
       }
-      cache($this->bin)->set($this->cid, $data, CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+      cache($this->bin)->set($this->cid, $data, Cache::PERMANENT, $this->tags);
       if ($lock) {
         lock()->release($lock_name);
       }

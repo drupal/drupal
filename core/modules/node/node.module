@@ -11,7 +11,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\node\NodeTypeInterface;
@@ -342,7 +342,7 @@ function node_type_get_names() {
     $config = \Drupal::config($config_name);
     $names[$config->get('type')] = $config->get('name');
   }
-  cache()->set($cid, $names, CacheBackendInterface::CACHE_PERMANENT, array(
+  cache()->set($cid, $names, Cache::PERMANENT, array(
     'node_type' => array_keys($names),
     'node_types' => TRUE,
   ));

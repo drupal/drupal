@@ -9,6 +9,7 @@ namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessManager;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -220,7 +221,7 @@ class LocalTaskManager extends DefaultPluginManager {
           'parents' => $parents,
           'children' => $children,
         );
-        $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $data, CacheBackendInterface::CACHE_PERMANENT, $this->cacheTags);
+        $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $data, Cache::PERMANENT, $this->cacheTags);
       }
       // Create a plugin instance for each element of the hierarchy.
       foreach ($base_routes as $base_route) {

@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
@@ -200,7 +199,7 @@ function filter_formats(AccountInterface $account = NULL) {
     else {
       $formats['all'] = \Drupal::entityManager()->getStorageController('filter_format')->loadByProperties(array('status' => TRUE));
       uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-      \Drupal::cache()->set("filter_formats:{$language_interface->id}", $formats['all'], CacheBackendInterface::CACHE_PERMANENT, array('filter_formats' => TRUE));
+      \Drupal::cache()->set("filter_formats:{$language_interface->id}", $formats['all'], Cache::PERMANENT, array('filter_formats' => TRUE));
     }
   }
 
@@ -638,7 +637,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
   // automatically flushed when the text format is updated.
   // @see \Drupal\filter\Entity\FilterFormat::save()
   if ($cache) {
-    cache('filter')->set($cache_id, $text, CacheBackendInterface::CACHE_PERMANENT, array('filter_format' => $format->id()));
+    cache('filter')->set($cache_id, $text, Cache::PERMANENT, array('filter_format' => $format->id()));
   }
 
   return $text;

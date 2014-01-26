@@ -5,7 +5,7 @@
  * Entity API for handling entities like nodes or users.
  */
 
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
@@ -131,7 +131,7 @@ function entity_get_form_modes($entity_type = NULL) {
         $form_modes[$form_mode_entity_type][$form_mode_name] = (array) $form_mode;
       }
       drupal_alter('entity_form_mode_info', $form_modes);
-      cache()->set("entity_form_mode_info:$langcode", $form_modes, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+      cache()->set("entity_form_mode_info:$langcode", $form_modes, Cache::PERMANENT, array('entity_info' => TRUE));
     }
   }
 
@@ -169,7 +169,7 @@ function entity_get_view_modes($entity_type = NULL) {
         $view_modes[$view_mode_entity_type][$view_mode_name] = (array) $view_mode;
       }
       drupal_alter('entity_view_mode_info', $view_modes);
-      cache()->set("entity_view_mode_info:$langcode", $view_modes, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+      cache()->set("entity_view_mode_info:$langcode", $view_modes, Cache::PERMANENT, array('entity_info' => TRUE));
     }
   }
 

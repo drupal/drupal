@@ -13,6 +13,11 @@ namespace Drupal\Core\Cache;
 class Cache {
 
   /**
+   * Indicates that the item should never be removed unless explicitly deleted.
+   */
+  const PERMANENT = CacheBackendInterface::CACHE_PERMANENT;
+
+  /**
    * Deletes items from all bins with any of the specified tags.
    *
    * Many sites have more than one active cache backend, and each backend may

@@ -45,7 +45,7 @@ class NullBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {}
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {}
 
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::delete().

@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\Core\Cache;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\BackendChain;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Tests\UnitTestCase;
 
@@ -222,7 +222,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
    */
   public function testDeleteAllPropagation() {
     // Set both expiring and permanent keys.
-    $this->chain->set('test1', 1, CacheBackendInterface::CACHE_PERMANENT);
+    $this->chain->set('test1', 1, Cache::PERMANENT);
     $this->chain->set('test2', 3, time() + 1000);
     $this->chain->deleteAll();
 
@@ -237,8 +237,8 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
    */
   public function testDeleteTagsPropagation() {
     // Create two cache entries with the same tag and tag value.
-    $this->chain->set('test_cid_clear1', 'foo', CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => 2));
-    $this->chain->set('test_cid_clear2', 'foo', CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => 2));
+    $this->chain->set('test_cid_clear1', 'foo', Cache::PERMANENT, array('test_tag' => 2));
+    $this->chain->set('test_cid_clear2', 'foo', Cache::PERMANENT, array('test_tag' => 2));
     $this->assertNotSame(FALSE, $this->firstBackend->get('test_cid_clear1')
       && $this->firstBackend->get('test_cid_clear2')
       && $this->secondBackend->get('test_cid_clear1')
@@ -258,8 +258,8 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
       'Two caches removed from all backends after clearing a cache tag.');
 
     // Create two cache entries with the same tag and an array tag value.
-    $this->chain->set('test_cid_clear1', 'foo', CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(1)));
-    $this->chain->set('test_cid_clear2', 'foo', CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(1)));
+    $this->chain->set('test_cid_clear1', 'foo', Cache::PERMANENT, array('test_tag' => array(1)));
+    $this->chain->set('test_cid_clear2', 'foo', Cache::PERMANENT, array('test_tag' => array(1)));
     $this->assertNotSame(FALSE, $this->firstBackend->get('test_cid_clear1')
       && $this->firstBackend->get('test_cid_clear2')
       && $this->secondBackend->get('test_cid_clear1')
@@ -279,9 +279,9 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
       'Two caches removed from all backends after clearing a cache tag.');
 
     // Create three cache entries with a mix of tags and tag values.
-    $this->chain->set('test_cid_clear1', 'foo', CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(1)));
-    $this->chain->set('test_cid_clear2', 'foo', CacheBackendInterface::CACHE_PERMANENT, array('test_tag' => array(2)));
-    $this->chain->set('test_cid_clear3', 'foo', CacheBackendInterface::CACHE_PERMANENT, array('test_tag_foo' => array(3)));
+    $this->chain->set('test_cid_clear1', 'foo', Cache::PERMANENT, array('test_tag' => array(1)));
+    $this->chain->set('test_cid_clear2', 'foo', Cache::PERMANENT, array('test_tag' => array(2)));
+    $this->chain->set('test_cid_clear3', 'foo', Cache::PERMANENT, array('test_tag_foo' => array(3)));
     $this->assertNotSame(FALSE, $this->firstBackend->get('test_cid_clear1')
       && $this->firstBackend->get('test_cid_clear2')
       && $this->firstBackend->get('test_cid_clear3')

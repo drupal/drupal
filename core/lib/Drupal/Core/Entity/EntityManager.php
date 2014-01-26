@@ -145,7 +145,8 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getCurrentLanguage()->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getCurrentLanguage()->id, 'cache', Cache::PERMANENT, array('entity_info' => TRUE));
+
     $this->container = $container;
   }
 
@@ -363,7 +364,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
           }
         }
 
-        $this->cache->set($cid, $this->entityFieldInfo[$entity_type], CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE, 'entity_field_info' => TRUE));
+        $this->cache->set($cid, $this->entityFieldInfo[$entity_type], Cache::PERMANENT, array('entity_info' => TRUE, 'entity_field_info' => TRUE));
       }
     }
 
@@ -425,7 +426,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
-        $this->cache->set("entity_bundle_info:$langcode", $this->bundleInfo, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+        $this->cache->set("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, array('entity_info' => TRUE));
       }
     }
 

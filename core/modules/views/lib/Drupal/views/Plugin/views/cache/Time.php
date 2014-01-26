@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Simple caching of query results for Views displays.
@@ -122,7 +122,7 @@ class Time extends CachePluginBase {
       return time() + $lifespan;
     }
     else {
-      return CacheBackendInterface::CACHE_PERMANENT;
+      return Cache::PERMANENT;
     }
   }
 

@@ -123,7 +123,7 @@ class BackendChain implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
     foreach ($this->backends as $backend) {
       $backend->set($cid, $data, $expire, $tags);
     }

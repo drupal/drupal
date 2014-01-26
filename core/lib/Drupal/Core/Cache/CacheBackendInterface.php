@@ -146,7 +146,7 @@ interface CacheBackendInterface {
    * @see \Drupal\Core\Cache\CacheBackendInterface::get()
    * @see \Drupal\Core\Cache\CacheBackendInterface::getMultiple()
    */
-  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array());
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array());
 
   /**
    * Deletes an item from the cache.

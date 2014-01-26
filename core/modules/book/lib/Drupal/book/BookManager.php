@@ -6,7 +6,7 @@
 
 namespace Drupal\book;
 
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -589,7 +589,7 @@ class BookManager {
         }
 
         // Cache the tree building parameters using the page-specific cid.
-        cache('menu')->set($cid, $tree_parameters, CacheBackendInterface::CACHE_PERMANENT, array('menu' => $menu_name));
+        cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
       }
 
       // Build the tree using the parameters; the resulting tree will be cached
@@ -776,7 +776,7 @@ class BookManager {
       $this->bookTreeCollectNodeLinks($data['tree'], $data['node_links']);
 
       // Cache the data, if it is not already in the cache.
-      cache('menu')->set($tree_cid, $data, CacheBackendInterface::CACHE_PERMANENT, array('menu' => $menu_name));
+      cache('menu')->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
       $trees[$tree_cid] = $data;
     }
 

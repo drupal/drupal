@@ -118,7 +118,7 @@ class DatabaseBackend implements CacheBackendInterface {
     }
 
     // Check expire time.
-    $cache->valid = $cache->expire == CacheBackendInterface::CACHE_PERMANENT || $cache->expire >= REQUEST_TIME;
+    $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= REQUEST_TIME;
 
     // Check if invalidateTags() has been called with any of the entry's tags.
     if ($cache->checksum_invalidations != $checksum['invalidations']) {
@@ -140,7 +140,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Implements Drupal\Core\Cache\CacheBackendInterface::set().
    */
-  public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array()) {
+  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
     $try_again = FALSE;
     try {
       // The bin might not yet exist.
@@ -312,7 +312,7 @@ class DatabaseBackend implements CacheBackendInterface {
   public function garbageCollection() {
     try {
       Database::getConnection()->delete($this->bin)
-        ->condition('expire', CacheBackendInterface::CACHE_PERMANENT, '<>')
+        ->condition('expire', Cache::PERMANENT, '<>')
         ->condition('expire', REQUEST_TIME, '<')
         ->execute();
     }

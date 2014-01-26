@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\LinkManager;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 class TypeLinkManager implements TypeLinkManagerInterface {
@@ -98,6 +99,6 @@ class TypeLinkManager implements TypeLinkManagerInterface {
     }
     // These URIs only change when entity info changes, so cache it permanently
     // and only clear it when entity_info is cleared.
-    $this->cache->set('rest:links:types', $data, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+    $this->cache->set('rest:links:types', $data, Cache::PERMANENT, array('entity_info' => TRUE));
   }
 }

@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\MapArray;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\SystemListingInfo;
@@ -3149,7 +3148,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
         'page_compressed' => $page_compressed,
       ),
       'tags' => array('content' => TRUE) + drupal_cache_tags_page_get(),
-      'expire' => CacheBackendInterface::CACHE_PERMANENT,
+      'expire' => Cache::PERMANENT,
       'created' => REQUEST_TIME,
     );
 
@@ -4103,7 +4102,7 @@ function drupal_render_cache_set(&$markup, array $elements) {
   }
 
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
-  $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CacheBackendInterface::CACHE_PERMANENT;
+  $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
   $tags = drupal_render_collect_cache_tags($elements);
   cache($bin)->set($cid, $data, $expire, $tags);
 }
@@ -4418,7 +4417,7 @@ function drupal_cache_tags_page_get() {
  *   - #pre_render: $function with a _pre_render suffix.
  *   - #cache: An associative array prepared for drupal_render_cache_set().
  */
-function drupal_render_cache_by_query($query, $function, $expire = CacheBackendInterface::CACHE_PERMANENT, $granularity = NULL) {
+function drupal_render_cache_by_query($query, $function, $expire = Cache::PERMANENT, $granularity = NULL) {
   $cache_keys = array_merge(array($function), drupal_render_cid_parts($granularity));
   $query->preExecute();
   $cache_keys[] = hash('sha256', serialize(array((string) $query, $query->getArguments())));

@@ -77,7 +77,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     // Read from the storage on a cache miss and cache the data, if any.
     $data = $this->storage->read($name);
     if ($data !== FALSE) {
-      $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT);
+      $this->cache->set($name, $data, Cache::PERMANENT);
     }
     // If the cache contained bogus data and there is no data in the storage,
     // wipe the cache entry.
@@ -101,7 +101,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
       $list = $this->storage->readMultiple($names);
       // Cache configuration objects that were loaded from the storage.
       foreach ($list as $name => $data) {
-        $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT);
+        $this->cache->set($name, $data, Cache::PERMANENT);
       }
     }
 
@@ -120,7 +120,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     if ($this->storage->write($name, $data)) {
       // While not all written data is read back, setting the cache instead of
       // just deleting it avoids cache rebuild stampedes.
-      $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT);
+      $this->cache->set($name, $data, Cache::PERMANENT);
       Cache::deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
       $this->findByPrefixCache = array();
       return TRUE;
@@ -212,7 +212,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
         $this->cache->set(
           'find:' . $prefix,
           $this->findByPrefixCache[$prefix],
-          CacheBackendInterface::CACHE_PERMANENT,
+          Cache::PERMANENT,
           array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE)
         );
       }

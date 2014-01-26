@@ -8,7 +8,6 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Template\Attribute;
@@ -1216,7 +1215,7 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
       }
 
       // Cache the tree building parameters using the page-specific cid.
-      cache('menu')->set($cid, $tree_parameters, CacheBackendInterface::CACHE_PERMANENT, array('menu' => $menu_name));
+      cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
     }
 
     // Build the tree using the parameters; the resulting tree will be cached
@@ -1402,7 +1401,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
           $tree_parameters['active_trail'] = $active_trail;
         }
         // Cache the tree building parameters using the page-specific cid.
-        cache('menu')->set($cid, $tree_parameters, CacheBackendInterface::CACHE_PERMANENT, array('menu' => $menu_name));
+        cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
       }
 
       // Build the tree using the parameters; the resulting tree will be cached
@@ -1513,7 +1512,7 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
     menu_tree_collect_node_links($data['tree'], $data['node_links']);
 
     // Cache the data, if it is not already in the cache.
-    cache('menu')->set($tree_cid, $data, CacheBackendInterface::CACHE_PERMANENT, array('menu' => $menu_name));
+    cache('menu')->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
     $trees[$tree_cid] = $data;
   }
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -178,13 +178,13 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $this->cacheBackend->expects($this->at(2))
       ->method('set')
-      ->with('local_task:en', $definitions, CacheBackendInterface::CACHE_PERMANENT);
+      ->with('local_task:en', $definitions, Cache::PERMANENT);
 
     $expected_set = $this->getLocalTasksCache();
 
     $this->cacheBackend->expects($this->at(3))
       ->method('set')
-      ->with('local_task:en:menu_local_task_test_tasks_view', $expected_set, CacheBackendInterface::CACHE_PERMANENT, array('local_task' => 1));
+      ->with('local_task:en:menu_local_task_test_tasks_view', $expected_set, Cache::PERMANENT, array('local_task' => 1));
 
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');
     $this->assertEquals($result, $local_tasks);

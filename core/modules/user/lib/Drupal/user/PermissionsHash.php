@@ -9,6 +9,7 @@ namespace Drupal\user;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\PrivateKey;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
@@ -57,7 +58,7 @@ class PermissionsHash implements PermissionsHashInterface {
     }
     else {
       $permissions_hash = $this->doGenerate($sorted_roles);
-      $this->cache->set("user_permissions_hash:$role_list", $permissions_hash, CacheBackendInterface::CACHE_PERMANENT, array('role' => $sorted_roles));
+      $this->cache->set("user_permissions_hash:$role_list", $permissions_hash, Cache::PERMANENT, array('role' => $sorted_roles));
     }
 
     return $permissions_hash;

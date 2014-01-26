@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\cache;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\Core\Database\Query\Select;
 
@@ -107,7 +106,7 @@ abstract class CachePluginBase extends PluginBase {
     *   The cache type, either 'query', 'result' or 'output'.
     */
   protected function cacheSetExpire($type) {
-    return CacheBackendInterface::CACHE_PERMANENT;
+    return Cache::PERMANENT;
   }
 
   /**

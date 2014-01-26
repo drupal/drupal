@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Utility;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\DestructableInterface;
@@ -162,7 +163,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
         $registry = $this->initializeRegistry();
         $data = array_merge($registry, $data);
       }
-      $this->cache->set($this->cid, $data, CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+      $this->cache->set($this->cid, $data, Cache::PERMANENT, $this->tags);
       if ($lock) {
         $this->lock->release($lock_name);
       }
