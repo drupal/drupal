@@ -25,7 +25,7 @@ class DisplayUnitTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'node');
+  public static $modules = array('block', 'node', 'field', 'user');
 
   /**
    * Views plugin types to test.

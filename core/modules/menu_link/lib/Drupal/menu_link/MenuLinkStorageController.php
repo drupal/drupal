@@ -121,7 +121,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       }
 
       if ($entity->isNew()) {
-        $entity->mlid = $this->database->insert($this->entityInfo->getBaseTable())->fields(array('menu_name' => 'tools'))->execute();
+        $entity->mlid = $this->database->insert($this->entityInfo->getBaseTable())->fields(array('menu_name' => $entity->menu_name))->execute();
         $entity->enforceIsNew();
       }
 

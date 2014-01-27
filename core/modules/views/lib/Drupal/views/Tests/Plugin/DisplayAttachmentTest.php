@@ -40,9 +40,6 @@ class DisplayAttachmentTest extends PluginTestBase {
    * Tests the attachment plugin.
    */
   protected function testAttachment() {
-    // @todo Remove that once http://drupal.org/node/1828444 got in.
-    \Drupal::state()->set('menu_rebuild_needed', TRUE);
-
     $this->drupalGet('test-display-attachment');
 
     $result = $this->xpath('//div[contains(@class, "view-content")]');

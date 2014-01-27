@@ -64,8 +64,9 @@ class BlockHiddenRegionTest extends WebTestBase {
     \Drupal::config('system.theme')
       ->set('default', $theme)
       ->save();
-    \Drupal::service('router.builder')->rebuild();
-    menu_router_rebuild();
+    // Enabling a theme will cause the kernel terminate event to rebuild the
+    // router. Simulate that here.
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     // Ensure that "block_test_theme" is set as the default theme.
     $this->drupalGet('admin/structure/block');

@@ -86,7 +86,9 @@ class AccessTest extends PluginTestBase {
     $display['display_options']['access']['options']['access'] = TRUE;
     $access_plugin->options['access'] = TRUE;
     $view->save();
-    $this->container->get('router.builder')->rebuild();
+    // Saving a view will cause the router to be rebuilt when the kernel
+    // termination event fires. Simulate that here.
+    $this->container->get('router.builder')->rebuildIfNeeded();
 
     $this->assertTrue($access_plugin->access($this->normal_user));
 

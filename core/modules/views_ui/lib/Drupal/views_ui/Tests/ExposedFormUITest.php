@@ -43,7 +43,6 @@ class ExposedFormUITest extends UITestBase {
    * Tests the admin interface of exposed filter and sort items.
    */
   function testExposedAdminUi() {
-    menu_router_rebuild();
     $edit = array();
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');

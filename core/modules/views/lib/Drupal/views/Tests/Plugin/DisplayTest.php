@@ -250,6 +250,7 @@ class DisplayTest extends PluginTestBase {
 
     // Rebuild the router, and ensure that the path is not accessible anymore.
     views_invalidate_cache();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $this->drupalGet('test_display_invalid');
     $this->assertResponse(404);

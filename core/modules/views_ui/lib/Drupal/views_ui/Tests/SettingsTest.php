@@ -87,7 +87,7 @@ class SettingsTest extends UITestBase {
       'ui_show_display_embed' => FALSE,
     );
     $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
-    views_invalidate_cache();
+
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->assertNoFieldById('edit-displays-top-add-display-embed');
 

@@ -49,7 +49,6 @@ class MiniPagerTest extends PluginTestBase {
    * Tests the rendering of mini pagers.
    */
   public function testMiniPagerRender() {
-    menu_router_rebuild();
     $this->drupalGet('test_mini_pager');
     $this->assertText('›› test', 'The next link appears on the first page.');
     $this->assertText('Page 1', 'The current page info shows the first page.');

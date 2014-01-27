@@ -9,6 +9,7 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\KeyValueStore\StateInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -23,7 +24,7 @@ use Drupal\Core\Lock\LockBackendInterface;
  * Because this class makes use of the modules system, it cannot currently
  * be unit tested.
  */
-class RouteBuilder {
+class RouteBuilder implements RouteBuilderInterface {
 
   /**
    * The dumper to which we should send collected routes.
@@ -68,7 +69,7 @@ class RouteBuilder {
   protected $controllerResolver;
 
   /**
-   * Construcs the RouteBuilder using the passed MatcherDumperInterface.
+   * Constructs the RouteBuilder using the passed MatcherDumperInterface.
    *
    * @param \Drupal\Core\Routing\MatcherDumperInterface $dumper
    *   The matcher dumper used to store the route information.
@@ -81,19 +82,17 @@ class RouteBuilder {
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver) {
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver, StateInterface $state = NULL) {
     $this->dumper = $dumper;
     $this->lock = $lock;
     $this->dispatcher = $dispatcher;
     $this->moduleHandler = $module_handler;
     $this->controllerResolver = $controller_resolver;
+    $this->state = $state;
   }
 
   /**
-   * Rebuilds the route info and dumps to dumper.
-   *
-   * @return bool
-   *   Returns TRUE if the rebuild succeeds, FALSE otherwise.
+   * {@inheritdoc}
    */
   public function rebuild() {
     if (!$this->lock->acquire('router_rebuild')) {
@@ -157,9 +156,27 @@ class RouteBuilder {
     $this->dumper->addRoutes($collection);
     $this->dumper->dump(array('provider' => 'dynamic_routes'));
 
+    $this->state->delete(static::REBUILD_NEEDED);
     $this->lock->release('router_rebuild');
     $this->dispatcher->dispatch(RoutingEvents::FINISHED, new Event());
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rebuildIfNeeded() {
+    if ($this->state->get(static::REBUILD_NEEDED, FALSE)) {
+      return $this->rebuild();
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRebuildNeeded() {
+    $this->state->set(static::REBUILD_NEEDED, TRUE);
   }
 
   /**

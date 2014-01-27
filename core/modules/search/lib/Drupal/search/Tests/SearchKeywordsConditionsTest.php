@@ -34,8 +34,6 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
     // Login with sufficient privileges.
     $this->drupalLogin($this->searching_user);
-    // Test with all search modules enabled.
-    \Drupal::state()->set('menu_rebuild_needed', TRUE);
   }
 
   /**

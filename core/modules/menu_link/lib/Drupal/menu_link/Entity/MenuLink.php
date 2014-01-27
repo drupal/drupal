@@ -539,7 +539,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     }
     // Find the route_name.
     if (!isset($this->route_name)) {
-      if ($result = \Drupal::service('router.matcher.final_matcher')->findRouteNameParameters($this->link_path)) {
+      if (!$this->external && $result = \Drupal::service('router.matcher.final_matcher')->findRouteNameParameters($this->link_path)) {
         list($this->route_name, $this->route_parameters) = $result;
       }
       else {

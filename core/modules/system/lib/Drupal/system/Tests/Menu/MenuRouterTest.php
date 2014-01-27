@@ -186,7 +186,6 @@ class MenuRouterTest extends WebTestBase {
     // rebuild.
     menu_test_menu_name('changed');
     \Drupal::service('router.builder')->rebuild();
-    menu_router_rebuild();
 
     $menu_links = entity_load_multiple_by_properties('menu_link', array('router_path' => 'menu_name_test'));
     $menu_link = reset($menu_links);

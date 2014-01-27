@@ -475,13 +475,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     $router_items[$path] = $router_item;
   }
   if (!isset($router_items[$path])) {
-    // Rebuild if we know it's needed, or if the menu masks are missing which
-    // occurs rarely, likely due to a race condition of multiple rebuilds.
-    if (\Drupal::state()->get('menu_rebuild_needed') || !\Drupal::state()->get('menu.masks')) {
-      menu_router_rebuild();
-      \Drupal::service('router.builder')->rebuild();
-      Cache::deleteTags(array('local_task' => 1));
-    }
+    \Drupal::service('router.builder')->rebuildIfNeeded();
     $original_map = arg(NULL, $path);
 
     $parts = array_slice($original_map, 0, MENU_MAX_PARTS);
@@ -2536,13 +2530,13 @@ function menu_router_rebuild() {
   $transaction = db_transaction();
 
   try {
+    // Ensure the route based router is up to date.
+    \Drupal::service('router.builder')->rebuildIfNeeded();
     list($menu) = menu_router_build(TRUE);
     _menu_navigation_links_rebuild($menu);
     // Clear the menu, page and block caches.
     menu_cache_clear_all();
     _menu_clear_page_cache();
-    // Indicate that the menu has been successfully rebuilt.
-    \Drupal::state()->delete('menu_rebuild_needed');
   }
   catch (Exception $e) {
     $transaction->rollback();
@@ -2744,6 +2738,9 @@ function _menu_navigation_links_rebuild($menu) {
   }
 
   // Find any item whose router path does not exist any more.
+  // Do not delete entries with an empty path as this can remove menu links in
+  // the process of being created.
+  $paths[] = '';
   $query = \Drupal::entityQuery('menu_link')
     ->condition('router_path', $paths, 'NOT IN')
     ->condition('external', 0)

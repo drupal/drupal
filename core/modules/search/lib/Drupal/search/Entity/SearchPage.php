@@ -205,11 +205,7 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface {
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
     parent::postSave($storage_controller, $update);
-
-    $this->state()->set('menu_rebuild_needed', TRUE);
-    // @todo The above call should be sufficient, but it is not until
-    //   https://drupal.org/node/2167323 is fixed.
-    \Drupal::service('router.builder')->rebuild();
+    $this->routeBuilder()->setRebuildNeeded();
   }
 
   /**
@@ -239,13 +235,13 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface {
   }
 
   /**
-   * Wraps the state storage.
+   * Wraps the route builder.
    *
-   * @return \Drupal\Core\KeyValueStore\StateInterface
+   * @return \Drupal\Core\Routing\RouteBuilderInterface
    *   An object for state storage.
    */
-  protected function state() {
-    return \Drupal::state();
+  protected function routeBuilder() {
+    return \Drupal::service('router.builder');
   }
 
   /**

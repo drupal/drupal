@@ -181,6 +181,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   public function routeRebuildFinished() {
+    $this->reset();
     $this->state->set('views.view_route_names', $this->viewRouteNames);
   }
 

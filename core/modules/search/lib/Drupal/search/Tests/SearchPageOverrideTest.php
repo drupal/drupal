@@ -35,13 +35,9 @@ class SearchPageOverrideTest extends SearchTestBase {
     // Login as a user that can create and search content.
     $this->search_user = $this->drupalCreateUser(array('search content', 'administer search'));
     $this->drupalLogin($this->search_user);
-
-    // Enable the extra type module for searching.
-    \Drupal::service('router.builder')->rebuild();
   }
 
   function testSearchPageHook() {
-    $this->container->get('router.builder')->rebuild();
     $keys = 'bike shed ' . $this->randomName();
     $this->drupalGet("search/dummy_path/{$keys}");
     $this->assertText('Dummy search snippet', 'Dummy search snippet is shown');

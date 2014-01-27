@@ -40,4 +40,9 @@ interface RouteProviderInterface extends RouteProviderBaseInterface {
    */
   public function getAllRoutes();
 
+  /**
+   * Resets the route provider object.
+   */
+  public function reset();
+
 }

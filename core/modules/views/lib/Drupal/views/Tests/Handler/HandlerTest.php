@@ -76,7 +76,6 @@ class HandlerTest extends ViewTestBase {
   function testFilterInOperatorUi() {
     $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
     $this->drupalLogin($admin_user);
-    menu_router_rebuild();
 
     $path = 'admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type';
     $this->drupalGet($path);

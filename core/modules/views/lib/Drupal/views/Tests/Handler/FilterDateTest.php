@@ -151,7 +151,7 @@ class FilterDateTest extends HandlerTestBase {
   protected function _testUiValidation() {
 
     $this->drupalLogin($this->drupalCreateUser(array('administer views', 'administer site configuration')));
-    menu_router_rebuild();
+
     $this->drupalGet('admin/structure/views/view/test_filter_date_between/edit');
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
 

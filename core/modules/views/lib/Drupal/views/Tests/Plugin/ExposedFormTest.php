@@ -67,8 +67,6 @@ class ExposedFormTest extends ViewTestBase {
     $view->display_handler->setOption('exposed_form', $exposed_form);
     $view->save();
 
-    views_invalidate_cache();
-
     // Make sure the submit button label changed.
     $this->drupalGet('test_exposed_form_buttons');
     $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', $expected_label);
@@ -81,8 +79,6 @@ class ExposedFormTest extends ViewTestBase {
     $exposed_form['options']['submit_button'] = '';
     $view->display_handler->setOption('exposed_form', $exposed_form);
     $view->save();
-
-    views_invalidate_cache();
 
     // Make sure the submit button label shows 'Apply'.
     $this->drupalGet('test_exposed_form_buttons');
@@ -119,8 +115,6 @@ class ExposedFormTest extends ViewTestBase {
     $exposed_form['options']['reset_button'] = TRUE;
     $view->display_handler->setOption('exposed_form', $exposed_form);
     $view->save();
-
-    views_invalidate_cache();
 
     // Look whether the reset button label changed.
     $this->drupalGet('test_exposed_form_buttons', array('query' => array('type' => 'article')));

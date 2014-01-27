@@ -551,19 +551,12 @@ function views_invalidate_cache() {
   Cache::deleteTags(array('content' => TRUE));
 
   // Set the menu as needed to be rebuilt.
-  \Drupal::state()->set('menu_rebuild_needed', TRUE);
+  \Drupal::service('router.builder')->setRebuildNeeded();
 
   $module_handler = \Drupal::moduleHandler();
 
   // Reset the RouteSubscriber from views.
   \Drupal::getContainer()->get('views.route_subscriber')->reset();
-
-  // Set the router to be rebuild.
-  // @todo Figure out why the cache rebuild is trigged but the route table
-  //   does not exist yet.
-  if (db_table_exists('router')) {
-    \Drupal::service('router.builder')->rebuild();
-  }
 
   // Invalidate the block cache to update views block derivatives.
   if ($module_handler->moduleExists('block')) {

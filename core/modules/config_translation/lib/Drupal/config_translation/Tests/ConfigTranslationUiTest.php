@@ -669,8 +669,9 @@ class ConfigTranslationUiTest extends WebTestBase {
     // Enable the test theme and rebuild routes.
     $theme = 'config_translation_test_theme';
     theme_enable(array($theme));
-    \Drupal::service('router.builder')->rebuild();
-    menu_router_rebuild();
+    // Enabling a theme will cause the kernel terminate event to rebuild the
+    // router. Simulate that here.
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $this->drupalLogin($this->admin_user);
 

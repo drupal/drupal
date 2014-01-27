@@ -13,7 +13,6 @@ use Drupal\Component\Uuid\Uuid;
 function menu_install() {
   // Add a link for each custom menu.
   \Drupal::service('router.builder')->rebuild();
-  menu_router_rebuild();
   $system_link = entity_load_multiple_by_properties('menu_link', array('link_path' => 'admin/structure/menu', 'module' => 'system'));
   $system_link = reset($system_link);
 

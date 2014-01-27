@@ -18,7 +18,7 @@ class ExtensionViewsFieldTest extends ViewUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array('file', 'file_test_views');
+  public static $modules = array('file', 'file_test_views', 'user');
 
   /**
    * Views used by this test.

@@ -18,6 +18,7 @@ use Drupal\Core\Routing\RouteProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Routing\MatcherDumper;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
+use Drupal\Tests\Core\Routing\NullRouteBuilder;
 
 /**
  * Basic tests for the RouteProvider.
@@ -31,6 +32,13 @@ class RouteProviderTest extends UnitTestBase {
    */
   protected $fixtures;
 
+  /**
+   * A null route builder to enable testing of the route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteBuilderInterface
+   */
+  protected $routeBuilder;
+
   public static function getInfo() {
     return array(
       'name' => 'Route Provider tests',
@@ -43,6 +51,7 @@ class RouteProviderTest extends UnitTestBase {
     parent::__construct($test_id);
 
     $this->fixtures = new RoutingFixtures();
+    $this->routeBuilder = new NullRouteBuilder();
   }
 
   public function tearDown() {
@@ -57,7 +66,7 @@ class RouteProviderTest extends UnitTestBase {
   public function testCandidateOutlines() {
 
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection);
+    $provider = new RouteProvider($connection, $this->routeBuilder);
 
     $parts = array('node', '5', 'edit');
 
@@ -81,7 +90,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testExactPathMatch() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -105,7 +114,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatch() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -134,7 +143,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatchTrailingSlash() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -163,7 +172,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaults() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -201,7 +210,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaultsCollision() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -240,7 +249,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathMatchDefaultsCollision2() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -279,7 +288,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   public function testOutlinePathMatchZero() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -314,7 +323,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testOutlinePathNoMatch() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -343,7 +352,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   function testSystemPathMatch() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -368,7 +377,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   protected function testRouteByName() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 
@@ -403,7 +412,7 @@ class RouteProviderTest extends UnitTestBase {
    */
   public function testGetRoutesByPatternWithLongPatterns() {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, 'test_routes');
+    $provider = new RouteProvider($connection, $this->routeBuilder, 'test_routes');
 
     $this->fixtures->createTables($connection);
 

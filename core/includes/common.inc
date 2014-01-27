@@ -4889,7 +4889,6 @@ function drupal_flush_all_caches() {
   // Important: This rebuild must happen last, so the menu router is guaranteed
   // to be based on up to date information.
   \Drupal::service('router.builder')->rebuild();
-  menu_router_rebuild();
 
   // Re-initialize the maintenance theme, if the current request attempted to
   // use it. Unlike regular usages of this function, the installer and update

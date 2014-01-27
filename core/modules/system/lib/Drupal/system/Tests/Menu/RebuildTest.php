@@ -7,10 +7,11 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests rebuilding the menu by setting 'menu_rebuild_needed.'
+ * Tests rebuilding the router.
  */
 class RebuildTest extends WebTestBase {
   public static function getInfo() {
@@ -22,9 +23,9 @@ class RebuildTest extends WebTestBase {
   }
 
   /**
-   * Test if the 'menu_rebuild_needed' variable triggers a menu_rebuild() call.
+   * Tests that set a router rebuild needed works.
    */
-  function testMenuRebuildByVariable() {
+  function testMenuRebuild() {
     // Check if 'admin' path exists.
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
     $this->assertEqual($admin_exists, 'admin', "The path 'admin/' exists prior to deleting.");
@@ -36,9 +37,9 @@ class RebuildTest extends WebTestBase {
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
     $this->assertFalse($admin_exists, "The path 'admin/' has been deleted and doesn't exist in the database.");
 
-    // Now we enable the rebuild variable and send a request to rebuild the menu
-    // item. Now 'admin' should exist.
-    \Drupal::state()->set('menu_rebuild_needed', TRUE);
+    // Now we set the router to be rebuilt. After the rebuild 'admin' should exist.
+    \Drupal::service('router.builder')->setRebuildNeeded();
+
     // The request should trigger the rebuild.
     $this->drupalGet('<front>');
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
