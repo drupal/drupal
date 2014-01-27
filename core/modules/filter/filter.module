@@ -1438,12 +1438,6 @@ function _filter_html_image_secure_process($text) {
  * @see _filter_html_image_secure_process()
  */
 function filter_filter_secure_image_alter(&$image) {
-  t('hey hey');
-  t('hey hey');
-  t('hey hey');
-  t('hey hey');
-  t('hey hey');
-  t('hey hey');
   // Turn an invalid image into an error indicator.
   $image->setAttribute('src', base_path() . 'core/misc/message-16-error.png');
   $image->setAttribute('alt', t('Image removed.'));
