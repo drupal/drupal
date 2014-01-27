@@ -122,14 +122,15 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $config = \Drupal::config('config_test.new');
     $this->assertTrue($config->isNew(), 'The configuration object config_test.new is new');
     $this->assertIdentical($config->get('key'), 'override');
-    \Drupal::configFactory()->disableOverrides();
+    $old_state = \Drupal::configFactory()->getOverrideState();
+    \Drupal::configFactory()->setOverrideState(FALSE);
     $config_raw = \Drupal::config('config_test.new');
     $this->assertIdentical($config_raw->get('key'), NULL);
     $config_raw
       ->set('key', 'raw')
       ->set('new_key', 'new_value')
       ->save();
-    \Drupal::configFactory()->enableOverrides();
+    \Drupal::configFactory()->setOverrideState($old_state);
     // Ensure override is preserved but all other data has been updated
     // accordingly.
     $this->assertIdentical($config->get('key'), 'override');

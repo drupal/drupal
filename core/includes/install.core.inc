@@ -482,7 +482,7 @@ function install_begin_request(&$install_state) {
     // ConfigFactory to try to load language override configuration which is not
     // supported by \Drupal\Core\Config\InstallStorage since loading a
     // non-existing file would throw an exception.
-    $container->get('config.factory')->disableOverrides();
+    $container->get('config.factory')->setOverrideState(FALSE);
   }
 
   // Set the request in the kernel to the new created Request above

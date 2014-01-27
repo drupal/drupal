@@ -55,9 +55,10 @@ class LocaleAdminPathConfigEntityConverter extends EntityConverter {
     $entity_type = substr($definition['type'], strlen('entity:'));
     if ($storage = $this->entityManager->getStorageController($entity_type)) {
       // Make sure no overrides are loaded.
-      $this->configFactory->disableOverrides();
+      $old_state = $this->configFactory->getOverrideState();
+      $this->configFactory->setOverrideState(FALSE);
       $entity = $storage->load($value);
-      $this->configFactory->enableOverrides();
+      $this->configFactory->setOverrideState($old_state);
       return $entity;
     }
   }
