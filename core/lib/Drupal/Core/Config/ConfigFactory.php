@@ -91,25 +91,27 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Disable overrides when loading configuration objects.
+   * Set the override state.
+   *
+   * @param bool $state
+   *   TRUE if overrides should be applied, FALSE otherwise.
    *
    * @return \Drupal\Core\Config\ConfigFactory
    *   The config factory object.
    */
-  public function disableOverrides() {
-    $this->useOverrides = FALSE;
+  public function setOverrideState($state) {
+    $this->useOverrides = $state;
     return $this;
   }
 
   /**
-   * Enable overrides when loading configuration objects.
+   * Get the override state.
    *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * @return bool
+   *   TRUE if overrides are applied, FALSE otherwise.
    */
-  public function enableOverrides() {
-    $this->useOverrides = TRUE;
-    return $this;
+  public function getOverrideState() {
+    return $this->useOverrides;
   }
 
   /**

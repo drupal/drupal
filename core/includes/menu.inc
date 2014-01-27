@@ -2562,7 +2562,8 @@ function menu_router_rebuild() {
 function menu_router_build($save = FALSE) {
   // Ensure that all configuration used to build the menu items are loaded
   // without overrides.
-  \Drupal::configFactory()->disableOverrides();
+  $old_state = \Drupal::configFactory()->getOverrideState();
+  \Drupal::configFactory()->setOverrideState(FALSE);
   // We need to manually call each module so that we can know which module
   // a given item came from.
   $callbacks = array();
@@ -2577,8 +2578,7 @@ function menu_router_build($save = FALSE) {
   }
   // Alter the menu as defined in modules, keys are like user/%user.
   drupal_alter('menu', $callbacks);
-  // Re-enable configuration overrides.
-  \Drupal::configFactory()->enableOverrides();
+  \Drupal::configFactory()->setOverrideState($old_state);
   foreach ($callbacks as $path => $router_item) {
     // If the menu item is a default local task and incorrectly references a
     // route, remove it.

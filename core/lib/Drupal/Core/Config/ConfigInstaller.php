@@ -101,7 +101,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
     }
 
     if (!empty($config_to_install)) {
-      $this->configFactory->disableOverrides();
+      $old_state = $this->configFactory->getOverrideState();
+      $this->configFactory->setOverrideState(FALSE);
       foreach ($config_to_install as $name) {
         // Only import new config.
         if ($this->activeStorage->exists($name)) {
@@ -123,7 +124,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
           $new_config->save();
         }
       }
-      $this->configFactory->enableOverrides();
+      $this->configFactory->setOverrideState($old_state);
     }
   }
 
