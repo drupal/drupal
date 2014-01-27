@@ -15,10 +15,10 @@
       var $table = $($input.attr('data-table'));
       var $rows;
 
-      function filterViewList (e) {
+      function filterViewList(e) {
         var query = $(e.target).val().toLowerCase();
 
-        function showViewRow (index, row) {
+        function showViewRow(index, row) {
           var $row = $(row);
           var $sources = $row.find('.views-table-filter-text-source');
           var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;

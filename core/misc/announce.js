@@ -42,7 +42,7 @@
   /**
    * Concatenates announcements to a single string; appends to the live region.
    */
-  function announce () {
+  function announce() {
     var text = [];
     var priority = 'polite';
     var announcement;

@@ -1,6 +1,6 @@
 /*jshint loopfunc: true, browser: true, curly: true, eqeqeq: true, expr: true, forin: true, latedef: true, newcap: true, noarg: true, trailing: true, undef: true, unused: true */
 /*! Picturefill - Author: Scott Jehl, 2012 | License: MIT/GPLv2 */
-(function( w ){
+(function (w) {
 
   // Enable strict mode.
   "use strict";
@@ -10,7 +10,7 @@
     return;
   }
 
-  w.picturefill = function() {
+  w.picturefill = function () {
     // Copy attributes from the source to the destination.
     function _copyAttributes(src, tar) {
       if (src.getAttribute('width') && src.getAttribute('height')) {
@@ -23,7 +23,7 @@
     var ps = w.document.getElementsByTagName('picture');
 
     // Loop the pictures.
-    for (var i = 0, il = ps.length; i < il; i++ ) {
+    for (var i = 0, il = ps.length; i < il; i++) {
       var sources = ps[i].getElementsByTagName('source');
       var picImg = null;
       var matches = [];
@@ -41,7 +41,7 @@
       }
 
       // See which sources match.
-      for (var j = 0, jl = sources.length; j < jl; j++ ) {
+      for (var j = 0, jl = sources.length; j < jl; j++) {
         var media = sources[j].getAttribute('media');
         // If there's no media specified or the media query matches, add it.
         if (!media || (w.matchMedia && w.matchMedia(media).matches)) {
@@ -71,7 +71,7 @@
           sources = srcset.split(', ');
 
           // Loop through each source/resolution in srcset.
-          for (var res = sources.length, r = res - 1; r >= 0; r-- ) {
+          for (var res = sources.length, r = res - 1; r >= 0; r--) {
             // Remove any leading whitespace, then split on spaces.
             var source = sources[ r ].replace(/^\s*/, '').replace(/\s*$/, '').split(' ');
             // Parse out the resolution for each source in `srcset`.
@@ -84,7 +84,7 @@
                 newImg.src = source[0];
                 // When the image is loaded, set a width equal to that of the
                 // original’s intrinsic width divided by the screen resolution.
-                newImg.onload = function() {
+                newImg.onload = function () {
                   // Clone the original image into memory so the width is
                   // unaffected by page styles.
                   var w = this.cloneNode(true).width;
@@ -113,7 +113,7 @@
   // Run on resize and domready (w.load as a fallback)
   if (w.addEventListener) {
     w.addEventListener('resize', w.picturefill, false);
-    w.addEventListener('DOMContentLoaded', function() {
+    w.addEventListener('DOMContentLoaded', function () {
       w.picturefill();
       // Run once only.
       w.removeEventListener('load', w.picturefill, false);

@@ -5,11 +5,11 @@
 
 Drupal.t("Standard Call t");
 Drupal
-.
-t
-(
-"Whitespace Call t"
-)
+  .
+  t
+  (
+    "Whitespace Call t"
+  )
 ;
 
 Drupal.t('Single Quote t');
@@ -28,13 +28,13 @@ Drupal.t("Context !key Args t", {'!key': 'value'}, {context: "Context string"});
 
 Drupal.formatPlural(1, "Standard Call plural", "Standard Call @count plural");
 Drupal
-.
-formatPlural
-(
-1,
-"Whitespace Call plural",
-"Whitespace Call @count plural"
-)
+  .
+  formatPlural
+  (
+    1,
+    "Whitespace Call plural",
+    "Whitespace Call @count plural"
+  )
 ;
 
 Drupal.formatPlural(1, 'Single Quote plural', 'Single Quote @count plural');

@@ -2,7 +2,7 @@
 
   "use strict";
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     $.ajax({
       type: "POST",
       cache: false,

@@ -8,7 +8,7 @@
   "use strict";
 
   Drupal.color = {
-    callback: function(context, settings, form, farb, height, width) {
+    callback: function (context, settings, form, farb, height, width) {
       // Solid background.
       form.find('#preview').css('backgroundColor', form.find('#palette input[name="palette[base]"]').val());
 

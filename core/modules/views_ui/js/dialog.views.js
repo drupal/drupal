@@ -2,7 +2,7 @@
 
   "use strict";
 
-  function handleDialogResize (e) {
+  function handleDialogResize(e) {
     var $modal = $(e.currentTarget);
     var $viewsOverride = $modal.find('[data-drupal-views-offset]');
     var $scroll = $modal.find('[data-drupal-views-scroll]');

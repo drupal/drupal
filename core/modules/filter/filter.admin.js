@@ -5,57 +5,57 @@
 
 (function ($) {
 
-"use strict";
+  "use strict";
 
-Drupal.behaviors.filterStatus = {
-  attach: function (context, settings) {
-    var $context = $(context);
-    $context.find('#filters-status-wrapper input.form-checkbox').once('filter-status', function () {
-      var $checkbox = $(this);
-      // Retrieve the tabledrag row belonging to this filter.
-      var $row = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-weight')).closest('tr');
-      // Retrieve the vertical tab belonging to this filter.
-      var $filterSettings = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-settings'));
-      var filterSettingsTab = $filterSettings.data('verticalTab');
+  Drupal.behaviors.filterStatus = {
+    attach: function (context, settings) {
+      var $context = $(context);
+      $context.find('#filters-status-wrapper input.form-checkbox').once('filter-status', function () {
+        var $checkbox = $(this);
+        // Retrieve the tabledrag row belonging to this filter.
+        var $row = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-weight')).closest('tr');
+        // Retrieve the vertical tab belonging to this filter.
+        var $filterSettings = $context.find('#' + $checkbox.attr('id').replace(/-status$/, '-settings'));
+        var filterSettingsTab = $filterSettings.data('verticalTab');
 
-      // Bind click handler to this checkbox to conditionally show and hide the
-      // filter's tableDrag row and vertical tab pane.
-      $checkbox.on('click.filterUpdate', function () {
-        if ($checkbox.is(':checked')) {
-          $row.show();
-          if (filterSettingsTab) {
-            filterSettingsTab.tabShow().updateSummary();
+        // Bind click handler to this checkbox to conditionally show and hide the
+        // filter's tableDrag row and vertical tab pane.
+        $checkbox.on('click.filterUpdate', function () {
+          if ($checkbox.is(':checked')) {
+            $row.show();
+            if (filterSettingsTab) {
+              filterSettingsTab.tabShow().updateSummary();
+            }
+            else {
+              // On very narrow viewports, Vertical Tabs are disabled.
+              $filterSettings.show();
+            }
           }
           else {
-            // On very narrow viewports, Vertical Tabs are disabled.
-            $filterSettings.show();
+            $row.hide();
+            if (filterSettingsTab) {
+              filterSettingsTab.tabHide().updateSummary();
+            }
+            else {
+              // On very narrow viewports, Vertical Tabs are disabled.
+              $filterSettings.hide();
+            }
           }
-        }
-        else {
-          $row.hide();
-          if (filterSettingsTab) {
-            filterSettingsTab.tabHide().updateSummary();
-          }
-          else {
-            // On very narrow viewports, Vertical Tabs are disabled.
-            $filterSettings.hide();
-          }
-        }
-        // Restripe table after toggling visibility of table row.
-        Drupal.tableDrag['filter-order'].restripeTable();
-      });
-
-      // Attach summary for configurable filters (only for screen-readers).
-      if (filterSettingsTab) {
-        filterSettingsTab.details.drupalSetSummary(function (tabContext) {
-          return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
+          // Restripe table after toggling visibility of table row.
+          Drupal.tableDrag['filter-order'].restripeTable();
         });
-      }
 
-      // Trigger our bound click handler to update elements to initial state.
-      $checkbox.triggerHandler('click.filterUpdate');
-    });
-  }
-};
+        // Attach summary for configurable filters (only for screen-readers).
+        if (filterSettingsTab) {
+          filterSettingsTab.details.drupalSetSummary(function (tabContext) {
+            return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
+          });
+        }
+
+        // Trigger our bound click handler to update elements to initial state.
+        $checkbox.triggerHandler('click.filterUpdate');
+      });
+    }
+  };
 
 })(jQuery);

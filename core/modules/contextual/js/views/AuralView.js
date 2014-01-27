@@ -5,47 +5,47 @@
 
 (function (Drupal, Backbone) {
 
-"use strict";
-
-/**
- * Renders the aural view of a contextual link (i.e. screen reader support).
- */
-Drupal.contextual.AuralView = Backbone.View.extend({
+  "use strict";
 
   /**
-   * {@inheritdoc}
+   * Renders the aural view of a contextual link (i.e. screen reader support).
    */
-  initialize: function (options) {
-    this.options = options;
+  Drupal.contextual.AuralView = Backbone.View.extend({
 
-    this.listenTo(this.model, 'change', this.render);
+    /**
+     * {@inheritdoc}
+     */
+    initialize: function (options) {
+      this.options = options;
 
-    // Use aria-role form so that the number of items in the list is spoken.
-    this.$el.attr('role', 'form');
+      this.listenTo(this.model, 'change', this.render);
 
-    // Initial render.
-    this.render();
-  },
+      // Use aria-role form so that the number of items in the list is spoken.
+      this.$el.attr('role', 'form');
 
-  /**
-   * {@inheritdoc}
-   */
-  render: function () {
-    var isOpen = this.model.get('isOpen');
+      // Initial render.
+      this.render();
+    },
 
-    // Set the hidden property of the links.
-    this.$el.find('.contextual-links')
-      .prop('hidden', !isOpen);
+    /**
+     * {@inheritdoc}
+     */
+    render: function () {
+      var isOpen = this.model.get('isOpen');
 
-    // Update the view of the trigger.
-    this.$el.find('.trigger')
-      .text(Drupal.t('@action @title configuration options', {
-        '@action': (!isOpen) ? this.options.strings.open : this.options.strings.close,
-        '@title': this.model.get('title')
-      }))
-      .attr('aria-pressed', isOpen);
-  }
+      // Set the hidden property of the links.
+      this.$el.find('.contextual-links')
+        .prop('hidden', !isOpen);
 
-});
+      // Update the view of the trigger.
+      this.$el.find('.trigger')
+        .text(Drupal.t('@action @title configuration options', {
+          '@action': (!isOpen) ? this.options.strings.open : this.options.strings.close,
+          '@title': this.model.get('title')
+        }))
+        .attr('aria-pressed', isOpen);
+    }
+
+  });
 
 })(Drupal, Backbone);

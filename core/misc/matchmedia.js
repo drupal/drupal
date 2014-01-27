@@ -33,7 +33,7 @@ window.matchMedia = window.matchMedia || (function (doc, window, Drupal) {
    * @param {String} q
    *   A media query e.g. "screen" or "screen and (min-width: 28em)".
    */
-  function MediaQueryList (q) {
+  function MediaQueryList(q) {
     this.media = q;
     this.matches = false;
     this.check.call(this);

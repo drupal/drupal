@@ -3,6 +3,7 @@
   "curly"     : true,
   "eqeqeq"    : true,
   "forin"     : true,
+  "indent"    : 2,
   "latedef"   : true,
   "newcap"    : true,
   "noarg"     : true,

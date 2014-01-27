@@ -98,7 +98,7 @@
     }
 
     // Bind dialogButtonsChange
-    $dialog.on('dialogButtonsChange', function() {
+    $dialog.on('dialogButtonsChange', function () {
       var buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
       $dialog.dialog('option', 'buttons', buttons);
     });

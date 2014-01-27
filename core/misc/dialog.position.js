@@ -13,7 +13,7 @@
    * be disabled by setting autoResize: false in the options array when creating
    * a new Drupal.dialog().
    */
-  function resetSize (event) {
+  function resetSize(event) {
     var positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
     var adjustedOptions = {};
     var windowHeight = $(window).height();
@@ -45,13 +45,13 @@
   /**
    * Position the dialog's center at the center of displace.offsets boundaries.
    */
-  function resetPosition (options) {
+  function resetPosition(options) {
     var offsets = displace.offsets;
     var left = offsets.left - offsets.right;
     var top = offsets.top - offsets.bottom;
 
-    var leftString = (left > 0 ? '+' : '-') + Math.abs(Math.round(left/2)) + 'px';
-    var topString = (top > 0 ? '+' : '-') + Math.abs(Math.round(top/2)) + 'px';
+    var leftString = (left > 0 ? '+' : '-') + Math.abs(Math.round(left / 2)) + 'px';
+    var topString = (top > 0 ? '+' : '-') + Math.abs(Math.round(top / 2)) + 'px';
     options.position = {
       my: 'center' + (left !== 0 ? leftString : '') + ' center' + (top !== 0 ? topString : '')
     };
