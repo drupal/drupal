@@ -13,6 +13,7 @@ use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Access\DefaultAccessCheck;
 use Drupal\Tests\UnitTestCase;
 use Drupal\router_test\Access\DefinedTestAccessCheck;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -412,8 +413,6 @@ class AccessManagerTest extends UnitTestCase {
    * @see \Drupal\Core\Access\AccessManager::checkNamedRoute()
    */
   public function testCheckNamedRouteWithUpcastedValues() {
-    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-
     $this->routeCollection = new RouteCollection();
     $route = new Route('/test-route-1/{value}', array(), array('_test_access' => 'TRUE'));
     $this->routeCollection->add('test_route_1', $route);
@@ -465,6 +464,66 @@ class AccessManagerTest extends UnitTestCase {
     $this->accessManager->setChecks($this->routeCollection);
 
     $this->assertFalse($this->accessManager->checkNamedRoute('test_route_1', array('value' => 'example'), $this->account));
+  }
+
+    /**
+   * Tests the checkNamedRoute with default values.
+   *
+   * @covers \Drupal\Core\Access\AccessManager::checkNamedRoute()
+   */
+  public function testCheckNamedRouteWithDefaultValue() {
+    $this->routeCollection = new RouteCollection();
+    $route = new Route('/test-route-1/{value}', array('value' => 'example'), array('_test_access' => 'TRUE'));
+    $this->routeCollection->add('test_route_1', $route);
+
+    $this->routeProvider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $this->routeProvider->expects($this->any())
+      ->method('getRouteByName')
+      ->with('test_route_1', array())
+      ->will($this->returnValue($route));
+
+    $map = array();
+    $map[] = array('test_route_1', array('value' => 'example'), '/test-route-1/example');
+
+    $this->urlGenerator = $this->getMock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+    $this->urlGenerator->expects($this->any())
+      ->method('generate')
+      ->with('test_route_1', array('value' => 'example'))
+      ->will($this->returnValueMap($map));
+
+    $this->paramConverter = $this->getMock('\Drupal\Core\ParamConverter\ParamConverterManager');
+    $this->paramConverter->expects($this->at(0))
+      ->method('enhance')
+      ->with(array('value' => 'example', RouteObjectInterface::ROUTE_OBJECT => $route))
+      ->will($this->returnValue(array('value' => 'upcasted_value')));
+
+    $subrequest = Request::create('/test-route-1/example');
+    $class = $this->getMockClass('Symfony\Component\HttpFoundation\Request', array('create'));
+    $class::staticExpects($this->any())
+      ->method('create')
+      ->with('/test-route-1/example')
+      ->will($this->returnValue($subrequest));
+
+    $this->accessManager = new AccessManager($this->routeProvider, $this->urlGenerator, $this->paramConverter, $this->account);
+    $this->accessManager->setContainer($this->container);
+    $this->accessManager->setRequest(new Request());
+
+    $access_check = $this->getMock('Drupal\Core\Access\AccessCheckInterface');
+    $access_check->expects($this->any())
+      ->method('applies')
+      ->will($this->returnValue(TRUE));
+    $access_check->expects($this->any())
+      ->method('access')
+      ->with($route, $subrequest)
+      ->will($this->returnValue(AccessInterface::KILL));
+
+    $subrequest->attributes->set('value', 'upcasted_value');
+    $this->container->register('test_access', $access_check);
+
+    $this->accessManager->addCheckService('test_access');
+    $this->accessManager->setChecks($this->routeCollection);
+
+    $this->assertFalse($this->accessManager->checkNamedRoute('test_route_1', array(), $this->account));
   }
 
   /**

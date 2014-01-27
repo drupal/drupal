@@ -199,8 +199,8 @@ class AccessManager extends ContainerAware {
       $route = $this->routeProvider->getRouteByName($route_name, $parameters);
       if (empty($route_request)) {
         // Create a request and copy the account from the current request.
-        $route_request = RequestHelper::duplicate($this->request, $this->urlGenerator->generate($route_name, $parameters));
-        $defaults = $parameters;
+        $defaults = $parameters + $route->getDefaults();
+        $route_request = RequestHelper::duplicate($this->request, $this->urlGenerator->generate($route_name, $defaults));
         $defaults[RouteObjectInterface::ROUTE_OBJECT] = $route;
         $route_request->attributes->add($this->paramConverterManager->enhance($defaults, $route_request));
       }
