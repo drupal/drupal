@@ -49,7 +49,7 @@ class ConfigImporter {
   /**
    * The event dispatcher used to notify subscribers.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcher
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 

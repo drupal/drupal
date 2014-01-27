@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\Language\Language;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines the default configuration object.
@@ -37,7 +37,7 @@ class Config {
   /**
    * An event dispatcher instance to use for configuration events.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcher
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -136,14 +136,14 @@ class Config {
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   A storage controller object to use for reading and writing the
    *   configuration data.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcher $event_dispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   An event dispatcher instance to use for configuration events.
    * @param \Drupal\Core\Config\TypedConfigManager $typed_config
    *   The typed configuration manager service.
    * @param \Drupal\Core\Language\Language $language
    *   The language object used to override configuration data.
    */
-  public function __construct($name, StorageInterface $storage, EventDispatcher $event_dispatcher, TypedConfigManager $typed_config, Language $language = NULL) {
+  public function __construct($name, StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManager $typed_config, Language $language = NULL) {
     $this->name = $name;
     $this->storage = $storage;
     $this->eventDispatcher = $event_dispatcher;
