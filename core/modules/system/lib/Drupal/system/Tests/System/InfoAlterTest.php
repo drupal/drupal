@@ -29,6 +29,9 @@ class InfoAlterTest extends WebTestBase {
    * return freshly altered info.
    */
   function testSystemInfoAlter() {
+    \Drupal::state()->set('module_test.hook_system_info_alter', TRUE);
+    $info = system_rebuild_module_data();
+    $this->assertFalse(isset($info['node']->info['required']), 'Before the module_test is installed the node module is not required.');
     // Enable seven and the test module.
     theme_enable(array('seven'));
     \Drupal::moduleHandler()->install(array('module_test'), FALSE);
@@ -44,5 +47,9 @@ class InfoAlterTest extends WebTestBase {
     $this->assertTrue(isset($info['regions']['test_region']), 'Altered theme info was returned by system_list().');
     $list_themes = list_themes();
     $this->assertTrue(isset($list_themes['seven']->info['regions']['test_region']), 'Altered theme info was returned by list_themes().');
+    system_list_reset();
+    $info = system_rebuild_module_data();
+    $this->assertTrue($info['node']->info['required'], 'After the module_test is installed the node module is required.');
+    \Drupal::state()->set('module_test.hook_system_info_alter', FALSE);
   }
 }

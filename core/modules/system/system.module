@@ -2434,6 +2434,13 @@ function _system_rebuild_module_data() {
     drupal_alter('system_info', $modules[$key]->info, $modules[$key], $type);
   }
 
+  // It is possible that a module was marked as required by
+  // hook_system_info_alter() and modules that it depends on are not required.
+  foreach ($modules as $module) {
+    _system_rebuild_module_data_ensure_required($module, $modules);
+  }
+
+
   if (isset($modules[$profile])) {
     // The installation profile is required, if it's a valid module.
     $modules[$profile]->info['required'] = TRUE;
@@ -2445,6 +2452,27 @@ function _system_rebuild_module_data() {
   }
 
   return $modules;
+}
+
+/**
+ * Ensures that dependencies of required modules are also required.
+ *
+ * @param \stdClass $module
+ *   The module info.
+ * @param array $modules
+ *   The array of all module info.
+ */
+function _system_rebuild_module_data_ensure_required($module, &$modules) {
+  if (!empty($module->info['required'])) {
+    foreach ($module->info['dependencies'] as $dependant) {
+      if (!isset($modules[$dependant]->info['required'])) {
+        $modules[$dependant]->info['required'] = TRUE;
+        $modules[$dependant]->info['explanation'] = t('Dependency of required module @module', array('@module' => $module->name));
+        // Ensure any dependencies it has are required.
+        _system_rebuild_module_data_ensure_required($modules[$dependant], $modules);
+      }
+    }
+  }
 }
 
 /**
