@@ -150,8 +150,7 @@ class NegotiationConfigureForm extends FormBase {
       }
 
       $method_weights_type[$type] = $method_weights;
-      // @todo convert this to config.
-      variable_set("language_negotiation_methods_weight_$type", $method_weights_input);
+      $this->config('language.types')->set('negotiation.' . $type . '.method_weights', $method_weights_input)->save();
     }
 
     // Update non-configurable language types and the related language
@@ -213,8 +212,8 @@ class NegotiationConfigureForm extends FormBase {
     }
 
     $negotiation_info = $form['#language_negotiation_info'];
-    $enabled_methods = variable_get("language_negotiation_$type", array());
-    $methods_weight = variable_get("language_negotiation_methods_weight_$type", array());
+    $enabled_methods = $this->config('language.types')->get('negotiation.' . $type . '.enabled') ?: array();
+    $methods_weight = $this->config('language.types')->get('negotiation.' . $type . '.method_weights') ?: array();
 
     // Add missing data to the methods lists.
     foreach ($negotiation_info as $method_id => $method) {

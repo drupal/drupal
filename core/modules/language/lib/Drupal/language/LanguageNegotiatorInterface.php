@@ -196,10 +196,10 @@ interface LanguageNegotiatorInterface {
    *
    * @param string $type
    *   The language type.
-   * @param array $method_weights
+   * @param array $enabled_methods
    *   An array of language negotiation method weights keyed by method ID.
    */
-  function saveConfiguration($type, $method_weights);
+  function saveConfiguration($type, $enabled_methods);
 
   /**
    * Resave the configuration to purge missing negotiation methods.

@@ -5,39 +5,10 @@
  * Install, update and uninstall functions for the language module.
  */
 
-use Drupal\Core\Language\Language;
-use Drupal\language\ConfigurableLanguageManagerInterface;
-use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
-
-/**
- * Implements hook_install().
- *
- * Enable URL language negotiation by default in order to have a basic working
- * system on multilingual sites without needing any preliminary configuration.
- */
-function language_install() {
-  $language_manager = \Drupal::languageManager();
-  if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
-    $negotiator = \Drupal::service('language_negotiator');
-    $types = $language_manager->getLanguageTypes();
-    $negotiator->updateConfiguration($types);
-    // Enable URL language detection for each configurable language type.
-    foreach ($types as $type) {
-      $negotiator->saveConfiguration($type, array(LanguageNegotiationUrl::METHOD_ID => 0));
-    }
-  }
-}
-
 /**
  * Implements hook_uninstall().
  */
 function language_uninstall() {
-  // Clear variables.
-  foreach (\Drupal::languageManager()->getDefinedLanguageTypes() as $type) {
-    variable_del("language_negotiation_$type");
-    variable_del("language_negotiation_methods_weight_$type");
-  }
-
   // Re-initialize the language system so successive calls to t() and other
   // functions will not expect languages to be present.
   drupal_language_initialize();

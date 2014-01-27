@@ -169,8 +169,15 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
   /**
    * Stores language types configuration.
    */
-  public function saveLanguageTypesConfiguration(array $config) {
-    $this->configFactory->get('language.types')->setData($config)->save();
+  public function saveLanguageTypesConfiguration(array $values) {
+    $config = $this->configFactory->get('language.types');
+    if (isset($values['configurable'])) {
+      $config->set('configurable', $values['configurable']);
+    }
+    if (isset($values['all'])) {
+      $config->set('all', $values['all']);
+    }
+    $config->save();
   }
 
   /**
