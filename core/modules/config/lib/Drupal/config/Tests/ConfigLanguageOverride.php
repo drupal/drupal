@@ -82,11 +82,10 @@ class ConfigLanguageOverride extends DrupalUnitTestBase {
     $config = \Drupal::config('config_test.new');
     $this->assertTrue($config->isNew(), 'The configuration object config_test.new is new');
     $this->assertIdentical($config->get('language'), 'override');
-    $old_state = \Drupal::configFactory()->getOverrideState();
-    \Drupal::configFactory()->setOverrideState(FALSE);
+    \Drupal::configFactory()->disableOverrides();
     $config = \Drupal::config('config_test.new');
     $this->assertIdentical($config->get('language'), NULL);
-    \Drupal::configFactory()->setOverrideState($old_state);
+    \Drupal::configFactory()->enableOverrides();
 
     // Ensure that language configuration overrides can not be overridden.
     global $conf;

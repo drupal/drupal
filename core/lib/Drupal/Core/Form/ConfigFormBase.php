@@ -74,10 +74,9 @@ abstract class ConfigFormBase extends FormBase {
    * configuration.
    */
   protected function config($name) {
-    $old_state = $this->configFactory->getOverrideState();
-    $this->configFactory->setOverrideState(FALSE);
+    $this->configFactory->disableOverrides();
     $config = $this->configFactory->get($name);
-    $this->configFactory->setOverrideState($old_state);
+    $this->configFactory->enableOverrides();
     return $config;
   }
 }

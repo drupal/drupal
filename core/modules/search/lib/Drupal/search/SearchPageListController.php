@@ -138,9 +138,8 @@ class SearchPageListController extends DraggableListController implements FormIn
    */
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
-    $old_state = $this->configFactory->getOverrideState();
-    $search_settings = $this->configFactory->setOverrideState(FALSE)->get('search.settings');
-    $this->configFactory->setOverrideState($old_state);
+    $search_settings = $this->configFactory->disableOverrides()->get('search.settings');
+    $this->configFactory->enableOverrides();
     // Collect some stats.
     $remaining = 0;
     $total = 0;

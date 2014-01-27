@@ -92,13 +92,11 @@ class ConfigOverridesPriorityTest extends DrupalUnitTestBase {
     $this->assertEqual($language_overridden_mail, $config_factory->get('system.site')->get('mail'));
     $this->assertEqual(50, $config_factory->get('system.site')->get('weight_select_max'));
 
-    $old_state = $config_factory->getOverrideState();
-    $config_factory->setOverrideState(FALSE);
+    $config_factory->disableOverrides();
     $this->assertEqual($non_overridden_name, $config_factory->get('system.site')->get('name'));
     $this->assertEqual($non_overridden_slogan, $config_factory->get('system.site')->get('slogan'));
     $this->assertEqual($non_overridden_mail, $config_factory->get('system.site')->get('mail'));
     $this->assertEqual(50, $config_factory->get('system.site')->get('weight_select_max'));
-    $config_factory->setOverrideState($old_state);
 
     unset($GLOBALS['config_test_run_module_overrides']);
   }

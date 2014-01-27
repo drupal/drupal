@@ -38,31 +38,25 @@ class ConfigModuleOverridesTest extends DrupalUnitTestBase {
       ->set('slogan', $non_overridden_slogan)
       ->save();
 
-    $this->assertTrue($config_factory->getOverrideState(), 'By default ConfigFactory has overrides enabled.');
-
-    $old_state = $config_factory->getOverrideState();
-
-    $config_factory->setOverrideState(FALSE);
-    $this->assertFalse($config_factory->getOverrideState(), 'ConfigFactory can disable overrides.');
+    $config_factory->disableOverrides();
     $this->assertEqual($non_overridden_name, $config_factory->get('system.site')->get('name'));
     $this->assertEqual($non_overridden_slogan, $config_factory->get('system.site')->get('slogan'));
 
-    $config_factory->setOverrideState(TRUE);
-    $this->assertTrue($config_factory->getOverrideState(), 'ConfigFactory can enable overrides.');
+    $config_factory->enableOverrides();
     $this->assertEqual($overridden_name, $config_factory->get('system.site')->get('name'));
     $this->assertEqual($overridden_slogan, $config_factory->get('system.site')->get('slogan'));
 
     // Test overrides of completely new configuration objects. In normal runtime
     // this should only happen for configuration entities as we should not be
     // creating simple configuration objects on the fly.
-    $config = $config_factory->get('config_override.new');
+    $config = \Drupal::config('config_override.new');
     $this->assertTrue($config->isNew(), 'The configuration object config_override.new is new');
     $this->assertIdentical($config->get('module'), 'override');
-    $config_factory->setOverrideState(FALSE);
+    \Drupal::configFactory()->disableOverrides();
     $config = \Drupal::config('config_override.new');
     $this->assertIdentical($config->get('module'), NULL);
+    \Drupal::configFactory()->enableOverrides();
 
-    $config_factory->setOverrideState($old_state);
     unset($GLOBALS['config_test_run_module_overrides']);
   }
 }
