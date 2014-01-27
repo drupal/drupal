@@ -1145,18 +1145,18 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
 /**
  * Finds all files that match a given mask in a given directory.
  *
- * Directories and files beginning with a period are excluded; this
- * prevents hidden files and directories (such as SVN working directories)
- * from being scanned.
+ * Directories and files beginning with a dot are excluded; this prevents
+ * hidden files and directories (such as SVN working directories) from being
+ * scanned.
  *
  * @param $dir
  *   The base directory or URI to scan, without trailing slash.
  * @param $mask
- *   The preg_match() regular expression of the files to find.
+ *   The preg_match() regular expression for files to be included.
  * @param $options
  *   An associative array of additional options, with the following elements:
- *   - 'nomask': The preg_match() regular expression of the files to ignore.
- *     Defaults to '/(\.\.?|CVS)$/'.
+ *   - 'nomask': The preg_match() regular expression for files to be excluded.
+ *     There is no default.
  *   - 'callback': The callback function to call for each match. There is no
  *     default callback.
  *   - 'recurse': When TRUE, the directory scan will recurse the entire tree
@@ -1168,17 +1168,16 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
  *   - 'min_depth': Minimum depth of directories to return files from. Defaults
  *     to 0.
  * @param $depth
- *   Current depth of recursion. This parameter is only used internally and
+ *   The current depth of recursion. This parameter is only used internally and
  *   should not be passed in.
  *
  * @return
  *   An associative array (keyed on the chosen key) of objects with 'uri',
- *   'filename', and 'name' members corresponding to the matching files.
+ *   'filename', and 'name' properties corresponding to the matched files.
  */
 function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
   // Merge in defaults.
   $options += array(
-    'nomask' => '/^CVS$/',
     'callback' => 0,
     'recurse' => TRUE,
     'key' => 'uri',
@@ -1198,7 +1197,7 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
     if ($handle = @opendir($dir)) {
       while (FALSE !== ($filename = readdir($handle))) {
         // Skip this file if it matches the nomask or starts with a dot.
-        if ($filename[0] != '.' && !preg_match($options['nomask'], $filename)) {
+        if ($filename[0] != '.' && !(isset($options['nomask']) && preg_match($options['nomask'], $filename))) {
           if ($depth == 0 && $dir_has_slash) {
             $uri = "$dir$filename";
           }
