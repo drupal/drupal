@@ -4,7 +4,7 @@ update.status:
   title: List
 update.settings:
   route_name: update.settings
-  parent_id: update.status
+  base_route: system.admin_reports
   title: Settings
   weight: 50
 update.report_install:
