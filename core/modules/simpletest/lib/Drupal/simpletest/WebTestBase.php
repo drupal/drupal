@@ -661,8 +661,9 @@ abstract class WebTestBase extends TestBase {
     if (!isset($account->session_id)) {
       return FALSE;
     }
-    // @see _drupal_session_read()
-    return (bool) db_query("SELECT sid FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $account->session_id))->fetchField();
+    // @see _drupal_session_read(). The session ID is hashed before being stored
+    // in the database.
+    return (bool) db_query("SELECT sid FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => Crypt::hashBase64($account->session_id)))->fetchField();
   }
 
   /**

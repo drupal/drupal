@@ -92,19 +92,21 @@ function _drupal_session_read($sid) {
   // Otherwise, if the session is still active, we have a record of the
   // client's session in the database. If it's HTTPS then we are either have
   // a HTTPS session or we are about to log in so we check the sessions table
-  // for an anonymous session with the non-HTTPS-only cookie.
+  // for an anonymous session with the non-HTTPS-only cookie. The session ID
+  // that is in the user's cookie is hashed before being stored in the database
+  // as a security measure. Thus, we have to hash it to match the database.
   if (\Drupal::request()->isSecure()) {
-    $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchAssoc();
+    $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => Crypt::hashBase64($sid)))->fetchAssoc();
     if (!$values) {
       if ($cookies->has($insecure_session_name)) {
         $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid AND s.uid = 0", array(
-        ':sid' => $cookies->get($insecure_session_name)))
+        ':sid' => Crypt::hashBase64($cookies->get($insecure_session_name))))
         ->fetchAssoc();
       }
     }
   }
   else {
-    $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $sid))->fetchAssoc();
+    $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => Crypt::hashBase64($sid)))->fetchAssoc();
   }
 
   // We found the client's session record and they are an authenticated,
@@ -185,18 +187,19 @@ function _drupal_session_write($sid, $value) {
       // Use the session ID as 'sid' and an empty string as 'ssid' by default.
       // _drupal_session_read() does not allow empty strings so that's a safe
       // default.
-      $key = array('sid' => $sid, 'ssid' => '');
+      $key = array('sid' => Crypt::hashBase64($sid), 'ssid' => '');
       // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
       if (\Drupal::request()->isSecure()) {
-        $key['ssid'] = $sid;
+        $key['ssid'] = Crypt::hashBase64($sid);
         $cookies = \Drupal::request()->cookies;
         // The "secure pages" setting allows a site to simultaneously use both
         // secure and insecure session cookies. If enabled and both cookies are
-        // presented then use both keys.
+        // presented then use both keys. The session ID from the cookie is
+        // hashed before being stored in the database as a security measure.
         if (settings()->get('mixed_mode_sessions', FALSE)) {
           $insecure_session_name = substr(session_name(), 1);
           if ($cookies->has($insecure_session_name)) {
-            $key['sid'] = $cookies->get($insecure_session_name);
+            $key['sid'] = Crypt::hashBase64($cookies->get($insecure_session_name));
           }
         }
       }
@@ -384,18 +387,18 @@ function drupal_session_regenerate() {
     $params = session_get_cookie_params();
     $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
     setcookie(session_name(), session_id(), $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    $fields = array('sid' => session_id());
+    $fields = array('sid' => Crypt::hashBase64(session_id()));
     if ($is_https) {
-      $fields['ssid'] = session_id();
+      $fields['ssid'] = Crypt::hashBase64(session_id());
       // If the "secure pages" setting is enabled, use the newly-created
       // insecure session identifier as the regenerated sid.
       if (settings()->get('mixed_mode_sessions', FALSE)) {
-        $fields['sid'] = $session_id;
+        $fields['sid'] = Crypt::hashBase64($session_id);
       }
     }
     db_update('sessions')
       ->fields($fields)
-      ->condition($is_https ? 'ssid' : 'sid', $old_session_id)
+      ->condition($is_https ? 'ssid' : 'sid', Crypt::hashBase64($old_session_id))
       ->execute();
   }
   elseif (isset($old_insecure_session_id)) {
@@ -403,8 +406,8 @@ function drupal_session_regenerate() {
     // secure site but a session was active on the insecure site, update the
     // insecure session with the new session identifiers.
     db_update('sessions')
-      ->fields(array('sid' => $session_id, 'ssid' => session_id()))
-      ->condition('sid', $old_insecure_session_id)
+      ->fields(array('sid' => Crypt::hashBase64($session_id), 'ssid' => Crypt::hashBase64(session_id())))
+      ->condition('sid', Crypt::hashBase64($old_insecure_session_id))
       ->execute();
   }
   else {
@@ -437,7 +440,7 @@ function _drupal_session_destroy($sid) {
   $is_https = \Drupal::request()->isSecure();
   // Delete session data.
   db_delete('sessions')
-    ->condition($is_https ? 'ssid' : 'sid', $sid)
+    ->condition($is_https ? 'ssid' : 'sid', Crypt::hashBase64($sid))
     ->execute();
 
   // Reset $_SESSION and $user to prevent a new session from being started
