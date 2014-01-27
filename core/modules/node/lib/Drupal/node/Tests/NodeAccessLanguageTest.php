@@ -64,20 +64,20 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     // Creating a public node with langcode Hungarian, will be saved as the
     // fallback in node access table.
-    $node_public = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'hu', 'private' => FALSE));
-    $this->assertTrue($node_public->language()->id == 'hu', 'Node created as Hungarian.');
+    $node_public_hu = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'hu', 'private' => FALSE));
+    $this->assertTrue($node_public_hu->language()->id == 'hu', 'Node created as Hungarian.');
 
     // Tests the default access is provided for the public Hungarian node.
-    $this->assertNodeAccess($expected_node_access, $node_public, $web_user);
+    $this->assertNodeAccess($expected_node_access, $node_public_hu, $web_user);
 
     // Tests that Hungarian provided specifically results in the same.
-    $this->assertNodeAccess($expected_node_access, $node_public, $web_user, 'hu');
+    $this->assertNodeAccess($expected_node_access, $node_public_hu, $web_user, 'hu');
 
     // There is no specific Catalan version of this node and Croatian is not
     // even set up on the system in this scenario, so the user will not get
     // access to these nodes.
-    $this->assertNodeAccess($expected_node_access_no_access, $node_public, $web_user, 'ca');
-    $this->assertNodeAccess($expected_node_access_no_access, $node_public, $web_user, 'hr');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_hu, $web_user, 'ca');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_hu, $web_user, 'hr');
 
     // Creating a public node with no special langcode, like when no language
     // module enabled.
@@ -97,17 +97,51 @@ class NodeAccessLanguageTest extends NodeTestBase {
     $this->assertNodeAccess($expected_node_access_no_access, $node_public_no_language, $web_user, 'hr');
 
     // Reset the node access cache and turn on our test node access code.
-    drupal_static_reset('node_access');
-    variable_set('node_access_test_secret_catalan', 1);
+    \Drupal::entityManager()->getAccessController('node')->resetCache();
+    \Drupal::state()->set('node_access_test_secret_catalan', 1);
+    $node_public_ca = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'ca', 'private' => FALSE));
+    $this->assertTrue($node_public_ca->language()->id == 'ca', 'Node created as Catalan.');
 
     // Tests that access is granted if requested with no language.
     $this->assertNodeAccess($expected_node_access, $node_public_no_language, $web_user);
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_ca, $web_user);
 
     // Tests that Hungarian is still not accessible.
     $this->assertNodeAccess($expected_node_access_no_access, $node_public_no_language, $web_user, 'hu');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_ca, $web_user, 'hu');
+
+    // Tests that Hungarian node is still accessible.
+    $this->assertNodeAccess($expected_node_access, $node_public_hu, $web_user, 'hu');
 
     // Tests that Catalan is still not accessible.
     $this->assertNodeAccess($expected_node_access_no_access, $node_public_no_language, $web_user, 'ca');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_ca, $web_user, 'ca');
+
+    // Make Catalan accessible.
+    \Drupal::state()->set('node_access_test_secret_catalan', 0);
+
+    // Tests that Catalan is accessible on a node with a Catalan version as the
+    // static cache has not been reset.
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_ca, $web_user, 'ca');
+
+    \Drupal::entityManager()->getAccessController('node')->resetCache();
+
+    // Tests that access is granted if requested with no language.
+    $this->assertNodeAccess($expected_node_access, $node_public_no_language, $web_user);
+    $this->assertNodeAccess($expected_node_access, $node_public_ca, $web_user);
+
+    // Tests that Hungarian is still not accessible.
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_no_language, $web_user, 'hu');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_ca, $web_user, 'hu');
+
+    // Tests that Hungarian node is still accessible.
+    $this->assertNodeAccess($expected_node_access, $node_public_hu, $web_user, 'hu');
+
+    // Tests that Catalan is still not accessible on a node without a language.
+    $this->assertNodeAccess($expected_node_access_no_access, $node_public_no_language, $web_user, 'ca');
+
+    // Tests that Catalan is accessible on a node with a Catalan version.
+    $this->assertNodeAccess($expected_node_access, $node_public_ca, $web_user, 'ca');
   }
 
   /**
@@ -115,27 +149,25 @@ class NodeAccessLanguageTest extends NodeTestBase {
    */
   function testNodeAccessPrivate() {
     $web_user = $this->drupalCreateUser(array('access content'));
-
-    $node = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'hu'));
-    $this->assertTrue($node->language()->id == 'hu', 'Node created as Hungarian.');
+    $expected_node_access = array('view' => TRUE, 'update' => FALSE, 'delete' => FALSE);
     $expected_node_access_no_access = array('view' => FALSE, 'update' => FALSE, 'delete' => FALSE);
 
     // Creating a private node with langcode Hungarian, will be saved as the
     // fallback in node access table.
-    $node_public = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'hu', 'private' => TRUE));
-    $this->assertTrue($node_public->language()->id == 'hu', 'Node created as Hungarian.');
+    $node_private_hu = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'hu', 'private' => TRUE));
+    $this->assertTrue($node_private_hu->language()->id == 'hu', 'Node created as Hungarian.');
 
     // Tests the default access is not provided for the private Hungarian node.
-    $this->assertNodeAccess($expected_node_access_no_access, $node_public, $web_user);
+    $this->assertNodeAccess($expected_node_access_no_access, $node_private_hu, $web_user);
 
     // Tests that Hungarian provided specifically results in the same.
-    $this->assertNodeAccess($expected_node_access_no_access, $node_public, $web_user, 'hu');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_private_hu, $web_user, 'hu');
 
     // There is no specific Catalan version of this node and Croatian is not
     // even set up on the system in this scenario, so the user will not get
     // access to these nodes.
-    $this->assertNodeAccess($expected_node_access_no_access, $node_public, $web_user, 'ca');
-    $this->assertNodeAccess($expected_node_access_no_access, $node_public, $web_user, 'hr');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_private_hu, $web_user, 'ca');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_private_hu, $web_user, 'hr');
 
     // Creating a private node with no special langcode, like when no language
     // module enabled.
@@ -155,7 +187,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
     $this->assertNodeAccess($expected_node_access_no_access, $node_private_no_language, $web_user, 'hr');
 
     // Reset the node access cache and turn on our test node access code.
-    entity_access_controller('node')->resetCache();
+    \Drupal::entityManager()->getAccessController('node')->resetCache();
     \Drupal::state()->set('node_access_test_secret_catalan', 1);
 
     // Tests that access is not granted if requested with no language.
@@ -166,6 +198,27 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     // Tests that Catalan is still not accessible.
     $this->assertNodeAccess($expected_node_access_no_access, $node_private_no_language, $web_user, 'ca');
+
+    // Creating a private node with langcode Catalan to test that the
+    // node_access_test_secret_catalan flag works.
+    $private_ca_user = $this->drupalCreateUser(array('access content', 'node test view'));
+    $node_private_ca = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'ca', 'private' => TRUE));
+    $this->assertTrue($node_private_ca->language()->id == 'ca', 'Node created as Catalan.');
+
+    // Tests that Catalan is still not accessible to either user.
+    $this->assertNodeAccess($expected_node_access_no_access, $node_private_ca, $web_user, 'ca');
+    $this->assertNodeAccess($expected_node_access_no_access, $node_private_ca, $private_ca_user, 'ca');
+
+    \Drupal::entityManager()->getAccessController('node')->resetCache();
+    \Drupal::state()->set('node_access_test_secret_catalan', 0);
+
+    // Tests that Catalan is still not accessible for a user with no access to
+    // private nodes.
+    $this->assertNodeAccess($expected_node_access_no_access, $node_private_ca, $web_user, 'ca');
+
+    // Tests that Catalan is accessible by a user with the permission to see
+    // private nodes.
+    $this->assertNodeAccess($expected_node_access, $node_private_ca, $private_ca_user, 'ca');
   }
 
   /**
