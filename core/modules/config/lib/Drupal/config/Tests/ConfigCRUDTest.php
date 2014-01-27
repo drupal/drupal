@@ -7,9 +7,11 @@
 
 namespace Drupal\config\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\UnsupportedDataTypeConfigException;
 
 /**
  * Tests CRUD operations on configuration objects.
@@ -225,12 +227,31 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $this->assertIdentical($config->get(), $data);
     $this->assertIdentical($storage->read($name), $data);
 
+    // Test that setting an unsupported type for a config object with a schema
+    // fails.
     try {
       $config->set('stream', fopen(__FILE__, 'r'))->save();
       $this->fail('No Exception thrown upon saving invalid data type.');
     }
-    catch (\Exception $e) {
-      $this->pass(format_string('%class thrown upon saving invalid data type.', array(
+    catch (UnsupportedDataTypeConfigException $e) {
+      $this->pass(String::format('%class thrown upon saving invalid data type.', array(
+        '%class' => get_class($e),
+      )));
+    }
+
+    // Test that setting an unsupported type for a config object with no schema
+    // also fails.
+    $typed_config_manager = $this->container->get('config.typed');
+    $config_name = 'config_test.no_schema';
+    $config = $this->container->get('config.factory')->get($config_name);
+    $this->assertFalse($typed_config_manager->hasConfigSchema($config_name));
+
+    try {
+      $config->set('stream', fopen(__FILE__, 'r'))->save();
+      $this->fail('No Exception thrown upon saving invalid data type.');
+    }
+    catch (UnsupportedDataTypeConfigException $e) {
+      $this->pass(String::format('%class thrown upon saving invalid data type.', array(
         '%class' => get_class($e),
       )));
     }

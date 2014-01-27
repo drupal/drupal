@@ -592,6 +592,9 @@ class Config {
    *
    * @return mixed
    *   The value cast to the type indicated in the schema.
+   *
+   * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
+   *   Exception on unsupported/undefined data type deducted.
    */
   protected function castValue($key, $value) {
     if ($value === NULL) {
@@ -627,9 +630,12 @@ class Config {
       }
     }
     else {
-      // Any non-scalar value must be an array.
+      // Throw exception on any non-scalar or non-array value.
       if (!is_array($value)) {
-        $value = (array) $value;
+        throw new UnsupportedDataTypeConfigException(String::format('Invalid data type for config element @name:@key', array(
+          '@name' => $this->getName(),
+          '@key' => $key,
+        )));
       }
       // Recurse into any nested keys.
       foreach ($value as $nested_value_key => $nested_value) {

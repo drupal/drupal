@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Component\Utility\String;
 use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Exception\DumpException;
 use Symfony\Component\Yaml\Parser;
 
 /**
@@ -105,11 +107,17 @@ class FileStorage implements StorageInterface {
   /**
    * Implements Drupal\Core\Config\StorageInterface::write().
    *
-   * @throws Symfony\Component\Yaml\Exception\DumpException
+   * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
    * @throws \Drupal\Core\Config\StorageException
    */
   public function write($name, array $data) {
-    $data = $this->encode($data);
+    try {
+      $data = $this->encode($data);
+    }
+    catch(DumpException $e) {
+      throw new UnsupportedDataTypeConfigException(String::format('Invalid data type for used in config: @name', array('@name' => $name)));
+    }
+
     $target = $this->getFilePath($name);
     $status = @file_put_contents($target, $data);
     if ($status === FALSE) {
