@@ -584,19 +584,23 @@ function file_ensure_htaccess() {
  * @param $private
  *   FALSE indicates that $directory should be an open and public directory.
  *   The default is TRUE which indicates a private and protected directory.
+ *
+ * @return bool
+ *   TRUE if the .htaccess file could be created or existed already, FALSE
+ *   otherwise.
  */
 function file_save_htaccess($directory, $private = TRUE) {
   if (file_uri_scheme($directory)) {
-    $directory = file_stream_wrapper_uri_normalize($directory);
+    $htaccess_path = file_stream_wrapper_uri_normalize($directory . '/.htaccess');
   }
   else {
     $directory = rtrim($directory, '/\\');
+    $htaccess_path = $directory . '/.htaccess';
   }
-  $htaccess_path =  $directory . '/.htaccess';
 
   if (file_exists($htaccess_path)) {
     // Short circuit if the .htaccess file already exists.
-    return;
+    return TRUE;
   }
 
   if ($private) {
@@ -609,12 +613,13 @@ function file_save_htaccess($directory, $private = TRUE) {
   }
 
   // Write the .htaccess file.
-  if (file_put_contents($htaccess_path, $htaccess_lines)) {
-    drupal_chmod($htaccess_path, 0444);
+  if (file_exists($directory) && is_writable($directory) && file_put_contents($htaccess_path, $htaccess_lines)) {
+    return drupal_chmod($htaccess_path, 0444);
   }
   else {
     $variables = array('%directory' => $directory, '!htaccess' => '<br />' . nl2br(String::checkPlain($htaccess_lines)));
     watchdog('security', "Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", $variables, WATCHDOG_ERROR);
+    return FALSE;
   }
 }
 
