@@ -202,12 +202,16 @@ function file_get_stream_wrappers($filter = STREAM_WRAPPERS_ALL) {
   $wrappers_storage = &drupal_static(__FUNCTION__);
 
   if (!isset($wrappers_storage)) {
-    $wrappers = \Drupal::moduleHandler()->invokeAll('stream_wrappers');
-    foreach ($wrappers as $scheme => $info) {
-      // Add defaults.
-      $wrappers[$scheme] += array('type' => STREAM_WRAPPERS_NORMAL);
+    $wrappers = array();
+    $container = \Drupal::getContainer();
+    if (is_object($container) && $container->has('module_handler')) {
+      $wrappers = \Drupal::moduleHandler()->invokeAll('stream_wrappers');
+      foreach ($wrappers as $scheme => $info) {
+        // Add defaults.
+        $wrappers[$scheme] += array('type' => STREAM_WRAPPERS_NORMAL);
+      }
+      \Drupal::moduleHandler()->alter('stream_wrappers', $wrappers);
     }
-    drupal_alter('stream_wrappers', $wrappers);
     $existing = stream_get_wrappers();
     foreach ($wrappers as $scheme => $info) {
       // We only register classes that implement our interface.

@@ -15,7 +15,7 @@ class CopyTest extends FileManagedTestBase {
     return array(
       'name' => 'File copying',
       'description' => 'Tests the file copy function.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

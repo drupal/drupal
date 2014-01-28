@@ -15,7 +15,7 @@ class LoadTest extends FileManagedTestBase {
     return array(
       'name' => 'File loading',
       'description' => 'Tests the file_load() function.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

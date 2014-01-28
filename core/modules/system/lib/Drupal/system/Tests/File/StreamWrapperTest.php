@@ -8,12 +8,11 @@
 namespace Drupal\system\Tests\File;
 
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests stream wrapper functions.
  */
-class StreamWrapperTest extends WebTestBase {
+class StreamWrapperTest extends FileTestBase {
 
   /**
    * Modules to enable.
@@ -22,7 +21,18 @@ class StreamWrapperTest extends WebTestBase {
    */
   public static $modules = array('file_test');
 
+  /**
+   * A stream wrapper scheme to register for the test.
+   *
+   * @var string
+   */
   protected $scheme = 'dummy';
+
+  /**
+   * A fully-qualified stream wrapper class name to register for the test.
+   *
+   * @var string
+   */
   protected $classname = 'Drupal\file_test\DummyStreamWrapper';
 
   public static function getInfo() {
@@ -31,16 +41,6 @@ class StreamWrapperTest extends WebTestBase {
       'description' => 'Tests stream wrapper functions.',
       'group' => 'File API',
     );
-  }
-
-  function setUp() {
-    parent::setUp();
-    drupal_static_reset('file_get_stream_wrappers');
-  }
-
-  function tearDown() {
-    parent::tearDown();
-    stream_wrapper_unregister($this->scheme);
   }
 
   /**

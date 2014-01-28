@@ -21,7 +21,7 @@ class RemoteFileSaveUploadTest extends SaveUploadTest {
 
   public static function getInfo() {
     $info = parent::getInfo();
-    $info['group'] = 'File API (remote)';
+    $info['group'] = 'File Managed API (remote)';
     return $info;
   }
 

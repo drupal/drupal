@@ -15,7 +15,7 @@ class UsageTest extends FileManagedTestBase {
     return array(
       'name' => 'File usage',
       'description' => 'Tests the file usage functions.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

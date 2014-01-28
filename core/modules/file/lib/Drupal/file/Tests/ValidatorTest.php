@@ -15,7 +15,7 @@ class ValidatorTest extends FileManagedTestBase {
     return array(
       'name' => 'File validator tests',
       'description' => 'Tests the functions used to validate uploaded files.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

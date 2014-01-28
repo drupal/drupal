@@ -13,13 +13,17 @@ namespace Drupal\system\Tests\File;
 class ReadOnlyStreamWrapperTest extends FileTestBase {
 
   /**
-   * Modules to enable.
+   * A stream wrapper scheme to register for the test.
    *
-   * @var array
+   * @var string
    */
-  public static $modules = array('file_test');
-
   protected $scheme = 'dummy-readonly';
+
+  /**
+   * A fully-qualified stream wrapper class name to register for the test.
+   *
+   * @var string
+   */
   protected $classname = 'Drupal\file_test\DummyReadOnlyStreamWrapper';
 
   public static function getInfo() {
@@ -28,16 +32,6 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
       'description' => 'Tests the read-only stream wrapper write functions.',
       'group' => 'File API',
     );
-  }
-
-  function setUp() {
-    parent::setUp();
-    drupal_static_reset('file_get_stream_wrappers');
-  }
-
-  function tearDown() {
-    parent::tearDown();
-    stream_wrapper_unregister($this->scheme);
   }
 
   /**

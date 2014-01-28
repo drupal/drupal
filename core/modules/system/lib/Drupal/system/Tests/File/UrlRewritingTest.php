@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\File;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Tests for file URL rewriting.
  */
@@ -23,7 +25,7 @@ class UrlRewritingTest extends FileTestBase {
     return array(
       'name' => 'File URL rewriting',
       'description' => 'Tests for file URL rewriting.',
-      'group' => 'File',
+      'group' => 'File API',
     );
   }
 
@@ -94,6 +96,11 @@ class UrlRewritingTest extends FileTestBase {
   function testRelativeFileURL() {
     // Disable file_test.module's hook_file_url_alter() implementation.
     \Drupal::state()->set('file_test.hook_file_url_alter', NULL);
+
+    // Create a mock Request for file_url_transform_relative().
+    $request = Request::create($GLOBALS['base_url']);
+    $this->container->set('request', $request);
+    \Drupal::setContainer($this->container);
 
     // Shipped file.
     $filepath = 'core/assets/vendor/jquery/jquery.js';

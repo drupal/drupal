@@ -15,7 +15,7 @@ class MoveTest extends FileManagedTestBase {
     return array(
       'name' => 'File moving',
       'description' => 'Tests the file move function.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

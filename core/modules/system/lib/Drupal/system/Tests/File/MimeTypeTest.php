@@ -7,12 +7,10 @@
 
 namespace Drupal\system\Tests\File;
 
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Tests for file_get_mimetype().
  */
-class MimeTypeTest extends WebTestBase {
+class MimeTypeTest extends FileTestBase {
 
   /**
    * Modules to enable.

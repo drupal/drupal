@@ -17,7 +17,7 @@ class DownloadTest extends FileManagedTestBase {
     return array(
       'name' => 'File download',
       'description' => 'Tests for file download/transfer functions.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

@@ -15,7 +15,7 @@ class ValidateTest extends FileManagedTestBase {
     return array(
       'name' => 'File validate',
       'description' => 'Tests the file_validate() function.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

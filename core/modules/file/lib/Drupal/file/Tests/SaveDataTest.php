@@ -15,7 +15,7 @@ class SaveDataTest extends FileManagedTestBase {
     return array(
       'name' => 'File save data',
       'description' => 'Tests the file save data function.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

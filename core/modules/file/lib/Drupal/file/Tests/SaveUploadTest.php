@@ -30,7 +30,7 @@ class SaveUploadTest extends FileManagedTestBase {
     return array(
       'name' => 'File uploading',
       'description' => 'Tests the file uploading functions.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

@@ -15,7 +15,7 @@ class SpaceUsedTest extends FileManagedTestBase {
     return array(
       'name' => 'File space used tests',
       'description' => 'Tests the spaceUsed() function.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

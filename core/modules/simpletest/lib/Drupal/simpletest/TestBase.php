@@ -991,6 +991,19 @@ abstract class TestBase {
     // Create and set new configuration directories.
     $this->prepareConfigDirectories();
 
+    // Unregister all custom stream wrappers of the parent site.
+    // Availability of Drupal stream wrappers varies by test base class:
+    // - UnitTestBase operates in a completely empty environment.
+    // - DrupalUnitTestBase supports and maintains stream wrappers in a custom
+    //   way.
+    // - WebTestBase re-initializes Drupal stream wrappers after installation.
+    // The original stream wrappers are restored after the test run.
+    // @see TestBase::tearDown()
+    $wrappers = file_get_stream_wrappers();
+    foreach ($wrappers as $scheme => $info) {
+      stream_wrapper_unregister($scheme);
+    }
+
     // Reset statics before the old container is replaced so that objects with a
     // __destruct() method still have access to it.
     // All static variables need to be reset before the database prefix is
@@ -1150,10 +1163,6 @@ abstract class TestBase {
       }
     }
 
-    // In case a fatal error occurred that was not in the test process read the
-    // log to pick up any fatal errors.
-    simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
-
     // Delete temporary files directory.
     file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10), array($this, 'filePreDeleteCallback'));
 
@@ -1183,6 +1192,17 @@ abstract class TestBase {
     // Restore original statics and globals.
     \Drupal::setContainer($this->originalContainer);
     $GLOBALS['config_directories'] = $this->originalConfigDirectories;
+
+    // Re-initialize original stream wrappers of the parent site.
+    // This must happen after static variables have been reset and the original
+    // container and $config_directories are restored, as simpletest_log_read()
+    // uses the public stream wrapper to locate the error.log.
+    file_get_stream_wrappers();
+
+    // In case a fatal error occurred that was not in the test process read the
+    // log to pick up any fatal errors.
+    simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
+
     if (isset($this->originalPrefix)) {
       drupal_valid_test_ua($this->originalPrefix);
     }

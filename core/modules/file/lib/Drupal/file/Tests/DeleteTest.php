@@ -15,7 +15,7 @@ class DeleteTest extends FileManagedTestBase {
     return array(
       'name' => 'File delete',
       'description' => 'Tests the file delete function.',
-      'group' => 'File API',
+      'group' => 'File Managed API',
     );
   }
 

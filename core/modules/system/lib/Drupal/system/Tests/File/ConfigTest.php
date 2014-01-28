@@ -7,10 +7,12 @@
 
 namespace Drupal\system\Tests\File;
 
+use Drupal\simpletest\WebTestBase;
+
 /**
  * File system configuration related tests.
  */
-class ConfigTest extends FileTestBase {
+class ConfigTest extends WebTestBase {
 
   public static function getInfo() {
     return array(

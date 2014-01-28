@@ -7,14 +7,14 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\system\Tests\File\FileTestBase;
-use \stdClass;
+use Drupal\file\FileInterface;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Base class for file tests that use the file_test module to test uploads and
  * hooks.
  */
-abstract class FileManagedTestBase extends FileTestBase {
+abstract class FileManagedTestBase extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -90,6 +90,50 @@ abstract class FileManagedTestBase extends FileTestBase {
   }
 
   /**
+   * Asserts that two files have the same values (except timestamp).
+   *
+   * @param \Drupal\file\FileInterface $before
+   *   File object to compare.
+   * @param \Drupal\file\FileInterface $after
+   *   File object to compare.
+   */
+  function assertFileUnchanged(FileInterface $before, FileInterface $after) {
+    $this->assertEqual($before->id(), $after->id(), t('File id is the same: %file1 == %file2.', array('%file1' => $before->id(), '%file2' => $after->id())), 'File unchanged');
+    $this->assertEqual($before->getOwner()->id(), $after->getOwner()->id(), t('File owner is the same: %file1 == %file2.', array('%file1' => $before->getOwner()->id(), '%file2' => $after->getOwner()->id())), 'File unchanged');
+    $this->assertEqual($before->getFilename(), $after->getFilename(), t('File name is the same: %file1 == %file2.', array('%file1' => $before->getFilename(), '%file2' => $after->getFilename())), 'File unchanged');
+    $this->assertEqual($before->getFileUri(), $after->getFileUri(), t('File path is the same: %file1 == %file2.', array('%file1' => $before->getFileUri(), '%file2' => $after->getFileUri())), 'File unchanged');
+    $this->assertEqual($before->getMimeType(), $after->getMimeType(), t('File MIME type is the same: %file1 == %file2.', array('%file1' => $before->getMimeType(), '%file2' => $after->getMimeType())), 'File unchanged');
+    $this->assertEqual($before->getSize(), $after->getSize(), t('File size is the same: %file1 == %file2.', array('%file1' => $before->getSize(), '%file2' => $after->getSize())), 'File unchanged');
+    $this->assertEqual($before->isPermanent(), $after->isPermanent(), t('File status is the same: %file1 == %file2.', array('%file1' => $before->isPermanent(), '%file2' => $after->isPermanent())), 'File unchanged');
+  }
+
+  /**
+   * Asserts that two files are not the same by comparing the fid and filepath.
+   *
+   * @param \Drupal\file\FileInterface $file1
+   *   File object to compare.
+   * @param \Drupal\file\FileInterface $file2
+   *   File object to compare.
+   */
+  function assertDifferentFile(FileInterface $file1, FileInterface $file2) {
+    $this->assertNotEqual($file1->id(), $file2->id(), t('Files have different ids: %file1 != %file2.', array('%file1' => $file1->id(), '%file2' => $file2->id())), 'Different file');
+    $this->assertNotEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have different paths: %file1 != %file2.', array('%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri())), 'Different file');
+  }
+
+  /**
+   * Asserts that two files are the same by comparing the fid and filepath.
+   *
+   * @param \Drupal\file\FileInterface $file1
+   *   File object to compare.
+   * @param \Drupal\file\FileInterface $file2
+   *   File object to compare.
+   */
+  function assertSameFile(FileInterface $file1, FileInterface $file2) {
+    $this->assertEqual($file1->id(), $file2->id(), t('Files have the same ids: %file1 == %file2.', array('%file1' => $file1->id(), '%file2-fid' => $file2->id())), 'Same file');
+    $this->assertEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have the same path: %file1 == %file2.', array('%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri())), 'Same file');
+  }
+
+  /**
    * Create a file and save it to the files table and assert that it occurs
    * correctly.
    *
@@ -106,7 +150,7 @@ abstract class FileManagedTestBase extends FileTestBase {
    *   File entity.
    */
   function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
-    $file = new stdClass();
+    $file = new \stdClass();
     $file->uri = $this->createUri($filepath, $contents, $scheme);
     $file->filename = drupal_basename($file->uri);
     $file->filemime = 'text/plain';
@@ -121,4 +165,41 @@ abstract class FileManagedTestBase extends FileTestBase {
 
     return entity_create('file', (array) $file);
   }
+
+  /**
+   * Creates a file and returns its URI.
+   *
+   * @param string $filepath
+   *   Optional string specifying the file path. If none is provided then a
+   *   randomly named file will be created in the site's files directory.
+   * @param string $contents
+   *   Optional contents to save into the file. If a NULL value is provided an
+   *   arbitrary string will be used.
+   * @param string $scheme
+   *   Optional string indicating the stream scheme to use. Drupal core includes
+   *   public, private, and temporary. The public wrapper is the default.
+   *
+   * @return string
+   *   File URI.
+   */
+  function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
+    if (!isset($filepath)) {
+      // Prefix with non-latin characters to ensure that all file-related
+      // tests work with international filenames.
+      $filepath = 'Файл для тестирования ' . $this->randomName();
+    }
+    if (!isset($scheme)) {
+      $scheme = file_default_scheme();
+    }
+    $filepath = $scheme . '://' . $filepath;
+
+    if (!isset($contents)) {
+      $contents = "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
+    }
+
+    file_put_contents($filepath, $contents);
+    $this->assertTrue(is_file($filepath), t('The test file exists on the disk.'), 'Create test file');
+    return $filepath;
+  }
+
 }
