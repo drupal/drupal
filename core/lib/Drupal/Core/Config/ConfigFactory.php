@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Config\ConfigFactory.
+ * Contains \Drupal\Core\Config\ConfigFactory.
  */
 
 namespace Drupal\Core\Config;
@@ -26,12 +26,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @see \Drupal\Core\Config\StorageInterface
  */
-class ConfigFactory implements EventSubscriberInterface {
-
-  /**
-   * Prefix for all language configuration files.
-   */
-  const LANGUAGE_CONFIG_PREFIX = 'language.config';
+class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface {
 
   /**
    * A storage controller instance for reading and writing configuration data.
@@ -92,13 +87,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Set the override state.
-   *
-   * @param bool $state
-   *   TRUE if overrides should be applied, FALSE otherwise.
-   *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * {@inheritdoc}
    */
   public function setOverrideState($state) {
     $this->useOverrides = $state;
@@ -106,23 +95,14 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Get the override state.
-   *
-   * @return bool
-   *   TRUE if overrides are applied, FALSE otherwise.
+   * {@inheritdoc}
    */
   public function getOverrideState() {
     return $this->useOverrides;
   }
 
   /**
-   * Returns a configuration object for a given name.
-   *
-   * @param string $name
-   *   The name of the configuration object to construct.
-   *
-   * @return \Drupal\Core\Config\Config
-   *   A configuration object.
+   * {@inheritdoc}
    */
   public function get($name) {
     global $conf;
@@ -169,16 +149,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Returns a list of configuration objects for the given names.
-   *
-   * This will pre-load all requested configuration objects does not create
-   * new configuration objects.
-   *
-   * @param array $names
-   *   List of names of configuration objects.
-   *
-   * @return array
-   *   List of successfully loaded configuration objects, keyed by name.
+   * {@inheritdoc}
    */
   public function loadMultiple(array $names) {
     global $conf;
@@ -261,14 +232,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Resets and re-initializes configuration objects. Internal use only.
-   *
-   * @param string $name
-   *   (optional) The name of the configuration object to reset. If omitted, all
-   *   configuration objects are reset.
-   *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * {@inheritdoc}
    */
   public function reset($name = NULL) {
     if ($name) {
@@ -289,15 +253,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Renames a configuration object using the storage controller.
-   *
-   * @param string $old_name
-   *   The old name of the configuration object.
-   * @param string $new_name
-   *   The new name of the configuration object.
-   *
-   * @return \Drupal\Core\Config\Config
-   *   The renamed config object.
+   * {@inheritdoc}
    */
   public function rename($old_name, $new_name) {
     $this->storage->rename($old_name, $new_name);
@@ -313,13 +269,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Gets the cache key for a given config name.
-   *
-   * @param string $name
-   *   The name of the configuration object.
-   *
-   * @return string
-   *   The cache key.
+   * {@inheritdoc}
    */
   public function getCacheKey($name) {
     $can_override = $this->canOverride($name);
@@ -332,13 +282,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Gets all the cache keys that match the provided config name.
-   *
-   * @param string $name
-   *   The name of the configuration object.
-   *
-   * @return array
-   *   An array of cache keys that match the provided config name.
+   * {@inheritdoc}
    */
   public function getCacheKeys($name) {
     return array_filter(array_keys($this->cache), function($key) use ($name) {
@@ -348,10 +292,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Clears the config factory static cache.
-   *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * {@inheritdoc}
    */
   public function clearStaticCache() {
     $this->cache = array();
@@ -359,14 +300,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Sets the language to be used in configuration overrides.
-   *
-   * @param \Drupal\Core\Language\Language $language
-   *   The language object to be set on the config factory. Used to override
-   *   configuration by language.
-   *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * {@inheritdoc}
    */
   public function setLanguage(Language $language = NULL) {
     $this->language = $language;
@@ -374,15 +308,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Sets the language for configuration overrides using the default language.
-   *
-   * @param \Drupal\Core\Language\LanguageDefault $language_default
-   *   The default language service. This sets the initial language on the
-   *   config factory to the site's default. The language can be used to
-   *   override configuration data if language overrides are available.
-   *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * {@inheritdoc}
    */
   public function setLanguageFromDefault(LanguageDefault $language_default) {
     $this->language = $language_default->get();
@@ -390,25 +316,14 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Gets the language Used to override configuration.
-   *
-   * @return \Drupal\Core\Language\Language
+   * {@inheritdoc}
    */
   public function getLanguage() {
     return $this->language;
   }
 
   /**
-   * Gets configuration names for this language.
-   *
-   * It will be the same name with a prefix depending on language code:
-   * language.config.LANGCODE.NAME
-   *
-   * @param array $names
-   *   A list of configuration object names.
-   *
-   * @return array
-   *   The localized config names, keyed by configuration object name.
+   * {@inheritdoc}
    */
   public function getLanguageConfigNames(array $names) {
     $language_names = array();
@@ -423,19 +338,7 @@ class ConfigFactory implements EventSubscriberInterface {
   }
 
   /**
-   * Gets configuration name for the provided language.
-   *
-   * The name will be the same name with a prefix depending on language code:
-   * language.config.LANGCODE.NAME
-   *
-   * @param string $langcode
-   *   The language code.
-   * @param string $name
-   *   The name of the configuration object.
-   *
-   * @return bool|string
-   *   The configuration name for configuration object providing overrides.
-   *   Returns false if the name already starts with the language config prefix.
+   * {@inheritdoc}
    */
   public function getLanguageConfigName($langcode, $name) {
     if (strpos($name, static::LANGUAGE_CONFIG_PREFIX) === 0) {
