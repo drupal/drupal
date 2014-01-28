@@ -27,7 +27,6 @@ class EditTestBase extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'variable');
     $this->installSchema('entity_test', array('entity_test', 'entity_test_rev'));
     $this->installConfig(array('field', 'filter'));
   }

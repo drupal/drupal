@@ -75,7 +75,6 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'variable');
     $this->installSchema('entity_test', array('entity_test_rev', 'entity_test_rev_revision'));
 
     // Setup a field and instance.

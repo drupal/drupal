@@ -264,7 +264,6 @@ class EntityDisplayTest extends DrupalUnitTestBase {
    */
   public function testRenameDeleteBundle() {
     $this->enableModules(array('field_test', 'node', 'system', 'text'));
-    $this->installSchema('system', array('variable'));
     $this->installSchema('node', array('node'));
 
     // Create a node bundle, display and form display object.

@@ -11,7 +11,7 @@ chdir('../../..');
 // Load the Drupal bootstrap.
 require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.inc';
-drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
+drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
 
 if (\Drupal::config('statistics.settings')->get('count_content_views')) {
   $nid = filter_input(INPUT_POST, 'nid', FILTER_VALIDATE_INT);

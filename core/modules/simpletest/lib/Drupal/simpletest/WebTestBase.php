@@ -957,31 +957,28 @@ abstract class WebTestBase extends TestBase {
     drupal_flush_all_caches();
     $this->container = \Drupal::getContainer();
 
-    // Reload global $conf array and permissions.
+    // Reset static variables and reload permissions.
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
   }
 
   /**
-   * Refreshes the in-memory set of variables.
+   * Refreshes in-memory configuration and state information.
    *
-   * Useful after a page request is made that changes a variable in a different
-   * thread.
+   * Useful after a page request is made that changes configuration or state in
+   * a different thread.
    *
    * In other words calling a settings page with $this->drupalPostForm() with a
-   * changed value would update a variable to reflect that change, but in the
-   * thread that made the call (thread running the test) the changed variable
+   * changed value would update configuration to reflect that change, but in the
+   * thread that made the call (thread running the test) the changed values
    * would not be picked up.
    *
-   * This method clears the variables cache and loads a fresh copy from the
-   * database to ensure that the most up-to-date set of variables is loaded.
+   * This method clears the cache and loads a fresh copy.
    */
   protected function refreshVariables() {
-    global $conf;
-    cache('bootstrap')->delete('variables');
-    $conf = variable_initialize();
     // Clear the tag cache.
     drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
+
     \Drupal::service('config.factory')->reset();
     \Drupal::state()->resetCache();
   }

@@ -33,7 +33,7 @@ class PhpMail implements MailInterface {
   }
 
   /**
-   * Sends an e-mail message, using Drupal variables and default settings.
+   * Sends an e-mail message.
    *
    * @param array $message
    *   A message array, as described in hook_mail_alter().

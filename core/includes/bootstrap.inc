@@ -139,19 +139,14 @@ const DRUPAL_BOOTSTRAP_KERNEL = 1;
 const DRUPAL_BOOTSTRAP_PAGE_CACHE = 2;
 
 /**
- * Fourth bootstrap phase: initialize the variable system.
+ * Fourth bootstrap phase: load code for subsystems and modules.
  */
-const DRUPAL_BOOTSTRAP_VARIABLES = 3;
-
-/**
- * Fifth bootstrap phase: load code for subsystems and modules.
- */
-const DRUPAL_BOOTSTRAP_CODE = 4;
+const DRUPAL_BOOTSTRAP_CODE = 3;
 
 /**
  * Final bootstrap phase: initialize language, path, theme, and modules.
  */
-const DRUPAL_BOOTSTRAP_FULL = 5;
+const DRUPAL_BOOTSTRAP_FULL = 4;
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
@@ -789,124 +784,6 @@ function drupal_get_filename($type, $name, $filename = NULL) {
  */
 function settings() {
   return Settings::getSingleton();
-}
-
-/**
- * Loads the persistent variable table.
- *
- * The variable table is composed of values that have been saved in the table
- * with variable_set() as well as those explicitly specified in the
- * configuration file.
- */
-function variable_initialize($conf = array()) {
-  // NOTE: caching the variables improves performance by 20% when serving
-  // cached pages.
-  if ($cached = cache('bootstrap')->get('variables')) {
-    $variables = $cached->data;
-  }
-  else {
-    // Cache miss. Avoid a stampede.
-    $name = 'variable_init';
-    $lock = \Drupal::lock();
-    if (!$lock->acquire($name, 1)) {
-      // Another request is building the variable cache.
-      // Wait, then re-run this function.
-      $lock->wait($name);
-      return variable_initialize($conf);
-    }
-    else {
-      // Proceed with variable rebuild.
-      $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
-      cache('bootstrap')->set('variables', $variables);
-      $lock->release($name);
-    }
-  }
-
-  foreach ($conf as $name => $value) {
-    $variables[$name] = $value;
-  }
-
-  return $variables;
-}
-
-/**
- * Returns a persistent variable.
- *
- * Case-sensitivity of the variable_* functions depends on the database
- * collation used. To avoid problems, always use lower case for persistent
- * variable names.
- *
- * @param $name
- *   The name of the variable to return.
- * @param $default
- *   The default value to use if this variable has never been set.
- *
- * @return
- *   The value of the variable. Unserialization is taken care of as necessary.
- *
- * @deprecated This will be removed in Drupal 8.0. Instead, use the
- *   configuration API.
- *
- * @see \Drupal\Core\Config::get()
- */
-function variable_get($name, $default = NULL) {
-  global $conf;
-
-  return isset($conf[$name]) ? $conf[$name] : $default;
-}
-
-/**
- * Sets a persistent variable.
- *
- * Case-sensitivity of the variable_* functions depends on the database
- * collation used. To avoid problems, always use lower case for persistent
- * variable names.
- *
- * @param $name
- *   The name of the variable to set.
- * @param $value
- *   The value to set. This can be any PHP data type; these functions take care
- *   of serialization as necessary.
- *
- * @deprecated This will be removed in Drupal 8.0. Instead, use the
- *   configuration API.
- *
- * @see \Drupal\Core\Config::set()
- */
-function variable_set($name, $value) {
-  global $conf;
-
-  db_merge('variable')->key(array('name' => $name))->fields(array('value' => serialize($value)))->execute();
-
-  cache('bootstrap')->delete('variables');
-
-  $conf[$name] = $value;
-}
-
-/**
- * Unsets a persistent variable.
- *
- * Case-sensitivity of the variable_* functions depends on the database
- * collation used. To avoid problems, always use lower case for persistent
- * variable names.
- *
- * @param $name
- *   The name of the variable to undefine.
- *
- * @deprecated This will be removed in Drupal 8.0. Instead, use the
- *   configuration API.
- *
- * @see \Drupal\Core\Config::clear()
- */
-function variable_del($name) {
-  global $conf;
-
-  db_delete('variable')
-    ->condition('name', $name)
-    ->execute();
-  cache('bootstrap')->delete('variables');
-
-  unset($conf[$name]);
 }
 
 /**
@@ -1719,24 +1596,19 @@ function drupal_anonymous_user() {
  *   - DRUPAL_BOOTSTRAP_CONFIGURATION: Initializes configuration.
  *   - DRUPAL_BOOTSTRAP_KERNEL: Initalizes a kernel.
  *   - DRUPAL_BOOTSTRAP_PAGE_CACHE: Tries to serve a cached page.
- *   - DRUPAL_BOOTSTRAP_VARIABLES: Initializes the variable system.
  *   - DRUPAL_BOOTSTRAP_CODE: Loads code for subsystems and modules.
  *   - DRUPAL_BOOTSTRAP_FULL: Fully loads Drupal. Validates and fixes input
  *     data.
- * @param $new_phase
- *   A boolean, set to FALSE if calling drupal_bootstrap from inside a
- *   function called from drupal_bootstrap (recursion).
  *
  * @return
  *   The most recently completed phase.
  */
-function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
+function drupal_bootstrap($phase = NULL) {
   // Not drupal_static(), because does not depend on any run-time information.
   static $phases = array(
     DRUPAL_BOOTSTRAP_CONFIGURATION,
     DRUPAL_BOOTSTRAP_KERNEL,
     DRUPAL_BOOTSTRAP_PAGE_CACHE,
-    DRUPAL_BOOTSTRAP_VARIABLES,
     DRUPAL_BOOTSTRAP_CODE,
     DRUPAL_BOOTSTRAP_FULL,
   );
@@ -1747,10 +1619,10 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   // bootstrap state.
   static $stored_phase = -1;
 
-  // When not recursing, store the phase name so it's not forgotten during
-  // recursion. Additionally, ensure that $final_phase is never rolled back to an
-  // earlier bootstrap state.
-  if ($new_phase && $phase > $final_phase) {
+  // Store the phase name so it's not forgotten during recursion. Additionally,
+  // ensure that $final_phase is never rolled back to an earlier bootstrap
+  // state.
+  if ($phase > $final_phase) {
     $final_phase = $phase;
   }
   if (isset($phase)) {
@@ -1776,10 +1648,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
 
         case DRUPAL_BOOTSTRAP_PAGE_CACHE:
           _drupal_bootstrap_page_cache();
-          break;
-
-        case DRUPAL_BOOTSTRAP_VARIABLES:
-          _drupal_bootstrap_variables();
           break;
 
         case DRUPAL_BOOTSTRAP_CODE:
@@ -1986,7 +1854,6 @@ function _drupal_bootstrap_page_cache() {
     $cache_enabled = TRUE;
   }
   else {
-    drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
     $config = \Drupal::config('system.performance');
     $cache_enabled = $config->get('cache.page.use_internal');
   }
@@ -2052,16 +1919,6 @@ function _drupal_initialize_db_test_prefix() {
       );
     }
   }
-}
-
-/**
- * Loads system variables and all enabled bootstrap modules.
- */
-function _drupal_bootstrap_variables() {
-  global $conf;
-
-  // Load variables from the database, but do not overwrite variables set in settings.php.
-  $conf = variable_initialize(isset($conf) ? $conf : array());
 }
 
 /**
@@ -2200,8 +2057,9 @@ function drupal_valid_test_ua($new_prefix = NULL) {
     list(, $prefix, $time, $salt, $hmac) = $matches;
     $check_string =  $prefix . ';' . $time . ';' . $salt;
     // We use the salt from settings.php to make the HMAC key, since
-    // the database is not yet initialized and we can't access any Drupal variables.
-    // The file properties add more entropy not easily accessible to others.
+    // the database is not yet initialized and we can't access the configuration
+    // system. The file properties add more entropy not easily accessible to
+    // others.
     $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
     // We can't use Crypt::hmacBase64() yet because this can be called in very
@@ -2266,8 +2124,9 @@ function drupal_generate_test_ua($prefix) {
 
   if (!isset($key)) {
     // We use the salt from settings.php to make the HMAC key, since
-    // the database is not yet initialized and we can't access any Drupal variables.
-    // The file properties add more entropy not easily accessible to others.
+    // the database is not yet initialized and we can't access the configuration
+    // system. The file properties add more entropy not easily accessible to
+    // others.
     $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
   }
   // Generate a moderately secure HMAC based on the database credentials.

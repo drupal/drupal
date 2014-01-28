@@ -35,8 +35,7 @@ class DatabaseStorageTest extends StorageTestBase {
     $this->container
       ->register('keyvalue.database', 'Drupal\Core\KeyValueStore\KeyValueDatabaseFactory')
       ->addArgument(new Reference('database'));
-    global $conf;
-    $conf['keyvalue_default'] = 'keyvalue.database';
+    $this->settingsSet('keyvalue_default', 'keyvalue.database');
   }
 
   protected function tearDown() {

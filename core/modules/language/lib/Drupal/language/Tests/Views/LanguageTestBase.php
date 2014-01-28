@@ -24,7 +24,6 @@ abstract class LanguageTestBase extends ViewUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', 'variable');
     $this->installConfig(array('language'));
 
     // Create English and another language beside English.

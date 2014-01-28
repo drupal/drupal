@@ -35,7 +35,6 @@ abstract class LanguageTestBase extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', array('variable'));
     $this->installConfig(array('language'));
 
     $this->state = $this->container->get('state');

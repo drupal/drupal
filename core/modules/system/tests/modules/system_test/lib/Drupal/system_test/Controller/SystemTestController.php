@@ -57,13 +57,6 @@ class SystemTestController extends ControllerBase {
   }
 
   /**
-   * @todo Remove as part of https://drupal.org/node/1775842.
-   */
-  public function variableGet() {
-    return variable_get('simpletest_bootstrap_variable_test');
-  }
-
-  /**
    * @todo Remove system_test_set_header().
    */
   public function setHeader() {

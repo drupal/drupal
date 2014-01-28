@@ -22,7 +22,7 @@ class EntityUriTest extends EntityUnitTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('variable', 'url_alias'));
+    $this->installSchema('system', array('url_alias'));
   }
 
   /**

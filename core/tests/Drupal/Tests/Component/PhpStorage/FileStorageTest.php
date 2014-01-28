@@ -25,17 +25,17 @@ class FileStorageTest extends PhpStorageTestBase {
   public function setUp() {
     parent::setUp();
     $dir_path = sys_get_temp_dir() . '/php';
-    $conf['php_storage']['simpletest'] = array(
+    $settings['php_storage']['simpletest'] = array(
       'class' => 'Drupal\Component\PhpStorage\FileStorage',
       'directory' => $dir_path,
     );
-    $conf['php_storage']['readonly'] = array(
+    $settings['php_storage']['readonly'] = array(
       'class' => 'Drupal\Component\PhpStorage\FileReadOnlyStorage',
       'directory' => $dir_path,
       // Let this read from the bin where the other instance is writing.
       'bin' => 'simpletest',
     );
-    new Settings($conf);
+    new Settings($settings);
   }
 
   /**

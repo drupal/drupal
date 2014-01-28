@@ -1,7 +1,0 @@
-name: 'Config upgrade tests'
-type: module
-description: 'A support module for update_variables_to_config testing.'
-core: 8.x
-package: Testing
-version: VERSION
-hidden: true

@@ -50,7 +50,6 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
 
     $this->languageManager = $this->container->get('language_manager');
 
-    $this->installSchema('system', 'variable');
     $this->installSchema('entity_test', array(
       'entity_test_mul',
       'entity_test_mul_property_data',

@@ -121,6 +121,8 @@ function update_prepare_d8_bootstrap() {
   // Do not attempt to dump and write it.
   $kernel = new DrupalKernel('update', drupal_classloader(), FALSE);
   $kernel->boot();
+  $request = Request::createFromGlobals();
+  \Drupal::getContainer()->set('request', $request);
 
   // If any of the required settings needs to be written, then settings.php
   // needs to be writable.
@@ -317,9 +319,8 @@ function update_prepare_d8_bootstrap() {
         update_add_cache_columns($table);
       }
 
-      // Bootstrap variables so we can update theme while preparing the update
-      // process.
-      drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
+      // Bootstrap to cache system.
+      drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
 
       // Update the 'language_default' system variable, if configured.
       // Required to run before drupal_install_config_directories(), since that
@@ -460,6 +461,7 @@ function update_prepare_d8_bootstrap() {
   new Settings($settings);
   $kernel = new DrupalKernel('update', drupal_classloader(), FALSE);
   $kernel->boot();
+  \Drupal::getContainer()->set('request', $request);
 
   // Clear the D7 caches, to ensure that for example the theme_registry does not
   // take part in the upgrade process.

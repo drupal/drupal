@@ -1227,7 +1227,7 @@ function install_database_errors($database, $settings_file) {
  * @see install_settings_form_validate()
  */
 function install_settings_form_submit($form, &$form_state) {
-  global $install_state, $conf;
+  global $install_state;
 
   // Update global settings array and save.
   $settings = array();

@@ -59,14 +59,6 @@ system_test.authorize_init:
   requirements:
     _permission: 'administer software updates'
 
-system_test.variable_get:
-  path: '/system-test/variable-get'
-  defaults:
-    _title: 'Variable Get'
-    _content: '\Drupal\system_test\Controller\SystemTestController::variableGet'
-  requirements:
-    _permission: 'access content'
-
 system_test.set_header:
   path: '/system-test/set-header'
   defaults:

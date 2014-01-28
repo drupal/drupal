@@ -2217,11 +2217,9 @@ function theme_menu_local_tasks(&$variables) {
  *
  * @return
  *   An array of menu machine names, in order of preference. The
- *   'system.menu.active_menus_default' config item may be used to assert a menu
+ *   'system.menu:active_menus_default' config item may be used to assert a menu
  *   order different from the order of creation, or to prevent a particular menu
  *   from being used at all in the active trail.
- *   E.g., $conf['system.menu']['active_menus_default'] = array('tools',
- *   'main').
  */
 function menu_set_active_menu_names($menu_names = NULL) {
   $active = &drupal_static(__FUNCTION__);

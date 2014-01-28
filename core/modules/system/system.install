@@ -575,29 +575,6 @@ function system_install() {
  * Implements hook_schema().
  */
 function system_schema() {
-  // NOTE: {variable} needs to be created before all other tables, as
-  // some database drivers, e.g. Oracle and DB2, will require variable_get()
-  // and variable_set() for overcoming some database specific limitations.
-  $schema['variable'] = array(
-    'description' => 'Named variable/value pairs created by Drupal core or any other module or theme. All variables are cached in memory at the start of every Drupal request so developers should not be careless about what is stored here.',
-    'fields' => array(
-      'name' => array(
-        'description' => 'The name of the variable.',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'value' => array(
-        'description' => 'The value of the variable.',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
-    ),
-    'primary key' => array('name'),
-  );
-
   $schema['batch'] = array(
     'description' => 'Stores details about batches (processes that run in multiple HTTP requests).',
     'fields' => array(
@@ -994,7 +971,7 @@ function system_schema() {
   );
 
   $schema['semaphore'] = array(
-    'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as Drupal variables since they must not be cached.',
+    'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as state since they must not be cached.',
     'fields' => array(
       'name' => array(
         'description' => 'Primary Key: Unique name.',

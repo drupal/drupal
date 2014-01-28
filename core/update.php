@@ -347,11 +347,8 @@ require_once __DIR__ . '/includes/schema.inc';
 update_prepare_d8_bootstrap();
 
 // Determine if the current user has access to run update.php.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
-
-// A request object from the HTTPFoundation to tell us about the request.
-$request = Request::createFromGlobals();
-\Drupal::getContainer()->set('request', $request);
+drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
+$request = \Drupal::request();
 
 require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
 drupal_session_initialize();

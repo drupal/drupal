@@ -43,7 +43,6 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', 'variable');
     $this->installConfig(array('language'));
 
     $this->enableModules(array('views_ui'));

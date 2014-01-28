@@ -69,15 +69,9 @@ require_once __DIR__ . '/includes/file.inc';
 require_once __DIR__ . '/includes/module.inc';
 require_once __DIR__ . '/includes/ajax.inc';
 
-// We prepare only a minimal bootstrap. This includes the database and
-// variables, however, so we have access to the class autoloader.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
-
-$request = Request::createFromGlobals();
-\Drupal::getContainer()->set('request', $request);
-
-// This must go after drupal_bootstrap(), which unsets globals!
-global $conf;
+// Prepare a minimal bootstrap.
+drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
+$request = \Drupal::request();
 
 // We have to enable the user and system modules, even to check access and
 // display errors via the maintenance theme.

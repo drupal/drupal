@@ -485,7 +485,7 @@ function simpletest_script_run_phpunit($test_id, $class) {
  * Bootstrap Drupal and run a single test.
  */
 function simpletest_script_run_one_test($test_id, $test_class) {
-  global $args, $conf;
+  global $args;
 
   try {
     // Bootstrap Drupal.
@@ -497,8 +497,8 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     $container->set('request', $request);
 
     // Override configuration according to command line parameters.
-    $conf['simpletest.settings']['verbose'] = $args['verbose'];
-    $conf['simpletest.settings']['clear_results'] = !$args['keep-results'];
+    $GLOBALS['conf']['simpletest.settings']['verbose'] = $args['verbose'];
+    $GLOBALS['conf']['simpletest.settings']['clear_results'] = !$args['keep-results'];
 
     $test = new $test_class($test_id);
     $test->dieOnFail = (bool) $args['die-on-fail'];

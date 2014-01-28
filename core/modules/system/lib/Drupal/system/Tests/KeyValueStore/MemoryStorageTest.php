@@ -31,9 +31,6 @@ class MemoryStorageTest extends StorageTestBase {
     parent::setUp();
     $this->container
       ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
-    if (isset($conf['keyvalue_default'])) {
-      $this->originalKeyValue = $conf['keyvalue_default'];
-    }
     $this->settingsSet('keyvalue_default', 'keyvalue.memory');
   }
 
