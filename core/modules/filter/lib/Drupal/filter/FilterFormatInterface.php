@@ -58,4 +58,30 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    */
   public function getPermissionName();
 
+  /**
+   * Retrieves all filter types that are used in the text format.
+   *
+   * @return array
+   *   All filter types used by filters of the text format.
+   */
+  public function getFilterTypes();
+
+  /**
+   * Retrieve all HTML restrictions (tags and attributes) for the text format.
+   *
+   * Note that restrictions applied to the "*" tag (the wildcard tag, i.e. all
+   * tags) are treated just like any other HTML tag. That means that any
+   * restrictions applied to it are not automatically applied to all other tags.
+   * It is up to the caller to handle this in whatever way it sees fit; this way
+   * no information granularity is lost.
+   *
+   * @return array|FALSE
+   *   A structured array as returned by FilterInterface::getHTMLRestrictions(),
+   *   but with the intersection of all filters in this text format.
+   *   Will either indicate blacklisting of tags or whitelisting of tags. In
+   *   the latter case, it's possible that restrictions on attributes are also
+   *   stored. FALSE means there are no HTML restrictions.
+   */
+  public function getHtmlRestrictions();
+
 }

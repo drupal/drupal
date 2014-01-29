@@ -249,7 +249,7 @@ interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionI
    *     FALSE
    *     @endcode
    *
-   * @see filter_get_html_restrictions_by_format()
+   * @see \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions()
    */
   public function getHTMLRestrictions();
 
