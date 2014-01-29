@@ -176,7 +176,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
     return new Route(
       $this->getBaseRoute()->getPath() . '/translate',
       array(
-        '_controller' => '\Drupal\config_translation\Controller\ConfigTranslationController::itemPage',
+        '_content' => '\Drupal\config_translation\Controller\ConfigTranslationController::itemPage',
         'plugin_id' => $this->getPluginId(),
       ),
       array('_config_translation_overview_access' => 'TRUE')

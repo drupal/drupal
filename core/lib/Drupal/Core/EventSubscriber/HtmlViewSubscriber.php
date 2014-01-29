@@ -65,6 +65,18 @@ class HtmlViewSubscriber implements EventSubscriberInterface {
       // to return an object implementing __toString(), but that is not
       // recommended.
       $response = new Response((string) $this->renderer->renderPage($page), $page->getStatusCode());
+      if ($tags = $page->getCacheTags()) {
+        $response->headers->set('cache_tags', serialize($tags));
+      }
+      if ($keys = $page->getCacheKeys()) {
+        $response->headers->set('cache_keys', serialize($keys));
+      }
+      if ($bin = $page->getCacheBin()) {
+        $response->headers->set('cache_bin', $bin);
+      }
+      if ($max_age = $page->getCacheMaxAge()) {
+        $response->headers->set('cache_max_age', $max_age);
+      }
       $event->setResponse($response);
     }
   }

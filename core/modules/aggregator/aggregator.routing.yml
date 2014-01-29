@@ -57,7 +57,7 @@ aggregator.feed_edit:
 aggregator.feed_refresh:
   path: '/admin/config/services/aggregator/update/{aggregator_feed}'
   defaults:
-    _controller: '\Drupal\aggregator\Controller\AggregatorController::feedRefresh'
+    _content: '\Drupal\aggregator\Controller\AggregatorController::feedRefresh'
     _title: 'Update items'
   requirements:
     _permission: 'administer news feeds'

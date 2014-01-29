@@ -102,7 +102,7 @@ class BatchController implements ContainerInjectionInterface {
       $request = \Drupal::request();
       $output['#title'] = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
     }
-    $page = new HtmlPage('', $output['#title']);
+    $page = new HtmlPage('', isset($output['#cache']) ? $output['#cache'] : array(), $output['#title']);
 
     $page_array = drupal_prepare_page($output);
 

@@ -54,11 +54,13 @@ class HtmlPage extends HtmlFragment {
    *
    * @param string $content
    *   (optional) The body content of the page.
+   * @param array $cache_info
+   *   The cache information.
    * @param string $title
    *   (optional) The title of the page.
    */
-  public function __construct($content = '', $title = '') {
-    parent::__construct($content);
+  public function __construct($content = '', array $cache_info = array(), $title = '') {
+    parent::__construct($content, $cache_info);
 
     $this->title = $title;
 

@@ -36,21 +36,27 @@ class DefaultHtmlPageRenderer implements HtmlPageRendererInterface {
    * {@inheritdoc}
    */
   public function render(HtmlFragment $fragment, $status_code = 200) {
-    $page = new HtmlPage('', $fragment->getTitle());
-
+    // Converts the given HTML fragment which represents the main content region
+    // of the page into a render array.
     $page_content['main'] = array(
       '#markup' => $fragment->getContent(),
+      '#cache' => array('tags' => $fragment->getCacheTags()),
     );
-    $page_content['#title'] = $page->getTitle();
+    $page_content['#title'] = $fragment->getTitle();
 
+    // Build the full page array by calling drupal_prepare_page(), which invokes
+    // hook_page_build(). This adds the other regions to the page.
     $page_array = drupal_prepare_page($page_content);
 
-    $page = $this->preparePage($page, $page_array);
+    // Collect cache tags for all the content in all the regions on the page.
+    $tags = drupal_render_collect_cache_tags($page_array);
 
+    // Build the HtmlPage object.
+    $page = new HtmlPage('', array('tags' => $tags), $fragment->getTitle());
+    $page = $this->preparePage($page, $page_array);
     $page->setBodyTop(drupal_render($page_array['page_top']));
     $page->setBodyBottom(drupal_render($page_array['page_bottom']));
     $page->setContent(drupal_render($page_array));
-
     $page->setStatusCode($status_code);
 
     return $page;

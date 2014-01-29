@@ -176,7 +176,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
   public function testGetOverviewRoute() {
     $expected = new Route('/admin/config/system/site-information/translate',
       array(
-        '_controller' => '\Drupal\config_translation\Controller\ConfigTranslationController::itemPage',
+        '_content' => '\Drupal\config_translation\Controller\ConfigTranslationController::itemPage',
         'plugin_id' => 'system.site_information_settings',
       ),
       array(

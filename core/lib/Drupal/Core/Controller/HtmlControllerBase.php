@@ -71,7 +71,9 @@ class HtmlControllerBase {
       );
     }
 
-    $fragment = new HtmlFragment(drupal_render($page_content));
+    $cache_tags = $this->drupalRenderCollectCacheTags($page_content);
+    $cache = !empty($cache_tags) ? array('tags' => $cache_tags) : array();
+    $fragment = new HtmlFragment($this->drupalRender($page_content), $cache);
 
     // A title defined in the return always wins.
     if (isset($page_content['#title'])) {
@@ -82,6 +84,24 @@ class HtmlControllerBase {
     }
 
     return $fragment;
+  }
+
+  /**
+   * Wraps drupal_render().
+   *
+   * @todo: Remove as part of https://drupal.org/node/2182149
+   */
+  protected function drupalRender(&$elements, $is_recursive_call = FALSE) {
+    return drupal_render($elements, $is_recursive_call);
+  }
+
+  /**
+   * Wraps drupal_render_collect_cache_tags()
+   *
+   * @todo: Remove as part of https://drupal.org/node/2182149
+   */
+  protected function drupalRenderCollectCacheTags($element, $tags = array()) {
+    return drupal_render_collect_cache_tags($element, $tags);
   }
 
 }

@@ -48,7 +48,7 @@ system_test.lock_exit:
 system_test.cache_tags_page:
   path: '/system-test/cache_tags_page'
   defaults:
-    _controller: '\Drupal\system_test\Controller\SystemTestController::system_test_cache_tags_page'
+    _content: '\Drupal\system_test\Controller\SystemTestController::system_test_cache_tags_page'
   requirements:
     _access: 'TRUE'
 

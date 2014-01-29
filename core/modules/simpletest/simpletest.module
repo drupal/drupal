@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Page\HtmlPage;
 use Drupal\simpletest\TestBase;
 use Symfony\Component\Process\PhpExecutableFinder;
 
