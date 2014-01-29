@@ -370,9 +370,11 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
       ->range(0, $new_replies);
 
     // 2. Find the first thread.
-    $first_thread = db_select($unread_threads_query, 'thread')
+    $first_thread_query = db_select($unread_threads_query, 'thread');
+    $first_thread_query->addExpression('SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 'torder');
+    $first_thread = $first_thread_query
       ->fields('thread', array('thread'))
-      ->orderBy('SUBSTRING(thread, 1, (LENGTH(thread) - 1))')
+      ->orderBy('torder')
       ->range(0, 1)
       ->execute()
       ->fetchField();

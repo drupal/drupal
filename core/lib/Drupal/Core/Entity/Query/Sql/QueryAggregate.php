@@ -124,7 +124,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   protected function addSortAggregate() {
     if(!$this->count) {
       foreach ($this->sortAggregate as $alias => $sort) {
-        $this->sqlQuery->orderBy($this->sqlExpressions[$alias], $sort['direction']);
+        $this->sqlQuery->orderBy($alias, $sort['direction']);
       }
     }
     return $this;

@@ -222,8 +222,8 @@ class Query extends QueryBase implements QueryInterface {
         // if the direction is descending.
         $function = $direction == 'ASC' ? 'min' : 'max';
         $expression = "$function($sql_alias)";
-        $this->sqlQuery->addExpression($expression);
-        $this->sqlQuery->orderBy($expression, $direction);
+        $expression_alias = $this->sqlQuery->addExpression($expression);
+        $this->sqlQuery->orderBy($expression_alias, $direction);
       }
     }
     return $this;

@@ -363,9 +363,19 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * called.
    *
    * @param $field
-   *   The field on which to order.
+   *   The field on which to order. The field is escaped for security so only
+   *   valid field and alias names are possible. To order by an expression, add
+   *   the expression with addExpression() first and then use the alias to order
+   *   on.
+   *
+   *   Example:
+   *   <code>
+   *   $query->addExpression('SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 'order_field');
+   *   $query->orderBy('order_field', 'ASC');
+   *   </code>
    * @param $direction
-   *   The direction to sort. Legal values are "ASC" and "DESC".
+   *   The direction to sort. Legal values are "ASC" and "DESC". Any other value
+   *   will be converted to "ASC".
    * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    */
