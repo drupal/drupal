@@ -86,10 +86,23 @@ function statistics_menu() {
     'title' => 'Statistics',
     'description' => 'Control details about what and how your site logs content statistics.',
     'route_name' => 'statistics.settings',
-    'access arguments' => array('administer statistics'),
     'weight' => -15,
   );
   return $items;
+}
+
+/**
+ * Implements hook_menu_link_defaults().
+ */
+function statistics_menu_link_defaults() {
+  $links['statistics.admin.config.system.statistics'] = array(
+    'link_title' => 'Statistics',
+    'description' => 'Control details about what and how your site logs content statistics.',
+    'route_name' => 'statistics.settings',
+    'parent' => 'system.admin.config.system',
+    'weight' => -15,
+  );
+  return $links;
 }
 
 /**

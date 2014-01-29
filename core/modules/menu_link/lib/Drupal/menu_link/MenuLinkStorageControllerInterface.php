@@ -34,20 +34,6 @@ interface MenuLinkStorageControllerInterface extends EntityStorageControllerInte
   public function getPreventReparenting();
 
   /**
-   * Loads updated and customized menu links for specific router paths.
-   *
-   * Note that this is a low-level method and it doesn't return fully populated
-   * menu link entities. (e.g. no fields are attached)
-   *
-   * @param array $router_paths
-   *   An array of router paths.
-   *
-   * @return array
-   *   An array of menu link objects indexed by their ids.
-   */
-  public function loadUpdatedCustomized(array $router_paths);
-
-  /**
    * Loads system menu link as needed by system_get_module_admin_tasks().
    *
    * @return array
@@ -106,5 +92,19 @@ interface MenuLinkStorageControllerInterface extends EntityStorageControllerInte
    *   A menu link entity or FALSE if not valid parent was found.
    */
   public function getParentFromHierarchy(EntityInterface $entity);
+
+  /**
+   * Builds a menu link entity from a default item.
+   *
+   * This function should only be called for link data from
+   * hook_menu_link_defaults().
+   *
+   * @param array $item
+   *   An item returned from menu_links_get_defaults().
+   *
+   * @return \Drupal\menu_link\MenuLinkInterface
+   *   A menu link entity.
+   */
+  public function createFromDefaultLink(array $item);
 
 }

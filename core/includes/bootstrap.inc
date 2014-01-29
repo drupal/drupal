@@ -1517,14 +1517,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
  *   The current page's title.
  */
 function drupal_get_title() {
-  $title = drupal_set_title();
-
-  // During a bootstrap, menu.inc is not included and thus we cannot provide a title.
-  if (!isset($title) && function_exists('menu_get_active_title')) {
-    $title = String::checkPlain(menu_get_active_title());
-  }
-
-  return $title;
+  return drupal_set_title() ?: '';
 }
 
 /**

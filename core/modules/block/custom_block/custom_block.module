@@ -84,6 +84,19 @@ function custom_block_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function custom_block_menu_link_defaults() {
+  $links['custom_block.add_page'] = array(
+    'link_title' => 'Add custom block',
+    'description' => 'Add custom block',
+    'route_name' => 'custom_block.add_page',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_theme().
  */
 function custom_block_theme($existing, $type, $theme, $path) {

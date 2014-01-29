@@ -11,35 +11,13 @@ use Drupal\Component\Uuid\Uuid;
  * Implements hook_install().
  */
 function menu_install() {
-  // Add a link for each custom menu.
+  // Rebuild all the menu data.
+  // @todo - remove this when we understand why removing it breaks the
+  // standard install profile, possibly need to be handled in
+  // \Drupal\Core\Extension\ModuleHandler::install().
+  // @see https://drupal.org/node/2181151
   \Drupal::service('router.builder')->rebuild();
-  $system_link = entity_load_multiple_by_properties('menu_link', array('link_path' => 'admin/structure/menu', 'module' => 'system'));
-  $system_link = reset($system_link);
-
-  $base_link = entity_create('menu_link', array(
-    'menu_name' => $system_link->menu_name,
-    'router_path' => 'admin/structure/menu/manage/%',
-    'module' => 'menu',
-  ));
-
-  $menus = entity_load_multiple('menu');
-  foreach ($menus as $menu) {
-    $link = $base_link->createDuplicate();
-    $link->plid = $system_link->id();
-    $link->link_title = $menu->label();
-    $link->link_path = 'admin/structure/menu/manage/' . $menu->id();
-
-    $query = \Drupal::entityQuery('menu_link')
-      ->condition('link_path', $link->link_path)
-      ->condition('plid', $link->plid);
-    $result = $query->execute();
-
-    if (empty($result)) {
-      $link->save();
-    }
-  }
-  menu_cache_clear_all();
-
+  menu_router_rebuild();
   if (\Drupal::moduleHandler()->moduleExists('node')) {
     $node_types = array_keys(node_type_get_names());
     foreach ($node_types as $type_id) {

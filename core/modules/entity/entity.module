@@ -96,6 +96,36 @@ function entity_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function entity_menu_link_defaults() {
+  $links['entity.admin.structure.display_modes'] = array(
+    'link_title' => 'Display modes',
+    'description' => 'Configure what displays are available for your content and forms.',
+    'route_name' => 'entity.display_mode',
+    'parent' => 'system.admin.structure',
+  );
+
+  // View modes.
+  $links['entity.admin.structure.display_modes.view'] = array(
+    'link_title' => 'View modes',
+    'description' => 'Manage custom view modes.',
+    'route_name' => 'entity.view_mode_list',
+    'parent' => 'entity.admin.structure.display_modes',
+  );
+
+  // Form modes.
+  $links['entity.admin.structure.display_modes.form'] = array(
+    'link_title' => 'Form modes',
+    'description' => 'Manage custom form modes.',
+    'route_name' => 'entity.form_mode_list',
+    'parent' => 'entity.admin.structure.display_modes',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_entity_bundle_rename().
  */
 function entity_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {

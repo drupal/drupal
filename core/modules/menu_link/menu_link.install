@@ -31,6 +31,12 @@ function menu_link_schema() {
         'length' => 128,
         'not null' => FALSE,
       ),
+      'machine_name' => array(
+        'description' => 'Unique machine name: Optional human-readable ID for this link.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
       'plid' => array(
         'description' => 'The parent link ID (plid) is the mlid of the link above in the hierarchy, or zero if the link is at the top level in its menu.',
         'type' => 'int',
@@ -45,13 +51,6 @@ function menu_link_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'router_path' => array(
-        'description' => 'For links corresponding to a Drupal path (external = 0), this connects the link to a {menu_router}.path for joins.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
       'langcode' => array(
         'description' => 'The {language}.langcode of this link.',
         'type' => 'varchar',
@@ -60,7 +59,7 @@ function menu_link_schema() {
         'default' => '',
       ),
       'link_title' => array(
-        'description' => 'The text displayed for the link, which may be modified by a title callback stored in {menu_router}.',
+        'description' => 'The text displayed for the link.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -214,7 +213,6 @@ function menu_link_schema() {
       'path_menu' => array(array('link_path', 128), 'menu_name'),
       'menu_plid_expand_child' => array('menu_name', 'plid', 'expanded', 'has_children'),
       'menu_parents' => array('menu_name', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9'),
-      'router_path' => array(array('router_path', 128)),
     ),
     'primary key' => array('mlid'),
   );

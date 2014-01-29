@@ -974,6 +974,31 @@ function node_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function node_menu_link_defaults() {
+  $links['node.admin.content'] = array(
+    'link_title' => 'Content',
+    'route_name' => 'node.content_overview',
+    'parent' => 'system.admin',
+    'description' => 'Find and manage content.',
+    'weight' => -10,
+  );
+
+  $links['node.admin.structure.types'] = array(
+    'link_title' => 'Content types',
+    'parent' => 'system.admin.structure',
+    'description' => 'Manage content types, including default status, front page promotion, comment settings, etc.',
+    'route_name' => 'node.overview_types',
+  );
+  $links['node.add'] = array(
+    'link_title' => 'Add content',
+    'route_name' => 'node.add_page',
+  );
+  return $links;
+}
+
+/**
  * Implements hook_menu_local_tasks().
  */
 function node_menu_local_tasks(&$data, $route_name) {

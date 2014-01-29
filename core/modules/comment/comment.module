@@ -197,6 +197,20 @@ function comment_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function comment_menu_link_defaults() {
+  $links['comment.admin.content'] = array(
+    'link_title' => 'Comment forms',
+    'route_name' => 'comment.admin',
+    'parent' => 'system.admin.structure',
+    'description' => 'List and edit site comments and the comment approval queue.',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function comment_menu_alter(&$items) {

@@ -47,6 +47,14 @@ function editor_menu_alter(&$items) {
 }
 
 /**
+ * Implements hook_menu_link_defaults_alter().
+ */
+function editor_menu_link_defaults_alter(array &$links) {
+  $links['filter.admin.formats']['link_title'] = 'Text formats and editors';
+  $links['filter.admin.formats']['description'] = 'Configure how user-contributed content is filtered and formatted, as well as the text editor user interface (WYSIWYGs or toolbars).';
+}
+
+/**
  * Implements hook_element_info().
  *
  * Extends the functionality of text_format elements (provided by Filter

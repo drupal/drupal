@@ -78,6 +78,12 @@ class MenuTest extends MenuWebTestBase {
     $this->addInvalidMenuLink();
     $this->addCustomMenuCRUD();
 
+    // Verify that the menu links rebuild is idempotent and leaves the same
+    // number of links in the table.
+    $before_count = db_query('SELECT COUNT(*) FROM {menu_links}')->fetchField();
+    menu_link_rebuild_defaults();
+    $after_count = db_query('SELECT COUNT(*) FROM {menu_links}')->fetchField();
+    $this->assertIdentical($before_count, $after_count, 'menu_link_rebuild_defaults() does not add more links');
     // Do standard user tests.
     // Login the user.
     $this->drupalLogin($this->authenticated_user);
@@ -752,7 +758,7 @@ class MenuTest extends MenuWebTestBase {
     // the front page.
     $query = \Drupal::entityQuery('menu_link')
       ->condition('module', 'system')
-      ->condition('router_path', 'user/logout');
+      ->condition('link_path', 'user/logout');
     $result = $query->execute();
     if (!empty($result)) {
       $mlid = reset($result);

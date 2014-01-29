@@ -92,6 +92,29 @@ function language_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function language_menu_link_defaults() {
+  // Base language management and configuration.
+  $links['language.admin.language.admin_overview'] = array(
+    'link_title' => 'Languages',
+    'description' => 'Configure languages for content and the user interface.',
+    'route_name' => 'language.admin_overview',
+    'parent' => 'system.admin.config.regional',
+  );
+  // Content language settings.
+  $links['language.admin.language.content_settings_page'] = array(
+    'link_title' => 'Content language',
+    'description' => 'Configure language support for content.',
+    'route_name' => 'language.content_settings_page',
+    'parent' => 'system.admin.config.regional',
+    'weight' => 10,
+  );
+
+  return $links;
+}
+
+/**
  * Editing or deleting locked languages should not be possible.
  *
  * @deprecated Use \Drupal\language\LanguageAccessController instead.

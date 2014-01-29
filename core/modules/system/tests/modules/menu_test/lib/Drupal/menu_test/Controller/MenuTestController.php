@@ -19,6 +19,23 @@ class MenuTestController {
     return menu_test_callback();
   }
 
+
+  /**
+   * A title callback method for test routes.
+   *
+   * @param array $_title_arguments
+   *   Optional array from the route defaults.
+   * @param string $_title
+   *   Optional _title string from the route defaults.
+   *
+   * @return string
+   *   The route title.
+   */
+  public function titleCallback(array $_title_arguments = array(), $_title = '') {
+    $_title_arguments += array('case_number' => '2', 'title' => $_title);
+    return t($_title_arguments['title']) . ' - Case ' . $_title_arguments['case_number'];
+  }
+
   /**
    * @todo Remove menu_test_custom_403_404_callback().
    */
