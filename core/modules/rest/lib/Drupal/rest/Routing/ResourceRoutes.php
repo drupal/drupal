@@ -62,7 +62,7 @@ class ResourceRoutes implements ContainerInjectionInterface {
    */
   public function routes() {
     $routes = array();
-    $enabled_resources = $this->config->get('rest.settings')->load()->get('resources');
+    $enabled_resources = $this->config->get('rest.settings')->get('resources');
 
     // Iterate over all enabled resource plugins.
     foreach ($enabled_resources as $id => $enabled_methods) {

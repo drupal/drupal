@@ -66,11 +66,11 @@ class CachedStorageTest extends UnitTestCase {
       'baz.back',
     );
     $configCacheValues = array(
-      'foo.bar' => (object) array(
-        'data' => array('foo' => 'bar'),
+      'foo.bar' => array(
+        'foo' => 'bar',
       ),
-      'baz.back' => (object) array(
-        'data' => array('foo' => 'bar'),
+      'baz.back' => array(
+        'foo' => 'bar',
       ),
     );
     $storage = $this->getMock('Drupal\Core\Config\StorageInterface');
@@ -84,35 +84,87 @@ class CachedStorageTest extends UnitTestCase {
   }
 
   /**
-   * Test fall through to file storage on a cache miss.
+   * Test fall through to file storage in CachedStorage::readMulitple().
    */
   public function testGetMultipleOnPartiallyPrimedCache() {
     $configNames = array(
       'foo.bar',
       'baz.back',
-      $this->randomName() . '. ' . $this->randomName(),
+      'config.exists_not_cached',
+      'config.does_not_exist_cached',
+      'config.does_not_exist',
     );
     $configCacheValues = array(
-      'foo.bar' => (object) array(
-        'data' => array('foo' => 'bar'),
+      'foo.bar' => array(
+        'foo' => 'bar',
       ),
-      'baz.back' => (object) array(
-        'data' => array('foo' => 'bar'),
+      'baz.back' => array(
+        'foo' => 'bar',
       ),
     );
     $cache = new MemoryBackend(__FUNCTION__);
     foreach ($configCacheValues as $key => $value) {
       $cache->set($key, $value);
     }
+    $cache->set('config.does_not_exist_cached', FALSE);
 
-    $response = array($configNames[2] => array($this->randomName()));
+    $config_exists_not_cached_data = array('foo' => 'bar');
+    $response = array(
+      $configNames[2] => $config_exists_not_cached_data,
+      $configNames[4] => FALSE,
+    );
     $storage = $this->getMock('Drupal\Core\Config\StorageInterface');
     $storage->expects($this->once())
       ->method('readMultiple')
-      ->with(array(2 => $configNames[2]))
+      ->with(array(2 => $configNames[2], 4 => $configNames[4]))
       ->will($this->returnValue($response));
 
     $cachedStorage = new CachedStorage($storage, $cache);
-    $this->assertEquals($configCacheValues + $response, $cachedStorage->readMultiple($configNames));
+    $expected_data = $configCacheValues + array($configNames[2] => $config_exists_not_cached_data);
+    $this->assertEquals($expected_data, $cachedStorage->readMultiple($configNames));
+
+    // Ensure that the a missing file is cached.
+    $entry = $cache->get('config.does_not_exist');
+    $this->assertFalse($entry->data);
+
+    // Ensure that the a file containing data is cached.
+    $entry = $cache->get('config.exists_not_cached');
+    $this->assertEquals($config_exists_not_cached_data, $entry->data);
   }
+
+  /**
+   * Test fall through to file storage on a cache miss in CachedStorage::read().
+   */
+  public function testReadNonExistentFileCacheMiss() {
+    $name = 'config.does_not_exist';
+    $cache = new MemoryBackend(__FUNCTION__);
+    $storage = $this->getMock('Drupal\Core\Config\StorageInterface');
+    $storage->expects($this->once())
+            ->method('read')
+            ->with($name)
+            ->will($this->returnValue(FALSE));
+    $cachedStorage = new CachedStorage($storage, $cache);
+
+    $this->assertFalse($cachedStorage->read($name));
+
+    // Ensure that the a missing file is cached.
+    $entry = $cache->get('config.does_not_exist');
+    $this->assertFalse($entry->data);
+  }
+
+  /**
+   * Test file storage on a cache hit in CachedStorage::read().
+   */
+  public function testReadNonExistentFileCached() {
+    $name = 'config.does_not_exist';
+    $cache = new MemoryBackend(__FUNCTION__);
+    $cache->set($name, FALSE);
+
+    $storage = $this->getMock('Drupal\Core\Config\StorageInterface');
+    $storage->expects($this->never())
+            ->method('read');
+    $cachedStorage = new CachedStorage($storage, $cache);
+    $this->assertFalse($cachedStorage->read($name));
+  }
+
 }

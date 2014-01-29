@@ -67,7 +67,7 @@ class Config {
    *
    * @var array
    */
-  protected $data;
+  protected $data = array();
 
   /**
    * The original data of the configuration object.
@@ -106,13 +106,6 @@ class Config {
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $storage;
-
-  /**
-   * Whether the configuration object has already been loaded.
-   *
-   * @var bool
-   */
-  protected $isLoaded = FALSE;
 
   /**
    * The config schema wrapper object for this configuration object.
@@ -161,7 +154,6 @@ class Config {
    *   The configuration object.
    */
   public function initWithData(array $data) {
-    $this->isLoaded = TRUE;
     $this->settingsOverrides = array();
     $this->languageOverrides = array();
     $this->moduleOverrides = array();
@@ -236,9 +228,6 @@ class Config {
    *   TRUE if this configuration object does not exist in storage.
    */
   public function isNew() {
-    if (!$this->isLoaded) {
-      $this->load();
-    }
     return $this->isNew;
   }
 
@@ -263,9 +252,6 @@ class Config {
    *   The data that was requested.
    */
   public function get($key = '') {
-    if (!$this->isLoaded) {
-      $this->load();
-    }
     if (!isset($this->overriddenData)) {
       $this->setOverriddenData();
     }
@@ -295,8 +281,6 @@ class Config {
    */
   public function setData(array $data) {
     $this->replaceData($data);
-    // A load would destroy the data just set (for example on import).
-    $this->isLoaded = TRUE;
     return $this;
   }
 
@@ -417,10 +401,6 @@ class Config {
    *   The configuration object.
    */
   public function set($key, $value) {
-    if (!$this->isLoaded) {
-      $this->load();
-    }
-
     // The dot/period is a reserved character; it may appear between keys, but
     // not within keys.
     $parts = explode('.', $key);
@@ -444,9 +424,6 @@ class Config {
    *   The configuration object.
    */
   public function clear($key) {
-    if (!$this->isLoaded) {
-      $this->load();
-    }
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       unset($this->data[$key]);
@@ -455,28 +432,6 @@ class Config {
       NestedArray::unsetValue($this->data, $parts);
     }
     $this->resetOverriddenData();
-    return $this;
-  }
-
-  /**
-   * Loads configuration data into this object.
-   *
-   * @return \Drupal\Core\Config\Config
-   *   The configuration object.
-   */
-  public function load() {
-    $this->isLoaded = FALSE;
-    $data = $this->storage->read($this->name);
-    if ($data === FALSE) {
-      $this->isNew = TRUE;
-      $this->replaceData(array());
-    }
-    else {
-      $this->isNew = FALSE;
-      $this->replaceData($data);
-    }
-    $this->originalData = $this->data;
-    $this->isLoaded = TRUE;
     return $this;
   }
 
@@ -500,9 +455,6 @@ class Config {
       }
     }
 
-    if (!$this->isLoaded) {
-      $this->load();
-    }
     $this->storage->write($this->name, $this->data);
     $this->isNew = FALSE;
     $this->notify('save');
@@ -557,9 +509,6 @@ class Config {
    *   The configuration object.
    */
   public function merge(array $data_to_merge) {
-    if (!$this->isLoaded) {
-      $this->load();
-    }
     // Preserve integer keys so that configuration keys are not changed.
     $this->replaceData(NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE));
     return $this;
@@ -661,9 +610,6 @@ class Config {
    *   The raw data.
    */
   public function getRawData() {
-    if (!$this->isLoaded) {
-      $this->load();
-    }
     return $this->data;
   }
 
@@ -685,13 +631,9 @@ class Config {
    *   The data that was requested.
    */
   public function getOriginal($key = '', $apply_overrides = TRUE) {
-    if (!$this->isLoaded) {
-      $this->load();
-    }
-
+    $original_data = $this->originalData;
     if ($apply_overrides) {
       // Apply overrides.
-      $original_data = $this->originalData;
       if (isset($this->languageOverrides) && is_array($this->languageOverrides)) {
         $original_data = NestedArray::mergeDeepArray(array($original_data, $this->languageOverrides), TRUE);
       }

@@ -68,22 +68,14 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    */
   public function read($name) {
     if ($cache = $this->cache->get($name)) {
-      // The cache backend supports primitive data types, but only an array
-      // represents valid config object data.
-      if (is_array($cache->data)) {
-        return $cache->data;
-      }
+      // The cache contains either the cached configuration data or FALSE
+      // if the configuration file does not exist.
+      return $cache->data;
     }
-    // Read from the storage on a cache miss and cache the data, if any.
+    // Read from the storage on a cache miss and cache the data. Also cache
+    // information about missing configuration objects.
     $data = $this->storage->read($name);
-    if ($data !== FALSE) {
-      $this->cache->set($name, $data, Cache::PERMANENT);
-    }
-    // If the cache contained bogus data and there is no data in the storage,
-    // wipe the cache entry.
-    elseif ($cache) {
-      $this->cache->delete($name);
-    }
+    $this->cache->set($name, $data);
     return $data;
   }
 
@@ -99,9 +91,10 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
 
     if (!empty($names)) {
       $list = $this->storage->readMultiple($names);
-      // Cache configuration objects that were loaded from the storage.
-      foreach ($list as $name => $data) {
-        $this->cache->set($name, $data, Cache::PERMANENT);
+      // Cache configuration objects that were loaded from the storage, cache
+      // missing configuration objects as an explicit FALSE.
+      foreach ($names as $name) {
+        $this->cache->set($name, isset($list[$name]) ? $list[$name] : FALSE);
       }
     }
 
@@ -110,7 +103,9 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
       $list[$name] = $cache->data;
     }
 
-    return $list;
+    // Ensure that only existing configuration objects are returned, filter out
+    // cached information about missing objects.
+    return array_filter($list);
   }
 
   /**
@@ -120,7 +115,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     if ($this->storage->write($name, $data)) {
       // While not all written data is read back, setting the cache instead of
       // just deleting it avoids cache rebuild stampedes.
-      $this->cache->set($name, $data, Cache::PERMANENT);
+      $this->cache->set($name, $data);
       Cache::deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
       $this->findByPrefixCache = array();
       return TRUE;

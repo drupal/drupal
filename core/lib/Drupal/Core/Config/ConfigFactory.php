@@ -264,7 +264,9 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
 
     $new_cache_key = $this->getCacheKey($new_name);
     $this->cache[$new_cache_key] = new Config($new_name, $this->storage, $this->eventDispatcher, $this->typedConfigManager, $this->language);
-    $this->cache[$new_cache_key]->load();
+    if ($data = $this->storage->read($new_name)) {
+      $this->cache[$new_cache_key]->initWithData($data);
+    }
     return $this->cache[$new_cache_key];
   }
 

@@ -417,7 +417,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
       // If 'container.modules' is wrong, the container must be rebuilt.
       if (!isset($this->moduleList)) {
-        $this->moduleList = $this->container->get('config.factory')->get('system.module')->load()->get('enabled');
+        $this->moduleList = $this->container->get('config.factory')->get('system.module')->get('enabled');
       }
       if (array_keys($this->moduleList) !== array_keys($container_modules)) {
         $persist = $this->getServicesToPersist();
