@@ -17,6 +17,13 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 class MigrateMenuConfigsTest extends MigrateDrupalTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('menu');
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {

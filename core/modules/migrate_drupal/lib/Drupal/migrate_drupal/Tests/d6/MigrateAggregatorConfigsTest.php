@@ -17,6 +17,13 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 class MigrateAggregatorConfigsTest extends MigrateDrupalTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('aggregator');
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {

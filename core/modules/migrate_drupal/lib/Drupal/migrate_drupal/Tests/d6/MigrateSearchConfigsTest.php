@@ -17,6 +17,13 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 class MigrateSearchConfigsTest extends MigrateDrupalTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('search');
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {

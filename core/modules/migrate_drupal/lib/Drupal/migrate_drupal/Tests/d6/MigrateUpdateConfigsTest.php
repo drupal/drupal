@@ -17,6 +17,13 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 class MigrateUpdateConfigsTest extends MigrateDrupalTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('update');
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {

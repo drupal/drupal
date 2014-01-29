@@ -75,13 +75,18 @@ class ConfigInstaller implements ConfigInstallerInterface {
    */
   public function installDefaultConfig($type, $name) {
     // Get all default configuration owned by this extension.
-    $source_storage = new ExtensionInstallStorage();
+    $source_storage = new ExtensionInstallStorage($this->activeStorage);
     $config_to_install = $source_storage->listAll($name . '.');
 
     // Work out if this extension provides default configuration for any other
     // enabled extensions.
     $config_dir = drupal_get_path($type, $name) . '/config';
     if (is_dir($config_dir)) {
+      if (is_dir($config_dir . '/schema')) {
+        // Refresh the schema cache if installing default configuration and the
+        // extension has a configuration schema directory.
+        $this->typedConfig->clearCachedDefinitions();
+      }
       $default_storage = new FileStorage($config_dir);
       $other_module_config = array_filter($default_storage->listAll(), function ($value) use ($name) {
         return !preg_match('/^' . $name . '\./', $value);

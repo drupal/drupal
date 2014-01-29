@@ -199,6 +199,7 @@ class TypedConfigManager extends PluginManagerBase implements TypedConfigManager
    */
   public function clearCachedDefinitions() {
     $this->definitions = NULL;
+    $this->schemaStorage->reset();
     $this->cache->delete($this::CACHE_ID);
   }
 

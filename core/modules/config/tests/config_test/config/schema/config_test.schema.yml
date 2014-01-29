@@ -132,6 +132,14 @@ config_test.schema_data_types:
       sequence:
         - type: boolean
 
+config_test.schema_in_install:
+  label: 'Schema test data with parenting'
+  type: mapping
+  mapping:
+    integer:
+      type: integer
+      label: 'Integer'
+
 config_test.types:
   type: mapping
   label: 'Configuration type'

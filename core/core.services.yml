@@ -93,6 +93,7 @@ services:
     arguments: ['@database', config_snapshot]
   config.storage.schema:
     class: Drupal\Core\Config\Schema\SchemaStorage
+    arguments: ['@config.storage']
   config.storage.installer:
     class: Drupal\Core\Config\InstallStorage
   config.typed:

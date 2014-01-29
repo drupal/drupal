@@ -374,7 +374,8 @@ function install_begin_request(&$install_state) {
 
     $container->register('config.storage', 'Drupal\Core\Config\InstallStorage');
 
-    $container->register('config.storage.schema', 'Drupal\Core\Config\Schema\SchemaStorage');
+    $container->register('config.storage.schema', 'Drupal\Core\Config\Schema\SchemaStorage')
+      ->addArgument(new Reference('config.storage'));
 
     $container->register('config.typed', 'Drupal\Core\Config\TypedConfigManager')
       ->addArgument(new Reference('config.storage'))

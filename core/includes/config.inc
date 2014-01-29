@@ -30,6 +30,12 @@ function config_uninstall_default_config($type, $name) {
   foreach ($config_names as $config_name) {
     \Drupal::config($config_name)->delete();
   }
+  $schema_dir = drupal_get_path($type, $name) . '/config/schema';
+  if (is_dir($schema_dir)) {
+    // Refresh the schema cache if uninstalling an extension that provides
+    // configuration schema.
+    \Drupal::service('config.typed')->clearCachedDefinitions();
+  }
 }
 
 /**

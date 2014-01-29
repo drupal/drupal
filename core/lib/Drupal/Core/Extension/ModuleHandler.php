@@ -723,11 +723,11 @@ class ModuleHandler implements ModuleHandlerInterface {
       $this->invoke($module, 'uninstall');
       drupal_uninstall_schema($module);
 
-      // Remove all configuration belonging to the module.
-      config_uninstall_default_config('module', $module);
-
       // Remove the module's entry from the config.
       $module_config->clear("enabled.$module")->save();
+
+      // Remove all configuration belonging to the module.
+      config_uninstall_default_config('module', $module);
 
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild

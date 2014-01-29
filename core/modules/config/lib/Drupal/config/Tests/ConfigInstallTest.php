@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\config\Tests\ConfigInstallTest.
+ * Contains \Drupal\config\Tests\ConfigInstallTest.
  */
 
 namespace Drupal\config\Tests;
@@ -42,9 +42,16 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $config = \Drupal::config($default_configuration_entity);
     $this->assertIdentical($config->isNew(), TRUE);
 
+    // Ensure that schema provided by modules that are not installed is not
+    // available.
+    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_test.schema_in_install'), 'Configuration schema for config_test.schema_in_install does not exist.');
+
     // Install the test module.
     $this->enableModules(array('config_test'));
     $this->installConfig(array('config_test'));
+
+    // After module installation the new schema should exist.
+    $this->assertTrue(\Drupal::service('config.typed')->hasConfigSchema('config_test.schema_in_install'), 'Configuration schema for config_test.schema_in_install exists.');
 
     // Verify that default module config exists.
     \Drupal::configFactory()->reset($default_config);
@@ -62,5 +69,15 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $this->assertFalse(isset($GLOBALS['hook_config_test']['update']));
     $this->assertFalse(isset($GLOBALS['hook_config_test']['predelete']));
     $this->assertFalse(isset($GLOBALS['hook_config_test']['delete']));
+
+    // Ensure that data type casting is applied during config installation.
+    $config = \Drupal::config('config_test.schema_in_install');
+    $this->assertIdentical($config->get('integer'), 1);
+
+    // Test that uninstalling configuration removes configuration schema.
+    \Drupal::config('system.module')->set('enabled', array())->save();
+    config_uninstall_default_config('module', 'config_test');
+    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_test.schema_in_install'), 'Configuration schema for config_test.schema_in_install does not exist.');
+
   }
 }
