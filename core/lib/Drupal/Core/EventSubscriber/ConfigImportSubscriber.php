@@ -41,7 +41,6 @@ class ConfigImportSubscriber implements EventSubscriberInterface {
    */
   static function getSubscribedEvents() {
     $events['config.importer.validate'][] = array('onConfigImporterValidate', 40);
-    $events['config.installer.validate'][] = array('onConfigImporterValidate', 40);
     return $events;
   }
 
