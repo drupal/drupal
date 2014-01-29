@@ -90,10 +90,10 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     try {
       $this->container->get('config.storage.staging')->deleteAll();
       $this->configImporter->reset()->import();
-      $this->assertFalse(FALSE, "ConfigImporterException not thrown, we didn't stop an empty import.");
+      $this->fail('ConfigImporterException thrown, successfully stopping an empty import.');
     }
     catch (ConfigImporterException $e) {
-      $this->assertTrue(TRUE, 'ConfigImporterException thrown, successfully stopping an empty import.');
+      $this->pass('ConfigImporterException thrown, successfully stopping an empty import.');
     }
   }
 

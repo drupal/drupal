@@ -20,3 +20,7 @@ services:
     arguments: ['@batch.storage']
     tags:
       - { name: theme_negotiator, priority: 1000 }
+  system.config_subscriber:
+    class: Drupal\system\SystemConfigSubscriber
+    tags:
+      - { name: event_subscriber }
