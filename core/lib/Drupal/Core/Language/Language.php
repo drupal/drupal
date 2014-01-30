@@ -21,9 +21,6 @@ class Language {
   /**
    * The values to use to instantiate the default language.
    *
-   * @todo Remove once the default language is converted to config. See
-   *   https://drupal.org/node/2108599.
-   *
    * @var array
    */
   public static $defaultValues = array(
