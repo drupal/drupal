@@ -237,7 +237,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
           ->getStorageController($this->data['config_type'])
           ->create($this->data['import']);
         $entity->save();
-        drupal_set_message($this->t('The @entity_type %label was imported.', array('@entity_type' => $entity->entityType(), '%label' => $entity->label())));
+        drupal_set_message($this->t('The @entity_type %label was imported.', array('@entity_type' => $entity->getEntityTypeId(), '%label' => $entity->label())));
       }
       catch (\Exception $e) {
         drupal_set_message($e->getMessage(), 'error');

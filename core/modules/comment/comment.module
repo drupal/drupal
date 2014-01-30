@@ -293,8 +293,8 @@ function comment_field_instance_delete(FieldInstanceInterface $instance) {
   if ($instance->getType() == 'comment') {
     // Delete all comments that used by the entity bundle.
     $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_id = :field_id", array(
-      ':entity_type' => $instance->entityType(),
-      ':field_id' => $instance->entityType() . '__' . $instance->getName(),
+      ':entity_type' => $instance->getEntityTypeId(),
+      ':field_id' => $instance->getEntityTypeId() . '__' . $instance->getName(),
     ))->fetchCol();
     entity_delete_multiple('comment', $comments);
     \Drupal::cache()->delete('comment_entity_info');
@@ -340,7 +340,7 @@ function comment_permission() {
  *   An array "page=X" if the page number is greater than zero; NULL otherwise.
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
-  $instance = \Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
+  $instance = \Drupal::service('field.info')->getInstance($entity->getEntityTypeId(), $entity->bundle(), $field_name);
   $mode = $instance->getSetting('default_mode');
   $comments_per_page = $instance->getSetting('per_page');
   $pagenum = NULL;
@@ -362,8 +362,8 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
     $unread_threads_query = db_select('comment')
       ->fields('comment', array('thread'))
       ->condition('entity_id', $entity->id())
-      ->condition('entity_type', $entity->entityType())
-      ->condition('field_id', $entity->entityType() . '__' . $field_name)
+      ->condition('entity_type', $entity->getEntityTypeId())
+      ->condition('field_id', $entity->getEntityTypeId() . '__' . $field_name)
       ->condition('status', CommentInterface::PUBLISHED)
       ->orderBy('created', 'DESC')
       ->orderBy('cid', 'DESC')
@@ -389,8 +389,8 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
                       AND status = :status AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
       ':status' => CommentInterface::PUBLISHED,
       ':entity_id' => $entity->id(),
-      ':field_id' => $entity->entityType() . '__' . $field_name,
-      ':entity_type' => $entity->entityType(),
+      ':field_id' => $entity->getEntityTypeId() . '__' . $field_name,
+      ':entity_type' => $entity->getEntityTypeId(),
       ':thread' => $first_thread,
     ))->fetchField();
 
@@ -425,7 +425,7 @@ function comment_entity_view_alter(&$build, EntityInterface $entity, EntityViewD
  * Implements hook_entity_view().
  */
 function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode) {
-  if ($entity->entityType() != 'node') {
+  if ($entity->getEntityTypeId() != 'node') {
     // Comment links are only added to node entity type for backwards
     // compatibility. Should you require comment links for other entity types
     // you can do-so by implementing a new field formatter.
@@ -495,7 +495,7 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
               'fragment' => 'comment-form',
             );
             if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
-              $links['comment-add']['href'] = 'comment/reply/'. $entity->entityType() . '/' . $entity->id() .'/' . $field_name;
+              $links['comment-add']['href'] = 'comment/reply/'. $entity->getEntityTypeId() . '/' . $entity->id() .'/' . $field_name;
             }
           }
           else {
@@ -524,7 +524,7 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
                 'fragment' => 'comment-form',
               );
               if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
-                $links['comment-add']['href'] = 'comment/reply/'. $entity->entityType() . '/' . $entity->id() .'/' . $field_name;
+                $links['comment-add']['href'] = 'comment/reply/'. $entity->getEntityTypeId() . '/' . $entity->id() .'/' . $field_name;
               }
             }
           }
@@ -551,7 +551,7 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
         array('node_id' => $entity->id()),
       );
       $entity->content['links']['#post_render_cache']['Drupal\comment\CommentViewBuilder::attachNewCommentsLinkMetadata'] = array(
-        array('entity_type' => $entity->entityType(), 'entity_id' => $entity->id(), 'field_name' => $field_name),
+        array('entity_type' => $entity->getEntityTypeId(), 'entity_id' => $entity->id(), 'field_name' => $field_name),
       );
     }
   }
@@ -582,9 +582,9 @@ function comment_node_view_alter(&$build, EntityInterface $node, EntityViewDispl
  */
 function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NULL) {
   $values = array(
-    'entity_type' => $entity->entityType(),
+    'entity_type' => $entity->getEntityTypeId(),
     'entity_id' => $entity->id(),
-    'field_id' => $entity->entityType() . '__' . $field_name,
+    'field_id' => $entity->getEntityTypeId() . '__' . $field_name,
     'pid' => $pid,
   );
   $comment = entity_create('comment', $values);
@@ -672,8 +672,8 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
   $query->addField('c', 'cid');
   $query
     ->condition('c.entity_id', $entity->id())
-    ->condition('c.entity_type', $entity->entityType())
-    ->condition('c.field_id', $entity->entityType() . '__' . $field_name)
+    ->condition('c.entity_type', $entity->getEntityTypeId())
+    ->condition('c.field_id', $entity->getEntityTypeId() . '__' . $field_name)
     ->addTag('entity_access')
     ->addTag('comment_filter')
     ->addMetaData('base_table', 'comment')
@@ -685,8 +685,8 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
   $count_query->addExpression('COUNT(*)');
   $count_query
     ->condition('c.entity_id', $entity->id())
-    ->condition('c.entity_type', $entity->entityType())
-    ->condition('c.field_id', $entity->entityType() . '__' . $field_name)
+    ->condition('c.entity_type', $entity->getEntityTypeId())
+    ->condition('c.field_id', $entity->getEntityTypeId() . '__' . $field_name)
     ->addTag('entity_access')
     ->addTag('comment_filter')
     ->addMetaData('base_table', 'comment')
@@ -905,7 +905,7 @@ function comment_entity_insert(EntityInterface $entity) {
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {comment_entity_statistics} table.
   if (\Drupal::state()->get('comment.maintain_entity_statistics') &&
-    $fields = \Drupal::service('comment.manager')->getFields($entity->entityType())) {
+    $fields = \Drupal::service('comment.manager')->getFields($entity->getEntityTypeId())) {
     $query = db_insert('comment_entity_statistics')
      ->fields(array(
       'entity_id',
@@ -938,8 +938,8 @@ function comment_entity_insert(EntityInterface $entity) {
       }
       $query->values(array(
         'entity_id' => $entity->id(),
-        'entity_type' => $entity->entityType(),
-        'field_id' => $entity->entityType() . '__' . $field_name,
+        'entity_type' => $entity->getEntityTypeId(),
+        'field_id' => $entity->getEntityTypeId() . '__' . $field_name,
         'cid' => 0,
         'last_comment_timestamp' => $last_comment_timestamp,
         'last_comment_name' => NULL,
@@ -958,13 +958,13 @@ function comment_entity_predelete(EntityInterface $entity) {
   $cids = db_select('comment', 'c')
     ->fields('c', array('cid'))
     ->condition('entity_id', $entity->id())
-    ->condition('entity_type', $entity->entityType())
+    ->condition('entity_type', $entity->getEntityTypeId())
     ->execute()
     ->fetchCol();
   entity_delete_multiple('comment', $cids);
   db_delete('comment_entity_statistics')
     ->condition('entity_id', $entity->id())
-    ->condition('entity_type', $entity->entityType())
+    ->condition('entity_type', $entity->getEntityTypeId())
     ->execute();
 }
 
@@ -1465,7 +1465,7 @@ function template_preprocess_comment(&$variables) {
   else {
     // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
     if ($commented_entity->hasField('uid') && $comment->uid->target_id == $commented_entity->get('uid')->value) {
-      $variables['attributes']['class'][] = 'by-' . $commented_entity->entityType() . '-author';
+      $variables['attributes']['class'][] = 'by-' . $commented_entity->getEntityTypeId() . '-author';
     }
   }
   // Add clearfix class.
@@ -1566,7 +1566,7 @@ function comment_ranking() {
  * Implements hook_file_download_access().
  */
 function comment_file_download_access($field, EntityInterface $entity, FileInterface $file) {
-  if ($entity->entityType() == 'comment') {
+  if ($entity->getEntityTypeId() == 'comment') {
     if (user_access('access comments') && $entity->status->value == CommentInterface::PUBLISHED || user_access('administer comments')) {
       $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
       // Check access to parent entity.

@@ -77,7 +77,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
     $autocomplete_route_parameters = array(
       'type' => $this->getSetting('autocomplete_type'),
       'field_name' => $this->fieldDefinition->getName(),
-      'entity_type' => $entity->entityType(),
+      'entity_type' => $entity->getEntityTypeId(),
       'bundle_name' => $entity->bundle(),
     );
 

@@ -29,7 +29,7 @@ abstract class EntityDisplayModeFormBase extends EntityFormController {
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * The entity manager.
@@ -66,7 +66,7 @@ abstract class EntityDisplayModeFormBase extends EntityFormController {
    */
   protected function init(array &$form_state) {
     parent::init($form_state);
-    $this->entityInfo = $this->entityManager->getDefinition($this->entity->entityType());
+    $this->entityType = $this->entityManager->getDefinition($this->entity->getEntityTypeId());
   }
 
   /**
@@ -114,7 +114,7 @@ abstract class EntityDisplayModeFormBase extends EntityFormController {
       return TRUE;
     }
     return (bool) $this->queryFactory
-      ->get($this->entity->entityType())
+      ->get($this->entity->getEntityTypeId())
       ->condition('id', $element['#field_prefix'] . $entity_id)
       ->execute();
   }
@@ -123,10 +123,10 @@ abstract class EntityDisplayModeFormBase extends EntityFormController {
    * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
-    drupal_set_message(t('Saved the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $this->entityInfo->getLowercaseLabel())));
+    drupal_set_message(t('Saved the %label @entity-type.', array('%label' => $this->entity->label(), '@entity-type' => $this->entityType->getLowercaseLabel())));
     $this->entity->save();
     entity_info_cache_clear();
-    $form_state['redirect_route']['route_name'] = 'entity.' . $this->entity->entityType() . '_list';
+    $form_state['redirect_route']['route_name'] = 'entity.' . $this->entity->getEntityTypeId() . '_list';
   }
 
 }

@@ -237,7 +237,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $entity = $items->getEntity();
 
     $element += array(
-      '#entity_type' => $entity->entityType(),
+      '#entity_type' => $entity->getEntityTypeId(),
       '#bundle' => $entity->bundle(),
       '#entity' => $entity,
       '#field_name' => $this->fieldDefinition->getName(),

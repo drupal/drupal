@@ -127,7 +127,7 @@ class LinkFormatter extends FormatterBase {
       if (empty($settings['url_only']) && !empty($item->title)) {
         // Unsanitizied token replacement here because $options['html'] is FALSE
         // by default in l().
-        $link_title = \Drupal::token()->replace($item->title, array($entity->entityType() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
+        $link_title = \Drupal::token()->replace($item->title, array($entity->getEntityTypeId() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
       }
 
       // Trim the link text to the desired length.

@@ -164,7 +164,7 @@ class EditController implements ContainerInjectionInterface {
       $entity = $entity->getTranslation($langcode);
 
       // If the entity information for this field is requested, include it.
-      $entity_id = $entity->entityType() . '/' . $entity_id;
+      $entity_id = $entity->getEntityTypeId() . '/' . $entity_id;
       if (is_array($entities) && in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
         $metadata[$entity_id] = $this->metadataGenerator->generateEntityMetadata($entity);
       }
@@ -314,7 +314,7 @@ class EditController implements ContainerInjectionInterface {
    *       "public" instead of "protected".
    */
   public function renderField(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
-    $entity_view_mode_ids = array_keys(entity_get_view_modes($entity->entityType()));
+    $entity_view_mode_ids = array_keys(entity_get_view_modes($entity->getEntityTypeId()));
     if (in_array($view_mode_id, $entity_view_mode_ids)) {
       $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
     }
@@ -349,7 +349,7 @@ class EditController implements ContainerInjectionInterface {
     // Return information about the entity that allows a front end application
     // to identify it.
     $output = array(
-      'entity_type' => $entity->entityType(),
+      'entity_type' => $entity->getEntityTypeId(),
       'entity_id' => $entity->id()
     );
 

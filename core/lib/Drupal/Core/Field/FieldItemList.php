@@ -186,7 +186,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function access($operation = 'view', AccountInterface $account = NULL) {
-    $access_controller = \Drupal::entityManager()->getAccessController($this->getParent()->entityType());
+    $access_controller = \Drupal::entityManager()->getAccessController($this->getEntity()->getEntityTypeId());
     return $access_controller->fieldAccess($operation, $this->getFieldDefinition(), $account, $this);
   }
 

@@ -284,7 +284,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    */
   public function getForm(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
     $form_state['build_info'] = isset($form_state['build_info']) ? $form_state['build_info'] : array();
-    $controller = $this->getFormController($entity->entityType(), $operation);
+    $controller = $this->getFormController($entity->getEntityTypeId(), $operation);
     $controller->setEntity($entity);
     $form_state['build_info'] += array(
       'callback_object' => $controller,

@@ -24,14 +24,14 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
-   * The entity info array.
+   * Information about the entity type.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * The entity manager service.
@@ -68,8 +68,8 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
    *   The language manager.
    */
   public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
-    $this->entityType = $entity_info->id();
-    $this->entityInfo = $entity_info;
+    $this->entityTypeId = $entity_info->id();
+    $this->entityType = $entity_info;
     $this->entityManager = $entity_manager;
     $this->languageManager = $language_manager;
   }
@@ -89,7 +89,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
    * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
-    field_attach_prepare_view($this->entityType, $entities, $displays, $langcode);
+    field_attach_prepare_view($this->entityTypeId, $entities, $displays, $langcode);
 
     // Initialize the field item attributes for the fields set to be displayed.
     foreach ($entities as $entity) {
@@ -108,7 +108,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       }
     }
 
-    module_invoke_all('entity_prepare_view', $this->entityType, $entities, $displays, $view_mode);
+    module_invoke_all('entity_prepare_view', $this->entityTypeId, $entities, $displays, $view_mode);
 
     foreach ($entities as $entity) {
       // Remove previously built content, if exists.
@@ -134,22 +134,22 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
    */
   protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
     $return = array(
-      '#theme' => $this->entityType,
-      "#{$this->entityType}" => $entity,
+      '#theme' => $this->entityTypeId,
+      "#{$this->entityTypeId}" => $entity,
       '#view_mode' => $view_mode,
       '#langcode' => $langcode,
     );
 
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
-    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && !isset($entity->in_preview) && $this->entityInfo->isRenderCacheable()) {
+    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && !isset($entity->in_preview) && $this->entityType->isRenderCacheable()) {
       $return['#cache'] = array(
-        'keys' => array('entity_view', $this->entityType, $entity->id(), $view_mode),
+        'keys' => array('entity_view', $this->entityTypeId, $entity->id(), $view_mode),
         'granularity' => DRUPAL_CACHE_PER_ROLE,
         'bin' => $this->cacheBin,
         'tags' => array(
-          $this->entityType . '_view' => TRUE,
-          $this->entityType => array($entity->id()),
+          $this->entityTypeId . '_view' => TRUE,
+          $this->entityTypeId => array($entity->id()),
         ),
       );
     }
@@ -219,7 +219,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       $this->buildContent($view_mode_entities, $displays[$mode], $mode, $langcode);
     }
 
-    $view_hook = "{$this->entityType}_view";
+    $view_hook = "{$this->entityTypeId}_view";
     $build = array('#sorted' => TRUE);
     $weight = 0;
     foreach ($entities as $key => $entity) {
@@ -259,13 +259,13 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       $tags = array();
       foreach ($entities as $entity) {
         $id = $entity->id();
-        $tags[$this->entityType][$id] = $id;
-        $tags[$this->entityType . '_view_' . $entity->bundle()] = TRUE;
+        $tags[$this->entityTypeId][$id] = $id;
+        $tags[$this->entityTypeId . '_view_' . $entity->bundle()] = TRUE;
       }
       Cache::deleteTags($tags);
     }
     else {
-      Cache::deleteTags(array($this->entityType . '_view' => TRUE));
+      Cache::deleteTags(array($this->entityTypeId . '_view' => TRUE));
     }
   }
 
@@ -283,7 +283,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       // The 'default' is not an actual view mode.
       return TRUE;
     }
-    $view_modes_info = entity_get_view_modes($this->entityType);
+    $view_modes_info = entity_get_view_modes($this->entityTypeId);
     return !empty($view_modes_info[$view_mode]['cache']);
   }
 

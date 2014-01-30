@@ -74,7 +74,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
     $elements = $this->viewElements($items);
     if ($elements) {
       $entity = $items->getEntity();
-      $entity_type = $entity->entityType();
+      $entity_type = $entity->getEntityTypeId();
       $field_name = $this->fieldDefinition->getName();
       $info = array(
         '#theme' => 'field',
@@ -101,8 +101,8 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
         }
 
         if (isset($item->entity)) {
-          $info['#cache']['tags'][$item->entity->entityType()][] = $item->entity->id();
-          $info['#cache']['tags'][$item->entity->entityType() . '_view'] = TRUE;
+          $info['#cache']['tags'][$item->entity->getEntityTypeId()][] = $item->entity->id();
+          $info['#cache']['tags'][$item->entity->getEntityTypeId() . '_view'] = TRUE;
         }
       }
 

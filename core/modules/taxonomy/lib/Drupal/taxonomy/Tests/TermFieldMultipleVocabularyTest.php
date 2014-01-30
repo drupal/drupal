@@ -101,7 +101,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     // Render the entity.
     $entity = entity_load('entity_test', $id);
     $entities = array($id => $entity);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
+    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     field_attach_prepare_view('entity_test', $entities, array($entity->bundle() => $display));
     $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
@@ -114,7 +114,7 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     // Re-render the content.
     $entity = entity_load('entity_test', $id);
     $entities = array($id => $entity);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
+    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     field_attach_prepare_view('entity_test', $entities, array($entity->bundle() => $display));
     $entity->content = field_attach_view($entity, $display);
     $this->plainTextContent = FALSE;

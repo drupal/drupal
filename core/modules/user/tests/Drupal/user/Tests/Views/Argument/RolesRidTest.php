@@ -71,7 +71,7 @@ class RolesRidTest extends UnitTestCase {
       ->with($this->equalTo('user_role'))
       ->will($this->returnValue($role_storage_controller));
 
-    // @todo \Drupal\Core\Entity\Entity::entityInfo() uses a global call to
+    // @todo \Drupal\Core\Entity\Entity::entityType() uses a global call to
     //   entity_get_info(), which in turn wraps \Drupal::entityManager(). Set
     //   the entity manager until this is fixed.
     $container = new ContainerBuilder();

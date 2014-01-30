@@ -44,7 +44,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
     // see https://drupal.org/node/2114707.
     if (!isset($this->instance)) {
       $entity = $this->getEntity();
-      $instances = Field::fieldInfo()->getBundleInstances($entity->entityType(), $entity->bundle());
+      $instances = Field::fieldInfo()->getBundleInstances($entity->getEntityTypeId(), $entity->bundle());
       if (isset($instances[$this->getName()])) {
         $this->instance = $instances[$this->getName()];
       }
@@ -141,7 +141,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
 
       // Use the widget currently configured for the 'default' form mode, or
       // fallback to the default widget for the field type.
-      $entity_form_display = entity_get_form_display($entity->entityType(), $entity->bundle(), 'default');
+      $entity_form_display = entity_get_form_display($entity->getEntityTypeId(), $entity->bundle(), 'default');
       $widget = $entity_form_display->getRenderer($this->getFieldDefinition()->getName());
       if (!$widget) {
         $widget = \Drupal::service('plugin.manager.field.widget')->getInstance(array('field_definition' => $this->getFieldDefinition()));

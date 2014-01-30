@@ -480,7 +480,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
       $file->status = FILE_STATUS_PERMANENT;
       $file->save();
     }
-    \Drupal::service('file.usage')->add($file, 'editor', $entity->entityType(), $entity->id());
+    \Drupal::service('file.usage')->add($file, 'editor', $entity->getEntityTypeId(), $entity->id());
   }
 }
 
@@ -500,7 +500,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
 function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count) {
   foreach ($uuids as $uuid) {
     $file = entity_load_by_uuid('file', $uuid);
-    \Drupal::service('file.usage')->delete($file, 'editor', $entity->entityType(), $entity->id(), $count);
+    \Drupal::service('file.usage')->delete($file, 'editor', $entity->getEntityTypeId(), $entity->id(), $count);
   }
 }
 
@@ -551,7 +551,7 @@ function _editor_get_processed_text_fields(ContentEntityInterface $entity) {
   // Only return fields that have text processing enabled.
   return array_filter($configurable_fields, function ($field) use ($entity) {
     $settings = Field::fieldInfo()
-      ->getInstance($entity->entityType(), $entity->bundle(), $field)
+      ->getInstance($entity->getEntityTypeId(), $entity->bundle(), $field)
       ->getSettings();
     return isset($settings['text_processing']) && $settings['text_processing'] === TRUE;
   });

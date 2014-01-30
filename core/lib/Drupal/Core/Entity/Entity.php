@@ -28,7 +28,7 @@ abstract class Entity implements EntityInterface {
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
    * Boolean indicating whether the entity should be forced to be new.
@@ -61,7 +61,7 @@ abstract class Entity implements EntityInterface {
    *   The type of the entity to create.
    */
   public function __construct(array $values, $entity_type) {
-    $this->entityType = $entity_type;
+    $this->entityTypeId = $entity_type;
     // Set initial values.
     foreach ($values as $key => $value) {
       $this->$key = $value;
@@ -99,15 +99,15 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function entityType() {
-    return $this->entityType;
+  public function getEntityTypeId() {
+    return $this->entityTypeId;
   }
 
   /**
    * {@inheritdoc}
    */
   public function bundle() {
-    return $this->entityType;
+    return $this->entityTypeId;
   }
 
   /**
@@ -115,7 +115,7 @@ abstract class Entity implements EntityInterface {
    */
   public function label() {
     $label = NULL;
-    $entity_info = $this->entityInfo();
+    $entity_info = $this->getEntityType();
     // @todo Convert to is_callable() and call_user_func().
     if (($label_callback = $entity_info->getLabelCallback()) && function_exists($label_callback)) {
       $label = $label_callback($this);
@@ -155,7 +155,7 @@ abstract class Entity implements EntityInterface {
    *   of the entity, and matching the signature of url().
    */
   public function uri($rel = 'canonical') {
-    $entity_info = $this->entityInfo();
+    $entity_info = $this->getEntityType();
 
     // The links array might contain URI templates set in annotations.
     $link_templates = $this->linkTemplates();
@@ -181,7 +181,7 @@ abstract class Entity implements EntityInterface {
 
       // Pass the entity data to url() so that alter functions do not need to
       // look up this entity again.
-      $uri['options']['entity_type'] = $this->entityType;
+      $uri['options']['entity_type'] = $this->entityTypeId;
       $uri['options']['entity'] = $this;
       return $uri;
     }
@@ -189,7 +189,7 @@ abstract class Entity implements EntityInterface {
     $bundle = $this->bundle();
     // A bundle-specific callback takes precedence over the generic one for
     // the entity type.
-    $bundles = entity_get_bundles($this->entityType);
+    $bundles = entity_get_bundles($this->entityTypeId);
     if (isset($bundles[$bundle]['uri_callback'])) {
       $uri_callback = $bundles[$bundle]['uri_callback'];
     }
@@ -207,7 +207,7 @@ abstract class Entity implements EntityInterface {
     // Other relationship types are not supported by this logic.
     elseif ($rel == 'canonical') {
       $uri = array(
-        'path' => 'entity/' . $this->entityType . '/' . $this->id(),
+        'path' => 'entity/' . $this->entityTypeId . '/' . $this->id(),
       );
     }
     else {
@@ -227,7 +227,7 @@ abstract class Entity implements EntityInterface {
    *   An array of link templates containing route names.
    */
   protected function linkTemplates() {
-    return $this->entityInfo()->getLinkTemplates();
+    return $this->getEntityType()->getLinkTemplates();
   }
 
   /**
@@ -243,11 +243,11 @@ abstract class Entity implements EntityInterface {
   protected function uriPlaceholderReplacements() {
     if (empty($this->uriPlaceholderReplacements)) {
       $this->uriPlaceholderReplacements = array(
-        '{entityType}' => $this->entityType(),
+        '{entityType}' => $this->getEntityTypeId(),
         '{bundle}' => $this->bundle(),
         '{id}' => $this->id(),
         '{uuid}' => $this->uuid(),
-        '{' . $this->entityType() . '}' => $this->id(),
+        '{' . $this->getEntityTypeId() . '}' => $this->id(),
       );
     }
     return $this->uriPlaceholderReplacements;
@@ -271,11 +271,11 @@ abstract class Entity implements EntityInterface {
   public function access($operation = 'view', AccountInterface $account = NULL) {
     if ($operation == 'create') {
       return \Drupal::entityManager()
-        ->getAccessController($this->entityType)
+        ->getAccessController($this->entityTypeId)
         ->createAccess($this->bundle(), $account);
     }
     return \Drupal::entityManager()
-      ->getAccessController($this->entityType)
+      ->getAccessController($this->entityTypeId)
       ->access($this, $operation, Language::LANGCODE_DEFAULT, $account);
   }
 
@@ -295,7 +295,7 @@ abstract class Entity implements EntityInterface {
    * {@inheritdoc}
    */
   public function save() {
-    return \Drupal::entityManager()->getStorageController($this->entityType)->save($this);
+    return \Drupal::entityManager()->getStorageController($this->entityTypeId)->save($this);
   }
 
   /**
@@ -303,7 +303,7 @@ abstract class Entity implements EntityInterface {
    */
   public function delete() {
     if (!$this->isNew()) {
-      \Drupal::entityManager()->getStorageController($this->entityType)->delete(array($this->id() => $this));
+      \Drupal::entityManager()->getStorageController($this->entityTypeId)->delete(array($this->id() => $this));
     }
   }
 
@@ -312,7 +312,7 @@ abstract class Entity implements EntityInterface {
    */
   public function createDuplicate() {
     $duplicate = clone $this;
-    $entity_info = $this->entityInfo();
+    $entity_info = $this->getEntityType();
     $duplicate->{$entity_info->getKey('id')} = NULL;
 
     // Check if the entity type supports UUIDs and generate a new one if so.
@@ -326,8 +326,8 @@ abstract class Entity implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function entityInfo() {
-    return \Drupal::entityManager()->getDefinition($this->entityType());
+  public function getEntityType() {
+    return \Drupal::entityManager()->getDefinition($this->getEntityTypeId());
   }
 
   /**
@@ -388,11 +388,11 @@ abstract class Entity implements EntityInterface {
    */
   protected function onSaveOrDelete() {
     $referenced_entities = array(
-      $this->entityType() => array($this->id() => $this),
+      $this->getEntityTypeId() => array($this->id() => $this),
     );
 
     foreach ($this->referencedEntities() as $referenced_entity) {
-      $referenced_entities[$referenced_entity->entityType()][$referenced_entity->id()] = $referenced_entity;
+      $referenced_entities[$referenced_entity->getEntityTypeId()][$referenced_entity->id()] = $referenced_entity;
     }
 
     foreach ($referenced_entities as $entity_type => $entities) {

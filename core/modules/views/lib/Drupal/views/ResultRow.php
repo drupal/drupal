@@ -22,7 +22,7 @@ class ResultRow {
   /**
    * An array of relationship entities.
    *
-   * @var array \Drupal\Core\Entity\EntityInterface[]
+   * @var \Drupal\Core\Entity\EntityInterface[]
    */
   public $_relationship_entities = array();
 

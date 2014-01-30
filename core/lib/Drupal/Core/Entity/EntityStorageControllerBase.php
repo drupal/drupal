@@ -24,25 +24,23 @@ abstract class EntityStorageControllerBase extends EntityControllerBase implemen
   /**
    * Whether this entity type should use the static cache.
    *
-   * Set by entity info.
-   *
    * @var boolean
    */
   protected $cache;
 
   /**
-   * Entity type for this controller instance.
+   * Entity type ID for this controller instance.
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
-   * Array of information about the entity.
+   * Information about the entity type.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * Name of the entity's ID field in the entity database table.
@@ -67,24 +65,24 @@ abstract class EntityStorageControllerBase extends EntityControllerBase implemen
    *   The entity info for the entity type.
    */
   public function __construct(EntityTypeInterface $entity_info) {
-    $this->entityType = $entity_info->id();
-    $this->entityInfo = $entity_info;
+    $this->entityTypeId = $entity_info->id();
+    $this->entityType = $entity_info;
     // Check if the entity type supports static caching of loaded entities.
-    $this->cache = $this->entityInfo->isStaticallyCacheable();
+    $this->cache = $this->entityType->isStaticallyCacheable();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function entityType() {
+  public function getEntityTypeId() {
+    return $this->entityTypeId;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityType() {
     return $this->entityType;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityInfo() {
-    return $this->entityInfo;
   }
 
   /**
@@ -150,9 +148,9 @@ abstract class EntityStorageControllerBase extends EntityControllerBase implemen
    */
   protected function invokeHook($hook, EntityInterface $entity) {
     // Invoke the hook.
-    $this->moduleHandler()->invokeAll($this->entityType . '_' . $hook, array($entity));
+    $this->moduleHandler()->invokeAll($this->entityTypeId . '_' . $hook, array($entity));
     // Invoke the respective entity-level hook.
-    $this->moduleHandler()->invokeAll('entity_' . $hook, array($entity, $this->entityType));
+    $this->moduleHandler()->invokeAll('entity_' . $hook, array($entity, $this->entityTypeId));
   }
 
   /**
@@ -162,16 +160,16 @@ abstract class EntityStorageControllerBase extends EntityControllerBase implemen
    *   Associative array of query results, keyed on the entity ID.
    */
   protected function postLoad(array &$queried_entities) {
-    $entity_class = $this->entityInfo->getClass();
+    $entity_class = $this->entityType->getClass();
     $entity_class::postLoad($this, $queried_entities);
     // Call hook_entity_load().
     foreach ($this->moduleHandler()->getImplementations('entity_load') as $module) {
       $function = $module . '_entity_load';
-      $function($queried_entities, $this->entityType);
+      $function($queried_entities, $this->entityTypeId);
     }
     // Call hook_TYPE_load().
-    foreach ($this->moduleHandler()->getImplementations($this->entityType . '_load') as $module) {
-      $function = $module . '_' . $this->entityType . '_load';
+    foreach ($this->moduleHandler()->getImplementations($this->entityTypeId . '_load') as $module) {
+      $function = $module . '_' . $this->entityTypeId . '_load';
       $function($queried_entities);
     }
   }
@@ -196,7 +194,7 @@ abstract class EntityStorageControllerBase extends EntityControllerBase implemen
    */
   public function loadByProperties(array $values = array()) {
     // Build a query to fetch the entity IDs.
-    $entity_query = \Drupal::entityQuery($this->entityType);
+    $entity_query = \Drupal::entityQuery($this->entityTypeId);
     $this->buildPropertyQuery($entity_query, $values);
     $result = $entity_query->execute();
     return $result ? $this->loadMultiple($result) : array();

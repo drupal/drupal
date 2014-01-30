@@ -1,4 +1,5 @@
 <?php
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * @file
@@ -44,7 +45,7 @@ function field_test_entity_info_translatable($entity_type = NULL, $translatable 
  *
  * @deprecated Use \Drupal\field_test\Form\FieldTestForm::testEntityNestedForm()
  */
-function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2) {
+function field_test_entity_nested_form($form, &$form_state, EntityInterface $entity_1, EntityInterface $entity_2) {
   // First entity.
   foreach (array('id', 'type') as $key) {
     $form[$key] = array(
@@ -52,7 +53,7 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
       '#value' => $entity_1->$key->value,
     );
   }
-  $form_state['form_display'] = entity_get_form_display($entity_1->entityType(), $entity_1->bundle(), 'default');
+  $form_state['form_display'] = entity_get_form_display($entity_1->getEntityTypeId(), $entity_1->bundle(), 'default');
   field_attach_form($entity_1, $form, $form_state);
 
   // Second entity.
@@ -69,7 +70,7 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
       '#value' => $entity_2->$key->value,
     );
   }
-  $form_state['form_display'] = entity_get_form_display($entity_1->entityType(), $entity_1->bundle(), 'default');
+  $form_state['form_display'] = entity_get_form_display($entity_1->getEntityTypeId(), $entity_1->bundle(), 'default');
   field_attach_form($entity_2, $form['entity_2'], $form_state);
 
   $form['save'] = array(

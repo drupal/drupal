@@ -24,7 +24,7 @@ class Query extends QueryBase implements QueryInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * The build sql select query.
@@ -107,20 +107,20 @@ class Query extends QueryBase implements QueryInterface {
    *   Returns the called object.
    */
   protected function prepare() {
-    $entity_type = $this->entityType;
-    $this->entityInfo = $this->entityManager->getDefinition($entity_type);
-    if (!$base_table = $this->entityInfo->getBaseTable()) {
+    $entity_type = $this->entityTypeId;
+    $this->entityType = $this->entityManager->getDefinition($entity_type);
+    if (!$base_table = $this->entityType->getBaseTable()) {
       throw new QueryException("No base table, invalid query.");
     }
     $simple_query = TRUE;
-    if ($this->entityInfo->getDataTable()) {
+    if ($this->entityType->getDataTable()) {
       $simple_query = FALSE;
     }
     $this->sqlQuery = $this->connection->select($base_table, 'base_table', array('conjunction' => $this->conjunction));
     $this->sqlQuery->addMetaData('entity_type', $entity_type);
-    $id_field = $this->entityInfo->getKey('id');
+    $id_field = $this->entityType->getKey('id');
     // Add the key field for fetchAllKeyed().
-    if (!$revision_field = $this->entityInfo->getKey('revision')) {
+    if (!$revision_field = $this->entityType->getKey('revision')) {
       // When there is no revision support, the key field is the entity key.
       $this->sqlFields["base_table.$id_field"] = array('base_table', $id_field);
       // Now add the value column for fetchAllKeyed(). This is always the
@@ -138,7 +138,7 @@ class Query extends QueryBase implements QueryInterface {
       $this->sqlQuery->addTag($entity_type . '_access');
     }
     $this->sqlQuery->addTag('entity_query');
-    $this->sqlQuery->addTag('entity_query_' . $this->entityType);
+    $this->sqlQuery->addTag('entity_query_' . $this->entityTypeId);
 
     // Add further tags added.
     if (isset($this->alterTags)) {

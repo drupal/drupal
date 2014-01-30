@@ -270,7 +270,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->method('getClass')
       ->will($this->returnValue('Drupal\search\Tests\TestSearchPage'));
     $this->storage->expects($this->once())
-      ->method('entityInfo')
+      ->method('getEntityType')
       ->will($this->returnValue($entity_type));
 
     // Declare entities out of their expected order so we can be sure they were

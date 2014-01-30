@@ -24,14 +24,14 @@ class Bundle extends InOperator {
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
-   * The entity info for the entity type.
+   * The entity type definition.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * Overrides \Drupal\views\Plugin\views\filter\InOperator::init().
@@ -39,9 +39,9 @@ class Bundle extends InOperator {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->entityType = $this->getEntityType();
-    $this->entityInfo = \Drupal::entityManager()->getDefinition($this->entityType);
-    $this->real_field = $this->entityInfo->getKey('bundle');
+    $this->entityTypeId = $this->getEntityType();
+    $this->entityType = \Drupal::entityManager()->getDefinition($this->entityTypeId);
+    $this->real_field = $this->entityType->getKey('bundle');
   }
 
   /**
@@ -49,8 +49,8 @@ class Bundle extends InOperator {
    */
   public function getValueOptions() {
     if (!isset($this->value_options)) {
-      $types = entity_get_bundles($this->entityType);
-      $this->value_title = t('@entity types', array('@entity' => $this->entityInfo->getLabel()));
+      $types = entity_get_bundles($this->entityTypeId);
+      $this->value_title = t('@entity types', array('@entity' => $this->entityType->getLabel()));
 
       $options = array();
       foreach ($types as $type => $info) {

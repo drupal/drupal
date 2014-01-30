@@ -21,9 +21,10 @@ class EntityChangedConstraintValidator extends ConstraintValidator {
    */
   public function validate($value, Constraint $constraint) {
     if (isset($value)) {
+      /** @var $entity \Drupal\Core\Entity\EntityInterface */
       $entity = $this->context->getMetadata()->getTypedData()->getEntity();
       if (!$entity->isNew()) {
-        $saved_entity = \Drupal::entityManager()->getStorageController($entity->entityType())->loadUnchanged($entity->id());
+        $saved_entity = \Drupal::entityManager()->getStorageController($entity->getEntityTypeId())->loadUnchanged($entity->id());
 
         if ($saved_entity && ($saved_entity instanceof EntityChangedInterface) && ($saved_entity->getChangedTime() > $value)) {
           $this->context->addViolation($constraint->message);

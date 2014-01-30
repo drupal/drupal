@@ -159,7 +159,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
               '#type' => 'render_cache_placeholder',
               '#callback' => '\Drupal\comment\Plugin\Field\FieldFormatter\CommentDefaultFormatter::renderForm',
               '#context' => array(
-                'entity_type' => $entity->entityType(),
+                'entity_type' => $entity->getEntityTypeId(),
                 'entity_id' => $entity->id(),
                 'field_name' => $field_name,
               ),
@@ -169,7 +169,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       }
 
       $elements[] = $output + array(
-        '#theme' => 'comment_wrapper__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field_name,
+        '#theme' => 'comment_wrapper__' . $entity->getEntityTypeId() . '__' . $entity->bundle() . '__' . $field_name,
         '#entity' => $entity,
         '#display_mode' => $this->getFieldSetting('default_mode'),
         'comments' => array(),

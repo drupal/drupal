@@ -72,17 +72,17 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns the type of the entity.
    *
-   * @return
-   *   The type of the entity.
+   * @return string
+   *   The entity type ID.
    */
-  public function entityType();
+  public function getEntityTypeId();
 
   /**
    * Returns the bundle of the entity.
    *
    * @return
-   *   The bundle of the entity. Defaults to the entity type if the entity type
-   *   does not make use of different bundles.
+   *   The bundle of the entity. Defaults to the entity type ID if the entity
+   *   type does not make use of different bundles.
    */
   public function bundle();
 
@@ -221,11 +221,12 @@ interface EntityInterface extends AccessibleInterface {
   public function createDuplicate();
 
   /**
-   * Returns the info of the type of the entity.
+   * Returns the entity type definition.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   Entity type definition.
    */
-  public function entityInfo();
+  public function getEntityType();
 
   /**
    * Returns a list of entities referenced by this entity.

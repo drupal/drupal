@@ -85,7 +85,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
    */
   protected function assertFieldStorageLangcode(ContentEntityInterface $entity, $message = '') {
     $status = TRUE;
-    $entity_type = $entity->entityType();
+    $entity_type = $entity->getEntityTypeId();
     $id = $entity->id();
     $langcode = $entity->getUntranslated()->language()->id;
     $fields = array($this->field_name, $this->untranslatable_field_name);

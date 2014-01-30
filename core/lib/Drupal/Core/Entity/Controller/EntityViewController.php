@@ -62,7 +62,7 @@ class EntityViewController implements ContainerInjectionInterface {
    */
   public function view(EntityInterface $_entity, $view_mode = 'full', $langcode = NULL) {
     return $this->entityManager
-      ->getViewBuilder($_entity->entityType())
+      ->getViewBuilder($_entity->getEntityTypeId())
       ->view($_entity, $view_mode, $langcode);
   }
 

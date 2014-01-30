@@ -49,7 +49,7 @@ class EntityTestFormController extends ContentEntityFormController {
     );
 
     // @todo: Is there a better way to check if an entity type is revisionable?
-    $entity_info = $entity->entityInfo();
+    $entity_info = $entity->getEntityType();
     if ($entity_info->hasKey('revision') && !$entity->isNew()) {
       $form['revision'] = array(
         '#type' => 'checkbox',
@@ -85,15 +85,15 @@ class EntityTestFormController extends ContentEntityFormController {
     $entity->save();
 
     if ($is_new) {
-     $message = t('%entity_type @id has been created.', array('@id' => $entity->id(), '%entity_type' => $entity->entityType()));
+     $message = t('%entity_type @id has been created.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()));
     }
     else {
-      $message = t('%entity_type @id has been updated.', array('@id' => $entity->id(), '%entity_type' => $entity->entityType()));
+      $message = t('%entity_type @id has been updated.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()));
     }
     drupal_set_message($message);
 
     if ($entity->id()) {
-      $entity_type = $entity->entityType();
+      $entity_type = $entity->getEntityTypeId();
       $form_state['redirect_route'] = array(
         'route_name' => "entity_test.edit_$entity_type",
         'route_parameters' => array(
@@ -114,7 +114,7 @@ class EntityTestFormController extends ContentEntityFormController {
   public function delete(array $form, array &$form_state) {
     $entity = $this->entity;
     $entity->delete();
-    drupal_set_message(t('%entity_type @id has been deleted.', array('@id' => $entity->id(), '%entity_type' => $entity->entityType())));
+    drupal_set_message(t('%entity_type @id has been deleted.', array('@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId())));
     $form_state['redirect_route']['route_name'] = '<front>';
   }
 }

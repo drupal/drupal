@@ -94,7 +94,7 @@ class CommentItem extends ConfigFieldItemBase {
 
     $settings = $this->getFieldSettings();
 
-    $entity_type = $this->getEntity()->entityType();
+    $entity_type = $this->getEntity()->getEntityTypeId();
     $field_name = $this->getFieldDefinition()->getName();
 
     $element['comment'] = array(

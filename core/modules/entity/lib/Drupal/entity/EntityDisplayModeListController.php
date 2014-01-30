@@ -19,11 +19,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityDisplayModeListController extends ConfigEntityListController {
 
   /**
-   * The entity info for all entity types.
+   * All entity types.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface[]
    */
-  protected $entityInfoComplete;
+  protected $entityTypes;
 
   /**
    * Constructs a new EntityListController object.
@@ -38,7 +38,7 @@ class EntityDisplayModeListController extends ConfigEntityListController {
   public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, array $entity_info_complete) {
     parent::__construct($entity_info, $storage);
 
-    $this->entityInfoComplete = $entity_info_complete;
+    $this->entityTypes = $entity_info_complete;
   }
 
   /**
@@ -86,17 +86,17 @@ class EntityDisplayModeListController extends ConfigEntityListController {
   public function render() {
     $build = array();
     foreach ($this->load() as $entity_type => $entities) {
-      if (!isset($this->entityInfoComplete[$entity_type])) {
+      if (!isset($this->entityTypes[$entity_type])) {
         continue;
       }
 
       // Filter entities
-      if ($this->entityInfoComplete[$entity_type]->isFieldable() && !$this->isValidEntity($entity_type)) {
+      if ($this->entityTypes[$entity_type]->isFieldable() && !$this->isValidEntity($entity_type)) {
         continue;
       }
 
       $table = array(
-        '#prefix' => '<h2>' . $this->entityInfoComplete[$entity_type]->getLabel() . '</h2>',
+        '#prefix' => '<h2>' . $this->entityTypes[$entity_type]->getLabel() . '</h2>',
         '#type' => 'table',
         '#header' => $this->buildHeader(),
         '#rows' => array(),
@@ -112,12 +112,12 @@ class EntityDisplayModeListController extends ConfigEntityListController {
         $table['#weight'] = -10;
       }
 
-      $short_type = str_replace('_mode', '', $this->entityType);
+      $short_type = str_replace('_mode', '', $this->entityTypeId);
       $table['#rows']['_add_new'][] = array(
         'data' => array(
           '#type' => 'link',
           '#href' => "admin/structure/display-modes/$short_type/add/$entity_type",
-          '#title' => t('Add new %label @entity-type', array('%label' => $this->entityInfoComplete[$entity_type]->getLabel(), '@entity-type' => $this->entityInfo->getLowercaseLabel())),
+          '#title' => t('Add new %label @entity-type', array('%label' => $this->entityTypes[$entity_type]->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel())),
           '#options' => array(
             'html' => TRUE,
           ),
@@ -140,7 +140,7 @@ class EntityDisplayModeListController extends ConfigEntityListController {
    *   doesn't has the correct controller.
    */
   protected function isValidEntity($entity_type) {
-    return $this->entityInfoComplete[$entity_type]->hasViewBuilderClass();
+    return $this->entityTypes[$entity_type]->hasViewBuilderClass();
   }
 
 }

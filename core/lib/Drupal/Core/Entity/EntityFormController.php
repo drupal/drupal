@@ -59,7 +59,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     // hook_form_alter(), #validate, #submit, and #theme callbacks, but only if
     // it is different from the actual form ID, since callbacks would be invoked
     // twice otherwise.
-    $base_form_id = $this->entity->entityType() . '_form';
+    $base_form_id = $this->entity->getEntityTypeId() . '_form';
     if ($base_form_id == $this->getFormId()) {
       $base_form_id = NULL;
     }
@@ -70,7 +70,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
    * {@inheritdoc}
    */
   public function getFormId() {
-    $entity_type = $this->entity->entityType();
+    $entity_type = $this->entity->getEntityTypeId();
     $bundle = $this->entity->bundle();
     $form_id = $entity_type;
     if ($bundle != $entity_type) {
@@ -126,7 +126,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
 
     // Invoke the prepare form hooks.
     $this->prepareInvokeAll('entity_prepare_form', $form_state);
-    $this->prepareInvokeAll($this->entity->entityType() . '_prepare_form', $form_state);
+    $this->prepareInvokeAll($this->entity->getEntityTypeId() . '_prepare_form', $form_state);
   }
 
   /**
@@ -138,7 +138,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     $entity = $this->entity;
     // @todo Exploit the Field API to generate the default widgets for the
     // entity properties.
-    if ($entity->entityInfo()->isFieldable()) {
+    if ($entity->getEntityType()->isFieldable()) {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
 
@@ -175,7 +175,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     }
 
     // Hide or assign weights for extra fields.
-    $extra_fields = field_info_extra_fields($this->entity->entityType(), $this->entity->bundle(), 'form');
+    $extra_fields = field_info_extra_fields($this->entity->getEntityTypeId(), $this->entity->bundle(), 'form');
     foreach ($extra_fields as $extra_field => $info) {
       $component = $this->getFormDisplay($form_state)->getComponent($extra_field);
       if (!$component) {
@@ -364,7 +364,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     // properties.
     if (isset($form['#entity_builders'])) {
       foreach ($form['#entity_builders'] as $function) {
-        call_user_func_array($function, array($entity->entityType(), $entity, &$form, &$form_state));
+        call_user_func_array($function, array($entity->getEntityTypeId(), $entity, &$form, &$form_state));
       }
     }
 

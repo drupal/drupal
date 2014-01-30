@@ -117,11 +117,11 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
     try {
       // Load the stored entity, if any.
       if (!$entity->isNew() && !isset($entity->original)) {
-        $entity->original = entity_load_unchanged($this->entityType, $entity->id());
+        $entity->original = entity_load_unchanged($this->entityTypeId, $entity->id());
       }
 
       if ($entity->isNew()) {
-        $entity->mlid = $this->database->insert($this->entityInfo->getBaseTable())->fields(array('menu_name' => $entity->menu_name))->execute();
+        $entity->mlid = $this->database->insert($this->entityType->getBaseTable())->fields(array('menu_name' => $entity->menu_name))->execute();
         $entity->enforceIsNew();
       }
 
@@ -137,7 +137,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       // $entity may have additional keys left over from building a router entry.
       // The intersect removes the extra keys, allowing a meaningful comparison.
       if ($entity->isNew() || (array_intersect_key(get_object_vars($entity), get_object_vars($entity->original)) != get_object_vars($entity->original))) {
-        $return = drupal_write_record($this->entityInfo->getBaseTable(), $entity, $this->idKey);
+        $return = drupal_write_record($this->entityType->getBaseTable(), $entity, $this->idKey);
 
         if ($return) {
           if (!$entity->isNew()) {
@@ -164,7 +164,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
     }
     catch (\Exception $e) {
       $transaction->rollback();
-      watchdog_exception($this->entityType, $e);
+      watchdog_exception($this->entityTypeId, $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
@@ -199,11 +199,11 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       );
     $query_result = $query->execute();
 
-    if ($class = $this->entityInfo->getClass()) {
+    if ($class = $this->entityType->getClass()) {
       // We provide the necessary arguments for PDO to create objects of the
       // specified entity class.
       // @see \Drupal\Core\Entity\EntityInterface::__construct()
-      $query_result->setFetchMode(\PDO::FETCH_CLASS, $class, array(array(), $this->entityType));
+      $query_result->setFetchMode(\PDO::FETCH_CLASS, $class, array(array(), $this->entityTypeId));
     }
 
     return $query_result->fetchAllAssoc($this->idKey);
@@ -232,7 +232,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
     // If plid == 0, there is nothing to update.
     if ($entity->plid) {
       // Check if at least one visible child exists in the table.
-      $query = \Drupal::entityQuery($this->entityType);
+      $query = \Drupal::entityQuery($this->entityTypeId);
       $query
         ->condition('menu_name', $entity->menu_name)
         ->condition('hidden', 0)
@@ -279,7 +279,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
    * {@inheritdoc}
    */
   public function moveChildren(EntityInterface $entity) {
-    $query = $this->database->update($this->entityInfo->getBaseTable());
+    $query = $this->database->update($this->entityType->getBaseTable());
 
     $query->fields(array('menu_name' => $entity->menu_name));
 
@@ -325,7 +325,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
    * {@inheritdoc}
    */
   public function countMenuLinks($menu_name) {
-    $query = \Drupal::entityQuery($this->entityType);
+    $query = \Drupal::entityQuery($this->entityTypeId);
     $query
       ->condition('menu_name', $menu_name)
       ->count();
@@ -341,7 +341,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       $parent = FALSE;
       $parent_path = substr($parent_path, 0, strrpos($parent_path, '/'));
 
-      $query = \Drupal::entityQuery($this->entityType);
+      $query = \Drupal::entityQuery($this->entityTypeId);
       $query
         ->condition('mlid', $entity->id(), '<>')
         ->condition('module', 'system')

@@ -27,18 +27,18 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
   protected $accessCache = array();
 
   /**
-   * The entity type of the access controller instance.
+   * The entity type ID of the access controller instance.
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
-   * The entity info array.
+   * Information about the entity type.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * Constructs an access controller instance.
@@ -47,8 +47,8 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
    *   The entity info for the entity type.
    */
   public function __construct(EntityTypeInterface $entity_info) {
-    $this->entityType = $entity_info->id();
-    $this->entityInfo = $entity_info;
+    $this->entityTypeId = $entity_info->id();
+    $this->entityType = $entity_info;
   }
 
   /**
@@ -73,7 +73,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
     // - At least one module says to grant access.
     $access = array_merge(
       $this->moduleHandler()->invokeAll('entity_access', array($entity, $operation, $account, $langcode)),
-      $this->moduleHandler()->invokeAll($entity->entityType() . '_access', array($entity, $operation, $account, $langcode))
+      $this->moduleHandler()->invokeAll($entity->getEntityTypeId() . '_access', array($entity, $operation, $account, $langcode))
     );
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
@@ -129,7 +129,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
    *   could not be determined.
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    if ($admin_permission = $this->entityInfo->getAdminPermission()) {
+    if ($admin_permission = $this->entityType->getAdminPermission()) {
       return $account->hasPermission($admin_permission);
     }
     else {
@@ -220,7 +220,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
     // - At least one module says to grant access.
     $access = array_merge(
       $this->moduleHandler()->invokeAll('entity_create_access', array($account, $context['langcode'])),
-      $this->moduleHandler()->invokeAll($this->entityType . '_create_access', array($account, $context['langcode']))
+      $this->moduleHandler()->invokeAll($this->entityTypeId . '_create_access', array($account, $context['langcode']))
     );
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
@@ -250,7 +250,7 @@ class EntityAccessController extends EntityControllerBase implements EntityAcces
    *   could not be determined.
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    if ($admin_permission = $this->entityInfo->getAdminPermission()) {
+    if ($admin_permission = $this->entityType->getAdminPermission()) {
       return $account->hasPermission($admin_permission);
     }
     else {

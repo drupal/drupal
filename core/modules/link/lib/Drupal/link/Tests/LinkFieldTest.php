@@ -515,7 +515,7 @@ class LinkFieldTest extends WebTestBase {
       $this->container->get('entity.manager')->getStorageController('entity_test')->resetCache(array($id));
     }
     $entity = entity_load('entity_test', $id);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), $view_mode);
+    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), $view_mode);
     field_attach_prepare_view('entity_test', array($entity->id() => $entity), array($entity->bundle() => $display));
     $entity->content = field_attach_view($entity, $display);
 

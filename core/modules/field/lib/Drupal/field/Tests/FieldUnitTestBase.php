@@ -109,7 +109,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    */
   protected function entitySaveReload(EntityInterface $entity) {
     $entity->save();
-    $controller = $this->container->get('entity.manager')->getStorageController($entity->entityType());
+    $controller = $this->container->get('entity.manager')->getStorageController($entity->getEntityTypeId());
     $controller->resetCache();
     return $controller->load($entity->id());
   }
@@ -150,8 +150,8 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    */
   function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = Language::LANGCODE_NOT_SPECIFIED, $column = 'value') {
     // Re-load the entity to make sure we have the latest changes.
-    entity_get_controller($entity->entityType())->resetCache(array($entity->id()));
-    $e = entity_load($entity->entityType(), $entity->id());
+    entity_get_controller($entity->getEntityTypeId())->resetCache(array($entity->id()));
+    $e = entity_load($entity->getEntityTypeId(), $entity->id());
     $field = $values = $e->getTranslation($langcode)->$field_name;
     // Filter out empty values so that they don't mess with the assertions.
     $field->filterEmptyItems();

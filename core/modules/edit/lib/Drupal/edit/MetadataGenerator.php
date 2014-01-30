@@ -91,7 +91,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
       'label' => check_plain($label),
       'access' => TRUE,
       'editor' => $editor_id,
-      'aria' => t('Entity @type @id, field @field', array('@type' => $entity->entityType(), '@id' => $entity->id(), '@field' => $label)),
+      'aria' => t('Entity @type @id, field @field', array('@type' => $entity->getEntityTypeId(), '@id' => $entity->id(), '@field' => $label)),
     );
     $custom_metadata = $editor->getMetadata($items);
     if (count($custom_metadata)) {

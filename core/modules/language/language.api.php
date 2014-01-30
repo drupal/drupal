@@ -153,7 +153,7 @@ function hook_language_fallback_candidates_alter(array &$candidates, array $cont
 function hook_language_fallback_candidates_OPERATION_alter(array &$candidates, array $context) {
   // We know that the current OPERATION deals with entities so no need to check
   // here.
-  if ($context['data']->entityType() == 'node') {
+  if ($context['data']->getEntityTypeId() == 'node') {
     $candidates = array_reverse($candidates);
   }
 }

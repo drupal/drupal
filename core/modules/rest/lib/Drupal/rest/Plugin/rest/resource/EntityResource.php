@@ -80,7 +80,7 @@ class EntityResource extends ResourceBase {
     $definition = $this->getPluginDefinition();
     // Verify that the deserialized entity is of the type that we expect to
     // prevent security issues.
-    if ($entity->entityType() != $definition['entity_type']) {
+    if ($entity->getEntityTypeId() != $definition['entity_type']) {
       throw new BadRequestHttpException(t('Invalid entity type'));
     }
     // POSTed entities must not have an ID set, because we always want to create
@@ -98,7 +98,7 @@ class EntityResource extends ResourceBase {
     $this->validate($entity);
     try {
       $entity->save();
-      watchdog('rest', 'Created entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
+      watchdog('rest', 'Created entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
       $url = url(strtr($this->pluginId, ':', '/') . '/' . $entity->id(), array('absolute' => TRUE));
       // 201 Created responses have an empty body.
@@ -131,7 +131,7 @@ class EntityResource extends ResourceBase {
       throw new NotFoundHttpException();
     }
     $definition = $this->getPluginDefinition();
-    if ($entity->entityType() != $definition['entity_type']) {
+    if ($entity->getEntityTypeId() != $definition['entity_type']) {
       throw new BadRequestHttpException(t('Invalid entity type'));
     }
     $original_entity = entity_load($definition['entity_type'], $id);
@@ -161,7 +161,7 @@ class EntityResource extends ResourceBase {
     $this->validate($original_entity);
     try {
       $original_entity->save();
-      watchdog('rest', 'Updated entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
+      watchdog('rest', 'Updated entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
       // Update responses have an empty body.
       return new ResourceResponse(NULL, 204);
@@ -191,7 +191,7 @@ class EntityResource extends ResourceBase {
       }
       try {
         $entity->delete();
-        watchdog('rest', 'Deleted entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
+        watchdog('rest', 'Deleted entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
 
         // Delete responses have an empty body.
         return new ResourceResponse(NULL, 204);

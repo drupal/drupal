@@ -28,7 +28,7 @@ class FileFieldItemList extends ConfigFieldItemList {
 
     // Add a new usage for newly uploaded files.
     foreach ($this->targetEntities() as $file) {
-      \Drupal::service('file.usage')->add($file, 'file', $entity->entityType(), $entity->id());
+      \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
     }
   }
 
@@ -47,7 +47,7 @@ class FileFieldItemList extends ConfigFieldItemList {
     // deletion of previous file usages are necessary.
     if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
       foreach ($files as $file) {
-        \Drupal::service('file.usage')->add($file, 'file', $entity->entityType(), $entity->id());
+        \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
       }
       return;
     }
@@ -64,13 +64,13 @@ class FileFieldItemList extends ConfigFieldItemList {
     $removed_fids = array_filter(array_diff($original_fids, $fids));
     $removed_files = \Drupal::entityManager()->getStorageController('file')->loadMultiple($removed_fids);
     foreach ($removed_files as $file) {
-      \Drupal::service('file.usage')->delete($file, 'file', $entity->entityType(), $entity->id());
+      \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id());
     }
 
     // Add new usage entries for newly added files.
     foreach ($files as $fid => $file) {
       if (!in_array($fid, $original_fids)) {
-        \Drupal::service('file.usage')->add($file, 'file', $entity->entityType(), $entity->id());
+        \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
       }
     }
   }
@@ -84,7 +84,7 @@ class FileFieldItemList extends ConfigFieldItemList {
 
     // Delete all file usages within this entity.
     foreach ($this->targetEntities() as $file) {
-      \Drupal::service('file.usage')->delete($file, 'file', $entity->entityType(), $entity->id(), 0);
+      \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id(), 0);
     }
   }
 
@@ -97,7 +97,7 @@ class FileFieldItemList extends ConfigFieldItemList {
 
     // Decrement the file usage by 1.
     foreach ($this->targetEntities() as $file) {
-      \Drupal::service('file.usage')->delete($file, 'file', $entity->entityType(), $entity->id());
+      \Drupal::service('file.usage')->delete($file, 'file', $entity->getEntityTypeId(), $entity->id());
     }
   }
 

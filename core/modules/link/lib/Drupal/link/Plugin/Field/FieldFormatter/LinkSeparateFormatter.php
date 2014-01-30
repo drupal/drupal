@@ -48,7 +48,7 @@ class LinkSeparateFormatter extends LinkFormatter {
       if (empty($settings['url_only']) && !empty($item->title)) {
         // Unsanitized token replacement here because $options['html'] is FALSE
         // by default in l().
-        $link_title = \Drupal::token()->replace($item->title, array($entity->entityType() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
+        $link_title = \Drupal::token()->replace($item->title, array($entity->getEntityTypeId() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
       }
 
       // The link_separate formatter has two titles; the link text (as in the

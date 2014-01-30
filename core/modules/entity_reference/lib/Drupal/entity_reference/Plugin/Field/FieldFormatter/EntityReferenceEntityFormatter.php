@@ -92,7 +92,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       static $depth = 0;
       $depth++;
       if ($depth > 20) {
-        throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $item->entity->entityType(), '@entity_id' => $item->target_id)));
+        throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $item->entity->getEntityTypeId(), '@entity_id' => $item->target_id)));
       }
 
       if (!empty($item->target_id)) {

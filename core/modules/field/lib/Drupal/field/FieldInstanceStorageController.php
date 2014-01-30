@@ -107,18 +107,18 @@ class FieldInstanceStorageController extends ConfigStorageController {
     if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
       // Optimize for the most frequent case where we do have a specific ID.
       $id = $conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name'];
-      $instances = $this->entityManager->getStorageController($this->entityType)->loadMultiple(array($id));
+      $instances = $this->entityManager->getStorageController($this->entityTypeId)->loadMultiple(array($id));
     }
     else {
       // No specific ID, we need to examine all existing instances.
-      $instances = $this->entityManager->getStorageController($this->entityType)->loadMultiple();
+      $instances = $this->entityManager->getStorageController($this->entityTypeId)->loadMultiple();
     }
 
     // Merge deleted instances (stored in state) if needed.
     if ($include_deleted) {
       $deleted_instances = $this->state->get('field.instance.deleted') ?: array();
       foreach ($deleted_instances as $id => $config) {
-        $instances[$id] = $this->entityManager->getStorageController($this->entityType)->create($config);
+        $instances[$id] = $this->entityManager->getStorageController($this->entityTypeId)->create($config);
       }
     }
 

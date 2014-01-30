@@ -76,7 +76,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    */
   public function serialize() {
     // Only store the definition, not external objects or derived data.
-    $data = $this->getExportProperties() + array('entityType' => $this->entityType());
+    $data = $this->getExportProperties() + array('entityType' => $this->getEntityTypeId());
     return serialize($data);
   }
 

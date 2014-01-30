@@ -283,7 +283,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    * {@inheritdoc}
    */
   public function isNewRevision() {
-    return $this->newRevision || ($this->entityInfo()->hasKey('revision') && !$this->getRevisionId());
+    return $this->newRevision || ($this->getEntityType()->hasKey('revision') && !$this->getRevisionId());
   }
 
   /**
@@ -298,7 +298,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    */
   public function isTranslatable() {
     // @todo Inject the entity manager and retrieve bundle info from it.
-    $bundles = entity_get_bundles($this->entityType);
+    $bundles = entity_get_bundles($this->entityTypeId);
     return !empty($bundles[$this->bundle()]['translatable']);
   }
 
@@ -366,7 +366,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     $original = $all_links[$this->machine_name];
     $original['machine_name'] = $this->machine_name;
     /** @var \Drupal\menu_link\MenuLinkStorageControllerInterface $storage_controller */
-    $storage_controller = \Drupal::entityManager()->getStorageController($this->entityType);
+    $storage_controller = \Drupal::entityManager()->getStorageController($this->entityTypeId);
     $new_link = $storage_controller->createFromDefaultLink($original);
     // Merge existing menu link's ID and 'has_children' property.
     foreach (array('mlid', 'has_children') as $key) {

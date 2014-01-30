@@ -60,7 +60,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertIdentical($empty->get('langcode'), $default_langcode);
 
     // Verify Entity properties/methods on the newly created empty entity.
-    $this->assertIdentical($empty->entityType(), 'config_test');
+    $this->assertIdentical($empty->getEntityTypeId(), 'config_test');
     $uri = $empty->uri();
     $this->assertIdentical($uri['path'], 'admin/structure/config_test/manage');
 

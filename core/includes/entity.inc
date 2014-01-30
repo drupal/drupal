@@ -501,7 +501,7 @@ function entity_list_controller($entity_type) {
  *   A render array for the entity.
  */
 function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $reset = FALSE) {
-  $render_controller = \Drupal::entityManager()->getViewBuilder($entity->entityType());
+  $render_controller = \Drupal::entityManager()->getViewBuilder($entity->getEntityTypeId());
   if ($reset) {
     $render_controller->resetCache(array($entity->id()));
   }
@@ -511,7 +511,7 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $res
 /**
  * Returns the render array for the provided entities.
  *
- * @param array $entities
+ * @param \Drupal\Core\Entity\EntityInterface[] $entities
  *   The entities to be rendered, must be of the same type.
  * @param string $view_mode
  *   The view mode that should be used to display the entity.
@@ -527,7 +527,7 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $res
  *   entities array passed in $entities.
  */
 function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $reset = FALSE) {
-  $render_controller = \Drupal::entityManager()->getViewBuilder(reset($entities)->entityType());
+  $render_controller = \Drupal::entityManager()->getViewBuilder(reset($entities)->getEntityTypeId());
   if ($reset) {
     $render_controller->resetCache(array_keys($entities));
   }
@@ -619,7 +619,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  * @see entity_get_display().
  */
 function entity_get_render_display(EntityInterface $entity, $view_mode) {
-  $entity_type = $entity->entityType();
+  $entity_type = $entity->getEntityTypeId();
   $bundle = $entity->bundle();
   $render_view_mode = 'default';
 
@@ -727,7 +727,7 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
  * @see entity_get_form_display().
  */
 function entity_get_render_form_display(EntityInterface $entity, $form_mode) {
-  $entity_type = $entity->entityType();
+  $entity_type = $entity->getEntityTypeId();
   $bundle = $entity->bundle();
   $render_form_mode = 'default';
 

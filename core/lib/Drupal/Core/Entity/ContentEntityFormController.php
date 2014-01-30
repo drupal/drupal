@@ -50,7 +50,7 @@ class ContentEntityFormController extends EntityFormController {
     $entity = $this->entity;
     // @todo Exploit the Field API to generate the default widgets for the
     // entity fields.
-    if ($entity->entityInfo()->isFieldable()) {
+    if ($entity->getEntityType()->isFieldable()) {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
 
@@ -66,7 +66,7 @@ class ContentEntityFormController extends EntityFormController {
   public function validate(array $form, array &$form_state) {
     $this->updateFormLangcode($form_state);
     $entity = $this->buildEntity($form, $form_state);
-    $entity_type = $entity->entityType();
+    $entity_type = $entity->getEntityTypeId();
     $entity_langcode = $entity->language()->id;
 
     $violations = array();
@@ -130,7 +130,7 @@ class ContentEntityFormController extends EntityFormController {
    */
   public function buildEntity(array $form, array &$form_state) {
     $entity = clone $this->entity;
-    $entity_type = $entity->entityType();
+    $entity_type = $entity->getEntityTypeId();
     $info = \Drupal::entityManager()->getDefinition($entity_type);
 
     // @todo Exploit the Entity Field API to process the submitted field values.

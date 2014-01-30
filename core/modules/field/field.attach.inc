@@ -85,7 +85,7 @@ use Drupal\entity\Entity\EntityFormDisplay;
  *   An array of returned values.
  */
 function field_invoke_method($method, $target_function, EntityInterface $entity, &$a = NULL, &$b = NULL, array $options = array()) {
-  $entity_type = $entity->entityType();
+  $entity_type = $entity->getEntityTypeId();
 
   // Determine the list of fields to iterate on.
   $field_definitions = _field_invoke_get_field_definitions($entity_type, $entity->bundle(), $options);
@@ -127,7 +127,7 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
  * @param callable $target_function
  *   A function that receives a FieldDefinitionInterface object and a bundle
  *   name and returns the object on which the method should be invoked.
- * @param array $entities
+ * @param \Drupal\Core\Entity\EntityInterface[] $entities
  *   An array of entities, keyed by entity ID.
  * @param mixed $a
  *   (optional) A parameter for the invoked method. Defaults to NULL.
@@ -153,7 +153,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
   // Go through the entities and collect the instances on which the method
   // should be called.
   foreach ($entities as $entity) {
-    $entity_type = $entity->entityType();
+    $entity_type = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
     $id = $entity->id();
 

@@ -270,7 +270,7 @@ class CommentManager implements CommentManagerInterface {
         // We cannot use drupal_get_destination() because these links
         // sometimes appear on /node and taxonomy listing pages.
         if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
-          $destination = array('destination' => 'comment/reply/' . $entity->entityType() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
+          $destination = array('destination' => 'comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
         }
         else {
           $uri = $entity->uri();

@@ -25,18 +25,18 @@ class EntityListController extends EntityControllerBase implements EntityListCon
   protected $storage;
 
   /**
-   * The entity type name.
+   * The entity type ID.
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
-   * The entity info array.
+   * Information about the entity type.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * {@inheritdoc}
@@ -57,9 +57,9 @@ class EntityListController extends EntityControllerBase implements EntityListCon
    *   The entity storage controller class.
    */
   public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage) {
-    $this->entityType = $entity_info->id();
+    $this->entityTypeId = $entity_info->id();
     $this->storage = $storage;
-    $this->entityInfo = $entity_info;
+    $this->entityType = $entity_info;
   }
 
   /**
@@ -181,7 +181,7 @@ class EntityListController extends EntityControllerBase implements EntityListCon
       '#header' => $this->buildHeader(),
       '#title' => $this->getTitle(),
       '#rows' => array(),
-      '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityInfo->getLabel())),
+      '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityType->getLabel())),
     );
     foreach ($this->load() as $entity) {
       if ($row = $this->buildRow($entity)) {

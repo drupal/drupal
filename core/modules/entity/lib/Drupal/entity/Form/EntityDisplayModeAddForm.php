@@ -15,18 +15,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
 
   /**
+   * The entity type for which the display mode is being created.
+   *
    * @var string
    */
-  protected $entityType;
+  protected $targetEntityTypeId;
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $entity_type = NULL) {
-    $this->entityType = $entity_type;
+    $this->targetEntityTypeId = $entity_type;
     $form = parent::buildForm($form, $form_state);
-    $definition = $this->entityManager->getDefinition($this->entityType);
-    $form['#title'] = $this->t('Add new %label @entity-type', array('%label' => $definition->getLabel(), '@entity-type' => $this->entityInfo->getLowercaseLabel()));
+    $definition = $this->entityManager->getDefinition($this->targetEntityTypeId);
+    $form['#title'] = $this->t('Add new %label @entity-type', array('%label' => $definition->getLabel(), '@entity-type' => $this->entityType->getLowercaseLabel()));
     return $form;
   }
 
@@ -36,19 +38,19 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
-    form_set_value($form['id'], $this->entityType . '.' . $form_state['values']['id'], $form_state);
+    form_set_value($form['id'], $this->targetEntityTypeId . '.' . $form_state['values']['id'], $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function prepareEntity() {
-    $definition = $this->entityManager->getDefinition($this->entityType);
+    $definition = $this->entityManager->getDefinition($this->targetEntityTypeId);
     if (!$definition->isFieldable() || !$definition->hasViewBuilderClass()) {
       throw new NotFoundHttpException();
     }
 
-    $this->entity->targetEntityType = $this->entityType;
+    $this->entity->targetEntityType = $this->targetEntityTypeId;
   }
 
 }

@@ -109,7 +109,7 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
    * {@inheritdoc}
    */
   public function sortSearchPages($search_pages) {
-    $entity_info = $this->storage->entityInfo();
+    $entity_info = $this->storage->getEntityType();
     uasort($search_pages, array($entity_info->getClass(), 'sort'));
     return $search_pages;
   }

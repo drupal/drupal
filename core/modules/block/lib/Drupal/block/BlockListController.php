@@ -97,7 +97,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     $entities = _block_rehash($this->theme);
 
     // Sort the blocks using \Drupal\block\Entity\Block::sort().
-    uasort($entities, array($this->entityInfo->getClass(), 'sort'));
+    uasort($entities, array($this->entityType->getClass(), 'sort'));
     return $entities;
   }
 

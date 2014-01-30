@@ -21,7 +21,8 @@ class EntityTypeConstraintValidator extends ConstraintValidator {
    */
   public function validate($entity, Constraint $constraint) {
 
-    if (!empty($entity) && $entity->entityType() != $constraint->type) {
+    /** @var $entity \Drupal\Core\Entity\EntityInterface */
+    if (!empty($entity) && $entity->getEntityTypeId() != $constraint->type) {
       $this->context->addViolation($constraint->message, array('%type' => $constraint->type));
     }
   }

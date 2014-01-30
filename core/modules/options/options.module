@@ -65,7 +65,7 @@ function options_field_entity_delete(FieldInterface $field) {
 function options_allowed_values(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
   $allowed_values = &drupal_static(__FUNCTION__, array());
 
-  $cache_id = implode(':', array($entity->entityType(), $entity->bundle(), $field_definition->getName()));
+  $cache_id = implode(':', array($entity->getEntityTypeId(), $entity->bundle(), $field_definition->getName()));
   if (!isset($allowed_values[$cache_id])) {
     $function = $field_definition->getSetting('allowed_values_function');
     // If $cacheable is FALSE, then the allowed values are not statically

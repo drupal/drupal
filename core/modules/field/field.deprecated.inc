@@ -287,7 +287,7 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
 
   $form += (array) field_invoke_method('form', _field_invoke_widget_target($form_display), $entity, $form, $form_state, $options);
 
-  $form['#entity_type'] = $entity->entityType();
+  $form['#entity_type'] = $entity->getEntityTypeId();
   $form['#bundle'] = $entity->bundle();
 
   // Let other modules make changes to the form.

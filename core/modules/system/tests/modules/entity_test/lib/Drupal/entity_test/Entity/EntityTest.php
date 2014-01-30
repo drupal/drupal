@@ -100,7 +100,7 @@ class EntityTest extends ContentEntityBase {
   public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
     if (empty($values['type'])) {
-      $values['type'] = $storage_controller->entityType();
+      $values['type'] = $storage_controller->getEntityTypeId();
     }
   }
 
@@ -108,7 +108,7 @@ class EntityTest extends ContentEntityBase {
    * Overrides Drupal\entity\Entity::label().
    */
   public function label() {
-    $info = $this->entityInfo();
+    $info = $this->getEntityType();
     if (!isset($langcode)) {
       $langcode = $this->activeLangcode;
     }

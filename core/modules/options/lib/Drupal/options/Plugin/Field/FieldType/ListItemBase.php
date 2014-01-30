@@ -214,7 +214,7 @@ abstract class ListItemBase extends ConfigFieldItemBase implements AllowedValues
       // Prevent removing values currently in use.
       if ($has_data) {
         $lost_keys = array_diff(array_keys($this->getFieldSetting('allowed_values')), array_keys($values));
-        if (_options_values_in_use($this->getEntity()->entityType(), $this->getFieldDefinition()->getName(), $lost_keys)) {
+        if (_options_values_in_use($this->getEntity()->getEntityTypeId(), $this->getFieldDefinition()->getName(), $lost_keys)) {
           \Drupal::formBuilder()->setError($element, $form_state, t('Allowed values list: some values are being removed while currently in use.'));
         }
       }

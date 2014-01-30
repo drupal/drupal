@@ -138,7 +138,7 @@ class TextFieldTest extends WebTestBase {
 
     // Display the entity.
     $entity = entity_load('entity_test', $id);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
+    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $entity->content = field_attach_view($entity, $display);
     $this->drupalSetContent(drupal_render($entity->content));
     $this->assertText($value, 'Filtered tags are not displayed');
@@ -211,7 +211,7 @@ class TextFieldTest extends WebTestBase {
 
     // Display the entity.
     $entity = entity_load('entity_test', $id);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
+    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertNoRaw($value, 'HTML tags are not displayed.');
@@ -253,7 +253,7 @@ class TextFieldTest extends WebTestBase {
     // Display the entity.
     $this->container->get('entity.manager')->getStorageController('entity_test')->resetCache(array($id));
     $entity = entity_load('entity_test', $id);
-    $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
+    $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $entity->content = field_attach_view($entity, $display);
     $this->content = drupal_render($entity->content);
     $this->assertRaw($value, 'Value is displayed unfiltered');

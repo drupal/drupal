@@ -37,18 +37,18 @@ class EntityRow extends RowPluginBase {
   public $base_field;
 
   /**
-   * Stores the entity type of the result entities.
+   * Stores the entity type ID of the result entities.
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
-   * Contains the entity info of the entity type of this row plugin instance.
+   * Contains the entity type of this row plugin instance.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * Contains an array of render arrays, one for each rendered entity.
@@ -75,10 +75,10 @@ class EntityRow extends RowPluginBase {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->entityType = $this->definition['entity_type'];
-    $this->entityInfo = $this->entityManager->getDefinition($this->entityType);
-    $this->base_table = $this->entityInfo->getBaseTable();
-    $this->base_field = $this->entityInfo->getKey('id');
+    $this->entityTypeId = $this->definition['entity_type'];
+    $this->entityType = $this->entityManager->getDefinition($this->entityTypeId);
+    $this->base_table = $this->entityType->getBaseTable();
+    $this->base_field = $this->entityType->getKey('id');
   }
 
   /**
@@ -119,7 +119,7 @@ class EntityRow extends RowPluginBase {
    */
   protected function buildViewModeOptions() {
     $options = array('default' => t('Default'));
-    $view_modes = entity_get_view_modes($this->entityType);
+    $view_modes = entity_get_view_modes($this->entityTypeId);
     foreach ($view_modes as $mode => $settings) {
       $options[$mode] = $settings['label'];
     }

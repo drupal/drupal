@@ -93,7 +93,7 @@ class ConfigTranslationOverviewTest extends WebTestBase {
       $this->assertLinkByHref($base_url . '/translate');
       $this->assertText(String::checkPlain($test_entity->label()));
 
-      $entity_info = \Drupal::entityManager()->getDefinition($test_entity->entityType());
+      $entity_info = \Drupal::entityManager()->getDefinition($test_entity->getEntityTypeId());
       $this->drupalGet($base_url . '/translate');
 
       $title = t('!label !entity_type', array('!label' => $test_entity->label(), '!entity_type' => $entity_info->getLowercaseLabel()));

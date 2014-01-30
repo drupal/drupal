@@ -462,14 +462,14 @@ class EntityManagerTest extends UnitTestCase {
 
     $apple_entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
     $apple_entity->expects($this->once())
-      ->method('entityType')
+      ->method('getEntityTypeId')
       ->will($this->returnValue('apple'));
 
     $this->assertSame('the form contents', $this->entityManager->getForm($apple_entity));
 
     $banana_entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
     $banana_entity->expects($this->once())
-      ->method('entityType')
+      ->method('getEntityTypeId')
       ->will($this->returnValue('banana'));
 
     $this->assertSame('the form contents', $this->entityManager->getForm($banana_entity));

@@ -250,13 +250,14 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
   }
   elseif (($type == 'entity' & !empty($data['entity'])) ||
     ($type == 'node' & !empty($data['node']))) {
+    /** @var $entity \Drupal\Core\Entity\ContentEntityInterface */
     $entity = !empty($data['entity']) ? $data['entity'] : $data['node'];
 
     foreach ($tokens as $name => $original) {
       switch($name) {
         case 'comment-count':
           $count = 0;
-          $fields = array_keys(\Drupal::service('comment.manager')->getFields($entity->entityType()));
+          $fields = array_keys(\Drupal::service('comment.manager')->getFields($entity->getEntityTypeId()));
           $definitions = array_keys($entity->getPropertyDefinitions());
           $valid_fields = array_intersect($fields, $definitions);
           foreach ($valid_fields as $field_name) {
@@ -266,7 +267,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'comment-count-new':
-          $replacements[$original] = comment_num_new($entity->id(), $entity->entityType());
+          $replacements[$original] = comment_num_new($entity->id(), $entity->getEntityTypeId());
           break;
       }
     }

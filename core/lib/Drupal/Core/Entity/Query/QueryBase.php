@@ -20,7 +20,7 @@ abstract class QueryBase {
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
    * The list of sorts.
@@ -129,7 +129,7 @@ abstract class QueryBase {
    * Constructs this object.
    */
   public function __construct($entity_type, $conjunction, array $namespaces) {
-    $this->entityType = $entity_type;
+    $this->entityTypeId = $entity_type;
     $this->conjunction = $conjunction;
     $this->namespaces = $namespaces;
     $this->condition = $this->conditionGroupFactory($conjunction);
@@ -142,7 +142,7 @@ abstract class QueryBase {
    * Implements \Drupal\Core\Entity\Query\QueryInterface::getEntityType().
    */
   public function getEntityType() {
-    return $this->entityType;
+    return $this->entityTypeId;
   }
 
   /**

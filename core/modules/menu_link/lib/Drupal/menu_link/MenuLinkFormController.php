@@ -262,7 +262,7 @@ class MenuLinkFormController extends EntityFormController {
     // Invoke all specified builders for copying form values to entity properties.
     if (isset($form['#entity_builders'])) {
       foreach ($form['#entity_builders'] as $function) {
-        call_user_func_array($function, array($entity->entityType(), $entity, &$form, &$form_state));
+        call_user_func_array($function, array($entity->getEntityTypeId(), $entity, &$form, &$form_state));
       }
     }
 

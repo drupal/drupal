@@ -173,7 +173,7 @@ class EntitySerializationTest extends NormalizerTestBase {
     foreach (array('json', 'xml') as $type) {
       $denormalized = $this->serializer->denormalize($normalized, $this->entityClass, $type, array('entity_type' => 'entity_test_mulrev'));
       $this->assertTrue($denormalized instanceof $this->entityClass, String::format('Denormalized entity is an instance of @class', array('@class' => $this->entityClass)));
-      $this->assertIdentical($denormalized->entityType(), $this->entity->entityType(), 'Expected entity type found.');
+      $this->assertIdentical($denormalized->getEntityTypeId(), $this->entity->getEntityTypeId(), 'Expected entity type found.');
       $this->assertIdentical($denormalized->bundle(), $this->entity->bundle(), 'Expected entity bundle found.');
       $this->assertIdentical($denormalized->uuid(), $this->entity->uuid(), 'Expected entity UUID found.');
     }

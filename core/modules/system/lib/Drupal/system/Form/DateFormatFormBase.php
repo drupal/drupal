@@ -95,7 +95,7 @@ abstract class DateFormatFormBase extends EntityFormController {
    */
   public function exists($entity_id, array $element,  array $form_state) {
     return (bool) $this->queryFactory
-      ->get($this->entity->entityType())
+      ->get($this->entity->getEntityTypeId())
       ->condition('id', $element['#field_prefix'] . $entity_id)
       ->execute();
   }

@@ -124,7 +124,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
       if (!$entity->access('view')) {
         throw new AccessDeniedHttpException();
       }
-      $instance = $this->fieldInfo->getInstance($entity->entityType(), $entity->bundle(), $comment->field_name->value);
+      $instance = $this->fieldInfo->getInstance($entity->getEntityTypeId(), $entity->bundle(), $comment->field_name->value);
 
       // Find the current display page for this comment.
       $page = comment_get_display_page($comment->id(), $instance);
@@ -251,7 +251,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
         // redirect loop.
         $entity->{$field_name}->status = COMMENT_HIDDEN;
         // Render array of the entity full view mode.
-        $build['commented_entity'] = $this->entityManager()->getViewBuilder($entity->entityType())->view($entity, 'full');
+        $build['commented_entity'] = $this->entityManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, 'full');
         unset($build['commented_entity']['#cache']);
         $entity->{$field_name}->status = $status;
       }
@@ -264,8 +264,8 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     $comment = $this->entityManager()->getStorageController('comment')->create(array(
       'entity_id' => $entity->id(),
       'pid' => $pid,
-      'entity_type' => $entity->entityType(),
-      'field_id' => $entity->entityType() . '__' . $field_name,
+      'entity_type' => $entity->getEntityTypeId(),
+      'field_id' => $entity->getEntityTypeId() . '__' . $field_name,
     ));
     $build['comment_form'] = $this->entityManager()->getForm($comment);
 

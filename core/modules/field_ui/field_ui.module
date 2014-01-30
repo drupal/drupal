@@ -180,7 +180,7 @@ function field_ui_form_node_type_form_alter(&$form, $form_state) {
  * Implements hook_entity_operation_alter().
  */
 function field_ui_entity_operation_alter(array &$operations, EntityInterface $entity) {
-  $info = $entity->entityInfo();
+  $info = $entity->getEntityType();
   // Add manage fields and display links if this entity type is the bundle
   // of another.
   if ($bundle_of = $info->getBundleOf()) {

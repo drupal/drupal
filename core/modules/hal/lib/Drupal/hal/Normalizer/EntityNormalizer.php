@@ -29,13 +29,14 @@ class EntityNormalizer extends NormalizerBase {
    */
   public function normalize($entity, $format = NULL, array $context = array()) {
     // Create the array of normalized properties, starting with the URI.
+    /** @var $entity \Drupal\Core\Entity\ContentEntityInterface */
     $normalized = array(
       '_links' => array(
         'self' => array(
           'href' => $this->getEntityUri($entity),
         ),
         'type' => array(
-          'href' => $this->linkManager->getTypeUri($entity->entityType(), $entity->bundle()),
+          'href' => $this->linkManager->getTypeUri($entity->getEntityTypeId(), $entity->bundle()),
         ),
       ),
     );
@@ -43,6 +44,7 @@ class EntityNormalizer extends NormalizerBase {
     // If the properties to use were specified, only output those properties.
     // Otherwise, output all properties except internal ID.
     if (isset($context['included_fields'])) {
+      $properties = array();
       foreach ($context['included_fields'] as $property_name) {
         $properties[] = $entity->get($property_name);
       }

@@ -344,7 +344,7 @@ function _field_filter_xss_display_allowed_tags() {
 function field_view_value(EntityInterface $entity, $field_name, $item, $display = array(), $langcode = NULL) {
   $output = array();
 
-  if ($field = field_info_field($entity->entityType(), $field_name)) {
+  if ($field = field_info_field($entity->getEntityTypeId(), $field_name)) {
     // Clone the entity since we are going to modify field values.
     $clone = clone $entity;
 

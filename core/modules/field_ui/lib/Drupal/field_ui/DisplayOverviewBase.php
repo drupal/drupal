@@ -560,7 +560,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
           // If no display exists for the newly enabled view mode, initialize
           // it with those from the 'default' view mode, which were used so
           // far.
-          if (!entity_load($this->getEntityDisplay('default')->entityType(), $this->entity_type . '.' . $this->bundle . '.' . $mode)) {
+          if (!entity_load($this->getEntityDisplay('default')->getEntityTypeId(), $this->entity_type . '.' . $this->bundle . '.' . $mode)) {
             $display = $this->getEntityDisplay('default')->createCopy($mode);
             $display->save();
           }

@@ -44,8 +44,8 @@ class TermViewBuilder extends EntityViewBuilder {
     $return = parent::getBuildDefaults($entity, $view_mode, $langcode);
 
     // TODO: rename "term" to "taxonomy_term" in theme_taxonomy_term().
-    $return['#term'] = $return["#{$this->entityType}"];
-    unset($return["#{$this->entityType}"]);
+    $return['#term'] = $return["#{$this->entityTypeId}"];
+    unset($return["#{$this->entityTypeId}"]);
 
     return $return;
   }

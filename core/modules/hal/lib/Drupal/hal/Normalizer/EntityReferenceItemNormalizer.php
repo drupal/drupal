@@ -25,6 +25,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()
    */
   public function normalize($field_item, $format = NULL, array $context = array()) {
+    /** @var $field_item \Drupal\Core\Field\FieldItemInterface */
     $target_entity = $field_item->get('entity')->getValue();
 
     // If the parent entity passed in a langcode, unset it before normalizing
@@ -48,7 +49,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
     // objects.
     $field_name = $field_item->getParent()->getName();
     $entity = $field_item->getEntity();
-    $field_uri = $this->linkManager->getRelationUri($entity->entityType(), $entity->bundle(), $field_name);
+    $field_uri = $this->linkManager->getRelationUri($entity->getEntityTypeId(), $entity->bundle(), $field_name);
     return array(
       '_links' => array(
         $field_uri => array($link),

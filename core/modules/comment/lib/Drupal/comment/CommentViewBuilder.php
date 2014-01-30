@@ -128,7 +128,7 @@ class CommentViewBuilder extends EntityViewBuilder {
           'comment_entity_id' => $entity->id(),
           'view_mode' => $view_mode,
           'langcode' => $langcode,
-          'commented_entity_type' => $commented_entity->entityType(),
+          'commented_entity_type' => $commented_entity->getEntityTypeId(),
           'commented_entity_id' => $commented_entity->id(),
           'in_preview' => !empty($entity->in_preview),
         ),
@@ -271,7 +271,7 @@ class CommentViewBuilder extends EntityViewBuilder {
     if (empty($comment->in_preview)) {
       $prefix = '';
       $commented_entity = $this->entityManager->getStorageController($comment->entity_type->value)->load($comment->entity_id->value);
-      $instance = $this->fieldInfo->getInstance($commented_entity->entityType(), $commented_entity->bundle(), $comment->field_name->value);
+      $instance = $this->fieldInfo->getInstance($commented_entity->getEntityTypeId(), $commented_entity->bundle(), $comment->field_name->value);
       $is_threaded = isset($comment->divs)
         && $instance->getSetting('default_mode') == COMMENT_MODE_THREADED;
 

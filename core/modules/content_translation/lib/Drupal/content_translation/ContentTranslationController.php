@@ -20,14 +20,14 @@ class ContentTranslationController implements ContentTranslationControllerInterf
    *
    * @var string
    */
-  protected $entityType;
+  protected $entityTypeId;
 
   /**
-   * The entity info of the entity being translated.
+   * Information about the entity type.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entityInfo;
+  protected $entityType;
 
   /**
    * Initializes an instance of the content translation controller.
@@ -36,8 +36,8 @@ class ContentTranslationController implements ContentTranslationControllerInterf
    *   The info array of the given entity type.
    */
   public function __construct($entity_info) {
-    $this->entityType = $entity_info->id();
-    $this->entityInfo = $entity_info;
+    $this->entityTypeId = $entity_info->id();
+    $this->entityType = $entity_info;
   }
 
   /**
@@ -57,12 +57,12 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   public function getTranslationAccess(EntityInterface $entity, $op) {
     // @todo Move this logic into a translation access controller checking also
     //   the translation language and the given account.
-    $info = $entity->entityInfo();
+    $info = $entity->getEntityType();
     $translate_permission = TRUE;
     // If no permission granularity is defined this entity type does not need an
     // explicit translate permission.
     if (!user_access('translate any entity') && $permission_granularity = $info->getPermissionGranularity()) {
-      $translate_permission = user_access($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->entityType()}" : "translate {$entity->entityType()}");
+      $translate_permission = user_access($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->getEntityTypeId()}" : "translate {$entity->getEntityTypeId()}");
     }
     return $translate_permission && user_access("$op content translations");
   }

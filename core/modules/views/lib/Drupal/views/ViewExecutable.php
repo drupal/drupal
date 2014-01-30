@@ -78,7 +78,7 @@ class ViewExecutable {
    *
    * The array must use a numeric index starting at 0.
    *
-   * @var array
+   * @var \Drupal\views\ResultRow[]
    */
   public $result = array();
 

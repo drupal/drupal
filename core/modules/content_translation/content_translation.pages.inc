@@ -18,7 +18,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
  * @deprecated Use \Drupal\content_translation\Controller\ContentTranslationController::overview()
  */
 function content_translation_overview(EntityInterface $entity) {
-  $controller = content_translation_controller($entity->entityType());
+  $controller = content_translation_controller($entity->getEntityTypeId());
   $entity_manager = \Drupal::entityManager();
   $languages = language_list();
   $original = $entity->getUntranslated()->language()->id;
@@ -42,7 +42,7 @@ function content_translation_overview(EntityInterface $entity) {
 
     // Determine whether the current entity is translatable.
     $translatable = FALSE;
-    foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
+    foreach (field_info_instances($entity->getEntityTypeId(), $entity->bundle()) as $instance) {
       if ($instance->isTranslatable()) {
         $translatable = TRUE;
         break;

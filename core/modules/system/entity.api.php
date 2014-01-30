@@ -300,7 +300,7 @@ function hook_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
   // Insert the new entity into a fictional table of all entities.
   db_insert('example_entity')
     ->fields(array(
-      'type' => $entity->entityType(),
+      'type' => $entity->getEntityTypeId(),
       'id' => $entity->id(),
       'created' => REQUEST_TIME,
       'updated' => REQUEST_TIME,
@@ -323,7 +323,7 @@ function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
     ->fields(array(
       'updated' => REQUEST_TIME,
     ))
-    ->condition('type', $entity->entityType())
+    ->condition('type', $entity->getEntityTypeId())
     ->condition('id', $entity->id())
     ->execute();
 }
@@ -372,7 +372,7 @@ function hook_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
   // Count references to this entity in a custom table before they are removed
   // upon entity deletion.
   $id = $entity->id();
-  $type = $entity->entityType();
+  $type = $entity->getEntityTypeId();
   $count = db_select('example_entity_data')
     ->condition('type', $type)
     ->condition('id', $id)
@@ -400,7 +400,7 @@ function hook_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
 function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
   // Delete the entity's entry from a fictional table of all entities.
   db_delete('example_entity')
-    ->condition('type', $entity->entityType())
+    ->condition('type', $entity->getEntityTypeId())
     ->condition('id', $entity->id())
     ->execute();
 }
@@ -554,7 +554,7 @@ function hook_entity_prepare_view($entity_type, array $entities, array $displays
  */
 function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInterface $entity, $context) {
   // For nodes, change the view mode when it is teaser.
-  if ($entity->entityType() == 'node' && $view_mode == 'teaser') {
+  if ($entity->getEntityTypeId() == 'node' && $view_mode == 'teaser') {
     $view_mode = 'my_custom_view_mode';
   }
 }
