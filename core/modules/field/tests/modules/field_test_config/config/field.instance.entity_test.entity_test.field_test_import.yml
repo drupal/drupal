@@ -5,9 +5,9 @@ entity_type: entity_test
 bundle: entity_test
 label: 'Test import field'
 description: ''
-required: '0'
+required: false
 default_value: {  }
 default_value_function: ''
 settings:
-  text_processing: '0'
+  text_processing: 0
 field_type: text

@@ -1,15 +1,15 @@
 id: test_block
 theme: stark
-weight: ''
+weight: 0
 status: true
 langcode: en
-region: -1
+region: '-1'
 plugin: test_html_id
 settings:
   label: 'Test block html id'
   module: block_test
-  label_display: false
-  cache: true
+  label_display: 'hidden'
+  cache: 1
 visibility:
   path:
     visibility: 0

@@ -1,0 +1,5 @@
+# Schema for the configuration files of the Seven theme.
+
+bartik.settings:
+  type: theme_settings_default
+  label: 'Bartik settings'

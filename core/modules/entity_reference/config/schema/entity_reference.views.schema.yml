@@ -1,0 +1,20 @@
+# Schema for the views plugins of the Entity Reference module.
+
+views.display.entity_reference:
+  type: views_display
+  label: 'Entity Reference'
+
+views.row.entity_reference:
+  type: views.row.fields
+  label: 'Entity Reference inline fields'
+
+views.style.entity_reference:
+  type: views_style
+  label: 'Entity Reference list'
+  mapping:
+    search_fields:
+      type: sequence
+      label: 'Search fields'
+      sequence:
+        - type: string
+          label: 'Search field'

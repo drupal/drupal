@@ -1,0 +1,26 @@
+# Schema for entity fields, specifying generic component data type information.
+
+# Schema for the base of the view mode display format settings.
+entity_field_display_base:
+  type: mapping
+  mapping:
+    label:
+      type: string
+      label: 'Label setting machine name'
+    type:
+      type: string
+      label: 'Format type machine name'
+    weight:
+      type: integer
+      label: 'Weight'
+
+# Schema for the base of the form mode display format settings.
+entity_field_form_display_base:
+  type: mapping
+  mapping:
+    type:
+      type: string
+      label: 'Format type machine name'
+    weight:
+      type: integer
+      label: 'Weight'

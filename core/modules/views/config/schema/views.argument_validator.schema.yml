@@ -17,3 +17,19 @@ views.argument_validator.php:
 views.argument_validator.numeric:
   type: boolean
   label: 'Numeric'
+
+views.argument_validator_entity:
+  type: mapping
+  mapping:
+    bundles:
+      type: boolean
+      label: 'Bundles'
+    access:
+      type: boolean
+      label: 'Access'
+    operation:
+      type: string
+      label: 'Access operation to check'
+    multiple:
+      type: integer
+      label: 'Multiple arguments'

@@ -4,10 +4,10 @@ name: field_test_import_2
 entity_type: entity_test
 type: text
 settings:
-  max_length: '255'
+  max_length: 255
 module: text
-locked: '0'
-cardinality: '1'
+locked: false
+cardinality: 1
 translatable: false
 indexes:
   format:

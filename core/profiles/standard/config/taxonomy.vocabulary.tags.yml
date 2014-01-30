@@ -2,7 +2,7 @@ vid: tags
 uuid: f0c0ffc8-0936-46db-b106-6bf5c9f8dfa3
 name: Tags
 description: 'Use tags to group articles on similar topics into categories.'
-hierarchy: '0'
-weight: '0'
-status: '1'
+hierarchy: 0
+weight: 0
+status: true
 langcode: en

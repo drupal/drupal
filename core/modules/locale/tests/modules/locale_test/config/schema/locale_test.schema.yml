@@ -1,0 +1,17 @@
+# Schema for the configuration files of the Locale Test module.
+
+locale_test.no_translation:
+  type: mapping
+  label: 'No traslation settings'
+  mapping:
+    test:
+      type: string
+      label: 'Test'
+
+locale_test.translation:
+  type: mapping
+  label: 'translation settings'
+  mapping:
+    test:
+      type: string
+      label: 'Test'

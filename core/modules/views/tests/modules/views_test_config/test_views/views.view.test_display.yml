@@ -31,7 +31,7 @@ display:
     display_plugin: block
     display_title: Block
     id: block_1
-    position: '2'
+    position: 2
   default:
     display_options:
       access:
@@ -80,14 +80,14 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   page_1:
     display_options:
       path: test-display
     display_plugin: page
     display_title: Page
     id: page_1
-    position: '1'
+    position: 1
 label: ''
 id: test_display
 tag: ''

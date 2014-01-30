@@ -51,3 +51,91 @@ entity.form_mode.*.*:
     langcode:
       type: string
       label: 'Default language'
+
+# Overview configuration information for view mode or form mode displays.
+entity.display.*.*.*:
+  type: mapping
+  label: 'Entity display'
+  mapping:
+    id:
+      type: string
+      label: 'Entity display ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    mode:
+      type: string
+      label: 'View or form mode machine name'
+    status:
+      type: boolean
+      label: 'Enabled'
+    content:
+      type: sequence
+      label: 'Field display formatters'
+      sequence:
+        - type: entity_display.field.[type]
+    hidden:
+      type: sequence
+      label: 'Field display setting'
+      sequence:
+        - type: boolean
+          label: 'Value'
+
+# Overview configuration information for form mode displays.
+entity.form_display.*.*.*:
+  type: mapping
+  label: 'Entity form display'
+  mapping:
+    id:
+      type: string
+      label: 'Entity display ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    targetEntityType:
+      type: string
+      label: 'Target entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    mode:
+      type: string
+      label: 'View or form mode machine name'
+    content:
+      type: sequence
+      label: 'Field form display formatters'
+      sequence:
+        - type: entity_form_display.field.[type]
+    status:
+      type: boolean
+      label: 'Enabled'
+
+# Default schema for entity display field with undefined type.
+entity_display.field.*:
+  type: mapping
+  label: 'Entity display default'
+  mapping:
+    visible:
+      type: boolean
+      label: 'Visibility'
+    weight:
+      type: integer
+      label: 'Weight'
+
+# Default schema for entity form display field with undefined type.
+entity_form_display.field.*:
+  type: mapping
+  label: 'Entity form display default'
+  mapping:
+    visible:
+      type: boolean
+      label: 'Visibility'
+    weight:
+      type: integer
+      label: 'Weight'

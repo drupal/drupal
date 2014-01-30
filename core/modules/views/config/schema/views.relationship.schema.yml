@@ -1,5 +1,9 @@
 # Schema for the views relationship.
 
+views.relationship.*:
+  type: views_relationship
+  label: 'Standard'
+
 views.relationship.standard:
   type: views_relationship
   label: 'Standard'

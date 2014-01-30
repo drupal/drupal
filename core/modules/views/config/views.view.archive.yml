@@ -43,7 +43,7 @@ display:
           id: 0
           total_pages: 0
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
@@ -93,8 +93,8 @@ display:
           id: status
           table: node_field_data
           field: status
-          value: '1'
-          group: '0'
+          value: true
+          group: 0
           expose:
             operator: '0'
           plugin_id: boolean
@@ -111,8 +111,8 @@ display:
         type: 'entity:node'
         options:
           view_mode: teaser
-          links: '1'
-          comments: '0'
+          links: true
+          comments: false
       header: {  }
       footer: {  }
       empty: {  }

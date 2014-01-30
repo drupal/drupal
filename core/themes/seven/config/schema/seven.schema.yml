@@ -1,0 +1,9 @@
+# Schema for the configuration files of the Seven theme.
+
+seven.settings:
+  type: theme_settings_default
+  label: 'Seven settings'
+
+seven.breakpoints:
+  type: theme_breakpoints_default
+  label: 'Seven breakpoints'

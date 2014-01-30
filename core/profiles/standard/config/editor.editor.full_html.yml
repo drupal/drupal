@@ -32,7 +32,7 @@ settings:
             - Table
             - HorizontalRule
         -
-          name: Block Formatting
+          name: 'Block Formatting'
           items:
             - Format
         -
@@ -40,7 +40,6 @@ settings:
           items:
             - ShowBlocks
             - Source
-
   plugins:
     stylescombo:
       styles: ''

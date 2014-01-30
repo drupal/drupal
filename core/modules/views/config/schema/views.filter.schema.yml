@@ -4,15 +4,13 @@ views.filter.*:
   type: views_filter
   label: 'Default filter'
 
-views_filter_boolean:
+views.filter.boolean:
   type: views_filter
-  mapping:
-    value:
-      type: boolean
-      label: 'Value'
+  label: 'Boolean'
 
 views_filter_boolean_string:
-  type: views_filter_boolean
+  type: views_filter
+  label: 'Boolean string'
 
 views.filter.broken:
   type: views_filter
@@ -20,15 +18,26 @@ views.filter.broken:
 
 views.filter.bundle:
   type: views.filter.in_operator
-  label: 'Broken'
+  label: 'Bundle'
 
 views.filter.combine:
   type: views.filter.string
   label: 'Combine'
+  mapping:
+    fields:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        - type: string
+          label: 'Field'
 
 views.filter.date:
   type: views.filter.numeric
   label: 'Date'
+
+views.filter.groupby_numeric:
+  type: views.filter.numeric
+  label: 'Group by numeric'
 
 views.filter.in_operator:
   type: views_filter
@@ -62,6 +71,9 @@ views.filter.string:
         required:
           type: boolean
           label: 'Required'
+    value:
+      type: string
+      label: 'Value'
 
 views.filter.numeric:
   type: views_filter
@@ -86,7 +98,7 @@ views.filter.numeric:
 
 views.filter.equality:
   type: views.filter.numeric
-  label: 'Broken'
+  label: 'Equality'
 
 views.filter.many_to_one:
   type: views.filter.in_operator
@@ -95,6 +107,9 @@ views.filter.many_to_one:
     operator:
       type: string
       label: 'Operator'
+    reduce_duplicates:
+      type: boolean
+      label: 'Reduce duplicate'
     value:
       type: sequence
       label: 'Values'
@@ -102,19 +117,26 @@ views.filter.many_to_one:
         - type: string
           label: 'Value'
 
+views.filter.standard:
+  type: views_filter
+  label: 'Standard'
+
+views.filter.group_items.*:
+  type: views_filter_group_items
+  label: 'Default'
+
 views.filter.group_items.string:
-  type: sequence
+  type: views_filter_group_items
+  label: 'String group items'
+
+views.filter.group_items.boolean:
+  type: views_filter_group_items
   label: 'Group items'
-  sequence:
-    - type: mapping
-      label: 'Group item'
-      mapping:
-        title:
-          type: label
-          label: 'Label'
-        operator:
-          type: string
-          label: 'Operator'
-        value:
-          type: label
-          label: 'Value'
+
+# Schema for the views filter value.
+
+views.filter_value.boolean:
+  type: boolean
+
+views.filter_value.combine:
+  type: string

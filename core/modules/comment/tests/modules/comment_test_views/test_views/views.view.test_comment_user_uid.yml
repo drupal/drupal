@@ -1,7 +1,7 @@
 base_table: node
 core: '8'
 description: ''
-status: '1'
+status: true
 display:
   default:
     display_options:
@@ -9,15 +9,15 @@ display:
         type: perm
       arguments:
         uid_touch:
-          default_argument_skip_url: '0'
+          default_argument_skip_url: false
           default_argument_type: fixed
           field: uid_touch
           id: uid_touch
           summary:
             format: default_summary
-            number_of_records: '0'
+            number_of_records: 0
           summary_options:
-            items_per_page: '25'
+            items_per_page: 25
           table: node_field_data
           plugin_id: argument_comment_user_uid
           provider: comment
@@ -36,7 +36,7 @@ display:
         type: full
       query:
         options:
-          query_comment: '0'
+          query_comment: false
         type: views_query
       style:
         type: default
@@ -45,7 +45,11 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
 label: test_comment_user_uid
 id: test_comment_user_uid
 tag: default
+base_field: nid
+module: comment_test_views
+uuid: 8f8244da-6e5e-4a8c-a17a-13ae6a3e4a88
+langcode: und

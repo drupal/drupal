@@ -15,14 +15,15 @@ settings:
   max_resolution: ''
   min_resolution: ''
   alt_field: true
-  title_field: ''
-  alt_field_required: 0
-  title_field_required: 0
+  title_field: false
+  alt_field_required: false
+  title_field_required: false
   default_image:
     fid: null
     alt: ''
     title: ''
     width: null
     height: null
-status: 1
+status: true
 langcode: und
+field_type: image

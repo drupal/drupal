@@ -108,3 +108,61 @@ field.number_float.value:
         value:
           type: float
           label: 'Value'
+
+entity_display.field.number_decimal:
+  type: entity_field_display_base
+  label: 'Number decimal display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        thousand_separator:
+          type: string
+          label: 'Thousand marker'
+        decimal_separator:
+          type: string
+          label: 'Decimal marker'
+        scale:
+          type: integer
+          label: 'Scale'
+        prefix_suffix:
+          type: boolean
+          label: 'Display prefix and suffix.'
+
+entity_display.field.number_integer:
+  type: entity_field_display_base
+  label: 'Number interger display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        thousand_separator:
+          type: string
+          label: 'Thousand marker'
+        prefix_suffix:
+          type: boolean
+          label: 'Display prefix and suffix.'
+
+entity_display.field.number_unformatted:
+  type: entity_field_display_base
+  label: 'Number unformatted display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_form_display.field.number:
+  type: entity_field_form_display_base
+  label: 'Number default display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        placeholder:
+          type: label
+          label: 'Placeholder'

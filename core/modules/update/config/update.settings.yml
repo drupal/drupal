@@ -7,4 +7,4 @@ fetch:
   timeout: 30
 notification:
   emails: {  }
-  threshold: '0'
+  threshold: all

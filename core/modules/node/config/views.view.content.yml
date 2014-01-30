@@ -163,7 +163,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: '1'
+          link_to_node: true
           plugin_id: node
           provider: node
         type:
@@ -180,8 +180,8 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: '0'
-          machine_name: '0'
+          link_to_node: false
+          machine_name: ''
           plugin_id: node_type
           provider: node
         name:
@@ -199,10 +199,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: '1'
-          overwrite_anonymous: '0'
+          link_to_user: true
+          overwrite_anonymous: false
           anonymous_text: ''
-          format_username: '1'
+          format_username: true
           plugin_id: user_name
           provider: user
         status:
@@ -222,7 +222,7 @@ display:
           type: published-notpublished
           type_custom_true: ''
           type_custom_false: ''
-          not: '0'
+          not: ''
           plugin_id: boolean
           provider: views
         changed:
@@ -277,7 +277,7 @@ display:
           empty_zero: false
           empty: ''
           text: Translate
-          optional: '1'
+          optional: true
           plugin_id: content_translation_link
           provider: content_translation
         dropbutton:
@@ -289,7 +289,7 @@ display:
             edit_node: edit_node
             delete_node: delete_node
             translation_link: translation_link
-          destination: '1'
+          destination: true
           plugin_id: dropbutton
           provider: views
         timestamp:
@@ -340,8 +340,8 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: '0'
-          comments: '0'
+          link_to_node: false
+          comments: false
           plugin_id: history_user_timestamp
           provider: history
       filters:
@@ -350,10 +350,10 @@ display:
           table: node_field_data
           field: status_extra
           operator: '='
-          value: ''
+          value: false
           plugin_id: node_status
           provider: node
-          group: '1'
+          group: 1
         status:
           id: status
           table: node_field_data
@@ -362,8 +362,8 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: All
-          group: '1'
+          value: true
+          group: 1
           exposed: true
           expose:
             operator_id: ''
@@ -385,7 +385,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items:
@@ -408,7 +408,7 @@ display:
           admin_label: ''
           operator: in
           value: {  }
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: type_op
@@ -433,7 +433,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -448,7 +448,7 @@ display:
           admin_label: ''
           operator: contains
           value: ''
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: title_op
@@ -472,7 +472,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -484,7 +484,7 @@ display:
           field: langcode
           operator: in
           value: {  }
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: langcode_op
@@ -493,7 +493,7 @@ display:
             identifier: langcode
             remember_roles:
               authenticated: authenticated
-          optional: '1'
+          optional: true
           plugin_id: language
           provider: language
       sorts: {  }
@@ -517,7 +517,7 @@ display:
           required: true
           plugin_id: standard
           provider: views
-      show_admin_links: '0'
+      show_admin_links: false
       filter_groups:
         operator: AND
         groups:
@@ -535,7 +535,7 @@ display:
         description: ''
         name: admin
         weight: -10
-        context: '0'
+        context: ''
       tab_options:
         type: normal
         title: Content

@@ -2,4 +2,4 @@ id: main
 label: 'Main navigation'
 description: 'Use this for linking to the main site sections.'
 langcode: en
-locked: 1
+locked: true

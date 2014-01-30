@@ -42,3 +42,6 @@ locale.settings:
         path:
           type: string
           label: 'Interface translations directory'
+        import_enabled:
+          type: boolean
+          label: 'Import enabled'

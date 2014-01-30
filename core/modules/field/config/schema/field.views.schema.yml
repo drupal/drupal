@@ -1,0 +1,60 @@
+# Schema for the views plugins of the Field module.
+
+views.argument.field_list:
+  type: views.argument.numeric
+  label: 'List field name'
+  mapping:
+    human:
+      type: boolean
+      label: 'Display list value as human readable'
+
+views.argument.field_list_string:
+  type: views.argument.string
+  label: 'List field name'
+  mapping:
+    human:
+      type: boolean
+      label: 'Display list value as human readable'
+
+views.field.field:
+  type: views_field
+  label: 'Log event message'
+  mapping:
+    click_sort_column:
+      type: string
+      label: 'Column used for click sorting'
+    type:
+      type: string
+      label: 'Formatter'
+    field_api_classes:
+      type: boolean
+      label: 'Use field template'
+    group_rows:
+      type: boolean
+      label: 'Display all values in the same row'
+    multi_type:
+      type: string
+      label: 'Display type'
+    separator:
+      type: label
+      label: 'Separator'
+    delta_limit:
+      type: string
+      label: 'Field'
+    delta_offset:
+      type: string
+      label: 'Offset'
+    delta_reversed:
+      type: boolean
+      label: 'Reversed'
+    delta_first_last:
+      type: boolean
+      label: 'First and last only'
+
+views.filter.field_list:
+  type: views.filter.many_to_one
+  label: 'List field'
+
+views.relationship.entity_reverse:
+  type: views_relationship
+  label: 'Reverse entity reference'

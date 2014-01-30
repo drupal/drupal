@@ -1,18 +1,30 @@
 base_field: nid
 base_table: node
-core: 8.x
-module: entity_reference_test
-id: test_entity_reference
+core: '8'
 description: ''
-label: 'Entity reference'
-tag: ''
 status: true
 display:
+  entity_reference_1:
+    display_plugin: entity_reference
+    id: entity_reference_1
+    display_title: EntityReference
+    position: null
+    display_options:
+      style:
+        type: entity_reference
+        options:
+          grouping: {  }
+          search_fields:
+            title: title
+      pager:
+        type: none
+        options:
+          offset: 0
   default:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -33,19 +45,52 @@ display:
           id: title
           table: node_field_data
           field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
           label: ''
+          exclude: false
           alter:
             alter_text: false
+            text: ''
             make_link: false
+            path: ''
             absolute: false
-            trim: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: ''
             word_boundary: false
             ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
             strip_tags: false
+            trim: false
+            preserve_tags: ''
             html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
           hide_empty: false
           empty_zero: false
+          hide_alter_empty: true
           link_to_node: true
+          plugin_id: node
           provider: node
       filters:
         status:
@@ -54,8 +99,9 @@ display:
           field: status
           id: status
           expose:
-            operator: 0
-          group: true
+            operator: ''
+          group: 1
+          plugin_id: boolean
           provider: views
       sorts:
         created:
@@ -63,20 +109,11 @@ display:
           table: node_field_data
           field: created
           order: DESC
+          plugin_id: date
           provider: views
-  entity_reference_1:
-    display_plugin: entity_reference
-    id: entity_reference_1
-    display_title: EntityReference
-    position: ''
-    display_options:
-      style:
-        type: entity_reference
-        options:
-          grouping: {  }
-          search_fields:
-            title: title
-      pager:
-        type: none
-        options:
-          offset: 0
+label: 'Entity reference'
+module: entity_reference_test
+id: test_entity_reference
+tag: ''
+uuid: d82ab7cf-088c-485a-9d00-c77876e2fa76
+langcode: en

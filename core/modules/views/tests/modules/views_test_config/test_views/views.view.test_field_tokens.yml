@@ -47,6 +47,6 @@ display:
     display_plugin: default
     display_title: Defaults
     id: default
-    position: '0'
+    position: 0
 id: test_field_tokens
 tag: ''

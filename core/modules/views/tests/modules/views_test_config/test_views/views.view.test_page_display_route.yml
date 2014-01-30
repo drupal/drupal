@@ -21,14 +21,14 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   page_1:
     display_options:
       path: test_route_without_arguments
     display_plugin: page
     display_title: Page
     id: page_1
-    position: '0'
+    position: 0
   page_2:
     display_options:
       defaults:
@@ -45,7 +45,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_2
-    position: '0'
+    position: 0
   page_3:
     display_options:
       defaults:
@@ -62,7 +62,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_3
-    position: '0'
+    position: 0
   page_4:
     display_options:
       defaults:
@@ -86,7 +86,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_4
-    position: '0'
+    position: 0
   page_5:
     display_options:
       defaults:
@@ -110,7 +110,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_5
-    position: '0'
+    position: 0
   page_6:
     display_options:
       defaults:
@@ -134,7 +134,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_6
-    position: '0'
+    position: 0
   page_7:
     display_options:
       defaults:
@@ -145,7 +145,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_7
-    position: '0'
+    position: 0
 label: ''
 id: test_page_display_route
 tag: ''

@@ -144,10 +144,10 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected = array();
     $expected['label'] = 'Schema multiple filesytem marker test';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
-    $expected['mapping']['id']['type'] = 'string';
-    $expected['mapping']['id']['label'] = 'ID';
-    $expected['mapping']['description']['type'] = 'text';
-    $expected['mapping']['description']['label'] = 'Description';
+    $expected['mapping']['testid']['type'] = 'string';
+    $expected['mapping']['testid']['label'] = 'ID';
+    $expected['mapping']['testdescription']['type'] = 'text';
+    $expected['mapping']['testdescription']['label'] = 'Description';
 
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for config_test.someschema.somemodule.section_one.subsection');
 

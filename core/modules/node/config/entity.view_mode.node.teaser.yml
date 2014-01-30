@@ -1,6 +1,6 @@
 id: node.teaser
 uuid: 9f83c955-6c84-421b-b156-86764523ee53
 label: Teaser
-status: '1'
-cache: '1'
+status: true
+cache: true
 targetEntityType: node

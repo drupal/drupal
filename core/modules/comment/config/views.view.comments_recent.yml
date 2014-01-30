@@ -11,7 +11,7 @@ display:
     position: 0
     display_options:
       block_description: 'Recent comments'
-      block_category: Lists (Views)
+      block_category: 'Lists (Views)'
   default:
     display_plugin: default
     id: default
@@ -110,7 +110,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           link_to_comment: true
-          link_to_node: false
+          link_to_entity: false
         changed:
           id: changed
           table: comment
@@ -171,7 +171,7 @@ display:
           id: status
           plugin_id: boolean
           expose:
-            operator: false
+            operator: ''
           group: 1
         status_node:
           value: true
@@ -181,7 +181,7 @@ display:
           id: status_node
           plugin_id: boolean
           expose:
-            operator: false
+            operator: ''
           group: 1
       sorts:
         created:

@@ -1,6 +1,6 @@
 id: node.full
 uuid: faa8c4b0-64a5-458e-8e03-3ae4b4daee5b
-label: Full content
-status: '0'
-cache: '1'
+label: 'Full content'
+status: false
+cache: true
 targetEntityType: node

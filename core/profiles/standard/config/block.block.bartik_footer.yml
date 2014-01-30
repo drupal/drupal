@@ -1,8 +1,8 @@
 id: bartik_footer
 theme: bartik
 uuid: a6c75fc2-5ca1-403e-ab37-557c7244e8c0
-weight: '0'
-status: '1'
+weight: 0
+status: true
 langcode: en
 region: footer
 plugin: 'system_menu_block:footer'
@@ -10,10 +10,10 @@ settings:
   label: 'Footer menu'
   module: system
   label_display: visible
-  cache: '-1'
+  cache: -1
 visibility:
   path:
-    visibility: '0'
+    visibility: 0
     pages: ''
   role:
     roles: {  }

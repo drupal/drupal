@@ -1,8 +1,8 @@
 id: bartik_search
 theme: bartik
 uuid: 51f70058-a370-4410-9000-a65488d00e6c
-weight: '-1'
-status: '1'
+weight: -1
+status: true
 langcode: en
 region: sidebar_first
 plugin: search_form_block
@@ -10,10 +10,10 @@ settings:
   label: Search
   module: search
   label_display: visible
-  cache: '-1'
+  cache: -1
 visibility:
   path:
-    visibility: '0'
+    visibility: 0
     pages: ''
   role:
     roles: {  }

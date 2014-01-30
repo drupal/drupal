@@ -9,11 +9,11 @@ settings:
   node:
     preview: 1
     options:
-      status: status
+      status: true
       # Not promoted to front page.
-      promote: '0'
-      sticky: '0'
-      revision: '0'
+      promote: false
+      sticky: false
+      revision: false
     submitted: true
 status: true
 langcode: en

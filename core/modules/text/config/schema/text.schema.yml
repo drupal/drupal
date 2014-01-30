@@ -21,7 +21,7 @@ field.text.instance_settings:
   label: 'Text settings'
   mapping:
     text_processing:
-      type: string
+      type: integer
       label: 'Text processing'
 
 field.text.value:
@@ -99,3 +99,95 @@ field.text_with_summary.value:
         format:
           type: string
           label: 'Text format'
+
+entity_display.field.text_default:
+  type: entity_field_display_base
+  label: 'Text default display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_display.field.text_plain:
+  type: entity_field_display_base
+  label: 'Plain text display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_display.field.text_summary_or_trimmed:
+  type: entity_field_display_base
+  label: 'Summary or trimmed text display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        trim_length:
+          type: integer
+          label: 'Trim length'
+
+entity_display.field.text_trimmed:
+  type: entity_field_display_base
+  label: 'Trimmed text display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        trim_length:
+          type: integer
+          label: 'Trim length'
+
+entity_form_display.field.text_textarea:
+  type: entity_field_form_display_base
+  label: 'Text area (multiple rows) display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        rows:
+          type: integer
+          label: 'Rows'
+        placeholder:
+          type: label
+          label: 'Placeholder'
+
+entity_form_display.field.text_textarea_with_summary:
+  type: entity_field_form_display_base
+  label: 'Text area with a summary display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        rows:
+          type: integer
+          label: 'Rows'
+        summary_rows:
+          type: integer
+          label: 'Number of summary rows'
+        placeholder:
+          type: label
+          label: 'Placeholder'
+
+entity_form_display.field.text_textfield:
+  type: entity_field_form_display_base
+  label: 'Text field display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        size:
+          type: integer
+          label: 'Size of textfield'
+        placeholder:
+          type: label
+          label: 'Placeholder'

@@ -101,10 +101,15 @@ views.style.table:
     empty_table:
       type: boolean
       label: 'Show the empty text in the table'
-
+    caption:
+      type: label
+      label: 'Caption'
+    description:
+      type: text
+      label: 'Caption'
 
 views.style.default_summary:
-  type: mapping
+  type: views_style
   label: 'Summary options'
   mapping:
     base_path:
@@ -121,7 +126,7 @@ views.style.default_summary:
       label: 'Items to display'
 
 views.style.rss:
-  type: mapping
+  type: views_style
   label: 'RSS Feed'
   mapping:
     description:
@@ -129,7 +134,7 @@ views.style.rss:
       label: 'RSS description'
 
 views.style.unformatted_summary:
-  type: mapping
+  type: views.style.default_summary
   label: 'Unformatted'
   mapping:
     inline:

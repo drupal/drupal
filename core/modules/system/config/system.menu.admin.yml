@@ -2,4 +2,4 @@ id: admin
 label: Administration
 description: 'Contains links to administrative tasks.'
 langcode: en
-locked: 1
+locked: true

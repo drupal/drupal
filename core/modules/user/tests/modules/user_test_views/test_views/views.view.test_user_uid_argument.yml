@@ -24,6 +24,6 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
 label: null
 id: test_user_uid_argument

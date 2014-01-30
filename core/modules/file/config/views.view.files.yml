@@ -46,7 +46,7 @@ display:
             previous: '‹ previous'
             next: 'next ›'
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
@@ -131,7 +131,7 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-medium
-          default: changed
+          default: 'changed'
           empty_table: true
       row:
         type: fields
@@ -151,7 +151,7 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_file: '0'
+          link_to_file: false
           relationship: none
           group_type: group
           admin_label: ''
@@ -167,6 +167,7 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
+          plugin_id: file
         filename:
           id: filename
           table: file_managed
@@ -182,7 +183,7 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_file: '1'
+          link_to_file: true
           relationship: none
           group_type: group
           admin_label: ''
@@ -198,6 +199,7 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
+          plugin_id: file
         filemime:
           id: filemime
           table: file_managed
@@ -246,8 +248,8 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_file: '0'
-          filemime_image: '0'
+          link_to_file: false
+          filemime_image: false
           plugin_id: file_filemime
         filesize:
           id: filesize
@@ -520,7 +522,7 @@ display:
           admin_label: ''
           operator: word
           value: ''
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: filemime_op
@@ -544,7 +546,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -558,7 +560,7 @@ display:
           admin_label: ''
           operator: word
           value: ''
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: filemime_op
@@ -582,7 +584,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -596,7 +598,7 @@ display:
           admin_label: ''
           operator: in
           value: {  }
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: status_op
@@ -612,7 +614,7 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-            reduce: '0'
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -621,7 +623,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -648,8 +650,8 @@ display:
           admin_label: 'File usage'
           required: true
       arguments: {  }
-      group_by: '1'
-      show_admin_links: '1'
+      group_by: true
+      show_admin_links: true
   page_1:
     display_plugin: page
     id: page_1
@@ -663,7 +665,7 @@ display:
         description: ''
         name: admin
         weight: 0
-        context: '0'
+        context: ''
       display_description: ''
       defaults:
         pager: true
@@ -688,7 +690,7 @@ display:
       path: admin/content/files/usage/%
       empty: {  }
       defaults:
-        empty: '0'
+        empty: false
         pager: false
         pager_options: false
         filters: false
@@ -711,14 +713,14 @@ display:
             previous: '‹ previous'
             next: 'next ›'
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-      pager_options: ''
+      pager_options: false
       filters: {  }
       filter_groups:
         operator: AND
@@ -772,7 +774,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_entity: '1'
+          link_to_entity: true
           plugin_id: entity_label
           provider: views
         type:
@@ -934,7 +936,7 @@ display:
           suffix: ''
           plugin_id: numeric
           provider: views
-      group_by: '0'
+      group_by: false
       title: 'File usage'
       arguments:
         fid:
@@ -951,8 +953,6 @@ display:
             title: All
           title_enable: true
           title: 'File usage information for %1'
-          breadcrumb_enable: false
-          breadcrumb: ''
           default_argument_type: fixed
           default_argument_options:
             argument: ''
@@ -972,7 +972,7 @@ display:
             fail: 'not found'
           validate_options: {  }
           break_phrase: false
-          not: '0'
+          not: false
           plugin_id: file_fid
           provider: file
       style:

@@ -47,14 +47,14 @@ display:
             first: '« first'
             last: 'last »'
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          quantity: '9'
+          quantity: 9
       style:
         type: table
         options:
@@ -236,10 +236,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: '1'
-          overwrite_anonymous: '0'
+          link_to_user: true
+          overwrite_anonymous: false
           anonymous_text: ''
-          format_username: '1'
+          format_username: true
           plugin_id: user_name
           provider: user
         status:
@@ -554,7 +554,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           text: Translate
-          optional: '1'
           plugin_id: content_translation_link
           provider: content_translation
         dropbutton:
@@ -614,7 +613,7 @@ display:
             rid: '0'
             created: '0'
             access: '0'
-          destination: '1'
+          destination: true
           plugin_id: dropbutton
         mail:
           id: mail
@@ -664,7 +663,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: '0'
+          link_to_user: false
           plugin_id: user_mail
       filters:
         combine:
@@ -676,7 +675,7 @@ display:
           admin_label: ''
           operator: contains
           value: ''
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: combine_op
@@ -700,7 +699,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -717,7 +716,7 @@ display:
           admin_label: ''
           operator: or
           value: {  }
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: rid_op
@@ -733,7 +732,7 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-            reduce: '0'
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -742,11 +741,11 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: '0'
+          reduce_duplicates: false
           plugin_id: user_roles
           provider: user
         permission:
@@ -758,7 +757,7 @@ display:
           admin_label: ''
           operator: or
           value: {  }
-          group: '1'
+          group: 1
           exposed: true
           expose:
             operator_id: permission_op
@@ -774,7 +773,7 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-            reduce: '0'
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -783,11 +782,11 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: '0'
+          reduce_duplicates: false
           plugin_id: user_permissions
           provider: user
         status:
@@ -798,8 +797,8 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: All
-          group: '1'
+          value: true
+          group: 1
           exposed: true
           expose:
             operator_id: ''
@@ -823,7 +822,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items:
@@ -849,7 +848,7 @@ display:
             min: ''
             max: ''
             value: '0'
-          group: '1'
+          group: 1
           exposed: false
           expose:
             operator_id: '0'
@@ -871,7 +870,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -906,14 +905,14 @@ display:
           content: 'No people available.'
           plugin_id: text_custom
           provider: views
-      use_more: '0'
-      use_more_always: '0'
+      use_more: false
+      use_more_always: false
       use_more_text: more
       display_comment: ''
-      use_ajax: '0'
-      hide_attachment_summary: '0'
-      show_admin_links: '1'
-      group_by: '0'
+      use_ajax: false
+      hide_attachment_summary: false
+      show_admin_links: true
+      group_by: false
       link_url: ''
       link_display: page_1
       css_class: ''
@@ -928,14 +927,14 @@ display:
     position: 1
     display_options:
       path: admin/people/list
-      show_admin_links: '0'
+      show_admin_links: false
       menu:
         type: 'default tab'
         title: List
         description: 'Find and manage people interacting with your site.'
         name: admin
         weight: -10
-        context: '0'
+        context: ''
       tab_options:
         type: normal
         title: People

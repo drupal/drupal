@@ -11,10 +11,6 @@ views.pager.none:
 views.pager.some:
   type: views_pager
   label: 'Display a specified number of items'
-  mapping:
-    items_per_page:
-      type: integer
-      label: 'Items per page'
 
 views.pager.mini:
   type: views_pager_sql
@@ -34,3 +30,6 @@ views.pager.full:
         last:
           type: label
           label: 'Last page link text'
+    quantity:
+      type: integer
+      label: 'Number of pager links visible'

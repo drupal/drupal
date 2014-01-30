@@ -8,7 +8,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -50,14 +50,14 @@ display:
     display_plugin: page
     id: page_1
     display_title: Page
-    position: '1'
+    position: 1
     display_options:
       path: test-display-attachment
   attachment_1:
     display_plugin: attachment
     id: attachment_1
     display_title: Attachment
-    position: '2'
+    position: 2
     display_options:
       displays:
         page_1: page_1

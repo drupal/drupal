@@ -9,11 +9,11 @@ settings:
     -
       vocabulary: tags
       parent: 0
-locked: '0'
-cardinality: '-1'
-translatable: '0'
+locked: false
+cardinality: -1
+translatable: false
 indexes:
   target_id:
     - target_id
-status: 1
+status: true
 langcode: und

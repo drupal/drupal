@@ -9,7 +9,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
 base_field: id
 status: '0'
 module: views

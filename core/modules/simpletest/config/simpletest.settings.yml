@@ -1,6 +1,6 @@
-clear_results: '1'
+clear_results: true
 httpauth:
-  method: '1'
+  method: 1
   password: ''
   username: ''
-verbose: '1'
+verbose: true

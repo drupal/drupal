@@ -8,43 +8,37 @@ rest.settings:
       type: sequence
       label: 'Resources'
       sequence:
-        - type: sequence
+        - type: rest_resource
           label: 'Resource'
-          sequence:
-            - type: rest.resource.[%key]
 
-rest.resource.GET:
+rest_resource:
   type: mapping
-  label: 'GET method settings'
   mapping:
-    supported_format:
+    GET:
+      type: rest_request
+      label: 'GET method settings'
+    POST:
+      type: rest_request
+      label: 'POST method settings'
+    PATCH:
+      type: rest_request
+      label: 'PATCH method settings'
+    DELETE:
+      type: rest_request
+      label: 'DELETE method settings'
+
+rest_request:
+  type: mapping
+  mapping:
+    supported_formats:
       type: sequence
       label: 'Supported format'
       sequence:
         - type: string
           label: 'Format'
-
-rest.resource.POST:
-  type: mapping
-  label: 'POST method settings'
-  mapping:
     supported_auth:
       type: sequence
-      label: 'Supported format'
+      label: 'Supported authentication'
       sequence:
         - type: string
-          label: 'Format'
-
-rest.resource.PATCH:
-  type: sequence
-  label: 'PATCH method settings'
-  sequence:
-    - type: string
-      label: 'Format'
-
-rest.resource.DELETE:
-  type: sequence
-  label: 'DELETE method settings'
-  sequence:
-    - type: string
-      label: 'Format'
+          label: 'Authentication'

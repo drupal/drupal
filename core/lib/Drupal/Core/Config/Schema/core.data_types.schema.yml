@@ -78,12 +78,49 @@ filter:
   type: mapping
   label: 'Filter'
   mapping:
-    module:
+    id:
       type: string
-      label: 'Module'
+      label: 'ID'
+    provider:
+      type: string
+      label: 'Provider'
     status:
       type: boolean
-      label: 'Enabled'
+      label: 'Status'
+    weight:
+      type: integer
+      label: 'Weight'
+    settings:
+      type: filter_settings.[%parent.id]
+
+
+# System action configuration base.
+action_configuration_default:
+  type: sequence
+  label: 'Action configuration'
+  sequence:
+    - type: string
+
+theme_settings_default:
+  type: mapping
+  mapping:
+    shortcut_module_link:
+      type: boolean
+      label: 'Shortcut module link'
+
+theme_breakpoints_default:
+  type: sequence
+  sequence:
+    - type: string
+      label: 'Breakpoint value'
+
+views_field_bulk_form:
+  type: views_field
+  label: 'Bulk operation'
+  mapping:
+    action_title:
+      type: label
+      label: 'Action title'
 
 # Array of routes with route_name and route_params keys.
 route:

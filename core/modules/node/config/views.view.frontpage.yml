@@ -69,7 +69,7 @@ display:
             label: ''
             multiple: false
             operator: ''
-            operator_id: '0'
+            operator_id: ''
             remember: false
             remember_roles:
               authenticated: authenticated
@@ -77,7 +77,7 @@ display:
             use_operator: false
           exposed: false
           field: promote
-          group: '1'
+          group: 1
           group_info:
             default_group: All
             default_group_multiple: {  }
@@ -87,7 +87,7 @@ display:
             label: ''
             multiple: false
             optional: true
-            remember: 0
+            remember: false
             widget: select
           group_type: group
           id: promote
@@ -95,17 +95,17 @@ display:
           operator: '='
           relationship: none
           table: node_field_data
-          value: '1'
+          value: true
           plugin_id: boolean
           provider: views
         status:
           expose:
-            operator: '0'
+            operator: ''
           field: status
-          group: '1'
+          group: 1
           id: status
           table: node_field_data
-          value: '1'
+          value: true
           plugin_id: boolean
           provider: views
       pager:
@@ -116,7 +116,7 @@ display:
           id: 0
           total_pages: 0
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
@@ -128,7 +128,7 @@ display:
             next: 'next ›'
             first: '« first'
             last: 'last »'
-          quantity: '9'
+          quantity: 9
       query:
         type: views_query
         options:
@@ -141,8 +141,8 @@ display:
         type: 'entity:node'
         options:
           build_mode: teaser
-          comments: '0'
-          links: '1'
+          comments: false
+          links: true
           view_mode: teaser
       sorts:
         sticky:
@@ -207,7 +207,7 @@ display:
       path: rss.xml
       displays:
         page_1: page_1
-        default: '0'
+        default: ''
       pager:
         type: some
         options:
@@ -218,13 +218,13 @@ display:
         options:
           description: ''
           grouping: {  }
-          uses_fields: '0'
+          uses_fields: false
       row:
         type: node_rss
         options:
           relationship: none
           item_length: default
-          links: '0'
+          links: false
 label: Frontpage
 module: node
 id: frontpage

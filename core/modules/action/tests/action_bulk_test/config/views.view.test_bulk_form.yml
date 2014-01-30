@@ -9,7 +9,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -22,35 +22,35 @@ display:
       pager:
         type: full
         options:
-          items_per_page: '10'
+          items_per_page: 10
       style:
         type: table
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: '1'
-          row_class_special: '1'
-          override: '1'
-          sticky: '0'
+          default_row_class: true
+          row_class_special: true
+          override: true
+          sticky: false
           summary: ''
           columns:
             title: title
             action_bulk_form: action_bulk_form
           info:
             title:
-              sortable: '0'
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
             bulk_form:
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
-          default: '-1'
-          empty_table: '0'
+          default: ''
+          empty_table: false
       row:
         type: fields
       fields:
@@ -60,17 +60,17 @@ display:
           field: title
           label: ''
           alter:
-            alter_text: '0'
-            make_link: '0'
-            absolute: '0'
-            trim: '0'
-            word_boundary: '0'
-            ellipsis: '0'
-            strip_tags: '0'
-            html: '0'
-          hide_empty: '0'
-          empty_zero: '0'
-          link_to_node: '1'
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          link_to_node: true
           plugin_id: node
           provider: node
         action_bulk_form:
@@ -81,57 +81,57 @@ display:
           group_type: group
           admin_label: ''
           label: 'Bulk form'
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           plugin_id: action_bulk_form
           provider: action
       filters:
         status:
-          value: '1'
+          value: true
           table: node_field_data
           field: status
           id: status
           expose:
-            operator: '0'
-          group: '1'
+            operator: ''
+          group: 1
           plugin_id: boolean
           provider: views
       sorts:
@@ -147,10 +147,10 @@ display:
     display_plugin: page
     id: page_1
     display_title: Page
-    position: ''
+    position: null
     display_options:
       path: test_bulk_form
 base_field: nid
-status: '1'
+status: true
 module: views
 langcode: und

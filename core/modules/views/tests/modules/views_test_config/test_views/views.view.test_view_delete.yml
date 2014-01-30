@@ -22,7 +22,7 @@ display:
     display_plugin: default
     display_title: Defaults
     id: default
-    position: '0'
+    position: 0
 label: test_view_delete
 id: test_view_delete
 tag: ''

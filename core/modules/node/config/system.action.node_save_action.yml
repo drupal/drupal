@@ -1,7 +1,7 @@
 id: node_save_action
 uuid: 493b5aa1-25b1-4e62-af07-079952c04108
 label: 'Save content'
-status: '1'
+status: true
 langcode: en
 type: node
 plugin: node_save_action

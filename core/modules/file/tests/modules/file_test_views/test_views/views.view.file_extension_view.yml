@@ -49,7 +49,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
 label: 'Test view for file extension views field handler'
 id: file_extension_view
 tag: ''

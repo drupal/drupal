@@ -47,3 +47,33 @@ filter.format.*:
     langcode:
       type: string
       label: 'Default language'
+
+filter_settings.*:
+  type: sequence
+  label: 'Filter settings'
+  sequence:
+    - type: string
+      label: 'Value'
+
+filter_settings.filter_html:
+  type: filter
+  label: 'Filter HTML'
+  mapping:
+    allowed_html:
+      type: string
+      label: 'Allowed HTML'
+    filter_html_help:
+      type: boolean
+      label: 'HTML help'
+    filter_html_nofollow:
+      type: boolean
+      label: 'HTML nofollow'
+
+
+filter_settings.filter_url:
+  type: filter
+  label: 'Filter URL'
+  mapping:
+    filter_url_length:
+      type: integer
+      label: 'URL length'

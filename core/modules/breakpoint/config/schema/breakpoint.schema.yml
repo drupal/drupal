@@ -25,7 +25,7 @@ breakpoint.breakpoint.*.*.*:
       type: string
       label: 'Source type'
     weight:
-      type: string
+      type: integer
       label: 'Weight'
     multipliers:
       type: sequence
@@ -56,7 +56,7 @@ breakpoint.breakpoint_group.*.*.*:
     label:
       type: string
       label: 'Label'
-    breakpoints:
+    breakpoint_ids:
       type: sequence
       label: 'Breakpoints'
       sequence:

@@ -402,7 +402,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'bundle' => $this->type,
     ))->save();
     entity_get_form_display('node', $this->type, 'default')
-      ->setComponent($field->id, array(
+      ->setComponent($field->name, array(
         'type' => 'test_field_widget',
       ))
       ->save();

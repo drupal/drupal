@@ -5,15 +5,15 @@ entity_type: entity_test
 bundle: test_bundle
 label: 'Test import field 2 on test bundle'
 description: ''
-required: '0'
+required: false
 default_value: {  }
 default_value_function: ''
 settings:
-  text_processing: '0'
+  text_processing: 0
 widget:
-  weight: '-2'
+  weight: -2
   type: text_textfield
   module: text
   settings:
-    size: '60'
+    size: 60
 field_type: text

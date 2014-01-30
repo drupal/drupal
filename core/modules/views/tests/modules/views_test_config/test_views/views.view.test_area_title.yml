@@ -43,7 +43,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   page_1:
     display_options:
       defaults:
@@ -60,7 +60,7 @@ display:
     display_plugin: page
     display_title: 'Page 1'
     id: page_1
-    position: '1'
+    position: 1
 label: ''
 id: test_area_title
 tag: ''

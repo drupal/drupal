@@ -1,0 +1,36 @@
+# Schema for the views plugins of the Search module.
+
+views.argument.search:
+  type: views_argument
+  label: 'Query key'
+
+views.field.search_score:
+  type: views.field.numeric
+  label: 'Search score'
+  mapping:
+    alternate_sort:
+      type: string
+      label: 'Alternative sort'
+    alternate_order:
+      type: string
+      label: 'Alternate sort order'
+
+views.filter.search:
+  type: views_filter
+  label: 'Link to node'
+  mapping:
+    operator:
+      type: string
+      label: 'On empty input'
+
+views.row.search_view:
+  type: views.field.numeric
+  label: 'Source link'
+  mapping:
+    score:
+      type: boolean
+      label: 'Display score'
+
+views.sort.search_score:
+  type: views_sort
+  label: 'Search score'

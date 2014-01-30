@@ -162,3 +162,28 @@ field.image.instance_settings:
     default_image:
       type: field_default_image
       label: 'Default value'
+
+entity_display.field.image:
+  type: entity_field_display_base
+  label: 'Image field display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Format settings'
+      sequence:
+        - type: string
+
+entity_form_display.field.image_image:
+  type: entity_field_form_display_base
+  label: 'Image field display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Format settings'
+      mapping:
+        progress_indicator:
+          type: string
+          label: 'Progress indicator'
+        preview_image_style:
+          type: string
+          label: 'Preview image style'

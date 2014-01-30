@@ -1,0 +1,9 @@
+# Schema for the configuration files of the Stark theme.
+
+stark.settings:
+  type: theme_settings_default
+  label: 'Stark settings'
+
+stark.breakpoints:
+  type: theme_breakpoints_default
+  label: 'Stark breakpoints'

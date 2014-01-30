@@ -7,3 +7,5 @@ status: true
 content:
   description:
     weight: 0
+hidden: {  }
+status: true

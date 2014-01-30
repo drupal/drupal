@@ -43,7 +43,7 @@ display:
           id: 0
           total_pages: 0
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
@@ -114,8 +114,8 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: '0'
-          machine_name: '0'
+          link_to_node: false
+          machine_name: ''
           provider: node
         title:
           id: title
@@ -166,7 +166,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: '1'
+          link_to_node: true
           provider: node
         name:
           id: name
@@ -217,10 +217,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: '1'
-          overwrite_anonymous: '0'
+          link_to_user: true
+          overwrite_anonymous: false
           anonymous_text: ''
-          format_username: '1'
+          format_username: true
           provider: user
         comment_count:
           id: comment_count
@@ -339,9 +339,9 @@ display:
           table: history
           field: timestamp
           label: ''
-          link_to_node: '0'
-          comments: '1'
-          plugin_id: node_history_user_timestamp
+          link_to_node: false
+          comments: true
+          plugin_id: history_user_timestamp
           relationship: none
           group_type: group
           admin_label: ''
@@ -393,7 +393,7 @@ display:
           label: ''
           hide_empty: true
           suffix: ' new'
-          link_to_comment: '1'
+          link_to_comment: true
           plugin_id: node_new_comments
           relationship: none
           group_type: group
@@ -437,11 +437,11 @@ display:
           empty: ''
           empty_zero: false
           hide_alter_empty: true
-          set_precision: '0'
-          precision: '0'
+          set_precision: false
+          precision: 0
           decimal: .
           separator: ','
-          format_plural: '0'
+          format_plural: false
           format_plural_singular: '1'
           format_plural_plural: '@count'
           prefix: ''
@@ -492,8 +492,8 @@ display:
           id: status
           table: node_field_data
           field: status
-          value: '1'
-          group: '0'
+          value: true
+          group: 0
           expose:
             operator: '0'
           plugin_id: boolean
@@ -546,7 +546,7 @@ display:
           inline: {  }
           separator: ''
           hide_empty: false
-          default_field_elements: '1'
+          default_field_elements: true
       header: {  }
       footer: {  }
       empty: {  }

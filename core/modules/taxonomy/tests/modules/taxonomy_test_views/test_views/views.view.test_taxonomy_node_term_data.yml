@@ -1,7 +1,7 @@
 base_table: node
 core: '8'
 description: ''
-status: '1'
+status: true
 display:
   default:
     display_options:
@@ -15,9 +15,9 @@ display:
           relationship: term_node_tid
           summary:
             format: default_summary
-            number_of_records: '0'
+            number_of_records: 0
           summary_options:
-            items_per_page: '25'
+            items_per_page: 25
           table: taxonomy_term_data
           plugin_id: taxonomy
           provider: taxonomy
@@ -28,9 +28,9 @@ display:
           relationship: term_node_tid_1
           summary:
             format: default_summary
-            number_of_records: '0'
+            number_of_records: 0
           summary_options:
-            items_per_page: '25'
+            items_per_page: 25
           table: taxonomy_term_data
           plugin_id: taxonomy
           provider: taxonomy
@@ -49,7 +49,7 @@ display:
           label: 'Term #1'
           table: node
           vocabularies:
-            tags: '0'
+            tags: false
           plugin_id: node_term_data
           provider: taxonomy
         term_node_tid_1:
@@ -58,7 +58,7 @@ display:
           label: 'Term #2'
           table: node
           vocabularies:
-            tags: '0'
+            tags: false
           plugin_id: node_term_data
           provider: taxonomy
       sorts:
@@ -76,7 +76,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
 label: test_taxonomy_node_term_data
 id: test_taxonomy_node_term_data
 tag: ''

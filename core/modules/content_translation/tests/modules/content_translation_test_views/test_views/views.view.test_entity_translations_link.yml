@@ -8,7 +8,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: none
@@ -96,7 +96,7 @@ display:
     display_plugin: page
     id: page_1
     display_title: Page
-    position: ''
+    position: null
     display_options:
       path: test-entity-translations-link
 label: People

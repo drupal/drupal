@@ -1,0 +1,13 @@
+# Schema for the configuration files of the Aggregator Test module.
+
+aggregator_test.settings:
+  type: mapping
+  label: 'Aggregator test settings'
+  mapping:
+    items:
+      type: mapping
+      label: 'Items'
+      mapping:
+        dummy_length:
+          type: integer
+          label: 'Dummy length'

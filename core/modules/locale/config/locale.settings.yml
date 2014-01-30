@@ -10,4 +10,4 @@ translation:
   overwrite_not_customized: true
   update_interval_days: 0
   path: ''
-  import_enabled: '1'
+  import_enabled: true

@@ -23,3 +23,53 @@ field.datetime.value:
       sequence:
         - type: string
           label: 'Value'
+
+entity_display.field.datetime_default:
+  type: entity_field_display_base
+  label: 'Datetime default display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        format_type:
+          type: string
+          label: 'Date format'
+
+entity_display.field.datetime_plain:
+  type: entity_field_display_base
+  label: 'Datetime plain display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_form_display.field.datetime_datelist:
+  type: entity_field_form_display_base
+  label: 'Datetime select list display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        increment:
+          type: integer
+          label: 'Time increments'
+        date_order:
+          type: string
+          label: 'Date part order'
+        time_type:
+          type: string
+          label: 'Time type'
+
+entity_form_display.field.datetime_default:
+  type: entity_field_form_display_base
+  label: 'Datetime default display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string

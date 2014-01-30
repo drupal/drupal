@@ -1,6 +1,6 @@
 id: tour-test-2
 module: tour_test
-label: Tour test english
+label: 'Tour test english'
 langcode: en
 routes:
   - route_name: tour_test.2
@@ -8,8 +8,8 @@ tips:
   tour-test-2:
     id: tour-test-2
     plugin: text
-    label: The quick brown fox
-    body: Per lo più in pianura.
-    weight: "2"
+    label: 'The quick brown fox'
+    body: 'Per lo più in pianura.'
+    weight: 2
     attributes:
       data-id: tour-test-2

@@ -2,13 +2,13 @@ base_field: nid
 base_table: node
 core: 8.x
 description: ''
-status: '1'
+status: true
 display:
   default:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -25,23 +25,23 @@ display:
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: '1'
-          row_class_special: '1'
-          override: '1'
-          sticky: '0'
+          default_row_class: true
+          row_class_special: true
+          override: true
+          sticky: false
           summary: ''
           columns:
             title: title
           info:
             title:
-              sortable: '1'
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
-          default: '-1'
-          empty_table: '0'
+          default: -1
+          empty_table: false
       row:
         type: fields
       fields:
@@ -53,47 +53,47 @@ display:
           group_type: group
           admin_label: ''
           label: Title
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
+            nl2br: false
             max_length: ''
-            word_boundary: '0'
-            ellipsis: '0'
-            more_link: '0'
+            word_boundary: false
+            ellipsis: false
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
-          link_to_node: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_node: true
           provider: node
       filters:
         uid_touch_tracker:
@@ -105,33 +105,31 @@ display:
           admin_label: ''
           operator: in
           value:
-            - '0'
-          group: '1'
-          exposed: '0'
+            - 0
+          group: 1
+          exposed: false
           expose:
             operator_id: ''
             label: 'User posted or commented'
             description: ''
-            use_operator: '0'
+            use_operator: false
             operator: uid_touch_tracker_op
             identifier: uid_touch_tracker
-            required: '0'
-            remember: '0'
-            multiple: '0'
+            required: false
+            remember: false
+            multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            reduce: '0'
-          is_grouped: '0'
+            reduce: false
+          is_grouped: false
           group_info:
             label: ''
             description: ''
             identifier: ''
-            optional: '1'
+            optional: true
             widget: select
-            multiple: '0'
-            remember: '0'
+            multiple: false
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -148,24 +146,24 @@ display:
           default_action: ignore
           exception:
             value: all
-            title_enable: '0'
+            title_enable: false
             title: All
-          title_enable: '0'
+          title_enable: false
           title: ''
           default_argument_type: fixed
           default_argument_options:
             argument: ''
-          default_argument_skip_url: '0'
+          default_argument_skip_url: false
           summary_options:
             base_path: ''
-            count: '1'
-            items_per_page: '25'
-            override: '0'
+            count: 1
+            items_per_page: 25
+            override: false
           summary:
             sort_order: asc
-            number_of_records: '0'
+            number_of_records: 0
             format: default_summary
-          specify_validation: '0'
+          specify_validation: false
           validate:
             type: none
             fail: 'not found'

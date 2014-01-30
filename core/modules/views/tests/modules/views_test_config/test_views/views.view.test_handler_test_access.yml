@@ -58,5 +58,5 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
 id: test_handler_test_access

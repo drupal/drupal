@@ -37,3 +37,21 @@ picture.mappings.*:
     langcode:
       type: string
       label: 'Default language'
+
+entity_display.field.picture:
+  type: entity_field_display_base
+  label: 'Picture list format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        picture_mapping:
+          type: string
+          label: 'Picture mapping'
+        fallback_image_style:
+          type: string
+          label: 'Fallback image style'
+        image_link:
+          type: string
+          label: 'Link image to'

@@ -42,7 +42,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   page_1:
     display_options:
       path: test_exposed_block
@@ -50,7 +50,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_1
-    position: '0'
+    position: 0
 label: ''
 id: test_exposed_block
 tag: ''

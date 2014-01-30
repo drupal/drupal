@@ -143,3 +143,30 @@ user.role.*:
     langcode:
       type: string
       label: 'Default language'
+
+action.configuration.user_add_role_action:
+  type: action_configuration_default
+  label: 'Add a role to the selected users configuration'
+
+action.configuration.user_block_user_action:
+  type: action_configuration_default
+  label: 'Block the selected users configuration'
+
+action.configuration.user_cancel_user_action:
+  type: action_configuration_default
+  label: 'Cancel the selected user accounts configuration'
+
+action.configuration.user_remove_role_action:
+  type: mapping
+  label: 'Remove a role from the selected users configuration'
+  mapping:
+    rid:
+      type: sequence
+      label: 'Roles'
+      sequence:
+        - type: sequence
+          label: 'Role'
+
+action.configuration.user_unblock_user_action:
+  type: action_configuration_default
+  label: 'Unblock the selected users configuration'

@@ -20,7 +20,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
 label: ''
 id: test_store_pager_settings
 tag: ''

@@ -42,7 +42,7 @@ display:
           id: 0
           total_pages: 0
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
@@ -100,11 +100,11 @@ display:
             type: 'entity:taxonomy_term'
             fail: 'not found'
           validate_options:
-            access: '1'
+            access: true
             operation: view
-            multiple: '1'
+            multiple: 1
             bundles: {  }
-          depth: '0'
+          depth: 0
           break_phrase: true
           plugin_id: taxonomy_index_tid_depth
           relationship: none
@@ -115,8 +115,8 @@ display:
           default_argument_skip_url: false
           summary_options:
             base_path: ''
-            count: '1'
-            items_per_page: '25'
+            count: true
+            items_per_page: 25
             override: false
           provider: taxonomy
         term_node_tid_depth_modifier:
@@ -149,7 +149,7 @@ display:
           id: status_extra
           table: node_field_data
           field: status_extra
-          group: '0'
+          group: 0
           expose:
             operator: '0'
           plugin_id: node_status
@@ -166,8 +166,8 @@ display:
         type: 'entity:node'
         options:
           view_mode: teaser
-          links: '1'
-          comments: '0'
+          links: true
+          comments: false
       header: {  }
       footer: {  }
       empty: {  }
@@ -200,7 +200,7 @@ display:
           id: 0
           total_pages: 0
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
@@ -212,7 +212,7 @@ display:
             next: 'next ›'
             first: '« first'
             last: 'last »'
-          quantity: '9'
+          quantity: 9
       path: taxonomy/term/%/%/feed
       displays:
         page: page
@@ -222,13 +222,13 @@ display:
         options:
           description: ''
           grouping: {  }
-          uses_fields: '0'
+          uses_fields: false
       row:
         type: node_rss
         options:
           relationship: none
           item_length: default
-          links: '0'
+          links: false
 label: 'Taxonomy term'
 module: taxonomy
 id: taxonomy_term

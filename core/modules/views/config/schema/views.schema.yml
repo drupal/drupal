@@ -72,12 +72,15 @@ views.view.*:
   type: mapping
   label: 'View'
   mapping:
+    langcode:
+      type: string
+      label: 'Default language'
     status:
       type: boolean
       label: 'Status'
     module:
       label: 'Module'
-    name:
+    id:
       label: 'Machine name'
     description:
       type: text

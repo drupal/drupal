@@ -14,8 +14,8 @@ settings:
   file_extensions: 'png gif jpg jpeg'
   file_directory: pictures
   max_filesize: '30 KB'
-  alt_field: 0
-  title_field: 0
+  alt_field: false
+  title_field: false
   max_resolution: 85x85
   min_resolution: ''
   default_image:
@@ -24,6 +24,6 @@ settings:
     title: ''
     width: null
     height: null
-  alt_field_required: '0'
-  title_field_required: '0'
+  alt_field_required: false
+  title_field_required: false
 field_type: image

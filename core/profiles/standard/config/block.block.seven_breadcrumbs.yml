@@ -1,8 +1,8 @@
 id: seven_breadcrumbs
 theme: seven
 uuid: f8d0d0fb-daf7-4c91-8a09-9cb643279f03
-weight: '-2'
-status: '0'
+weight: -2
+status: false
 langcode: en
 region: '-1'
 plugin: system_breadcrumb_block
@@ -10,10 +10,10 @@ settings:
   label: Breadcrumbs
   module: system
   label_display: '0'
-  cache: '-1'
+  cache: -1
 visibility:
   path:
-    visibility: '0'
+    visibility: 0
     pages: ''
   role:
     roles: {  }

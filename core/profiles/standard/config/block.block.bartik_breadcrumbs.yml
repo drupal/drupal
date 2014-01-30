@@ -1,8 +1,8 @@
 id: bartik_breadcrumbs
 theme: bartik
 uuid: a29e843f-d19c-4528-ab02-2fc335e12b1e
-weight: '-5'
-status: '0'
+weight: -5
+status: false
 langcode: en
 region: '-1'
 plugin: system_breadcrumb_block
@@ -10,10 +10,10 @@ settings:
   label: Breadcrumbs
   module: system
   label_display: '0'
-  cache: '-1'
+  cache: -1
 visibility:
   path:
-    visibility: '0'
+    visibility: 0
     pages: ''
   role:
     roles: {  }

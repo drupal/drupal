@@ -9,7 +9,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -39,12 +39,12 @@ display:
     display_plugin: rest_export
     id: rest_export_1
     display_title: serializer
-    position: ''
+    position: null
     display_options:
       defaults:
         access: false
       path: test/serialize/entity
 base_field: id
-status: '1'
+status: true
 module: rest
 langcode: und

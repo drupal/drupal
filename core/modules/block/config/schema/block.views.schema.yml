@@ -1,0 +1,22 @@
+# Schema for the views plugins of the Block module.
+
+
+views.display.block:
+  type: views_display
+  label: 'Block display options'
+  mapping:
+    block_description:
+      type: label
+      label: 'Block name'
+    block_category:
+      type: text
+      label: 'Block category'
+    block_caching:
+      type: integer
+      label: 'Block caching'
+    block_hide_empty:
+      type: boolean
+      label: 'Hide block if no result/empty text'
+    allow:
+      type: boolean
+      label: 'Allow'

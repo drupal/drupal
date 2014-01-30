@@ -43,12 +43,12 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   page_1:
     id: page_1
     display_title: Page
     display_plugin: page
-    position: '1'
+    position: 1
     display_options:
       defaults:
         title: '0'

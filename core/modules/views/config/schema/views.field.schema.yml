@@ -51,6 +51,14 @@ views.field.date:
       type: string
       label: 'Timezone'
 
+views.field.entity_label:
+  type: views_field
+  label: 'Entity label'
+  mapping:
+    link_to_entity:
+      type: boolean
+      label: 'Link to entity'
+
 views.field.file_size:
   type: views_field
   label: 'File size'
@@ -64,11 +72,18 @@ views.field.links:
   label: 'Links'
   mapping:
     fields:
-      type: string
+      type: sequence
       label: 'Fields'
+      sequence:
+        - type: string
+          label: 'Field'
     destination:
       type: boolean
       label: 'Include destination'
+
+views.field.dropbutton:
+  type: views.field.links
+  label: 'Drop button'
 
 views.field.machine_name:
   type: views_field
@@ -77,6 +92,10 @@ views.field.machine_name:
     machine_name:
       type: boolean
       label: 'Output machine name'
+
+views.field.markup:
+  type: views_field
+  label: 'Markup'
 
 views.field.numeric:
   type: views_field
@@ -151,3 +170,7 @@ views.field.url:
     display_as_link:
       type: boolean
       label: 'Display as link'
+
+views.field.xss:
+  type: views_field
+  label: 'Xss'

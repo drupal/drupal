@@ -8,7 +8,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: none
@@ -137,7 +137,7 @@ display:
           decimal: .
           separator: ','
           format_plural: false
-          format_plural_singular: true
+          format_plural_singular: '1'
           format_plural_plural: '@count'
           prefix: ''
           suffix: ''

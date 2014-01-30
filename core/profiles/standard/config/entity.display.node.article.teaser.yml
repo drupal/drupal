@@ -3,17 +3,17 @@ uuid: 7156f406-c67c-4d1f-bd35-53dbf20ee7e4
 targetEntityType: node
 bundle: article
 mode: teaser
-status: 1
+status: true
 content:
   body:
     label: hidden
     type: text_summary_or_trimmed
-    weight: '0'
+    weight: 0
     settings:
-      trim_length: '600'
+      trim_length: 600
   field_tags:
     type: taxonomy_term_reference_link
-    weight: '10'
+    weight: 10
     label: above
     settings: {  }
   field_image:
@@ -22,4 +22,4 @@ content:
     settings:
       image_style: medium
       image_link: content
-    weight: '-1'
+    weight: -1

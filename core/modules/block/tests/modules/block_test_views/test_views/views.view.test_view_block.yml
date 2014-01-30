@@ -8,7 +8,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -37,7 +37,7 @@ display:
     display_plugin: block
     id: block_1
     display_title: Block
-    position: ''
+    position: null
     display_options:
       field:
         title:

@@ -1,0 +1,44 @@
+# Schema for the configuration files of the Comment module.
+
+entity_display.field.comment_default:
+  type: entity_field_display_base
+  label: 'Comment display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_form_display.field.comment_default:
+  type: entity_field_form_display_base
+  label: 'Comment display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+action.configuration.comment_publish_action:
+  type: action_configuration_default
+  label: 'Publish comment configuration'
+
+action.configuration.comment_save_action:
+  type: action_configuration_default
+  label: 'Save comment configuration'
+
+action.configuration.comment_unpublish_by_keyword_action:
+  type: mapping
+  label: 'Unpublish comment containing keyword(s) configuration'
+  mapping:
+    keyword:
+      type: sequence
+      label: 'Keywords'
+      sequence:
+        - type: sequence
+          label: 'Keyword'
+
+action.configuration.comment_unpublish_action:
+  type: action_configuration_default
+  label: 'Unpublish comment configuration'

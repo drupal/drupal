@@ -1,0 +1,9 @@
+# Schema for the configuration files of the Invalid Configuration Name module.
+
+invalid_object_name:
+  type: mapping
+  label: 'Invalid configuration'
+  mapping:
+    frittata:
+      type: string
+      label: 'String'

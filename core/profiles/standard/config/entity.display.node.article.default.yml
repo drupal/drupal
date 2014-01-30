@@ -3,16 +3,16 @@ uuid: 3ca9876e-7b93-48bd-8f00-b4ce293ad554
 targetEntityType: node
 bundle: article
 mode: default
-status: 1
+status: true
 content:
   body:
     label: hidden
     type: text_default
-    weight: '0'
+    weight: 0
     settings: {  }
   field_tags:
     type: taxonomy_term_reference_link
-    weight: '10'
+    weight: 10
     label: above
     settings: {  }
   field_image:
@@ -21,4 +21,4 @@ content:
     settings:
       image_style: large
       image_link: ''
-    weight: '-1'
+    weight: -1

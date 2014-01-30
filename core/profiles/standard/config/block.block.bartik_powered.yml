@@ -1,8 +1,8 @@
 id: bartik_powered
 theme: bartik
 uuid: 37cff101-27dc-478d-9d00-b58b9d884039
-weight: '10'
-status: '1'
+weight: 10
+status: true
 langcode: en
 region: footer
 plugin: system_powered_by_block
@@ -10,10 +10,10 @@ settings:
   label: 'Powered by Drupal'
   module: system
   label_display: '0'
-  cache: '-1'
+  cache: -1
 visibility:
   path:
-    visibility: '0'
+    visibility: 0
     pages: ''
   role:
     roles: {  }

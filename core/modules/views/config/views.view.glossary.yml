@@ -18,7 +18,7 @@ display:
           distinct: false
           slave: false
           query_tags: {  }
-      use_ajax: '1'
+      use_ajax: true
       access:
         type: none
         options: {  }
@@ -43,7 +43,7 @@ display:
           id: 0
           total_pages: 0
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
@@ -58,7 +58,7 @@ display:
           id: title
           table: node_field_data
           field: title
-          link_to_node: '1'
+          link_to_node: true
           plugin_id: node
           relationship: none
           group_type: group
@@ -110,7 +110,7 @@ display:
           table: users
           field: name
           label: Author
-          link_to_user: '1'
+          link_to_user: true
           relationship: uid
           plugin_id: user_name
           group_type: group
@@ -155,9 +155,9 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          overwrite_anonymous: '0'
+          overwrite_anonymous: false
           anonymous_text: ''
-          format_username: '1'
+          format_username: true
           provider: user
         changed:
           id: changed
@@ -290,7 +290,7 @@ display:
           inline: {  }
           separator: ''
           hide_empty: false
-          default_field_elements: '1'
+          default_field_elements: true
       header: {  }
       footer: {  }
       empty: {  }
@@ -322,7 +322,7 @@ display:
         type: none
         options:
           offset: 0
-          items_per_page: '0'
+          items_per_page: 0
       defaults:
         arguments: false
       arguments:
@@ -339,7 +339,7 @@ display:
           summary:
             format: unformatted_summary
           summary_options:
-            items_per_page: '25'
+            items_per_page: 25
             inline: true
             separator: ' | '
           specify_validation: true

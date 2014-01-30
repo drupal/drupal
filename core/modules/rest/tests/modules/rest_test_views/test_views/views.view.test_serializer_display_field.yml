@@ -9,7 +9,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -41,9 +41,9 @@ display:
           group_type: group
           admin_label: ''
           label: 'Custom text'
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '1'
+            alter_text: true
             text: TEST
           plugin_id: custom
           provider: views
@@ -67,7 +67,7 @@ display:
     display_plugin: rest_export
     id: rest_export_1
     display_title: serializer
-    position: ''
+    position: null
     display_options:
       defaults:
         access: false
@@ -84,7 +84,7 @@ display:
     display_plugin: rest_export
     id: rest_export_2
     display_title: 'serialize - access denied'
-    position: ''
+    position: null
     display_options:
       defaults:
         access: false
@@ -100,6 +100,6 @@ display:
       row:
         type: data_field
 base_field: id
-status: '1'
+status: true
 module: rest
 langcode: und

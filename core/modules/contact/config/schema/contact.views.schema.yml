@@ -1,0 +1,5 @@
+# Schema for the views plugins of the Contact module.
+
+views.field.contact_link:
+  type: views.field.user_link
+  label: 'Link to user contact page'

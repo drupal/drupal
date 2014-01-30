@@ -8,7 +8,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: '1'
+    position: 1
     display_options:
       access: {  }
       cache: {  }

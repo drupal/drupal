@@ -208,7 +208,7 @@ system.performance:
           mapping:
             use_internal:
               type: boolean
-              label: 'Cache pages for anonymous users'
+              label: 'Use internal page cache'
             max_age:
               type: integer
               label: 'Max age of page cache'
@@ -295,8 +295,8 @@ system.theme:
       type: sequence
       label: 'Enabled themes'
       sequence:
-        - type: string
-          label: 'Theme'
+        - type: integer
+          label: 'Weight'
     default:
       type: string
       label: 'Default theme'
@@ -326,3 +326,163 @@ system.menu.*:
     status:
       type: boolean
       label: ''
+
+system.action.*:
+  type: mapping
+  label: 'System action'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Label'
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Default language'
+    type:
+      type: string
+      label: 'Type'
+    plugin:
+      type: string
+      label: 'Plugin'
+    configuration:
+      type: action.configuration.[plugin]
+
+system.file:
+  type: mapping
+  label: 'File system'
+  mapping:
+    allow_insecure_uploads:
+      type: boolean
+      label: 'Allow insecure uploads'
+    default_scheme:
+      type: string
+      label: 'Default download method'
+    path:
+      type: mapping
+      label: 'Path settings'
+      mapping:
+        private:
+          type: string
+          label: 'Private file system path'
+        temporary:
+          type: string
+          label: 'Temporary directory'
+
+system.image:
+  type: mapping
+  label: 'Image settings'
+  mapping:
+    toolkit:
+      type: string
+      label: 'Toolkit'
+
+system.image.gd:
+  type: mapping
+  label: 'Image settings'
+  mapping:
+    jpeg_quality:
+      type: integer
+      label: 'JPEG quality'
+
+system.mail:
+  type: mapping
+  label: 'Image settings'
+  mapping:
+    interface:
+      type: mapping
+      label: 'Interface'
+      mapping:
+        default:
+          type: string
+          label: 'Default'
+
+system.module:
+  type: mapping
+  label: 'Module settings'
+  mapping:
+    enabled:
+      type: sequence
+      label: 'Enabled modules'
+      sequence:
+        - type: integer
+          label: 'Weight'
+
+system.theme.global:
+  type: mapping
+  label: 'Theme global settings'
+  mapping:
+    favicon:
+      type: mapping
+      label: 'Shortcut icon settings'
+      mapping:
+        mimetype:
+          type: string
+          label: 'MIME type'
+        path:
+          type: string
+          label: 'Path'
+        url:
+          type: string
+          label: 'URL'
+        use_default:
+          type: boolean
+          label: 'Use the default shortcut icon supplied by the theme'
+    features:
+      type: mapping
+      label: 'Shortcut icon settings'
+      mapping:
+        comment_user_picture:
+          type: boolean
+          label: 'User pictures in comments'
+        comment_user_verification:
+          type: boolean
+          label: 'User verification status in comments'
+        favicon:
+          type: boolean
+          label: 'Shortcut icon'
+        logo:
+          type: boolean
+          label: 'Logo'
+        name:
+          type: boolean
+          label: 'Site name'
+        node_user_picture:
+          type: boolean
+          label: 'User pictures in posts'
+        main_menu:
+          type: boolean
+          label: 'Main menu'
+        secondary_menu:
+          type: boolean
+          label: 'Secondary menu'
+        slogan:
+          type: boolean
+          label: 'Site slogan'
+    logo:
+      type: mapping
+      label: 'Shortcut icon settings'
+      mapping:
+        path:
+          type: string
+          label: 'Logo path'
+        url:
+          type: uri
+          label: 'URL'
+        use_default:
+          type: boolean
+          label: 'Use default'
+
+system.theme.disabled:
+  type: sequence
+  label: 'Disabled themes'
+  sequence:
+    - type: string
+      label: 'Theme'

@@ -3,16 +3,16 @@ uuid: 1a720d40-7bcd-41e3-ae4d-08d1cad4ac2a
 name: Import
 description: 'Import description.'
 help: ''
-has_title: '1'
+has_title: true
 title_label: Title
 settings:
   node:
-    preview: '1'
+    preview: 1
     options:
       status: status
       promote: promote
-      sticky: '0'
-      revision: '0'
-    submitted: '1'
-status: '1'
+      sticky: false
+      revision: false
+    submitted: true
+status: true
 langcode: en

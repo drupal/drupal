@@ -7,7 +7,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: '0'
+    position: 0
     display_options:
       fields:
         nid:

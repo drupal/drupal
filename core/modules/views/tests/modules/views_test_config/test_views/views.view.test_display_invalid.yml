@@ -17,19 +17,19 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   page_1:
     display_options:
       path: test_display_invalid
     display_plugin: page
     display_title: Page
     id: page_1
-    position: '0'
+    position: 0
   block_1:
     display_plugin: block
     id: block_1
     display_title: Block
-    position: '1'
+    position: 1
 label: ''
 id: test_display_invalid
 tag: ''

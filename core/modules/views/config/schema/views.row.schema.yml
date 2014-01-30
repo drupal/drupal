@@ -1,11 +1,11 @@
 # Schema for the views row.
 
 views.row.fields:
-  type: mapping
+  type: views_row
   label: 'Field options'
   mapping:
     default_field_elements:
-      type: string
+      type: boolean
       label: 'Provide default field wrapper elements'
     inline:
       type: sequence
@@ -19,3 +19,33 @@ views.row.fields:
     hide_empty:
       type: boolean
       label: 'Hide empty'
+
+views.row.rss_fields:
+  type: mapping
+  label: 'RSS field options'
+  mapping:
+    title_field:
+      type: string
+      label: 'Title field'
+    link_field:
+      type: string
+      label: 'Link field'
+    description_field:
+      type: string
+      label: 'Description field'
+    creator_field:
+      type: string
+      label: 'Creator field'
+    date_field:
+      type: string
+      label: 'Publication date field'
+    guid_field_options:
+      type: mapping
+      label: 'Guid settings'
+      mapping:
+        guid_field:
+          type: string
+          label: 'GUID field'
+        guid_field_is_permalink:
+          type: boolean
+          label: 'GUID is permalink'

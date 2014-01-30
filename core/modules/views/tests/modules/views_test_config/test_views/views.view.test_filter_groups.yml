@@ -77,7 +77,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   page:
     display_options:
       defaults:
@@ -120,7 +120,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page
-    position: '0'
+    position: 0
 label: test_filter_groups
 id: test_filter_groups
 tag: default

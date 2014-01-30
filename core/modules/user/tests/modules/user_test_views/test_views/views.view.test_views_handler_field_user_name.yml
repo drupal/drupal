@@ -45,7 +45,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
 label: test_views_handler_field_user_name
 id: test_views_handler_field_user_name
 tag: default

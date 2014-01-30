@@ -4,6 +4,6 @@ first_day: 0
 timezone:
   default: ''
   user:
-    configurable: '1'
-    warn: '0'
-    default: '0'
+    configurable: true
+    warn: false
+    default: 0

@@ -1,7 +1,7 @@
 id: node_publish_action
 uuid: 83bc5b18-6987-4106-be00-bbf90333a655
 label: 'Publish content'
-status: '1'
+status: true
 langcode: en
 type: node
 plugin: node_publish_action

@@ -1,4 +1,4 @@
-admin: '0'
+admin: ''
 enabled:
-  stark: '0'
+  stark: 0
 default: stark

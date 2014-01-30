@@ -61,7 +61,7 @@ field.taxonomy_term_reference.settings:
               type: string
               label: 'Vocabulary'
             parent:
-              type: string
+              type: integer
               value: 'Parent'
 
 field.taxonomy_term_reference.instance_settings:
@@ -82,3 +82,42 @@ field.taxonomy_term_reference.value:
           type: integer
           label: 'Term ID'
 
+entity_display.field.entity_reference_rss_category:
+  type: entity_field_display_base
+  label: 'Taxonomy format settings'
+
+entity_display.field.taxonomy_term_reference_plain:
+  type: entity_field_display_base
+  label: 'Taxonomy format settings'
+
+entity_display.field.taxonomy_term_reference_rss_category:
+  type: entity_field_display_base
+  label: 'Taxonomy format settings'
+
+entity_display.field.taxonomy_term_reference_link:
+  type: entity_field_display_base
+  label: 'Taxonomy format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_form_display.field.taxonomy_autocomplete:
+  type: entity_field_form_display_base
+  label: 'Autocomplete term widget (tagging) format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        size:
+          type: integer
+          label: 'Size'
+        autocomplete_route_name:
+          type: string
+          label: 'Autocomplete route name'
+        placeholder:
+          type: label
+          label: 'Placeholder'

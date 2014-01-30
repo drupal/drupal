@@ -21,7 +21,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   page_1:
     display_options:
       path: test_page_display_menu/default
@@ -44,7 +44,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_1
-    position: '0'
+    position: 0
   page_2:
     display_options:
       path: test_page_display_menu/local
@@ -61,7 +61,7 @@ display:
     display_plugin: page
     display_title: Page
     id: page_2
-    position: '0'
+    position: 0
 label: 'Test page menu'
 id: test_page_display_menu
 tag: ''

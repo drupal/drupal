@@ -1,7 +1,7 @@
 id: stark_tools
 theme: stark
-weight: '0'
-status: '1'
+weight: 0
+status: true
 langcode: en
 region: sidebar_first
 plugin: 'system_menu_block:tools'
@@ -9,10 +9,10 @@ settings:
   label: Tools
   module: system
   label_display: visible
-  cache: '-1'
+  cache: -1
 visibility:
   path:
-    visibility: '0'
+    visibility: 0
     pages: ''
   role:
     roles: {  }

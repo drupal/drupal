@@ -1,8 +1,8 @@
 id: seven_content
 theme: seven
 uuid: 3c9e3337-e0f4-42c3-8a00-f1d8be09b0ea
-weight: '0'
-status: '1'
+weight: 0
+status: true
 langcode: en
 region: content
 plugin: system_main_block
@@ -10,10 +10,10 @@ settings:
   label: 'Main page content'
   module: system
   label_display: '0'
-  cache: '-1'
+  cache: -1
 visibility:
   path:
-    visibility: '0'
+    visibility: 0
     pages: ''
   role:
     roles: {  }

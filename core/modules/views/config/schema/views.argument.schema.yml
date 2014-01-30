@@ -65,3 +65,81 @@ views.argument.string:
     require_value:
       type: boolean
       label: 'Do not display items with no value in summary'
+
+
+views.argument.broken:
+  type: views_argument
+  label: 'Broken'
+
+views.argument.date:
+  type: views_argument
+  label: 'Date'
+  mapping:
+    date:
+      type: string
+      label: 'Date'
+    node_created:
+      type: string
+      label: 'Node Creation Time'
+    node_changed:
+      type: string
+      label: 'Node Update Time'
+
+views.argument.date_day:
+  type: views.argument.date
+  label: 'Day Date'
+  mapping:
+    day:
+      type: string
+      label: 'Day'
+
+views.argument.formula:
+  type: views_argument
+  label: 'Formula'
+  mapping:
+    placeholder:
+      type: string
+      label: 'Place Holder'
+    formula:
+      type: string
+      label: 'Formula Used'
+
+views.argument.date_fulldate:
+  type: views.argument.date
+  label: 'Full Date'
+  mapping:
+    created:
+      type: string
+      label: 'Full Date'
+
+views.argument.groupby_numeric:
+  type: views_argument
+  label: 'Group by Numeric'
+
+views.argument.date_month:
+  type: views.argument.date
+  label: 'Month Date'
+  mapping:
+    month:
+      type: string
+      label: 'Month'
+
+views.argument.standard:
+  type: views_argument
+  label: 'Standard'
+
+views.argument.date_week:
+  type: views.argument.date
+  label: 'Week Date'
+
+views.argument.date_year:
+  type: views.argument.date
+  label: 'Year Date'
+
+views.argument.date_year_month:
+  type: views.argument.date
+  label: 'YearMonthDate'
+  mapping:
+    created:
+      type: string
+      label: 'Date Year month'

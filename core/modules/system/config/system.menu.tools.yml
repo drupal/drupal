@@ -2,4 +2,4 @@ id: tools
 label: Tools
 description: 'Contains links for site visitors. Some modules add their links here.'
 langcode: en
-locked: 1
+locked: true

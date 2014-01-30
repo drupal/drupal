@@ -29,24 +29,24 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: '0'
+    position: 0
   attachment_1:
     display_plugin: attachment
     display_title: Attachment
     id: attachment_1
-    position: '1'
+    position: 1
   page_1:
     display_plugin: page
     display_title: Page
     display_options:
       path: test_attachment_ui
     id: page_1
-    position: '2'
+    position: 2
   feed_1:
     display_plugin: feed
     id: feed_1
     display_title: Feed
-    position: '3'
+    position: 3
     display_options:
       pager:
         type: some

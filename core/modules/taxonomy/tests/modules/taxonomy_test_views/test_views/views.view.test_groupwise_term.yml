@@ -2,7 +2,7 @@ base_field: tid
 base_table: taxonomy_term_data
 core: 8.0-dev
 description: ''
-status: '1'
+status: true
 display:
   default:
     display_options:
@@ -28,7 +28,7 @@ display:
           provider: node
       pager:
         options:
-          items_per_page: '10'
+          items_per_page: 10
         type: full
       query:
         type: views_query
@@ -40,10 +40,10 @@ display:
           id: tid_representative
           label: 'Representative node'
           relationship: none
-          required: '0'
+          required: false
           subquery_namespace: ''
           subquery_order: DESC
-          subquery_regenerate: '1'
+          subquery_regenerate: true
           subquery_sort: node.nid
           subquery_view: ''
           table: taxonomy_term_data

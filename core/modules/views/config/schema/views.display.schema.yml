@@ -4,9 +4,8 @@ views.display.default:
   type: views_display
   label: 'Default display options'
 
-views.display.page:
+views_display_path:
   type: views_display
-  label: 'Page display options'
   mapping:
     path:
       type: string
@@ -14,6 +13,11 @@ views.display.page:
     route_name:
       type: string
       label: 'Route name'
+
+views.display.page:
+  type: views_display_path
+  label: 'Page display options'
+  mapping:
     menu:
       type: mapping
       label: 'Menu'
@@ -56,27 +60,10 @@ views.display.page:
           type: string
           label: 'Menu name'
 
-views.display.block:
-  type: views_display
-  label: 'Block display options'
-  mapping:
-    block_description:
-      type: text
-      label: 'Block name'
-    block_category:
-      type: text
-      label: 'Block category'
-    block_caching:
-      type: boolean
-      label: 'Block caching'
-
 views.display.feed:
-  type: views_display
+  type: views_display_path
   label: 'Feed display options'
   mapping:
-    path:
-      type: string
-      label: 'Page path'
     sitename_title:
       type: boolean
       label: 'Use the site name for the title'
@@ -86,6 +73,9 @@ views.display.feed:
       sequence:
         - type: string
           label: 'Display'
+    display_description:
+      type: text
+      label: 'Display description'
 
 views.display.embed:
   type: views_display

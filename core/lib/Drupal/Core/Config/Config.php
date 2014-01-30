@@ -574,8 +574,8 @@ class Config {
         }
       }
       catch (SchemaIncompleteException $e) {
-        // @todo throw an exception due to an incomplete schema. Only possible
-        //   once https://drupal.org/node/1910624 is complete.
+        // @todo throw an exception due to an incomplete schema.
+        // Fix as part of https://drupal.org/node/2183983.
       }
     }
     else {

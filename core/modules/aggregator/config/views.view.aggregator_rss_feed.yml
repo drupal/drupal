@@ -42,7 +42,7 @@ display:
           id: 0
           total_pages: 0
           expose:
-            items_per_page: '0'
+            items_per_page: false
             items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 20, 40, 60'
             items_per_page_options_all: false
@@ -54,7 +54,7 @@ display:
             next: 'next ›'
             first: '« first'
             last: 'last »'
-          quantity: '9'
+          quantity: 9
       style:
         type: default
       row:
@@ -69,6 +69,7 @@ display:
           admin_label: ''
           label: 'Item ID'
           exclude: false
+          plugin_id: numeric
           alter:
             alter_text: false
             text: ''
@@ -108,11 +109,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          set_precision: '0'
-          precision: '0'
+          set_precision: false
+          precision: 0
           decimal: .
           separator: ','
-          format_plural: '0'
+          format_plural: false
           format_plural_singular: '1'
           format_plural_plural: '@count'
           prefix: ''

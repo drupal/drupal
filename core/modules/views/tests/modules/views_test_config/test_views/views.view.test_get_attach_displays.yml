@@ -9,7 +9,7 @@ display:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -75,14 +75,14 @@ display:
     display_plugin: page
     id: page_1
     display_title: Page
-    position: ''
+    position: null
     display_options:
       path: test-get-attach-displays
   feed_1:
     display_plugin: feed
     id: feed_1
     display_title: Feed
-    position: ''
+    position: null
     display_options:
       pager:
         type: some
@@ -98,7 +98,7 @@ display:
     display_plugin: feed
     id: feed_2
     display_title: 'Feed 2'
-    position: ''
+    position: null
     display_options:
       displays:
         default: default
