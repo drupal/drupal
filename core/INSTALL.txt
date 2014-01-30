@@ -5,6 +5,7 @@ CONTENTS OF THIS FILE
  * Requirements and notes
  * Optional server requirements
  * Installation
+ * Reinstall
  * Building and customizing your site
  * Multisite configuration
  * Multilingual configuration
@@ -284,6 +285,20 @@ INSTALLATION
    http://drupal.org/cron, and sample cron shell scripts can be found in the
    scripts/ directory. (Note that these scripts must be customized like the
    above example, to add your site-specific cron key and domain name.)
+
+REINSTALL
+------------
+
+Drupal can be reinstalled without downloading and extracting the Drupal release.
+
+1. Drop all the tables in your database.
+
+2. Remove everything in sites/default/files.
+
+3. Remove sites/default/settings.php.
+
+4. Follow the Installation Instructions above starting from Step 3 (Run the
+   install script).
 
 BUILDING AND CUSTOMIZING YOUR SITE
 ----------------------------------
