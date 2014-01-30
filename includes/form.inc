@@ -15,10 +15,9 @@
  * reference the form builder function using \@see. For examples, of this see
  * system_modules_uninstall() or user_pass(), the latter of which has the
  * following in its doxygen documentation:
- *
- * \@ingroup forms
- * \@see user_pass_validate().
- * \@see user_pass_submit().
+ * - \@ingroup forms
+ * - \@see user_pass_validate()
+ * - \@see user_pass_submit()
  *
  * @}
  */
