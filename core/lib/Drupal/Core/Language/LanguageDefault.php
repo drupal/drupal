@@ -3,7 +3,7 @@
 namespace Drupal\Core\Language;
 
 /**
- * Provides a simple get and set wrapper to a language object.
+ * Provides a simple get and set wrapper to the default language object.
  *
  * The default language must be provided without dependencies since it is both
  * configured and a dependency of the configuration system. The LanguageDefault
