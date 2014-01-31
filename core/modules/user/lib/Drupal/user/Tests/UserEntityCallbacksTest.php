@@ -21,6 +21,11 @@ class UserEntityCallbacksTest extends WebTestBase {
    */
   public static $modules = array('user');
 
+  /**
+   * @var \Drupal\user\UserInterface
+   */
+  protected $account;
+
   public static function getInfo() {
     return array(
       'name' => 'User entity callback tests',
@@ -52,7 +57,6 @@ class UserEntityCallbacksTest extends WebTestBase {
    * Test URI callback.
    */
   function testUriCallback() {
-    $uri = $this->account->uri();
-    $this->assertEqual('user/' . $this->account->id(), $uri['path'], 'Correct user URI.');
+    $this->assertEqual('user/' . $this->account->id(), $this->account->getSystemPath(), 'Correct user URI.');
   }
 }

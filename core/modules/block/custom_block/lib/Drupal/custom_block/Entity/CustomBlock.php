@@ -37,6 +37,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *   revision_table = "custom_block_revision",
  *   links = {
  *     "canonical" = "custom_block.edit",
+ *     "delete-form" = "custom_block.delete",
  *     "edit-form" = "custom_block.edit",
  *     "admin-form" = "custom_block.type_edit"
  *   },

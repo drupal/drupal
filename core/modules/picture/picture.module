@@ -200,6 +200,7 @@ function theme_picture_formatter($variables) {
   if (drupal_strlen($item->title) != 0) {
     $picture['#title'] = $item->title;
   }
+  // @todo Add support for route names.
   if (isset($variables['path']['path'])) {
     $path = $variables['path']['path'];
     $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();

@@ -50,7 +50,7 @@ interface WizardInterface {
    * @param array $form_state
    *   The current state of the wizard form.
    *
-   * @return \Drupal\views\ViewExecutable
+   * @return \Drupal\views\ViewStorageInterface
    *   The created view object.
    *
    * @throws \Drupal\views\Plugin\views\wizard\WizardException

@@ -82,16 +82,4 @@ class ConfigTestFormController extends EntityFormController {
     $form_state['redirect_route']['route_name'] = 'config_test.list_page';
   }
 
-  /**
-   * Overrides Drupal\Core\Entity\EntityFormController::delete().
-   */
-  public function delete(array $form, array &$form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'config_test.entity_delete',
-      'route_parameters' => array(
-        'config_test' => $this->entity->id(),
-      ),
-    );
-  }
-
 }

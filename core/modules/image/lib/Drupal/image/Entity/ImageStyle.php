@@ -40,6 +40,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *     "uuid" = "uuid"
  *   },
  *   links = {
+ *     "flush-form" = "image.style_flush",
  *     "edit-form" = "image.style_edit"
  *   }
  * )

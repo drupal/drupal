@@ -464,33 +464,6 @@ function taxonomy_field_views_data_views_data_alter(array &$data, FieldInterface
 }
 
 /**
- * Helper function to set a breadcrumb for taxonomy.
- */
-function views_taxonomy_set_breadcrumb(&$breadcrumb, &$argument) {
-  if (empty($argument->options['set_breadcrumb'])) {
-    return;
-  }
-
-  $args = $argument->view->args;
-  $parents = taxonomy_get_parents_all($argument->argument);
-  foreach (array_reverse($parents) as $parent) {
-    // Unfortunately parents includes the current argument. Skip.
-    if ($parent->id() == $argument->argument) {
-      continue;
-    }
-    if (!empty($argument->options['use_taxonomy_term_path'])) {
-      $path = $parent->uri();
-      $path = $path['path'];
-    }
-    else {
-      $args[$argument->position] = $parent->id();
-      $path = $argument->view->getUrl($args);
-    }
-    $breadcrumb[$path] = check_plain($parent->label());
-  }
-}
-
-/**
  * Implements hook_views_plugins_argument_validator_alter().
  *
  * Extend the generic entity argument validator.

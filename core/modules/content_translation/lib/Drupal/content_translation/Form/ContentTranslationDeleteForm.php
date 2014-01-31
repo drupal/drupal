@@ -40,7 +40,6 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
    */
   public function buildForm(array $form, array &$form_state, $_entity_type = NULL, $language = NULL) {
     $this->entity = $this->getRequest()->attributes->get($_entity_type);
-    $uri = $this->entity->uri('drupal:content-translation-overview');
     $this->language = language_load($language);
     return parent::buildForm($form, $form_state);
   }
@@ -82,8 +81,8 @@ class ContentTranslationDeleteForm extends ConfirmFormBase {
     // Remove any existing path alias for the removed translation.
     // @todo This should be taken care of by the Path module.
     if (\Drupal::moduleHandler()->moduleExists('path')) {
-      $uri = $this->entity->uri();
-      $conditions = array('source' => $uri['path'], 'langcode' => $this->language->id);
+      $path = $this->entity->getSystemPath();
+      $conditions = array('source' => $path, 'langcode' => $this->language->id);
       \Drupal::service('path.crud')->delete($conditions);
     }
 

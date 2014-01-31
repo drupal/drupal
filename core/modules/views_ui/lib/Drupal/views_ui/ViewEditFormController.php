@@ -122,7 +122,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       $lock_message_substitutions = array(
         '!user' => drupal_render($username),
         '!age' => format_interval(REQUEST_TIME - $view->lock->updated),
-        '!break' => url('admin/structure/views/view/' . $view->id() . '/break-lock'),
+        '!break' => $view->url('break-lock'),
       );
       $form['locked'] = array(
         '#type' => 'container',
@@ -626,10 +626,7 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     // Redirect to the top-level edit page. The first remaining display will
     // become the active display.
-    $form_state['redirect_route'] = array(
-      'route_name' => 'views_ui.edit',
-      'route_parameters' => array('view' => $view->id()),
-    );
+    $form_state['redirect_route'] = $view->urlInfo('edit-form');
   }
 
   /**
@@ -687,8 +684,7 @@ class ViewEditFormController extends ViewFormControllerBase {
         ),
         'clone' => array(
           'title' => $this->t('Clone view'),
-          'href' => "admin/structure/views/view/{$view->id()}/clone",
-        ),
+        ) + $view->urlInfo('clone'),
         'reorder' => array(
           'title' => $this->t('Reorder displays'),
           'href' => "admin/structure/views/nojs/reorder-displays/{$view->id()}/$display_id",
@@ -700,8 +696,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     if ($view->access('delete')) {
       $element['extra_actions']['#links']['delete'] = array(
         'title' => $this->t('Delete view'),
-        'href' => "admin/structure/views/view/{$view->id()}/delete",
-      );
+      ) + $view->urlInfo('delete-form');
     }
 
     // Let other modules add additional links here.

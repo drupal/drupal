@@ -44,6 +44,7 @@ use Drupal\taxonomy\TermInterface;
  *   bundle_entity_type = "taxonomy_vocabulary",
  *   links = {
  *     "canonical" = "taxonomy.term_page",
+ *     "delete-form" = "taxonomy.term_delete",
  *     "edit-form" = "taxonomy.term_edit",
  *     "admin-form" = "taxonomy.overview_terms"
  *   },

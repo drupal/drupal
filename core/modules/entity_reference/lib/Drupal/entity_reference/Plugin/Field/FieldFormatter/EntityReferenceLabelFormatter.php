@@ -59,15 +59,17 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
         // User doesn't have access to the referenced entity.
         continue;
       }
+      /** @var $referenced_entity \Drupal\Core\Entity\EntityInterface */
       if ($referenced_entity = $item->entity) {
         $label = $referenced_entity->label();
         // If the link is to be displayed and the entity has a uri,
         // display a link.
-        if ($this->getSetting('link') && $uri = $referenced_entity->uri()) {
+        if ($this->getSetting('link') && $uri = $referenced_entity->urlInfo()) {
           $elements[$delta] = array(
             '#type' => 'link',
             '#title' => $label,
-            '#href' => $uri['path'],
+            '#route_name' => $uri['route_name'],
+            '#route_parameters' => $uri['route_parameters'],
             '#options' => $uri['options'],
           );
         }

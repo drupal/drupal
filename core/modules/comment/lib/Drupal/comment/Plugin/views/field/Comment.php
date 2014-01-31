@@ -93,8 +93,7 @@ class Comment extends FieldPluginBase {
         $entity_id = $this->getValue($values, 'entity_id');
         $entity_type = $this->getValue($values, 'entity_type');
         $entity = entity_load($entity_type, $entity_id);
-        $uri = $entity->uri();
-        $this->options['alter']['path'] = $uri['path'];
+        $this->options['alter']['path'] = $entity->getSystemPath();
       }
     }
 

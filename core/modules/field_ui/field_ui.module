@@ -136,6 +136,15 @@ function field_ui_entity_info(&$entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   $entity_info['field_instance']->setFormClass('delete', 'Drupal\field_ui\Form\FieldDeleteForm');
   $entity_info['field_entity']->setListClass('Drupal\field_ui\FieldListController');
+
+  foreach ($entity_info as $info) {
+    if ($bundle = $info->getBundleOf()) {
+      $info
+        ->setLinkTemplate('field_ui-fields', "field_ui.overview_$bundle")
+        ->setLinkTemplate('field_ui-form-display', "field_ui.form_display_overview_$bundle")
+        ->setLinkTemplate('field_ui-display', "field_ui.display_overview_$bundle");
+    }
+  }
 }
 
 /**
@@ -184,30 +193,23 @@ function field_ui_entity_operation_alter(array &$operations, EntityInterface $en
   // Add manage fields and display links if this entity type is the bundle
   // of another.
   if ($bundle_of = $info->getBundleOf()) {
-    $uri = $entity->uri();
     if (user_access('administer '. $bundle_of . ' fields')) {
       $operations['manage-fields'] = array(
         'title' => t('Manage fields'),
-        'href' => $uri['path'] . '/fields',
-        'options' => $uri['options'],
         'weight' => 15,
-      );
+      ) + $entity->urlInfo('field_ui-fields');
     }
     if (user_access('administer '. $bundle_of . ' form display')) {
       $operations['manage-form-display'] = array(
         'title' => t('Manage form display'),
-        'href' => $uri['path'] . '/form-display',
-        'options' => $uri['options'],
         'weight' => 20,
-      );
+      ) + $entity->urlInfo('field_ui-form-display');
     }
     if (user_access('administer '. $bundle_of . ' display')) {
       $operations['manage-display'] = array(
         'title' => t('Manage display'),
-        'href' => $uri['path'] . '/display',
-        'options' => $uri['options'],
         'weight' => 25,
-      );
+      ) + $entity->urlInfo('field_ui-display');
     }
   }
 }

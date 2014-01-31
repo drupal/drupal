@@ -123,8 +123,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Load the saved image style.
     $style = entity_load('image_style', $style_name);
     // Ensure that the image style URI matches our expected path.
-    $style_uri = $style->uri();
-    $style_uri_path = url($style_uri['path'], $style_uri['options']);
+    $style_uri_path = $style->url();
     $this->assertTrue(strpos($style_uri_path, $style_path) !== FALSE, 'The image style URI is correct.');
 
     // Confirm that all effects on the image style have settings on the effect

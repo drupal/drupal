@@ -92,26 +92,13 @@ class FeedFormController extends ContentEntityFormController {
         $form_state['redirect_route']['route_name'] = 'aggregator.admin_overview';
       }
       else {
-        $form_state['redirect_route'] = array(
-          'route_name' => 'aggregator.feed_view',
-          'route_parameters' => array('aggregator_feed' => $feed->id()),
-        );
+        $form_state['redirect_route'] = $feed->urlInfo('canonical');
       }
     }
     else {
       watchdog('aggregator', 'Feed %feed added.', array('%feed' => $feed->label()), WATCHDOG_NOTICE, l($this->t('view'), 'admin/config/services/aggregator'));
       drupal_set_message($this->t('The feed %feed has been added.', array('%feed' => $feed->label())));
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, array &$form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'aggregator.feed_delete',
-      'route_parameters' => array('aggregator_feed' => $this->entity->id()),
-    );
   }
 
 }

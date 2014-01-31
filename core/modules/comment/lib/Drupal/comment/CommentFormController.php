@@ -368,7 +368,7 @@ class CommentFormController extends ContentEntityFormController {
     $entity = entity_load($form_state['values']['entity_type'], $form_state['values']['entity_id']);
     $comment = $this->entity;
     $field_name = $comment->field_name->value;
-    $uri = $entity->uri();
+    $uri = $entity->urlInfo();
 
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == COMMENT_OPEN)) {
       // Save the anonymous user information to a cookie for reuse.
@@ -399,15 +399,14 @@ class CommentFormController extends ContentEntityFormController {
         $query['page'] = $page;
       }
       // Redirect to the newly posted comment.
-      $redirect = array($uri['path'], array('query' => $query, 'fragment' => 'comment-' . $comment->id()) + $uri['options']);
+      $uri['options'] += array('query' => $query, 'fragment' => 'comment-' . $comment->id());
     }
     else {
       watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject->value), WATCHDOG_WARNING);
       drupal_set_message($this->t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject->value)), 'error');
       // Redirect the user to the entity they are commenting on.
-      $redirect = $uri['path'];
     }
-    $form_state['redirect'] = $redirect;
+    $form_state['redirect_route'] = $uri;
     // Clear the block and page caches so that anonymous users see the comment
     // they have posted.
     Cache::invalidateTags(array('content' => TRUE));

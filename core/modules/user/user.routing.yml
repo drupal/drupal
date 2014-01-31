@@ -68,12 +68,12 @@ user.admin_permissions:
     _permission: 'administer permissions'
 
 user.admin_permission:
-  path: '/admin/people/permissions/{role_id}'
+  path: '/admin/people/permissions/{user_role}'
   defaults:
     _form: '\Drupal\user\Form\UserPermissionsRoleSpecificForm'
     _title: 'Edit role'
   requirements:
-    _permission: 'administer permissions'
+    _entity_access: 'user_role.update'
 
 user.multiple_cancel_confirm:
   path: '/admin/people/cancel'

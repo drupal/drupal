@@ -75,13 +75,10 @@ class ImageStyleListController extends ConfigEntityListController implements Ent
    * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
-    $uri = $entity->uri('edit-form');
     $flush = array(
       'title' => t('Flush'),
-      'href' => $uri['path'] . '/flush',
-      'options' => $uri['options'],
       'weight' => 200,
-    );
+    ) + $entity->urlInfo('flush-form');
 
     return parent::getOperations($entity) + array('flush' => $flush);
   }

@@ -115,11 +115,14 @@ function menu_entity_info(&$entity_info) {
     ->setFormClass('edit', 'Drupal\menu\MenuFormController')
     ->setFormClass('delete', 'Drupal\menu\Form\MenuDeleteForm')
     ->setListClass('Drupal\menu\MenuListController')
+    ->setLinkTemplate('add-form', 'menu.link_add')
+    ->setLinkTemplate('delete-form', 'menu.delete_menu')
     ->setLinkTemplate('edit-form', 'menu.menu_edit');
 
   $entity_info['menu_link']
     ->setFormClass('delete', 'Drupal\menu\Form\MenuLinkDeleteForm')
-    ->setFormClass('reset', 'Drupal\menu\Form\MenuLinkResetForm');
+    ->setFormClass('reset', 'Drupal\menu\Form\MenuLinkResetForm')
+    ->setLinkTemplate('delete-form', 'menu.link_delete');
 }
 
 /**

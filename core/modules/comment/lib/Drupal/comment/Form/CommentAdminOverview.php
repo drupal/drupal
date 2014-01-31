@@ -172,6 +172,7 @@ class CommentAdminOverview extends FormBase {
      ->pager(50)
      ->execute();
 
+    /** @var $comments \Drupal\comment\CommentInterface[] */
     $comments = $this->commentStorage->loadMultiple($cids);
 
     // Build a table listing the appropriate comments.
@@ -190,8 +191,9 @@ class CommentAdminOverview extends FormBase {
     }
 
     foreach ($comments as $comment) {
+      /** @var $commented_entity \Drupal\comment\CommentInterface */
       $commented_entity = $commented_entities[$comment->entity_type->value][$comment->entity_id->value];
-      $commented_entity_uri = $commented_entity->uri();
+      $commented_entity_uri = $commented_entity->urlInfo();
       $username = array(
         '#theme' => 'username',
         '#account' => comment_prepare_author($comment),
@@ -207,7 +209,8 @@ class CommentAdminOverview extends FormBase {
           'data' => array(
             '#type' => 'link',
             '#title' => $comment->subject->value,
-            '#href' => $comment_permalink['path'],
+            '#route_name' => $comment_permalink['route_name'],
+            '#route_parameters' => $comment_permalink['route_parameters'],
             '#options' => $comment_permalink['options'] + array(
               'attributes' => array(
                 'title' => Unicode::truncate($body, 128),
@@ -220,14 +223,15 @@ class CommentAdminOverview extends FormBase {
           'data' => array(
             '#type' => 'link',
             '#title' => $commented_entity->label(),
-            '#href' => $commented_entity_uri['path'],
+            '#route_name' => $commented_entity_uri['route_name'],
+            '#route_parameters' => $commented_entity_uri['route_parameters'],
             '#options' => $commented_entity_uri['options'],
             '#access' => $commented_entity->access('view'),
           ),
         ),
         'changed' => $this->date->format($comment->changed->value, 'short'),
       );
-      $comment_uri = $comment->uri();
+      $comment_uri = $comment->urlInfo();
       $links = array();
       $links['edit'] = array(
         'title' => $this->t('edit'),

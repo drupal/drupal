@@ -126,7 +126,10 @@ function comment_entity_bundle_info() {
  */
 function comment_uri(CommentInterface $comment) {
   return array(
-    'path' => 'comment/' . $comment->id(),
+    'route_name' => 'comment.permalink',
+    'route_parameters' => array(
+      'comment' => $comment->id(),
+    ),
     'options' => array('fragment' => 'comment-' . $comment->id()),
   );
 }
@@ -444,16 +447,15 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
     if ($commenting_status) {
       $instance = \Drupal::service('field.info')->getInstance('node', $entity->bundle(), $field_name);
       // Entity have commenting open or close.
-      $uri = $entity->uri();
       if ($view_mode == 'rss') {
         // Add a comments RSS element which is a URL to the comments of this node.
-        if (!empty($uri['options'])) {
-          $uri['options']['fragment'] = 'comments';
-          $uri['options']['absolute'] = TRUE;
-        }
+        $options = array(
+          'fragment' => 'comments',
+          'absolute' => TRUE,
+        );
         $entity->rss_elements[] = array(
           'key' => 'comments',
-          'value' => url($uri['path'], $uri['options'])
+          'value' => $entity->url('canonical', $options),
         );
       }
       elseif ($view_mode == 'teaser') {
@@ -464,11 +466,10 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
           if (!empty($entity->get($field_name)->comment_count)) {
             $links['comment-comments'] = array(
               'title' => format_plural($entity->get($field_name)->comment_count, '1 comment', '@count comments'),
-              'href' => $uri['path'],
               'attributes' => array('title' => t('Jump to the first comment of this posting.')),
               'fragment' => 'comments',
               'html' => TRUE,
-            );
+            ) + $entity->urlInfo();
             if (\Drupal::moduleHandler()->moduleExists('history')) {
               $links['comment-new-comments'] = array(
                 'title' => '',
@@ -490,12 +491,19 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
           if (user_access('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
-              'href' => $uri['path'],
               'attributes' => array('title' => t('Add a new comment to this page.')),
               'fragment' => 'comment-form',
             );
             if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
-              $links['comment-add']['href'] = 'comment/reply/'. $entity->getEntityTypeId() . '/' . $entity->id() .'/' . $field_name;
+              $links['comment-add']['route_name'] = 'comment.reply';
+              $links['comment-add']['route_parameters'] = array(
+                'entity_type' => $entity->getEntityTypeId(),
+                'entity_id' => $entity->id(),
+                'field_name' => $field_name,
+              );
+            }
+            else {
+              $links['comment-add'] += $entity->urlInfo();
             }
           }
           else {
@@ -520,11 +528,18 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
               $links['comment-add'] = array(
                 'title' => t('Add new comment'),
                 'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
-                'href' => $uri['path'],
                 'fragment' => 'comment-form',
               );
               if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
-                $links['comment-add']['href'] = 'comment/reply/'. $entity->getEntityTypeId() . '/' . $entity->id() .'/' . $field_name;
+                $links['comment-add']['route_name'] = 'comment.reply';
+                $links['comment-add']['route_parameters'] = array(
+                  'entity_type' => $entity->getEntityTypeId(),
+                  'entity_id' => $entity->id(),
+                  'field_name' => $field_name,
+                );
+              }
+              else {
+                $links['comment-add'] += $entity->urlInfo();
               }
             }
           }
@@ -1358,6 +1373,7 @@ function comment_prepare_author(CommentInterface $comment) {
  *     Array keys: #comment, #commented_entity.
  */
 function template_preprocess_comment(&$variables) {
+  /** @var $comment \Drupal\comment\CommentInterface */
   $comment = $variables['elements']['#comment'];
   $commented_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
   $variables['comment'] = $comment;
@@ -1395,13 +1411,19 @@ function template_preprocess_comment(&$variables) {
   else {
     $variables['signature'] = '';
   }
+  if (isset($comment->in_preview)) {
+    $variables['title'] = l($comment->subject->value, '');
+    $variables['permalink'] = l(t('Permalink'), '');
+  }
+  else {
+    $uri = $comment->urlInfo();
+    $uri['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
+    $variables['title'] = \Drupal::l($comment->subject->value, $uri['route_name'], $uri['route_parameters'], $uri['options']);
 
-  $uri = $comment->uri();
-  $permalink_uri = $comment->permalink();
-  $uri['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
+    $permalink_uri = $comment->permalink();
+    $variables['permalink'] = \Drupal::l(t('Permalink'), $permalink_uri['route_name'], $permalink_uri['route_parameters'], $permalink_uri['options']);
+  }
 
-  $variables['title'] = l($comment->subject->value, $uri['path'], $uri['options']);
-  $variables['permalink'] = l(t('Permalink'), $permalink_uri['path'], $permalink_uri['options']);
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
 
   if ($comment->pid->target_id) {
@@ -1425,8 +1447,8 @@ function template_preprocess_comment(&$variables) {
     }
     $permalink_uri_parent = $comment_parent->permalink();
     $permalink_uri_parent['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
-    $variables['parent_title'] = l($comment_parent->subject->value, $permalink_uri_parent['path'], $permalink_uri_parent['options']);
-    $variables['parent_permalink'] = l(t('Parent permalink'), $permalink_uri_parent['path'], $permalink_uri_parent['options']);
+    $variables['parent_title'] = \Drupal::l($comment_parent->subject->value, $permalink_uri_parent['route_name'], $permalink_uri_parent['route_parameters'], $permalink_uri_parent['options']);
+    $variables['parent_permalink'] = \Drupal::l(t('Parent permalink'), $permalink_uri_parent['route_name'], $permalink_uri_parent['route_parameters'], $permalink_uri_parent['options']);
     $variables['parent'] = t('In reply to !parent_title by !parent_username',
         array('!parent_username' => $variables['parent_author'], '!parent_title' => $variables['parent_title']));
   }

@@ -93,6 +93,7 @@ function theme_image_formatter($variables) {
 
   // The link path and link options are both optional, but for the options to be
   // processed, the link path must at least be an empty string.
+  // @todo Add support for route names.
   if (isset($variables['path']['path'])) {
     $path = $variables['path']['path'];
     $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();

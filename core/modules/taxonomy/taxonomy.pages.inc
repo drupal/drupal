@@ -19,12 +19,11 @@ function taxonomy_term_page(Term $term) {
   $build['#attached']['drupal_add_feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
 
   foreach ($term->uriRelationships() as $rel) {
-    $uri = $term->uri($rel);
     // Set the term path as the canonical URL to prevent duplicate content.
     $build['#attached']['drupal_add_html_head_link'][] = array(
       array(
         'rel' => $rel,
-        'href' => url($uri['path'], $uri['options']),
+        'href' => $term->url($rel),
       ),
       TRUE,
     );
@@ -34,7 +33,7 @@ function taxonomy_term_page(Term $term) {
       $build['#attached']['drupal_add_html_head_link'][] = array(
         array(
           'rel' => 'shortlink',
-          'href' => url($uri['path'], array_merge($uri['options'], array('alias' => TRUE))),
+          'href' => $term->url($rel, array('alias' => TRUE)),
         ),
         TRUE,
       );

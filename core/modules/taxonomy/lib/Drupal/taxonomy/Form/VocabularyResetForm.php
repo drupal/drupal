@@ -60,12 +60,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'taxonomy.overview_terms',
-      'route_parameters' => array(
-        'taxonomy_vocabulary' => $this->entity->id(),
-      ),
-    );
+    return $this->entity->urlInfo('overview-form');
   }
 
   /**
@@ -89,10 +84,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
     $this->termStorage->resetWeights($this->entity->id());
     drupal_set_message($this->t('Reset vocabulary %name to alphabetical order.', array('%name' => $this->entity->label())));
     watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
-    $form_state['redirect_route'] = array(
-      'route_name' => 'taxonomy.vocabulary_edit',
-      'route_parameters' => array('taxonomy_vocabulary' => $this->entity->id()),
-    );
+    $form_state['redirect_route'] = $this->entity->urlInfo('edit-form');
   }
 
 }

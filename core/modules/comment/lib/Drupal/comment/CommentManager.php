@@ -102,7 +102,7 @@ class CommentManager implements CommentManagerInterface {
     return $this->entityManager
       ->getStorageController($comment->entity_type->value)
       ->load($comment->entity_id->value)
-      ->uri();
+      ->urlInfo();
   }
 
   /**
@@ -273,8 +273,7 @@ class CommentManager implements CommentManagerInterface {
           $destination = array('destination' => 'comment/reply/' . $entity->getEntityTypeId() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
         }
         else {
-          $uri = $entity->uri();
-          $destination = array('destination' => $uri['path'] . '#comment-form');
+          $destination = array('destination' => $entity->getSystemPath() . '#comment-form');
         }
 
         if ($this->userConfig->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {

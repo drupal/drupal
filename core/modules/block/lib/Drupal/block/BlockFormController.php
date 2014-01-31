@@ -341,24 +341,6 @@ class BlockFormController extends EntityFormController {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, array &$form_state) {
-    parent::delete($form, $form_state);
-    $form_state['redirect_route'] = array(
-      'route_name' => 'block.admin_block_delete',
-      'route_parameters' => array(
-        'block' => $this->entity->id(),
-      ),
-    );
-    $query = $this->getRequest()->query;
-    if ($query->has('destination')) {
-      $form_state['redirect_route']['options']['query']['destination'] = $query->get('destination');
-      $query->remove('destination');
-    }
-  }
-
-  /**
    * Generates a unique machine name for a block.
    *
    * @param \Drupal\block\BlockInterface $block

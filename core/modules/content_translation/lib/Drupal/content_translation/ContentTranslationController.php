@@ -431,9 +431,8 @@ class ContentTranslationController implements ContentTranslationControllerInterf
     $entity = $form_controller->getEntity();
     $source = $form_state['values']['source_langcode']['source'];
 
-    $uri = $entity->uri('drupal:content-translation-overview');
-    $path = $uri['path'] . '/add/' . $source . '/' . $form_controller->getFormLangcode($form_state);
-    $form_state['redirect'] = $path;
+    $path = $entity->getSystemPath('drupal:content-translation-overview');
+    $form_state['redirect'] = $path . '/add/' . $source . '/' . $form_controller->getFormLangcode($form_state);
     $languages = language_list();
     drupal_set_message(t('Source language set to: %language', array('%language' => $languages[$source]->name)));
   }
@@ -459,9 +458,9 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   function entityFormDeleteTranslation($form, &$form_state) {
     $form_controller = content_translation_form_controller($form_state);
     $entity = $form_controller->getEntity();
-    $uri = $entity->uri('drupal:content-translation-overview');
+    $path = $entity->getSystemPath('drupal:content-translation-overview');
     $form_langcode = $form_controller->getFormLangcode($form_state);
-    $form_state['redirect'] = $uri['path'] . '/delete/' . $form_langcode;
+    $form_state['redirect'] = $path . '/delete/' . $form_langcode;
   }
 
   /**

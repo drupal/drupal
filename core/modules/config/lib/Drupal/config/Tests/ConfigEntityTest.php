@@ -61,8 +61,14 @@ class ConfigEntityTest extends WebTestBase {
 
     // Verify Entity properties/methods on the newly created empty entity.
     $this->assertIdentical($empty->getEntityTypeId(), 'config_test');
-    $uri = $empty->uri();
-    $this->assertIdentical($uri['path'], 'admin/structure/config_test/manage');
+    // The URI can only be checked after saving.
+    try {
+      $empty->urlInfo();
+      $this->fail('EntityMalformedException was thrown.');
+    }
+    catch (EntityMalformedException $e) {
+      $this->pass('EntityMalformedException was thrown.');
+    }
 
     // Verify that an empty entity cannot be saved.
     try {
@@ -107,9 +113,6 @@ class ConfigEntityTest extends WebTestBase {
     $expected['uuid'] = $config_test->uuid();
     $this->assertIdentical($config_test->label(), $expected['label']);
 
-    $uri = $config_test->uri();
-    $this->assertIdentical($uri['path'], 'admin/structure/config_test/manage/' . $expected['id']);
-
     // Verify that the entity can be saved.
     try {
       $status = $config_test->save();
@@ -118,6 +121,9 @@ class ConfigEntityTest extends WebTestBase {
     catch (EntityMalformedException $e) {
       $this->fail('EntityMalformedException was not thrown.');
     }
+
+    // The entity path can only be checked after saving.
+    $this->assertIdentical($config_test->getSystemPath(), 'admin/structure/config_test/manage/' . $expected['id']);
 
     // Verify that the correct status is returned and properties did not change.
     $this->assertIdentical($status, SAVED_NEW);

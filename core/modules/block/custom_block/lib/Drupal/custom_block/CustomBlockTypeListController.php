@@ -41,8 +41,8 @@ class CustomBlockTypeListController extends ConfigEntityListController {
    * Overrides \Drupal\Core\Entity\EntityListController::buildRow().
    */
   public function buildRow(EntityInterface $entity) {
-    $uri = $entity->uri();
-    $row['type'] = l($entity->label(), $uri['path'], $uri['options']);
+    $uri = $entity->urlInfo();
+    $row['type'] = \Drupal::l($entity->label(), $uri['route_name'], $uri['route_parameters'], $uri['options']);
     $row['description'] = filter_xss_admin($entity->description);
     return $row + parent::buildRow($entity);
   }

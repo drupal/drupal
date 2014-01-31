@@ -37,7 +37,7 @@ class LinkDelete extends Link {
     }
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = 'node/' . $node->id() . '/delete';
+    $this->options['alter']['path'] = $node->getSystemPath('delete-form');
     $this->options['alter']['query'] = drupal_get_destination();
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');

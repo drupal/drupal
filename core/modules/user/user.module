@@ -151,7 +151,10 @@ function user_entity_bundle_info() {
  */
 function user_uri($user) {
   return array(
-    'path' => 'user/' . $user->id(),
+    'route_name' => 'user.view',
+    'route_parameters' => array(
+      'user' => $user->id(),
+    ),
   );
 }
 

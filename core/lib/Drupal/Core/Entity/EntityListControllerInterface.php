@@ -26,7 +26,7 @@ interface EntityListControllerInterface {
    * This allows the controller to manipulate the list, like filtering or
    * sorting the loaded entities.
    *
-   * @return array
+   * @return \Drupal\Core\Entity\EntityInterface[]
    *   An array of entities implementing Drupal\Core\Entity\EntityInterface.
    */
   public function load();

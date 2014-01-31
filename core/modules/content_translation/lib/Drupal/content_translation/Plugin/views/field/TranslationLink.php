@@ -64,8 +64,7 @@ class TranslationLink extends FieldPluginBase {
       $text = !empty($this->options['text']) ? $this->options['text'] : t('translate');
 
       $this->options['alter']['make_link'] = TRUE;
-      $uri = $entity->uri();
-      $this->options['alter']['path'] = $uri['path'] . '/translations';
+      $this->options['alter']['path'] = $entity->getSystemPath() . '/translations';
 
       return $text;
     }

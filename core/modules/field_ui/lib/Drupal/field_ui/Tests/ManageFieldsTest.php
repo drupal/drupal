@@ -507,7 +507,7 @@ class ManageFieldsTest extends FieldUiTestBase {
    */
   function testDeleteTaxonomyField() {
     // Create a new field.
-    $bundle_path = 'admin/structure/taxonomy/manage/tags';
+    $bundle_path = 'admin/structure/taxonomy/manage/tags/overview';
     $edit1 = array(
       'fields[_add_new_field][label]' => $this->field_label,
       'fields[_add_new_field][field_name]' => $this->field_name_input,

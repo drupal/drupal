@@ -125,7 +125,10 @@ function taxonomy_entity_bundle_info() {
  */
 function taxonomy_term_uri($term) {
   return array(
-    'path' => 'taxonomy/term/' . $term->id(),
+    'route_name' => 'taxonomy.term_page',
+    'route_parameters' => array(
+      'taxonomy_term' => $term->id(),
+    ),
   );
 }
 
@@ -396,8 +399,7 @@ function template_preprocess_taxonomy_term(&$variables) {
   $variables['term'] = $variables['elements']['#term'];
   $term = $variables['term'];
 
-  $uri = $term->uri();
-  $variables['url']  = url($uri['path'], $uri['options']);
+  $variables['url'] = $term->url();
   // We use name here because that is what appears in the UI.
   $variables['name'] = check_plain($term->label());
   $variables['page'] = $variables['view_mode'] == 'full' && taxonomy_term_is_page($term);

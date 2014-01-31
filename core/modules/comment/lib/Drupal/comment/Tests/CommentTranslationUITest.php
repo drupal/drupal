@@ -134,11 +134,11 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $languages = language_list();
 
     // Check that simple users cannot see unpublished field translations.
-    $uri = $entity->uri();
+    $path = $entity->getSystemPath();
     foreach ($this->langcodes as $index => $langcode) {
       $translation = $this->getTranslation($entity, $langcode);
       $value = $this->getValue($translation, 'comment_body', $langcode);
-      $this->drupalGet($uri['path'], array('language' => $languages[$langcode]));
+      $this->drupalGet($path, array('language' => $languages[$langcode]));
       if ($index > 0) {
         $this->assertNoRaw($value, 'Unpublished field translation is not shown.');
       }

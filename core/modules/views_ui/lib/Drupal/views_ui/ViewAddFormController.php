@@ -181,7 +181,9 @@ class ViewAddFormController extends ViewFormControllerBase {
    */
   public function submit(array $form, array &$form_state) {
     try {
-      $view = $form_state['wizard_instance']->createView($form, $form_state);
+      /** @var $wizard \Drupal\views\Plugin\views\wizard\WizardInterface */
+      $wizard = $form_state['wizard_instance'];
+      $view = $wizard->createView($form, $form_state);
     }
     // @todo Figure out whether it really makes sense to throw and catch exceptions on the wizard.
     catch (WizardException $e) {
@@ -191,10 +193,7 @@ class ViewAddFormController extends ViewFormControllerBase {
     }
     $view->save();
 
-    $form_state['redirect_route'] = array(
-      'route_name' => 'views_ui.edit',
-      'route_parameters' => array('view' => $view->id()),
-    );
+    $form_state['redirect_route'] = $view->urlInfo('edit-form');
   }
 
   /**

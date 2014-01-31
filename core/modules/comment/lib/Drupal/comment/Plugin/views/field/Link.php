@@ -117,8 +117,7 @@ class Link extends FieldPluginBase {
       $entity_id = $comment->entity_id;
       $entity_type = $comment->entity_type;
       $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
-      $uri = $entity->uri();
-      $this->options['alter']['path'] = $uri['path'];
+      $this->options['alter']['path'] = $entity->getSystemPath();
     }
 
     return $text;

@@ -454,10 +454,9 @@ function entity_test_entity_predelete(EntityInterface $entity) {
  * Implements hook_entity_operation_alter().
  */
 function entity_test_entity_operation_alter(array &$operations, EntityInterface $entity) {
-  $uri = $entity->uri();
   $operations['test_operation'] = array(
     'title' => format_string('Test Operation: @label', array('@label' => $entity->label())),
-    'href' => $uri['path'] . '/test_operation',
+    'href' => $entity->url() . '/test_operation',
     'weight' => 50,
   );
 }

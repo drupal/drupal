@@ -32,25 +32,19 @@ class VocabularyListController extends DraggableListController {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    $uri = $entity->uri();
 
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('edit vocabulary');
-      $operations['edit']['href'] = $uri['path'] . '/edit';
     }
 
     $operations['list'] = array(
       'title' => t('list terms'),
-      'href' => $uri['path'],
-      'options' => $uri['options'],
       'weight' => 0,
-    );
+    ) + $entity->urlInfo('overview-form');
     $operations['add'] = array(
       'title' => t('add terms'),
-      'href' => $uri['path'] . '/add',
-      'options' => $uri['options'],
       'weight' => 10,
-    );
+    ) + $entity->urlInfo('add-form');
     unset($operations['delete']);
 
     return $operations;

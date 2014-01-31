@@ -169,10 +169,10 @@ function config_translation_config_translation_info(&$info) {
  */
 function config_translation_entity_operation_alter(array &$operations, EntityInterface $entity) {
   if (\Drupal::currentUser()->hasPermission('translate configuration')) {
-    $uri = $entity->uri();
+    $uri = $entity->urlInfo();
     $operations['translate'] = array(
       'title' => t('Translate'),
-      'href' => $uri['path'] . '/translate',
+      'href' => $entity->getSystemPath() . '/translate',
       'options' => $uri['options'],
       'weight' => 50,
     );

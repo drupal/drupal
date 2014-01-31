@@ -45,6 +45,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   },
  *   links = {
  *     "canonical" = "comment.permalink",
+ *     "delete-form" = "comment.confirm_delete",
  *     "edit-form" = "comment.edit_page",
  *     "admin-form" = "comment.bundle"
  *   }
@@ -342,11 +343,10 @@ class Comment extends ContentEntityBase implements CommentInterface {
    */
   public function permalink() {
     $entity = entity_load($this->get('entity_type')->value, $this->get('entity_id')->value);
-    $uri = $entity->uri();
-    $url['path'] = $uri['path'];
-    $url['options'] = array('fragment' => 'comment-' . $this->id());
+    $uri = $entity->urlInfo();
+    $uri['options'] = array('fragment' => 'comment-' . $this->id());
 
-    return $url;
+    return $uri;
   }
 
   /**

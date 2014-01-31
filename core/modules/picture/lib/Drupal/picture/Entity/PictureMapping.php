@@ -35,7 +35,8 @@ use Drupal\picture\PictureMappingInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "edit-form" = "picture.mapping_page_edit"
+ *     "edit-form" = "picture.mapping_page_edit",
+ *     "duplicate-form" = "picture.mapping_page_duplicate"
  *   }
  * )
  */

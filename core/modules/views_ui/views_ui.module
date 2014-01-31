@@ -98,7 +98,14 @@ function views_ui_entity_info(&$entity_info) {
     ->setFormClass('delete', 'Drupal\views_ui\ViewDeleteFormController')
     ->setFormClass('break_lock', 'Drupal\views_ui\Form\BreakLockForm')
     ->setListClass('Drupal\views_ui\ViewListController')
-    ->setLinkTemplate('edit-form', 'views_ui.edit');
+    ->setLinkTemplate('edit-form', 'views_ui.edit')
+    ->setLinkTemplate('edit-display-form', 'views_ui.edit_display')
+    ->setLinkTemplate('preview-form', 'views_ui.preview')
+    ->setLinkTemplate('clone', 'views_ui.clone')
+    ->setLinkTemplate('delete-form', 'views_ui.delete')
+    ->setLinkTemplate('enable', 'views_ui.enable')
+    ->setLinkTemplate('disable', 'views_ui.disable')
+    ->setLinkTemplate('break-lock', 'views_ui.break_lock');
 }
 
 /**

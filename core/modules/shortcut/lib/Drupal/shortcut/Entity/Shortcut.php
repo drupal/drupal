@@ -40,7 +40,8 @@ use Drupal\shortcut\ShortcutInterface;
  *     "label" = "title"
  *   },
  *   links = {
- *     "edit-form" = "/admin/config/user-interface/shortcut/link/{shortcut}"
+ *     "delete-form" = "shortcut.link_delete",
+ *     "edit-form" = "shortcut.link_edit"
  *   }
  * )
  */

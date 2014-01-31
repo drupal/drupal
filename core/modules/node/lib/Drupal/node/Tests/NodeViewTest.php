@@ -28,8 +28,7 @@ class NodeViewTest extends NodeTestBase {
   public function testHtmlHeadLinks() {
     $node = $this->drupalCreateNode();
 
-    $uri = $node->uri();
-    $this->drupalGet($uri['path']);
+    $this->drupalGet($node->getSystemPath());
 
     $result = $this->xpath('//link[@rel = "version-history"]');
     $this->assertEqual($result[0]['href'], url("node/{$node->id()}/revisions"));

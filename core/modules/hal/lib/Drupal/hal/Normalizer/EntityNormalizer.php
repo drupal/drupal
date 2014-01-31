@@ -162,8 +162,7 @@ class EntityNormalizer extends NormalizerBase {
    *   The entity URI.
    */
   protected function getEntityUri($entity) {
-    $uri_info = $entity->uri();
-    return url($uri_info['path'], array('absolute' => TRUE));
+    return $entity->url('canonical', array('absolute' => TRUE));
   }
 
   /**

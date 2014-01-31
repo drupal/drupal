@@ -95,11 +95,12 @@ class NodeListController extends EntityListController {
       '#mark_type' => node_mark($entity->id(), $entity->getChangedTime()),
     );
     $langcode = $entity->language()->id;
-    $uri = $entity->uri();
+    $uri = $entity->urlInfo();
     $row['title']['data'] = array(
       '#type' => 'link',
       '#title' => $entity->label(),
-      '#href' => $uri['path'],
+      '#route_name' => $uri['route_name'],
+      '#route_parameters' => $uri['route_parameters'],
       '#options' => $uri['options'] + ($langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$langcode]) ? array('language' => $languages[$langcode]) : array()),
       '#suffix' => ' ' . drupal_render($mark),
     );

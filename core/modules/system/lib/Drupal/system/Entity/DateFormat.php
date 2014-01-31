@@ -36,6 +36,7 @@ use Drupal\system\DateFormatInterface;
  *   },
  *   admin_permission = "administer site configuration",
  *   links = {
+ *     "delete-form" = "system.date_format_delete",
  *     "edit-form" = "system.date_format_edit"
  *   }
  * )

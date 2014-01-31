@@ -171,22 +171,17 @@ class StandardProfileTest extends WebTestBase {
     $image_file = $this->article->get('field_image')->entity;
     $this->imageUri = entity_load('image_style', 'large')->buildUrl($image_file->getFileUri());
     // Term.
-    $term_uri_info = $this->term->uri();
-    $this->termUri = url($term_uri_info['path'], array('absolute' => TRUE));
+    $this->termUri = $this->term->url('canonical', array('absolute' => TRUE));
     // Article.
-    $article_uri_info = $this->article->uri();
-    $this->articleUri = url($article_uri_info['path'], array('absolute' => TRUE));
+    $this->articleUri = $this->article->url('canonical', array('absolute' => TRUE));
     // Page.
-    $page_uri_info = $this->page->uri();
-    $this->pageUri = url($page_uri_info['path'], array('absolute' => TRUE));
+    $this->pageUri = $this->page->url('canonical', array('absolute' => TRUE));
     // Author.
-    $this->authorUri = url('user/' . $this->adminUser->id(), array('absolute' => TRUE));
+    $this->authorUri = $this->adminUser->url('canonical', array('absolute' => TRUE));
     // Comment.
-    $article_comment_uri_info = $this->articleComment->uri();
-    $this->articleCommentUri = url($article_comment_uri_info['path'], array('absolute' => TRUE));
+    $this->articleCommentUri = $this->articleComment->url('canonical', array('absolute' => TRUE));
     // Commenter.
-    $commenter_uri_info = $this->webUser->uri();
-    $this->commenterUri = url($commenter_uri_info['path'], array('absolute' => TRUE));
+    $this->commenterUri = $this->webUser->url('canonical', array('absolute' => TRUE));
 
     $this->drupalLogout();
   }
@@ -251,9 +246,7 @@ class StandardProfileTest extends WebTestBase {
    */
   protected function doArticleRdfaTests() {
     // Feed the HTML into the parser.
-    $uri_info = $this->article->uri();
-    $path = $uri_info['path'];
-    $graph = $this->getRdfGraph($path);
+    $graph = $this->getRdfGraph($this->article->getSystemPath());
 
     // Type.
     $this->assertEqual($graph->type($this->articleUri), 'schema:Article', 'Article type was found (schema:Article).');
@@ -290,9 +283,7 @@ class StandardProfileTest extends WebTestBase {
     $node_type->save();
 
     // Feed the HTML into the parser.
-    $uri_info = $this->page->uri();
-    $path = $uri_info['path'];
-    $graph = $this->getRdfGraph($path);
+    $graph = $this->getRdfGraph($this->page->getSystemPath());
 
     // Type.
     $this->assertEqual($graph->type($this->pageUri), 'schema:WebPage', 'Page type was found (schema:WebPage).');
@@ -308,9 +299,7 @@ class StandardProfileTest extends WebTestBase {
     $this->drupalLogin($this->root_user);
 
     // Feed the HTML into the parser.
-    $uri_info = $this->adminUser->uri();
-    $path = $uri_info['path'];
-    $graph = $this->getRdfGraph($path);
+    $graph = $this->getRdfGraph($this->adminUser->getSystemPath());
 
     // User type.
     $this->assertEqual($graph->type($this->authorUri), 'schema:Person', "User type was found (schema:Person) on user page.");
@@ -330,9 +319,7 @@ class StandardProfileTest extends WebTestBase {
    */
   protected function doTermRdfaTests() {
     // Feed the HTML into the parser.
-    $uri_info = $this->term->uri();
-    $path = $uri_info['path'];
-    $graph = $this->getRdfGraph($path);
+    $graph = $this->getRdfGraph($this->term->getSystemPath());
 
     // Term type.
     $this->assertEqual($graph->type($this->termUri), 'schema:Thing', "Term type was found (schema:Thing) on term page.");
@@ -360,8 +347,7 @@ class StandardProfileTest extends WebTestBase {
    *   The word to use in the test assertion message.
    */
   protected function assertRdfaCommonNodeProperties($graph, NodeInterface $node, $message_prefix) {
-    $uri_info = $node->uri();
-    $uri = url($uri_info['path'], array('absolute' => TRUE));
+    $uri = $node->url('canonical', array('absolute' => TRUE));
 
     // Title.
     $expected_value = array(

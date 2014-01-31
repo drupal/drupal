@@ -699,10 +699,9 @@ function hook_entity_field_info_alter(&$info, $entity_type) {
  *   The entity on which the linked operations will be performed.
  */
 function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
-  $uri = $entity->uri();
   $operations['translate'] = array(
     'title' => t('Translate'),
-    'href' => $uri['path'] . '/translate',
+    'href' => $entity->getSystemPath() . '/translate',
     'weight' => 50,
   );
 }

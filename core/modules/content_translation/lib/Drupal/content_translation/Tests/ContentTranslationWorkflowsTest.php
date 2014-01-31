@@ -67,8 +67,8 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
     // Create a translation.
     $this->drupalLogin($this->translator);
-    $uri = $this->entity->uri('drupal:content-translation-overview');
-    $add_translation_path = $uri['path'] . "/add/$default_langcode/{$this->langcodes[2]}";
+    $path = $this->entity->getSystemPath('drupal:content-translation-overview');
+    $add_translation_path = $path . "/add/$default_langcode/{$this->langcodes[2]}";
     $this->drupalPostForm($add_translation_path, array(), t('Save'));
     $this->rebuildContainer();
   }
@@ -91,8 +91,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
     // Check that translation permissions governate the associated operations.
     $ops = array('create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete'));
-    $uri = $this->entity->uri('drupal:content-translation-overview');
-    $translations_path = $uri['path'];
+    $translations_path = $this->entity->getSystemPath('drupal:content-translation-overview');
     foreach ($ops as $current_op => $label) {
       $user = $this->drupalCreateUser(array($this->getTranslatePermission(), "$current_op content translations"));
       $this->drupalLogin($user);
@@ -125,16 +124,14 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $this->drupalLogin($user);
 
     // Check whether the user is allowed to access the entity form in edit mode.
-    $uri = $this->entity->uri('edit-form');
-    $edit_path = $uri['path'];
+    $edit_path = $this->entity->getSystemPath('edit-form');
     $options = array('language' => $languages[$default_langcode]);
     $this->drupalGet($edit_path, $options);
     $this->assertResponse($expected_status['edit'], format_string('The @user_label has the expected edit access.', $args));
 
     // Check whether the user is allowed to access the translation overview.
     $langcode = $this->langcodes[1];
-    $uri = $this->entity->uri('drupal:content-translation-overview');
-    $translations_path = $uri['path'];
+    $translations_path = $this->entity->getSystemPath('drupal:content-translation-overview');
     $options = array('language' => $languages[$langcode]);
     $this->drupalGet($translations_path, $options);
     $this->assertResponse($expected_status['overview'], format_string('The @user_label has the expected translation overview access.', $args));

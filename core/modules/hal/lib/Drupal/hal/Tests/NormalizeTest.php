@@ -21,6 +21,15 @@ class NormalizeTest extends NormalizerTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  function setUp() {
+    parent::setUp();
+
+    \Drupal::service('router.builder')->rebuild();
+  }
+
+  /**
    * Tests the normalize function.
    */
   public function testNormalize() {
@@ -172,8 +181,7 @@ class NormalizeTest extends NormalizerTestBase {
    *   The entity URI.
    */
   protected function getEntityUri($entity) {
-    $entity_uri_info = $entity->uri();
-    return url($entity_uri_info['path'], array('absolute' => TRUE));
+    return $entity->url('canonical', array('absolute' => TRUE));
   }
 
 }

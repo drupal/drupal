@@ -129,12 +129,12 @@ class NodeController extends ControllerBase {
     $build = $this->buildPage($node);
 
     foreach ($node->uriRelationships() as $rel) {
-      $uri = $node->uri($rel);
+      $uri = $node->urlInfo($rel);
       // Set the node path as the canonical URL to prevent duplicate content.
       $build['#attached']['drupal_add_html_head_link'][] = array(
         array(
         'rel' => $rel,
-        'href' => $this->urlGenerator()->generateFromPath($uri['path'], $uri['options']),
+        'href' => $node->url($rel),
         )
         , TRUE);
 
@@ -143,7 +143,7 @@ class NodeController extends ControllerBase {
         $build['#attached']['drupal_add_html_head_link'][] = array(
           array(
             'rel' => 'shortlink',
-            'href' => $this->urlGenerator()->generateFromPath($uri['path'], array_merge($uri['options'], array('alias' => TRUE))),
+            'href' => $node->url($rel, array('alias' => TRUE)),
           )
         , TRUE);
       }

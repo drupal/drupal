@@ -107,12 +107,7 @@ abstract class ImageEffectFormBase extends FormBase {
     $this->imageStyle->saveImageEffect($form_state['values']);
 
     drupal_set_message($this->t('The image effect was successfully applied.'));
-    $form_state['redirect_route'] = array(
-      'route_name' => 'image.style_edit',
-      'route_parameters' => array(
-        'image_style' => $this->imageStyle->id(),
-      ),
-    );
+    $form_state['redirect_route'] = $this->imageStyle->urlInfo('edit-form');
   }
 
   /**

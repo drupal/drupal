@@ -61,12 +61,11 @@ class OptionsDynamicValuesTest extends FieldTestBase {
     );
     $this->entity = entity_create('entity_test_rev', $values);
     $this->entity->save();
-    $uri = $this->entity->uri();
     $this->test = array(
       'label' => $this->entity->label(),
       'uuid' => $this->entity->uuid(),
       'bundle' => $this->entity->bundle(),
-      'uri' => $uri['path'],
+      'uri' => $this->entity->url(),
     );
   }
 }

@@ -208,16 +208,4 @@ class NodeTypeFormController extends EntityFormController {
     $form_state['redirect_route']['route_name'] = 'node.overview_types';
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, array &$form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'node.type_delete_confirm',
-      'route_parameters' => array(
-        'node_type' => $this->entity->id(),
-      ),
-    );
-  }
-
 }

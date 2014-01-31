@@ -38,7 +38,9 @@ use Drupal\node\NodeTypeInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "edit-form" = "node.type_edit"
+ *     "add-form" = "node.add",
+ *     "edit-form" = "node.type_edit",
+ *     "delete-form" = "node.type_delete_confirm"
  *   }
  * )
  */

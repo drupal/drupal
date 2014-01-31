@@ -112,8 +112,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'url':
-          $uri = $term->uri();
-          $replacements[$original] = url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE)));
+          $replacements[$original] = $term->url('canonical', array('absolute' => TRUE));
           break;
 
         case 'node-count':

@@ -17,6 +17,13 @@ use Drupal\user\UserInterface;
 class MessageFormController extends ContentEntityFormController {
 
   /**
+   * The message being used by this form.
+   *
+   * @var \Drupal\contact\MessageInterface
+   */
+  protected $entity;
+
+  /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state) {
@@ -208,8 +215,7 @@ class MessageFormController extends ContentEntityFormController {
     // To avoid false error messages caused by flood control, redirect away from
     // the contact form; either to the contacted user account or the front page.
     if ($message->isPersonal() && user_access('access user profiles')) {
-      $uri = $message->getPersonalRecipient()->uri();
-      $form_state['redirect'] = array($uri['path'], $uri['options']);
+      $form_state['redirect_route'] = $message->getPersonalRecipient()->urlInfo();
     }
     else {
       $form_state['redirect_route']['route_name'] = '<front>';

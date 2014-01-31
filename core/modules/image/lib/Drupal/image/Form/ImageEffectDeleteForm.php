@@ -47,12 +47,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'image.style_edit',
-      'route_parameters' => array(
-        'image_style' => $this->imageStyle->id(),
-      ),
-    );
+    return $this->imageStyle->urlInfo('edit-form');
   }
 
   /**
@@ -78,12 +73,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $this->imageStyle->deleteImageEffect($this->imageEffect);
     drupal_set_message($this->t('The image effect %name has been deleted.', array('%name' => $this->imageEffect->label())));
-    $form_state['redirect_route'] = array(
-      'route_name' => 'image.style_edit',
-      'route_parameters' => array(
-        'image_style' => $this->imageStyle->id(),
-      ),
-    );
+    $form_state['redirect_route'] = $this->imageStyle->urlInfo('edit-form');
   }
 
 }

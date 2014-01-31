@@ -102,21 +102,13 @@ class ForumFormController extends TermFormController {
    * {@inheritdoc}
    */
   public function delete(array $form, array &$form_state) {
-    $destination = array();
-    $request = $this->getRequest();
-    if ($request->query->has('destination')) {
-      $destination = drupal_get_destination();
-      $request->query->remove('destination');
+    $form_state['redirect_route'] = $this->entity->urlInfo('forum-delete-form');
+
+    $query = $this->getRequest()->query;
+    if ($query->has('destination')) {
+      $form_state['redirect_route']['options']['query']['destination'] = $query->get('destination');
+      $query->remove('destination');
     }
-    $form_state['redirect_route'] = array(
-      'route_name' => 'forum.delete',
-      'route_parameters' => array(
-        'taxonomy_term' => $this->entity->id(),
-      ),
-      'options' => array(
-        'query' => $destination,
-      ),
-    );
   }
 
   /**

@@ -91,29 +91,18 @@ class CustomBlockTypeFormController extends EntityFormController {
     $block_type = $this->entity;
     $status = $block_type->save();
 
-    $uri = $block_type->uri();
+    $uri = $block_type->urlInfo();
+    $edit_link = \Drupal::l($this->t('Edit'), $uri['route_name'], $uri['route_parameters'], $uri['options']);
     if ($status == SAVED_UPDATED) {
       drupal_set_message(t('Custom block type %label has been updated.', array('%label' => $block_type->label())));
-      watchdog('custom_block', 'Custom block type %label has been updated.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
+      watchdog('custom_block', 'Custom block type %label has been updated.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, $edit_link);
     }
     else {
       drupal_set_message(t('Custom block type %label has been added.', array('%label' => $block_type->label())));
-      watchdog('custom_block', 'Custom block type %label has been added.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
+      watchdog('custom_block', 'Custom block type %label has been added.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, $edit_link);
     }
 
     $form_state['redirect_route']['route_name'] = 'custom_block.type_list';
-  }
-
-  /**
-   * Overrides \Drupal\Core\Entity\EntityFormController::delete().
-   */
-  public function delete(array $form, array &$form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'custom_block.type_delete',
-      'route_parameters' => array(
-        'custom_block_type' => $this->entity->id(),
-      ),
-    );
   }
 
 }

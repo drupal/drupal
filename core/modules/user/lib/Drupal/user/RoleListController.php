@@ -44,14 +44,11 @@ class RoleListController extends DraggableListController {
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
 
-    $operations['permissions'] = array(
-      'title' => t('Edit permissions'),
-      'href' => 'admin/people/permissions/' . $entity->id(),
-      'weight' => 20,
-    );
-    // Built-in roles could not be deleted or disabled.
-    if (in_array($entity->id(), array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-      unset($operations['delete']);
+    if ($entity->hasLinkTemplate('edit-permissions-form')) {
+      $operations['permissions'] = array(
+        'title' => t('Edit permissions'),
+        'weight' => 20,
+      ) + $entity->urlInfo('edit-permissions-form');
     }
     return $operations;
   }

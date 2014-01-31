@@ -167,14 +167,4 @@ class ShortcutFormController extends ContentEntityFormController {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, array &$form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'shortcut.link_delete',
-      'route_parameters' => array('shortcut' => $this->entity->id()),
-    );
-  }
-
 }

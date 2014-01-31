@@ -214,7 +214,9 @@ function forum_entity_info(&$entity_info) {
   // Register forum specific form controllers.
   $entity_info['taxonomy_term']
     ->setFormClass('forum', 'Drupal\forum\Form\ForumFormController')
-    ->setFormClass('container', 'Drupal\forum\Form\ContainerFormController');
+    ->setFormClass('container', 'Drupal\forum\Form\ContainerFormController')
+    ->setLinkTemplate('forum-delete-form', 'forum.delete')
+    ->setLinkTemplate('forum-edit-form', 'forum.edit_forum');
 }
 
 /**
@@ -234,7 +236,10 @@ function forum_entity_bundle_info_alter(&$bundles) {
  */
 function forum_uri($forum) {
   return array(
-    'path' => 'forum/' . $forum->id(),
+    'route_name' => 'forum.page',
+    'route_parameters' => array(
+      'taxonomy_term' => $forum->id(),
+    ),
   );
 }
 

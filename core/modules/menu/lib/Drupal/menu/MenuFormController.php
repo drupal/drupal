@@ -205,34 +205,18 @@ class MenuFormController extends EntityFormController {
 
     $status = $menu->save();
 
-    $uri = $menu->uri();
+    $uri = $menu->urlInfo();
+    $edit_link = \Drupal::l($this->t('Edit'), $uri['route_name'], $uri['route_parameters'], $uri['options']);
     if ($status == SAVED_UPDATED) {
       drupal_set_message(t('Menu %label has been updated.', array('%label' => $menu->label())));
-      watchdog('menu', 'Menu %label has been updated.', array('%label' => $menu->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
+      watchdog('menu', 'Menu %label has been updated.', array('%label' => $menu->label()), WATCHDOG_NOTICE, $edit_link);
     }
     else {
       drupal_set_message(t('Menu %label has been added.', array('%label' => $menu->label())));
-      watchdog('menu', 'Menu %label has been added.', array('%label' => $menu->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
+      watchdog('menu', 'Menu %label has been added.', array('%label' => $menu->label()), WATCHDOG_NOTICE, $edit_link);
     }
 
-    $form_state['redirect_route'] = array(
-      'route_name' => 'menu.menu_edit',
-      'route_parameters' => array(
-        'menu' => $this->entity->id(),
-      ),
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, array &$form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'menu.delete_menu',
-      'route_parameters' => array(
-        'menu' => $this->entity->id(),
-      ),
-    );
+    $form_state['redirect_route'] = $this->entity->urlInfo('edit-form');
   }
 
   /**

@@ -32,31 +32,19 @@ class ConfigEntityListController extends EntityListController {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    $uri = $entity->uri();
-
-    // Ensure the edit operation exists since it is access controlled.
-    if (isset($operations['edit'])) {
-      // For configuration entities edit path is the MENU_DEFAULT_LOCAL_TASK and
-      // therefore should be accessed by the short route.
-      $operations['edit']['href'] = $uri['path'];
-    }
 
     if ($this->entityType->hasKey('status')) {
-      if (!$entity->status()) {
+      if (!$entity->status() && $entity->hasLinkTemplate('enable')) {
         $operations['enable'] = array(
           'title' => t('Enable'),
-          'href' => $uri['path'] . '/enable',
-          'options' => $uri['options'],
           'weight' => -10,
-        );
+        ) + $entity->urlInfo('enable');
       }
-      else {
+      elseif ($entity->hasLinkTemplate('disable')) {
         $operations['disable'] = array(
           'title' => t('Disable'),
-          'href' => $uri['path'] . '/disable',
-          'options' => $uri['options'],
           'weight' => 40,
-        );
+        ) + $entity->urlInfo('disable');
       }
     }
 

@@ -36,6 +36,7 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
+ *     "delete-form" = "custom_block.type_delete",
  *     "edit-form" = "custom_block.type_edit"
  *   }
  * )

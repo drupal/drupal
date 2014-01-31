@@ -36,7 +36,11 @@ use Drupal\taxonomy\VocabularyInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "edit-form" = "taxonomy.overview_terms"
+ *     "add-form" = "taxonomy.term_add",
+ *     "delete-form" = "taxonomy.vocabulary_delete",
+ *     "reset" = "taxonomy.vocabulary_reset",
+ *     "overview-form" = "taxonomy.overview_terms",
+ *     "edit-form" = "taxonomy.vocabulary_edit"
  *   }
  * )
  */

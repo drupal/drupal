@@ -92,7 +92,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     drupal_set_message($this->t('Comment approved.'));
     $permalink_uri = $comment->permalink();
     $permalink_uri['options']['absolute'] = TRUE;
-    $url = $this->urlGenerator()->generateFromPath($permalink_uri['path'], $permalink_uri['options']);
+    $url = $this->urlGenerator()->generateFromRoute($permalink_uri['route_name'], $permalink_uri['route_parameters'], $permalink_uri['options']);
     return new RedirectResponse($url);
   }
 
@@ -129,8 +129,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
       // Find the current display page for this comment.
       $page = comment_get_display_page($comment->id(), $instance);
       // @todo: Cleaner sub request handling.
-      $uri = $entity->uri();
-      $redirect_request = Request::create($uri['path'], 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
+      $redirect_request = Request::create($entity->getSystemPath(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
       $redirect_request->query->set('page', $page);
       // @todo: Convert the pager to use the request object.
       $request->query->set('page', $page);
@@ -155,7 +154,11 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     // Legacy nodes only had a single comment field, so use the first comment
     // field on the entity.
     if (!empty($fields) && ($field_names = array_keys($fields)) && ($field_name = reset($field_names))) {
-      return new RedirectResponse($this->urlGenerator()->generateFromPath('comment/reply/node/' . $node->id() . '/' . $field_name, array('absolute' => TRUE)));
+      return $this->redirect('comment.reply', array(
+        'entity_type' => 'node',
+        'entity_id' => $node->id(),
+        'field_name' => $field_name,
+      ));
     }
     throw new NotFoundHttpException();
   }
@@ -210,13 +213,14 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     }
 
     $account = $this->currentUser();
-    $uri = $entity->uri();
+    $uri = $entity->urlInfo();
+    $path = $entity->getSystemPath();
     $build = array();
 
     // Check if the user has the proper permissions.
     if (!$account->hasPermission('post comments')) {
       drupal_set_message($this->t('You are not authorized to post comments.'), 'error');
-      return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
+      return $this->redirect($uri['route_name'], $uri['route_parameters']);
     }
 
     // The user is not just previewing a comment.
@@ -224,7 +228,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
       $status = $entity->{$field_name}->status;
       if ($status != COMMENT_OPEN) {
         drupal_set_message($this->t("This discussion is closed: you can't post new comments."), 'error');
-        return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
+        return $this->redirect($uri['route_name'], $uri['route_parameters']);
       }
 
       // $pid indicates that this is a reply to a comment.
@@ -232,14 +236,14 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
         // Check if the user has the proper permissions.
         if (!$account->hasPermission('access comments')) {
           drupal_set_message($this->t('You are not authorized to view comments.'), 'error');
-          return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
+          return $this->redirect($uri['route_name'], $uri['route_parameters']);
         }
         // Load the parent comment.
         $comment = $this->entityManager()->getStorageController('comment')->load($pid);
         // Check if the parent comment is published and belongs to the entity.
         if (($comment->status->value == CommentInterface::NOT_PUBLISHED) || ($comment->entity_id->value != $entity->id())) {
           drupal_set_message($this->t('The comment you are replying to does not exist.'), 'error');
-          return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
+          return $this->redirect($uri['route_name'], $uri['route_parameters']);
         }
         // Display the parent comment.
         $build['comment_parent'] = $this->entityManager()->getViewBuilder('comment')->view($comment);

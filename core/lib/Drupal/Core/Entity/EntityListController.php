@@ -93,24 +93,18 @@ class EntityListController extends EntityControllerBase implements EntityListCon
    * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
-    $uri = $entity->uri();
-
     $operations = array();
-    if ($entity->access('update')) {
+    if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
       $operations['edit'] = array(
         'title' => $this->t('Edit'),
-        'href' => $uri['path'] . '/edit',
-        'options' => $uri['options'],
         'weight' => 10,
-      );
+      ) + $entity->urlInfo('edit-form');
     }
-    if ($entity->access('delete')) {
+    if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
       $operations['delete'] = array(
         'title' => $this->t('Delete'),
-        'href' => $uri['path'] . '/delete',
-        'options' => $uri['options'],
         'weight' => 100,
-      );
+      ) + $entity->urlInfo('delete-form');
     }
 
     return $operations;

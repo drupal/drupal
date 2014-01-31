@@ -62,8 +62,9 @@ class NodeDeleteForm extends ContentEntityConfirmFormBase {
     $actions = parent::actions($form, $form_state);
 
     // @todo Convert to getCancelRoute() after http://drupal.org/node/1987778.
-    $uri = $this->entity->uri();
-    $actions['cancel']['#href'] = $this->urlGenerator->generateFromPath($uri['path'], $uri['options']);
+    $uri = $this->entity->urlInfo();
+    $actions['cancel']['#route_name'] = $uri['route_name'];
+    $actions['cancel']['#route_parameters'] = $uri['route_parameters'];
 
     return $actions;
   }

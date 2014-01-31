@@ -90,7 +90,9 @@ class ViewPreviewFormController extends ViewFormControllerBase {
         '#markup' => $view->renderPreview($this->displayID, $args),
       );
     }
-    $form['#action'] = url('admin/structure/views/view/' . $view->id() .'/preview/' . $this->displayID);
+    $uri = $view->urlInfo('preview-form');
+    $uri['route_parameters']['display_id'] = $this->displayID;
+    $form['#action'] = \Drupal::url($uri['route_name'], $uri['route_parameters'], $uri['options']);
 
     return $form;
   }

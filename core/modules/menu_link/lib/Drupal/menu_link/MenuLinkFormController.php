@@ -310,16 +310,4 @@ class MenuLinkFormController extends EntityFormController {
     }
   }
 
-  /**
-   * Overrides EntityFormController::delete().
-   */
-  public function delete(array $form, array &$form_state) {
-    $menu_link = $this->entity;
-    $form_state['redirect_route'] = array(
-      'route_name' => 'menu.link_delete',
-      'route_parameters' => array(
-        'menu' => $menu_link->id(),
-      ),
-    );
-  }
 }

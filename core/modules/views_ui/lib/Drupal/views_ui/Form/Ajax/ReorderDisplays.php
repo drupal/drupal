@@ -32,6 +32,7 @@ class ReorderDisplays extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
+    /** @var $view \Drupal\views\ViewStorageInterface */
     $view = $form_state['view'];
     $display_id = $form_state['display_id'];
 
@@ -148,6 +149,7 @@ class ReorderDisplays extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
+    /** @var $view \Drupal\views_ui\ViewUI */
     $view = $form_state['view'];
     $order = array();
 
@@ -190,11 +192,8 @@ class ReorderDisplays extends ViewsFormBase {
 
     // Store in cache.
     $view->cacheSet();
-    $form_state['redirect_route'] = array(
-      'route_name' => 'views_ui.operation',
-      'route_parameters' => array('view' => $view->id(), 'operation' => 'edit'),
-      'options' => array('fragment' => 'views-tab-default'),
-    );
+    $form_state['redirect_route'] = $view->urlInfo('edit-form');
+    $form_state['redirect_route']['options']['fragment'] = 'views-tab-default';
   }
 
 }

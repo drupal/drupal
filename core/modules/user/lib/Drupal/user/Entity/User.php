@@ -44,7 +44,8 @@ use Drupal\user\UserInterface;
  *   links = {
  *     "canonical" = "user.view",
  *     "edit-form" = "user.edit",
- *     "admin-form" = "user.account_settings"
+ *     "admin-form" = "user.account_settings",
+ *     "cancel-form" = "user.cancel"
  *   }
  * )
  */

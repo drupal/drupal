@@ -53,8 +53,8 @@ class CommentBreadcrumbBuilder extends BreadcrumbBuilderBase {
     $entity = $this->entityManager
       ->getStorageController($attributes['entity_type'])
       ->load($attributes['entity_id']);
-    $uri = $entity->uri();
-    $breadcrumb[] = l($entity->label(), $uri['path'], $uri['options']);
+    $uri = $entity->urlInfo();
+    $breadcrumb[] = \Drupal::l($entity->label(), $uri['route_name'], $uri['route_parameters'], $uri['options']);
     return $breadcrumb;
   }
 

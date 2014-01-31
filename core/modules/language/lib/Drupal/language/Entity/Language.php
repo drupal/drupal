@@ -37,6 +37,7 @@ use Drupal\language\LanguageInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
+ *     "delete-form" = "language.delete",
  *     "edit-form" = "language.edit"
  *   }
  * )

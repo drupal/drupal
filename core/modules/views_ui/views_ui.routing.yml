@@ -46,14 +46,23 @@ views_ui.reports_plugins:
   requirements:
     _permission: 'administer views'
 
-views_ui.operation:
-  path: '/admin/structure/views/view/{view}/{op}'
+views_ui.enable:
+  path: '/admin/structure/views/view/{view}/enable'
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
+    op: enable
   requirements:
     _permission: 'administer views'
     _csrf_token: 'TRUE'
-    op: 'enable|disable'
+
+views_ui.disable:
+  path: '/admin/structure/views/view/{view}/disable'
+  defaults:
+    _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
+    op: disable
+  requirements:
+    _permission: 'administer views'
+    _csrf_token: 'TRUE'
 
 views_ui.clone:
   path: '/admin/structure/views/view/{view}/clone'

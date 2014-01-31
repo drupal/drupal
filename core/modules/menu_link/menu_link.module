@@ -27,7 +27,8 @@ function menu_link_help($path, $arg) {
  */
 function menu_link_uri(MenuLink $menu_link) {
   return array(
-    'path' => $menu_link->link_path,
+    'route_name' => $menu_link->route_name,
+    'route_parameters' => $menu_link->route_parameters,
   );
 }
 

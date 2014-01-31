@@ -72,8 +72,7 @@ class ViewCloneFormController extends ViewFormControllerBase {
     $this->entity->save();
 
     // Redirect the user to the view admin form.
-    $uri = $this->entity->uri();
-    $form_state['redirect'] = $uri['path'];
+    $form_state['redirect_route'] = $this->entity->urlInfo('edit-form');
     return $this->entity;
   }
 

@@ -518,14 +518,11 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
-  protected function uriPlaceholderReplacements() {
-    if (empty($this->uriPlaceholderReplacements)) {
-      parent::uriPlaceholderReplacements();
-      $entity_info = \Drupal::entityManager()->getDefinition($this->entity_type);
-      $key = '{' . $entity_info->getBundleEntityType() . '}';
-      $this->uriPlaceholderReplacements[$key] = $this->bundle;
-    }
-    return $this->uriPlaceholderReplacements;
+  protected function urlRouteParameters($rel) {
+    $parameters = parent::urlRouteParameters($rel);
+    $entity_info = \Drupal::entityManager()->getDefinition($this->entity_type);
+    $parameters[$entity_info->getBundleEntityType()] = $this->bundle;
+    return $parameters;
   }
 
   /**

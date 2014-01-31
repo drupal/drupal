@@ -229,19 +229,4 @@ class TermFormController extends ContentEntityFormController {
     $form_state['tid'] = $term->id();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, array &$form_state) {
-    $destination = array();
-    if ($this->getRequest()->query->has('destination')) {
-      $destination = drupal_get_destination();
-    }
-    $form_state['redirect_route'] = array(
-      'route_name' => 'taxonomy.term_delete',
-      'route_parameters' => array('taxonomy_term' => $this->entity->id()),
-      'options' => array('query' => $destination),
-    );
-  }
-
 }

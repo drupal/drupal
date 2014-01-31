@@ -23,7 +23,7 @@ shortcut.set_add:
     _entity_create_access: 'shortcut_set'
 
 shortcut.set_edit:
-  path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/edit'
+  path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}'
   defaults:
     _entity_form: 'shortcut_set.edit'
     _title: 'Edit shortcut set'
@@ -39,7 +39,7 @@ shortcut.link_add_inline:
     _csrf_token: 'TRUE'
 
 shortcut.set_customize:
-  path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}'
+  path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/customize'
   defaults:
     _entity_form: 'shortcut_set.customize'
     _title: 'List links'

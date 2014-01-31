@@ -48,6 +48,7 @@ use Drupal\entity\EntityViewModeInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
+ *     "delete-form" = "entity.view_mode_delete",
  *     "edit-form" = "entity.view_mode_edit"
  *   }
  * )

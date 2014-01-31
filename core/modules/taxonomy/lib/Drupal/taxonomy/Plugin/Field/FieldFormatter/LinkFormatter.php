@@ -37,12 +37,14 @@ class LinkFormatter extends TaxonomyFormatterBase {
         );
       }
       else {
+        /** @var $term \Drupal\taxonomy\TermInterface */
         $term = $item->entity;
-        $uri = $term->uri();
+        $uri = $term->urlInfo();
         $elements[$delta] = array(
           '#type' => 'link',
           '#title' => $term->label(),
-          '#href' => $uri['path'],
+          '#route_name' => $uri['route_name'],
+          '#route_parameters' => $uri['route_parameters'],
           '#options' => $uri['options'],
         );
 

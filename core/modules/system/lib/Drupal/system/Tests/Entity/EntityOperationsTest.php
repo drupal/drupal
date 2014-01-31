@@ -49,8 +49,7 @@ class EntityOperationsTest extends WebTestBase {
     $this->drupalGet('admin/people/roles');
     $roles = user_roles();
     foreach ($roles as $role) {
-      $uri = $role->uri();
-      $this->assertLinkByHref($uri['path'] . '/test_operation');
+      $this->assertLinkByHref($role->url() . '/test_operation');
       $this->assertLink(format_string('Test Operation: @label', array('@label' => $role->label())));
     }
   }

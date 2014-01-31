@@ -242,9 +242,8 @@ function path_entity_insert(EntityInterface $entity) {
     // Only save a non-empty alias.
     if (!empty($entity->path->alias)) {
       // Ensure fields for programmatic executions.
-      $uri = $entity->uri();
       $langcode = $entity->language()->id;
-      \Drupal::service('path.crud')->save($uri['path'], $entity->path->alias, $langcode);
+      \Drupal::service('path.crud')->save($entity->getSystemPath(), $entity->path->alias, $langcode);
     }
   }
 }
@@ -263,9 +262,8 @@ function path_entity_update(EntityInterface $entity) {
     if ($entity->path->alias) {
       $pid = $entity->path->pid;
       // Ensure fields for programmatic executions.
-      $uri = $entity->uri();
       $langcode = $entity->language()->id;
-      \Drupal::service('path.crud')->save($uri['path'], $entity->path->alias, $langcode, $pid);
+      \Drupal::service('path.crud')->save($entity->getSystemPath(), $entity->path->alias, $langcode, $pid);
     }
   }
 }
@@ -276,8 +274,7 @@ function path_entity_update(EntityInterface $entity) {
 function path_entity_predelete(EntityInterface $entity) {
   if ($entity instanceof ContentEntityInterface && $entity->hasField('path')) {
     // Delete all aliases associated with this term.
-    $uri = $entity->uri();
-    \Drupal::service('path.crud')->delete(array('source' => $uri['path']));
+    \Drupal::service('path.crud')->delete(array('source' => $entity->getSystemPath()));
   }
 }
 

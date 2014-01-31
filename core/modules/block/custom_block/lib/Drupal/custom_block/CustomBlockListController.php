@@ -36,10 +36,7 @@ class CustomBlockListController extends EntityListController {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    // The custom block edit path does not contain '/edit'.
     if (isset($operations['edit'])) {
-      $uri = $entity->uri();
-      $operations['edit']['href'] = $uri['path'];
       $operations['edit']['query']['destination'] = 'admin/structure/block/custom-blocks';
     }
     return $operations;

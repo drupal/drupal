@@ -39,7 +39,8 @@ use Drupal\filter\FilterBag;
  *     "status" = "status"
  *   },
  *   links = {
- *     "edit-form" = "filter.format_edit"
+ *     "edit-form" = "filter.format_edit",
+ *     "disable" = "filter.admin_disable"
  *   }
  * )
  */

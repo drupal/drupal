@@ -38,13 +38,10 @@ class PictureMappingListController extends ConfigEntityListController {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    $uri = $entity->uri();
     $operations['duplicate'] = array(
       'title' => t('Duplicate'),
-      'href' => $uri['path'] . '/duplicate',
-      'options' => $uri['options'],
       'weight' => 15,
-    );
+    ) + $entity->urlInfo('duplicate-form');
     return $operations;
   }
 

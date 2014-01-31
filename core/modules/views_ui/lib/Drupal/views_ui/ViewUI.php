@@ -101,7 +101,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * The View storage object.
    *
-   * @var \Drupal\views\Entity\View
+   * @var \Drupal\views\ViewStorageInterface
    */
   protected $storage;
 
@@ -278,10 +278,7 @@ class ViewUI implements ViewStorageInterface {
       $this->cacheSet();
     }
 
-    $form_state['redirect_route'] = array(
-      'route_name' => 'views_ui.edit',
-      'route_parameters' => array('view' => $this->id()),
-    );
+    $form_state['redirect_route'] = $this->urlInfo('edit-form');
   }
 
   /**
@@ -886,8 +883,15 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Implements \Drupal\Core\Entity\EntityInterface::uri().
    */
-  public function uri() {
-    return $this->storage->uri();
+  public function urlInfo($rel = 'edit-form') {
+    return $this->storage->urlInfo($rel);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSystemPath($rel = 'edit-form') {
+    return $this->storage->getSystemPath($rel);
   }
 
   /**
@@ -1159,5 +1163,19 @@ class ViewUI implements ViewStorageInterface {
    public function referencedEntities() {
      return $this->storage->referencedEntities();
    }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function url($rel = 'edit-form', $options = array()) {
+    return $this->storage->url($rel, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasLinkTemplate($key) {
+    return $this->storage->hasLinkTemplate($key);
+  }
 
 }

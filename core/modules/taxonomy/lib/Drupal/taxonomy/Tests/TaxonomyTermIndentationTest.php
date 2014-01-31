@@ -52,7 +52,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     );
 
     // Submit the edited form and check for HTML indentation element presence.
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid'), $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/overview', $edit, t('Save'));
     $this->assertPattern('|<div class="indentation">&nbsp;</div>|');
 
     // Check explicitly that term 2's parent is term 1.
@@ -67,7 +67,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
       'terms[tid:' . $term2->id() . ':0][weight]' => 1,
     );
 
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid'), $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid' ) . '/overview', $edit, t('Save'));
     // All terms back at the root level, no identation should be present.
     $this->assertNoPattern('|<div class="indentation">&nbsp;</div>|');
 

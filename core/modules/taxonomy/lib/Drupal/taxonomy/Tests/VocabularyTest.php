@@ -142,7 +142,7 @@ class VocabularyTest extends TaxonomyTestBase {
 
     // Delete the vocabulary.
     $edit = array();
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit', $edit, t('Delete'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vocabulary->id(), $edit, t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), '[confirm deletion] Asks for confirmation.');
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
 

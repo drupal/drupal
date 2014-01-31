@@ -52,6 +52,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
     parent::setUp();
 
     $this->installSchema('system', array('router'));
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**
@@ -109,8 +110,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
    *   The absolute URI.
    */
   protected function getAbsoluteUri($entity) {
-    $uri_info = $entity->uri();
-    return url($uri_info['path'], array('absolute' => TRUE));
+    return $entity->url('canonical', array('absolute' => TRUE));
   }
 
 }

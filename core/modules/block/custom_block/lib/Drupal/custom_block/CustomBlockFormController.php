@@ -251,27 +251,6 @@ class CustomBlockFormController extends ContentEntityFormController {
   /**
    * {@inheritdoc}
    */
-  public function delete(array $form, array &$form_state) {
-    $destination = array();
-    $query = $this->getRequest()->query;
-    if (!is_null($query->get('destination'))) {
-      $destination = drupal_get_destination();
-      $query->remove('destination');
-    }
-    $form_state['redirect_route'] = array(
-      'route_name' => 'custom_block.delete',
-      'route_parameters' => array(
-        'custom_block' => $this->entity->id(),
-      ),
-      'options' => array(
-        'query' => $destination,
-      ),
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function validateForm(array &$form, array &$form_state) {
     if ($this->entity->isNew()) {
       $exists = $this->customBlockStorage->loadByProperties(array('info' => $form_state['values']['info']));

@@ -309,7 +309,15 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
    *   A reference to a keyed array containing the current state of the form.
    */
   public function delete(array $form, array &$form_state) {
-    // @todo Perform common delete operations.
+    if ($this->entity->hasLinkTemplate('delete-form')) {
+      $form_state['redirect_route'] = $this->entity->urlInfo('delete-form');
+
+      $query = $this->getRequest()->query;
+      if ($query->has('destination')) {
+        $form_state['redirect_route']['options']['query']['destination'] = $query->get('destination');
+        $query->remove('destination');
+      }
+    }
   }
 
   /**

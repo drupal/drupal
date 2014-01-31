@@ -34,9 +34,7 @@ class RSSCategoryFormatter extends TaxonomyFormatterBase {
       if ($item->target_id) {
         $value = $item->entity->label();
 
-        $uri = $item->entity->uri();
-        $uri['options']['absolute'] = TRUE;
-        $domain = url($uri['path'], $uri['options']);
+        $domain = $item->entity->url('canonical', array('absolute' => TRUE));
       }
       else {
         $value = $item->entity->label();

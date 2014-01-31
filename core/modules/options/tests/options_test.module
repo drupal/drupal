@@ -31,10 +31,9 @@ function options_test_allowed_values_callback(FieldDefinitionInterface $field_de
 function options_test_dynamic_values_callback(FieldDefinitionInterface $field_definition, EntityInterface $entity, &$cacheable) {
   $cacheable = FALSE;
   // We need the values of the entity as keys.
-  $uri = $entity->uri();
   return drupal_map_assoc(array(
     $entity->label(),
-    $uri['path'],
+    $entity->url(),
     $entity->uuid(),
     $entity->bundle(),
   ));

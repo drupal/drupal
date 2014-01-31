@@ -273,7 +273,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->assertNoText('Use custom display settings for the following view modes', 'Custom display settings fieldset found.');
 
     // This may not trigger a notice when 'view_modes_custom' isn't available.
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary . '/display', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview/display', array(), t('Save'));
   }
 
   /**

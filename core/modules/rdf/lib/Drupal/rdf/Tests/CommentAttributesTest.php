@@ -227,8 +227,7 @@ class CommentAttributesTest extends CommentTestBase {
    *   An array containing information about an anonymous user.
    */
   function _testBasicCommentRdfaMarkup($graph, $comment, $account = array()) {
-    $uri = $comment->uri();
-    $comment_uri = url($uri['path'], $uri['options'] + array('absolute' => TRUE));
+    $comment_uri = $comment->url('canonical', array('absolute' => TRUE));
 
     // Comment type.
     $expected_value = array(

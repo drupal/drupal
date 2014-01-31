@@ -43,16 +43,13 @@ class MenuListController extends ConfigEntityListController {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    $uri = $entity->uri();
 
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('Edit menu');
       $operations['add'] = array(
         'title' => t('Add link'),
-        'href' => $uri['path'] . '/add',
-        'options' => $uri['options'],
         'weight' => 20,
-      );
+      ) + $entity->urlInfo('add-form');
     }
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = t('Delete menu');

@@ -19,7 +19,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
  */
 function content_translation_overview(EntityInterface $entity) {
   $controller = content_translation_controller($entity->getEntityTypeId());
-  $entity_manager = \Drupal::entityManager();
   $languages = language_list();
   $original = $entity->getUntranslated()->language()->id;
   $translations = $entity->getTranslationLanguages();
@@ -27,18 +26,13 @@ function content_translation_overview(EntityInterface $entity) {
 
   $rel = array();
   foreach (array('canonical', 'edit-form', 'drupal:content-translation-overview') as $name) {
-    $rel[$name] = $entity->uri($name);
+    $rel[$name] = $entity->getSystemPath($name);
   }
 
   $header = array(t('Language'), t('Translation'), t('Source language'), t('Status'), t('Operations'));
   $rows = array();
 
   if (\Drupal::languageManager()->isMultilingual()) {
-    // If we have a view path defined for the current entity get the switch
-    // links based on it.
-    if (!empty($rel['canonical'])) {
-      $links = _content_translation_get_switch_links($rel['canonical']['path']);
-    }
 
     // Determine whether the current entity is translatable.
     $translatable = FALSE;
@@ -53,13 +47,13 @@ function content_translation_overview(EntityInterface $entity) {
       $language_name = $language->name;
       $langcode = $language->id;
 
-      $add_path = $rel['drupal:content-translation-overview']['path'] . '/add/' . $original . '/' . $langcode;
-      $translate_path = $rel['drupal:content-translation-overview']['path'] . '/edit/' . $langcode;
+      $add_path = $rel['drupal:content-translation-overview'] . '/add/' . $original . '/' . $langcode;
+      $translate_path = $rel['drupal:content-translation-overview'] . '/edit/' . $langcode;
 
       $add_links = _content_translation_get_switch_links($add_path);
-      $edit_links = _content_translation_get_switch_links($rel['edit-form']['path']);
+      $edit_links = _content_translation_get_switch_links($rel['edit-form']);
       $translate_links = _content_translation_get_switch_links($translate_path);
-      $delete_links = _content_translation_get_switch_links($rel['drupal:content-translation-overview']['path'] . '/delete/' . $langcode);
+      $delete_links = _content_translation_get_switch_links($rel['drupal:content-translation-overview'] . '/delete/' . $langcode);
 
       $operations = array(
         'data' => array(
@@ -74,7 +68,7 @@ function content_translation_overview(EntityInterface $entity) {
         $source = isset($entity->translation[$langcode]['source']) ? $entity->translation[$langcode]['source'] : '';
         $is_original = $langcode == $original;
         $label = $entity->getTranslation($langcode)->label();
-        $link = isset($links->links[$langcode]['href']) ? $links->links[$langcode] : array('href' => $rel['canonical']['path'], 'language' => $language);
+        $link = isset($links->links[$langcode]['href']) ? $links->links[$langcode] : array('href' => $rel['canonical'], 'language' => $language);
         $row_title = l($label, $link['href'], $link);
 
         if (empty($link['href'])) {
@@ -85,7 +79,7 @@ function content_translation_overview(EntityInterface $entity) {
         // the entity form, otherwise if we are not dealing with the original
         // language we point the link to the translation form.
         if ($entity->access('update')) {
-          $links['edit'] = isset($edit_links->links[$langcode]['href']) ? $edit_links->links[$langcode] : array('href' => $rel['edit-form']['path'], 'language' => $language);
+          $links['edit'] = isset($edit_links->links[$langcode]['href']) ? $edit_links->links[$langcode] : array('href' => $rel['edit-form'], 'language' => $language);
         }
         elseif (!$is_original && $controller->getTranslationAccess($entity, 'update')) {
           $links['edit'] = isset($translate_links->links[$langcode]['href']) ? $translate_links->links[$langcode] : array('href' => $translate_path, 'language' => $language);

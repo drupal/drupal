@@ -83,8 +83,7 @@ class Taxonomy extends FieldPluginBase {
         'vid' => $this->getValue($values, 'vid'),
       ));
       $this->options['alter']['make_link'] = TRUE;
-      $uri = $term->uri();
-      $this->options['alter']['path'] = $uri['path'];
+      $this->options['alter']['path'] = $term->getSystemPath();
     }
 
     if (!empty($this->options['convert_spaces'])) {

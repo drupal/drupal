@@ -136,22 +136,19 @@ class ViewListController extends ConfigEntityListController implements EntityCon
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    $uri = $entity->uri();
 
-    $operations['clone'] = array(
-      'title' => $this->t('Clone'),
-      'href' => $uri['path'] . '/clone',
-      'options' => $uri['options'],
-      'weight' => 15,
-    );
+    if ($entity->hasLinkTemplate('clone')) {
+      $operations['clone'] = array(
+        'title' => $this->t('Clone'),
+        'weight' => 15,
+      ) + $entity->urlInfo('clone');
+    }
 
     // Add AJAX functionality to enable/disable operations.
     foreach (array('enable', 'disable') as $op) {
       if (isset($operations[$op])) {
-        $operations[$op]['route_name'] = 'views_ui.operation';
-        $operations[$op]['route_parameters'] = array('view' => $entity->id(), 'op' => $op);
-        // @todo Remove this when entity links use route_names.
-        unset($operations[$op]['href']);
+        $operations[$op]['route_name'] = "views_ui.$op";
+        $operations[$op]['route_parameters'] = array('view' => $entity->id());
 
         // Enable and disable operations should use AJAX.
         $operations[$op]['attributes']['class'][] = 'use-ajax';

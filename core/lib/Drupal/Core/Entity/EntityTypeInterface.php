@@ -391,17 +391,14 @@ interface EntityTypeInterface {
    * HTML page must also define an "edit-form" relationship.
    *
    * By default, the following placeholders are supported:
-   * - entityType: The machine name of the entity type.
-   * - bundle: The bundle machine name of the entity.
-   * - id: The unique ID of the entity.
-   * - uuid: The UUID of the entity.
    * - [entityType]: The entity type itself will also be a valid token for the
    *   ID of the entity. For instance, a placeholder of {node} used on the Node
-   *   class would have the same value as {id}. This is generally preferred
-   *   over "id" for better self-documentation.
+   *   class.
+   * - [bundleEntityType]: The bundle machine name itself. For instance, a
+   *   placeholder of {node_type} used on the Node class.
    *
    * Specific entity types may also expand upon this list by overriding the
-   * Entity::uriPlaceholderReplacements() method.
+   * Entity::urlRouteParameters() method.
    *
    * @link http://www.iana.org/assignments/link-relations/link-relations.xml @endlink
    * @link http://tools.ietf.org/html/rfc6570 @endlink

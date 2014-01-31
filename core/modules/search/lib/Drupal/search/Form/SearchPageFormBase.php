@@ -184,18 +184,6 @@ abstract class SearchPageFormBase extends EntityFormController {
   /**
    * {@inheritdoc}
    */
-  public function delete(array $form, array &$form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'search.delete',
-      'route_parameters' => array(
-        'search_page' => $this->entity->id(),
-      ),
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
     if ($this->entity->isDefaultSearch()) {

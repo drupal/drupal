@@ -58,10 +58,9 @@ class Analyze extends ViewsFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $form_state['redirect_route'] = array(
-      'route_name' => 'views_ui.edit',
-      'route_parameters' => array('view' => $form_state['view']->id()),
-    );
+    /** @var $view \Drupal\views_ui\ViewUI */
+    $view = $form_state['view'];
+    $form_state['redirect_route'] = $view->urlInfo('edit-form');
   }
 
 }

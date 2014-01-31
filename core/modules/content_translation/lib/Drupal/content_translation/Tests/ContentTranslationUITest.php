@@ -52,8 +52,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $this->entityId = $this->createEntity($values[$default_langcode], $default_langcode);
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
     $this->assertTrue($entity, 'Entity found in the database.');
-    $uri = $entity->uri();
-    $this->drupalGet($uri['path']);
+    $this->drupalGet($entity->getSystemPath());
     $this->assertResponse(200, 'Entity URL is valid.');
 
     $translation = $this->getTranslation($entity, $default_langcode);
@@ -68,8 +67,8 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $langcode = 'it';
     $values[$langcode] = $this->getNewEntityValues($langcode);
 
-    $uri = $entity->uri('drupal:content-translation-overview');
-    $path = $langcode . '/' . $uri['path'] . '/add/' . $default_langcode . '/' . $langcode;
+    $content_translation_path = $entity->getSystemPath('drupal:content-translation-overview');
+    $path = $langcode . '/' . $content_translation_path . '/add/' . $default_langcode . '/' . $langcode;
     $this->drupalPostForm($path, $this->getEditValues($values, $langcode), $this->getFormSubmitAction($entity));
     if ($this->testLanguageSelector) {
       $this->assertNoFieldByXPath('//select[@id="edit-langcode"]', NULL, 'Language selector correclty disabled on translations.');
@@ -80,7 +79,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $langcode = 'fr';
     $source_langcode = 'it';
     $edit = array('source_langcode[source]' => $source_langcode);
-    $path = $langcode . '/' . $uri['path'] . '/add/' . $default_langcode . '/' . $langcode;
+    $path = $langcode . '/' . $content_translation_path . '/add/' . $default_langcode . '/' . $langcode;
     $this->drupalPostForm($path, $edit, t('Change'));
     $this->assertFieldByXPath("//input[@name=\"{$this->fieldName}[0][value]\"]", $values[$source_langcode][$this->fieldName][0]['value'], 'Source language correctly switched.');
 
@@ -107,8 +106,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    */
   protected function doTestTranslationOverview() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
-    $uri = $entity->uri('drupal:content-translation-overview');
-    $this->drupalGet($uri['path']);
+    $this->drupalGet($entity->getSystemPath('drupal:content-translation-overview'));
 
     foreach ($this->langcodes as $langcode) {
       if ($entity->hasTranslation($langcode)) {
@@ -127,14 +125,14 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
 
     // Mark translations as outdated.
     $edit = array('content_translation[retranslate]' => TRUE);
-    $uri = $entity->uri('edit-form');
-    $this->drupalPostForm($langcode . '/' . $uri['path'], $edit, $this->getFormSubmitAction($entity));
+    $edit_path = $entity->getSystemPath('edit-form');
+    $this->drupalPostForm($langcode . '/' . $edit_path, $edit, $this->getFormSubmitAction($entity));
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
 
     // Check that every translation has the correct "outdated" status.
     foreach ($this->langcodes as $enabled_langcode) {
       $prefix = $enabled_langcode != $default_langcode ? $enabled_langcode . '/' : '';
-      $path = $prefix . $uri['path'];
+      $path = $prefix . $edit_path;
       $this->drupalGet($path);
       if ($enabled_langcode == $langcode) {
         $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is not checked by default.');
@@ -156,8 +154,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    */
   protected function doTestPublishedStatus() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
-    $uri = $entity->uri('edit-form');
-    $path = $uri['path'];
+    $path = $entity->getSystemPath('edit-form');
 
     // Unpublish translations.
     foreach ($this->langcodes as $index => $langcode) {
@@ -179,8 +176,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    */
   protected function doTestAuthoringInfo() {
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
-    $uri = $entity->uri('edit-form');
-    $path = $uri['path'];
+    $path = $entity->getSystemPath('edit-form');
     $values = array();
 
     // Post different authoring information for each translation.
@@ -224,8 +220,8 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     // Confirm and delete a translation.
     $langcode = 'fr';
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
-    $uri = $entity->uri('edit-form');
-    $this->drupalPostForm($langcode . '/' . $uri['path'], array(), t('Delete translation'));
+    $path = $entity->getSystemPath('edit-form');
+    $this->drupalPostForm($langcode . '/' . $path, array(), t('Delete translation'));
     $this->drupalPostForm(NULL, array(), t('Delete'));
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
     if ($this->assertTrue(is_object($entity), 'Entity found')) {

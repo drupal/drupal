@@ -54,6 +54,7 @@ class RowEntityTest extends ViewUnitTestBase {
     $this->installSchema('system', array('menu_router'));
     $this->installSchema('taxonomy', array('taxonomy_term_data', 'taxonomy_term_hierarchy'));
     $this->installConfig(array('taxonomy'));
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

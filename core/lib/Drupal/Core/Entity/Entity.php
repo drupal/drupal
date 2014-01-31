@@ -9,7 +9,6 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Defines a base entity class.
@@ -38,18 +37,11 @@ abstract class Entity implements EntityInterface {
   protected $enforceIsNew;
 
   /**
-   * The route provider service.
+   * The URL generator.
    *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
-  protected $routeProvider;
-
-  /**
-   * Local cache for URI placeholder substitution values.
-   *
-   * @var array
-   */
-  protected $uriPlaceholderReplacements;
+  protected $urlGenerator;
 
   /**
    * Constructs an Entity object.
@@ -127,97 +119,68 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
-   * Returns the URI elements of the entity.
-   *
-   * URI templates might be set in the links array in an annotation, for
-   * example:
-   * @code
-   * links = {
-   *   "canonical" = "/node/{node}",
-   *   "edit-form" = "/node/{node}/edit",
-   *   "version-history" = "/node/{node}/revisions"
-   * }
-   * @endcode
-   * or specified in a callback function set like:
-   * @code
-   * uri_callback = "contact_category_uri",
-   * @endcode
-   * If the path is not set in the links array, the uri_callback function is
-   * used for setting the path. If this does not exist and the link relationship
-   * type is canonical, the path is set using the default template:
-   * entity/entityType/id.
-   *
-   * @param string $rel
-   *   The link relationship type, for example: canonical or edit-form.
-   *
-   * @return array
-   *   An array containing the 'path' and 'options' keys used to build the URI
-   *   of the entity, and matching the signature of url().
+   * {@inheritdoc}
    */
-  public function uri($rel = 'canonical') {
-    $entity_info = $this->getEntityType();
+  public function urlInfo($rel = 'canonical') {
+    if ($this->isNew()) {
+      throw new EntityMalformedException(sprintf('The "%s" entity type has not been saved, and cannot have a URI.', $this->getEntityTypeId()));
+    }
 
     // The links array might contain URI templates set in annotations.
     $link_templates = $this->linkTemplates();
 
-    $template = NULL;
     if (isset($link_templates[$rel])) {
-      try {
-        $template = $this->routeProvider()->getRouteByName($link_templates[$rel])->getPath();
-      }
-      catch (RouteNotFoundException $e) {
-        // Fall back to a non-template-based URI.
-      }
-    }
-    if ($template) {
-      // If there is a template for the given relationship type, do the
-      // placeholder replacement and use that as the path.
-      $replacements = $this->uriPlaceholderReplacements();
-      $uri['path'] = str_replace(array_keys($replacements), array_values($replacements), $template);
-
-      // @todo Remove this once http://drupal.org/node/1888424 is in and we can
-      //   move the BC handling of / vs. no-/ to the generator.
-      $uri['path'] = trim($uri['path'], '/');
-
-      // Pass the entity data to url() so that alter functions do not need to
-      // look up this entity again.
-      $uri['options']['entity_type'] = $this->entityTypeId;
-      $uri['options']['entity'] = $this;
-      return $uri;
-    }
-
-    $bundle = $this->bundle();
-    // A bundle-specific callback takes precedence over the generic one for
-    // the entity type.
-    $bundles = entity_get_bundles($this->entityTypeId);
-    if (isset($bundles[$bundle]['uri_callback'])) {
-      $uri_callback = $bundles[$bundle]['uri_callback'];
-    }
-    elseif ($entity_uri_callback = $entity_info->getUriCallback()) {
-      $uri_callback = $entity_uri_callback;
-    }
-
-    // Invoke the callback to get the URI. If there is no callback, use the
-    // default URI format.
-    // @todo Convert to is_callable() and call_user_func().
-    if (isset($uri_callback) && function_exists($uri_callback)) {
-      $uri = $uri_callback($this);
-    }
-    // Only use these defaults for a canonical link (that is, a link to self).
-    // Other relationship types are not supported by this logic.
-    elseif ($rel == 'canonical') {
-      $uri = array(
-        'path' => 'entity/' . $this->entityTypeId . '/' . $this->id(),
-      );
+      // If there is a template for the given relationship type, generate the path.
+      $uri['route_name'] = $link_templates[$rel];
+      $uri['route_parameters'] = $this->urlRouteParameters($rel);
     }
     else {
-      return array();
+      $bundle = $this->bundle();
+      // A bundle-specific callback takes precedence over the generic one for
+      // the entity type.
+      $bundles = \Drupal::entityManager()->getBundleInfo($this->getEntityTypeId());
+      if (isset($bundles[$bundle]['uri_callback'])) {
+        $uri_callback = $bundles[$bundle]['uri_callback'];
+      }
+      elseif ($entity_uri_callback = $this->getEntityType()->getUriCallback()) {
+        $uri_callback = $entity_uri_callback;
+      }
+
+      // Invoke the callback to get the URI. If there is no callback, use the
+      // default URI format.
+      // @todo Convert to is_callable() and call_user_func().
+      if (isset($uri_callback) && function_exists($uri_callback)) {
+        $uri = $uri_callback($this);
+      }
+      else {
+        return array();
+      }
     }
 
     // Pass the entity data to url() so that alter functions do not need to
     // look up this entity again.
+    $uri['options']['entity_type'] = $this->getEntityTypeId();
     $uri['options']['entity'] = $this;
+
     return $uri;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSystemPath($rel = 'canonical') {
+    if ($uri = $this->urlInfo($rel)) {
+      return $this->urlGenerator()->getPathFromRoute($uri['route_name'], $uri['route_parameters']);
+    }
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasLinkTemplate($rel) {
+    $link_templates = $this->linkTemplates();
+    return isset($link_templates[$rel]);
   }
 
   /**
@@ -231,26 +194,42 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function url($rel = 'canonical', $options = array()) {
+    // While self::urlInfo() will throw an exception if the entity is new,
+    // the expected result for a URL is always a string.
+    if ($this->isNew() || !$uri = $this->urlInfo($rel)) {
+      return '';
+    }
+
+    $options += $uri['options'];
+    return $this->urlGenerator()->generateFromRoute($uri['route_name'], $uri['route_parameters'], $options);
+  }
+
+  /**
    * Returns an array of placeholders for this entity.
    *
    * Individual entity classes may override this method to add additional
    * placeholders if desired. If so, they should be sure to replicate the
    * property caching logic.
    *
+   * @param string $rel
+   *   The link relationship type, for example: canonical or edit-form.
+   *
    * @return array
    *   An array of URI placeholders.
    */
-  protected function uriPlaceholderReplacements() {
-    if (empty($this->uriPlaceholderReplacements)) {
-      $this->uriPlaceholderReplacements = array(
-        '{entityType}' => $this->getEntityTypeId(),
-        '{bundle}' => $this->bundle(),
-        '{id}' => $this->id(),
-        '{uuid}' => $this->uuid(),
-        '{' . $this->getEntityTypeId() . '}' => $this->id(),
-      );
+  protected function urlRouteParameters($rel) {
+    // The entity ID is needed as a route parameter.
+    $uri_route_parameters[$this->getEntityTypeId()] = $this->id();
+
+    // The 'admin-form' link requires the bundle as a route parameter if the
+    // entity type uses bundles.
+    if ($rel == 'admin-form' && $this->getEntityType()->getBundleEntityType() != 'bundle') {
+      $uri_route_parameters[$this->getEntityType()->getBundleEntityType()] = $this->bundle();
     }
-    return $this->uriPlaceholderReplacements;
+    return $uri_route_parameters;
   }
 
   /**
@@ -403,16 +382,16 @@ abstract class Entity implements EntityInterface {
   }
 
   /**
-   * Wraps the route provider service.
+   * Wraps the URL generator.
    *
-   * @return \Drupal\Core\Routing\RouteProviderInterface
-   *   The route provider.
+   * @return \Drupal\Core\Routing\UrlGeneratorInterface
+   *   The URL generator.
    */
-  protected function routeProvider() {
-    if (!$this->routeProvider) {
-      $this->routeProvider = \Drupal::service('router.route_provider');
+  protected function urlGenerator() {
+    if (!$this->urlGenerator) {
+      $this->urlGenerator = \Drupal::urlGenerator();
     }
-    return $this->routeProvider;
+    return $this->urlGenerator;
   }
 
 }

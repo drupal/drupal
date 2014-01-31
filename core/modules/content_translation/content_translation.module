@@ -175,12 +175,9 @@ function content_translation_entity_field_info_alter(&$info, $entity_type) {
 function content_translation_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
   // @todo Use an access permission.
   if ($entity instanceof NodeInterface && $entity->isTranslatable()) {
-    $uri = $entity->uri();
     $operations['translate'] = array(
       'title' => t('Translate'),
-      'href' => $uri['path'] . '/translations',
-      'options' => $uri['options'],
-    );
+    ) + $entity->urlInfo('drupal:content-translation-overview');
   }
 }
 

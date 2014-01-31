@@ -225,7 +225,10 @@ function node_entity_form_display_alter(EntityFormDisplayInterface $form_display
  */
 function node_uri(EntityInterface $node) {
   return array(
-    'path' => 'node/' . $node->id(),
+    'route_name' => 'node.view',
+    'route_parameters' => array(
+      'node' => $node->id(),
+    ),
   );
 }
 
@@ -647,8 +650,7 @@ function template_preprocess_node(&$variables) {
   );
   $variables['name'] = drupal_render($username);
 
-  $uri = $node->uri();
-  $variables['node_url']  = url($uri['path'], $uri['options']);
+  $variables['node_url'] = $node->url();
   $variables['label'] = $variables['elements']['title'];
   unset($variables['elements']['title']);
   $variables['page'] = $variables['view_mode'] == 'full' && node_is_page($node);

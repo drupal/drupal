@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Implements hook_help().
@@ -229,8 +230,7 @@ function rdf_comment_load($comments) {
       ->getPreparedFieldMapping('created');
     $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->created->value);
     $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-    $uri = $entity->uri();
-    $comment->rdf_data['entity_uri'] = url($uri['path']);
+    $comment->rdf_data['entity_uri'] = $entity->url();
     if ($comment->pid->target_id) {
       $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id);
     }
@@ -333,8 +333,9 @@ function rdf_preprocess_node(&$variables) {
  * Implements hook_preprocess_HOOK() for user templates.
  */
 function rdf_preprocess_user(&$variables) {
+  /** @var $account \Drupal\user\UserInterface */
   $account = $variables['elements']['#user'];
-  $uri = $account->uri();
+  $uri = $account->urlInfo();
   $mapping = rdf_get_mapping('user', 'user');
   $bundle_mapping = $mapping->getPreparedBundleMapping();
 
@@ -342,11 +343,11 @@ function rdf_preprocess_user(&$variables) {
   // will automatically describe the user.
   if (!empty($bundle_mapping['types'])) {
     $variables['attributes']['typeof'] = $bundle_mapping['types'];
-    $variables['attributes']['about'] = url($uri['path'], $uri['options']);
+    $variables['attributes']['about'] = $account->url();
   }
   // If we are on the user account page, add the relationship between the
   // sioc:UserAccount and the foaf:Person who holds the account.
-  if (current_path() == $uri['path']) {
+  if (\Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME) == $uri['route_name']) {
     // Adds the markup for username as language neutral literal, see
     // rdf_preprocess_username().
     $name_mapping = $mapping->getPreparedFieldMapping('name');
@@ -354,7 +355,7 @@ function rdf_preprocess_user(&$variables) {
       $username_meta = array(
         '#tag' => 'meta',
         '#attributes' => array(
-          'about' => url($uri['path'], $uri['options']),
+          'about' => $account->url(),
           'property' => $name_mapping['properties'],
           'content' => $account->getUsername(),
           'lang' => '',
@@ -431,13 +432,12 @@ function rdf_preprocess_comment(&$variables) {
   $mapping = rdf_get_mapping('comment', $comment->bundle());
   $bundle_mapping = $mapping->getPreparedBundleMapping();
 
-  if (!empty($bundle_mapping['types'])) {
+  if (!empty($bundle_mapping['types']) && !isset($comment->in_preview)) {
     // Adds RDFa markup to the comment container. The about attribute specifies
     // the URI of the resource described within the HTML element, while the
     // typeof attribute indicates its RDF type (e.g., sioc:Post, foaf:Document,
     // and so on.)
-    $uri = $comment->uri();
-    $variables['attributes']['about'] = url($uri['path'], $uri['options']);
+    $variables['attributes']['about'] = $comment->url();
     $variables['attributes']['typeof'] = $bundle_mapping['types'];
   }
 

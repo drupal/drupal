@@ -45,16 +45,6 @@ class LanguageListController extends DraggableListController {
     $operations = parent::getOperations($entity);
     $default = language_default();
 
-    // Edit and delete path for Languages entities have a different pattern
-    // than other config entities.
-    $path = 'admin/config/regional/language';
-    if (isset($operations['edit'])) {
-      $operations['edit']['href'] = $path . '/edit/' . $entity->id();
-    }
-    if (isset($operations['delete'])) {
-      $operations['delete']['href'] = $path . '/delete/' . $entity->id();
-    }
-
     // Deleting the site default language is not allowed.
     if ($entity->id() == $default->id) {
       unset($operations['delete']);

@@ -63,7 +63,8 @@ class DeleteForm extends ContentEntityConfirmFormBase {
 
     // @todo Convert to getCancelRoute() after http://drupal.org/node/1987778.
     $uri = $this->commentManager->getParentEntityUri($this->entity);
-    $actions['cancel']['#href'] = $uri['path'];
+    $actions['cancel']['#route_name'] = $uri['route_name'];
+    $actions['cancel']['#route_parameters'] = $uri['route_parameters'];
 
     return $actions;
   }
@@ -99,8 +100,7 @@ class DeleteForm extends ContentEntityConfirmFormBase {
     // Clear the cache so an anonymous user sees that his comment was deleted.
     Cache::invalidateTags(array('content' => TRUE));
 
-    $uri = $this->commentManager->getParentEntityUri($this->entity);
-    $form_state['redirect'] = $uri['path'];
+    $form_state['redirect_route'] = $this->commentManager->getParentEntityUri($this->entity);
   }
 
 }

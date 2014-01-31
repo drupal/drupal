@@ -106,12 +106,12 @@ class EntityLabel extends FieldPluginBase {
       return;
     }
 
+    /** @var $entity \Drupal\Core\Entity\EntityInterface */
     $entity = $this->loadedReferencers[$type][$value];
 
     if (!empty($this->options['link_to_entity'])) {
-      $uri = $entity->uri();
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = $uri['path'];
+      $this->options['alter']['path'] = $entity->getSystemPath();
     }
 
     return $this->sanitizeValue($entity->label());

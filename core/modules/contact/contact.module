@@ -100,6 +100,14 @@ function contact_menu_link_defaults() {
 }
 
 /**
+ * Implements hook_entity_info_alter().
+ */
+function contact_entity_info_alter(&$entity_info) {
+  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_info['user']->setLinkTemplate('contact-form', 'contact.personal_page');
+}
+
+/**
  * Implements hook_entity_bundle_info().
  */
 function contact_entity_bundle_info() {
@@ -183,6 +191,7 @@ function contact_category_load($id) {
  */
 function contact_mail($key, &$message, $params) {
   $contact_message = $params['contact_message'];
+  /** @var $sender \Drupal\user\UserInterface */
   $sender = $params['sender'];
   $language = language_load($message['langcode']);
 
@@ -194,8 +203,7 @@ function contact_mail($key, &$message, $params) {
     '!sender-name' => user_format_name($sender),
   );
   if ($sender->isAuthenticated()) {
-    $sender_uri = $sender->uri();
-    $variables['!sender-url'] = url($sender_uri['path'], array('absolute' => TRUE, 'language' => $language) + $sender_uri['options']);
+    $variables['!sender-url'] = $sender->url('canonical', array('absolute' => TRUE, 'language' => $language));
   }
   else {
     $variables['!sender-url'] = $params['sender']->getEmail();
