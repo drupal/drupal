@@ -104,15 +104,9 @@ function forum_module_preinstall($module) {
  * Implements hook_uninstall().
  */
 function forum_uninstall() {
-  // Load the dependent Taxonomy module, in case it has been disabled.
-  drupal_load('module', 'taxonomy');
-
   if ($field = field_info_field('node', 'taxonomy_forums')) {
     $field->delete();
   }
-
-  // Load the dependent Comment module, in case it has been disabled.
-  drupal_load('module', 'comment');
 
   if ($field = field_info_field('node', 'comment_forum')) {
     $field->delete();

@@ -61,7 +61,6 @@ class ScanDirectoryTest extends FileTestBase {
    * Check that the callback function is called correctly.
    */
   function testOptionCallback() {
-    drupal_load('module', 'file_test');
 
     // When nothing is matched nothing should be passed to the callback.
     $all_files = file_scan_directory($this->path, '/^NONEXISTINGFILENAME/', array('callback' => 'file_test_file_scan_callback'));
