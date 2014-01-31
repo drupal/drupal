@@ -116,9 +116,10 @@ function error_displayable($error = NULL) {
  *   TRUE if the error is fatal.
  */
 function _drupal_log_error($error, $fatal = FALSE) {
+  $is_installer = drupal_installation_attempted();
   // Initialize a maintenance theme if the bootstrap was not complete.
   // Do it early because drupal_set_message() triggers a drupal_theme_initialize().
-  if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
+  if (!$is_installer && $fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
     unset($GLOBALS['theme']);
     if (!defined('MAINTENANCE_MODE')) {
       define('MAINTENANCE_MODE', 'error');
@@ -215,14 +216,20 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
       // Should not translate the string to avoid errors producing more errors.
-      $output = theme('maintenance_page', array('content' => 'The website has encountered an error. Please try again later.'));
-
-      $response = new Response($output, 500);
-      if ($fatal) {
-        $response->setStatusCode(500, '500 Service unavailable (with message)');
+      $message = 'The website has encountered an error. Please try again later.';
+      if ($is_installer) {
+        // install_display_output() prints the output and ends script execution.
+        install_display_output($message, $GLOBALS['install_state']);
+      }
+      else {
+        $output = theme('maintenance_page', array('content' => $message));
       }
 
-      return $response;
+      $response = new Response($output, 500);
+      $response->setStatusCode(500, '500 Service unavailable (with message)');
+      // An exception must halt script execution.
+      $response->send();
+      exit;
     }
   }
 }

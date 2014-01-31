@@ -88,24 +88,14 @@ function install_drupal($settings = array()) {
   // installation.
   $interactive = empty($settings);
   $install_state = $settings + array('interactive' => $interactive) + install_state_defaults();
-  try {
-    // Begin the page request. This adds information about the current state of
-    // the Drupal installation to the passed-in array.
-    install_begin_request($install_state);
-    // Based on the installation state, run the remaining tasks for this page
-    // request, and collect any output.
-    $output = install_run_tasks($install_state);
-  }
-  catch (Exception $e) {
-    // When an installation error occurs, either send the error to the web
-    // browser or pass on the exception so the calling script can use it.
-    if ($install_state['interactive']) {
-      install_display_output($e->getMessage(), $install_state);
-    }
-    else {
-      throw $e;
-    }
-  }
+
+  // Begin the page request. This adds information about the current state of
+  // the Drupal installation to the passed-in array.
+  install_begin_request($install_state);
+  // Based on the installation state, run the remaining tasks for this page
+  // request, and collect any output.
+  $output = install_run_tasks($install_state);
+
   // After execution, all tasks might be complete, in which case
   // $install_state['installation_finished'] is TRUE. In case the last task
   // has been processed, remove the global $install_state, so other code can
