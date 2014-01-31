@@ -362,7 +362,8 @@ function ajax_prepare_response($page_callback_result) {
     $commands[] = ajax_command_insert(NULL, $html);
     // Add the status messages inside the new content's wrapper element, so that
     // on subsequent Ajax requests, it is treated as old content.
-    $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
+    $status_messages = array('#theme' => 'status_messages');
+    $commands[] = ajax_command_prepend(NULL, drupal_render($status_messages));
   }
 
   return $commands;
