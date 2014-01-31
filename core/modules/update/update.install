@@ -137,38 +137,3 @@ function _update_requirement_check($project, $type) {
   $requirement['value'] = l($requirement_label, update_manager_access() ? 'admin/reports/updates/update' : 'admin/reports/updates');
   return $requirement;
 }
-
-/**
- * Moves update settings from variables to config.
- */
-function update_update_8000() {
-  update_variables_to_config('update.settings', array(
-    'update_check_disabled' => 'check.disabled_extensions',
-    'update_check_frequency' => 'check.interval_days',
-    'update_fetch_url' => 'fetch.url',
-    'update_max_fetch_attempts' => 'fetch.max_attempts',
-    'update_max_fetch_time' => 'fetch.timeout',
-    'update_notify_emails' => 'notification.emails',
-    'update_notification_threshold' => 'notification.threshold',
-  ));
-}
-
-/**
- * Convert update_last_check, last_email_notification variables to state API.
- *
- * @ingroup config_upgrade
- */
-function update_update_8001() {
-  $variable_map = array(
-    'update_last_check' => 'update.last_check',
-    'update_last_email_notification' => 'update.last_email_notification'
-  );
-  update_variables_to_state($variable_map);
-}
-
-/**
- * Deletes the {cache_update} table.
- */
-function update_update_8002() {
-  db_drop_table('cache_update');
-}

@@ -20,11 +20,6 @@ use Drupal\Core\Utility\SchemaCache;
 const SCHEMA_UNINSTALLED = -1;
 
 /**
- * Indicates that a module has been installed.
- */
-const SCHEMA_INSTALLED = 0;
-
-/**
  * Gets the schema definition of a table, or the whole database schema.
  *
  * The returned schema will include any modifications made by any

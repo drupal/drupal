@@ -38,8 +38,29 @@ function update_script_test_requirements($phase) {
 }
 
 /**
+ * Implements hook_update_last_removed().
+ */
+function update_script_test_update_last_removed() {
+  return 7110;
+}
+
+/**
+ * Dummy update_script_test update 7200.
+ */
+function update_script_test_update_7200() {
+  return 'The update_script_test_update_7200() update was executed successfully.';
+}
+
+/**
+ * Dummy update_script_test update 7201.
+ */
+function update_script_test_update_7201() {
+  return 'The update_script_test_update_7201() update was executed successfully.';
+}
+
+/**
  * Dummy update function to run during the tests.
  */
-function update_script_test_update_8000() {
-  return t('The update_script_test_update_8000() update was executed successfully.');
+function update_script_test_update_8001() {
+  return 'The update_script_test_update_8001() update was executed successfully.';
 }

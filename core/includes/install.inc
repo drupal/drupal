@@ -630,8 +630,14 @@ function drupal_install_system($install_state) {
 
   $system_path = drupal_get_path('module', 'system');
   require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';
+
+  // Set the schema version to the number of the last update provided by the
+  // module, or the minimum core schema version.
+  $system_version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
   $system_versions = drupal_get_schema_versions('system');
-  $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
+  if ($system_versions) {
+    $system_version = max(max($system_versions), $system_version);
+  }
   \Drupal::keyValue('system.schema')->set('system', $system_version);
 
   // System module needs to be enabled and the system/module lists need to be

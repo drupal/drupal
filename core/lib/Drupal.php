@@ -87,6 +87,11 @@ class Drupal {
   const CORE_COMPATIBILITY = '8.x';
 
   /**
+   * Core minimum schema version.
+   */
+  const CORE_MINIMUM_SCHEMA_VERSION = 8000;
+
+  /**
    * The currently active container object.
    *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface

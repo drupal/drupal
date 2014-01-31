@@ -13,24 +13,3 @@ function syslog_install() {
   // to be set dynamically during installation.
   \Drupal::config('syslog.settings')->set('facility', defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER)->save();
 }
-
-/**
- * @addtogroup updates-7.x-to-8.x
- * @{
- */
-
-/**
- * Update settings to the new configuration system.
- **/
-function syslog_update_8000() {
-  update_variables_to_config('syslog.settings', array(
-    'syslog_identity' => 'identity',
-    'syslog_facility' => 'facility',
-    'syslog_format' => 'format',
-  ));
-}
-
-/**
- * @} End of "addtogroup updates-7.x-to-8.x".
- * The next series of updates should start at 9000.
- */

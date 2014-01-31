@@ -14,6 +14,7 @@
  * back to its original state!
  */
 
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Update\Form\UpdateScriptSelectionForm;
 use Symfony\Component\HttpFoundation\Request;
@@ -285,53 +286,6 @@ function update_task_list($active = NULL) {
   drupal_add_region_content('sidebar_first', drupal_render($task_list));
 }
 
-/**
- * Returns and stores extra requirements that apply during the update process.
- */
-function update_extra_requirements($requirements = NULL) {
-  static $extra_requirements = array();
-  if (isset($requirements)) {
-    $extra_requirements += $requirements;
-  }
-  return $extra_requirements;
-}
-
-/**
- * Checks update requirements and reports errors and (optionally) warnings.
- *
- * @param $skip_warnings
- *   (optional) If set to TRUE, requirement warnings will be ignored, and a
- *   report will only be issued if there are requirement errors. Defaults to
- *   FALSE.
- */
-function update_check_requirements($skip_warnings = FALSE) {
-  // Check requirements of all loaded modules.
-  $requirements = \Drupal::moduleHandler()->invokeAll('requirements', array('update'));
-  $requirements += update_extra_requirements();
-  $severity = drupal_requirements_severity($requirements);
-
-  // If there are errors, always display them. If there are only warnings, skip
-  // them if the caller has indicated they should be skipped.
-  if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$skip_warnings)) {
-    update_task_list('requirements');
-    drupal_set_title('Requirements problem');
-    $status = array(
-      '#theme' => 'status_report',
-      '#requirements' => $requirements,
-    );
-    $status_report = drupal_render($status);
-    $status_report .= 'Check the messages and <a href="' . check_url(drupal_requirements_url($severity)) . '">try again</a>.';
-    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-    $maintenance_page = array(
-      '#theme' => 'maintenance_page',
-      '#content' => $status_report,
-    );
-    print drupal_render($maintenance_page);
-    exit();
-  }
-}
-
-
 // Some unavoidable errors happen because the database is not yet up-to-date.
 // Our custom error handler is not yet installed, so we just suppress them.
 ini_set('display_errors', FALSE);
@@ -343,12 +297,43 @@ require_once __DIR__ . '/includes/update.inc';
 require_once __DIR__ . '/includes/common.inc';
 require_once __DIR__ . '/includes/file.inc';
 require_once __DIR__ . '/includes/unicode.inc';
+require_once __DIR__ . '/includes/install.inc';
 require_once __DIR__ . '/includes/schema.inc';
-update_prepare_d8_bootstrap();
+// Bootstrap to configuration.
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+// Bootstrap the database.
+require_once __DIR__ . '/includes/database.inc';
+
+// Updating from a site schema version prior to 8000 should block the update
+// process. Ensure that the site is not attempting to update a database
+// created in a previous version of Drupal.
+if (db_table_exists('system')) {
+  $system_schema = db_query('SELECT schema_version FROM {system} WHERE name = :system', array(':system' => 'system'))->fetchField();
+  if ($system_schema < \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
+    print 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must <a href="https://drupal.org/node/2179269">migrate your site to Drupal 8</a> first.';
+    exit;
+  }
+}
+
+// Enable UpdateServiceProvider service overrides.
+// @see update_flush_all_caches()
+$GLOBALS['conf']['container_service_providers']['UpdateServiceProvider'] = 'Drupal\Core\DependencyInjection\UpdateServiceProvider';
+$GLOBALS['conf']['update_service_provider_overrides'] = TRUE;
+
+// module.inc is not yet loaded but there are calls to module_config_sort()
+// below.
+require_once __DIR__ . '/includes/module.inc';
+
+$settings = settings()->getAll();
+new Settings($settings);
+$kernel = new DrupalKernel('update', drupal_classloader(), FALSE);
+$kernel->boot();
+$request = Request::createFromGlobals();
+\Drupal::getContainer()->set('request', $request);
 
 // Determine if the current user has access to run update.php.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
-$request = \Drupal::request();
 
 require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
 drupal_session_initialize();
@@ -382,16 +367,14 @@ if (is_null($op) && update_access_allowed()) {
 
   // Check the update requirements for Drupal. Only report on errors at this
   // stage, since the real requirements check happens further down.
+  // The request will exit() if any requirement violations are reported in the
+  // following function invocation.
   update_check_requirements(TRUE);
 
   // Redirect to the update information page if all requirements were met.
   install_goto('core/update.php?op=info');
 }
 
-// Allow update_fix_d8_requirements() to run before code that can break on a
-// Drupal 7 database.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
-update_fix_d8_requirements();
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 

@@ -42,7 +42,7 @@ class UpdateModuleHandler extends ModuleHandler {
       // Forms do not render without the basic elements in
       // drupal_common_theme() called from system_theme().
       case 'theme':
-      // user_update_8011() uses public:// to create the image style directory.
+      // Allow access to stream wrappers.
       case 'stream_wrappers':
         return array('system');
 
@@ -71,10 +71,7 @@ class UpdateModuleHandler extends ModuleHandler {
     $schema_store = \Drupal::keyValue('system.schema');
     $old_schema = array();
     foreach ($module_list as $module) {
-      // Check for initial schema and install it. The schema version of a newly
-      // installed module is always 0. Using 8000 here would be inconsistent
-      // since $module_update_8000() may involve a schema change, and we want
-      // to install the schema as it was before any updates were added.
+      // Check for initial schema and install it.
       module_load_install($module);
       $function = $module . '_schema_0';
       if (function_exists($function)) {

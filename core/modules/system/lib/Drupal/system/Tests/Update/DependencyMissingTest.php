@@ -19,7 +19,7 @@ class DependencyMissingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('update_test_2');
+  public static $modules = array('update_test_0', 'update_test_2');
 
   public static function getInfo() {
     return array(
@@ -38,11 +38,11 @@ class DependencyMissingTest extends WebTestBase {
 
   function testMissingUpdate() {
     $starting_updates = array(
-      'update_test_2' => 8000,
+      'update_test_2' => 8001,
     );
     $update_graph = update_resolve_dependencies($starting_updates);
-    $this->assertTrue($update_graph['update_test_2_update_8000']['allowed'], "The module's first update function is allowed to run, since it does not have any missing dependencies.");
-    $this->assertFalse($update_graph['update_test_2_update_8001']['allowed'], "The module's second update function is not allowed to run, since it has a direct dependency on a missing update.");
-    $this->assertFalse($update_graph['update_test_2_update_8002']['allowed'], "The module's third update function is not allowed to run, since it has an indirect dependency on a missing update.");
+    $this->assertTrue($update_graph['update_test_2_update_8001']['allowed'], "The module's first update function is allowed to run, since it does not have any missing dependencies.");
+    $this->assertFalse($update_graph['update_test_2_update_8002']['allowed'], "The module's second update function is not allowed to run, since it has a direct dependency on a missing update.");
+    $this->assertFalse($update_graph['update_test_2_update_8003']['allowed'], "The module's third update function is not allowed to run, since it has an indirect dependency on a missing update.");
   }
 }

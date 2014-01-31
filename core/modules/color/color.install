@@ -37,31 +37,3 @@ function color_requirements($phase) {
 
   return $requirements;
 }
-
-/**
- * Converts variables to config.
- */
-function color_update_8001() {
-  $themes  = db_select('variable', 'v')
-    ->fields('v', array('name'))
-    ->condition('v.name', db_like('color_') . '%' . db_like('_palette'), 'LIKE')
-    ->execute()
-    ->fetchAllAssoc('name');
-
-  foreach ($themes as $theme_palette => $theme) {
-    // Get theme name from color palette variable.
-    preg_match('/color_(.*)_palette/', $theme_palette, $matches);
-    $theme_key = $matches[1];
-    $config = \Drupal::config('color.' . $theme_key);
-    $config->set('palette', update_variable_get('color_' . $theme_key . '_palette'));
-    $config->set('logo', update_variable_get('color_' . $theme_key . '_logo'));
-    $config->set('stylesheets', update_variable_get('color_' . $theme_key . '_stylesheets'));
-    $config->set('files', update_variable_get('color_' . $theme_key . '_files'));
-    // Screenshot is optional.
-    if (update_variable_get('color_' . $theme_key . '_screenshot')) {
-      $config->set('screenshot', update_variable_get('color_' . $theme_key . '_screenshot'));
-    }
-    $config->save();
-  }
-}
-

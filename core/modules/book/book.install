@@ -56,26 +56,3 @@ function book_schema() {
 
   return $schema;
 }
-
-/**
- * Move the Book module settings from variables to config.
- *
- * @ingroup config_upgrade
- */
-function book_update_8000() {
-  update_variables_to_config('book.settings', array(
-    'book_child_type' => 'child_type',
-    'book_block_mode' => 'block.navigation.mode',
-  ));
-  $allowed_types = update_variable_get('book_allowed_types', FALSE);
-  if ($allowed_types) {
-    // Ensure consistent ordering of allowed_types.
-    // @see book_admin_settings_submit()
-    sort($allowed_types);
-
-    \Drupal::config('book.settings')
-      ->set('allowed_types', $allowed_types)
-      ->save();
-  }
-
-}
