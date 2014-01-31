@@ -38,17 +38,13 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
-    // We let the Field API handles multiple values for us, only take care of
-    // the one matching our delta.
+  protected function getEntityIds(FieldItemListInterface $items, $delta) {
+    // The autocomplete widget outputs one entity label per form element.
     if (isset($items[$delta])) {
-      $items->setValue(array($items[$delta]->getValue()));
-    }
-    else {
-      $items->setValue(array());
+      return array($items[$delta]->target_id);
     }
 
-    return parent::formElement($items, $delta, $element, $form, $form_state);
+    return array();
   }
 
   /**

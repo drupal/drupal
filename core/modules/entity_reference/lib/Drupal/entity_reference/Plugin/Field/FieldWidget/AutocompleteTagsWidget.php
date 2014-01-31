@@ -45,8 +45,13 @@ class AutocompleteTagsWidget extends AutocompleteWidgetBase {
       foreach (drupal_explode_tags($element['#value']) as $input) {
         $match = FALSE;
 
-        // Take "label (entity id)', match the id from parenthesis.
+        // Take "label (entity id)', match the ID from parenthesis when it's a
+        // number.
         if (preg_match("/.+\((\d+)\)/", $input, $matches)) {
+          $match = $matches[1];
+        }
+        // Match the ID when it's a string (e.g. for config entity types).
+        elseif (preg_match("/.+\(([\w.]+)\)/", $input, $matches)) {
           $match = $matches[1];
         }
         else {
