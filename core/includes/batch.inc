@@ -243,7 +243,7 @@ function _batch_process() {
     $finished = 1;
 
     if ($item = $queue->claimItem()) {
-      list($function, $args) = $item->data;
+      list($callback, $args) = $item->data;
 
       // Build the 'context' array and execute the function call.
       $batch_context = array(
@@ -252,7 +252,7 @@ function _batch_process() {
         'finished' => &$finished,
         'message'  => &$task_message,
       );
-      call_user_func_array($function, array_merge($args, array(&$batch_context)));
+      call_user_func_array($callback, array_merge($args, array(&$batch_context)));
 
       if ($finished >= 1) {
         // Make sure this step is not counted twice when computing $current.
@@ -383,10 +383,10 @@ function _batch_next_set() {
   if (isset($batch['sets'][$batch['current_set'] + 1])) {
     $batch['current_set']++;
     $current_set = &_batch_current_set();
-    if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && is_callable($function)) {
+    if (isset($current_set['form_submit']) && ($callback = $current_set['form_submit']) && is_callable($callback)) {
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
-      call_user_func_array($function, array($batch['form_state']['complete_form'], &$batch['form_state']));
+      call_user_func_array($callback, array($batch['form_state']['complete_form'], &$batch['form_state']));
     }
     return TRUE;
   }
@@ -408,7 +408,7 @@ function _batch_finished() {
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {
         include_once DRUPAL_ROOT . '/' . $batch_set['file'];
       }
-      if (function_exists($batch_set['finished'])) {
+      if (is_callable($batch_set['finished'])) {
         $queue = _batch_queue($batch_set);
         $operations = $queue->getAllItems();
         $batch_set['finished']($batch_set['success'], $batch_set['results'], $operations, format_interval($batch_set['elapsed'] / 1000));
@@ -464,11 +464,11 @@ function _batch_finished() {
     if (!empty($_batch['form_state']['rebuild'])) {
       $_SESSION['batch_form_state'] = $_batch['form_state'];
     }
-    $function = $_batch['redirect_callback'];
-    if (function_exists($function)) {
-      $function($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
+    $callback = $_batch['redirect_callback'];
+    if (is_callable($callback)) {
+      $callback($_batch['source_url'], array('query' => array('op' => 'finish', 'id' => $_batch['id'])));
     }
-    elseif ($function === NULL) {
+    elseif ($callback === NULL) {
       // Default to RedirectResponse objects when nothing specified.
       $url = url($_batch['source_url'], array(
         'absolute' => TRUE,
