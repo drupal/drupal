@@ -8,6 +8,7 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\SortArray;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -70,8 +71,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     // If the widget is handling multiple values (e.g Options), or if we are
     // displaying an individual element, just get a single form element and make
     // it the $delta value.
-    $definition = $this->getPluginDefinition();
-    if (isset($get_delta) || $definition['multiple_values']) {
+    if ($this->handlesMultipleValues() || isset($get_delta)) {
       $delta = isset($get_delta) ? $get_delta : 0;
       $element = array(
         '#title' => check_plain($this->fieldDefinition->getLabel()),
@@ -278,44 +278,38 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $values = NestedArray::getValue($form_state['values'], $path, $key_exists);
 
     if ($key_exists) {
-      // Remove the 'value' of the 'add more' button.
-      unset($values['add_more']);
+      // Account for drag-and-drop reordering if needed.
+      if (!$this->handlesMultipleValues()) {
+        // Remove the 'value' of the 'add more' button.
+        unset($values['add_more']);
 
-      // Let the widget turn the submitted values into actual field values.
-      // Make sure the '_weight' entries are persisted in the process.
-      $weights = array();
-      // Check that $values[0] is an array, because if it's a string, then in
-      // PHP 5.3, ['_weight'] returns the first character.
-      if (isset($values[0]) && is_array($values[0]) && isset($values[0]['_weight'])) {
-        foreach ($values as $delta => $value) {
-          $weights[$delta] = $value['_weight'];
+        // The original delta, before drag-and-drop reordering, is needed to
+        // route errors to the corect form element.
+        foreach ($values as $delta => &$value) {
+          $value['_original_delta'] = $delta;
         }
-      }
-      $items->setValue($this->massageFormValues($values, $form, $form_state));
 
-      foreach ($items as $delta => $item) {
-        // Put back the weight.
-        if (isset($weights[$delta])) {
-          $item->_weight = $weights[$delta];
-        }
-        // The tasks below are going to reshuffle deltas. Keep track of the
-        // original deltas for correct reporting of errors in flagErrors().
-        $item->_original_delta = $delta;
+        usort($values, function ($a, $b) {
+          return SortArray::sortByKeyInt($a, $b, '_weight');
+        });
       }
 
-      // Account for drag-n-drop reordering.
-      $this->sortItems($items);
+      // Let the widget massage the submitted values.
+      $values = $this->massageFormValues($values, $form, $form_state);
 
-      // Remove empty values.
+      // Assign the values and remove the empty ones.
+      $items->setValue($values);
       $items->filterEmptyItems();
 
       // Put delta mapping in $form_state, so that flagErrors() can use it.
       $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
       foreach ($items as $delta => $item) {
-        $field_state['original_deltas'][$delta] = $item->_original_delta;
-        unset($item->_original_delta);
+        $field_state['original_deltas'][$delta] = isset($item->_original_delta) ? $item->_original_delta : $delta;
+        unset($item->_original_delta, $item->_weight);
       }
       field_form_set_state($form['#parents'], $field_name, $form_state, $field_state);
+
+      return;
     }
   }
 
@@ -348,8 +342,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
 
       // Only set errors if the element is accessible.
       if (!isset($element['#access']) || $element['#access']) {
-        $definition = $this->getPluginDefinition();
-        $is_multiple = $definition['multiple_values'];
+        $handles_multiple = $this->handlesMultipleValues();
 
         $violations_by_delta = array();
         foreach ($field_state['constraint_violations'] as $violation) {
@@ -368,7 +361,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           // Pass violations to the main element:
           // - if this is a multiple-value widget,
           // - or if the violations are at the ItemList level.
-          if ($is_multiple || $delta === NULL) {
+          if ($handles_multiple || $delta === NULL) {
             $delta_element = $element;
           }
           // Otherwise, pass errors by delta to the corresponding sub-element.
@@ -420,28 +413,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   }
 
   /**
-   * Sorts submitted field values according to drag-n-drop reordering.
-   *
-   * @param \Drupal\Core\Field\FieldItemListInterface $items
-   *   The field values.
-   */
-  protected function sortItems(FieldItemListInterface $items) {
-    if ($this->fieldDefinition->isMultiple() && isset($items[0]->_weight)) {
-      $itemValues = $items->getValue(TRUE);
-      usort($itemValues, function ($a, $b) {
-        $a_weight = (is_array($a) ? $a['_weight'] : 0);
-        $b_weight = (is_array($b) ? $b['_weight'] : 0);
-        return $a_weight - $b_weight;
-      });
-      $items->setValue($itemValues);
-      // Remove the '_weight' entries.
-      foreach ($items as $item) {
-        unset($item->_weight);
-      }
-    }
-  }
-
-  /**
    * Returns the array of field settings.
    *
    * @return array
@@ -462,6 +433,18 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    */
   protected function getFieldSetting($setting_name) {
     return $this->fieldDefinition->getSetting($setting_name);
+  }
+
+  /**
+   * Returns whether the widget handles multiple values.
+   *
+   * @return bool
+   *   TRUE if a single copy of formElement() can handle multiple field values,
+   *   FALSE if multiple values require separate copies of formElement().
+   */
+  protected function handlesMultipleValues() {
+    $definition = $this->getPluginDefinition();
+    return $definition['multiple_values'];
   }
 
 }
