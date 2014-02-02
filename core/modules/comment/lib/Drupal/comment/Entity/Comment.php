@@ -442,7 +442,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setComputed(TRUE);
 
     $item_definition = $fields['field_name']->getItemDefinition();
-    $item_definition->setClass('\Drupal\comment\CommentFieldName');
+    $item_definition->setClass('\Drupal\comment\CommentFieldNameItem');
     $fields['field_name']->setItemDefinition($item_definition);
 
     return $fields;

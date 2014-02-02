@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\shortcut\ShortcutPath.
+ * Contains \Drupal\comment\CommentFieldNameItem.
  */
 
-namespace Drupal\shortcut;
+namespace Drupal\comment;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * The field item for the 'path' field.
+ * The field item for the 'fieldname' field.
  */
-class ShortcutPath extends StringItem {
+class CommentFieldNameItem extends StringItem {
 
   /**
    * Definitions of the contained properties.
@@ -28,11 +28,12 @@ class ShortcutPath extends StringItem {
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
+
     if (!isset(static::$propertyDefinitions)) {
       static::$propertyDefinitions['value'] = DataDefinition::create('string')
         ->setLabel(t('String value'))
-        ->setComputed(TRUE)
-        ->setClass('\Drupal\shortcut\ShortcutPathValue');
+        ->setClass('\Drupal\comment\CommentFieldNameValue')
+        ->setComputed(TRUE);
     }
     return static::$propertyDefinitions;
   }

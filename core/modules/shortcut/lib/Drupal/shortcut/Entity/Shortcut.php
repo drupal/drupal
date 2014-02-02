@@ -182,7 +182,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setComputed(TRUE);
 
     $item_definition = $fields['path']->getItemDefinition();
-    $item_definition->setClass('\Drupal\shortcut\ShortcutPath');
+    $item_definition->setClass('\Drupal\shortcut\ShortcutPathItem');
     $fields['path']->setItemDefinition($item_definition);
 
     return $fields;
