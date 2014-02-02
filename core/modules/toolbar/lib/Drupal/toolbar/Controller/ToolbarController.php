@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\toolbar\Routing\ToolbarController.
+ * Contains \Drupal\toolbar\Controller\ToolbarController.
  */
 
-namespace Drupal\toolbar\Routing;
+namespace Drupal\toolbar\Controller;
 
 use Drupal\Core\Access\AccessInterface;
 use Drupal\Core\Controller\ControllerBase;
