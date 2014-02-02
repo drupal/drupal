@@ -721,7 +721,7 @@ abstract class HandlerBase extends PluginBase {
       return $views_data['table']['entity type'];
     }
     else {
-      throw new \Exception(format_string('No entity type for field @field on view @view', array('@field' => $this->options['id'], '@view' => $this->view->storage->id())));
+      throw new \Exception(String::format('No entity type for field @field on view @view', array('@field' => $this->options['id'], '@view' => $this->view->storage->id())));
     }
   }
 

@@ -206,14 +206,6 @@ function node_views_data() {
     );
   }
 
-  $data['node']['node_bulk_form'] = array(
-    'title' => t('Node operations bulk form'),
-    'help' => t('Add a form element that lets you run operations on multiple nodes.'),
-    'field' => array(
-      'id' => 'node_bulk_form',
-    ),
-  );
-
   $data['node']['view_node'] = array(
     'field' => array(
       'title' => t('Link to content'),
@@ -628,6 +620,19 @@ function node_views_data() {
   );
 
   return $data;
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function node_views_data_alter(&$data) {
+  $data['node']['node_bulk_form'] = array(
+    'title' => t('Node operations bulk form'),
+    'help' => t('Add a form element that lets you run operations on multiple nodes.'),
+    'field' => array(
+      'id' => 'node_bulk_form',
+    ),
+  );
 }
 
 /**

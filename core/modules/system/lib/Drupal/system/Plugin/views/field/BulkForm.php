@@ -2,21 +2,32 @@
 
 /**
  * @file
- * Contains \Drupal\system\Plugin\views\field\BulkFormBase.
+ * Contains \Drupal\system\Plugin\views\field\BulkForm.
  */
 
 namespace Drupal\system\Plugin\views\field;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\style\Table;
 use Drupal\views\ResultRow;
+use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a generic bulk operation form element.
+ * Defines a actions-based bulk operation form element.
+ *
+ * @PluginID("bulk_form")
  */
-abstract class BulkFormBase extends FieldPluginBase {
+class BulkForm extends FieldPluginBase {
+
+  /**
+   * The action storage controller.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $actionStorage;
 
   /**
    * An array of actions that can be executed.
@@ -26,11 +37,55 @@ abstract class BulkFormBase extends FieldPluginBase {
   protected $actions = array();
 
   /**
+   * Constructs a new BulkForm object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
+   *   The action storage controller.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityStorageControllerInterface $storage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->actionStorage = $storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity.manager')->getStorageController('action'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
+    $entity_type = $this->getEntityType();
+    // Filter the actions to only include those for this entity type.
+    $this->actions = array_filter($this->actionStorage->loadMultiple(), function ($action) use ($entity_type) {
+      return $action->getType() == $entity_type;
+    });
+  }
+
+  /**
    * {@inheritdoc }
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['action_title'] = array('default' => 'With selection', 'translatable' => TRUE);
+    $options['include_exclude'] = array(
+      'default' => 'exclude',
+    );
+    $options['selected_actions'] = array(
+      'default' => array(),
+    );
     return $options;
   }
 
@@ -45,33 +100,32 @@ abstract class BulkFormBase extends FieldPluginBase {
       '#description' => t('The title shown above the actions dropdown.'),
     );
 
+    $form['include_exclude'] = array(
+      '#type' => 'radios',
+      '#title' => t('Available actions'),
+      '#options' => array(
+        'exclude' => t('All actions, except selected'),
+        'include' => t('Only selected actions'),
+      ),
+      '#default_value' => $this->options['include_exclude'],
+    );
+    $form['selected_actions'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Selected actions'),
+      '#options' => $this->getBulkOptions(FALSE),
+      '#default_value' => $this->options['selected_actions'],
+    );
+
     parent::buildOptionsForm($form, $form_state);
-  }
-
-
-  /**
-   * Constructs a new BulkForm object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
-   * @param array $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
-   *   The entity manager.
-   */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManagerInterface $manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->actions = $manager->getStorageController('action')->loadMultiple();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('entity.manager'));
+  public function validateOptionsForm(&$form, &$form_state) {
+    parent::validateOptionsForm($form, $form_state);
+
+    $form_state['values']['options']['selected_actions'] = array_filter($form_state['values']['options']['selected_actions']);
   }
 
   /**
@@ -96,6 +150,7 @@ abstract class BulkFormBase extends FieldPluginBase {
       $this->options['label'] = '';
     }
   }
+
 
   /**
    * Form constructor for the bulk form.
@@ -156,13 +211,33 @@ abstract class BulkFormBase extends FieldPluginBase {
   /**
    * Returns the available operations for this form.
    *
+   * @param bool $filtered
+   *   (optional) Whether to filter actions to selected actions.
    * @return array
    *   An associative array of operations, suitable for a select element.
    */
-  protected function getBulkOptions() {
-    return array_map(function ($action) {
-      return $action->label();
-    }, $this->actions);
+  protected function getBulkOptions($filtered = TRUE) {
+    $options = array();
+    // Filter the action list.
+    foreach ($this->actions as $id => $action) {
+      if ($filtered) {
+        $in_selected = in_array($id, $this->options['selected_actions']);
+        // If the field is configured to include only the selected actions,
+        // skip actions that were not selected.
+        if (($this->options['include_exclude'] == 'include') && !$in_selected) {
+          continue;
+        }
+        // Otherwise, if the field is configured to exclude the selected
+        // actions, skip actions that were selected.
+        elseif (($this->options['include_exclude'] == 'exclude') && $in_selected) {
+          continue;
+        }
+      }
+
+      $options[$id] = $action->label();
+    }
+
+    return $options;
   }
 
   /**
@@ -190,6 +265,35 @@ abstract class BulkFormBase extends FieldPluginBase {
       if (!empty($operation_definition['confirm_form_path'])) {
         $form_state['redirect'] = $operation_definition['confirm_form_path'];
       }
+
+      $count = count(array_filter($form_state['values'][$this->options['id']]));
+      $action = $this->actions[$form_state['values']['action']];
+      if ($count) {
+        drupal_set_message($this->translationManager()->formatPlural($count, '%action was applied to @count item.', '%action was applied to @count items.', array(
+          '%action' => $action->label(),
+        )));
+      }
+
+    }
+  }
+
+  /**
+   * Returns the message to be displayed when there are no selected items.
+   *
+   * @return string
+   *  Message displayed when no items are selected.
+   */
+  protected function emptySelectedMessage() {
+    return t('No items selected.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function viewsFormValidate(&$form, &$form_state) {
+    $selected = array_filter($form_state['values'][$this->options['id']]);
+    if (empty($selected)) {
+      form_set_error('', $form_state, $this->emptySelectedMessage());
     }
   }
 

@@ -58,8 +58,8 @@ class BulkFormTest extends WebTestBase {
     // Make sure a checkbox appears on all rows.
     $edit = array();
     for ($i = 0; $i < 10; $i++) {
-      $this->assertFieldById('edit-action-bulk-form-' . $i, NULL, format_string('The checkbox on row @row appears.', array('@row' => $i)));
-      $edit["action_bulk_form[$i]"] = TRUE;
+      $this->assertFieldById('edit-node-bulk-form-' . $i, NULL, format_string('The checkbox on row @row appears.', array('@row' => $i)));
+      $edit["node_bulk_form[$i]"] = TRUE;
     }
 
     // Set all nodes to sticky and check that.
@@ -77,7 +77,7 @@ class BulkFormTest extends WebTestBase {
     $node = node_load($nodes[0]->id());
     $this->assertTrue($node->isPublished(), 'The node is published.');
 
-    $edit = array('action_bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action');
+    $edit = array('node_bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action');
     $this->drupalPostForm(NULL, $edit, t('Apply'));
 
     $this->assertText('Unpublish content was applied to 1 item.');
@@ -93,9 +93,9 @@ class BulkFormTest extends WebTestBase {
     // Set up to include just the sticky actions.
     $view = views_get_view('test_bulk_form');
     $display = &$view->storage->getDisplay('default');
-    $display['display_options']['fields']['action_bulk_form']['include_exclude'] = 'include';
-    $display['display_options']['fields']['action_bulk_form']['selected_actions']['node_make_sticky_action'] = 'node_make_sticky_action';
-    $display['display_options']['fields']['action_bulk_form']['selected_actions']['node_make_unsticky_action'] = 'node_make_unsticky_action';
+    $display['display_options']['fields']['node_bulk_form']['include_exclude'] = 'include';
+    $display['display_options']['fields']['node_bulk_form']['selected_actions']['node_make_sticky_action'] = 'node_make_sticky_action';
+    $display['display_options']['fields']['node_bulk_form']['selected_actions']['node_make_unsticky_action'] = 'node_make_unsticky_action';
     $view->save();
 
     $this->drupalGet('test_bulk_form');
@@ -107,7 +107,7 @@ class BulkFormTest extends WebTestBase {
     // Set up to exclude the sticky actions.
     $view = views_get_view('test_bulk_form');
     $display = &$view->storage->getDisplay('default');
-    $display['display_options']['fields']['action_bulk_form']['include_exclude'] = 'exclude';
+    $display['display_options']['fields']['node_bulk_form']['include_exclude'] = 'exclude';
     $view->save();
 
     $this->drupalGet('test_bulk_form');
@@ -122,7 +122,7 @@ class BulkFormTest extends WebTestBase {
     // Setup up a different bulk form title.
     $view = views_get_view('test_bulk_form');
     $display = &$view->storage->getDisplay('default');
-    $display['display_options']['fields']['action_bulk_form']['action_title'] = 'Test title';
+    $display['display_options']['fields']['node_bulk_form']['action_title'] = 'Test title';
     $view->save();
 
     $this->drupalGet('test_bulk_form');
