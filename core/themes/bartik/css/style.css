@@ -1427,20 +1427,6 @@ input.form-submit:focus {
   color: #717171;
 }
 
-/* Animated throbber */
-.js input.form-autocomplete {
-  background-position: 100% 4px; /* LTR */
-}
-.js[dir="rtl"] input.form-autocomplete {
-  background-position: 1% 4px;
-}
-.js input.form-autocomplete.ui-autocomplete-loading {
-  background-position: 100% -16px; /* LTR */
-}
-.js[dir="rtl"] input.form-autocomplete.ui-autocomplete-loading {
-  background-position: 1% -16px;
-}
-
 /* Comment form */
 .comment-form label {
   float: left; /* LTR */
