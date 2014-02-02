@@ -1055,7 +1055,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . $this->t('Aggregation settings') . '</span>', "admin/structure/views/nojs/handler-group/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => $this->t('Aggregation settings')), 'html' => TRUE));
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . $this->t('Aggregation settings') . '</span>', "admin/structure/views/nojs/handler-group/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Aggregation settings')), 'html' => TRUE));
       }
 
       if ($handler->hasExtraOptions()) {
