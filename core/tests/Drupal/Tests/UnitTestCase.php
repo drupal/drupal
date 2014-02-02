@@ -8,6 +8,7 @@
 namespace Drupal\Tests;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
@@ -38,7 +39,9 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     // PHP does not allow us to declare this method as abstract public static,
     // so we simply throw an exception here if this has not been implemented by
     // a child class.
-    throw new \RuntimeException("Sub-class must implement the getInfo method!");
+    throw new \RuntimeException(String::format('@class must implement \Drupal\Tests\UnitTestCase::getInfo().', array(
+      '@class' => get_called_class(),
+    )));
   }
 
   /**

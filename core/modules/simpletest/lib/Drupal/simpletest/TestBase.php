@@ -198,7 +198,9 @@ abstract class TestBase {
     // PHP does not allow us to declare this method as abstract public static,
     // so we simply throw an exception here if this has not been implemented by
     // a child class.
-    throw new \RuntimeException("Sub-class must implement the getInfo method!");
+    throw new \RuntimeException(String::format('@class must implement \Drupal\simpletest\TestBase::getInfo().', array(
+      '@class' => get_called_class(),
+    )));
   }
 
   /**
