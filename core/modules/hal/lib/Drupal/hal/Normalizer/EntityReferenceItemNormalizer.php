@@ -7,6 +7,8 @@
 
 namespace Drupal\hal\Normalizer;
 
+use Drupal\rest\LinkManager\LinkManagerInterface;
+use Drupal\serialization\EntityResolver\EntityResolverInterface;
 use Drupal\serialization\EntityResolver\UuidReferenceInterface;
 
 /**
@@ -20,6 +22,33 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
    * @var string
    */
   protected $supportedInterfaceOrClass = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+
+  /**
+   * The hypermedia link manager.
+   *
+   * @var \Drupal\rest\LinkManager\LinkManagerInterface
+   */
+  protected $linkManager;
+
+  /**
+   * The entity resolver.
+   *
+   * @var \Drupal\serialization\EntityResolver\EntityResolverInterface
+   */
+  protected $entityResolver;
+
+  /**
+   * Constructs an EntityReferenceItemNormalizer object.
+   *
+   * @param \Drupal\rest\LinkManager\LinkManagerInterface $link_manager
+   *   The hypermedia link manager.
+   * @param \Drupal\serialization\EntityResolver\EntityResolverInterface $entity_Resolver
+   *   The entity resolver.
+   */
+  public function __construct(LinkManagerInterface $link_manager, EntityResolverInterface $entity_Resolver) {
+    $this->linkManager = $link_manager;
+    $this->entityResolver = $entity_Resolver;
+  }
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()

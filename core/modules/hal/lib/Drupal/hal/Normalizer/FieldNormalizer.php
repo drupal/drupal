@@ -8,8 +8,6 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Language\Language;
-
 use Symfony\Component\Serializer\Exception\LogicException;
 
 /**

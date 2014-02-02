@@ -8,8 +8,8 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Language\Language;
+use Drupal\rest\LinkManager\LinkManagerInterface;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
@@ -23,6 +23,23 @@ class EntityNormalizer extends NormalizerBase {
    * @var string
    */
   protected $supportedInterfaceOrClass = 'Drupal\Core\Entity\EntityInterface';
+
+  /**
+   * The hypermedia link manager.
+   *
+   * @var \Drupal\rest\LinkManager\LinkManagerInterface
+   */
+  protected $linkManager;
+
+  /**
+   * Constructs an EntityNormalizer object.
+   *
+   * @param \Drupal\rest\LinkManager\LinkManagerInterface $link_manager
+   *   The hypermedia link manager.
+   */
+  public function __construct(LinkManagerInterface $link_manager) {
+    $this->linkManager = $link_manager;
+  }
 
   /**
    * Implements \Symfony\Component\Serializer\Normalizer\NormalizerInterface::normalize()

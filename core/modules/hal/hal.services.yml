@@ -1,29 +1,22 @@
 services:
   serializer.normalizer.entity_reference_item.hal:
     class: Drupal\hal\Normalizer\EntityReferenceItemNormalizer
+    arguments: ['@rest.link_manager', '@serializer.entity_resolver']
     tags:
       - { name: normalizer, priority: 10 }
-    calls:
-      - [setLinkManager, ['@rest.link_manager']]
-      - [setEntityResolver, ['@serializer.entity_resolver']]
   serializer.normalizer.field_item.hal:
     class: Drupal\hal\Normalizer\FieldItemNormalizer
     tags:
       - { name: normalizer, priority: 10 }
-    calls:
-      - [setLinkManager, ['@rest.link_manager']]
   serializer.normalizer.field.hal:
     class: Drupal\hal\Normalizer\FieldNormalizer
     tags:
       - { name: normalizer, priority: 10 }
-    calls:
-      - [setLinkManager, ['@rest.link_manager']]
   serializer.normalizer.entity.hal:
     class: Drupal\hal\Normalizer\EntityNormalizer
+    arguments: ['@rest.link_manager']
     tags:
       - { name: normalizer, priority: 10 }
-    calls:
-      - [setLinkManager, ['@rest.link_manager']]
   serializer.encoder.hal:
     class: Drupal\hal\Encoder\JsonEncoder
     tags:
