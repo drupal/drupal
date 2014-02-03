@@ -10,7 +10,6 @@ namespace Drupal\config_translation\Controller;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
@@ -25,7 +24,7 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 /**
  * Provides page callbacks for the configuration translation interface.
  */
-class ConfigTranslationController extends ControllerBase implements ContainerInjectionInterface {
+class ConfigTranslationController extends ControllerBase {
 
   /**
    * The configuration mapper manager.

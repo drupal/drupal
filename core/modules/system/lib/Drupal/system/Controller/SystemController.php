@@ -9,7 +9,6 @@ namespace Drupal\system\Controller;
 
 use Drupal\Component\Utility\Json;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -20,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Returns responses for System routes.
  */
-class SystemController extends ControllerBase implements ContainerInjectionInterface {
+class SystemController extends ControllerBase {
 
   /**
    * The entity query factory object.

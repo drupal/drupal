@@ -7,22 +7,14 @@
 
 namespace Drupal\update\Controller;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\update\UpdateManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Controller\ControllerBase;
 
 /**
  * Controller routines for update routes.
  */
-class UpdateController implements ContainerInjectionInterface {
-
-  /**
-   * Module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
+class UpdateController extends ControllerBase {
 
   /**
    * Update manager service.
@@ -34,14 +26,10 @@ class UpdateController implements ContainerInjectionInterface {
   /**
    * Constructs update status data.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   Module Handler Service.
-   *
    * @param \Drupal\update\UpdateManagerInterface $update_manager
    *   Update Manager Service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, UpdateManagerInterface $update_manager) {
-    $this->moduleHandler = $module_handler;
+  public function __construct(UpdateManagerInterface $update_manager) {
     $this->updateManager = $update_manager;
   }
 
@@ -50,7 +38,6 @@ class UpdateController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('update.manager')
     );
   }
@@ -66,7 +53,7 @@ class UpdateController implements ContainerInjectionInterface {
       '#theme' => 'update_report'
     );
     if ($available = update_get_available(TRUE)) {
-      $this->moduleHandler->loadInclude('update', 'compare.inc');
+      $this->moduleHandler()->loadInclude('update', 'compare.inc');
       $build['#data'] = update_calculate_project_data($available);
     }
     else {

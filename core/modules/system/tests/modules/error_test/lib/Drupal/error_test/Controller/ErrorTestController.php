@@ -8,13 +8,12 @@ namespace Drupal\error_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for error_test routes.
  */
-class ErrorTestController extends ControllerBase implements ContainerInjectionInterface {
+class ErrorTestController extends ControllerBase {
 
   /**
    * The database connection.

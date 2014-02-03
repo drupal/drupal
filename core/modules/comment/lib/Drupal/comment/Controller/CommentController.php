@@ -12,7 +12,6 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\field\FieldInfo;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,7 +25,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  *
  * @see \Drupal\comment\Entity\Comment.
  */
-class CommentController extends ControllerBase implements ContainerInjectionInterface {
+class CommentController extends ControllerBase {
 
   /**
    * The HTTP kernel.

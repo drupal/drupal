@@ -13,7 +13,6 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\Date;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Returns responses for dblog routes.
  */
-class DbLogController extends ControllerBase implements ContainerInjectionInterface {
+class DbLogController extends ControllerBase {
 
   /**
    * The database service.

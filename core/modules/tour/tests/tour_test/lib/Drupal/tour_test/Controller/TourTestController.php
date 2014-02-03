@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\tour_test\Controller\TourTestController.
@@ -6,20 +7,10 @@
 
 namespace Drupal\tour_test\Controller;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * Controller routines for tour_test routes.
  */
-class TourTestController implements ContainerInjectionInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static();
-  }
+class TourTestController {
 
   /**
    * Outputs some content for testing tours.

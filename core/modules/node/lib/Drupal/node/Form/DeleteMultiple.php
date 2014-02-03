@@ -10,7 +10,6 @@ namespace Drupal\node\Form;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Component\Utility\String;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a node deletion confirmation form.
  */
-class DeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterface {
+class DeleteMultiple extends ConfirmFormBase {
 
   /**
    * The array of nodes to delete.

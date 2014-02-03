@@ -10,7 +10,6 @@ namespace Drupal\config_translation\Controller;
 use Drupal\Component\Utility\String;
 use Drupal\config_translation\ConfigMapperInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Groups all defined configuration mapper instances by weight.
  */
-class ConfigTranslationMapperList extends ControllerBase implements ContainerInjectionInterface {
+class ConfigTranslationMapperList extends ControllerBase {
 
   /**
    * A array of configuration mapper instances.

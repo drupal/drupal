@@ -7,20 +7,10 @@
 
 namespace Drupal\twig_extension_test;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * Controller routines for Twig extension test routes.
  */
-class TwigExtensionTestController implements ContainerInjectionInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static();
-  }
+class TwigExtensionTestController {
 
   /**
    * Menu callback for testing Twig filters in a Twig template.

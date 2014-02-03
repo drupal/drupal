@@ -8,7 +8,6 @@
 namespace Drupal\contact\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\contact\CategoryInterface;
 use Drupal\user\UserInterface;
@@ -20,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Controller routines for contact routes.
  */
-class ContactController extends ControllerBase implements ContainerInjectionInterface {
+class ContactController extends ControllerBase {
 
   /**
    * The flood service.

@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -28,7 +30,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @see \Drupal\Core\DependencyInjection\ContainerInjectionInterface
  */
-abstract class ControllerBase {
+abstract class ControllerBase implements ContainerInjectionInterface {
 
   /**
    * The entity manager.
@@ -99,6 +101,13 @@ abstract class ControllerBase {
    * @var \Drupal\Core\Form\FormBuilderInterface
    */
   protected $formBuilder;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static();
+  }
 
   /**
    * Retrieves the entity manager service.

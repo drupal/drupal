@@ -11,7 +11,6 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\field\FieldInfo;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Returns responses for comment module administrative routes.
  */
-class AdminController extends ControllerBase implements ContainerInjectionInterface {
+class AdminController extends ControllerBase {
 
   /**
    * The field info service.

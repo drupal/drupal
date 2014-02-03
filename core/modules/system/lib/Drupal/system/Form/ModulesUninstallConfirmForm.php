@@ -10,14 +10,13 @@ namespace Drupal\system\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Builds a confirmation form to uninstall selected modules.
  */
-class ModulesUninstallConfirmForm extends ConfirmFormBase implements ContainerInjectionInterface {
+class ModulesUninstallConfirmForm extends ConfirmFormBase {
 
   /**
    * The module handler service.

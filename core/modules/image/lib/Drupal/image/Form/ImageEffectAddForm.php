@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides an add form for image effects.
  */
-class ImageEffectAddForm extends ImageEffectFormBase implements ContainerInjectionInterface {
+class ImageEffectAddForm extends ImageEffectFormBase {
 
   /**
    * The image effect manager.

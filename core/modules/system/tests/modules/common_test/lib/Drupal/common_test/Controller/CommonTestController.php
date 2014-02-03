@@ -8,21 +8,12 @@
 namespace Drupal\common_test\Controller;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller routines for common_test routes.
  */
-class CommonTestController implements ContainerInjectionInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static();
-  }
+class CommonTestController {
 
   /**
    * Returns links to the current page, with and without query strings.

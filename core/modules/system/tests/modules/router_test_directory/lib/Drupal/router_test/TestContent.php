@@ -7,10 +7,8 @@
 
 namespace Drupal\router_test;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\user\UserInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -18,7 +16,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Test controllers that are intended to be wrapped in a main controller.
  */
-class TestContent extends ContainerAware implements ContainerInjectionInterface {
+class TestContent extends ControllerBase {
 
   /**
    * The HTTP kernel.
@@ -55,13 +53,13 @@ class TestContent extends ContainerAware implements ContainerInjectionInterface 
    *   The user name of the current logged in user.
    */
   public function test11() {
-    $account = \Drupal::currentUser();
+    $account = $this->currentUser();
     return $account->getUsername();
   }
 
   public function testAccount(UserInterface $user) {
-    $current_user = \Drupal::currentUser();
-    $this->container->set('current_user', $user);
+    $current_user = $this->currentUser();
+    \Drupal::getContainer()->set('current_user', $user);
     return $current_user->getUsername() . ':' . $user->getUsername();
   }
 

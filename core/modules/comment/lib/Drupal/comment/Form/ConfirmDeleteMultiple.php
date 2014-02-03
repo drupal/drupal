@@ -10,14 +10,13 @@ namespace Drupal\comment\Form;
 use Drupal\comment\CommentStorageControllerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the comment multiple delete confirmation form.
  */
-class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterface {
+class ConfirmDeleteMultiple extends ConfirmFormBase {
 
   /**
    * The comment storage.

@@ -8,55 +8,15 @@
 namespace Drupal\menu\Controller;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\menu_link\MenuLinkStorageControllerInterface;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\system\MenuInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Returns responses for Menu routes.
  */
-class MenuController implements ContainerInjectionInterface {
-
-  /**
-   * The menu link storage.
-   *
-   * @var \Drupal\menu_link\MenuLinkStorageControllerInterface
-   */
-  protected $menuLinkStorage;
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
-   * Constructs a new MenuController.
-   *
-   * @param \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage
-   *   The storage controller.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
-   */
-  public function __construct(MenuLinkStorageControllerInterface $menu_link_storage, EntityManagerInterface $entity_manager) {
-    $this->menuLinkStorage = $menu_link_storage;
-    $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager')->getStorageController('menu_link'),
-      $container->get('entity.manager')
-    );
-  }
+class MenuController extends ControllerBase {
 
   /**
    * Gets all the available menus and menu items as a JavaScript array.
@@ -89,12 +49,12 @@ class MenuController implements ContainerInjectionInterface {
    *   Returns the menu link submission form.
    */
   public function addLink(MenuInterface $menu) {
-    $menu_link = $this->menuLinkStorage->create(array(
+    $menu_link = $this->entityManager()->getStorageController('menu_link')->create(array(
       'mlid' => 0,
       'plid' => 0,
       'menu_name' => $menu->id(),
     ));
-    return $this->entityManager->getForm($menu_link);
+    return $this->entityManager()->getForm($menu_link);
   }
 
   /**

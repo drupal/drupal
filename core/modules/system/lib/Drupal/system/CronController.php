@@ -9,14 +9,13 @@ namespace Drupal\system;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\CronInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller for Cron handling.
  */
-class CronController extends ControllerBase implements ContainerInjectionInterface {
+class CronController extends ControllerBase {
 
   /**
    * The cron service.

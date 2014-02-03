@@ -9,7 +9,6 @@ namespace Drupal\aggregator\Controller;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\aggregator\FeedInterface;
 use Drupal\aggregator\ItemInterface;
 use Drupal\Core\Database\Connection;
@@ -21,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 /**
  * Returns responses for aggregator module routes.
  */
-class AggregatorController extends ControllerBase implements ContainerInjectionInterface {
+class AggregatorController extends ControllerBase {
 
   /**
    * The database connection.

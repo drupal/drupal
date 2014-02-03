@@ -7,40 +7,12 @@
 
 namespace Drupal\system\Controller;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Controller\ControllerBase;
 
 /**
  * Controller for admin section.
  */
-class AdminController implements ContainerInjectionInterface {
-
-  /**
-   * Module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Constructs an AdminController object.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   Module Handler Service.
-   */
-  public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('module_handler')
-    );
-  }
+class AdminController extends ControllerBase {
 
   /**
    * Prints a listing of admin tasks, organized by module.
@@ -82,4 +54,5 @@ class AdminController implements ContainerInjectionInterface {
 
     return $output;
   }
+
 }

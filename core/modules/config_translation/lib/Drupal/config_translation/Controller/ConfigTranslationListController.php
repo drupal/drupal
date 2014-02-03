@@ -9,14 +9,13 @@ namespace Drupal\config_translation\Controller;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Defines the configuration translation list controller.
  */
-class ConfigTranslationListController extends ControllerBase implements ContainerInjectionInterface {
+class ConfigTranslationListController extends ControllerBase {
 
   /**
    * The definition of the config mapper.

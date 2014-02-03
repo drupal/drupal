@@ -7,18 +7,16 @@
 
 namespace Drupal\entity_reference;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Controller\ControllerInterface;
 
 /**
  * Defines route controller for entity reference.
  */
-class EntityReferenceController implements ContainerInjectionInterface {
+class EntityReferenceController extends ControllerBase {
 
   /**
    * The autocomplete helper for entity references.
@@ -28,23 +26,13 @@ class EntityReferenceController implements ContainerInjectionInterface {
   protected $entityReferenceAutocomplete;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * Constructs a EntityReferenceController object.
    *
-   * @param \Drupal\entity_reference\EntityReferenceAutocomplete $entity_reference_autcompletion
+   * @param \Drupal\entity_reference\EntityReferenceAutocomplete $entity_reference_autocompletion
    *   The autocompletion helper for entity references.
-   * @param \Drupal\Core\Entity\EntityManagerInterface êntity_manager
-   *   The entity manager.
    */
-  public function __construct(EntityReferenceAutocomplete $entity_reference_autcompletion, EntityManagerInterface $entity_manager) {
-    $this->entityReferenceAutocomplete = $entity_reference_autcompletion;
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityReferenceAutocomplete $entity_reference_autocompletion) {
+    $this->entityReferenceAutocomplete = $entity_reference_autocompletion;
   }
 
   /**
@@ -86,7 +74,7 @@ class EntityReferenceController implements ContainerInjectionInterface {
       throw new AccessDeniedHttpException();
     }
 
-    $access_controller = $this->entityManager->getAccessController($entity_type);
+    $access_controller = $this->entityManager()->getAccessController($entity_type);
     if ($instance->getType() != 'entity_reference' || !$access_controller->fieldAccess('edit', $instance)) {
       throw new AccessDeniedHttpException();
     }

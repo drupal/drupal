@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\help\Controller\HelpController.
@@ -6,40 +7,14 @@
 
 namespace Drupal\help\Controller;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Component\Utility\String;
 
 /**
  * Controller routines for help routes.
  */
-class HelpController implements ContainerInjectionInterface {
-
-  /**
-   * Stores the module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Constructs a \Drupal\help\Controller\HelpController object.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   */
-  public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('module_handler'));
-  }
+class HelpController extends ControllerBase {
 
   /**
    * Prints a page listing a glossary of Drupal terminology.
@@ -52,7 +27,7 @@ class HelpController implements ContainerInjectionInterface {
       '#attached' => array(
         'css' => array(drupal_get_path('module', 'help') . '/css/help.module.css'),
       ),
-      '#markup' => '<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList(),
+      '#markup' => '<h2>' . $this->t('Help topics') . '</h2><p>' . $this->t('Help is available on the following items:') . '</p>' . $this->helpLinksAsList(),
     );
     return $output;
   }
@@ -68,8 +43,8 @@ class HelpController implements ContainerInjectionInterface {
     $module_info = system_rebuild_module_data();
 
     $modules = array();
-    foreach ($this->moduleHandler->getImplementations('help') as $module) {
-      if ($this->moduleHandler->invoke($module, 'help', array("admin/help#$module", $empty_arg))) {
+    foreach ($this->moduleHandler()->getImplementations('help') as $module) {
+      if ($this->moduleHandler()->invoke($module, 'help', array("admin/help#$module", $empty_arg))) {
         $modules[$module] = $module_info[$module]->info['name'];
       }
     }
@@ -81,7 +56,7 @@ class HelpController implements ContainerInjectionInterface {
     $output = '<div class="clearfix"><div class="help-items"><ul>';
     $i = 0;
     foreach ($modules as $module => $name) {
-      $output .= '<li>' . l($name, 'admin/help/' . $module) . '</li>';
+      $output .= '<li>' . $this->l($name, 'help.page',  array('name' => $module)) . '</li>';
       if (($i + 1) % $break == 0 && ($i + 1) != $count) {
         $output .= '</ul></div><div class="help-items' . ($i + 1 == $break * 3 ? ' help-items-last' : '') . '"><ul>';
       }
@@ -105,13 +80,13 @@ class HelpController implements ContainerInjectionInterface {
    */
   public function helpPage($name) {
     $build = array();
-    if ($this->moduleHandler->implementsHook($name, 'help')) {
+    if ($this->moduleHandler()->implementsHook($name, 'help')) {
       $info = system_get_info('module');
       $build['#title'] = String::checkPlain($info[$name]['name']);
 
-      $temp = $this->moduleHandler->invoke($name, 'help', array("admin/help#$name", drupal_help_arg()));
+      $temp = $this->moduleHandler()->invoke($name, 'help', array("admin/help#$name", drupal_help_arg()));
       if (empty($temp)) {
-        $build['top']['#markup'] = t('No help is available for module %module.', array('%module' => $info[$name]['name']));
+        $build['top']['#markup'] = $this->t('No help is available for module %module.', array('%module' => $info[$name]['name']));
       }
       else {
         $build['top']['#markup'] = $temp;
@@ -131,7 +106,7 @@ class HelpController implements ContainerInjectionInterface {
         $build['links']['#links'] = array(
           '#heading' => array(
             'level' => 'h3',
-            'text' => t('@module administration pages', array('@module' => $info[$name]['name'])),
+            'text' => $this->t('@module administration pages', array('@module' => $info[$name]['name'])),
           ),
           '#links' => $links,
         );
