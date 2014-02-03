@@ -399,17 +399,18 @@ function hook_css_alter(&$css) {
 }
 
 /**
- * Alter the commands that are sent to the user through the Ajax framework.
+ * Alter the Ajax command data that is sent to the client.
  *
- * @param $commands
- *   An array of all commands that will be sent to the user.
+ * @param \Drupal\Core\Ajax\CommandInterface[] $data
+ *   An array of all the rendered commands that will be sent to the client.
  *
- * @see ajax_render()
+ * @see \Drupal\Core\Ajax\AjaxResponse::ajaxRender()
  */
-function hook_ajax_render_alter($commands) {
+function hook_ajax_render_alter(array &$data) {
   // Inject any new status messages into the content area.
   $status_messages = array('#theme' => 'status_messages');
-  $commands[] = ajax_command_prepend('#block-system-main .content', drupal_render($status_messages));
+  $command = new \Drupal\Core\Ajax\PrependCommand('#block-system-main .content', drupal_render($status_messages));
+  $data[] = $command->render();
 }
 
 /**

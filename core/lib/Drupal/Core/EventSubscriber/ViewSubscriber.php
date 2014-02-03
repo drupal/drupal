@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Ajax\AjaxResponseRenderer;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Page\HtmlPage;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -43,16 +44,26 @@ class ViewSubscriber implements EventSubscriberInterface {
   protected $titleResolver;
 
   /**
+   * The Ajax response renderer.
+   *
+   * @var \Drupal\Core\Ajax\AjaxResponseRenderer
+   */
+  protected $ajaxRenderer;
+
+  /**
    * Constructs a new ViewSubscriber.
    *
    * @param \Drupal\Core\ContentNegotiation $negotiation
    *   The content negotiation.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
+   * @param \Drupal\Core\Ajax\AjaxResponseRenderer $ajax_renderer
+   *   The ajax response renderer.
    */
-  public function __construct(ContentNegotiation $negotiation, TitleResolverInterface $title_resolver) {
+  public function __construct(ContentNegotiation $negotiation, TitleResolverInterface $title_resolver, AjaxResponseRenderer $ajax_renderer) {
     $this->negotiation = $negotiation;
     $this->titleResolver = $title_resolver;
+    $this->ajaxRenderer = $ajax_renderer;
   }
 
   /**
@@ -118,26 +129,8 @@ class ViewSubscriber implements EventSubscriberInterface {
     return $response;
   }
 
-  public function onAjax(GetResponseForControllerResultEvent $event) {
-    $page_callback_result = $event->getControllerResult();
-
-    // Construct the response content from the page callback result.
-    $commands = ajax_prepare_response($page_callback_result);
-    $json = ajax_render($commands);
-
-    // Build the actual response object.
-    $response = new JsonResponse();
-    $response->setContent($json);
-
-    return $response;
-  }
-
   public function onIframeUpload(GetResponseForControllerResultEvent $event) {
-    $page_callback_result = $event->getControllerResult();
-
-    // Construct the response content from the page callback result.
-    $commands = ajax_prepare_response($page_callback_result);
-    $json = ajax_render($commands);
+    $response = $event->getResponse();
 
     // Browser IFRAMEs expect HTML. Browser extensions, such as Linkification
     // and Skype's Browser Highlighter, convert URLs, phone numbers, etc. into
@@ -145,7 +138,7 @@ class ViewSubscriber implements EventSubscriberInterface {
     // JSON data by making it the value of a textarea.
     // @see http://malsup.com/jquery/form/#file-upload
     // @see http://drupal.org/node/1009382
-    $html = '<textarea>' . $json . '</textarea>';
+    $html = '<textarea>' . $response->getContent() . '</textarea>';
 
     return new Response($html);
   }

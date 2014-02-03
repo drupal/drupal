@@ -24,22 +24,22 @@ abstract class AjaxTestBase extends WebTestBase {
   /**
    * Asserts the array of Ajax commands contains the searched command.
    *
-   * The Ajax framework, via the ajax_render() function, returns an array of
-   * commands. This array sometimes includes commands automatically provided by
-   * the framework in addition to commands returned by a particular page
-   * callback. During testing, we're usually interested that a particular
-   * command is present, and don't care whether other commands precede or
-   * follow the one we're interested in. Additionally, the command we're
-   * interested in may include additional data that we're not interested in.
-   * Therefore, this function simply asserts that one of the commands in
-   * $haystack contains all of the keys and values in $needle. Furthermore, if
-   * $needle contains a 'settings' key with an array value, we simply assert
-   * that all keys and values within that array are present in the command we're
-   * checking, and do not consider it a failure if the actual command contains
-   * additional settings that aren't part of $needle.
+   * An AjaxResponse object stores an array of Ajax commands. This array
+   * sometimes includes commands automatically provided by the framework in
+   * addition to commands returned by a particular controller. During testing,
+   * we're usually interested that a particular command is present, and don't
+   * care whether other commands precede or follow the one we're interested in.
+   * Additionally, the command we're interested in may include additional data
+   * that we're not interested in. Therefore, this function simply asserts that
+   * one of the commands in $haystack contains all of the keys and values in
+   * $needle. Furthermore, if $needle contains a 'settings' key with an array
+   * value, we simply assert that all keys and values within that array are
+   * present in the command we're checking, and do not consider it a failure if
+   * the actual command contains additional settings that aren't part of
+   * $needle.
    *
    * @param $haystack
-   *   An array of Ajax commands returned by the server.
+   *   An array of rendered Ajax commands returned by the server.
    * @param $needle
    *   Array of info we're expecting in one of those commands.
    * @param $message

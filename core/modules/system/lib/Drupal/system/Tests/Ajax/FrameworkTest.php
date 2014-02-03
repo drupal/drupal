@@ -27,14 +27,14 @@ class FrameworkTest extends AjaxTestBase {
   }
 
   /**
-   * Ensures ajax_render() returns JavaScript settings from the page request.
+   * Ensures \Drupal\Core\Ajax\AjaxResponse::ajaxRender() returns JavaScript settings from the page request.
    */
   public function testAJAXRender() {
     // Verify that settings command is generated when JavaScript settings are
     // set via _drupal_add_js().
     $commands = $this->drupalGetAJAX('ajax-test/render');
     $expected = new SettingsCommand(array('ajax' => 'test'), TRUE);
-    $this->assertCommand($commands, $expected->render(), 'ajax_render() loads settings added with _drupal_add_js().');
+    $this->assertCommand($commands, $expected->render(), '\Drupal\Core\Ajax\AjaxResponse::ajaxRender() loads settings added with _drupal_add_js().');
   }
 
   /**
@@ -101,7 +101,7 @@ class FrameworkTest extends AjaxTestBase {
   }
 
   /**
-   * Tests behavior of ajax_render_error().
+   * Tests the behavior of an error alert command.
    */
   public function testAJAXRenderError() {
     // Verify custom error message.

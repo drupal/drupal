@@ -410,13 +410,15 @@ services:
     arguments: ['@controller_resolver', '@string_translation', '@title_resolver']
   controller.ajax:
     class: Drupal\Core\Controller\AjaxController
-    arguments: ['@controller_resolver']
+    arguments: ['@controller_resolver', '@ajax_response_renderer']
   controller.entityform:
     class: Drupal\Core\Entity\HtmlEntityFormController
     arguments: ['@controller_resolver', '@service_container', '@entity.manager']
   controller.dialog:
     class: Drupal\Core\Controller\DialogController
     arguments: ['@controller_resolver', '@title_resolver']
+  ajax_response_renderer:
+    class: Drupal\Core\Ajax\AjaxResponseRenderer
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
     tags:
@@ -428,7 +430,7 @@ services:
     class: Drupal\Core\EventSubscriber\ViewSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@content_negotiation', '@title_resolver']
+    arguments: ['@content_negotiation', '@title_resolver', '@ajax_response_renderer']
   html_view_subscriber:
     class: Drupal\Core\EventSubscriber\HtmlViewSubscriber
     tags:

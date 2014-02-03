@@ -7,17 +7,12 @@
 
 namespace Drupal\Core\Controller;
 
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\InsertCommand;
-use Drupal\Core\Ajax\PrependCommand;
-use Drupal\Core\Page\HtmlFragment;
-use Drupal\Core\Page\HtmlPage;
+use Drupal\Core\Ajax\AjaxResponseRenderer;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Default controller for ajax requests.
+ * Default controller for Ajax requests.
  */
 class AjaxController extends ContainerAware {
 
@@ -29,62 +24,39 @@ class AjaxController extends ContainerAware {
   protected $controllerResolver;
 
   /**
+   * The Ajax response renderer.
+   *
+   * @var \Drupal\Core\Ajax\AjaxResponseRenderer
+   */
+  protected $ajaxRenderer;
+
+  /**
    * Constructs a new AjaxController instance.
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
+   * @param \Drupal\Core\Ajax\AjaxResponseRenderer $ajax_renderer
+   *   The Ajax response renderer.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver) {
+  public function __construct(ControllerResolverInterface $controller_resolver, AjaxResponseRenderer $ajax_renderer) {
     $this->controllerResolver = $controller_resolver;
+    $this->ajaxRenderer = $ajax_renderer;
   }
 
   /**
-   * Controller method for AJAX content.
+   * Controller method for Ajax content.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    * @param callable $_content
-   *   The callable that returns the content of the ajax response.
+   *   The callable that returns the content of the Ajax response.
    *
-   * @return \Symfony\Component\HttpFoundation\Response
+   * @return \Drupal\Core\Ajax\AjaxResponse
    *   A response object.
    */
   public function content(Request $request, $_content) {
     $content = $this->getContentResult($request, $_content);
-    // If there is already an AjaxResponse, then return it without
-    // manipulation.
-    if ($content instanceof AjaxResponse && $content->isOk()) {
-      return $content;
-    }
-
-    // Allow controllers to return a HtmlFragment or a Response object directly.
-    if ($content instanceof HtmlFragment) {
-      $content = $content->getContent();
-    }
-    if ($content instanceof Response) {
-      $content = $content->getContent();
-    }
-
-    // Most controllers return a render array, but some return a string.
-    if (!is_array($content)) {
-      $content = array(
-        '#markup' => $content,
-      );
-    }
-
-    $html = drupal_render($content);
-
-    $response = new AjaxResponse();
-    // The selector for the insert command is NULL as the new content will
-    // replace the element making the ajax call. The default 'replaceWith'
-    // behavior can be changed with #ajax['method'].
-    $response->addCommand(new InsertCommand(NULL, $html));
-    $status_messages = array('#theme' => 'status_messages');
-    $output = drupal_render($status_messages);
-    if (!empty($output)) {
-      $response->addCommand(new PrependCommand(NULL, $output));
-    }
-    return $response;
+    return $this->ajaxRenderer->render($content);
   }
 
   /**
