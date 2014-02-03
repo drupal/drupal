@@ -232,6 +232,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     foreach ($find as $item) {
       // Render the node.
+      /** @var \Drupal\node\NodeInterface $node */
       $node = $node_storage->load($item->sid)->getTranslation($item->langcode);
       $build = $node_render->view($node, 'search_result', $item->langcode);
       unset($build['#theme']);
@@ -245,7 +246,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $language = language_load($item->langcode);
       $username = array(
         '#theme' => 'username',
-        '#account' => $node->getAuthor(),
+        '#account' => $node->getOwner(),
       );
       $results[] = array(
         'link' => $node->url('canonical', array('absolute' => TRUE, 'language' => $language)),

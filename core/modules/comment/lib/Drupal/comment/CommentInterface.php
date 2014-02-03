@@ -8,12 +8,13 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\user\EntityOwnerInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Provides an interface defining a comment entity.
  */
-interface CommentInterface extends ContentEntityInterface, EntityChangedInterface {
+interface CommentInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
    * Comment is awaiting approval.

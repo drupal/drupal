@@ -102,6 +102,7 @@ class Rss extends RowPluginBase {
     }
 
     // Load the specified node:
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $this->nodes[$nid];
     if (empty($node)) {
       return;
@@ -118,7 +119,7 @@ class Rss extends RowPluginBase {
       ),
       array(
         'key' => 'dc:creator',
-        'value' => $node->getAuthor()->getUsername(),
+        'value' => $node->getOwner()->getUsername(),
       ),
       array(
         'key' => 'guid',

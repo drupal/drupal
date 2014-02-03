@@ -18,6 +18,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\FieldInterface;
 use Drupal\file\FileInterface;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Comments are displayed in a flat list - expanded.
@@ -932,18 +933,22 @@ function comment_entity_insert(EntityInterface $entity) {
       'last_comment_uid',
       'comment_count'
     ));
+    $execute_query = FALSE;
     foreach ($fields as $field_name => $detail) {
       // Skip fields that entity does not have.
       if (!$entity->hasField($field_name)) {
         continue;
       }
       // There is at least one comment field, the query needs to be executed.
-      // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
-      if ($entity->hasField('uid')) {
-        $last_comment_uid = $entity->get('uid')->value;
+      $execute_query = TRUE;
+      // Get the user ID from the entity if it is set, or default to the
+      // currently logged in user.
+      if ($entity instanceof EntityOwnerInterface) {
+        $last_comment_uid = $entity->getOwnerId();
       }
-      else {
-        // Default to current user when entity does not have a uid property.
+      if (!isset($last_comment_uid)) {
+        // Default to current user when entity does not implement
+        // EntityOwnerInterface or author is not set.
         $last_comment_uid = \Drupal::currentUser()->id();
       }
       // Default to REQUEST_TIME when entity does not have a changed property.
@@ -962,7 +967,9 @@ function comment_entity_insert(EntityInterface $entity) {
         'comment_count' => 0,
       ));
     }
-    $query->execute();
+    if ($execute_query) {
+      $query->execute();
+    }
   }
 }
 
@@ -1088,9 +1095,10 @@ function comment_user_cancel($edit, $account, $method) {
       break;
 
     case 'user_cancel_reassign':
+      /** @var \Drupal\comment\CommentInterface[] $comments */
       $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->id()));
       foreach ($comments as $comment) {
-        $comment->uid->target_id = 0;
+        $comment->setOwnerId(0);
         $comment->save();
       }
       break;
@@ -1284,7 +1292,7 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
     }
 
     if (!empty($account) && $account->isAuthenticated()) {
-      $comment->uid->target_id = $account->id();
+      $comment->setOwner($account);
       $comment->name->value = check_plain($account->getUsername());
     }
     else {
@@ -1355,7 +1363,7 @@ function comment_preprocess_block(&$variables) {
  */
 function comment_prepare_author(CommentInterface $comment) {
   // The account has been pre-loaded by CommentViewBuilder::buildContent().
-  $account = $comment->uid->entity;
+  $account = $comment->getOwner();
   if (empty($account->uid->value)) {
     $account = entity_create('user', array('uid' => 0, 'name' => $comment->name->value, 'homepage' => $comment->homepage->value));
   }
@@ -1373,7 +1381,7 @@ function comment_prepare_author(CommentInterface $comment) {
  *     Array keys: #comment, #commented_entity.
  */
 function template_preprocess_comment(&$variables) {
-  /** @var $comment \Drupal\comment\CommentInterface */
+  /** @var \Drupal\comment\CommentInterface $comment */
   $comment = $variables['elements']['#comment'];
   $commented_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
   $variables['comment'] = $comment;
@@ -1481,12 +1489,12 @@ function template_preprocess_comment(&$variables) {
   if ($variables['status'] != 'published') {
     $variables['attributes']['class'][] = $variables['status'];
   }
-  if (!$comment->uid->target_id) {
+  if (!$comment->getOwnerId()) {
     $variables['attributes']['class'][] = 'by-anonymous';
   }
   else {
     // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
-    if ($commented_entity->hasField('uid') && $comment->uid->target_id == $commented_entity->get('uid')->value) {
+    if ($commented_entity instanceof EntityOwnerInterface && $comment->getOwnerId() == $commented_entity->getOwnerId()) {
       $variables['attributes']['class'][] = 'by-' . $commented_entity->getEntityTypeId() . '-author';
     }
   }
@@ -1494,7 +1502,7 @@ function template_preprocess_comment(&$variables) {
   $variables['attributes']['class'][] = 'clearfix';
 
   // Add comment author user ID. Necessary for the comment-by-viewer library.
-  $variables['attributes']['data-comment-user-id'] = $comment->uid->value;
+  $variables['attributes']['data-comment-user-id'] = $comment->getOwnerId();
 
   $variables['content_attributes']['class'][] = 'content';
 }

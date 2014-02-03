@@ -98,7 +98,7 @@ class User extends ArgumentDefaultPluginBase {
     if (!empty($this->options['user']) && $this->request->attributes->has('node')) {
       $node = $this->request->attributes->get('node');
       if ($node instanceof NodeInterface) {
-        return $node->getAuthorId();
+        return $node->getOwnerId();
       }
     }
 

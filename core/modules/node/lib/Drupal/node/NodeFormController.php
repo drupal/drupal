@@ -29,6 +29,7 @@ class NodeFormController extends ContentEntityFormController {
    * {@inheritdoc}
    */
   protected function prepareEntity() {
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $this->entity;
     // Set up default values, if required.
     $type = entity_load('node_type', $node->bundle());
@@ -47,7 +48,7 @@ class NodeFormController extends ContentEntityFormController {
           $node->$key = (int) !empty($this->settings['options'][$key]);
         }
       }
-      $node->setAuthorId(\Drupal::currentUser()->id());
+      $node->setOwnerId(\Drupal::currentUser()->id());
       $node->setCreatedTime(REQUEST_TIME);
     }
     else {
@@ -63,6 +64,7 @@ class NodeFormController extends ContentEntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state) {
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $this->entity;
 
     if ($this->operation == 'edit') {
@@ -180,7 +182,7 @@ class NodeFormController extends ContentEntityFormController {
       '#title' => t('Authored by'),
       '#maxlength' => 60,
       '#autocomplete_route_name' => 'user.autocomplete',
-      '#default_value' => $node->getAuthorId()? $node->getAuthor()->getUsername() : '',
+      '#default_value' => $node->getOwnerId()? $node->getOwner()->getUsername() : '',
       '#weight' => -1,
       '#description' => t('Leave blank for %anonymous.', array('%anonymous' => $user_config->get('anonymous'))),
     );
@@ -417,14 +419,15 @@ class NodeFormController extends ContentEntityFormController {
    * {@inheritdoc}
    */
   public function buildEntity(array $form, array &$form_state) {
+    /** @var \Drupal\node\NodeInterface $entity */
     $entity = parent::buildEntity($form, $form_state);
     // A user might assign the node author by entering a user name in the node
     // form, which we then need to translate to a user ID.
     if (!empty($form_state['values']['name']) && $account = user_load_by_name($form_state['values']['name'])) {
-      $entity->setAuthorId($account->id());
+      $entity->setOwnerId($account->id());
     }
     else {
-      $entity->setAuthorId(0);
+      $entity->setOwnerId(0);
     }
 
     if (!empty($form_state['values']['date']) && $form_state['values']['date'] instanceOf DrupalDateTime) {

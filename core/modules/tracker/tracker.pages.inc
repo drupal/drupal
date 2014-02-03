@@ -88,7 +88,7 @@ function tracker_page($account = NULL) {
       $row = array(
         'type' => check_plain(node_get_type_label($node)),
         'title' => array('data' => l($node->getTitle(), 'node/' . $node->id()) . ' ' . drupal_render($mark_build)),
-        'author' => array('data' => array('#theme' => 'username', '#account' => $node->getAuthor())),
+        'author' => array('data' => array('#theme' => 'username', '#account' => $node->getOwner())),
         'replies' => array('class' => array('replies'), 'data' => $comments),
         'last updated' => array('data' => t('!time ago', array('!time' => format_interval(REQUEST_TIME - $node->last_activity)))),
       );

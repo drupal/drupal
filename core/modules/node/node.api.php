@@ -279,7 +279,7 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
     // have status unpublished.
     $grants[] = array(
       'realm' => 'example_author',
-      'gid' => $node->getAuthorId(),
+      'gid' => $node->getOwnerId(),
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,
@@ -577,13 +577,13 @@ function hook_node_access(\Drupal\node\NodeInterface $node, $op, $account, $lang
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }

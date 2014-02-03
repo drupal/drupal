@@ -23,6 +23,13 @@ abstract class TrackerTestBase extends ViewTestBase {
    */
   public static $modules = array('comment', 'tracker', 'tracker_test_views');
 
+  /**
+   * The node used for testing.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $node;
+
   protected function setUp() {
     parent::setUp();
 

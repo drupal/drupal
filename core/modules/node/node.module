@@ -10,6 +10,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
+use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -518,7 +519,7 @@ function node_type_update_nodes($old_id, $new_id) {
  *   (optional) Whether to reset the internal node_load() cache.  Defaults to
  *   FALSE.
  *
- * @return array
+ * @return \Drupal\node\NodeInterface[]
  *   An array of node entities indexed by nid.
  *
  * @see entity_load_multiple()
@@ -640,12 +641,13 @@ function template_preprocess_node(&$variables) {
   // Provide a distinct $teaser boolean.
   $variables['teaser'] = $variables['view_mode'] == 'teaser';
   $variables['node'] = $variables['elements']['#node'];
+  /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
 
   $variables['date'] = format_date($node->getCreatedTime());
   $username = array(
     '#theme' => 'username',
-    '#account' => $node->getAuthor(),
+    '#account' => $node->getOwner(),
     '#link_options' => array('attributes' => array('rel' => 'author')),
   );
   $variables['name'] = drupal_render($username);
@@ -672,7 +674,7 @@ function template_preprocess_node(&$variables) {
       // To change user picture settings (e.g. image style), edit the 'compact'
       // view mode on the User entity. Note that the 'compact' view mode might
       // not be configured, so remember to always check the theme setting first.
-      $variables['user_picture'] = user_view($node->getAuthor(), 'compact');
+      $variables['user_picture'] = user_view($node->getOwner(), 'compact');
     }
     else {
       $variables['user_picture'] = array();
@@ -1227,6 +1229,7 @@ function node_feed($nids = FALSE, $channel = array()) {
   $namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
 
   // Load all nodes to be rendered.
+  /** @var \Drupal\node\NodeInterface[] $nodes */
   $nodes = node_load_multiple($nids);
   $items = '';
   foreach ($nodes as $node) {
@@ -1236,7 +1239,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     $node->rss_namespaces = array();
     $node->rss_elements = array(
       array('key' => 'pubDate', 'value' => gmdate('r', $node->getCreatedTime())),
-      array('key' => 'dc:creator', 'value' => $node->getAuthor()->label()),
+      array('key' => 'dc:creator', 'value' => $node->getOwner()->label()),
       array('key' => 'guid', 'value' => $node->id() . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))
     );
 
@@ -1419,7 +1422,7 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
 /**
  * Implements hook_node_access().
  */
-function node_node_access($node, $op, $account) {
+function node_node_access(NodeInterface $node, $op, $account) {
   $type = $node->bundle();
 
   $configured_types = node_permissions_get_configured_types();
@@ -1429,13 +1432,13 @@ function node_node_access($node, $op, $account) {
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getOwnerId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }

@@ -58,7 +58,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:changed]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->id);
     $tests['[file:changed:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->id);
     $tests['[file:owner]'] = check_plain(user_format_name($this->admin_user));
-    $tests['[file:owner:uid]'] = $file->getOwner()->id();
+    $tests['[file:owner:uid]'] = $file->getOwnerId();
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');

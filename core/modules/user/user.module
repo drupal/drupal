@@ -164,23 +164,23 @@ function user_uri($user) {
  * Called by Drupal\Core\Entity\EntityViewBuilderInterface::buildContent()
  * implementations.
  *
- * @param array $entities
+ * @param \Drupal\user\EntityOwnerInterface[] $entities
  *   The entities keyed by entity ID.
  */
 function user_attach_accounts(array $entities) {
   $uids = array();
   foreach ($entities as $entity) {
-    $uids[] = $entity->getAuthorId();
+    $uids[] = $entity->getOwnerId();
   }
   $uids = array_unique($uids);
   $accounts = user_load_multiple($uids);
   $anonymous = drupal_anonymous_user();
   foreach ($entities as $id => $entity) {
-    if (isset($accounts[$entity->getAuthorId()])) {
-      $entities[$id]->account = $accounts[$entity->getAuthorId()];
+    if (isset($accounts[$entity->getOwnerId()])) {
+      $entities[$id]->setOwner($accounts[$entity->getOwnerId()]);
     }
     else {
-      $entities[$id]->account = $anonymous;
+      $entities[$id]->setOwner($anonymous);
     }
   }
 }

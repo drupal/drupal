@@ -87,7 +87,7 @@ class PageEditTest extends NodeTestBase {
     $this->assertNotIdentical($node->getRevisionId(), $revised_node->getRevisionId(), 'A new revision has been created.');
     // Ensure that the node author is preserved when it was not changed in the
     // edit form.
-    $this->assertIdentical($node->getAuthorId(), $revised_node->getAuthorId(), 'The node author has been preserved.');
+    $this->assertIdentical($node->getOwnerId(), $revised_node->getOwnerId(), 'The node author has been preserved.');
     // Ensure that the revision authors are different since the revisions were
     // made by different users.
     $first_node_version = node_revision_load($node->getRevisionId());
@@ -110,7 +110,7 @@ class PageEditTest extends NodeTestBase {
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertIdentical($node->getAuthorId(), $this->admin_user->id(), 'Node authored by admin user.');
+    $this->assertIdentical($node->getOwnerId(), $this->admin_user->id(), 'Node authored by admin user.');
 
     // Try to change the 'authored by' field to an invalid user name.
     $edit = array(
@@ -124,14 +124,14 @@ class PageEditTest extends NodeTestBase {
     $edit['name'] = '';
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->id(), TRUE);
-    $this->assertIdentical($node->getAuthorId(), '0', 'Node authored by anonymous user.');
+    $this->assertIdentical($node->getOwnerId(), '0', 'Node authored by anonymous user.');
 
     // Change the authored by field to another user's name (that is not
     // logged in).
     $edit['name'] = $this->web_user->getUsername();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->id(), TRUE);
-    $this->assertIdentical($node->getAuthorId(), $this->web_user->id(), 'Node authored by normal user.');
+    $this->assertIdentical($node->getOwnerId(), $this->web_user->id(), 'Node authored by normal user.');
 
     // Check that normal users cannot change the authored by information.
     $this->drupalLogin($this->web_user);

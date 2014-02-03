@@ -77,6 +77,7 @@ class CommentFormController extends ContentEntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::form().
    */
   public function form(array $form, array &$form_state) {
+    /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->entity;
     $entity = $this->entityManager->getStorageController($comment->entity_type->value)->load($comment->entity_id->value);
     $field_name = $comment->field_name->value;
@@ -212,7 +213,7 @@ class CommentFormController extends ContentEntityFormController {
     // Used for conditional validation of author fields.
     $form['is_anonymous'] = array(
       '#type' => 'value',
-      '#value' => ($comment->id() ? !$comment->uid->target_id : $this->currentUser->isAnonymous()),
+      '#value' => ($comment->id() ? !$comment->getOwnerId() : $this->currentUser->isAnonymous()),
     );
 
     // Add internal comment properties.
@@ -313,13 +314,14 @@ class CommentFormController extends ContentEntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::submit().
    */
   public function submit(array $form, array &$form_state) {
+    /** @var \Drupal\comment\CommentInterface $comment */
     $comment = parent::submit($form, $form_state);
 
     // If the comment was posted by a registered user, assign the author's ID.
     // @todo Too fragile. Should be prepared and stored in comment_form()
     // already.
     if (!$comment->is_anonymous && !empty($comment->name->value) && ($account = user_load_by_name($comment->name->value))) {
-      $comment->uid->target_id = $account->id();
+      $comment->setOwner($account);
     }
     // If the comment was posted by an anonymous user and no author name was
     // required, use "Anonymous" by default.

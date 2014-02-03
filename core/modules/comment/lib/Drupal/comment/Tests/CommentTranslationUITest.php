@@ -108,7 +108,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $values['entity_id'] = $node->id();
     $values['entity_type'] = 'node';
     $values['field_id'] = $node_bundle;
-    $values['uid'] = $node->getAuthorId();
+    $values['uid'] = $node->getOwnerId();
     return parent::createEntity($values, $langcode, $node_bundle);
   }
 

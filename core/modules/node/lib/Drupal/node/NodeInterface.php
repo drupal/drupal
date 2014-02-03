@@ -7,6 +7,7 @@
 
 namespace Drupal\node;
 
+use Drupal\user\EntityOwnerInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\user\UserInterface;
@@ -14,7 +15,7 @@ use Drupal\user\UserInterface;
 /**
  * Provides an interface defining a node entity.
  */
-interface NodeInterface extends ContentEntityInterface, EntityChangedInterface {
+interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
    * Returns the node type.
@@ -25,7 +26,6 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface {
   public function getType();
 
   /**
-   *
    * Returns the node title.
    *
    * @return string
@@ -102,33 +102,6 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface {
   public function setSticky($sticky);
 
   /**
-   * Returns the node author user entity.
-   *
-   * @return \Drupal\user\UserInterface
-   *   The author user entity.
-   */
-  public function getAuthor();
-
-  /**
-   * Returns the node author user ID.
-   *
-   * @return int
-   *   The author user ID.
-   */
-  public function getAuthorId();
-
-  /**
-   * Sets the node author user ID.
-   *
-   * @param int $uid
-   *   The author user id.
-   *
-   * @return \Drupal\node\NodeInterface
-   *   The called node entity.
-   */
-  public function setAuthorId($uid);
-
-  /**
    * Returns the node published status indicator.
    *
    * Unpublished nodes are only visible to their authors and to administrators.
@@ -160,7 +133,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface {
   /**
    * Sets the node revision creation timestamp.
    *
-   * @param int $imestamp
+   * @param int $timestamp
    *   The UNIX timestamp of when this revision was created.
    *
    * @return \Drupal\node\NodeInterface

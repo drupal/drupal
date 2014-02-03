@@ -67,7 +67,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject->value);
     $tests['[comment:node:nid]'] = $comment->entity_id->value;
     $tests['[comment:node:title]'] = check_plain($node->getTitle());
-    $tests['[comment:author:uid]'] = $comment->uid->target_id;
+    $tests['[comment:author:uid]'] = $comment->getOwnerId();
     $tests['[comment:author:name]'] = check_plain($this->admin_user->getUsername());
 
     // Test to make sure that we generated something for each token.

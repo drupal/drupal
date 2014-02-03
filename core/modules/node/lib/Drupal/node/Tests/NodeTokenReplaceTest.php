@@ -59,7 +59,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:url]'] = url('node/' . $node->id(), $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->id() . '/edit', $url_options);
     $tests['[node:author]'] = check_plain(user_format_name($account));
-    $tests['[node:author:uid]'] = $node->getAuthorId();
+    $tests['[node:author:uid]'] = $node->getOwnerId();
     $tests['[node:author:name]'] = check_plain(user_format_name($account));
     $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->getCreatedTime(), 2, $language_interface->id);
     $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->getChangedTime(), 2, $language_interface->id);

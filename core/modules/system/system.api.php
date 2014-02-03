@@ -1630,9 +1630,10 @@ function hook_mail($key, &$message, $params) {
 
   // Node-based variable translation is only available if we have a node.
   if (isset($params['node'])) {
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $params['node'];
     $variables += array(
-      '%uid' => $node->getAuthorId(),
+      '%uid' => $node->getOwnerId(),
       '%node_url' => url('node/' . $node->id(), array('absolute' => TRUE)),
       '%node_type' => node_get_type_label($node),
       '%title' => $node->getTitle(),
@@ -2815,6 +2816,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
   $replacements = array();
 
   if ($type == 'node' && !empty($data['node'])) {
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $data['node'];
 
     foreach ($tokens as $name => $original) {
@@ -2834,7 +2836,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $account = $node->getAuthor() ? $node->getAuthor() : user_load(0);
+          $account = $node->getOwner() ? $node->getOwner() : user_load(0);
           $replacements[$original] = $sanitize ? check_plain($account->label()) : $account->label();
           break;
 
@@ -2845,7 +2847,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
     }
 
     if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $node->getAuthor()), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $node->getOwner()), $options);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {

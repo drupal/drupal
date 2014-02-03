@@ -236,6 +236,7 @@ function seven_preprocess_install_page(&$variables) {
  * Changes vertical tabs to container and adds meta information.
  */
 function seven_form_node_form_alter(&$form, &$form_state) {
+  /** @var \Drupal\node\NodeInterface $node */
   $node = $form_state['controller']->getEntity();
 
   $form['#theme'] = array('node_edit_form');
@@ -265,7 +266,7 @@ function seven_form_node_form_alter(&$form, &$form_state) {
       '#type' => 'item',
       '#wrapper_attributes' => array('class' => array('author', 'container-inline')),
       '#title' => t('Author'),
-      '#markup' => $node->getAuthor()->getUsername(),
+      '#markup' => $node->getOwner()->getUsername(),
     ),
   );
   $form['revision_information']['#type'] = 'container';

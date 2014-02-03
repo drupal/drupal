@@ -90,6 +90,7 @@ class NodeListController extends EntityListController {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+    /** @var \Drupal\node\NodeInterface $entity */
     $mark = array(
       '#theme' => 'mark',
       '#mark_type' => node_mark($entity->id(), $entity->getChangedTime()),
@@ -107,7 +108,7 @@ class NodeListController extends EntityListController {
     $row['type'] = String::checkPlain(node_get_type_label($entity));
     $row['author']['data'] = array(
       '#theme' => 'username',
-      '#account' => $entity->getAuthor(),
+      '#account' => $entity->getOwner(),
     );
     $row['status'] = $entity->isPublished() ? $this->t('published') : $this->t('not published');
     $row['changed'] = $this->dateService->format($entity->getChangedTime(), 'short');

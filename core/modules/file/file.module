@@ -602,6 +602,7 @@ function file_file_download($uri, $field_type = 'file') {
   $user = \Drupal::currentUser();
 
   // Get the file record based on the URI. If not in the database just return.
+  /** @var \Drupal\file\FileInterface[] $files */
   $files = entity_load_multiple_by_properties('file', array('uri' => $uri));
   if (count($files)) {
     foreach ($files as $item) {
@@ -625,7 +626,7 @@ function file_file_download($uri, $field_type = 'file') {
   // temporary files where the host entity has not yet been saved (for example,
   // an image preview on a node/add form) in which case, allow download by the
   // file's owner.
-  if (empty($references) && ($file->isPermanent() || $file->getOwner()->id() != $user->id())) {
+  if (empty($references) && ($file->isPermanent() || $file->getOwnerId() != $user->id())) {
     return;
   }
 
@@ -1005,6 +1006,7 @@ function file_tokens($type, $tokens, array $data = array(), array $options = arr
   $replacements = array();
 
   if ($type == 'file' && !empty($data['file'])) {
+    /** @var \Drupal\file\FileInterface $file */
     $file = $data['file'];
 
     foreach ($tokens as $name => $original) {

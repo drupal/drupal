@@ -200,7 +200,7 @@ abstract class WebTestBase extends TestBase {
    * @param $reset
    *   (optional) Whether to reset the entity cache.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\node\NodeInterface
    *   A node entity matching $title.
    */
   function drupalGetNodeByTitle($title, $reset = FALSE) {
@@ -247,7 +247,7 @@ abstract class WebTestBase extends TestBase {
    *   - revision: 1. (Backwards-compatible binary flag indicating whether a
    *     new revision should be created; use 1 to specify a new revision.)
    *
-   * @return \Drupal\node\Entity\Node
+   * @return \Drupal\node\NodeInterface
    *   The created node entity.
    */
   protected function drupalCreateNode(array $settings = array()) {

@@ -56,11 +56,12 @@ class NodeSaveTest extends NodeTestBase {
       'type' => 'article',
       'nid' => $test_nid,
     );
+    /** @var \Drupal\node\NodeInterface $node */
     $node = entity_create('node', $node);
     $node->enforceIsNew();
 
     // Verify that node_submit did not overwrite the user ID.
-    $this->assertEqual($node->getAuthorId(), $this->web_user->id(), 'Function node_submit() preserves user ID');
+    $this->assertEqual($node->getOwnerId(), $this->web_user->id(), 'Function node_submit() preserves user ID');
 
     $node->save();
     // Test the import.

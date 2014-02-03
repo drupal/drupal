@@ -10,6 +10,7 @@ namespace Drupal\comment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Defines the controller class for comments.
@@ -92,6 +93,16 @@ class CommentStorageController extends FieldableDatabaseStorageController implem
     else {
       // Comments do not exist.
       $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+      // Get the user ID from the entity if it's set, or default to the
+      // currently logged in user.
+      if ($entity instanceof EntityOwnerInterface) {
+        $last_comment_uid = $entity->getOwnerId();
+      }
+      if (!isset($last_comment_uid)) {
+        // Default to current user when entity does not implement
+        // EntityOwnerInterface or author is not set.
+        $last_comment_uid = \Drupal::currentUser()->id();
+      }
       $this->database->update('comment_entity_statistics')
         ->fields(array(
           'cid' => 0,
@@ -100,10 +111,7 @@ class CommentStorageController extends FieldableDatabaseStorageController implem
           // REQUEST_TIME.
           'last_comment_timestamp' => ($entity instanceof EntityChangedInterface) ? $entity->getChangedTime() : REQUEST_TIME,
           'last_comment_name' => '',
-          // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
-          // Get the user ID from the entity if it's set, or default to the
-          // currently logged in user.
-          'last_comment_uid' => $entity->hasField('uid') ? $entity->get('uid')->value : \Drupal::currentUser()->id(),
+          'last_comment_uid' => $last_comment_uid,
         ))
         ->condition('entity_id', $comment->entity_id->value)
         ->condition('entity_type', $comment->entity_type->value)

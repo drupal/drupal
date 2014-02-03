@@ -8,6 +8,7 @@
 namespace Drupal\rdf\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -119,9 +120,9 @@ class TrackerAttributesTest extends WebTestBase {
    * @param \Drupal\Core\Entity\EntityInterface $node
    * The node just created.
    */
-  function _testBasicTrackerRdfaMarkup(EntityInterface $node) {
+  function _testBasicTrackerRdfaMarkup(NodeInterface $node) {
     $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
-    $user_uri = url('user/' . $node->getAuthorId(), array('absolute' => TRUE));
+    $user_uri = url('user/' . $node->getOwnerId(), array('absolute' => TRUE));
 
     // Parses tracker page where the nodes are displayed in a table.
     $parser = new \EasyRdf_Parser_Rdfa();
@@ -150,10 +151,10 @@ class TrackerAttributesTest extends WebTestBase {
       'type' => 'uri',
       'value' => $user_uri,
     );
-    if ($node->getAuthorId() == 0) {
+    if ($node->getOwnerId() == 0) {
       $this->assertFalse($graph->hasProperty($node_uri, 'http://rdfs.org/sioc/ns#has_creator', $expected_value), 'No relation to author found in RDF output (sioc:has_creator).');
     }
-    elseif ($node->getAuthorId() > 0) {
+    elseif ($node->getOwnerId() > 0) {
       $this->assertTrue($graph->hasProperty($node_uri, 'http://rdfs.org/sioc/ns#has_creator', $expected_value), 'Relation to author found in RDF output (sioc:has_creator).');
     }
     // Last updated.

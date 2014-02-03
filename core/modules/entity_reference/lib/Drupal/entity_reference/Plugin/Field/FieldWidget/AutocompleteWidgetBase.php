@@ -9,6 +9,7 @@ namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -94,8 +95,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
       '#element_validate' => array(array($this, 'elementValidate')),
-      // @todo: Use wrapper to get the user if exists or needed.
-      '#autocreate_uid' => isset($entity->uid) ? $entity->uid : $user->id(),
+      '#autocreate_uid' => ($entity instanceof EntityOwnerInterface) ? $entity->getOwnerId() : $user->id(),
     );
 
     return array('target_id' => $element);
@@ -187,11 +187,16 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
     $bundle_key = $entity_info->getKey('bundle');
     $label_key = $entity_info->getKey('label');
 
-    return $entity_manager->getStorageController($target_type)->create(array(
+    $entity = $entity_manager->getStorageController($target_type)->create(array(
       $label_key => $label,
       $bundle_key => $bundle,
-      'uid' => $uid,
     ));
+
+    if ($entity instanceof EntityOwnerInterface) {
+      $entity->setOwnerId($uid);
+    }
+
+    return $entity;
   }
 
   /**

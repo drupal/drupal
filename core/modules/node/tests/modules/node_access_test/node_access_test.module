@@ -58,7 +58,7 @@ function node_access_test_node_access_records(NodeInterface $node) {
     // means there are many many groups of just 1 user.
     $grants[] = array(
       'realm' => 'node_access_test_author',
-      'gid' => $node->getAuthorId(),
+      'gid' => $node->getOwnerId(),
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,

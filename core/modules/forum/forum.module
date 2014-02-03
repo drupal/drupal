@@ -762,6 +762,7 @@ function template_preprocess_forum_topic_list(&$variables) {
 
   if (!empty($variables['topics'])) {
     $row = 0;
+    /** @var \Drupal\node\NodeInterface $topic */
     foreach ($variables['topics'] as $id => $topic) {
       $variables['topics'][$id]->icon = array(
         '#theme' => 'forum_icon',
@@ -788,8 +789,8 @@ function template_preprocess_forum_topic_list(&$variables) {
         $variables['topics'][$id]->message = '';
       }
       $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => (object) array(
-        'uid' => $topic->getAuthorId(),
-        'name' => $topic->getAuthor()->getUsername(),
+        'uid' => $topic->getOwnerId(),
+        'name' => $topic->getOwner()->getUsername(),
         'created' => $topic->getCreatedTime(),
       ));
       $variables['topics'][$id]->submitted = drupal_render($forum_submitted);

@@ -171,7 +171,7 @@ function _tracker_user_access($account) {
  * Adds new tracking information for this node since it's new.
  */
 function tracker_node_insert(NodeInterface $node, $arg = 0) {
-  _tracker_add($node->id(), $node->getAuthorId(), $node->getChangedTime());
+  _tracker_add($node->id(), $node->getOwnerId(), $node->getChangedTime());
 }
 
 /**
@@ -180,7 +180,7 @@ function tracker_node_insert(NodeInterface $node, $arg = 0) {
  * Adds tracking information for this node since it's been updated.
  */
 function tracker_node_update(NodeInterface $node, $arg = 0) {
-  _tracker_add($node->id(), $node->getAuthorId(), $node->getChangedTime());
+  _tracker_add($node->id(), $node->getOwnerId(), $node->getChangedTime());
 }
 
 /**
@@ -203,11 +203,11 @@ function tracker_node_predelete(EntityInterface $node, $arg = 0) {
  * Comment module doesn't call hook_comment_unpublish() when saving individual
  * comments so we need to check for those here.
  */
-function tracker_comment_update($comment) {
+function tracker_comment_update(CommentInterface $comment) {
   // $comment->save() calls hook_comment_publish() for all published comments
   // so we need to handle all other values here.
   if ($comment->status->value != CommentInterface::PUBLISHED && $comment->entity_type->value == 'node') {
-    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
+    _tracker_remove($comment->entity_id->target_id, $comment->getOwnerId(), $comment->changed->value);
   }
 }
 
@@ -217,27 +217,27 @@ function tracker_comment_update($comment) {
  * This actually handles the insert and update of published nodes since
  * $comment->save() calls hook_comment_publish() for all published comments.
  */
-function tracker_comment_publish($comment) {
+function tracker_comment_publish(CommentInterface $comment) {
   if ($comment->entity_type->value == 'node') {
-    _tracker_add($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
+    _tracker_add($comment->entity_id->target_id, $comment->getOwnerId(), $comment->changed->value);
   }
 }
 
 /**
  * Implements hook_comment_unpublish().
  */
-function tracker_comment_unpublish($comment) {
+function tracker_comment_unpublish(CommentInterface $comment) {
   if ($comment->entity_type->value == 'node') {
-    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
+    _tracker_remove($comment->entity_id->target_id, $comment->getOwnerId(), $comment->changed->value);
   }
 }
 
 /**
  * Implements hook_comment_delete().
  */
-function tracker_comment_delete($comment) {
+function tracker_comment_delete(CommentInterface $comment) {
   if ($comment->entity_type->value == 'node') {
-    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
+    _tracker_remove($comment->entity_id->target_id, $comment->getOwnerId(), $comment->changed->value);
   }
 }
 

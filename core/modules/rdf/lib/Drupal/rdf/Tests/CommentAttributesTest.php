@@ -7,6 +7,7 @@
 
 namespace Drupal\rdf\Tests;
 
+use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestBase;
 
 /**
@@ -226,7 +227,7 @@ class CommentAttributesTest extends CommentTestBase {
    * @param $account
    *   An array containing information about an anonymous user.
    */
-  function _testBasicCommentRdfaMarkup($graph, $comment, $account = array()) {
+  function _testBasicCommentRdfaMarkup($graph, CommentInterface $comment, $account = array()) {
     $comment_uri = $comment->url('canonical', array('absolute' => TRUE));
 
     // Comment type.
@@ -274,8 +275,8 @@ class CommentAttributesTest extends CommentTestBase {
     $this->assertTrue($graph->hasProperty($comment_uri, 'http://purl.org/rss/1.0/modules/content/encoded', $expected_value), 'Comment body found in RDF output (content:encoded).');
 
     // The comment author can be a registered user or an anonymous user.
-    if ($comment->uid->value > 0) {
-      $author_uri = url('user/' . $comment->uid->value, array('absolute' => TRUE));
+    if ($comment->getOwnerId() > 0) {
+      $author_uri = url('user/' . $comment->getOwnerId(), array('absolute' => TRUE));
       // Comment relation to author.
       $expected_value = array(
         'type' => 'uri',
@@ -303,7 +304,7 @@ class CommentAttributesTest extends CommentTestBase {
     $this->assertTrue($graph->hasProperty($author_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'Comment author name found in RDF output (foaf:name).');
 
     // Comment author homepage (only for anonymous authors).
-    if ($comment->uid->value == 0) {
+    if ($comment->getOwnerId() == 0) {
       $expected_value = array(
         'type' => 'uri',
         'value' => 'http://example.org/',
