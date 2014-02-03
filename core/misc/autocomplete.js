@@ -155,6 +155,20 @@
   }
 
   /**
+   * Override jQuery UI _renderItem function to output HTML by default.
+   *
+   * @param {Object} ul
+   * @param {Object} item
+   *
+   * @return {Object}
+   */
+  function renderItem (ul, item) {
+    return $("<li>")
+      .append( $("<a>").html(item.label))
+      .appendTo( ul );
+  }
+
+  /**
    * Attaches the autocomplete behavior to all required fields.
    */
   Drupal.behaviors.autocomplete = {
@@ -163,7 +177,9 @@
       var $autocomplete = $(context).find('input.form-autocomplete').once('autocomplete');
       if ($autocomplete.length) {
         // Use jQuery UI Autocomplete on the textfield.
-        $autocomplete.autocomplete(autocomplete.options);
+        $autocomplete.autocomplete(autocomplete.options)
+          .data("ui-autocomplete")
+          ._renderItem = autocomplete.options.renderItem;
       }
     },
     detach: function (context, settings, trigger) {
@@ -189,7 +205,8 @@
       source: sourceData,
       focus: focusHandler,
       search: searchHandler,
-      select: selectHandler
+      select: selectHandler,
+      renderItem: renderItem
     },
     ajax: {
       dataType: 'json'
