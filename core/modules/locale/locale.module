@@ -10,6 +10,7 @@
  * object files are supported.
  */
 
+use Drupal\Component\Utility\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\Crypt;
@@ -644,7 +645,7 @@ function locale_js_translate(array $files = array()) {
   }
 
   // Add the translation JavaScript file to the page.
-  $locale_javascripts = \Drupal::state()->get('translation.javascript') ?: array();
+  $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: array();
   $translation_file = NULL;
   if (!empty($files) && !empty($locale_javascripts[$language_interface->id])) {
     // Add the translation JavaScript file to the page.
@@ -1168,6 +1169,19 @@ function _locale_refresh_configuration(array $langcodes, array $lids) {
 }
 
 /**
+ * Removes the quotes and string concatenations from the string.
+ *
+ * @param string $string
+ *   Single or double quoted strings, optionally concatenated by plus (+) sign.
+ *
+ * @return string
+ *   String with leading and trailing quotes removed.
+ */
+function _locale_strip_quotes($string) {
+  return implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($string, 1, -1)));
+}
+
+/**
  * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
  * Drupal.formatPlural() and inserts them into the database.
  *
@@ -1241,43 +1255,28 @@ function _locale_parse_js_file($filepath) {
   // Add strings from Drupal.t().
   foreach ($t_matches[1] as $key => $string) {
     $matches[] = array(
-      'string'  => $string,
-      'context' => $t_matches[2][$key],
+      'source'  => _locale_strip_quotes($string),
+      'context' => _locale_strip_quotes($t_matches[2][$key]),
     );
   }
 
   // Add string from Drupal.formatPlural().
   foreach ($plural_matches[1] as $key => $string) {
     $matches[] = array(
-      'string'  => $string,
-      'context' => $plural_matches[3][$key],
+      'source'  => _locale_strip_quotes($string) . LOCALE_PLURAL_DELIMITER . _locale_strip_quotes($plural_matches[2][$key]),
+      'context' => _locale_strip_quotes($plural_matches[3][$key]),
     );
-
-    // If there is also a plural version of this string, add it to the strings array.
-    if (isset($plural_matches[2][$key])) {
-      $matches[] = array(
-        'string'  => $plural_matches[2][$key],
-        'context' => $plural_matches[3][$key],
-      );
-    }
   }
 
   // Loop through all matches and process them.
   foreach ($matches as $match) {
-
-    // Remove the quotes and string concatenations from the string and context.
-    $string =  implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['string'], 1, -1)));
-    $context = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['context'], 1, -1)));
-
-    $source = \Drupal::service('locale.storage')->findString(array('source' => $string, 'context' => $context));
+    $source = \Drupal::service('locale.storage')->findString($match);
 
     if (!$source) {
       // We don't have the source string yet, thus we insert it into the database.
-      $source = \Drupal::service('locale.storage')->createString(array(
-        'source'    => $string,
-        'context'   => $context,
-      ));
+      $source = \Drupal::service('locale.storage')->createString($match);
     }
+
     // Besides adding the location this will tag it for current version.
     $source->addLocation('javascript', $filepath);
     $source->save();
@@ -1322,6 +1321,9 @@ function _locale_invalidate_js($langcode = NULL) {
  *
  * @param $langcode
  *   The language, the translation file should be (re)created for.
+ *
+ * @return bool
+ *   TRUE if translation file exists, FALSE otherwise.
  */
 function _locale_rebuild_js($langcode = NULL) {
   $config = \Drupal::config('locale.settings');
@@ -1350,14 +1352,18 @@ function _locale_rebuild_js($langcode = NULL) {
   $data_hash = NULL;
   $data = $status = '';
   if (!empty($translations)) {
+    $data = array(
+      'pluralDelimiter: ' . Json::encode(LOCALE_PLURAL_DELIMITER),
+    );
 
-    $data = "Drupal.locale = { ";
     $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
-    if (!empty($locale_plurals[$language->id])) {
-      $data .= "'pluralFormula': function (\$n) { return Number({$locale_plurals[$language->id]['formula']}); }, ";
+    if (!empty($locale_plurals[$language->id]['formula'])) {
+      $data[] = "pluralFormula: function (\$n) { return Number({$locale_plurals[$language->id]['formula']}); }";
     }
 
-    $data .= "'strings': " . drupal_json_encode($translations) . " };";
+    $data[] = 'strings: ' . Json::encode($translations);
+
+    $data = 'Drupal.locale = { ' . implode(', ', $data) . ' };';
     $data_hash = Crypt::hashBase64($data);
   }
 

@@ -31,7 +31,6 @@ class LocaleJavascriptTranslation extends WebTestBase {
   }
 
   function testFileParsing() {
-
     $filename = drupal_get_path('module', 'locale') . '/tests/locale_test.js';
 
     // Parse the file to look for source strings.
@@ -44,52 +43,46 @@ class LocaleJavascriptTranslation extends WebTestBase {
         'type' => 'javascript',
         'name' => $filename,
       ));
+
+    $source_strings = array();
     foreach ($strings as $string) {
       $source_strings[$string->source] = $string->context;
     }
+
+    $etx = LOCALE_PLURAL_DELIMITER;
     // List of all strings that should be in the file.
     $test_strings = array(
-      "Standard Call t" => '',
-      "Whitespace Call t" => '',
+      'Standard Call t' => '',
+      'Whitespace Call t' => '',
 
-      "Single Quote t" => '',
+      'Single Quote t' => '',
       "Single Quote \\'Escaped\\' t" => '',
-      "Single Quote Concat strings t" => '',
+      'Single Quote Concat strings t' => '',
 
-      "Double Quote t" => '',
+      'Double Quote t' => '',
       "Double Quote \\\"Escaped\\\" t" => '',
-      "Double Quote Concat strings t" => '',
+      'Double Quote Concat strings t' => '',
 
-      "Context !key Args t" => "Context string",
+      'Context !key Args t' => 'Context string',
 
-      "Context Unquoted t" => "Context string unquoted",
-      "Context Single Quoted t" => "Context string single quoted",
-      "Context Double Quoted t" => "Context string double quoted",
+      'Context Unquoted t' => 'Context string unquoted',
+      'Context Single Quoted t' => 'Context string single quoted',
+      'Context Double Quoted t' => 'Context string double quoted',
 
-      "Standard Call plural" => '',
-      "Standard Call @count plural" => '',
-      "Whitespace Call plural" => '',
-      "Whitespace Call @count plural" => '',
+      "Standard Call plural{$etx}Standard Call @count plural" => '',
+      "Whitespace Call plural{$etx}Whitespace Call @count plural" => '',
 
-      "Single Quote plural" => '',
-      "Single Quote @count plural" => '',
-      "Single Quote \\'Escaped\\' plural" => '',
-      "Single Quote \\'Escaped\\' @count plural" => '',
+      "Single Quote plural{$etx}Single Quote @count plural" => '',
+      "Single Quote \\'Escaped\\' plural{$etx}Single Quote \\'Escaped\\' @count plural" => '',
 
-      "Double Quote plural" => '',
-      "Double Quote @count plural" => '',
-      "Double Quote \\\"Escaped\\\" plural" => '',
-      "Double Quote \\\"Escaped\\\" @count plural" => '',
+      "Double Quote plural{$etx}Double Quote @count plural" => '',
+      "Double Quote \\\"Escaped\\\" plural{$etx}Double Quote \\\"Escaped\\\" @count plural" => '',
 
-      "Context !key Args plural" => "Context string",
-      "Context !key Args @count plural" => "Context string",
+      "Context !key Args plural{$etx}Context !key Args @count plural" => 'Context string',
 
-      "Context Unquoted plural" => "Context string unquoted",
-      "Context Unquoted @count plural" => "Context string unquoted",
-      "Context Single Quoted plural" => "Context string single quoted",
-      "Context Single Quoted @count plural" => "Context string single quoted",
-      "Context Double Quoted plural" => "Context string double quoted",
-      "Context Double Quoted @count plural" => "Context string double quoted",
+      "Context Unquoted plural{$etx}Context Unquoted @count plural" => 'Context string unquoted',
+      "Context Single Quoted plural{$etx}Context Single Quoted @count plural" => 'Context string single quoted',
+      "Context Double Quoted plural{$etx}Context Double Quoted @count plural" => 'Context string double quoted',
     );
 
     // Assert that all strings were found properly.
@@ -97,12 +90,13 @@ class LocaleJavascriptTranslation extends WebTestBase {
       $args = array('%source' => $str, '%context' => $context);
 
       // Make sure that the string was found in the file.
-      $this->assertTrue(isset($source_strings[$str]), String::format("Found source string: %source", $args));
+      $this->assertTrue(isset($source_strings[$str]), String::format('Found source string: %source', $args));
 
       // Make sure that the proper context was matched.
-      $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, strlen($context) > 0 ? String::format("Context for %source is %context", $args) : String::format("Context for %source is blank", $args));
+      $message = $context ? String::format('Context for %source is %context', $args) : String::format('Context for %source is blank', $args);
+      $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, $message);
     }
 
-    $this->assertEqual(count($source_strings), count($test_strings), "Found correct number of source strings.");
+    $this->assertEqual(count($source_strings), count($test_strings), 'Found correct number of source strings.');
   }
 }

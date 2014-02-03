@@ -192,9 +192,9 @@ if (window.jQuery) {
   /**
    * Replace placeholders with sanitized values in a string.
    *
-   * @param str
+   * @param {String} str
    *   A string with placeholders.
-   * @param args
+   * @param {Object} args
    *   An object of replacements pairs to make. Incidences of any key in this
    *   array are replaced with the corresponding value. Based on the first
    *   character of the key, the value is escaped and/or themed:
@@ -202,6 +202,9 @@ if (window.jQuery) {
    *    - @variable: escape plain text to HTML (Drupal.checkPlain)
    *    - %variable: escape text and theme as a placeholder for user-submitted
    *      content (checkPlain + Drupal.theme('placeholder'))
+   *
+   * @return {String}
+   *   Returns the replaced string.
    *
    * @see Drupal.t()
    * @ingroup sanitization
@@ -223,10 +226,61 @@ if (window.jQuery) {
             args[key] = Drupal.theme('placeholder', args[key]);
             break;
         }
-        str = str.replace(key, args[key]);
       }
     }
-    return str;
+
+    return Drupal.stringReplace(str, args, null);
+  };
+
+  /**
+   * Replace substring.
+   *
+   * The longest keys will be tried first. Once a substring has been replaced,
+   * its new value will not be searched again.
+   *
+   * @param {String} str
+   *   A string with placeholders.
+   * @param {Object} args
+   *   Key-value pairs.
+   * @param {Array|null} keys
+   *   Array of keys from the "args".  Internal use only.
+   *
+   * @return {String}
+   *   Returns the replaced string.
+   */
+  Drupal.stringReplace = function (str, args, keys) {
+    if (str.length === 0) {
+      return str;
+    }
+
+    // If the array of keys is not passed then collect the keys from the args.
+    if (!Array.isArray(keys)) {
+      keys = [];
+      for (var k in args) {
+        if (args.hasOwnProperty(k)) {
+          keys.push(k);
+        }
+      }
+
+      // Order the keys by the character length. The shortest one is the first.
+      keys.sort(function (a, b) { return a.length - b.length; });
+    }
+
+    if (keys.length === 0) {
+      return str;
+    }
+
+    // Take next longest one from the end.
+    var key = keys.pop();
+    var fragments = str.split(key);
+
+    if (keys.length) {
+      for (var i = 0; i < fragments.length; i++) {
+        fragments[i] = Drupal.stringReplace(fragments[i], args, keys);
+      }
+    }
+
+    return fragments.join(args[key]);
   };
 
   /**
@@ -273,49 +327,48 @@ if (window.jQuery) {
   /**
    * Format a string containing a count of items.
    *
-   * This function ensures that the string is pluralized correctly. Since Drupal.t() is
-   * called by this function, make sure not to pass already-localized strings to it.
+   * This function ensures that the string is pluralized correctly. Since
+   * Drupal.t() is called by this function, make sure not to pass
+   * already-localized strings to it.
    *
-   * See the documentation of the server-side format_plural() function for further details.
+   * See the documentation of the server-side format_plural() function for
+   * further details.
    *
-   * @param count
+   * @param {Number} count
    *   The item count to display.
-   * @param singular
+   * @param {String} singular
    *   The string for the singular case. Please make sure it is clear this is
-   *   singular, to ease translation (e.g. use "1 new comment" instead of "1 new").
-   *   Do not use @count in the singular string.
-   * @param plural
-   *   The string for the plural case. Please make sure it is clear this is plural,
-   *   to ease translation. Use @count in place of the item count, as in "@count
-   *   new comments".
-   * @param args
+   *   singular, to ease translation (e.g. use "1 new comment" instead of "1
+   *   new"). Do not use @count in the singular string.
+   * @param {String} plural
+   *   The string for the plural case. Please make sure it is clear this is
+   *   plural, to ease translation. Use @count in place of the item count, as in
+   *   "@count new comments".
+   * @param {Object} args
    *   An object of replacements pairs to make after translation. Incidences
    *   of any key in this array are replaced with the corresponding value.
    *   See Drupal.formatString().
    *   Note that you do not need to include @count in this array.
    *   This replacement is done automatically for the plural case.
-   * @param options
+   * @param {Object} options
    *   The options to pass to the Drupal.t() function.
-   * @return
+   *
+   * @return {String}
    *   A translated string.
    */
   Drupal.formatPlural = function (count, singular, plural, args, options) {
     args = args || {};
     args['@count'] = count;
+
+    var pluralDelimiter = Drupal.locale.pluralDelimiter;
+
     // Determine the index of the plural form.
     var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] === 1) ? 0 : 1);
+    var translations = Drupal
+      .t(singular + pluralDelimiter + plural, args, options)
+      .split(pluralDelimiter);
 
-    if (index === 0) {
-      return Drupal.t(singular, args, options);
-    }
-    else if (index === 1) {
-      return Drupal.t(plural, args, options);
-    }
-    else {
-      args['@count[' + index + ']'] = args['@count'];
-      delete args['@count'];
-      return Drupal.t(plural.replace('@count', '@count[' + index + ']'), args, options);
-    }
+    return translations[index];
   };
 
   /**
