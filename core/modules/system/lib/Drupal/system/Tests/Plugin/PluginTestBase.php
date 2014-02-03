@@ -62,6 +62,11 @@ abstract class PluginTestBase extends UnitTestBase {
         'label' => 'Navigation',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
       ),
+      'menu:foo' => array(
+        'label' => 'Base label',
+        'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
+        'setting' => 'default',
+      ),
       'layout' => array(
         'label' => 'Layout',
         'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockLayoutBlock',

@@ -53,6 +53,11 @@ class MockBlockManager extends PluginManagerBase {
       'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
       'derivative' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlockDeriver',
     ));
+    // A plugin defining itself as a derivative.
+    $this->discovery->setDefinition('menu:foo', array(
+      'label' => t('Base label'),
+      'class' => 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock',
+    ));
 
     // A block plugin that can optionally be derived: the layout block plugin.
     // A layout is a special kind of block into which other blocks can be

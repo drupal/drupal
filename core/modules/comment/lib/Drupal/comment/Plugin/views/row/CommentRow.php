@@ -11,6 +11,10 @@ use Drupal\views\Plugin\views\row\EntityRow;
 
 /**
  * Plugin which performs a comment_view on the resulting object.
+ *
+ * @ViewsRow(
+ *   id = "entity:comment",
+ * )
  */
 class CommentRow extends EntityRow {
 

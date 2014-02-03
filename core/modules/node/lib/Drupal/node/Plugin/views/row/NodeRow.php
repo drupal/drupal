@@ -15,6 +15,10 @@ use Drupal\views\Plugin\views\row\EntityRow;
  * Most of the code on this object is in the theme function.
  *
  * @ingroup views_row_plugins
+ *
+ * @ViewsRow(
+ *   id = "entity:node",
+ * )
  */
 class NodeRow extends EntityRow {
 

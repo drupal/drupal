@@ -656,15 +656,3 @@ function node_views_wizard() {
   }
 
 }
-
-/**
- * Implements hook_views_plugins_row_alter().
- *
- * Replaces the generic row plugin by a custom one for nodes.
- *
- * @see \Drupal\views\Plugin\views\row\EntityRow
- */
-function node_views_plugins_row_alter(array &$plugins) {
-  $plugins['entity:node']['class'] = 'Drupal\node\Plugin\views\row\NodeRow';
-  $plugins['entity:node']['provider'] = 'node';
-}

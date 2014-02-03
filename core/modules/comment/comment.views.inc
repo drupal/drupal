@@ -676,15 +676,3 @@ function comment_views_data_alter(&$data) {
     }
   }
 }
-
-/**
- * Implements hook_views_plugins_row_alter().
- *
- * Replaces the generic row plugin by a custom one for comments.
- *
- * @see \Drupal\views\Plugin\views\row\EntityRow
- */
-function comment_views_plugins_row_alter(array &$plugins) {
-  $plugins['entity:comment']['class'] = 'Drupal\comment\Plugin\views\row\CommentRow';
-  $plugins['entity:comment']['provider'] = 'comment';
-}

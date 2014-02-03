@@ -46,6 +46,12 @@ class MockMenuBlockDeriver implements DerivativeInterface {
       'navigation' => array(
         'label' => t('Navigation'),
       ) + $base_plugin_definition,
+      'foo' => array(
+        // Instead of the derivative label, the specific label will be used.
+        'label' => t('Derivative label'),
+        // This setting will be merged in.
+         'setting' => 'default'
+      ) + $base_plugin_definition,
     );
 
     return $derivatives;
