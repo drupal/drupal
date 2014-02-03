@@ -2446,12 +2446,12 @@ function drupal_classloader_register($name, $path) {
  *
  * Example:
  * @code
- * function system_get_module_info($property) {
- *   static $info;
- *   if (!isset($info)) {
- *     $info = new ModuleInfo('system_info', 'cache');
+ * function drupal_session_started($set = NULL) {
+ *   static $session_started = FALSE;
+ *   if (isset($set)) {
+ *     $session_started = $set;
  *   }
- *   return $info[$property];
+ *   return $session_started && session_id();
  * }
  * @endcode
  *

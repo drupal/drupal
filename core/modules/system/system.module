@@ -2552,27 +2552,6 @@ function system_get_info($type, $name = NULL) {
 }
 
 /**
- * Return .info.yml data for modules.
- *
- * @param string $property
- *   The .info.yml property to retrieve.
- *
- * @return array
- *   An array keyed by module name, with the .info.yml file property as values.
- *   Only modules with the property specified in their .info.yml file will be
- *   returned.
- *
- * @see \Drupal\Core\Utility\ModuleInfo
- */
-function system_get_module_info($property) {
-  static $info;
-  if (!isset($info)) {
-    $info = new ModuleInfo('system_info', 'cache');
-  }
-  return $info[$property];
-}
-
-/**
  * Helper function to scan and collect module .info.yml data.
  *
  * @return
