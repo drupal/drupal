@@ -9,13 +9,14 @@
 
   var pathInfo = drupalSettings.path;
   var escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
+  var windowLocation = window.location;
 
   // Saves the last non-administrative page in the browser to be able to link back
   // to it when browsing administrative pages. If there is a destination parameter
   // there is not need to save the current path because the page is loaded within
   // an existing "workflow".
-  if (!pathInfo.currentPathIsAdmin && !/destination=/.test(window.location.search)) {
-    sessionStorage.setItem('escapeAdminPath', pathInfo.currentPath);
+  if (!pathInfo.currentPathIsAdmin && !/destination=/.test(windowLocation.search)) {
+    sessionStorage.setItem('escapeAdminPath', windowLocation.pathname.substring(pathInfo.basePath.length) + windowLocation.search);
   }
 
   /**
