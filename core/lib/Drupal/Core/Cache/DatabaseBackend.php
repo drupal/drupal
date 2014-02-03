@@ -8,7 +8,6 @@
 namespace Drupal\Core\Cache;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\SchemaObjectExistsException;
 
 /**
@@ -311,7 +310,7 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   public function garbageCollection() {
     try {
-      Database::getConnection()->delete($this->bin)
+      $this->connection->delete($this->bin)
         ->condition('expire', Cache::PERMANENT, '<>')
         ->condition('expire', REQUEST_TIME, '<')
         ->execute();
