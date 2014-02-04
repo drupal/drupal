@@ -233,7 +233,7 @@ function hook_queue_info_alter(&$queues) {
  *  - "#post_render": array of callables taking $children and $element.
  *  - "#submit": array of callback functions taking $form and $form_state.
  *  - "#title_display": optional string indicating if and how #title should be
- *    displayed, see theme_form_element() and theme_form_element_label().
+ *    displayed, see the form-element template and theme_form_element_label().
  *
  * @see hook_element_info_alter()
  * @see system_element_info()

@@ -2687,6 +2687,9 @@ function form_process_file($element) {
 
 /**
  * Returns HTML for a form element.
+ * Prepares variables for form element templates.
+ *
+ * Default template: form-element.html.twig.
  *
  * Each form element is wrapped in a DIV container having the following CSS
  * classes:
@@ -2723,7 +2726,7 @@ function form_process_file($element) {
  * but the parent element should have neither. Use this carefully because a
  * field without an associated label can cause accessibility challenges.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #title_display, #description, #id, #required,
@@ -2731,7 +2734,7 @@ function form_process_file($element) {
  *
  * @ingroup themeable
  */
-function theme_form_element($variables) {
+function template_preprocess_form_element(&$variables) {
   $element = &$variables['element'];
 
   // This function is invoked as theme wrapper, but the rendered form element
@@ -2743,64 +2746,52 @@ function theme_form_element($variables) {
   // Take over any #wrapper_attributes defined by the element.
   // @todo Temporary hack for #type 'item'.
   // @see http://drupal.org/node/1829202
+  $variables['attributes'] = array();
   if (isset($element['#wrapper_attributes'])) {
-    $attributes = $element['#wrapper_attributes'];
+    $variables['attributes'] = $element['#wrapper_attributes'];
   }
+
   // Add element #id for #type 'item'.
   if (isset($element['#markup']) && !empty($element['#id'])) {
-    $attributes['id'] = $element['#id'];
+    $variables['attributes']['id'] = $element['#id'];
   }
+
   // Add element's #type and #name as class to aid with JS/CSS selectors.
-  $attributes['class'][] = 'form-item';
+  $variables['attributes']['class'][] = 'form-item';
   if (!empty($element['#type'])) {
-    $attributes['class'][] = 'form-type-' . strtr($element['#type'], '_', '-');
+    $variables['attributes']['class'][] = 'form-type-' . strtr($element['#type'], '_', '-');
   }
   if (!empty($element['#name'])) {
-    $attributes['class'][] = 'form-item-' . strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
+    $variables['attributes']['class'][] = 'form-item-' . strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
   }
   // Add a class for disabled elements to facilitate cross-browser styling.
   if (!empty($element['#attributes']['disabled'])) {
-    $attributes['class'][] = 'form-disabled';
+    $variables['attributes']['class'][] = 'form-disabled';
   }
-  $output = '<div' . new Attribute($attributes) . '>' . "\n";
 
   // If #title is not set, we don't display any label or required marker.
   if (!isset($element['#title'])) {
     $element['#title_display'] = 'none';
   }
-  $prefix = isset($element['#field_prefix']) ? '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ' : '';
-  $suffix = isset($element['#field_suffix']) ? ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>' : '';
+  $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
+  $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
 
-  switch ($element['#title_display']) {
-    case 'before':
-    case 'invisible':
-      $output .= ' ' . theme('form_element_label', $variables);
-      $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
-      break;
-
-    case 'after':
-      $output .= ' ' . $prefix . $element['#children'] . $suffix;
-      $output .= ' ' . theme('form_element_label', $variables) . "\n";
-      break;
-
-    case 'none':
-    case 'attribute':
-      // Output no label and no required marker, only the children.
-      $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
-      break;
-  }
-
+  $variables['description'] = NULL;
   if (!empty($element['#description'])) {
-    $attributes = array('class' => 'description');
+    $description_attributes = array('class' => 'description');
     if (!empty($element['#id'])) {
-      $attributes['id'] = $element['#id'] . '--description';
+      $description_attributes['id'] = $element['#id'] . '--description';
     }
-    $output .= '<div' . new Attribute($attributes) . '>' . $element['#description'] . "</div>\n";
+    $variables['description']['attributes'] = new Attribute($description_attributes);
+    $variables['description']['content'] = $element['#description'];
   }
 
-  $output .= "</div>\n";
+  // Add label_display and label variables to template.
+  $variables['label_display'] = $element['#title_display'];
+  $variables['label'] = array('#theme' => 'form_element_label');
+  $variables['label'] += array_intersect_key($element, array_flip(array('#id', '#required', '#title', '#title_display')));
 
-  return $output;
+  $variables['children'] = $element['#children'];
 }
 
 /**
@@ -2845,7 +2836,6 @@ function theme_form_required_marker($variables) {
  */
 function theme_form_element_label($variables) {
   $element = $variables['element'];
-
   // If title and required marker are both empty, output no label.
   if ((!isset($element['#title']) || $element['#title'] === '') && empty($element['#required'])) {
     return '';
