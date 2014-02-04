@@ -2576,34 +2576,33 @@ function theme_form($variables) {
 }
 
 /**
- * Returns HTML for a textarea form element.
+ * Prepares variables for textarea templates.
  *
- * @param $variables
+ * Default template: textarea.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #description, #rows, #cols,
  *     #placeholder, #required, #attributes, #resizable
  *
- * @ingroup themeable
  */
-function theme_textarea($variables) {
+function template_preprocess_textarea(&$variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id', 'name', 'rows', 'cols', 'placeholder'));
   _form_set_attributes($element, array('form-textarea'));
-
-  $wrapper_attributes = array(
+  $variables['wrapper_attributes'] = new Attribute(array(
     'class' => array('form-textarea-wrapper'),
-  );
+  ));
 
   // Add resizable behavior.
   if (!empty($element['#resizable'])) {
     $element['#attributes']['class'][] = 'resize-' . $element['#resizable'];
   }
 
-  $output = '<div' . new Attribute($wrapper_attributes) . '>';
-  $output .= '<textarea' . new Attribute($element['#attributes']) . '>' . String::checkPlain($element['#value']) . '</textarea>';
-  $output .= '</div>';
-  return $output;
+  $variables['attributes'] = new Attribute($element['#attributes']);
+
+  $variables['value'] = String::checkPlain($element['#value']);
 }
 
 /**

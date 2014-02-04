@@ -2725,6 +2725,7 @@ function drupal_common_theme() {
     ),
     'textarea' => array(
       'render element' => 'element',
+      'template' => 'textarea',
     ),
     'tableselect' => array(
       'render element' => 'element',
