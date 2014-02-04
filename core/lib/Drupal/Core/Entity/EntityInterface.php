@@ -101,14 +101,14 @@ interface EntityInterface extends AccessibleInterface {
    * example:
    * @code
    * links = {
-   *   "canonical" = "/node/{node}",
-   *   "edit-form" = "/node/{node}/edit",
-   *   "version-history" = "/node/{node}/revisions"
+   *   "canonical" = "node.view",
+   *   "edit-form" = "node.page_edit",
+   *   "version-history" = "node.revision_overview"
    * }
    * @endcode
    * or specified in a callback function set like:
    * @code
-   * uri_callback = "contact_category_uri",
+   * uri_callback = "comment_uri",
    * @endcode
    * If the path is not set in the links array, the uri_callback function is
    * used for setting the path. If this does not exist and the link relationship
