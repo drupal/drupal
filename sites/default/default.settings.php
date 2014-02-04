@@ -256,12 +256,11 @@ $config_directories = array();
 /**
  * Settings:
  *
- * $settings contains configuration that can not be saved in the configuration
- * system because it is required too early during bootstrap like the database
- * information. It is also used for configuration that is specific for a given
- * environment like reverse proxy settings
+ * $settings contains environment-specific configuration, such as the files
+ * directory and reverse proxy address, and temporary configuration, such as
+ * turning on Twig debugging and security overrides.
  *
- * @see settings_get()
+ * @see \Drupal\Component\Utility\Settings::get()
  */
 
 /**
