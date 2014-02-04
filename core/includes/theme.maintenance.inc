@@ -162,9 +162,19 @@ function theme_authorize_report($variables) {
         if ($number === '#abort') {
           continue;
         }
-        $items[] = theme('authorize_message', array('message' => $log_message['message'], 'success' => $log_message['success']));
+        $authorize_message = array(
+          '#theme' => 'authorize_message',
+          '#message' => $log_message['message'],
+          '#success' => $log_message['success'],
+        );
+        $items[] = drupal_render($authorize_message);
       }
-      $output .= theme('item_list',  array('items' => $items, 'title' => $heading));
+      $item_list = array(
+        '#theme' => 'item_list',
+        '#items' => $items,
+        '#title' => $heading,
+      );
+      $output .= drupal_render($item_list);
     }
     $output .= '</div>';
   }
