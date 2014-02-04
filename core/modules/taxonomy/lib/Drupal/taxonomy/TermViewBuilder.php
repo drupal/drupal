@@ -40,19 +40,6 @@ class TermViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
-    $return = parent::getBuildDefaults($entity, $view_mode, $langcode);
-
-    // TODO: rename "term" to "taxonomy_term" in theme_taxonomy_term().
-    $return['#term'] = $return["#{$this->entityTypeId}"];
-    unset($return["#{$this->entityTypeId}"]);
-
-    return $return;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
     $build['#attached']['css'][] = drupal_get_path('module', 'taxonomy') . '/css/taxonomy.module.css';

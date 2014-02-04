@@ -372,7 +372,8 @@ function taxonomy_term_view_multiple(array $terms, $view_mode = 'full', $langcod
 function taxonomy_theme_suggestions_taxonomy_term(array $variables) {
   $suggestions = array();
 
-  $term = $variables['elements']['#term'];
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  $term = $variables['elements']['#taxonomy_term'];
 
   $suggestions[] = 'taxonomy_term__' . $term->bundle();
   $suggestions[] = 'taxonomy_term__' . $term->id();
@@ -389,14 +390,15 @@ function taxonomy_theme_suggestions_taxonomy_term(array $variables) {
  *   An associative array containing:
  *   - elements: An associative array containing the taxonomy term and any
  *     fields attached to the term. Properties used:
- *     - #term: The term object.
+ *     - #taxonomy_term: A \Drupal\taxonomy\TermInterface object.
  *     - #view_mode: The current view mode for this taxonomy term, e.g.
  *       'full' or 'teaser'.
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_taxonomy_term(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
-  $variables['term'] = $variables['elements']['#term'];
+  $variables['term'] = $variables['elements']['#taxonomy_term'];
+  /** @var \Drupal\taxonomy\TermInterface $term */
   $term = $variables['term'];
 
   $variables['url'] = $term->url();
