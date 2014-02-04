@@ -222,7 +222,11 @@ function _drupal_log_error($error, $fatal = FALSE) {
         install_display_output($message, $GLOBALS['install_state']);
       }
       else {
-        $output = theme('maintenance_page', array('content' => $message));
+        $output = array(
+          '#theme' => 'maintenance_page',
+          '#content' => $message,
+        );
+        $output = drupal_render($output);
       }
 
       $response = new Response($output, 500);
