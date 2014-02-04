@@ -12,6 +12,30 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInterface;
 
 /**
+ * Implements hook_help().
+ */
+function entity_reference_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#entity_reference':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Entity Reference module allows you to create fields that contain links to other entities (such as content items, taxonomy terms, etc.) within the site. This allows you, for example, to include a link to a user within a content item. For more information, see <a href="!er_do">the online documentation for the Entity Reference module</a>, the <a href="!entity_help">Entity module help page</a>, and the <a href="!field_help">Field module help page</a>.', array('!field_help' => \Drupal::url('help.page', array('name' => 'field')),'!entity_help' => \Drupal::url('help.page', array('name' => 'entity')), '!er_do' => 'https://drupal.org/documentation/modules/entityreference')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing and displaying entity reference fields') . '</dt>';
+      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the entity reference field can be configured separately. See the <a href="!field_ui">Field UI help</a> for more information on how to manage fields and their display.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '<dt>' . t('Selecting reference type') . '</dt>';
+      $output .= '<dd>' . t('In the field settings you can select which entity type you want to create a reference to.') . '</dd>';
+      $output .= '<dt>' . t('Filtering and sorting reference fields') . '</dt>';
+      $output .= '<dd>' . t('Depending on the chosen entity type, additional filtering and sorting options are available for the list of entities that can be referred to, in the field settings. For example, the list of users can be filtered by role and sorted by name or ID.') . '</dd>';
+      $output .= '<dt>' . t('Displaying a reference') . '</dt>';
+      $output .= '<dd>' . t('An entity reference can be displayed as a simple label with or without a link to the entity. Alternatively, the referenced entity can be displayed as a teaser (or any other available view mode) inside the referencing entity.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
  * Implements hook_field_info_alter().
  */
 function entity_reference_field_info_alter(&$info) {
