@@ -3,4 +3,4 @@ toolbar.subtrees:
   defaults:
     _controller: '\Drupal\toolbar\Controller\ToolbarController::subtreesJsonp'
   requirements:
-    _custom_access: '\Drupal\toolbar\Routing\ToolbarController::checkSubTreeAccess'
+    _custom_access: '\Drupal\toolbar\Controller\ToolbarController::checkSubTreeAccess'

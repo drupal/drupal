@@ -441,6 +441,19 @@ class ToolbarAdminMenuTest extends WebTestBase {
   }
 
   /**
+   * Tests that the 'toolbar/subtrees/{hash}' is reachable.
+   */
+  function testSubtreesJsonRequest() {
+    $admin_user = $this->admin_user;
+    $this->drupalLogin($admin_user);
+    // Request a new page to refresh the drupalSettings object.
+    $subtrees_hash = $this->getSubtreesHash();
+
+    $this->drupalGetJSON('toolbar/subtrees/' . $subtrees_hash);
+    $this->assertResponse('200');
+  }
+
+  /**
    * Get the hash value from the admin menu subtrees route path.
    *
    * @return string
