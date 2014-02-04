@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Ajax;
 
-use Drupal\ajax_test\AjaxTestForm;
+use Drupal\ajax_test\Form\AjaxTestForm;
 
 /**
  * Tests use of dialogs as wrappers for Ajax responses.

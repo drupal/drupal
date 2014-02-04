@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\ajax_test\AjaxTestForm.
+ * Contains \Drupal\ajax_test\Form\AjaxTestForm.
  */
 
-namespace Drupal\ajax_test;
+namespace Drupal\ajax_test\Form;
 
 use Drupal\Core\Form\FormInterface;
 
