@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Tests\Handler\FilterBooleanWebTest.
+ * Contains \Drupal\views_ui\Tests\FilterBooleanWebTest.
  */
 
 namespace Drupal\views_ui\Tests;

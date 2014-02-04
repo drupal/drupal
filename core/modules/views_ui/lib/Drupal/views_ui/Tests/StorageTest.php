@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\tests\StorageTest.
+ * Contains \Drupal\views_ui\Tests\StorageTest.
  */
 
 namespace Drupal\views_ui\Tests;

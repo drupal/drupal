@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\tests\TagTest.
+ * Contains \Drupal\views_ui\Tests\TagTest.
  */
 
 namespace Drupal\views_ui\Tests;

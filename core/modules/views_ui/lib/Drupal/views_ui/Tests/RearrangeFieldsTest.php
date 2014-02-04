@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\tests\RearrangeFieldsTest.
+ * Contains \Drupal\views_ui\Tests\RearrangeFieldsTest.
  */
 
 namespace Drupal\views_ui\Tests;

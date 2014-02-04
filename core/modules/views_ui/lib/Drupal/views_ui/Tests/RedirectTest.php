@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_ui\tests\RedirectTest.
+ * Contains \Drupal\views_ui\Tests\RedirectTest.
  */
 
 namespace Drupal\views_ui\Tests;
