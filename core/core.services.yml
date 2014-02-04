@@ -435,10 +435,12 @@ services:
     class: Drupal\Core\EventSubscriber\HtmlViewSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@html_page_renderer']
+    arguments: ['@html_fragment_renderer', '@html_page_renderer']
+  html_fragment_renderer:
+    class: Drupal\Core\Page\DefaultHtmlFragmentRenderer
+    arguments: ['@language_manager']
   html_page_renderer:
     class: Drupal\Core\Page\DefaultHtmlPageRenderer
-    arguments: ['@language_manager']
   private_key:
     class: Drupal\Core\PrivateKey
     arguments: ['@state']
@@ -533,7 +535,7 @@ services:
     arguments: ['@config.storage', '@config.storage.snapshot']
   exception_controller:
     class: Drupal\Core\Controller\ExceptionController
-    arguments: ['@content_negotiation', '@string_translation', '@title_resolver', '@html_page_renderer']
+    arguments: ['@content_negotiation', '@string_translation', '@title_resolver', '@html_page_renderer', '@html_fragment_renderer']
     calls:
       - [setContainer, ['@service_container']]
   exception_listener:

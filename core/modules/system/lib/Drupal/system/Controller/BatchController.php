@@ -9,7 +9,7 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Page\DefaultHtmlPageRenderer;
+use Drupal\Core\Page\DefaultHtmlFragmentRenderer;
 use Drupal\Core\Page\HtmlPage;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,11 +23,11 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class BatchController implements ContainerInjectionInterface {
 
   /**
-   * The HTML page renderer.
+   * The fragment rendering service.
    *
-   * @var \Drupal\Core\Page\DefaultHtmlPageRenderer
+   * @var \Drupal\Core\Page\DefaultHtmlFragmentRenderer
    */
-  protected $htmlPageRenderer;
+  protected $fragmentRenderer;
 
   /**
    * The title resolver.
@@ -39,13 +39,13 @@ class BatchController implements ContainerInjectionInterface {
   /**
    * Constructs a new BatchController.
    *
-   * @param \Drupal\Core\Page\DefaultHtmlPageRenderer $html_page_renderer
-   *   The HTML page renderer.
+   * @param \Drupal\Core\Page\DefaultHtmlFragmentRenderer $html_fragment_renderer
+   *   The fragment rendering service.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver.
    */
-  public function __construct(DefaultHtmlPageRenderer $html_page_renderer, TitleResolverInterface $title_resolver) {
-    $this->htmlPageRenderer = $html_page_renderer;
+  public function __construct(DefaultHtmlFragmentRenderer $html_fragment_renderer, TitleResolverInterface $title_resolver) {
+    $this->fragmentRenderer = $html_fragment_renderer;
     $this->titleResolver = $title_resolver;
   }
 
@@ -54,7 +54,7 @@ class BatchController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('html_page_renderer'),
+      $container->get('html_fragment_renderer'),
       $container->get('title_resolver')
     );
   }
@@ -106,7 +106,7 @@ class BatchController implements ContainerInjectionInterface {
 
     $page_array = drupal_prepare_page($output);
 
-    $page = $this->htmlPageRenderer->preparePage($page, $page_array);
+    $page = $this->fragmentRenderer->preparePage($page, $page_array);
 
     $page->setBodyTop(drupal_render($page_array['page_top']));
     $page->setBodyBottom(drupal_render($page_array['page_bottom']));

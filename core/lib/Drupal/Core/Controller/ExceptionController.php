@@ -44,7 +44,14 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    *
    * @var \Drupal\Core\Page\HtmlPageRendererInterface
    */
-  protected $renderer;
+  protected $htmlPageRenderer;
+
+  /**
+   * The fragment rendering service.
+   *
+   * @var \Drupal\Core\Page\HtmlFragmentRendererInterface
+   */
+  protected $fragmentRenderer;
 
   /**
    * Constructor.
@@ -58,11 +65,14 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
    *   The title resolver.
    * @param \Drupal\Core\Page\HtmlPageRendererInterface $renderer
    *   The page renderer.
+   * @param \Drupal\Core\Page\HtmlFragmentRendererInterface $fragment_renderer
+   *   The fragment rendering service.
    */
-  public function __construct(ContentNegotiation $negotiation, TranslationInterface $translation_manager, TitleResolverInterface $title_resolver, HtmlPageRendererInterface $renderer) {
+  public function __construct(ContentNegotiation $negotiation, TranslationInterface $translation_manager, TitleResolverInterface $title_resolver, HtmlPageRendererInterface $renderer, $fragment_renderer) {
     parent::__construct($translation_manager, $title_resolver);
     $this->negotiation = $negotiation;
-    $this->renderer = $renderer;
+    $this->htmlPageRenderer = $renderer;
+    $this->fragmentRenderer = $fragment_renderer;
   }
 
   /**
@@ -164,8 +174,8 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
       );
 
       $fragment = $this->createHtmlFragment($page_content, $request);
-      $page = $this->renderer->render($fragment, 403);
-      $response = new Response($this->renderer->renderPage($page), $page->getStatusCode());
+      $page = $this->fragmentRenderer->render($fragment, 403);
+      $response = new Response($this->htmlPageRenderer->render($page), $page->getStatusCode());
       return $response;
     }
 
@@ -241,8 +251,8 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
       );
 
       $fragment = $this->createHtmlFragment($page_content, $request);
-      $page = $this->renderer->render($fragment, 404);
-      $response = new Response($this->renderer->renderPage($page), $page->getStatusCode());
+      $page = $this->fragmentRenderer->render($fragment, 404);
+      $response = new Response($this->htmlPageRenderer->render($page), $page->getStatusCode());
       return $response;
     }
 
