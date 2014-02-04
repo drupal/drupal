@@ -10,11 +10,10 @@
  * your modifications. Failure to remove write permissions to this file is a
  * security risk.
  *
- * The configuration file to be loaded is based upon the rules below. However
- * if the multisite aliasing file named sites/sites.php is present, it will be
- * loaded, and the aliases in the array $sites will override the default
- * directory rules below. See sites/example.sites.php for more information about
- * aliases.
+ * In order to use the selection rules below the multisite aliasing file named
+ * sites/sites.php must be present. Its optional settings will be loaded, and
+ * the aliases in the array $sites will override the default directory rules
+ * below. See sites/example.sites.php for more information about aliases.
  *
  * The configuration directory will be discovered by stripping the website's
  * hostname from left to right and pathname from right to left. The first
