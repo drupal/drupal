@@ -130,7 +130,7 @@ class Schema extends DatabaseSchema {
 
     $sql_keys = array();
     if (isset($table['primary key']) && is_array($table['primary key'])) {
-      $sql_keys[] = 'PRIMARY KEY (' . implode(', ', $table['primary key']) . ')';
+      $sql_keys[] = 'PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
     }
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
@@ -318,6 +318,26 @@ class Schema extends DatabaseSchema {
     return implode(', ', $return);
   }
 
+  /**
+   * Create the SQL expression for primary keys.
+   *
+   * Postgresql does not support key length. It does support fillfactor, but
+   * that requires a separate database lookup for each column in the key. The
+   * key length defined in the schema is ignored.
+   */
+  protected function createPrimaryKeySql($fields) {
+    $return = array();
+    foreach ($fields as $field) {
+      if (is_array($field)) {
+        $return[] = '"' . $field[0] . '"';
+      }
+      else {
+        $return[] = '"' . $field . '"';
+      }
+    }
+    return implode(', ', $return);
+  }
+
   function renameTable($table, $new_name) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot rename @table to @table_new: table @table doesn't exist.", array('@table' => $table, '@table_new' => $new_name)));
@@ -457,7 +477,7 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", array('@table' => $table)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . implode(',', $fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . $this->createPrimaryKeySql($fields) . ')');
   }
 
   public function dropPrimaryKey($table) {
