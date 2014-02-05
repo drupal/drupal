@@ -10,14 +10,9 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Routing\UrlGeneratorInterface;
-use Drupal\Core\Session\AccountInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a class which generates a link with route names and parameters.
@@ -39,13 +34,6 @@ class LinkGenerator implements LinkGeneratorInterface {
   protected $moduleHandler;
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * The path alias manager.
    *
    * @var \Drupal\Core\Path\AliasManagerInterface
@@ -59,42 +47,13 @@ class LinkGenerator implements LinkGeneratorInterface {
    *   The url generator.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
    *   The path alias manager.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, AliasManagerInterface $alias_manager) {
+  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, AliasManagerInterface $alias_manager) {
     $this->urlGenerator = $url_generator;
     $this->moduleHandler = $module_handler;
-    $this->languageManager = $language_manager;
     $this->aliasManager = $alias_manager;
-  }
-
-  /**
-   * Sets the $request property.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The HttpRequest object representing the current request.
-   */
-  public function setRequest(Request $request) {
-    // Pre-calculate and store values based on the request that may be used
-    // repeatedly in generate().
-    $raw_variables = $request->attributes->get('_raw_variables');
-    // $raw_variables is a ParameterBag object or NULL.
-    $parameters = $raw_variables ? $raw_variables->all() : array();
-    $this->active = array(
-      'route_name' => $request->attributes->get(RouteObjectInterface::ROUTE_NAME),
-      'language' => $this->languageManager->getCurrentLanguage(Language::TYPE_URL)->id,
-      'parameters' => $parameters + (array) $request->query->all(),
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getActive() {
-    return $this->active;
   }
 
   /**
