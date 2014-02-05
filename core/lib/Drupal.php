@@ -137,6 +137,19 @@ class Drupal {
   }
 
   /**
+   * Indicates if a service is defined in the container.
+   *
+   * @param string $id
+   *   The ID of the service to check.
+   *
+   * @return bool
+   *   TRUE if the specified service exists, FALSE otherwise.
+   */
+  public static function hasService($id) {
+    return static::$container && static::$container->has($id);
+  }
+
+  /**
    * Retrieves the currently active request object.
    *
    * Note: The use of this wrapper in particular is especially discouraged. Most

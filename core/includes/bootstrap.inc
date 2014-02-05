@@ -709,7 +709,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // Verify that we have an keyvalue service before using it. This is required
     // because this function is called during installation.
     // @todo Inject database connection into KeyValueStore\DatabaseStorage.
-    if (($container = \Drupal::getContainer()) && $container->has('keyvalue') && function_exists('db_query')) {
+    if (\Drupal::hasService('keyvalue') && function_exists('db_query')) {
       if ($type == 'module') {
         if (empty($files[$type])) {
           $files[$type] = \Drupal::moduleHandler()->getModuleList();

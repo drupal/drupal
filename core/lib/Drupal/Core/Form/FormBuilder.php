@@ -1810,7 +1810,7 @@ class FormBuilder implements FormBuilderInterface {
    */
   protected function currentUser() {
     if (!$this->currentUser) {
-      if (\Drupal::getContainer()->has('current_user')) {
+      if (\Drupal::hasService('current_user')) {
         $this->currentUser = \Drupal::currentUser();
       }
       else {

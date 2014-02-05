@@ -613,7 +613,7 @@ function drupal_install_system($install_state) {
   // Create tables.
   drupal_install_schema('system');
 
-  if (!\Drupal::getContainer()->has('kernel')) {
+  if (!\Drupal::hasService('kernel')) {
     // Immediately boot a kernel to have real services ready. If there's already
     // an initialized request object in the pre-kernel container, persist it in
     // the post-kernel container.
