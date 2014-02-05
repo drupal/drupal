@@ -342,8 +342,6 @@ services:
     class: Drupal\Core\ParamConverter\ParamConverterManager
     calls:
       - [setContainer, ['@service_container']]
-    tags:
-      - { name: route_enhancer }
   paramconverter_subscriber:
     class: Drupal\Core\EventSubscriber\ParamConverterSubscriber
     tags:
@@ -372,6 +370,12 @@ services:
   ajax_response_subscriber:
     class: Drupal\Core\EventSubscriber\AjaxResponseSubscriber
     tags:
+      - { name: event_subscriber }
+  route_enhancer.param_conversion:
+    class: Drupal\Core\Routing\Enhancer\ParamConversionEnhancer
+    arguments: ['@paramconverter_manager']
+    tags:
+      - { name: route_enhancer }
       - { name: event_subscriber }
   route_enhancer.authentication:
     class: Drupal\Core\Routing\Enhancer\AuthenticationEnhancer

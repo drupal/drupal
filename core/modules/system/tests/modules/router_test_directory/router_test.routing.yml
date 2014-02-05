@@ -86,3 +86,10 @@ router_test.13:
   defaults:
     _content: '\Drupal\router_test\TestContent::testAccount'
 
+router_test.14:
+  path: '/router_test/test14/{uid}'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test9'
+

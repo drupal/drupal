@@ -12,10 +12,10 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Component\Utility\Unicode;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -192,7 +192,7 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
       $request->attributes->add($this->router->matchRequest($request));
       return $request;
     }
-    catch (NotFoundHttpException $e) {
+    catch (ParamNotConvertedException $e) {
       return NULL;
     }
     catch (ResourceNotFoundException $e) {

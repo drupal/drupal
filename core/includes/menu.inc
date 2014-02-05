@@ -9,13 +9,13 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -934,7 +934,7 @@ function menu_item_route_access(Route $route, $href, &$map, Request $request = N
   try {
     $request->attributes->add(\Drupal::service('router')->matchRequest($request));
   }
-  catch (NotFoundHttpException $e) {
+  catch (ParamNotConvertedException $e) {
     return FALSE;
   }
 

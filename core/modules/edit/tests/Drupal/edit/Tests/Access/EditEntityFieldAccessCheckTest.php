@@ -144,8 +144,6 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests the access method with an undefined entity type.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function testAccessWithUndefinedEntityType() {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
@@ -158,13 +156,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(NULL));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->editAccessCheck->access($route, $request, $account);
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
   }
 
   /**
    * Tests the access method with a non existing entity.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function testAccessWithNotExistingEntity() {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
@@ -183,13 +179,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->will($this->returnValue(NULL));
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->editAccessCheck->access($route, $request, $account);
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
   }
 
   /**
    * Tests the access method with a forgotten passed field_name.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function testAccessWithNotPassedFieldName() {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
@@ -198,13 +192,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $request->attributes->set('entity', $this->createMockEntity());
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->editAccessCheck->access($route, $request, $account);
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
   }
 
   /**
    * Tests the access method with a non existing field.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function testAccessWithNonExistingField() {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
@@ -214,13 +206,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $request->attributes->set('field_name', 'not_valid');
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->editAccessCheck->access($route, $request, $account);
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
   }
 
   /**
    * Tests the access method with a forgotten passed language.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function testAccessWithNotPassedLanguage() {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
@@ -230,13 +220,11 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $request->attributes->set('field_name', 'valid');
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->editAccessCheck->access($route, $request, $account);
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
   }
 
   /**
    * Tests the access method with an invalid language.
-   *
-   * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function testAccessWithInvalidLanguage() {
     $entity = $this->createMockEntity();
@@ -253,7 +241,7 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
     $request->attributes->set('langcode', 'xx-lolspeak');
 
     $account = $this->getMock('Drupal\Core\Session\AccountInterface');
-    $this->editAccessCheck->access($route, $request, $account);
+    $this->assertSame(AccessCheckInterface::KILL, $this->editAccessCheck->access($route, $request, $account));
   }
 
   /**

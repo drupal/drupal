@@ -12,7 +12,6 @@ use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -44,7 +43,9 @@ class EditEntityFieldAccessCheck implements AccessInterface, EditEntityFieldAcce
     // @todo Request argument validation and object loading should happen
     //   elsewhere in the request processing pipeline:
     //   http://drupal.org/node/1798214.
-    $this->validateAndUpcastRequestAttributes($request);
+    if (!$this->validateAndUpcastRequestAttributes($request)) {
+      return static::KILL;
+    }
 
     return $this->accessEditEntityField($request->attributes->get('entity'), $request->attributes->get('field_name'))  ? static::ALLOW : static::DENY;
   }
@@ -65,11 +66,11 @@ class EditEntityFieldAccessCheck implements AccessInterface, EditEntityFieldAcce
       $entity_id = $entity;
       $entity_type = $request->attributes->get('entity_type');
       if (!$entity_type || !$this->entityManager->getDefinition($entity_type)) {
-        throw new NotFoundHttpException();
+        return FALSE;
       }
       $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
       if (!$entity) {
-        throw new NotFoundHttpException();
+        return FALSE;
       }
       $request->attributes->set('entity', $entity);
     }
@@ -77,12 +78,14 @@ class EditEntityFieldAccessCheck implements AccessInterface, EditEntityFieldAcce
     // Validate the field name and language.
     $field_name = $request->attributes->get('field_name');
     if (!$field_name || !$entity->hasField($field_name)) {
-      throw new NotFoundHttpException();
+      return FALSE;
     }
     $langcode = $request->attributes->get('langcode');
     if (!$langcode || !$entity->hasTranslation($langcode)) {
-      throw new NotFoundHttpException();
+      return FALSE;
     }
+
+    return TRUE;
   }
 
 }

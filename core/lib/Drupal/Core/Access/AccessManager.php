@@ -7,7 +7,8 @@
 
 namespace Drupal\Core\Access;
 
-use Drupal\Core\ParamConverter\ParamConverterManager;
+use Drupal\Core\ParamConverter\ParamConverterManagerInterface;
+use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -17,7 +18,6 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -73,7 +73,7 @@ class AccessManager extends ContainerAware {
   /**
    * The paramconverter manager.
    *
-   * @var \Drupal\Core\ParamConverter\ParamConverterManager
+   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface
    */
   protected $paramConverterManager;
 
@@ -91,10 +91,10 @@ class AccessManager extends ContainerAware {
    *   The route provider.
    * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $url_generator
    *   The url generator.
-   * @param \Drupal\Core\ParamConverter\ParamConverterManager $paramconverter_manager
+   * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $paramconverter_manager
    *   The param converter manager.
    */
-  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManager $paramconverter_manager) {
+  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManagerInterface $paramconverter_manager) {
     $this->routeProvider = $route_provider;
     $this->urlGenerator = $url_generator;
     $this->paramConverterManager = $paramconverter_manager;
@@ -202,14 +202,14 @@ class AccessManager extends ContainerAware {
         $defaults = $parameters + $route->getDefaults();
         $route_request = RequestHelper::duplicate($this->request, $this->urlGenerator->generate($route_name, $defaults));
         $defaults[RouteObjectInterface::ROUTE_OBJECT] = $route;
-        $route_request->attributes->add($this->paramConverterManager->enhance($defaults, $route_request));
+        $route_request->attributes->add($this->paramConverterManager->convert($defaults, $route_request));
       }
       return $this->check($route, $route_request, $account);
     }
     catch (RouteNotFoundException $e) {
       return FALSE;
     }
-    catch (NotFoundHttpException $e) {
+    catch (ParamNotConvertedException $e) {
       return FALSE;
     }
   }

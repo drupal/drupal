@@ -65,7 +65,7 @@ class AccessManagerTest extends UnitTestCase {
   /**
    * The parameter converter.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $paramConverter;
 
@@ -119,7 +119,7 @@ class AccessManagerTest extends UnitTestCase {
       ->method('generate')
       ->will($this->returnValueMap($map));
 
-    $this->paramConverter = $this->getMock('\Drupal\Core\ParamConverter\ParamConverterManager');
+    $this->paramConverter = $this->getMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
 
     $this->account = $this->getMock('Drupal\Core\Session\AccountInterface');
 
@@ -395,11 +395,11 @@ class AccessManagerTest extends UnitTestCase {
     $this->accessManager->setRequest(new Request());
 
     $this->paramConverter->expects($this->at(0))
-      ->method('enhance')
+      ->method('convert')
       ->will($this->returnValue(array()));
 
     $this->paramConverter->expects($this->at(1))
-      ->method('enhance')
+      ->method('convert')
       ->will($this->returnValue(array()));
 
     // Tests the access with routes with parameters without given request.
@@ -431,9 +431,9 @@ class AccessManagerTest extends UnitTestCase {
       ->method('generate')
       ->will($this->returnValueMap($map));
 
-    $this->paramConverter = $this->getMock('\Drupal\Core\ParamConverter\ParamConverterManager');
+    $this->paramConverter = $this->getMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
     $this->paramConverter->expects($this->at(0))
-      ->method('enhance')
+      ->method('convert')
       ->will($this->returnValue(array('value' => 'upcasted_value')));
 
 
@@ -491,9 +491,9 @@ class AccessManagerTest extends UnitTestCase {
       ->with('test_route_1', array('value' => 'example'))
       ->will($this->returnValueMap($map));
 
-    $this->paramConverter = $this->getMock('\Drupal\Core\ParamConverter\ParamConverterManager');
+    $this->paramConverter = $this->getMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
     $this->paramConverter->expects($this->at(0))
-      ->method('enhance')
+      ->method('convert')
       ->with(array('value' => 'example', RouteObjectInterface::ROUTE_OBJECT => $route))
       ->will($this->returnValue(array('value' => 'upcasted_value')));
 

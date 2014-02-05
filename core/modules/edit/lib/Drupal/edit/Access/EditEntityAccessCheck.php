@@ -44,7 +44,9 @@ class EditEntityAccessCheck implements AccessInterface {
     // @todo Request argument validation and object loading should happen
     //   elsewhere in the request processing pipeline:
     //   http://drupal.org/node/1798214.
-    $this->validateAndUpcastRequestAttributes($request);
+    if (!$this->validateAndUpcastRequestAttributes($request)) {
+      return static::KILL;
+    }
 
     return $this->accessEditEntity($request->attributes->get('entity'), $account)  ? static::ALLOW : static::DENY;
   }
@@ -65,14 +67,16 @@ class EditEntityAccessCheck implements AccessInterface {
       $entity_id = $entity;
       $entity_type = $request->attributes->get('entity_type');
       if (!$entity_type || !$this->entityManager->getDefinition($entity_type)) {
-        throw new NotFoundHttpException();
+        return FALSE;
       }
       $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
       if (!$entity) {
-        throw new NotFoundHttpException();
+        return FALSE;
       }
       $request->attributes->set('entity', $entity);
     }
+
+    return TRUE;
   }
 
 }

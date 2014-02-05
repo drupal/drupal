@@ -7,6 +7,9 @@
 
 namespace Drupal\router_test;
 
+use Drupal\Core\ParamConverter\ParamNotConvertedException;
+use Drupal\user\UserInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -48,6 +51,19 @@ class TestControllers {
 
   public function test8() {
     return new Response('test8');
+  }
+
+  public function test9($uid) {
+    $text = 'Route not matched.';
+    try {
+      $match = \Drupal::service('router')->match('/user/' . $uid);
+      if (isset($match['user']) && $match['user'] instanceof UserInterface) {
+        $text = sprintf('User route "%s" was matched.', $match[RouteObjectInterface::ROUTE_NAME]);
+      }
+    }
+    catch (ParamNotConvertedException $e) {
+    }
+    return new Response($text);
   }
 
 }

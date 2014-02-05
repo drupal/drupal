@@ -8,10 +8,7 @@
 namespace Drupal\Core\ParamConverter;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  * A typical use case for this would be upcasting (converting) a node id to a
  * node entity.
  */
-class ParamConverterManager extends ContainerAware implements RouteEnhancerInterface {
+class ParamConverterManager extends ContainerAware implements ParamConverterManagerInterface {
 
   /**
    * An array of registered converter service ids.
@@ -45,15 +42,7 @@ class ParamConverterManager extends ContainerAware implements RouteEnhancerInter
   protected $converters = array();
 
   /**
-   * Registers a parameter converter with the manager.
-   *
-   * @param string $converter
-   *   The parameter converter service id to register.
-   * @param int $priority
-   *   (optional) The priority of the converter. Defaults to 0.
-   *
-   * @return \Drupal\Core\ParamConverter\ParamConverterManager
-   *   The called object for chaining.
+   * {@inheritdoc}
    */
   public function addConverter($converter, $priority = 0) {
     if (empty($this->converterIds[$priority])) {
@@ -65,10 +54,7 @@ class ParamConverterManager extends ContainerAware implements RouteEnhancerInter
   }
 
   /**
-   * Sorts the converter service ids and flattens them.
-   *
-   * @return array
-   *   The sorted parameter converter service ids.
+   * {@inheritdoc}
    */
   public function getConverterIds() {
     if (!isset($this->sortedConverterIds)) {
@@ -82,16 +68,7 @@ class ParamConverterManager extends ContainerAware implements RouteEnhancerInter
   }
 
   /**
-   * Lazy-loads converter services.
-   *
-   * @param string $converter
-   *   The service id of converter service to load.
-   *
-   * @return \Drupal\Core\ParamConverter\ParamConverterInterface
-   *   The loaded converter service identified by the given service id.
-   *
-   * @throws \InvalidArgumentException
-   *   If the given service id is not a registered converter.
+   * {@inheritdoc}
    */
   public function getConverter($converter) {
     if (isset($this->converters[$converter])) {
@@ -104,10 +81,7 @@ class ParamConverterManager extends ContainerAware implements RouteEnhancerInter
   }
 
   /**
-   * Saves a list of applicable converters to each route.
-   *
-   * @param \Symfony\Component\Routing\RouteCollection $routes
-   *   A collection of routes to apply converters to.
+   * {@inheritdoc}
    */
   public function setRouteParameterConverters(RouteCollection $routes) {
     foreach ($routes->all() as $route) {
@@ -137,33 +111,11 @@ class ParamConverterManager extends ContainerAware implements RouteEnhancerInter
   }
 
   /**
-   * Invokes the registered converter for each defined parameter on a route.
-   *
-   * @param array $defaults
-   *   The route defaults array.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-   *   If one of the assigned converters returned NULL because the given
-   *   variable could not be converted.
-   *
-   * @return array
-   *   The modified defaults.
+   * {@inheritdoc}
    */
-  public function enhance(array $defaults, Request $request) {
-    // Store a backup of the raw $defaults values corresponding to
-    // variables in the route path pattern.
+  public function convert(array $defaults, Request $request) {
+    /** @var $route \Symfony\Component\Routing\Route */
     $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
-    $variables = array_flip($route->compile()->getVariables());
-    // Foreach  will copy the values from the array it iterates. Even if they
-    // are references, use it to break them. This avoids any scenarios where raw
-    // variables also get replaced with converted values.
-    $raw_variables = array();
-    foreach (array_intersect_key($defaults, $variables) as $key => $value) {
-      $raw_variables[$key] = $value;
-    }
-    $defaults['_raw_variables'] = new ParameterBag($raw_variables);
 
     // Skip this enhancer if there are no parameter definitions.
     if (!$parameters = $route->getOption('parameters')) {
@@ -183,10 +135,10 @@ class ParamConverterManager extends ContainerAware implements RouteEnhancerInter
       }
 
       // If a converter returns NULL it means that the parameter could not be
-      // converted in which case we throw a 404.
+      // converted.
       $defaults[$name] = $this->getConverter($definition['converter'])->convert($defaults[$name], $definition, $name, $defaults, $request);
       if (!isset($defaults[$name])) {
-        throw new NotFoundHttpException();
+        throw new ParamNotConvertedException(sprintf('The "%s" parameter was not converted for the path "%s" (route name: "%s")', $name, $route->getPath(), $defaults[RouteObjectInterface::ROUTE_NAME]));
       }
     }
 
