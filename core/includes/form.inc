@@ -1527,6 +1527,9 @@ function form_process_container($element, &$form_state) {
  */
 function theme_tableselect($variables) {
   $element = $variables['element'];
+  $table = array(
+    '#theme' => 'table',
+  );
   $rows = array();
   $header = $element['#header'];
   if (!empty($element['#options'])) {
@@ -1566,7 +1569,7 @@ function theme_tableselect($variables) {
     // checkboxes/radios in the first table column.
     if ($element['#js_select']) {
       // Add a "Select all" checkbox.
-      drupal_add_library('system', 'drupal.tableselect');
+      $table['#attached']['library'][] = array('system', 'drupal.tableselect');
       array_unshift($header, array('class' => array('select-all')));
     }
     else {
@@ -1575,7 +1578,14 @@ function theme_tableselect($variables) {
       array_unshift($header, '');
     }
   }
-  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => $element['#empty'], 'attributes' => $element['#attributes']));
+  $table += array(
+    '#header' => $header,
+    '#rows' => $rows,
+    '#empty' => $element['#empty'],
+    '#attributes' => $element['#attributes'],
+  );
+
+  return drupal_render($table);
 }
 
 /**
