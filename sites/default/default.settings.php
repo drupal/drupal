@@ -592,25 +592,19 @@ ini_set('session.cookie_lifetime', 2000000);
 # $cookie_domain = '.example.com';
 
 /**
- * Variable overrides:
+ * Configuration overrides.
  *
- * To override specific entries in the 'variable' table for this site,
+ * To globally override specific configuration values for this site,
  * set them here. You usually don't need to use this feature. This is
  * useful in a configuration file for a vhost or directory, rather than
- * the default settings.php. Any configuration setting from the 'variable'
- * table can be given a new value. Note that any values you provide in
- * these variable overrides will not be modifiable from the Drupal
- * administration interface.
+ * the default settings.php.
  *
- * The following overrides are examples:
- * - site_name: Defines the site's name.
- * - $conf['system.theme']['default']: Defines the default theme for this site.
- * - anonymous: Defines the human-readable name of anonymous users.
- * Remove the leading hash signs to enable.
+ * Note that any values you provide in these variable overrides will not be
+ * modifiable from the Drupal administration interface.
  */
-# $conf['system.site']['name'] = 'My Drupal site';
-# $conf['system.theme']['default'] = 'stark';
-# $conf['anonymous'] = 'Visitor';
+# $config['system.site']['name'] = 'My Drupal site';
+# $config['system.theme']['default'] = 'stark';
+# $config['user.settings']['anonymous'] = 'Visitor';
 
 /**
  * CSS/JS aggregated file gzip compression:
@@ -624,8 +618,8 @@ ini_set('session.cookie_lifetime', 2000000);
  * configured to cache and compress these files itself you may want to uncomment
  * one or both of the below lines, which will prevent gzip files being stored.
  */
-# $conf['system.performance']['css']['gzip'] = FALSE;
-# $conf['system.performance']['js']['gzip'] = FALSE;
+# $config['system.performance']['css']['gzip'] = FALSE;
+# $config['system.performance']['js']['gzip'] = FALSE;
 
 /**
  * Fast 404 pages:
@@ -649,9 +643,9 @@ ini_set('session.cookie_lifetime', 2000000);
  *
  * Remove the leading hash signs if you would like to alter this functionality.
  */
-#$conf['system.performance']['fast_404']['exclude_paths'] = '/\/(?:styles)\//';
-#$conf['system.performance']['fast_404']['paths'] = '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
-#$conf['system.performance']['fast_404']['html'] = '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
+# $config['system.performance']['fast_404']['exclude_paths'] = '/\/(?:styles)\//';
+# $config['system.performance']['fast_404']['paths'] = '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
+# $config['system.performance']['fast_404']['html'] = '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>';
 
 /**
  * Load local development override configuration, if available.

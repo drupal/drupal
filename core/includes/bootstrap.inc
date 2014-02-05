@@ -537,16 +537,18 @@ function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root, $script_path;
 
   // Export these settings.php variables to the global namespace.
-  global $databases, $cookie_domain, $conf, $db_prefix, $drupal_hash_salt, $base_secure_url, $base_insecure_url, $config_directories;
-  $conf = array();
+  global $databases, $cookie_domain, $db_prefix, $drupal_hash_salt, $base_secure_url, $base_insecure_url, $config_directories, $config;
+  $settings = array();
+  $config = array();
 
   // Make conf_path() available as local variable in settings.php.
   $conf_path = conf_path();
   if (is_readable(DRUPAL_ROOT . '/' . $conf_path . '/settings.php')) {
     include_once DRUPAL_ROOT . '/' . $conf_path . '/settings.php';
   }
+  // Initialize Settings.
+  new Settings($settings);
 
-  new Settings(isset($settings) ? $settings : array());
   $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
 
   if (isset($base_url)) {
@@ -2078,14 +2080,14 @@ function drupal_valid_test_ua($new_prefix = NULL) {
  * Very strictly for internal use only.
  *
  * Loads settings.php from the simpletest public files directory. These files
- * can change the global $conf, the global $config_directories, the return
- * value of conf_path(), and settings().
+ * can change the global $config_directories, the return value of conf_path(),
+ * settings(), and $config overrides.
  *
  * @param string $test_prefix
  *   The simpletest prefix.
  */
 function _drupal_load_test_overrides($test_prefix) {
-  global $conf, $config_directories;
+  global $config_directories, $config;
 
   // Do not use the parent site's config directories. Use only the child site's.
   // @see \Drupal\simpletest\TestBase::prepareConfigDirectories()
@@ -2100,7 +2102,7 @@ function _drupal_load_test_overrides($test_prefix) {
   if (file_exists($filename)) {
     $settings = settings()->getAll();
     $conf_path = &drupal_static('conf_path');
-    // This can override $conf, $conf_path, $settings, and $config_directories.
+    // This can override $config, $conf_path, $settings, and $config_directories.
     include $filename;
     // Keep the overriden $conf_path alive across drupal_static_reset() calls.
     // @see conf_path()

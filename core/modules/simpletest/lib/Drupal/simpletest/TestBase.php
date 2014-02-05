@@ -89,7 +89,7 @@ abstract class TestBase {
    *
    * @var boolean
    */
-  protected $verbose = FALSE;
+  public $verbose = FALSE;
 
   /**
    * Incrementing identifier for verbose output filenames.
@@ -724,7 +724,7 @@ abstract class TestBase {
     $simpletest_config = \Drupal::config('simpletest.settings');
 
     $class = get_class($this);
-    if ($simpletest_config->get('verbose')) {
+    if ($this->verbose || $simpletest_config->get('verbose')) {
       // Initialize verbose debugging.
       $this->verbose = TRUE;
       $this->verboseDirectory = PublicStream::basePath() . '/simpletest/verbose';
@@ -923,7 +923,7 @@ abstract class TestBase {
    * @see TestBase::beforePrepareEnvironment()
    */
   private function prepareEnvironment() {
-    global $user, $conf;
+    global $user;
 
     // Allow (base) test classes to backup global state information.
     $this->beforePrepareEnvironment();
@@ -942,7 +942,7 @@ abstract class TestBase {
 
     // Backup current in-memory configuration.
     $this->originalSettings = settings()->getAll();
-    $this->originalConf = $conf;
+    $this->originalConfig = $GLOBALS['config'];
 
     // Backup statics and globals.
     $this->originalContainer = clone \Drupal::getContainer();
@@ -1051,8 +1051,8 @@ abstract class TestBase {
     // Change the database prefix.
     $this->changeDatabasePrefix();
 
-    // Reset all variables to perform tests in a clean environment.
-    $conf = array();
+    // Remove all configuration overrides.
+    $GLOBALS['config'] = array();
 
     drupal_set_time_limit($this->timeLimit);
   }
@@ -1131,7 +1131,7 @@ abstract class TestBase {
    * @see TestBase::prepareEnvironment()
    */
   private function restoreEnvironment() {
-    global $user, $conf;
+    global $user;
 
     // Reset all static variables.
     // Unsetting static variables will potentially invoke destruct methods,
@@ -1188,7 +1188,7 @@ abstract class TestBase {
     drupal_static_reset();
 
     // Restore original in-memory configuration.
-    $conf = $this->originalConf;
+    $GLOBALS['config'] = $this->originalConfig;
     new Settings($this->originalSettings);
 
     // Restore original statics and globals.

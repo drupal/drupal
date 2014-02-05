@@ -320,7 +320,6 @@ function system_requirements($phase) {
   // During an install we need to make assumptions about the file system
   // unless overrides are provided in settings.php.
   if ($phase == 'install') {
-    global $conf;
     $directories = array();
     if ($file_public_path = settings()->get('file_public_path')) {
       $directories[] = $file_public_path;
@@ -331,11 +330,11 @@ function system_requirements($phase) {
       // conf_path() cache must also be reset in this case.
       $directories[] = conf_path(FALSE, TRUE) . '/files';
     }
-    if (!empty($conf['system.file']['path.private'])) {
-      $directories[] = $conf['system.file']['path.private'];
+    if (!empty($GLOBALS['config']['system.file']['path']['private'])) {
+      $directories[] = $GLOBALS['config']['system.file']['path']['private'];
     }
-    if (!empty($conf['system.file']['path.temporary'])) {
-      $directories[] = $conf['system.file']['path.temporary'];
+    if (!empty($GLOBALS['config']['system.file']['path']['temporary'])) {
+      $directories[] = $GLOBALS['config']['system.file']['path']['temporary'];
     }
     else {
       // If the temporary directory is not overridden use an appropriate

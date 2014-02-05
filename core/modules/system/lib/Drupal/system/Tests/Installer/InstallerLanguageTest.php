@@ -23,14 +23,6 @@ class InstallerLanguageTest extends WebTestBase {
     );
   }
 
-  function setUp() {
-    parent::setUp();
-    // The database is not available during this part of install. Use global
-    // $conf to override the installation translations directory path.
-    global $conf;
-    $conf['locale.settings']['translation.path'] =  drupal_get_path('module', 'simpletest') . '/files/translations';
-  }
-
   /**
    * Tests that the installer can find translation files.
    */
@@ -44,7 +36,7 @@ class InstallerLanguageTest extends WebTestBase {
       'it' => array(),
     );
 
-    $file_translation = new FileTranslation($GLOBALS['conf']['locale.settings']['translation.path']);
+    $file_translation = new FileTranslation(drupal_get_path('module', 'simpletest') . '/files/translations');
     foreach ($expected_translation_files as $langcode => $files_expected) {
       $files_found = $file_translation->findTranslationFiles($langcode);
       $this->assertTrue(count($files_found) == count($files_expected), format_string('@count installer languages found.', array('@count' => count($files_expected))));

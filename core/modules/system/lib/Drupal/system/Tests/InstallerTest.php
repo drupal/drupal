@@ -33,26 +33,31 @@ class InstallerTest extends WebTestBase {
   protected function setUp() {
     $this->isInstalled = FALSE;
 
-    $variable_groups = array(
-      'system.file' => array(
-        'path.private' =>  $this->private_files_directory,
-        'path.temporary' =>  $this->temp_files_directory,
-      ),
-      'locale.settings' =>  array(
-        'translation.path' => $this->translation_files_directory,
-      ),
-    );
-    foreach ($variable_groups as $config_base => $variables) {
-      foreach ($variables as $name => $value) {
-        NestedArray::setValue($GLOBALS['conf'], array_merge(array($config_base), explode('.', $name)), $value);
-      }
-    }
+
+
     $settings['conf_path'] = (object) array(
       'value' => $this->public_files_directory,
       'required' => TRUE,
     );
     $settings['config_directories'] = (object) array(
       'value' => array(),
+      'required' => TRUE,
+    );
+    $settings['config']['system.file'] = (object) array(
+      'value' => array(
+        'path' => array(
+          'private' => $this->private_files_directory,
+          'temporary' => $this->temp_files_directory,
+        ),
+      ),
+      'required' => TRUE,
+    );
+    $settings['config']['locale.settings'] = (object) array(
+      'value' => array(
+        'translation' => array(
+          'path' => $this->translation_files_directory,
+        ),
+      ),
       'required' => TRUE,
     );
     $this->writeSettings($settings);
@@ -66,13 +71,13 @@ class InstallerTest extends WebTestBase {
     }
     $this->rebuildContainer();
 
-    foreach ($variable_groups as $config_base => $variables) {
-      $config = \Drupal::config($config_base);
-      foreach ($variables as $name => $value) {
-        $config->set($name, $value);
-      }
-      $config->save();
-    }
+    \Drupal::config('system.file')
+      ->set('path.private', $this->private_files_directory)
+      ->set('path.temporary', $this->temp_files_directory)
+      ->save();
+    \Drupal::config('locale.settings')
+      ->set('translation.path', $this->translation_files_directory)
+      ->save();
 
     // Use the test mail class instead of the default mail handler class.
     \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\TestMailCollector')->save();

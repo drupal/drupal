@@ -496,12 +496,9 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     $container = \Drupal::getContainer();
     $container->set('request', $request);
 
-    // Override configuration according to command line parameters.
-    $GLOBALS['conf']['simpletest.settings']['verbose'] = $args['verbose'];
-    $GLOBALS['conf']['simpletest.settings']['clear_results'] = !$args['keep-results'];
-
     $test = new $test_class($test_id);
     $test->dieOnFail = (bool) $args['die-on-fail'];
+    $test->verbose = (bool) $args['verbose'];
     $test->run();
     $info = $test->getInfo();
 

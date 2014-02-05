@@ -105,8 +105,6 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * {@inheritdoc}
    */
   public function get($name) {
-    global $conf;
-
     if ($config = $this->loadMultiple(array($name))) {
       return $config[$name];
     }
@@ -139,8 +137,8 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
             $this->cache[$cache_key]->setModuleOverride($module_overrides[$name]);
           }
           // Apply any settings.php overrides.
-          if (isset($conf[$name])) {
-            $this->cache[$cache_key]->setSettingsOverride($conf[$name]);
+          if (isset($GLOBALS['config'][$name])) {
+            $this->cache[$cache_key]->setSettingsOverride($GLOBALS['config'][$name]);
           }
         }
       }
@@ -152,8 +150,6 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * {@inheritdoc}
    */
   public function loadMultiple(array $names) {
-    global $conf;
-
     $list = array();
 
     foreach ($names as $key => $name) {
@@ -205,8 +201,8 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
           if (isset($module_overrides[$name])) {
             $this->cache[$cache_key]->setModuleOverride($module_overrides[$name]);
           }
-          if (isset($conf[$name])) {
-            $this->cache[$cache_key]->setSettingsOverride($conf[$name]);
+          if (isset($GLOBALS['config'][$name])) {
+            $this->cache[$cache_key]->setSettingsOverride($GLOBALS['config'][$name]);
           }
         }
         $list[$name] = $this->cache[$cache_key];

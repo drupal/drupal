@@ -33,20 +33,7 @@ class InstallerTranslationTest extends InstallerTest {
   protected function setUp() {
     $this->isInstalled = FALSE;
 
-    $variable_groups = array(
-      'system.file' => array(
-        'path.private' =>  $this->private_files_directory,
-        'path.temporary' => $this->temp_files_directory,
-      ),
-      'locale.settings' => array(
-        'translation.path' => $this->translation_files_directory,
-      ),
-    );
-    foreach ($variable_groups as $config_base => $variables) {
-      foreach ($variables as $name => $value) {
-        NestedArray::setValue($GLOBALS['conf'], array_merge(array($config_base), explode('.', $name)), $value);
-      }
-    }
+
     $settings['conf_path'] = (object) array(
       'value' => $this->public_files_directory,
       'required' => TRUE,
@@ -55,10 +42,31 @@ class InstallerTranslationTest extends InstallerTest {
       'value' => array(),
       'required' => TRUE,
     );
+    $settings['config']['system.file'] = (object) array(
+      'value' => array(
+        'path' => array(
+          'private' => $this->private_files_directory,
+          'temporary' => $this->temp_files_directory,
+        ),
+      ),
+      'required' => TRUE,
+    );
+    // Add the translations directory so we can retrieve German translations.
+    $settings['config']['locale.settings'] = (object) array(
+      'value' => array(
+        'translation' => array(
+          'path' => drupal_get_path('module', 'simpletest') . '/files/translations',
+        ),
+      ),
+      'required' => TRUE,
+    );
     $this->writeSettings($settings);
 
     // Submit the installer with German language.
-    $this->drupalPostForm($GLOBALS['base_url'] . '/core/install.php', array('langcode' => 'de'), 'Save and continue');
+    $edit = array(
+      'langcode' => 'de',
+    );
+    $this->drupalPostForm($GLOBALS['base_url'] . '/core/install.php', $edit, 'Save and continue');
 
     // On the following page where installation profile is being selected the
     // interface should be already translated, so there is no "Set up database"
@@ -73,9 +81,13 @@ class InstallerTranslationTest extends InstallerTest {
     // Get the "Save and continue" submit button translated value from the
     // translated interface.
     $submit_value = (string) current($this->xpath('//input[@type="submit"]/@value'));
+    $this->assertNotEqual($submit_value, 'Save and continue');
 
-    // Submit the standard profile installation.
-    $this->drupalPostForm(NULL, array('profile' => 'standard'), $submit_value);
+    // Submit the Standard profile installation.
+    $edit = array(
+      'profile' => 'standard',
+    );
+    $this->drupalPostForm(NULL, $edit, $submit_value);
 
     // Submit the next step.
     $this->drupalPostForm(NULL, array(), $submit_value);
@@ -87,13 +99,13 @@ class InstallerTranslationTest extends InstallerTest {
     }
     $this->rebuildContainer();
 
-    foreach ($variable_groups as $config_base => $variables) {
-      $config = \Drupal::config($config_base);
-      foreach ($variables as $name => $value) {
-        $config->set($name, $value);
-      }
-      $config->save();
-    }
+    \Drupal::config('system.file')
+      ->set('path.private', $this->private_files_directory)
+      ->set('path.temporary', $this->temp_files_directory)
+      ->save();
+    \Drupal::config('locale.settings')
+      ->set('translation.path', $this->translation_files_directory)
+      ->save();
 
     // Submit site configuration form.
     $this->drupalPostForm(NULL, array(

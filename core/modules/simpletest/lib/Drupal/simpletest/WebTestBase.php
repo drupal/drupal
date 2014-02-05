@@ -766,21 +766,12 @@ abstract class WebTestBase extends TestBase {
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
     $batch = array();
-    $variable_groups = array(
-      'system.file' => array(
-        'path.private' =>  $this->private_files_directory,
-        'path.temporary' =>  $this->temp_files_directory,
-      ),
-      'locale.settings' =>  array(
-        'translation.path' => $this->translation_files_directory,
-      ),
-    );
-    foreach ($variable_groups as $config_base => $variables) {
-      foreach ($variables as $name => $value) {
-        NestedArray::setValue($GLOBALS['conf'], array_merge(array($config_base), explode('.', $name)), $value);
-      }
-    }
+
     $this->settingsSet('file_public_path', $this->public_files_directory);
+    $GLOBALS['config']['system.file']['path']['private'] = $this->private_files_directory;
+    $GLOBALS['config']['system.file']['path']['temporary'] = $this->temp_files_directory;
+    $GLOBALS['config']['locale.settings']['translation']['path'] = $this->translation_files_directory;
+
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     $this->settingsSet('cache', array('default' => 'cache.backend.memory'));
@@ -837,13 +828,13 @@ abstract class WebTestBase extends TestBase {
 
     // Now make sure that the file path configurations are saved. This is done
     // after we install the modules to override default values.
-    foreach ($variable_groups as $config_base => $variables) {
-      $config = \Drupal::config($config_base);
-      foreach ($variables as $name => $value) {
-        $config->set($name, $value);
-      }
-      $config->save();
-    }
+    \Drupal::config('system.file')
+      ->set('path.private', $this->private_files_directory)
+      ->set('path.temporary', $this->temp_files_directory)
+      ->save();
+    \Drupal::config('locale.settings')
+      ->set('translation.path', $this->translation_files_directory)
+      ->save();
 
     // Use the test mail class instead of the default mail handler class.
     \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\TestMailCollector')->save();
