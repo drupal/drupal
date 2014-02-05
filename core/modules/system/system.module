@@ -2579,7 +2579,6 @@ function _system_rebuild_module_data() {
     'package' => 'Other',
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
-    'files' => array(),
   );
 
   // Read info files for each module.
