@@ -54,6 +54,10 @@ class Select extends QuerySelect {
   public function orderBy($field, $direction = 'ASC') {
     // Call parent function to order on this.
     $return = parent::orderBy($field, $direction);
+    
+    if ($this->hasTag('entity_query')) {
+      return $return;
+    }
 
     // If there is a table alias specified, split it up.
     if (strpos($field, '.') !== FALSE) {
