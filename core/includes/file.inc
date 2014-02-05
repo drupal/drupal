@@ -1497,6 +1497,9 @@ function drupal_basename($uri, $suffix = NULL) {
  * @see mkdir()
  * @see http://drupal.org/node/515192
  * @ingroup php_wrappers
+ *
+ * @todo Update with open_basedir compatible recursion logic from
+ *   \Drupal\Component\PhpStorage\FileStorage::ensureDirectory().
  */
 function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
   if (!isset($mode)) {

@@ -58,31 +58,46 @@ class FileStorage implements PhpStorageInterface {
   }
 
   /**
-   * Ensures the root directory exists and has the right permissions.
+   * Ensures the requested directory exists and has the right permissions.
+   *
+   * For compatibility with open_basedir, the requested directory is created
+   * using a recursion logic that is based on the relative directory path/tree:
+   * It works from the end of the path recursively back towards the root
+   * directory, until an existing parent directory is found. From there, the
+   * subdirectories are created.
    *
    * @param string $directory
    *   The directory path.
-   *
    * @param int $mode
    *   The mode, permissions, the directory should have.
+   * @param bool $is_backwards_recursive
+   *   Internal use only.
+   *
+   * @return bool
+   *   TRUE if the directory exists or has been created, FALSE otherwise.
    */
-  protected function ensureDirectory($directory, $mode = 0777) {
-    if (!file_exists($directory)) {
-      // mkdir() obeys umask() so we need to mkdir() and chmod() manually.
-      $parts = explode('/', $directory);
-      $path = '';
-      $delimiter = '';
-      do {
-        $part = array_shift($parts);
-        $path .= $delimiter . $part;
-        $delimiter = '/';
-        // For absolute paths the first part will be empty.
-        if ($part && !file_exists($path)) {
-          mkdir($path);
-          chmod($path, $mode);
-        }
-      } while ($parts);
+  protected function ensureDirectory($directory, $mode = 0777, $is_backwards_recursive = FALSE) {
+    // If the directory exists already, there's nothing to do.
+    if (is_dir($directory)) {
+      return TRUE;
     }
+    // Otherwise, try to create the directory and ensure to set its permissions,
+    // because mkdir() obeys the umask of the current process.
+    if (is_dir($parent = dirname($directory))) {
+      // If the parent directory exists, then the backwards recursion must end,
+      // regardless of whether the subdirectory could be created.
+      if ($status = mkdir($directory)) {
+        // Only try to chmod() if the subdirectory could be created.
+        $status = chmod($directory, $mode);
+      }
+      return $is_backwards_recursive ? TRUE : $status;
+    }
+    // If the parent directory and the requested directory does not exist and
+    // could not be created above, walk the requested directory path back up
+    // until an existing directory is hit, and from there, recursively create
+    // the sub-directories. Only if that recursion succeeds, create the final,
+    // originally requested subdirectory.
+    return $this->ensureDirectory($parent, $mode, TRUE) && mkdir($directory) && chmod($directory, $mode);
   }
 
   /**
