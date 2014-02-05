@@ -723,18 +723,6 @@ function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
 }
 
 /**
- * Sorts vocabularies by its weight and label.
- *
- * @param array $vocabularies
- *   An array of \Drupal\taxonomy\Entity\Vocabulary objects.
- */
-function taxonomy_vocabulary_sort(array &$vocabularies = array()) {
-  // @todo Remove error suppressing when http://drupal.org/node/1799600 is
-  // fixed.
-  @uasort($vocabularies, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-}
-
-/**
  * Return the taxonomy vocabulary entity matching a vocabulary ID.
  *
  * @deprecated use entity_load('taxonomy_vocabulary', $vid) instead.

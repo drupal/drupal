@@ -98,7 +98,6 @@ class VocabularyTest extends TaxonomyTestBase {
     // Load the vocabularies from the database.
     $this->container->get('entity.manager')->getStorageController('taxonomy_vocabulary')->resetCache();
     $new_vocabularies = entity_load_multiple('taxonomy_vocabulary');
-    taxonomy_vocabulary_sort($new_vocabularies);
 
     // Check that the weights are saved in the database correctly.
     foreach ($vocabularies as $key => $vocabulary) {
