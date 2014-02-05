@@ -45,7 +45,7 @@ class BlockInvalidRegionTest extends WebTestBase {
    */
   function testBlockInInvalidRegion() {
     // Enable a test block and place it in an invalid region.
-    $block = $this->drupalPlaceBlock('test_html_id');
+    $block = $this->drupalPlaceBlock('test_html');
     $block->set('region', 'invalid_region');
     $block->save();
 

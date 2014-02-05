@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Utility\ModuleInfo;
+use Drupal\block\BlockPluginInterface;
 use Drupal\menu_link\MenuLinkInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -3089,6 +3090,24 @@ function system_page_alter(&$page) {
       $page[$region]['#region'] = $region;
     }
   }
+}
+
+/**
+ * Implements hook_block_view_BASE_BLOCK_ID_alter().
+ */
+function system_block_view_system_main_block_alter(array &$build, BlockPluginInterface $block) {
+  // Contextual links on the system_main block would basically duplicate the
+  // tabs/local tasks, so reduce the clutter.
+  unset($build['#contextual_links']);
+}
+
+/**
+ * Implements hook_block_view_BASE_BLOCK_ID_alter().
+ */
+function system_block_view_system_help_block_alter(array &$build, BlockPluginInterface $block) {
+  // Assume that most users do not need or want to perform contextual actions on
+  // the help block, so don't needlessly draw attention to it.
+  unset($build['#contextual_links']);
 }
 
 /**

@@ -335,7 +335,7 @@ function menu_block_view_system_menu_block_alter(array &$build, BlockPluginInter
   $menu_name = $block->getDerivativeId();
   if (isset($menus[$menu_name]) && isset($build['content'])) {
     foreach (element_children($build['content']) as $key) {
-      $build['content']['#contextual_links']['menu'] = array(
+      $build['#contextual_links']['menu'] = array(
         'route_parameters' => array('menu' => $build['content'][$key]['#original_link']['menu_name']),
       );
     }

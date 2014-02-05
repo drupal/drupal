@@ -9,7 +9,7 @@ namespace Drupal\block\Tests;
 
 use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\block_test\Plugin\Block\TestHtmlIdBlock;
+use Drupal\block_test\Plugin\Block\TestHtmlBlock;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\block\Entity\Block;
 use Drupal\block\BlockInterface;
@@ -78,7 +78,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $entity = $this->controller->create(array(
       'id' => 'test_block',
       'theme' => 'stark',
-      'plugin' => 'test_html_id',
+      'plugin' => 'test_html',
     ));
     $entity->save();
 
@@ -97,18 +97,18 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
       'langcode' => language_default()->id,
       'theme' => 'stark',
       'region' => '-1',
-      'plugin' => 'test_html_id',
+      'plugin' => 'test_html',
       'settings' => array(
-        'cache' => 1,
         'label' => '',
         'module' => 'block_test',
         'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
+        'cache' => DRUPAL_NO_CACHE,
       ),
       'visibility' => NULL,
     );
     $this->assertIdentical($actual_properties, $expected_properties);
 
-    $this->assertTrue($entity->getPlugin() instanceof TestHtmlIdBlock, 'The entity has an instance of the correct block plugin.');
+    $this->assertTrue($entity->getPlugin() instanceof TestHtmlBlock, 'The entity has an instance of the correct block plugin.');
   }
 
   /**
@@ -153,7 +153,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $entity = $this->controller->create(array(
       'id' => 'test_block2',
       'theme' => 'stark',
-      'plugin' => 'test_html_id',
+      'plugin' => 'test_html',
       'settings' => array(
         'label' => 'Powered by Bananas',
       ),

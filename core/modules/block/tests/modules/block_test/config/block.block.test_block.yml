@@ -4,9 +4,9 @@ weight: 0
 status: true
 langcode: en
 region: '-1'
-plugin: test_html_id
+plugin: test_html
 settings:
-  label: 'Test block html id'
+  label: 'Test HTML block'
   module: block_test
   label_display: 'hidden'
   cache: 1
