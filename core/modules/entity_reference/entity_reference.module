@@ -168,27 +168,6 @@ function entity_reference_settings_ajax_submit($form, &$form_state) {
 }
 
 /**
- * Implements hook_options_list().
- */
-function entity_reference_options_list(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
-  if (!$options = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field_definition, $entity)->getReferenceableEntities()) {
-    return array();
-  }
-
-  // Rebuild the array by changing the bundle key into the bundle label.
-  $target_type = $field_definition->getSetting('target_type');
-  $bundles = entity_get_bundles($target_type);
-
-  $return = array();
-  foreach ($options as $bundle => $entity_ids) {
-    $bundle_label = check_plain($bundles[$bundle]['label']);
-    $return[$bundle_label] = $entity_ids;
-  }
-
-  return count($return) == 1 ? reset($return) : $return;
-}
-
-/**
  * Implements hook_query_TAG_alter().
  */
 function entity_reference_query_entity_reference_alter(AlterableInterface $query) {

@@ -40,7 +40,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('config_test', 'entity_test', 'entity_reference');
+  public static $modules = array('config_test', 'entity_test', 'entity_reference', 'options');
 
   public static function getInfo() {
     return array(
@@ -62,7 +62,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
   }
 
   /**
-   * Tests the entity reference field with all its widgets.
+   * Tests the entity reference field with all its supported field widgets.
    */
   public function testSupportedEntityTypesAndWidgets() {
     foreach ($this->getTestEntities() as $referenced_entities) {
@@ -111,6 +111,22 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
       $this->drupalPostForm($this->entityType . '/manage/' . $entity->id(), array(), t('Save'));
       $this->assertFieldValues($entity_name, $referenced_entities);
+
+      // Test all the other widgets supported by the entity reference field.
+      // Since we don't know the form structure for these widgets, just test
+      // that editing and saving an already created entity works.
+      $entity = current(entity_load_multiple_by_properties($this->entityType, array('name' => $entity_name)));
+      $supported_widgets = \Drupal::service('plugin.manager.field.widget')->getOptions('entity_reference');
+      $supported_widget_types = array_diff(array_keys($supported_widgets), array('entity_reference_autocomplete', 'entity_reference_autocomplete_tags'));
+
+      foreach ($supported_widget_types as $widget_type) {
+        entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName, array(
+          'type' => $widget_type,
+        ))->save();
+
+        $this->drupalPostForm($this->entityType . '/manage/' . $entity->id(), array(), t('Save'));
+        $this->assertFieldValues($entity_name, $referenced_entities);
+      }
     }
   }
 

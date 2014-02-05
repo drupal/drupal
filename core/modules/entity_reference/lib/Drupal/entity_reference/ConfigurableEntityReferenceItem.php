@@ -7,10 +7,14 @@
 
 namespace Drupal\entity_reference;
 
+use Drupal\Component\Utility\String;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\TypedData\AllowedValuesInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\ConfigEntityReferenceItemBase;
 use Drupal\Core\Field\ConfigFieldItemInterface;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
 
 /**
  * Alternative plugin implementation of the 'entity_reference' field type.
@@ -24,7 +28,53 @@ use Drupal\Core\Field\ConfigFieldItemInterface;
  * @see entity_reference_field_info_alter().
  *
  */
-class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase implements ConfigFieldItemInterface {
+class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase implements ConfigFieldItemInterface, AllowedValuesInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPossibleValues(AccountInterface $account = NULL) {
+    return $this->getSettableValues($account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPossibleOptions(AccountInterface $account = NULL) {
+    return $this->getSettableOptions($account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettableValues(AccountInterface $account = NULL) {
+    // Flatten options firstly, because Settable Options may contain group
+    // arrays.
+    $flatten_options = \Drupal::formBuilder()->flattenOptions($this->getSettableOptions($account));
+    return array_keys($flatten_options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettableOptions(AccountInterface $account = NULL) {
+    $field_definition = $this->getFieldDefinition();
+    if (!$options = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field_definition, $this->getEntity())->getReferenceableEntities()) {
+      return array();
+    }
+
+    // Rebuild the array by changing the bundle key into the bundle label.
+    $target_type = $field_definition->getSetting('target_type');
+    $bundles = \Drupal::entityManager()->getBundleInfo($target_type);
+
+    $return = array();
+    foreach ($options as $bundle => $entity_ids) {
+      $bundle_label = String::checkPlain($bundles[$bundle]['label']);
+      $return[$bundle_label] = $entity_ids;
+    }
+
+    return count($return) == 1 ? reset($return) : $return;
+  }
 
   /**
    * Definitions of the contained properties.
@@ -61,6 +111,23 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
     }
 
     return static::$propertyDefinitions[$key];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    $constraints = parent::getConstraints();
+
+    // Remove the 'AllowedValuesConstraint' validation constraint because entity
+    // reference fields already use the 'ValidReference' constraint.
+    foreach ($constraints as $key => $constraint) {
+      if ($constraint instanceof AllowedValuesConstraint) {
+        unset($constraints[$key]);
+      }
+    }
+
+    return $constraints;
   }
 
   /**
