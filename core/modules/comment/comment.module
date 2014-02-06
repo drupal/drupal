@@ -10,7 +10,6 @@
  * book page, user etc.
  */
 
-use Drupal\Component\Utility\Number;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\comment\CommentInterface;
@@ -1540,34 +1539,6 @@ function template_preprocess_comment_wrapper(&$variables) {
  */
 function _comment_per_page() {
   return drupal_map_assoc(array(10, 30, 50, 70, 90, 150, 200, 250, 300));
-}
-
-/**
- * Generates a sorting code.
- *
- * Consists of a leading character indicating length, followed by N digits
- * with a numerical value in base 36 (alphadecimal). These codes can be sorted
- * as strings without altering numerical order.
- *
- * It goes:
- * 00, 01, 02, ..., 0y, 0z,
- * 110, 111, ... , 1zy, 1zz,
- * 2100, 2101, ..., 2zzy, 2zzz,
- * 31000, 31001, ...
- *
- * @deprecated Use \Drupal\Component\Utility\Number::intToAlphadecimal() instead.
- */
-function comment_int_to_alphadecimal($i = 0) {
-  return Number::alphadecimalToInt($i);
-}
-
-/**
- * Decodes a sorting code back to an integer.
- *
- * @deprecated Use \Drupal\Component\Utility\Number::alphadecimalToInt() instead.
- */
-function comment_alphadecimal_to_int($c = '00') {
-  return Number::alphadecimalToInt($c);
 }
 
 /**
