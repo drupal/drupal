@@ -149,9 +149,6 @@ div.admin-required {
   font-size: 0.9em;
   color: #666;
 }
-span.admin-disabled {
-  color: #800;
-}
 span.admin-enabled {
   color: #080;
 }
