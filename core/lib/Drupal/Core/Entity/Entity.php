@@ -394,4 +394,14 @@ abstract class Entity implements EntityInterface {
     return $this->urlGenerator;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    // Don't serialize the url generator.
+    $this->urlGenerator = NULL;
+
+    return array_keys(get_object_vars($this));
+  }
+
 }

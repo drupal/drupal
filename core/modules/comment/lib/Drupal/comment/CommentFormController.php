@@ -31,6 +31,13 @@ class CommentFormController extends ContentEntityFormController {
   protected $fieldInfo;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {

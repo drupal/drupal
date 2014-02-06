@@ -338,6 +338,10 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     $this->fields = array();
     $this->fieldDefinitions = NULL;
     $this->clearTranslationCache();
+
+    // Don't serialize the url generator.
+    $this->urlGenerator = NULL;
+
     return array_keys(get_object_vars($this));
   }
 
