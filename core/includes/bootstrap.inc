@@ -845,44 +845,6 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
 }
 
 /**
- * Includes a file with the provided type and name.
- *
- * This prevents including a theme, engine, module, etc., more than once.
- *
- * @param $type
- *   The type of item to load (i.e. theme, theme_engine, module).
- * @param $name
- *   The name of the item to load.
- *
- * @return
- *   TRUE if the item is loaded or has already been loaded.
- */
-function drupal_load($type, $name) {
-  if ($type == 'module' && \Drupal::moduleHandler()->moduleExists($name)) {
-    return \Drupal::moduleHandler()->load($name);
-  }
-
-  // Once a file is included this can't be reversed during a request so do not
-  // use drupal_static() here.
-  static $files = array();
-
-  if (isset($files[$type][$name])) {
-    return TRUE;
-  }
-
-  $filename = drupal_get_filename($type, $name);
-
-  if ($filename) {
-    include_once DRUPAL_ROOT . '/' . $filename;
-    $files[$type][$name] = TRUE;
-
-    return TRUE;
-  }
-
-  return FALSE;
-}
-
-/**
  * Sets an HTTP response header for the current page.
  *
  * Note: When sending a Content-Type header, always include a 'charset' type,

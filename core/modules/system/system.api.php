@@ -2039,10 +2039,6 @@ function hook_requirements($phase) {
  * tables and their related keys and indexes. A schema is defined by
  * hook_schema() which must live in your module's .install file.
  *
- * This hook is called at install and uninstall time, and in the latter case, it
- * cannot rely on the .module file being loaded or hooks being known. If the
- * .module file is needed, it may be loaded with drupal_load().
- *
  * The tables declared by this hook will be automatically created when the
  * module is installed, and removed when the module is uninstalled. This happens
  * before hook_install() is invoked, and after hook_uninstall() is invoked,
@@ -2457,14 +2453,6 @@ function hook_update_last_removed() {
  * will fire when the module gets uninstalled but before the module's database
  * tables are removed, allowing your module to query its own tables during
  * this routine.
- *
- * When hook_uninstall() is called, your module will already be disabled, so
- * its .module file will not be automatically included. If you need to call API
- * functions from your .module file in this hook, use drupal_load() to make
- * them available. (Keep this usage to a minimum, though, especially when
- * calling API functions that invoke hooks, or API functions from modules
- * listed as dependencies, since these may not be available or work as expected
- * when the module is disabled.)
  *
  * @see hook_install()
  * @see hook_schema()
