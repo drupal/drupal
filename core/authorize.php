@@ -119,7 +119,11 @@ if (authorize_access_allowed()) {
       drupal_set_message($results['page_message']['message'], $results['page_message']['type']);
     }
 
-    $output = theme('authorize_report', array('messages' => $results['messages']));
+    $authorize_report = array(
+      '#theme' => 'authorize_report',
+      '#messages' => $results['messages'],
+    );
+    $output = drupal_render($authorize_report);
 
     $links = array();
     if (is_array($results['tasks'])) {
@@ -132,7 +136,12 @@ if (authorize_access_allowed()) {
       ));
     }
 
-    $output .= theme('item_list', array('items' => $links, 'title' => t('Next steps')));
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => $links,
+      '#title' => t('Next steps'),
+    );
+    $output .= drupal_render($item_list);
   }
   // If a batch is running, let it run.
   elseif ($request->query->has('batch')) {
@@ -157,5 +166,10 @@ else {
 
 if (!empty($output)) {
   drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-  print theme('maintenance_page', array('content' => $output, 'show_messages' => $show_messages));
+  $maintenance_page = array(
+    '#theme' => 'maintenance_page',
+    '#content' => $output,
+    '#show_messages' => $show_messages,
+  );
+  print drupal_render($maintenance_page);
 }
