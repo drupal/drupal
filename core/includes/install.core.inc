@@ -289,21 +289,8 @@ function install_begin_request(&$install_state) {
     exit;
   }
 
-  // If we have a language selected and it is not yet saved in the system (eg.
-  // pre-database data screens we are unable to persistently store the default
-  // language), we should set language_default so the proper language is used to
-  // display installer pages as early as possible.
-  $default_language_values = Language::$defaultValues;
-  if (!empty($install_state['parameters']['langcode']) && $default_language_values['id'] != $install_state['parameters']['langcode']) {
-    $default_language_values = array('id' => $install_state['parameters']['langcode']);
-  }
-  // Register the 'language_manager' service.
-  $container->setParameter('language.default_values', $default_language_values);
-  $container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
-    ->addArgument('%language.default_values%');
-  $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-    ->addArgument(new Reference('language.default'));
-
+  // Ensure that procedural dependencies are loaded as early as possible,
+  // since the error/exception handlers depend on them.
   require_once __DIR__ . '/../modules/system/system.install';
   require_once __DIR__ . '/common.inc';
   require_once __DIR__ . '/file.inc';
@@ -320,6 +307,21 @@ function install_begin_request(&$install_state) {
   include_once __DIR__ . '/module.inc';
   include_once __DIR__ . '/session.inc';
   require_once __DIR__ . '/entity.inc';
+
+  // If we have a language selected and it is not yet saved in the system (eg.
+  // pre-database data screens we are unable to persistently store the default
+  // language), we should set language_default so the proper language is used to
+  // display installer pages as early as possible.
+  $default_language_values = Language::$defaultValues;
+  if (!empty($install_state['parameters']['langcode']) && $default_language_values['id'] != $install_state['parameters']['langcode']) {
+    $default_language_values = array('id' => $install_state['parameters']['langcode']);
+  }
+  // Register the 'language_manager' service.
+  $container->setParameter('language.default_values', $default_language_values);
+  $container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
+    ->addArgument('%language.default_values%');
+  $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+    ->addArgument(new Reference('language.default'));
 
   // Register the translation services.
   install_register_translation_service($container);
@@ -953,6 +955,11 @@ function install_full_redirect_url($install_state) {
  *   An array of information about the current installation state.
  */
 function install_display_output($output, $install_state) {
+  // Ensure the maintenance theme is initialized.
+  // The regular initialization call in install_begin_request() may not be
+  // reached in case of an early installer error.
+  drupal_maintenance_theme();
+
   drupal_page_header();
 
   // Prevent install.php from being indexed when installed in a sub folder.

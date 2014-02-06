@@ -89,9 +89,19 @@ class Error {
    */
   public static function renderExceptionSafe(\Exception $exception) {
     $decode = static::decodeException($exception);
+    $backtrace = $decode['backtrace'];
     unset($decode['backtrace']);
+    // Remove 'main()'.
+    array_shift($backtrace);
 
-    return String::format('%type: !message in %function (line %line of %file).', $decode);
+    $output = String::format('%type: !message in %function (line %line of %file).', $decode);
+    // Even though it is possible that this method is called on a public-facing
+    // site, it is only called when the exception handler itself threw an
+    // exception, which normally means that a code change caused the system to
+    // no longer function correctly (as opposed to a user-triggered error), so
+    // we assume that it is safe to include a verbose backtrace.
+    $output .= '<pre>' . static::formatBacktrace($backtrace) . '</pre>';
+    return $output;
   }
 
   /**

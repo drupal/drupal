@@ -94,14 +94,17 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
  *   TRUE if an error should be displayed.
  */
 function error_displayable($error = NULL) {
+  if (defined('MAINTENANCE_MODE')) {
+    return TRUE;
+  }
   $error_level = _drupal_get_error_level();
-  $updating = (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update');
-  $all_errors_displayed = ($error_level == ERROR_REPORTING_DISPLAY_ALL) ||
-    ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE);
-  $error_needs_display = ($error_level == ERROR_REPORTING_DISPLAY_SOME &&
-    isset($error) && $error['%type'] != 'Notice' && $error['%type'] != 'Strict warning');
-
-  return ($updating || $all_errors_displayed || $error_needs_display);
+  if ($error_level == ERROR_REPORTING_DISPLAY_ALL || $error_level == ERROR_REPORTING_DISPLAY_VERBOSE) {
+    return TRUE;
+  }
+  if ($error_level == ERROR_REPORTING_DISPLAY_SOME && isset($error)) {
+    return $error['%type'] != 'Notice' && $error['%type'] != 'Strict warning';
+  }
+  return FALSE;
 }
 
 /**
@@ -119,11 +122,16 @@ function _drupal_log_error($error, $fatal = FALSE) {
   $is_installer = drupal_installation_attempted();
   // Initialize a maintenance theme if the bootstrap was not complete.
   // Do it early because drupal_set_message() triggers a drupal_theme_initialize().
-  if (!$is_installer && $fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
-    unset($GLOBALS['theme']);
+  if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
+    // The installer initializes a maintenance theme at the earliest possible
+    // point in time already. Do not unset that.
+    if (!$is_installer) {
+      unset($GLOBALS['theme']);
+    }
     if (!defined('MAINTENANCE_MODE')) {
       define('MAINTENANCE_MODE', 'error');
     }
+    // No-op if $GLOBALS['theme'] is set already.
     drupal_maintenance_theme();
   }
 
@@ -252,13 +260,23 @@ function _drupal_log_error($error, $fatal = FALSE) {
  *   The current error level.
  */
 function _drupal_get_error_level() {
-  try {
-    return \Drupal::config('system.logging')->get('error_level');
+  // Raise the error level to maximum for the installer, so users are able to
+  // file proper bug reports for installer errors. The returned value is
+  // different to the one below, because the installer actually has a
+  // 'config.factory' service, which reads the default 'error_level' value from
+  // System module's default configuration and the default value is not verbose.
+  // @see error_displayable()
+  if (drupal_installation_attempted()) {
+    return ERROR_REPORTING_DISPLAY_VERBOSE;
   }
-  catch (Exception $e) {
-    // During very early install the cache_config table does not exist.
-    return ERROR_REPORTING_DISPLAY_ALL;
+  $error_level = NULL;
+  if (\Drupal::hasService('config.factory')) {
+    $error_level = \Drupal::config('system.logging')->get('error_level');
   }
+  // If there is no container or if it has no config.factory service, we are
+  // possibly in an edge-case error situation while trying to serve a regular
+  // request on a public site, so use the non-verbose default value.
+  return $error_level ?: ERROR_REPORTING_DISPLAY_ALL;
 }
 
 /**
