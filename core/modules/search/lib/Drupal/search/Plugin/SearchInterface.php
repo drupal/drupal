@@ -72,12 +72,10 @@ interface SearchInterface extends PluginInspectionInterface {
   public function execute();
 
   /**
-   * Executes the search and builds render arrays for the result items.
+   * Executes the search and builds a render array.
    *
    * @return array
-   *   An array of render arrays of search result items (generally each item
-   *   has '#theme' set to 'search_result'), or an empty array if there are no
-   *   results.
+   *   The search results in a renderable array.
    */
   public function buildResults();
 

@@ -108,6 +108,11 @@ function search_theme() {
       'file' => 'search.pages.inc',
       'template' => 'search-result',
     ),
+    'search_results' => array(
+      'variables' => array('results' => NULL, 'plugin_id' => NULL),
+      'file' => 'search.pages.inc',
+      'template' => 'search-results',
+    ),
   );
 }
 

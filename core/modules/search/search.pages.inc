@@ -6,6 +6,35 @@
  */
 
 use Drupal\Core\Language\Language;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Prepares variables for search results templates.
+ *
+ * Default template: search-results.html.twig.
+ *
+ * @param array $variables
+ *   An array with the following elements:
+ *   - results: Search results array.
+ *   - plugin_id: Plugin the search results came from.
+ */
+function template_preprocess_search_results(&$variables) {
+  $variables['search_results'] = '';
+  if (!empty($variables['plugin_id'])) {
+    $variables['plugin_id'] = check_plain($variables['plugin_id']);
+  }
+  foreach ($variables['results'] as $result) {
+    $variables['search_results'][] = array(
+      '#theme' => 'search_result',
+      '#result' => $result,
+      '#plugin_id' => $variables['plugin_id'],
+    );
+  }
+  $variables['pager'] = array('#theme' => 'pager');
+  // @todo Revisit where this help text is added, see also
+  //   http://drupal.org/node/1918856.
+  $variables['help'] = search_help('search#noresults', drupal_help_arg());
+}
 
 /**
  * Implements hook_theme_suggestions_HOOK().

@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Default theme implementation for displaying search results.
+ *
+ * This template collects each invocation of theme_search_result(). This and
+ * the child template are dependent to one another sharing the markup for
+ * definition lists.
+ *
+ * Note that modules may implement their own search type and theme function
+ * completely bypassing this template.
+ *
+ * Available variables:
+ * - search_results: All results as it is rendered through
+ *   search-result.html.twig.
+ * - plugin_id: The machine-readable name of the plugin being executed, such
+ *   as 'node_search' or 'user_search'.
+ * - pager: The pager next/prev links to display, if any.
+ * - help: HTML for help text to display when no results are found.
+ *
+ * @see template_preprocess_search_results()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if search_results %}
+  <h2>{{ 'Search results'|t }}</h2>
+  <ol class="search-results {{ plugin_id }}-results">
+    {{ search_results }}
+  </ol>
+  {{ pager }}
+{% else %}
+  <h2>{{ 'Your search yielded no results'|t }}</h2>
+  {{ help }}
+{% endif %}

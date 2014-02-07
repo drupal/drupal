@@ -88,17 +88,11 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
    */
   public function buildResults() {
     $results = $this->execute();
-
-    $built = array();
-    foreach ($results as $result) {
-      $built[] = array(
-        '#theme' => 'search_result',
-        '#result' => $result,
-        '#plugin_id' => $this->getPluginId(),
-      );
-    }
-
-    return $built;
+    return array(
+      '#theme' => 'search_results',
+      '#results' => $results,
+      '#plugin_id' => $this->getPluginId(),
+    );
   }
 
  /**

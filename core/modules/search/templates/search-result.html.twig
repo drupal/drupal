@@ -3,10 +3,9 @@
  * @file
  * Default theme implementation for displaying a single search result.
  *
- * This template renders a single search result. The list of results is
- * rendered using '#theme' => 'item_list', with suggestions of:
- * - item_list__search_results__(plugin_id)
- * - item_list__search_results
+ * This template renders a single search result and is collected into
+ * search-results.html.twig. This and the parent template are
+ * dependent to one another sharing the markup for ordered lists.
  *
  * Available variables:
  * - url: URL of the result.
@@ -58,16 +57,18 @@
  * @ingroup themeable
  */
 #}
-{{ title_prefix }}
-<h3 class="title"{{ title_attributes }}>
-  <a href="{{ url }}">{{ title }}</a>
-</h3>
-{{ title_suffix }}
-<div class="search-snippet-info">
-  {% if snippet %}
-    <p class="search-snippet"{{ content_attributes }}>{{ snippet }}</p>
-  {% endif %}
-  {% if info %}
-    <p class="search-info">{{ info }}</p>
-  {% endif %}
-</div>
+<li {{ attributes }}>
+  {{ title_prefix }}
+  <h3 class="title"{{ title_attributes }}>
+    <a href="{{ url }}">{{ title }}</a>
+  </h3>
+  {{ title_suffix }}
+  <div class="search-snippet-info">
+    {% if snippet %}
+      <p class="search-snippet"{{ content_attributes }}>{{ snippet }}</p>
+    {% endif %}
+    {% if info %}
+      <p class="search-info">{{ info }}</p>
+    {% endif %}
+  </div>
+</li>
