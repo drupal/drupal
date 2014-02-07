@@ -210,8 +210,14 @@ Node Access
 Module maintainers
 ------------------
 
+Action module
+- ?
+
 Aggregator module
 - Paris Liakos 'rootatwc' http://drupal.org/user/1011436
+
+Ban module
+- ?
 
 Basic Auth module
 - Klaus Purer 'klausi' http://drupal.org/user/262198
@@ -261,6 +267,9 @@ Custom block module
 Database Logging module
 - Khalid Baheyeldin 'kbahey' http://drupal.org/user/4063
 
+DateTime module
+- ?
+
 E-mail module
 - Nils Destoop 'zuuperman' https://drupal.org/user/361625
 
@@ -270,6 +279,9 @@ Edit module
 
 Editor module
 - Wim Leers 'Wim Leers' http://drupal.org/user/99777
+
+Entity module
+- ?
 
 Entity Reference module
 - Amitai Burstein 'Amitaibu' http://drupal.org/user/57511
@@ -323,6 +335,12 @@ Menu Link module
 - Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 - Károly Négyesi 'chx' http://drupal.org/user/9446
 - Peter Wolanin 'pwolanin' http://drupal.org/user/49851
+
+Migrate module
+- ?
+
+Migrate (Drupal) module
+- ?
 
 Node module
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
