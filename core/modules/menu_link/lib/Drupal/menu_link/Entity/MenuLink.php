@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Route;
  *   controllers = {
  *     "storage" = "Drupal\menu_link\MenuLinkStorageController",
  *     "access" = "Drupal\menu_link\MenuLinkAccessController",
- *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "form" = {
  *       "default" = "Drupal\menu_link\MenuLinkFormController"
  *     }
