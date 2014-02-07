@@ -60,6 +60,14 @@ class FunctionsTest extends WebTestBase {
     $expected = '<div class="item-list"><h3>Some title</h3>No items found.</div>';
     $this->assertThemeOutput('item_list', $variables, $expected, 'Empty %callback generates empty string with title.');
 
+    // Verify that empty text is not displayed when there are list items.
+    $variables = array();
+    $variables['title'] = 'Some title';
+    $variables['empty'] = 'No items found.';
+    $variables['items'] = array('Un', 'Deux', 'Trois');
+    $expected = '<div class="item-list"><h3>Some title</h3><ul><li>Un</li><li>Deux</li><li>Trois</li></ul></div>';
+    $this->assertThemeOutput('item_list', $variables, $expected, '%callback does not print empty text when there are list items.');
+
     // Verify nested item lists.
     $variables = array();
     $variables['title'] = 'Some title';

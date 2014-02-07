@@ -29,7 +29,8 @@
           <li{{ item.attributes }}>{{ item.value }}</li>
         {%- endfor -%}
       </{{ list_type }}>
+    {%- else -%}
+      {{- empty -}}
     {%- endif -%}
-    {{- empty -}}
   </div>
 {%- endif %}
