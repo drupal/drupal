@@ -79,7 +79,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     $url = $style->buildUrl($original_uri);
 
     // Create a test entity with the image field set.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $entity->image_test->target_id = $this->image->id();
     $entity->image_test->alt = NULL;
     $entity->image_test->uri = $original_uri;

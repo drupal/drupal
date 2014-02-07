@@ -248,7 +248,7 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
   /**
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::create().
    */
-  public function create(array $values) {
+  public function create(array $values = array()) {
     $class = $this->entityType->getClass();
     $class::preCreate($this, $values);
 

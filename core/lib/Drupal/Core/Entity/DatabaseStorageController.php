@@ -235,7 +235,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
   /**
    * {@inheritdoc}
    */
-  public function create(array $values) {
+  public function create(array $values = array()) {
     $entity_class = $this->entityType->getClass();
     $entity_class::preCreate($this, $values);
 

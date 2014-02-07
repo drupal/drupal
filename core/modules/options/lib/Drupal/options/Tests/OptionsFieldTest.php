@@ -34,7 +34,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
    */
   function testUpdateAllowedValues() {
     // All three options appear.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $form = \Drupal::entityManager()->getForm($entity);
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
@@ -42,7 +42,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
 
     // Use one of the values in an actual entity, and check that this value
     // cannot be removed from the list.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $entity->{$this->fieldName}->value = 1;
     $entity->save();
     $this->field->settings['allowed_values'] = array(2 => 'Two');
@@ -60,7 +60,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     // Removed options do not appear.
     $this->field->settings['allowed_values'] = array(2 => 'Two');
     $this->field->save();
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $form = \Drupal::entityManager()->getForm($entity);
     $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
@@ -71,7 +71,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->field->save();
     // The entity holds an outdated field object with the old allowed values
     // setting, so we need to reintialize the entity object.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $form = \Drupal::entityManager()->getForm($entity);
     $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');
     $this->assertTrue(empty($form[$this->fieldName]['widget'][2]), 'Option 2 does not exist');
@@ -92,7 +92,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
         'type' => 'options_buttons',
       ))
       ->save();
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $form = \Drupal::entityManager()->getForm($entity);
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');

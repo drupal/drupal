@@ -59,7 +59,7 @@ class EditorFileUsageTest extends EntityUnitTestBase {
    * Tests the configurable text editor manager.
    */
   public function testEditorEntityHooks() {
-    $image = entity_create('file', array());
+    $image = entity_create('file');
     $image->setFileUri('core/misc/druplicon.png');
     $image->setFilename(drupal_basename($image->getFileUri()));
     $image->save();

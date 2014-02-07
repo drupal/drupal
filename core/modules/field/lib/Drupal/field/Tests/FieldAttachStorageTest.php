@@ -58,7 +58,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
     // Preparation: create three revisions and store them in $revision array.
     $values = array();
-    $entity = entity_create($entity_type, array());
+    $entity = entity_create($entity_type);
     for ($revision_id = 0; $revision_id < 3; $revision_id++) {
       // Note: we try to insert one extra value.
       $current_values = $this->_generateTestFieldValues($cardinality + 1);

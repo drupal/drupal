@@ -68,7 +68,7 @@ class FileItemTest extends FieldUnitTestBase {
    */
   public function testFileItem() {
     // Create a test entity with the
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $entity->file_test->target_id = $this->file->id();
     $entity->file_test->display = 1;
     $entity->file_test->description = $description = $this->randomName();

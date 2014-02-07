@@ -60,7 +60,7 @@ class ShapeItemTest extends FieldUnitTestBase {
    */
   public function testShapeItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $shape = 'cube';
     $color = 'blue';
     $entity->{$this->field_name}->shape = $shape;

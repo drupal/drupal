@@ -48,7 +48,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->createFieldWithInstance('_2');
 
     $entity_type = 'entity_test';
-    $entity_init = entity_create($entity_type, array());
+    $entity_init = entity_create($entity_type);
 
     // Populate values to be displayed.
     $values = $this->_generateTestFieldValues($this->field->getCardinality());

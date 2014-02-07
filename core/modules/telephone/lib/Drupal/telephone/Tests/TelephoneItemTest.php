@@ -52,7 +52,7 @@ class TelephoneItemTest extends FieldUnitTestBase {
    */
   public function testTestItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $value = '+0123456789';
     $entity->field_test = $value;
     $entity->name->value = $this->randomName();

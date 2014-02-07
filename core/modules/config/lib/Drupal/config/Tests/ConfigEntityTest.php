@@ -38,7 +38,7 @@ class ConfigEntityTest extends WebTestBase {
   function testCRUD() {
     $default_langcode = language_default()->id;
     // Verify default properties on a newly created empty entity.
-    $empty = entity_create('config_test', array());
+    $empty = entity_create('config_test');
     $this->assertIdentical($empty->id, NULL);
     $this->assertTrue($empty->uuid);
     $this->assertIdentical($empty->label, NULL);

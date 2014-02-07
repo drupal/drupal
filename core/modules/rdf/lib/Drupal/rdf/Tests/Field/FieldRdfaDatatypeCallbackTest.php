@@ -45,7 +45,7 @@ class FieldRdfaDatatypeCallbackTest extends FieldRdfaTestBase {
 
     // Set up test values.
     $this->test_value = $this->randomName();
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$this->fieldName}->value = $this->test_value;
     $this->entity->save();
 

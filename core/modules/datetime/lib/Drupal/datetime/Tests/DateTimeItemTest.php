@@ -58,7 +58,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
    */
   public function testDateTimeItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $value = '2014-01-01T20:00:00Z';
     $entity->field_datetime = $value;
     $entity->name->value = $this->randomName();
@@ -88,7 +88,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
    */
   public function testSetValue() {
     // Test DateTimeItem::setValue() using string.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $value = '2014-01-01T20:00:00Z';
     $entity->get('field_datetime')->set(0, $value);
     $entity->save();
@@ -98,7 +98,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->field_datetime[0]->value, $value, 'DateTimeItem::setValue() works with string value.');
 
     // Test DateTimeItem::setValue() using property array.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $value = '2014-01-01T20:00:00Z';
     $entity->set('field_datetime', $value);
     $entity->save();
@@ -113,7 +113,7 @@ class DateTimeItemTest extends FieldUnitTestBase {
    */
   public function testSetValueProperty() {
     // Test Date::setValue().
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $value = '2014-01-01T20:00:00Z';
 
     $entity->set('field_datetime', $value);

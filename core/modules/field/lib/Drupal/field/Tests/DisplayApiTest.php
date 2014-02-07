@@ -110,7 +110,7 @@ class DisplayApiTest extends FieldUnitTestBase {
 
     // Create an entity with values.
     $this->values = $this->_generateTestFieldValues($this->cardinality);
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$this->field_name}->setValue($this->values);
     $this->entity->save();
   }

@@ -78,7 +78,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
   public function testTaxonomyTermReferenceItem() {
     $tid = $this->term->id();
     // Just being able to create the entity like this verifies a lot of code.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $entity->field_test_taxonomy->target_id = $this->term->id();
     $entity->name->value = $this->randomName();
     $entity->save();

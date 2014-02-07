@@ -100,7 +100,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Create an entity with four revisions.
     $revision_ids = array();
-    $entity = entity_create($entity_type, array());
+    $entity = entity_create($entity_type);
     $entity->save();
     $revision_ids[] = $entity->getRevisionId();
     for ($i = 0; $i < 4; $i++) {
@@ -166,7 +166,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   function testFieldWrite() {
     $entity_type = $bundle = 'entity_test_rev';
-    $entity = entity_create($entity_type, array());
+    $entity = entity_create($entity_type);
 
     $revision_values = array();
 

@@ -22,11 +22,11 @@ class ValidatorTest extends FileManagedTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->image = entity_create('file', array());
+    $this->image = entity_create('file');
     $this->image->setFileUri('core/misc/druplicon.png');
     $this->image->setFilename(drupal_basename($this->image->getFileUri()));
 
-    $this->non_image = entity_create('file', array());
+    $this->non_image = entity_create('file');
     $this->non_image->setFileUri('core/assets/vendor/jquery/jquery.js');
     $this->non_image->setFilename(drupal_basename($this->non_image->getFileUri()));
   }
@@ -105,7 +105,7 @@ class ValidatorTest extends FileManagedTestBase {
    */
   function testFileValidateNameLength() {
     // Create a new file entity.
-    $file = entity_create('file', array());
+    $file = entity_create('file');
 
     // Add a filename with an allowed length and test it.
     $file->setFilename(str_repeat('x', 240));

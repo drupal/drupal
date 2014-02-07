@@ -74,7 +74,7 @@ class EditorSelectionTest extends EditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$field_name}->value = 'Hello, world!';
     $this->entity->{$field_name}->format = 'full_html';
     $this->entity->save();
@@ -126,7 +126,7 @@ class EditorSelectionTest extends EditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$field_name}->value = 'Hello, world!';
     $this->entity->{$field_name}->format = 'filtered_html';
     $this->entity->save();
@@ -163,7 +163,7 @@ class EditorSelectionTest extends EditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$field_name}->value = 42;
     $this->entity->save();
 

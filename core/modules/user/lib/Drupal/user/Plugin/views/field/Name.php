@@ -78,7 +78,7 @@ class Name extends User {
    * {@inheritdoc}
    */
   protected function renderLink($data, ResultRow $values) {
-    $account = entity_create('user', array());
+    $account = entity_create('user');
     $account->uid = $this->getValue($values, 'uid');
     $account->name = $this->getValue($values);
     if (!empty($this->options['link_to_user']) || !empty($this->options['overwrite_anonymous'])) {

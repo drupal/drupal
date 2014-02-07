@@ -102,7 +102,7 @@ class TranslationWebTest extends FieldTestBase {
 
     // Prepare the field translations.
     field_test_entity_info_translatable($this->entity_type, TRUE);
-    $entity = entity_create($this->entity_type, array());
+    $entity = entity_create($this->entity_type);
     $available_langcodes = array_flip(array_keys(language_list()));
     $field_name = $this->field->getName();
 

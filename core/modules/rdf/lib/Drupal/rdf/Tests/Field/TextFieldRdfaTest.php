@@ -57,7 +57,7 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
     ))->save();
 
     // Set up test entity.
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$this->fieldName}->value = $this->testValue;
     $this->entity->{$this->fieldName}->summary = $this->testSummary;
   }

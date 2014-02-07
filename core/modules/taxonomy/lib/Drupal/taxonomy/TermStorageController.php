@@ -23,7 +23,7 @@ class TermStorageController extends FieldableDatabaseStorageController implement
    *   An array of values to set, keyed by property name. A value for the
    *   vocabulary ID ('vid') is required.
    */
-  public function create(array $values) {
+  public function create(array $values = array()) {
     // Save new terms with no parents by default.
     if (empty($values['parent'])) {
       $values['parent'] = array(0);

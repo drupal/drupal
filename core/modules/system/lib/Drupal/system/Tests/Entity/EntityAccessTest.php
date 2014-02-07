@@ -86,7 +86,7 @@ class EntityAccessTest extends EntityLanguageTestBase  {
     $controller = $this->container->get('entity.manager')->getAccessController('entity_test_default_access');
     $this->assertTrue($controller instanceof EntityAccessController, 'The default entity controller is used for the entity_test_default_access entity type.');
 
-    $entity = entity_create('entity_test_default_access', array());
+    $entity = entity_create('entity_test_default_access');
     $this->assertEntityAccess(array(
       'create' => FALSE,
       'update' => FALSE,

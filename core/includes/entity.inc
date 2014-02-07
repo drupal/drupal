@@ -377,16 +377,16 @@ function entity_delete_multiple($entity_type, array $ids) {
 /**
  * Constructs a new entity object, without permanently saving it.
  *
- * @param $entity_type
+ * @param string $entity_type
  *   The type of the entity.
- * @param $values
- *   An array of values to set, keyed by property name. If the entity type has
- *   bundles the bundle key has to be specified.
+ * @param array $values
+ *   (optional) An array of values to set, keyed by property name. If the
+ *   entity type has bundles, the bundle key has to be specified.
  *
  * @return \Drupal\Core\Entity\EntityInterface
  *   A new entity object.
  */
-function entity_create($entity_type, array $values) {
+function entity_create($entity_type, array $values = array()) {
   return \Drupal::entityManager()
     ->getStorageController($entity_type)
     ->create($values);

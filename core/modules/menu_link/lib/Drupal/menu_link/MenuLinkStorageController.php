@@ -71,7 +71,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
   /**
    * {@inheritdoc}
    */
-  public function create(array $values) {
+  public function create(array $values = array()) {
     // The bundle of menu links being the menu name is not enforced but is the
     // default behavior if no bundle is set.
     if (!isset($values['bundle']) && isset($values['menu_name'])) {

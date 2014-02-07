@@ -93,7 +93,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
     ))->save();
 
     // Set up test values.
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$this->fieldName}->target_id = $this->term->id();
     $this->entity->save();
     $this->uri = $this->getAbsoluteUri($this->entity);

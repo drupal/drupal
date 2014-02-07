@@ -54,7 +54,7 @@ class NumberItemTest extends FieldUnitTestBase {
    */
   public function testNumberItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $integer = rand(0, 10);
     $entity->field_integer = $integer;
     $float = 3.14;

@@ -80,7 +80,7 @@ class EntityViewControllerTest extends WebTestBase {
 
     // Create an entity and save test value in field_test_text.
     $test_value = $this->randomName();
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $entity->field_test_text = $test_value;
     $entity->save();
 

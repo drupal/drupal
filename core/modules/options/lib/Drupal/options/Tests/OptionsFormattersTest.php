@@ -34,7 +34,7 @@ class OptionsFormattersTest extends OptionsFieldUnitTestBase {
    * Tests the formatters.
    */
   public function testFormatter() {
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $entity->{$this->fieldName}->value = 1;
 
     $build = field_view_field($entity, $this->fieldName, array());

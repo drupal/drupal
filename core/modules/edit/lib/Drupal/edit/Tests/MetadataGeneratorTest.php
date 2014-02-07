@@ -95,7 +95,7 @@ class MetadataGeneratorTest extends EditTestBase {
     );
 
     // Create an entity with values for this text field.
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$field_1_name}->value = 'Test';
     $this->entity->{$field_2_name}->value = 42;
     $this->entity->save();
@@ -161,7 +161,7 @@ class MetadataGeneratorTest extends EditTestBase {
     $full_html_format->save();
 
     // Create an entity with values for this rich text field.
-    $this->entity = entity_create('entity_test', array());
+    $this->entity = entity_create('entity_test');
     $this->entity->{$field_name}->value = 'Test';
     $this->entity->{$field_name}->format = 'full_html';
     $this->entity->save();

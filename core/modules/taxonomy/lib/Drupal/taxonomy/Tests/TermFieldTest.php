@@ -80,14 +80,14 @@ class TermFieldTest extends TaxonomyTestBase {
   function testTaxonomyTermFieldValidation() {
     // Test validation with a valid value.
     $term = $this->createTerm($this->vocabulary);
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $entity->{$this->field_name}->target_id = $term->id();
     $violations = $entity->{$this->field_name}->validate();
     $this->assertEqual(count($violations) , 0, 'Correct term does not cause validation error.');
 
     // Test validation with an invalid valid value (wrong vocabulary).
     $bad_term = $this->createTerm($this->createVocabulary());
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $entity->{$this->field_name}->target_id = $bad_term->id();
     $violations = $entity->{$this->field_name}->validate();
     $this->assertEqual(count($violations) , 1, 'Wrong term causes validation error.');

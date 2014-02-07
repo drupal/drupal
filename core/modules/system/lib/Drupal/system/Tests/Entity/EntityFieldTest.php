@@ -70,7 +70,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Pass in the value of the name field when creating. With the user
     // field we test setting a field after creation.
-    $entity = entity_create($entity_type, array());
+    $entity = entity_create($entity_type);
     $entity->user_id->target_id = $this->entity_user->id();
     $entity->name->value = $this->entity_name;
 
@@ -362,7 +362,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     // Test introspecting an entity object.
     // @todo: Add bundles and test bundles as well.
-    $entity = entity_create($entity_type, array());
+    $entity = entity_create($entity_type);
 
     $definitions = $entity->getPropertyDefinitions();
     $this->assertEqual($definitions['name']->getType(), 'string', $entity_type .': Name field found.');

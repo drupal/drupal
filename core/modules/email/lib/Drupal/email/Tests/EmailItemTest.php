@@ -59,7 +59,7 @@ class EmailItemTest extends FieldUnitTestBase {
    */
   public function testEmailItem() {
     // Verify entity creation.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $value = 'test@example.com';
     $entity->field_email = $value;
     $entity->name->value = $this->randomName();

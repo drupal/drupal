@@ -111,14 +111,14 @@ interface EntityStorageControllerInterface {
   /**
    * Constructs a new entity object, without permanently saving it.
    *
-   * @param $values
-   *   An array of values to set, keyed by property name. If the entity type has
-   *   bundles the bundle key has to be specified.
+   * @param array $values
+   *   (optional) An array of values to set, keyed by property name. If the
+   *   entity type has bundles, the bundle key has to be specified.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   A new entity object.
    */
-  public function create(array $values);
+  public function create(array $values = array());
 
   /**
    * Deletes permanently saved entities.

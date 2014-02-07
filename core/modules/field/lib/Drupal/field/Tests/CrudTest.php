@@ -348,7 +348,7 @@ class CrudTest extends FieldUnitTestBase {
     $this->assertTrue(!empty($instance) && empty($instance->deleted), 'A new instance for a previously used field name is created.');
 
     // Save an entity with data for the field
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     $values[0]['value'] = mt_rand(1, 127);
     $entity->{$field->getName()}->value = $values[0]['value'];
     $entity = $this->entitySaveReload($entity);
@@ -402,7 +402,7 @@ class CrudTest extends FieldUnitTestBase {
     $instance->save();
 
     do {
-      $entity = entity_create('entity_test', array());
+      $entity = entity_create('entity_test');
       // Fill in the entity with more values than $cardinality.
       for ($i = 0; $i < 20; $i++) {
         // We can not use $i here because 0 values are filtered out.

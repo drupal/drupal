@@ -64,7 +64,7 @@ class TextFieldTest extends WebTestBase {
     ))->save();
 
     // Test validation with valid and invalid values.
-    $entity = entity_create('entity_test', array());
+    $entity = entity_create('entity_test');
     for ($i = 0; $i <= $max_length + 2; $i++) {
       $entity->{$this->field->name}->value = str_repeat('x', $i);
       $violations = $entity->{$this->field->name}->validate();
