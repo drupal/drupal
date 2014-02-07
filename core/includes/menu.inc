@@ -1837,7 +1837,7 @@ function menu_navigation_links($menu_name, $level = 0) {
       if ($item['link']['href'] == $router_item['tab_root_href'] && $item['link']['href'] != current_path()) {
         $l['attributes']['class'][] = 'active';
       }
-      // Keyed with the unique mlid to generate classes in theme_links().
+      // Keyed with the unique mlid to generate classes in links.html.twig.
       $links['menu-' . $item['link']['mlid'] . $class] = $l;
     }
   }

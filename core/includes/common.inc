@@ -3414,7 +3414,7 @@ function drupal_pre_render_link($element) {
  * Pre-render callback: Collects child links into a single array.
  *
  * This function can be added as a pre_render callback for a renderable array,
- * usually one which will be themed by theme_links(). It iterates through all
+ * usually one which will be themed by links.html.twig. It iterates through all
  * unrendered children of the element, collects any #links properties it finds,
  * merges them into the parent element's #links array, and prevents those
  * children from being rendered separately.
@@ -3435,21 +3435,21 @@ function drupal_pre_render_link($element) {
  *     '#theme' => 'links__node__comment',
  *     '#links' => array(
  *       // An array of links associated with node comments, suitable for
- *       // passing in to theme_links().
+ *       // passing in to links.html.twig.
  *     ),
  *   ),
  *   'statistics' => array(
  *     '#theme' => 'links__node__statistics',
  *     '#links' => array(
  *       // An array of links associated with node statistics, suitable for
- *       // passing in to theme_links().
+ *       // passing in to links.html.twig.
  *     ),
  *   ),
  *   'translation' => array(
  *     '#theme' => 'links__node__translation',
  *     '#links' => array(
  *       // An array of links associated with node translation, suitable for
- *       // passing in to theme_links().
+ *       // passing in to links.html.twig.
  *     ),
  *   ),
  * );

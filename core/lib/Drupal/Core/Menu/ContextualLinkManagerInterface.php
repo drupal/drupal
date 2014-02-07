@@ -24,7 +24,7 @@ interface ContextualLinkManagerInterface {
   public function getContextualLinkPluginsByGroup($group_name);
 
   /**
-   * Gets the contextual links prepared as expected by theme_links().
+   * Gets the contextual links prepared as expected by links.html.twig.
    *
    * @param string $group_name
    *   The group name.

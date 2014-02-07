@@ -2869,7 +2869,7 @@ abstract class WebTestBase extends TestBase {
    * Asserts themed output.
    *
    * @param $callback
-   *   The name of the theme function to invoke; e.g. 'links' for theme_links().
+   *   The name of the theme hook to invoke; e.g. 'links' for links.html.twig.
    * @param $variables
    *   An array of variables to pass to the theme function.
    * @param $expected

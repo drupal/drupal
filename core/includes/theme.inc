@@ -1168,9 +1168,11 @@ function template_preprocess_status_messages(&$variables) {
 }
 
 /**
- * Returns HTML for a set of links.
+ * Prepares variables for links templates.
  *
- * @param $variables
+ * Default template: links.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - links: An associative array of links to be themed. The key for each link
  *     is used as its CSS class. Each link should be itself an array, with the
@@ -1194,13 +1196,12 @@ function template_preprocess_status_messages(&$variables) {
  *     l() as its $options parameter.
  *   - attributes: A keyed array of attributes for the UL containing the
  *     list of links.
- *   - set_active_class: (optional) Whether theme_links() should compare the
+ *   - set_active_class: (optional) Whether each link should compare the
  *     route_name + route_parameters or href (path), language and query options
- *     to the current URL for each of the links, to determine whether the link
- *     is "active". If so, an "active" class will be applied to the list item
- *     containing the link, as well as the link itself. It is important to use
- *     this sparingly since it is usually unnecessary and requires extra
- *     processing.
+ *     to the current URL, to determine whether the link is "active". If so, an
+ *     "active" class will be applied to the list item containing the link, as
+ *     well as the link itself. It is important to use this sparingly since it
+ *     is usually unnecessary and requires extra processing.
  *     For anonymous users, the "active" class will be calculated on the server,
  *     because most sites serve each anonymous user the same cached page anyway.
  *     For authenticated users, the "active" class will be calculated on the
@@ -1223,8 +1224,8 @@ function template_preprocess_status_messages(&$variables) {
  *     http://juicystudio.com/article/screen-readers-display-none.php and
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  *
- * theme_links() unfortunately duplicates the "active" class handling of l() and
- * LinkGenerator::generate() because it needs to be able to set the "active"
+ * Unfortunately links templates duplicate the "active" class handling of l()
+ * and LinkGenerator::generate() because it needs to be able to set the "active"
  * class not on the links themselves ("a" tags), but on the list items ("li"
  * tags) that contain the links. This is necessary for CSS to be able to style
  * list items differently when the link is active, since CSS does not yet allow
@@ -1236,11 +1237,9 @@ function template_preprocess_status_messages(&$variables) {
  * @see \Drupal\Core\Utility\LinkGenerator::generate()
  * @see system_page_build()
  */
-function theme_links($variables) {
+function template_preprocess_links(&$variables) {
   $links = $variables['links'];
-  $attributes = $variables['attributes'];
-  $heading = $variables['heading'];
-  $output = '';
+  $heading = &$variables['heading'];
 
   if (!empty($links)) {
     // Prepend the heading to the list, if any.
@@ -1258,15 +1257,14 @@ function theme_links($variables) {
       if (isset($heading['class'])) {
         $heading['attributes']['class'] = $heading['class'];
       }
-
-      $output .= '<' . $heading['level'] . new Attribute($heading['attributes']) . '>';
-      $output .= String::checkPlain($heading['text']);
-      $output .= '</' . $heading['level'] . '>';
+      // Convert the attributes array into an Attribute object.
+      $heading['attributes'] = new Attribute($heading['attributes']);
+      $heading['text'] = String::checkPlain($heading['text']);
     }
 
-    $output .= '<ul' . new Attribute($attributes) . '>';
-
+    $variables['links'] = array();
     foreach ($links as $key => $link) {
+      $item = array();
       $link += array(
         'href' => NULL,
         'route_name' => NULL,
@@ -1320,29 +1318,23 @@ function theme_links($variables) {
           $li_attributes['data-drupal-link-system-path'] = \Drupal::service('path.alias_manager.cached')->getSystemPath($path);
         }
 
-        $item = drupal_render($link_element);
+        $item['link'] = $link_element;
       }
+
       // Handle title-only text items.
-      else {
-        // Merge in default array properties into $link.
-        $link += array(
-          'html' => FALSE,
-        );
-        $item = ($link['html'] ? $link['title'] : String::checkPlain($link['title']));
-        if (isset($link['attributes'])) {
-          $item = '<span' . new Attribute($link['attributes']) . '>' . $item . '</span>';
-        }
+      $text = (!empty($link['html']) ? $link['title'] : String::checkPlain($link['title']));
+      $item['text'] = $text;
+      if (isset($link['attributes'])) {
+        $item['text_attributes'] = new Attribute($link['attributes']);
       }
 
-      $output .= '<li' . new Attribute($li_attributes) . '>';
-      $output .= $item;
-      $output .= '</li>';
+      // Handle list item attributes.
+      $item['attributes'] = new Attribute($li_attributes);
+
+      // Add the item to the list of links.
+      $variables['links'][] = $item;
     }
-
-    $output .= '</ul>';
   }
-
-  return $output;
 }
 
 /**
@@ -2579,6 +2571,7 @@ function drupal_common_theme() {
     ),
     'links' => array(
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array(), 'set_active_class' => FALSE),
+      'template' => 'links',
     ),
     'dropbutton_wrapper' => array(
       'variables' => array('children' => NULL),

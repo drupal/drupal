@@ -2359,7 +2359,7 @@ function system_page_build(&$page) {
   // - applying a post-render cache callback if the current user is anonymous.
   // @see l()
   // @see \Drupal\Core\Utility\LinkGenerator::generate()
-  // @see theme_links()
+  // @see template_preprocess_links()
   // @see \Drupal\system\Controller\SystemController::setLinkActiveClass
   if (\Drupal::currentUser()->isAuthenticated()) {
     $page['#attached']['library'][] = array('system', 'drupal.active-link');

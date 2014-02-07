@@ -1390,7 +1390,7 @@ function form_pre_render_actions_dropbutton(array $element) {
       }
       // Add this button to the corresponding dropbutton.
       // @todo Change #type 'dropbutton' to be based on theme_item_list()
-      //   instead of theme_links() to avoid this preemptive rendering.
+      //   instead of links.html.twig to avoid this preemptive rendering.
       $button = drupal_render($element[$key]);
       $dropbuttons[$dropbutton]['#links'][$key] = array(
         'title' => $button,

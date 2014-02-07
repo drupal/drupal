@@ -957,7 +957,7 @@ class ViewEditFormController extends ViewFormControllerBase {
         break;
     }
 
-    // Create an array of actions to pass to theme_links
+    // Create an array of actions to pass to links template.
     $actions = array();
     $count_handlers = count($executable->display_handler->getHandlers($type));
 

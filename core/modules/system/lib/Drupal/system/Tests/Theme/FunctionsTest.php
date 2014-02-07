@@ -149,9 +149,13 @@ class FunctionsTest extends WebTestBase {
   }
 
   /**
-   * Tests theme_links().
+   * Tests links.html.twig.
    */
   function testLinks() {
+    // Turn off the query for the l() function to compare the active
+    // link correctly.
+    $original_query = \Drupal::request()->query->all();
+    \Drupal::request()->query->replace(array());
     // Verify that empty variables produce no output.
     $variables = array();
     $expected = '';
@@ -197,6 +201,9 @@ class FunctionsTest extends WebTestBase {
     $expected_heading = '<h2>Links heading</h2>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);
+
+    // Restore the original request's query.
+    \Drupal::request()->query->replace($original_query);
 
     // Verify that passing an array as heading works (core support).
     $variables['heading'] = array('text' => 'Links heading', 'level' => 'h3', 'class' => 'heading');

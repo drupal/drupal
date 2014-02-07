@@ -63,7 +63,7 @@ class AjaxTestController {
       ),
     );
 
-    // Dialog behavior applied to links rendered by theme_links().
+    // Dialog behavior applied to links rendered by links.html.twig.
     $build['links'] = array(
       '#theme' => 'links',
       '#links' => array(
