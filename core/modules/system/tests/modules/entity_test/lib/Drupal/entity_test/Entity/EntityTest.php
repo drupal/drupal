@@ -107,22 +107,6 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
   }
 
   /**
-   * Overrides Drupal\entity\Entity::label().
-   */
-  public function label() {
-    $info = $this->getEntityType();
-    if (!isset($langcode)) {
-      $langcode = $this->activeLangcode;
-    }
-    if ($info->getKey('laebl') == 'name') {
-      return $this->getTranslation($langcode)->name->value;
-    }
-    else {
-      return parent::label($langcode);
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
