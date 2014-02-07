@@ -1403,9 +1403,6 @@ function hook_theme($existing, $type, $theme, $path) {
     'forum_list' => array(
       'variables' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
     ),
-    'forum_topic_list' => array(
-      'variables' => array('tid' => NULL, 'topics' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
-    ),
     'forum_icon' => array(
       'variables' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
     ),

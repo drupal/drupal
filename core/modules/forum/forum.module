@@ -73,15 +73,11 @@ function forum_theme() {
   return array(
     'forums' => array(
       'template' => 'forums',
-      'variables' => array('forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'term' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
+      'variables' => array('forums' => array(), 'topics' => array(), 'topics_pager' => array(), 'parents' => NULL, 'term' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_list' => array(
       'template' => 'forum-list',
       'variables' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
-    ),
-    'forum_topic_list' => array(
-      'template' => 'forum-topic-list',
-      'variables' => array('tid' => NULL, 'topics' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_icon' => array(
       'template' => 'forum-icon',
@@ -658,26 +654,107 @@ function template_preprocess_forums(&$variables) {
         '#tid' => $variables['tid'],
       );
     }
-    else {
-      $variables['forums'] = array();
-    }
 
-    if ($variables['term'] && empty($variables['term']->forum_container->value)) {
-      $variables['topics'] = array(
-        '#theme' => 'forum_topic_list',
-        '#tid' => $variables['tid'],
-        '#topics' => $variables['topics'],
-        '#sortby' => $variables['sortby'],
-        '#forum_per_page' => $variables['forum_per_page'],
+    if ($variables['term'] && empty($variables['term']->forum_container->value) && !empty($variables['topics'])) {
+      global $forum_topic_list_header;
+
+      $table = array(
+        '#theme' => 'table__forum_topic_list',
+        '#responsive' => FALSE,
+        '#attributes' => array('id' => 'forum-topic-' . $variables['tid']),
+        '#header' => array(),
+        '#rows' => array(),
+      );
+
+      if (!empty($forum_topic_list_header)) {
+        $table['#header'] = $forum_topic_list_header;
+      }
+
+      /** @var \Drupal\node\NodeInterface $topic */
+      foreach ($variables['topics'] as $id => $topic) {
+        $variables['topics'][$id]->icon = array(
+          '#theme' => 'forum_icon',
+          '#new_posts' => $topic->new,
+          '#num_posts' => $topic->comment_count,
+          '#comment_mode' => $topic->comment_mode,
+          '#sticky' => $topic->isSticky(),
+          '#first_new' => $topic->first_new,
+        );
+
+        // We keep the actual tid in forum table, if it's different from the
+        // current tid then it means the topic appears in two forums, one of
+        // them is a shadow copy.
+        if ($variables['tid'] != $topic->forum_tid) {
+          $variables['topics'][$id]->moved = TRUE;
+          $variables['topics'][$id]->title = check_plain($topic->getTitle());
+          $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->forum_tid");
+        }
+        else {
+          $variables['topics'][$id]->moved = FALSE;
+          $variables['topics'][$id]->title_link = l($topic->getTitle(), 'node/' . $topic->id());
+          $variables['topics'][$id]->message = '';
+        }
+        $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => (object) array(
+          'uid' => $topic->getOwnerId(),
+          'name' => $topic->getOwner()->getUsername(),
+          'created' => $topic->getCreatedTime(),
+        ));
+        $variables['topics'][$id]->submitted = drupal_render($forum_submitted);
+        $forum_submitted = array(
+          '#theme' => 'forum_submitted',
+          '#topic' => isset($topic->last_reply) ? $topic->last_reply : NULL,
+        );
+        $variables['topics'][$id]->last_reply = drupal_render($forum_submitted);
+
+        $variables['topics'][$id]->new_text = '';
+        $variables['topics'][$id]->new_url = '';
+
+        if ($topic->new_replies) {
+          $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', array('%title' => $variables['topics'][$id]->label()));
+          $variables['topics'][$id]->new_url = url('node/' . $topic->id(), array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic, 'comment_node_forum'), 'fragment' => 'new'));
+        }
+
+        // Build table rows from topics.
+        $row = array();
+        $row[] = array(
+          'data' => array(
+            $topic->icon,
+            array(
+              '#markup' => '<div class="title"><div>' . $topic->title_link . '</div><div>' . $topic->submitted . '</div></div>',
+            ),
+          ),
+          'class' => array('topic'),
+        );
+
+        if ($topic->moved) {
+          $row[] = array(
+            'data' => $topic->message,
+            'colspan' => '2',
+          );
+        }
+        else {
+          $new_replies = '';
+          if ($topic->new_replies) {
+            $new_replies = '<br /><a href="' . $topic->new_url . '">' . $topic->new_text . '</a>';
+          }
+
+          $row[] = array(
+            'data' => $topic->comment_count . $new_replies,
+            'class' => array('replies'),
+          );
+          $row[] = array(
+            'data' => $topic->last_reply,
+            'class' => array('last-reply'),
+          );
+        }
+        $table['#rows'][] = $row;
+      }
+
+      $variables['topics'] = $table;
+      $variables['topics_pager'] = array(
+        '#theme' => 'pager',
       );
     }
-    else {
-      $variables['topics'] = array();
-    }
-  }
-  else {
-    $variables['forums'] = array();
-    $variables['topics'] = array();
   }
 }
 
@@ -733,93 +810,6 @@ function template_preprocess_forum_list(&$variables) {
   // Give meaning to $tid for themers. $tid actually stands for term ID.
   $variables['forum_id'] = $variables['tid'];
   unset($variables['tid']);
-}
-
-/**
- * Prepares variables for forum topic list templates.
- *
- * Default template: forum-topic-list.html.twig.
- *
- * @param array $variables
- *   An array containing the following elements:
- *   - tid: Taxonomy term ID of the current forum.
- *   - topics: An array of all the topics in the current forum.
- *   - forum_per_page: The maximum number of topics to display per page.
- */
-function template_preprocess_forum_topic_list(&$variables) {
-  global $forum_topic_list_header;
-
-  $header = '';
-  if (!empty($forum_topic_list_header)) {
-    // Create the tablesorting header.
-    $ts = tablesort_init($forum_topic_list_header);
-    foreach ($forum_topic_list_header as $cell) {
-      $cell = tablesort_header($cell, $forum_topic_list_header, $ts);
-      $header .= _theme_table_cell($cell, TRUE);
-    }
-  }
-  $variables['header'] = $header;
-
-  if (!empty($variables['topics'])) {
-    $row = 0;
-    /** @var \Drupal\node\NodeInterface $topic */
-    foreach ($variables['topics'] as $id => $topic) {
-      $variables['topics'][$id]->icon = array(
-        '#theme' => 'forum_icon',
-        '#new_posts' => $topic->new,
-        '#num_posts' => $topic->comment_count,
-        '#comment_mode' => $topic->comment_mode,
-        '#sticky' => $topic->isSticky(),
-        '#first_new' => $topic->first_new,
-      );
-      $variables['topics'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
-      $row++;
-
-      // We keep the actual tid in forum table, if it's different from the
-      // current tid then it means the topic appears in two forums, one of
-      // them is a shadow copy.
-      if ($variables['tid'] != $topic->forum_tid) {
-        $variables['topics'][$id]->moved = TRUE;
-        $variables['topics'][$id]->title = check_plain($topic->getTitle());
-        $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->forum_tid");
-      }
-      else {
-        $variables['topics'][$id]->moved = FALSE;
-        $variables['topics'][$id]->title_link = l($topic->getTitle(), 'node/' . $topic->id());
-        $variables['topics'][$id]->message = '';
-      }
-      $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => (object) array(
-        'uid' => $topic->getOwnerId(),
-        'name' => $topic->getOwner()->getUsername(),
-        'created' => $topic->getCreatedTime(),
-      ));
-      $variables['topics'][$id]->submitted = drupal_render($forum_submitted);
-      $forum_submitted = array(
-        '#theme' => 'forum_submitted',
-        '#topic' => isset($topic->last_reply) ? $topic->last_reply : NULL,
-      );
-      $variables['topics'][$id]->last_reply = drupal_render($forum_submitted);
-
-      $variables['topics'][$id]->new_text = '';
-      $variables['topics'][$id]->new_url = '';
-      if ($topic->new_replies) {
-        $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', array('%title' => $variables['topics'][$id]->label()));
-        $variables['topics'][$id]->new_url = url('node/' . $topic->id(), array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic, 'comment_node_forum'), 'fragment' => 'new'));
-      }
-
-    }
-  }
-  else {
-    // Make this safe for the template.
-    $variables['topics'] = array();
-  }
-  // Give meaning to $tid for themers. $tid actually stands for term id.
-  $variables['topic_id'] = $variables['tid'];
-  unset($variables['tid']);
-
-  $variables['pager'] = array(
-    '#theme' => 'pager',
-  );
 }
 
 /**
