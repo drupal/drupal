@@ -36,6 +36,7 @@
   },
   "config": {
     "vendor-dir": "core/vendor",
-    "preferred-install": "dist"
+    "preferred-install": "dist",
+    "autoloader-suffix": "Drupal8"
   }
 }
