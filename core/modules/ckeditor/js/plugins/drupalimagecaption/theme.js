@@ -56,11 +56,11 @@
                 this.parts.caption.setStyle('display', this.data.hasCaption ? '' : 'none');
 
                 // Set the alignment, if any.
-                this.element.removeClass('caption-left');
-                this.element.removeClass('caption-center');
-                this.element.removeClass('caption-right');
+                this.element.removeClass('align-left');
+                this.element.removeClass('align-center');
+                this.element.removeClass('align-right');
                 if (this.data.data_align) {
-                  this.element.addClass('caption-' + this.data.data_align);
+                  this.element.addClass('align-' + this.data.data_align);
                 }
               }
             }
@@ -101,7 +101,7 @@
               if (captionValue !== undefined) {
                 var classes = 'caption caption-img';
                 if (alignValue !== null) {
-                  classes += ' caption-' + alignValue;
+                  classes += ' align-' + alignValue;
                 }
                 figure = el.wrapWith(new CKEDITOR.htmlParser.element('figure', { 'class': classes }));
                 var caption = CKEDITOR.htmlParser.fragment.fromHtml(captionValue || '', 'figcaption');
@@ -167,7 +167,7 @@
               // Build the HTML for the widget.
               var html = '<figure class="caption caption-img';
               if (returnValues.attributes.data_align && returnValues.attributes.data_align !== 'none') {
-                html += ' caption-' + returnValues.attributes.data_align;
+                html += ' align-' + returnValues.attributes.data_align;
               }
               html += '"><img ';
               for (var attr in returnValues.attributes) {

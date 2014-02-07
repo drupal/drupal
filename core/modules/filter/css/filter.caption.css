@@ -8,7 +8,6 @@
  */
 .caption {
   display: table;
-  margin: 0;
 }
 .caption > * {
   display: block;
@@ -28,31 +27,4 @@
 .caption > figcaption[contenteditable=true]:empty:before {
   content: attr(data-placeholder);
   font-style: italic;
-}
-
-/**
- * Caption alignment.
- */
-.caption-left {
-  float: left; /* LTR */
-  margin-left: 0; /* LTR */
-}
-[dir="rtl"] .caption-left {
-  float: right;
-  margin-left: auto;
-  margin-right: 0;
-}
-.caption-right {
-  float: right; /* LTR */
-  margin-right: 0; /* LTR */
-}
-[dir="rtl"] .caption-right {
-  float: left;
-  margin-left: 0;
-  margin-right: auto;
-}
-.caption-center {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
 }

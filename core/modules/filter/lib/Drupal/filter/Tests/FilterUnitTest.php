@@ -115,13 +115,13 @@ class FilterUnitTest extends DrupalUnitTestBase {
     // Both data-caption and data-align attributes: all 3 allowed values for the
     // data-align attribute.
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="left" />';
-    $expected = '<figure class="caption caption-img caption-left"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure class="caption caption-img align-left"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $this->assertIdentical($expected, $test($input));
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="center" />';
-    $expected = '<figure class="caption caption-img caption-center"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure class="caption caption-img align-center"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $this->assertIdentical($expected, $test($input));
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="right" />';
-    $expected = '<figure class="caption caption-img caption-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure class="caption caption-img align-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $this->assertIdentical($expected, $test($input));
 
     // Both data-caption and data-align attributes, but a disallowed data-align
@@ -132,7 +132,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
 
     // Ensure the filter also works with uncommon yet valid attribute quoting.
     $input = '<img src=llama.jpg data-caption=\'Loquacious llama!\' data-align=right />';
-    $expected = '<figure class="caption caption-img caption-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $expected = '<figure class="caption caption-img align-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
     $this->assertIdentical($expected, $test($input));
 
     // Security test: attempt to inject an additional class.
