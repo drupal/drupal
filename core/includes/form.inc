@@ -2851,7 +2851,14 @@ function theme_form_element_label($variables) {
   }
 
   // If the element is required, a required marker is appended to the label.
-  $required = !empty($element['#required']) ? theme('form_required_marker', array('element' => $element)) : '';
+  $required = '';
+  if (!empty($element['#required'])) {
+    $marker = array(
+      '#theme' => 'form_required_marker',
+      '#element' => $element,
+    );
+    $required = drupal_render($marker);
+  }
 
   $title = filter_xss_admin($element['#title']);
 
