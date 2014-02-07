@@ -7,8 +7,8 @@
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Menu\LocalTaskDefault;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,11 +84,11 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * Setups the local task default.
    */
   protected function setupLocalTaskDefault() {
-    $container = new ContainerBuilder();
-    $container->set('string_translation', $this->stringTranslation);
-    $container->set('router.route_provider', $this->routeProvider);
-    \Drupal::setContainer($container);
-    $this->localTaskBase = new LocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition);
+    $this->localTaskBase = new TestLocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition);
+    $this->localTaskBase
+      ->setRouteProvider($this->routeProvider)
+      ->setTranslationManager($this->stringTranslation);
+
   }
 
   /**
@@ -315,4 +315,11 @@ class LocalTaskDefaultTest extends UnitTestCase {
     ), $this->localTaskBase->getOptions($request));
   }
 
+}
+
+class TestLocalTaskDefault extends LocalTaskDefault {
+  public function setRouteProvider(RouteProviderInterface $route_provider) {
+    $this->routeProvider = $route_provider;
+    return $this;
+  }
 }
