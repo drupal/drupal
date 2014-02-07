@@ -77,10 +77,11 @@
       // If this tab has a tray associated with it, it is considered an
       // activatable tab.
       if (event.target.hasAttribute('data-toolbar-tray')) {
-        var tab = this.model.get('activeTab');
-        var id = '#' + event.target.id;
+        var activeTab = this.model.get('activeTab');
+        var clickedTab = event.target;
+
         // Set the event target as the active item if it is not already.
-        this.model.set('activeTab', (!tab || id !== tab) ? id : null);
+        this.model.set('activeTab', (!activeTab || clickedTab !== activeTab) ? clickedTab : null);
 
         event.preventDefault();
         event.stopPropagation();
