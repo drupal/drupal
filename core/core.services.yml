@@ -215,6 +215,8 @@ services:
   request:
     class: Symfony\Component\HttpFoundation\Request
     synthetic: true
+  request_stack:
+    class: Symfony\Component\HttpFoundation\RequestStack
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
     arguments: ['@service_container']
@@ -226,7 +228,7 @@ services:
     arguments: ['@controller_resolver', '@string_translation']
   http_kernel:
     class: Drupal\Core\HttpKernel
-    arguments: ['@event_dispatcher', '@service_container', '@controller_resolver']
+    arguments: ['@event_dispatcher', '@service_container', '@controller_resolver', '@request_stack']
   language_manager:
     class: Drupal\Core\Language\LanguageManager
     arguments: ['@language.default']

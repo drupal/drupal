@@ -14,6 +14,7 @@ namespace Drupal\Core;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -34,9 +35,21 @@ class HttpKernel extends BaseHttpKernel
 
     private $esiSupport;
 
-    public function __construct(EventDispatcherInterface $dispatcher, ContainerInterface $container, ControllerResolverInterface $controllerResolver)
+  /**
+   * Constructs a new HttpKernel.
+   *
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   *   The event dispatcher.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The dependency injection container.
+   * @param \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
+   */
+    public function __construct(EventDispatcherInterface $dispatcher, ContainerInterface $container, ControllerResolverInterface $controller_resolver, RequestStack $request_stack = NULL)
     {
-        parent::__construct($dispatcher, $controllerResolver);
+        parent::__construct($dispatcher, $controller_resolver, $request_stack);
 
         $this->container = $container;
     }
