@@ -1266,7 +1266,7 @@ function file_managed_file_process($element, &$form_state, $form) {
     $element['upload']['#attached']['js'] = array(
       array(
         'type' => 'setting',
-        'data' => array('file' => array('elements' => array('#' . $element['#id'] . '-upload' => $extension_list)))
+        'data' => array('file' => array('elements' => array('#' . $element['#id'] => $extension_list)))
       )
     );
   }

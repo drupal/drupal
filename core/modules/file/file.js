@@ -18,27 +18,33 @@
     attach: function (context, settings) {
       var $context = $(context);
       var validateExtension = Drupal.file.validateExtension;
-      var selector, elements;
+      var elements;
+
+      function initFileValidation (selector) {
+        $context.find(selector)
+          .once('fileValidate')
+          .on('change.fileValidate', { extensions: elements[selector] }, Drupal.file.validateExtension);
+      }
+
       if (settings.file && settings.file.elements) {
         elements = settings.file.elements;
-        for (selector in elements) {
-          if (elements.hasOwnProperty(selector)) {
-            $context.find(selector).on('change', {extensions: elements[selector]}, validateExtension);
-          }
-        }
+        Object.keys(elements).forEach(initFileValidation);
       }
     },
-    detach: function (context, settings) {
+    detach: function (context, settings, trigger) {
       var $context = $(context);
       var validateExtension = Drupal.file.validateExtension;
-      var selector, elements;
-      if (settings.file && settings.file.elements) {
+      var elements;
+
+      function removeFileValidation (selector) {
+        $context.find(selector)
+          .removeOnce('fileValidate')
+          .off('change.fileValidate', Drupal.file.validateExtension);
+      }
+
+      if (trigger === 'unload' && settings.file && settings.file.elements) {
         elements = settings.file.elements;
-        for (selector in elements) {
-          if (elements.hasOwnProperty(selector)) {
-            $context.find(selector).off('change', validateExtension);
-          }
-        }
+        Object.keys(elements).forEach(removeFileValidation);
       }
     }
   };
@@ -115,6 +121,8 @@
           });
           $(this).closest('div.form-managed-file').prepend('<div class="messages messages--error file-upload-js-error" aria-live="polite">' + error + '</div>');
           this.value = '';
+          // Cancel all other change event handlers.
+          event.stopImmediatePropagation();
         }
       }
     },
