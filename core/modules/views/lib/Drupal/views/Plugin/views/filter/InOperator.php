@@ -23,7 +23,7 @@ use Drupal\views\ViewExecutable;
  */
 class InOperator extends FilterPluginBase {
 
-  var $value_form_type = 'checkboxes';
+  protected $valueFormType = 'checkboxes';
 
   /**
    * @var array
@@ -216,7 +216,7 @@ class InOperator extends FilterPluginBase {
 
     if ($which == 'all' || $which == 'value') {
       $form['value'] = array(
-        '#type' => $this->value_form_type,
+        '#type' => $this->valueFormType,
         '#title' => $this->value_title,
         '#options' => $options,
         '#default_value' => $default_value,
@@ -229,7 +229,7 @@ class InOperator extends FilterPluginBase {
       }
 
       if ($which == 'all') {
-        if (empty($form_state['exposed']) && (in_array($this->value_form_type, array('checkbox', 'checkboxes', 'radios', 'select')))) {
+        if (empty($form_state['exposed']) && (in_array($this->valueFormType, array('checkbox', 'checkboxes', 'radios', 'select')))) {
           $form['value']['#prefix'] = '<div id="edit-options-value-wrapper">';
           $form['value']['#suffix'] = '</div>';
         }

@@ -106,7 +106,7 @@ class ManyToOne extends InOperator {
     return $operators;
   }
 
-  var $value_form_type = 'select';
+  protected $valueFormType = 'select';
   protected function valueForm(&$form, &$form_state) {
     parent::valueForm($form, $form_state);
 
