@@ -983,9 +983,16 @@ function install_display_output($output, $install_state) {
     // Let the theming function know when every step of the installation has
     // been completed.
     $active_task = $install_state['installation_finished'] ? NULL : $install_state['active_task'];
-    drupal_add_region_content('sidebar_first', theme('task_list', array('items' => install_tasks_to_display($install_state), 'active' => $active_task, 'variant' => 'install')));
+    $task_list = array(
+      '#theme' => 'task_list',
+      '#items' => install_tasks_to_display($install_state),
+      '#active' => $active_task,
+      '#variant' => 'install',
+    );
+    drupal_add_region_content('sidebar_first', drupal_render($task_list));
   }
-  print theme('install_page', array('content' => $output));
+  $install_page = array('#theme' => 'install_page', '#content' => $output);
+  print drupal_render($install_page);
   exit;
 }
 
@@ -2526,7 +2533,11 @@ function install_display_requirements($install_state, $requirements) {
   if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($install_state['parameters']['continue']))) {
     if ($install_state['interactive']) {
       drupal_set_title(t('Requirements problem'));
-      $status_report = theme('status_report', array('requirements' => $requirements));
+      $status_report = array(
+        '#theme' => 'status_report',
+        '#requirements' => $requirements,
+      );
+      $status_report = drupal_render($status_report);
       $status_report .= t('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
       return $status_report;
     }
