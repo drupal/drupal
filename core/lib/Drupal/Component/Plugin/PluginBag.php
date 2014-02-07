@@ -161,7 +161,13 @@ abstract class PluginBag implements \Iterator, \Countable {
    */
   public function valid() {
     $key = key($this->instanceIDs);
-    return $key !== NULL && $key !== FALSE;
+    // Check the key is valid but also that this key yields a plugin from get().
+    // There can be situations where configuration contains data for a plugin
+    // that cannot be instantiated. In this case, this enables us to skip that
+    // plugin during iteration.
+    // @todo Look at removing when https://drupal.org/node/2080823 has been
+    //   solved.
+    return $key !== NULL && $key !== FALSE && $this->get($key);
   }
 
   /**

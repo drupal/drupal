@@ -50,6 +50,10 @@ class DisplayFeedTest extends PluginTestBase {
    */
   public function testFeedUI() {
     $this->drupalGet('admin/structure/views');
+    // Verify that the page lists the test_display_feed view.
+    // Regression test: ViewsListController::getDisplayPaths() did not properly
+    // check whether a DisplayBag was returned in iterating over all displays.
+    $this->assertText('test_display_feed');
 
     // Check the attach TO interface.
     $this->drupalGet('admin/structure/views/nojs/display/test_display_feed/feed_1/displays');

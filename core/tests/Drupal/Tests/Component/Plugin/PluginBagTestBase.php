@@ -75,9 +75,24 @@ abstract class PluginBagTestBase extends UnitTestCase {
     $create_count = $create_count ?: $this->never();
     $this->pluginManager->expects($create_count)
       ->method('createInstance')
-      ->will($this->returnValueMap($map));
+      ->will($this->returnCallback(array($this, 'returnPluginMap')));
 
     $this->defaultPluginBag = new DefaultPluginBag($this->pluginManager, $this->config);
+  }
+
+  /**
+   * Return callback for createInstance.
+   *
+   * @param string $plugin_id
+   *   The plugin ID to return the mock plugin for.
+   *
+   * @return \Drupal\Component\Plugin\PluginInspectionInterface|\PHPUnit_Framework_MockObject_MockObject
+   *   The mock plugin object.
+   */
+  public function returnPluginMap($plugin_id) {
+    if (isset($this->pluginInstances[$plugin_id])) {
+      return $this->pluginInstances[$plugin_id];
+    }
   }
 
   /**

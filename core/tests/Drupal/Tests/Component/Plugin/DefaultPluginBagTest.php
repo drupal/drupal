@@ -145,7 +145,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
    * @see \Drupal\Component\Plugin\DefaultPluginBag::setConfiguration()
    */
   public function testSetConfiguration() {
-    $this->setupPluginBag($this->exactly(4));
+    $this->setupPluginBag($this->exactly(3));
     $expected = array(
       'id' => 'cherry',
       'key' => 'value',
