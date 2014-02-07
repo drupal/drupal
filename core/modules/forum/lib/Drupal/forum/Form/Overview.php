@@ -40,7 +40,7 @@ class Overview extends OverviewTerms {
   }
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(

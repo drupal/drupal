@@ -20,7 +20,7 @@ class RouteBuilderStatic implements RouteBuilderInterface {
   protected $rebuildNeeded = FALSE;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function rebuild() {
     // @todo Add the route for the batch pages when that conversion happens,
@@ -28,7 +28,7 @@ class RouteBuilderStatic implements RouteBuilderInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function rebuildIfNeeded(){
     if ($this->rebuildNeeded && $this->rebuild()) {
@@ -39,7 +39,7 @@ class RouteBuilderStatic implements RouteBuilderInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setRebuildNeeded() {
     $this->rebuildNeeded = TRUE;

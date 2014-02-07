@@ -75,7 +75,7 @@ class BulkForm extends FieldPluginBase {
   }
 
   /**
-   * {@inheritdoc }
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -90,7 +90,7 @@ class BulkForm extends FieldPluginBase {
   }
 
   /**
-   * {@inheritdoc }
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, &$form_state) {
     $form['action_title'] = array(

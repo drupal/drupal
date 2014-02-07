@@ -198,7 +198,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   }
 
   /**
-   * {@inheritdoc} Drupal\views\Plugin\views\wizard\WizardInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $style_options = views_fetch_plugin_names('style', 'normal', array($this->base_table));

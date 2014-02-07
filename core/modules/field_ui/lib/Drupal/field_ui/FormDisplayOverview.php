@@ -121,7 +121,7 @@ class FormDisplayOverview extends DisplayOverviewBase {
   }
 
   /**
-   * {@inheritdoc
+   * {@inheritdoc}
    */
   protected function getTableHeader() {
     return array(

@@ -56,7 +56,7 @@
     },
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     initialize: function () {
       this.set('fields', new Drupal.edit.FieldCollection());
@@ -511,7 +511,7 @@
     },
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     destroy: function (options) {
       Drupal.edit.BaseModel.prototype.destroy.call(this, options);

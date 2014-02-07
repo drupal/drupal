@@ -45,7 +45,7 @@ class ConfigTranslationListController extends ControllerBase {
   }
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(

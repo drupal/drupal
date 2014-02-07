@@ -95,7 +95,7 @@ class LazyLoadingRouteCollection implements Iterator {
   }
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   public function count() {
     if (!isset($this->count)) {

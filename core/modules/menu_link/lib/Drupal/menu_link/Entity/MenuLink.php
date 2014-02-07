@@ -537,7 +537,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   }
 
   /**
-   * @inheritdoc}
+   * {@inheritdoc}
    */
   public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
     parent::postLoad($storage_controller, $entities);

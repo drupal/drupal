@@ -118,7 +118,7 @@ class ThemeNegotiator implements ThemeNegotiatorInterface {
   }
 
   /**
-   * {@inheritdoc
+   * {@inheritdoc}
    */
   public function applies(Request $request) {
     return TRUE;

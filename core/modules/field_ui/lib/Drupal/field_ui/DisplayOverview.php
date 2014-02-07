@@ -154,7 +154,7 @@ class DisplayOverview extends DisplayOverviewBase {
   }
 
   /**
-   * {@inheritdoc
+   * {@inheritdoc}
    */
   protected function getTableHeader() {
     return array(

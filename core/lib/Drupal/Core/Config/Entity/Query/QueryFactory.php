@@ -62,7 +62,7 @@ class QueryFactory implements QueryFactoryInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
    public function getAggregate($entity_type, $conjunction, EntityManagerInterface $entity_manager) {
       throw new QueryException('Aggregation over configuration entities is not supported');

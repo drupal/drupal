@@ -58,7 +58,7 @@ class TestCurrentPassword extends FormBase {
   }
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     drupal_set_message($this->t('The password has been validated and the form submitted successfully.'));

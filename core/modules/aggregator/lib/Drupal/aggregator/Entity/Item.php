@@ -106,98 +106,98 @@ class Item extends ContentEntityBase implements ItemInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getFeedId() {
     return $this->get('fid')->target_id;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setFeedId($fid) {
     return $this->set('fid', $fid);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getTitle() {
     return $this->get('title')->value;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setTitle($title) {
     return $this->set('title', $title);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function  getLink() {
     return $this->get('link')->value;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setLink($link) {
     return $this->set('link', $link);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getAuthor() {
     return $this->get('author')->value;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setAuthor($author) {
     return $this->set('author', $author);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getDescription() {
     return $this->get('description')->value;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setDescription($description) {
     return $this->set('description', $description);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getPostedTime() {
     return $this->get('timestamp')->value;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setPostedTime($timestamp) {
     return $this->set('timestamp', $timestamp);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getGuid() {
     return $this->get('guid')->value;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setGuid($guid) {
     return $this->set('guid', $guid);
