@@ -170,6 +170,7 @@ Theme system
 - Carl Wiedemann 'c4rl' http://drupal.org/user/235047
 - Steve Oliver 'steveoliver' http://drupal.org/user/42327
 - Fabian Franz 'Fabianx' http://drupal.org/user/693738
+- Joël Pittet 'joelpittet' https://drupal.org/user/160302
 
 Token system
 - Dave Reid 'davereid' http://drupal.org/user/53892
