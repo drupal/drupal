@@ -4,7 +4,7 @@ session_test.get:
     _title: 'Session value'
     _content: '\Drupal\session_test\Controller\SessionTestController::get'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 session_test.id:
   path: '/session-test/id'
@@ -12,7 +12,7 @@ session_test.id:
     _title: 'Session ID'
     _content: '\Drupal\session_test\Controller\SessionTestController::getId'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 session_test.id_from_cookie:
   path: '/session-test/id-from-cookie'
@@ -20,7 +20,7 @@ session_test.id_from_cookie:
     _title: 'Session ID from cookie'
     _content: '\Drupal\session_test\Controller\SessionTestController::getIdFromCookie'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 session_test.set:
   path: '/session-test/set/{test_value}'
@@ -31,7 +31,7 @@ session_test.set:
     converters:
       test_value: '\s+'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 session_test.no_set:
   path: '/session-test/no-set/{test_value}'
@@ -42,7 +42,7 @@ session_test.no_set:
     converters:
       test_value: '\s+'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 session_test.set_message:
   path: '/session-test/set-message'
@@ -50,7 +50,7 @@ session_test.set_message:
     _title: 'Set message'
     _content: '\Drupal\session_test\Controller\SessionTestController::setMessage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 session_test.set_message_but_dont_save:
   path: '/session-test/set-message-but-dont-save'
@@ -58,7 +58,7 @@ session_test.set_message_but_dont_save:
     _title: 'Set message but do not save session'
     _content: '\Drupal\session_test\Controller\SessionTestController::setMessageButDontSave'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 session_test.set_not_started:
   path: '/session-test/set-not-started'
@@ -66,7 +66,7 @@ session_test.set_not_started:
     _title: 'Set message when session is not started'
     _content: '\Drupal\session_test\Controller\SessionTestController::setNotStarted'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 session_test.is_logged_in:
   path: '/session-test/is-logged-in'

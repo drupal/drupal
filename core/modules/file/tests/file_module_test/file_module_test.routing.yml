@@ -7,4 +7,4 @@ file_module_test.managed_test:
     multiple: FALSE
     default_fids: NULL
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'

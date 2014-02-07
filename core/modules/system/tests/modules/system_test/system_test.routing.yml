@@ -64,7 +64,7 @@ system_test.set_header:
   defaults:
     _content: '\Drupal\system_test\Controller\SystemTestController::setHeader'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 system_test.shutdown_functions:
   path: '/system-test/shutdown-functions/{arg1}/{arg2}'

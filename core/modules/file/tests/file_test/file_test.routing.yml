@@ -3,4 +3,4 @@ file.test:
   defaults:
     _form: 'Drupal\file_test\Form\FileTestForm'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'

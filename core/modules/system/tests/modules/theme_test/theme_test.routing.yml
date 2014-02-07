@@ -5,7 +5,7 @@ theme_test.function_template_override:
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::functionTemplateOverridden'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 theme_test.info_stylesheets:
   path: '/theme-test/info/stylesheets'
@@ -63,32 +63,32 @@ suggestion_alter:
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::suggestionAlter'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 theme_test.general_suggestion_alter:
   path: '/theme-test/general-suggestion-alter'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::generalSuggestionAlter'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 suggestion_provided:
   path: '/theme-test/suggestion-provided'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::suggestionProvided'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 specific_suggestion_alter:
   path: '/theme-test/specific-suggestion-alter'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::specificSuggestionAlter'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 function_suggestion_alter:
   path: '/theme-test/function-suggestion-alter'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::functionSuggestionAlter'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'

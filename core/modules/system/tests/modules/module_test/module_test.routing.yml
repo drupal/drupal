@@ -4,7 +4,7 @@ module_test.dynamic_invoke:
     _title: 'Test hook dynamic loading (invoke)'
     _content: '\Drupal\module_test\Controller\ModuleTestController::hookDynamicLoadingInvoke'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 module_test.dynamic_invoke_all:
   path: '/module-test/hook-dynamic-loading-invoke-all'
@@ -12,7 +12,7 @@ module_test.dynamic_invoke_all:
     _title: 'Test hook dynamic loading (invoke_all)'
     _content: '\Drupal\module_test\Controller\ModuleTestController::hookDynamicLoadingInvokeAll'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 module_test.class_loading:
   path: '/module-test/class-loading'

@@ -3,10 +3,10 @@ twig_extension_test.filter:
   defaults:
     _content: '\Drupal\twig_extension_test\TwigExtensionTestController::testFilterRender'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 twig_extension_test.function:
   path: '/twig-extension-test/function'
   defaults:
     _content: '\Drupal\twig_extension_test\TwigExtensionTestController::testFunctionRender'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'

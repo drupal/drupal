@@ -6,7 +6,7 @@ aggregator_test.feed:
     use_last_modified: FALSE
     use_etag: FALSE
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 aggregator_test.redirect:
   path: '/aggregator/redirect'
@@ -14,4 +14,4 @@ aggregator_test.redirect:
     _controller: '\Drupal\aggregator_test\Controller\AggregatorTestRssController::testRedirect'
     _title: 'Test feed with a redirect'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'

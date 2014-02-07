@@ -12,7 +12,7 @@ menu_test.menu_callback_title:
     _title: 'Menu Callback Title'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.login_callback:
   path: '/menu_login_callback'
@@ -26,7 +26,7 @@ menu_test.callback_description:
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.callback_description_plain:
   path: '/menu_callback_description/description-plain'
@@ -34,7 +34,7 @@ menu_test.callback_description_plain:
     _title: 'Menu item with a regular description'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.callback_description_callback:
   path: '/menu_callback_description/description-callback'
@@ -42,7 +42,7 @@ menu_test.callback_description_callback:
     _title: 'Menu item with a description set with a callback'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.menu_no_title_callback:
   path: '/menu_no_title_callback'
@@ -50,7 +50,7 @@ menu_test.menu_no_title_callback:
     _title: 'A title with @placeholder'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.router_test1:
   path: '/foo/{bar}'
@@ -213,7 +213,7 @@ menu_test.menu_test_maintain:
     _title: 'Menu maintain test'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hierarchy_parent:
   path: '/menu-test/hierarchy/parent'
@@ -221,7 +221,7 @@ menu_test.hierarchy_parent:
     _title: 'Parent menu router'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hierarchy_parent_child:
   path: '/menu-test/hierarchy/parent/child'
@@ -229,7 +229,7 @@ menu_test.hierarchy_parent_child:
     _title: 'Child menu router'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hierarchy_parent_child2:
   path: '/menu-test/hierarchy/parent/child2/child'
@@ -237,7 +237,7 @@ menu_test.hierarchy_parent_child2:
     _title: 'Unattached subchild router'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.menu_test:
   path: '/menu-test'
@@ -245,7 +245,7 @@ menu_test.menu_test:
     _title: 'Menu test root'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden:
   path: '/menu-test/hidden'
@@ -253,7 +253,7 @@ menu_test.hidden:
     _title: 'Hidden test root'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_menu:
   path: '/menu-test/hidden/menu'
@@ -261,7 +261,7 @@ menu_test.hidden_menu:
     _title: 'Menus'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_menu_add:
   path: '/menu-test/hidden/menu/add'
@@ -269,7 +269,7 @@ menu_test.hidden_menu_add:
     _title: 'Add menu'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_menu_settings:
   path: '/menu-test/hidden/menu/settings'
@@ -277,7 +277,7 @@ menu_test.hidden_menu_settings:
     _title: 'Settings'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_manage:
   path: '/menu-test/hidden/menu/manage/{menu}'
@@ -285,7 +285,7 @@ menu_test.hidden_manage:
     _title: 'Customize menu'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_manage_add:
   path: '/menu-test/hidden/menu/manage/{menu}/add'
@@ -293,7 +293,7 @@ menu_test.hidden_manage_add:
     _title: 'Add link'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_manage_edit:
   path: '/menu-test/hidden/menu/manage/{menu}/edit'
@@ -301,7 +301,7 @@ menu_test.hidden_manage_edit:
     _title: 'Edit menu'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_manage_delete:
   path: '/menu-test/hidden/menu/manage/{menu}/delete'
@@ -309,7 +309,7 @@ menu_test.hidden_manage_delete:
     _title: 'Delete menu'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_block:
   path: '/menu-test/hidden/block'
@@ -317,7 +317,7 @@ menu_test.hidden_block:
     _title: 'Blocks'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_block_add:
   path: '/menu-test/hidden/block/add'
@@ -325,7 +325,7 @@ menu_test.hidden_block_add:
     _title: 'Add block'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_block_configure:
   path: '/menu-test/hidden/block/manage/{foo}/{bar}'
@@ -333,7 +333,7 @@ menu_test.hidden_block_configure:
     _title: 'Configure block'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.hidden_block_delete:
   path: '/menu-test/hidden/block/manage/{foo}/{bar}/delete'
@@ -341,7 +341,7 @@ menu_test.hidden_block_delete:
     _title: 'Configure block'
     _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.breadcrumbs:
   path: '/menu-test/breadcrumb/tasks'
@@ -453,7 +453,7 @@ menu_test.custom_403:
     _title: 'Custom 403 page'
     _content: '\Drupal\menu_test\Controller\MenuTestController::custom403404'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.custom_404:
   path: '/menu-test/custom-404-page'
@@ -461,7 +461,7 @@ menu_test.custom_404:
     _title: 'Custom 404 page'
     _content: '\Drupal\menu_test\Controller\MenuTestController::custom403404'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.menu_trail:
   path: '/menu-test/menu-trail'
@@ -469,7 +469,7 @@ menu_test.menu_trail:
     _title: 'Menu trail - Case 1'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTrail'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.menu_trail_admin:
   path: '/admin/config/development/menu-trail'
@@ -485,7 +485,7 @@ menu_test.theme_callback:
     _title: 'Page that displays different themes'
     _content: '\Drupal\menu_test\Controller\MenuTestController::themePage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.no_theme_callback:
   path: '/menu-test/no-theme-callback'
@@ -494,7 +494,7 @@ menu_test.no_theme_callback:
     _content: '\Drupal\menu_test\Controller\MenuTestController::themePage'
     inherited: false
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.exotic_path:
   # "Special" ASCII characters, characters that look like a percent-escaped
@@ -506,7 +506,7 @@ menu_test.exotic_path:
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
   requirements:
     exotic: '.+'
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.theme_callback_inheritance:
   path: '/menu-test/theme-callback/{inherited}/inheritance'
@@ -514,7 +514,7 @@ menu_test.theme_callback_inheritance:
     _title: 'Page that tests theme negotiation inheritance.'
     _content: '\Drupal\menu_test\Controller\MenuTestController::themePage'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 menu_test.title_test_case1:
   path: '/menu-title-test/case1'

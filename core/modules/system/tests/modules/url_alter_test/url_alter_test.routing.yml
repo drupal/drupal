@@ -3,4 +3,4 @@ url_alter_test.foo:
   defaults:
     _content: '\Drupal\url_alter_test\Controller\URLAlterTestController::foo'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'

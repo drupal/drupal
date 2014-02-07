@@ -10,7 +10,7 @@ common_test.destination:
   defaults:
     _controller: '\Drupal\common_test\Controller\CommonTestController::destination'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 common_test.js_and_css_querystring:
   path: '/common-test/query-string'
@@ -18,4 +18,4 @@ common_test.js_and_css_querystring:
     _title: 'Test querystring'
     _content: '\Drupal\common_test\Controller\CommonTestController::jsAndCssQuerystring'
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
