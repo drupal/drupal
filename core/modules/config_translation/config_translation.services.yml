@@ -24,3 +24,4 @@ services:
       - '@language_manager'
       - '@module_handler'
       - '@config.typed'
+      - '@theme_handler'

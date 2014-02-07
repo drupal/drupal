@@ -5,7 +5,7 @@
  * Contains \Drupal\config_translation\Tests\ConfigMapperManagerTest.
  */
 
-namespace Drupal\config_translation\Tests {
+namespace Drupal\config_translation\Tests;
 
 use Drupal\config_translation\ConfigMapperManager;
 use Drupal\Core\Language\Language;
@@ -62,12 +62,17 @@ class ConfigMapperManagerTest extends UnitTestCase {
       ->method('getModuleList')
       ->with()
       ->will($this->returnValue(array()));
+    $theme_handler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
+    $theme_handler->expects($this->any())
+      ->method('listInfo')
+      ->will($this->returnValue(array()));
 
-    $this->configMapperManager = new TestConfigMapperManager(
+    $this->configMapperManager = new ConfigMapperManager(
       $this->getMock('Drupal\Core\Cache\CacheBackendInterface'),
       $language_manager,
       $module_handler,
-      $this->typedConfigManager
+      $this->typedConfigManager,
+      $theme_handler
     );
   }
 
@@ -186,28 +191,4 @@ class ConfigMapperManagerTest extends UnitTestCase {
     return $nested_element;
   }
 
-}
-
-/**
- * Subclass of the tested class to avoid global function calls.
- *
- * @todo Remove this once https://drupal.org/node/2109287 is fixed in core.
- */
-class TestConfigMapperManager extends ConfigMapperManager {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getThemeList($refresh = FALSE) {
-    return array();
-  }
-}
-
-}
-
-// @todo Remove this once https://drupal.org/node/2109287 is fixed in core.
-namespace {
-  if (!function_exists('drupal_get_path')) {
-    function drupal_get_path() {}
-  }
 }

@@ -9,6 +9,7 @@ namespace Drupal\block\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,20 +26,33 @@ class ThemeLocalTask extends DerivativeBase implements ContainerDerivativeInterf
   protected $config;
 
   /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * Constructs a new ThemeLocalTask.
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
    */
-  public function __construct(ConfigFactory $config_factory) {
+  public function __construct(ConfigFactory $config_factory, ThemeHandlerInterface $theme_handler) {
     $this->config = $config_factory->get('system.theme');
+    $this->themeHandler = $theme_handler;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, $base_plugin_id) {
-    return new static($container->get('config.factory'));
+    return new static(
+      $container->get('config.factory'),
+      $container->get('theme_handler')
+    );
   }
 
   /**
@@ -47,7 +61,7 @@ class ThemeLocalTask extends DerivativeBase implements ContainerDerivativeInterf
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     $default_theme = $this->config->get('default');
 
-    foreach (list_themes() as $theme_name => $theme) {
+    foreach ($this->themeHandler->listInfo() as $theme_name => $theme) {
       if ($theme->status) {
         $this->derivatives[$theme_name] = $base_plugin_definition;
         $this->derivatives[$theme_name]['title'] = $theme->info['name'];

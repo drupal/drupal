@@ -5,9 +5,10 @@
  * Contains \Drupal\block\Tests\Menu\BlockLocalTasksTest.
  */
 
-namespace Drupal\block\Tests\Menu {
+namespace Drupal\block\Tests\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTest;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests existence of block local tasks.
@@ -32,7 +33,32 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTest {
     $config_factory = $this->getConfigFactoryStub(array('system.theme' => array(
       'default' => 'test_c',
     )));
-    \Drupal::getContainer()->set('config.factory', $config_factory);
+
+    $themes = array();
+    $themes['test_a'] = (object) array(
+      'status' => 0,
+    );
+    $themes['test_b'] = (object) array(
+      'status' => 1,
+      'info' => array(
+        'name' => 'test_b',
+      ),
+    );
+    $themes['test_c'] = (object) array(
+      'status' => 1,
+      'info' => array(
+        'name' => 'test_c',
+      ),
+    );
+    $theme_handler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
+    $theme_handler->expects($this->any())
+      ->method('listInfo')
+      ->will($this->returnValue($themes));
+
+    $container = new ContainerBuilder();
+    $container->set('config.factory', $config_factory);
+    $container->set('theme_handler', $theme_handler);
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -61,31 +87,4 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTest {
     );
   }
 
-}
-
-}
-
-namespace {
-  if (!function_exists('list_themes')) {
-    function list_themes() {
-      $themes = array();
-      $themes['test_a'] = (object) array(
-        'status' => 0,
-      );
-      $themes['test_b'] = (object) array(
-        'status' => 1,
-        'info' => array(
-          'name' => 'test_b',
-        ),
-      );
-      $themes['test_c'] = (object) array(
-        'status' => 1,
-        'info' => array(
-          'name' => 'test_c',
-        ),
-      );
-
-      return $themes;
-    }
-  }
 }
