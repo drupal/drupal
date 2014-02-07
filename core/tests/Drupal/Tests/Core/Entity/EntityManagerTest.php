@@ -223,7 +223,8 @@ class EntityManagerTest extends UnitTestCase {
    *
    * @covers ::getDefinition()
    *
-   * @expectedException \Drupal\Component\Plugin\Exception\UnknownPluginException
+   * @expectedException \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @expectedExceptionMessage The "pear" entity type does not exist.
    */
   public function testGetDefinitionInvalidException() {
     $this->setUpEntityManager();

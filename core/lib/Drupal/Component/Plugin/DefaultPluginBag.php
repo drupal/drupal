@@ -7,7 +7,7 @@
 
 namespace Drupal\Component\Plugin;
 
-use Drupal\Component\Plugin\Exception\UnknownPluginException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\MapArray;
 
 /**
@@ -75,7 +75,7 @@ class DefaultPluginBag extends PluginBag {
   protected function initializePlugin($instance_id) {
     $configuration = isset($this->configurations[$instance_id]) ? $this->configurations[$instance_id] : array();
     if (!isset($configuration[$this->pluginKey])) {
-      throw new UnknownPluginException($instance_id);
+      throw new PluginNotFoundException($instance_id);
     }
     $this->set($instance_id, $this->manager->createInstance($configuration[$this->pluginKey], $configuration));
   }

@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Component\Plugin\Exception\UnknownPluginException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
@@ -170,7 +170,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
       return NULL;
     }
 
-    throw new UnknownPluginException($entity_type_id, sprintf('The "%s" entity type does not exist.', $entity_type_id));
+    throw new PluginNotFoundException($entity_type_id, sprintf('The "%s" entity type does not exist.', $entity_type_id));
   }
 
   /**

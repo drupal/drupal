@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Component\Plugin\Exception\UnknownPluginException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\field\Entity\Field;
 use Drupal\field\Entity\FieldInstance;
 use Drupal\file\Entity\File;
@@ -76,7 +76,7 @@ function image_help($path, $arg) {
       try {
         $effect = entity_load('image_style', $arg[5])->getEffect($arg[7]);
       }
-      catch (UnknownPluginException $e) {
+      catch (PluginNotFoundException $e) {
         return NULL;
       }
       $effect_definition = $effect->getPluginDefinition();

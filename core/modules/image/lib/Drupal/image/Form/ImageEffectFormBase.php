@@ -10,7 +10,7 @@ namespace Drupal\image\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
-use Drupal\Component\Plugin\Exception\UnknownPluginException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\String;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -58,7 +58,7 @@ abstract class ImageEffectFormBase extends FormBase {
     try {
       $this->imageEffect = $this->prepareImageEffect($image_effect);
     }
-    catch (UnknownPluginException $e) {
+    catch (PluginNotFoundException $e) {
       throw new NotFoundHttpException(String::format("Invalid effect id: '@id'.", array('@id' => $image_effect)));
     }
     $request = $this->getRequest();
