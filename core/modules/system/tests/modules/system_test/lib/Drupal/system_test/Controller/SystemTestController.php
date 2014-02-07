@@ -68,6 +68,14 @@ class SystemTestController extends ControllerBase {
    */
   public function shutdownFunctions($arg1, $arg2) {
     system_test_page_shutdown_functions($arg1, $arg2);
+    // If using PHP-FPM then fastcgi_finish_request() will have been fired
+    // preventing further output to the browser which means that the escaping of
+    // the exception message can not be tested.
+    // @see _drupal_shutdown_function()
+    // @see \Drupal\system\Tests\System\ShutdownFunctionsTest
+    if (function_exists('fastcgi_finish_request')) {
+      return 'The function fastcgi_finish_request exists when serving the request.';
+    }
   }
 
 }

@@ -140,9 +140,8 @@ function system_test_page_shutdown_functions($arg1, $arg2) {
  * Dummy shutdown function which registers another shutdown function.
  */
 function _system_test_first_shutdown_function($arg1, $arg2) {
-  // Output something, page has already been printed and the session stored
-  // so we can't use drupal_set_message.
-  print t('First shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2));
+  // Set something to ensure that this function got called.
+  \Drupal::state()->set('_system_test_first_shutdown_function', array($arg1, $arg2));
   drupal_register_shutdown_function('_system_test_second_shutdown_function', $arg1, $arg2);
 }
 
@@ -150,14 +149,13 @@ function _system_test_first_shutdown_function($arg1, $arg2) {
  * Dummy shutdown function.
  */
 function _system_test_second_shutdown_function($arg1, $arg2) {
-  // Output something, page has already been printed and the session stored
-  // so we can't use drupal_set_message.
-  print t('Second shutdown function, arg1 : @arg1, arg2: @arg2', array('@arg1' => $arg1, '@arg2' => $arg2));
+  // Set something to ensure that this function got called.
+  \Drupal::state()->set('_system_test_second_shutdown_function', array($arg1, $arg2));
 
   // Throw an exception with an HTML tag. Since this is called in a shutdown
   // function, it will not bubble up to the default exception handler but will
   // be caught in _drupal_shutdown_function() and be displayed through
-  // \Drupal\Core\Utility\Error::renderExceptionSafe().
+  // \Drupal\Core\Utility\Error::renderExceptionSafe() if possible.
   throw new Exception('Drupal is <blink>awesome</blink>.');
 }
 

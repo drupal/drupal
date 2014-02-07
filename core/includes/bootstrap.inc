@@ -2585,12 +2585,16 @@ function _drupal_shutdown_function() {
     }
   }
   catch (Exception $exception) {
-    // If we are displaying errors, then do so with no possibility of a further
-    // uncaught exception being thrown.
-    require_once __DIR__ . '/errors.inc';
-    if (error_displayable()) {
-      print '<h1>Uncaught exception thrown in shutdown function.</h1>';
-      print '<p>' . Error::renderExceptionSafe($exception) . '</p><hr />';
+    // If using PHP-FPM then fastcgi_finish_request() will have been fired
+    // preventing further output to the browser.
+    if (!function_exists('fastcgi_finish_request')) {
+      // If we are displaying errors, then do so with no possibility of a
+      // further uncaught exception being thrown.
+      require_once __DIR__ . '/errors.inc';
+      if (error_displayable()) {
+        print '<h1>Uncaught exception thrown in shutdown function.</h1>';
+        print '<p>' . Error::renderExceptionSafe($exception) . '</p><hr />';
+      }
     }
     error_log($exception);
   }
