@@ -89,7 +89,7 @@ abstract class TestBase {
    *
    * @var boolean
    */
-  public $verbose = FALSE;
+  public $verbose;
 
   /**
    * Incrementing identifier for verbose output filenames.
@@ -724,7 +724,11 @@ abstract class TestBase {
     $simpletest_config = \Drupal::config('simpletest.settings');
 
     $class = get_class($this);
-    if ($this->verbose || $simpletest_config->get('verbose')) {
+    // Unless preset from run-tests.sh, retrieve the current verbose setting.
+    if (!isset($this->verbose)) {
+      $this->verbose = $simpletest_config->get('verbose');
+    }
+    if ($this->verbose) {
       // Initialize verbose debugging.
       $this->verbose = TRUE;
       $this->verboseDirectory = PublicStream::basePath() . '/simpletest/verbose';
