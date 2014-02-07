@@ -769,63 +769,6 @@ function update_retrieve_dependencies() {
 }
 
 /**
- * Helper function to update entities with uuid.
- *
- * @param array $sandbox
- *   A sandbox where conversion happens.
- * @param string $table
- *   A table whose data should be updated.
- * @param string $primary_key
- *   A $table primary key column.
- * @param array $values
- *   A $primary_key values of rows to be updated.
- */
-function update_add_uuids(&$sandbox, $table, $primary_key, $values) {
-  $uuid = \Drupal::service('uuid');
-  foreach ($values as $value) {
-    db_update($table)
-      ->fields(array(
-        'uuid' => $uuid->generate(),
-      ))
-      ->condition($primary_key, $value)
-      ->isNull('uuid')
-      ->execute();
-    $sandbox['progress']++;
-    $sandbox['last'] = $value;
-  }
-}
-
-
-/**
- * Adds tags, checksum_invalidations, checksum_deletions to a cache table.
- *
- * @param string $table
- *   Name of the cache table.
- */
-function update_add_cache_columns($table) {
-  if (db_table_exists($table) && !db_field_exists($table, 'tags')) {
-    db_add_field($table, 'tags', array(
-      'description' => 'Space-separated list of cache tags for this entry.',
-      'type' => 'text',
-      'size' => 'big',
-      'not null' => FALSE,
-    ));
-    db_add_field($table, 'checksum_invalidations', array(
-      'description' => 'The tag invalidation sum when this entry was saved.',
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ));
-    db_add_field($table, 'checksum_deletions', array(
-      'description' => 'The tag deletion sum when this entry was saved.',
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-    ));
-  }
-}
-
-/**
  * Replace permissions during update.
  *
  * This function can replace one permission to several or even delete an old
