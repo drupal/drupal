@@ -21,7 +21,7 @@ class NoHelpTest extends WebTestBase {
    *
    * @var array.
    */
-  public static $modules = array('menu_test');
+  public static $modules = array('help', 'menu_test');
 
   /**
    * The user who will be created.
@@ -48,6 +48,8 @@ class NoHelpTest extends WebTestBase {
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/help');
-    $this->assertNoText('Hook menu tests', 'Making sure the test module menu_test does not display a help link in admin/help');
+    $this->assertResponse(200);
+    $this->assertText('Help is available on the following items', 'Help page is found.');
+    $this->assertNoText('Hook menu tests', 'Making sure the test module menu_test does not display a help link on admin/help.');
   }
 }
