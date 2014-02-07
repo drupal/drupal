@@ -150,6 +150,27 @@ display:
     position: null
     display_options:
       path: test_bulk_form
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: Page
+    position: null
+    display_options:
+      path: test_bulk_form_empty
+      defaults:
+        style: false
+        empty: false
+      style:
+        type: default
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          empty: true
+          content: 'This view is empty.'
+          plugin_id: text_custom
+          provider: views
 base_field: nid
 status: true
 module: views

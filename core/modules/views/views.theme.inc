@@ -133,8 +133,15 @@ function template_preprocess_views_view(&$variables) {
   if (views_view_has_form_elements($view)) {
     // Copy the rows so as not to modify them by reference when rendering.
     $rows = $variables['rows'];
-    $rows = drupal_render($rows);
-    $output = !empty($rows) ? $rows : $variables['empty'];
+    // Only render row output if there are rows. Otherwise, render the empty
+    // region.
+    if (!empty($rows)) {
+      $output = drupal_render($rows);
+    }
+    else {
+      $empty = $variables['empty'];
+      $output = drupal_render($empty);
+    }
 
     $container = \Drupal::getContainer();
     $form_object = new ViewsForm($container->get('controller_resolver'), $container->get('url_generator'), $container->get('request'), $view->storage->id(), $view->current_display);

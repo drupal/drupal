@@ -35,6 +35,11 @@ class BulkFormTest extends WebTestBase {
    * Tests the bulk form.
    */
   public function testBulkForm() {
+    // First, test an empty bulk form with the default style plugin to make sure
+    // the empty region is rendered correctly.
+    $this->drupalGet('test_bulk_form_empty');
+    $this->assertText(t('This view is empty.'), 'Empty text found on empty bulk form.');
+
     $nodes = array();
     for ($i = 0; $i < 10; $i++) {
       // Ensure nodes are sorted in the same order they are inserted in the
