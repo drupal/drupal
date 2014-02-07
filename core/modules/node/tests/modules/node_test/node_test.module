@@ -8,14 +8,13 @@
  * interaction with the Node module.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_view().
  */
-function node_test_node_view(EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+function node_test_node_view(NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if ($view_mode == 'rss') {
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = array(
@@ -56,7 +55,7 @@ function node_test_node_grants($account, $op) {
 /**
  * Implements hook_node_access_records().
  */
-function node_test_node_access_records(EntityInterface $node) {
+function node_test_node_access_records(NodeInterface $node) {
   // Return nothing when testing for empty responses.
   if (!empty($node->disable_node_access)) {
     return;
@@ -113,7 +112,7 @@ function node_test_node_grants_alter(&$grants, $account, $op) {
 /**
  * Implements hook_node_presave().
  */
-function node_test_node_presave(EntityInterface $node) {
+function node_test_node_presave(NodeInterface $node) {
   if ($node->getTitle() == 'testing_node_presave') {
     // Sun, 19 Nov 1978 05:00:00 GMT
     $node->setCreatedTime(280299600);
@@ -131,7 +130,7 @@ function node_test_node_presave(EntityInterface $node) {
 /**
  * Implements hook_node_update().
  */
-function node_test_node_update(EntityInterface $node) {
+function node_test_node_update(NodeInterface $node) {
   // Determine changes on update.
   if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
     if ($node->original->getTitle() != $node->getTitle()) {
@@ -158,7 +157,7 @@ function node_test_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\Entity
  *
  * @see \Drupal\node\Tests\NodeSaveTest::testNodeSaveOnInsert()
  */
-function node_test_node_insert(EntityInterface $node) {
+function node_test_node_insert(NodeInterface $node) {
   // Set the node title to the node ID and save.
   if ($node->getTitle() == 'new') {
     $node->setTitle('Node '. $node->id());

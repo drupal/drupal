@@ -88,10 +88,11 @@ class NodeAccessController extends EntityAccessController implements NodeAccessC
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $node, $operation, $langcode, AccountInterface $account) {
-    // Fetch information from the node object if possible.
-    $status = $node->getTranslation($langcode)->isPublished();
+    /** @var \Drupal\node\NodeInterface $node */
     /** @var \Drupal\node\NodeInterface $translation */
     $translation = $node->getTranslation($langcode);
+    // Fetch information from the node object if possible.
+    $status = $translation->isPublished();
     $uid = $translation->getOwnerId();
 
     // Check if authors can view their own unpublished nodes.

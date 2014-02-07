@@ -1,7 +1,6 @@
 <?php
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 
@@ -245,7 +244,7 @@ function hook_node_grants($account, $op) {
  * Also note that a deny all is not written to the database; denies are
  * implicit.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node that has just been saved.
  *
  * @return
@@ -309,7 +308,7 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
  *
  * @param $grants
  *   The $grants array returned by hook_node_access_records().
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node for which the grants were acquired.
  *
  * The preferred use of this hook is in a module that bridges multiple node
@@ -321,7 +320,7 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
  * @see hook_node_grants_alter()
  * @ingroup node_access
  */
-function hook_node_access_records_alter(&$grants, Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_access_records_alter(&$grants, Drupal\node\NodeInterface $node) {
   // Our module allows editors to mark specific articles with the 'is_preview'
   // field. If the node being saved has a TRUE value for that field, then only
   // our grants are retained, and other grants are removed. Doing so ensures
@@ -392,14 +391,14 @@ function hook_node_grants_alter(&$grants, $account, $op) {
  * hook_entity_predelete() is called and field values are deleted, and before
  * the node is removed from the node table in the database.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node that is about to be deleted.
  *
  * @see hook_node_predelete()
  * @see entity_delete_multiple()
  * @ingroup node_api_hooks
  */
-function hook_node_predelete(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_predelete(\Drupal\node\NodeInterface $node) {
   db_delete('mytable')
     ->condition('nid', $node->id())
     ->execute();
@@ -411,14 +410,14 @@ function hook_node_predelete(\Drupal\Core\Entity\EntityInterface $node) {
  * This hook is invoked from entity_delete_multiple() after field values are
  * deleted and after the node has been removed from the database.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node that has been deleted.
  *
  * @see hook_node_predelete()
  * @see entity_delete_multiple()
  * @ingroup node_api_hooks
  */
-function hook_node_delete(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_delete(\Drupal\node\NodeInterface $node) {
   drupal_set_message(t('Node: @title has been deleted', array('@title' => $node->label())));
 }
 
@@ -428,12 +427,12 @@ function hook_node_delete(\Drupal\Core\Entity\EntityInterface $node) {
  * This hook is invoked from node_revision_delete() after the revision has been
  * removed from the node_revision table, and before field values are deleted.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node revision (node object) that is being deleted.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_revision_delete(\Drupal\node\NodeInterface $node) {
   db_delete('mytable')
     ->condition('vid', $node->getRevisionId())
     ->execute();
@@ -454,12 +453,12 @@ function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
  * write/update database queries executed from this hook are also not committed
  * immediately. Check $node->save() and db_transaction() for more info.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node that is being created.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_insert(\Drupal\node\NodeInterface $node) {
   db_insert('mytable')
     ->fields(array(
       'nid' => $node->id(),
@@ -474,12 +473,12 @@ function hook_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
  * This hook runs after a new node object has just been instantiated. It can be
  * used to set initial values, e.g. to provide defaults.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node object.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_create(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_create(\Drupal\node\NodeInterface $node) {
   if (!isset($node->foo)) {
     $node->foo = 'some_initial_value';
   }
@@ -546,7 +545,7 @@ function hook_node_load($nodes) {
  * the default home page at path 'node', a recent content block, etc.) See
  * @link node_access Node access rights @endlink for a full explanation.
  *
- * @param \Drupal\Core\Entity\EntityInterface|string $node
+ * @param \Drupal\node\NodeInterface|string $node
  *   Either a node entity or the machine name of the content type on which to
  *   perform the access check.
  * @param string $op
@@ -622,7 +621,7 @@ function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display,
  * This hook is invoked from the node search plugin during search execution,
  * after loading and rendering the node.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node being displayed in a search result.
  * @param $langcode
  *   Language code of result being displayed.
@@ -638,7 +637,7 @@ function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display,
  *
  * @ingroup node_api_hooks
  */
-function hook_node_search_result(\Drupal\Core\Entity\EntityInterface $node, $langcode) {
+function hook_node_search_result(\Drupal\node\NodeInterface $node, $langcode) {
   $rating = db_query('SELECT SUM(points) FROM {my_rating} WHERE nid = :nid', array('nid' => $node->id()))->fetchField();
   return array('rating' => format_plural($rating, '1 point', '@count points'));
 }
@@ -649,12 +648,12 @@ function hook_node_search_result(\Drupal\Core\Entity\EntityInterface $node, $lan
  * This hook is invoked from $node->save() before the node is saved to the
  * database.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node that is being inserted or updated.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_presave(\Drupal\node\NodeInterface $node) {
   if ($node->id() && $node->moderate) {
     // Reset votes when node is updated:
     $node->score = 0;
@@ -678,12 +677,12 @@ function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
  * write/update database queries executed from this hook are also not committed
  * immediately. Check $node->save() and db_transaction() for more info.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node that is being updated.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_update(\Drupal\node\NodeInterface $node) {
   db_update('mytable')
     ->fields(array('extra' => $node->extra))
     ->condition('nid', $node->id())
@@ -696,7 +695,7 @@ function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
  * This hook is invoked during search indexing, after loading, and after the
  * result of rendering is added as $node->rendered to the node object.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node being indexed.
  * @param $langcode
  *   Language code of the variant of the node being indexed.
@@ -706,7 +705,7 @@ function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
  *
  * @ingroup node_api_hooks
  */
-function hook_node_update_index(\Drupal\Core\Entity\EntityInterface $node, $langcode) {
+function hook_node_update_index(\Drupal\node\NodeInterface $node, $langcode) {
   $text = '';
   $ratings = db_query('SELECT title, description FROM {my_ratings} WHERE nid = :nid', array(':nid' => $node->id()));
   foreach ($ratings as $rating) {
@@ -729,7 +728,7 @@ function hook_node_update_index(\Drupal\Core\Entity\EntityInterface $node, $lang
  * hook_node_presave() instead. If it is really necessary to change the node at
  * the validate stage, you can use form_set_value().
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node being validated.
  * @param $form
  *   The form being used to edit the node.
@@ -738,7 +737,7 @@ function hook_node_update_index(\Drupal\Core\Entity\EntityInterface $node, $lang
  *
  * @ingroup node_api_hooks
  */
-function hook_node_validate(\Drupal\Core\Entity\EntityInterface $node, $form, &$form_state) {
+function hook_node_validate(\Drupal\node\NodeInterface $node, $form, &$form_state) {
   if (isset($node->end) && isset($node->start)) {
     if ($node->start > $node->end) {
       form_set_error('time', $form_state, t('An event may not end before it starts.'));
@@ -757,7 +756,7 @@ function hook_node_validate(\Drupal\Core\Entity\EntityInterface $node, $form, &$
  * properties. See hook_field_attach_extract_form_values() for customizing
  * field-related properties.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node entity being updated in response to a form submission.
  * @param $form
  *   The form being used to edit the node.
@@ -766,7 +765,7 @@ function hook_node_validate(\Drupal\Core\Entity\EntityInterface $node, $form, &$
  *
  * @ingroup node_api_hooks
  */
-function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$form_state) {
+function hook_node_submit(\Drupal\node\NodeInterface $node, $form, &$form_state) {
   // Decompose the selected menu parent option into 'menu_name' and 'plid', if
   // the form used the default parent selection widget.
   if (!empty($form_state['values']['menu']['parent'])) {
@@ -786,7 +785,7 @@ function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$fo
  * the RSS item generated for this node.
  * For details on how this is used, see node_feed().
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node that is being assembled for rendering.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
  *   The entity_display object holding the display options configured for the
@@ -801,7 +800,7 @@ function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$fo
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
+function hook_node_view(\Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // node type in hook_field_extra_fields().
@@ -828,7 +827,7 @@ function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\Core\
  *
  * @param $build
  *   A renderable array representing the node content.
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node being rendered.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
  *   The entity_display object holding the display options configured for the
@@ -839,7 +838,7 @@ function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\Core\
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view_alter(&$build, \Drupal\Core\Entity\EntityInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function hook_node_view_alter(&$build, \Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

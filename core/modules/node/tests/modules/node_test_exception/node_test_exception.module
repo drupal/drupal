@@ -5,12 +5,12 @@
  * A module implementing node related hooks to test API interaction.
  */
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_insert().
  */
-function node_test_exception_node_insert(EntityInterface $node) {
+function node_test_exception_node_insert(NodeInterface $node) {
   if ($node->getTitle() == 'testing_transaction_exception') {
     throw new Exception('Test exception for rollback.');
   }

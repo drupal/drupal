@@ -8,7 +8,7 @@
  * of the node to be marked as private (viewable only by administrators).
  */
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_grants().
@@ -23,7 +23,7 @@ function node_access_test_language_node_grants($account, $op) {
 /**
  * Implements hook_node_access_records().
  */
-function node_access_test_language_node_access_records(EntityInterface $node) {
+function node_access_test_language_node_access_records(NodeInterface $node) {
   $grants = array();
 
   // Create grants for each translation of the node.

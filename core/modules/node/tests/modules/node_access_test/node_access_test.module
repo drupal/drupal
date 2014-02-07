@@ -9,7 +9,6 @@
  * a special 'node test view' permission.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\node\NodeInterface;
 
@@ -121,28 +120,28 @@ function node_access_test_node_load($nodes) {
  * Implements hook_node_predelete().
  */
 
-function node_access_test_node_predelete(EntityInterface $node) {
+function node_access_test_node_predelete(NodeInterface $node) {
   db_delete('node_access_test')->condition('nid', $node->id())->execute();
 }
 
 /**
  * Implements hook_node_insert().
  */
-function node_access_test_node_insert(EntityInterface $node) {
+function node_access_test_node_insert(NodeInterface $node) {
   _node_access_test_node_write($node);
 }
 
 /**
  * Implements hook_nodeapi_update().
  */
-function node_access_test_node_update(EntityInterface $node) {
+function node_access_test_node_update(NodeInterface $node) {
   _node_access_test_node_write($node);
 }
 
 /**
  * Helper for node insert/update.
  */
-function _node_access_test_node_write(EntityInterface $node) {
+function _node_access_test_node_write(NodeInterface $node) {
   db_merge('node_access_test')
     ->key(array('nid' => $node->id()))
     ->fields(array('private' => (int) $node->private->value))

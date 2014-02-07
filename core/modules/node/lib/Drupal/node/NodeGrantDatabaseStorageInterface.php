@@ -7,7 +7,6 @@
 
 namespace Drupal\node;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -96,7 +95,7 @@ interface NodeGrantDatabaseStorageInterface {
   /**
    * Determines access to nodes based on node grants.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The entity for which to check 'create' access.
    * @param string $operation
    *   The entity operation. Usually one of 'view', 'edit', 'create' or
@@ -111,7 +110,7 @@ interface NodeGrantDatabaseStorageInterface {
    *   module implements hook_node_grants(), the node does not (yet) have an id
    *   or none of the implementing modules explicitly granted or denied access.
    */
-  public function access(EntityInterface $node, $operation, $langcode, AccountInterface $account);
+  public function access(NodeInterface $node, $operation, $langcode, AccountInterface $account);
 
   /**
    * Counts available node grants.

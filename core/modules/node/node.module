@@ -10,12 +10,12 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
-use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\node\NodeTypeInterface;
+use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
@@ -218,13 +218,13 @@ function node_entity_form_display_alter(EntityFormDisplayInterface $form_display
 /**
  * Entity URI callback.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   A node entity.
  *
  * @return array
  *   An array with 'path' as the key and the path to the node as its value.
  */
-function node_uri(EntityInterface $node) {
+function node_uri(NodeInterface $node) {
   return array(
     'route_name' => 'node.view',
     'route_parameters' => array(
@@ -356,7 +356,7 @@ function node_type_get_names() {
 /**
  * Returns the node type label for the passed node.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   A node entity to return the node type's label for.
  *
  * @return string|false
@@ -365,7 +365,7 @@ function node_type_get_names() {
  * @todo Add this as generic helper method for config entities representing
  *   entity bundles.
  */
-function node_get_type_label(EntityInterface $node) {
+function node_get_type_label(NodeInterface $node) {
   $type = entity_load('node_type', $node->bundle());
   return $type ? $type->label() : FALSE;
 }
@@ -574,13 +574,13 @@ function node_revision_delete($revision_id) {
 /**
  * Checks whether the current page is the full page view of the passed-in node.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   A node entity.
  *
  * @return
  *   The ID of the node if this is a full page view, otherwise FALSE.
  */
-function node_is_page(EntityInterface $node) {
+function node_is_page(NodeInterface $node) {
   $page_node = menu_get_object();
   return (!empty($page_node) ? $page_node->id() == $node->id() : FALSE);
 }
@@ -905,7 +905,7 @@ function theme_node_search_admin($variables) {
 /**
  * Access callback: Checks node revision access.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node to check.
  * @param $op
  *   (optional) The specific operation being checked. Defaults to 'view.'
@@ -923,7 +923,7 @@ function theme_node_search_admin($variables) {
  *
  * @see node_menu()
  */
-function _node_revision_access(EntityInterface $node, $op = 'view', $account = NULL, $langcode = NULL) {
+function _node_revision_access(NodeInterface $node, $op = 'view', $account = NULL, $langcode = NULL) {
   if ($account === NULL) {
     $account = \Drupal::currentUser();
   }
@@ -1022,7 +1022,7 @@ function node_menu_local_tasks(&$data, $route_name) {
 /**
  * Title callback: Displays the node's title.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node entity.
  *
  * @return
@@ -1030,7 +1030,7 @@ function node_menu_local_tasks(&$data, $route_name) {
  *
  * @see node_menu()
  */
-function node_page_title(EntityInterface $node) {
+function node_page_title(NodeInterface $node) {
   return $node->label();
 }
 
@@ -1059,13 +1059,13 @@ function node_last_changed($nid, $langcode = NULL) {
 /**
  * Returns a list of all the existing revision numbers for the node passed in.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node entity.
  *
  * @return
  *   An associative array keyed by node revision number.
  */
-function node_revision_list(EntityInterface $node) {
+function node_revision_list(NodeInterface $node) {
   $revisions = array();
   $result = db_query('SELECT nr.vid, nfr.title, nr.log, nr.revision_uid AS uid, n.vid AS current_vid, nr.revision_timestamp, u.name FROM {node_field_revision} nfr JOIN {node_revision} nr ON nr.vid = nfr.vid LEFT JOIN {node} n ON n.vid = nfr.vid INNER JOIN {users} u ON u.uid = nr.revision_uid WHERE nfr.nid = :nid AND nfr.default_langcode = 1 ORDER BY nfr.vid DESC', array(':nid' => $node->id()));
   foreach ($result as $revision) {
@@ -1282,7 +1282,7 @@ function node_feed($nids = FALSE, $channel = array()) {
 /**
  * Generates an array for rendering the given node.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   A node entity.
  * @param $view_mode
  *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
@@ -1293,7 +1293,7 @@ function node_feed($nids = FALSE, $channel = array()) {
  * @return
  *   An array as expected by drupal_render().
  */
-function node_view(EntityInterface $node, $view_mode = 'full', $langcode = NULL) {
+function node_view(NodeInterface $node, $view_mode = 'full', $langcode = NULL) {
   return entity_view($node, $view_mode, $langcode);
 }
 

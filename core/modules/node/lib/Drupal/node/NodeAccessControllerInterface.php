@@ -39,7 +39,7 @@ interface NodeAccessControllerInterface {
    * Note: Don't call this function directly from a contributed module. Call
    * node_access_acquire_grants() instead.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The node whose grants are being written.
    * @param $grants
    *   A list of grants to write. See hook_node_access_records() for the

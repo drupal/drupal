@@ -9,7 +9,6 @@
  * @see node_menu()
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\node\NodeInterface;
 
@@ -44,7 +43,7 @@ function theme_node_add_list($variables) {
 /**
  * Generates a node preview.
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node to preview.
  *
  * @return

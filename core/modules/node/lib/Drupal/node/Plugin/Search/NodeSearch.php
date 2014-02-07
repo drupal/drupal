@@ -10,7 +10,6 @@ namespace Drupal\node\Plugin\Search;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
@@ -18,6 +17,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\node\NodeInterface;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -316,10 +316,10 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /**
    * Indexes a single node.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The node to index.
    */
-  protected function indexNode(EntityInterface $node) {
+  protected function indexNode(NodeInterface $node) {
     // Save the changed time of the most recent indexed node, for the search
     // results half-life calculation.
     $this->state->set('node.cron_last', $node->getChangedTime());
