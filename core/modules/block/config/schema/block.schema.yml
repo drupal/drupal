@@ -59,9 +59,6 @@ block.block.*:
               sequence:
                - type: string
                  label: 'Node type'
-        visibility__active_tab:
-          type: string
-          label: 'Visibility active tab'
     plugin:
       type: string
       label: 'Plugin'

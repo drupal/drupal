@@ -319,6 +319,7 @@ class BlockFormController extends EntityFormController {
       'values' => &$form_state['values']['settings'],
       'errors' => $form_state['errors'],
     );
+
     // Call the plugin submit handler.
     $entity->getPlugin()->submitConfigurationForm($form, $settings);
 
@@ -338,6 +339,21 @@ class BlockFormController extends EntityFormController {
         'query' => array('block-placement' => drupal_html_class($this->entity->id()))
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildEntity(array $form, array &$form_state) {
+    $entity = parent::buildEntity($form, $form_state);
+
+    // visibility__active_tab is Form API state and not configuration.
+    // @todo Fix vertical tabs.
+    $visibility = $entity->get('visibility');
+    unset($visibility['visibility__active_tab']);
+    $entity->set('visibility', $visibility);
+
+    return $entity;
   }
 
   /**
