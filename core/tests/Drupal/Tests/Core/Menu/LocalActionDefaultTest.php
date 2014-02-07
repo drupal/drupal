@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Tests\UnitTestCase;
 
@@ -81,11 +80,8 @@ class LocalActionDefaultTest extends UnitTestCase {
    * Setups the local action default.
    */
   protected function setupLocalActionDefault() {
-    $container = new ContainerBuilder();
-    $container->set('string_translation', $this->stringTranslation);
-    \Drupal::setContainer($container);
-
     $this->localActionDefault = new LocalActionDefault($this->config, $this->pluginId, $this->pluginDefinition, $this->routeProvider);
+    $this->localActionDefault->setTranslationManager($this->stringTranslation);
   }
 
   /**
