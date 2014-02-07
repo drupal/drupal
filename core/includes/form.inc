@@ -979,44 +979,34 @@ function theme_fieldset($variables) {
 }
 
 /**
- * Returns HTML for a details form element and its children.
+ * Prepares variables for details element templates.
  *
- * @param $variables
+ * Default template: details.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #children, #collapsed, #description, #id,
- *     #title, #value.
+ *     Properties used: #attributes, #children, #collapsed, #collapsible,
+ *     #description, #id, #title, #value.
  *
  * @ingroup themeable
  */
-function theme_details($variables) {
+function template_preprocess_details(&$variables) {
   $element = $variables['element'];
-  element_set_attributes($element, array('id'));
-  _form_set_attributes($element, array('form-wrapper'));
-
-  $output = '<details' . new Attribute($element['#attributes']) . '>';
+  $variables['attributes'] = $element['#attributes'];
+  $variables['summary_attributes'] = new Attribute();
   if (!empty($element['#title'])) {
-    $summary_attributes = new Attribute(array(
-      'role' => 'button',
-    ));
+    $variables['summary_attributes']['role'] = 'button';
     if (!empty($element['#attributes']['id'])) {
-      $summary_attributes['aria-controls'] = $element['#attributes']['id'];
+      $variables['summary_attributes']['aria-controls'] = $element['#attributes']['id'];
     }
-    $summary_attributes['aria-expanded'] = empty($element['#attributes']['open']) ? FALSE : TRUE;
-    $summary_attributes['aria-pressed'] = $summary_attributes['aria-expanded'];
-    $output .= '<summary' . $summary_attributes . '>' . $element['#title'] . '</summary>';
+    $variables['summary_attributes']['aria-expanded'] = empty($element['#attributes']['open']) ? FALSE : TRUE;
+    $variables['summary_attributes']['aria-pressed'] = $variables['summary_attributes']['aria-expanded'];
   }
-  $output .= '<div class="details-wrapper">';
-  if (!empty($element['#description'])) {
-    $output .= '<div class="details-description">' . $element['#description'] . '</div>';
-  }
-  $output .= $element['#children'];
-  if (isset($element['#value'])) {
-    $output .= $element['#value'];
-  }
-  $output .= '</div>';
-  $output .= "</details>\n";
-  return $output;
+  $variables['title'] = (!empty($element['#title'])) ? $element['#title'] : '';
+  $variables['description'] = (!empty($element['#description'])) ? $element['#description'] : '';
+  $variables['children'] = (isset($element['#children'])) ? $element['#children'] : '';
+  $variables['value'] = (isset($element['#value'])) ? $element['#value'] : '';
 }
 
 /**
@@ -1980,11 +1970,11 @@ function form_process_group(&$element, &$form_state) {
  *   The modified element.
  */
 function form_pre_render_details($element) {
+  element_set_attributes($element, array('id'));
+
   // The .form-wrapper class is required for #states to treat details like
   // containers.
-  if (!isset($element['#attributes']['class'])) {
-    $element['#attributes']['class'] = array();
-  }
+  _form_set_attributes($element, array('form-wrapper'));
 
   // Collapsible details.
   $element['#attached']['library'][] = array('system', 'drupal.collapse');

@@ -598,9 +598,6 @@ class RenderTest extends DrupalUnitTestBase {
     $element = array('#cache' => $element['#cache']);
     $cached_element = cache()->get(drupal_render_cid_create($element))->data;
     $expected_element = array(
-      '#markup' => '<details class="form-wrapper" open="open"><summary role="button" aria-expanded>Parent</summary><div class="details-wrapper"><details class="form-wrapper" open="open"><summary role="button" aria-expanded>Child</summary><div class="details-wrapper">Subchild</div></details>
-</div></details>
-',
       '#attached' => array(
         'js' => array(
           array('type' => 'setting', 'data' => array('foo' => 'bar'))
@@ -618,7 +615,17 @@ class RenderTest extends DrupalUnitTestBase {
         )
       ),
     );
-    $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
+
+    $dom = filter_dom_load($cached_element['#markup']);
+    $xpath = new \DOMXPath($dom);
+    $parent = $xpath->query('//details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Parent"]')->length;
+    $child =  $xpath->query('//details[@class="form-wrapper" and @open="open"]/div[@class="details-wrapper"]/details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Child"]')->length;
+    $subchild = $xpath->query('//details[@class="form-wrapper" and @open="open"]/div[@class="details-wrapper"]/details[@class="form-wrapper" and @open="open"]/div [@class="details-wrapper" and text()="Subchild"]')->length;
+    $this->assertTrue($parent && $child && $subchild, 'The correct data is cached: the stored #markup is not affected by #post_render_cache callbacks.');
+
+    // Remove markup because it's compared above in the xpath.
+    unset($cached_element['#markup']);
+    $this->assertIdentical($cached_element, $expected_element, 'The correct data is cached: the stored #attached properties are not affected by #post_render_cache callbacks.');
 
     // GET request: #cache enabled, cache hit.
     drupal_static_reset('_drupal_add_js');
@@ -674,9 +681,6 @@ class RenderTest extends DrupalUnitTestBase {
     $cached_parent_element = cache()->get(drupal_render_cid_create($element))->data;
     $cached_child_element = cache()->get(drupal_render_cid_create($element['child']))->data;
     $expected_parent_element = array(
-      '#markup' => '<details class="form-wrapper" open="open"><summary role="button" aria-expanded>Parent</summary><div class="details-wrapper"><details class="form-wrapper" open="open"><summary role="button" aria-expanded>Child</summary><div class="details-wrapper">Subchild</div></details>
-</div></details>
-',
       '#attached' => array(
         'js' => array(
           array('type' => 'setting', 'data' => array('foo' => 'bar'))
@@ -694,10 +698,19 @@ class RenderTest extends DrupalUnitTestBase {
         )
       ),
     );
-    $this->assertIdentical($cached_parent_element, $expected_parent_element, 'The correct data is cached for the parent: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
+
+    $dom = filter_dom_load($cached_parent_element['#markup']);
+    $xpath = new \DOMXPath($dom);
+    $parent = $xpath->query('//details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Parent"]')->length;
+    $child =  $xpath->query('//details[@class="form-wrapper" and @open="open"]/div[@class="details-wrapper"]/details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Child"]')->length;
+    $subchild = $xpath->query('//details[@class="form-wrapper" and @open="open"]/div[@class="details-wrapper"]/details[@class="form-wrapper" and @open="open"]/div [@class="details-wrapper" and text()="Subchild"]')->length;
+    $this->assertTrue($parent && $child && $subchild, 'The correct data is cached for the parent: the stored #markup is not affected by #post_render_cache callbacks.');
+
+    // Remove markup because it's compared above in the xpath.
+    unset($cached_parent_element['#markup']);
+    $this->assertIdentical($cached_parent_element, $expected_parent_element, 'The correct data is cached for the parent: the stored #attached properties are not affected by #post_render_cache callbacks.');
+
     $expected_child_element = array(
-      '#markup' => '<details class="form-wrapper" open="open"><summary role="button" aria-expanded>Child</summary><div class="details-wrapper">Subchild</div></details>
-',
       '#attached' => array(
         'library' => array(
           array('system', 'drupal.collapse'),
@@ -710,7 +723,16 @@ class RenderTest extends DrupalUnitTestBase {
         )
       ),
     );
-    $this->assertIdentical($cached_child_element, $expected_child_element, 'The correct data is cached for the child: the stored #markup and #attached properties are not affected by #post_render_cache callbacks.');
+
+    $dom = filter_dom_load($cached_child_element['#markup']);
+    $xpath = new \DOMXPath($dom);
+    $child =  $xpath->query('//details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Child"]')->length;
+    $subchild = $xpath->query('//details[@class="form-wrapper" and @open="open"]/div [@class="details-wrapper" and text()="Subchild"]')->length;
+    $this->assertTrue($child && $subchild, 'The correct data is cached for the child: the stored #markup is not affected by #post_render_cache callbacks.');
+
+    // Remove markup because it's compared above in the xpath.
+    unset($cached_child_element['#markup']);
+    $this->assertIdentical($cached_child_element, $expected_child_element, 'The correct data is cached for the child: the stored #attached properties are not affected by #post_render_cache callbacks.');
 
     // GET request: #cache enabled, cache hit, parent element.
     drupal_static_reset('_drupal_add_js');

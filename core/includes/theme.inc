@@ -2682,6 +2682,7 @@ function drupal_common_theme() {
     ),
     'details' => array(
       'render element' => 'element',
+      'template' => 'details',
     ),
     'radios' => array(
       'render element' => 'element',
