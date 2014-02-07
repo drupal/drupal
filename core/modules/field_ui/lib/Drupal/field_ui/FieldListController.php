@@ -11,7 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldTypePluginManager;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,7 +43,7 @@ class FieldListController extends ConfigEntityListController {
   /**
    * The field type manager.
    *
-   * @var \Drupal\Core\Field\FieldTypePluginManager
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
    */
   protected $fieldTypeManager;
 
@@ -54,10 +54,10 @@ class FieldListController extends ConfigEntityListController {
    *   The entity info for the entity type.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Field\FieldTypePluginManager $field_type_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The 'field type' plugin manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, FieldTypePluginManager $field_type_manager) {
+  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager) {
     parent::__construct($entity_info, $entity_manager->getStorageController($entity_info->id()));
 
     $this->entityManager = $entity_manager;

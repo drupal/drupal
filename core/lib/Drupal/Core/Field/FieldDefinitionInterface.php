@@ -75,7 +75,7 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
    * @return string
    *   The field type, i.e. the id of a field type plugin. For example 'text'.
    *
-   * @see \Drupal\Core\Field\FieldTypePluginManager
+   * @see \Drupal\Core\Field\FieldTypePluginManagerInterface
    */
   public function getType();
 

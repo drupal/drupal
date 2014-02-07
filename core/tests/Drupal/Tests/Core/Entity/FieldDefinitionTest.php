@@ -46,10 +46,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function setUp() {
     // Mock the field type manager and place it in the container.
-    //  @todo Add FieldTypePluginManagerInterface in https://drupal.org/node/2175415.
-    $field_type_manager = $this->getMockBuilder('Drupal\Core\Field\FieldTypePluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $field_type_manager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
 
     $this->fieldType = $this->randomName();
     $this->fieldTypeDefinition = array(

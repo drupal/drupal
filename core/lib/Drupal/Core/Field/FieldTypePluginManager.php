@@ -17,7 +17,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *
  * @todo Add FieldTypePluginManagerInterface in https://drupal.org/node/2175415.
  */
-class FieldTypePluginManager extends DefaultPluginManager {
+class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
 
   /**
    * {@inheritdoc}
@@ -62,14 +62,7 @@ class FieldTypePluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Returns the default field-level settings for a field type.
-   *
-   * @param string $type
-   *   A field type name.
-   *
-   * @return array
-   *   The type's default settings, as provided by the plugin
-   *   definition, or an empty array if type or settings are undefined.
+   * {@inheritdoc}
    */
   public function getDefaultSettings($type) {
     $info = $this->getDefinition($type);
@@ -77,14 +70,7 @@ class FieldTypePluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Returns the default instance-level settings for a field type.
-   *
-   * @param string $type
-   *   A field type name.
-   *
-   * @return array
-   *   The instance's default settings, as provided by the plugin
-   *   definition, or an empty array if type or settings are undefined.
+   * {@inheritdoc}
    */
   public function getDefaultInstanceSettings($type) {
     $info = $this->getDefinition($type);
@@ -92,10 +78,7 @@ class FieldTypePluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets the definition of all field types that are configurable.
-   *
-   * @return array
-   *   An array of field type definitions.
+   * {@inheritdoc}
    */
   public function getConfigurableDefinitions() {
     $definitions = $this->getDefinitions();

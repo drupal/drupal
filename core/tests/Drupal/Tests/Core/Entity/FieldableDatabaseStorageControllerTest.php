@@ -40,10 +40,7 @@ class FieldableDatabaseStorageControllerTest extends UnitTestCase {
    * @see \Drupal\Core\Entity\Controller\FieldableDatabaseStorageController::_fieldSqlSchema()
    */
   public function testFieldSqlSchemaForEntityWithStringIdentifier() {
-    //  @todo Add FieldTypePluginManagerInterface in https://drupal.org/node/2175415.
-    $field_type_manager = $this->getMockBuilder('Drupal\Core\Field\FieldTypePluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $field_type_manager = $this->getMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
     $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
 
     $container = new ContainerBuilder();

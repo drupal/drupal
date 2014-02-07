@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\DataType\Deriver;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -33,7 +33,7 @@ class FieldItemDeriver implements ContainerDerivativeInterface {
   /**
    * The field type plugin manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
    */
   protected $fieldTypePluginManager;
 
@@ -42,10 +42,10 @@ class FieldItemDeriver implements ContainerDerivativeInterface {
    *
    * @param string $base_plugin_id
    *   The base plugin ID.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $field_type_plugin_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The field type plugin manager.
    */
-  public function __construct($base_plugin_id, PluginManagerInterface $field_type_plugin_manager) {
+  public function __construct($base_plugin_id, FieldTypePluginManagerInterface $field_type_plugin_manager) {
     $this->basePluginId = $base_plugin_id;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
   }
