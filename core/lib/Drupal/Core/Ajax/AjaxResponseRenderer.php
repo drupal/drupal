@@ -26,16 +26,13 @@ class AjaxResponseRenderer {
    *   An Ajax response containing the controller result.
    */
   public function render($content) {
-    // If there is already an AjaxResponse, then return it without manipulation.
-    if ($content instanceof AjaxResponse && $content->isOk()) {
+    // If there is already a Response object, return it without manipulation.
+    if ($content instanceof Response && $content->isOk()) {
       return $content;
     }
 
-    // Allow controllers to return a HtmlFragment or a Response object directly.
+    // Allow controllers to return an HtmlFragment directly.
     if ($content instanceof HtmlFragment) {
-      $content = $content->getContent();
-    }
-    elseif ($content instanceof Response) {
       $content = $content->getContent();
     }
     // Most controllers return a render array, but some return a string.
@@ -50,7 +47,7 @@ class AjaxResponseRenderer {
     if (isset($content['#type']) && ($content['#type'] == 'ajax')) {
       // Complex Ajax callbacks can return a result that contains an error
       // message or a specific set of commands to send to the browser.
-      $content += element_info('ajax');
+      $content += $this->elementInfo('ajax');
       $error = $content['#error'];
       if (!empty($error)) {
         // Fall back to some default message otherwise use the specific one.
@@ -61,18 +58,34 @@ class AjaxResponseRenderer {
       }
     }
 
-    $html = drupal_render($content);
+    $html = $this->drupalRender($content);
 
     // The selector for the insert command is NULL as the new content will
     // replace the element making the Ajax call. The default 'replaceWith'
     // behavior can be changed with #ajax['method'].
     $response->addCommand(new InsertCommand(NULL, $html));
     $status_messages = array('#theme' => 'status_messages');
-    $output = drupal_render($status_messages);
+    $output = $this->drupalRender($status_messages);
     if (!empty($output)) {
       $response->addCommand(new PrependCommand(NULL, $output));
     }
     return $response;
+  }
+
+  /**
+   * Wraps drupal_render().
+   *
+   * @todo: Remove as part of https://drupal.org/node/2182149
+   */
+  protected function drupalRender(&$elements, $is_recursive_call = FALSE) {
+    return drupal_render($elements, $is_recursive_call);
+  }
+
+  /**
+   * Wraps element_info().
+   */
+  protected function elementInfo($type) {
+    return element_info($type);
   }
 
 }
