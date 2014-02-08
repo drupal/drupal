@@ -25,44 +25,21 @@
  * Add/remove links.
  */
 .add-or-remove-shortcuts .icon {
-  background: transparent url("../images/shortcut-add.png") no-repeat;
-  height: 12px;
-  margin-left: 8px; /* LTR */
-  overflow: hidden;
-  text-indent: 12px;
-  width: 12px;
+  background: transparent url('../images/favstar.svg') no-repeat left top;
+  width: 20px;
+  height: 20px;
 }
 .no-svg .add-or-remove-shortcuts .icon {
-  background: transparent url("../images/shortcut-add.png") no-repeat;
+  background-image: url('../images/favstar.png');
 }
-[dir="rtl"] .add-or-remove-shortcuts .icon {
-  margin-left: 0;
-  margin-right: 8px;
-}
-[dir="rtl"] .add-or-remove-shortcuts .text {
-  padding: 0 10px 0 6px;
-}
-[dir="rtl"] .add-or-remove-shortcuts a:focus .text,
-[dir="rtl"] .add-or-remove-shortcuts a:hover .text {
-  border-radius: 5px 0 0 5px;
-}
-.add-shortcut a:focus .icon,
-.add-shortcut a:hover .icon {
-  background-position: 0 -12px; /* LTR */
-}
-[dir="rtl"] .add-shortcut a:focus .icon,
-[dir="rtl"] .add-shortcut a:hover .icon {
-  background-position: 0 -24px;
+.add-shortcut a:hover .icon,
+.add-shortcut a:focus .icon {
+  background-position: -20px top;
 }
 .remove-shortcut .icon {
-  margin-top: 4px;
-  background-position: -12px 0;
+  background-position: -40px top;
 }
 .remove-shortcut a:focus .icon,
 .remove-shortcut a:hover .icon {
-  background-position: -12px -12px; /* LTR */
-}
-[dir="rtl"] .remove-shortcut a:focus .icon,
-[dir="rtl"] .remove-shortcut a:hover .icon {
-  background-position: -12px -24px;
+  background-position: -60px top; /* LTR */
 }

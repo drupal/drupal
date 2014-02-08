@@ -1390,6 +1390,18 @@ function system_library_info() {
     ),
   );
 
+  // jQuery Intrinsic Measurements.
+  $libraries['jquery.intrinsic'] = array(
+    'title' => 'Instric Measurements',
+    'version' => '1.0',
+    'js' => array(
+      'core/misc/jquery.intrinsic.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+    ),
+  );
+
   // jQuery Form Plugin.
   $libraries['jquery.form'] = array(
     'title' => 'jQuery Form Plugin',

@@ -365,3 +365,24 @@ tr .ajax-progress-throbber .throbber {
   margin-left: auto;
   margin-right: auto;
 }
+
+/*
+ * Remove browser styles, especially for <buttons> and so on.
+ */
+.reset-appearance {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 0 none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  line-height: inherit;
+}
+
+/*
+ * Contain positioned elements.
+ */
+.position-container {
+  position: relative;
+}

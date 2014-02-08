@@ -448,20 +448,31 @@ td.group-title {
  * The tabs that switch between sections
  */
 
-ul#views-display-menu-tabs {
+.views-displays .tabs.secondary {
   margin-right: 200px;
+  border: 0;
 }
 
-ul#views-display-menu-tabs li {
+.views-displays .tabs.secondary li,
+.views-displays .tabs.secondary li.active {
+  background: transparent;
   margin-bottom: 5px;
+  border: 0;
+  padding: 0;
+  width: auto;
 }
 
-ul#views-display-menu-tabs li.add ul.action-list li{
+.views-displays .tabs.secondary li.add ul.action-list li{
   margin: 0;
 }
 
-.views-displays .secondary a {
+.views-displays .tabs.secondary li {
+  margin: 0 5px 0 6px;
+}
+
+.views-displays .tabs.secondary a {
   border: 1px solid #cbcbcb;
+  border-radius: 7px;
   display: inline-block;
   font-size: small;
   line-height: 1.3333;
@@ -471,38 +482,38 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 /**
  * Display a red border if the display doesn't validate.
  */
-.views-displays ul.secondary li.active a.active.error,
-.views-displays .secondary a.error {
+.views-displays .tabs.secondary li.active a.active.error,
+.views-displays .tabs.secondary a.error {
   border: 2px solid #ed541d;
   padding: 1px 6px;
 }
 
-.views-displays .secondary a:focus {
+.views-displays .tabs.secondary a:focus {
   outline: none;
 }
 
-.views-displays ul.secondary li a {
+.views-displays .tabs.secondary li a {
   background-color: #fff;
 }
 
-.views-displays ul.secondary li a:hover,
-.views-displays ul.secondary li.active a,
-.views-displays ul.secondary li.active a.active {
+.views-displays .tabs.secondary li a:hover,
+.views-displays .tabs.secondary li.active a,
+.views-displays .tabs.secondary li.active a.active {
   background-color: #555;
   color: #fff;
 }
 
-.views-displays .secondary .open > a {
+.views-displays .tabs.secondary .open > a {
   background-color: #f1f1f1;
   border-bottom: 1px solid transparent;
   position: relative;
 }
 
-.views-displays .secondary .open > a:hover {
+.views-displays .tabs.secondary .open > a:hover {
   background-color: #f1f1f1;
 }
 
-.views-displays .secondary .action-list  li {
+.views-displays .tabs.secondary .action-list  li {
   background-color: #f1f1f1;
   border-color: #cbcbcb;
   border-style: solid;
@@ -510,7 +521,7 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   padding: 2px 9px;
 }
 
-.views-displays .secondary .action-list  li:first-child {
+.views-displays .tabs.secondary .action-list  li:first-child {
   border-width: 1px 1px 0;
 }
 
@@ -518,18 +529,18 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   border-width: 0 1px 1px;
 }
 
-.views-displays .secondary .action-list  li:last-child {
+.views-displays .tabs.secondary .action-list  li:last-child {
   border-width: 0 1px 1px;
 }
 
-.views-displays .secondary .action-list input.form-submit {
+.views-displays .tabs.secondary .action-list input.form-submit {
   background: none repeat scroll 0 0 transparent;
   border: medium none;
   margin: 0;
   padding: 0;
 }
 
-.views-displays .secondary .action-list li:hover {
+.views-displays .tabs.secondary .action-list li:hover {
   background-color: #ddd;
 }
 

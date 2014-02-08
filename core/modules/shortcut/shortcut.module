@@ -433,7 +433,7 @@ function shortcut_preprocess_page(&$variables) {
         ),
         '#prefix' => '<div class="add-or-remove-shortcuts ' . $link_mode . '-shortcut">',
         '#type' => 'link',
-        '#title' => '<span class="icon">'. t('Add or remove shortcut') .'</span><span class="text">' . $link_text . '</span>',
+        '#title' => '<span class="icon"></span><span class="text">'. $link_text .'</span>',
         '#route_name' => $route_name,
         '#route_parameters' => $route_parameters,
         '#options' => array('query' => $query, 'html' => TRUE),

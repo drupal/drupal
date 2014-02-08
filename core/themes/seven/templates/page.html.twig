@@ -66,21 +66,24 @@
  */
 #}
   <header id="branding" class="clearfix">
-    {{ breadcrumb }}
-    {{ title_prefix }}
-    {% if title %}
-      <h1 class="page-title">{{ title }}</h1>
-    {% endif %}
-    {{ title_suffix }}
-    {% if primary_local_tasks %}
-      {{ primary_local_tasks }}
-    {% endif %}
+    <div class="branding__inner">
+      {{ title_prefix }}
+      {% if title %}
+        <h1 class="page-title">{{ title }}</h1>
+      {% endif %}
+      {{ title_suffix }}
+      {% if primary_local_tasks %}
+        {{ primary_local_tasks }}
+      {% endif %}
+    </div>
   </header>
 
   <div id="page">
     {% if secondary_local_tasks %}
       <div class="tabs-secondary clearfix" role="navigation">{{ secondary_local_tasks }}</div>
     {% endif %}
+
+    {{ breadcrumb }}
 
     <main id="content" class="clearfix" role="main">
       <div class="visually-hidden"><a id="main-content"></a></div>

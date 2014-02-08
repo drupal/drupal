@@ -7,20 +7,6 @@
  * Add/remove links.
  */
 .add-or-remove-shortcuts .icon {
-  display: block;
-  float: left; /* LTR */
-  margin-top: 5px;
-}
-.add-or-remove-shortcuts .text {
-  display: none;
-  float: left; /* LTR */
-  padding-top: 2px;
-}
-[dir="rtl"] .add-or-remove-shortcuts .icon,
-[dir="rtl"] .add-or-remove-shortcuts .text {
-  float: right;
-}
-.add-or-remove-shortcuts a:focus .text,
-.add-or-remove-shortcuts a:hover .text {
-  display: block;
+  display: inline-block;
+  vertical-align: -2px;
 }
