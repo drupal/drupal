@@ -5,6 +5,8 @@
  * Helper module for the Text Editor tests.
  */
 
+use Drupal\filter\FilterFormatInterface;
+
 /**
  * Implements hook_editor_default_settings().
  */
@@ -37,5 +39,20 @@ function editor_test_editor_js_settings_alter(&$settings) {
 
   if (isset($settings['full_html'])) {
     $settings['full_html']['editorSettings']['ponyModeEnabled'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_editor_xss_filter_alter().
+ */
+function editor_test_editor_xss_filter_alter(&$editor_xss_filter_class, FilterFormatInterface $format, FilterFormatInterface $original_format = NULL) {
+  // Allow tests to enable or disable this alter hook.
+  if (!\Drupal::state()->get('editor_test_editor_xss_filter_alter_enabled', FALSE)) {
+    return;
+  }
+
+  $filters = $format->filters()->getAll();
+  if (isset($filters['filter_html']) && $filters['filter_html']->status) {
+    $editor_xss_filter_class = '\Drupal\editor_test\EditorXssFilter\Insecure';
   }
 }

@@ -15,7 +15,7 @@ use Drupal\filter\Plugin\FilterBase;
  * @Filter(
  *   id = "filter_autop",
  *   title = @Translation("Convert line breaks into HTML (i.e. <code>&lt;br&gt;</code> and <code>&lt;p&gt;</code>)"),
- *   type = FILTER_TYPE_MARKUP_LANGUAGE
+ *   type = Drupal\filter\Plugin\FilterInterface::TYPE_MARKUP_LANGUAGE
  * )
  */
 class FilterAutoP extends FilterBase {

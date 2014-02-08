@@ -16,7 +16,7 @@ use Drupal\filter\Plugin\FilterBase;
  *   id = "filter_test_uncacheable",
  *   title = @Translation("Uncacheable filter"),
  *   description = @Translation("Does nothing, but makes a text format uncacheable"),
- *   type = FILTER_TYPE_TRANSFORM_IRREVERSIBLE,
+ *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
  *   cache = false
  * )
  */

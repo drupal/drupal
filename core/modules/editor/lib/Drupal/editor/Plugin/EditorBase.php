@@ -28,6 +28,7 @@ use Drupal\editor\Plugin\EditorPluginInterface;
  *   only" filtering.
  * - supports_inline_editing: Whether the editor supports the inline editing
  *   provided by the Edit module.
+ * - is_xss_safe: Whether this text editor is not vulnerable to XSS attacks.
  *
  * A complete sample plugin definition should be defined as in this example:
  *
@@ -36,7 +37,8 @@ use Drupal\editor\Plugin\EditorPluginInterface;
  *   id = "myeditor",
  *   label = @Translation("My Editor"),
  *   supports_content_filtering = FALSE,
- *   supports_inline_editing = FALSE
+ *   supports_inline_editing = FALSE,
+ *   is_xss_safe = FALSE
  * )
  * @endcode
  */

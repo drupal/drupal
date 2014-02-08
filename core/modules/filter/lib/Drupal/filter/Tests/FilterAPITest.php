@@ -10,6 +10,7 @@ namespace Drupal\filter\Tests;
 use Drupal\Core\TypedData\AllowedValuesInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\filter\Plugin\DataType\FilterFormat;
+use Drupal\filter\Plugin\FilterInterface;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -38,12 +39,12 @@ class FilterAPITest extends EntityUnitTestBase {
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'filters' => array(
-        // Note that the filter_html filter is of the type FILTER_TYPE_MARKUP_LANGUAGE.
+        // Note that the filter_html filter is of the type FilterInterface::TYPE_MARKUP_LANGUAGE.
         'filter_url' => array(
           'weight' => -1,
           'status' => 1,
         ),
-        // Note that the filter_html filter is of the type FILTER_TYPE_HTML_RESTRICTOR.
+        // Note that the filter_html filter is of the type FilterInterface::TYPE_HTML_RESTRICTOR.
         'filter_html' => array(
           'status' => 1,
           'settings' => array(
@@ -78,18 +79,18 @@ class FilterAPITest extends EntityUnitTestBase {
       'Expected filter result.'
     );
     $this->assertIdentical(
-      check_markup($text, 'filtered_html', '', FALSE, array(FILTER_TYPE_MARKUP_LANGUAGE)),
+      check_markup($text, 'filtered_html', '', FALSE, array(FilterInterface::TYPE_MARKUP_LANGUAGE)),
       $expected_filter_text_without_html_generators,
-      'Expected filter result when skipping FILTER_TYPE_MARKUP_LANGUAGE filters.'
+      'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters.'
     );
     // Related to @see FilterSecurityTest.php/testSkipSecurityFilters(), but
     // this check focuses on the ability to filter multiple filter types at once.
     // Drupal core only ships with these two types of filters, so this is the
     // most extensive test possible.
     $this->assertIdentical(
-      check_markup($text, 'filtered_html', '', FALSE, array(FILTER_TYPE_HTML_RESTRICTOR, FILTER_TYPE_MARKUP_LANGUAGE)),
+      check_markup($text, 'filtered_html', '', FALSE, array(FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE)),
       $expected_filter_text_without_html_generators,
-      'Expected filter result when skipping FILTER_TYPE_MARKUP_LANGUAGE filters, even when trying to disable filters of the FILTER_TYPE_HTML_RESTRICTOR type.'
+      'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.'
     );
   }
 
@@ -108,7 +109,7 @@ class FilterAPITest extends EntityUnitTestBase {
     );
     $this->assertIdentical(
       $filtered_html_format->getFilterTypes(),
-      array(FILTER_TYPE_MARKUP_LANGUAGE, FILTER_TYPE_HTML_RESTRICTOR),
+      array(FilterInterface::TYPE_MARKUP_LANGUAGE, FilterInterface::TYPE_HTML_RESTRICTOR),
       'FilterFormatInterface::getFilterTypes() works as expected for the filtered_html format.'
     );
 
@@ -146,12 +147,12 @@ class FilterAPITest extends EntityUnitTestBase {
     );
     $this->assertIdentical(
       $stupid_filtered_html_format->getFilterTypes(),
-      array(FILTER_TYPE_HTML_RESTRICTOR),
+      array(FilterInterface::TYPE_HTML_RESTRICTOR),
       'FilterFormatInterface::getFilterTypes() works as expected for the stupid_filtered_html format.'
     );
 
     // Test on very_restricted_html, where there's two different filters of the
-    // FILTER_TYPE_HTML_RESTRICTOR type, each restricting in different ways.
+    // FilterInterface::TYPE_HTML_RESTRICTOR type, each restricting in different ways.
     $very_restricted_html_format = entity_create('filter_format', array(
       'format' => 'very_restricted_html',
       'name' => 'Very Restricted HTML',
@@ -185,7 +186,7 @@ class FilterAPITest extends EntityUnitTestBase {
     );
     $this->assertIdentical(
       $very_restricted_html_format->getFilterTypes(),
-      array(FILTER_TYPE_HTML_RESTRICTOR),
+      array(FilterInterface::TYPE_HTML_RESTRICTOR),
       'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'
     );
   }

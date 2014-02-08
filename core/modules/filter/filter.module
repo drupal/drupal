@@ -11,34 +11,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\filter\FilterFormatInterface;
-
-/**
- * Non-HTML markup language filters that generate HTML.
- *
- * @todo Move into \Drupal\filter\Plugin\Filter\FilterInterface
- */
-const FILTER_TYPE_MARKUP_LANGUAGE = 0;
-
-/**
- * HTML tag and attribute restricting filters.
- *
- * @todo Move into \Drupal\filter\Plugin\Filter\FilterInterface
- */
-const FILTER_TYPE_HTML_RESTRICTOR = 1;
-
-/**
- * Reversible transformation filters.
- *
- * @todo Move into \Drupal\filter\Plugin\Filter\FilterInterface
- */
-const FILTER_TYPE_TRANSFORM_REVERSIBLE = 2;
-
-/**
- * Irreversible transformation filters.
- *
- * @todo Move into \Drupal\filter\Plugin\Filter\FilterInterface
- */
-const FILTER_TYPE_TRANSFORM_IRREVERSIBLE = 3;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Implements hook_help().
@@ -412,7 +385,7 @@ function filter_format_allowcache($format_id) {
  *   (optional) An array of filter types to skip, or an empty array (default)
  *   to skip no filter types. All of the format's filters will be applied,
  *   except for filters of the types that are marked to be skipped.
- *   FILTER_TYPE_HTML_RESTRICTOR is the only type that cannot be skipped.
+ *   FilterInterface::TYPE_HTML_RESTRICTOR is the only type that cannot be skipped.
  *
  * @return
  *   The filtered text.
@@ -429,9 +402,9 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
     return '';
   }
 
-  // Prevent FILTER_TYPE_HTML_RESTRICTOR from being skipped.
-  if (in_array(FILTER_TYPE_HTML_RESTRICTOR, $filter_types_to_skip)) {
-    $filter_types_to_skip = array_diff($filter_types_to_skip, array(FILTER_TYPE_HTML_RESTRICTOR));
+  // Prevent FilterInterface::TYPE_HTML_RESTRICTOR from being skipped.
+  if (in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $filter_types_to_skip)) {
+    $filter_types_to_skip = array_diff($filter_types_to_skip, array(FilterInterface::TYPE_HTML_RESTRICTOR));
   }
 
   // When certain filters should be skipped, don't perform caching.

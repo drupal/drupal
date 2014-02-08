@@ -10,6 +10,7 @@ namespace Drupal\editor\Plugin\InPlaceEditor;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\edit\Plugin\InPlaceEditorInterface;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Defines the formatted text in-place editor.
@@ -61,7 +62,7 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
    */
   protected function textFormatHasTransformationFilters($format_id) {
     $format = entity_load('filter_format', $format_id);
-    return (bool) count(array_intersect(array(FILTER_TYPE_TRANSFORM_REVERSIBLE, FILTER_TYPE_TRANSFORM_IRREVERSIBLE), $format->getFiltertypes()));
+    return (bool) count(array_intersect(array(FilterInterface::TYPE_TRANSFORM_REVERSIBLE, FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE), $format->getFiltertypes()));
   }
 
   /**

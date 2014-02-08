@@ -34,14 +34,22 @@
    *   attached.
    */
   function changeTextEditor($formatSelector, activeFormatID, newFormatID) {
+    var originalFormatID = activeFormatID;
     var field = findFieldForFormatSelector($formatSelector);
     // Detach the current editor (if any) and attach a new editor.
     if (drupalSettings.editor.formats[activeFormatID]) {
       Drupal.editorDetach(field, drupalSettings.editor.formats[activeFormatID]);
     }
+    // When no text editor is currently active, stop tracking changes.
+    else if (!drupalSettings.editor.formats[activeFormatID]) {
+      $(field).off('.editor');
+    }
     activeFormatID = newFormatID;
+
+    // Attach the new text editor (if any).
     if (drupalSettings.editor.formats[activeFormatID]) {
-      Drupal.editorAttach(field, drupalSettings.editor.formats[activeFormatID]);
+      var format = drupalSettings.editor.formats[activeFormatID];
+      filterXssWhenSwitching(field, format, originalFormatID, Drupal.editorAttach);
     }
     $formatSelector.attr('data-editor-active-text-format', newFormatID);
   }
@@ -135,9 +143,21 @@
         $this.attr('data-editor-active-text-format', activeFormatID);
         var field = findFieldForFormatSelector($this);
 
-        // Directly attach this editor, if the text format is enabled.
+        // Directly attach this text editor, if the text format is enabled.
         if (settings.editor.formats[activeFormatID]) {
+          // XSS protection for the current text format/editor is performed on the
+          // server side, so we don't need to do anything special here.
           Drupal.editorAttach(field, settings.editor.formats[activeFormatID]);
+        }
+        // When there is no text editor for this text format, still track changes,
+        // because the user has the ability to switch to some text editor, other-
+        // wise this code would not be executed.
+        else {
+          $(field).on('change.editor keypress.editor', function () {
+            field.setAttribute('data-editor-value-is-changed', 'true');
+            // Just knowing that the value was changed is enough, stop tracking.
+            $(field).off('.editor');
+          });
         }
 
         // Attach onChange handler to text format selector element.
@@ -200,6 +220,10 @@
       // happen within the text editor.
       Drupal.editors[format.editor].onChange(field, function () {
         $(field).trigger('formUpdated');
+
+        // Keep track of changes, so we know what to do when switching text
+        // formats and guaranteeing XSS protection.
+        field.setAttribute('data-editor-value-is-changed', 'true');
       });
     }
   };
@@ -214,7 +238,51 @@
       }
 
       Drupal.editors[format.editor].detach(field, format, trigger);
+
+      // Restore the original value if the user didn't make any changes yet.
+      if (field.getAttribute('data-editor-value-is-changed') === 'false') {
+        field.value = field.getAttribute('data-editor-value-original');
+      }
     }
   };
+
+  /**
+   * Filter away XSS attack vectors when switching text formats.
+   *
+   * @param DOM field
+   *   The textarea DOM element.
+   * @param Object format
+   *   The text format that's being activated, from drupalSettings.editor.formats.
+   * @param String originalFormatID
+   *   The text format ID of the original text format.
+   * @param Function callback
+   *   A callback to be called (with no parameters) after the field's value has
+   *   been XSS filtered.
+   */
+  function filterXssWhenSwitching (field, format, originalFormatID, callback) {
+    // A text editor that already is XSS-safe needs no additional measures.
+    if (format.editor.isXssSafe) {
+      callback(field, format);
+    }
+    // Otherwise, ensure XSS safety: let the server XSS filter this value.
+    else {
+      $.ajax({
+        url: Drupal.url('editor/filter_xss/' + format.format),
+        type: 'POST',
+        data: {
+          'value': field.value,
+          'original_format_id': originalFormatID
+        },
+        dataType: 'json',
+        success: function (xssFilteredValue) {
+          // If the server returns false, then no XSS filtering is needed.
+          if (xssFilteredValue !== false) {
+            field.value = xssFilteredValue;
+          }
+          callback(field, format);
+        }
+      });
+    }
+  }
 
 })(jQuery, Drupal, drupalSettings);

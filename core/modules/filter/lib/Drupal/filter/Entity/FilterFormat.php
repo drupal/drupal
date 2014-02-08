@@ -12,6 +12,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\FilterBag;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Represents a text format.
@@ -287,7 +288,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
       if (!$filter->status) {
         return FALSE;
       }
-      if ($filter->getType() === FILTER_TYPE_HTML_RESTRICTOR && $filter->getHTMLRestrictions() !== FALSE) {
+      if ($filter->getType() === FilterInterface::TYPE_HTML_RESTRICTOR && $filter->getHTMLRestrictions() !== FALSE) {
         return TRUE;
       }
       return FALSE;

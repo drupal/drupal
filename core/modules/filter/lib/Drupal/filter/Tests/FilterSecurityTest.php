@@ -9,6 +9,7 @@ namespace Drupal\filter\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Security tests for missing/vanished text formats or filters.
@@ -32,7 +33,7 @@ class FilterSecurityTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Security',
-      'description' => 'Test the behavior of check_markup() when a filter or text format vanishes, or when check_markup() is called in such a way that it is instructed to skip all filters of the "FILTER_TYPE_HTML_RESTRICTOR" type.',
+      'description' => 'Test the behavior of check_markup() when a filter or text format vanishes, or when check_markup() is called in such a way that it is instructed to skip all filters of the "FilterInterface::TYPE_HTML_RESTRICTOR" type.',
       'group' => 'Filter',
     );
   }
@@ -48,7 +49,7 @@ class FilterSecurityTest extends WebTestBase {
       'format' => 'filtered_html',
       'name' => 'Filtered HTML',
       'filters' => array(
-        // Note that the filter_html filter is of the type FILTER_TYPE_HTML_RESTRICTOR.
+        // Note that the filter_html filter is of the type FilterInterface::TYPE_HTML_RESTRICTOR.
         'filter_html' => array(
           'status' => 1,
         ),
@@ -103,6 +104,6 @@ class FilterSecurityTest extends WebTestBase {
     $text = "Text with some disallowed tags: <script />, <em><object>unicorn</object></em>, <i><table></i>.";
     $expected_filtered_text = "Text with some disallowed tags: , <em>unicorn</em>, .";
     $this->assertEqual(check_markup($text, 'filtered_html', '', FALSE, array()), $expected_filtered_text, 'Expected filter result.');
-    $this->assertEqual(check_markup($text, 'filtered_html', '', FALSE, array(FILTER_TYPE_HTML_RESTRICTOR)), $expected_filtered_text, 'Expected filter result, even when trying to disable filters of the FILTER_TYPE_HTML_RESTRICTOR type.');
+    $this->assertEqual(check_markup($text, 'filtered_html', '', FALSE, array(FilterInterface::TYPE_HTML_RESTRICTOR)), $expected_filtered_text, 'Expected filter result, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
   }
 }

@@ -5,6 +5,8 @@
  * Documentation for Text Editor API.
  */
 
+use Drupal\filter\FilterFormatInterface;
+
 /**
  * @addtogroup hooks
  * @{
@@ -100,6 +102,31 @@ function hook_editor_js_settings_alter(array &$settings, array $formats) {
   if (isset($formats['basic_html'])) {
     $settings['basic_html']['editor'][] = 'MyDifferentEditor';
     $settings['basic_html']['editorSettings']['buttons'] = array('strong', 'italic', 'underline');
+  }
+}
+
+/**
+ * Modifies the text editor XSS filter that will used for the given text format.
+ *
+ * Is only called when an EditorXssFilter will effectively be used; this hook
+ * does not allow one to alter that decision.
+ *
+ * @param string &$editor_xss_filter_class
+ *   The text editor XSS filter class that will be used.
+ * @param \Drupal\filter\FilterFormatInterface $format
+ *   The text format configuration entity. Provides context based upon which
+ *   one may want to adjust the filtering.
+ * @param \Drupal\filter\FilterFormatInterface $original_format|null
+ *   (optional) The original text format configuration entity (when switching
+ *   text formats/editors). Also provides context based upon which one may want
+ *   to adjust the filtering.
+ *
+ * @see \Drupal\editor\EditorXssFilterInterface
+ */
+function hook_editor_xss_filter_alter(&$editor_xss_filter_class, FilterFormatInterface $format, FilterFormatInterface $original_format = NULL) {
+  $filters = $format->filters()->getAll();
+  if (isset($filters['filter_wysiwyg']) && $filters['filter_wysiwyg']->status) {
+    $editor_xss_filter_class = '\Drupal\filter_wysiwyg\EditorXssFilter\WysiwygFilter';
   }
 }
 

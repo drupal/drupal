@@ -17,7 +17,7 @@ use Drupal\Component\Utility\Xss;
  *   id = "filter_test_restrict_tags_and_attributes",
  *   title = @Translation("Tag and attribute restricting filter"),
  *   description = @Translation("Used for testing \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions()."),
- *   type = FILTER_TYPE_HTML_RESTRICTOR
+ *   type = Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR
  * )
  */
 class FilterTestRestrictTagsAndAttributes extends FilterBase {

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\filter\Plugin\Filter\FilterInterface.
+ * Contains \Drupal\filter\Plugin\FilterInterface.
  */
 
 namespace Drupal\filter\Plugin;
@@ -54,13 +54,14 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  * - title: (required) An administrative summary of what the filter does.
  *   - type: (required) A classification of the filter's purpose. This is one
  *     of the following:
- *     - FILTER_TYPE_HTML_RESTRICTOR: HTML tag and attribute restricting
+ *     - FilterInterface::TYPE_HTML_RESTRICTOR: HTML tag and attribute
+ *       restricting filters.
+ *     - FilterInterface::TYPE_MARKUP_LANGUAGE: Non-HTML markup language filters
+ *       that generate HTML.
+ *     - FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE: Irreversible
+ *       transformation filters.
+ *     - FilterInterface::TYPE_TRANSFORM_REVERSIBLE: Reversible transformation
  *       filters.
- *     - FILTER_TYPE_MARKUP_LANGUAGE: Non-HTML markup language filters that
- *       generate HTML.
- *     - FILTER_TYPE_TRANSFORM_IRREVERSIBLE: Irreversible transformation
- *       filters.
- *     - FILTER_TYPE_TRANSFORM_REVERSIBLE: Reversible transformation filters.
  * - description: Additional administrative information about the filter's
  *   behavior, if needed for clarification.
  * - status: The default status for new instances of the filter. Defaults to
@@ -79,15 +80,35 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  */
 interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionInterface {
 
+   /**
+    * Non-HTML markup language filters that generate HTML.
+    */
+   const TYPE_MARKUP_LANGUAGE = 0;
+
+   /**
+    * HTML tag and attribute restricting filters to prevent XSS attacks.
+    */
+   const TYPE_HTML_RESTRICTOR = 1;
+
+   /**
+    * Reversible transformation filters.
+    */
+   const TYPE_TRANSFORM_REVERSIBLE = 2;
+
+   /**
+    * Irreversible transformation filters.
+    */
+   const TYPE_TRANSFORM_IRREVERSIBLE = 3;
+
   /**
    * Returns the processing type of this filter plugin.
    *
    * @return int
    *   One of:
-   *   - FILTER_TYPE_MARKUP_LANGUAGE
-   *   - FILTER_TYPE_HTML_RESTRICTOR
-   *   - FILTER_TYPE_TRANSFORM_REVERSIBLE
-   *   - FILTER_TYPE_TRANSFORM_IRREVERSIBLE
+   *   - FilterInterface::TYPE_MARKUP_LANGUAGE
+   *   - FilterInterface::TYPE_HTML_RESTRICTOR
+   *   - FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+   *   - FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
    */
   public function getType();
 
@@ -162,8 +183,9 @@ interface FilterInterface extends ConfigurablePluginInterface, PluginInspectionI
   /**
    * Returns HTML allowed by this filter's configuration.
    *
-   * May be implemented by filters of the type FILTER_TYPE_HTML_RESTRICTOR, this
-   * won't be used for filters of other types; they should just return FALSE.
+   * May be implemented by filters of the FilterInterface::TYPE_HTML_RESTRICTOR
+   * type, this won't be used for filters of other types; they should just
+   * return FALSE.
    *
    * This callback function is only necessary for filters that strip away HTML
    * tags (and possibly attributes) and allows other modules to gain insight in

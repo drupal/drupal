@@ -10,6 +10,7 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\editor\Entity\Editor;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Defines the "internal" plugin (i.e. core plugins part of our CKEditor build).
@@ -287,7 +288,7 @@ class Internal extends CKEditorPluginBase {
     // When nothing is disallowed, set allowedContent to true.
     $format = entity_load('filter_format', $editor->format);
     $filter_types = $format->getFilterTypes();
-    if (!in_array(FILTER_TYPE_HTML_RESTRICTOR, $filter_types)) {
+    if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $filter_types)) {
       return TRUE;
     }
     // Generate setting that accurately reflects allowed tags and attributes.

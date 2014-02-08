@@ -10,17 +10,21 @@ namespace Drupal\editor;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\editor\Ajax\GetUntransformedTextCommand;
 use Drupal\editor\Form\EditorImageDialog;
 use Drupal\editor\Form\EditorLinkDialog;
-use Drupal\filter\Entity\FilterFormat;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Drupal\filter\Plugin\FilterInterface;
+use Drupal\filter\FilterFormatInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Returns responses for Editor module routes.
  */
-class EditorController extends ContainerAware {
+class EditorController extends ControllerBase {
 
   /**
    * Returns an Ajax response to render a text field without transformation filters.
@@ -43,10 +47,41 @@ class EditorController extends ContainerAware {
 
     // Direct text editing is only supported for single-valued fields.
     $field = $entity->getTranslation($langcode)->$field_name;
-    $editable_text = check_markup($field->value, $field->format, $langcode, FALSE, array(FILTER_TYPE_TRANSFORM_REVERSIBLE, FILTER_TYPE_TRANSFORM_IRREVERSIBLE));
+    $editable_text = check_markup($field->value, $field->format, $langcode, FALSE, array(FilterInterface::TYPE_TRANSFORM_REVERSIBLE, FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE));
     $response->addCommand(new GetUntransformedTextCommand($editable_text));
 
     return $response;
+  }
+
+  /**
+   * Apply the necessary XSS filtering for using a certain text format's editor.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object.
+   * @param \Drupal\filter\FilterFormatInterface $filter_format
+   *   The text format whose text editor (if any) will be used.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   A JSON response containing the XSS-filtered value.
+   *
+   * @see editor_filter_xss()
+   */
+  public function filterXss(Request $request, FilterFormatInterface $filter_format) {
+    $value = $request->request->get('value');
+    if (!isset($value)) {
+      throw new NotFoundHttpException();
+    }
+
+    // The original_format parameter will only exist when switching text format.
+    $original_format_id = $request->request->get('original_format_id');
+    $original_format = NULL;
+    if (isset($original_format_id)) {
+      $original_format = $this->entityManager()
+        ->getStorageController('filter_format')
+        ->load($original_format_id);
+    }
+
+    return new JsonResponse(editor_filter_xss($value, $filter_format, $original_format));
   }
 
 }

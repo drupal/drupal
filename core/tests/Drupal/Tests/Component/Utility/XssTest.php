@@ -107,7 +107,7 @@ class XssTest extends UnitTestCase {
   }
 
   /**
-   * Tests limiting allowed tags and XSS prevention.
+   * Tests limiting to allowed tags and XSS prevention.
    *
    * XSS tests assume that script is disallowed by default and src is allowed
    * by default, but on* and style attributes are disallowed.
@@ -115,11 +115,11 @@ class XssTest extends UnitTestCase {
    * @param string $value
    *   The value to filter.
    * @param string $expected
-   *   The expected result.
+   *   The string that is expected to be missing.
    * @param string $message
    *   The assertion message to display upon failure.
    * @param array $allowed_tags
-   *   (Optional) The allowed tags to be passed on Xss::filter().
+   *   (optional) The allowed HTML tags to be passed to Xss::filter().
    *
    * @dataProvider providerTestFilterXssNotNormalized
    */
@@ -140,11 +140,11 @@ class XssTest extends UnitTestCase {
    *
    * @return array
    *   An array of arrays containing the following elements:
-   *     - The value to filter string.
-   *     - The value to expect after filtering string.
-   *     - The assertion message string.
-   *     - (optional) The allowed html tags array that should be passed to
-   *        Xss::filter().
+   *     - The value to filter.
+   *     - The value to expect that's missing after filtering.
+   *     - The assertion message.
+   *     - (optional) The allowed HTML HTML tags array that should be passed to
+   *       Xss::filter().
    */
   public function providerTestFilterXssNotNormalized() {
     $cases = array(
@@ -435,6 +435,65 @@ class XssTest extends UnitTestCase {
   }
 
   /**
+   * Tests removing disallowed tags and XSS prevention.
+   *
+   * Xss::filter() has the ability to run in blacklist mode, in which it still
+   * applies the exact same filtering, with one exception: it no longer works
+   * with a list of allowed tags, but with a list of disallowed tags.
+   *
+   * @param string $value
+   *   The value to filter.
+   * @param string $expected
+   *   The string that is expected to be missing.
+   * @param string $message
+   *   The assertion message to display upon failure.
+   * @param array $disallowed_tags
+   *   (optional) The disallowed HTML tags to be passed to Xss::filter().
+   *
+   * @dataProvider providerTestBlackListMode
+   */
+  public function testBlacklistMode($value, $expected, $message, array $disallowed_tags) {
+    $value = Xss::filter($value, $disallowed_tags, Xss::FILTER_MODE_BLACKLIST);
+    $this->assertSame($expected, $value, $message);
+  }
+
+  /**
+   * Data provider for testBlacklistMode().
+   *
+   * @see testBlacklistMode()
+   *
+   * @return array
+   *   An array of arrays containing the following elements:
+   *     - The value to filter.
+   *     - The value to expect after filtering.
+   *     - The assertion message.
+   *     - (optional) The disallowed HTML tags to be passed to Xss::filter().
+   */
+  public function providerTestBlackListMode() {
+    return array(
+      array(
+        '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
+        '<unknown>Pink Fairy Armadillo</unknown><video src="gerenuk.mp4">alert(0)',
+        'Disallow only the script tag',
+        array('script')
+      ),
+      array(
+        '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
+        '<unknown>Pink Fairy Armadillo</unknown>alert(0)',
+        'Disallow both the script and video tags',
+        array('script', 'video')
+      ),
+      // No real use case for this, but it is an edge case we must ensure works.
+      array(
+        '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
+        '<unknown>Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
+        'Disallow no tags',
+        array()
+      ),
+    );
+  }
+
+  /**
    * Checks that invalid multi-byte sequences are rejected.
    *
    * @param string $value
@@ -521,7 +580,7 @@ class XssTest extends UnitTestCase {
   }
 
   /**
-   * Asserts that a text transformed to lowercase with HTML entities decoded does contains a given string.
+   * Asserts that a text transformed to lowercase with HTML entities decoded does contain a given string.
    *
    * Otherwise fails the test with a given message, similar to all the
    * SimpleTest assert* functions.

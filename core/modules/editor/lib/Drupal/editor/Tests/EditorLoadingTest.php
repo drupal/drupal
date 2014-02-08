@@ -97,6 +97,7 @@ class EditorLoadingTest extends WebTestBase {
       'editor' => 'unicorn',
       'editorSettings' => array('ponyModeEnabled' => TRUE),
       'editorSupportsContentFiltering' => TRUE,
+      'isXssSafe' => FALSE,
     )));
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
@@ -125,6 +126,7 @@ class EditorLoadingTest extends WebTestBase {
       'editor' => 'unicorn',
       'editorSettings' => array('ponyModeEnabled' => TRUE),
       'editorSupportsContentFiltering' => TRUE,
+      'isXssSafe' => FALSE,
     )));
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");

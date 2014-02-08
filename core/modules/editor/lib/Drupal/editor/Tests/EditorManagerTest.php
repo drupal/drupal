@@ -105,6 +105,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
               'editor' => 'unicorn',
               'editorSettings' => $unicorn_plugin->getJSSettings($editor),
               'editorSupportsContentFiltering' => TRUE,
+              'isXssSafe' => FALSE,
             )
           )))
         )

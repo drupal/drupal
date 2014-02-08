@@ -83,6 +83,7 @@ class EditorManager extends DefaultPluginManager {
         'editor' => $editor->editor,
         'editorSettings' => $plugin->getJSSettings($editor),
         'editorSupportsContentFiltering' => $plugin_definition['supports_content_filtering'],
+        'isXssSafe' => $plugin_definition['is_xss_safe'],
       );
     }
 

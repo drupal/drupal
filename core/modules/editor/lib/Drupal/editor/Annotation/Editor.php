@@ -42,8 +42,15 @@ class Editor extends Plugin {
   /**
    * Whether the editor supports the inline editing provided by the Edit module.
    *
-   * @var boolean
+   * @var bool
    */
   public $supports_inline_editing;
+
+  /**
+   * Whether this text editor is not vulnerable to XSS attacks.
+   *
+   * @var bool
+   */
+  public $is_xss_safe;
 
 }

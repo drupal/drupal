@@ -13,6 +13,18 @@ namespace Drupal\Component\Utility;
 class Xss {
 
   /**
+   * Indicates that XSS filtering must be applied in whitelist mode: only
+   * specified HTML tags are allowed.
+   */
+  const FILTER_MODE_WHITELIST = TRUE;
+
+  /**
+   * Indicates that XSS filtering must be applied in blacklist mode: only
+   * specified HTML tags are disallowed.
+   */
+  const FILTER_MODE_BLACKLIST = FALSE;
+
+  /**
    * The list of html tags allowed by filterAdmin().
    *
    * @var array
@@ -35,10 +47,14 @@ class Xss {
    *   javascript:).
    *
    * @param $string
-   *   The string with raw HTML in it. It will be stripped of everything that can
-   *   cause an XSS attack.
-   * @param array $allowed_tags
-   *   An array of allowed tags.
+   *   The string with raw HTML in it. It will be stripped of everything that
+   *   can cause an XSS attack.
+   * @param array $html_tags
+   *   An array of HTML tags.
+   * @param bool $mode
+   *   (optional) Defaults to FILTER_MODE_WHITELIST ($html_tags is used as a
+   *   whitelist of allowed tags), but can also be set to FILTER_MODE_BLACKLIST
+   *   ($html_tags is used as a blacklist of disallowed tags).
    *
    * @return string
    *   An XSS safe version of $string, or an empty string if $string is not
@@ -48,14 +64,14 @@ class Xss {
    *
    * @ingroup sanitization
    */
-  public static function filter($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
+  public static function filter($string, $html_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd'), $mode = Xss::FILTER_MODE_WHITELIST) {
     // Only operate on valid UTF-8 strings. This is necessary to prevent cross
     // site scripting issues on Internet Explorer 6.
     if (!Unicode::validateUtf8($string)) {
       return '';
     }
     // Store the text format.
-    static::split($allowed_tags, TRUE);
+    static::split($html_tags, TRUE, $mode);
     // Remove NULL characters (ignored by some browsers).
     $string = str_replace(chr(0), '', $string);
     // Remove Netscape 4 JS entities.
@@ -80,7 +96,7 @@ class Xss {
       <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
       |                 # or
       >                 # just a >
-      )%x', '\Drupal\Component\Utility\Xss::split', $string);
+      )%x', 'static::split', $string);
   }
 
   /**
@@ -112,17 +128,22 @@ class Xss {
    *   If $store is TRUE then the array contains the allowed tags.
    *   If $store is FALSE then the array has one element, the HTML tag to process.
    * @param bool $store
-   *   Whether to store $m.
+   *   Whether to store $matches.
+   * @param bool $mode
+   *   (optional) Ignored when $store is FALSE, otherwise used to determine
+   *   whether $matches is a list of allowed (if FILTER_MODE_WHITELIST) or
+   *   disallowed (if FILTER_MODE_BLACKLIST) HTML tags.
    *
    * @return string
    *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
    *   version of the HTML element.
    */
-  protected static function split($matches, $store = FALSE) {
-    static $allowed_html;
+  protected static function split($matches, $store = FALSE, $mode = Xss::FILTER_MODE_WHITELIST) {
+    static $html_tags, $split_mode;
 
     if ($store) {
-      $allowed_html = array_flip($matches);
+      $html_tags = array_flip($matches);
+      $split_mode = $mode;
       return;
     }
 
@@ -151,8 +172,12 @@ class Xss {
       $elem = '!--';
     }
 
-    if (!isset($allowed_html[strtolower($elem)])) {
-      // Disallowed HTML element.
+    // When in whitelist mode, an element is disallowed when not listed.
+    if ($split_mode === static::FILTER_MODE_WHITELIST && !isset($html_tags[strtolower($elem)])) {
+      return '';
+    }
+    // When in blacklist mode, an element is disallowed when listed.
+    elseif ($split_mode === static::FILTER_MODE_BLACKLIST && isset($html_tags[strtolower($elem)])) {
       return '';
     }
 

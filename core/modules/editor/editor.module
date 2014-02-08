@@ -10,6 +10,8 @@ use Drupal\editor\Entity\Editor;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Field;
+use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Implements hook_help().
@@ -377,7 +379,99 @@ function editor_pre_render_format($element) {
   $manager = \Drupal::service('plugin.manager.editor');
   $element['#attached'] = NestedArray::mergeDeep($element['#attached'], $manager->getAttachments($format_ids));
 
+  // Apply XSS filters when editing content if necessary. Some types of text
+  // editors cannot guarantee that the end user won't become a victim of XSS.
+  if (!empty($element['value']['#value'])) {
+    $original = $element['value']['#value'];
+    $format = entity_load('filter_format', $element['format']['format']['#value']);
+
+    // Ensure XSS-safety for the current text format/editor.
+    $filtered = editor_filter_xss($original, $format);
+    if ($filtered !== FALSE) {
+      $element['value']['#value'] = $filtered;
+    }
+
+    // Only when the user has access to multiple text formats, we must add data-
+    // attributes for the original value and change tracking, because they are
+    // only necessary when the end user can switch between text formats/editors.
+    if ($element['format']['format']['#access']) {
+      $element['value']['#attributes']['data-editor-value-is-changed'] = 'false';
+      $element['value']['#attributes']['data-editor-value-original'] = $original;
+    }
+  }
+
   return $element;
+}
+
+/**
+ * Applies text editor XSS filtering.
+ *
+ * @param string $html
+ *   The HTML string that will be passed to the text editor.
+ * @param \Drupal\filter\FilterFormatInterface $format
+ *   The text format whose text editor will be used.
+ * @param \Drupal\filter\FilterFormatInterface $original_format|null
+ *   (optional) The original text format (i.e. when switching text formats,
+ *   $format is the text format that is going to be used, $original_format is
+ *   the one that was being used initially, the one that is stored in the
+ *   database when editing).
+ *
+ * @return string|false
+ *   FALSE when no XSS filtering needs to be applied (either because no text
+ *   editor is associated with the text format, or because the text editor is
+ *   safe from XSS attacks, or because the text format does not use any XSS
+ *   protection filters), otherwise the XSS filtered string.
+ *
+ * @see https://drupal.org/node/2099741
+ */
+function editor_filter_xss($html, FilterFormatInterface $format, FilterFormatInterface $original_format = NULL) {
+  $editor = editor_load($format->id());
+
+  // If no text editor is associated with this text format, then we don't need
+  // text editor XSS filtering either.
+  if (!isset($editor)) {
+    return FALSE;
+  }
+
+  // If the text editor associated with this text format guarantees security,
+  // then we also don't need text editor XSS filtering.
+  $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->editor);
+  if ($definition['is_xss_safe'] === TRUE) {
+    return FALSE;
+  }
+
+  // If there is no filter preventing XSS attacks in the text format being used,
+  // then no text editor XSS filtering is needed either. (Because then the
+  // editing user can already be attacked by merely viewing the content.)
+  // e.g.: an admin user creates content in Full HTML and then edits it, no text
+  // format switching happens; in this case, no text editor XSS filtering is
+  // desirable, because it would strip style attributes, amongst others.
+  $current_filter_types = $format->getFilterTypes();
+  if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $current_filter_types, TRUE)) {
+    if ($original_format === NULL) {
+      return FALSE;
+    }
+    // Unless we are switching from another text format, in which case we must
+    // first check whether a filter preventing XSS attacks is used in that text
+    // format, and if so, we must still apply XSS filtering.
+    // e.g.: an anonymous user creates content in Restricted HTML, an admin user
+    // edits it (then no XSS filtering is applied because no text editor is
+    // used), and switches to Full HTML (for which a text editor is used). Then
+    // we must apply XSS filtering to protect the admin user.
+    else {
+      $original_filter_types = $original_format->getFilterTypes();
+      if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $original_filter_types, TRUE)) {
+        return FALSE;
+      }
+    }
+  }
+
+  // Otherwise, apply the text editor XSS filter. We use the default one unless
+  // a module tells us to use a different one.
+  $editor_xss_filter_class = '\Drupal\editor\EditorXssFilter\Standard';
+  \Drupal::moduleHandler()->alter('editor_xss_filter', $editor_xss_filter_class, $format, $original_format);
+
+  return call_user_func($editor_xss_filter_class . '::filterXss', $html, $format, $original_format);
 }
 
 /**

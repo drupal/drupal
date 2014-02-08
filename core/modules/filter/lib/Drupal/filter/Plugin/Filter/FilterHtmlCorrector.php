@@ -15,7 +15,7 @@ use Drupal\filter\Plugin\FilterBase;
  * @Filter(
  *   id = "filter_htmlcorrector",
  *   title = @Translation("Correct faulty and chopped off HTML"),
- *   type = FILTER_TYPE_HTML_RESTRICTOR,
+ *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
  *   weight = 10
  * )
  */
