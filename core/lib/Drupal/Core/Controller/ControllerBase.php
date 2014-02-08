@@ -40,6 +40,13 @@ abstract class ControllerBase implements ContainerInjectionInterface {
   protected $entityManager;
 
   /**
+   * The entity form builder.
+   *
+   * @var \Drupal\Core\Entity\EntityFormBuilderInterface
+   */
+  protected $entityFormBuilder;
+
+  /**
    * The language manager.
    *
    * @var \Drupal\Core\Language\LanguageManager
@@ -120,6 +127,19 @@ abstract class ControllerBase implements ContainerInjectionInterface {
       $this->entityManager = $this->container()->get('entity.manager');
     }
     return $this->entityManager;
+  }
+
+  /**
+   * Retrieves the entity form builder.
+   *
+   * @return \Drupal\Core\Entity\EntityFormBuilderInterface
+   *   The entity form builder.
+   */
+  protected function entityFormBuilder() {
+    if (!$this->entityFormBuilder) {
+      $this->entityFormBuilder = $this->container()->get('entity.form_builder');
+    }
+    return $this->entityFormBuilder;
   }
 
   /**

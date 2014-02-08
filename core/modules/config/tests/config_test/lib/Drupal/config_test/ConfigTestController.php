@@ -28,7 +28,7 @@ class ConfigTestController extends ControllerBase {
    *   A form array as expected by drupal_render().
    */
   public function edit(ConfigTest $config_test) {
-    $form = $this->entityManager()->getForm($config_test);
+    $form = $this->entityFormBuilder()->getForm($config_test);
     $form['#title'] = String::format('Edit %label', array('%label' => $config_test->label()));
     return $form;
   }

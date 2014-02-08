@@ -188,6 +188,9 @@ services:
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager', '@string_translation']
+  entity.form_builder:
+    class: Drupal\Core\Entity\EntityFormBuilder
+    arguments: ['@entity.manager', '@form_builder']
   plugin.manager.field.field_type:
     class: Drupal\Core\Field\FieldTypePluginManager
     arguments: ['@container.namespaces', '@cache.field', '@language_manager', '@module_handler']

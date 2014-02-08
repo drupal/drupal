@@ -87,7 +87,7 @@ class SearchController extends ControllerBase {
       }
     }
     // The form may be altered based on whether the search was run.
-    $build['search_form'] = $this->entityManager()->getForm($entity, 'search');
+    $build['search_form'] = $this->entityFormBuilder()->getForm($entity, 'search');
     $build['search_results'] = $results;
     return $build;
   }

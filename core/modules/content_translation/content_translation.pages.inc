@@ -189,7 +189,7 @@ function content_translation_add_page(EntityInterface $entity, Language $source 
   $form_state['content_translation']['source'] = $source;
   $form_state['content_translation']['target'] = $target;
   $form_state['content_translation']['translation_form'] = !$entity->access('update');
-  return \Drupal::entityManager()->getForm($entity, 'default', $form_state);
+  return \Drupal::service('entity.form_builder')->getForm($entity, 'default', $form_state);
 }
 
 /**
@@ -210,7 +210,7 @@ function content_translation_edit_page(EntityInterface $entity, Language $langua
   $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
   $form_state['langcode'] = $language->id;
   $form_state['content_translation']['translation_form'] = TRUE;
-  return \Drupal::entityManager()->getForm($entity, 'default', $form_state);
+  return \Drupal::service('entity.form_builder')->getForm($entity, 'default', $form_state);
 }
 
 /**

@@ -157,7 +157,7 @@ class ForumController extends ControllerBase {
       'vid' => $vid,
       'forum_controller' => 0,
     ));
-    return $this->entityManager()->getForm($taxonomy_term, 'forum');
+    return $this->entityFormBuilder()->getForm($taxonomy_term, 'forum');
   }
 
   /**
@@ -172,7 +172,7 @@ class ForumController extends ControllerBase {
       'vid' => $vid,
       'forum_container' => 1,
     ));
-    return $this->entityManager()->getForm($taxonomy_term, 'container');
+    return $this->entityFormBuilder()->getForm($taxonomy_term, 'container');
   }
 
 }

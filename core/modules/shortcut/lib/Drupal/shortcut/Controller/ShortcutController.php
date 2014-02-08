@@ -31,7 +31,7 @@ class ShortcutController extends ControllerBase {
     if ($this->moduleHandler()->moduleExists('language')) {
       $shortcut->langcode = language_get_default_langcode('shortcut', $shortcut_set->id());
     }
-    return $this->entityManager()->getForm($shortcut, 'add');
+    return $this->entityFormBuilder()->getForm($shortcut, 'add');
   }
 
 }

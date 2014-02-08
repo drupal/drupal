@@ -287,7 +287,7 @@ function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
 function entity_test_add($entity_type) {
   drupal_set_title(t('Create an @type', array('@type' => $entity_type)));
   $entity = entity_create($entity_type);
-  return \Drupal::entityManager()->getForm($entity);
+  return \Drupal::service('entity.form_builder')->getForm($entity);
 }
 
 /**
@@ -305,7 +305,7 @@ function entity_test_add($entity_type) {
  */
 function entity_test_edit(EntityInterface $entity) {
   drupal_set_title($entity->label(), PASS_THROUGH);
-  return \Drupal::entityManager()->getForm($entity);
+  return \Drupal::service('entity.form_builder')->getForm($entity);
 }
 
 /**

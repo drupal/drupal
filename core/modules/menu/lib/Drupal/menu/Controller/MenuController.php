@@ -54,7 +54,7 @@ class MenuController extends ControllerBase {
       'plid' => 0,
       'menu_name' => $menu->id(),
     ));
-    return $this->entityManager()->getForm($menu_link);
+    return $this->entityFormBuilder()->getForm($menu_link);
   }
 
   /**

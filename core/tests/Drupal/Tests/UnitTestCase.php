@@ -9,6 +9,7 @@ namespace Drupal\Tests;
 
 use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
@@ -194,6 +195,30 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
       ->method('translate')
       ->will($this->returnCallback(function ($string, array $args = array()) { return strtr($string, $args); }));
     return $translation;
+  }
+
+  /**
+   * Sets up a container with cache bins.
+   *
+   * @param \Drupal\Core\Cache\CacheBackendInterface $backend
+   *   The cache backend to set up.
+   *
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit_Framework_MockObject_MockObject
+   *   The container with the cache bins set up.
+   */
+  protected function getContainerWithCacheBins(CacheBackendInterface $backend) {
+    $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+    $container->expects($this->any())
+      ->method('getParameter')
+      ->with('cache_bins')
+      ->will($this->returnValue(array('cache.test' => 'test')));
+    $container->expects($this->any())
+      ->method('get')
+      ->with('cache.test')
+      ->will($this->returnValue($backend));
+
+    \Drupal::setContainer($container);
+    return $container;
   }
 
 }

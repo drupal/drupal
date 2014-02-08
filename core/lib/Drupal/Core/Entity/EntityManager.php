@@ -282,22 +282,6 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   /**
    * {@inheritdoc}
    */
-  public function getForm(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
-    $form_state['build_info'] = isset($form_state['build_info']) ? $form_state['build_info'] : array();
-    $controller = $this->getFormController($entity->getEntityTypeId(), $operation);
-    $controller->setEntity($entity);
-    $form_state['build_info'] += array(
-      'callback_object' => $controller,
-      'base_form_id' => $controller->getBaseFormID(),
-      'args' => array(),
-    );
-    $form_id = $controller->getFormID();
-    return \Drupal::formBuilder()->buildForm($form_id, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getAdminRouteInfo($entity_type, $bundle) {
     if (($entity_info = $this->getDefinition($entity_type)) && $admin_form = $entity_info->getLinkTemplate('admin-form')) {
       return array(

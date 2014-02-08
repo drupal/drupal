@@ -35,7 +35,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
   function testUpdateAllowedValues() {
     // All three options appear.
     $entity = entity_create('entity_test');
-    $form = \Drupal::entityManager()->getForm($entity);
+    $form = \Drupal::service('entity.form_builder')->getForm($entity);
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][3]), 'Option 3 exists');
@@ -61,7 +61,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->field->settings['allowed_values'] = array(2 => 'Two');
     $this->field->save();
     $entity = entity_create('entity_test');
-    $form = \Drupal::entityManager()->getForm($entity);
+    $form = \Drupal::service('entity.form_builder')->getForm($entity);
     $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
     $this->assertTrue(empty($form[$this->fieldName]['widget'][3]), 'Option 3 does not exist');
@@ -72,7 +72,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     // The entity holds an outdated field object with the old allowed values
     // setting, so we need to reintialize the entity object.
     $entity = entity_create('entity_test');
-    $form = \Drupal::entityManager()->getForm($entity);
+    $form = \Drupal::service('entity.form_builder')->getForm($entity);
     $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');
     $this->assertTrue(empty($form[$this->fieldName]['widget'][2]), 'Option 2 does not exist');
     $this->assertTrue(empty($form[$this->fieldName]['widget'][3]), 'Option 3 does not exist');
@@ -93,7 +93,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
       ))
       ->save();
     $entity = entity_create('entity_test');
-    $form = \Drupal::entityManager()->getForm($entity);
+    $form = \Drupal::service('entity.form_builder')->getForm($entity);
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
     $this->assertTrue(!empty($form[$this->fieldName]['widget'][3]), 'Option 3 exists');

@@ -443,31 +443,6 @@ function entity_access_controller($entity_type) {
 }
 
 /**
- * Returns the built and processed entity form for the given entity.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to be created or edited.
- * @param string $operation
- *   (optional) The operation identifying the form variation to be returned.
- * @param array $form_state
- *   (optional) An associative array containing the current state of the form.
- *   Use this to pass additional information to the form, such as the langcode.
- *   @code
- *   $form_state['langcode'] = $langcode;
- *   $form = entity_get_form($entity, 'default', $form_state);
- *   @endcode
- *
- * @return array
- *   The processed form for the given entity and operation.
- *
- * @deprecated Use \Drupal::entityManager()->getForm() or _entity_form from a
- *   routing.yml file instead of a page callback.
- */
-function entity_get_form(EntityInterface $entity, $operation = 'default', array $form_state = array()) {
-  return \Drupal::entityManager()->getForm($entity, $operation, $form_state);
-}
-
-/**
  * Returns an entity list controller for a given entity type.
  *
  * @param string $entity_type

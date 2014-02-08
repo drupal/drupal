@@ -122,23 +122,9 @@ class EntityManagerTest extends UnitTestCase {
 
     $this->formBuilder = $this->getMock('Drupal\Core\Form\FormBuilderInterface');
 
-    $this->container = new ContainerBuilder();
-    $this->container->set('cache.cache', $this->cache);
-    $this->container->setParameter('cache_bins', array('cache.cache' => 'cache'));
-    $this->container->set('module_handler', $this->moduleHandler);
-    $this->container->set('form_builder', $this->formBuilder);
-    \Drupal::setContainer($this->container);
+    $this->container = $this->getContainerWithCacheBins($this->cache);
 
     $this->discovery = $this->getMock('Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown() {
-    parent::tearDown();
-    $container = new ContainerBuilder();
-    \Drupal::setContainer($container);
   }
 
   /**
@@ -163,7 +149,7 @@ class EntityManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->will($this->returnValue($definitions));
 
-    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->container, $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager);
+    $this->entityManager = new TestEntityManager(new \ArrayObject(), $this->container, $this->moduleHandler, $this->cache, $this->languageManager, $this->translationManager, $this->formBuilder);
     $this->entityManager->setDiscovery($this->discovery);
   }
 
@@ -433,47 +419,6 @@ class EntityManagerTest extends UnitTestCase {
       ->will($this->returnValue(''));
     $this->setUpEntityManager(array('test_entity_type' => $entity));
     $this->entityManager->getController('test_entity_type', 'storage');
-  }
-
-  /**
-   * Tests the getForm() method.
-   *
-   * @covers ::getForm()
-   */
-  public function testGetForm() {
-    $this->formBuilder->expects($this->exactly(2))
-      ->method('buildForm')
-      ->with('the_form_id', $this->isType('array'))
-      ->will($this->returnValue('the form contents'));
-
-    $apple = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $apple->expects($this->once())
-      ->method('getFormClass')
-      ->with('default')
-      ->will($this->returnValue('Drupal\Tests\Core\Entity\TestEntityForm'));
-    $banana = $this->getMock('Drupal\Core\Entity\EntityTypeInterface');
-    $banana->expects($this->once())
-      ->method('getFormClass')
-      ->with('default')
-      ->will($this->returnValue('Drupal\Tests\Core\Entity\TestEntityFormInjected'));
-    $this->setUpEntityManager(array(
-      'apple' => $apple,
-      'banana' => $banana,
-    ));
-
-    $apple_entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
-    $apple_entity->expects($this->once())
-      ->method('getEntityTypeId')
-      ->will($this->returnValue('apple'));
-
-    $this->assertSame('the form contents', $this->entityManager->getForm($apple_entity));
-
-    $banana_entity = $this->getMock('Drupal\Core\Entity\EntityInterface');
-    $banana_entity->expects($this->once())
-      ->method('getEntityTypeId')
-      ->will($this->returnValue('banana'));
-
-    $this->assertSame('the form contents', $this->entityManager->getForm($banana_entity));
   }
 
   /**

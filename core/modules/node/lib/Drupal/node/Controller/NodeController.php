@@ -72,7 +72,7 @@ class NodeController extends ControllerBase {
       'langcode' => $langcode ? $langcode : $this->languageManager()->getCurrentLanguage()->id,
     ));
 
-    $form = $this->entityManager()->getForm($node);
+    $form = $this->entityFormBuilder()->getForm($node);
 
     return $form;
   }

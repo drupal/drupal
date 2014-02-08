@@ -17,13 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 class CustomBlockController extends ControllerBase {
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * The custom block storage controller.
    *
    * @var \Drupal\Core\Entity\EntityStorageControllerInterface
@@ -43,7 +36,6 @@ class CustomBlockController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     $entity_manager = $container->get('entity.manager');
     return new static(
-      $entity_manager,
       $entity_manager->getStorageController('custom_block'),
       $entity_manager->getStorageController('custom_block_type')
     );
@@ -52,17 +44,14 @@ class CustomBlockController extends ControllerBase {
   /**
    * Constructs a CustomBlock object.
    *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $entity_manager
-   *   The entity manager.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $custom_block_storage
    *   The custom block storage controller.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $custom_block_type_storage
    *   The custom block type storage controller.
    */
-  public function __construct(PluginManagerInterface $entity_manager, EntityStorageControllerInterface $custom_block_storage, EntityStorageControllerInterface $custom_block_type_storage) {
+  public function __construct(EntityStorageControllerInterface $custom_block_storage, EntityStorageControllerInterface $custom_block_type_storage) {
     $this->customBlockStorage = $custom_block_storage;
     $this->customBlockTypeStorage = $custom_block_type_storage;
-    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -107,7 +96,7 @@ class CustomBlockController extends ControllerBase {
       // newly created block in the given theme.
       $block->setTheme($theme);
     }
-    return $this->entityManager->getForm($block);
+    return $this->entityFormBuilder()->getForm($block);
   }
 
   /**

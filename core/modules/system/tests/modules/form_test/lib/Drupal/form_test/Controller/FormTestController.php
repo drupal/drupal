@@ -30,8 +30,8 @@ class FormTestController extends ControllerBase {
     );
     $node1 = $this->entityManager()->getStorageController('node')->create($values);
     $node2 = clone($node1);
-    $return['node_form_1'] = $this->entityManager()->getForm($node1);
-    $return['node_form_2'] = $this->entityManager()->getForm($node2);
+    $return['node_form_1'] = $this->entityFormBuilder()->getForm($node1);
+    $return['node_form_2'] = $this->entityFormBuilder()->getForm($node2);
     return $return;
   }
 

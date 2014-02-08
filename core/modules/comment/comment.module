@@ -603,7 +603,7 @@ function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NU
     'pid' => $pid,
   );
   $comment = entity_create('comment', $values);
-  return \Drupal::entityManager()->getForm($comment);
+  return \Drupal::service('entity.form_builder')->getForm($comment);
 }
 
 /**

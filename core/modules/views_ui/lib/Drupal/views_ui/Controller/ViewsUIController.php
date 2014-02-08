@@ -8,7 +8,6 @@
 namespace Drupal\views_ui\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views_ui\ViewUI;
@@ -25,13 +24,6 @@ use Drupal\Core\Ajax\ReplaceCommand;
 class ViewsUIController extends ControllerBase {
 
   /**
-   * Stores the Entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
    * Stores the Views data cache object.
    *
    * @var \Drupal\views\ViewsData
@@ -41,13 +33,10 @@ class ViewsUIController extends ControllerBase {
   /**
    * Constructs a new \Drupal\views_ui\Controller\ViewsUIController object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The Entity manager.
    * @param \Drupal\views\ViewsData views_data
    *   The Views data cache object.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ViewsData $views_data) {
-    $this->entityManager = $entity_manager;
+  public function __construct(ViewsData $views_data) {
     $this->viewsData = $views_data;
   }
 
@@ -56,7 +45,6 @@ class ViewsUIController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager'),
       $container->get('views.views_data')
     );
   }
@@ -68,7 +56,7 @@ class ViewsUIController extends ControllerBase {
    *   The Views fields report page.
    */
   public function reportFields() {
-    $views = $this->entityManager->getStorageController('view')->loadMultiple();
+    $views = $this->entityManager()->getStorageController('view')->loadMultiple();
 
     // Fetch all fieldapi fields which are used in views
     // Therefore search in all views, displays and handler-types.
@@ -164,7 +152,7 @@ class ViewsUIController extends ControllerBase {
 
     // If the request is via AJAX, return the rendered list as JSON.
     if ($request->request->get('js')) {
-      $list = $this->entityManager->getListController('view')->render();
+      $list = $this->entityManager()->getListController('view')->render();
       $response = new AjaxResponse();
       $response->addCommand(new ReplaceCommand('#views-entity-list', drupal_render($list)));
       return $response;
@@ -187,7 +175,7 @@ class ViewsUIController extends ControllerBase {
     $matches = array();
     $string = $request->query->get('q');
     // Get matches from default views.
-    $views = $this->entityManager->getStorageController('view')->loadMultiple();
+    $views = $this->entityManager()->getStorageController('view')->loadMultiple();
     foreach ($views as $view) {
       $tag = $view->get('tag');
       if ($tag && strpos($tag, $string) === 0) {
@@ -222,8 +210,8 @@ class ViewsUIController extends ControllerBase {
     }
     $build['#title'] = $name;
 
-    $build['edit'] = $this->entityManager->getForm($view, 'edit', array('display_id' => $display_id));
-    $build['preview'] = $this->entityManager->getForm($view, 'preview', array('display_id' => $display_id));
+    $build['edit'] = $this->entityFormBuilder()->getForm($view, 'edit', array('display_id' => $display_id));
+    $build['preview'] = $this->entityFormBuilder()->getForm($view, 'preview', array('display_id' => $display_id));
     return $build;
   }
 
