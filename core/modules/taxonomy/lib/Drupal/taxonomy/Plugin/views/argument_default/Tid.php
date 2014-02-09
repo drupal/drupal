@@ -10,6 +10,9 @@ namespace Drupal\taxonomy\Plugin\views\argument_default;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
+use Drupal\node\NodeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Taxonomy tid default argument.
@@ -20,6 +23,42 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  * )
  */
 class Tid extends ArgumentDefaultPluginBase {
+
+  /**
+   * The request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
+   * Constructs a new Tid instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Request $request) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->request = $request;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('request')
+    );
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\Plugin\views\PluginBase::init().
@@ -114,6 +153,9 @@ class Tid extends ArgumentDefaultPluginBase {
     $options['vids'] = array_filter($options['vids']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getArgument() {
     // Load default argument from taxonomy page.
     if (!empty($this->options['term_page'])) {
@@ -123,14 +165,8 @@ class Tid extends ArgumentDefaultPluginBase {
     }
     // Load default argument from node.
     if (!empty($this->options['node'])) {
-      foreach (range(1, 3) as $i) {
-        $node = menu_get_object('node', $i);
-        if (!empty($node)) {
-          break;
-        }
-      }
       // Just check, if a node could be detected.
-      if ($node) {
+      if (($node = $this->request->attributes->has('node')) && $node instanceof NodeInterface) {
         $taxonomy = array();
         $instances = field_info_instances('node', $node->getType());
         foreach ($instances as $instance) {

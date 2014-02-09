@@ -21,6 +21,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\Entity\File;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Denotes that the node is not published.
@@ -581,7 +582,10 @@ function node_revision_delete($revision_id) {
  *   The ID of the node if this is a full page view, otherwise FALSE.
  */
 function node_is_page(NodeInterface $node) {
-  $page_node = menu_get_object();
+  $request = \Drupal::request();
+  if ($request->attributes->get(RouteObjectInterface::ROUTE_NAME) == 'node.view') {
+    $page_node = $request->attributes->get('node');
+  }
   return (!empty($page_node) ? $page_node->id() == $node->id() : FALSE);
 }
 
@@ -590,7 +594,7 @@ function node_is_page(NodeInterface $node) {
  */
 function node_preprocess_html(&$variables) {
   // If on an individual node page, add the node type to body classes.
-  if ($node = menu_get_object()) {
+  if (($node = \Drupal::request()->attributes->get('node')) && $node instanceof NodeInterface) {
     $variables['attributes']['class'][] = drupal_html_class('node-type-' . $node->getType());
   }
 }
@@ -1159,26 +1163,23 @@ function node_block_access($block) {
       // @see node_form_block_form_alter()
       return;
     }
-    $node = menu_get_object();
-    $node_types = node_type_get_types();
-    if (arg(0) == 'node' && arg(1) == 'add' && arg(2)) {
-      $node_add_arg = strtr(arg(2), '-', '_');
-    }
 
     // For blocks with node types associated, if the node type does not match
     // the settings from this block, deny access to it.
-    if (!empty($node)) {
-      // This is a node or node edit page.
+    $request = \Drupal::request();
+    if ($node = $request->attributes->get('node')) {
+      // Page has node.
       return in_array($node->bundle(), $allowed_types);
     }
-    elseif (isset($node_add_arg) && isset($node_types[$node_add_arg])) {
-      // This is a node creation page
-      return in_array($node_add_arg, $allowed_types);
+    // This is a node creation page.
+    // $request->attributes->has('node_type') would also match administration
+    // configuration pages, which the previous URI path options did not.
+    if ($request->attributes->get(RouteObjectInterface::ROUTE_NAME) == 'node.add') {
+      $node_type = $request->attributes->get('node_type');
+      return in_array($node_type->id(), $allowed_types);
     }
-    else {
-      // This page does not match the $allowed_types so deny access.
-      return FALSE;
-    }
+
+    return FALSE;
   }
 }
 

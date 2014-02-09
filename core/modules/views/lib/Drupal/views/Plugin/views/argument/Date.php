@@ -8,6 +8,9 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Core\Database\Database;
+use Drupal\node\NodeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Abstract argument handler for dates.
@@ -41,16 +44,53 @@ class Date extends Formula {
    */
   protected $argFormat = 'Y-m-d';
 
+  /**
+   * The request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
   var $option_name = 'default_argument_date';
+
+  /**
+   * Constructs a new Date instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Request $request) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->request = $request;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('request')
+    );
+  }
 
   /**
    * Add an option to set the default value to the current date.
    */
   public function defaultArgumentForm(&$form, &$form_state) {
     parent::defaultArgumentForm($form, $form_state);
-    $form['default_argument_type']['#options'] += array('date' => t('Current date'));
-    $form['default_argument_type']['#options'] += array('node_created' => t("Current node's creation time"));
-    $form['default_argument_type']['#options'] += array('node_changed' => t("Current node's update time"));  }
+    $form['default_argument_type']['#options'] += array('date' => $this->t('Current date'));
+    $form['default_argument_type']['#options'] += array('node_created' => $this->t("Current node's creation time"));
+    $form['default_argument_type']['#options'] += array('node_changed' => $this->t("Current node's update time"));
+  }
 
   /**
    * Set the empty argument value to the current date,
@@ -61,18 +101,9 @@ class Date extends Formula {
       return date($this->argFormat, REQUEST_TIME);
     }
     elseif (!$raw && in_array($this->options['default_argument_type'], array('node_created', 'node_changed'))) {
-      foreach (range(1, 3) as $i) {
-        $node = menu_get_object('node', $i);
-        if (!empty($node)) {
-          continue;
-        }
-      }
+      $node = $this->request->attributes->get('node');
 
-      if (arg(0) == 'node' && is_numeric(arg(1))) {
-        $node = node_load(arg(1));
-      }
-
-      if (empty($node)) {
+      if (!($node instanceof NodeInterface)) {
         return parent::getDefaultArgument();
       }
       elseif ($this->options['default_argument_type'] == 'node_created') {
@@ -90,7 +121,7 @@ class Date extends Formula {
    * {@inheritdoc}
    */
   public function getSortName() {
-    return t('Date', array(), array('context' => 'Sort order'));
+    return $this->t('Date', array(), array('context' => 'Sort order'));
   }
 
   /**

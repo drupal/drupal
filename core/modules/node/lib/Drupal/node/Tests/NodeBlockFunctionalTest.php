@@ -138,6 +138,9 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // Create a page node.
     $node5 = $this->drupalCreateNode(array('uid' => $this->adminUser->id(), 'type' => 'page'));
 
+    $this->drupalLogout();
+    $this->drupalLogin($this->webUser);
+
     // Verify visibility rules.
     $this->drupalGet('');
     $label = $block->label();

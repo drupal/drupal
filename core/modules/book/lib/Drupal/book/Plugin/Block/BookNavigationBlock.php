@@ -8,6 +8,9 @@
 namespace Drupal\book\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a 'Book navigation' block.
@@ -18,7 +21,44 @@ use Drupal\block\BlockBase;
  *   category = @Translation("Menus")
  * )
  */
-class BookNavigationBlock extends BlockBase {
+class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
+   * Constructs a new BookNavigationBlock instance.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Request $request) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->request = $request;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('request')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -61,7 +101,7 @@ class BookNavigationBlock extends BlockBase {
    */
   public function build() {
     $current_bid = 0;
-    if ($node = menu_get_object()) {
+    if ($node = $this->request->get('node')) {
       $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
     }
     if ($this->configuration['block_mode'] == 'all pages') {

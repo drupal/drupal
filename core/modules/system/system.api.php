@@ -449,7 +449,7 @@ function hook_page_build(&$page) {
   }
 
   // Append a standard disclaimer to the content region on a node detail page.
-  if (menu_get_object('node', 1)) {
+  if (\Drupal::request()->attributes->get('node')) {
     $page['content']['disclaimer'] = array(
       '#markup' => t('Acme, Inc. is not responsible for the contents of this sample code.'),
       '#weight' => 25,

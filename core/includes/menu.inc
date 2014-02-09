@@ -957,59 +957,6 @@ function menu_item_route_access(Route $route, $href, &$map, Request $request = N
 }
 
 /**
- * Gets a loaded object from a router item.
- *
- * menu_get_object() provides access to objects loaded by the current router
- * item. For example, on the page node/%node, the router loads the %node object,
- * and calling menu_get_object() will return that. Normally, it is necessary to
- * specify the type of object referenced, however node is the default.
- * The following example tests to see whether the node being displayed is of the
- * "story" content type:
- * @code
- * $node = menu_get_object();
- * $story = $node->getType() == 'story';
- * @endcode
- *
- * @param $type
- *   Type of the object. These appear in hook_menu definitions as %type. Core
- *   provides aggregator_feed, aggregator_category, contact, filter_format,
- *   forum_term, menu, menu_link, node, taxonomy_vocabulary, user. See the
- *   relevant {$type}_load function for more on each. Defaults to node.
- * @param $position
- *   The position of the object in the path, where the first path segment is 0.
- *   For node/%node, the position of %node is 1, but for comment/reply/%node,
- *   it's 2. Defaults to 1.
- * @param $path
- *   See menu_get_item() for more on this. Defaults to the current path.
- *
- * @todo Remove this function in https://drupal.org/node/2091399.
- */
-function menu_get_object($type = 'node', $position = 1, $path = NULL) {
-  $router_item = menu_get_item($path);
-  if (empty($router_item['map'][$position])) {
-    return;
-  }
-
-  if (isset($router_item['load_functions'][$position]) && $router_item['load_functions'][$position] == $type . '_load') {
-    return $router_item['map'][$position];
-  }
-
-  // If the path is route-based, use the route path instead of the menu item.
-  // The most common use of this function is for the node page, which has a
-  // route path of '/node/{node}'. By splitting that path into parts, we check
-  // for the $type wrapped in curly braces at the correct $position, returning
-  // the value found there.
-  $request = \Drupal::request();
-  if ($request->attributes->has(RouteObjectInterface::ROUTE_OBJECT)) {
-    $path = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getPath();
-    $parts = explode('/', ltrim($path, '/'));
-    if (isset($parts[$position]) && $parts[$position] == '{' . $type . '}') {
-      return $router_item['map'][$position];
-    }
-  }
-}
-
-/**
  * Renders a menu tree based on the current path.
  *
  * The tree is expanded based on the current path and dynamic paths are also

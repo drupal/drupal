@@ -2241,7 +2241,7 @@ function template_preprocess_page(&$variables) {
     );
   }
 
-  if ($node = menu_get_object()) {
+  if ($node = \Drupal::request()->attributes->get('node')) {
     $variables['node'] = $node;
   }
 
