@@ -9,6 +9,8 @@ namespace Drupal\Component\Utility;
 
 /**
  * Helper class URL based methods.
+ *
+ * @todo Rename to UrlHelper in https://drupal.org/node/2184653.
  */
 class Url {
 

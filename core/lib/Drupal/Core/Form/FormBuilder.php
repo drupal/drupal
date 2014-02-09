@@ -10,7 +10,7 @@ namespace Drupal\Core\Form;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\Url as UrlHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\HttpKernel;
@@ -18,6 +18,7 @@ use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -847,7 +848,7 @@ class FormBuilder implements FormBuilderInterface {
     if (isset($form['#token'])) {
       if (!$this->csrfToken->validate($form_state['values']['form_token'], $form['#token'])) {
         $path = $this->request->attributes->get('_system_path');
-        $query = Url::filterQueryParameters($this->request->query->all());
+        $query = UrlHelper::filterQueryParameters($this->request->query->all());
         $url = $this->urlGenerator->generateFromPath($path, array('query' => $query));
 
         // Setting this error will cause the form to fail validation.
@@ -933,13 +934,17 @@ class FormBuilder implements FormBuilderInterface {
 
     // Check for a route-based redirection.
     if (isset($form_state['redirect_route'])) {
-      $form_state['redirect_route'] += array(
-        'route_parameters' => array(),
-        'options' => array(),
-      );
-      $form_state['redirect_route']['options']['absolute'] = TRUE;
-      $url = $this->urlGenerator->generateFromRoute($form_state['redirect_route']['route_name'], $form_state['redirect_route']['route_parameters'], $form_state['redirect_route']['options']);
-      return new RedirectResponse($url);
+      // @todo Remove once all redirects are converted to Url.
+      if (!($form_state['redirect_route'] instanceof Url)) {
+        $form_state['redirect_route'] += array(
+          'route_parameters' => array(),
+          'options' => array(),
+        );
+        $form_state['redirect_route'] = new Url($form_state['redirect_route']['route_name'], $form_state['redirect_route']['route_parameters'], $form_state['redirect_route']['options']);
+      }
+
+      $form_state['redirect_route']->setAbsolute();
+      return new RedirectResponse($form_state['redirect_route']->toString());
     }
 
     // Only invoke a redirection if redirect value was not set to FALSE.
@@ -1318,7 +1323,7 @@ class FormBuilder implements FormBuilderInterface {
     // Special handling if we're on the top level form element.
     if (isset($element['#type']) && $element['#type'] == 'form') {
       if (!empty($element['#https']) && settings()->get('mixed_mode_sessions', FALSE) &&
-        !Url::isExternal($element['#action'])) {
+        !UrlHelper::isExternal($element['#action'])) {
         global $base_root;
 
         // Not an external URL so ensure that it is secure.

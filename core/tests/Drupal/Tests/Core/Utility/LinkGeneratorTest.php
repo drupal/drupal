@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Utility {
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
 use Drupal\Tests\UnitTestCase;
 
@@ -15,6 +16,8 @@ use Drupal\Tests\UnitTestCase;
  * Tests the link generator.
  *
  * @see \Drupal\Core\Utility\LinkGenerator
+ *
+ * @coversDefaultClass \Drupal\Core\Utility\LinkGenerator
  */
 class LinkGeneratorTest extends UnitTestCase {
 
@@ -54,6 +57,7 @@ class LinkGeneratorTest extends UnitTestCase {
     'html' => FALSE,
     'language' => NULL,
     'set_active_class' => FALSE,
+    'absolute' => FALSE,
   );
 
   /**
@@ -122,6 +126,34 @@ class LinkGeneratorTest extends UnitTestCase {
       'tag' => 'a',
       'attributes' => array('href' => $url),
       ), $result);
+  }
+
+  /**
+   * Tests the generateFromUrl() method.
+   *
+   * @covers ::generateFromUrl()
+   */
+  public function testGenerateFromUrl() {
+    $this->urlGenerator->expects($this->once())
+      ->method('generateFromRoute')
+      ->with('test_route_1', array(), array('fragment' => 'the-fragment') + $this->defaultOptions)
+      ->will($this->returnValue('/test-route-1#the-fragment'));
+
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('link', $this->isType('array'));
+
+    $url = new Url('test_route_1', array(), array('fragment' => 'the-fragment'));
+    $url->setUrlGenerator($this->urlGenerator);
+
+    $result = $this->linkGenerator->generateFromUrl('Test', $url);
+    $this->assertTag(array(
+      'tag' => 'a',
+      'attributes' => array(
+        'href' => '/test-route-1#the-fragment',
+      ),
+      'content' => 'Test',
+    ), $result);
   }
 
   /**

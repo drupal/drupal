@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\UrlMatcher;
+use Drupal\Core\Url;
 use Drupal\shortcut\ShortcutSetInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -389,7 +390,7 @@ function shortcut_preprocess_page(&$variables) {
   // pages).
   if (shortcut_set_edit_access() && ($item = menu_get_item()) && $item['access']) {
     $link = current_path();
-    if (!($route_info = \Drupal::service('router.matcher.final_matcher')->findRouteNameParameters($link))) {
+    if (!($url = Url::createFromPath($link))) {
       // Bail out early if we couldn't find a matching route.
       return;
     }
@@ -405,7 +406,7 @@ function shortcut_preprocess_page(&$variables) {
     // Check if $link is already a shortcut and set $link_mode accordingly.
     $shortcuts = \Drupal::entityManager()->getStorageController('shortcut')->loadByProperties(array('shortcut_set' => $shortcut_set->id()));
     foreach ($shortcuts as $shortcut) {
-      if ($shortcut->getRouteName() == $route_info[0] && $shortcut->getRouteParams() == $route_info[1]) {
+      if ($shortcut->getRouteName() == $url->getRouteName() && $shortcut->getRouteParams() == $url->getRouteParameters()) {
         $shortcut_id = $shortcut->id();
         break;
       }

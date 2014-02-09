@@ -11,6 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Routing\UrlMatcher;
+use Drupal\Core\Url;
 use Drupal\shortcut\ShortcutInterface;
 
 /**
@@ -125,10 +126,9 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     parent::preSave($storage_controller);
 
-    if ($route_info = \Drupal::service('router.matcher.final_matcher')->findRouteNameParameters($this->path->value)) {
-      $this->setRouteName($route_info[0]);
-      $this->setRouteParams($route_info[1]);
-    }
+    $url = Url::createFromPath($this->path->value);
+    $this->setRouteName($url->getRouteName());
+    $this->setRouteParams($url->getRouteParameters());
   }
 
   /**

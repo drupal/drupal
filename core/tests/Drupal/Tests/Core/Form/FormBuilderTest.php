@@ -7,8 +7,10 @@
 
 namespace Drupal\Tests\Core\Form {
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -29,6 +31,17 @@ class FormBuilderTest extends FormTestBase {
       'description' => 'Tests the form builder.',
       'group' => 'Form API',
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+
+    $container = new ContainerBuilder();
+    $container->set('url_generator', $this->urlGenerator);
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -225,6 +238,7 @@ class FormBuilderTest extends FormTestBase {
     return array(
       array(array('redirect_route' => array('route_name' => 'test_route_a')), 'test-route'),
       array(array('redirect_route' => array('route_name' => 'test_route_b', 'route_parameters' => array('key' => 'value'))), 'test-route/value'),
+      array(array('redirect_route' => new Url('test_route_b', array('key' => 'value'))), 'test-route/value'),
     );
   }
 
