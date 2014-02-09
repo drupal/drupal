@@ -134,14 +134,14 @@ class Rss extends StylePluginBase {
       $rows .= $this->view->rowPlugin->render($row);
     }
 
-    $output = theme($this->themeFunctions(),
-      array(
-        'view' => $this->view,
-        'options' => $this->options,
-        'rows' => $rows
-      ));
+    $build = array(
+      '#theme' => $this->themeFunctions(),
+      '#view' => $this->view,
+      '#options' => $this->options,
+      '#rows' => $rows,
+    );
     unset($this->view->row_index);
-    return $output;
+    return drupal_render($build);
   }
 
 }

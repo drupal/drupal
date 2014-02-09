@@ -1591,8 +1591,7 @@ abstract class FieldPluginBase extends HandlerBase {
   protected function documentSelfTokens(&$tokens) { }
 
   /**
-   * Call out to the theme() function, which probably just calls render() but
-   * allows sites to override output fairly easily.
+   * Pass values to drupal_render() using $this->themeFunctions() as #theme.
    *
    * @param \Drupal\views\ResultRow $values
    *   Holds single row of a view's result set.
@@ -1601,12 +1600,13 @@ abstract class FieldPluginBase extends HandlerBase {
    *   Returns rendered output of the given theme implementation.
    */
   function theme(ResultRow $values) {
-    return theme($this->themeFunctions(),
-      array(
-        'view' => $this->view,
-        'field' => $this,
-        'row' => $values
-      ));
+    $build = array(
+      '#theme' => $this->themeFunctions(),
+      '#view' => $this->view,
+      '#field' => $this,
+      '#row' => $values,
+    );
+    return drupal_render($build);
   }
 
   public function themeFunctions() {
