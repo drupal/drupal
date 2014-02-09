@@ -84,17 +84,10 @@ class Query extends QueryBase implements QueryInterface {
    * Implements \Drupal\Core\Entity\Query\QueryInterface::execute().
    */
   public function execute() {
-    // Load all config files.
-    $entity_info = $this->entityManager->getDefinition($this->getEntityType());
-    $prefix = $entity_info->getConfigPrefix() . '.';
-    $prefix_length = strlen($prefix);
-    $names = $this->configStorage->listAll($prefix);
-    $configs = array();
-    $config_objects = $this->configFactory->loadMultiple($names);
-    foreach ($config_objects as $config) {
-      $configs[substr($config->getName(), $prefix_length)] = $config->get();
-    }
+    // Load the relevant config records.
+    $configs = $this->loadRecords();
 
+    // Apply conditions.
     $result = $this->condition->compile($configs);
 
     // Apply sort settings.
@@ -122,6 +115,59 @@ class Query extends QueryBase implements QueryInterface {
       $value = (string) $key;
     }
     return $result;
+  }
+
+  /**
+   * Loads the config records to examine for the query.
+   *
+   * @return array
+   *   Config records keyed by entity IDs.
+   */
+  protected function loadRecords() {
+    $entity_info = $this->entityManager->getDefinition($this->getEntityType());
+    $prefix = $entity_info->getConfigPrefix() . '.';
+    $prefix_length = strlen($prefix);
+
+    // Search the conditions for restrictions on entity IDs.
+    $ids = array();
+    if ($this->condition->getConjunction() == 'AND') {
+      foreach ($this->condition->conditions() as $condition) {
+        if (is_string($condition['field']) && $condition['field'] == $entity_info->getKey('id')) {
+          $operator = $condition['operator'] ?: (is_array($condition['value']) ? 'IN' : '=');
+          if ($operator == '=') {
+            $ids = array($condition['value']);
+          }
+          elseif ($operator == 'IN') {
+            $ids = $condition['value'];
+          }
+          // We stop at the first restricting condition on ID. In the (weird)
+          // case where there are additional restricting conditions, results
+          // will be eliminated when the conditions are checked on the loaded
+          // records.
+          if ($ids) {
+            break;
+          }
+        }
+      }
+    }
+    // If there are conditions restricting config ID, we can narrow the list of
+    // records to load and parse.
+    if ($ids) {
+      $names = array_map(function ($id) use ($prefix) {
+        return $prefix . $id;
+      }, $ids);
+    }
+    // If no restrictions on IDs were found, we need to parse all records.
+    else {
+      $names = $this->configStorage->listAll($prefix);
+    }
+
+    // Load the corresponding records.
+    $records = array();
+    foreach ($this->configFactory->loadMultiple($names) as $config) {
+      $records[substr($config->getName(), $prefix_length)] = $config->get();
+    }
+    return $records;
   }
 
 }
