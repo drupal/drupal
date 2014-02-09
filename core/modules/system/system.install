@@ -712,6 +712,7 @@ function system_schema() {
     'primary key' => array('collection', 'name'),
     'indexes' => array(
       'all' => array('name', 'collection', 'expire'),
+      'expire' => array('expire'),
     ),
   );
 

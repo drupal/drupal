@@ -18,9 +18,9 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
   /**
    * Holds references to each instantiation so they can be terminated.
    *
-   * @var array
+   * @var \Drupal\Core\KeyValueStore\DatabaseStorageExpirable[]
    */
-  protected $storages;
+  protected $storages = array();
 
   /**
    * The database connection.
@@ -44,16 +44,20 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
    * {@inheritdoc}
    */
   public function get($collection) {
-    $storage = new DatabaseStorageExpirable($collection, $this->connection);
-    $this->storages[] = $storage;
-    return $storage;
+    if (!isset($this->storages[$collection])) {
+      $this->storages[$collection] = new DatabaseStorageExpirable($collection, $this->connection);
+    }
+    return $this->storages[$collection];
   }
 
   /**
-   * Implements Drupal\Core\DestructableInterface::terminate().
+   * {@inheritdoc}
    */
   public function destruct() {
-    foreach ($this->storages as $storage) {
+    if (!empty($this->storages)) {
+      // Each instance does garbage collection for all collections, so we can
+      // optimize and only have to call the first, avoids multiple DELETE.
+      $storage = reset($this->storages);
       $storage->destruct();
     }
   }
