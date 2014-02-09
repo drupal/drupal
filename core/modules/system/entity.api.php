@@ -438,7 +438,7 @@ function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
+ *   The entity view display holding the display options configured for the
  *   entity components.
  * @param $view_mode
  *   The view mode the entity is rendered in.
@@ -484,7 +484,7 @@ function hook_entity_view(\Drupal\Core\Entity\EntityInterface $entity, \Drupal\C
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object being rendered.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
+ *   The entity view display holding the display options configured for the
  *   entity components.
  *
  * @see hook_entity_view()
@@ -514,8 +514,8 @@ function hook_entity_view_alter(&$build, Drupal\Core\Entity\EntityInterface $ent
  *   The type of entities being viewed (i.e. node, user, comment).
  * @param array $entities
  *   The entities keyed by entity ID.
- * @param array $display
- *   The array of entity_display objects holding the display options configured
+ * @param \Drupal\Core\Entity\EntityViewDisplayInterface[] $displays
+ *   The array of entity view displays holding the display options configured
  *   for the entity components, keyed by bundle name.
  * @param string $view_mode
  *   The view mode.
@@ -563,7 +563,7 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
  * Alters the settings used for displaying an entity.
  *
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object that will be used to display the entity
+ *   The entity view display that will be used to display the entity
  *   components.
  * @param array $context
  *   An associative array containing:
@@ -571,7 +571,7 @@ function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInter
  *   - bundle: The bundle, e.g., 'page' or 'article'.
  *   - view_mode: The view mode, e.g. 'full', 'teaser'...
  */
-function hook_entity_display_alter(\Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, array $context) {
+function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, array $context) {
   // Leave field labels out of the search index.
   if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
     foreach ($display->getComponents() as $name => $options) {

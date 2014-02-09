@@ -60,8 +60,8 @@ field.file.instance_settings:
       type: boolean
       label: 'Enable Description field'
 
-entity_display.field.file_default:
-  type: entity_field_display_base
+entity_view_display.field.file_default:
+  type: entity_field_view_display_base
   label: 'Generic file format settings'
   mapping:
     settings:
@@ -70,8 +70,8 @@ entity_display.field.file_default:
       sequence:
         - type: string
 
-entity_display.field.file_rss_enclosure:
-  type: entity_field_display_base
+entity_view_display.field.file_rss_enclosure:
+  type: entity_field_view_display_base
   label: 'RSS enclosure format settings'
   mapping:
     settings:
@@ -80,8 +80,8 @@ entity_display.field.file_rss_enclosure:
       sequence:
         - type: string
 
-entity_display.field.file_table:
-  type: entity_field_display_base
+entity_view_display.field.file_table:
+  type: entity_field_view_display_base
   label: 'Table of files format settings'
   mapping:
     settings:
@@ -90,8 +90,8 @@ entity_display.field.file_table:
       sequence:
         - type: string
 
-entity_display.field.file_url_plain:
-  type: entity_field_display_base
+entity_view_display.field.file_url_plain:
+  type: entity_field_view_display_base
   label: 'URL to file format settings'
   mapping:
     settings:

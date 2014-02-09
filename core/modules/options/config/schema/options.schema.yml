@@ -120,8 +120,8 @@ field.list_boolean.value:
           type: boolean
           label: 'Value'
 
-entity_display.field.list_default:
-  type: entity_field_display_base
+entity_view_display.field.list_default:
+  type: entity_field_view_display_base
   label: 'Options list default display settings'
   mapping:
     settings:
@@ -130,8 +130,8 @@ entity_display.field.list_default:
       sequence:
         - type: string
 
-entity_display.field.list_key:
-  type: entity_field_display_base
+entity_view_display.field.list_key:
+  type: entity_field_view_display_base
   label: 'Key format settings'
   mapping:
     settings:

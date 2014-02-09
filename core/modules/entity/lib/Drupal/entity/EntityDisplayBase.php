@@ -14,8 +14,7 @@ use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 
 /**
- * Base class for config entity types that store configuration for entity forms
- * and displays.
+ * Provides a common base class for entity view and form displays.
  */
 abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDisplayInterface {
 
@@ -121,7 +120,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // Add the validity checks back when http://drupal.org/node/1856556 is
     // fixed.
     // if (!isset($values['targetEntityType']) || !isset($values['bundle']) || !isset($values['mode'])) {
-    //   throw new \InvalidArgumentException('Missing required properties for an EntityDisplay entity.');
+    //   throw new \InvalidArgumentException('Missing required properties for an EntityDisplayBase entity.');
     // }
 
     // A plugin manager and a context type needs to be set by extending classes.

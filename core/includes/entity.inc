@@ -510,18 +510,18 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
 }
 
 /**
- * Returns the entity_display object associated to a bundle and view mode.
+ * Returns the entity view display associated to a bundle and view mode.
  *
  * Use this function when assigning suggested display options for a component
  * in a given view mode. Note that they will only be actually used at render
  * time if the view mode itself is configured to use dedicated display settings
  * for the bundle; if not, the 'default' display is used instead.
  *
- * The function reads the entity_display object from the current configuration,
- * or returns a ready-to-use empty one if configuration entry exists yet for
- * this bundle and view mode. This streamlines manipulation of display objects
- * by always returning a consistent object that reflects the current state of
- * the configuration.
+ * The function reads the entity view display from the current configuration, or
+ * returns a ready-to-use empty one if configuration entry exists yet for this
+ * bundle and view mode. This streamlines manipulation of display objects by
+ * always returning a consistent object that reflects the current state of the
+ * configuration.
  *
  * Example usage:
  * - Set the 'body' field to be displayed and the 'field_image' field to be
@@ -546,19 +546,19 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $re
  *   this bundle.
  *
  * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
- *   The display object associated to the view mode.
+ *   The entity view display associated to the view mode.
  */
 function entity_get_display($entity_type, $bundle, $view_mode) {
   // Try loading the display from configuration.
-  $display = entity_load('entity_display', $entity_type . '.' . $bundle . '.' . $view_mode);
+  $display = entity_load('entity_view_display', $entity_type . '.' . $bundle . '.' . $view_mode);
 
   // If not found, create a fresh display object. We do not preemptively create
-  // new entity_display configuration entries for each existing entity type and
-  // bundle whenever a new view mode becomes available. Instead, configuration
-  // entries are only created when a display object is explicitly configured
-  // and saved.
+  // new entity_view_display configuration entries for each existing entity type
+  // and bundle whenever a new view mode becomes available. Instead,
+  // configuration entries are only created when a display object is explicitly
+  // configured and saved.
   if (!$display) {
-    $display = entity_create('entity_display', array(
+    $display = entity_create('entity_view_display', array(
       'targetEntityType' => $entity_type,
       'bundle' => $bundle,
       'mode' => $view_mode,
@@ -570,7 +570,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
 }
 
 /**
- * Returns the entity_display object used to render an entity.
+ * Returns the entity view display used to render an entity.
  *
  * Depending on the configuration of the view mode for the bundle, this can be
  * either the display object associated to the view mode, or the 'default'
@@ -589,7 +589,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  *  The view mode being rendered.
  *
  * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
- *   The display object that should be used to render the entity.
+ *   The entity view display that should be used to render the entity.
  *
  * @see entity_get_display().
  */
@@ -605,7 +605,7 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
       'default' => $entity_type . '.' . $bundle . '.default',
       $view_mode => $entity_type . '.' . $bundle . '.' . $view_mode,
     );
-    $entity_displays = entity_load_multiple('entity_display', $ids);
+    $entity_displays = entity_load_multiple('entity_view_display', $ids);
     if (isset($entity_displays[$ids[$view_mode]]) && $entity_displays[$ids[$view_mode]]->status()) {
       $render_view_mode = $view_mode;
     }
@@ -620,19 +620,19 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
     'bundle' => $bundle,
     'view_mode' => $view_mode,
   );
-  drupal_alter('entity_display', $display, $display_context);
+  drupal_alter('entity_view_display', $display, $display_context);
 
   return $display;
 }
 
 /**
- * Returns the entity_form_display object associated to a bundle and form mode.
+ * Returns the entity form display associated to a bundle and form mode.
  *
- * The function reads the entity_form_display object from the current
- * configuration, or returns a ready-to-use empty one if configuration entry
+ * The function reads the entity form display object from the current
+ * configuration, or returns a ready-to-use empty one if no configuration entry
  * exists yet for this bundle and form mode. This streamlines manipulation of
- * EntityFormDisplay objects by always returning a consistent object that
- * reflects the current state of the configuration.
+ * entity form displays by always returning a consistent object that reflects
+ * the current state of the configuration.
  *
  * Example usage:
  * - Set the 'body' field to be displayed with the 'text_textarea_with_summary'
@@ -658,16 +658,16 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
  *   The form mode.
  *
  * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
- *   The EntityFormDisplay object associated to the form mode.
+ *   The entity form display associated to the given form mode.
  */
 function entity_get_form_display($entity_type, $bundle, $form_mode) {
   // Try loading the entity from configuration.
   $entity_form_display = entity_load('entity_form_display', $entity_type . '.' . $bundle . '.' . $form_mode);
 
   // If not found, create a fresh entity object. We do not preemptively create
-  // new EntityFormDisplay configuration entries for each existing entity type
+  // new entity form display configuration entries for each existing entity type
   // and bundle whenever a new form mode becomes available. Instead,
-  // configuration entries are only created when a EntityFormDisplay object is
+  // configuration entries are only created when an entity form display is
   // explicitly configured and saved.
   if (!$entity_form_display) {
     $entity_form_display = entity_create('entity_form_display', array(
@@ -682,7 +682,7 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
 }
 
 /**
- * Returns the entity_form_display object used to render an entity form.
+ * Returns the entity form display used to render an entity form.
  *
  * This function should only be used internally when rendering an entity form.
  * When assigning suggested form display options for a component in a given form
@@ -697,7 +697,8 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
  *   The form mode being rendered.
  *
  * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
- *   The form display object that should be used to render the entity form.
+ *   The entity form display object that should be used to render the entity
+ *   form.
  *
  * @see entity_get_form_display().
  */

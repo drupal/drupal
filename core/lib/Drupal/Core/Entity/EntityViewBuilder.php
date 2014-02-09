@@ -165,8 +165,8 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be prepared.
    * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
-   *   The entity_display object holding the display options configured for
-   *   the entity components.
+   *   The entity view display holding the display options configured for the
+   *   entity components.
    * @param string $view_mode
    *   The view mode that should be used to prepare the entity.
    * @param string $langcode

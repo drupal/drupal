@@ -100,8 +100,8 @@ field.text_with_summary.value:
           type: string
           label: 'Text format'
 
-entity_display.field.text_default:
-  type: entity_field_display_base
+entity_view_display.field.text_default:
+  type: entity_field_view_display_base
   label: 'Text default display format settings'
   mapping:
     settings:
@@ -110,8 +110,8 @@ entity_display.field.text_default:
       sequence:
         - type: string
 
-entity_display.field.text_plain:
-  type: entity_field_display_base
+entity_view_display.field.text_plain:
+  type: entity_field_view_display_base
   label: 'Plain text display format settings'
   mapping:
     settings:
@@ -120,8 +120,8 @@ entity_display.field.text_plain:
       sequence:
         - type: string
 
-entity_display.field.text_summary_or_trimmed:
-  type: entity_field_display_base
+entity_view_display.field.text_summary_or_trimmed:
+  type: entity_field_view_display_base
   label: 'Summary or trimmed text display format settings'
   mapping:
     settings:
@@ -132,8 +132,8 @@ entity_display.field.text_summary_or_trimmed:
           type: integer
           label: 'Trim length'
 
-entity_display.field.text_trimmed:
-  type: entity_field_display_base
+entity_view_display.field.text_trimmed:
+  type: entity_field_view_display_base
   label: 'Trimmed text display format settings'
   mapping:
     settings:

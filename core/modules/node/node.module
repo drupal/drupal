@@ -185,9 +185,9 @@ function node_entity_bundle_info() {
 }
 
 /**
- * Implements hook_entity_display_alter().
+ * Implements hook_entity_view_display_alter().
  */
-function node_entity_display_alter(EntityViewDisplayInterface $display, $context) {
+function node_entity_view_display_alter(EntityViewDisplayInterface $display, $context) {
   if ($context['entity_type'] == 'node') {
     // Hide field labels in search index.
     if ($context['view_mode'] == 'search_index') {

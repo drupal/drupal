@@ -51,7 +51,7 @@ class ViewModeAccessCheck implements AccessInterface {
       if (!$view_mode || $view_mode == 'default') {
         $visibility = TRUE;
       }
-      elseif ($entity_display = $this->entityManager->getStorageController('entity_display')->load($entity_type . '.' . $bundle . '.' . $view_mode)) {
+      elseif ($entity_display = $this->entityManager->getStorageController('entity_view_display')->load($entity_type . '.' . $bundle . '.' . $view_mode)) {
         $visibility = $entity_display->status();
       }
 

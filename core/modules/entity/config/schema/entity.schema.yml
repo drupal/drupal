@@ -53,7 +53,7 @@ entity.form_mode.*.*:
       label: 'Default language'
 
 # Overview configuration information for view mode or form mode displays.
-entity.display.*.*.*:
+entity.view_display.*.*.*:
   type: mapping
   label: 'Entity display'
   mapping:
@@ -79,7 +79,7 @@ entity.display.*.*.*:
       type: sequence
       label: 'Field display formatters'
       sequence:
-        - type: entity_display.field.[type]
+        - type: entity_view_display.field.[type]
     hidden:
       type: sequence
       label: 'Field display setting'
@@ -117,7 +117,7 @@ entity.form_display.*.*.*:
       label: 'Enabled'
 
 # Default schema for entity display field with undefined type.
-entity_display.field.*:
+entity_view_display.field.*:
   type: mapping
   label: 'Entity display default'
   mapping:

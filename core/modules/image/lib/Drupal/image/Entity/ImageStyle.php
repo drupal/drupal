@@ -146,7 +146,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
     if ($style->id() != $style->getOriginalId()) {
       // Loop through all entity displays looking for formatters / widgets using
       // the image style.
-      foreach (entity_load_multiple('entity_display') as $display) {
+      foreach (entity_load_multiple('entity_view_display') as $display) {
         foreach ($display->getComponents() as $name => $options) {
           if (isset($options['type']) && $options['type'] == 'image' && $options['settings']['image_style'] == $style->getOriginalId()) {
             $options['settings']['image_style'] = $style->id();

@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Telephone module.
 
-entity_display.field.telephone_link:
-  type: entity_field_display_base
+entity_view_display.field.telephone_link:
+  type: entity_field_view_display_base
   label: 'Telephone link format settings'
   mapping:
     settings:

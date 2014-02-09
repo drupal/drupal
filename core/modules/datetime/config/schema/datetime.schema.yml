@@ -24,8 +24,8 @@ field.datetime.value:
         - type: string
           label: 'Value'
 
-entity_display.field.datetime_default:
-  type: entity_field_display_base
+entity_view_display.field.datetime_default:
+  type: entity_field_view_display_base
   label: 'Datetime default display format settings'
   mapping:
     settings:
@@ -36,8 +36,8 @@ entity_display.field.datetime_default:
           type: string
           label: 'Date format'
 
-entity_display.field.datetime_plain:
-  type: entity_field_display_base
+entity_view_display.field.datetime_plain:
+  type: entity_field_view_display_base
   label: 'Datetime plain display format settings'
   mapping:
     settings:

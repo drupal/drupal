@@ -86,7 +86,7 @@ class DisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function buildExtraFieldRow($field_id, $extra_field, $entity_display) {
+  protected function buildExtraFieldRow($field_id, $extra_field, EntityDisplayInterface $entity_display) {
     $extra_field_row = parent::buildExtraFieldRow($field_id, $extra_field, $entity_display);
 
     // Insert an empty placeholder for the label column.
@@ -150,7 +150,7 @@ class DisplayOverview extends DisplayOverviewBase {
    * {@inheritdoc}
    */
   protected function getDisplayType() {
-    return 'entity_display';
+    return 'entity_view_display';
   }
 
   /**

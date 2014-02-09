@@ -87,7 +87,7 @@ function hook_comment_load(Drupal\comment\Comment $comments) {
  * @param \Drupal\comment\Entity\Comment $comment $comment
  *   Passes in the comment the action is being performed on.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
+ *   The entity view display holding the display options configured for the
  *   comment components.
  * @param $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -125,7 +125,7 @@ function hook_comment_view(\Drupal\comment\Entity\Comment $comment, \Drupal\Core
  * @param \Drupal\comment\Entity\Comment $comment
  *   The comment being rendered.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
+ *   The entity view display holding the display options configured for the
  *   comment components.
  *
  * @see comment_view()

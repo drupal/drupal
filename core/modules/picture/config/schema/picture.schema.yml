@@ -38,8 +38,8 @@ picture.mappings.*:
       type: string
       label: 'Default language'
 
-entity_display.field.picture:
-  type: entity_field_display_base
+entity_view_display.field.picture:
+  type: entity_field_view_display_base
   label: 'Picture list format settings'
   mapping:
     settings:

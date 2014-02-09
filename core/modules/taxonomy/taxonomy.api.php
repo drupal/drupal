@@ -250,8 +250,8 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
  * @param \Drupal\taxonomy\Entity\Term $term
  *   The term that is being assembled for rendering.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
- *   term components.
+ *   The entity view display holding the display options configured for the term
+ *   components.
  * @param $view_mode
  *   The $view_mode parameter from taxonomy_term_view().
  * @param $langcode
@@ -289,8 +289,8 @@ function hook_taxonomy_term_view(\Drupal\taxonomy\Entity\Term $term, \Drupal\Cor
  * @param \Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term being rendered.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
- *   term components.
+ *   The entity view display holding the display options configured for the term
+ *   components.
  *
  * @see hook_entity_view_alter()
  */

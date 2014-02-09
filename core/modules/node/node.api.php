@@ -788,8 +788,8 @@ function hook_node_submit(\Drupal\node\NodeInterface $node, $form, &$form_state)
  * @param \Drupal\node\NodeInterface $node
  *   The node that is being assembled for rendering.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
- *   node components.
+ *   The entity view display holding the display options configured for the node
+ *   components.
  * @param string $view_mode
  *   The $view_mode parameter from node_view().
  * @param string $langcode
@@ -830,8 +830,8 @@ function hook_node_view(\Drupal\node\NodeInterface $node, \Drupal\Core\Entity\Di
  * @param \Drupal\node\NodeInterface $node
  *   The node being rendered.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
- *   node components.
+ *   The entity view display holding the display options configured for the node
+ *   components.
  *
  * @see node_view()
  * @see hook_entity_view_alter()

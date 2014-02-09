@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Link module.
 
-entity_display.field.link:
-  type: entity_field_display_base
+entity_view_display.field.link:
+  type: entity_field_view_display_base
   label: 'Link format settings'
   mapping:
     settings:
@@ -24,8 +24,8 @@ entity_display.field.link:
           type: string
           label: 'Open link in new window'
 
-entity_display.field.link_separate:
-  type: entity_field_display_base
+entity_view_display.field.link_separate:
+  type: entity_field_view_display_base
   label: 'Link format settings'
   mapping:
     settings:

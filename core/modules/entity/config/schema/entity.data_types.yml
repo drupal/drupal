@@ -1,7 +1,7 @@
 # Schema for entity fields, specifying generic component data type information.
 
 # Schema for the base of the view mode display format settings.
-entity_field_display_base:
+entity_field_view_display_base:
   type: mapping
   mapping:
     label:

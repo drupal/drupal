@@ -10,7 +10,7 @@ namespace Drupal\entity\Tests;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
- * Tests the EntityDisplay configuration entities.
+ * Tests the entity display configuration entities.
  */
 class EntityFormDisplayTest extends DrupalUnitTestBase {
 

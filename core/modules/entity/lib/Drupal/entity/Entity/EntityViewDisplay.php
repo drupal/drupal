@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\entity\Entity\EntityDisplay.
+ * Contains \Drupal\entity\Entity\EntityViewDisplay.
  */
 
 namespace Drupal\entity\Entity;
@@ -15,12 +15,12 @@ use Drupal\entity\EntityDisplayBase;
  * rendered entity in a given view mode.
  *
  * @EntityType(
- *   id = "entity_display",
- *   label = @Translation("Entity display"),
+ *   id = "entity_view_display",
+ *   label = @Translation("Entity view display"),
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
- *   config_prefix = "entity.display",
+ *   config_prefix = "entity.view_display",
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
@@ -28,7 +28,7 @@ use Drupal\entity\EntityDisplayBase;
  *   }
  * )
  */
-class EntityDisplay extends EntityDisplayBase implements EntityViewDisplayInterface {
+class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayInterface {
 
   /**
    * {@inheritdoc}

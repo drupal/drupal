@@ -430,7 +430,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
    * @return array
    *   A table row array.
    */
-  protected function buildExtraFieldRow($field_id, $extra_field, $entity_display) {
+  protected function buildExtraFieldRow($field_id, $extra_field, EntityDisplayInterface $entity_display) {
     $display_options = $entity_display->getComponent($field_id);
 
     $extra_field_row = array(

@@ -311,8 +311,8 @@ function hook_user_logout($account) {
  * @param \Drupal\user\UserInterface $account
  *   The user object on which the operation is being performed.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
- *   user components.
+ *   The entity view display holding the display options configured for the user
+ *   components.
  * @param $view_mode
  *   View mode, e.g. 'full'.
  * @param $langcode
@@ -351,8 +351,8 @@ function hook_user_view(\Drupal\user\UserInterface $account, \Drupal\Core\Entity
  * @param \Drupal\user\UserInterface $account
  *   The user account being rendered.
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- *   The entity_display object holding the display options configured for the
- *   user components.
+ *   The entity view display holding the display options configured for the user
+ *   components.
  *
  * @see user_view()
  * @see hook_entity_view_alter()

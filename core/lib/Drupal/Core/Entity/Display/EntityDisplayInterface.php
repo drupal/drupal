@@ -13,7 +13,7 @@ namespace Drupal\Core\Entity\Display;
 interface EntityDisplayInterface {
 
   /**
-   * Creates a duplicate of the EntityDisplay object on a different view mode.
+   * Creates a duplicate of the entity display object on a different view mode.
    *
    * The new object necessarily has the same $targetEntityType and $bundle
    * properties than the original one.
@@ -55,7 +55,7 @@ interface EntityDisplayInterface {
    *   The display options.
    *
    * @return self
-   *   The EntityDisplay object.
+   *   The entity display object.
    */
   public function setComponent($name, array $options = array());
 
@@ -66,7 +66,7 @@ interface EntityDisplayInterface {
    *   The name of the component.
    *
    * @return self
-   *   The EntityDisplay object.
+   *   The entity display object.
    */
   public function removeComponent($name);
 
