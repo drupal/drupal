@@ -4135,7 +4135,7 @@ function drupal_render_cache_generate_placeholder($callback, array $context, $to
   foreach ($context as $key => $value) {
     $context_attribute .= $key . ':' . $value . ';';
   }
-  return '<drupal:render-cache-placeholder callback="' . $callback .  '" context="' . $context_attribute . '" token="'. $token . '" />';;
+  return '<drupal:render-cache-placeholder callback="' . $callback . '" context="' . $context_attribute . '" token="' . $token . '" />';
 }
 
 /**
