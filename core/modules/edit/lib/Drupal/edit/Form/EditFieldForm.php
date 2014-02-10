@@ -7,13 +7,14 @@
 
 namespace Drupal\edit\Form;
 
-use Drupal\Core\Form\FormBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\user\TempStoreFactory;
 use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormBase;
+use Drupal\entity\Entity\EntityFormDisplay;
+use Drupal\user\TempStoreFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds and process a form for editing a single entity field.
@@ -128,7 +129,7 @@ class EditFieldForm extends FormBase {
 
     // @todo Allow the usage of different form modes by exposing a hook and the
     //   UI for them.
-    $form_state['form_display'] = entity_get_render_form_display($entity, 'default');
+    $form_state['form_display'] = EntityFormDisplay::collectRenderDisplay($entity, 'default');
   }
 
   /**

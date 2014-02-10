@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\edit\Access\EditEntityFieldAccessCheckInterface;
-use Drupal\field\FieldInstanceInterface;
+use Drupal\entity\Entity\EntityViewDisplay;
 
 /**
  * Generates in-place editing metadata for an entity field.
@@ -78,7 +78,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     }
 
     // Early-return if no editor is available.
-    $formatter_id = entity_get_render_display($entity, $view_mode)->getRenderer($field_name)->getPluginId();
+    $formatter_id = EntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getRenderer($field_name)->getPluginId();
     $editor_id = $this->editorSelector->getEditor($formatter_id, $items);
     if (!isset($editor_id)) {
       return array('access' => FALSE);

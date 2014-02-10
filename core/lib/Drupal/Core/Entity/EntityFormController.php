@@ -10,6 +10,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\entity\Entity\EntityFormDisplay;
 
 /**
  * Base class for entity form controllers.
@@ -121,7 +122,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     // Prepare the entity to be presented in the entity form.
     $this->prepareEntity();
 
-    $form_display = entity_get_render_form_display($this->entity, $this->getOperation());
+    $form_display = EntityFormDisplay::collectRenderDisplay($this->entity, $this->getOperation());
     $this->setFormDisplay($form_display, $form_state);
 
     // Invoke the prepare form hooks.

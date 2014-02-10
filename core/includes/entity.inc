@@ -570,62 +570,6 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
 }
 
 /**
- * Returns the entity view display used to render an entity.
- *
- * Depending on the configuration of the view mode for the bundle, this can be
- * either the display object associated to the view mode, or the 'default'
- * display.
- *
- * This function should only be used internally when rendering an entity. When
- * assigning suggested display options for a component in a given view mode,
- * entity_get_display() should be used instead, in order to avoid inadvertently
- * modifying the output of other view modes that might happen to use the
- * 'default' display too. Those options will then be effectively applied only
- * if the view mode is configured to use them.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity being rendered.
- * @param string $view_mode
- *  The view mode being rendered.
- *
- * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
- *   The entity view display that should be used to render the entity.
- *
- * @see entity_get_display().
- */
-function entity_get_render_display(EntityInterface $entity, $view_mode) {
-  $entity_type = $entity->getEntityTypeId();
-  $bundle = $entity->bundle();
-  $render_view_mode = 'default';
-
-  // Fall back to the default display if the display for the view mode does
-  // not exist or is disabled.
-  if ($view_mode != 'default') {
-    $ids = array(
-      'default' => $entity_type . '.' . $bundle . '.default',
-      $view_mode => $entity_type . '.' . $bundle . '.' . $view_mode,
-    );
-    $entity_displays = entity_load_multiple('entity_view_display', $ids);
-    if (isset($entity_displays[$ids[$view_mode]]) && $entity_displays[$ids[$view_mode]]->status()) {
-      $render_view_mode = $view_mode;
-    }
-  }
-
-  $display = entity_get_display($entity_type, $bundle, $render_view_mode);
-  $display->originalMode = $view_mode;
-
-  // Let modules alter the display.
-  $display_context = array(
-    'entity_type' => $entity_type,
-    'bundle' => $bundle,
-    'view_mode' => $view_mode,
-  );
-  drupal_alter('entity_view_display', $display, $display_context);
-
-  return $display;
-}
-
-/**
  * Returns the entity form display associated to a bundle and form mode.
  *
  * The function reads the entity form display object from the current
@@ -679,59 +623,6 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
   }
 
   return $entity_form_display;
-}
-
-/**
- * Returns the entity form display used to render an entity form.
- *
- * This function should only be used internally when rendering an entity form.
- * When assigning suggested form display options for a component in a given form
- * mode, entity_get_form_display() should be used instead, in order to avoid
- * inadvertently modifying the output of other form modes that might happen to
- * use the 'default' form display too. Those options will then be effectively
- * applied only if the form mode is configured to use them.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity for which the form is being rendered.
- * @param string $form_mode
- *   The form mode being rendered.
- *
- * @return \Drupal\Core\Entity\Display\EntityFormDisplayInterface
- *   The entity form display object that should be used to render the entity
- *   form.
- *
- * @see entity_get_form_display().
- */
-function entity_get_render_form_display(EntityInterface $entity, $form_mode) {
-  $entity_type = $entity->getEntityTypeId();
-  $bundle = $entity->bundle();
-  $render_form_mode = 'default';
-
-  // Look at the default form display and form display for the view mode, and
-  // fallback to the former if the latter does not exist is disabled.
-  if ($form_mode != 'default') {
-    $ids = array(
-      'default' => $entity_type . '.' . $bundle . '.default',
-      $form_mode => $entity_type . '.' . $bundle . '.' . $form_mode,
-    );
-    $entity_form_displays = entity_load_multiple('entity_form_display', $ids);
-    if (isset($entity_form_displays[$ids[$form_mode]]) && $entity_form_displays[$ids[$form_mode]]->status()) {
-      $render_form_mode = $form_mode;
-    }
-  }
-
-  $form_display = entity_get_form_display($entity_type, $bundle, $render_form_mode);
-  $form_display->originalMode = $form_mode;
-
-  // Let modules alter the form display.
-  $form_display_context = array(
-    'entity_type' => $entity_type,
-    'bundle' => $bundle,
-    'form_mode' => $form_mode,
-  );
-  drupal_alter('entity_form_display', $form_display, $form_display_context);
-
-  return $form_display;
 }
 
 /**

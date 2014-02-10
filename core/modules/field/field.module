@@ -7,6 +7,7 @@
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\entity\Entity\EntityViewDisplay;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -428,7 +429,7 @@ function field_view_field(ContentEntityInterface $entity, $field_name, $display_
   // Get the formatter object.
   if (is_string($display_options)) {
     $view_mode = $display_options;
-    $formatter = entity_get_render_display($entity, $view_mode)->getRenderer($field_name);
+    $formatter = EntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getRenderer($field_name);
   }
   else {
     $view_mode = '_custom';

@@ -9,9 +9,9 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\entity\Entity\EntityViewDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -193,7 +193,6 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
 
     // Build the view modes and display objects.
     $view_modes = array();
-    $displays = array();
     $context = array('langcode' => $langcode);
     foreach ($entities as $key => $entity) {
       $bundle = $entity->bundle();
@@ -208,14 +207,10 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       drupal_alter('entity_view_mode', $entity_view_mode, $entity, $context);
       // Store entities for rendering by view_mode.
       $view_modes[$entity_view_mode][$entity->id()] = $entity;
-
-      // Get the corresponding display settings.
-      if (!isset($displays[$entity_view_mode][$bundle])) {
-        $displays[$entity_view_mode][$bundle] = entity_get_render_display($entity, $entity_view_mode);
-      }
     }
 
     foreach ($view_modes as $mode => $view_mode_entities) {
+      $displays[$mode] = EntityViewDisplay::collectRenderDisplays($view_mode_entities, $mode);
       $this->buildContent($view_mode_entities, $displays[$mode], $mode, $langcode);
     }
 
