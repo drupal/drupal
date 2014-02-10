@@ -7,7 +7,6 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Drupal\Component\Utility\Timer;
-use Drupal\Core\StreamWrapper\PublicStream;
 
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31; // Red.
@@ -416,8 +415,7 @@ function simpletest_script_execute_batch($test_classes) {
           echo 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').' . "\n";
           if ($args['die-on-fail']) {
             list($db_prefix, ) = simpletest_last_test_get($child['test_id']);
-            $public_files = PublicStream::basePath();
-            $test_directory = $public_files . '/simpletest/' . substr($db_prefix, 10);
+            $test_directory = 'sites/simpletest/' . substr($db_prefix, 10);
             echo 'Simpletest database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix '. $db_prefix . ' and config directories in '. $test_directory . "\n";
             $args['keep-results'] = TRUE;
             // Exit repeat loop immediately.
@@ -583,10 +581,9 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
   // Read the log file in case any fatal errors caused the test to crash.
   simpletest_log_read($test_id, $db_prefix, $test_class);
 
-  // Check whether a test file directory was setup already.
-  // @see prepareEnvironment()
-  $public_files = PublicStream::basePath();
-  $test_directory = $public_files . '/simpletest/' . substr($db_prefix, 10);
+  // Check whether a test site directory was setup already.
+  // @see \Drupal\simpletest\TestBase::prepareEnvironment()
+  $test_directory = DRUPAL_ROOT . '/sites/simpletest/' . substr($db_prefix, 10);
   if (is_dir($test_directory)) {
     // Output the error_log.
     if (is_file($test_directory . '/error.log')) {
@@ -595,8 +592,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
         $messages[] = $errors;
       }
     }
-
-    // Delete the test files directory.
+    // Delete the test site directory.
     // simpletest_clean_temporary_directories() cannot be used here, since it
     // would also delete file directories of other tests that are potentially
     // running concurrently.

@@ -383,18 +383,16 @@ function simpletest_last_test_get($test_id) {
  *
  * @param $test_id
  *   The test ID to which the log relates.
- * @param $prefix
+ * @param $database_prefix
  *   The database prefix to which the log relates.
  * @param $test_class
  *   The test class to which the log relates.
- * @param $during_test
- *   Indicates that the current file directory path is a temporary file
- *   file directory used during testing.
+ *
  * @return
  *   Found any entries in log.
  */
-function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALSE) {
-  $log = 'public://' . ($during_test ? '' : '/simpletest/' . substr($prefix, 10)) . '/error.log';
+function simpletest_log_read($test_id, $database_prefix, $test_class) {
+  $log = DRUPAL_ROOT . '/sites/simpletest/' . substr($database_prefix, 10) . '/error.log';
   $found = FALSE;
   if (file_exists($log)) {
     foreach (file($log) as $line) {
@@ -648,11 +646,11 @@ function simpletest_clean_database() {
  */
 function simpletest_clean_temporary_directories() {
   $count = 0;
-  if (is_dir('public://simpletest')) {
-    $files = scandir('public://simpletest');
+  if (is_dir(DRUPAL_ROOT . '/sites/simpletest')) {
+    $files = scandir(DRUPAL_ROOT . '/sites/simpletest');
     foreach ($files as $file) {
-      $path = 'public://simpletest/' . $file;
-      if (is_dir($path) && (is_numeric($file) || strpos($file, 'config_simpletest') !== FALSE)) {
+      if ($file[0] != '.') {
+        $path = DRUPAL_ROOT . '/sites/simpletest/' . $file;
         file_unmanaged_delete_recursive($path, array('Drupal\simpletest\TestBase', 'filePreDeleteCallback'));
         $count++;
       }

@@ -53,6 +53,8 @@ class FormValuesTest extends AjaxTestBase {
     }
 
     // Verify that AJAX elements with invalid callbacks return error code 500.
+    // Ensure the test error log is empty before these tests.
+    $this->assertNoErrorsLogged();
     foreach (array('null', 'empty', 'nonexistent') as $key) {
       $element_name = 'select_' . $key . '_callback';
       $edit = array(
@@ -61,5 +63,8 @@ class FormValuesTest extends AjaxTestBase {
       $commands = $this->drupalPostAjaxForm('ajax_forms_test_get_form', $edit, $element_name);
       $this->assertResponse(500);
     }
+    // The exceptions are expected. Do not interpret them as a test failure.
+    // Not using File API; a potential error must trigger a PHP warning.
+    unlink(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
   }
 }
