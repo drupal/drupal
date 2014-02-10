@@ -34,7 +34,7 @@ abstract class NormalizerBase extends SerializationNormalizerBase implements Den
    * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::supportsDenormalization()
    */
   public function supportsDenormalization($data, $type, $format = NULL) {
-    if (in_array($format, $this->formats)) {
+    if (in_array($format, $this->formats) && (class_exists($this->supportedInterfaceOrClass) || interface_exists($this->supportedInterfaceOrClass))) {
       $target = new \ReflectionClass($type);
       $supported = new \ReflectionClass($this->supportedInterfaceOrClass);
       if ($supported->isInterface()) {
@@ -44,6 +44,8 @@ abstract class NormalizerBase extends SerializationNormalizerBase implements Den
         return ($target->getName() == $this->supportedInterfaceOrClass || $target->isSubclassOf($this->supportedInterfaceOrClass));
       }
     }
+
+    return FALSE;
   }
 
 }
