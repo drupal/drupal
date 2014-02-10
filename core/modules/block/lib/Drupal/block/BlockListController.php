@@ -56,15 +56,15 @@ class BlockListController extends ConfigEntityListController implements FormInte
   /**
    * Constructs a new BlockListController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $block_manager
    *   The block manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, PluginManagerInterface $block_manager) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, PluginManagerInterface $block_manager) {
+    parent::__construct($entity_type, $storage);
 
     $this->blockManager = $block_manager;
   }
@@ -72,10 +72,10 @@ class BlockListController extends ConfigEntityListController implements FormInte
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id()),
+      $entity_type,
+      $container->get('entity.manager')->getStorageController($entity_type->id()),
       $container->get('plugin.manager.block')
     );
   }

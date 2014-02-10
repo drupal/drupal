@@ -27,7 +27,7 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *
    * If a bundle is passed, fields specific to this bundle are included.
    *
-   * @param string $entity_type
+   * @param string $entity_type_id
    *   The entity type to get field definitions for. Only entity types that
    *   implement \Drupal\Core\Entity\ContentEntityInterface are supported.
    * @param string $bundle
@@ -40,7 +40,7 @@ interface EntityManagerInterface extends PluginManagerInterface {
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitionsByConstraints()
    */
-  public function getFieldDefinitions($entity_type, $bundle = NULL);
+  public function getFieldDefinitions($entity_type_id, $bundle = NULL);
 
   /**
    * Creates a new access controller instance.
@@ -56,7 +56,7 @@ interface EntityManagerInterface extends PluginManagerInterface {
   /**
    * Returns the route information for an entity type's bundle.
    *
-   * @param string $entity_type
+   * @param string $entity_type_id
    *   The entity type.
    * @param string $bundle
    *   The name of the bundle.
@@ -67,7 +67,7 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *   - route_parameters: (optional) An associative array of parameter names
    *     and values.
    */
-  public function getAdminRouteInfo($entity_type, $bundle);
+  public function getAdminRouteInfo($entity_type_id, $bundle);
 
   /**
    * Gets an array of entity field definitions based on validation constraints.

@@ -80,21 +80,21 @@ class EntityDeriver implements ContainerDerivativeInterface {
     // Also keep the 'entity' defined as is.
     $this->derivatives[''] = $base_plugin_definition;
     // Add definitions for each entity type and bundle.
-    foreach ($this->entityManager->getDefinitions() as $entity_type => $info) {
-      $this->derivatives[$entity_type] = array(
-        'label' => $info->getLabel(),
-        'class' => $info->getClass(),
-        'constraints' => array('EntityType' => $entity_type),
+    foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
+      $this->derivatives[$entity_type_id] = array(
+        'label' => $entity_type->getLabel(),
+        'class' => $entity_type->getClass(),
+        'constraints' => array('EntityType' => $entity_type_id),
       ) + $base_plugin_definition;
 
       // Incorporate the bundles as entity:$entity_type:$bundle, if any.
-      foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
-        if ($bundle !== $entity_type) {
-          $this->derivatives[$entity_type . ':' . $bundle] = array(
+      foreach (entity_get_bundles($entity_type_id) as $bundle => $bundle_info) {
+        if ($bundle !== $entity_type_id) {
+          $this->derivatives[$entity_type_id . ':' . $bundle] = array(
             'label' => $bundle_info['label'],
-            'class' => $info->getClass(),
+            'class' => $entity_type->getClass(),
             'constraints' => array(
-              'EntityType' => $entity_type,
+              'EntityType' => $entity_type_id,
               'Bundle' => $bundle,
             ),
           ) + $base_plugin_definition;

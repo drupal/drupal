@@ -49,8 +49,8 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
   /**
    * Overrides DatabaseStorageController::__construct().
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
@@ -58,8 +58,8 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
    * @param \Symfony\Cmf\Component\Routing\RouteProviderInterface $route_provider
    *   The route provider service.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, UuidInterface $uuid_service, RouteProviderInterface $route_provider) {
-    parent::__construct($entity_info, $database, $uuid_service);
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, UuidInterface $uuid_service, RouteProviderInterface $route_provider) {
+    parent::__construct($entity_type, $database, $uuid_service);
 
     $this->routeProvider = $route_provider;
 
@@ -83,9 +83,9 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
+      $entity_type,
       $container->get('database'),
       $container->get('uuid'),
       $container->get('router.route_provider')

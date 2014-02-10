@@ -55,7 +55,7 @@ class SelectionBase implements SelectionInterface {
   public static function settingsForm(FieldDefinitionInterface $field_definition) {
     $target_type = $field_definition->getSetting('target_type');
     $selection_handler_settings = $field_definition->getSetting('handler_settings') ?: array();
-    $entity_info = \Drupal::entityManager()->getDefinition($target_type);
+    $entity_type = \Drupal::entityManager()->getDefinition($target_type);
     $bundles = entity_get_bundles($target_type);
 
     // Merge-in default values.
@@ -67,7 +67,7 @@ class SelectionBase implements SelectionInterface {
       'auto_create' => FALSE,
     );
 
-    if ($entity_info->hasKey('bundle')) {
+    if ($entity_type->hasKey('bundle')) {
       $bundle_options = array();
       foreach ($bundles as $bundle_name => $bundle_info) {
         $bundle_options[$bundle_name] = $bundle_info['label'];
@@ -104,7 +104,7 @@ class SelectionBase implements SelectionInterface {
     if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
       // @todo Use Entity::getPropertyDefinitions() when all entity types are
       // converted to the new Field API.
-      $fields = drupal_map_assoc(drupal_schema_fields_sql($entity_info->getBaseTable()));
+      $fields = drupal_map_assoc(drupal_schema_fields_sql($entity_type->getBaseTable()));
       foreach (field_info_instances($target_type) as $bundle_instances) {
         foreach ($bundle_instances as $instance_name => $instance) {
           foreach ($instance->getField()->getColumns() as $column_name => $column_info) {
@@ -197,10 +197,10 @@ class SelectionBase implements SelectionInterface {
     $result = array();
     if ($ids) {
       $target_type = $this->fieldDefinition->getSetting('target_type');
-      $entity_info = \Drupal::entityManager()->getDefinition($target_type);
+      $entity_type = \Drupal::entityManager()->getDefinition($target_type);
       $query = $this->buildEntityQuery();
       $result = $query
-        ->condition($entity_info->getKey('id'), $ids, 'IN')
+        ->condition($entity_type->getKey('id'), $ids, 'IN')
         ->execute();
     }
 
@@ -258,14 +258,14 @@ class SelectionBase implements SelectionInterface {
   public function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $target_type = $this->fieldDefinition->getSetting('target_type');
     $handler_settings = $this->fieldDefinition->getSetting('handler_settings');
-    $entity_info = \Drupal::entityManager()->getDefinition($target_type);
+    $entity_type = \Drupal::entityManager()->getDefinition($target_type);
 
     $query = \Drupal::entityQuery($target_type);
     if (!empty($handler_settings['target_bundles'])) {
-      $query->condition($entity_info->getKey('bundle'), $handler_settings['target_bundles'], 'IN');
+      $query->condition($entity_type->getKey('bundle'), $handler_settings['target_bundles'], 'IN');
     }
 
-    if (isset($match) && $label_key = $entity_info->getKey('label')) {
+    if (isset($match) && $label_key = $entity_type->getKey('label')) {
       $query->condition($label_key, $match, $match_operator);
     }
 

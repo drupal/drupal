@@ -58,16 +58,16 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
 
     entity_create('field_entity', array(
       'name' => $this->fieldName,
-      'entity_type' => $this->entityType,
+      'entity_type' => $this->entityTypeId,
       'type' => 'image',
       'cardinality' => $this->cardinality,
       'translatable' => TRUE,
     ))->save();
 
     entity_create('field_instance', array(
-      'entity_type' => $this->entityType,
+      'entity_type' => $this->entityTypeId,
       'field_name' => $this->fieldName,
-      'bundle' => $this->entityType,
+      'bundle' => $this->entityTypeId,
       'label' => 'Test translatable image field',
       'settings' => array(
         'translation_sync' => array(
@@ -93,7 +93,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   function testImageFieldSync() {
     // Check that the alt and title fields are enabled for the image field.
     $this->drupalLogin($this->editor);
-    $this->drupalGet('entity_test_mul/structure/' . $this->entityType . '/fields/' . $this->entityType . '.' . $this->entityType . '.' . $this->fieldName);
+    $this->drupalGet('entity_test_mul/structure/' . $this->entityTypeId . '/fields/' . $this->entityTypeId . '.' . $this->entityTypeId . '.' . $this->fieldName);
     $this->assertFieldChecked('edit-instance-settings-translation-sync-alt');
     $this->assertFieldChecked('edit-instance-settings-translation-sync-title');
     $edit = array(
@@ -132,7 +132,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'user_id' => mt_rand(1, 128),
       'langcode' => $default_langcode,
     );
-    $entity = entity_create($this->entityType, $values);
+    $entity = entity_create($this->entityTypeId, $values);
 
     // Create some file entities from the generated test files and store them.
     $values = array();

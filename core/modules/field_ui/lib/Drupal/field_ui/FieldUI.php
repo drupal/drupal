@@ -17,7 +17,7 @@ class FieldUI {
   /**
    * Returns the route info for the field overview of a given entity bundle.
    *
-   * @param string $entity_type
+   * @param string $entity_type_id
    *   An entity type.
    * @param string $bundle
    *   The entity bundle.
@@ -31,13 +31,13 @@ class FieldUI {
    *     \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
    *     comprehensive documentation.
    */
-  public static function getOverviewRouteInfo($entity_type, $bundle) {
-    $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
-    if ($entity_info->hasLinkTemplate('admin-form')) {
+  public static function getOverviewRouteInfo($entity_type_id, $bundle) {
+    $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+    if ($entity_type->hasLinkTemplate('admin-form')) {
       return array(
-        'route_name' => "field_ui.overview_$entity_type",
+        'route_name' => "field_ui.overview_$entity_type_id",
         'route_parameters' => array(
-          $entity_info->getBundleEntityType() => $bundle,
+          $entity_type->getBundleEntityType() => $bundle,
         ),
         'options' => array(),
       );

@@ -110,8 +110,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL) {
-    parent::buildForm($form, $form_state, $entity_type, $bundle);
+  public function buildForm(array $form, array &$form_state, $entity_type_id = NULL, $bundle = NULL) {
+    parent::buildForm($form, $form_state, $entity_type_id, $bundle);
 
     if (empty($this->mode)) {
       $this->mode = 'default';
@@ -769,8 +769,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
   protected function getDisplays() {
     $load_ids = array();
     $display_entity_type = $this->getDisplayType();
-    $entity_info = $this->entityManager->getDefinition($display_entity_type);
-    $config_prefix = $entity_info->getConfigPrefix();
+    $entity_type = $this->entityManager->getDefinition($display_entity_type);
+    $config_prefix = $entity_type->getConfigPrefix();
     $ids = config_get_storage_names_with_prefix($config_prefix . '.' . $this->entity_type . '.' . $this->bundle . '.');
     foreach ($ids as $id) {
       $config_id = str_replace($config_prefix . '.', '', $id);

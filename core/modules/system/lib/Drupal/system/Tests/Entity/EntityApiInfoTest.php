@@ -27,22 +27,22 @@ class EntityApiInfoTest extends WebTestBase  {
    */
   function testEntityInfoChanges() {
     \Drupal::moduleHandler()->install(array('entity_cache_test'));
-    $entity_info = \Drupal::entityManager()->getDefinitions();
-    $this->assertTrue(isset($entity_info['entity_cache_test']), 'Test entity type found.');
+    $entity_types = \Drupal::entityManager()->getDefinitions();
+    $this->assertTrue(isset($entity_types['entity_cache_test']), 'Test entity type found.');
 
     // Change the label of the test entity type and make sure changes appear
     // after flushing caches.
     \Drupal::state()->set('entity_cache_test.label', 'New label.');
-    $info = \Drupal::entityManager()->getDefinition('entity_cache_test');
-    $this->assertEqual($info->getLabel(), 'Entity Cache Test', 'Original label appears in cached entity info.');
+    $entity_type = \Drupal::entityManager()->getDefinition('entity_cache_test');
+    $this->assertEqual($entity_type->getLabel(), 'Entity Cache Test', 'Original label appears in cached entity info.');
     $this->resetAll();
-    $info = \Drupal::entityManager()->getDefinition('entity_cache_test');
-    $this->assertEqual($info->getLabel(), 'New label.', 'New label appears in entity info.');
+    $entity_type = \Drupal::entityManager()->getDefinition('entity_cache_test');
+    $this->assertEqual($entity_type->getLabel(), 'New label.', 'New label appears in entity info.');
 
     // Uninstall the providing module and make sure the entity type is gone.
     module_uninstall(array('entity_cache_test', 'entity_cache_test_dependency'));
-    $entity_info = \Drupal::entityManager()->getDefinitions();
-    $this->assertFalse(isset($entity_info['entity_cache_test']), 'Entity type of the providing module is gone.');
+    $entity_types = \Drupal::entityManager()->getDefinitions();
+    $this->assertFalse(isset($entity_types['entity_cache_test']), 'Entity type of the providing module is gone.');
   }
 
   /**
@@ -52,8 +52,8 @@ class EntityApiInfoTest extends WebTestBase  {
    */
   function testEntityInfoCacheWatchdog() {
     \Drupal::moduleHandler()->install(array('entity_cache_test'));
-    $info = \Drupal::state()->get('entity_cache_test');
-    $this->assertEqual($info->getLabel(), 'Entity Cache Test', 'Entity info label is correct.');
-    $this->assertEqual($info->getStorageClass(), 'Drupal\Core\Entity\DatabaseStorageController', 'Entity controller class info is correct.');
+    $entity_type = \Drupal::state()->get('entity_cache_test');
+    $this->assertEqual($entity_type->getLabel(), 'Entity Cache Test', 'Entity info label is correct.');
+    $this->assertEqual($entity_type->getStorageClass(), 'Drupal\Core\Entity\DatabaseStorageController', 'Entity controller class info is correct.');
   }
 }

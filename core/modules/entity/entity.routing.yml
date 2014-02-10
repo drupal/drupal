@@ -23,7 +23,7 @@ entity.view_mode_add:
     _permission: 'administer display modes'
 
 entity.view_mode_add_type:
-  path: '/admin/structure/display-modes/view/add/{entity_type}'
+  path: '/admin/structure/display-modes/view/add/{entity_type_id}'
   defaults:
     _entity_form: 'view_mode.add'
     _title: 'Add view mode'
@@ -63,7 +63,7 @@ entity.form_mode_add:
     _permission: 'administer display modes'
 
 entity.form_mode_add_type:
-  path: '/admin/structure/display-modes/form/add/{entity_type}'
+  path: '/admin/structure/display-modes/form/add/{entity_type_id}'
   defaults:
     _entity_form: 'form_mode.add'
     _title: 'Add form mode'

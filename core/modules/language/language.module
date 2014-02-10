@@ -162,9 +162,9 @@ function language_theme() {
  */
 function language_entity_supported() {
   $supported = array();
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
-    if ($info->isTranslatable()) {
-      $supported[$entity_type] = $entity_type;
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+    if ($entity_type->isTranslatable()) {
+      $supported[$entity_type_id] = $entity_type_id;
     }
   }
   return $supported;

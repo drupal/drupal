@@ -31,22 +31,22 @@ class BlockAccessController extends EntityAccessController implements EntityCont
   /**
    * Constructs a BlockAccessController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
    *   The alias manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, AliasManagerInterface $alias_manager) {
-    parent::__construct($entity_info);
+  public function __construct(EntityTypeInterface $entity_type, AliasManagerInterface $alias_manager) {
+    parent::__construct($entity_type);
     $this->aliasManager = $alias_manager;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
+      $entity_type,
       $container->get('path.alias_manager')
     );
   }

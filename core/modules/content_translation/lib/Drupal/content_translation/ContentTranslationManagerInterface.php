@@ -23,12 +23,12 @@ interface ContentTranslationManagerInterface {
   /**
    * Checks whether an entity type supports translation.
    *
-   * @param string $entity_type
+   * @param string $entity_type_id
    *   The entity type.
    *
    * @return bool
    *   TRUE if an entity type is supported, FALSE otherwise.
    */
-  public function isSupported($entity_type);
+  public function isSupported($entity_type_id);
 
 }

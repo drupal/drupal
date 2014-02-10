@@ -36,15 +36,15 @@ class FilterFormatListController extends DraggableListController implements Enti
   /**
    * Constructs a new FilterFormatListController.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ConfigFactory $config_factory) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, ConfigFactory $config_factory) {
+    parent::__construct($entity_type, $storage);
 
     $this->configFactory = $config_factory;
   }
@@ -52,10 +52,10 @@ class FilterFormatListController extends DraggableListController implements Enti
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id()),
+      $entity_type,
+      $container->get('entity.manager')->getStorageController($entity_type->id()),
       $container->get('config.factory')
     );
   }

@@ -41,25 +41,25 @@ class EntityListController extends EntityControllerBase implements EntityListCon
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id())
+      $entity_type,
+      $container->get('entity.manager')->getStorageController($entity_type->id())
     );
   }
 
   /**
    * Constructs a new EntityListController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage) {
-    $this->entityTypeId = $entity_info->id();
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage) {
+    $this->entityTypeId = $entity_type->id();
     $this->storage = $storage;
-    $this->entityType = $entity_info;
+    $this->entityType = $entity_type;
   }
 
   /**

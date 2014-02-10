@@ -62,11 +62,11 @@ class ViewsSelection implements SelectionInterface {
     $displays = views_get_applicable_views('entity_reference_display');
     // Filter views that list the entity type we want, and group the separate
     // displays by view.
-    $entity_info = \Drupal::entityManager()->getDefinition($field_definition->getSetting('target_type'));
+    $entity_type = \Drupal::entityManager()->getDefinition($field_definition->getSetting('target_type'));
     $options = array();
     foreach ($displays as $data) {
       list($view, $display_id) = $data;
-      if ($view->storage->get('base_table') == $entity_info->getBaseTable()) {
+      if ($view->storage->get('base_table') == $entity_type->getBaseTable()) {
         $name = $view->storage->get('id');
         $display = $view->storage->get('display');
         $options[$name . ':' . $display_id] = $name . ' - ' . $display[$display_id]['display_title'];

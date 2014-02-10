@@ -35,7 +35,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   }
 
   function setUp() {
-    $this->entityType = 'comment';
+    $this->entityTypeId = 'comment';
     $this->nodeBundle = 'article';
     $this->bundle = 'node__comment_article';
     $this->testLanguageSelector = FALSE;
@@ -128,7 +128,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    */
   protected function assertPublishedStatus() {
     parent::assertPublishedStatus();
-    $entity = entity_load($this->entityType, $this->entityId);
+    $entity = entity_load($this->entityTypeId, $this->entityId);
     $user = $this->drupalCreateUser(array('access comments'));
     $this->drupalLogin($user);
     $languages = language_list();

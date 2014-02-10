@@ -50,15 +50,15 @@ class FieldListController extends ConfigEntityListController {
   /**
    * Constructs a new EntityListController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The 'field type' plugin manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager) {
-    parent::__construct($entity_info, $entity_manager->getStorageController($entity_info->id()));
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager) {
+    parent::__construct($entity_type, $entity_manager->getStorageController($entity_type->id()));
 
     $this->entityManager = $entity_manager;
     $this->bundles = entity_get_bundles();
@@ -69,9 +69,9 @@ class FieldListController extends ConfigEntityListController {
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
+      $entity_type,
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.field_type')
     );

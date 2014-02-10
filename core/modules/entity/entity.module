@@ -128,15 +128,15 @@ function entity_menu_link_defaults() {
 /**
  * Implements hook_entity_bundle_rename().
  */
-function entity_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
+function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) {
   // Rename entity displays.
-  $entity_info = \Drupal::entityManager()->getDefinition('entity_view_display');
+  $entity_type = \Drupal::entityManager()->getDefinition('entity_view_display');
   if ($bundle_old !== $bundle_new) {
-    $ids = config_get_storage_names_with_prefix('entity.view_display.' . $entity_type . '.' . $bundle_old . '.');
+    $ids = config_get_storage_names_with_prefix('entity.view_display.' . $entity_type_id . '.' . $bundle_old . '.');
     foreach ($ids as $id) {
-      $id = ConfigStorageController::getIDFromConfigName($id, $entity_info->getConfigPrefix());
+      $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
       $display = entity_load('entity_view_display', $id);
-      $new_id = $entity_type . '.' . $bundle_new . '.' . $display->mode;
+      $new_id = $entity_type_id . '.' . $bundle_new . '.' . $display->mode;
       $display->id = $new_id;
       $display->bundle = $bundle_new;
       $display->save();
@@ -144,13 +144,13 @@ function entity_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   }
 
   // Rename entity form displays.
-  $entity_info = \Drupal::entityManager()->getDefinition('entity_form_display');
+  $entity_type = \Drupal::entityManager()->getDefinition('entity_form_display');
   if ($bundle_old !== $bundle_new) {
-    $ids = config_get_storage_names_with_prefix('entity.form_display.' . $entity_type . '.' . $bundle_old . '.');
+    $ids = config_get_storage_names_with_prefix('entity.form_display.' . $entity_type_id . '.' . $bundle_old . '.');
     foreach ($ids as $id) {
-      $id = ConfigStorageController::getIDFromConfigName($id, $entity_info->getConfigPrefix());
+      $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
       $form_display = entity_load('entity_form_display', $id);
-      $new_id = $entity_type . '.' . $bundle_new . '.' . $form_display->mode;
+      $new_id = $entity_type_id . '.' . $bundle_new . '.' . $form_display->mode;
       $form_display->id = $new_id;
       $form_display->bundle = $bundle_new;
       $form_display->save();
@@ -161,20 +161,20 @@ function entity_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
 /**
  * Implements hook_entity_bundle_delete().
  */
-function entity_entity_bundle_delete($entity_type, $bundle) {
+function entity_entity_bundle_delete($entity_type_id, $bundle) {
   // Remove entity displays of the deleted bundle.
-  $entity_info = \Drupal::entityManager()->getDefinition('entity_view_display');
-  $ids = config_get_storage_names_with_prefix('entity.view_display.' . $entity_type . '.' . $bundle . '.');
+  $entity_type = \Drupal::entityManager()->getDefinition('entity_view_display');
+  $ids = config_get_storage_names_with_prefix('entity.view_display.' . $entity_type_id . '.' . $bundle . '.');
   foreach ($ids as &$id) {
-    $id = ConfigStorageController::getIDFromConfigName($id, $entity_info->getConfigPrefix());
+    $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
   }
   entity_delete_multiple('entity_view_display', $ids);
 
   // Remove entity form displays of the deleted bundle.
-  $entity_info = \Drupal::entityManager()->getDefinition('entity_form_display');
-  $ids = config_get_storage_names_with_prefix('entity.form_display.' . $entity_type . '.' . $bundle . '.');
+  $entity_type = \Drupal::entityManager()->getDefinition('entity_form_display');
+  $ids = config_get_storage_names_with_prefix('entity.form_display.' . $entity_type_id . '.' . $bundle . '.');
   foreach ($ids as &$id) {
-    $id = ConfigStorageController::getIDFromConfigName($id, $entity_info->getConfigPrefix());
+    $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
   }
   entity_delete_multiple('entity_form_display', $ids);
 }
@@ -185,10 +185,10 @@ function entity_entity_bundle_delete($entity_type, $bundle) {
 function entity_module_preuninstall($module) {
   // Clean up all entity bundles (including field instances) of every entity
   // type provided by the module that is being uninstalled.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
-    if ($entity_info->getProvider() == $module) {
-      foreach (array_keys(entity_get_bundles($entity_type)) as $bundle) {
-        entity_invoke_bundle_hook('delete', $entity_type, $bundle);
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+    if ($entity_type->getProvider() == $module) {
+      foreach (array_keys(entity_get_bundles($entity_type_id)) as $bundle) {
+        entity_invoke_bundle_hook('delete', $entity_type_id, $bundle);
       }
     }
   }

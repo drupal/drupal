@@ -1608,8 +1608,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('Field Language');
 
         $translatable_entity_tables = array();
-        foreach (\Drupal::entityManager()->getDefinitions() as $entity_info) {
-          if ($entity_info->isTranslatable() && $base_table = $entity_info->getBaseTable()) {
+        foreach (\Drupal::entityManager()->getDefinitions() as $entity_type) {
+          if ($entity_type->isTranslatable() && $base_table = $entity_type->getBaseTable()) {
             $translatable_entity_tables[] = $base_table;
           }
         }

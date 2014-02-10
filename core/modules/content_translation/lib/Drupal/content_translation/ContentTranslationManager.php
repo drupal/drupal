@@ -34,9 +34,9 @@ class ContentTranslationManager implements ContentTranslationManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function isSupported($entity_type) {
-    $info = $this->entityManager->getDefinition($entity_type);
-    return $info->isTranslatable() && $info->hasLinkTemplate('drupal:content-translation-overview');
+  public function isSupported($entity_type_id) {
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    return $entity_type->isTranslatable() && $entity_type->hasLinkTemplate('drupal:content-translation-overview');
   }
 
   /**
@@ -44,9 +44,9 @@ class ContentTranslationManager implements ContentTranslationManagerInterface {
    */
   public function getSupportedEntityTypes() {
     $supported_types = array();
-    foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-      if ($this->isSupported($entity_type)) {
-        $supported_types[$entity_type] = $entity_info;
+    foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
+      if ($this->isSupported($entity_type_id)) {
+        $supported_types[$entity_type_id] = $entity_type;
       }
     }
     return $supported_types;

@@ -115,15 +115,15 @@ function views_views_data() {
   );
 
   // Registers an entity area handler per entity type.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
     // Exclude entity types, which cannot be rendered.
-    if ($entity_info->hasViewBuilderClass()) {
-      $label = $entity_info->getLabel();
-      $data['views']['entity_' . $entity_type] = array(
+    if ($entity_type->hasViewBuilderClass()) {
+      $label = $entity_type->getLabel();
+      $data['views']['entity_' . $entity_type_id] = array(
         'title' => t('Rendered entity - @label', array('@label' => $label)),
         'help' => t('Displays a rendered @label entity in an area.', array('@label' => $label)),
         'area' => array(
-          'entity_type' => $entity_type,
+          'entity_type' => $entity_type_id,
           'id' => 'entity',
         ),
       );

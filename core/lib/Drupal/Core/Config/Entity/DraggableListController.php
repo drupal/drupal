@@ -48,8 +48,8 @@ abstract class DraggableListController extends ConfigEntityListController implem
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage) {
+    parent::__construct($entity_type, $storage);
 
     // Check if the entity type supports weighting.
     if ($this->entityType->hasKey('weight')) {

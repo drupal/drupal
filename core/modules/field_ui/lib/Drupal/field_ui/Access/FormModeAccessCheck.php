@@ -39,19 +39,19 @@ class FormModeAccessCheck implements AccessInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
-    if ($entity_type = $route->getDefault('entity_type')) {
+    if ($entity_type_id = $route->getDefault('entity_type_id')) {
       $form_mode = $request->attributes->get('form_mode_name');
 
       if (!($bundle = $request->attributes->get('bundle'))) {
-        $entity_info = $this->entityManager->getDefinition($entity_type);
-        $bundle = $request->attributes->get('_raw_variables')->get($entity_info->getBundleEntityType());
+        $entity_type = $this->entityManager->getDefinition($entity_type_id);
+        $bundle = $request->attributes->get('_raw_variables')->get($entity_type->getBundleEntityType());
       }
 
       $visibility = FALSE;
       if (!$form_mode || $form_mode == 'default') {
         $visibility = TRUE;
       }
-      elseif ($entity_display = $this->entityManager->getStorageController('entity_form_display')->load($entity_type . '.' . $bundle . '.' . $form_mode)) {
+      elseif ($entity_display = $this->entityManager->getStorageController('entity_form_display')->load($entity_type_id . '.' . $bundle . '.' . $form_mode)) {
         $visibility = $entity_display->status();
       }
 

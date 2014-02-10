@@ -349,23 +349,23 @@ function comment_views_data() {
     ),
   );
 
-  $entities_info = \Drupal::entityManager()->getDefinitions();
+  $entities_types = \Drupal::entityManager()->getDefinitions();
 
   // Provide a relationship for each entity type except comment.
-  foreach ($entities_info as $type => $entity_info) {
-    if ($type == 'comment' || !$entity_info->isFieldable() || !$entity_info->getBaseTable()) {
+  foreach ($entities_types as $type => $entity_type) {
+    if ($type == 'comment' || !$entity_type->isFieldable() || !$entity_type->getBaseTable()) {
       continue;
     }
     if ($fields = \Drupal::service('comment.manager')->getFields($type)) {
       $data['comment'][$type] = array(
         'relationship' => array(
-          'title' => $entity_info->getLabel(),
-          'help' => t('The @entity_type to which the comment is a reply to.', array('@entity_type' => $entity_info->getLabel())),
-          'base' => $entity_info->getBaseTable(),
-          'base field' => $entity_info->getKey('id'),
+          'title' => $entity_type->getLabel(),
+          'help' => t('The @entity_type to which the comment is a reply to.', array('@entity_type' => $entity_type->getLabel())),
+          'base' => $entity_type->getBaseTable(),
+          'base field' => $entity_type->getKey('id'),
           'relationship field' => 'entity_id',
           'id' => 'standard',
-          'label' => $entity_info->getLabel(),
+          'label' => $entity_type->getLabel(),
           'extra' => array(
             array(
               'field' => 'entity_type',
@@ -431,8 +431,8 @@ function comment_views_data() {
   $data['comment_entity_statistics']['table']['group']  = t('Comment Statistics');
 
   // Provide a relationship for each entity type except comment.
-  foreach ($entities_info as $type => $entity_info) {
-    if ($type == 'comment' || !$entity_info->isFieldable() || !$entity_info->getBaseTable()) {
+  foreach ($entities_types as $type => $entity_type) {
+    if ($type == 'comment' || !$entity_type->isFieldable() || !$entity_type->getBaseTable()) {
       continue;
     }
     // This relationship does not use the 'field id' column, if the entity has
@@ -442,9 +442,9 @@ function comment_views_data() {
     // {comment_entity_statistics} for each field as multiple joins between
     // the same two tables is not supported.
     if (\Drupal::service('comment.manager')->getFields($type)) {
-      $data['comment_entity_statistics']['table']['join'][$entity_info->getBaseTable()] = array(
+      $data['comment_entity_statistics']['table']['join'][$entity_type->getBaseTable()] = array(
         'type' => 'INNER',
-        'left_field' => $entity_info->getKey('id'),
+        'left_field' => $entity_type->getKey('id'),
         'field' => 'entity_id',
         'extra' => array(
           array(

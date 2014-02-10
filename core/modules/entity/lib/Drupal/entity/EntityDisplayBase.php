@@ -331,9 +331,9 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       //   $this->fieldDefinitions static cache ?)
       //   https://drupal.org/node/2114707
       $entity_manager = \Drupal::entityManager();
-      $entity_info = $entity_manager->getDefinition($this->targetEntityType);
+      $entity_type = $entity_manager->getDefinition($this->targetEntityType);
       $definitions = array();
-      if ($entity_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+      if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
         $entity = _field_create_entity_from_ids((object) array('entity_type' => $this->targetEntityType, 'bundle' => $this->bundle, 'entity_id' => NULL));
         foreach ($entity as $field_name => $items) {
           $definitions[$field_name] = $items->getFieldDefinition();

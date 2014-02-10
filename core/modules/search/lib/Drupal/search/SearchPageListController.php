@@ -45,8 +45,8 @@ class SearchPageListController extends DraggableListController implements FormIn
   /**
    * Constructs a new SearchPageListController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
    * @param \Drupal\search\SearchPluginManager $search_manager
@@ -54,8 +54,8 @@ class SearchPageListController extends DraggableListController implements FormIn
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, SearchPluginManager $search_manager, ConfigFactory $config_factory) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, SearchPluginManager $search_manager, ConfigFactory $config_factory) {
+    parent::__construct($entity_type, $storage);
     $this->configFactory = $config_factory;
     $this->searchManager = $search_manager;
   }
@@ -63,10 +63,10 @@ class SearchPageListController extends DraggableListController implements FormIn
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id()),
+      $entity_type,
+      $container->get('entity.manager')->getStorageController($entity_type->id()),
       $container->get('plugin.manager.search'),
       $container->get('config.factory')
     );

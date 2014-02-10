@@ -114,23 +114,23 @@ function config_translation_config_translation_info(&$info) {
   // "field_ui.instance_edit_$entity_type" are not defined.
   if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
     // Add fields entity mappers to all fieldable entity types defined.
-    foreach ($entity_manager->getDefinitions() as $entity_type => $entity_info) {
+    foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
       $base_route = NULL;
       try {
-        $base_route = $route_provider->getRouteByName('field_ui.instance_edit_' . $entity_type);
+        $base_route = $route_provider->getRouteByName('field_ui.instance_edit_' . $entity_type_id);
       }
       catch (RouteNotFoundException $e) {
         // Ignore non-existent routes.
       }
 
       // Make sure entity type is fieldable and has a base route.
-      if ($entity_info->isFieldable() && !empty($base_route)) {
-        $info[$entity_type . '_fields'] = array(
-          'base_route_name' => 'field_ui.instance_edit_' . $entity_type,
+      if ($entity_type->isFieldable() && !empty($base_route)) {
+        $info[$entity_type_id . '_fields'] = array(
+          'base_route_name' => 'field_ui.instance_edit_' . $entity_type_id,
           'entity_type' => 'field_instance',
           'title' => '!label field',
           'class' => '\Drupal\config_translation\ConfigFieldInstanceMapper',
-          'base_entity_type' => $entity_type,
+          'base_entity_type' => $entity_type_id,
           'weight' => 10,
         );
       }
@@ -138,12 +138,12 @@ function config_translation_config_translation_info(&$info) {
   }
 
   // Discover configuration entities automatically.
-  foreach ($entity_manager->getDefinitions() as $entity_type => $entity_info) {
+  foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
     // Determine base path for entities automatically if provided via the
     // configuration entity.
     if (
-      !$entity_info->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface') ||
-      !$entity_info->hasLinkTemplate('edit-form')
+      !$entity_type->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface') ||
+      !$entity_type->hasLinkTemplate('edit-form')
     ) {
       // Do not record this entity mapper if the entity type does not
       // provide a base route. We'll surely not be able to do anything with
@@ -153,12 +153,12 @@ function config_translation_config_translation_info(&$info) {
     }
 
     // Use the entity type as the plugin ID.
-    $info[$entity_type] = array(
+    $info[$entity_type_id] = array(
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
-      'base_route_name' => $entity_info->getLinkTemplate('edit-form'),
+      'base_route_name' => $entity_type->getLinkTemplate('edit-form'),
       'title' => '!label !entity_type',
       'names' => array(),
-      'entity_type' => $entity_type,
+      'entity_type' => $entity_type_id,
       'weight' => 10,
     );
   }

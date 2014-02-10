@@ -851,7 +851,7 @@ class TestEntityControllerInjected implements EntityControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static('yellow');
   }
 

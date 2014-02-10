@@ -250,7 +250,7 @@ function entity_revision_delete($entity_type, $revision_id) {
  *
  * Note that some entity types may not support UUIDs.
  *
- * @param string $entity_type
+ * @param string $entity_type_id
  *   The entity type to load; e.g., 'node' or 'user'.
  * @param string $uuid
  *   The UUID of the entity to load.
@@ -265,13 +265,13 @@ function entity_revision_delete($entity_type, $revision_id) {
  *
  * @see \Drupal\Core\Entity\EntityManagerInterface
  */
-function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
-  $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
-  if (!$uuid_key = $entity_info->getKey('uuid')) {
-    throw new EntityStorageException("Entity type $entity_type does not support UUIDs.");
+function entity_load_by_uuid($entity_type_id, $uuid, $reset = FALSE) {
+  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  if (!$uuid_key = $entity_type->getKey('uuid')) {
+    throw new EntityStorageException("Entity type $entity_type_id does not support UUIDs.");
   }
 
-  $controller = \Drupal::entityManager()->getStorageController($entity_type);
+  $controller = \Drupal::entityManager()->getStorageController($entity_type_id);
   if ($reset) {
     $controller->resetCache();
   }

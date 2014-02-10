@@ -183,9 +183,9 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
       $bundle = reset($bundles);
     }
 
-    $entity_info = $entity_manager->getDefinition($target_type);
-    $bundle_key = $entity_info->getKey('bundle');
-    $label_key = $entity_info->getKey('label');
+    $entity_type = $entity_manager->getDefinition($target_type);
+    $bundle_key = $entity_type->getKey('bundle');
+    $label_key = $entity_type->getKey('label');
 
     $entity = $entity_manager->getStorageController($target_type)->create(array(
       $label_key => $label,

@@ -67,14 +67,14 @@ class EntityDerivative implements ContainerDerivativeInterface {
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     if (!isset($this->derivatives)) {
       // Add in the default plugin configuration and the resource type.
-      foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
-        $this->derivatives[$entity_type] = array(
-          'id' => 'entity:' . $entity_type,
-          'entity_type' => $entity_type,
-          'serialization_class' => $entity_info->getClass(),
-          'label' => $entity_info->getLabel(),
+      foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
+        $this->derivatives[$entity_type_id] = array(
+          'id' => 'entity:' . $entity_type_id,
+          'entity_type' => $entity_type_id,
+          'serialization_class' => $entity_type->getClass(),
+          'label' => $entity_type->getLabel(),
         );
-        $this->derivatives[$entity_type] += $base_plugin_definition;
+        $this->derivatives[$entity_type_id] += $base_plugin_definition;
       }
     }
     return $this->derivatives;

@@ -63,7 +63,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
       $this->fieldName => array(array('value' => $this->randomName(16))),
     );
     $id = $this->createEntity($values, $default_langcode);
-    $this->entity = entity_load($this->entityType, $id, TRUE);
+    $this->entity = entity_load($this->entityTypeId, $id, TRUE);
 
     // Create a translation.
     $this->drupalLogin($this->translator);

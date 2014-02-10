@@ -84,8 +84,8 @@ class FieldOverview extends OverviewBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $entity_type = NULL, $bundle = NULL) {
-    parent::buildForm($form, $form_state, $entity_type, $bundle);
+  public function buildForm(array $form, array &$form_state, $entity_type_id = NULL, $bundle = NULL) {
+    parent::buildForm($form, $form_state, $entity_type_id, $bundle);
 
     // Gather bundle information.
     $instances = field_info_instances($this->entity_type, $this->bundle);

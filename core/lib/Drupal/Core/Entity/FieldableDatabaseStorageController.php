@@ -63,8 +63,6 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * Whether this entity type should use the static cache.
    *
-   * Set by entity info.
-   *
    * @var boolean
    */
   protected $cache;
@@ -86,9 +84,9 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
+      $entity_type,
       $container->get('database'),
       $container->get('field.info')
     );
@@ -97,15 +95,15 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * Constructs a DatabaseStorageController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, FieldInfo $field_info) {
-    parent::__construct($entity_info);
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, FieldInfo $field_info) {
+    parent::__construct($entity_type);
 
     $this->database = $database;
     $this->fieldInfo = $field_info;
@@ -1187,13 +1185,13 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       $description_revision = "Revision archive storage for {$field->entity_type} field {$field->getName()}.";
     }
 
-    $entity_type = $field->entity_type;
+    $entity_type_id = $field->entity_type;
     $entity_manager = \Drupal::entityManager();
-    $info = $entity_manager->getDefinition($entity_type);
-    $definitions = $entity_manager->getFieldDefinitions($entity_type);
+    $entity_type = $entity_manager->getDefinition($entity_type_id);
+    $definitions = $entity_manager->getFieldDefinitions($entity_type_id);
 
     // Define the entity ID schema based on the field definitions.
-    $id_definition = $definitions[$info->getKey('id')];
+    $id_definition = $definitions[$entity_type->getKey('id')];
     if ($id_definition->getType() == 'integer') {
       $id_schema = array(
         'type' => 'int',
@@ -1213,7 +1211,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
 
     // Define the revision ID schema, default to integer if there is no revision
     // ID.
-    $revision_id_definition = $info->hasKey('revision_id') ? $definitions[$info->getKey('revision_id')] : NULL;
+    $revision_id_definition = $entity_type->hasKey('revision_id') ? $definitions[$entity_type->getKey('revision_id')] : NULL;
     if (!$revision_id_definition || $revision_id_definition->getType() == 'integer') {
       $revision_id_schema = array(
         'type' => 'int',

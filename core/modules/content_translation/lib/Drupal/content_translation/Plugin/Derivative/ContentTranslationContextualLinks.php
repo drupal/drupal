@@ -51,10 +51,10 @@ class ContentTranslationContextualLinks extends DerivativeBase implements Contai
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     // Create contextual links for translatable entity types.
-    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type => $entity_info) {
-      $this->derivatives[$entity_type]['title'] = t('Translate');
-      $this->derivatives[$entity_type]['route_name'] = $entity_info->getLinkTemplate('drupal:content-translation-overview');
-      $this->derivatives[$entity_type]['group'] = $entity_type;
+    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
+      $this->derivatives[$entity_type_id]['title'] = t('Translate');
+      $this->derivatives[$entity_type_id]['route_name'] = $entity_type->getLinkTemplate('drupal:content-translation-overview');
+      $this->derivatives[$entity_type_id]['group'] = $entity_type_id;
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);
   }

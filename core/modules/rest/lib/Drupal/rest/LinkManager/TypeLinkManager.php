@@ -81,18 +81,18 @@ class TypeLinkManager implements TypeLinkManagerInterface {
 
     // Type URIs correspond to bundles. Iterate through the bundles to get the
     // URI and data for them.
-    $entity_info = \Drupal::entityManager()->getDefinitions();
-    foreach (entity_get_bundles() as $entity_type => $bundles) {
+    $entity_types = \Drupal::entityManager()->getDefinitions();
+    foreach (entity_get_bundles() as $entity_type_id => $bundles) {
       // Only content entities are supported currently.
       // @todo Consider supporting config entities.
-      if ($entity_info[$entity_type]->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+      if ($entity_types[$entity_type_id]->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
         continue;
       }
       foreach ($bundles as $bundle => $bundle_info) {
         // Get a type URI for the bundle.
-        $bundle_uri = $this->getTypeUri($entity_type, $bundle);
+        $bundle_uri = $this->getTypeUri($entity_type_id, $bundle);
         $data[$bundle_uri] = array(
-          'entity_type' => $entity_type,
+          'entity_type' => $entity_type_id,
           'bundle' => $bundle,
         );
       }

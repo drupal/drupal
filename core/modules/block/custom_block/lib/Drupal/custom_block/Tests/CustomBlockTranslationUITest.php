@@ -48,7 +48,7 @@ class CustomBlockTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\simpletest\WebTestBase::setUp().
    */
   public function setUp() {
-    $this->entityType = 'custom_block';
+    $this->entityTypeId = 'custom_block';
     $this->bundle = 'basic';
     $this->name = drupal_strtolower($this->randomName());
     $this->testLanguageSelector = FALSE;

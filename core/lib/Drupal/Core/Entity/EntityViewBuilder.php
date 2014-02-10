@@ -60,16 +60,16 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
   /**
    * Constructs a new EntityViewBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity information array.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
-    $this->entityTypeId = $entity_info->id();
-    $this->entityType = $entity_info;
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager) {
+    $this->entityTypeId = $entity_type->id();
+    $this->entityType = $entity_type;
     $this->entityManager = $entity_manager;
     $this->languageManager = $language_manager;
   }
@@ -77,9 +77,9 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
+      $entity_type,
       $container->get('entity.manager'),
       $container->get('language_manager')
     );

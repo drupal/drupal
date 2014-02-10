@@ -1866,20 +1866,20 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
     $references[$file->id()][$age] = array();
     $usage_list = \Drupal::service('file.usage')->listUsage($file);
     $file_usage_list = isset($usage_list['file']) ? $usage_list['file'] : array();
-    foreach ($file_usage_list as $entity_type => $entity_ids) {
-      $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
+    foreach ($file_usage_list as $entity_type_id => $entity_ids) {
+      $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
       // The usage table contains usage of every revision. If we are looking
       // for every revision or the entity does not support revisions then
       // every usage is already a match.
-      $match_entity_type = $age == EntityStorageControllerInterface::FIELD_LOAD_REVISION || !$entity_info->hasKey('revision');
-      $entities = entity_load_multiple($entity_type, array_keys($entity_ids));
+      $match_entity_type = $age == EntityStorageControllerInterface::FIELD_LOAD_REVISION || !$entity_type->hasKey('revision');
+      $entities = entity_load_multiple($entity_type_id, array_keys($entity_ids));
       foreach ($entities as $entity) {
         $bundle = $entity->bundle();
         // We need to find file fields for this entity type and bundle.
-        if (!isset($file_fields[$entity_type][$bundle])) {
-          $file_fields[$entity_type][$bundle] = array();
+        if (!isset($file_fields[$entity_type_id][$bundle])) {
+          $file_fields[$entity_type_id][$bundle] = array();
           // This contains the possible field names.
-          $instances = field_info_instances($entity_type, $bundle);
+          $instances = field_info_instances($entity_type_id, $bundle);
           foreach ($instances as $field_name => $instance) {
             $field_type = $instance->getType();
             // If this is the first time this field type is seen, check
@@ -1889,11 +1889,11 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
             }
             // If the field type does reference files then record it.
             if ($field_columns[$field_type]) {
-              $file_fields[$entity_type][$bundle][$field_name] = $field_columns[$field_type];
+              $file_fields[$entity_type_id][$bundle][$field_name] = $field_columns[$field_type];
             }
           }
         }
-        foreach ($file_fields[$entity_type][$bundle] as $field_name => $field_column) {
+        foreach ($file_fields[$entity_type_id][$bundle] as $field_name => $field_column) {
           $match = $match_entity_type;
           // If we didn't match yet then iterate over the field items to find
           // the referenced file. This will fail if the usage checked is in a
@@ -1908,7 +1908,7 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
             }
           }
           if ($match) {
-            $references[$file->id()][$age][$field_name][$entity_type][$entity->id()] = $entity;
+            $references[$file->id()][$age][$field_name][$entity_type_id][$entity->id()] = $entity;
           }
         }
       }
@@ -1919,10 +1919,10 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
   // cache is very small so this will be very fast.
   if ($field || $field_type) {
     foreach ($return as $field_name => $data) {
-      foreach (array_keys($data) as $entity_type) {
-        $current_field = field_info_field($entity_type, $field_name);
+      foreach (array_keys($data) as $entity_type_id) {
+        $current_field = field_info_field($entity_type_id, $field_name);
         if (($field_type && $current_field->getType() != $field_type) || ($field && $field->uuid() != $current_field->uuid())) {
-          unset($return[$field_name][$entity_type]);
+          unset($return[$field_name][$entity_type_id]);
         }
       }
     }

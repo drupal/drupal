@@ -19,7 +19,7 @@ class TranslationTest extends FieldUnitTestBase {
   /**
    * Modules to enable.
    *
-   * node is required because the tests alter node entity info.
+   * node is required because the tests alter the node entity type.
    *
    * @var array
    */
@@ -118,13 +118,13 @@ class TranslationTest extends FieldUnitTestBase {
   function testTranslatableFieldSaveLoad() {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
-    $entity_info = \Drupal::entityManager()->getDefinition('node');
-    $this->assertTrue($entity_info->isTranslatable(), 'Nodes are translatable.');
+    $entity_type = \Drupal::entityManager()->getDefinition('node');
+    $this->assertTrue($entity_type->isTranslatable(), 'Nodes are translatable.');
 
     // Prepare the field translations.
-    $entity_type = 'entity_test';
-    field_test_entity_info_translatable($entity_type, TRUE);
-    $entity = entity_create($entity_type, array('type' => $this->instance->bundle));
+    $entity_type_id = 'entity_test';
+    field_test_entity_info_translatable($entity_type_id, TRUE);
+    $entity = entity_create($entity_type_id, array('type' => $this->instance->bundle));
     $field_translations = array();
     $available_langcodes = array_keys(language_list());
     $entity->langcode->value = reset($available_langcodes);
@@ -164,7 +164,7 @@ class TranslationTest extends FieldUnitTestBase {
     $translation_langcodes = array_values($translation_langcodes);
 
     $values = array('type' => $instance->bundle, 'langcode' => $translation_langcodes[0]);
-    $entity = entity_create($entity_type, $values);
+    $entity = entity_create($entity_type_id, $values);
     foreach ($translation_langcodes as $langcode) {
       $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->field->getCardinality());
       $entity->getTranslation($langcode, FALSE)->{$this->field_name}->setValue($values[$this->field_name][$langcode]);
@@ -182,7 +182,7 @@ class TranslationTest extends FieldUnitTestBase {
     // Check that explicit empty values are not overridden with default values.
     foreach (array(NULL, array()) as $empty_items) {
       $values = array('type' => $instance->bundle, 'langcode' => $translation_langcodes[0]);
-      $entity = entity_create($entity_type, $values);
+      $entity = entity_create($entity_type_id, $values);
       foreach ($translation_langcodes as $langcode) {
         $values[$this->field_name][$langcode] = $this->_generateTestFieldValues($this->field->getCardinality());
         $entity->getTranslation($langcode)->{$this->field_name}->setValue($values[$this->field_name][$langcode]);

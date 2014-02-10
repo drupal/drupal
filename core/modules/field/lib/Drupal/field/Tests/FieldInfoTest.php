@@ -24,12 +24,12 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Test that field_test module's fields, widgets, and formatters show up.
 
     $field_test_info = $this->getExpectedFieldTypeDefinition();
-    $info = \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions();
+    $entity_type = \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
-        $this->assertEqual($info[$t_key][$key], $val, format_string('Field type %t_key key %key is %value', array('%t_key' => $t_key, '%key' => $key, '%value' => print_r($val, TRUE))));
+        $this->assertEqual($entity_type[$t_key][$key], $val, format_string('Field type %t_key key %key is %value', array('%t_key' => $t_key, '%key' => $key, '%value' => print_r($val, TRUE))));
       }
-      $this->assertEqual($info[$t_key]['provider'], 'field_test',  'Field type field_test module appears.');
+      $this->assertEqual($entity_type[$t_key]['provider'], 'field_test',  'Field type field_test module appears.');
     }
 
     // Verify that no unexpected instances exist.
@@ -70,10 +70,10 @@ class FieldInfoTest extends FieldUnitTestBase {
     $instance = entity_create('field_instance', $instance_definition);
     $instance->save();
 
-    $info = \Drupal::entityManager()->getDefinition('entity_test');
+    $entity_type = \Drupal::entityManager()->getDefinition('entity_test');
     $instances = field_info_instances('entity_test', $instance->bundle);
     $this->assertEqual(count($instances), 1, format_string('One instance shows up in info when attached to a bundle on a @label.', array(
-      '@label' => $info->getLabel(),
+      '@label' => $entity_type->getLabel(),
     )));
     $this->assertTrue($instance_definition < $instances[$instance->getName()], 'Instance appears in info correctly');
 

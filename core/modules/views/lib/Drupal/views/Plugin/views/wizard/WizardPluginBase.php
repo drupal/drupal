@@ -38,14 +38,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @var string
    */
-  protected $entity_type;
+  protected $entityTypeId;
 
   /**
    * Contains the information from entity_get_info of the $entity_type.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $entity_info;
+  protected $entityType;
 
   /**
    * An array of validated view objects, keyed by a hash.
@@ -118,11 +118,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $this->base_table = $this->definition['base_table'];
 
-    $entities = \Drupal::entityManager()->getDefinitions();
-    foreach ($entities as $entity_type => $entity_info) {
-      if ($this->base_table == $entity_info->getBaseTable()) {
-        $this->entity_info = $entity_info;
-        $this->entity_type = $entity_type;
+    $entity_types = \Drupal::entityManager()->getDefinitions();
+    foreach ($entity_types as $entity_type_id => $entity_type) {
+      if ($this->base_table == $entity_type->getBaseTable()) {
+        $this->entityType = $entity_type;
+        $this->entityTypeId = $entity_type_id;
       }
     }
   }
@@ -561,9 +561,9 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function buildFilters(&$form, &$form_state) {
     module_load_include('inc', 'views_ui', 'admin');
 
-    $bundles = entity_get_bundles($this->entity_type);
+    $bundles = entity_get_bundles($this->entityTypeId);
     // If the current base table support bundles and has more than one (like user).
-    if (!empty($bundles) && $this->entity_info) {
+    if (!empty($bundles) && $this->entityType) {
       // Get all bundles and their human readable names.
       $options = array('all' => t('All'));
       foreach ($bundles as $type => $bundle) {
@@ -837,7 +837,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $filters = array();
 
     if (!empty($form_state['values']['show']['type']) && $form_state['values']['show']['type'] != 'all') {
-      $bundle_key = $this->entity_info->getKey('bundle');
+      $bundle_key = $this->entityType->getKey('bundle');
       // Figure out the table where $bundle_key lives. It may not be the same as
       // the base table for the view; the taxonomy vocabulary machine_name, for
       // example, is stored in taxonomy_vocabulary, not taxonomy_term_data.

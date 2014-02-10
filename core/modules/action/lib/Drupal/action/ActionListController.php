@@ -35,15 +35,15 @@ class ActionListController extends ConfigEntityListController implements EntityC
   /**
    * Constructs a new ActionListController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The action storage controller.
    * @param \Drupal\Core\Action\ActionManager $action_manager
    *   The action plugin manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ActionManager $action_manager) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, ActionManager $action_manager) {
+    parent::__construct($entity_type, $storage);
 
     $this->actionManager = $action_manager;
   }
@@ -51,10 +51,10 @@ class ActionListController extends ConfigEntityListController implements EntityC
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id()),
+      $entity_type,
+      $container->get('entity.manager')->getStorageController($entity_type->id()),
       $container->get('plugin.manager.action')
     );
   }

@@ -37,23 +37,23 @@ function image_field_views_data(FieldInterface $field) {
  * Views integration to provide reverse relationships on image fields.
  */
 function image_field_views_data_views_data_alter(array &$data, FieldInterface $field) {
-  $entity_type = $field->entity_type;
+  $entity_type_id = $field->entity_type;
   $field_name = $field->getName();
-  $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
-  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type;
+  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
+  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
 
-  list($label) = field_views_field_label($entity_type, $field_name);
+  list($label) = field_views_field_label($entity_type_id, $field_name);
 
   $data['file_managed'][$pseudo_field_name]['relationship'] = array(
-    'title' => t('@entity using @field', array('@entity' => $entity_info->getLabel(), '@field' => $label)),
-    'help' => t('Relate each @entity with a @field set to the image.', array('@entity' => $entity_info->getLabel(), '@field' => $label)),
+    'title' => t('@entity using @field', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
+    'help' => t('Relate each @entity with a @field set to the image.', array('@entity' => $entity_type->getLabel(), '@field' => $label)),
     'id' => 'entity_reverse',
     'field_name' => $field_name,
-    'entity_type' => $entity_type,
+    'entity_type' => $entity_type_id,
     'field table' => FieldableDatabaseStorageController::_fieldTableName($field),
     'field field' => $field_name . '_target_id',
-    'base' => $entity_info->getBaseTable(),
-    'base field' => $entity_info->getKey('id'),
+    'base' => $entity_type->getBaseTable(),
+    'base field' => $entity_type->getKey('id'),
     'label' => t('!field_name', array('!field_name' => $field_name)),
     'join_extra' => array(
       0 => array(

@@ -32,15 +32,15 @@ class NodeListController extends EntityListController {
   /**
    * Constructs a new NodeListController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
    * @param \Drupal\Core\Datetime\Date $date_service
    *   The date service.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, Date $date_service) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, Date $date_service) {
+    parent::__construct($entity_type, $storage);
 
     $this->dateService = $date_service;
   }
@@ -48,10 +48,10 @@ class NodeListController extends EntityListController {
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id()),
+      $entity_type,
+      $container->get('entity.manager')->getStorageController($entity_type->id()),
       $container->get('date')
     );
   }

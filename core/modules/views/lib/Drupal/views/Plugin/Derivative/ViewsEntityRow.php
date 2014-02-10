@@ -91,16 +91,16 @@ class ViewsEntityRow implements ContainerDerivativeInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
-    foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
+    foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
       // Just add support for entity types which have a views integration.
-      if (($base_table = $entity_info->getBaseTable()) && $this->viewsData->get($base_table) && $this->entityManager->hasController($entity_type, 'view_builder')) {
-        $this->derivatives[$entity_type] = array(
-          'id' => 'entity:' . $entity_type,
+      if (($base_table = $entity_type->getBaseTable()) && $this->viewsData->get($base_table) && $this->entityManager->hasController($entity_type_id, 'view_builder')) {
+        $this->derivatives[$entity_type_id] = array(
+          'id' => 'entity:' . $entity_type_id,
           'provider' => 'views',
-          'title' => $entity_info->getLabel(),
-          'help' => t('Display the @label', array('@label' => $entity_info->getLabel())),
+          'title' => $entity_type->getLabel(),
+          'help' => t('Display the @label', array('@label' => $entity_type->getLabel())),
           'base' => array($base_table),
-          'entity_type' => $entity_type,
+          'entity_type' => $entity_type_id,
           'display_types' => array('normal'),
           'class' => $base_plugin_definition['class'],
         );

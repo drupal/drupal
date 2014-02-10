@@ -22,11 +22,11 @@ class EntityDisplayModeController extends ControllerBase {
    */
   public function viewModeTypeSelection() {
     $entity_types = array();
-    foreach ($this->entityManager()->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info->isFieldable() && $entity_info->hasViewBuilderClass()) {
-        $entity_types[$entity_type] = array(
-          'title' => $entity_info->getLabel(),
-          'link_path' => 'admin/structure/display-modes/view/add/' . $entity_type,
+    foreach ($this->entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+      if ($entity_type->isFieldable() && $entity_type->hasViewBuilderClass()) {
+        $entity_types[$entity_type_id] = array(
+          'title' => $entity_type->getLabel(),
+          'link_path' => 'admin/structure/display-modes/view/add/' . $entity_type_id,
           'localized_options' => array(),
         );
       }
@@ -45,11 +45,11 @@ class EntityDisplayModeController extends ControllerBase {
    */
   public function formModeTypeSelection() {
     $entity_types = array();
-    foreach ($this->entityManager()->getDefinitions() as $entity_type => $entity_info) {
-      if ($entity_info->isFieldable() && $entity_info->hasFormClasses()) {
-        $entity_types[$entity_type] = array(
-          'title' => $entity_info->getLabel(),
-          'link_path' => 'admin/structure/display-modes/form/add/' . $entity_type,
+    foreach ($this->entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+      if ($entity_type->isFieldable() && $entity_type->hasFormClasses()) {
+        $entity_types[$entity_type_id] = array(
+          'title' => $entity_type->getLabel(),
+          'link_path' => 'admin/structure/display-modes/form/add/' . $entity_type_id,
           'localized_options' => array(),
         );
       }

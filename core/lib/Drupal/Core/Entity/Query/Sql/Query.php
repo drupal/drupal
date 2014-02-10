@@ -20,7 +20,7 @@ use Drupal\Core\Entity\Query\QueryInterface;
 class Query extends QueryBase implements QueryInterface {
 
   /**
-   * Contains the entity info for the entity type of that query.
+   * The entity type definition.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
@@ -71,7 +71,7 @@ class Query extends QueryBase implements QueryInterface {
    * @param string $entity_type
    *   The entity type.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager storing the entity info.
+   *   The entity manager service.
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.

@@ -39,7 +39,7 @@ class ContentTranslationOverviewAccess implements AccessInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
-    $entity_type = $request->attributes->get('_entity_type');
+    $entity_type = $request->attributes->get('_entity_type_id');
     if ($entity = $request->attributes->get($entity_type)) {
       // Get entity base info.
       $bundle = $entity->bundle();

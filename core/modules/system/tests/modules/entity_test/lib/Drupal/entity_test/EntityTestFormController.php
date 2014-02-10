@@ -49,8 +49,7 @@ class EntityTestFormController extends ContentEntityFormController {
     );
 
     // @todo: Is there a better way to check if an entity type is revisionable?
-    $entity_info = $entity->getEntityType();
-    if ($entity_info->hasKey('revision') && !$entity->isNew()) {
+    if ($entity->getEntityType()->hasKey('revision') && !$entity->isNew()) {
       $form['revision'] = array(
         '#type' => 'checkbox',
         '#title' => t('Create new revision'),

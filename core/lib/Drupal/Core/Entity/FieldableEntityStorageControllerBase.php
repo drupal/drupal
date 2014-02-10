@@ -33,11 +33,11 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
   /**
    * Constructs a FieldableEntityStorageControllerBase object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    */
-  public function __construct(EntityTypeInterface $entity_info) {
-    parent::__construct($entity_info);
+  public function __construct(EntityTypeInterface $entity_type) {
+    parent::__construct($entity_type);
 
     $this->bundleKey = $this->entityType->getKey('bundle');
     $this->entityClass = $this->entityType->getClass();
@@ -46,9 +46,9 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info
+      $entity_type
     );
   }
 
@@ -205,8 +205,8 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
     $this->doSaveFieldItems($entity, $update);
 
     if ($update) {
-      $entity_info = $entity->getEntityType();
-      if ($entity_info->isFieldDataCacheable()) {
+      $entity_type = $entity->getEntityType();
+      if ($entity_type->isFieldDataCacheable()) {
         cache('field')->delete('field:' . $entity->getEntityTypeId() . ':' . $entity->id());
       }
     }
@@ -225,8 +225,8 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
   protected function deleteFieldItems(EntityInterface $entity) {
     $this->doDeleteFieldItems($entity);
 
-    $entity_info = $entity->getEntityType();
-    if ($entity_info->isFieldDataCacheable()) {
+    $entity_type = $entity->getEntityType();
+    if ($entity_type->isFieldDataCacheable()) {
       cache('field')->delete('field:' . $entity->getEntityTypeId() . ':' . $entity->id());
     }
   }

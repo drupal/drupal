@@ -60,12 +60,12 @@ class EntityNormalizer extends NormalizerBase implements DenormalizerInterface {
       throw new UnexpectedValueException('Entity type parameter must be included in context.');
     }
 
-    $entity_info = $this->entityManager->getDefinition($context['entity_type']);
+    $entity_type = $this->entityManager->getDefinition($context['entity_type']);
 
     // The bundle property behaves differently from other entity properties.
     // i.e. the nested structure with a 'value' key does not work.
-    if ($entity_info->hasKey('bundle')) {
-      $bundle_key = $entity_info->getKey('bundle');
+    if ($entity_type->hasKey('bundle')) {
+      $bundle_key = $entity_type->getKey('bundle');
       $type = $data[$bundle_key][0]['value'];
       $data[$bundle_key] = $type;
     }

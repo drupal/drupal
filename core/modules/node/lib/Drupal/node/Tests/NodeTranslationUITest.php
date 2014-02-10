@@ -38,7 +38,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
   }
 
   function setUp() {
-    $this->entityType = 'node';
+    $this->entityTypeId = 'node';
     $this->bundle = 'article';
     parent::setUp();
 
@@ -110,7 +110,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::assertPublishedStatus().
    */
   protected function doTestPublishedStatus() {
-    $entity = entity_load($this->entityType, $this->entityId, TRUE);
+    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     $path = $entity->getSystemPath('edit-form');
     $languages = language_list();
 
@@ -128,7 +128,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
         }
         $this->drupalPostForm($path, array(), $action, array('language' => $languages[$langcode]));
       }
-      $entity = entity_load($this->entityType, $this->entityId, TRUE);
+      $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
       foreach ($this->langcodes as $langcode) {
         // The node is created as unpulished thus we switch to the published
         // status first.
@@ -142,7 +142,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::assertAuthoringInfo().
    */
   protected function doTestAuthoringInfo() {
-    $entity = entity_load($this->entityType, $this->entityId, TRUE);
+    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     $path = $entity->getSystemPath('edit-form');
     $languages = language_list();
     $values = array();
@@ -162,7 +162,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
       $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity), array('language' => $languages[$langcode]));
     }
 
-    $entity = entity_load($this->entityType, $this->entityId, TRUE);
+    $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     foreach ($this->langcodes as $langcode) {
       $this->assertEqual($entity->translation[$langcode]['uid'] == $values[$langcode]['uid'], 'Translation author correctly stored.');
       $this->assertEqual($entity->translation[$langcode]['created'] == $values[$langcode]['created'], 'Translation date correctly stored.');
@@ -198,7 +198,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->assertRaw('Not translated');
 
     // Delete the only translatable field.
-    field_info_field($this->entityType, 'field_test_et_ui_test')->delete();
+    field_info_field($this->entityTypeId, 'field_test_et_ui_test')->delete();
 
     // Visit translation page.
     $this->drupalGet('node/' . $article->id() . '/translations');
@@ -230,7 +230,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $default_langcode = $this->langcodes[0];
     $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
     $this->entityId = $this->createEntity($values[$default_langcode], $default_langcode);
-    $node = \Drupal::entityManager()->getStorageController($this->entityType)->load($this->entityId);
+    $node = \Drupal::entityManager()->getStorageController($this->entityTypeId)->load($this->entityId);
     $node->setPromoted(TRUE);
 
     // Create translations.

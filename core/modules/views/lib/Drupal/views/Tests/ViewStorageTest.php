@@ -40,11 +40,11 @@ class ViewStorageTest extends ViewUnitTestBase {
   );
 
   /**
-   * The configuration entity information from entity_get_info().
+   * The entity type definition.
    *
-   * @var array
+   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
-  protected $info;
+  protected $entityType;
 
   /**
    * The configuration entity storage controller.
@@ -72,12 +72,12 @@ class ViewStorageTest extends ViewUnitTestBase {
    * Tests CRUD operations.
    */
   function testConfigurationEntityCRUD() {
-    // Get the configuration entity information and controller.
-    $this->info = \Drupal::entityManager()->getDefinition('view');
+    // Get the configuration entity type and controller.
+    $this->entityType = \Drupal::entityManager()->getDefinition('view');
     $this->controller = $this->container->get('entity.manager')->getStorageController('view');
 
     // Confirm that an info array has been returned.
-    $this->assertTrue($this->info instanceof EntityTypeInterface, 'The View info array is loaded.');
+    $this->assertTrue($this->entityType instanceof EntityTypeInterface, 'The View info array is loaded.');
 
     // Confirm we have the correct controller class.
     $this->assertTrue($this->controller instanceof ViewStorageController, 'The correct controller is loaded.');

@@ -107,12 +107,12 @@ abstract class Entity implements EntityInterface {
    */
   public function label() {
     $label = NULL;
-    $entity_info = $this->getEntityType();
+    $entity_type = $this->getEntityType();
     // @todo Convert to is_callable() and call_user_func().
-    if (($label_callback = $entity_info->getLabelCallback()) && function_exists($label_callback)) {
+    if (($label_callback = $entity_type->getLabelCallback()) && function_exists($label_callback)) {
       $label = $label_callback($this);
     }
-    elseif (($label_key = $entity_info->getKey('label')) && isset($this->{$label_key})) {
+    elseif (($label_key = $entity_type->getKey('label')) && isset($this->{$label_key})) {
       $label = $this->{$label_key};
     }
     return $label;
@@ -291,13 +291,13 @@ abstract class Entity implements EntityInterface {
    */
   public function createDuplicate() {
     $duplicate = clone $this;
-    $entity_info = $this->getEntityType();
-    $duplicate->{$entity_info->getKey('id')} = NULL;
+    $entity_type = $this->getEntityType();
+    $duplicate->{$entity_type->getKey('id')} = NULL;
 
     // Check if the entity type supports UUIDs and generate a new one if so.
-    if ($entity_info->hasKey('uuid')) {
+    if ($entity_type->hasKey('uuid')) {
       // @todo Inject the UUID service into the Entity class once possible.
-      $duplicate->{$entity_info->getKey('uuid')} = \Drupal::service('uuid')->generate();
+      $duplicate->{$entity_type->getKey('uuid')} = \Drupal::service('uuid')->generate();
     }
     return $duplicate;
   }

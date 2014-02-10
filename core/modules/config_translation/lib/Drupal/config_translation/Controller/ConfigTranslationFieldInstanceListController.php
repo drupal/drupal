@@ -52,11 +52,11 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     $entity_manager = $container->get('entity.manager');
     return new static(
-      $entity_info,
-      $entity_manager->getStorageController($entity_info->id()),
+      $entity_type,
+      $entity_manager->getStorageController($entity_type->id()),
       $entity_manager
     );
   }
@@ -64,15 +64,15 @@ class ConfigTranslationFieldInstanceListController extends ConfigTranslationEnti
   /**
    * Constructs a new ConfigTranslationFieldInstanceListController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, EntityManagerInterface $entity_manager) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, EntityManagerInterface $entity_manager) {
+    parent::__construct($entity_type, $storage);
     $this->entityManager = $entity_manager;
   }
 

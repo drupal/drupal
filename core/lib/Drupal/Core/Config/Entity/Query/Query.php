@@ -124,15 +124,15 @@ class Query extends QueryBase implements QueryInterface {
    *   Config records keyed by entity IDs.
    */
   protected function loadRecords() {
-    $entity_info = $this->entityManager->getDefinition($this->getEntityType());
-    $prefix = $entity_info->getConfigPrefix() . '.';
+    $entity_type = $this->entityManager->getDefinition($this->getEntityType());
+    $prefix = $entity_type->getConfigPrefix() . '.';
     $prefix_length = strlen($prefix);
 
     // Search the conditions for restrictions on entity IDs.
     $ids = array();
     if ($this->condition->getConjunction() == 'AND') {
       foreach ($this->condition->conditions() as $condition) {
-        if (is_string($condition['field']) && $condition['field'] == $entity_info->getKey('id')) {
+        if (is_string($condition['field']) && $condition['field'] == $entity_type->getKey('id')) {
           $operator = $condition['operator'] ?: (is_array($condition['value']) ? 'IN' : '=');
           if ($operator == '=') {
             $ids = array($condition['value']);

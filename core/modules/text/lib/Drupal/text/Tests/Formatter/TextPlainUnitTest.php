@@ -105,8 +105,8 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
    *   The created entity object.
    */
   protected function createEntity($values = array()) {
-    $info = \Drupal::entityManager()->getDefinition($this->entity_type);
-    $bundle_key = $info->getKey('bundle');
+    $entity_type = \Drupal::entityManager()->getDefinition($this->entity_type);
+    $bundle_key = $entity_type->getKey('bundle');
     $entity = entity_create($this->entity_type, $values + array(
       $bundle_key => $this->bundle,
     ));

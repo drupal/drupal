@@ -42,7 +42,7 @@ class TranslationLinkTest extends ContentTranslationTestBase {
 
   function setUp() {
     // @todo Use entity_type once it is has multilingual Views integration.
-    $this->entityType = 'user';
+    $this->entityTypeId = 'user';
 
     parent::setUp();
 

@@ -39,23 +39,23 @@ function hook_config_translation_info(&$info) {
   // "field_ui.instance_edit_$entity_type" are not defined.
   if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
     // Add fields entity mappers to all fieldable entity types defined.
-    foreach ($entity_manager->getDefinitions() as $entity_type => $entity_info) {
+    foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
       $base_route = NULL;
       try {
-        $base_route = $route_provider->getRouteByName('field_ui.instance_edit_' . $entity_type);
+        $base_route = $route_provider->getRouteByName('field_ui.instance_edit_' . $entity_type_id);
       }
       catch (RouteNotFoundException $e) {
         // Ignore non-existent routes.
       }
 
       // Make sure entity type is fieldable and has a base route.
-      if ($entity_info->isFieldable() && !empty($base_route)) {
-        $info[$entity_type . '_fields'] = array(
-          'base_route_name' => 'field_ui.instance_edit_' . $entity_type,
+      if ($entity_type->isFieldable() && !empty($base_route)) {
+        $info[$entity_type_id . '_fields'] = array(
+          'base_route_name' => 'field_ui.instance_edit_' . $entity_type_id,
           'entity_type' => 'field_instance',
           'title' => t('!label field'),
           'class' => '\Drupal\config_translation\ConfigFieldInstanceMapper',
-          'base_entity_type' => $entity_type,
+          'base_entity_type' => $entity_type_id,
           'weight' => 10,
         );
       }

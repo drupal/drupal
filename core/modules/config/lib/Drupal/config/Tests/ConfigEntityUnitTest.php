@@ -49,16 +49,16 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
    * Tests storage controller methods.
    */
   public function testStorageControllerMethods() {
-    $info = \Drupal::entityManager()->getDefinition('config_test');
+    $entity_type = \Drupal::entityManager()->getDefinition('config_test');
 
-    $expected = $info->getConfigPrefix() . '.';
+    $expected = $entity_type->getConfigPrefix() . '.';
     $this->assertIdentical($this->storage->getConfigPrefix(), $expected);
 
     // Test the static extractID() method.
     $expected_id = 'test_id';
-    $config_name = $info->getConfigPrefix() . '.' . $expected_id;
+    $config_name = $entity_type->getConfigPrefix() . '.' . $expected_id;
     $storage = $this->storage;
-    $this->assertIdentical($storage::getIDFromConfigName($config_name, $info->getConfigPrefix()), $expected_id);
+    $this->assertIdentical($storage::getIDFromConfigName($config_name, $entity_type->getConfigPrefix()), $expected_id);
 
     // Create three entities, two with the same style.
     $style = $this->randomName(8);

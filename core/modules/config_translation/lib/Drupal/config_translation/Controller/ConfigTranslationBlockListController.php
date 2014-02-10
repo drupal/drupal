@@ -29,18 +29,18 @@ class ConfigTranslationBlockListController extends ConfigTranslationEntityListCo
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, ThemeHandlerInterface $theme_handler) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, ThemeHandlerInterface $theme_handler) {
+    parent::__construct($entity_type, $storage);
     $this->themes = $theme_handler->listInfo();
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id()),
+      $entity_type,
+      $container->get('entity.manager')->getStorageController($entity_type->id()),
       $container->get('theme_handler')
     );
   }

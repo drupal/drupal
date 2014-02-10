@@ -51,10 +51,10 @@ class AreaEntityTest extends ViewTestBase {
    */
   public function testEntityAreaData() {
     $data = $this->container->get('views.views_data')->get('views');
-    $entity_info = $this->container->get('entity.manager')->getDefinitions();
+    $entity_types = $this->container->get('entity.manager')->getDefinitions();
 
-    $expected_entities = array_filter($entity_info, function (EntityTypeInterface $info) {
-      return $info->hasViewBuilderClass();
+    $expected_entities = array_filter($entity_types, function (EntityTypeInterface $entity_type) {
+      return $entity_type->hasViewBuilderClass();
     });
 
     // Test that all expected entity types have data.
@@ -64,8 +64,8 @@ class AreaEntityTest extends ViewTestBase {
       $this->assertEqual($entity, $data['entity_' . $entity]['area']['entity_type'], format_string('Correct entity_type set for @entity', array('@entity' => $entity)));
     }
 
-    $expected_entities = array_filter($entity_info, function (EntityTypeInterface $info) {
-      return !$info->hasViewBuilderClass();
+    $expected_entities = array_filter($entity_types, function (EntityTypeInterface $type) {
+      return !$type->hasViewBuilderClass();
     });
 
     // Test that no configuration entity types have data.

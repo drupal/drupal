@@ -319,9 +319,9 @@ class Field extends ConfigEntityBase implements FieldInterface {
     // Disallow reserved field names. This can't prevent all field name
     // collisions with existing entity properties, but some is better than
     // none.
-    foreach ($entity_manager->getDefinitions() as $type => $info) {
-      if (in_array($this->name, $info->getKeys())) {
-        throw new FieldException(format_string('Attempt to create field %name which is reserved by entity type %type.', array('%name' => $this->name, '%type' => $type)));
+    foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
+      if (in_array($this->name, $entity_type->getKeys())) {
+        throw new FieldException(format_string('Attempt to create field %name which is reserved by entity type %type.', array('%name' => $this->name, '%type' => $entity_type_id)));
       }
     }
 
@@ -669,8 +669,8 @@ class Field extends ConfigEntityBase implements FieldInterface {
       $columns = array_keys($storage_details['columns']);
       $factory = \Drupal::service('entity.query');
       // Entity Query throws an exception if there is no base table.
-      $entity_info = \Drupal::entityManager()->getDefinition($this->entity_type);
-      if (!$entity_info->getBaseTable()) {
+      $entity_type = \Drupal::entityManager()->getDefinition($this->entity_type);
+      if (!$entity_type->getBaseTable()) {
         return FALSE;
       }
       $query = $factory->get($this->entity_type);

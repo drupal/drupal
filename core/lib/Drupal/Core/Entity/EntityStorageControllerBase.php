@@ -61,12 +61,12 @@ abstract class EntityStorageControllerBase extends EntityControllerBase implemen
   /**
    * Constructs an EntityStorageControllerBase instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    */
-  public function __construct(EntityTypeInterface $entity_info) {
-    $this->entityTypeId = $entity_info->id();
-    $this->entityType = $entity_info;
+  public function __construct(EntityTypeInterface $entity_type) {
+    $this->entityTypeId = $entity_type->id();
+    $this->entityType = $entity_type;
     // Check if the entity type supports static caching of loaded entities.
     $this->cache = $this->entityType->isStaticallyCacheable();
   }

@@ -520,8 +520,8 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    */
   protected function urlRouteParameters($rel) {
     $parameters = parent::urlRouteParameters($rel);
-    $entity_info = \Drupal::entityManager()->getDefinition($this->entity_type);
-    $parameters[$entity_info->getBundleEntityType()] = $this->bundle;
+    $entity_type = \Drupal::entityManager()->getDefinition($this->entity_type);
+    $parameters[$entity_type->getBundleEntityType()] = $this->bundle;
     return $parameters;
   }
 

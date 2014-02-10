@@ -28,27 +28,27 @@ class EntityDisplayModeListController extends ConfigEntityListController {
   /**
    * Constructs a new EntityListController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
-   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_info_complete
-   *   The entity info for all entity types.
+   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
+   *   List of all entity types.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $storage, array $entity_info_complete) {
-    parent::__construct($entity_info, $storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, array $entity_types) {
+    parent::__construct($entity_type, $storage);
 
-    $this->entityTypes = $entity_info_complete;
+    $this->entityTypes = $entity_types;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     $entity_manager = $container->get('entity.manager');
     return new static(
-      $entity_info,
-      $entity_manager->getStorageController($entity_info->id()),
+      $entity_type,
+      $entity_manager->getStorageController($entity_type->id()),
       $entity_manager->getDefinitions()
     );
   }

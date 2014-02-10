@@ -79,8 +79,8 @@ function config($name) {
  *   Either the entity type name, or NULL if none match.
  */
 function config_get_entity_type_by_name($name) {
-  $entities = array_filter(\Drupal::entityManager()->getDefinitions(), function (EntityTypeInterface $entity_info) use ($name) {
-    return ($config_prefix = $entity_info->getConfigPrefix()) && strpos($name, $config_prefix . '.') === 0;
+  $entities = array_filter(\Drupal::entityManager()->getDefinitions(), function (EntityTypeInterface $entity_type) use ($name) {
+    return ($config_prefix = $entity_type->getConfigPrefix()) && strpos($name, $config_prefix . '.') === 0;
   });
   return key($entities);
 }

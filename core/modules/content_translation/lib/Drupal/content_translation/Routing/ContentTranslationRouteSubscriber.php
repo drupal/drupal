@@ -39,9 +39,9 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection, $provider) {
-    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type => $entity_info) {
+    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
       // Try to get the route from the current collection.
-      if (!$entity_route = $collection->get($entity_info->getLinkTemplate('canonical'))) {
+      if (!$entity_route = $collection->get($entity_type->getLinkTemplate('canonical'))) {
         continue;
       }
       $path = $entity_route->getPath() . '/translations';
@@ -51,22 +51,22 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
         array(
           '_content' => '\Drupal\content_translation\Controller\ContentTranslationController::overview',
           'account' => 'NULL',
-          '_entity_type' => $entity_type,
+          '_entity_type_id' => $entity_type_id,
         ),
         array(
-          '_access_content_translation_overview' => $entity_type,
+          '_access_content_translation_overview' => $entity_type_id,
           '_permission' => 'translate any entity',
         ),
         array(
           '_access_mode' => 'ANY',
           'parameters' => array(
             'entity' => array(
-              'type' => 'entity:' . $entity_type,
+              'type' => 'entity:' . $entity_type_id,
             ),
           ),
         )
       );
-      $collection->add($entity_info->getLinkTemplate('drupal:content-translation-overview'), $route);
+      $collection->add($entity_type->getLinkTemplate('drupal:content-translation-overview'), $route);
 
       $route = new Route(
         $path . '/add/{source}/{target}',
@@ -75,7 +75,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           'source' => NULL,
           'target' => NULL,
           '_title' => 'Add',
-          '_entity_type' => $entity_type,
+          '_entity_type_id' => $entity_type_id,
 
         ),
         array(
@@ -86,12 +86,12 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_access_mode' => 'ANY',
           'parameters' => array(
             'entity' => array(
-              'type' => 'entity:' . $entity_type,
+              'type' => 'entity:' . $entity_type_id,
             ),
           ),
         )
       );
-      $collection->add("content_translation.translation_add_$entity_type", $route);
+      $collection->add("content_translation.translation_add_$entity_type_id", $route);
 
       $route = new Route(
         $path . '/edit/{language}',
@@ -99,7 +99,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_content' => '\Drupal\content_translation\Controller\ContentTranslationController::edit',
           'language' => NULL,
           '_title' => 'Edit',
-          '_entity_type' => $entity_type,
+          '_entity_type_id' => $entity_type_id,
         ),
         array(
           '_permission' => 'translate any entity',
@@ -109,12 +109,12 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_access_mode' => 'ANY',
           'parameters' => array(
             'entity' => array(
-              'type' => 'entity:' . $entity_type,
+              'type' => 'entity:' . $entity_type_id,
             ),
           ),
         )
       );
-      $collection->add("content_translation.translation_edit_$entity_type", $route);
+      $collection->add("content_translation.translation_edit_$entity_type_id", $route);
 
       $route = new Route(
         $path . '/delete/{language}',
@@ -122,7 +122,7 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
           '_form' => '\Drupal\content_translation\Form\ContentTranslationDeleteForm',
           'language' => NULL,
           '_title' => 'Delete',
-          '_entity_type' => $entity_type,
+          '_entity_type_id' => $entity_type_id,
         ),
         array(
           '_permission' => 'translate any entity',
@@ -131,13 +131,13 @@ class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
         array(
           'parameters' => array(
             'entity' => array(
-              'type' => 'entity:' . $entity_type,
+              'type' => 'entity:' . $entity_type_id,
             ),
           ),
           '_access_mode' => 'ANY',
         )
       );
-      $collection->add("content_translation.delete_$entity_type", $route);
+      $collection->add("content_translation.delete_$entity_type_id", $route);
     }
   }
 

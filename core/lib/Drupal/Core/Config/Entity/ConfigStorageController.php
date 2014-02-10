@@ -82,8 +82,8 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
   /**
    * Constructs a ConfigStorageController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory service.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
@@ -93,8 +93,8 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
    */
-  public function __construct(EntityTypeInterface $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, UuidInterface $uuid_service) {
-    parent::__construct($entity_info);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactory $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, UuidInterface $uuid_service) {
+    parent::__construct($entity_type);
 
     $this->idKey = $this->entityType->getKey('id');
     $this->statusKey = $this->entityType->getKey('status');
@@ -108,9 +108,9 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
+      $entity_type,
       $container->get('config.factory'),
       $container->get('config.storage'),
       $container->get('entity.query'),

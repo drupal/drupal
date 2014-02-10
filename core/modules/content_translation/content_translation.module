@@ -191,13 +191,13 @@ function content_translation_menu() {
   $items = array();
 
   // Create tabs for all possible entity types.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
     // Provide the translation UI only for enabled types.
-    if (content_translation_enabled($entity_type)) {
-      $path = _content_translation_link_to_router_path($entity_type, $info->getLinkTemplate('canonical'));
+    if (content_translation_enabled($entity_type_id)) {
+      $path = _content_translation_link_to_router_path($entity_type_id, $entity_type->getLinkTemplate('canonical'));
       $entity_position = count(explode('/', $path)) - 1;
       $keys = array_flip(array('load_arguments'));
-      $translation = $info->get('translation');
+      $translation = $entity_type->get('translation');
       $menu_info = array_intersect_key($translation['content_translation'], $keys) + array('file' => 'content_translation.pages.inc');
       $item = array();
 
@@ -214,7 +214,7 @@ function content_translation_menu() {
       $args = array($entity_position, $language_position, $language_position + 1);
       $items["$path/translations/add/%language/%language"] = array(
         'title' => 'Add',
-        'route_name' => "content_translation.translation_add_$entity_type",
+        'route_name' => "content_translation.translation_add_$entity_type_id",
         'weight' => 1,
       );
 
@@ -222,14 +222,14 @@ function content_translation_menu() {
       $args = array($entity_position, $language_position);
       $items["$path/translations/edit/%language"] = array(
         'title' => 'Edit',
-        'route_name' => "content_translation.translation_edit_$entity_type",
+        'route_name' => "content_translation.translation_edit_$entity_type_id",
         'weight' => 1,
       );
 
       // Delete translation callback.
       $items["$path/translations/delete/%language"] = array(
         'title' => 'Delete',
-        'route_name' => "content_translation.delete_$entity_type",
+        'route_name' => "content_translation.delete_$entity_type_id",
       ) + $item;
     }
   }
@@ -249,9 +249,9 @@ function content_translation_menu_alter(array &$items) {
   $items['admin/config/regional/content-language']['description'] = 'Configure language and translation support for content.';
 
   // Check that the declared menu base paths are actually valid.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
-    if (content_translation_enabled($entity_type)) {
-      $path = _content_translation_link_to_router_path($entity_type, $info->getLinkTemplate('canonical'));
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+    if (content_translation_enabled($entity_type_id)) {
+      $path = _content_translation_link_to_router_path($entity_type_id, $entity_type->getLinkTemplate('canonical'));
 
       // If the base path is not defined we cannot provide the translation UI
       // for this entity type. In some cases the actual base path might not have
@@ -264,7 +264,7 @@ function content_translation_menu_alter(array &$items) {
           $items["$path/translations/add/%language/%language"],
           $items["$path/translations/delete/%language"]
         );
-        $t_args = array('@entity_type' => $info->getLabel() ?: $entity_type);
+        $t_args = array('@entity_type' => $entity_type->getLabel() ?: $entity_type_id);
         watchdog('content translation', 'The entities of type @entity_type do not define a valid base path: it will not be possible to translate them.', $t_args, WATCHDOG_WARNING);
       }
       else {
@@ -353,11 +353,11 @@ function content_translation_translate_access(EntityInterface $entity) {
  *   the current user.
  */
 function content_translation_view_access(EntityInterface $entity, $langcode, AccountInterface $account = NULL) {
-  $entity_type = $entity->getEntityTypeId();
-  $info = $entity->getEntityType();
-  $permission = "translate $entity_type";
-  if ($info->getPermissionGranularity() == 'bundle') {
-    $permission = "translate {$entity->bundle()} $entity_type";
+  $entity_type_id = $entity->getEntityTypeId();
+  $entity_type = $entity->getEntityType();
+  $permission = "translate $entity_type_id";
+  if ($entity_type->getPermissionGranularity() == 'bundle') {
+    $permission = "translate {$entity->bundle()} $entity_type_id";
   }
   return !empty($entity->translation[$langcode]['status']) || user_access('translate any entity', $account) || user_access($permission, $account);
 }
@@ -532,7 +532,7 @@ function content_translation_enabled($entity_type, $bundle = NULL) {
 /**
  * Content translation controller factory.
  *
- * @param string $entity_type
+ * @param string $entity_type_id
  *   The type of the entity being translated.
  *
  * @return \Drupal\content_translation\ContentTranslationControllerInterface
@@ -540,11 +540,11 @@ function content_translation_enabled($entity_type, $bundle = NULL) {
  *
  * @todo Move to \Drupal\content_translation\ContentTranslationManager.
  */
-function content_translation_controller($entity_type) {
-  $entity_info = \Drupal::entityManager()->getDefinition($entity_type);
+function content_translation_controller($entity_type_id) {
+  $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
   // @todo Throw an exception if the key is missing.
-  $class = $entity_info->getControllerClass('translation');
-  return new $class($entity_info);
+  $class = $entity_type->getControllerClass('translation');
+  return new $class($entity_type);
 }
 
 /**
@@ -609,16 +609,16 @@ function content_translation_permission() {
 
   // Create a translate permission for each enabled entity type and (optionally)
   // bundle.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $info) {
-    if ($permission_granularity = $info->getPermissionGranularity()) {
-      $t_args = array('@entity_label' => $info->getLowercaseLabel());
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+    if ($permission_granularity = $entity_type->getPermissionGranularity()) {
+      $t_args = array('@entity_label' => $entity_type->getLowercaseLabel());
 
       switch ($permission_granularity) {
         case 'bundle':
-          foreach (entity_get_bundles($entity_type) as $bundle => $bundle_info) {
-            if (content_translation_enabled($entity_type, $bundle)) {
+          foreach (entity_get_bundles($entity_type_id) as $bundle => $bundle_info) {
+            if (content_translation_enabled($entity_type_id, $bundle)) {
               $t_args['%bundle_label'] = isset($bundle_info['label']) ? $bundle_info['label'] : $bundle;
-              $permission["translate $bundle $entity_type"] = array(
+              $permission["translate $bundle $entity_type_id"] = array(
                 'title' => t('Translate %bundle_label @entity_label', $t_args),
               );
             }
@@ -626,8 +626,8 @@ function content_translation_permission() {
           break;
 
         case 'entity_type':
-          if (content_translation_enabled($entity_type)) {
-            $permission["translate $entity_type"] = array(
+          if (content_translation_enabled($entity_type_id)) {
+            $permission["translate $entity_type_id"] = array(
               'title' => t('Translate @entity_label', $t_args),
             );
           }

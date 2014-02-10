@@ -76,8 +76,8 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertFieldByName('field[settings][target_type]', 'node');
 
     // Check that all entity types can be referenced.
-    foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
-      $this->assertFieldByXPath("//select[@name='field[settings][target_type]']/option[@value='" . $entity_type . "']");
+    foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+      $this->assertFieldByXPath("//select[@name='field[settings][target_type]']/option[@value='" . $entity_type_id . "']");
     }
 
     // Second step: 'Instance settings' form.
@@ -87,8 +87,8 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->assertFieldByName('instance[settings][handler]', 'default');
 
     // The base handler settings should be displayed.
-    $entity_type = 'node';
-    $bundles = entity_get_bundles($entity_type);
+    $entity_type_id = 'node';
+    $bundles = entity_get_bundles($entity_type_id);
     foreach ($bundles as $bundle_name => $bundle_info) {
       $this->assertFieldByName('instance[settings][handler_settings][target_bundles][' . $bundle_name . ']');
     }

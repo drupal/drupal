@@ -59,15 +59,15 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     // Create tabs for all possible entity types.
-    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type => $entity_info) {
+    foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
       // Find the route name for the translation overview.
-      $translation_route_name = $entity_info->getLinkTemplate('drupal:content-translation-overview');
+      $translation_route_name = $entity_type->getLinkTemplate('drupal:content-translation-overview');
 
       $this->derivatives[$translation_route_name] = array(
-        'entity_type' => $entity_type,
+        'entity_type' => $entity_type_id,
         'title' => 'Translate',
         'route_name' => $translation_route_name,
-        'base_route' => $entity_info->getLinkTemplate('canonical'),
+        'base_route' => $entity_type->getLinkTemplate('canonical'),
       ) + $base_plugin_definition;
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);

@@ -215,11 +215,11 @@ class FieldInstanceEditForm extends FormBase {
       $destination = drupal_get_destination();
       $request->query->remove('destination');
     }
-    $entity_info = $this->entityManager->getDefinition($this->instance->entity_type);
+    $entity_type = $this->entityManager->getDefinition($this->instance->entity_type);
     $form_state['redirect_route'] = array(
       'route_name' => 'field_ui.delete_' . $this->instance->entity_type,
       'route_parameters' => array(
-        $entity_info->getBundleEntityType() => $this->instance->bundle,
+        $entity_type->getBundleEntityType() => $this->instance->bundle,
         'field_instance' => $this->instance->id(),
       ),
       'options' => array(

@@ -31,25 +31,25 @@ class ImageStyleListController extends ConfigEntityListController implements Ent
   /**
    * Constructs a new ImageStyleListController object.
    *
-   * @param EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $image_style_storage
    *   The image style entity storage controller class.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityStorageControllerInterface $image_style_storage, UrlGeneratorInterface $url_generator) {
-    parent::__construct($entity_info, $image_style_storage);
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $image_style_storage, UrlGeneratorInterface $url_generator) {
+    parent::__construct($entity_type, $image_style_storage);
     $this->urlGenerator = $url_generator;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
-      $container->get('entity.manager')->getStorageController($entity_info->id()),
+      $entity_type,
+      $container->get('entity.manager')->getStorageController($entity_type->id()),
       $container->get('url_generator'),
       $container->get('string_translation')
     );

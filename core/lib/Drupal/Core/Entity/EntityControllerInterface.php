@@ -31,12 +31,12 @@ interface EntityControllerInterface {
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container this object should use.
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    *
    * @return static
    *   A new instance of the entity controller.
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info);
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type);
 
 }

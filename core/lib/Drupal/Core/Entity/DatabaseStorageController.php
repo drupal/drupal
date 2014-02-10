@@ -38,8 +38,6 @@ class DatabaseStorageController extends EntityStorageControllerBase {
   /**
    * Whether this entity type should use the static cache.
    *
-   * Set by entity info.
-   *
    * @var boolean
    */
   protected $cache;
@@ -61,9 +59,9 @@ class DatabaseStorageController extends EntityStorageControllerBase {
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
+      $entity_type,
       $container->get('database'),
       $container->get('uuid')
     );
@@ -72,15 +70,15 @@ class DatabaseStorageController extends EntityStorageControllerBase {
   /**
    * Constructs a DatabaseStorageController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity info for the entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, UuidInterface $uuid_service) {
-    parent::__construct($entity_info);
+  public function __construct(EntityTypeInterface $entity_type, Connection $database, UuidInterface $uuid_service) {
+    parent::__construct($entity_type);
 
     $this->database = $database;
     $this->uuidService = $uuid_service;

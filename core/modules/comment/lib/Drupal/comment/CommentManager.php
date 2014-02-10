@@ -108,14 +108,14 @@ class CommentManager implements CommentManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFields($entity_type) {
-    $info = $this->entityManager->getDefinition($entity_type);
-    if (!$info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+  public function getFields($entity_type_id) {
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    if (!$entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
       return array();
     }
 
     $map = $this->getAllFields();
-    return isset($map[$entity_type]) ? $map[$entity_type] : array();
+    return isset($map[$entity_type_id]) ? $map[$entity_type_id] : array();
   }
 
   /**

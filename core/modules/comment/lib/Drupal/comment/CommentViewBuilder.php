@@ -46,9 +46,9 @@ class CommentViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_info) {
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
-      $entity_info,
+      $entity_type,
       $container->get('entity.manager'),
       $container->get('language_manager'),
       $container->get('field.info'),
@@ -59,8 +59,8 @@ class CommentViewBuilder extends EntityViewBuilder {
   /**
    * Constructs a new CommentViewBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
-   *   The entity information array.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -70,8 +70,8 @@ class CommentViewBuilder extends EntityViewBuilder {
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
    */
-  public function __construct(EntityTypeInterface $entity_info, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, FieldInfo $field_info, CsrfTokenGenerator $csrf_token) {
-    parent::__construct($entity_info, $entity_manager, $language_manager);
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, FieldInfo $field_info, CsrfTokenGenerator $csrf_token) {
+    parent::__construct($entity_type, $entity_manager, $language_manager);
     $this->fieldInfo = $field_info;
     $this->csrfToken = $csrf_token;
   }
