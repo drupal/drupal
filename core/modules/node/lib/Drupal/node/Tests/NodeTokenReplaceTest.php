@@ -7,12 +7,24 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\system\Tests\System\TokenReplaceUnitTestBase;
+use Drupal\Component\Utility\String;
 
 /**
  * Test node token replacement in strings.
  */
-class NodeTokenReplaceTest extends NodeTestBase {
+class NodeTokenReplaceTest extends TokenReplaceUnitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node', 'filter');
+
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Node token replacement',
@@ -22,29 +34,38 @@ class NodeTokenReplaceTest extends NodeTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->installSchema('node', array('node', 'node_field_revision', 'node_field_data', 'node_revision'));
+    $this->installConfig(array('filter'));
+
+    $node_type = entity_create('node_type', array('type' => 'article', 'name' => 'Article'));
+    $node_type->save();
+    node_add_body_field($node_type);
+  }
+
+  /**
    * Creates a node, then tests the tokens generated from it.
    */
   function testNodeTokenReplacement() {
-    $token_service = \Drupal::token();
-    $language_interface = language(Language::TYPE_INTERFACE);
     $url_options = array(
       'absolute' => TRUE,
-      'language' => $language_interface,
+      'language' => $this->languageInterface,
     );
 
     // Create a user and a node.
-    $account = $this->drupalCreateUser();
-    $settings = array(
+    $account = $this->createUser();
+    /* @var $node \Drupal\node\NodeInterface */
+    $node = entity_create('node', array(
       'type' => 'article',
+      'tnid' => 0,
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
-      'body' => array(array('value' => $this->randomName(32), 'summary' => $this->randomName(16))),
-    );
-    $node = $this->drupalCreateNode($settings);
-
-    // Load node so that the body and summary fields are structured properly.
-    $node = node_load($node->id());
-    $instance = field_info_instance('node', 'body', $node->getType());
+      'body' => array(array('value' => $this->randomName(32), 'summary' => $this->randomName(16), 'format' => 'plain_text')),
+    ));
+    $node->save();
 
     // Generate and test sanitized tokens.
     $tests = array();
@@ -58,41 +79,40 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:langcode]'] = check_plain($node->language()->id);
     $tests['[node:url]'] = url('node/' . $node->id(), $url_options);
     $tests['[node:edit-url]'] = url('node/' . $node->id() . '/edit', $url_options);
-    $tests['[node:author]'] = check_plain(user_format_name($account));
+    $tests['[node:author]'] = String::checkPlain($account->getUsername());
     $tests['[node:author:uid]'] = $node->getOwnerId();
-    $tests['[node:author:name]'] = check_plain(user_format_name($account));
-    $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->getCreatedTime(), 2, $language_interface->id);
-    $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->getChangedTime(), 2, $language_interface->id);
+    $tests['[node:author:name]'] = String::checkPlain($account->getUsername());
+    $tests['[node:created:since]'] = \Drupal::service('date')->formatInterval(REQUEST_TIME - $node->getCreatedTime(), 2, $this->languageInterface->id);
+    $tests['[node:changed:since]'] = \Drupal::service('date')->formatInterval(REQUEST_TIME - $node->getChangedTime(), 2, $this->languageInterface->id);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->id));
+      $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->languageInterface->id));
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced.', array('%token' => $input)));
     }
 
     // Generate and test unsanitized tokens.
     $tests['[node:title]'] = $node->getTitle();
-    $tests['[node:title]'] = $node->label();
     $tests['[node:body]'] = $node->body->value;
     $tests['[node:summary]'] = $node->body->summary;
     $tests['[node:langcode]'] = $node->language()->id;
-    $tests['[node:author:name]'] = user_format_name($account);
+    $tests['[node:author:name]'] = $account->getUsername();
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->id, 'sanitize' => FALSE));
+      $output = $this->tokenService->replace($input, array('node' => $node), array('langcode' => $this->languageInterface->id, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
 
     // Repeat for a node without a summary.
-    $settings['body'] = array(array('value' => $this->randomName(32), 'summary' => ''));
-    $node = $this->drupalCreateNode($settings);
-
-    // Load node (without summary) so that the body and summary fields are
-    // structured properly.
-    $node = node_load($node->id());
-    $instance = field_info_instance('node', 'body', $node->getType());
+    $node = entity_create('node', array(
+      'type' => 'article',
+      'uid' => $account->id(),
+      'title' => '<blink>Blinking Text</blink>',
+      'body' => array(array('value' => $this->randomName(32), 'format' => 'plain_text')),
+    ));
+    $node->save();
 
     // Generate and test sanitized token - use full body as expected value.
     $tests = array();
@@ -102,7 +122,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated for node without a summary.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('node' => $node), array('language' => $language_interface));
+      $output = $this->tokenService->replace($input, array('node' => $node), array('language' => $this->languageInterface));
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced for node without a summary.', array('%token' => $input)));
     }
 
@@ -110,8 +130,9 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:summary]'] = $node->body->value;
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('node' => $node), array('language' => $language_interface, 'sanitize' => FALSE));
+      $output = $this->tokenService->replace($input, array('node' => $node), array('language' => $this->languageInterface, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced for node without a summary.', array('%token' => $input)));
     }
   }
+
 }
