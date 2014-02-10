@@ -6,18 +6,6 @@
  */
 
 /**
- * Global variable that holds information about the tests being run.
- *
- * An array, with the following keys:
- *  - 'test_run_id': the ID of the test being run, in the form 'simpletest_%"
- *  - 'in_child_site': TRUE if the current request is a cURL request from
- *     the parent site.
- *
- * @var array
- */
-global $drupal_test_info;
-
-/**
  * @addtogroup hooks
  * @{
  */

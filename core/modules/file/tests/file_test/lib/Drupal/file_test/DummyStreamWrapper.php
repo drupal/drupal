@@ -16,7 +16,7 @@ use Drupal\Core\StreamWrapper\LocalStream;
  */
 class DummyStreamWrapper extends LocalStream {
   function getDirectoryPath() {
-    return 'sites/default/files';
+    return conf_path() . '/files';
   }
 
   /**

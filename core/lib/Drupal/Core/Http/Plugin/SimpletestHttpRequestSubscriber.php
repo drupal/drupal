@@ -34,9 +34,8 @@ class SimpletestHttpRequestSubscriber implements EventSubscriberInterface {
     // user-agent is used to ensure that multiple testing sessions running at the
     // same time won't interfere with each other as they would if the database
     // prefix were stored statically in a file or database variable.
-    $test_info = &$GLOBALS['drupal_test_info'];
-    if (!empty($test_info['test_run_id'])) {
-      $event['request']->setHeader('User-Agent', drupal_generate_test_ua($test_info['test_run_id']));
+    if ($test_prefix = drupal_valid_test_ua()) {
+      $event['request']->setHeader('User-Agent', drupal_generate_test_ua($test_prefix));
     }
   }
 }

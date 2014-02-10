@@ -20,11 +20,6 @@ use Drupal\Core\Database\ConnectionNotDefinedException;
 abstract class UnitTestBase extends TestBase {
 
   /**
-   * @var array
-   */
- protected $configDirectories;
-
-  /**
    * Constructor for UnitTestBase.
    */
   function __construct($test_id = NULL) {
@@ -41,6 +36,7 @@ abstract class UnitTestBase extends TestBase {
    * setUp() method.
    */
   protected function setUp() {
+    file_prepare_directory($this->public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
     $this->settingsSet('file_public_path', $this->public_files_directory);
   }
 }

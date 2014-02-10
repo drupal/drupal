@@ -94,6 +94,9 @@ class ErrorHandlerTest extends WebTestBase {
    * Test the exception handler.
    */
   function testExceptionHandler() {
+    // Ensure the test error log is empty before these tests.
+    $this->assertNoErrorsLogged();
+
     $error_exception = array(
       '%type' => 'Exception',
       '!message' => 'Drupal is awesome',
@@ -121,6 +124,10 @@ class ErrorHandlerTest extends WebTestBase {
     $this->assertText($error_pdo_exception['!message'], format_string('Found !message in error page.', $error_pdo_exception));
     $error_details = format_string('in %function (line ', $error_pdo_exception);
     $this->assertRaw($error_details, format_string("Found '!message' in error page.", array('!message' => $error_details)));
+
+    // The exceptions are expected. Do not interpret them as a test failure.
+    // Not using File API; a potential error must trigger a PHP warning.
+    unlink(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
   }
 
   /**

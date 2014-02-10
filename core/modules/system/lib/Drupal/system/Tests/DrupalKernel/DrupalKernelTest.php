@@ -10,12 +10,12 @@ namespace Drupal\system\Tests\DrupalKernel;
 use Drupal\Core\DrupalKernel;
 use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
 use Drupal\Component\PhpStorage\FileReadOnlyStorage;
-use Drupal\simpletest\UnitTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests compilation of the DIC.
  */
-class DrupalKernelTest extends UnitTestBase {
+class DrupalKernelTest extends DrupalUnitTestBase {
 
   public static function getInfo() {
     return array(
@@ -26,7 +26,13 @@ class DrupalKernelTest extends UnitTestBase {
   }
 
   function setUp() {
-    parent::setUp();
+    // DrupalKernel relies on global $config_directories and requires those
+    // directories to exist. Therefore, create the directories, but do not
+    // invoke DrupalUnitTestBase::setUp(), since that would set up further
+    // environment aspects, which would distort this test, because it tests
+    // the DrupalKernel (re-)building itself.
+    $this->prepareConfigDirectories();
+
     $this->settingsSet('php_storage', array('service_container' => array(
       'bin' => 'service_container',
       'class' => 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage',

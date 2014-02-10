@@ -39,7 +39,7 @@ class SimpleTestTest extends WebTestBase {
   }
 
   function setUp() {
-    if (!$this->inCURL()) {
+    if (!$this->isInChildSite()) {
       parent::setUp();
       // Create and log in an admin user.
       $this->drupalLogin($this->drupalCreateUser(array('administer unit tests')));
@@ -54,7 +54,7 @@ class SimpleTestTest extends WebTestBase {
    * Test the internal browsers functionality.
    */
   function testInternalBrowser() {
-    if (!$this->inCURL()) {
+    if (!$this->isInChildSite()) {
       // Retrieve the test page and check its title and headers.
       $this->drupalGet('test-page');
       $this->assertTrue($this->drupalGetHeader('Date'), 'An HTTP header was received.');
@@ -91,10 +91,12 @@ class SimpleTestTest extends WebTestBase {
       $headers = $this->drupalGetHeaders(TRUE);
       $this->assertEqual(count($headers), 2, 'Simpletest stopped following redirects after the first one.');
 
-      // Remove the Simpletest settings.php so we can test the protection
+      // Remove the Simpletest private key file so we can test the protection
       // against requests that forge a valid testing user agent to gain access
       // to the installer.
-      drupal_unlink($this->public_files_directory . '/settings.php');
+      // @see drupal_valid_test_ua()
+      // Not using File API; a potential error must trigger a PHP warning.
+      unlink($this->siteDirectory . '/.htkey');
       global $base_url;
       $this->drupalGet(url($base_url . '/core/install.php', array('external' => TRUE, 'absolute' => TRUE)));
       $this->assertResponse(403, 'Cannot access install.php.');
@@ -105,7 +107,7 @@ class SimpleTestTest extends WebTestBase {
    * Test validation of the User-Agent header we use to perform test requests.
    */
   function testUserAgentValidation() {
-    if (!$this->inCURL()) {
+    if (!$this->isInChildSite()) {
       global $base_url;
       $system_path = $base_url . '/' . drupal_get_path('module', 'system');
       $HTTP_path = $system_path .'/tests/http.php?q=node';
@@ -147,7 +149,7 @@ class SimpleTestTest extends WebTestBase {
     $this->valid_permission = 'access content';
     $this->invalid_permission = 'invalid permission';
 
-    if ($this->inCURL()) {
+    if ($this->isInChildSite()) {
       // Only run following code if this test is running itself through a CURL
       // request.
       $this->stubTest();
@@ -335,10 +337,4 @@ class SimpleTestTest extends WebTestBase {
     return trim(html_entity_decode(strip_tags($element->asXML())));
   }
 
-  /**
-   * Check if the test is being run from inside a CURL request.
-   */
-  function inCURL() {
-    return (bool) drupal_valid_test_ua();
-  }
 }

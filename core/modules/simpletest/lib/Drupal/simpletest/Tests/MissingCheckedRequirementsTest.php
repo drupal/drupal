@@ -39,7 +39,7 @@ class MissingCheckedRequirementsTest extends WebTestBase {
    * Overrides checkRequirements().
    */
   protected function checkRequirements() {
-    if (drupal_valid_test_ua()) {
+    if ($this->isInChildSite()) {
       return array(
         'Test is not allowed to run.'
       );
@@ -53,7 +53,7 @@ class MissingCheckedRequirementsTest extends WebTestBase {
   protected function testCheckRequirements() {
     // If this is the main request, run the web test script and then assert
     // that the child tests did not run.
-    if (!drupal_valid_test_ua()) {
+    if (!$this->isInChildSite()) {
       // Run this test from web interface.
       $edit['Drupal\simpletest\Tests\MissingCheckedRequirementsTest'] = TRUE;
       $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));

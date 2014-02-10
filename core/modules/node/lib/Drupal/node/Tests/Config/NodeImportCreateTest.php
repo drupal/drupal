@@ -71,7 +71,8 @@ class NodeImportCreateTest extends DrupalUnitTestBase {
     $this->copyConfig($active, $staging);
     // Manually add new node type.
     $src_dir = drupal_get_path('module', 'node_test_config') . '/staging';
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$node_type_config_name.yml", "public://config_staging/$node_type_config_name.yml"));
+    $target_dir = $this->configDirectories[CONFIG_STAGING_DIRECTORY];
+    $this->assertTrue(file_unmanaged_copy("$src_dir/$node_type_config_name.yml", "$target_dir/$node_type_config_name.yml"));
 
     // Import the content of the staging directory.
     $this->configImporter()->import();
