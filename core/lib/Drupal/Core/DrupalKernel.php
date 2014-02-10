@@ -335,13 +335,20 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Returns the classname based on environment.
+   * Returns the classname based on environment and testing prefix.
    *
    * @return string
    *   The class name.
    */
   protected function getClassName() {
     $parts = array('service_container', $this->environment);
+    // Make sure to use a testing-specific container even in the parent site.
+    if (!empty($GLOBALS['drupal_test_info']['test_run_id'])) {
+      $parts[] = $GLOBALS['drupal_test_info']['test_run_id'];
+    }
+    elseif ($prefix = drupal_valid_test_ua()) {
+      $parts[] = $prefix;
+    }
     return implode('_', $parts);
   }
 

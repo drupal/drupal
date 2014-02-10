@@ -276,17 +276,18 @@ function install_begin_request(&$install_state) {
   // which will be used for installing Drupal.
   conf_path(FALSE);
 
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
   // If the hash salt leaks, it becomes possible to forge a valid testing user
-  // agent, install a new copy of Drupal, and take over the original site.
-  // The user agent header is used to pass a database prefix in the request when
-  // running tests. However, for security reasons, it is imperative that no
-  // installation be permitted using such a prefix.
-  if ($install_state['interactive'] && strpos($request->server->get('HTTP_USER_AGENT'), 'simpletest') !== FALSE && !drupal_valid_test_ua()) {
+  // agent, install a new copy of Drupal, and take over the original site. To
+  // avoid this yet allow for automated testing of the installer, make sure
+  // there is also a special test-specific settings.php overriding conf_path().
+  // _drupal_load_test_overrides() sets the simpletest_conf_path in-memory
+  // setting in this case.
+  if ($install_state['interactive'] && drupal_valid_test_ua() && !settings()->get('simpletest_conf_path')) {
     header($request->server->get('SERVER_PROTOCOL') . ' 403 Forbidden');
     exit;
   }
-
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
   // Ensure that procedural dependencies are loaded as early as possible,
   // since the error/exception handlers depend on them.
@@ -1079,6 +1080,7 @@ function install_verify_database_settings() {
   global $databases;
   if (!empty($databases)) {
     $database = $databases['default']['default'];
+    drupal_static_reset('conf_path');
     $settings_file = './' . conf_path(FALSE) . '/settings.php';
     $errors = install_database_errors($database, $settings_file);
     if (empty($errors)) {
@@ -1101,6 +1103,7 @@ function install_verify_database_settings() {
 function install_settings_form($form, &$form_state, &$install_state) {
   global $databases;
 
+  drupal_static_reset('conf_path');
   $conf_path = './' . conf_path(FALSE);
   $settings_file = $conf_path . '/settings.php';
   $database = isset($databases['default']['default']) ? $databases['default']['default'] : array();
@@ -1162,6 +1165,12 @@ function install_settings_form($form, &$form_state, &$install_state) {
 function install_settings_form_validate($form, &$form_state) {
   $driver = $form_state['values']['driver'];
   $database = $form_state['values'][$driver];
+  // When testing the interactive installer, copy the database password and
+  // the test prefix.
+  if ($test_prefix = drupal_valid_test_ua()) {
+    $database['prefix'] = $test_prefix;
+    $database['password'] = $GLOBALS['databases']['default']['default']['password'];
+  }
   $drivers = drupal_get_database_types();
   $reflection = new \ReflectionClass($drivers[$driver]);
   $install_namespace = $reflection->getNamespaceName();
@@ -1228,14 +1237,33 @@ function install_settings_form_submit($form, &$form_state) {
   // Update global settings array and save.
   $settings = array();
   $database = $form_state['storage']['database'];
-  $settings['databases']['default']['default'] = (object) array(
-    'value'    => $database,
-    'required' => TRUE,
-  );
-  $settings['drupal_hash_salt'] = (object) array(
-    'value'    => Crypt::randomStringHashed(55),
-    'required' => TRUE,
-  );
+  // Ideally, there is no difference between the code executed by the
+  // automated test browser and an ordinary browser. However, the database
+  // settings need a different format and also need to skip the password
+  // when testing. The hash salt also needs to be skipped because the original
+  // salt is used to verify the validity of the automated test browser.
+  // Because of these, there's a little difference in the code following but
+  // it is small and self-contained.
+  if ($test_prefix = drupal_valid_test_ua()) {
+    foreach ($form_state['storage']['database'] as $k => $v) {
+      if ($k != 'password') {
+        $settings['databases']['default']['default'][$k] = (object) array(
+          'value'    => $v,
+          'required' => TRUE,
+        );
+      }
+    }
+  }
+  else {
+    $settings['databases']['default']['default'] = (object) array(
+      'value'    => $database,
+      'required' => TRUE,
+    );
+    $settings['drupal_hash_salt'] = (object) array(
+      'value'    => Crypt::randomStringHashed(55),
+      'required' => TRUE,
+    );
+  }
 
   // Remember the profile which was used.
   $settings['settings'] = array(
@@ -2353,7 +2381,7 @@ function install_check_requirements($install_state) {
   if (!$install_state['settings_verified']) {
     $readable = FALSE;
     $writable = FALSE;
-    $conf_path = './' . conf_path(FALSE);
+    $conf_path = './' . conf_path(FALSE, TRUE);
     $settings_file = $conf_path . '/settings.php';
     $default_settings_file = './sites/default/default.settings.php';
     $file = $conf_path;

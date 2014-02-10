@@ -326,8 +326,9 @@ function system_requirements($phase) {
     }
     else {
       // If we are installing Drupal, the settings.php file might not exist yet
-      // in the intended site directory, so don't require it.
-      $directories[] = conf_path(FALSE) . '/files';
+      // in the intended conf_path() directory, so don't require it. The
+      // conf_path() cache must also be reset in this case.
+      $directories[] = conf_path(FALSE, TRUE) . '/files';
     }
     if (!empty($GLOBALS['config']['system.file']['path']['private'])) {
       $directories[] = $GLOBALS['config']['system.file']['path']['private'];

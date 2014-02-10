@@ -240,15 +240,15 @@ define('DRUPAL_ROOT', dirname(dirname(__DIR__)));
  * @see default.settings.php
  */
 function conf_path($require_settings = TRUE, $reset = FALSE) {
-  static $conf_path;
+  $conf_path = &drupal_static(__FUNCTION__, '');
 
-  if (isset($conf_path) && !$reset) {
+  if ($conf_path && !$reset) {
     return $conf_path;
   }
 
   // Check for a simpletest override.
-  if ($test_prefix = drupal_valid_test_ua()) {
-    $conf_path = 'sites/simpletest/' . substr($test_prefix, 10);
+  if ($simpletest_conf_path = _drupal_simpletest_conf_path()) {
+    $conf_path = $simpletest_conf_path;
     return $conf_path;
   }
 
@@ -260,6 +260,50 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
   $http_host = $_SERVER['HTTP_HOST'];
   $conf_path = find_conf_path($http_host, $script_name, $require_settings);
   return $conf_path;
+}
+
+/**
+ * Determines whether to use an overridden value for conf_path().
+ *
+ * Simpletest may provide a secondary, test-specific settings.php file to load
+ * after the primary one used by the parent site and override its variables.
+ * - If the child settings.php does not override $conf_path, then this function
+ * returns FALSE and conf_path() returns the directory of the primary
+ * settings.php.
+ * - If the child settings.php does override $conf_path, then
+ * _drupal_load_test_overrides() sets the 'simpletest_conf_path' setting, and
+ * this function returns that to conf_path(), causing installations and
+ * upgrades to act on that one.
+ *
+ * @return string|false
+ *   The overridden $conf_path, or FALSE if the $conf_path should not currently
+ *   be overridden.
+ *
+ * @see conf_path()
+ * @see _drupal_load_test_overrides()
+ */
+function _drupal_simpletest_conf_path() {
+  // Ensure that the settings object is available. conf_path() is called once
+  // before the Settings class is included, and at that point it should still
+  // load the primary $conf_path. See drupal_settings_initialize().
+  if (!class_exists('Drupal\Component\Utility\Settings', FALSE)) {
+    return FALSE;
+  }
+
+  // If no $simpletest_conf_path is set, use the normal $conf_path.
+  if (!($simpletest_conf_path = settings()->get('simpletest_conf_path'))) {
+    return FALSE;
+  }
+
+  // Ensure that this is actually a simpletest request. We can't check this
+  // before settings.php is loaded.
+  if (!drupal_valid_test_ua()) {
+    return FALSE;
+  }
+
+  // When the $simpletest_conf_path is set in a valid test request,
+  // return that path.
+  return $simpletest_conf_path;
 }
 
 /**
@@ -490,32 +534,20 @@ function drupal_valid_http_host($host) {
  * Sets the base URL, cookie domain, and session name from configuration.
  */
 function drupal_settings_initialize() {
+  global $base_url, $base_path, $base_root, $script_path;
+
   // Export these settings.php variables to the global namespace.
-  global $base_url, $databases, $cookie_domain, $drupal_hash_salt, $config_directories, $config;
+  global $databases, $cookie_domain, $db_prefix, $drupal_hash_salt, $base_secure_url, $base_insecure_url, $config_directories, $config;
   $settings = array();
   $config = array();
 
   // Make conf_path() available as local variable in settings.php.
   $conf_path = conf_path();
   if (is_readable(DRUPAL_ROOT . '/' . $conf_path . '/settings.php')) {
-    require DRUPAL_ROOT . '/' . $conf_path . '/settings.php';
+    include_once DRUPAL_ROOT . '/' . $conf_path . '/settings.php';
   }
   // Initialize Settings.
   new Settings($settings);
-}
-
-/**
- * Initializes global request variables.
- *
- * @todo D8: Eliminate this entirely in favor of Request object.
- */
-function _drupal_request_initialize() {
-  // Provided by settings.php.
-  // @see drupal_settings_initialize()
-  global $base_url, $cookie_domain;
-  // Set and derived from $base_url by this function.
-  global $base_path, $base_root, $script_path;
-  global $base_secure_url, $base_insecure_url;
 
   $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
 
@@ -1721,27 +1753,11 @@ function _drupal_exception_handler($exception) {
  */
 function _drupal_bootstrap_configuration() {
   drupal_environment_initialize();
-
-  // Indicate that code is operating in a test child site.
-  if ($test_prefix = drupal_valid_test_ua()) {
-    // Only code that interfaces directly with tests should rely on this
-    // constant; e.g., the error/exception handler conditionally adds further
-    // error information into HTTP response headers that are consumed by
-    // Simpletest's internal browser.
-    define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
-
-    // Log fatal errors to the test site directory.
-    ini_set('log_errors', 1);
-    ini_set('error_log', DRUPAL_ROOT . '/sites/simpletest/' . substr($test_prefix, 10) . '/error.log');
-  }
-  else {
-    // Ensure that no other code defines this.
-    define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
-  }
-
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
-  _drupal_request_initialize();
+
+  // Make sure we are using the test database prefix in child Drupal sites.
+  _drupal_initialize_db_test_prefix();
 
   // Activate the class loader.
   drupal_classloader();
@@ -1825,6 +1841,39 @@ function _drupal_bootstrap_page_cache() {
     }
     else {
       drupal_add_http_header('X-Drupal-Cache', 'MISS');
+    }
+  }
+}
+
+/**
+ * In a test environment, get the test db prefix and set it in $databases.
+ */
+function _drupal_initialize_db_test_prefix() {
+  // The user agent header is used to pass a database prefix in the request when
+  // running tests. However, for security reasons, it is imperative that we
+  // validate we ourselves made the request.
+  if ($test_prefix = drupal_valid_test_ua()) {
+    // Set the test run id for use in other parts of Drupal.
+    $test_info = &$GLOBALS['drupal_test_info'];
+    $test_info['test_run_id'] = $test_prefix;
+    $test_info['in_child_site'] = TRUE;
+
+    foreach ($GLOBALS['databases']['default'] as &$value) {
+      // Extract the current default database prefix.
+      if (!isset($value['prefix'])) {
+        $current_prefix = '';
+      }
+      elseif (is_array($value['prefix'])) {
+        $current_prefix = $value['prefix']['default'];
+      }
+      else {
+        $current_prefix = $value['prefix'];
+      }
+
+      // Remove the current database prefix and replace it by our own.
+      $value['prefix'] = array(
+        'default' => $current_prefix . $test_prefix,
+      );
     }
   }
 }
@@ -1943,9 +1992,10 @@ function module_hook($module, $hook) {
  * Returns the test prefix if this is an internal request from SimpleTest.
  *
  * @param string $new_prefix
- *   Internal use only. A new prefix to be stored.
+ *   Internal use only. A new prefix to be stored. Passed in by tests that use
+ *   the test runner from within a test.
  *
- * @return string|FALSE
+ * @return
  *   Either the simpletest prefix (the string "simpletest" followed by any
  *   number of digits) or FALSE if the user agent does not contain a valid
  *   HMAC and timestamp.
@@ -1959,68 +2009,82 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   if (isset($test_prefix)) {
     return $test_prefix;
   }
-  // Unless the below User-Agent and HMAC validation succeeds, we are not in
-  // a test environment.
-  $test_prefix = FALSE;
 
-  // Perform a basic check on the User-Agent HTTP request header first. Any
-  // inbound request that uses the simpletest UA header needs to be validated.
   if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^(simpletest\d+);(.+);(.+);(.+)$/", $_SERVER['HTTP_USER_AGENT'], $matches)) {
     list(, $prefix, $time, $salt, $hmac) = $matches;
     $check_string =  $prefix . ';' . $time . ';' . $salt;
-    // Read the hash salt prepared by drupal_generate_test_ua().
-    // This function is called before settings.php is read and Drupal's error
-    // handlers are set up. While Drupal's error handling may be properly
-    // configured on production sites, the server's PHP error_reporting may not.
-    // Ensure that no information leaks on production sites.
-    $key_file = DRUPAL_ROOT . '/sites/simpletest/' . substr($prefix, 10) . '/.htkey';
-    if (!is_readable($key_file)) {
-      header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
-      exit;
-    }
-    $private_key = file_get_contents($key_file);
-    // The file properties add more entropy not easily accessible to others.
-    $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);
+    // We use the salt from settings.php to make the HMAC key, since
+    // the database is not yet initialized and we can't access the configuration
+    // system. The file properties add more entropy not easily accessible to
+    // others.
+    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
-    $test_hmac = Crypt::hmacBase64($check_string, $key);
+    // We can't use Crypt::hmacBase64() yet because this can be called in very
+    // early bootstrap when autoloader has not been initialized yet.
+    $test_hmac = base64_encode(hash_hmac('sha256', $check_string, $key, TRUE));
+    $test_hmac = strtr($test_hmac, array('+' => '-', '/' => '_', '=' => ''));
     // Since we are making a local request a 5 second time window is allowed,
     // and the HMAC must match.
-    if ($time_diff >= 0 && $time_diff <= 5 && $hmac === $test_hmac) {
+    if ($time_diff >= 0 && $time_diff <= 5 && $hmac == $test_hmac) {
       $test_prefix = $prefix;
+      _drupal_load_test_overrides($test_prefix);
+      return $test_prefix;
     }
   }
+
+  $test_prefix = FALSE;
   return $test_prefix;
+}
+
+/**
+ * Overrides low-level and environment-specific configuration.
+ *
+ * Very strictly for internal use only.
+ *
+ * Loads settings.php from the simpletest public files directory. These files
+ * can change the global $config_directories, the return value of conf_path(),
+ * settings(), and $config overrides.
+ *
+ * @param string $test_prefix
+ *   The simpletest prefix.
+ */
+function _drupal_load_test_overrides($test_prefix) {
+  global $config_directories, $config;
+
+  // Do not use the parent site's config directories. Use only the child site's.
+  // @see \Drupal\simpletest\TestBase::prepareConfigDirectories()
+  $path_prefix = 'simpletest/' . substr($test_prefix, 10);
+  $config_directories = array();
+  foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
+    $config_directories[$type] = conf_path() . '/files/' . $path_prefix . '/config_' . $type;
+  }
+
+  // Check for and load a settings.php file in the simpletest files directory.
+  $filename = conf_path() . '/files/' . $path_prefix . '/settings.php';
+  if (file_exists($filename)) {
+    $settings = settings()->getAll();
+    $conf_path = &drupal_static('conf_path');
+    // This can override $config, $conf_path, $settings, and $config_directories.
+    include $filename;
+    // Keep the overriden $conf_path alive across drupal_static_reset() calls.
+    // @see conf_path()
+    $settings['simpletest_conf_path'] = $conf_path;
+    new Settings($settings);
+  }
 }
 
 /**
  * Generates a user agent string with a HMAC and timestamp for simpletest.
  */
 function drupal_generate_test_ua($prefix) {
-  static $key, $last_prefix;
+  static $key;
 
-  if (!isset($key) || $last_prefix != $prefix) {
-    $last_prefix = $prefix;
-    $key_file = DRUPAL_ROOT . '/sites/simpletest/' . substr($prefix, 10) . '/.htkey';
-    // When issuing an outbound HTTP client request from within an inbound test
-    // request, then the outbound request has to use the same User-Agent header
-    // as the inbound request. A newly generated private key for the same test
-    // prefix would invalidate all subsequent inbound requests.
-    // @see \Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
-    if (DRUPAL_TEST_IN_CHILD_SITE && $parent_prefix = drupal_valid_test_ua()) {
-      if ($parent_prefix != $prefix) {
-        throw new \RuntimeException("Malformed User-Agent: Expected '$parent_prefix' but got '$prefix'.");
-      }
-      // If the file is not readable, a PHP warning is expected in this case.
-      $private_key = file_get_contents($key_file);
-    }
-    else {
-      // Generate and save a new hash salt for a test run.
-      // Consumed by drupal_valid_test_ua() before settings.php is loaded.
-      $private_key = Crypt::randomStringHashed(55);
-      file_put_contents($key_file, $private_key);
-    }
-    // The file properties add more entropy not easily accessible to others.
-    $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);
+  if (!isset($key)) {
+    // We use the salt from settings.php to make the HMAC key, since
+    // the database is not yet initialized and we can't access the configuration
+    // system. The file properties add more entropy not easily accessible to
+    // others.
+    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
   }
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);

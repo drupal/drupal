@@ -95,12 +95,11 @@ class FieldImportCreateTest extends FieldUnitTestBase {
 
     // Add the new files to the staging directory.
     $src_dir = drupal_get_path('module', 'field_test_config') . '/staging';
-    $target_dir = $this->configDirectories[CONFIG_STAGING_DIRECTORY];
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name.yml", "$target_dir/$field_config_name.yml"));
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$instance_config_name.yml", "$target_dir/$instance_config_name.yml"));
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name_2.yml", "$target_dir/$field_config_name_2.yml"));
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$instance_config_name_2a.yml", "$target_dir/$instance_config_name_2a.yml"));
-    $this->assertTrue(file_unmanaged_copy("$src_dir/$instance_config_name_2b.yml", "$target_dir/$instance_config_name_2b.yml"));
+    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name.yml", "public://config_staging/$field_config_name.yml"));
+    $this->assertTrue(file_unmanaged_copy("$src_dir/$instance_config_name.yml", "public://config_staging/$instance_config_name.yml"));
+    $this->assertTrue(file_unmanaged_copy("$src_dir/$field_config_name_2.yml", "public://config_staging/$field_config_name_2.yml"));
+    $this->assertTrue(file_unmanaged_copy("$src_dir/$instance_config_name_2a.yml", "public://config_staging/$instance_config_name_2a.yml"));
+    $this->assertTrue(file_unmanaged_copy("$src_dir/$instance_config_name_2b.yml", "public://config_staging/$instance_config_name_2b.yml"));
 
     // Import the content of the staging directory.
     $this->configImporter()->import();

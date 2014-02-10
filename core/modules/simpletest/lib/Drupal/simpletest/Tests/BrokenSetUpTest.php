@@ -28,13 +28,6 @@ class BrokenSetUpTest extends WebTestBase {
    */
   public static $modules = array('simpletest');
 
-  /**
-   * The path to the shared trigger file.
-   *
-   * @var string
-   */
-  protected $sharedTriggerFile;
-
   public static function getInfo() {
     return array(
       'name' => 'Broken SimpleTest method',
@@ -45,20 +38,15 @@ class BrokenSetUpTest extends WebTestBase {
 
   function setUp() {
     // If the test is being run from the main site, set up normally.
-    if (!$this->isInChildSite()) {
+    if (!drupal_valid_test_ua()) {
       parent::setUp();
-
-      $this->sharedTriggerFile = $this->public_files_directory . '/trigger';
-
       // Create and log in user.
       $admin_user = $this->drupalCreateUser(array('administer unit tests'));
       $this->drupalLogin($admin_user);
     }
     // If the test is being run from within simpletest, set up the broken test.
     else {
-      $this->sharedTriggerFile = $this->originalFileDirectory . '/trigger';
-
-      if (file_get_contents($this->sharedTriggerFile) === 'setup') {
+      if (file_get_contents($this->originalFileDirectory . '/simpletest/trigger') === 'setup') {
         throw new \Exception('Broken setup');
       }
       $this->pass('The setUp() method has run.');
@@ -67,13 +55,13 @@ class BrokenSetUpTest extends WebTestBase {
 
   function tearDown() {
     // If the test is being run from the main site, tear down normally.
-    if (!$this->isInChildSite()) {
-      unlink($this->sharedTriggerFile);
+    if (!drupal_valid_test_ua()) {
+      unlink($this->originalFileDirectory . '/simpletest/trigger');
       parent::tearDown();
     }
     // If the test is being run from within simpletest, output a message.
     else {
-      if (file_get_contents($this->sharedTriggerFile) === 'teardown') {
+      if (file_get_contents($this->originalFileDirectory . '/simpletest/trigger') === 'teardown') {
         throw new \Exception('Broken teardown');
       }
       $this->pass('The tearDown() method has run.');
@@ -86,9 +74,9 @@ class BrokenSetUpTest extends WebTestBase {
   function testMethod() {
     // If the test is being run from the main site, run it again from the web
     // interface within the simpletest child site.
-    if (!$this->isInChildSite()) {
+    if (!drupal_valid_test_ua()) {
       // Verify that a broken setUp() method is caught.
-      file_put_contents($this->sharedTriggerFile, 'setup');
+      file_put_contents($this->originalFileDirectory . '/simpletest/trigger', 'setup');
       $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
       $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
       $this->assertRaw('Broken setup');
@@ -99,7 +87,7 @@ class BrokenSetUpTest extends WebTestBase {
       $this->assertNoRaw('The tearDown() method has run.');
 
       // Verify that a broken tearDown() method is caught.
-      file_put_contents($this->sharedTriggerFile, 'teardown');
+      file_put_contents($this->originalFileDirectory . '/simpletest/trigger', 'teardown');
       $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
       $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
       $this->assertNoRaw('Broken setup');
@@ -110,7 +98,7 @@ class BrokenSetUpTest extends WebTestBase {
       $this->assertNoRaw('The tearDown() method has run.');
 
       // Verify that a broken test method is caught.
-      file_put_contents($this->sharedTriggerFile, 'test');
+      file_put_contents($this->originalFileDirectory . '/simpletest/trigger', 'test');
       $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
       $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
       $this->assertNoRaw('Broken setup');
@@ -122,7 +110,7 @@ class BrokenSetUpTest extends WebTestBase {
     }
     // If the test is being run from within simpletest, output a message.
     else {
-      if (file_get_contents($this->sharedTriggerFile) === 'test') {
+      if (file_get_contents($this->originalFileDirectory . '/simpletest/trigger') === 'test') {
         throw new \Exception('Broken test');
       }
       $this->pass('The test method has run.');

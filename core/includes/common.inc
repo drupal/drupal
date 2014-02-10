@@ -3071,6 +3071,14 @@ function _drupal_bootstrap_code() {
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
 
+  // Now that stream wrappers are registered, log fatal errors from a simpletest
+  // child site to a test specific file directory.
+  $test_info = &$GLOBALS['drupal_test_info'];
+  if (!empty($test_info['in_child_site'])) {
+    ini_set('log_errors', 1);
+    ini_set('error_log', 'public://error.log');
+  }
+
   // Set the allowed protocols once we have the config available.
   $allowed_protocols = \Drupal::config('system.filter')->get('protocols');
   if (!isset($allowed_protocols)) {

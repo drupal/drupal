@@ -37,13 +37,6 @@ abstract class TestBase {
   protected $testId;
 
   /**
-   * The site directory of this test run.
-   *
-   * @var string
-   */
-  protected $siteDirectory = NULL;
-
-  /**
    * The database prefix of this test run.
    *
    * @var string
@@ -157,13 +150,6 @@ abstract class TestBase {
    * @see run-tests.sh
    */
   public $dieOnFail = FALSE;
-
-  /**
-   * The DrupalKernel instance used in the test.
-   *
-   * @var \Drupal\Core\DrupalKernel
-   */
-  protected $kernel;
 
   /**
    * The dependency injection container used in the test.
@@ -622,20 +608,7 @@ abstract class TestBase {
     return $this->assertTrue($identical, $message, $group);
   }
 
-  /**
-   * Asserts that no errors have been logged to the PHP error.log thus far.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
-   *
-   * @see TestBase::prepareEnvironment()
-   * @see _drupal_bootstrap_configuration()
-   */
-  protected function assertNoErrorsLogged() {
-    // Since PHP only creates the error.log file when an actual error is
-    // triggered, it is sufficient to check whether the file exists.
-    return $this->assertFalse(file_exists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log'), 'PHP error.log is empty.');
-  }
+
 
   /**
    * Fire an assertion that is always positive.
@@ -884,9 +857,7 @@ abstract class TestBase {
    * @see drupal_valid_test_ua()
    */
   private function prepareDatabasePrefix() {
-    $suffix = mt_rand(1000, 1000000);
-    $this->siteDirectory = 'sites/simpletest/' . $suffix;
-    $this->databasePrefix = 'simpletest' . $suffix;
+    $this->databasePrefix = 'simpletest' . mt_rand(1000, 1000000);
 
     // As soon as the database prefix is set, the test might start to execute.
     // All assertions as well as the SimpleTest batch operations are associated
@@ -914,9 +885,19 @@ abstract class TestBase {
     $connection_info = Database::getConnectionInfo('default');
     Database::renameConnection('default', 'simpletest_original_default');
     foreach ($connection_info as $target => $value) {
-      $connection_info[$target]['prefix'] = $value['prefix']['default'] . $this->databasePrefix;
+      $connection_info[$target]['prefix'] = array(
+        'default' => $value['prefix']['default'] . $this->databasePrefix,
+      );
     }
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
+
+    // Additionally override global $databases, since the installer does not use
+    // the Database connection info.
+    // @see install_verify_database_settings()
+    // @see install_database_errors()
+    // @todo Fix installer to use Database connection info.
+    global $databases;
+    $databases['default']['default'] = $connection_info['default'];
   }
 
   /**
@@ -957,9 +938,10 @@ abstract class TestBase {
     $language_interface = language(Language::TYPE_INTERFACE);
 
     // When running the test runner within a test, back up the original database
-    // prefix.
-    if (DRUPAL_TEST_IN_CHILD_SITE) {
+    // prefix and re-set the new/nested prefix in drupal_valid_test_ua().
+    if (drupal_valid_test_ua()) {
       $this->originalPrefix = drupal_valid_test_ua();
+      drupal_valid_test_ua($this->databasePrefix);
     }
 
     // Backup current in-memory configuration.
@@ -999,15 +981,21 @@ abstract class TestBase {
 
     // Create test directory ahead of installation so fatal errors and debug
     // information can be logged during installation process.
-    file_prepare_directory($this->siteDirectory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    // Use temporary files directory with the same prefix as the database.
+    $this->public_files_directory = $this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10);
+    $this->private_files_directory = $this->public_files_directory . '/private';
+    $this->temp_files_directory = $this->private_files_directory . '/temp';
+    $this->translation_files_directory = $this->public_files_directory . '/translations';
 
-    // Prepare filesystem directory paths.
-    $this->public_files_directory = $this->siteDirectory . '/files';
-    $this->private_files_directory = $this->siteDirectory . '/private';
-    $this->temp_files_directory = $this->siteDirectory . '/temp';
-    $this->translation_files_directory = $this->siteDirectory . '/translations';
-
+    // Create the directories
+    file_prepare_directory($this->public_files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    file_prepare_directory($this->private_files_directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($this->temp_files_directory, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($this->translation_files_directory, FILE_CREATE_DIRECTORY);
     $this->generatedTestFiles = FALSE;
+
+    // Create and set new configuration directories.
+    $this->prepareConfigDirectories();
 
     // Unregister all custom stream wrappers of the parent site.
     // Availability of Drupal stream wrappers varies by test base class:
@@ -1052,29 +1040,51 @@ abstract class TestBase {
     \Drupal::setContainer($this->container);
 
     // Unset globals.
-    unset($GLOBALS['config_directories']);
     unset($GLOBALS['theme_key']);
     unset($GLOBALS['theme']);
 
     // Log fatal errors.
     ini_set('log_errors', 1);
-    ini_set('error_log', DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
+    ini_set('error_log', $this->public_files_directory . '/error.log');
+
+    // Set the test information for use in other parts of Drupal.
+    $test_info = &$GLOBALS['drupal_test_info'];
+    $test_info['test_run_id'] = $this->databasePrefix;
+    $test_info['in_child_site'] = FALSE;
 
     // Change the database prefix.
-    // All static variables need to be reset before the database prefix is
-    // changed, since \Drupal\Core\Utility\CacheArray implementations attempt to
-    // write back to persistent caches when they are destructed.
     $this->changeDatabasePrefix();
 
     // Remove all configuration overrides.
     $GLOBALS['config'] = array();
 
-    // After preparing the environment and changing the database prefix, we are
-    // in a valid test environment.
-    drupal_valid_test_ua($this->databasePrefix);
-    conf_path(FALSE, TRUE);
-
     drupal_set_time_limit($this->timeLimit);
+  }
+
+  /**
+   * Create and set new configuration directories.
+   *
+   * The child site uses drupal_valid_test_ua() to adjust the config directory
+   * paths to a test-prefix-specific directory within the public files
+   * directory.
+   *
+   * @see config_get_config_directory()
+   */
+  protected function prepareConfigDirectories() {
+    $GLOBALS['config_directories'] = array();
+    $this->configDirectories = array();
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+    foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
+      // Assign the relative path to the global variable.
+      $path = conf_path() . '/files/simpletest/' . substr($this->databasePrefix, 10) . '/config_' . $type;
+      $GLOBALS['config_directories'][$type] = $path;
+      // Ensure the directory can be created and is writeable.
+      if (!install_ensure_config_directory($type)) {
+        return FALSE;
+      }
+      // Provide the already resolved path for tests.
+      $this->configDirectories[$type] = $path;
+    }
   }
 
   /**
@@ -1093,11 +1103,11 @@ abstract class TestBase {
    *   tests can invoke this workaround when requiring services from newly
    *   enabled modules to be immediately available in the same request.
    */
-  protected function rebuildContainer($environment = 'testing') {
+  protected function rebuildContainer() {
     // Preserve the request object after the container rebuild.
     $request = \Drupal::request();
 
-    $this->kernel = new DrupalKernel($environment, drupal_classloader(), FALSE);
+    $this->kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
     $this->kernel->boot();
     // DrupalKernel replaces the container in \Drupal::getContainer() with a
     // different object, so we need to replace the instance on this test class.
@@ -1159,12 +1169,8 @@ abstract class TestBase {
       }
     }
 
-    // In case a fatal error occurred that was not in the test process read the
-    // log to pick up any fatal errors.
-    simpletest_log_read($this->testId, $this->databasePrefix, get_class($this));
-
-    // Delete test site directory.
-    file_unmanaged_delete_recursive($this->siteDirectory, array($this, 'filePreDeleteCallback'));
+    // Delete temporary files directory.
+    file_unmanaged_delete_recursive($this->originalFileDirectory . '/simpletest/' . substr($this->databasePrefix, 10), array($this, 'filePreDeleteCallback'));
 
     // Restore original database connection.
     Database::removeConnection('default');
@@ -1193,13 +1199,19 @@ abstract class TestBase {
     \Drupal::setContainer($this->originalContainer);
     $GLOBALS['config_directories'] = $this->originalConfigDirectories;
 
+    // Re-initialize original stream wrappers of the parent site.
+    // This must happen after static variables have been reset and the original
+    // container and $config_directories are restored, as simpletest_log_read()
+    // uses the public stream wrapper to locate the error.log.
+    file_get_stream_wrappers();
+
+    // In case a fatal error occurred that was not in the test process read the
+    // log to pick up any fatal errors.
+    simpletest_log_read($this->testId, $this->databasePrefix, get_class($this), TRUE);
+
     if (isset($this->originalPrefix)) {
       drupal_valid_test_ua($this->originalPrefix);
     }
-    else {
-      drupal_valid_test_ua(FALSE);
-    }
-    conf_path(TRUE, TRUE);
 
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();

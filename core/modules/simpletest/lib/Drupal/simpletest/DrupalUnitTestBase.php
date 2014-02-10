@@ -58,13 +58,6 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
   private $themeData;
 
   /**
-   * The configuration directories for this test run.
-   *
-   * @var array
-   */
-  protected $configDirectories = array();
-
-  /**
    * A KeyValueMemoryFactory instance to use when building the container.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory.
@@ -101,36 +94,12 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
   }
 
   /**
-   * Create and set new configuration directories.
-   *
-   * @see config_get_config_directory()
-   */
-  protected function prepareConfigDirectories() {
-    $this->configDirectories = array();
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
-      // Assign the relative path to the global variable.
-      $path = $this->siteDirectory . '/config_' . $type;
-      $GLOBALS['config_directories'][$type] = $path;
-      // Ensure the directory can be created and is writeable.
-      if (!install_ensure_config_directory($type)) {
-        throw new \RuntimeException("Failed to create '$type' config directory $path");
-      }
-      // Provide the already resolved path for tests.
-      $this->configDirectories[$type] = $path;
-    }
-  }
-
-  /**
    * Sets up Drupal unit test environment.
    */
   protected function setUp() {
     $this->keyValueFactory = new KeyValueMemoryFactory();
 
     parent::setUp();
-
-    // Create and set new configuration directories.
-    $this->prepareConfigDirectories();
 
     // Build a minimal, partially mocked environment for unit tests.
     $this->containerBuild(\Drupal::getContainer());
@@ -188,9 +157,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
   }
 
   protected function tearDown() {
-    if ($this->kernel instanceof DrupalKernel) {
-      $this->kernel->shutdown();
-    }
+    $this->kernel->shutdown();
     // Before tearing down the test environment, ensure that no stream wrapper
     // of this test leaks into the parent environment. Unlike all other global
     // state variables in Drupal, stream wrappers are a global state construct
