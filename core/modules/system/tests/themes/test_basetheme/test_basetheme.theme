@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Add hooks for tests to use.
+ */
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function test_basetheme_views_pre_render(ViewExecutable $view) {
+  // We append the function name to the title for test to check for.
+  $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
+}
+
+/**
+ * Implements hook_views_post_render().
+ */
+function test_basetheme_views_post_render(ViewExecutable $view) {
+  // We append the function name to the title for test to check for.
+  $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
+}
