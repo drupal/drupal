@@ -111,7 +111,7 @@ services:
     class: Drupal\Core\Form\FormBuilder
     arguments: ['@module_handler', '@keyvalue.expirable', '@event_dispatcher', '@url_generator', '@string_translation', '@?csrf_token', '@?http_kernel']
     calls:
-      - [setRequest, ['@?request']]
+      - [setRequest, ['@?request=']]
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
     arguments: ['@service_container', '@settings']
@@ -218,6 +218,7 @@ services:
   request:
     class: Symfony\Component\HttpFoundation\Request
     synthetic: true
+    synchronized: true
   request_stack:
     class: Symfony\Component\HttpFoundation\RequestStack
   event_dispatcher:
@@ -546,7 +547,7 @@ services:
     calls:
       - [setContainer, ['@service_container']]
   exception_listener:
-    class: Symfony\Component\HttpKernel\EventListener\ExceptionListener
+    class: Drupal\Core\EventSubscriber\ExceptionListener
     tags:
       - { name: event_subscriber }
     arguments: [['@exception_controller', execute]]

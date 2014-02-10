@@ -33,7 +33,7 @@ class SessionHttpsTest extends WebTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->request = Request::create('http://example.com/');
+    $this->request = Request::createFromGlobals();
     $this->container->set('request', $this->request);
   }
 

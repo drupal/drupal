@@ -35,8 +35,7 @@ class FloodTest extends WebTestBase {
 
     // Flood backends need a request object. Create a dummy one and insert it
     // to the container.
-    $this->request = Request::create('http://example.com/');
-    $this->request->server->set('REMOTE_ADDR', '3.3.3.3');
+    $this->request = Request::createFromGlobals();
     $this->container->set('request', $this->request);
   }
 

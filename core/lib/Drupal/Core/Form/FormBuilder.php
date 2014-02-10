@@ -200,7 +200,7 @@ class FormBuilder implements FormBuilderInterface {
     $form_id = $this->getFormId($form_id, $form_state);
 
     if (!isset($form_state['input'])) {
-      $form_state['input'] = $form_state['method'] == 'get' ? $_GET : $_POST;
+      $form_state['input'] = $form_state['method'] == 'get' ? $this->request->query->all() : $this->request->request->all();
     }
 
     if (isset($_SESSION['batch_form_state'])) {

@@ -67,7 +67,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->request = Request::create('http://example.com/');
+    $this->request = Request::createFromGlobals();
     $this->container->set('request', $this->request);
 
     $admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages', 'administer blocks'));
