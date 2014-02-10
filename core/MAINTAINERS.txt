@@ -34,7 +34,6 @@ Authentication and authorization system
 - ?
 
 Base system
-- Károly Négyesi 'chx' http://drupal.org/user/9446
 - Damien Tournoud 'DamZ' http://drupal.org/user/22211
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
 - Kat Bailey 'katbailey' http://drupal.org/user/172987
@@ -63,7 +62,6 @@ Configuration entity system
 - Justin Randell 'beejeebus' https://drupal.org/user/38580
 
 Cron system
-- Károly Négyesi 'chx' http://drupal.org/user/9446
 - Derek Wright 'dww' http://drupal.org/user/46549
 
 CSS
@@ -82,7 +80,6 @@ Database system
 
   Sqlite DB driver
   - Damien Tournoud 'DamZ' http://drupal.org/user/22211
-  - Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Database update system
 - ?
@@ -101,7 +98,6 @@ File system
 - Aaron Winborn 'aaron' http://drupal.org/user/33420
 
 Form system
-- Károly Négyesi 'chx' http://drupal.org/user/9446
 - Alex Bronstein 'effulgentsia' http://drupal.org/user/78040
 - Wolfgang Ziegler 'fago' http://drupal.org/user/16747
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
@@ -136,7 +132,6 @@ Migrate
 - Mike Ryan 'mikeryan' http://drupal.org/user/4420
 
 Menu system
-- Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Path system
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
@@ -147,7 +142,6 @@ Plugin system
 
 Queue system
 - James Gilliland 'neclimdul' http://drupal.org/user/48673
-- Károly Négyesi 'chx' http://drupal.org/user/9446
 - Mark Sonnabaum 'msonnabaum' http://drupal.org/user/75278
 
 Render system
@@ -334,7 +328,6 @@ Menu module
 
 Menu Link module
 - Andrei Mateescu 'amateescu' http://drupal.org/user/729614
-- Károly Négyesi 'chx' http://drupal.org/user/9446
 - Peter Wolanin 'pwolanin' http://drupal.org/user/49851
 
 Migrate module
@@ -382,7 +375,6 @@ Shortcut module
 
 Simpletest module
 - Jimmy Berry 'boombatower' http://drupal.org/user/214218
-- Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Statistics module
 - Tim Millwood 'timmillwood' http://drupal.org/user/227849
