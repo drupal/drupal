@@ -58,12 +58,9 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $this->configImporter = new ConfigImporter(
       $storage_comparer->createChangelist(),
       $this->container->get('event_dispatcher'),
-      $this->container->get('config.factory'),
-      $this->container->get('entity.manager'),
+      $this->container->get('config.manager'),
       $this->container->get('lock'),
-      $this->container->get('uuid'),
-      $this->container->get('config.typed'),
-      $this->container->get('module_handler')
+      $this->container->get('config.typed')
     );
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }

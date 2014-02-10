@@ -8,6 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\ConfigImporterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,6 +17,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Create a snapshot when config is imported.
  */
 class ConfigSnapshotSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The configuration manager.
+   *
+   * @var \Drupal\Core\Config\ConfigManagerInterface
+   */
+  protected $configManager;
 
   /**
    * The source storage used to discover configuration changes.
@@ -39,7 +47,8 @@ class ConfigSnapshotSubscriber implements EventSubscriberInterface {
    * @param StorageInterface $snapshot_storage
    *   The snapshot storage used to write configuration changes.
    */
-  public function __construct(StorageInterface $source_storage, StorageInterface $snapshot_storage) {
+  public function __construct(ConfigManagerInterface $config_manager, StorageInterface $source_storage, StorageInterface $snapshot_storage) {
+    $this->configManager = $config_manager;
     $this->sourceStorage = $source_storage;
     $this->snapshotStorage = $snapshot_storage;
   }
@@ -51,7 +60,7 @@ class ConfigSnapshotSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onConfigImporterImport(ConfigImporterEvent $event) {
-    config_import_create_snapshot($this->sourceStorage, $this->snapshotStorage);
+    $this->configManager->createSnapshot($this->sourceStorage, $this->snapshotStorage);
   }
 
   /**

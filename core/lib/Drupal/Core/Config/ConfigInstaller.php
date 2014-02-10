@@ -8,7 +8,6 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConfigInstaller implements ConfigInstallerInterface {
@@ -35,11 +34,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
   protected $typedConfig;
 
   /**
-   * The entity manager.
+   * The configuration manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Config\ConfigManagerInterface
    */
-  protected $entityManager;
+  protected $configManager;
 
   /**
    * The event dispatcher.
@@ -57,16 +56,16 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The active configuration storage.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   *   The configuration manager.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(ConfigFactory $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, EntityManagerInterface $entity_manager, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(ConfigFactory $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher) {
     $this->configFactory = $config_factory;
     $this->activeStorage = $active_storage;
     $this->typedConfig = $typed_config;
-    $this->entityManager = $entity_manager;
+    $this->configManager = $config_manager;
     $this->eventDispatcher = $event_dispatcher;
   }
 
@@ -119,8 +118,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if ($data !== FALSE) {
           $new_config->setData($data);
         }
-        if ($entity_type = config_get_entity_type_by_name($name)) {
-          $this->entityManager
+        if ($entity_type = $this->configManager->getEntityTypeIdByName($name)) {
+          $this->configManager
+            ->getEntityManager()
             ->getStorageController($entity_type)
             ->create($new_config->get())
             ->save();

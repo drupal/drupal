@@ -70,6 +70,9 @@ services:
     class: Drupal\Core\Config\FileStorage
     factory_class: Drupal\Core\Config\FileStorageFactory
     factory_method: getActive
+  config.manager:
+    class: Drupal\Core\Config\ConfigManager
+    arguments: ['@entity.manager', '@config.factory', '@config.typed', '@string_translation']
   config.storage:
     class: Drupal\Core\Config\CachedStorage
     arguments: ['@config.cachedstorage.storage', '@cache.config']
@@ -83,7 +86,7 @@ services:
     arguments: ['@config.storage', '@event_dispatcher', '@config.typed']
   config.installer:
     class: Drupal\Core\Config\ConfigInstaller
-    arguments: ['@config.factory', '@config.storage', '@config.typed', '@entity.manager', '@event_dispatcher']
+    arguments: ['@config.factory', '@config.storage', '@config.typed', '@config.manager', '@event_dispatcher']
   config.storage.staging:
     class: Drupal\Core\Config\FileStorage
     factory_class: Drupal\Core\Config\FileStorageFactory
@@ -540,7 +543,7 @@ services:
     class: Drupal\Core\EventSubscriber\ConfigSnapshotSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@config.storage', '@config.storage.snapshot']
+    arguments: ['@config.manager', '@config.storage', '@config.storage.snapshot']
   exception_controller:
     class: Drupal\Core\Controller\ExceptionController
     arguments: ['@content_negotiation', '@string_translation', '@title_resolver', '@html_page_renderer', '@html_fragment_renderer']

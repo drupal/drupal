@@ -1473,10 +1473,8 @@ abstract class TestBase {
       $this->configImporter = new ConfigImporter(
         $storage_comparer,
         $this->container->get('event_dispatcher'),
-        $this->container->get('config.factory'),
-        $this->container->get('entity.manager'),
+        $this->container->get('config.manager'),
         $this->container->get('lock'),
-        $this->container->get('uuid'),
         $this->container->get('config.typed')
       );
     }

@@ -346,6 +346,13 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function listAll($prefix = '') {
+    return $this->storage->listAll($prefix);
+  }
+
+  /**
    * Determines if a particular configuration object can be overridden.
    *
    * Language override configuration should not be overridden.

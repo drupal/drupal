@@ -56,7 +56,7 @@ class ConfigDiffTest extends DrupalUnitTestBase {
     $staging->write($config_name, $staging_data);
 
     // Verify that the diff reflects a change.
-    $diff = config_diff($active, $staging, $config_name);
+    $diff = \Drupal::service('config.manager')->diff($active, $staging, $config_name);
     $this->assertEqual($diff->edits[0]->type, 'change', 'The first item in the diff is a change.');
     $this->assertEqual($diff->edits[0]->orig[0], $change_key . ': ' . $original_data[$change_key], format_string("The active value for key '%change_key' is '%original_data'.", array('%change_key' => $change_key, '%original_data' => $original_data[$change_key])));
     $this->assertEqual($diff->edits[0]->closing[0], $change_key . ': ' . $change_data, format_string("The staging value for key '%change_key' is '%change_data'.", array('%change_key' => $change_key, '%change_data' => $change_data)));
@@ -67,7 +67,7 @@ class ConfigDiffTest extends DrupalUnitTestBase {
     $staging->write($config_name, $staging_data);
 
     // Verify that the diff reflects a removed key.
-    $diff = config_diff($active, $staging, $config_name);
+    $diff = \Drupal::service('config.manager')->diff($active, $staging, $config_name);
     $this->assertEqual($diff->edits[0]->type, 'copy', 'The first item in the diff is a copy.');
     $this->assertEqual($diff->edits[1]->type, 'delete', 'The second item in the diff is a delete.');
     $this->assertEqual($diff->edits[1]->orig[0], $remove_key . ': ' . $original_data[$remove_key], format_string("The active value for key '%remove_key' is '%original_data'.", array('%remove_key' => $remove_key, '%original_data' => $original_data[$remove_key])));
@@ -79,7 +79,7 @@ class ConfigDiffTest extends DrupalUnitTestBase {
     $staging->write($config_name, $staging_data);
 
     // Verify that the diff reflects an added key.
-    $diff = config_diff($active, $staging, $config_name);
+    $diff = \Drupal::service('config.manager')->diff($active, $staging, $config_name);
     $this->assertEqual($diff->edits[0]->type, 'copy', 'The first item in the diff is a copy.');
     $this->assertEqual($diff->edits[1]->type, 'add', 'The second item in the diff is an add.');
     $this->assertFalse($diff->edits[1]->orig, format_string("The key '%add_key' does not exist in active.", array('%add_key' => $add_key)));

@@ -730,7 +730,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $module_config->clear("enabled.$module")->save();
 
       // Remove all configuration belonging to the module.
-      config_uninstall_default_config('module', $module);
+      \Drupal::service('config.manager')->uninstall('module', $module);
 
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild

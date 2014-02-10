@@ -2191,7 +2191,7 @@ function install_finished(&$install_state) {
   // Save a snapshot of the initially installed configuration.
   $active = \Drupal::service('config.storage');
   $snapshot = \Drupal::service('config.storage.snapshot');
-  config_import_create_snapshot($active, $snapshot);
+  \Drupal::service('config.manager')->createSnapshot($active, $snapshot);
 
   return $output;
 }

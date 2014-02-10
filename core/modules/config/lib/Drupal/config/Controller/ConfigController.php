@@ -8,6 +8,7 @@
 namespace Drupal\config\Controller;
 
 use Drupal\Component\Archiver\ArchiveTar;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\system\FileDownloadController;
@@ -34,6 +35,13 @@ class ConfigController implements ContainerInjectionInterface {
   protected $sourceStorage;
 
   /**
+   * The configuration manager.
+   *
+   * @var \Drupal\Core\Config\ConfigManagerInterface
+   */
+  protected $configManager;
+
+  /**
    * The file download controller.
    *
    * @var \Drupal\system\FileDownloadController
@@ -47,6 +55,7 @@ class ConfigController implements ContainerInjectionInterface {
     return new static(
       $container->get('config.storage'),
       $container->get('config.storage.staging'),
+      $container->get('config.manager'),
       new FileDownloadController()
     );
   }
@@ -61,9 +70,10 @@ class ConfigController implements ContainerInjectionInterface {
    * @param \Drupal\system\FileDownloadController $file_download_controller
    *   The file download controller.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, FileDownloadController $file_download_controller) {
+  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller) {
     $this->targetStorage = $target_storage;
     $this->sourceStorage = $source_storage;
+    $this->configManager = $config_manager;
     $this->fileDownloadController = $file_download_controller;
   }
 
@@ -94,7 +104,7 @@ class ConfigController implements ContainerInjectionInterface {
    */
   public function diff($config_file) {
 
-    $diff = config_diff($this->targetStorage, $this->sourceStorage, $config_file);
+    $diff = $this->configManager->diff($this->targetStorage, $this->sourceStorage, $config_file);
     $formatter = new \DrupalDiffFormatter();
     $formatter->show_header = FALSE;
 

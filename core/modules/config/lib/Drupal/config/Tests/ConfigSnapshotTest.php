@@ -35,7 +35,7 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
     $this->installSchema('system', 'config_snapshot');
     // Update the config snapshot. This allows the parent::setUp() to write
     // configuration files.
-    config_import_create_snapshot(\Drupal::service('config.storage'), \Drupal::service('config.storage.snapshot'));
+    \Drupal::service('config.manager')->createSnapshot(\Drupal::service('config.storage'), \Drupal::service('config.storage.snapshot'));
   }
 
   /**
@@ -62,7 +62,7 @@ class ConfigSnapshotTest extends DrupalUnitTestBase {
     $this->assertTrue($active_snapshot_comparer->reset()->hasChanges());
 
     // Update the config snapshot.
-    config_import_create_snapshot($active, $snapshot);
+    \Drupal::service('config.manager')->createSnapshot($active, $snapshot);
 
     // The snapshot and active config should now contain the same config
     // objects.
