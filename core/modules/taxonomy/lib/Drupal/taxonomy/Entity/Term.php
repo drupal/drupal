@@ -208,6 +208,8 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setDescription(t('The term UUID.'))
       ->setReadOnly(TRUE);
 
+    // @todo Convert this to an entity_reference field, see
+    //   https://drupal.org/node/2181593
     $fields['vid'] = FieldDefinition::create('string')
       ->setLabel(t('Vocabulary ID'))
       ->setDescription(t('The ID of the vocabulary to which the term is assigned.'));
@@ -218,7 +220,9 @@ class Term extends ContentEntityBase implements TermInterface {
 
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The term name.'));
+      ->setDescription(t('The term name.'))
+      ->setRequired(TRUE)
+      ->setSetting('max_length', 255);
 
     $fields['description'] = FieldDefinition::create('text_long')
       ->setLabel(t('Description'))
@@ -230,12 +234,14 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setDescription(t('The weight of this term in relation to other terms.'))
       ->setSetting('default_value', 0);
 
+    // @todo Convert this to an entity_reference field, see
+    // https://drupal.org/node/1915056
     $fields['parent'] = FieldDefinition::create('integer')
       ->setLabel(t('Term Parents'))
       ->setDescription(t('The parents of this term.'))
       // Save new terms with no parents by default.
       ->setSetting('default_value', 0)
-      ->setComputed(TRUE);
+      ->setConstraints(array('TermParent' => array()));
 
     $fields['changed'] = FieldDefinition::create('integer')
       ->setLabel(t('Changed'))

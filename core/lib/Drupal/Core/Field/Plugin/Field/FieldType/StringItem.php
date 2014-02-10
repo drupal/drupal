@@ -62,4 +62,20 @@ class StringItem extends FieldItemBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    $constraints = parent::getConstraints();
+
+    if ($max_length = $this->getFieldSetting('max_length')) {
+      $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+      $constraints[] = $constraint_manager->create('ComplexData', array(
+        'value' => array('Length' => array('max' => $max_length))
+      ));
+    }
+
+    return $constraints;
+  }
+
 }

@@ -16,12 +16,10 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
  *   id = "uuid",
  *   label = @Translation("UUID"),
  *   description = @Translation("An entity field containing a UUID."),
- *   configurable = FALSE,
- *   constraints = {
- *     "ComplexData" = {
- *       "value" = {"Length" = {"max" = 128}}
- *     }
- *   }
+ *   settings = {
+ *     "max_length" = "128"
+ *   },
+ *   configurable = FALSE
  * )
  */
 class UuidItem extends StringItem {

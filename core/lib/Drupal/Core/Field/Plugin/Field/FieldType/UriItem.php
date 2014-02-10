@@ -8,20 +8,26 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'uri' entity field type.
  *
+ * URIs are not length limited by RFC 2616, but we need to provide a sensible
+ * default. There is a de-facto limit of 2000 characters in browsers and other
+ * implementors, so we go with 2048.
+ *
  * @FieldType(
  *   id = "uri",
  *   label = @Translation("URI"),
  *   description = @Translation("An entity field containing a URI."),
+ *   settings = {
+ *     "max_length" = "2048"
+ *   },
  *   configurable = FALSE
  * )
  */
-class UriItem extends FieldItemBase {
+class UriItem extends StringItem {
 
   /**
    * Field definitions of the contained properties.

@@ -128,7 +128,7 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the test entity.'))
       ->setTranslatable(TRUE)
-      ->setPropertyConstraints('value', array('Length' => array('max' => 32)));
+      ->setSetting('max_length', 32);
 
     // @todo: Add allowed values validation.
     $fields['type'] = FieldDefinition::create('string')
