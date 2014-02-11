@@ -47,9 +47,6 @@ field.field.*.*:
     translatable:
       type: boolean
       label: 'Translatable'
-    active:
-      type: boolean
-      label: 'Active'
     indexes:
       type: sequence
       label: 'Indexes'
@@ -82,6 +79,9 @@ field.instance.*.*.*:
     field_name:
       type: string
       label: 'Field name'
+    entity_type:
+      type: string
+      label: 'Entity type'
     bundle:
       type: string
       label: 'Bundle'
@@ -104,29 +104,6 @@ field.instance.*.*.*:
     field_type:
       type: string
       label: 'Field type'
-    entity_type:
-      type: string
-      label: 'Entity type'
-    widget:
-      type: mapping
-      label: 'Field instance'
-      mapping:
-        weight:
-          type: integer
-          label: 'Weight'
-        type:
-          type: string
-          label: 'Type'
-        module:
-          type: string
-          label: 'Module'
-        settings:
-          type: mapping
-          label: 'Settings'
-          mapping:
-            size:
-              type: integer
-              label: 'Size'
 
 entity_form_display.field.hidden:
   type: entity_field_form_display_base

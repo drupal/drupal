@@ -12,10 +12,4 @@ default_value: {  }
 default_value_function: ''
 settings:
   text_processing: '0'
-widget:
-  weight: '-2'
-  type: text_textfield
-  module: text
-  settings:
-    size: '60'
 field_type: text
