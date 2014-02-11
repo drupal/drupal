@@ -11,6 +11,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
+use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Defines the default configuration object.
  */
-class Config {
+class Config extends DependencySerialization {
 
   /**
    * The maximum length of a configuration object name.

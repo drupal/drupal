@@ -7,9 +7,11 @@
 
 namespace Drupal\Tests\Core\DependencyInjection;
 
+use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the dependency serialization base class.
@@ -36,20 +38,19 @@ class DependencySerializationTest extends UnitTestCase {
     // Create a pseudo service and dependency injected object.
     $service = new \stdClass();
     $service->_serviceId = 'test_service';
-    $container = $this->getMock('Drupal\Core\DependencyInjection\Container');
-    $container->expects($this->exactly(1))
-      ->method('get')
-      ->with('test_service')
-      ->will($this->returnValue($service));
+    $container = new Container();
+    $container->set('test_service', $service);
+    $container->set('service_container', $container);
     \Drupal::setContainer($container);
 
     $dependencySerialization = new TestClass($service);
+    $dependencySerialization->setContainer($container);
 
     $string = serialize($dependencySerialization);
     $object = unserialize($string);
 
-    // The original object got _serviceIds added so let's remove it to check
-    // equality
+    // The original object got _serviceIds added so removing it to check
+    // equality.
     unset($dependencySerialization->_serviceIds);
 
     // Ensure dependency injected object remains the same after serialization.
@@ -61,6 +62,7 @@ class DependencySerializationTest extends UnitTestCase {
     // Ensure that both the service and the variable are in the unserialized
     // object.
     $this->assertSame($service, $object->service);
+    $this->assertSame($container, $object->container);
   }
 
 }
@@ -68,7 +70,7 @@ class DependencySerializationTest extends UnitTestCase {
 /**
  * Defines a test class which has a single service as dependency.
  */
-class TestClass extends DependencySerialization {
+class TestClass extends DependencySerialization implements ContainerAwareInterface {
 
   /**
    * A test service.
@@ -76,6 +78,13 @@ class TestClass extends DependencySerialization {
    * @var \stdClass
    */
   public $service;
+
+  /**
+   * The container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  public $container;
 
   /**
    * {@inheritdoc}
@@ -94,4 +103,10 @@ class TestClass extends DependencySerialization {
     $this->service = $service;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setContainer(ContainerInterface $container = NULL) {
+    $this->container = $container;
+  }
 }

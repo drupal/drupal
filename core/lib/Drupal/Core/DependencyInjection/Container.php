@@ -27,4 +27,12 @@ class Container extends SymfonyContainer {
     return $service;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    trigger_error('The container was serialized.', E_USER_ERROR);
+    return array_keys(get_object_vars($this));
+  }
+
 }

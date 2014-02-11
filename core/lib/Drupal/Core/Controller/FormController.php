@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @todo Make this a trait in PHP 5.4.
  */
-abstract class FormController {
+abstract class FormController extends DependencySerialization {
 
   /**
    * The form definition. The format may vary depending on the child class.

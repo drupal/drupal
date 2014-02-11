@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\Core\DependencyInjection;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a dependency injection friendly methods for serialization.
@@ -31,6 +32,11 @@ abstract class DependencySerialization {
         // container, only store its ID so it can be used to get a fresh object
         // on unserialization.
         $this->_serviceIds[$key] = $value->_serviceId;
+        unset($vars[$key]);
+      }
+      // Special case the container, which might not have a service ID.
+      elseif ($value instanceof ContainerInterface) {
+        $this->_serviceIds[$key] = 'service_container';
         unset($vars[$key]);
       }
     }

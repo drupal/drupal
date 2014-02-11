@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -15,7 +16,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  *
  * @todo Convert this to a trait.
  */
-abstract class EntityControllerBase {
+abstract class EntityControllerBase extends DependencySerialization {
 
   /**
    * The translation manager service.

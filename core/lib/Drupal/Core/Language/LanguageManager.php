@@ -8,12 +8,13 @@
 namespace Drupal\Core\Language;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
  * Class responsible for providing language support on language-unaware sites.
  */
-class LanguageManager implements LanguageManagerInterface {
+class LanguageManager extends DependencySerialization implements LanguageManagerInterface {
 
   /**
    * The string translation service.
