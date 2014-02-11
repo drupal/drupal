@@ -70,13 +70,13 @@ class SetCustomize extends EntityFormController {
     foreach ($shortcuts as $shortcut) {
       $id = $shortcut->id();
       $form['shortcuts']['links'][$id]['#attributes']['class'][] = 'draggable';
-      $form['shortcuts']['links'][$id]['name']['#markup'] = l($shortcut->title->value, $shortcut->path->value);
-      $form['shortcuts']['links'][$id]['#weight'] = $shortcut->weight->value;
+      $form['shortcuts']['links'][$id]['name']['#markup'] = l($shortcut->getTitle(), $shortcut->path->value);
+      $form['shortcuts']['links'][$id]['#weight'] = $shortcut->getWeight();
       $form['shortcuts']['links'][$id]['weight'] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $shortcut->title->value)),
+        '#title' => t('Weight for @title', array('@title' => $shortcut->getTitle())),
         '#title_display' => 'invisible',
-        '#default_value' => $shortcut->weight->value,
+        '#default_value' => $shortcut->getWeight(),
         '#attributes' => array('class' => array('shortcut-weight')),
       );
 
@@ -121,7 +121,7 @@ class SetCustomize extends EntityFormController {
   public function save(array $form, array &$form_state) {
     $shortcuts = $this->storageController->loadByProperties(array('shortcut_set' => $this->entity->id()));
     foreach ($shortcuts as $shortcut) {
-      $shortcut->weight->value = $form_state['values']['shortcuts']['links'][$shortcut->id()]['weight'];
+      $shortcut->setWeight($form_state['values']['shortcuts']['links'][$shortcut->id()]['weight']);
       $shortcut->save();
     }
     drupal_set_message(t('The shortcut set has been updated.'));

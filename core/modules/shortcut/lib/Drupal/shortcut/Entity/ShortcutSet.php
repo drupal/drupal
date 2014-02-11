@@ -111,7 +111,7 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
   public function resetLinkWeights() {
     $weight = -50;
     foreach ($this->getShortcuts() as $shortcut) {
-      $shortcut->weight->value = ++$weight;
+      $shortcut->setWeight(++$weight);
       $shortcut->save();
     }
 
