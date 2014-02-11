@@ -1705,6 +1705,13 @@ abstract class WebTestBase extends TestBase {
       $this->drupalProcessAjaxResponse($content, $return, $ajax_settings, $drupal_settings);
     }
 
+    $verbose = 'AJAX POST request to: ' . $path;
+    $verbose .= '<br />AJAX controller path: ' . $ajax_path;
+    $verbose .= '<hr />Ending URL: ' . $this->getUrl();
+    $verbose .= '<hr />' . $this->content;
+
+    $this->verbose($verbose);
+
     return $return;
   }
 
