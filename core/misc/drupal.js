@@ -276,7 +276,8 @@ if (window.jQuery) {
 
     if (keys.length) {
       for (var i = 0; i < fragments.length; i++) {
-        fragments[i] = Drupal.stringReplace(fragments[i], args, keys);
+        // Process each fragment with a copy of remaining keys.
+        fragments[i] = Drupal.stringReplace(fragments[i], args, keys.slice(0));
       }
     }
 
