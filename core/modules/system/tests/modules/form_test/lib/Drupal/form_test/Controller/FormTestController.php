@@ -35,11 +35,4 @@ class FormTestController extends ControllerBase {
     return $return;
   }
 
-  /**
-   * @todo Remove form_test_wrapper_callback().
-   */
-  public function wrapperCallback($form_id) {
-    return form_test_wrapper_callback($form_id);
-  }
-
 }

@@ -39,11 +39,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    * @param \Drupal\Core\Form\FormInterface|string $form_arg
    *   A form object to use to build the form, or the unique string identifying
    *   the desired form. If $form_arg is a string and a function with that
-   *   name exists, it is called to build the form array. Modules that need to
-   *   generate the same form (or very similar forms) using different $form_ids
-   *   can implement hook_forms(), which maps different $form_id values to the
-   *   proper form constructor function. Examples may be found in node_forms(),
-   *   and search_forms().
+   *   name exists, it is called to build the form array.
    * @param ...
    *   Any additional arguments are passed on to the functions called by
    *   drupal_get_form(), including the unique form constructor function. For
@@ -68,11 +64,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    *
    * @param $form_id
    *   The unique string identifying the desired form. If a function with that
-   *   name exists, it is called to build the form array. Modules that need to
-   *   generate the same form (or very similar forms) using different $form_ids
-   *   can implement hook_forms(), which maps different $form_id values to the
-   *   proper form constructor function. Examples may be found in node_forms(),
-   *   and search_forms().
+   *   name exists, it is called to build the form array.
    * @param array $form_state
    *   An array which stores information about the form. This is passed as a
    *   reference so that the caller can use it to examine what in the form
@@ -97,8 +89,8 @@ interface FormBuilderInterface extends FormErrorInterface {
    *       Use form_load_include() to add include files from a form constructor.
    *     - form_id: Identification of the primary form being constructed and
    *       processed.
-   *     - base_form_id: Identification for a base form, as declared in a
-   *       hook_forms() implementation.
+   *     - base_form_id: Identification for a base form, as declared in the form
+  *       class's \Drupal\Core\Form\BaseFormIdInterface::getBaseFormId() method.
    *   - rebuild_info: Internal. Similar to 'build_info', but pertaining to
    *     self::rebuildForm().
    *   - rebuild: Normally, after the entire form processing is completed and
@@ -213,14 +205,6 @@ interface FormBuilderInterface extends FormErrorInterface {
    *     need to or should not be cached during the whole form workflow; e.g.,
    *     data that needs to be accessed during the current form build process
    *     only. There is no use-case for this functionality in Drupal core.
-   *   - wrapper_callback: Modules that wish to pre-populate certain forms with
-   *     common elements, such as back/next/save buttons in multi-step form
-   *     wizards, may define a form builder function name that returns a form
-   *     structure, which is passed on to the actual form builder function.
-   *     Such implementations may either define the 'wrapper_callback' via
-   *     hook_forms() or have to invoke self::buildForm() (instead of
-   *     self::getForm()) on their own in a custom menu callback to prepare
-   *     $form_state accordingly.
    *   Information on how certain $form_state properties control redirection
    *   behavior after form submission may be found in self::redirectForm().
    *
@@ -255,11 +239,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    *
    * @param string $form_id
    *   The unique string identifying the desired form. If a function with that
-   *   name exists, it is called to build the form array. Modules that need to
-   *   generate the same form (or very similar forms) using different $form_ids
-   *   can implement hook_forms(), which maps different $form_id values to the
-   *   proper form constructor function. Examples may be found in node_forms()
-   *   and search_forms().
+   *   name exists, it is called to build the form array.
    * @param array $form_state
    *   A keyed array containing the current state of the form.
    * @param array|null $old_form
@@ -302,11 +282,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    * @param \Drupal\Core\Form\FormInterface|string $form_arg
    *   A form object to use to build the form, or the unique string identifying
    *   the desired form. If $form_arg is a string and a function with that
-   *   name exists, it is called to build the form array. Modules that need to
-   *   generate the same form (or very similar forms) using different $form_ids
-   *   can implement hook_forms(), which maps different $form_id values to the
-   *   proper form constructor function. Examples may be found in node_forms()
-   *   and search_forms().
+   *   name exists, it is called to build the form array.
    * @param $form_state
    *   A keyed array containing the current state of the form. Most important is
    *   the $form_state['values'] collection, a tree of data used to simulate the
@@ -354,9 +330,6 @@ interface FormBuilderInterface extends FormErrorInterface {
    * @param string $form_id
    *   The unique string identifying the desired form. If a function
    *   with that name exists, it is called to build the form array.
-   *   Modules that need to generate the same form (or very similar forms)
-   *   using different $form_ids can implement hook_forms(), which maps
-   *   different $form_id values to the proper form constructor function.
    * @param array $form_state
    *   A keyed array containing the current state of the form, including the
    *   additional arguments to self::getForm() or self::submitForm() in the

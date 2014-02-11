@@ -68,15 +68,6 @@ form_test.autocomplete_2:
   requirements:
     _permission: 'access autocomplete test'
 
-form_test.wrapper:
-  path: '/form_test/wrapper-callback'
-  defaults:
-    _title: 'Form wrapper callback test'
-    _content: '\Drupal\form_test\Controller\FormTestController::wrapperCallback'
-    form_id: 'form_test_wrapper_callback_form'
-  requirements:
-    _access: 'TRUE'
-
 form_test.alter_form:
   path: '/form-test/alter'
   defaults:

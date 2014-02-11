@@ -963,9 +963,6 @@ function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
  * one exists) check the $form_state. The base form ID is stored under
  * $form_state['build_info']['base_form_id'].
  *
- * See hook_forms() for more information on how to implement base forms in
- * Drupal.
- *
  * Form alter hooks are called in the following order: hook_form_alter(),
  * hook_form_BASE_FORM_ID_alter(), hook_form_FORM_ID_alter(). See
  * hook_form_alter() for more details.
@@ -981,7 +978,6 @@ function hook_form_FORM_ID_alter(&$form, &$form_state, $form_id) {
  * @see hook_form_alter()
  * @see hook_form_FORM_ID_alter()
  * @see drupal_prepare_form()
- * @see hook_forms()
  */
 function hook_form_BASE_FORM_ID_alter(&$form, &$form_state, $form_id) {
   // Modification for the form with the given BASE_FORM_ID goes here. For
@@ -994,85 +990,6 @@ function hook_form_BASE_FORM_ID_alter(&$form, &$form_state, $form_id) {
     '#title' => t("I agree with the website's terms and conditions."),
     '#required' => TRUE,
   );
-}
-
-/**
- * Map form_ids to form builder functions.
- *
- * By default, when drupal_get_form() is called, the system will look for a
- * function with the same name as the form ID, and use that function to build
- * the form. If no such function is found, Drupal calls this hook. Modules
- * implementing this hook can then provide their own instructions for mapping
- * form IDs to constructor functions. As a result, you can easily map multiple
- * form IDs to a single form constructor (referred to as a 'base' form).
- *
- * Using a base form can help to avoid code duplication, by allowing many
- * similar forms to use the same code base. Another benefit is that it becomes
- * much easier for other modules to apply a general change to the group of
- * forms; hook_form_BASE_FORM_ID_alter() can be used to easily alter multiple
- * forms at once by directly targeting the shared base form.
- *
- * Two example use cases where base forms may be useful are given below.
- *
- * First, you can use this hook to tell the form system to use a different
- * function to build certain forms in your module; this is often used to define
- * a form "factory" function that is used to build several similar forms. In
- * this case, your hook implementation will likely ignore all of the input
- * arguments. See node_forms() for an example of this. Note, node_forms() is the
- * hook_forms() implementation; the base form itself is defined in node_form().
- *
- * Second, you could use this hook to define how to build a form with a
- * dynamically-generated form ID. In this case, you would need to verify that
- * the $form_id input matched your module's format for dynamically-generated
- * form IDs, and if so, act appropriately.
- *
- * @param $form_id
- *   The unique string identifying the desired form.
- * @param $args
- *   An array containing the original arguments provided to drupal_get_form()
- *   or drupal_form_submit(). These are always passed to the form builder and
- *   do not have to be specified manually in 'callback arguments'.
- *
- * @return
- *   An associative array whose keys define form_ids and whose values are an
- *   associative array defining the following keys:
- *   - callback: The name of the form builder function to invoke. This will be
- *     used for the base form ID, for example, to target a base form using
- *     hook_form_BASE_FORM_ID_alter().
- *   - callback arguments: (optional) Additional arguments to pass to the
- *     function defined in 'callback', which are prepended to $args.
- *   - wrapper_callback: (optional) The name of a form builder function to
- *     invoke before the form builder defined in 'callback' is invoked. This
- *     wrapper callback may prepopulate the $form array with form elements,
- *     which will then be already contained in the $form that is passed on to
- *     the form builder defined in 'callback'. For example, a wrapper callback
- *     could setup wizard-alike form buttons that are the same for a variety of
- *     forms that belong to the wizard, which all share the same wrapper
- *     callback.
- */
-function hook_forms($form_id, $args) {
-  // Simply reroute the (non-existing) $form_id 'mymodule_first_form' to
-  // 'mymodule_main_form'.
-  $forms['mymodule_first_form'] = array(
-    'callback' => 'mymodule_main_form',
-  );
-
-  // Reroute the $form_id and prepend an additional argument that gets passed to
-  // the 'mymodule_main_form' form builder function.
-  $forms['mymodule_second_form'] = array(
-    'callback' => 'mymodule_main_form',
-    'callback arguments' => array('some parameter'),
-  );
-
-  // Reroute the $form_id, but invoke the form builder function
-  // 'mymodule_main_form_wrapper' first, so we can prepopulate the $form array
-  // that is passed to the actual form builder 'mymodule_main_form'.
-  $forms['mymodule_wrapped_form'] = array(
-    'callback' => 'mymodule_main_form',
-    'wrapper_callback' => 'mymodule_main_form_wrapper',
-  );
-
-  return $forms;
 }
 
 /**

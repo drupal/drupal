@@ -130,15 +130,6 @@ class FormTestForm {
   }
 
   /**
-   * Wraps form_test_wrapper_callback_form().
-   *
-   * @todo Remove form_test_wrapper_callback_form().
-   */
-  public function testWrapperCallback() {
-    return drupal_get_form('form_test_wrapper_callback_form');
-  }
-
-  /**
    * Wraps form_test_form_state_values_clean_form().
    *
    * @todo Remove form_test_form_state_values_clean_form().

@@ -743,37 +743,6 @@ function form_label_test_form() {
 }
 
 /**
- * Menu callback; Invokes a form builder function with a wrapper callback.
- *
- * @deprecated \Drupal\form_test\Controller\FormTestController::wrapperCallback()
- */
-function form_test_wrapper_callback($form_id) {
-  $form_state = array(
-    'build_info' => array('args' => array()),
-    'wrapper_callback' => 'form_test_wrapper_callback_wrapper',
-  );
-  return drupal_build_form($form_id, $form_state);
-}
-
-/**
- * Form wrapper for form_test_wrapper_callback_form().
- */
-function form_test_wrapper_callback_wrapper($form, &$form_state) {
-  $form['wrapper'] = array('#markup' => 'Form wrapper callback element output.');
-  return $form;
-}
-
-/**
- * Form builder for form wrapper callback test.
- *
- * @deprecated Use \Drupal\form_test\testWrapperCallback()
- */
-function form_test_wrapper_callback_form($form, &$form_state) {
-  $form['builder'] = array('#markup' => 'Form builder element output.');
-  return $form;
-}
-
-/**
  * Form builder for form_state_values_clean() test.
  *
  * @deprecated Use \Drupal\form_test\testFormStateClean()
