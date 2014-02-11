@@ -267,18 +267,20 @@ function user_views_data() {
     ),
   );
 
-  $data['users']['signature'] = array(
-    'title' => t('Signature'),
-    'help' => t("The user's signature."),
-    'field' => array(
-      'id' => 'markup',
-      'format' => filter_fallback_format(),
-      'click sortable' => FALSE,
-    ),
-    'filter' => array(
-      'id' => 'string',
-    ),
-  );
+  if (\Drupal::moduleHandler()->moduleExists('filter')) {
+    $data['users']['signature'] = array(
+      'title' => t('Signature'),
+      'help' => t("The user's signature."),
+      'field' => array(
+        'id' => 'markup',
+        'format' => filter_fallback_format(),
+        'click sortable' => FALSE,
+      ),
+      'filter' => array(
+        'id' => 'string',
+      ),
+    );
+  }
 
   if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
     $data['users']['translation_link'] = array(

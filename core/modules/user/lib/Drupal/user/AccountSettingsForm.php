@@ -147,14 +147,17 @@ class AccountSettingsForm extends ConfigFormBase {
     }
 
     // Account settings.
+    $filter_exists = $this->moduleHandler->moduleExists('filter');
     $form['personalization'] = array(
       '#type' => 'details',
       '#title' => $this->t('Personalization'),
+      '#access' => $filter_exists,
     );
     $form['personalization']['user_signatures'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Enable signatures.'),
-      '#default_value' => $config->get('signatures'),
+      '#default_value' => $filter_exists ? $config->get('signatures') : 0,
+      '#access' => $filter_exists,
     );
 
     // Default notifications address.

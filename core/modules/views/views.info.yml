@@ -4,3 +4,5 @@ description: 'Create customized lists and queries from your database.'
 package: Core
 version: VERSION
 core: 8.x
+dependencies:
+  - filter

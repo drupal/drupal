@@ -217,14 +217,20 @@ abstract class AccountFormController extends ContentEntityFormController {
       '#weight' => 1,
       '#access' => (!$register && $config->get('signatures')),
     );
-
-    $form['signature_settings']['signature'] = array(
-      '#type' => 'text_format',
-      '#title' => $this->t('Signature'),
-      '#default_value' => $account->getSignature(),
-      '#description' => $this->t('Your signature will be publicly displayed at the end of your comments.'),
-      '#format' => $account->getSignatureFormat(),
-    );
+    // While the details group will simply not be rendered if empty, the actual
+    // signature element cannot use #access, since #type 'text_format' is not
+    // available when Filter module is not installed. If the user account has an
+    // existing signature value and format, then the existing field values will
+    // just be re-saved to the database in case of an entity update.
+    if ($this->moduleHandler->moduleExists('filter')) {
+      $form['signature_settings']['signature'] = array(
+        '#type' => 'text_format',
+        '#title' => $this->t('Signature'),
+        '#default_value' => $account->getSignature(),
+        '#description' => $this->t('Your signature will be publicly displayed at the end of your comments.'),
+        '#format' => $account->getSignatureFormat(),
+      );
+    }
 
     $user_preferred_langcode = $register ? $language_interface->id : $account->getPreferredLangcode();
 

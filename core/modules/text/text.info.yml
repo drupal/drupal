@@ -4,6 +4,7 @@ description: 'Defines simple text field types.'
 package: Field types
 version: VERSION
 core: 8.x
+required: true
 dependencies:
   - field
-required: true
+  - filter

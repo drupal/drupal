@@ -1809,6 +1809,10 @@ function user_modules_installed($modules) {
 function user_modules_uninstalled($modules) {
   // Remove any potentially orphan module data stored for users.
   \Drupal::service('user.data')->delete($modules);
+  // User signatures require Filter module.
+  if (in_array('filter', $modules)) {
+    \Drupal::config('user.settings')->set('signatures', FALSE)->save();
+  }
 }
 
 /**
