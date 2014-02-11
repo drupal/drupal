@@ -2350,11 +2350,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  * @see system_page_build()
  */
 function template_preprocess_maintenance_page(&$variables) {
-  global $theme;
   $language_interface = language(Language::TYPE_INTERFACE);
-  // Retrieve the theme data to list all available regions.
-  $theme_data = list_themes();
-  $regions = $theme_data[$theme]->info['regions'];
 
   // Initializes attributes which are specific to the html element.
   $variables['html_attributes'] = new Attribute;
@@ -2375,11 +2371,14 @@ function template_preprocess_maintenance_page(&$variables) {
     drupal_render($build);
   }
 
-  // Get all region content set with drupal_add_region_content().
-  foreach (array_keys($regions) as $region) {
-    // Assign region to a region variable.
-    $region_content = drupal_get_region_content($region);
-    isset($variables[$region]) ? $variables[$region] .= $region_content : $variables[$region] = $region_content;
+  foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
+    if (!isset($variables[$region_key])) {
+      $variables[$region_key] = array();
+    }
+    // Append region content set with drupal_add_region_content() as markup.
+    if ($region_content = drupal_get_region_content($region_key)) {
+      $variables[$region_key][]['#markup'] = $region_content;
+    }
   }
 
   // Setup layout variable.
