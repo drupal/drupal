@@ -11,12 +11,12 @@ chdir('../../..');
 // Load the Drupal bootstrap.
 require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 require_once dirname(dirname(__DIR__)) . '/includes/bootstrap.inc';
-drupal_bootstrap(DRUPAL_BOOTSTRAP_PAGE_CACHE);
+drupal_bootstrap(DRUPAL_BOOTSTRAP_KERNEL);
 
 if (\Drupal::config('statistics.settings')->get('count_content_views')) {
   $nid = filter_input(INPUT_POST, 'nid', FILTER_VALIDATE_INT);
   if ($nid) {
-    db_merge('node_counter')
+    \Drupal::database()->merge('node_counter')
       ->key(array('nid' => $nid))
       ->fields(array(
         'daycount' => 1,

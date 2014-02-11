@@ -97,4 +97,5 @@ class StatisticsLoggingTest extends WebTestBase {
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '1');
   }
+
 }
