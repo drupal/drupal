@@ -47,7 +47,7 @@ class ConfigTestFormController extends EntityFormController {
       '#default_value' => $entity->get('style'),
       '#access' => FALSE,
     );
-    if (module_exists('image')) {
+    if ($this->moduleHandler->moduleExists('image')) {
       $form['style']['#access'] = TRUE;
       $form['style']['#options'] = image_style_options();
     }

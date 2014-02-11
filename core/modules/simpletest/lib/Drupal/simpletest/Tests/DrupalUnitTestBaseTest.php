@@ -53,7 +53,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $module = 'field_test';
 
     // Verify that the module does not exist yet.
-    $this->assertFalse(module_exists($module), "$module module not found.");
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists($module), "$module module not found.");
     $list = array_keys(\Drupal::moduleHandler()->getModuleList());
     $this->assertFalse(in_array($module, $list), "$module module not found in the extension handler's module list.");
     $list = \Drupal::moduleHandler()->getImplementations('permission');
@@ -63,7 +63,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->enableModules(array($module));
 
     // Verify that the module exists.
-    $this->assertTrue(module_exists($module), "$module module found.");
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists($module), "$module module found.");
     $list = array_keys(\Drupal::moduleHandler()->getModuleList());
     $this->assertTrue(in_array($module, $list), "$module module found in the extension handler's module list.");
     $list = \Drupal::moduleHandler()->getImplementations('permission');
@@ -78,7 +78,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $table = 'node';
 
     // Verify that the module does not exist yet.
-    $this->assertFalse(module_exists($module), "$module module not found.");
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists($module), "$module module not found.");
     $list = array_keys(\Drupal::moduleHandler()->getModuleList());
     $this->assertFalse(in_array($module, $list), "$module module not found in the extension handler's module list.");
     $list = \Drupal::moduleHandler()->getImplementations('permission');
@@ -92,7 +92,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     \Drupal::moduleHandler()->install(array($module));
 
     // Verify that the enabled module exists.
-    $this->assertTrue(module_exists($module), "$module module found.");
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists($module), "$module module found.");
     $list = array_keys(\Drupal::moduleHandler()->getModuleList());
     $this->assertTrue(in_array($module, $list), "$module module found in the extension handler's module list.");
     $list = \Drupal::moduleHandler()->getImplementations('permission');

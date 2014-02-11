@@ -251,7 +251,7 @@ class BlockTest extends BlockTestBase {
    */
   function testBlockRehash() {
     \Drupal::moduleHandler()->install(array('block_test'));
-    $this->assertTrue(module_exists('block_test'), 'Test block module enabled.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block_test'), 'Test block module enabled.');
 
     // Clear the block cache to load the block_test module's block definitions.
     $this->container->get('plugin.manager.block')->clearCachedDefinitions();

@@ -144,10 +144,10 @@ class ModuleApiTest extends WebTestBase {
     // are not already enabled. (If they were, the tests below would not work
     // correctly.)
     \Drupal::moduleHandler()->install(array('module_test'), FALSE);
-    $this->assertTrue(module_exists('module_test'), 'Test module is enabled.');
-    $this->assertFalse(module_exists('forum'), 'Forum module is disabled.');
-    $this->assertFalse(module_exists('ban'), 'Ban module is disabled.');
-    $this->assertFalse(module_exists('xmlrpc'), 'XML-RPC module is disabled.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('module_test'), 'Test module is enabled.');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('forum'), 'Forum module is disabled.');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('ban'), 'Ban module is disabled.');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('xmlrpc'), 'XML-RPC module is disabled.');
 
     // First, create a fake missing dependency. Forum depends on ban, which
     // depends on a made-up module, foo. Nothing should be installed.
@@ -155,7 +155,7 @@ class ModuleApiTest extends WebTestBase {
     drupal_static_reset('system_rebuild_module_data');
     $result = \Drupal::moduleHandler()->install(array('forum'));
     $this->assertFalse($result, '\Drupal\Core\Extension\ModuleHandler::install() returns FALSE if dependencies are missing.');
-    $this->assertFalse(module_exists('forum'), '\Drupal\Core\Extension\ModuleHandler::install() aborts if dependencies are missing.');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('forum'), '\Drupal\Core\Extension\ModuleHandler::install() aborts if dependencies are missing.');
 
     // Now, fix the missing dependency. Forum module depends on ban, but ban
     // depends on the XML-RPC module.
@@ -165,9 +165,9 @@ class ModuleApiTest extends WebTestBase {
     $result = \Drupal::moduleHandler()->install(array('forum'));
     $this->assertTrue($result, '\Drupal\Core\Extension\ModuleHandler::install() returns the correct value.');
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue(module_exists('ban') && module_exists('xmlrpc'), 'Dependency chain was installed.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('ban') && \Drupal::moduleHandler()->moduleExists('xmlrpc'), 'Dependency chain was installed.');
     // Verify that the original module was installed.
-    $this->assertTrue(module_exists('forum'), 'Module installation with unlisted dependencies succeeded.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('forum'), 'Module installation with unlisted dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
     $module_order = \Drupal::state()->get('module_test.install_order') ?: array();
     $this->assertEqual($module_order, array('xmlrpc', 'ban', 'forum'), 'Modules were enabled in the correct order.');
@@ -201,9 +201,9 @@ class ModuleApiTest extends WebTestBase {
     $result = \Drupal::moduleHandler()->install(array('forum'));
     $this->assertTrue($result, '\Drupal\Core\Extension\ModuleHandler::install() returns the correct value.');
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue(module_exists('ban') && module_exists('xmlrpc'), 'Dependency chain was installed.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('ban') && \Drupal::moduleHandler()->moduleExists('xmlrpc'), 'Dependency chain was installed.');
     // Verify that the original module was installed.
-    $this->assertTrue(module_exists('forum'), 'Module installation with version dependencies succeeded.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('forum'), 'Module installation with version dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
     $enable_order = \Drupal::state()->get('module_test.install_order') ?: array();
     $xmlrpc_position = array_search('xmlrpc', $enable_order);

@@ -40,7 +40,7 @@ class HistoryUserTimestamp extends Node {
     if (\Drupal::currentUser()->isAuthenticated()) {
       $this->additional_fields['created'] = array('table' => 'node_field_data', 'field' => 'created');
       $this->additional_fields['changed'] = array('table' => 'node_field_data', 'field' => 'changed');
-      if (module_exists('comment') && !empty($this->options['comments'])) {
+      if (\Drupal::moduleHandler()->moduleExists('comment') && !empty($this->options['comments'])) {
         $this->additional_fields['last_comment'] = array('table' => 'comment_entity_statistics', 'field' => 'last_comment_timestamp');
       }
     }
@@ -56,7 +56,7 @@ class HistoryUserTimestamp extends Node {
 
   public function buildOptionsForm(&$form, &$form_state) {
     parent::buildOptionsForm($form, $form_state);
-    if (module_exists('comment')) {
+    if (\Drupal::moduleHandler()->moduleExists('comment')) {
       $form['comments'] = array(
         '#type' => 'checkbox',
         '#title' => t('Check for new comments as well'),
@@ -85,7 +85,7 @@ class HistoryUserTimestamp extends Node {
       $last_read = $this->getValue($values);
       $changed = $this->getValue($values, 'changed');
 
-      $last_comment = module_exists('comment') && !empty($this->options['comments']) ?  $this->getValue($values, 'last_comment') : 0;
+      $last_comment = \Drupal::moduleHandler()->moduleExists('comment') && !empty($this->options['comments']) ?  $this->getValue($values, 'last_comment') : 0;
 
       if (!$last_read && $changed > HISTORY_READ_LIMIT) {
         $mark = MARK_NEW;

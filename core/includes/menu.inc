@@ -1706,7 +1706,7 @@ function menu_list_system_menus() {
  */
 function menu_main_menu() {
   $config = \Drupal::config('menu.settings');
-  $menu_enabled = module_exists('menu');
+  $menu_enabled = \Drupal::moduleHandler()->moduleExists('menu');
   // When menu module is not enabled, we need a hardcoded default value.
   $main_links_source = $menu_enabled ? $config->get('main_links') : 'main';
   return menu_navigation_links($main_links_source);
@@ -1717,7 +1717,7 @@ function menu_main_menu() {
  */
 function menu_secondary_menu() {
   $config = \Drupal::config('menu.settings');
-  $menu_enabled = module_exists('menu');
+  $menu_enabled = \Drupal::moduleHandler()->moduleExists('menu');
   // When menu module is not enabled, we need a hardcoded default value.
   $main_links_source = $menu_enabled ? $config->get('main_links') : 'main';
   $secondary_links_source = $menu_enabled ? $config->get('secondary_links') : 'account';

@@ -35,7 +35,7 @@ class InfoAlterTest extends WebTestBase {
     // Enable seven and the test module.
     theme_enable(array('seven'));
     \Drupal::moduleHandler()->install(array('module_test'), FALSE);
-    $this->assertTrue(module_exists('module_test'), 'Test module is enabled.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('module_test'), 'Test module is enabled.');
 
     // Verify that the rebuilt and altered theme info is returned.
     $info = system_get_info('theme', 'seven');

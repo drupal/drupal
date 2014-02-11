@@ -171,7 +171,7 @@ function menu_load($menu_name) {
 function menu_menu_insert(Menu $menu) {
   menu_cache_clear_all();
   // Invalidate the block cache to update menu-based derivatives.
-  if (module_exists('block')) {
+  if (\Drupal::moduleHandler()->moduleExists('block')) {
     \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
   // Make sure the menu is present in the active menus variable so that its
@@ -194,7 +194,7 @@ function menu_menu_insert(Menu $menu) {
 function menu_menu_update(Menu $menu) {
   menu_cache_clear_all();
   // Invalidate the block cache to update menu-based derivatives.
-  if (module_exists('block')) {
+  if (\Drupal::moduleHandler()->moduleExists('block')) {
     \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 }
@@ -227,7 +227,7 @@ function menu_menu_delete(Menu $menu) {
   menu_cache_clear_all();
 
   // Invalidate the block cache to update menu-based derivatives.
-  if (module_exists('block')) {
+  if (\Drupal::moduleHandler()->moduleExists('block')) {
     \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 }

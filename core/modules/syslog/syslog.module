@@ -30,7 +30,7 @@ function syslog_help($path, $arg) {
  */
 function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
   $config = \Drupal::config('syslog.settings');
-  $help = module_exists('help') ? ' ' . l(t('More information'), 'admin/help/syslog') . '.' : NULL;
+  $help = \Drupal::moduleHandler()->moduleExists('help') ? ' ' . l(t('More information'), 'admin/help/syslog') . '.' : NULL;
   $form['syslog_identity'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Syslog identity'),

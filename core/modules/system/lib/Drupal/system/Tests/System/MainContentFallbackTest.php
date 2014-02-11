@@ -58,7 +58,7 @@ class MainContentFallbackTest extends WebTestBase {
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
     $this->rebuildContainer();
-    $this->assertFalse(module_exists('block'), 'Block module uninstall.');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('block'), 'Block module uninstall.');
 
     // At this point, no region is filled and fallback should be triggered.
     $this->drupalGet('admin/config/system/site-information');
@@ -92,6 +92,6 @@ class MainContentFallbackTest extends WebTestBase {
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     $this->rebuildContainer();
-    $this->assertTrue(module_exists('block'), 'Block module re-enabled.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-enabled.');
   }
 }
