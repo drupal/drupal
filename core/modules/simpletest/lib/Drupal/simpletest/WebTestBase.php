@@ -2151,14 +2151,14 @@ abstract class WebTestBase extends TestBase {
    * used by PHP) doesn't support any form of quotation. This function
    * simplifies the building of XPath expression.
    *
-   * @param $xpath
+   * @param string $xpath
    *   An XPath query, possibly with placeholders in the form ':name'.
-   * @param $args
+   * @param array $args
    *   An array of arguments with keys in the form ':name' matching the
    *   placeholders in the query. The values may be either strings or numeric
    *   values.
    *
-   * @return
+   * @return string
    *   An XPath query with arguments replaced.
    */
   protected function buildXPathQuery($xpath, array $args = array()) {
@@ -2195,10 +2195,14 @@ abstract class WebTestBase extends TestBase {
    *
    * The search is relative to the root element (HTML tag normally) of the page.
    *
-   * @param $xpath
+   * @param string $xpath
    *   The xpath string to use in the search.
+   * @param array $arguments
+   *   An array of arguments with keys in the form ':name' matching the
+   *   placeholders in the query. The values may be either strings or numeric
+   *   values.
    *
-   * @return
+   * @return array
    *   The return value of the xpath search. For details on the xpath string
    *   format and return values see the SimpleXML documentation,
    *   http://php.net/manual/function.simplexml-element-xpath.php.
