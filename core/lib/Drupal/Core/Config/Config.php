@@ -75,7 +75,7 @@ class Config extends DependencySerialization {
    *
    * @var array
    */
-  protected $originalData;
+  protected $originalData = array();
 
   /**
    * The current runtime data.
@@ -458,7 +458,7 @@ class Config extends DependencySerialization {
 
     $this->storage->write($this->name, $this->data);
     $this->isNew = FALSE;
-    $this->notify('save');
+    $this->eventDispatcher->dispatch(ConfigEvents::SAVE, new ConfigCrudEvent($this));
     $this->originalData = $this->data;
     return $this;
   }
@@ -475,7 +475,7 @@ class Config extends DependencySerialization {
     $this->storage->delete($this->name);
     $this->isNew = TRUE;
     $this->resetOverriddenData();
-    $this->notify('delete');
+    $this->eventDispatcher->dispatch(ConfigEvents::DELETE, new ConfigCrudEvent($this));
     $this->originalData = $this->data;
     return $this;
   }
@@ -488,16 +488,6 @@ class Config extends DependencySerialization {
    */
   public function getStorage() {
     return $this->storage;
-  }
-
-  /**
-   * Dispatches a configuration event.
-   *
-   * @param string $config_event_name
-   *   The configuration event name.
-   */
-  protected function notify($config_event_name) {
-    $this->eventDispatcher->dispatch('config.' . $config_event_name, new ConfigEvent($this));
   }
 
   /**

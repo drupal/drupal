@@ -7,6 +7,7 @@
 
 namespace Drupal\system;
 
+use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageDispatcher;
@@ -21,7 +22,7 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events['config.importer.validate'][] = array('onConfigImporterValidate', 20);
+    $events[ConfigEvents::VALIDATE][] = array('onConfigImporterValidate', 20);
     return $events;
   }
 

@@ -8,6 +8,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -40,7 +41,7 @@ class ConfigImportSubscriber implements EventSubscriberInterface {
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events['config.importer.validate'][] = array('onConfigImporterValidate', 40);
+    $events[ConfigEvents::VALIDATE][] = array('onConfigImporterValidate', 40);
     return $events;
   }
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\config_override\EventSubscriber;
 
+use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigModuleOverridesEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -36,7 +37,7 @@ class ConfigModuleLowPriorityOverrideSubscriber implements EventSubscriberInterf
    *   An array of event listener definitions.
    */
   static function getSubscribedEvents() {
-    $events['config.module.overrides'][] = array('onConfigModuleOverride', 35);
+    $events[ConfigEvents::MODULE_OVERRIDES][] = array('onConfigModuleOverride', 35);
     return $events;
   }
 }

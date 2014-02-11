@@ -20,11 +20,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * The ConfigImporter has a identifier which is used to construct event names.
  * The events fired during an import are:
- * - 'config.importer.validate': Events listening can throw a
+ * - ConfigEvents::VALIDATE: Events listening can throw a
  *   \Drupal\Core\Config\ConfigImporterException to prevent an import from
  *   occurring.
  *   @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
- * - 'config.importer.import': Events listening can react to a successful import.
+ * - ConfigEvents::IMPORT: Events listening can react to a successful import.
  *   @see \Drupal\Core\EventSubscriber\ConfigSnapshotSubscriber
  *
  * @see \Drupal\Core\Config\ConfigImporterEvent

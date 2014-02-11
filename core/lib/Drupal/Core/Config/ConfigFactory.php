@@ -223,7 +223,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   protected function loadModuleOverrides(array $names) {
     $configOverridesEvent = new ConfigModuleOverridesEvent($names, $this->language);
-    $this->eventDispatcher->dispatch('config.module.overrides', $configOverridesEvent);
+    $this->eventDispatcher->dispatch(ConfigEvents::MODULE_OVERRIDES, $configOverridesEvent);
     return $configOverridesEvent->getOverrides();
   }
 
@@ -258,12 +258,10 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
       unset($this->cache[$old_cache_key]);
     }
 
-    $new_cache_key = $this->getCacheKey($new_name);
-    $this->cache[$new_cache_key] = new Config($new_name, $this->storage, $this->eventDispatcher, $this->typedConfigManager, $this->language);
-    if ($data = $this->storage->read($new_name)) {
-      $this->cache[$new_cache_key]->initWithData($data);
-    }
-    return $this->cache[$new_cache_key];
+    // Prime the cache and load the configuration with the correct overrides.
+    $config = $this->get($new_name);
+    $this->eventDispatcher->dispatch(ConfigEvents::RENAME, new ConfigRenameEvent($config, $old_name));
+    return $config;
   }
 
   /**
@@ -370,10 +368,10 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   /**
    * Removes stale static cache entries when configuration is saved.
    *
-   * @param ConfigEvent $event
+   * @param ConfigCrudEvent $event
    *   The configuration event.
    */
-  public function onConfigSave(ConfigEvent $event) {
+  public function onConfigSave(ConfigCrudEvent $event) {
     // Ensure that the static cache contains up to date configuration objects by
     // replacing the data on any entries for the configuration object apart
     // from the one that references the actual config object being saved.
@@ -390,7 +388,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events['config.save'][] = array('onConfigSave', 255);
+    $events[ConfigEvents::SAVE][] = array('onConfigSave', 255);
     return $events;
   }
 
