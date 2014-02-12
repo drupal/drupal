@@ -185,4 +185,56 @@ class Error {
     return $return;
   }
 
+  /**
+   * Formats a flattened backtrace into a plain-text string.
+   *
+   * The calls show values for scalar arguments and type names for complex ones.
+   *
+   * @param array $backtrace
+   *   The backtrace of a Symfony\Component\Debug\Exception\FlattenException.
+   *
+   * @return string
+   *   A plain-text line-wrapped string ready to be put inside <pre>.
+   */
+  public static function formatFlattenedBacktrace(array $backtrace) {
+    $return = '';
+
+    foreach ($backtrace as $trace) {
+      $call = array('function' => '', 'args' => array());
+
+      if (isset($trace['class'])) {
+        $call['function'] = $trace['class'] . $trace['type'] . $trace['function'];
+      }
+      elseif (isset($trace['function'])) {
+        $call['function'] = $trace['function'];
+      }
+      else {
+        $call['function'] = 'main';
+      }
+
+      if (isset($trace['args'])) {
+        foreach ($trace['args'] as $arg) {
+          $type = $arg[0];
+          $value = $arg[1];
+          if ($type == 'array') {
+            $call['args'][] = '[' . ucfirst($type) . ']';
+          }
+          elseif ($type == 'null') {
+            $call['args'][] = strtoupper($type);
+          }
+          elseif ($type == 'boolean') {
+            $call['args'][] = $value ? 'TRUE' : 'FALSE';
+          }
+          else {
+            $call['args'][] = $value;
+          }
+        }
+      }
+
+      $return .= $call['function'] . '(' . implode(', ', $call['args']) . ")\n";
+    }
+
+    return $return;
+  }
+
 }

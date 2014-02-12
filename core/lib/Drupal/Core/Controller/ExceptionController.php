@@ -317,13 +317,40 @@ class ExceptionController extends HtmlControllerBase implements ContainerAwareIn
       $class = 'error';
 
       // If error type is 'User notice' then treat it as debug information
-      // instead of an error message, see dd().
+      // instead of an error message.
+      // @see debug()
       if ($error['%type'] == 'User notice') {
         $error['%type'] = 'Debug';
         $class = 'status';
       }
 
-      drupal_set_message(t('%type: !message in %function (line %line of %file).', $error), $class);
+      // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
+      // in the message. This does not happen for (false) security.
+      $root_length = strlen(DRUPAL_ROOT);
+      if (substr($error['%file'], 0, $root_length) == DRUPAL_ROOT) {
+        $error['%file'] = substr($error['%file'], $root_length + 1);
+      }
+      // Should not translate the string to avoid errors producing more errors.
+      $message = String::format('%type: !message in %function (line %line of %file).', $error);
+
+      // Check if verbose error reporting is on.
+      $error_level = $this->container->get('config.factory')->get('system.logging')->get('error_level');
+
+      if ($error_level == ERROR_REPORTING_DISPLAY_VERBOSE) {
+        $backtrace_exception = $exception;
+        while ($backtrace_exception->getPrevious()) {
+          $backtrace_exception = $backtrace_exception->getPrevious();
+        }
+        $backtrace = $backtrace_exception->getTrace();
+        // First trace is the error itself, already contained in the message.
+        // While the second trace is the error source and also contained in the
+        // message, the message doesn't contain argument values, so we output it
+        // once more in the backtrace.
+        array_shift($backtrace);
+        // Generate a backtrace containing only scalar argument values.
+        $message .= '<pre class="backtrace">' . Error::formatFlattenedBacktrace($backtrace) . '</pre>';
+      }
+      drupal_set_message($message, $class, TRUE);
     }
 
     $page_content = array(
