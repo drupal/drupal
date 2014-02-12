@@ -511,6 +511,9 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     $link_templates = parent::linkTemplates();
     if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
       $link_templates['edit-form'] = 'field_ui.instance_edit_' . $this->entity_type;
+      if (isset($link_templates['drupal:config-translation-overview'])) {
+        $link_templates['drupal:config-translation-overview'] .= $link_templates['edit-form'];
+      }
     }
     return $link_templates;
   }

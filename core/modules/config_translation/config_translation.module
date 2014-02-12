@@ -85,21 +85,29 @@ function config_translation_theme() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_info_alter().
  */
-function config_translation_entity_info($entity_info) {
+function config_translation_entity_info_alter($entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
   foreach ($entity_info as $entity_type_id => $entity_type) {
-    if ($entity_type_id == 'block') {
-      $class = 'Drupal\config_translation\Controller\ConfigTranslationBlockListController';
+    if ($entity_type->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+      if ($entity_type_id == 'block') {
+        $class = 'Drupal\config_translation\Controller\ConfigTranslationBlockListController';
+      }
+      elseif ($entity_type_id == 'field_instance') {
+        $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListController';
+        // Will be filled in dynamically, see \Drupal\field\Entity\FieldInstance::linkTemplates().
+        $entity_type->setLinkTemplate('drupal:config-translation-overview', 'config_translation.item.overview.');
+      }
+      else {
+        $class = 'Drupal\config_translation\Controller\ConfigTranslationEntityListController';
+      }
+      $entity_type->setControllerClass('config_translation_list', $class);
+
+      if ($entity_type->hasLinkTemplate('edit-form')) {
+        $entity_type->setLinkTemplate('drupal:config-translation-overview', 'config_translation.item.overview.' . $entity_type->getLinkTemplate('edit-form'));
+      }
     }
-    elseif ($entity_type_id == 'field_instance') {
-      $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldInstanceListController';
-    }
-    else {
-      $class = 'Drupal\config_translation\Controller\ConfigTranslationEntityListController';
-    }
-    $entity_type->setControllerClass('config_translation_list', $class);
   }
 }
 
@@ -169,13 +177,10 @@ function config_translation_config_translation_info(&$info) {
  */
 function config_translation_entity_operation_alter(array &$operations, EntityInterface $entity) {
   if (\Drupal::currentUser()->hasPermission('translate configuration')) {
-    $uri = $entity->urlInfo();
     $operations['translate'] = array(
       'title' => t('Translate'),
-      'href' => $entity->getSystemPath() . '/translate',
-      'options' => $uri['options'],
       'weight' => 50,
-    );
+    ) + $entity->urlInfo('drupal:config-translation-overview');
   }
 }
 

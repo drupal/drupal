@@ -730,9 +730,8 @@ function hook_entity_field_info_alter(&$info, $entity_type_id) {
 function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
   $operations['translate'] = array(
     'title' => t('Translate'),
-    'href' => $entity->getSystemPath() . '/translate',
     'weight' => 50,
-  );
+  ) + $entity->urlInfo('my-custom-link-template');
 }
 
 /**
