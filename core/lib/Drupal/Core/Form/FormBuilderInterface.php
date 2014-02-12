@@ -15,12 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 interface FormBuilderInterface extends FormErrorInterface {
 
   /**
-   * Determines the form ID.
+   * Determines the ID of a form.
    *
    * @param \Drupal\Core\Form\FormInterface|string $form_arg
-   *   A form object to use to build the form, or the unique string identifying
-   *   the desired form. If $form_arg is a string and a function with that
-   *   name exists, it is called to build the form array.
+   *   The value is identical to that of self::getForm()'s $form_arg argument.
    * @param array $form_state
    *   An associative array containing the current state of the form.
    *
@@ -30,16 +28,17 @@ interface FormBuilderInterface extends FormErrorInterface {
   public function getFormId($form_arg, &$form_state);
 
   /**
-   * Returns a renderable form array for a given form ID.
+   * Gets a renderable form array.
    *
    * This function should be used instead of self::buildForm() when $form_state
    * is not needed (i.e., when initially rendering the form) and is often
    * used as a menu callback.
    *
    * @param \Drupal\Core\Form\FormInterface|string $form_arg
-   *   A form object to use to build the form, or the unique string identifying
-   *   the desired form. If $form_arg is a string and a function with that
-   *   name exists, it is called to build the form array.
+   *   The value must be one of the following:
+   *   - The name of a class that implements \Drupal\Core\Form\FormInterface.
+   *   - An instance of a class that implements \Drupal\Core\Form\FormInterface.
+   *   - The name of a function that builds the form.
    * @param ...
    *   Any additional arguments are passed on to the functions called by
    *   drupal_get_form(), including the unique form constructor function. For
@@ -63,8 +62,7 @@ interface FormBuilderInterface extends FormErrorInterface {
    * and submission if there is proper input.
    *
    * @param $form_id
-   *   The unique string identifying the desired form. If a function with that
-   *   name exists, it is called to build the form array.
+   *   The unique string identifying the desired form.
    * @param array $form_state
    *   An array which stores information about the form. This is passed as a
    *   reference so that the caller can use it to examine what in the form
@@ -77,8 +75,8 @@ interface FormBuilderInterface extends FormErrorInterface {
    *     Form API that is necessary to build and rebuild the form from cache
    *     when the original context may no longer be available:
    *     - callback: The actual callback to be used to retrieve the form array.
-   *       If none is provided $form_id is used instead. Can be any callable
-   *       type.
+   *       Can be any callable. If none is provided $form_id is used as the name
+   *       of a function to call instead.
    *     - args: A list of arguments to pass to the form constructor.
    *     - files: An optional array defining include files that need to be
    *       loaded for building the form. Each array entry may be the path to a
