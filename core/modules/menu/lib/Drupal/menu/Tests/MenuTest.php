@@ -435,6 +435,28 @@ class MenuTest extends MenuWebTestBase {
   }
 
   /**
+   * Tests that menu items pointing to unpublished nodes are editable.
+   */
+  function testUnpublishedNodeMenuItem() {
+    $this->drupalLogin($this->drupalCreateUser(array('access administration pages', 'administer blocks', 'administer menu', 'create article content', 'bypass node access')));
+    // Create an unpublished node.
+    $node = $this->drupalCreateNode(array(
+      'type' => 'article',
+      'status' => NODE_NOT_PUBLISHED,
+    ));
+
+    $item = $this->addMenuLink(0, 'node/' . $node->id());
+    $this->modifyMenuLink($item);
+
+    // Test that a user with 'administer menu' but without 'bypass node access'
+    // cannot see the menu item.
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/structure/menu/manage/' . $item['menu_name']);
+    $this->assertNoText($item['link_title'], "Menu link pointing to unpublished node is only visible to users with 'bypass node access' permission");
+  }
+
+  /**
    * Tests the contextual links on a menu block.
    */
   public function testBlockContextualLinks() {
