@@ -12,6 +12,9 @@ use Drupal\Core\Entity\Query\ConditionInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\Condition as SqlCondition;
 
+/**
+ * Implements entity query conditions for SQL databases.
+ */
 class Condition extends ConditionBase {
 
   /**
@@ -22,7 +25,7 @@ class Condition extends ConditionBase {
   protected $query;
 
   /**
-   * Implements Drupal\Core\Entity\Query\ConditionInterface::compile().
+   * {@inheritdoc}
    */
   public function compile($conditionContainer) {
     // If this is not the top level condition group then the sql query is
@@ -50,14 +53,14 @@ class Condition extends ConditionBase {
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\ConditionInterface::exists().
+   * {@inheritdoc}
    */
   public function exists($field, $langcode = NULL) {
     return $this->condition($field, NULL, 'IS NOT NULL', $langcode);
   }
 
   /**
-   * Implements Drupal\Core\Entity\Query\ConditionInterface::notExists().
+   * {@inheritdoc}
    */
   public function notExists($field, $langcode = NULL) {
     return $this->condition($field, NULL, 'IS NULL', $langcode);
