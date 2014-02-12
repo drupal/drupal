@@ -118,6 +118,9 @@ function statistics_cron() {
       ->execute();
     \Drupal::state()->set('statistics.day_timestamp', REQUEST_TIME);
   }
+
+  // Calculate the maximum of node views, for node search ranking.
+  \Drupal::state()->set('statistics.node_counter_scale', 1.0 / max(1, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));
 }
 
 /**
@@ -241,18 +244,11 @@ function statistics_ranking() {
           'on' => 'node_counter.nid = i.sid',
         ),
         // Inverse law that maps the highest view count on the site to 1 and 0 to 0.
-        'score' => '2.0 - 2.0 / (1.0 + node_counter.totalcount * CAST(:scale AS DECIMAL))',
-        'arguments' => array(':scale' => \Drupal::state()->get('statistics.node_counter_scale') ?: 0),
+        'score' => '2.0 - 2.0 / (1.0 + node_counter.totalcount * :scale)',
+        'arguments' => array(':scale' => (float) \Drupal::state()->get('statistics.node_counter_scale') ?: 0),
       ),
     );
   }
-}
-
-/**
- * Implements hook_update_index().
- */
-function statistics_update_index() {
-  \Drupal::state()->set('statistics.node_counter_scale', 1.0 / max(1, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));
 }
 
 /**

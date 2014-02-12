@@ -83,10 +83,6 @@ class SearchRankingTest extends SearchTestBase {
       }
     }
 
-    // Update the search index.
-    $this->nodeSearch->getPlugin()->updateIndex();
-    search_update_totals();
-
     // Add a comment to one of the nodes.
     $edit = array();
     $edit['subject'] = 'my comment title';
@@ -98,22 +94,16 @@ class SearchRankingTest extends SearchTestBase {
     // Enable counting of statistics.
     \Drupal::config('statistics.settings')->set('count_content_views', 1)->save();
 
-    // Then View one of the nodes a bunch of times.
-    // Manually calling statistics.php, simulating ajax behavior.
-    $client = \Drupal::httpClient();
-    $client->setConfig(array('curl.options' => array(CURLOPT_TIMEOUT => 10)));
+    // Simulating content views is kind of difficult in the test. Leave that
+    // to the Statistics module. So instead go ahead and manually update the
+    // counter for this node.
     $nid = $nodes['views'][1]->id();
-    global $base_url;
-    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    for ($i = 0; $i < 5; $i ++) {
-      $client->post($stats_path, array(), array('nid' => $nid))->send();
-    }
+    db_insert('node_counter')
+      ->fields(array('totalcount' => 5, 'daycount' => 5, 'timestamp' => REQUEST_TIME, 'nid' => $nid))
+      ->execute();
 
-    // @todo - comments and views are removed from the array since they are
-    // broken in core. Those modules expected hook_update_index() to be called
-    // even though it was only called on modules that implemented a search type.
-    array_pop($node_ranks);
-    array_pop($node_ranks);
+    // Run cron to update the search index and comment/statistics totals.
+    $this->cronRun();
 
     // Test that the settings form displays the context ranking section.
     $this->drupalGet('admin/config/search/settings/manage/node_search');

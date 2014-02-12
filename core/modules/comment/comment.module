@@ -1041,10 +1041,11 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
 }
 
 /**
- * Implements hook_update_index().
+ * Implements hook_cron().
  */
-function comment_update_index() {
-  // Store the maximum possible comments per thread (used for ranking by reply count)
+function comment_cron() {
+  // Store the maximum possible comments per thread (used for node search
+  // ranking by reply count).
   \Drupal::state()->set('comment.node_comment_statistics_scale', 1.0 / max(1, db_query('SELECT MAX(comment_count) FROM {comment_entity_statistics}')->fetchField()));
 }
 
@@ -1557,8 +1558,8 @@ function comment_ranking() {
         'on' => "ces.entity_id = i.sid AND ces.entity_type = 'node' AND ces.field_id = 'node__comment'",
       ),
       // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
-      'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * CAST(:scale AS DECIMAL))',
-      'arguments' => array(':scale' => \Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
+      'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * :scale)',
+      'arguments' => array(':scale' => (float) \Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
     ),
   );
 }
