@@ -66,12 +66,12 @@ the required extensions separately; place the downloaded profile in the
 /profiles directory before you start the installation process.
 
 More about installation profiles and distributions:
-* Read about the difference between installation profiles and distributions:
-  https://drupal.org/node/1089736
-* Download contributed installation profiles and distributions:
-  https://drupal.org/project/distributions
-* Develop your own installation profile or distribution:
-  https://drupal.org/developing/distributions
+ * Read about the difference between installation profiles and distributions:
+   https://drupal.org/node/1089736
+ * Download contributed installation profiles and distributions:
+   https://drupal.org/project/distributions
+ * Develop your own installation profile or distribution:
+   https://drupal.org/developing/distributions
 
 
 APPEARANCE
