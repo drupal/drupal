@@ -68,7 +68,7 @@ interface QueryInterface extends AlterableInterface {
   public function condition($field, $value = NULL, $operator = NULL, $langcode = NULL);
 
   /**
-   * Queries for the existence of a field.
+   * Queries for a non-empty value on a field.
    *
    * @param $field
    *   Name of a field.
@@ -79,7 +79,7 @@ interface QueryInterface extends AlterableInterface {
   public function exists($field, $langcode = NULL);
 
   /**
-   * Queries for the nonexistence of a field.
+   * Queries for an empty field.
    *
    * @param $field.
    *   Name of a field.
