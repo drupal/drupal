@@ -20,7 +20,7 @@ interface EntityInterface extends AccessibleInterface {
    * The UUID is guaranteed to be unique and can be used to identify an entity
    * across multiple systems.
    *
-   * @return string
+   * @return string|null
    *   The UUID of the entity, or NULL if the entity does not have one.
    */
   public function uuid();
@@ -48,7 +48,7 @@ interface EntityInterface extends AccessibleInterface {
    * Usually an entity is new if no ID exists for it yet. However, entities may
    * be enforced to be new with existing IDs too.
    *
-   * @return
+   * @return bool
    *   TRUE if the entity is new, or FALSE if the entity has already been saved.
    *
    * @see \Drupal\Core\Entity\EntityInterface::enforceIsNew()
@@ -70,7 +70,7 @@ interface EntityInterface extends AccessibleInterface {
   public function enforceIsNew($value = TRUE);
 
   /**
-   * Returns the type of the entity.
+   * Returns the ID of the type of the entity.
    *
    * @return string
    *   The entity type ID.
@@ -80,7 +80,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns the bundle of the entity.
    *
-   * @return
+   * @return string
    *   The bundle of the entity. Defaults to the entity type ID if the entity
    *   type does not make use of different bundles.
    */
@@ -89,7 +89,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns the label of the entity.
    *
-   * @return
+   * @return string|null
    *   The label of the entity, or NULL if there is no label defined.
    */
   public function label();
@@ -118,7 +118,7 @@ interface EntityInterface extends AccessibleInterface {
    * @param string $rel
    *   The link relationship type, for example: canonical or edit-form.
    *
-   * @return
+   * @return mixed[]
    *   An array containing the 'path' and 'options' keys used to build the URI
    *   of the entity, and matching the signature of url().
    */
@@ -166,7 +166,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns a list of URI relationships supported by this entity.
    *
-   * @return array
+   * @return string[]
    *   An array of link relationships supported by this entity.
    */
   public function uriRelationships();
@@ -177,7 +177,7 @@ interface EntityInterface extends AccessibleInterface {
    * When saving existing entities, the entity is assumed to be complete,
    * partial updates of entities are not supported.
    *
-   * @return
+   * @return int
    *   Either SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -244,7 +244,7 @@ interface EntityInterface extends AccessibleInterface {
    *
    * @param EntityStorageControllerInterface $storage_controller
    *   The entity storage controller object.
-   * @param array $entities
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities);
@@ -256,7 +256,7 @@ interface EntityInterface extends AccessibleInterface {
    *
    * @param EntityStorageControllerInterface $storage_controller
    *   The entity storage controller object.
-   * @param array $entities
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities);
@@ -266,7 +266,7 @@ interface EntityInterface extends AccessibleInterface {
    *
    * @param EntityStorageControllerInterface $storage_controller
    *   The entity storage controller object.
-   * @param array $entities
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   An array of entities.
    */
   public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities);
@@ -274,9 +274,9 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Creates a duplicate of the entity.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   A clone of the current entity with all identifiers unset, so saving
-   *   it inserts a new entity into the storage system.
+   * @return static
+   *   A clone of $this with all identifiers unset, so saving it inserts a new
+   *   entity into the storage system.
    */
   public function createDuplicate();
 
@@ -291,7 +291,7 @@ interface EntityInterface extends AccessibleInterface {
   /**
    * Returns a list of entities referenced by this entity.
    *
-   * @return array
+   * @return \Drupal\Core\Entity\EntityInterface[]
    *   An array of entities.
    */
   public function referencedEntities();
