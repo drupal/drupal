@@ -421,7 +421,7 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
  *
  * Transforms default image of image field from array into single value at save.
  */
-function image_entity_presave(EntityInterface $entity, $type) {
+function image_entity_presave(EntityInterface $entity) {
   $field = FALSE;
   if ($entity instanceof FieldInstance) {
     $field = $entity->getField();

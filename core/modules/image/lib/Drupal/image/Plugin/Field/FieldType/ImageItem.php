@@ -284,6 +284,8 @@ class ImageItem extends FileItem {
    * {@inheritdoc}
    */
   public function preSave() {
+    parent::preSave();
+
     $width = $this->width;
     $height = $this->height;
 

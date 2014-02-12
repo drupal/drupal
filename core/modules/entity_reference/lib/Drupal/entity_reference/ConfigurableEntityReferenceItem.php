@@ -8,12 +8,12 @@
 namespace Drupal\entity_reference;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Field\ConfigFieldItemInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\ConfigEntityReferenceItemBase;
-use Drupal\Core\Field\ConfigFieldItemInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
 
 /**
@@ -26,9 +26,8 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
  *  - target_type: The entity type to reference.
  *
  * @see entity_reference_field_info_alter().
- *
  */
-class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase implements ConfigFieldItemInterface, AllowedValuesInterface {
+class ConfigurableEntityReferenceItem extends EntityReferenceItem implements ConfigFieldItemInterface, AllowedValuesInterface {
 
   /**
    * {@inheritdoc}
@@ -48,7 +47,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
    * {@inheritdoc}
    */
   public function getSettableValues(AccountInterface $account = NULL) {
-    // Flatten options firstly, because Settable Options may contain group
+    // Flatten options first, because "settable options" may contain group
     // arrays.
     $flatten_options = \Drupal::formBuilder()->flattenOptions($this->getSettableOptions($account));
     return array_keys($flatten_options);

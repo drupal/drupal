@@ -169,6 +169,20 @@ class EntityReferenceItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public function getValue($include_computed = FALSE) {
+    $values = parent::getValue($include_computed);
+
+    // If there is an unsaved entity, return it as part of the field item values
+    // to ensure idempotency of getValue() / setValue().
+    if ($this->hasUnsavedEntity()) {
+      $values['entity'] = $this->entity;
+    }
+    return $values;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function onChange($property_name) {
     // Make sure that the target ID and the target property stay in sync.
     if ($property_name == 'target_id') {
@@ -185,6 +199,46 @@ class EntityReferenceItem extends FieldItemBase {
    */
   public function getMainPropertyName() {
     return 'target_id';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    // Avoid loading the entity by first checking the 'target_id'.
+    $target_id = $this->target_id;
+    if ($target_id !== NULL) {
+      return FALSE;
+    }
+    // Allow auto-create entities.
+    if ($this->hasUnsavedEntity()) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave() {
+    if ($this->hasUnsavedEntity()) {
+      $this->entity->save();
+      $this->target_id = $this->entity->id();
+    }
+  }
+
+  /**
+   * Determines whether the item holds an unsaved entity.
+   *
+   * This is notably used for "autocreate" widgets, and more generally to
+   * support referencing freshly created entities (they will get saved
+   * automatically as the hosting entity gets saved).
+   *
+   * @return bool
+   *   TRUE if the item holds an unsaved entity.
+   */
+  public function hasUnsavedEntity() {
+    return $this->target_id === NULL && ($entity = $this->entity) && $entity->isNew();
   }
 
 }

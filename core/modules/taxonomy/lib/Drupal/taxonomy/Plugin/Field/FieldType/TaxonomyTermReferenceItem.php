@@ -7,9 +7,9 @@
 
 namespace Drupal\taxonomy\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\ConfigEntityReferenceItemBase;
 use Drupal\Core\Field\ConfigFieldItemInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
 
@@ -35,7 +35,7 @@ use Drupal\Core\TypedData\AllowedValuesInterface;
  *   list_class = "\Drupal\taxonomy\Plugin\Field\FieldType\TaxonomyTermReferenceFieldItemList"
  * )
  */
-class TaxonomyTermReferenceItem extends ConfigEntityReferenceItemBase implements ConfigFieldItemInterface, AllowedValuesInterface {
+class TaxonomyTermReferenceItem extends EntityReferenceItem implements ConfigFieldItemInterface, AllowedValuesInterface {
 
   /**
    * {@inheritdoc}

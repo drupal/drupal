@@ -197,13 +197,6 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function isEmpty() {
-    return empty($this->target_id);
-  }
-
-  /**
    * Form API callback
    *
    * Removes slashes from the beginning and end of the destination value and

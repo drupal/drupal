@@ -48,7 +48,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
             $item->entity = $terms[$item->target_id];
           }
           // Terms to be created are not in $terms, but are still legitimate.
-          elseif ($item->target_id === NULL && isset($item->entity)) {
+          elseif ($item->hasUnsavedEntity()) {
             // Leave the item in place.
           }
           // Otherwise, unset the instance value, since the term does not exist.
