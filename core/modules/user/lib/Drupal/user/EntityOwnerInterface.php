@@ -31,8 +31,7 @@ interface EntityOwnerInterface {
    * @param \Drupal\user\UserInterface $account
    *   The owner user entity.
    *
-   * @return self
-   *   The called entity.
+   * @return $this
    */
   public function setOwner(UserInterface $account);
 
@@ -50,8 +49,7 @@ interface EntityOwnerInterface {
    * @param int $uid
    *   The owner user id.
    *
-   * @return self
-   *   The called entity.
+   * @return $this
    */
   public function setOwnerId($uid);
 
