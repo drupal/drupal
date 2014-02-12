@@ -15,9 +15,9 @@ interface EntityViewBuilderInterface {
   /**
    * Build the structured $content property on the entity.
    *
-   * @param array $entities
-   *   The entities, implementing EntityInterface, whose content is being built.
-   * @param \Drupal\Core\Entity\EntityViewDisplayInterface[] $displays
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   The entities whose content is being built.
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface[] $displays
    *   The array of entity view displays holding the display options
    *   configured for the entity components, keyed by bundle name.
    * @param string $view_mode

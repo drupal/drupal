@@ -100,11 +100,9 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // Render the entity.
     $entity = entity_load('entity_test', $id);
-    $entities = array($id => $entity);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
-    field_attach_prepare_view('entity_test', $entities, array($entity->bundle() => $display));
-    $entity->content = field_attach_view($entity, $display);
-    $this->content = drupal_render($entity->content);
+    $content = $display->build($entity);
+    $this->drupalSetContent(drupal_render($content));
     $this->assertText($term1->label(), 'Term 1 name is displayed.');
     $this->assertText($term2->label(), 'Term 2 name is displayed.');
 
@@ -113,12 +111,9 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // Re-render the content.
     $entity = entity_load('entity_test', $id);
-    $entities = array($id => $entity);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
-    field_attach_prepare_view('entity_test', $entities, array($entity->bundle() => $display));
-    $entity->content = field_attach_view($entity, $display);
-    $this->plainTextContent = FALSE;
-    $this->content = drupal_render($entity->content);
+    $content = $display->build($entity);
+    $this->drupalSetContent(drupal_render($content));
 
     // Term 1 should still be displayed; term 2 should not be.
     $this->assertText($term1->label(), 'Term 1 name is displayed.');

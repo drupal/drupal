@@ -48,22 +48,20 @@ interface FormatterInterface extends PluginSettingsInterface {
    * field that displays properties of the referenced entities such as name or
    * type.
    *
-   * This method operates on multiple entities. The $entities and $items
-   * parameters are arrays keyed by entity ID. For performance reasons,
-   * information for all involved entities should be loaded in a single query
-   * where possible.
+   * This method operates on multiple entities. The $entities_items parameter
+   * is an array keyed by entity ID. For performance reasons, information for
+   * all involved entities should be loaded in a single query where possible.
    *
-   * Changes or additions to field values are done by alterings the $items
-   * parameter by reference.
+   * Changes or additions to field values are done by directly altering the
+   * items.
    *
-   * @param array $entities_items
-   *   Array of field values (Drupal\Core\Field\FieldItemListInterface),
-   *   keyed by entity ID.
+   * @param \Drupal\Core\Field\FieldItemListInterface[] $entities_items
+   *   Array of field values, keyed by entity ID.
    */
   public function prepareView(array $entities_items);
 
   /**
-   * Builds a renderable array for one field on one entity instance.
+   * Builds a renderable array for a fully themed field.
    *
    * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The field values to be rendered.
@@ -81,7 +79,7 @@ interface FormatterInterface extends PluginSettingsInterface {
    *
    * @return array
    *   A renderable array for $items, as an array of child elements keyed by
-   *   numeric indexes starting from 0.
+   *   consecutive numeric indexes starting from 0.
    */
   public function viewElements(FieldItemListInterface $items);
 

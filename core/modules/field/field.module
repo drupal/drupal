@@ -5,7 +5,6 @@
  */
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Entity\EntityViewDisplay;
 
@@ -325,7 +324,7 @@ function _field_filter_xss_display_allowed_tags() {
 /**
  * Returns a renderable array for a single field value.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  *   The entity containing the field to display. Must at least contain the ID
  *   key and the field data to display.
  * @param $field_name
@@ -342,10 +341,10 @@ function _field_filter_xss_display_allowed_tags() {
  * @return
  *   A renderable array for the field value.
  */
-function field_view_value(EntityInterface $entity, $field_name, $item, $display = array(), $langcode = NULL) {
+function field_view_value(ContentEntityInterface $entity, $field_name, $item, $display = array(), $langcode = NULL) {
   $output = array();
 
-  if ($field = field_info_field($entity->getEntityTypeId(), $field_name)) {
+  if ($entity->hasField($field_name)) {
     // Clone the entity since we are going to modify field values.
     $clone = clone $entity;
 
@@ -376,8 +375,8 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
  * isolated field.
  * - Do not use inside node (or any other entity) templates; use
  *   render($content[FIELD_NAME]) instead.
- * - Do not use to display all fields in an entity; use
- *   field_attach_prepare_view() and field_attach_view() instead.
+ * - Do not use to display all fields in an entity; use EntityDisplay::build()
+ *   instead.
  * - The field_view_value() function can be used to output a single formatted
  *   field value, without label or wrapping field markup.
  *
@@ -424,49 +423,31 @@ function field_view_field(ContentEntityInterface $entity, $field_name, $display_
   if (!$entity->hasField($field_name)) {
     return $output;
   }
-  $field_definition = $entity->get($field_name)->getFieldDefinition();
 
-  // Get the formatter object.
+  // Get the display object.
   if (is_string($display_options)) {
     $view_mode = $display_options;
-    $formatter = EntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getRenderer($field_name);
+    $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+    foreach ($entity as $name => $items) {
+      if ($name != $field_name) {
+        $display->removeComponent($name);
+      }
+    }
   }
   else {
     $view_mode = '_custom';
-    // hook_field_attach_display_alter() needs to receive the 'prepared'
-    // $display_options, so we cannot let preparation happen internally.
-    $formatter_manager = Drupal::service('plugin.manager.field.formatter');
-    $display_options = $formatter_manager->prepareConfiguration($field_definition->getType(), $display_options);
-    $formatter = $formatter_manager->getInstance(array(
-      'field_definition' => $field_definition,
-      'view_mode' => $view_mode,
-      'prepare' => FALSE,
-      'configuration' => $display_options,
+    $display = entity_create('entity_view_display', array(
+      'targetEntityType' => $entity->getEntityTypeId(),
+      'bundle' => $entity->bundle(),
+      'mode' => $view_mode,
+      'status' => TRUE,
     ));
+    $display->setComponent($field_name, $display_options);
   }
 
-  if ($formatter) {
-    // Apply language fallback.
-    $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
-    $items = $entity->get($field_name);
-
-    // Run the formatter.
-    $formatter->prepareView(array($entity->id() => $items));
-    $result = $formatter->view($items);
-
-    // Invoke hook_field_attach_view_alter() to let other modules alter the
-    // renderable array, as in a full field_attach_view() execution.
-    $context = array(
-      'entity' => $entity,
-      'view_mode' => $view_mode,
-      'display_options' => $display_options,
-      'langcode' => $entity->language()->id,
-    );
-    drupal_alter('field_attach_view', $result, $context);
-
-    if (isset($result[$field_name])) {
-      $output = $result[$field_name];
-    }
+  $build = $display->build($entity);
+  if (isset($build[$field_name])) {
+    $output = $build[$field_name];
   }
 
   return $output;

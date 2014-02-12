@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\datetime\Tests\DatetimeFieldTest.
+ * Contains \Drupal\datetime\Tests\DateTimeFieldTest.
  */
 
 namespace Drupal\datetime\Tests;
 
+use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -455,10 +456,8 @@ class DateTimeFieldTest extends WebTestBase {
       entity_get_controller('entity_test')->resetCache(array($id));
     }
     $entity = entity_load('entity_test', $id);
-    $display = entity_get_display('entity_test', $entity->bundle(), 'full');
-    field_attach_prepare_view('entity_test', array($entity->id() => $entity), array($entity->bundle() => $display), $view_mode);
-    $entity->content = field_attach_view($entity, $display, $view_mode);
-
+    $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+    $entity->content = $display->build($entity);
     $output = drupal_render($entity->content);
     $this->drupalSetContent($output);
     $this->verbose($output);

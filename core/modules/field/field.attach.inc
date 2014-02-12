@@ -7,7 +7,6 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\entity\Entity\EntityFormDisplay;
 
 /**
  * @defgroup field_attach Field Attach API
@@ -46,12 +45,6 @@ use Drupal\entity\Entity\EntityFormDisplay;
  * found in $node->type. This property can be omitted if the entity type only
  * exposes a single bundle (all entities of this type have the same collection
  * of fields). This is the case for the 'user' entity type.
- *
- * Most Field Attach API functions define a corresponding hook function that
- * allows any module to act on Field Attach operations for any entity after the
- * operation is complete, and access or modify all the field, form, or display
- * data for that entity and operation. For example, field_attach_view() invokes
- * hook_field_attach_view_alter().
  *
  * @link field_language Field language API @endlink provides information about
  * the structure of field objects.
@@ -111,96 +104,6 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
         }
         else {
           $return[] = $result;
-        }
-      }
-    }
-  }
-
-  return $return;
-}
-
-/**
- * Invokes a method across fields on multiple entities.
- *
- * @param string $method
- *   The name of the method to invoke.
- * @param callable $target_function
- *   A function that receives a FieldDefinitionInterface object and a bundle
- *   name and returns the object on which the method should be invoked.
- * @param \Drupal\Core\Entity\EntityInterface[] $entities
- *   An array of entities, keyed by entity ID.
- * @param mixed $a
- *   (optional) A parameter for the invoked method. Defaults to NULL.
- * @param mixed $b
- *   (optional) A parameter for the invoked method. Defaults to NULL.
- * @param $options
- *   (optional) An associative array of additional options, with the following
- *   keys:
- *   - field_name: The name of the field whose operation should be invoked. By
- *     default, the operation is invoked on all the fields in the entity's
- *     bundle.
- *
- * @return array
- *   An array of returned values keyed by entity ID.
- *
- * @see field_invoke_method()
- */
-function field_invoke_method_multiple($method, $target_function, array $entities, &$a = NULL, &$b = NULL, array $options = array()) {
-  $grouped_items = array();
-  $grouped_targets = array();
-  $return = array();
-
-  // Go through the entities and collect the instances on which the method
-  // should be called.
-  foreach ($entities as $entity) {
-    $entity_type = $entity->getEntityTypeId();
-    $bundle = $entity->bundle();
-    $id = $entity->id();
-
-    // Determine the list of fields to iterate on.
-    $field_definitions = _field_invoke_get_field_definitions($entity_type, $bundle, $options);
-
-    foreach ($field_definitions as $field_definition) {
-      $field_name = $field_definition->getName();
-      $group_key = "$bundle:$field_name";
-
-      // Let the closure determine the target object on which the method should
-      // be called.
-      if (empty($grouped_targets[$group_key])) {
-        $target = call_user_func($target_function, $field_definition, $bundle);
-        if (method_exists($target, $method)) {
-          $grouped_targets[$group_key] = $target;
-        }
-        else {
-          $grouped_targets[$group_key] = FALSE;
-        }
-      }
-
-      // If there is a target, group the field items.
-      if ($grouped_targets[$group_key]) {
-        $items = $entity->get($field_name);
-        $items->filterEmptyItems();
-        $grouped_items[$group_key][$id] = $items;
-      }
-    }
-    // Initialize the return value for each entity.
-    $return[$id] = array();
-  }
-
-  // For each field, invoke the method and collect results.
-  foreach ($grouped_items as $key => $entities_items) {
-    $results = $grouped_targets[$key]->$method($entities_items, $a, $b);
-
-    if (isset($results)) {
-      // Collect results by entity.
-      // For hooks with array results, we merge results together.
-      // For hooks with scalar results, we collect results in an array.
-      foreach ($results as $id => $result) {
-        if (is_array($result)) {
-          $return[$id] = array_merge($return[$id], $result);
-        }
-        else {
-          $return[$id][] = $result;
         }
       }
     }

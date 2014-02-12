@@ -61,9 +61,8 @@ use Drupal\Component\Utility\Xss;
  *   - hook_node_load() (all)
  * - Viewing a single node (calling node_view() - note that the input to
  *   node_view() is a loaded node, so the Loading steps above are already done):
- *   - field_attach_prepare_view()
  *   - hook_entity_prepare_view() (all)
- *   - field_attach_view()
+ *   - hook_entity_display_build_alter() (all)
  *   - hook_node_view() (all)
  *   - hook_entity_view() (all)
  *   - hook_node_view_alter() (all)
@@ -71,9 +70,8 @@ use Drupal\Component\Utility\Xss;
  * - Viewing multiple nodes (calling node_view_multiple() - note that the input
  *   to node_view_multiple() is a set of loaded nodes, so the Loading steps
  *   above are already done):
- *   - field_attach_prepare_view()
  *   - hook_entity_prepare_view() (all)
- *   - field_attach_view()
+ *   - hook_entity_display_build_alter() (all)
  *   - hook_node_view() (all)
  *   - hook_entity_view() (all)
  *   - hook_node_view_alter() (all)

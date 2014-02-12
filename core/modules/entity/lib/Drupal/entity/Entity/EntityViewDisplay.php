@@ -9,6 +9,7 @@ namespace Drupal\entity\Entity;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\entity\EntityDisplayBase;
 
 /**
@@ -195,6 +196,64 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     // Persist the formatter object.
     $this->plugins[$field_name] = $formatter;
     return $formatter;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build(ContentEntityInterface $entity) {
+    $build = $this->buildMultiple(array($entity));
+    return $build[0];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildMultiple(array $entities) {
+    $build = array();
+    foreach ($entities as $key => $entity) {
+      $build[$key] = array();
+    }
+
+    // Run field formatters.
+    foreach ($this->getFieldDefinitions() as $field_name => $definition) {
+      if ($formatter = $this->getRenderer($field_name)) {
+        // Group items across all entities and pass them to the formatter's
+        // prepareView() method.
+        $grouped_items = array();
+        foreach ($entities as $id => $entity) {
+          $items = $entity->get($field_name);
+          $items->filterEmptyItems();
+          $grouped_items[$id] = $items;
+        }
+        $formatter->prepareView($grouped_items);
+
+        // Then let the formatter build the output for each entity.
+        foreach ($entities as $key => $entity) {
+          $items = $entity->get($field_name);
+          $build[$key] += $formatter->view($items);
+        }
+      }
+    }
+
+    foreach ($entities as $key => $entity) {
+      // Assign the configured weights.
+      foreach ($this->getComponents() as $name => $options) {
+        if (isset($build[$key][$name])) {
+          $build[$key][$name]['#weight'] = $options['weight'];
+        }
+      }
+
+      // Let other modules alter the renderable array.
+      $context = array(
+        'entity' => $entity,
+        'view_mode' => $this->originalMode,
+        'display' => $this,
+      );
+      \Drupal::moduleHandler()->alter('entity_display_build', $build[$key], $context);
+    }
+
+    return $build;
   }
 
 }

@@ -89,16 +89,18 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
    * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
-    field_attach_prepare_view($this->entityTypeId, $entities, $displays, $langcode);
-
-    // Initialize the field item attributes for the fields set to be displayed.
-    foreach ($entities as $entity) {
-      // The entity can include fields that aren't displayed, and the display
-      // can include components that aren't fields, so we want to iterate the
-      // intersection of $entity->getProperties() and $display->getComponents().
-      // However, the entity can have many more fields than are displayed, so we
-      // avoid the cost of calling $entity->getProperties() by iterating the
-      // intersection as follows.
+    $entities_by_bundle = array();
+    foreach ($entities as $id => $entity) {
+      // Remove previously built content, if exists.
+      $entity->content = array(
+        '#view_mode' => $view_mode,
+      );
+      // Initialize the field item attributes for the fields being displayed.
+      // The entity can include fields that are not displayed, and the display
+      // can include components that are not fields, so we want to act on the
+      // intersection. However, the entity can have many more fields than are
+      // displayed, so we avoid the cost of calling $entity->getProperties()
+      // by iterating the intersection as follows.
       foreach ($displays[$entity->bundle()]->getComponents() as $name => $options) {
         if ($entity->hasField($name)) {
           foreach ($entity->get($name) as $item) {
@@ -106,16 +108,19 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
           }
         }
       }
+      // Group the entities by bundle.
+      $entities_by_bundle[$entity->bundle()][$id] = $entity;
     }
 
+    // Invoke hook_entity_prepare_view().
     module_invoke_all('entity_prepare_view', $this->entityTypeId, $entities, $displays, $view_mode);
 
-    foreach ($entities as $entity) {
-      // Remove previously built content, if exists.
-      $entity->content = array(
-        '#view_mode' => $view_mode,
-      );
-      $entity->content += field_attach_view($entity, $displays[$entity->bundle()], $langcode);
+    // Let the displays build their render arrays.
+    foreach ($entities_by_bundle as $bundle => $bundle_entities) {
+      $build = $displays[$bundle]->buildMultiple($bundle_entities);
+      foreach ($bundle_entities as $id => $entity) {
+        $entity->content += $build[$id];
+      }
     }
   }
 
@@ -231,6 +236,9 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       $this->alterBuild($build[$key], $entity, $display, $entity_view_mode, $langcode);
 
       // Assign the weights configured in the display.
+      // @todo: Once https://drupal.org/node/1875974 provides the missing API,
+      //   only do it for 'extra fields', since other components have been taken
+      //   care of in EntityViewDisplay::buildMultiple().
       foreach ($display->getComponents() as $name => $options) {
         if (isset($build[$key][$name])) {
           $build[$key][$name]['#weight'] = $options['weight'];

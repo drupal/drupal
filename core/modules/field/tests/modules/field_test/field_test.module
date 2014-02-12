@@ -112,15 +112,16 @@ function field_test_field_entity_create(FieldInterface $field) {
 }
 
 /**
- * Implements hook_field_attach_view_alter().
+ * Implements hook_entity_display_build_alter().
  */
-function field_test_field_attach_view_alter(&$output, $context) {
-  if (!empty($context['display_options']['settings']['alter'])) {
-    $output['test_field'][] = array('#markup' => 'field_test_field_attach_view_alter');
+function field_test_entity_display_build_alter(&$output, $context) {
+  $display_options = $context['display']->getComponent('test_field');
+  if (isset($display_options['settings']['alter'])) {
+    $output['test_field'][] = array('#markup' => 'field_test_entity_display_build_alter');
   }
 
   if (isset($output['test_field'])) {
-    $output['test_field'][] = array('#markup' => 'field language is ' . $context['langcode']);
+    $output['test_field'][] = array('#markup' => 'entity language is ' . $context['entity']->language()->id);
   }
 }
 

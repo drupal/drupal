@@ -117,11 +117,9 @@ class TermFieldTest extends TaxonomyTestBase {
 
     // Display the object.
     $entity = entity_load('entity_test', $id);
-    $entities = array($id => $entity);
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
-    field_attach_prepare_view('entity_test', $entities, array($entity->bundle() => $display));
-    $entity->content = field_attach_view($entity, $display);
-    $this->content = drupal_render($entity->content);
+    $content = $display->build($entity);
+    $this->drupalSetContent(drupal_render($content));
     $this->assertText($term->label(), 'Term label is displayed.');
 
     // Delete the vocabulary and verify that the widget is gone.

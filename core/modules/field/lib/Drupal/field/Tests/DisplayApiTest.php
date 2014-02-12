@@ -142,8 +142,8 @@ class DisplayApiTest extends FieldUnitTestBase {
     $this->content = drupal_render($output);
     $setting = $display['settings']['test_formatter_setting_multiple'];
     $this->assertNoText($this->label, 'Label was not displayed.');
-    $this->assertText('field_test_field_attach_view_alter', 'Alter fired, display passed.');
-    $this->assertText('field language is ' . Language::LANGCODE_NOT_SPECIFIED, 'Language is placed onto the context.');
+    $this->assertText('field_test_entity_display_build_alter', 'Alter fired, display passed.');
+    $this->assertText('entity language is ' . Language::LANGCODE_NOT_SPECIFIED, 'Language is placed onto the context.');
     $array = array();
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
@@ -163,7 +163,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     $this->content = $view;
     $setting = $display['settings']['test_formatter_setting_additional'];
     $this->assertNoText($this->label, 'Label was not displayed.');
-    $this->assertNoText('field_test_field_attach_view_alter', 'Alter not fired.');
+    $this->assertNoText('field_test_entity_display_build_alter', 'Alter not fired.');
     foreach ($this->values as $delta => $value) {
       $this->assertText($setting . '|' . $value['value'] . '|' . ($value['value'] + 1), format_string('Value @delta was displayed with expected setting.', array('@delta' => $delta)));
     }

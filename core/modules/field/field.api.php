@@ -19,7 +19,7 @@ use Drupal\field\FieldUpdateForbiddenException;
  * should expose them using this hook. The user-defined settings (weight,
  * visible) are automatically applied on rendered forms and displayed entities
  * in a #pre_render callback added by field_attach_form() and
- * field_attach_view().
+ * EntityViewBuilder::viewMultiple().
  *
  * @see hook_field_extra_fields_alter()
  *
@@ -354,46 +354,6 @@ function hook_field_attach_extract_form_values(\Drupal\Core\Entity\EntityInterfa
   $values = NestedArray::getValue($form_state['values'], $form['#parents']);
   if (!empty($values['empty_field_foo'])) {
     unset($entity->field_foo);
-  }
-}
-
-/**
- * Perform alterations on field_attach_view() or field_view_field().
- *
- * This hook is invoked after the field module has performed the operation.
- *
- * @param $output
- *   The structured content array tree for all of the entity's fields.
- * @param $context
- *   An associative array containing:
- *   - entity: The entity with fields to render.
- *   - view_mode: View mode; for example, 'full' or 'teaser'.
- *   - display_options: Either a view mode string or an array of display
- *     options. If this hook is being invoked from field_attach_view(), the
- *     'display_options' element is set to the view mode string. If this hook
- *     is being invoked from field_view_field(), this element is set to the
- *     $display_options argument and the view_mode element is set to '_custom'.
- *     See field_view_field() for more information on what its $display_options
- *     argument contains.
- *   - langcode: The language code used for rendering.
- *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
- */
-function hook_field_attach_view_alter(&$output, $context) {
-  // Append RDF term mappings on displayed taxonomy links.
-  foreach (element_children($output) as $field_name) {
-    $element = &$output[$field_name];
-    if ($element['#field_type'] == 'entity_reference' && $element['#formatter'] == 'entity_reference_label') {
-      foreach ($element['#items'] as $delta => $item) {
-        $term = $item->entity;
-        if (!empty($term->rdf_mapping['rdftype'])) {
-          $element[$delta]['#options']['attributes']['typeof'] = $term->rdf_mapping['rdftype'];
-        }
-        if (!empty($term->rdf_mapping['name']['predicates'])) {
-          $element[$delta]['#options']['attributes']['property'] = $term->rdf_mapping['name']['predicates'];
-        }
-      }
-    }
   }
 }
 
