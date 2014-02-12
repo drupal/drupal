@@ -1148,6 +1148,10 @@ abstract class TestBase {
       }
     }
 
+    // Sleep for 50ms to allow shutdown functions and terminate events to
+    // complete. Further information: https://drupal.org/node/2194357.
+    usleep(50000);
+
     // Remove all prefixed tables.
     // @todo Connection prefix info is not normalized into an array.
     $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
