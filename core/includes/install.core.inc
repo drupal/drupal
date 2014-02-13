@@ -2567,7 +2567,7 @@ function install_display_requirements($install_state, $requirements) {
  */
 function _install_configure_form($form, &$form_state, &$install_state) {
   $form['site_information'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldgroup',
     '#title' => t('Site information'),
   );
   $form['site_information']['site_name'] = array(
@@ -2584,11 +2584,11 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#required' => TRUE,
     '#weight' => -15,
   );
+
   $form['admin_account'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldgroup',
     '#title' => t('Site maintenance account'),
   );
-
   $form['admin_account']['account']['#tree'] = TRUE;
   $form['admin_account']['account']['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
@@ -2598,7 +2598,6 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#weight' => -10,
     '#attributes' => array('class' => array('username')),
   );
-
   $form['admin_account']['account']['mail'] = array(
     '#type' => 'email',
     '#title' => t('E-mail address'),
@@ -2613,10 +2612,9 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   );
 
   $form['regional_settings'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldgroup',
     '#title' => t('Regional settings'),
   );
-
   $countries = \Drupal::service('country_manager')->getList();
   $form['regional_settings']['site_default_country'] = array(
     '#type' => 'select',
@@ -2627,7 +2625,6 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#description' => t('Select the default country for the site.'),
     '#weight' => 0,
   );
-
   $form['regional_settings']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => t('Default time zone'),
@@ -2639,7 +2636,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   );
 
   $form['update_notifications'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldgroup',
     '#title' => t('Update notifications'),
   );
   $form['update_notifications']['update_status_module'] = array(

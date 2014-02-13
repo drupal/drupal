@@ -27,6 +27,14 @@
 }
 
 /**
+ * Unboxed fieldsets for grouping form elements.
+ */
+.fieldgroup {
+  border-width: 0;
+  padding: 0;
+}
+
+/**
  * Collapsible details.
  *
  * @see collapse.js

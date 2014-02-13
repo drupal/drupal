@@ -551,6 +551,9 @@ function system_element_info() {
     '#pre_render' => array('form_pre_render_group'),
     '#theme_wrappers' => array('fieldset'),
   );
+  $types['fieldgroup'] = $types['fieldset'] + array(
+    '#attributes' => array('class' => array('fieldgroup')),
+  );
   $types['details'] = array(
     '#collapsed' => FALSE,
     '#value' => NULL,
