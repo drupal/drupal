@@ -43,7 +43,7 @@ class UserValidateCurrentPassCustomFormTest extends WebTestBase {
     parent::setUp();
 
     // Create two users
-    $this->accessUser = $this->drupalCreateUser(array('access content'));
+    $this->accessUser = $this->drupalCreateUser(array());
     $this->adminUser = $this->drupalCreateUser(array('administer users'));
   }
 

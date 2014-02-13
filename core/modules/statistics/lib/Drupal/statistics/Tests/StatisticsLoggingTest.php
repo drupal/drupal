@@ -22,7 +22,7 @@ class StatisticsLoggingTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('statistics', 'block');
+  public static $modules = array('node', 'statistics', 'block');
 
   /**
    * The Guzzle HTTP client.

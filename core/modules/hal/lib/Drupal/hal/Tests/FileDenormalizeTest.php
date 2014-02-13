@@ -22,7 +22,7 @@ class FileDenormalizeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('hal', 'file');
+  public static $modules = array('hal', 'file', 'node');
 
   public static function getInfo() {
     return array(

@@ -22,6 +22,13 @@ class MiniPagerTest extends PluginTestBase {
   public static $testViews = array('test_mini_pager');
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
+  /**
    * Nodes used by the test.
    *
    * @var array

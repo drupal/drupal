@@ -33,7 +33,7 @@ abstract class UITestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'block');
+  public static $modules = array('node', 'views_ui', 'block');
 
   protected function setUp() {
     parent::setUp();

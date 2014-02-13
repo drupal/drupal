@@ -121,12 +121,13 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(array('module_test'), TRUE);
     \Drupal::state()->set('module_test.dependency', 'dependency');
     // module_test creates a dependency chain:
-    // - forum depends on taxonomy, comment, datetime, history, and ban (via module_test)
+    // - forum depends on node, taxonomy, comment, datetime, history, and
+    //   ban (via module_test)
     // - taxonomy depends on options
     // - options depends on number
     // - ban depends on xmlrpc (via module_test)
     // The correct enable order is:
-    $expected_order = array('xmlrpc', 'ban', 'datetime', 'comment', 'history', 'number', 'options', 'taxonomy', 'forum');
+    $expected_order = array('xmlrpc', 'ban', 'node', 'datetime', 'comment', 'history', 'number', 'options', 'taxonomy', 'forum');
 
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.
@@ -134,7 +135,8 @@ class DependencyTest extends ModuleTestBase {
     $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $this->assertText(t('You must enable the History, Taxonomy, Options, Number, Comment, Datetime, Ban, XML-RPC modules to install Forum.'));
+    $this->assertText(t('You must enable the Node, History, Taxonomy, Options, Number, Comment, Datetime, Ban, XML-RPC modules to install Forum.'));
+    $edit['modules[Core][node][enable]'] = 'node';
     $edit['modules[Core][history][enable]'] = 'history';
     $edit['modules[Field types][options][enable]'] = 'options';
     $edit['modules[Field types][number][enable]'] = 'number';
@@ -144,7 +146,7 @@ class DependencyTest extends ModuleTestBase {
     $edit['modules[Core][ban][enable]'] = 'ban';
     $edit['modules[Core][xmlrpc][enable]'] = 'xmlrpc';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum', 'ban', 'xmlrpc', 'datetime', 'comment', 'history', 'taxonomy', 'options', 'number'), TRUE);
+    $this->assertModules(array('forum', 'ban', 'node', 'xmlrpc', 'datetime', 'comment', 'history', 'taxonomy', 'options', 'number'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
     $module_order = \Drupal::state()->get('module_test.install_order') ?: array();

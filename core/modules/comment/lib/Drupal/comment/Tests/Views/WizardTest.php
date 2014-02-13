@@ -21,7 +21,7 @@ class WizardTest extends WizardTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment');
+  public static $modules = array('node', 'comment');
 
 
   public static function getInfo() {

@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the filter format access functionality in the Filter module.
  */
 class FilterFormatAccessTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('filter', 'node');
+
   /**
    * A user with administrative permissions.
    *

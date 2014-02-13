@@ -14,6 +14,13 @@ use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 class MigrateNodeConfigsTest extends MigrateDrupalTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {

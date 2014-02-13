@@ -21,6 +21,13 @@ class AreaHTTPStatusCodeTest extends HandlerTestBase {
    */
   public static $testViews = array('test_http_status_code');
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   public static function getInfo() {
     return array(
       'name' => 'Area: HTTP Status Code',

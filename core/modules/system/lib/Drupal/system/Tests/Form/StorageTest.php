@@ -38,7 +38,7 @@ class StorageTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('access content'));
+    $this->web_user = $this->drupalCreateUser();
     $this->drupalLogin($this->web_user);
   }
 

@@ -18,7 +18,7 @@ class DefaultViewRecentComments extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'block');
+  public static $modules = array('node', 'comment', 'block');
 
   /**
    * Number of results for the Master display.

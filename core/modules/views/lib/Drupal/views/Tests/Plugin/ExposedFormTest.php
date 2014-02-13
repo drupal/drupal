@@ -28,7 +28,7 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui', 'block');
+  public static $modules = array('node', 'views_ui', 'block');
 
   public static function getInfo() {
     return array(

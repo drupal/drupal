@@ -24,7 +24,7 @@ class DisplayBlockTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('block_test_views', 'test_page_test', 'contextual', 'views_ui');
+  public static $modules = array('node', 'block_test_views', 'test_page_test', 'contextual', 'views_ui');
 
   /**
    * Views used by this test.

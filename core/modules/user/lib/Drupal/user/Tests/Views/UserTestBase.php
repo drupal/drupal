@@ -20,7 +20,7 @@ abstract class UserTestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('user_test_views');
+  public static $modules = array('user_test_views', 'node');
 
   /**
    * Users to use during this test.

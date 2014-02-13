@@ -13,16 +13,6 @@ namespace Drupal\custom_block\Tests;
 class CustomBlockPageViewTest extends CustomBlockTestBase {
 
   /**
-   * Permissions to grant admin user.
-   *
-   * @var array
-   */
-  protected $permissions = array(
-    'administer blocks',
-    'access content'
-  );
-
-  /**
    * Modules to enable.
    *
    * @var array

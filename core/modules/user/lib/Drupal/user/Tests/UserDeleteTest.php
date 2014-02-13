@@ -27,9 +27,9 @@ class UserDeleteTest extends WebTestBase {
    */
   function testUserDeleteMultiple() {
     // Create a few users with permissions, so roles will be created.
-    $user_a = $this->drupalCreateUser(array('access content'));
-    $user_b = $this->drupalCreateUser(array('access content'));
-    $user_c = $this->drupalCreateUser(array('access content'));
+    $user_a = $this->drupalCreateUser(array('access user profiles'));
+    $user_b = $this->drupalCreateUser(array('access user profiles'));
+    $user_c = $this->drupalCreateUser(array('access user profiles'));
 
     $uids = array($user_a->id(), $user_b->id(), $user_c->id());
 

@@ -19,6 +19,13 @@ class ArgumentStringTest extends HandlerTestBase {
    */
   public static $testViews = array('test_glossary');
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   public static function getInfo() {
     return array(
       'name' => 'Argument: String',

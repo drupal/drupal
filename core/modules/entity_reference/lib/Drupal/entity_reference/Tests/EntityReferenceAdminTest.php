@@ -21,7 +21,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     );
   }
 
-  public static $modules = array('field_ui', 'entity_reference');
+  public static $modules = array('node', 'field_ui', 'entity_reference');
 
   public function setUp() {
     parent::setUp();

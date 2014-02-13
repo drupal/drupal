@@ -43,6 +43,13 @@ abstract class RESTTestBase extends WebTestBase {
    */
   protected $defaultAuth;
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('rest', 'entity_test', 'node');
+
   protected function setUp() {
     parent::setUp();
     $this->defaultFormat = 'hal_json';

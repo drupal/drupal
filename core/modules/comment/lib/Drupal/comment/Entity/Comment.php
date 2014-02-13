@@ -369,10 +369,9 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setDescription(t('The parent comment ID if this is a reply to a comment.'))
       ->setSetting('target_type', 'comment');
 
-    $fields['entity_id'] = FieldDefinition::create('entity_reference')
+    $fields['entity_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Entity ID'))
       ->setDescription(t('The ID of the entity of which this comment is a reply.'))
-      ->setSetting('target_type', 'node')
       ->setRequired(TRUE);
 
     $fields['langcode'] = FieldDefinition::create('language')

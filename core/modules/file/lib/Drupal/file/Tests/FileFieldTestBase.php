@@ -20,7 +20,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   *
   * @var array
   */
-  public static $modules = array('file', 'file_module_test', 'field_ui');
+  public static $modules = array('node', 'file', 'file_module_test', 'field_ui');
 
   protected $admin_user;
 

@@ -2,6 +2,7 @@ name: Tracker
 type: module
 description: 'Enables tracking of recent content for users.'
 dependencies:
+  - node
   - comment
 package: Core
 version: VERSION

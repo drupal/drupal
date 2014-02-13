@@ -19,7 +19,7 @@ class TwigDebugMarkupTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('theme_test');
+  public static $modules = array('theme_test', 'node');
 
   public static function getInfo() {
     return array(

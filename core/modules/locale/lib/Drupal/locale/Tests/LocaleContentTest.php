@@ -19,7 +19,7 @@ class LocaleContentTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale');
+  public static $modules = array('node', 'locale');
 
   public static function getInfo() {
     return array(

@@ -23,7 +23,7 @@ class CommentLanguageTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'language_test', 'comment_test');
+  public static $modules = array('node', 'language', 'language_test', 'comment_test');
 
   public static function getInfo() {
     return array(

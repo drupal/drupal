@@ -23,7 +23,7 @@ class IntegrationTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('statistics', 'statistics_test_views');
+  public static $modules = array('statistics', 'statistics_test_views', 'node');
 
   /**
    * Stores the user object that accesses the page.

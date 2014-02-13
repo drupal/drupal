@@ -20,7 +20,7 @@ abstract class CommentTestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'comment_test_views');
+  public static $modules = array('node', 'comment', 'comment_test_views');
 
   /**
    * Stores a comment used by the tests.

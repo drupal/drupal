@@ -46,14 +46,14 @@ class UserPermissionsTest extends WebTestBase {
     $this->assertIdentical($previous_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
 
     // Add a permission.
-    $this->assertFalse($account->hasPermission('administer nodes'), 'User does not have "administer nodes" permission.');
+    $this->assertFalse($account->hasPermission('administer users'), 'User does not have "administer users" permission.');
     $edit = array();
-    $edit[$rid . '[administer nodes]'] = TRUE;
+    $edit[$rid . '[administer users]'] = TRUE;
     $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
     $storage_controller = $this->container->get('entity.manager')->getStorageController('user_role');
     $storage_controller->resetCache();
-    $this->assertTrue($account->hasPermission('administer nodes'), 'User now has "administer nodes" permission.');
+    $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
     $this->assertIdentical($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
     $this->assertNotEqual($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
@@ -105,19 +105,19 @@ class UserPermissionsTest extends WebTestBase {
     $previous_permissions_hash = $permissions_hash_generator->generate($account);
 
     // Verify current permissions.
-    $this->assertFalse($account->hasPermission('administer nodes'), 'User does not have "administer nodes" permission.');
+    $this->assertFalse($account->hasPermission('administer users'), 'User does not have "administer users" permission.');
     $this->assertTrue($account->hasPermission('access user profiles'), 'User has "access user profiles" permission.');
     $this->assertTrue($account->hasPermission('administer site configuration'), 'User has "administer site configuration" permission.');
 
     // Change permissions.
     $permissions = array(
-      'administer nodes' => 1,
+      'administer users' => 1,
       'access user profiles' => 0,
     );
     user_role_change_permissions($rid, $permissions);
 
     // Verify proper permission changes.
-    $this->assertTrue($account->hasPermission('administer nodes'), 'User now has "administer nodes" permission.');
+    $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
     $this->assertFalse($account->hasPermission('access user profiles'), 'User no longer has "access user profiles" permission.');
     $this->assertTrue($account->hasPermission('administer site configuration'), 'User still has "administer site configuration" permission.');
 

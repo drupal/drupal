@@ -24,6 +24,13 @@ class AccessTest extends PluginTestBase {
    */
   public static $testViews = array('test_access_none', 'test_access_static', 'test_access_dynamic');
 
+  /**
+   * Modules to enable.
+   *
+   * @return array
+   */
+  public static $modules = array('node');
+
   public static function getInfo() {
     return array(
       'name' => 'Access',

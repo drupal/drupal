@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class UserCancelTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   public static function getInfo() {
     return array(
       'name' => 'Cancel account',

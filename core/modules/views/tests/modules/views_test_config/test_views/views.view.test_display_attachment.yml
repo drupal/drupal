@@ -11,7 +11,7 @@ display:
     position: null
     display_options:
       access:
-        type: perm
+        type: none
       cache:
         type: none
       query:

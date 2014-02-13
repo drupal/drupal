@@ -127,7 +127,7 @@ class MenuRouterTest extends WebTestBase {
    * Tests for menu_link_maintain().
    */
   protected function doTestMenuLinkMaintain() {
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer site configuration'));
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
 
     // Create three menu items.

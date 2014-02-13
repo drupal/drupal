@@ -40,7 +40,7 @@ class BlockHtmlTest extends WebTestBase {
     $this->drupalPlaceBlock('test_html', array('id' => 'test_html_block'));
 
     // Enable a menu block, to test more complicated HTML.
-    $this->drupalPlaceBlock('system_menu_block:tools');
+    $this->drupalPlaceBlock('system_menu_block:admin');
   }
 
   /**

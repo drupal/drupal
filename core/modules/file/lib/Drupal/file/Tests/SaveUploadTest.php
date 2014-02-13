@@ -36,7 +36,7 @@ class SaveUploadTest extends FileManagedTestBase {
 
   function setUp() {
     parent::setUp();
-    $account = $this->drupalCreateUser(array('access content'));
+    $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
 
     $image_files = $this->drupalGetTestFiles('image');

@@ -27,7 +27,7 @@ class AreaTest extends HandlerTestBase {
    *
    * @var array
    */
-  public static $modules = array('views_ui');
+  public static $modules = array('node', 'views_ui');
 
   public static function getInfo() {
     return array(

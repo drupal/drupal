@@ -28,7 +28,7 @@ class UpcastingTest extends WebTestBase {
     );
   }
 
-  public static $modules = array('paramconverter_test');
+  public static $modules = array('paramconverter_test', 'node');
 
   /**
    * Confirms that all parameters are converted as expected.

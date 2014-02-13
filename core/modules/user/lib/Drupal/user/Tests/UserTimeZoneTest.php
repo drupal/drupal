@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for user-configurable time zones.
  */
 class UserTimeZoneTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   public static function getInfo() {
     return array(
       'name' => 'User time zones',

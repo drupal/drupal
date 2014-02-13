@@ -19,7 +19,7 @@ class UserAttributesTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf');
+  public static $modules = array('rdf', 'node');
 
   public static function getInfo() {
     return array(

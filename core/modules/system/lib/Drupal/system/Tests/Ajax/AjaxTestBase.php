@@ -19,7 +19,7 @@ abstract class AjaxTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('ajax_test', 'ajax_forms_test');
+  public static $modules = array('node', 'ajax_test', 'ajax_forms_test');
 
   /**
    * Asserts the array of Ajax commands contains the searched command.

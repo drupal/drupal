@@ -11,10 +11,7 @@ display:
     position: 1
     display_options:
       access:
-        type: perm
-        options:
-          perm: 'access content'
-        perm: 'access user profiles'
+        type: none
       cache:
         type: none
         options: {  }

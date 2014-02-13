@@ -19,7 +19,7 @@ class WriteRecordTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('database_test');
+  public static $modules = array('database_test', 'node');
 
   public static function getInfo() {
     return array(

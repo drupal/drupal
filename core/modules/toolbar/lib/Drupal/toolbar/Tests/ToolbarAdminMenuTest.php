@@ -53,7 +53,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'menu', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale');
+  public static $modules = array('node', 'block', 'menu', 'user', 'taxonomy', 'toolbar', 'language', 'test_page_test', 'locale');
 
   public static function getInfo() {
     return array(

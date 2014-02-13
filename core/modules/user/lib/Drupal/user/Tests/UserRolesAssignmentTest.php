@@ -34,7 +34,7 @@ class UserRolesAssignmentTest extends WebTestBase {
    * again.
    */
   function testAssignAndRemoveRole()  {
-    $rid = $this->drupalCreateRole(array('administer content types'));
+    $rid = $this->drupalCreateRole(array('administer users'));
     $account = $this->drupalCreateUser();
 
     // Assign the role to the user.
@@ -55,7 +55,7 @@ class UserRolesAssignmentTest extends WebTestBase {
    * be removed again.
    */
   function testCreateUserWithRole() {
-    $rid = $this->drupalCreateRole(array('administer content types'));
+    $rid = $this->drupalCreateRole(array('administer users'));
     // Create a new user and add the role at the same time.
     $edit = array(
       'name' => $this->randomName(),

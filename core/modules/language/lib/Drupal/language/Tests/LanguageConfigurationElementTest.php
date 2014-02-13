@@ -20,7 +20,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'language_elements_test');
+  public static $modules = array('node', 'language', 'language_elements_test');
 
   public static function getInfo() {
     return array(

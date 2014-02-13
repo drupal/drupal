@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class SelectionTest extends WebTestBase {
 
-  public static $modules = array('views', 'entity_reference', 'entity_reference_test', 'entity_test');
+  public static $modules = array('node', 'views', 'entity_reference', 'entity_reference_test', 'entity_test');
 
   public static function getInfo() {
     return array(

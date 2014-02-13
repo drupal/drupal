@@ -21,7 +21,7 @@ class BulkFormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('action_bulk_test');
+  public static $modules = array('node', 'action_bulk_test');
 
   public static function getInfo() {
     return array(

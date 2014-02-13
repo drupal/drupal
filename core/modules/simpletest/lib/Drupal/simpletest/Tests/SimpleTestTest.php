@@ -146,7 +146,7 @@ class SimpleTestTest extends WebTestBase {
   function testWebTestRunner() {
     $this->pass = t('SimpleTest pass.');
     $this->fail = t('SimpleTest fail.');
-    $this->valid_permission = 'access content';
+    $this->valid_permission = 'access administration pages';
     $this->invalid_permission = 'invalid permission';
 
     if ($this->isInChildSite()) {

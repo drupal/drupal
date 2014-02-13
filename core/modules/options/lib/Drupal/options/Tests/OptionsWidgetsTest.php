@@ -19,7 +19,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('options', 'entity_test', 'options_test', 'taxonomy', 'field_ui');
+  public static $modules = array('node', 'options', 'entity_test', 'options_test', 'taxonomy', 'field_ui');
 
  /**
    * A field with cardinality 1 to use in this test class.

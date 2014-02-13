@@ -17,7 +17,7 @@ class MenuTest extends MenuWebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'contextual', 'help', 'path', 'test_page_test');
+  public static $modules = array('node', 'block', 'contextual', 'help', 'path', 'test_page_test');
 
   /**
    * A user with administration rights.

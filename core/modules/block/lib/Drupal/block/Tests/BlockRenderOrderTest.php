@@ -19,7 +19,7 @@ class BlockRenderOrderTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('node', 'block');
 
   public static function getInfo() {
     return array(

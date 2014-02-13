@@ -20,7 +20,7 @@ class DateTimeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language');
+  public static $modules = array('node', 'language');
 
   public static function getInfo() {
     return array(

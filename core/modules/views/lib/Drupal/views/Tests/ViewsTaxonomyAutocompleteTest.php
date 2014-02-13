@@ -43,7 +43,7 @@ class ViewsTaxonomyAutocompleteTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = array('taxonomy');
+  public static $modules = array('node', 'taxonomy');
 
   public static function getInfo() {
     return array(

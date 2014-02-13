@@ -23,6 +23,13 @@ class FieldDropButtonTest extends HandlerTestBase {
    */
   public static $testViews = array('test_dropbutton');
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('node');
+
   public static function getInfo() {
     return array(
       'name' => 'Field: Dropbutton',
