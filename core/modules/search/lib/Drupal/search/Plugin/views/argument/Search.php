@@ -8,9 +8,12 @@
 namespace Drupal\search\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
- * Argument that accepts query keys for search.
+ * Argument handler for search keywords.
  *
  * @ingroup views_argument_handlers
  *
@@ -19,30 +22,53 @@ use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 class Search extends ArgumentPluginBase {
 
   /**
-   * Make sure that parseSearchExpression is run and everything is set up.
+   * A search query to use for parsing search keywords.
    *
-   * @param $input
-   *    The search phrase which was input by the user.
+   * @var \Drupal\search\ViewsSearchQuery
    */
-  function query_parse_search_expression($input) {
-    if (!isset($this->search_query)) {
-      $this->search_query = db_select('search_index', 'i', array('target' => 'slave'))->extend('Drupal\search\ViewsSearchQuery');
-      $this->search_query->searchExpression($input, $this->view->base_table);
-      $this->search_query->publicParseSearchExpression();
+  protected $searchQuery = NULL;
+
+  /**
+   * The search type name (value of {search_index}.type in the database).
+   *
+   * @var string
+   */
+  protected $searchType;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
+    $this->searchType = $this->definition['search_type'];
+  }
+
+  /**
+   * Sets up and parses the search query.
+   *
+   * @param string $input
+   *   The search keywords entered by the user.
+   */
+  protected function queryParseSearchExpression($input) {
+    if (!isset($this->searchQuery)) {
+      $this->searchQuery = db_select('search_index', 'i', array('target' => 'slave'))->extend('Drupal\search\ViewsSearchQuery');
+      $this->searchQuery->searchExpression($input, $this->searchType);
+      $this->searchQuery->publicParseSearchExpression();
     }
   }
 
   /**
-   * Add this argument to the query.
+   * {@inheritdoc}
    */
   public function query($group_by = FALSE) {
     $required = FALSE;
-    $this->query_parse_search_expression($this->argument);
-    if (!isset($this->search_query)) {
+    $this->queryParseSearchExpression($this->argument);
+    if (!isset($this->searchQuery)) {
       $required = TRUE;
     }
     else {
-      $words = $this->search_query->words();
+      $words = $this->searchQuery->words();
       if (empty($words)) {
         $required = TRUE;
       }
@@ -64,28 +90,22 @@ class Search extends ArgumentPluginBase {
         'left_table' => $search_index,
         'left_field' => 'word',
       );
-      $join = \Drupal::service()->get('plugin.manager.views.join')->createInstance('standard', $definition);
+      $join = Views::pluginManager('join')->createInstance('standard', $definition);
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
       $this->search_score = $this->query->addField('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
 
-      if (empty($this->query->relationships[$this->relationship])) {
-        $base_table = $this->view->storage->get('base_table');
-      }
-      else {
-        $base_table = $this->query->relationships[$this->relationship]['base'];
-      }
-      $search_condition->condition("$search_index.type", $base_table);
+      $search_condition->condition("$search_index.type", $this->searchType);
 
-      if (!$this->search_query->simple()) {
+      if (!$this->searchQuery->simple()) {
         $search_dataset = $this->query->addTable('search_dataset');
-        $conditions = $this->search_query->conditions();
+        $conditions = $this->searchQuery->conditions();
         $condition_conditions =& $conditions->conditions();
         foreach ($condition_conditions  as $key => &$condition) {
           // Make sure we just look at real conditions.
           if (is_numeric($key)) {
             // Replace the conditions with the table alias of views.
-            $this->search_query->condition_replace_string('d.', "$search_dataset.", $condition);
+            $this->searchQuery->conditionReplaceString('d.', "$search_dataset.", $condition);
           }
         }
         $search_conditions =& $search_condition->conditions();
@@ -103,10 +123,14 @@ class Search extends ArgumentPluginBase {
 
       $this->query->addWhere(0, $search_condition);
       $this->query->addGroupBy("$search_index.sid");
-      $matches = $this->search_query->matches();
+      $matches = $this->searchQuery->matches();
       $placeholder = $this->placeholder();
       $this->query->addHavingExpression(0, "COUNT(*) >= $placeholder", array($placeholder => $matches));
     }
+
+    // Set to NULL to prevent PDO exception when views object is cached
+    // and to clear out memory.
+    $this->searchQuery = NULL;
   }
 
 }

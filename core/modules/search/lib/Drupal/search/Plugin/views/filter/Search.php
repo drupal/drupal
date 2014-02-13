@@ -7,35 +7,58 @@
 
 namespace Drupal\search\Plugin\views\filter;
 
-use Drupal\search\SearchQuery;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
- * Field handler to provide simple renderer that allows linking to a node.
+ * Filter handler for search keywords.
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("search")
+ * @PluginID("search_keywords")
  */
 class Search extends FilterPluginBase {
 
+  /**
+   * This filter is always considered multiple-valued.
+   *
+   * @var bool
+   */
   protected $alwaysMultiple = TRUE;
 
   /**
-   * Stores an extended query extender from the search module.
-   *
-   * This value extends the query extender to be able to provide methods
-   * which returns the protected values.
-   *
-   * @var \Drupal\search\ViewsSearchQuery
-   */
-  var $search_query = NULL;
+   * A search query to use for parsing search keywords.
+    *
+    * @var \Drupal\search\ViewsSearchQuery
+    */
+  protected $searchQuery = NULL;
 
   /**
-   * Checks if the search query has been parsed.
+   * TRUE if the search query has been parsed.
    */
-  var $parsed = FALSE;
+  protected $parsed = FALSE;
 
+  /**
+   * The search type name (value of {search_index}.type in the database).
+   *
+   * @var string
+   */
+  protected $searchType;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
+
+    $this->searchType = $this->definition['search_type'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -45,7 +68,7 @@ class Search extends FilterPluginBase {
   }
 
   /**
-   * Provide simple equality operator
+   * {@inheritdoc}
    */
   protected function operatorForm(&$form, &$form_state) {
     $form['operator'] = array(
@@ -53,27 +76,27 @@ class Search extends FilterPluginBase {
       '#title' => t('On empty input'),
       '#default_value' => $this->operator,
       '#options' => array(
-        'optional' => t('Show All'),
-        'required' => t('Show None'),
+        'optional' => $this->t('Show All'),
+        'required' => $this->t('Show None'),
       ),
     );
   }
 
   /**
-   * Provide a simple textfield for equality
+   * {@inheritdoc}
    */
   protected function valueForm(&$form, &$form_state) {
     $form['value'] = array(
       '#type' => 'textfield',
       '#size' => 15,
       '#default_value' => $this->value,
-      '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
-      '#title' => empty($form_state['exposed']) ? t('Value') : '',
+      '#attributes' => array('title' => $this->t('Search keywords')),
+      '#title' => empty($form_state['exposed']) ? $this->t('Keywords') : '',
     );
   }
 
   /**
-   * Validate the options form.
+   * {@inheritdoc}
    */
   public function validateExposed(&$form, &$form_state) {
     if (!isset($this->options['expose']['identifier'])) {
@@ -82,47 +105,43 @@ class Search extends FilterPluginBase {
 
     $key = $this->options['expose']['identifier'];
     if (!empty($form_state['values'][$key])) {
-      $this->query_parse_search_expression($form_state['values'][$key]);
-      if (count($this->search_query->words()) == 0) {
+      $this->queryParseSearchExpression($form_state['values'][$key]);
+      if (count($this->searchQuery->words()) == 0) {
         form_set_error($key, $form_state, format_plural(\Drupal::config('search.settings')->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'));
       }
     }
   }
 
   /**
-   * Make sure that parseSearchExpression is run and everything is set up.
+   * Sets up and parses the search query.
    *
-   * @param $input
-   *    The search phrase which was input by the user.
+   * @param string $input
+   *   The search keywords entered by the user.
    */
-  function query_parse_search_expression($input) {
-    if (!isset($this->search_query)) {
+  protected function queryParseSearchExpression($input) {
+    if (!isset($this->searchQuery)) {
       $this->parsed = TRUE;
-      $this->search_query = db_select('search_index', 'i', array('target' => 'slave'))->extend('Drupal\search\ViewsSearchQuery');
-      $this->search_query->searchExpression($input, $this->view->base_table);
-      $this->search_query->publicParseSearchExpression();
+      $this->searchQuery = db_select('search_index', 'i', array('target' => 'slave'))->extend('Drupal\search\ViewsSearchQuery');
+      $this->searchQuery->searchExpression($input, $this->searchType);
+      $this->searchQuery->publicParseSearchExpression();
     }
   }
 
   /**
-   * Add this filter to the query.
-   *
-   * Due to the nature of fapi, the value and the operator have an unintended
-   * level of indirection. You will find them in $this->operator
-   * and $this->value respectively.
+   * {@inheritdoc}
    */
   public function query() {
     // Since attachment views don't validate the exposed input, parse the search
     // expression if required.
     if (!$this->parsed) {
-      $this->query_parse_search_expression($this->value);
+      $this->queryParseSearchExpression($this->value);
     }
     $required = FALSE;
-    if (!isset($this->search_query)) {
+    if (!isset($this->searchQuery)) {
       $required = TRUE;
     }
     else {
-      $words = $this->search_query->words();
+      $words = $this->searchQuery->words();
       if (empty($words)) {
         $required = TRUE;
       }
@@ -137,35 +156,30 @@ class Search extends FilterPluginBase {
 
       $search_condition = db_and();
 
-      // Create a new join to relate the 'serach_total' table to our current 'search_index' table.
+      // Create a new join to relate the 'search_total' table to our current
+      // 'search_index' table.
       $definition = array(
         'table' => 'search_total',
         'field' => 'word',
         'left_table' => $search_index,
         'left_field' => 'word',
       );
-      $join = \Drupal::service()->get('plugin.manager.views.join')->createInstance('standard', $definition);
+      $join = Views::pluginManager('join')->createInstance('standard', $definition);
 
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
       $this->search_score = $this->query->addField('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));
 
-      if (empty($this->query->relationships[$this->relationship])) {
-        $base_table = $this->view->storage->get('base_table');
-      }
-      else {
-        $base_table = $this->query->relationships[$this->relationship]['base'];
-      }
-      $search_condition->condition("$search_index.type", $base_table);
-      if (!$this->search_query->simple()) {
+      $search_condition->condition("$search_index.type", $this->searchType);
+      if (!$this->searchQuery->simple()) {
         $search_dataset = $this->query->addTable('search_dataset');
-        $conditions = $this->search_query->conditions();
+        $conditions = $this->searchQuery->conditions();
         $condition_conditions =& $conditions->conditions();
         foreach ($condition_conditions  as $key => &$condition) {
           // Make sure we just look at real conditions.
           if (is_numeric($key)) {
             // Replace the conditions with the table alias of views.
-            $this->search_query->condition_replace_string('d.', "$search_dataset.", $condition);
+            $this->searchQuery->conditionReplaceString('d.', "$search_dataset.", $condition);
           }
         }
         $search_conditions =& $search_condition->conditions();
@@ -183,12 +197,12 @@ class Search extends FilterPluginBase {
 
       $this->query->addWhere($this->options['group'], $search_condition);
       $this->query->addGroupBy("$search_index.sid");
-      $matches = $this->search_query->matches();
+      $matches = $this->searchQuery->matches();
       $placeholder = $this->placeholder();
       $this->query->addHavingExpression($this->options['group'], "COUNT(*) >= $placeholder", array($placeholder => $matches));
     }
     // Set to NULL to prevent PDO exception when views object is cached.
-    $this->search_query = NULL;
+    $this->searchQuery = NULL;
   }
 
 }

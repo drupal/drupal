@@ -10,7 +10,7 @@ namespace Drupal\search;
 use Drupal\Core\Database\Query\Condition;
 
 /**
- * Extends the core SearchQuery to be able to gets it's protected values.
+ * Extends the core SearchQuery to be able to gets its protected values.
  */
 class ViewsSearchQuery extends SearchQuery {
 
@@ -67,14 +67,14 @@ class ViewsSearchQuery extends SearchQuery {
    * @param \Drupal\Core\Database\Query\Condition $condition
    *   The query condition in which the string is replaced.
    */
-  function condition_replace_string($search, $replace, &$condition) {
+  function conditionReplaceString($search, $replace, &$condition) {
     if ($condition['field'] instanceof Condition) {
       $conditions =& $condition['field']->conditions();
       foreach ($conditions as $key => &$subcondition) {
         if (is_numeric($key)) {
           // As conditions can have subconditions, for example db_or(), the
           // function has to be called recursively.
-          $this->condition_replace_string($search, $replace, $subcondition);
+          $this->conditionReplaceString($search, $replace, $subcondition);
         }
       }
     }

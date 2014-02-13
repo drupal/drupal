@@ -103,8 +103,6 @@ class DefaultViewsTest extends ViewTestBase {
 
       $node = $this->drupalCreateNode($values);
 
-      search_index($node->id(), 'node', $node->body->value, Language::LANGCODE_NOT_SPECIFIED);
-
       $comment = array(
         'uid' => $user->id(),
         'status' => CommentInterface::PUBLISHED,

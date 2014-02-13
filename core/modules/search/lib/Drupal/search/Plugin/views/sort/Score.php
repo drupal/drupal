@@ -10,7 +10,7 @@ namespace Drupal\search\Plugin\views\sort;
 use Drupal\views\Plugin\views\sort\SortPluginBase;
 
 /**
- * Field handler to provide simple renderer that allows linking to a node.
+ * Sort handler for sorting by search score.
  *
  * @ingroup views_sort_handlers
  *
@@ -18,6 +18,9 @@ use Drupal\views\Plugin\views\sort\SortPluginBase;
  */
 class Score extends SortPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     // Check to see if the search filter/argument added 'score' to the table.
     // Our filter stores it as $handler->search_score -- and we also
@@ -33,8 +36,8 @@ class Score extends SortPluginBase {
       }
     }
 
-    // Do absolutely nothing if there is no filter/argument in place; there is no reason to
-    // sort on the raw scores with this handler.
+    // Do nothing if there is no filter/argument in place. There is no way
+    // to sort on scores.
   }
 
 }
