@@ -130,7 +130,7 @@ function template_preprocess_views_view(&$variables) {
   }
 
   // If form fields were found in the view, reformat the view output as a form.
-  if (views_view_has_form_elements($view)) {
+  if ($view->hasFormElements()) {
     // Copy the rows so as not to modify them by reference when rendering.
     $rows = $variables['rows'];
     // Only render row output if there are rows. Otherwise, render the empty

@@ -927,26 +927,6 @@ function views_get_view($name) {
 }
 
 /**
- * Returns TRUE if the passed-in view contains handlers with views form
- * implementations, FALSE otherwise.
- */
-function views_view_has_form_elements($view) {
-  foreach ($view->field as $field) {
-    if (property_exists($field, 'views_form_callback') || method_exists($field, 'viewsForm')) {
-      return TRUE;
-    }
-  }
-  $area_handlers = array_merge(array_values($view->header), array_values($view->footer));
-  $empty = empty($view->result);
-  foreach ($area_handlers as $area) {
-    if (method_exists($area, 'viewsForm') && !$area->viewsFormEmpty($empty)) {
-      return TRUE;
-    }
-  }
-  return FALSE;
-}
-
-/**
  * Replaces views substitution placeholders.
  *
  * @param array $element

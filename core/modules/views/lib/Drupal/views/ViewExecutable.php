@@ -2237,4 +2237,28 @@ class ViewExecutable extends DependencySerialization {
     return $themes;
   }
 
+  /**
+   * Determines if this view has form elements.
+   *
+   * @return bool
+   *   Returns TRUE if this view contains handlers with views form
+   *   implementations, FALSE otherwise.
+   */
+  public function hasFormElements() {
+    foreach ($this->field as $field) {
+      if (property_exists($field, 'views_form_callback') || method_exists($field, 'viewsForm')) {
+        return TRUE;
+      }
+    }
+    $area_handlers = array_merge(array_values($this->header), array_values($this->footer));
+    $empty = empty($this->result);
+    foreach ($area_handlers as $area) {
+      if (method_exists($area, 'viewsForm') && !$area->viewsFormEmpty($empty)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
 }
