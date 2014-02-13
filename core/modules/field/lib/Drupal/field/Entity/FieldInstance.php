@@ -601,6 +601,13 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
+  public function getTargetEntityTypeId() {
+    return $this->entity_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isQueryable() {
     return TRUE;
   }

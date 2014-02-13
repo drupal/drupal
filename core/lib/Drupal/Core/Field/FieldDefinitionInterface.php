@@ -256,6 +256,22 @@ interface FieldDefinitionInterface extends ListDefinitionInterface {
   public function getDefaultValue(EntityInterface $entity);
 
   /**
+   * Returns the ID of the type of the entity this field is attached to.
+   *
+   * This method should not be confused with EntityInterface::entityType()
+   * (configurable fields are config entities, and thus implement both
+   * interfaces):
+   *   - FieldDefinitionInterface::getTargetEntityTypeId() answers "as a field,
+   *     which entity type are you attached to?".
+   *   - EntityInterface::getEntityTypeId() answers "as a (config) entity, what
+   *     is your own entity type".
+   *
+   * @return string
+   *   The name of the entity type.
+   */
+  public function getTargetEntityTypeId();
+
+  /**
    * Returns the field schema.
    *
    * Note that this method returns an empty array for computed fields which have

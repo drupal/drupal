@@ -644,6 +644,13 @@ class Field extends ConfigEntityBase implements FieldInterface {
   /**
    * {@inheritdoc}
    */
+  public function getTargetEntityTypeId() {
+    return $this->entity_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isQueryable() {
     return TRUE;
   }

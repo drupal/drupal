@@ -309,8 +309,12 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
         $entity_type = $this->getDefinition($entity_type_id);
         $class = $entity_type->getClass();
 
+        $base_definitions = $class::baseFieldDefinitions($entity_type_id);
+        foreach ($base_definitions as &$base_definition) {
+          $base_definition->setTargetEntityTypeId($entity_type_id);
+        }
         $this->entityFieldInfo[$entity_type_id] = array(
-          'definitions' => $class::baseFieldDefinitions($entity_type_id),
+          'definitions' => $base_definitions,
           // Contains definitions of optional (per-bundle) fields.
           'optional' => array(),
           // An array keyed by bundle name containing the optional fields added
