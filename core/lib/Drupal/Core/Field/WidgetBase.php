@@ -308,8 +308,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         unset($item->_original_delta, $item->_weight);
       }
       field_form_set_state($form['#parents'], $field_name, $form_state, $field_state);
-
-      return;
     }
   }
 
