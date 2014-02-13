@@ -7,8 +7,8 @@
 
 namespace Drupal\Core\Path;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 
 /**
@@ -24,21 +24,24 @@ class Path {
   protected $connection;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a Path CRUD object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A database connection for reading and writing path aliases.
    *
-   * @param \Drupal\Core\Path\AliasManager $alias_manager
-   *   An alias manager with an internal cache of stored aliases.
-   *
-   * @todo This class should not take an alias manager in its constructor. Once
-   *   we move to firing an event for CRUD operations instead of invoking a
-   *   hook, we can have a listener that calls cacheClear() on the alias manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(Connection $connection, AliasManager $alias_manager) {
+  public function __construct(Connection $connection, ModuleHandlerInterface $module_handler) {
     $this->connection = $connection;
-    $this->alias_manager = $alias_manager;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -78,8 +81,7 @@ class Path {
         ->fields($fields);
       $pid = $query->execute();
       $fields['pid'] = $pid;
-      // @todo: Find a correct place to invoke hook_path_insert().
-      $hook = 'path_insert';
+      $operation = 'insert';
     }
     else {
       $fields['pid'] = $pid;
@@ -87,13 +89,11 @@ class Path {
         ->fields($fields)
         ->condition('pid', $pid);
       $pid = $query->execute();
-      // @todo: figure out where we can invoke hook_path_update()
-      $hook = 'path_update';
+      $operation = 'update';
     }
     if ($pid) {
       // @todo Switch to using an event for this instead of a hook.
-      module_invoke_all($hook, $fields);
-      $this->alias_manager->cacheClear();
+      $this->moduleHandler->invokeAll('path_' . $operation, array($fields));
       return $fields;
     }
     return FALSE;
@@ -138,8 +138,7 @@ class Path {
     }
     $deleted = $query->execute();
     // @todo Switch to using an event for this instead of a hook.
-    module_invoke_all('path_delete', $path);
-    $this->alias_manager->cacheClear();
+    $this->moduleHandler->invokeAll('path_delete', array($path));
     return $deleted;
   }
 }

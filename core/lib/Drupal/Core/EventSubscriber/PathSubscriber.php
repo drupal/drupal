@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\CacheDecorator\AliasManagerCacheDecorator;
+use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -23,7 +23,7 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
   /**
    * The alias manager that caches alias lookups based on the request.
    *
-   * @var \Drupal\Core\CacheDecorator\AliasManagerCacheDecorator
+   * @var \Drupal\Core\Path\AliasManagerInterface
    */
   protected $aliasManager;
 
@@ -34,7 +34,7 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
    */
   protected $pathProcessor;
 
-  public function __construct(AliasManagerCacheDecorator $alias_manager, InboundPathProcessorInterface $path_processor) {
+  public function __construct(AliasManagerInterface $alias_manager, InboundPathProcessorInterface $path_processor) {
     $this->aliasManager = $alias_manager;
     $this->pathProcessor = $path_processor;
   }

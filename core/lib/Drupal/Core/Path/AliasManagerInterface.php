@@ -54,4 +54,13 @@ interface AliasManagerInterface {
    *   An array of system paths.
    */
   public function preloadPathLookups(array $path_list);
+
+  /**
+   * Clear internal caches in alias manager.
+   *
+   * @param $source
+   *   Source path of the alias that is being inserted/updated. Can be ommitted
+   *   if entire cache needs to be flushed.
+   */
+  public function cacheClear($source = NULL);
 }

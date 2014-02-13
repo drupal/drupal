@@ -329,7 +329,7 @@ services:
     arguments: ['@path.alias_manager', '@cache.path']
   path.crud:
     class: Drupal\Core\Path\Path
-    arguments: ['@database', '@path.alias_manager']
+    arguments: ['@database', '@module_handler']
 # The argument to the hashing service defined in services.yml, to the
 # constructor of PhpassHashedPassword is the log2 number of iterations for
 # password stretching.

@@ -60,7 +60,7 @@ class MockAliasManager implements AliasManagerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::getSystemPath().
+   * {@inheritdoc}
    */
   public function getSystemPath($path, $path_language = NULL) {
     $language = $path_language ?: $this->defaultLanguage;
@@ -68,7 +68,7 @@ class MockAliasManager implements AliasManagerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::getPathAlias().
+   * {@inheritdoc}
    */
   public function getPathAlias($path, $path_language = NULL) {
     $language = $path_language ?: $this->defaultLanguage;
@@ -77,16 +77,23 @@ class MockAliasManager implements AliasManagerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::getPathLookups().
+   * {@inheritdoc}
    */
   public function getPathLookups() {
     return array_keys($this->lookedUp);
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::preloadPathLookups().
+   * {@inheritdoc}
    */
   public function preloadPathLookups(array $path_list) {
+    // Not needed.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function cacheClear($source = NULL) {
     // Not needed.
   }
 }

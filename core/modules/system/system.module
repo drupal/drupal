@@ -3187,3 +3187,24 @@ function system_admin_paths() {
   );
   return $paths;
 }
+
+/**
+ * Implements hook_path_update().
+ */
+function system_path_update() {
+  \Drupal::service('path.alias_manager.cached')->cacheClear();
+}
+
+/**
+ * Implements hook_path_insert().
+ */
+function system_path_insert() {
+  \Drupal::service('path.alias_manager.cached')->cacheClear();
+}
+
+/**
+ * Implements hook_path_delete().
+ */
+function system_path_delete($path) {
+  \Drupal::service('path.alias_manager.cached')->cacheClear();
+}

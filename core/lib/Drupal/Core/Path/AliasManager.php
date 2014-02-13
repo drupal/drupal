@@ -125,7 +125,14 @@ class AliasManager implements AliasManagerInterface {
    * Implements \Drupal\Core\Path\AliasManagerInterface::cacheClear().
    */
   public function cacheClear($source = NULL) {
-    $this->lookupMap = array();
+    if ($source) {
+      foreach (array_keys($this->lookupMap) as $lang) {
+        $this->lookupMap[$lang][$source];
+      }
+    }
+    else {
+      $this->lookupMap = array();
+    }
     $this->noSource = array();
     $this->no_aliases = array();
     $this->firstCall = TRUE;

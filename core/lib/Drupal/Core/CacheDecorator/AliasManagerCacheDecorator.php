@@ -55,14 +55,14 @@ class AliasManagerCacheDecorator implements CacheDecoratorInterface, AliasManage
   }
 
   /**
-   * Implements \Drupal\Core\CacheDecorator\CacheDecoratorInterface::setCacheKey().
+   * {@inheritdoc}
    */
   public function setCacheKey($key) {
     $this->cacheKey = $key;
   }
 
   /**
-   * Implements \Drupal\Core\CacheDecorator\CacheDecoratorInterface::writeCache().
+   * {@inheritdoc}
    *
    * Cache an array of the system paths available on each page. We assume
    * that aliases will be needed for the majority of these paths during
@@ -81,7 +81,7 @@ class AliasManagerCacheDecorator implements CacheDecoratorInterface, AliasManage
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::getSystemPath().
+   * {@inheritdoc}
    */
   public function getSystemPath($path, $path_language = NULL) {
     $system_path = $this->aliasManager->getSystemPath($path, $path_language);
@@ -98,23 +98,31 @@ class AliasManagerCacheDecorator implements CacheDecoratorInterface, AliasManage
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::getPathAlias().
+   * {@inheritdoc}
    */
   public function getPathAlias($path, $path_language = NULL) {
     return $this->aliasManager->getPathAlias($path, $path_language);
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::getPathLookups().
+   * {@inheritdoc}
    */
   public function getPathLookups() {
     return $this->aliasManager->getPathLookups();
   }
 
   /**
-   * Implements \Drupal\Core\Path\AliasManagerInterface::preloadPathLookups().
+   * {@inheritdoc}
    */
   public function preloadPathLookups(array $path_list) {
     $this->aliasManager->preloadPathLookups($path_list);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function cacheClear($source = NULL) {
+    $this->cache->delete($this->cacheKey);
+    $this->aliasManager->cacheClear($source);
   }
 }
