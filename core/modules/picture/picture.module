@@ -16,15 +16,13 @@ function picture_help($path, $arg) {
   switch ($path) {
     case 'admin/help#picture':
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Picture module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag.') . '</p>';
+      $output .= '<p>' . t('The Picture module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag. For more information, see the <a href="!picture">online documentation for the Picture module</a>.', array( '!picture' => 'https://drupal.org/documentation/modules/picture')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Mapping image styles to breakpoints') . '</dt>';
-      $output .= '<dd>' . t('To use responsive images, you need to define what size the images should be depending on the breakpoints. The Picture module allows you to define which image style should be used for each breakpoint on the <a href="@link">picture mappings administrative page</a>.', array(
-        '@link' => url('admin/config/media/picturemapping'),
-      )) . '</dd>';
-      $output .= '<dt>' . t('Formatting an Image field') . '</dt>';
-      $output .= '<dd>' . t('Images in Image fields can be formatted using the Picture formatter, to make them responsive. They will be automatically resized depending on breakpoints.') . '</dd>';
+      $output .= '<dt>' . t('Defining picture mappings') . '</dt>';
+      $output .= '<dd>' . t('By creating picture mappings you define the image styles that are being used to output images at certain breakpoints. On the <a href="!picture_mapping">Picture mappings</a> page, click <em>Add picture mapping</em> to create a new mapping. First chose a label and a breakpoint group and click Save. After that you can choose the image styles that will be used for each breakpoint. Image styles can be defined on the <a href="!image_styles">Image styles page</a> that is provided by the <a href="!image_help">Image module</a>. Breakpoints are defined in the configuration files of the theme. See the <a href="!breakpoint_help">help page of the Breakpoint module</a> for more information.', array('!picture_mapping' => \Drupal::url('picture.mapping_page'), '!image_styles' => \Drupal::url('image.style_list'),'!image_help' => \Drupal::url('help.page', array('name' => 'image')), '!breakpoint_help' => \Drupal::url('help.page', array('name' => 'breakpoint')))) . '</dd>';
+      $output .= '<dt>' . t('Using picture mappings in image fields') . '</dt>';
+      $output .= '<dd>' . t('After defining picture mappings, you can use them in the display settings for your image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Picture</em>, click the Edit icon and select one of the picture mappings that you have created. For general information on how to manage fields and their display see the <a href="!field_ui">help page of the Field UI module</a>. For information about entities see the <a href="!entity_help">help page of the Entity module</a>.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')),'!entity_help' => \Drupal::url('help.page', array('name' => 'entity')))) . '</dd>';
       $output .= '</dl>';
       break;
     case 'admin/config/media/picturemapping':
