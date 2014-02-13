@@ -97,7 +97,7 @@ class RegionalForm extends ConfigFormBase {
       '#options' => $zones,
     );
 
-    $configurable_timezones = $system_date->get('timezone.user.configurable');;
+    $configurable_timezones = $system_date->get('timezone.user.configurable');
     $form['timezone']['configurable_timezones'] = array(
       '#type' => 'checkbox',
       '#title' => t('Users may set their own time zone.'),

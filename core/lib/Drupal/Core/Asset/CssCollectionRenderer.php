@@ -91,7 +91,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
           // assets: output a LINK tag for a file CSS asset.
           if (count($css_assets) <= 31) {
             $element = $link_element_defaults;
-            $element['#attributes']['href'] = file_create_url($css_asset['data']) . $query_string_separator . $query_string;;
+            $element['#attributes']['href'] = file_create_url($css_asset['data']) . $query_string_separator . $query_string;
             $element['#attributes']['media'] = $css_asset['media'];
             $element['#browsers'] = $css_asset['browsers'];
             $elements[] = $element;

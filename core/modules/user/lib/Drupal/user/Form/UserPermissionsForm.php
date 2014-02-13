@@ -100,7 +100,7 @@ class UserPermissionsForm extends FormBase {
     // display name.
     $modules = array();
     foreach ($this->moduleHandler->getImplementations('permission') as $module) {
-      $modules[$module] = $module_info[$module]->info['name'];;
+      $modules[$module] = $module_info[$module]->info['name'];
     }
     asort($modules);
 
