@@ -157,10 +157,12 @@ function node_theme() {
     'node_add_list' => array(
       'variables' => array('content' => NULL),
       'file' => 'node.pages.inc',
+      'template' => 'node-add-list',
     ),
     'node_preview' => array(
       'variables' => array('node' => NULL),
       'file' => 'node.pages.inc',
+      'template' => 'node-preview',
     ),
     'node_edit_form' => array(
       'render element' => 'form',

@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a node preview.
+ *
+ * This display may be used during node creation and editing.
+ *
+ * Available variables:
+ * - preview_teaser: Flag indicating whether to show a trimmed teaser version.
+ * - teaser: Trimmed teaser version of the node.
+ * - full: Full version of the node.
+ *
+ * @see template_preprocess_node_preview()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if preview_teaser %}
+  <h3>{{ "Preview trimmed version"|t }}</h3>
+  {{ teaser }}
+  <h3>{{ "Preview full version"|t }}</h3>
+{% endif %}
+{{ full }}

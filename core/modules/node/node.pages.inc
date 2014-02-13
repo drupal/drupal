@@ -13,31 +13,27 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\node\NodeInterface;
 
 /**
- * Returns HTML for a list of available node types for node creation.
+ * Prepares variables for list of available node type templates.
  *
- * @param $variables
+ * Default template: node-add-list.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - content: An array of content types.
  *
  * @see node_add_page()
- *
- * @ingroup themeable
  */
-function theme_node_add_list($variables) {
-  $content = $variables['content'];
-
-  if ($content) {
-    $output = '<dl class="node-type-list">';
-    foreach ($content as $type) {
-      $output .= '<dt>' . l($type->name, 'node/add/' . $type->type) . '</dt>';
-      $output .= '<dd>' . filter_xss_admin($type->description) . '</dd>';
+function template_preprocess_node_add_list(&$variables) {
+  $variables['types'] = array();
+  if (!empty($variables['content'])) {
+    foreach ($variables['content'] as $type) {
+      $variables['types'][$type->type] = array(
+        'type' => $type->type,
+        'add_link' => l($type->name, 'node/add/' . $type->type),
+        'description' => filter_xss_admin($type->description),
+      );
     }
-    $output .= '</dl>';
   }
-  else {
-    $output = '<p>' . t('You have not created any content types yet. Go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
-  }
-  return $output;
 }
 
 /**
@@ -72,41 +68,37 @@ function node_preview(NodeInterface $node, array &$form_state) {
 }
 
 /**
- * Returns HTML for a node preview for display during node creation and editing.
+ * Prepares variables for node preview templates.
  *
- * @param $variables
+ * Default template: node-preview.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - node: The node entity which is being previewed.
  *
  * @see NodeFormController::preview()
  * @see node_preview()
- *
- * @ingroup themeable
  */
-function theme_node_preview($variables) {
+function template_preprocess_node_preview(&$variables) {
   $node = $variables['node'];
 
-  $output = '';
+  // Render trimmed teaser version of the post.
+  $node_teaser = node_view($node, 'teaser');
+  $node_teaser['#attached']['library'][] = array('node', 'drupal.node.preview');
+  $variables['teaser'] = $node_teaser;
+  // Render full version of the post.
+  $node_full = node_view($node, 'full');
+  $variables['full'] = $node_full;
 
-  $elements = node_view($node, 'teaser');
-  $elements['#attached']['library'][] = array('node', 'drupal.node.preview');
-  $trimmed = drupal_render($elements);
-  $elements = node_view($node, 'full');
-  $full = drupal_render($elements);
-
-  // Do we need to preview trimmed version of post as well as full version?
-  if ($trimmed != $full) {
+  // Display a preview of the teaser only if the content of the teaser is
+  // different to the full post.
+  if ($variables['teaser'] != $variables['full']) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
-    $output .= '<h3>' . t('Preview trimmed version') . '</h3>';
-    $output .= $trimmed;
-    $output .= '<h3>' . t('Preview full version') . '</h3>';
-    $output .= $full;
+    $variables['preview_teaser'] = TRUE;
   }
   else {
-    $output .= $full;
+    $variables['preview_teaser'] = FALSE;
   }
-
-  return $output;
 }
 
 /**
