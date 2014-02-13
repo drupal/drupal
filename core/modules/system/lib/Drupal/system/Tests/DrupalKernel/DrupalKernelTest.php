@@ -39,8 +39,6 @@ class DrupalKernelTest extends DrupalUnitTestBase {
       'directory' => DRUPAL_ROOT . '/' . $this->public_files_directory . '/php',
       'secret' => drupal_get_hash_salt(),
     )));
-    // Use a non-persistent cache to avoid queries to non-existing tables.
-    $this->settingsSet('cache', array('default' => 'cache.backend.memory'));
   }
 
   /**

@@ -7,8 +7,6 @@ services:
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
     arguments: ['@database']
-  cache.backend.memory:
-    class: Drupal\Core\Cache\MemoryBackendFactory
   cache.bootstrap:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
