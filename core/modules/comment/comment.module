@@ -203,17 +203,11 @@ function comment_menu() {
  * Implements hook_menu_link_defaults().
  */
 function comment_menu_link_defaults() {
-  $links['comment.admin.content.comment'] = array(
-    'link_title' => 'Comments',
-    'route_name' => 'comment.admin',
-    'parent' => 'node.admin.content',
-    'description' => 'List and edit site comments and the comment approval queue.',
-  );
-  $links['comment.admin.structure.comments'] = array(
+  $links['comment.admin.content'] = array(
     'link_title' => 'Comment forms',
-    'route_name' => 'comment.bundle_list',
+    'route_name' => 'comment.admin',
     'parent' => 'system.admin.structure',
-    'description' => 'Manage fields and displays settings for comment forms.',
+    'description' => 'List and edit site comments and the comment approval queue.',
   );
 
   return $links;
