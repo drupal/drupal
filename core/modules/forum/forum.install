@@ -39,7 +39,6 @@ function forum_install() {
     // Create a default forum so forum posts can be created.
     $term = entity_create('taxonomy_term', array(
       'name' => t('General discussion'),
-      'langcode' => language_default()->id,
       'description' => '',
       'parent' => array(0),
       'vid' => 'forums',

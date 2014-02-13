@@ -64,7 +64,6 @@ function standard_install() {
     'title' => t('Add content'),
     'weight' => -20,
     'path' => 'node/add',
-    'langcode' => language_default()->id,
   ));
   $shortcut->save();
 
@@ -73,7 +72,6 @@ function standard_install() {
     'title' => t('All content'),
     'weight' => -19,
     'path' => 'admin/content',
-    'langcode' => language_default()->id,
   ));
   $shortcut->save();
 
