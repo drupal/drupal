@@ -37,5 +37,26 @@
       <author>I wanted to get out and walk eastward toward the park through the soft twilight, but each time I tried to go I became entangled in some wild, strident argument which pulled me back, as if with ropes, into my chair. Yet high over the city our line of yellow windows must have contributed their share of human secrecy to the casual watcher in the darkening streets, and I was him too, looking up and wondering. I was within and without, simultaneously enchanted and repelled by the inexhaustible variety of life.</author>
       <description>Long author feed item description.</description>
     </item>
+    <item>
+      <title></title>
+      <link>http://example.com/empty/title</link>
+      <description>This is an item with an empty title.</description>
+    </item>
+    <item>
+      <title>Empty description feed item title.</title>
+      <link>http://example.com/empty/description</link>
+      <description></description>
+    </item>
+    <item>
+      <title>Empty link feed item title.</title>
+      <link></link>
+      <description>This is an item with an empty link.</description>
+    </item>
+    <item>
+      <title>Empty author feed item title.</title>
+      <link>http://example.com/empty/author</link>
+      <author></author>
+      <description>We've tested items with no author, but what about an empty author tag?</description>
+    </item>
   </channel>
 </rss>

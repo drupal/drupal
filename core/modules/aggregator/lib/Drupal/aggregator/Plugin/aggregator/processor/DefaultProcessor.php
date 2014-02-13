@@ -169,8 +169,14 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
 
       $entry->setFeedId($feed->id());
       $entry->setLink($item['link']);
-      $entry->setDescription($item['description']);
       $entry->setGuid($item['guid']);
+
+      $description = '';
+      if (!empty($item['description'])) {
+        $description = $item['description'];
+      }
+      $entry->setDescription($description);
+
       $entry->save();
     }
   }

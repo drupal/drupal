@@ -38,10 +38,11 @@ class RemoveFeedItemTest extends AggregatorTestBase {
       $feed = $this->createFeed($feed_url);
       // Update and remove items two times in a row to make sure that removal
       // resets all 'modified' information (modified, etag, hash) and allows for
-      // immediate update.
-      $this->updateAndRemove($feed, 4);
-      $this->updateAndRemove($feed, 4);
-      $this->updateAndRemove($feed, 4);
+      // immediate update. There's 8 items in the feed, but one has an empty
+      // title and is skipped.
+      $this->updateAndRemove($feed, 7);
+      $this->updateAndRemove($feed, 7);
+      $this->updateAndRemove($feed, 7);
       // Delete feed.
       $this->deleteFeed($feed);
     }
