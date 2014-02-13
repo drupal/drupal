@@ -71,14 +71,14 @@ class TrackerTest extends WebTestBase {
     ));
 
     $this->drupalGet('tracker');
-    $this->assertNoText($unpublished->label(), 'Unpublished node do not show up in the tracker listing.');
-    $this->assertText($published->label(), 'Published node show up in the tracker listing.');
+    $this->assertNoText($unpublished->label(), 'Unpublished node does not show up in the tracker listing.');
+    $this->assertText($published->label(), 'Published node shows up in the tracker listing.');
     $this->assertLink(t('My recent content'), 0, 'User tab shows up on the global tracker page.');
 
     // Delete a node and ensure it no longer appears on the tracker.
     $published->delete();
     $this->drupalGet('tracker');
-    $this->assertNoText($published->label(), 'Deleted node do not show up in the tracker listing.');
+    $this->assertNoText($published->label(), 'Deleted node does not show up in the tracker listing.');
   }
 
   /**
@@ -114,9 +114,9 @@ class TrackerTest extends WebTestBase {
     $this->drupalPostForm('comment/reply/node/' . $other_published_my_comment->id() . '/comment', $comment, t('Save'));
 
     $this->drupalGet('user/' . $this->user->id() . '/track');
-    $this->assertNoText($unpublished->label(), "Unpublished nodes do not show up in the users's tracker listing.");
+    $this->assertNoText($unpublished->label(), "Unpublished nodes do not show up in the user's tracker listing.");
     $this->assertText($my_published->label(), "Published nodes show up in the user's tracker listing.");
-    $this->assertNoText($other_published_no_comment->label(), "Other user's nodes do not show up in the user's tracker listing.");
+    $this->assertNoText($other_published_no_comment->label(), "Another user's nodes do not show up in the user's tracker listing.");
     $this->assertText($other_published_my_comment->label(), "Nodes that the user has commented on appear in the user's tracker listing.");
     // Verify that title and tab title have been set correctly.
     $this->assertText('Track', 'The user tracker tab has the name "Track".');
@@ -263,7 +263,7 @@ class TrackerTest extends WebTestBase {
     foreach ($nodes as $i => $node) {
       $this->assertText($node->label(), format_string('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
     }
-    $this->assertText('1 new', 'New comment is counted on the tracker listing pages.');
+    $this->assertText('1 new', 'One new comment is counted on the tracker listing pages.');
     $this->assertText('updated', 'Node is listed as updated');
 
     // Fetch the site-wide tracker.
@@ -290,7 +290,7 @@ class TrackerTest extends WebTestBase {
 
     // Assert that the node is displayed.
     $this->drupalGet('tracker');
-    $this->assertText($node->label(), 'Node is displayed on the tracker listing pages.');
+    $this->assertText($node->label(), 'A node is displayed on the tracker listing pages.');
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = array(
@@ -300,6 +300,6 @@ class TrackerTest extends WebTestBase {
     $this->drupalPostForm('admin/content', $edit, t('Apply'));
 
     $this->drupalGet('tracker');
-    $this->assertText(t('No content available.'), 'Node is displayed on the tracker listing pages.');
+    $this->assertText(t('No content available.'), 'A node is displayed on the tracker listing pages.');
   }
 }
