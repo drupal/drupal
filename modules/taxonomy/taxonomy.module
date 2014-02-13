@@ -748,7 +748,7 @@ function taxonomy_term_delete($tid) {
  * @param term
  *   A taxonomy term object.
  * @return
- *   A $page element suitable for use by drupal_page_render().
+ *   A $page element suitable for use by drupal_render().
  */
 function taxonomy_term_show($term) {
   return taxonomy_term_view_multiple(array($term->tid => $term), 'full');
