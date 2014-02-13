@@ -1866,25 +1866,6 @@ function module_implements($hook) {
 }
 
 /**
- * Invokes a hook in a particular module.
- *
- * All arguments are passed by value. Use drupal_alter() if you need to pass
- * arguments by reference.
- *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->invoke($module, $hook, $args = array()).
- *
- * @see drupal_alter()
- * @see \Drupal\Core\Extension\ModuleHandler::invoke()
- */
-function module_invoke($module, $hook) {
-  $args = func_get_args();
-  // Remove $module and $hook from the arguments.
-  unset($args[0], $args[1]);
-  return \Drupal::moduleHandler()->invoke($module, $hook, $args);
-}
-
-/**
  * Invokes a hook in all enabled modules that implement it.
  *
  * All arguments are passed by value. Use drupal_alter() if you need to pass

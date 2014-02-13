@@ -80,7 +80,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
         // Cast the result of hook_schema() to an array, as a NULL return value
         // would cause array_merge() to set the $schema variable to NULL as well.
         // That would break modules which use $schema further down the line.
-        $current = (array) module_invoke($module, 'schema');
+        $current = (array) \Drupal::moduleHandler()->invoke($module, 'schema');
         // Set 'module' and 'name' keys for each table, and remove descriptions,
         // as they needlessly slow down cache()->get() for every single request.
         _drupal_schema_initialize($current, $module);
@@ -268,7 +268,7 @@ function drupal_uninstall_schema($module) {
 function drupal_get_schema_unprocessed($module, $table = NULL) {
   // Load the .install file to get hook_schema.
   module_load_install($module);
-  $schema = module_invoke($module, 'schema');
+  $schema = \Drupal::moduleHandler()->invoke($module, 'schema');
 
   if (isset($table)) {
     if (isset($schema[$table])) {
