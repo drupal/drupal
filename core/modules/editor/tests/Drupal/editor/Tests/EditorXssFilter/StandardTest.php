@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\editor\Tests\editor\EditorXssFilter\StandardTest.
+ * Contains \Drupal\editor\Tests\EditorXssFilter\StandardTest.
  */
 
-namespace Drupal\editor\Tests\editor\EditorXssFilter;
+namespace Drupal\editor\Tests\EditorXssFilter;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\filter\Plugin\FilterInterface;
