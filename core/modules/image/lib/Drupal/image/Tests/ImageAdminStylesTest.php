@@ -67,10 +67,12 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
    * General test to add a style, add/remove/edit effects to it, then delete it.
    */
   function testStyle() {
+    $admin_path = 'admin/config/media/image-styles';
+
     // Setup a style to be created and effects to add to it.
     $style_name = strtolower($this->randomName(10));
     $style_label = $this->randomString();
-    $style_path = 'admin/config/media/image-styles/manage/' . $style_name;
+    $style_path = $admin_path . '/manage/' . $style_name;
     $effect_edits = array(
       'image_resize' => array(
         'data[width]' => 100,
@@ -106,8 +108,14 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $style_name,
       'label' => $style_label,
     );
-    $this->drupalPostForm('admin/config/media/image-styles/add', $edit, t('Create new style'));
+    $this->drupalPostForm($admin_path . '/add', $edit, t('Create new style'));
     $this->assertRaw(t('Style %name was created.', array('%name' => $style_label)));
+
+    // Ensure that the expected entity operations are there.
+    $this->drupalGet($admin_path);
+    $this->assertLinkByHref($style_path);
+    $this->assertLinkByHref($style_path . '/flush');
+    $this->assertLinkByHref($style_path . '/delete');
 
     // Add effect form.
 
