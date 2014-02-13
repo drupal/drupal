@@ -95,7 +95,7 @@ class TextWithSummaryItem extends TextItemBase {
    */
   public function instanceSettingsForm(array $form, array &$form_state) {
     $element = array();
-    $settings = $this->getFieldSettings();
+    $settings = $this->getSettings();
 
     $element['text_processing'] = array(
       '#type' => 'radios',

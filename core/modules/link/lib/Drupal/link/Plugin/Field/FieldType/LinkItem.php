@@ -89,7 +89,7 @@ class LinkItem extends ConfigFieldItemBase {
     $element['title'] = array(
       '#type' => 'radios',
       '#title' => t('Allow link text'),
-      '#default_value' => $this->getFieldSetting('title'),
+      '#default_value' => $this->getSetting('title'),
       '#options' => array(
         DRUPAL_DISABLED => t('Disabled'),
         DRUPAL_OPTIONAL => t('Optional'),

@@ -57,7 +57,7 @@ class TextLongItem extends TextItemBase {
     $element['text_processing'] = array(
       '#type' => 'radios',
       '#title' => t('Text processing'),
-      '#default_value' => $this->getFieldSetting('text_processing'),
+      '#default_value' => $this->getSetting('text_processing'),
       '#options' => array(
         t('Plain text'),
         t('Filtered text (user selects text format)'),

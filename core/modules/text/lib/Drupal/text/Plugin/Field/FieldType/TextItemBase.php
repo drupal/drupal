@@ -71,7 +71,7 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
     // textual property (e.g., 'value', 'summary') within this field item early
     // so that it is cached in the field cache. This avoids the need to look up
     // the sanitized value in the filter cache separately.
-    $text_processing = $this->getFieldSetting('text_processing');
+    $text_processing = $this->getSetting('text_processing');
     if (!$text_processing || filter_format_allowcache($this->get('format')->getValue())) {
       foreach ($this->getPropertyDefinitions() as $property => $definition) {
         if ($definition->getClass() == '\Drupal\text\TextProcessed') {

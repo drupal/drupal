@@ -94,7 +94,7 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
       '#type' => 'select',
       '#title' => t('Date type'),
       '#description' => t('Choose the type of date to create.'),
-      '#default_value' => $this->getFieldSetting('datetime_type'),
+      '#default_value' => $this->getSetting('datetime_type'),
       '#options' => array(
         static::DATETIME_TYPE_DATETIME => t('Date and time'),
         static::DATETIME_TYPE_DATE => t('Date only'),

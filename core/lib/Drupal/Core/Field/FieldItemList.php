@@ -81,6 +81,20 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
+  public function getSettings() {
+    return $this->definition->getSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSetting($setting_name) {
+    return $this->definition->getSetting($setting_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function filterEmptyItems() {
     if (isset($this->list)) {
       $this->list = array_values(array_filter($this->list, function($item) {

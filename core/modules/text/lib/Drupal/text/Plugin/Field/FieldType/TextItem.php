@@ -58,7 +58,7 @@ class TextItem extends TextItemBase {
     $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
     $constraints = parent::getConstraints();
 
-    if ($max_length = $this->getFieldSetting('max_length')) {
+    if ($max_length = $this->getSetting('max_length')) {
       $constraints[] = $constraint_manager->create('ComplexData', array(
         'value' => array(
           'Length' => array(
@@ -81,7 +81,7 @@ class TextItem extends TextItemBase {
     $element['max_length'] = array(
       '#type' => 'number',
       '#title' => t('Maximum length'),
-      '#default_value' => $this->getFieldSetting('max_length'),
+      '#default_value' => $this->getSetting('max_length'),
       '#required' => TRUE,
       '#description' => t('The maximum length of the field in characters.'),
       '#min' => 1,
@@ -100,7 +100,7 @@ class TextItem extends TextItemBase {
     $element['text_processing'] = array(
       '#type' => 'radios',
       '#title' => t('Text processing'),
-      '#default_value' => $this->getFieldSetting('text_processing'),
+      '#default_value' => $this->getSetting('text_processing'),
       '#options' => array(
         t('Plain text'),
         t('Filtered text (user selects text format)'),

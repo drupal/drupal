@@ -66,7 +66,7 @@ class DecimalItem extends NumberItemBase {
    */
   public function settingsForm(array $form, array &$form_state, $has_data) {
     $element = array();
-    $settings = $this->getFieldSettings();
+    $settings = $this->getSettings();
 
     $element['precision'] = array(
       '#type' => 'select',
@@ -92,7 +92,7 @@ class DecimalItem extends NumberItemBase {
    * {@inheritdoc}
    */
   public function preSave() {
-    $this->value = round($this->value, $this->getFieldSetting('scale'));
+    $this->value = round($this->value, $this->getSetting('scale'));
   }
 
 }

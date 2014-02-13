@@ -71,8 +71,8 @@ abstract class ListItemBase extends ConfigFieldItemBase implements AllowedValues
     //   https://drupal.org/node/2169983.
     $field_type = $this->getFieldDefinition()->getType();
 
-    $allowed_values = $this->getFieldSetting('allowed_values');
-    $allowed_values_function = $this->getFieldSetting('allowed_values_function');
+    $allowed_values = $this->getSetting('allowed_values');
+    $allowed_values_function = $this->getSetting('allowed_values_function');
 
     if (in_array($field_type, array('list_integer', 'list_float', 'list_text'))) {
       $element['allowed_values'] = array(
@@ -213,7 +213,7 @@ abstract class ListItemBase extends ConfigFieldItemBase implements AllowedValues
 
       // Prevent removing values currently in use.
       if ($has_data) {
-        $lost_keys = array_diff(array_keys($this->getFieldSetting('allowed_values')), array_keys($values));
+        $lost_keys = array_diff(array_keys($this->getSetting('allowed_values')), array_keys($values));
         if (_options_values_in_use($this->getEntity()->getEntityTypeId(), $this->getFieldDefinition()->getName(), $lost_keys)) {
           \Drupal::formBuilder()->setError($element, $form_state, t('Allowed values list: some values are being removed while currently in use.'));
         }

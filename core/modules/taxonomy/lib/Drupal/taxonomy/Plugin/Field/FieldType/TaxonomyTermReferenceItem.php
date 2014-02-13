@@ -68,12 +68,12 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements ConfigFie
    * {@inheritdoc}
    */
   public function getSettableOptions(AccountInterface $account = NULL) {
-    if ($callback = $this->getFieldSetting('options_list_callback')) {
+    if ($callback = $this->getSetting('options_list_callback')) {
       return call_user_func_array($callback, array($this->getFieldDefinition(), $this->getEntity()));
     }
     else {
       $options = array();
-      foreach ($this->getFieldSetting('allowed_values') as $tree) {
+      foreach ($this->getSetting('allowed_values') as $tree) {
         if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
           if ($terms = taxonomy_get_tree($vocabulary->id(), $tree['parent'], NULL, TRUE)) {
             foreach ($terms as $term) {
@@ -131,7 +131,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements ConfigFie
     $element = array();
     $element['#tree'] = TRUE;
 
-    foreach ($this->getFieldSetting('allowed_values') as $delta => $tree) {
+    foreach ($this->getSetting('allowed_values') as $delta => $tree) {
       $element['allowed_values'][$delta]['vocabulary'] = array(
         '#type' => 'select',
         '#title' => t('Vocabulary'),

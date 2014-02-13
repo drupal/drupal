@@ -26,7 +26,7 @@ abstract class NumberItemBase extends ConfigFieldItemBase {
    */
   public function instanceSettingsForm(array $form, array &$form_state) {
     $element = array();
-    $settings = $this->getFieldSettings();
+    $settings = $this->getSettings();
 
     $element['min'] = array(
       '#type' => 'textfield',
@@ -77,7 +77,7 @@ abstract class NumberItemBase extends ConfigFieldItemBase {
     $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
     $constraints = parent::getConstraints();
 
-    $settings = $this->getFieldSettings();
+    $settings = $this->getSettings();
     $label = $this->getFieldDefinition()->getLabel();
 
     if (!empty($settings['min'])) {

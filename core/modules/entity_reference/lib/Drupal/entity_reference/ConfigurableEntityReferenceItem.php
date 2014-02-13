@@ -158,7 +158,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Con
       '#type' => 'select',
       '#title' => t('Type of item to reference'),
       '#options' => \Drupal::entityManager()->getEntityTypeLabels(),
-      '#default_value' => $this->getFieldSetting('target_type'),
+      '#default_value' => $this->getSetting('target_type'),
       '#required' => TRUE,
       '#disabled' => $has_data,
       '#size' => 1,
@@ -174,7 +174,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Con
     $instance = $form_state['instance'];
 
     // Get all selection plugins for this entity type.
-    $selection_plugins = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionGroups($this->getFieldSetting('target_type'));
+    $selection_plugins = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionGroups($this->getSetting('target_type'));
     $handler_groups = array_keys($selection_plugins);
 
     $handlers = \Drupal::service('plugin.manager.entity_reference.selection')->getDefinitions();
