@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\Component\Utility\Tags;
 use Drupal\entity_reference\EntityReferenceController;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
@@ -101,11 +102,9 @@ class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
     // Try to autocomplete a entity label with both a comma and a slash.
     $input = '"label with, and / t';
     $data = $this->getAutocompleteResult('single', $input);
-    $n = $entity_3->name->value;
+    $n = $entity_3->name->value . ' (3)';
     // Entity labels containing commas or quotes must be wrapped in quotes.
-    if (strpos($entity_3->name->value, ',') !== FALSE || strpos($entity_3->name->value, '"') !== FALSE) {
-      $n = '"' . str_replace('"', '""', $entity_3->name->value) .  ' (3)"';
-    }
+    $n = Tags::encode($n);
     $target = array(
       'value' => $n,
       'label' => check_plain($entity_3->name->value),

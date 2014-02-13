@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
@@ -279,11 +280,8 @@ class TermTest extends TaxonomyTestBase {
     $input = '"term with, comma and / a';
     $path = 'taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id();
     $this->drupalGet($path, array('query' => array('q' => $input)));
-    $n = $third_term->label();
     // Term names containing commas or quotes must be wrapped in quotes.
-    if (strpos($third_term->label(), ',') !== FALSE || strpos($third_term->label(), '"') !== FALSE) {
-      $n = '"' . str_replace('"', '""', $third_term->label()) . '"';
-    }
+    $n = Tags::encode($third_term->label());
     $target = array(array(
       'value' => $n,
       'label' => check_plain($third_term->label()),

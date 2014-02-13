@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference;
 
+use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\entity_reference\Plugin\Type\SelectionPluginManager;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -97,9 +98,7 @@ class EntityReferenceAutocomplete {
           // tags.
           $key = preg_replace('/\s\s+/', ' ', str_replace("\n", '', trim(decode_entities(strip_tags($key)))));
           // Names containing commas or quotes must be wrapped in quotes.
-          if (strpos($key, ',') !== FALSE || strpos($key, '"') !== FALSE) {
-            $key = '"' . str_replace('"', '""', $key) . '"';
-          }
+          $key = Tags::encode($key);
           $matches[] = array('value' => $prefix . $key, 'label' => $label);
         }
       }

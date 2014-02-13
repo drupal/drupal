@@ -5,6 +5,7 @@
  * Enables the organization of content into categories.
  */
 
+use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\file\FileInterface;
@@ -779,12 +780,7 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
       // Make sure we have a completed loaded taxonomy term.
       if ($tag instanceof EntityInterface && $label = $tag->label()) {
         // Commas and quotes in tag names are special cases, so encode 'em.
-        if (strpos($label, ',') !== FALSE || strpos($label, '"') !== FALSE) {
-          $typed_tags[] = '"' . str_replace('"', '""', $label) . '"';
-        }
-        else {
-          $typed_tags[] = $label;
-        }
+        $typed_tags[] = Tags::encode($label);
       }
     }
   }

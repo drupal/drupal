@@ -43,6 +43,22 @@ class Tags {
   }
 
   /**
+   * Encodes a tag string, taking care of special cases like commas and quotes.
+   *
+   * @param string $tag
+   *   A tag string.
+   *
+   * @return string
+   *   The encoded string.
+   */
+  public static function encode($tag) {
+    if (strpos($tag, ',') !== FALSE || strpos($tag, '"') !== FALSE) {
+      return '"' . str_replace('"', '""', $tag) . '"';
+    }
+    return $tag;
+  }
+
+  /**
    * Implodes an array of tags into a string.
    *
    * @param array $tags
@@ -54,12 +70,7 @@ class Tags {
   public static function implode($tags) {
     $encoded_tags = array();
     foreach ($tags as $tag) {
-      // Commas and quotes in tag names are special cases, so encode them.
-      if (strpos($tag, ',') !== FALSE || strpos($tag, '"') !== FALSE) {
-        $tag = '"' . str_replace('"', '""', $tag) . '"';
-      }
-
-      $encoded_tags[] = $tag;
+      $encoded_tags[] = self::encode($tag);
     }
     return implode(', ', $encoded_tags);
   }

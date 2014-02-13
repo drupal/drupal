@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\user\EntityOwnerInterface;
@@ -130,9 +131,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
       $label = $entity_item->label();
       $key = "$label ($entity_id)";
       // Labels containing commas or quotes must be wrapped in quotes.
-      if (strpos($key, ',') !== FALSE || strpos($key, '"') !== FALSE) {
-        $key = '"' . str_replace('"', '""', $key) . '"';
-      }
+      $key = Tags::encode($key);
       $entity_labels[] = $key;
     }
     return $entity_labels;
