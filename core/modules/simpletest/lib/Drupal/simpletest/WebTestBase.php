@@ -1046,6 +1046,7 @@ abstract class WebTestBase extends TestBase {
   protected function refreshVariables() {
     // Clear the tag cache.
     drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
+    drupal_static_reset('Drupal\Core\Cache\DatabaseBackend::deletedTags');
 
     $this->container->get('config.factory')->reset();
     $this->container->get('state')->resetCache();

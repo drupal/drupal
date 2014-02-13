@@ -164,6 +164,14 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   protected function doSet($cid, $data, $expire, $tags) {
     $flat_tags = $this->flattenTags($tags);
+    $deleted_tags = &drupal_static('Drupal\Core\Cache\DatabaseBackend::deletedTags', array());
+    // Remove tags that were already deleted during this request from the static
+    // cache so that another deletion for them will be correctly updated.
+    foreach ($flat_tags as $tag) {
+      if (isset($deleted_tags[$tag])) {
+        unset($deleted_tags[$tag]);
+      }
+    }
     $checksum = $this->checksumTags($flat_tags);
     $fields = array(
       'serialized' => 0,
@@ -223,7 +231,13 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   public function deleteTags(array $tags) {
     $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache', array());
+    $deleted_tags = &drupal_static('Drupal\Core\Cache\DatabaseBackend::deletedTags', array());
     foreach ($this->flattenTags($tags) as $tag) {
+      // Only delete tags once per request unless they are written again.
+      if (isset($deleted_tags[$tag])) {
+        continue;
+      }
+      $deleted_tags[$tag] = TRUE;
       unset($tag_cache[$tag]);
       try {
         $this->connection->merge('cache_tags')
