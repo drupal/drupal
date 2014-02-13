@@ -19,7 +19,7 @@ class MenuNodeTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('menu', 'test_page_test');
+  public static $modules = array('menu', 'test_page_test', 'node');
 
   public static function getInfo() {
     return array(
