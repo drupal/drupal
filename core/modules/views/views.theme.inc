@@ -5,6 +5,7 @@
  * Preprocessors and helper functions to make theming easier.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
@@ -114,8 +115,8 @@ function template_preprocess_views_view(&$variables) {
           'views_dom_id:' . $variables['dom_id'] => array(
             'view_name' => $view->storage->id(),
             'view_display_id' => $view->current_display,
-            'view_args' => check_plain(implode('/', $view->args)),
-            'view_path' => check_plain(current_path()),
+            'view_args' => String::checkPlain(implode('/', $view->args)),
+            'view_path' => String::checkPlain(current_path()),
             'view_base_path' => $view->getPath(),
             'view_dom_id' => $variables['dom_id'],
             // To fit multiple views on a page, the programmer may have
@@ -261,7 +262,7 @@ function template_preprocess_views_view_fields(&$variables) {
 
       // Set up the label for the value and the HTML to make it easier
       // on the template.
-      $object->label = check_plain($view->field[$id]->label());
+      $object->label = String::checkPlain($view->field[$id]->label());
       $object->label_html = '';
       if ($object->label) {
         $object->label_html .= $object->label;
@@ -548,7 +549,7 @@ function template_preprocess_views_view_table(&$variables) {
 
     // Render the header labels.
     if ($field == $column && empty($fields[$field]->options['exclude'])) {
-      $label = check_plain(!empty($fields[$field]) ? $fields[$field]->label() : '');
+      $label = String::checkPlain(!empty($fields[$field]) ? $fields[$field]->label() : '');
       if (empty($options['info'][$field]['sortable']) || !$fields[$field]->clickSortable()) {
         $variables['header'][$field]['content'] = $label;
       }
@@ -980,7 +981,7 @@ function template_preprocess_views_view_rss(&$variables) {
   // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
   // We strip all HTML tags, but need to prevent double encoding from properly
   // escaped source data (such as &amp becoming &amp;amp;).
-  $variables['description'] = check_plain(decode_entities(strip_tags($style->getDescription())));
+  $variables['description'] = String::checkPlain(decode_entities(strip_tags($style->getDescription())));
 
   if ($view->display_handler->getOption('sitename_title')) {
     $title = $config->get('name');
@@ -991,7 +992,7 @@ function template_preprocess_views_view_rss(&$variables) {
   else {
     $title = $view->getTitle();
   }
-  $variables['title'] = check_plain($title);
+  $variables['title'] = String::checkPlain($title);
 
   // Figure out which display which has a path we're using for this feed. If
   // there isn't one, use the global $base_url
@@ -1016,7 +1017,7 @@ function template_preprocess_views_view_rss(&$variables) {
     $variables['link'] = check_url(url($path, $url_options));
   }
 
-  $variables['langcode'] = check_plain(language(Language::TYPE_INTERFACE)->id);
+  $variables['langcode'] = String::checkPlain(language(Language::TYPE_INTERFACE)->id);
   $variables['namespaces'] = new Attribute($style->namespaces);
   $variables['items'] = $items;
   $variables['channel_elements'] = format_xml_elements($style->channel_elements);
@@ -1040,9 +1041,9 @@ function template_preprocess_views_view_rss(&$variables) {
 function template_preprocess_views_view_row_rss(&$variables) {
   $item = $variables['row'];
 
-  $variables['title'] = check_plain($item->title);
+  $variables['title'] = String::checkPlain($item->title);
   $variables['link'] = check_url($item->link);
-  $variables['description'] = check_plain($item->description);
+  $variables['description'] = String::checkPlain($item->description);
   $variables['item_elements'] = empty($item->elements) ? '' : format_xml_elements($item->elements);
 }
 

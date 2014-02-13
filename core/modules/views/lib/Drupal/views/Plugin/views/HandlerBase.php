@@ -169,7 +169,7 @@ abstract class HandlerBase extends PluginBase {
    */
   public function adminLabel($short = FALSE) {
     if (!empty($this->options['admin_label'])) {
-      $title = check_plain($this->options['admin_label']);
+      $title = String::checkPlain($this->options['admin_label']);
       return $title;
     }
     $title = ($short && isset($this->definition['title short'])) ? $this->definition['title short'] : $this->definition['title'];
@@ -216,7 +216,7 @@ abstract class HandlerBase extends PluginBase {
    * @param $value
    *   The value being rendered.
    * @param $type
-   *   The type of sanitization needed. If not provided, check_plain() is used.
+   *   The type of sanitization needed. If not provided, String::checkPlain() is used.
    *
    * @return string
    *   Returns the safe value.

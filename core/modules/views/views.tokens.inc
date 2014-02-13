@@ -5,6 +5,8 @@
  * Token integration for the views module.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * Implements hook_token_info().
  */
@@ -83,11 +85,11 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'label':
-          $replacements[$original] = $sanitize ? check_plain($view->storage->label()) : $view->storage->label();
+          $replacements[$original] = $sanitize ? String::checkPlain($view->storage->label()) : $view->storage->label();
           break;
 
         case 'description':
-          $replacements[$original] = $sanitize ? check_plain($view->storage->get('description')) : $view->storage->get('description');
+          $replacements[$original] = $sanitize ? String::checkPlain($view->storage->get('description')) : $view->storage->get('description');
           break;
 
         case 'id':
@@ -96,7 +98,7 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
 
         case 'title':
           $title = $view->getTitle();
-          $replacements[$original] = $sanitize ? check_plain($title) : $title;
+          $replacements[$original] = $sanitize ? String::checkPlain($title) : $title;
           break;
 
         case 'url':

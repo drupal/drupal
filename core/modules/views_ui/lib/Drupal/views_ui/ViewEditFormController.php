@@ -11,6 +11,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\String;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -469,7 +470,7 @@ class ViewEditFormController extends ViewFormControllerBase {
       $build['top']['display_title'] = array(
         '#theme' => 'views_ui_display_tab_setting',
         '#description' => $this->t('Display name'),
-        '#link' => $view->getExecutable()->displayHandlers->get($display['id'])->optionLink(check_plain($display_title), 'display_title'),
+        '#link' => $view->getExecutable()->displayHandlers->get($display['id'])->optionLink(String::checkPlain($display_title), 'display_title'),
       );
     }
 
@@ -1038,7 +1039,7 @@ class ViewEditFormController extends ViewFormControllerBase {
         continue;
       }
 
-      $field_name = check_plain($handler->adminLabel(TRUE));
+      $field_name = String::checkPlain($handler->adminLabel(TRUE));
       if (!empty($field['relationship']) && !empty($relationships[$field['relationship']])) {
         $field_name = '(' . $relationships[$field['relationship']] . ') ' . $field_name;
       }

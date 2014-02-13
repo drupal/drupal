@@ -174,7 +174,7 @@ class Feed extends PathPluginBase {
       $display = array_shift($displays);
       $displays = $this->view->storage->get('display');
       if (!empty($displays[$display])) {
-        $attach_to = check_plain($displays[$display]['display_title']);
+        $attach_to = String::checkPlain($displays[$display]['display_title']);
       }
     }
 

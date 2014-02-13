@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\ResultRow;
 
 /**
@@ -66,11 +67,11 @@ class Serialized extends FieldPluginBase {
     $value = $values->{$this->field_alias};
 
     if ($this->options['format'] == 'unserialized') {
-      return check_plain(print_r(unserialize($value), TRUE));
+      return String::checkPlain(print_r(unserialize($value), TRUE));
     }
     elseif ($this->options['format'] == 'key' && !empty($this->options['key'])) {
       $value = (array) unserialize($value);
-      return check_plain($value[$this->options['key']]);
+      return String::checkPlain($value[$this->options['key']]);
     }
 
     return $value;

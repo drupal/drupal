@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\exposed_form;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Form\ViewsExposedForm;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -199,7 +200,7 @@ abstract class ExposedFormPluginBase extends PluginBase {
     $exposed_sorts = array();
     foreach ($this->view->sort as $id => $handler) {
       if ($handler->canExpose() && $handler->isExposed()) {
-        $exposed_sorts[$id] = check_plain($handler->options['expose']['label']);
+        $exposed_sorts[$id] = String::checkPlain($handler->options['expose']['label']);
       }
     }
 

@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Timer;
 use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
@@ -654,7 +655,7 @@ class ViewUI implements ViewStorageInterface {
                 }
               }
             }
-            $rows['query'][] = array('<strong>' . t('Query') . '</strong>', '<pre>' . check_plain(strtr($query_string, $quoted)) . '</pre>');
+            $rows['query'][] = array('<strong>' . t('Query') . '</strong>', '<pre>' . String::checkPlain(strtr($query_string, $quoted)) . '</pre>');
             if (!empty($this->additionalQueries)) {
               $queries = '<strong>' . t('These queries were run during view rendering:') . '</strong>';
               foreach ($this->additionalQueries as $query) {

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase as ComponentPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -266,9 +267,9 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   public function pluginTitle() {
     // Short_title is optional so its defaults to an empty string.
     if (!empty($this->definition['short_title'])) {
-      return check_plain($this->definition['short_title']);
+      return String::checkPlain($this->definition['short_title']);
     }
-    return check_plain($this->definition['title']);
+    return String::checkPlain($this->definition['title']);
   }
 
   /**

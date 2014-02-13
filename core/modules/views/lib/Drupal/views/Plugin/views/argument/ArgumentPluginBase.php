@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\Component\Utility\String as UtilityString;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
@@ -864,7 +865,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     if (empty($value) && !empty($this->definition['empty field name'])) {
       $value = $this->definition['empty field name'];
     }
-    return check_plain($value);
+    return UtilityString::checkPlain($value);
   }
 
   /**
@@ -883,7 +884,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
    * This usually needs to be overridden to provide a proper title.
    */
   function title() {
-    return check_plain($this->argument);
+    return UtilityString::checkPlain($this->argument);
   }
 
   /**

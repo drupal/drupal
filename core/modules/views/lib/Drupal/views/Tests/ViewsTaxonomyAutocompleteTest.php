@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\Core\Language\Language;
 
@@ -82,7 +83,7 @@ class ViewsTaxonomyAutocompleteTest extends ViewTestBase {
     $label = $this->term1->label();
     $expected = array(array(
       'value' => $label,
-      'label' => check_plain($label),
+      'label' => String::checkPlain($label),
     ));
     $this->assertIdentical($expected, $this->drupalGetJSON($base_autocomplete_path, array('query' => array('q' => $label))));
     // Test a term by partial name.

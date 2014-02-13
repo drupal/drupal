@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -90,7 +91,7 @@ class Attachment extends DisplayPluginBase {
     elseif (count($displays) == 1) {
       $display = array_shift($displays);
       if ($display = $this->view->storage->getDisplay($display)) {
-        $attach_to = check_plain($display['display_title']);
+        $attach_to = String::checkPlain($display['display_title']);
       }
     }
 

@@ -284,7 +284,7 @@ class String extends ArgumentPluginBase {
    * Override for specific title lookups.
    */
   public function titleQuery() {
-    return drupal_map_assoc($this->value, 'check_plain');
+    return drupal_map_assoc($this->value, '\Drupal\Component\Utility\String::checkPlain');
   }
 
   public function summaryName($data) {

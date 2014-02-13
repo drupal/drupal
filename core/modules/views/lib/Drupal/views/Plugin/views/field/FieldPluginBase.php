@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -206,7 +207,7 @@ abstract class FieldPluginBase extends HandlerBase {
       }
     }
     if ($this->options['element_type']) {
-      return check_plain($this->options['element_type']);
+      return String::checkPlain($this->options['element_type']);
     }
 
     if ($default_empty) {
@@ -234,7 +235,7 @@ abstract class FieldPluginBase extends HandlerBase {
       }
     }
     if ($this->options['element_label_type']) {
-      return check_plain($this->options['element_label_type']);
+      return String::checkPlain($this->options['element_label_type']);
     }
 
     if ($default_empty) {
@@ -254,7 +255,7 @@ abstract class FieldPluginBase extends HandlerBase {
       }
     }
     if ($this->options['element_wrapper_type']) {
-      return check_plain($this->options['element_wrapper_type']);
+      return String::checkPlain($this->options['element_wrapper_type']);
     }
 
     if ($default_empty) {
@@ -1329,7 +1330,7 @@ abstract class FieldPluginBase extends HandlerBase {
     if ($path != '<front>') {
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
-      // were removed by check_plain().
+      // were removed by String::checkPlain().
       $path = strip_tags(decode_entities(strtr($path, $tokens)));
 
       if (!empty($alter['path_case']) && $alter['path_case'] != 'none') {
@@ -1405,7 +1406,7 @@ abstract class FieldPluginBase extends HandlerBase {
       $options['attributes']['rel'] = $rel;
     }
 
-    $target = check_plain(trim(strtr($alter['target'], $tokens)));
+    $target = String::checkPlain(trim(strtr($alter['target'], $tokens)));
     if (!empty($target)) {
       $options['attributes']['target'] = $target;
     }
@@ -1480,7 +1481,7 @@ abstract class FieldPluginBase extends HandlerBase {
 
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
-      // were removed by check_plain().
+      // were removed by String::checkPlain().
       $tokens['!' . $count] = isset($this->view->args[$count - 1]) ? strip_tags(decode_entities($this->view->args[$count - 1])) : '';
     }
 

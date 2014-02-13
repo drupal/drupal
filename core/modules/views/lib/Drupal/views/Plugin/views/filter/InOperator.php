@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\Component\Utility\String as UtilityString;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -321,7 +322,7 @@ class InOperator extends FilterPluginBase {
       return;
     }
 
-    $operator = check_plain($info[$this->operator]['short']);
+    $operator = UtilityString::checkPlain($info[$this->operator]['short']);
     $values = '';
     if (in_array($this->operator, $this->operatorValues(1))) {
       // Remove every element which is not known.
@@ -337,13 +338,13 @@ class InOperator extends FilterPluginBase {
       else if (count($this->value) == 1) {
         // If any, use the 'single' short name of the operator instead.
         if (isset($info[$this->operator]['short_single'])) {
-          $operator = check_plain($info[$this->operator]['short_single']);
+          $operator = UtilityString::checkPlain($info[$this->operator]['short_single']);
         }
 
         $keys = $this->value;
         $value = array_shift($keys);
         if (isset($this->value_options[$value])) {
-          $values = check_plain($this->value_options[$value]);
+          $values = UtilityString::checkPlain($this->value_options[$value]);
         }
         else {
           $values = '';
@@ -359,7 +360,7 @@ class InOperator extends FilterPluginBase {
             break;
           }
           if (isset($this->value_options[$value])) {
-            $values .= check_plain($this->value_options[$value]);
+            $values .= UtilityString::checkPlain($this->value_options[$value]);
           }
         }
       }
