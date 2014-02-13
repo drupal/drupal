@@ -590,11 +590,13 @@ function menu_form_node_form_alter(&$form, $form_state) {
  * @see menu_form_node_form_alter()
  */
 function menu_node_submit(EntityInterface $node, $form, $form_state) {
-  $node->menu = entity_create('menu_link', $form_state['values']['menu']);
-  // Decompose the selected menu parent option into 'menu_name' and 'plid', if
-  // the form used the default parent selection widget.
-  if (!empty($form_state['values']['menu']['parent'])) {
-    list($node->menu['menu_name'], $node->menu['plid']) = explode(':', $form_state['values']['menu']['parent']);
+  if (!empty($form_state['values']['menu'])) {
+    $node->menu = entity_create('menu_link', $form_state['values']['menu']);
+    // Decompose the selected menu parent option into 'menu_name' and 'plid', if
+    // the form used the default parent selection widget.
+    if (!empty($form_state['values']['menu']['parent'])) {
+      list($node->menu['menu_name'], $node->menu['plid']) = explode(':', $form_state['values']['menu']['parent']);
+    }
   }
 }
 

@@ -21,8 +21,6 @@ class MenuNodeTest extends WebTestBase {
    */
   public static $modules = array('menu', 'test_page_test');
 
-  protected $profile = 'standard';
-
   public static function getInfo() {
     return array(
       'name' => 'Menu settings for nodes',
@@ -33,6 +31,7 @@ class MenuNodeTest extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     $this->admin_user = $this->drupalCreateUser(array(
       'access administration pages',
@@ -49,12 +48,29 @@ class MenuNodeTest extends WebTestBase {
    * Test creating, editing, deleting menu links via node form widget.
    */
   function testMenuNodeFormWidget() {
-    // Enable Tools menu as available menu.
+    // Disable the default main menu, so that no menus are enabled.
     $edit = array(
-      'menu_options[tools]' => 1,
+      'menu_options[main]' => FALSE,
     );
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
+
+    // Verify that no menu settings are displayed and nodes can be created.
+    $this->drupalGet('node/add/page');
+    $this->assertText(t('Create Basic page'));
+    $this->assertNoText(t('Menu settings'));
+    $node_title = $this->randomName();
     $edit = array(
+      'title[0][value]' => $node_title,
+      'body[0][value]' => $this->randomString(),
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $node = $this->drupalGetNodeByTitle($node_title);
+    $this->assertEqual($node->getTitle(), $edit['title[0][value]']);
+
+    // Enable Tools menu as available menu.
+    $edit = array(
+      'menu_options[main]' => 1,
+      'menu_options[tools]' => 1,
       'menu_parent' => 'main:0',
     );
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
