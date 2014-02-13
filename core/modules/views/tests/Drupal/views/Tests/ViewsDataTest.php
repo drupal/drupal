@@ -137,7 +137,12 @@ class ViewsDataTest extends UnitTestCase {
 
     // Test the number of tables returned and their order.
     $this->assertCount(6, $base_tables, 'The correct amount of base tables were returned.');
-    $this->assertSame(array('views_test_data_3', 'views_test_data_4', 'views_test_data_6', 'views_test_data', 'views_test_data_5', 'views_test_data_2'), array_keys($base_tables), 'The tables are sorted as expected.');
+    $base_tables_keys = array_keys($base_tables);
+    for ($i = 1; $i < count($base_tables); ++$i) {
+      $prev =  $base_tables[$base_tables_keys[$i - 1]];
+      $current = $base_tables[$base_tables_keys[$i]];
+      $this->assertTrue($prev['weight'] <= $current['weight'] && $prev['title'] <= $prev['title'], 'The tables are sorted as expected.');
+    }
 
     // Test the values returned for each base table.
     $defaults = array(
