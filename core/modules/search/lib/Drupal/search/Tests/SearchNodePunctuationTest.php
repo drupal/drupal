@@ -2,29 +2,22 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchNodeAccessTest.
+ * Contains \Drupal\search\Tests\SearchNodePunctuationTest.
  */
 
 namespace Drupal\search\Tests;
 
 /**
- * Tests node search with node access control.
+ * Tests node search with punctuation.
  */
-class SearchNodeAccessTest extends SearchTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node_access_test');
+class SearchNodePunctuationTest extends SearchTestBase {
 
   public $test_user;
 
   public static function getInfo() {
     return array(
-      'name' => 'Search and node access',
-      'description' => 'Tests search functionality with node access control.',
+      'name' => 'Search with punctuation',
+      'description' => 'Tests search functionality with punctuation.',
       'group' => 'Search',
     );
   }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchNumbersTest.
+ * Contains \Drupal\search\Tests\SearchNumbersTest.
  */
 
 namespace Drupal\search\Tests;
@@ -10,7 +10,7 @@ namespace Drupal\search\Tests;
 use Drupal\Core\Language\Language;
 
 /**
- * Tests that numbers can be searched.
+ * Tests that numbers with different formats can be searched.
  */
 class SearchNumbersTest extends SearchTestBase {
   protected $test_user;
@@ -47,8 +47,8 @@ class SearchNumbersTest extends SearchTestBase {
       'large' => '444444444444444444444444444444444444444',
       'gigantic' => '5555555555555555555555555555555555555555555555555',
       'over fifty characters' => '666666666666666666666666666666666666666666666666666666666666',
-      'date', '01/02/2009',
-      'commas', '987,654,321',
+      'date' => '01/02/2009',
+      'commas' => '987,654,321',
     );
 
     foreach ($this->numbers as $doc => $num) {

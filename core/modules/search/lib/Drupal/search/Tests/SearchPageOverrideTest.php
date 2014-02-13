@@ -2,13 +2,16 @@
 
 /**
  * @file
- * Definition of Drupal\search\Tests\SearchPageOverrideTest.
+ * Contains \Drupal\search\Tests\SearchPageOverrideTest.
  */
 
 namespace Drupal\search\Tests;
 
 /**
- * Tests that hook_search_page runs.
+ * Tests if the result page can be overridden.
+ *
+ * Verifies that a plugin can override the buildResults() method to
+ * control what the search results page looks like.
  */
 class SearchPageOverrideTest extends SearchTestBase {
 
@@ -24,7 +27,7 @@ class SearchPageOverrideTest extends SearchTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Search page override',
-      'description' => 'Verify that hook_search_page can override search page display.',
+      'description' => 'Verifies that the result page can be overridden.',
       'group' => 'Search',
     );
   }
