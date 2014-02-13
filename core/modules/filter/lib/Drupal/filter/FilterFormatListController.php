@@ -8,7 +8,7 @@
 namespace Drupal\filter;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\DraggableListController;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -29,7 +29,7 @@ class FilterFormatListController extends DraggableListController implements Enti
   /**
    * The config factory service.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -40,10 +40,10 @@ class FilterFormatListController extends DraggableListController implements Enti
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage
    *   The entity storage controller class.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, ConfigFactory $config_factory) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, ConfigFactoryInterface $config_factory) {
     parent::__construct($entity_type, $storage);
 
     $this->configFactory = $config_factory;

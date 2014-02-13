@@ -7,7 +7,7 @@
 
 namespace Drupal\config_translation;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -26,7 +26,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -73,7 +73,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    *     Defaults to 20.
    *   - list_controller: (optional) Class name for list controller used to
    *     generate lists of this type of configuration.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    * @param \Drupal\locale\LocaleConfigManager $locale_config_manager
    *   The locale configuration manager.
@@ -88,7 +88,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    *   Throws an exception if the route specified by the 'base_route_name' in
    *   the plugin definition could not be found by the route provider.
    */
-  public function __construct($plugin_id, array $plugin_definition, ConfigFactory $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager) {
+  public function __construct($plugin_id, array $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager) {
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
 

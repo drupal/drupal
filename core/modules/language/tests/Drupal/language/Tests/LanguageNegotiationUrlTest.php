@@ -82,9 +82,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
       ->with('url')
       ->will($this->returnValue($config_data));
 
-    $config = $this->getMockBuilder('Drupal\Core\Config\ConfigFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $config = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config->expects($this->any())
       ->method('get')
       ->with('language.negotiation')

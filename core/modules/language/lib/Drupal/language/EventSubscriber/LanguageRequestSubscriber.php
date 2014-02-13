@@ -7,7 +7,7 @@
 
 namespace Drupal\language\EventSubscriber;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
@@ -54,7 +54,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -69,10 +69,10 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    *   The translation service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current active user.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, TranslatorInterface $translation, AccountInterface $current_user, ConfigFactory $config_factory) {
+  public function __construct(ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, TranslatorInterface $translation, AccountInterface $current_user, ConfigFactoryInterface $config_factory) {
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;
     $this->translation = $translation;

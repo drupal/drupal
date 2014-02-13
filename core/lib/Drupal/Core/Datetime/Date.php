@@ -8,7 +8,7 @@
 namespace Drupal\Core\Datetime;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Language\Language;
@@ -44,7 +44,7 @@ class Date {
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -79,10 +79,10 @@ class Date {
    *   The language manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The string translation.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, TranslationInterface $translation, ConfigFactory $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, TranslationInterface $translation, ConfigFactoryInterface $config_factory) {
     $this->dateFormatStorage = $entity_manager->getStorageController('date_format');
     $this->languageManager = $language_manager;
     $this->stringTranslation = $translation;

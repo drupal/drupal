@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Form;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -44,7 +44,7 @@ abstract class FormBase extends DependencySerialization implements FormInterface
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -143,12 +143,12 @@ abstract class FormBase extends DependencySerialization implements FormInterface
   /**
    * Sets the config factory for this form.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    *
    * @return $this
    */
-  public function setConfigFactory(ConfigFactory $config_factory) {
+  public function setConfigFactory(ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;
     return $this;
   }

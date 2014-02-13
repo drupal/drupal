@@ -9,7 +9,7 @@ namespace Drupal\language;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\Settings;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +36,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -82,12 +82,12 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    *    The language manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $negotiator_manager
    *   The language negotiation methods plugin manager
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    * @param \Drupal\Component\Utility\Settings $settings
    *   The settings instance.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager, PluginManagerInterface $negotiator_manager, ConfigFactory $config_factory, Settings $settings) {
+  public function __construct(ConfigurableLanguageManagerInterface $language_manager, PluginManagerInterface $negotiator_manager, ConfigFactoryInterface $config_factory, Settings $settings) {
     $this->languageManager = $language_manager;
     $this->negotiatorManager = $negotiator_manager;
     $this->configFactory = $config_factory;

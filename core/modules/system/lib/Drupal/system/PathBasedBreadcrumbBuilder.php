@@ -8,7 +8,7 @@
 namespace Drupal\system;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -87,12 +87,12 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
    *   The dynamic router service.
    * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
    *   The inbound path processor.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver service.
    */
-  public function __construct(Request $request, EntityManagerInterface $entity_manager, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactory $config_factory, TitleResolverInterface $title_resolver) {
+  public function __construct(Request $request, EntityManagerInterface $entity_manager, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver) {
     $this->request = $request;
     $this->accessManager = $access_manager;
     $this->menuStorage = $entity_manager->getStorageController('menu');

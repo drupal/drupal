@@ -7,7 +7,7 @@
 
 namespace Drupal\language;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,10 +29,10 @@ interface LanguageNegotiationMethodInterface {
   /**
    * Injects the configuration factory.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    */
-  public function setConfig(ConfigFactory $config);
+  public function setConfig(ConfigFactoryInterface $config);
 
   /**
    * Injects the current user.

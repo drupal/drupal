@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,12 +27,12 @@ class RegionalForm extends ConfigFormBase {
   /**
    * Constructs a RegionalForm object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
    *   The country manager.
    */
-  public function __construct(ConfigFactory $config_factory, CountryManagerInterface $country_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, CountryManagerInterface $country_manager) {
     parent::__construct($config_factory);
     $this->countryManager = $country_manager;
   }

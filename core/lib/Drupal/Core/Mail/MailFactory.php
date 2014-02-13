@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Mail;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Component\Utility\String;
 
 /**
@@ -32,10 +32,10 @@ class MailFactory {
   /**
    * Constructs a MailFActory object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
    */
-  public function __construct(ConfigFactory $configFactory) {
+  public function __construct(ConfigFactoryInterface $configFactory) {
     $this->mailConfig = $configFactory->get('system.mail');
   }
 

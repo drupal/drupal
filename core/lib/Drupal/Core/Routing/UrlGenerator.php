@@ -17,7 +17,7 @@ use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 
 use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Url;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
 
@@ -43,7 +43,7 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
   /**
    * The route processor.
    *
-   * @var \Drupal\Tests\Core\RouteProcessor\OutboundRouteProcessorInterface
+   * @var \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface
    */
   protected $routeProcessor;
 
@@ -80,12 +80,18 @@ class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterfa
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $provider
    *   The route provider to be searched for routes.
-   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
-   *   The alias manager responsible for path aliasing.
+   * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $path_processor
+   *   The path processor to convert the system path to one suitable for urls.
+   * @param \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface $route_processor
+   *   The route processor.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
+   *    The config factory.
+   * @param \Drupal\Component\Utility\Settings $settings
+   *    The read only settings.
    * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
    *   An optional logger for recording errors.
    */
-  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactory $config, Settings $settings, LoggerInterface $logger = NULL) {
+  public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, ConfigFactoryInterface $config, Settings $settings, LoggerInterface $logger = NULL) {
     parent::__construct($provider, $logger);
 
     $this->pathProcessor = $path_processor;

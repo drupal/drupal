@@ -7,7 +7,7 @@
 
 namespace Drupal\language;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 
@@ -26,7 +26,7 @@ abstract class LanguageNegotiationMethodBase implements LanguageNegotiationMetho
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $config;
 
@@ -47,7 +47,7 @@ abstract class LanguageNegotiationMethodBase implements LanguageNegotiationMetho
   /**
    * {@inheritdoc}
    */
-  public function setConfig(ConfigFactory $config) {
+  public function setConfig(ConfigFactoryInterface $config) {
     $this->config = $config;
   }
 

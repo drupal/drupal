@@ -9,7 +9,7 @@ namespace Drupal\forum\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\taxonomy\Form\OverviewTerms;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

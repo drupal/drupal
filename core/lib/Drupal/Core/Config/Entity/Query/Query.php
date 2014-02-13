@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Config\Entity\Query;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryBase;
@@ -35,7 +35,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * The config factory used by the config entity query.
    *
-   * @var \Drupal\Core\Config\ConfigFactory;
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -51,10 +51,12 @@ class Query extends QueryBase implements QueryInterface {
    *   The entity manager that stores all meta information.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The actual config storage which is used to list all config items.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  function __construct($entity_type, $conjunction, EntityManagerInterface $entity_manager, StorageInterface $config_storage, ConfigFactory $config_factory, array $namespaces) {
+  function __construct($entity_type, $conjunction, EntityManagerInterface $entity_manager, StorageInterface $config_storage, ConfigFactoryInterface $config_factory, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
     $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;

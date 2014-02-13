@@ -8,7 +8,7 @@
 namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
@@ -20,7 +20,7 @@ class ImageToolkitManager extends DefaultPluginManager {
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -34,10 +34,10 @@ class ImageToolkitManager extends DefaultPluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ConfigFactory $config_factory) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ConfigFactoryInterface $config_factory) {
     parent::__construct('Plugin/ImageToolkit', $namespaces, 'Drupal\Core\ImageToolkit\Annotation\ImageToolkit');
 
     $this->setCacheBackend($cache_backend, $language_manager, 'image_toolkit_plugins');

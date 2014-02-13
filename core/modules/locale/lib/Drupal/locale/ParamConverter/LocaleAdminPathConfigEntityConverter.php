@@ -9,7 +9,7 @@ namespace Drupal\locale\ParamConverter;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
@@ -33,7 +33,7 @@ class LocaleAdminPathConfigEntityConverter extends EntityConverter {
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -43,7 +43,7 @@ class LocaleAdminPathConfigEntityConverter extends EntityConverter {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
    *   The entity manager.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactory $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;
     parent::__construct($entity_manager);
   }

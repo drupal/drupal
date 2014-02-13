@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\PathProcessor;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,17 +18,17 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
   /**
    * A config factory for retrieving required config settings.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $config;
 
   /**
    * Constructs a PathProcessorFront object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   A config factory for retrieving the site front page configuration.
    */
-  public function __construct(ConfigFactory $config) {
+  public function __construct(ConfigFactoryInterface $config) {
     $this->config = $config;
   }
 

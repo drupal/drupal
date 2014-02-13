@@ -11,7 +11,7 @@ use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -31,7 +31,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * Contains the configuration object factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -44,10 +44,10 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Config\ConfigFactory $config
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The configuration factory object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactory $config) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactoryInterface $config) {
     $this->configFactory = $config;
     // @todo Refactor aggregator plugins to ConfigEntity so merging
     //   the configuration here is not needed.

@@ -123,9 +123,7 @@ class DrupalTest extends UnitTestCase {
    * Tests the config() method.
    */
   public function testConfig() {
-    $config = $this->getMockBuilder('Drupal\Core\Config\ConfigFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $config = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config->expects($this->once())
       ->method('get')
       ->with('test_config')

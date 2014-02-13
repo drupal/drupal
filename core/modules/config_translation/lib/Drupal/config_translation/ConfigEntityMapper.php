@@ -7,7 +7,7 @@
 
 namespace Drupal\config_translation;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -58,7 +58,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    *   An array of plugin information as documented in
    *   ConfigNamesMapper::__construct() with the following additional keys:
    *   - entity_type: The name of the entity type this mapper belongs to.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    * @param \Drupal\locale\LocaleConfigManager $locale_config_manager
    *   The locale configuration manager.
@@ -71,7 +71,7 @@ class ConfigEntityMapper extends ConfigNamesMapper {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct($plugin_id, array $plugin_definition, ConfigFactory $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager, EntityManagerInterface $entity_manager) {
+  public function __construct($plugin_id, array $plugin_definition, ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $translation_manager, EntityManagerInterface $entity_manager) {
     parent::__construct($plugin_id, $plugin_definition, $config_factory, $locale_config_manager, $config_mapper_manager, $route_provider, $translation_manager);
     $this->setType($plugin_definition['entity_type']);
 

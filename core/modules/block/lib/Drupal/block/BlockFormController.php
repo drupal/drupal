@@ -8,7 +8,7 @@
 namespace Drupal\block;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -53,7 +53,7 @@ class BlockFormController extends EntityFormController {
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -66,10 +66,10 @@ class BlockFormController extends EntityFormController {
    *   The entity query factory.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, QueryFactory $entity_query_factory, LanguageManagerInterface $language_manager, ConfigFactory $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, QueryFactory $entity_query_factory, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
     $this->storageController = $entity_manager->getStorageController('block');
     $this->entityQueryFactory = $entity_query_factory;
     $this->languageManager = $language_manager;

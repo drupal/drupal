@@ -38,7 +38,7 @@ class ConfigOverridesPriorityTest extends DrupalUnitTestBase {
     $module_overridden_slogan = 'Yay for overrides!';
     $non_overridden_slogan = 'Yay for defaults!';
 
-    /** @var \Drupal\Core\Config\ConfigFactory $config_factory */
+    /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
     $config_factory = $this->container->get('config.factory');
     $config_factory
       ->get('system.site')

@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Theme;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
@@ -28,7 +28,7 @@ class AdminNegotiator implements ThemeNegotiatorInterface {
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -44,12 +44,12 @@ class AdminNegotiator implements ThemeNegotiatorInterface {
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
    */
-  public function __construct(AccountInterface $user, ConfigFactory $config_factory, EntityManagerInterface $entity_manager) {
+  public function __construct(AccountInterface $user, ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {
     $this->user = $user;
     $this->configFactory = $config_factory;
     $this->entityManager = $entity_manager;

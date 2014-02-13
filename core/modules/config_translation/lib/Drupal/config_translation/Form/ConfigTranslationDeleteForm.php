@@ -10,7 +10,7 @@ namespace Drupal\config_translation\Form;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,10 +66,10 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
    *   The configuration mapper manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    */
-  public function __construct(StorageInterface $config_storage, ConfigMapperManagerInterface $config_mapper_manager, ModuleHandlerInterface $module_handler, ConfigFactory $config_factory) {
+  public function __construct(StorageInterface $config_storage, ConfigMapperManagerInterface $config_mapper_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
     $this->configStorage = $config_storage;
     $this->configMapperManager = $config_mapper_manager;
     $this->moduleHandler = $module_handler;

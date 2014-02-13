@@ -122,9 +122,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     }
     // Construct a config factory with the array of configuration object stubs
     // as its return map.
-    $config_factory = $this->getMockBuilder('Drupal\Core\Config\ConfigFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->any())
       ->method('get')
       ->will($this->returnValueMap($config_map));

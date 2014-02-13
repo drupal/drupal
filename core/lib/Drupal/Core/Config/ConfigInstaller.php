@@ -15,7 +15,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -50,7 +50,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   /**
    * Constructs the configuration installer.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    * @param \Drupal\Core\Config\StorageInterface $active_storage
    *   The active configuration storage.
@@ -61,7 +61,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(ConfigFactory $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher) {
     $this->configFactory = $config_factory;
     $this->activeStorage = $active_storage;
     $this->typedConfig = $typed_config;

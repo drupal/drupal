@@ -266,7 +266,7 @@ class Drupal {
    * factory. For example, changing the language, or turning all overrides on
    * or off.
    *
-   * @return \Drupal\Core\Config\ConfigFactory
+   * @return \Drupal\Core\Config\ConfigFactoryInterface
    */
   public static function configFactory() {
     return static::$container->get('config.factory');

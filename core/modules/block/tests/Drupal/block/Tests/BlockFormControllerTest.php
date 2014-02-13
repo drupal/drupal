@@ -66,9 +66,7 @@ class BlockFormControllerTest extends UnitTestCase {
 
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
 
-    $config_factory = $this->getMockBuilder('Drupal\Core\Config\ConfigFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $config_factory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
 
     $block_form_controller = new BlockFormController($entity_manager, $query_factory, $language_manager, $config_factory);
 

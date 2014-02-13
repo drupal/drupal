@@ -45,7 +45,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $configFactory;
 
@@ -76,9 +76,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
       ->method('getStorageController')
       ->will($this->returnValue($this->storage));
 
-    $this->configFactory = $this->getMockBuilder('Drupal\Core\Config\ConfigFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->configFactory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $this->searchPageRepository = new SearchPageRepository($this->configFactory, $entity_manager);
   }
 

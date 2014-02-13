@@ -7,7 +7,7 @@
 namespace Drupal\update;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\PrivateKey;
@@ -84,7 +84,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
   /**
    * Constructs a UpdateProcessor.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
    *   The queue factory
@@ -99,7 +99,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_expirable_factory
    *   The expirable key/value factory.
    */
-  public function __construct(ConfigFactory $config_factory, QueueFactory $queue_factory, UpdateFetcherInterface $update_fetcher, StateInterface $state_store, PrivateKey $private_key, KeyValueFactoryInterface $key_value_factory, KeyValueFactoryInterface $key_value_expirable_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, QueueFactory $queue_factory, UpdateFetcherInterface $update_fetcher, StateInterface $state_store, PrivateKey $private_key, KeyValueFactoryInterface $key_value_factory, KeyValueFactoryInterface $key_value_expirable_factory) {
     $this->updateFetcher = $update_fetcher;
     $this->updateSettings = $config_factory->get('update.settings');
     $this->fetchQueue = $queue_factory->get('update_fetch_tasks');

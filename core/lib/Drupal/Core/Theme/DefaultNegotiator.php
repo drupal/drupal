@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Theme;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -25,10 +25,10 @@ class DefaultNegotiator implements ThemeNegotiatorInterface {
   /**
    * Constructs a DefaultNegotiator object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(ConfigFactory $config_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory) {
     $this->config = $config_factory->get('system.theme');
   }
 

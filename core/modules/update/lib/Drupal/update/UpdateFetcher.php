@@ -7,7 +7,7 @@
 
 namespace Drupal\update;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Exception\RequestException;
 
@@ -45,12 +45,12 @@ class UpdateFetcher implements UpdateFetcherInterface {
   /**
    * Constructs a UpdateFetcher.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Guzzle\Http\ClientInterface $http_client
    *   A Guzzle client object.
    */
-  public function __construct(ConfigFactory $config_factory, ClientInterface $http_client) {
+  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $http_client) {
     $this->fetchUrl = $config_factory->get('update.settings')->get('fetch.url');
     $this->httpClient = $http_client;
     $this->updateSettings = $config_factory->get('update.settings');

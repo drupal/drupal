@@ -251,7 +251,7 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface {
   /**
    * Wraps the config factory.
    *
-   * @return \Drupal\Core\Config\ConfigFactory
+   * @return \Drupal\Core\Config\ConfigFactoryInterface
    *   A config factory object.
    */
   protected function configFactory() {

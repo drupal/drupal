@@ -8,7 +8,7 @@
 namespace Drupal\search;
 
 use Drupal\Component\Utility\MapArray;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\DraggableListController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
@@ -31,7 +31,7 @@ class SearchPageListController extends DraggableListController implements FormIn
   /**
    * Stores the configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -51,10 +51,10 @@ class SearchPageListController extends DraggableListController implements FormIn
    *   The entity storage controller class.
    * @param \Drupal\search\SearchPluginManager $search_manager
    *   The search plugin manager.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, SearchPluginManager $search_manager, ConfigFactory $config_factory) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageControllerInterface $storage, SearchPluginManager $search_manager, ConfigFactoryInterface $config_factory) {
     parent::__construct($entity_type, $storage);
     $this->configFactory = $config_factory;
     $this->searchManager = $search_manager;

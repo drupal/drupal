@@ -6,7 +6,7 @@
 
 namespace Drupal\update;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -69,7 +69,7 @@ class UpdateManager implements UpdateManagerInterface {
   /**
    * Constructs a UpdateManager.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The Module Handler service
@@ -80,7 +80,7 @@ class UpdateManager implements UpdateManagerInterface {
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_expirable_factory
    *   The expirable key/value factory.
    */
-  public function __construct(ConfigFactory $config_factory, ModuleHandlerInterface $module_handler, UpdateProcessorInterface $update_processor, TranslationInterface $translation, KeyValueFactoryInterface $key_value_expirable_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, UpdateProcessorInterface $update_processor, TranslationInterface $translation, KeyValueFactoryInterface $key_value_expirable_factory) {
     $this->updateSettings = $config_factory->get('update.settings');
     $this->moduleHandler = $module_handler;
     $this->updateProcessor = $update_processor;

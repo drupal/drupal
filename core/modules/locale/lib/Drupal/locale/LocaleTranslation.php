@@ -8,7 +8,7 @@
 namespace Drupal\locale;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Lock\LockBackendAbstract;
@@ -35,7 +35,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -71,10 +71,10 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    *   The cache backend.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(StringStorageInterface $storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactory $config_factory) {
+  public function __construct(StringStorageInterface $storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactoryInterface $config_factory) {
     $this->storage = $storage;
     $this->cache = $cache;
     $this->lock = $lock;

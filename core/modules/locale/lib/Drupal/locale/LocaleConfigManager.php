@@ -11,7 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Manages localized configuration type plugins.
@@ -40,7 +40,7 @@ class LocaleConfigManager extends TypedConfigManager {
   /**
    * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -58,10 +58,10 @@ class LocaleConfigManager extends TypedConfigManager {
    *   The locale storage to use for reading string translations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend to use for caching the definitions.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory
    */
-  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage, CacheBackendInterface $cache, ConfigFactory $config_factory) {
+  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, StorageInterface $installStorage, StringStorageInterface $localeStorage, CacheBackendInterface $cache, ConfigFactoryInterface $config_factory) {
     // Note we use the install storage for the parent constructor.
     parent::__construct($configStorage, $schemaStorage, $cache);
     $this->installStorage = $installStorage;
@@ -220,7 +220,7 @@ class LocaleConfigManager extends TypedConfigManager {
    *   Language code to delete.
    */
   public function deleteLanguageTranslations($langcode) {
-    $locale_name = ConfigFactory::LANGUAGE_CONFIG_PREFIX . '.' . $langcode . '.';
+    $locale_name = ConfigFactoryInterface::LANGUAGE_CONFIG_PREFIX . '.' . $langcode . '.';
     foreach ($this->configStorage->listAll($locale_name) as $name) {
       $this->configStorage->delete($name);
     }

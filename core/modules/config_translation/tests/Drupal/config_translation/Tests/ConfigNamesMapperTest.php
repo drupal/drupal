@@ -8,7 +8,7 @@
 namespace Drupal\config_translation\Tests;
 
 use Drupal\config_translation\ConfigNamesMapper;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
@@ -646,10 +646,10 @@ class TestConfigNamesMapper extends ConfigNamesMapper {
   /**
    * Sets the configuration factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory $config_factory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory to set.
    */
-  public function setConfigFactory(ConfigFactory $config_factory) {
+  public function setConfigFactory(ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;
   }
 

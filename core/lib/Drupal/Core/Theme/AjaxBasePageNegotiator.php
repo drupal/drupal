@@ -8,7 +8,7 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -41,7 +41,7 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -50,10 +50,10 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
    *
    * @param \Drupal\Core\Access\CsrfTokenGenerator $token_generator
    *   The CSRF token generator.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(CsrfTokenGenerator $token_generator, ConfigFactory $config_factory) {
+  public function __construct(CsrfTokenGenerator $token_generator, ConfigFactoryInterface $config_factory) {
     $this->csrfGenerator = $token_generator;
     $this->configFactory = $config_factory;
   }

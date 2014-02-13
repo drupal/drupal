@@ -26,8 +26,7 @@ interface ConfigFactoryInterface {
    * @param bool $state
    *   TRUE if overrides should be applied, FALSE otherwise.
    *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * @return $this
    */
   public function setOverrideState($state);
 
@@ -71,8 +70,7 @@ interface ConfigFactoryInterface {
    *   (optional) The name of the configuration object to reset. If omitted, all
    *   configuration objects are reset.
    *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * @return $this
    */
   public function reset($name = NULL);
 
@@ -114,8 +112,7 @@ interface ConfigFactoryInterface {
   /**
    * Clears the config factory static cache.
    *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * @return $this
    */
   public function clearStaticCache();
 
@@ -126,8 +123,7 @@ interface ConfigFactoryInterface {
    *   The language object to be set on the config factory. Used to override
    *   configuration by language.
    *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * @return $this
    */
   public function setLanguage(Language $language = NULL);
 
@@ -139,8 +135,7 @@ interface ConfigFactoryInterface {
    *   config factory to the site's default. The language can be used to
    *   override configuration data if language overrides are available.
    *
-   * @return \Drupal\Core\Config\ConfigFactory
-   *   The config factory object.
+   * @return $this
    */
   public function setLanguageFromDefault(LanguageDefault $language_default);
 

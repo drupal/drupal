@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Form;
 
 use Drupal\aggregator\Plugin\AggregatorPluginManager;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -48,7 +48,7 @@ class SettingsForm extends ConfigFormBase {
   /**
    * Constructs a \Drupal\aggregator\SettingsForm object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $fetcher_manager
    *   The aggregator fetcher plugin manager.
@@ -59,7 +59,7 @@ class SettingsForm extends ConfigFormBase {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The string translation manager.
    */
-  public function __construct(ConfigFactory $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, TranslationInterface $translation_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, TranslationInterface $translation_manager) {
     parent::__construct($config_factory);
     $this->translationManager = $translation_manager;
     $this->managers = array(

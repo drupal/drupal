@@ -8,7 +8,7 @@
 namespace Drupal\block\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,12 +35,12 @@ class ThemeLocalTask extends DerivativeBase implements ContainerDerivativeInterf
   /**
    * Constructs a new ThemeLocalTask.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
    */
-  public function __construct(ConfigFactory $config_factory, ThemeHandlerInterface $theme_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler) {
     $this->config = $config_factory->get('system.theme');
     $this->themeHandler = $theme_handler;
   }

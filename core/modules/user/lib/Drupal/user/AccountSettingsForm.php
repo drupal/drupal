@@ -8,7 +8,7 @@
 namespace Drupal\user;
 
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,12 +27,12 @@ class AccountSettingsForm extends ConfigFormBase {
   /**
    * Constructs a \Drupal\user\AccountSettingsForm object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
    *   The module handler.
    */
-  public function __construct(ConfigFactory $config_factory, ModuleHandler $module_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandler $module_handler) {
     parent::__construct($config_factory);
     $this->moduleHandler = $module_handler;
   }

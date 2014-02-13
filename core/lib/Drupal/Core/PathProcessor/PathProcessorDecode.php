@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\PathProcessor;
 
-use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

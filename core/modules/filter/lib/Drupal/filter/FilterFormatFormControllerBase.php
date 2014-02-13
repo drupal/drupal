@@ -7,7 +7,7 @@
 
 namespace Drupal\filter;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\filter\Plugin\Filter\FilterNull;
@@ -21,7 +21,7 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
   /**
    * The config factory.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -35,12 +35,12 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
   /**
    * Constructs a new FilterFormatFormControllerBase.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
    */
-  public function __construct(ConfigFactory $config_factory, QueryFactory $query_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, QueryFactory $query_factory) {
     $this->configFactory = $config_factory;
     $this->queryFactory = $query_factory;
   }

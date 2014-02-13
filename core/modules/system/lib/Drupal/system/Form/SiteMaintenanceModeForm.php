@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,12 +27,12 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   /**
    * Constructs a new SiteMaintenanceModeForm.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state keyvalue collection to use.
    */
-  public function __construct(ConfigFactory $config_factory, StateInterface $state) {
+  public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state) {
     parent::__construct($config_factory);
     $this->state = $state;
   }

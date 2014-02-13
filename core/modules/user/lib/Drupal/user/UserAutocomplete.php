@@ -8,7 +8,7 @@
 namespace Drupal\user;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -28,7 +28,7 @@ class UserAutocomplete {
   /**
    * The config factory to get the anonymous user name.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
@@ -51,10 +51,10 @@ class UserAutocomplete {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to query for the user names.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(Connection $connection, ConfigFactory $config_factory, EntityManager $entity_manager, QueryFactory $entity_query) {
+  public function __construct(Connection $connection, ConfigFactoryInterface $config_factory, EntityManager $entity_manager, QueryFactory $entity_query) {
     $this->connection = $connection;
     $this->configFactory = $config_factory;
     $this->entityQuery = $entity_query;
