@@ -561,8 +561,15 @@ class Drupal {
   /**
    * Returns the CSRF token manager service.
    *
+   * The generated token is based on the session ID of the current user. Normally,
+   * anonymous users do not have a session, so the generated token will be
+   * different on every page request. To generate a token for users without a
+   * session, manually start a session prior to calling this function.
+   *
    * @return \Drupal\Core\Access\CsrfTokenGenerator
    *   The CSRF token manager.
+   *
+   * @see drupal_session_start()
    */
   public static function csrfToken() {
     return static::$container->get('csrf_token');

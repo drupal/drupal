@@ -55,6 +55,11 @@ class CsrfTokenGenerator {
   /**
    * Generates a token based on $value, the user session, and the private key.
    *
+   * The generated token is based on the session ID of the current user. Normally,
+   * anonymous users do not have a session, so the generated token will be
+   * different on every page request. To generate a token for users without a
+   * session, manually start a session prior to calling this function.
+   *
    * @param string $value
    *   (optional) An additional value to base the token on.
    *
@@ -64,6 +69,7 @@ class CsrfTokenGenerator {
    *   'drupal_private_key' configuration variable.
    *
    * @see drupal_get_hash_salt()
+   * @see drupal_session_start()
    */
   public function get($value = '') {
     return Crypt::hmacBase64($value, session_id() . $this->privateKey->get() . drupal_get_hash_salt());
