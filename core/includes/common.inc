@@ -2775,7 +2775,7 @@ function drupal_get_library($module, $name = NULL) {
 
   if (!isset($libraries[$module])) {
     // Retrieve all libraries associated with the module.
-    $module_libraries = \Drupal::moduleHandler()->invoke($module, 'library_info');
+    $module_libraries = module_invoke($module, 'library_info');
     if (empty($module_libraries)) {
       $module_libraries = array();
     }

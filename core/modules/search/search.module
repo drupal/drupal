@@ -429,7 +429,7 @@ function _search_index_truncate(&$text) {
  */
 function search_invoke_preprocess(&$text, $langcode = NULL) {
   foreach (\Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
-    $text = \Drupal::moduleHandler()->invoke($module, 'search_preprocess', array($text, $langcode));
+    $text = module_invoke($module, 'search_preprocess', $text, $langcode);
   }
 }
 

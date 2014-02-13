@@ -1564,7 +1564,7 @@ function user_role_load($rid) {
 function user_permission_get_modules() {
   $permissions = array();
   foreach (\Drupal::moduleHandler()->getImplementations('permission') as $module) {
-    $perms = \Drupal::moduleHandler()->invoke($module, 'permission');
+    $perms = module_invoke($module, 'permission');
     foreach ($perms as $key => $value) {
       $permissions[$key] = $module;
     }
@@ -1797,7 +1797,7 @@ function user_modules_installed($modules) {
   if ($rid) {
     $permissions = array();
     foreach ($modules as $module) {
-      if ($module_permissions = \Drupal::moduleHandler()->invoke($module, 'permission')) {
+      if ($module_permissions = module_invoke($module, 'permission')) {
         $permissions = array_merge($permissions, array_keys($module_permissions));
       }
     }

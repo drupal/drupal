@@ -102,7 +102,7 @@ class NodeFormController extends ContentEntityFormController {
       '#default_value' => $node->getChangedTime(),
     );
 
-    $language_configuration = \Drupal::moduleHandler()->invoke('language', 'get_default_configuration', array('node', $node->getType()));
+    $language_configuration = module_invoke('language', 'get_default_configuration', 'node', $node->getType());
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
