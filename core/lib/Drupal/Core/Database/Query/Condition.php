@@ -8,6 +8,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\InvalidQueryException;
 
 /**
  * Generic class for a series of conditions in a query.
@@ -76,6 +77,10 @@ class Condition implements ConditionInterface, \Countable {
         $operator = '=';
       }
     }
+    if (empty($value) && is_array($value)) {
+      throw new InvalidQueryException(sprintf("Query condition '%s %s ()' cannot be empty.", $field, $operator));
+    }
+
     $this->conditions[] = array(
       'field' => $field,
       'value' => $value,

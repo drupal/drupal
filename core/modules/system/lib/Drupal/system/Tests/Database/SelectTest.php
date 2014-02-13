@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\system\Tests\Database;
+use Drupal\Core\Database\InvalidQueryException;
 
 /**
  * Tests the SELECT builder.
@@ -479,6 +480,35 @@ class SelectTest extends DatabaseTestBase {
       return;
     }
     $this->fail('No Exception thrown.');
+  }
+
+  /**
+   * Tests thrown exception for IN query conditions with an empty array.
+   */
+  function testEmptyInCondition() {
+    try {
+      db_select('test', 't')
+        ->fields('t')
+        ->condition('age', array(), 'IN')
+        ->execute();
+
+      $this->fail('Expected exception not thrown');
+    }
+    catch (InvalidQueryException $e) {
+      $this->assertEqual("Query condition 'age IN ()' cannot be empty.", $e->getMessage());
+    }
+
+    try {
+      db_select('test', 't')
+        ->fields('t')
+        ->condition('age', array(), 'NOT IN')
+        ->execute();
+
+      $this->fail('Expected exception not thrown');
+    }
+    catch (InvalidQueryException $e) {
+      $this->assertEqual("Query condition 'age NOT IN ()' cannot be empty.", $e->getMessage());
+    }
   }
 
 }
