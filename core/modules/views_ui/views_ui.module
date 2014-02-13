@@ -238,7 +238,6 @@ function views_ui_preprocess_views_view(&$variables) {
           '#theme_wrappers' => array('views_ui_container'),
           '#attributes' => array('class' => 'contextual-region'),
         );
-        $variables[$section] = $variables[$section];
       }
     }
   }
