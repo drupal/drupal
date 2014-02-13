@@ -8,6 +8,7 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\Language;
 
 /**
@@ -35,7 +36,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The info array of the given entity type.
    */
-  public function __construct($entity_type) {
+  public function __construct(EntityTypeInterface $entity_type) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
   }
