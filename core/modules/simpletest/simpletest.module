@@ -103,16 +103,14 @@ function simpletest_js_alter(&$javascript) {
 }
 
 function _simpletest_format_summary_line($summary) {
-  $args = array(
-    '@pass' => format_plural(isset($summary['#pass']) ? $summary['#pass'] : 0, '1 pass', '@count passes'),
-    '@fail' => format_plural(isset($summary['#fail']) ? $summary['#fail'] : 0, '1 fail', '@count fails'),
-    '@exception' => format_plural(isset($summary['#exception']) ? $summary['#exception'] : 0, '1 exception', '@count exceptions'),
-  );
-  if (!$summary['#debug']) {
-    return t('@pass, @fail, and @exception', $args);
+  $parts = array();
+  $parts[] = $summary['#pass'] == 1 ? '1 pass' : $summary['#pass'] . ' passes';
+  $parts[] = $summary['#fail'] == 1 ? '1 fail' : $summary['#fail'] . ' fails';
+  $parts[] = $summary['#exception'] == 1 ? '1 exception' : $summary['#exception'] . ' exceptions';
+  if ($summary['#debug']) {
+    $parts[] = $summary['#debug'] == 1 ? '1 debug message' : $summary['#debug'] . ' debug messages';
   }
-  $args['@debug'] = format_plural(isset($summary['#debug']) ? $summary['#debug'] : 0, '1 debug message', '@count debug messages');
-  return t('@pass, @fail, @exception, and @debug', $args);
+  return implode(', ', $parts);
 }
 
 /**
