@@ -436,6 +436,13 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
     //   http://drupal.org/node/1901110
     return;
   }
+  if ($view_mode == 'search_index' || $view_mode == 'search_result' || $view_mode == 'print') {
+    // Do not add any links if the entity displayed for:
+    // - search indexing.
+    // - constructing a search result excerpt.
+    // - print.
+    return;
+  }
   $fields = \Drupal::service('comment.manager')->getFields('node');
   foreach ($fields as $field_name => $detail) {
     // Skip fields that entity does not have.
@@ -514,11 +521,9 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
           }
         }
       }
-      elseif ($view_mode != 'search_index' && $view_mode != 'search_result') {
+      else {
         // Entity in other view modes: add a "post comment" link if the user is
         // allowed to post comments and if this entity is allowing new comments.
-        // But we don't want this link if we're building the entity for search
-        // indexing or constructing a search result excerpt.
         if ($commenting_status == COMMENT_OPEN) {
           $comment_form_location = $instance->getSetting('form_location');
           if (user_access('post comments')) {

@@ -143,8 +143,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       }
 
       // Append comment form if the comments are open and the form is set to
-      // display below the entity.
-      if ($status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
+      // display below the entity. Do not show the form for the print view mode.
+      if ($status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW && $this->viewMode != 'print') {
         // Only show the add comment form if the user has permission.
         if ($this->currentUser->hasPermission('post comments')) {
           // All users in the "anonymous" role can use the same form: it is fine
