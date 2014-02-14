@@ -161,6 +161,8 @@ class BlockTest extends BlockTestBase {
     theme_enable(array('bartik', 'seven'));
     $theme_settings = $this->container->get('config.factory')->get('system.theme');
     foreach (array('bartik', 'stark', 'seven') as $theme) {
+      $this->drupalGet('admin/structure/block/list/' . $theme);
+      $this->assertTitle(t('Block layout') . ' | Drupal');
       // Select the 'Powered by Drupal' block to be placed.
       $block = array();
       $block['id'] = strtolower($this->randomName());
