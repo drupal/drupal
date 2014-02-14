@@ -10,7 +10,7 @@ namespace Drupal\Core\Config;
 /**
  * Defines events for the configuration system.
  */
-class ConfigEvents {
+final class ConfigEvents {
 
   /**
    * Name of event fired when saving the configuration object.
