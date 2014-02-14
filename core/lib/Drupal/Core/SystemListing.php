@@ -7,6 +7,8 @@
 
 namespace Drupal\Core;
 
+use Drupal\Component\Utility\Settings;
+
 /**
  * Returns information about system object files (modules, themes, etc.).
  *
@@ -100,6 +102,16 @@ class SystemListing {
     $searchdir[] = $directory;
     $searchdir[] = 'sites/all/' . $directory;
 
+    // Simpletest uses the regular built-in multi-site functionality of Drupal
+    // for running web tests. As a consequence, extensions of the parent site
+    // located in a different site-specific directory are not discovered in a
+    // test site environment, because the site directories are not the same.
+    // Therefore, add the site directory of the parent site to the search paths,
+    // so that contained extensions are still discovered.
+    // @see \Drupal\simpletest\WebTestBase::setUp()
+    if ($parent_site = Settings::getSingleton()->get('test_parent_site')) {
+      $searchdir[] = $parent_site;
+    }
     if (file_exists("$config/$directory")) {
       $searchdir[] = "$config/$directory";
     }

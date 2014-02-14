@@ -783,6 +783,14 @@ abstract class WebTestBase extends TestBase {
       'value' => $this->public_files_directory,
       'required' => TRUE,
     );
+    // Save the original site directory path, so that extensions in the
+    // site-specific directory can still be discovered in the test site
+    // environment.
+    // @see \Drupal\Core\SystemListing::scan()
+    $settings['settings']['test_parent_site'] = (object) array(
+      'value' => $this->originalSite,
+      'required' => TRUE,
+    );
     // Add the parent profile's search path to the child site's search paths.
     // @see drupal_system_listing()
     $settings['conf']['simpletest.settings']['parent_profile'] = (object) array(

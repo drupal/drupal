@@ -968,6 +968,7 @@ abstract class TestBase {
     }
 
     // Backup current in-memory configuration.
+    $this->originalSite = conf_path();
     $this->originalSettings = settings()->getAll();
     $this->originalConfig = $GLOBALS['config'];
 
