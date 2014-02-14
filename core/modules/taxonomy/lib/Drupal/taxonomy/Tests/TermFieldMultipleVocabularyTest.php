@@ -87,7 +87,9 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // Submit an entity with both terms.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field_name}[]", '', 'Widget is displayed.');
+    // Just check if the widget for the select is displayed, the NULL value is
+    // used to ignore the value check.
+    $this->assertFieldByName("{$this->field_name}[]", NULL, 'Widget is displayed.');
     $edit = array(
       'user_id' => mt_rand(0, 10),
       'name' => $this->randomName(),
@@ -125,7 +127,9 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // The widget should still be displayed.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field_name}[]", '', 'Widget is still displayed.');
+    // Just check if the widget for the select is displayed, the NULL value is
+    // used to ignore the value check.
+    $this->assertFieldByName("{$this->field_name}[]", NULL, 'Widget is still displayed.');
 
     // Term 1 should still pass validation.
     $edit = array(

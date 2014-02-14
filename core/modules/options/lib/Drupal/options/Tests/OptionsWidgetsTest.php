@@ -378,6 +378,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: with no field data, nothing is selected.
     $this->drupalGet('entity_test/manage/' . $entity->id());
+    $this->assertOptionSelected("edit-card-2", '_none');
     $this->assertNoOptionSelected('edit-card-2', 0);
     $this->assertNoOptionSelected('edit-card-2', 1);
     $this->assertNoOptionSelected('edit-card-2', 2);

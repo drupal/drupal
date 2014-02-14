@@ -858,6 +858,8 @@ function form_select_options($element, $choices = NULL) {
   // isset() fails in this situation.
   $value_valid = isset($element['#value']) || array_key_exists('#value', $element);
   $value_is_array = $value_valid && is_array($element['#value']);
+  // Check if the element is multiple select and no value has been selected.
+  $empty_value = (empty($element['#value']) && !empty($element['#multiple']));
   $options = '';
   foreach ($choices as $key => $choice) {
     if (is_array($choice)) {
@@ -870,7 +872,8 @@ function form_select_options($element, $choices = NULL) {
     }
     else {
       $key = (string) $key;
-      if ($value_valid && (!$value_is_array && (string) $element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'])))) {
+      $empty_choice = $empty_value && $key == '_none';
+      if ($value_valid && ((!$value_is_array && (string) $element['#value'] === $key || ($value_is_array && in_array($key, $element['#value']))) || $empty_choice)) {
         $selected = ' selected="selected"';
       }
       else {
