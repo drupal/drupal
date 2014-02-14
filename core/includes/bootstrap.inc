@@ -1899,7 +1899,7 @@ function module_invoke($module, $hook) {
 function module_invoke_all($hook) {
   $args = func_get_args();
   // Remove $hook from the arguments.
-  array_shift($args);
+  unset($args[0]);
   return \Drupal::moduleHandler()->invokeAll($hook, $args);
 }
 
@@ -2498,7 +2498,8 @@ function &drupal_register_shutdown_function($callback = NULL) {
       register_shutdown_function('_drupal_shutdown_function');
     }
     $args = func_get_args();
-    array_shift($args);
+    // Remove $callback from the arguments.
+    unset($args[0]);
     // Save callback and arguments
     $callbacks[] = array('callback' => $callback, 'arguments' => $args);
   }

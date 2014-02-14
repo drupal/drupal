@@ -1050,10 +1050,8 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
  */
 function views_embed_view($name, $display_id = 'default') {
   $args = func_get_args();
-  array_shift($args); // remove $name
-  if (count($args)) {
-    array_shift($args); // remove $display_id
-  }
+  // Remove $name and $display_id from the arguments.
+  unset($args[0], $args[1]);
 
   $view = views_get_view($name);
   if (!$view || !$view->access($display_id)) {
@@ -1082,10 +1080,8 @@ function views_embed_view($name, $display_id = 'default') {
  */
 function views_get_view_result($name, $display_id = NULL) {
   $args = func_get_args();
-  array_shift($args); // remove $name
-  if (count($args)) {
-    array_shift($args); // remove $display_id
-  }
+  // Remove $name and $display_id from the arguments.
+  unset($args[0], $args[1]);
 
   $view = views_get_view($name);
   if (is_object($view)) {

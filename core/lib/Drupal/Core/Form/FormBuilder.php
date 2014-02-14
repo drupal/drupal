@@ -181,8 +181,8 @@ class FormBuilder implements FormBuilderInterface {
 
     $args = func_get_args();
     // Remove $form_arg from the arguments.
-    array_shift($args);
-    $form_state['build_info']['args'] = $args;
+    unset($args[0]);
+    $form_state['build_info']['args'] = array_values($args);
 
     $form_id = $this->getFormId($form_arg, $form_state);
     return $this->buildForm($form_id, $form_state);
