@@ -687,11 +687,9 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
     foreach (array_keys($multi_column_fields) as $field_name) {
       $field_items = $entity->get($field_name);
       $field_value = $field_items->getValue();
-      // @todo Reconsider the usage of getPropertyDefinitions() after
-      // https://drupal.org/node/2144327.
-      foreach (array_keys($field_items[0]->getPropertyDefinitions()) as $property_name) {
-        if (isset($schema['fields'][$field_name . '__' . $property_name])) {
-          $values[$field_name . '__' . $property_name] = isset($field_value[0][$property_name]) ? $field_value[0][$property_name] : NULL;
+      foreach (array_keys($field_items->getFieldDefinition()->getColumns()) as $field_schema_column) {
+        if (isset($schema['fields'][$field_name . '__' . $field_schema_column])) {
+          $values[$field_name . '__' . $field_schema_column] = isset($field_value[0][$field_schema_column]) ? $field_value[0][$field_schema_column] : NULL;
         }
       }
     }
