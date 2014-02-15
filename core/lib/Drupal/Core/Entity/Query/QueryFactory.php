@@ -35,8 +35,8 @@ class QueryFactory extends ContainerAware {
   /**
    * Returns a query object for a given entity type.
    *
-   * @param string $entity_type
-   *   The entity type.
+   * @param string $entity_type_id
+   *   The entity type ID.
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
@@ -44,16 +44,16 @@ class QueryFactory extends ContainerAware {
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The query object that can query the given entity type.
    */
-  public function get($entity_type, $conjunction = 'AND') {
-    $service_name = $this->entityManager->getStorageController($entity_type)->getQueryServicename();
-    return $this->container->get($service_name)->get($entity_type, $conjunction, $this->entityManager);
+  public function get($entity_type_id, $conjunction = 'AND') {
+    $service_name = $this->entityManager->getStorageController($entity_type_id)->getQueryServicename();
+    return $this->container->get($service_name)->get($this->entityManager->getDefinition($entity_type_id), $conjunction);
   }
 
   /**
    * Returns an aggregated query object for a given entity type.
    *
-   * @param string $entity_type
-   *   The entity type.
+   * @param string $entity_type_id
+   *   The entity type ID.
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
@@ -61,9 +61,9 @@ class QueryFactory extends ContainerAware {
    * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
    *   The aggregated query object that can query the given entity type.
    */
-  public function getAggregate($entity_type, $conjunction = 'AND') {
-    $service_name = $this->entityManager->getStorageController($entity_type)->getQueryServicename();
-    return $this->container->get($service_name)->getAggregate($entity_type, $conjunction, $this->entityManager);
+  public function getAggregate($entity_type_id, $conjunction = 'AND') {
+    $service_name = $this->entityManager->getStorageController($entity_type_id)->getQueryServicename();
+    return $this->container->get($service_name)->getAggregate($this->entityManager->getDefinition($entity_type_id), $conjunction);
   }
 
 }

@@ -10,6 +10,7 @@ namespace Drupal\Core\Config\Entity\Query;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryInterface;
 
@@ -17,13 +18,6 @@ use Drupal\Core\Entity\Query\QueryInterface;
  * Defines the entity query for configuration entities.
  */
 class Query extends QueryBase implements QueryInterface {
-
-  /**
-   * Stores the entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
 
   /**
    * The config storage used by the config entity query.
@@ -42,13 +36,11 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Constructs a Query object.
    *
-   * @param string $entity_type
-   *   The entity type.
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager that stores all meta information.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The actual config storage which is used to list all config items.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -56,9 +48,8 @@ class Query extends QueryBase implements QueryInterface {
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  function __construct($entity_type, $conjunction, EntityManagerInterface $entity_manager, StorageInterface $config_storage, ConfigFactoryInterface $config_factory, array $namespaces) {
+  function __construct(EntityTypeInterface $entity_type, $conjunction, StorageInterface $config_storage, ConfigFactoryInterface $config_factory, array $namespaces) {
     parent::__construct($entity_type, $conjunction, $namespaces);
-    $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;
     $this->configFactory = $config_factory;
   }
@@ -126,15 +117,14 @@ class Query extends QueryBase implements QueryInterface {
    *   Config records keyed by entity IDs.
    */
   protected function loadRecords() {
-    $entity_type = $this->entityManager->getDefinition($this->getEntityType());
-    $prefix = $entity_type->getConfigPrefix() . '.';
+    $prefix = $this->entityType->getConfigPrefix() . '.';
     $prefix_length = strlen($prefix);
 
     // Search the conditions for restrictions on entity IDs.
     $ids = array();
     if ($this->condition->getConjunction() == 'AND') {
       foreach ($this->condition->conditions() as $condition) {
-        if (is_string($condition['field']) && $condition['field'] == $entity_type->getKey('id')) {
+        if (is_string($condition['field']) && $condition['field'] == $this->entityType->getKey('id')) {
           $operator = $condition['operator'] ?: (is_array($condition['value']) ? 'IN' : '=');
           if ($operator == '=') {
             $ids = array($condition['value']);

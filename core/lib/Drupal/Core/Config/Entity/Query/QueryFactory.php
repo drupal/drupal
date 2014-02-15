@@ -10,6 +10,7 @@ namespace Drupal\Core\Config\Entity\Query;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
@@ -57,14 +58,14 @@ class QueryFactory implements QueryFactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function get($entity_type, $conjunction, EntityManagerInterface $entity_manager) {
-    return new Query($entity_type, $conjunction, $entity_manager, $this->configStorage, $this->configFactory, $this->namespaces);
+  public function get(EntityTypeInterface $entity_type, $conjunction) {
+    return new Query($entity_type, $conjunction, $this->configStorage, $this->configFactory, $this->namespaces);
   }
 
   /**
    * {@inheritdoc}
    */
-   public function getAggregate($entity_type, $conjunction, EntityManagerInterface $entity_manager) {
+   public function getAggregate(EntityTypeInterface $entity_type, $conjunction) {
       throw new QueryException('Aggregation over configuration entities is not supported');
   }
 

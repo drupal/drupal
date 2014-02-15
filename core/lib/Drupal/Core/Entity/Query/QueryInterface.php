@@ -19,11 +19,11 @@ use Drupal\Core\Database\Query\AlterableInterface;
 interface QueryInterface extends AlterableInterface {
 
   /**
-   * Gets the entity type for this query.
+   * Gets the ID of the entity type for this query.
    *
    * @return string
    */
-  public function getEntityType();
+  public function getEntityTypeId();
 
   /**
    * Add a condition to the query or a condition group.
