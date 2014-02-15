@@ -2891,7 +2891,7 @@ function system_get_module_admin_tasks($module, $info) {
 
   $admin_tasks = array();
   $titles = array();
-  if ($menu = module_invoke($module, 'menu_link_defaults')) {
+  if ($menu = \Drupal::moduleHandler()->invoke($module, 'menu_link_defaults')) {
     foreach ($menu as $machine_name => $item) {
       if (isset($links[$machine_name])) {
         $task = $links[$machine_name];

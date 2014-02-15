@@ -660,7 +660,7 @@ function drupal_install_system($install_state) {
       ->save();
   }
 
-  module_invoke('system', 'install');
+  \Drupal::moduleHandler()->invoke('system', 'install');
 }
 
 /**
@@ -1012,7 +1012,7 @@ function drupal_requirements_severity(&$requirements) {
 function drupal_check_module($module) {
   module_load_install($module);
   // Check requirements
-  $requirements = module_invoke($module, 'requirements', 'install');
+  $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', array('install'));
   if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
     // Print any error messages
     foreach ($requirements as $requirement) {
