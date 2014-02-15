@@ -208,11 +208,10 @@ class Term extends ContentEntityBase implements TermInterface {
       ->setDescription(t('The term UUID.'))
       ->setReadOnly(TRUE);
 
-    // @todo Convert this to an entity_reference field, see
-    //   https://drupal.org/node/2181593
-    $fields['vid'] = FieldDefinition::create('string')
-      ->setLabel(t('Vocabulary ID'))
-      ->setDescription(t('The ID of the vocabulary to which the term is assigned.'));
+    $fields['vid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Vocabulary'))
+      ->setDescription(t('The vocabulary to which the term is assigned.'))
+      ->setSetting('target_type', 'taxonomy_vocabulary');
 
     $fields['langcode'] = FieldDefinition::create('language')
       ->setLabel(t('Language code'))

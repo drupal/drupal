@@ -102,7 +102,7 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     // Make sure the computed term reflects updates to the term id.
     $term2 = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vid' => $this->term->vid->value,
+      'vid' => $this->term->bundle(),
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $term2->save();

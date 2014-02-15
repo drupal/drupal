@@ -41,6 +41,10 @@ class TermValidationTest extends EntityUnitTestBase {
    * Tests the term validation constraints.
    */
   public function testValidation() {
+    $this->entityManager->getStorageController('taxonomy_vocabulary')->create(array(
+      'vid' => 'tags',
+      'name' => 'Tags',
+    ))->save();
     $term = $this->entityManager->getStorageController('taxonomy_term')->create(array(
       'name' => 'test',
       'vid' => 'tags',

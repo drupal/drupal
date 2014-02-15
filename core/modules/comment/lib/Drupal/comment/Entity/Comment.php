@@ -430,11 +430,10 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setLabel(t('Entity type'))
       ->setDescription(t('The entity type to which this comment is attached.'));
 
-    // @todo Convert to aa entity_reference field in
-    // https://drupal.org/node/2149859.
-    $fields['field_id'] = FieldDefinition::create('string')
+    $fields['field_id'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Field ID'))
-      ->setDescription(t('The comment field id.'));
+      ->setDescription(t('The comment field id.'))
+      ->setSetting('target_type', 'field_entity');
 
     $fields['field_name'] = FieldDefinition::create('string')
       ->setLabel(t('Comment field name'))
