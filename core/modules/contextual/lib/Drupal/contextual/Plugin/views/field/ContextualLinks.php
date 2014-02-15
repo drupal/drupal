@@ -9,6 +9,7 @@ namespace Drupal\contextual\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
+use Drupal\Component\Utility\Json;
 
 /**
  * Provides a handler that adds contextual links.
@@ -114,7 +115,7 @@ class ContextualLinks extends FieldPluginBase {
           '',
           array(),
           array(
-            'contextual-views-field-links' => drupal_encode_path(drupal_json_encode($links)),
+            'contextual-views-field-links' => drupal_encode_path(Json::encode($links)),
           )
         )
       );

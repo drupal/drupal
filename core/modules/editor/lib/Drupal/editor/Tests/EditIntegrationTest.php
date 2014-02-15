@@ -7,6 +7,7 @@
 
 namespace Drupal\editor\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Core\Language\Language;
 use Drupal\edit\EditorSelector;
 use Drupal\edit\MetadataGenerator;
@@ -199,7 +200,7 @@ class EditIntegrationTest extends EditTestBase {
         'data' => 'Test',
       )
     );
-    $this->assertEqual(drupal_json_encode($expected), $response->prepare($request)->getContent(), 'The GetUntransformedTextCommand AJAX command works correctly.');
+    $this->assertEqual(Json::encode($expected), $response->prepare($request)->getContent(), 'The GetUntransformedTextCommand AJAX command works correctly.');
   }
 
 }

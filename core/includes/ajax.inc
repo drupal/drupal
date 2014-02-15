@@ -5,6 +5,8 @@
  * Functions for use with Drupal's Ajax framework.
  */
 
+use Drupal\Component\Utility\Json;
+
 /**
  * @defgroup ajax Ajax framework
  * @{
@@ -300,7 +302,7 @@ function ajax_render($commands = array()) {
   // Allow modules to alter any Ajax response.
   drupal_alter('ajax_render', $commands);
 
-  return drupal_json_encode($commands);
+  return Json::encode($commands);
 }
 
 /**

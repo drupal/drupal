@@ -7,6 +7,7 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Core\KeyValueStore\StateInterface;
+use Drupal\Component\Utility\Json;
 
 /**
  * Renders JavaScript assets.
@@ -67,7 +68,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
       switch ($js_asset['type']) {
         case 'setting':
           $element['#value_prefix'] = $embed_prefix;
-          $element['#value'] = 'var drupalSettings = ' . drupal_json_encode(drupal_merge_js_settings($js_asset['data'])) . ";";
+          $element['#value'] = 'var drupalSettings = ' . Json::encode(drupal_merge_js_settings($js_asset['data'])) . ";";
           $element['#value_suffix'] = $embed_suffix;
           break;
 

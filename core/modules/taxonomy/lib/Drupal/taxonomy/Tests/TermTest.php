@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldDefinitionInterface;
 
@@ -274,7 +275,7 @@ class TermTest extends TaxonomyTestBase {
       'value' => check_plain($first_term->label()),
       'label' => $first_term->label(),
     ));
-    $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns only the expected matching term.');
+    $this->assertRaw(Json::encode($target), 'Autocomplete returns only the expected matching term.');
 
     // Try to autocomplete a term name with both a comma and a slash.
     $input = '"term with, comma and / a';
@@ -286,7 +287,7 @@ class TermTest extends TaxonomyTestBase {
       'value' => $n,
       'label' => check_plain($third_term->label()),
     ));
-    $this->assertRaw(drupal_json_encode($target), 'Autocomplete returns a term containing a comma and a slash.');
+    $this->assertRaw(Json::encode($target), 'Autocomplete returns a term containing a comma and a slash.');
   }
 
   /**
