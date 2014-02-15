@@ -11,6 +11,7 @@ use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\LocalActionInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
@@ -94,7 +95,7 @@ class LocalActionManager extends DefaultPluginManager {
 /**
    * The plugin instances.
    *
-   * @var array
+   * @var \Drupal\Core\Menu\LocalActionInterface[]
    */
   protected $instances = array();
 
@@ -112,12 +113,14 @@ class LocalActionManager extends DefaultPluginManager {
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   The access manager.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManager $access_manager, AccountInterface $account) {
     // Skip calling the parent constructor, since that assumes annotation-based
     // discovery.
     $this->discovery = new YamlDiscovery('local_actions', $module_handler->getModuleDirectories());
@@ -179,10 +182,10 @@ class LocalActionManager extends DefaultPluginManager {
       }
     }
     $links = array();
-    foreach ($this->instances[$route_appears] as $plugin) {
+    foreach ($this->instances[$route_appears] as $plugin_id => $plugin) {
       $route_name = $plugin->getRouteName();
       $route_parameters = $plugin->getRouteParameters($this->request);
-      $links[$route_name] = array(
+      $links[$plugin_id] = array(
         '#theme' => 'menu_local_action',
         '#link' => array(
           'title' => $this->getTitle($plugin),
