@@ -228,11 +228,11 @@ function rdf_comment_load($comments) {
     // to optimize performance for websites that implement an entity cache.
     $created_mapping = rdf_get_mapping('comment', $comment->bundle())
       ->getPreparedFieldMapping('created');
-    $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->created->value);
-    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+    $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->getCreatedTime());
+    $entity = $comment->getCommentedEntity();
     $comment->rdf_data['entity_uri'] = $entity->url();
-    if ($comment->pid->target_id) {
-      $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id);
+    if ($comment->hasParentComment()) {
+      $comment->rdf_data['pid_uri'] = $comment->getParentComment()->url();
     }
   }
 }
@@ -491,7 +491,7 @@ function rdf_preprocess_comment(&$variables) {
     $variables['rdf_metadata_attributes'][] = $parent_entity_attributes;
 
     // Adds the relation to parent comment, if it exists.
-    if ($comment->pid->target_id != 0) {
+    if ($comment->hasParentComment()) {
       $parent_comment_attributes['rel'] = $pid_mapping['properties'];
       // The parent comment URI is precomputed as part of the rdf_data so that
       // it can be cached as part of the entity.

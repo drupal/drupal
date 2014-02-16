@@ -44,7 +44,7 @@ class CommentThreadingTest extends CommentTestBase {
     $comment1 = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment1), 'Comment #1. Comment found.');
-    $this->assertEqual($comment1->thread->value, '01/');
+    $this->assertEqual($comment1->getThread(), '01/');
     // Confirm that there is no reference to a parent comment.
     $this->assertNoParentLink($comment1->id());
 
@@ -54,7 +54,7 @@ class CommentThreadingTest extends CommentTestBase {
     $comment2 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment2, TRUE), 'Comment #2. Reply found.');
-    $this->assertEqual($comment2->thread->value, '01.00/');
+    $this->assertEqual($comment2->getThread(), '01.00/');
     // Confirm that there is a link to the parent comment.
     $this->assertParentLink($comment2->id(), $comment1->id());
 
@@ -63,7 +63,7 @@ class CommentThreadingTest extends CommentTestBase {
     $comment3 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment3, TRUE), 'Comment #3. Second reply found.');
-    $this->assertEqual($comment3->thread->value, '01.00.00/');
+    $this->assertEqual($comment3->getThread(), '01.00.00/');
     // Confirm that there is a link to the parent comment.
     $this->assertParentLink($comment3->id(), $comment2->id());
 
@@ -73,7 +73,7 @@ class CommentThreadingTest extends CommentTestBase {
     $comment4 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment4), 'Comment #4. Third reply found.');
-    $this->assertEqual($comment4->thread->value, '01.01/');
+    $this->assertEqual($comment4->getThread(), '01.01/');
     // Confirm that there is a link to the parent comment.
     $this->assertParentLink($comment4->id(), $comment1->id());
 
@@ -84,7 +84,7 @@ class CommentThreadingTest extends CommentTestBase {
     $comment5 = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment5), 'Comment #5. Second comment found.');
-    $this->assertEqual($comment5->thread->value, '02/');
+    $this->assertEqual($comment5->getThread(), '02/');
     // Confirm that there is no link to a parent comment.
     $this->assertNoParentLink($comment5->id());
 
@@ -94,7 +94,7 @@ class CommentThreadingTest extends CommentTestBase {
     $comment6 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment6, TRUE), 'Comment #6. Reply found.');
-    $this->assertEqual($comment6->thread->value, '02.00/');
+    $this->assertEqual($comment6->getThread(), '02.00/');
     // Confirm that there is a link to the parent comment.
     $this->assertParentLink($comment6->id(), $comment5->id());
 
@@ -103,7 +103,7 @@ class CommentThreadingTest extends CommentTestBase {
     $comment7 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment7, TRUE), 'Comment #7. Second reply found.');
-    $this->assertEqual($comment7->thread->value, '02.00.00/');
+    $this->assertEqual($comment7->getThread(), '02.00.00/');
     // Confirm that there is a link to the parent comment.
     $this->assertParentLink($comment7->id(), $comment6->id());
 
@@ -113,7 +113,7 @@ class CommentThreadingTest extends CommentTestBase {
     $comment8 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment8), 'Comment #8. Third reply found.');
-    $this->assertEqual($comment8->thread->value, '02.01/');
+    $this->assertEqual($comment8->getThread(), '02.01/');
     // Confirm that there is a link to the parent comment.
     $this->assertParentLink($comment8->id(), $comment5->id());
   }

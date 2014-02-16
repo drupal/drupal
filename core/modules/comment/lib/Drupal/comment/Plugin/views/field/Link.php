@@ -102,6 +102,7 @@ class Link extends FieldPluginBase {
    */
   protected function renderLink($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
+    /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $data;
     $cid = $comment->id();
 
@@ -114,9 +115,7 @@ class Link extends FieldPluginBase {
     }
     // If there is no comment link to the node.
     elseif ($this->options['link_to_node']) {
-      $entity_id = $comment->entity_id;
-      $entity_type = $comment->entity_type;
-      $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
+      $entity = $comment->getCommentedEntity();
       $this->options['alter']['path'] = $entity->getSystemPath();
     }
 

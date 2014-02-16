@@ -51,6 +51,7 @@ class CommentCSSTest extends CommentTestBase {
       $node = $this->drupalCreateNode(array('type' => 'article', 'uid' => $case['node_uid']));
 
       // Add a comment.
+      /** @var \Drupal\comment\CommentInterface $comment */
       $comment = entity_create('comment', array(
         'entity_id' => $node->id(),
         'entity_type' => 'node',
@@ -132,7 +133,7 @@ class CommentCSSTest extends CommentTestBase {
       // comment that was created or changed after the last time the current
       // user read the corresponding node.
       if ($case['comment_status'] == CommentInterface::PUBLISHED || $case['user'] == 'admin') {
-        $this->assertIdentical(1, count($this->xpath('//*[contains(@class, "comment")]/*[@data-comment-timestamp="' . $comment->changed->value . '"]')), 'data-comment-timestamp attribute is set on comment');
+        $this->assertIdentical(1, count($this->xpath('//*[contains(@class, "comment")]/*[@data-comment-timestamp="' . $comment->getChangedTime() . '"]')), 'data-comment-timestamp attribute is set on comment');
         $expectedJS = ($case['user'] !== 'anonymous');
         $this->assertIdentical($expectedJS, isset($settings['ajaxPageState']['js']['core/modules/comment/js/comment-new-indicator.js']), 'drupal.comment-new-indicator library is present.');
       }

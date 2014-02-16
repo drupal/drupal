@@ -179,12 +179,12 @@ abstract class CommentTestBase extends WebTestBase {
   function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
     if ($comment) {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
-      $regex .= '<a id="comment-' . $comment->id() . '"(.*?)'; // Comment anchor.
-      $regex .= $comment->subject->value . '(.*?)'; // Match subject.
-      $regex .= $comment->comment_body->value . '(.*?)'; // Match comment.
+      $regex .= '<a id="comment-' . $comment->id() . '"(.*?)';
+      $regex .= $comment->getSubject() . '(.*?)';
+      $regex .= $comment->comment_body->value . '(.*?)';
       $regex .= '/s';
 
-      return (boolean)preg_match($regex, $this->drupalGetContent());
+      return (boolean) preg_match($regex, $this->drupalGetContent());
     }
     else {
       return FALSE;

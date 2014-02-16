@@ -60,156 +60,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
   protected $threadLock = '';
 
   /**
-   * The comment ID.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $cid;
-
-  /**
-   * The comment UUID.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $uuid;
-
-  /**
-   * The parent comment ID if this is a reply to another comment.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $pid;
-
-  /**
-   * The entity ID for the entity to which this comment is attached.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $entity_id;
-
-  /**
-   * The entity type of the entity to which this comment is attached.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $entity_type;
-
-  /**
-   * The field to which this comment is attached.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $field_id;
-
-  /**
-   * The comment language code.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $langcode;
-
-  /**
-   * The comment title.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $subject;
-
-  /**
-   * The comment author ID.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $uid;
-
-  /**
-   * The comment author's name.
-   *
-   * For anonymous authors, this is the value as typed in the comment form.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $name;
-
-  /**
-   * The comment author's e-mail address.
-   *
-   * For anonymous authors, this is the value as typed in the comment form.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $mail;
-
-  /**
-   * The comment author's home page address.
-   *
-   * For anonymous authors, this is the value as typed in the comment form.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $homepage;
-
-  /**
-   * The comment author's hostname.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $hostname;
-
-  /**
-   * The time that the comment was created.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $created;
-
-  /**
-   * The time that the comment was last edited.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $changed;
-
-  /**
-   * A boolean field indicating whether the comment is published.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $status;
-
-  /**
-   * The alphadecimal representation of the comment's place in a thread.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface
-   */
-  public $thread;
-
-  /**
-   * Initialize the object. Invoked upon construction and wake up.
-   */
-  protected function init() {
-    parent::init();
-    // We unset all defined properties, so magic getters apply.
-    unset($this->cid);
-    unset($this->uuid);
-    unset($this->pid);
-    unset($this->entity_id);
-    unset($this->field_id);
-    unset($this->subject);
-    unset($this->uid);
-    unset($this->name);
-    unset($this->mail);
-    unset($this->homepage);
-    unset($this->hostname);
-    unset($this->created);
-    unset($this->changed);
-    unset($this->status);
-    unset($this->thread);
-    unset($this->entity_type);
-  }
-
-  /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
+   * {@inheritdoc}
    */
   public function id() {
     return $this->get('cid')->value;
@@ -221,23 +72,21 @@ class Comment extends ContentEntityBase implements CommentInterface {
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     parent::preSave($storage_controller);
 
-    if (!isset($this->status->value)) {
-      $this->status->value = \Drupal::currentUser()->hasPermission('skip comment approval') ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED;
+    if (is_null($this->get('status')->value)) {
+      $published = \Drupal::currentUser()->hasPermission('skip comment approval') ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED;
+      $this->setPublished($published);
     }
     if ($this->isNew()) {
       // Add the comment to database. This next section builds the thread field.
       // Also see the documentation for comment_view().
-      if (!empty($this->thread->value)) {
-        // Allow calling code to set thread itself.
-        $thread = $this->thread->value;
-      }
-      else {
+      $thread = $this->getThread();
+      if (empty($thread)) {
         if ($this->threadLock) {
           // As preSave() is protected, this can only happen when this class
           // is extended in a faulty manner.
           throw new \LogicException('preSave is called again without calling postSave() or releaseThreadLock()');
         }
-        if ($this->pid->target_id == 0) {
+        if (!$this->hasParentComment()) {
           // This is a comment with no parent comment (depth 0): we start
           // by retrieving the maximum thread level.
           $max = $storage_controller->getMaxThread($this);
@@ -253,10 +102,10 @@ class Comment extends ContentEntityBase implements CommentInterface {
           // the thread value at the proper depth.
 
           // Get the parent comment:
-          $parent = $this->pid->entity;
+          $parent = $this->getParentComment();
           // Strip the "/" from the end of the parent thread.
-          $parent->thread->value = (string) rtrim((string) $parent->thread->value, '/');
-          $prefix = $parent->thread->value . '.';
+          $parent->setThread((string) rtrim((string) $parent->getThread(), '/'));
+          $prefix = $parent->getThread() . '.';
           // Get the max value in *this* thread.
           $max = $storage_controller->getMaxThreadPerThread($this);
 
@@ -271,7 +120,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
             $max = rtrim($max, '/');
             // Get the value at the correct depth.
             $parts = explode('.', $max);
-            $parent_depth = count(explode('.', $parent->thread->value));
+            $parent_depth = count(explode('.', $parent->getThread()));
             $n = Number::alphadecimalToInt($parts[$parent_depth]);
           }
         }
@@ -280,24 +129,24 @@ class Comment extends ContentEntityBase implements CommentInterface {
         // has the lock, just move to the next integer.
         do {
           $thread = $prefix . Number::intToAlphadecimal(++$n) . '/';
-          $lock_name = "comment:{$this->entity_id->value}:$thread";
+          $lock_name = "comment:{$this->getCommentedEntityId()}:$thread";
         } while (!\Drupal::lock()->acquire($lock_name));
         $this->threadLock = $lock_name;
       }
-      if (empty($this->created->value)) {
-        $this->created->value = REQUEST_TIME;
+      if (is_null($this->getCreatedTime())) {
+        $this->setCreatedTime(REQUEST_TIME);
       }
-      if (empty($this->changed->value)) {
-        $this->changed->value = $this->created->value;
+      if (is_null($this->getChangedTime())) {
+        $this->set('changed', $this->getCreatedTime());
       }
       // We test the value with '===' because we need to modify anonymous
       // users as well.
       if ($this->getOwnerId() === \Drupal::currentUser()->id() && \Drupal::currentUser()->isAuthenticated()) {
-        $this->name->value = \Drupal::currentUser()->getUsername();
+        $this->setAuthorName(\Drupal::currentUser()->getUsername());
       }
       // Add the values which aren't passed into the function.
-      $this->thread->value = $thread;
-      $this->hostname->value = \Drupal::request()->getClientIP();
+      $this->setThread($thread);
+      $this->setHostname(\Drupal::request()->getClientIP());
     }
   }
 
@@ -310,7 +159,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $this->releaseThreadLock();
     // Update the {comment_entity_statistics} table prior to executing the hook.
     $storage_controller->updateEntityStatistics($this);
-    if ($this->status->value == CommentInterface::PUBLISHED) {
+    if ($this->isPublished()) {
       module_invoke_all('comment_publish', $this);
     }
   }
@@ -343,7 +192,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function permalink() {
-    $entity = entity_load($this->get('entity_type')->value, $this->get('entity_id')->value);
+    $entity = $this->getCommentedEntity();
     $uri = $entity->urlInfo();
     $uri['options'] = array('fragment' => 'comment-' . $this->id());
 
@@ -450,8 +299,192 @@ class Comment extends ContentEntityBase implements CommentInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasParentComment() {
+    $parent = $this->get('pid')->entity;
+    return !empty($parent);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getParentComment() {
+    return $this->get('pid')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCommentedEntity() {
+    $entity_id = $this->getCommentedEntityId();
+    $entity_type = $this->getCommentedEntityTypeId();
+    return entity_load($entity_type, $entity_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCommentedEntityId() {
+    return $this->get('entity_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCommentedEntityTypeId() {
+    return $this->get('entity_type')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldId() {
+    return $this->get('field_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFieldId($field_id) {
+    $this->set('field_id', $field_id);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldName() {
+    return $this->get('field_name')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSubject() {
+    return $this->get('subject')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSubject($subject) {
+    $this->set('subject', $subject);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAuthorName() {
+    return $this->get('name')->value ?: \Drupal::config('user.settings')->get('anonymous');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAuthorName($name) {
+    $this->set('name', $name);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAuthorEmail() {
+    $mail = $this->get('mail')->value;
+
+    if ($this->get('uid')->target_id != 0) {
+      $mail = $this->get('uid')->entity->getEmail();
+    }
+
+    return $mail;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHomepage() {
+    return $this->get('homepage')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setHomepage($homepage) {
+    $this->set('homepage', $homepage);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHostname() {
+    return $this->get('hostname')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setHostname($hostname) {
+    $this->set('hostname', $hostname);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreatedTime() {
+    if (isset($this->get('created')->value)) {
+      return $this->get('created')->value;
+    }
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCreatedTime($created) {
+    $this->set('created', $created);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPublished() {
+    return $this->get('status')->value == CommentInterface::PUBLISHED;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPublished($status) {
+    $this->set('status', $status ? CommentInterface::PUBLISHED : CommentInterface::NOT_PUBLISHED);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getThread() {
+    $thread = $this->get('thread');
+    if (!empty($thread->value)) {
+      return $thread->value;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setThread($thread) {
+    $this->set('thread', $thread);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getChangedTime() {
-    return $this->changed->value;
+    return $this->get('changed')->value;
   }
 
   /**

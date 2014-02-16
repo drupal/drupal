@@ -100,8 +100,8 @@ class CommentManager implements CommentManagerInterface {
    */
   public function getParentEntityUri(CommentInterface $comment) {
     return $this->entityManager
-      ->getStorageController($comment->entity_type->value)
-      ->load($comment->entity_id->value)
+      ->getStorageController($comment->getCommentedEntityTypeId())
+      ->load($comment->getCommentedEntityId())
       ->urlInfo();
   }
 

@@ -78,23 +78,23 @@ class CommentBlockTest extends CommentTestBase {
     $this->assertText(t('Recent comments'));
 
     // Test the only the 10 latest comments are shown and in the proper order.
-    $this->assertNoText($comments[10]->subject->value, 'Comment 11 not found in block.');
+    $this->assertNoText($comments[10]->getSubject(), 'Comment 11 not found in block.');
     for ($i = 0; $i < 10; $i++) {
-      $this->assertText($comments[$i]->subject->value, String::format('Comment @number found in block.', array('@number' => 10 - $i)));
+      $this->assertText($comments[$i]->getSubject(), String::format('Comment @number found in block.', array('@number' => 10 - $i)));
       if ($i > 1) {
         $previous_position = $position;
-        $position = strpos($this->drupalGetContent(), $comments[$i]->subject->value);
+        $position = strpos($this->drupalGetContent(), $comments[$i]->getSubject());
         $this->assertTrue($position > $previous_position, String::format('Comment @a appears after comment @b', array('@a' => 10 - $i, '@b' => 11 - $i)));
       }
-      $position = strpos($this->drupalGetContent(), $comments[$i]->subject->value);
+      $position = strpos($this->drupalGetContent(), $comments[$i]->getSubject());
     }
 
     // Test that links to comments work when comments are across pages.
     $this->setCommentsPerPage(1);
 
     for ($i = 0; $i < 10; $i++) {
-      $this->clickLink($comments[$i]->subject->value);
-      $this->assertText($comments[$i]->subject->value, 'Comment link goes to correct page.');
+      $this->clickLink($comments[$i]->getSubject());
+      $this->assertText($comments[$i]->getSubject(), 'Comment link goes to correct page.');
       $this->assertRaw('<link rel="canonical"', 'Canonical URL was found in the HTML head');
     }
   }

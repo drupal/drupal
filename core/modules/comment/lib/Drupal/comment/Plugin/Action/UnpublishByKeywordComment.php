@@ -29,7 +29,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase {
     $text = drupal_render($build);
     foreach ($this->configuration['keywords'] as $keyword) {
       if (strpos($text, $keyword) !== FALSE) {
-        $comment->status->value = CommentInterface::NOT_PUBLISHED;
+        $comment->setPublished(FALSE);
         $comment->save();
         break;
       }

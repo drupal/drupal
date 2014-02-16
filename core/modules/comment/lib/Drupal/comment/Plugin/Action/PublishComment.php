@@ -25,7 +25,7 @@ class PublishComment extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($comment = NULL) {
-    $comment->status->value = CommentInterface::PUBLISHED;
+    $comment->setPublished(TRUE);
     $comment->save();
   }
 

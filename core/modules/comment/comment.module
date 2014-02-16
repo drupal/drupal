@@ -749,7 +749,7 @@ function comment_prepare_thread(&$comments) {
   foreach ($comments as $key => &$comment) {
     // The $divs element instructs #prefix whether to add an indent div or
     // close existing divs (a negative value).
-    $comment->depth = count(explode('.', $comment->thread->value)) - 1;
+    $comment->depth = count(explode('.', $comment->getThread())) - 1;
     if ($comment->depth > $divs) {
       $comment->divs = 1;
       $divs++;
@@ -935,7 +935,7 @@ function comment_entity_insert(EntityInterface $entity) {
       'last_comment_timestamp',
       'last_comment_name',
       'last_comment_uid',
-      'comment_count'
+      'comment_count',
     ));
     $execute_query = FALSE;
     foreach ($fields as $field_name => $detail) {
@@ -1094,7 +1094,7 @@ function comment_user_cancel($edit, $account, $method) {
     case 'user_cancel_block_unpublish':
       $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->id()));
       foreach ($comments as $comment) {
-        $comment->status->value = 0;
+        $comment->setPublished(COMMENT_NOT_PUBLISHED);
         $comment->save();
       }
       break;
@@ -1285,12 +1285,13 @@ function comment_get_display_page($cid, $instance) {
  */
 function comment_preview(CommentInterface $comment, array &$form_state) {
   $preview_build = array();
-  $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+  $entity = $comment->getCommentedEntity();
 
   if (!form_get_errors($form_state)) {
     // Attach the user and time information.
-    if (!empty($comment->name->value)) {
-      $account = user_load_by_name($comment->name->value);
+    $author_name = $comment->getAuthorName();
+    if (!empty($author_name)) {
+      $account = user_load_by_name($author_name);
     }
     elseif (\Drupal::currentUser()->isAuthenticated() && empty($comment->is_anonymous)) {
       $account = \Drupal::currentUser();
@@ -1298,13 +1299,14 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
 
     if (!empty($account) && $account->isAuthenticated()) {
       $comment->setOwner($account);
-      $comment->name->value = check_plain($account->getUsername());
+      $comment->setAuthorName(check_plain($account->getUsername()));
     }
-    else {
-      $comment->name->value = \Drupal::config('user.settings')->get('anonymous');
+    elseif (empty($author_name)) {
+      $comment->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));
     }
 
-    $comment->created->value = !empty($comment->created->value) ? $comment->created->value : REQUEST_TIME;
+    $created_time = !is_null($comment->getCreatedTime()) ? $comment->getCreatedTime() : REQUEST_TIME;
+    $comment->setCreatedTime($created_time);
     $comment->changed->value = REQUEST_TIME;
     $comment->in_preview = TRUE;
     $comment_build = comment_view($comment);
@@ -1313,10 +1315,10 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
     $preview_build['comment_preview'] = $comment_build;
   }
 
-  if ($comment->pid->target_id) {
+  if ($comment->hasParentComment()) {
     $build = array();
-    $parent = $comment->pid->entity;
-    if ($parent && $parent->status->value == CommentInterface::PUBLISHED) {
+    $parent = $comment->getParentComment();
+    if ($parent && $parent->isPublished()) {
       $build = comment_view($parent);
     }
   }
@@ -1332,7 +1334,7 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
     // entity is rendered, it excludes the comment field output. As objects are
     // always addressed by reference we ensure changes are not lost by setting
     // the value back to its original state after the call to entity_view().
-    $field_name = $comment->field_name->value;
+    $field_name = $comment->getFieldName();
     $original_value = $entity->get($field_name);
     $entity->set($field_name, COMMENT_HIDDEN);
     $build = entity_view($entity, 'full');
@@ -1370,7 +1372,7 @@ function comment_prepare_author(CommentInterface $comment) {
   // The account has been pre-loaded by CommentViewBuilder::buildContent().
   $account = $comment->getOwner();
   if (empty($account->uid->value)) {
-    $account = entity_create('user', array('uid' => 0, 'name' => $comment->name->value, 'homepage' => $comment->homepage->value));
+    $account = entity_create('user', array('uid' => 0, 'name' => $comment->getAuthorName(), 'homepage' => $comment->getHomepage()));
   }
   return $account;
 }
@@ -1388,7 +1390,7 @@ function comment_prepare_author(CommentInterface $comment) {
 function template_preprocess_comment(&$variables) {
   /** @var \Drupal\comment\CommentInterface $comment */
   $comment = $variables['elements']['#comment'];
-  $commented_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+  $commented_entity = $comment->getCommentedEntity();
   $variables['comment'] = $comment;
   $variables['commented_entity'] = $commented_entity;
 
@@ -1399,14 +1401,14 @@ function template_preprocess_comment(&$variables) {
     '#account' => $account,
   );
   $variables['author'] = drupal_render($username);
-  $variables['new_indicator_timestamp'] = $comment->changed->value;
-  $variables['created'] = format_date($comment->created->value);
+  $variables['new_indicator_timestamp'] = $comment->getChangedTime();
+  $variables['created'] = format_date($comment->getCreatedTime());
   // Avoid calling format_date() twice on the same timestamp.
-  if ($comment->changed->value == $comment->created->value) {
+  if ($comment->getChangedTime() == $comment->getCreatedTime()) {
     $variables['changed'] = $variables['created'];
   }
   else {
-    $variables['changed'] = format_date($comment->changed->value);
+    $variables['changed'] = format_date($comment->getChangedTime());
   }
 
   if (theme_get_setting('features.comment_user_picture')) {
@@ -1425,13 +1427,13 @@ function template_preprocess_comment(&$variables) {
     $variables['signature'] = '';
   }
   if (isset($comment->in_preview)) {
-    $variables['title'] = l($comment->subject->value, '');
+    $variables['title'] = l($comment->getSubject(), '');
     $variables['permalink'] = l(t('Permalink'), '');
   }
   else {
     $uri = $comment->urlInfo();
     $uri['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
-    $variables['title'] = \Drupal::l($comment->subject->value, $uri['route_name'], $uri['route_parameters'], $uri['options']);
+    $variables['title'] = \Drupal::l($comment->getSubject(), $uri['route_name'], $uri['route_parameters'], $uri['options']);
 
     $permalink_uri = $comment->permalink();
     $variables['permalink'] = \Drupal::l(t('Permalink'), $permalink_uri['route_name'], $permalink_uri['route_parameters'], $permalink_uri['options']);
@@ -1439,9 +1441,9 @@ function template_preprocess_comment(&$variables) {
 
   $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['author'], '!datetime' => $variables['created']));
 
-  if ($comment->pid->target_id) {
+  if ($comment->hasParentComment()) {
     // Fetch and store the parent comment information for use in templates.
-    $comment_parent = $comment->pid->entity;
+    $comment_parent = $comment->getParentComment();
     $account_parent = comment_prepare_author($comment_parent);
     $variables['parent_comment'] = $comment_parent;
     // @todo Do not call theme() here. We do this for purposes of t().
@@ -1450,17 +1452,17 @@ function template_preprocess_comment(&$variables) {
       '#account' => $account_parent,
     );
     $variables['parent_author'] = drupal_render($username);
-    $variables['parent_created'] = format_date($comment_parent->created->value);
+    $variables['parent_created'] = format_date($comment_parent->getCreatedTime());
     // Avoid calling format_date() twice on the same timestamp.
-    if ($comment_parent->changed->value == $comment_parent->created->value) {
+    if ($comment_parent->getChangedTime() == $comment_parent->getCreatedTime()) {
       $variables['parent_changed'] = $variables['parent_created'];
     }
     else {
-      $variables['parent_changed'] = format_date($comment_parent->changed->value);
+      $variables['parent_changed'] = format_date($comment_parent->getChangedTime());
     }
     $permalink_uri_parent = $comment_parent->permalink();
     $permalink_uri_parent['options'] += array('attributes' => array('class' => array('permalink'), 'rel' => 'bookmark'));
-    $variables['parent_title'] = \Drupal::l($comment_parent->subject->value, $permalink_uri_parent['route_name'], $permalink_uri_parent['route_parameters'], $permalink_uri_parent['options']);
+    $variables['parent_title'] = \Drupal::l($comment_parent->getSubject(), $permalink_uri_parent['route_name'], $permalink_uri_parent['route_parameters'], $permalink_uri_parent['options']);
     $variables['parent_permalink'] = \Drupal::l(t('Parent permalink'), $permalink_uri_parent['route_name'], $permalink_uri_parent['route_parameters'], $permalink_uri_parent['options']);
     $variables['parent'] = t('In reply to !parent_title by !parent_username',
         array('!parent_username' => $variables['parent_author'], '!parent_title' => $variables['parent_title']));
@@ -1485,7 +1487,7 @@ function template_preprocess_comment(&$variables) {
     $variables['status'] = 'preview';
   }
   else {
-    $variables['status'] = ($comment->status->value == CommentInterface::NOT_PUBLISHED) ? 'unpublished' : 'published';
+    $variables['status'] = $comment->isPublished() ? 'published' : 'unpublished';
   }
 
   // Gather comment classes.
@@ -1573,9 +1575,9 @@ function comment_ranking() {
  * Implements hook_file_download_access().
  */
 function comment_file_download_access($field, EntityInterface $entity, FileInterface $file) {
-  if ($entity->getEntityTypeId() == 'comment') {
-    if (user_access('access comments') && $entity->status->value == CommentInterface::PUBLISHED || user_access('administer comments')) {
-      $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);
+  if ($entity instanceof CommentInterface) {
+    if (user_access('access comments') && $entity->isPublished() || user_access('administer comments')) {
+      $commented_entity = $entity->getCommentedEntity();
       // Check access to parent entity.
       return $commented_entity->access('view');
     }

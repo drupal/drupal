@@ -90,13 +90,13 @@ class DefaultViewRecentComments extends ViewTestBase {
         'entity_id' => $this->node->id(),
       ));
       $comment->setOwnerId(0);
-      $comment->subject->value = 'Test comment ' . $i;
+      $comment->setSubject('Test comment ' . $i);
       $comment->comment_body->value = 'Test body ' . $i;
       $comment->comment_body->format = 'full_html';
 
       // Ensure comments are sorted in ascending order.
       $time = REQUEST_TIME + ($this->masterDisplayResults - $i);
-      $comment->created->value = $time;
+      $comment->setCreatedTime($time);
       $comment->changed->value = $time;
 
       $comment->save();
@@ -125,10 +125,10 @@ class DefaultViewRecentComments extends ViewTestBase {
     );
     $expected_result = array();
     foreach (array_values($this->commentsCreated) as $key => $comment) {
-      $expected_result[$key]['entity_id'] = $comment->entity_id->value;
-      $expected_result[$key]['subject'] = $comment->subject->value;
+      $expected_result[$key]['entity_id'] = $comment->getCommentedEntityId();
+      $expected_result[$key]['subject'] = $comment->getSubject();
       $expected_result[$key]['cid'] = $comment->id();
-      $expected_result[$key]['created'] = $comment->created->value;
+      $expected_result[$key]['created'] = $comment->getCreatedTime();
     }
     $this->assertIdenticalResultset($view, $expected_result, $map);
 

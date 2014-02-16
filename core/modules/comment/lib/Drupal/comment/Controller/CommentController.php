@@ -85,7 +85,7 @@ class CommentController extends ControllerBase {
    *   Redirects to the permalink URL for this comment.
    */
   public function commentApprove(CommentInterface $comment) {
-    $comment->status->value = CommentInterface::PUBLISHED;
+    $comment->setPublished(TRUE);
     $comment->save();
 
     drupal_set_message($this->t('Comment approved.'));
@@ -118,12 +118,12 @@ class CommentController extends ControllerBase {
    *   The comment listing set to the page on which the comment appears.
    */
   public function commentPermalink(Request $request, CommentInterface $comment) {
-    if ($entity = $this->entityManager()->getStorageController($comment->entity_type->value)->load($comment->entity_id->value)) {
+    if ($entity = $this->entityManager()->getStorageController($comment->getCommentedEntityTypeId())->load($comment->getCommentedEntityId())) {
       // Check access permissions for the entity.
       if (!$entity->access('view')) {
         throw new AccessDeniedHttpException();
       }
-      $instance = $this->fieldInfo->getInstance($entity->getEntityTypeId(), $entity->bundle(), $comment->field_name->value);
+      $instance = $this->fieldInfo->getInstance($entity->getEntityTypeId(), $entity->bundle(), $comment->getFieldName());
 
       // Find the current display page for this comment.
       $page = comment_get_display_page($comment->id(), $instance);
@@ -240,7 +240,7 @@ class CommentController extends ControllerBase {
         // Load the parent comment.
         $comment = $this->entityManager()->getStorageController('comment')->load($pid);
         // Check if the parent comment is published and belongs to the entity.
-        if (($comment->status->value == CommentInterface::NOT_PUBLISHED) || ($comment->entity_id->value != $entity->id())) {
+        if (!$comment->isPublished() || ($comment->getCommentedEntityId() != $entity->id())) {
           drupal_set_message($this->t('The comment you are replying to does not exist.'), 'error');
           return $this->redirect($uri['route_name'], $uri['route_parameters']);
         }

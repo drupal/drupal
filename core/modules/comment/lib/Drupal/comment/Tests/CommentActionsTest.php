@@ -41,12 +41,12 @@ class CommentActionsTest extends CommentTestBase {
     // Unpublish a comment.
     $action = entity_load('action', 'comment_unpublish_action');
     $action->execute(array($comment));
-    $this->assertEqual($comment->status->value, CommentInterface::NOT_PUBLISHED, 'Comment was unpublished');
+    $this->assertTrue($comment->isPublished() === FALSE, 'Comment was unpublished');
 
     // Publish a comment.
     $action = entity_load('action', 'comment_publish_action');
     $action->execute(array($comment));
-    $this->assertEqual($comment->status->value, CommentInterface::PUBLISHED, 'Comment was published');
+    $this->assertTrue($comment->isPublished() === TRUE, 'Comment was published');
   }
 
   /**
@@ -72,10 +72,10 @@ class CommentActionsTest extends CommentTestBase {
     // Load the full comment so that status is available.
     $comment = comment_load($comment->id());
 
-    $this->assertTrue($comment->status->value == CommentInterface::PUBLISHED, 'The comment status was set to published.');
+    $this->assertTrue($comment->isPublished() === TRUE, 'The comment status was set to published.');
 
     $action->execute(array($comment));
-    $this->assertTrue($comment->status->value == CommentInterface::NOT_PUBLISHED, 'The comment status was set to not published.');
+    $this->assertTrue($comment->isPublished() === FALSE, 'The comment status was set to not published.');
   }
 
 }

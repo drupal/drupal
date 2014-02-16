@@ -29,7 +29,7 @@ class CommentFieldNameValue extends TypedData {
       // Field id is of the form {entity_type}__{field_name}. We set the
       // optional limit param to explode() in case the user adds a field with __
       // in the name.
-      $parts = explode('__', $entity->field_id->value, 2);
+      $parts = explode('__', $entity->getFieldId(), 2);
       if ($parts && count($parts) == 2) {
         $this->value = end($parts);
       }
@@ -46,7 +46,7 @@ class CommentFieldNameValue extends TypedData {
       // Also set the field id.
       $field = $this->parent->getParent();
       $entity = $field->getParent();
-      $entity->field_id = $entity->entity_type->value . '__' . $value;
+      $entity->field_id = $entity->getCommentedEntityTypeId() . '__' . $value;
     }
   }
 

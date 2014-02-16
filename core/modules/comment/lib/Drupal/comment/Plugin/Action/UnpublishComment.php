@@ -25,7 +25,7 @@ class UnpublishComment extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($comment = NULL) {
-    $comment->status->value = CommentInterface::NOT_PUBLISHED;
+    $comment->setPublished(FALSE);
     $comment->save();
   }
 

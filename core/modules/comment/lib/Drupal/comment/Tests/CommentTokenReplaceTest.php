@@ -45,27 +45,28 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $parent_comment->id());
     $child_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $comment = comment_load($child_comment->id());
-    $comment->homepage->value = 'http://example.org/';
+    $comment->setHomepage('http://example.org/');
 
     // Add HTML to ensure that sanitation of some fields tested directly.
-    $comment->subject->value = '<blink>Blinking Comment</blink>';
+    $comment->setSubject('<blink>Blinking Comment</blink>');
 
     // Generate and test sanitized tokens.
     $tests = array();
     $tests['[comment:cid]'] = $comment->id();
-    $tests['[comment:hostname]'] = check_plain($comment->hostname->value);
-    $tests['[comment:name]'] = filter_xss($comment->name->value);
+    $tests['[comment:hostname]'] = check_plain($comment->getHostname());
+    $tests['[comment:name]'] = filter_xss($comment->getAuthorName());
+    $tests['[comment:author]'] = filter_xss($comment->getAuthorName());
     $tests['[comment:mail]'] = check_plain($this->admin_user->getEmail());
-    $tests['[comment:homepage]'] = check_url($comment->homepage->value);
-    $tests['[comment:title]'] = filter_xss($comment->subject->value);
+    $tests['[comment:homepage]'] = check_url($comment->getHomepage());
+    $tests['[comment:title]'] = filter_xss($comment->getSubject());
     $tests['[comment:body]'] = $comment->comment_body->processed;
     $tests['[comment:url]'] = url('comment/' . $comment->id(), $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->id() . '/edit', $url_options);
-    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created->value, 2, $language_interface->id);
-    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed->value, 2, $language_interface->id);
-    $tests['[comment:parent:cid]'] = $comment->pid->target_id;
-    $tests['[comment:parent:title]'] = check_plain($parent_comment->subject->value);
-    $tests['[comment:node:nid]'] = $comment->entity_id->value;
+    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->getCreatedTime(), 2, $language_interface->id);
+    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->getChangedTime(), 2, $language_interface->id);
+    $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
+    $tests['[comment:parent:title]'] = check_plain($parent_comment->getSubject());
+    $tests['[comment:node:nid]'] = $comment->getCommentedEntityId();
     $tests['[comment:node:title]'] = check_plain($node->getTitle());
     $tests['[comment:author:uid]'] = $comment->getOwnerId();
     $tests['[comment:author:name]'] = check_plain($this->admin_user->getUsername());
@@ -79,13 +80,14 @@ class CommentTokenReplaceTest extends CommentTestBase {
     }
 
     // Generate and test unsanitized tokens.
-    $tests['[comment:hostname]'] = $comment->hostname->value;
-    $tests['[comment:name]'] = $comment->name->value;
+    $tests['[comment:hostname]'] = $comment->getHostname();
+    $tests['[comment:name]'] = $comment->getAuthorName();
+    $tests['[comment:author]'] = $comment->getAuthorName();
     $tests['[comment:mail]'] = $this->admin_user->getEmail();
-    $tests['[comment:homepage]'] = $comment->homepage->value;
-    $tests['[comment:title]'] = $comment->subject->value;
+    $tests['[comment:homepage]'] = $comment->getHomepage();
+    $tests['[comment:title]'] = $comment->getSubject();
     $tests['[comment:body]'] = $comment->comment_body->value;
-    $tests['[comment:parent:title]'] = $parent_comment->subject->value;
+    $tests['[comment:parent:title]'] = $parent_comment->getSubject();
     $tests['[comment:node:title]'] = $node->getTitle();
     $tests['[comment:author:name]'] = $this->admin_user->getUsername();
 

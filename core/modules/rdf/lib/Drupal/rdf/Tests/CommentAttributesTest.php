@@ -246,7 +246,7 @@ class CommentAttributesTest extends CommentTestBase {
     // Comment title.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $comment->subject->value,
+      'value' => $comment->getSubject(),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($comment_uri, 'http://purl.org/dc/terms/title', $expected_value), 'Comment subject found in RDF output (dc:title).');
@@ -254,14 +254,14 @@ class CommentAttributesTest extends CommentTestBase {
     // Comment date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date('c', $comment->created->value),
+      'value' => date('c', $comment->getCreatedTime()),
       'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
     );
     $this->assertTrue($graph->hasProperty($comment_uri, 'http://purl.org/dc/terms/date', $expected_value), 'Comment date found in RDF output (dc:date).');
     // Comment date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date('c', $comment->created->value),
+      'value' => date('c', $comment->getCreatedTime()),
       'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
     );
     $this->assertTrue($graph->hasProperty($comment_uri, 'http://purl.org/dc/terms/created', $expected_value), 'Comment date found in RDF output (dc:created).');

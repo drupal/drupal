@@ -1959,8 +1959,8 @@ function node_reindex_node_search($nid) {
  */
 function node_comment_insert($comment) {
   // Reindex the node when comments are added.
-  if ($comment->entity_type->value == 'node') {
-    node_reindex_node_search($comment->entity_id->value);
+  if ($comment->getCommentedEntityTypeId() == 'node') {
+    node_reindex_node_search($comment->getCommentedEntityId());
   }
 }
 
@@ -1969,8 +1969,8 @@ function node_comment_insert($comment) {
  */
 function node_comment_update($comment) {
   // Reindex the node when comments are changed.
-  if ($comment->entity_type->value == 'node') {
-    node_reindex_node_search($comment->entity_id->value);
+  if ($comment->getCommentedEntityTypeId() == 'node') {
+    node_reindex_node_search($comment->getCommentedEntityId());
   }
 }
 
@@ -1979,8 +1979,8 @@ function node_comment_update($comment) {
  */
 function node_comment_delete($comment) {
   // Reindex the node when comments are deleted.
-  if ($comment->entity_type->value == 'node') {
-    node_reindex_node_search($comment->entity_id->value);
+  if ($comment->getCommentedEntityTypeId() == 'node') {
+    node_reindex_node_search($comment->getCommentedEntityId());
   }
 }
 
@@ -1989,8 +1989,8 @@ function node_comment_delete($comment) {
  */
 function node_comment_publish($comment) {
   // Reindex the node when comments are published.
-  if ($comment->entity_type->value == 'node') {
-    node_reindex_node_search($comment->entity_id->value);
+  if ($comment->getCommentedEntityTypeId() == 'node') {
+    node_reindex_node_search($comment->getCommentedEntityId());
   }
 }
 
@@ -1999,7 +1999,7 @@ function node_comment_publish($comment) {
  */
 function node_comment_unpublish($comment) {
   // Reindex the node when comments are unpublished.
-  if ($comment->entity_type->value == 'node') {
-    node_reindex_node_search($comment->entity_id->value);
+  if ($comment->getCommentedEntityTypeId() == 'node') {
+    node_reindex_node_search($comment->getCommentedEntityId());
   }
 }

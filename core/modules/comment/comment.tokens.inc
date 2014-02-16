@@ -137,32 +137,27 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           $replacements[$original] = $comment->id();
           break;
 
-        // Poster identity information for comments
+        // Poster identity information for comments.
         case 'hostname':
-          $replacements[$original] = $sanitize ? check_plain($comment->hostname->value) : $comment->hostname->value;
+          $replacements[$original] = $sanitize ? check_plain($comment->getHostname()) : $comment->getHostname();
           break;
 
         case 'name':
-          $name = ($comment->getOwnerId() == 0) ? \Drupal::config('user.settings')->get('anonymous') : $comment->name->value;
+          $name = ($comment->getOwnerId() == 0) ? \Drupal::config('user.settings')->get('anonymous') : $comment->getAuthorName();
           $replacements[$original] = $sanitize ? filter_xss($name) : $name;
           break;
 
         case 'mail':
-          if ($comment->getOwnerId()) {
-            $mail = $comment->getOwner()->getEmail();
-          }
-          else {
-            $mail = $comment->mail->value;
-          }
+          $mail = $comment->getAuthorEmail();
           $replacements[$original] = $sanitize ? check_plain($mail) : $mail;
           break;
 
         case 'homepage':
-          $replacements[$original] = $sanitize ? check_url($comment->homepage->value) : $comment->homepage->value;
+          $replacements[$original] = $sanitize ? check_url($comment->getHomepage()) : $comment->getHomepage();
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? filter_xss($comment->subject->value) : $comment->subject->value;
+          $replacements[$original] = $sanitize ? filter_xss($comment->getSubject()) : $comment->getSubject();
           break;
 
         case 'body':
@@ -180,28 +175,31 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           $replacements[$original] = url('comment/' . $comment->id() . '/edit', $url_options);
           break;
 
-        // Default values for the chained tokens handled below.
+        // @todo Remove 'name' token in favour of 'author'. See
+        //   https://drupal.org/node/920056.
+        case 'name':
         case 'author':
-          $replacements[$original] = $sanitize ? filter_xss($comment->name->value) : $comment->name->value;
+          $name = $comment->getAuthorName();
+          $replacements[$original] = $sanitize ? filter_xss($name) : $name;
           break;
 
         case 'parent':
-          if (!empty($comment->pid->target_id)) {
-            $parent = entity_load('comment', $comment->pid->target_id);
-            $replacements[$original] = $sanitize ? filter_xss($parent->subject->value) : $parent->subject->value;
+          if ($comment->hasParentComment()) {
+            $parent = $comment->getParentComment();
+            $replacements[$original] = $sanitize ? filter_xss($parent->getSubject()) : $parent->getSubject();
           }
           break;
 
         case 'created':
-          $replacements[$original] = format_date($comment->created->value, 'medium', '', NULL, $langcode);
+          $replacements[$original] = format_date($comment->getCreatedTime(), 'medium', '', NULL, $langcode);
           break;
 
         case 'changed':
-          $replacements[$original] = format_date($comment->changed->value, 'medium', '', NULL, $langcode);
+          $replacements[$original] = format_date($comment->getChangedTime(), 'medium', '', NULL, $langcode);
           break;
 
         case 'entity':
-          $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+          $entity = $comment->getCommentedEntity();
           $title = $entity->label();
           $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           break;
@@ -210,8 +208,8 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           // Support legacy comment node tokens, since tokes are embedded in
           // user data and can't be upgraded directly.
           // @todo Remove in Drupal 9, see https://drupal.org/node/2031901.
-          if ($comment->entity_type->value == 'node') {
-            $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+          if ($comment->getCommentedEntityTypeId() == 'node') {
+            $entity = $comment->getCommentedEntity();
             $title = $entity->label();
             $replacements[$original] = $sanitize ? filter_xss($title) : $title;
           }
@@ -224,24 +222,24 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
     // Chained token relationships.
     if ($entity_tokens = $token_service->findwithPrefix($tokens, 'entity')) {
-      $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-      $replacements += $token_service->generate($comment->entity_type->value, $entity_tokens, array($comment->entity_type->value => $entity), $options);
+      $entity = $comment->getCommentedEntity();
+      $replacements += $token_service->generate($comment->getCommentedEntityTypeId(), $entity_tokens, array($comment->getCommentedEntityTypeId() => $entity), $options);
     }
 
-    if (($node_tokens = $token_service->findwithPrefix($tokens, 'node')) && $comment->entity_type->value == 'node') {
-      $node = entity_load($comment->entity_type->value, $comment->entity_id->value);
+    if (($node_tokens = $token_service->findwithPrefix($tokens, 'node')) && $comment->getCommentedEntityTypeId() == 'node') {
+      $node = $comment->getCommentedEntity();
       $replacements += $token_service->generate('node', $node_tokens, array('node' => $node), $options);
     }
 
     if ($date_tokens = $token_service->findwithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $date_tokens, array('date' => $comment->created->value), $options);
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $comment->getCreatedTime()), $options);
     }
 
     if ($date_tokens = $token_service->findwithPrefix($tokens, 'changed')) {
-      $replacements += $token_service->generate('date', $date_tokens, array('date' => $comment->changed->value), $options);
+      $replacements += $token_service->generate('date', $date_tokens, array('date' => $comment->getChangedTime()), $options);
     }
 
-    if (($parent_tokens = $token_service->findwithPrefix($tokens, 'parent')) && $parent = $comment->pid->entity) {
+    if (($parent_tokens = $token_service->findwithPrefix($tokens, 'parent')) && $parent = $comment->getParentComment()) {
       $replacements += $token_service->generate('comment', $parent_tokens, array('comment' => $parent), $options);
     }
 
@@ -255,7 +253,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
     $entity = !empty($data['entity']) ? $data['entity'] : $data['node'];
 
     foreach ($tokens as $name => $original) {
-      switch($name) {
+      switch ($name) {
         case 'comment-count':
           $count = 0;
           $fields = array_keys(\Drupal::service('comment.manager')->getFields($entity->getEntityTypeId()));

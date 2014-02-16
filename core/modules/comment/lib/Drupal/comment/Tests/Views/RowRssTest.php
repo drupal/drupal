@@ -38,7 +38,7 @@ class RowRssTest extends CommentTestBase {
     $result = $this->xpath('//item');
     $this->assertEqual(count($result), 1, 'Just one comment was found in the rss output.');
 
-    $this->assertEqual($result[0]->pubdate, gmdate('r', $this->comment->created->value), 'The right pubDate appears in the rss output.');
+    $this->assertEqual($result[0]->pubdate, gmdate('r', $this->comment->getCreatedTime()), 'The right pubDate appears in the rss output.');
   }
 
 }

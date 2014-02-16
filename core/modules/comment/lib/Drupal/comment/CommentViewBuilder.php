@@ -86,6 +86,7 @@ class CommentViewBuilder extends EntityViewBuilder {
    *   Thrown when a comment is attached to an entity that no longer exists.
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
+    /** @var \Drupal\comment\CommentInterface[] $entities */
     $return = array();
     if (empty($entities)) {
       return $return;
@@ -104,23 +105,23 @@ class CommentViewBuilder extends EntityViewBuilder {
     $commented_entity_ids = array();
     $commented_entities = array();
     foreach ($entities as $entity) {
-      $commented_entity_ids[$entity->entity_type->value][] = $entity->entity_id->value;
+      $commented_entity_ids[$entity->getCommentedEntityTypeId()][] = $entity->getCommentedEntityId();
     }
     // Load entities in bulk. This is more performant than using
-    // $comment->entity_id->value as we can load them in bulk per type.
+    // $comment->getCommentedEntity() as we can load them in bulk per type.
     foreach ($commented_entity_ids as $entity_type => $entity_ids) {
       $commented_entities[$entity_type] = $this->entityManager->getStorageController($entity_type)->loadMultiple($entity_ids);
     }
 
     foreach ($entities as $entity) {
-      if (isset($commented_entities[$entity->entity_type->value][$entity->entity_id->value])) {
-        $commented_entity = $commented_entities[$entity->entity_type->value][$entity->entity_id->value];
+      if (isset($commented_entities[$entity->getCommentedEntityTypeId()][$entity->getCommentedEntityId()])) {
+        $commented_entity = $commented_entities[$entity->getCommentedEntityTypeId()][$entity->getCommentedEntityId()];
       }
       else {
         throw new \InvalidArgumentException(t('Invalid entity for comment.'));
       }
       $entity->content['#entity'] = $entity;
-      $entity->content['#theme'] = 'comment__' . $entity->field_id->value . '__' . $commented_entity->bundle();
+      $entity->content['#theme'] = 'comment__' . $entity->getFieldId() . '__' . $commented_entity->bundle();
       $entity->content['links'] = array(
         '#type' => 'render_cache_placeholder',
         '#callback' => '\Drupal\comment\CommentViewBuilder::renderLinks',
@@ -204,7 +205,7 @@ class CommentViewBuilder extends EntityViewBuilder {
    */
   protected static function buildLinks(CommentInterface $entity, EntityInterface $commented_entity) {
     $links = array();
-    $status = $commented_entity->get($entity->field_name->value)->status;
+    $status = $commented_entity->get($entity->getFieldName())->status;
 
     $container = \Drupal::getContainer();
 
@@ -227,11 +228,11 @@ class CommentViewBuilder extends EntityViewBuilder {
       if ($entity->access('create')) {
         $links['comment-reply'] = array(
           'title' => t('Reply'),
-          'href' => "comment/reply/{$entity->entity_type->value}/{$entity->entity_id->value}/{$entity->field_name->value}/{$entity->id()}",
+          'href' => "comment/reply/{$entity->getCommentedEntityId()}/{$entity->getCommentedEntityId()}/{$entity->getFieldName()}/{$entity->id()}",
           'html' => TRUE,
         );
       }
-      if ($entity->status->value == CommentInterface::NOT_PUBLISHED && $entity->access('approve')) {
+      if (!$entity->isPublished() && $entity->access('approve')) {
         $links['comment-approve'] = array(
           'title' => t('Approve'),
           'route_name' => 'comment.approve',
@@ -240,7 +241,7 @@ class CommentViewBuilder extends EntityViewBuilder {
         );
       }
       if (empty($links)) {
-        $links['comment-forbidden']['title'] = \Drupal::service('comment.manager')->forbiddenMessage($commented_entity, $entity->field_name->value);
+        $links['comment-forbidden']['title'] = \Drupal::service('comment.manager')->forbiddenMessage($commented_entity, $entity->getFieldName());
         $links['comment-forbidden']['html'] = TRUE;
       }
     }
@@ -270,8 +271,8 @@ class CommentViewBuilder extends EntityViewBuilder {
     parent::alterBuild($build, $comment, $display, $view_mode, $langcode);
     if (empty($comment->in_preview)) {
       $prefix = '';
-      $commented_entity = $this->entityManager->getStorageController($comment->entity_type->value)->load($comment->entity_id->value);
-      $instance = $this->fieldInfo->getInstance($commented_entity->getEntityTypeId(), $commented_entity->bundle(), $comment->field_name->value);
+      $commented_entity = $comment->getCommentedEntity();
+      $instance = $this->fieldInfo->getInstance($commented_entity->getEntityTypeId(), $commented_entity->bundle(), $comment->getFieldName());
       $is_threaded = isset($comment->divs)
         && $instance->getSetting('default_mode') == COMMENT_MODE_THREADED;
 

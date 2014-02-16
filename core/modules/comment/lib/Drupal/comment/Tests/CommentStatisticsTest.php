@@ -106,7 +106,7 @@ class CommentStatisticsTest extends CommentTestBase {
     // Checks the new values of node comment statistics with comment #3.
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->id(), TRUE);
-    $this->assertEqual($node->get('comment')->last_comment_name, $comment_loaded->name->value, 'The value of node last_comment_name is the name of the anonymous user.');
+    $this->assertEqual($node->get('comment')->last_comment_name, $comment_loaded->getAuthorName(), 'The value of node last_comment_name is the name of the anonymous user.');
     $this->assertEqual($node->get('comment')->last_comment_uid, 0, 'The value of node last_comment_uid is zero.');
     $this->assertEqual($node->get('comment')->comment_count, 2, 'The value of node comment_count is 2.');
   }
