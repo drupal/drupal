@@ -4,6 +4,8 @@
  * Attach custom data fields to Drupal entities.
  */
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Entity\EntityViewDisplay;
@@ -304,7 +306,7 @@ function field_cache_clear() {
  *   UTF-8.
  */
 function field_filter_xss($string) {
-  return _filter_htmlcorrector(filter_xss($string, _field_filter_xss_allowed_tags()));
+  return Html::normalize(Xss::filter($string, _field_filter_xss_allowed_tags()));
 }
 
 /**

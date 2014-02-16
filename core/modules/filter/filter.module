@@ -5,6 +5,7 @@
  * Framework for handling the filtering of content.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
@@ -694,103 +695,6 @@ function _filter_tips($format_id, $long = FALSE) {
 }
 
 /**
- * Parses an HTML snippet and returns it as a DOM object.
- *
- * This function loads the body part of a partial (X)HTML document and returns
- * a full DOMDocument object that represents this document. You can use
- * filter_dom_serialize() to serialize this DOMDocument back to a XHTML
- * snippet.
- *
- * @param $text
- *   The partial (X)HTML snippet to load. Invalid markup will be corrected on
- *   import.
- *
- * @return
- *   A DOMDocument that represents the loaded (X)HTML snippet.
- */
-function filter_dom_load($text) {
-  $dom_document = new DOMDocument();
-  // Ignore warnings during HTML soup loading.
-  @$dom_document->loadHTML('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
-
-  return $dom_document;
-}
-
-/**
- * Converts a DOM object back to an HTML snippet.
- *
- * The function serializes the body part of a DOMDocument back to an XHTML
- * snippet. The resulting XHTML snippet will be properly formatted to be
- * compatible with HTML user agents.
- *
- * @param $dom_document
- *   A DOMDocument object to serialize, only the tags below
- *   the first <body> node will be converted.
- *
- * @return
- *   A valid (X)HTML snippet, as a string.
- */
-function filter_dom_serialize($dom_document) {
-  $body_node = $dom_document->getElementsByTagName('body')->item(0);
-  $body_content = '';
-
-  foreach ($body_node->getElementsByTagName('script') as $node) {
-    filter_dom_serialize_escape_cdata_element($dom_document, $node);
-  }
-
-  foreach ($body_node->getElementsByTagName('style') as $node) {
-    filter_dom_serialize_escape_cdata_element($dom_document, $node, '/*', '*/');
-  }
-
-  foreach ($body_node->childNodes as $child_node) {
-    $body_content .= $dom_document->saveXML($child_node);
-  }
-  return $body_content;
-}
-
-/**
- * Adds comments around the <!CDATA section in a dom element.
- *
- * DOMDocument::loadHTML in filter_dom_load() makes CDATA sections from the
- * contents of inline script and style tags.  This can cause HTML 4 browsers to
- * throw exceptions.
- *
- * This function attempts to solve the problem by creating a DocumentFragment
- * and imitating the behavior in drupal_get_js(), commenting the CDATA tag.
- *
- * @param $dom_document
- *   The DOMDocument containing the $dom_element.
- * @param $dom_element
- *   The element potentially containing a CDATA node.
- * @param $comment_start
- *   (optional) A string to use as a comment start marker to escape the CDATA
- *   declaration. Defaults to '//'.
- * @param $comment_end
- *   (optional) A string to use as a comment end marker to escape the CDATA
- *   declaration. Defaults to an empty string.
- */
-function filter_dom_serialize_escape_cdata_element($dom_document, $dom_element, $comment_start = '//', $comment_end = '') {
-  foreach ($dom_element->childNodes as $node) {
-    if (get_class($node) == 'DOMCdataSection') {
-      // See drupal_get_js().  This code is more or less duplicated there.
-      $embed_prefix = "\n<!--{$comment_start}--><![CDATA[{$comment_start} ><!--{$comment_end}\n";
-      $embed_suffix = "\n{$comment_start}--><!]]>{$comment_end}\n";
-
-      // Prevent invalid cdata escaping as this would throw a DOM error.
-      // This is the same behavior as found in libxml2.
-      // Related W3C standard: http://www.w3.org/TR/REC-xml/#dt-cdsection
-      // Fix explanation: http://en.wikipedia.org/wiki/CDATA#Nesting
-      $data = str_replace(']]>', ']]]]><![CDATA[>', $node->data);
-
-      $fragment = $dom_document->createDocumentFragment();
-      $fragment->appendXML($embed_prefix . $data . $embed_suffix);
-      $dom_element->appendChild($fragment);
-      $dom_element->removeChild($node);
-    }
-  }
-}
-
-/**
  * Prepares variables for text format guideline templates.
  *
  * Default template: filter-guidelines.html.twig.
@@ -878,12 +782,12 @@ function _filter_html($text, $filter) {
   $text = filter_xss($text, $allowed_tags);
 
   if ($filter->settings['filter_html_nofollow']) {
-    $html_dom = filter_dom_load($text);
+    $html_dom = Html::load($text);
     $links = $html_dom->getElementsByTagName('a');
     foreach ($links as $link) {
       $link->setAttribute('rel', 'nofollow');
     }
-    $text = filter_dom_serialize($html_dom);
+    $text = Html::serialize($html_dom);
   }
 
   return trim($text);
@@ -1128,13 +1032,6 @@ function _filter_url_trim($text, $length = NULL) {
 }
 
 /**
- * Scans the input and makes sure that HTML tags are properly closed.
- */
-function _filter_htmlcorrector($text) {
-  return filter_dom_serialize(filter_dom_load($text));
-}
-
-/**
  * Converts line breaks into <p> and <br> in an intelligent fashion.
  *
  * Based on: http://photomatt.net/scripts/autop
@@ -1219,7 +1116,7 @@ function _filter_html_image_secure_process($text) {
   // Find the directory on the server where index.php resides.
   $local_dir = DRUPAL_ROOT . '/';
 
-  $html_dom = filter_dom_load($text);
+  $html_dom = Html::load($text);
   $images = $html_dom->getElementsByTagName('img');
   foreach ($images as $image) {
     $src = $image->getAttribute('src');
@@ -1245,7 +1142,7 @@ function _filter_html_image_secure_process($text) {
     // indicator. See filter_filter_secure_image_alter().
     \Drupal::moduleHandler()->alter('filter_secure_image', $image);
   }
-  $text = filter_dom_serialize($html_dom);
+  $text = Html::serialize($html_dom);
   return $text;
 }
 

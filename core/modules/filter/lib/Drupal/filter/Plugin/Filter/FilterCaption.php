@@ -7,6 +7,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
@@ -30,7 +31,7 @@ class FilterCaption extends FilterBase {
   public function process($text, $langcode, $cache, $cache_id) {
 
     if (stristr($text, 'data-caption') !== FALSE || stristr($text, 'data-align') !== FALSE) {
-      $dom = filter_dom_load($text);
+      $dom = Html::load($text);
       $xpath = new \DOMXPath($dom);
       foreach ($xpath->query('//*[@data-caption or @data-align]') as $node) {
         $caption = NULL;
@@ -82,7 +83,7 @@ class FilterCaption extends FilterBase {
         $altered_html = drupal_render($filter_caption);
 
         // Load the altered HTML into a new DOMDocument and retrieve the element.
-        $updated_node = filter_dom_load($altered_html)->getElementsByTagName('body')
+        $updated_node = Html::load($altered_html)->getElementsByTagName('body')
           ->item(0)
           ->childNodes
           ->item(0);
@@ -94,7 +95,7 @@ class FilterCaption extends FilterBase {
         $node->parentNode->replaceChild($updated_node, $node);
       }
 
-      return filter_dom_serialize($dom);
+      return Html::serialize($dom);
     }
 
     return $text;

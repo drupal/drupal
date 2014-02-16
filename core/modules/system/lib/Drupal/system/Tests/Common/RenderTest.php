@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Utility\Html;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -616,7 +617,7 @@ class RenderTest extends DrupalUnitTestBase {
       ),
     );
 
-    $dom = filter_dom_load($cached_element['#markup']);
+    $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
     $parent = $xpath->query('//details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Parent"]')->length;
     $child =  $xpath->query('//details[@class="form-wrapper" and @open="open"]/div[@class="details-wrapper"]/details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Child"]')->length;
@@ -699,7 +700,7 @@ class RenderTest extends DrupalUnitTestBase {
       ),
     );
 
-    $dom = filter_dom_load($cached_parent_element['#markup']);
+    $dom = Html::load($cached_parent_element['#markup']);
     $xpath = new \DOMXPath($dom);
     $parent = $xpath->query('//details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Parent"]')->length;
     $child =  $xpath->query('//details[@class="form-wrapper" and @open="open"]/div[@class="details-wrapper"]/details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Child"]')->length;
@@ -724,7 +725,7 @@ class RenderTest extends DrupalUnitTestBase {
       ),
     );
 
-    $dom = filter_dom_load($cached_child_element['#markup']);
+    $dom = Html::load($cached_child_element['#markup']);
     $xpath = new \DOMXPath($dom);
     $child =  $xpath->query('//details[@class="form-wrapper" and @open="open"]/summary[@role="button" and @aria-expanded and text()="Child"]')->length;
     $subchild = $xpath->query('//details[@class="form-wrapper" and @open="open"]/div [@class="details-wrapper" and text()="Subchild"]')->length;
@@ -806,7 +807,7 @@ class RenderTest extends DrupalUnitTestBase {
     $element = array('#cache' => array('cid' => 'render_cache_placeholder_test_GET'));
     $cached_element = cache()->get(drupal_render_cid_create($element))->data;
     // Parse unique token out of the markup.
-    $dom = filter_dom_load($cached_element['#markup']);
+    $dom = Html::load($cached_element['#markup']);
     $xpath = new \DOMXPath($dom);
     $nodes = $xpath->query('//*[@token]');
     $token = $nodes->item(0)->getAttribute('token');

@@ -5,6 +5,7 @@
  * Adds bindings for client-side "text editors" to text formats.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Component\Utility\NestedArray;
@@ -661,7 +662,7 @@ function _editor_get_processed_text_fields(ContentEntityInterface $entity) {
  *   An array of all found UUIDs.
  */
 function _editor_parse_file_uuids($text) {
-  $dom = filter_dom_load($text);
+  $dom = Html::load($text);
   $xpath = new \DOMXPath($dom);
   $uuids = array();
   foreach ($xpath->query('//*[@data-editor-file-uuid]') as $node) {

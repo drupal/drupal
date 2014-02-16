@@ -5,6 +5,7 @@
  * Field module functionality for the File module.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\field\FieldInterface;
 
 /**
@@ -181,8 +182,8 @@ function theme_file_upload_help($variables) {
 
   $descriptions = array();
 
-  if (strlen($description)) {
-    $descriptions[] = _filter_htmlcorrector($description);
+  if (!empty($description)) {
+    $descriptions[] = Html::normalize($description);
   }
   if (isset($cardinality)) {
     if ($cardinality == -1) {

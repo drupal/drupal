@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\String;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -1681,7 +1682,7 @@ abstract class FieldPluginBase extends HandlerBase {
       }
     }
     if (!empty($alter['html'])) {
-      $value = _filter_htmlcorrector($value);
+      $value = Html::normalize($value);
     }
 
     return $value;

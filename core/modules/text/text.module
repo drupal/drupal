@@ -5,6 +5,7 @@
  * Defines simple text field types.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -170,7 +171,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
 
   // If the htmlcorrector filter is present, apply it to the generated summary.
   if (isset($format) && $filters->has('filter_htmlcorrector') && $filters->get('filter_htmlcorrector')->status) {
-    $summary = _filter_htmlcorrector($summary);
+    $summary = Html::normalize($summary);
   }
 
   return $summary;
