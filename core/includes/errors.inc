@@ -169,7 +169,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     }
   }
 
-  if (\Drupal::request()->isXmlHttpRequest()) {
+  if (\Drupal::hasRequest() && \Drupal::request()->isXmlHttpRequest()) {
     if ($fatal) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.

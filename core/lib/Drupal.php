@@ -150,6 +150,16 @@ class Drupal {
   }
 
   /**
+   * Indicates if there is a currently active request object.
+   *
+   * @return bool
+   *   TRUE if there is a currently active request object, FALSE otherwise.
+   */
+  public static function hasRequest() {
+    return static::$container && static::$container->has('request') && static::$container->initialized('request') && static::$container->isScopeActive('request');
+  }
+
+  /**
    * Retrieves the currently active request object.
    *
    * Note: The use of this wrapper in particular is especially discouraged. Most

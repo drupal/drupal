@@ -1300,7 +1300,7 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
 
   // It is possible that the error handling will itself trigger an error. In that case, we could
   // end up in an infinite loop. To avoid that, we implement a simple static semaphore.
-  if (!$in_error_state && function_exists('module_implements')) {
+  if (!$in_error_state && \Drupal::hasService('module_handler')) {
     $in_error_state = TRUE;
 
     // The user object may not exist in all conditions, so 0 is substituted if needed.
