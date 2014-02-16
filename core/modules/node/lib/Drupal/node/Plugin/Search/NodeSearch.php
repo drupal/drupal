@@ -224,6 +224,10 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       // Add the language code of the indexed item to the result of the query,
       // since the node will be rendered using the respective language.
       ->fields('i', array('langcode'))
+      // And since SearchQuery makes these into GROUP BY queries, if we add
+      // a field, for PostgreSQL we also need to make it an aggregate or a
+      // GROUP BY. In this case, we want GROUP BY.
+      ->groupBy('i.langcode')
       ->limit(10)
       ->execute();
 
