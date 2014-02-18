@@ -87,7 +87,7 @@ function field_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling field types') . '</dt>';
-      $output .= '<dd>' . t('The Field module provides the infrastructure for fields and field attachment; the field types and input widgets themselves are provided by additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="@modules">Modules administration page</a>. Drupal core includes the following field type modules: Number (required), Text (required), List (required), Taxonomy (optional), Image (optional), and File (optional); the required Options module provides input widgets for other field modules. Additional fields and widgets may be provided by contributed modules, which you can find in the <a href="@contrib">contributed module section of Drupal.org</a>. Currently enabled field and input widget modules:', array('@modules' => url('admin/modules'), '@contrib' => 'http://drupal.org/project/modules', '@options' => url('admin/help/options')));
+      $output .= '<dd>' . t('The Field module provides the infrastructure for fields and field attachment; the field types and input widgets themselves are provided by additional modules. The modules can be enabled from the <a href="@modules">Modules administration page</a>. Drupal core includes the following field type modules: Text, Number, Email, Link, Telephone, Image, File, Options, Taxonomy, and Entity Reference. Additional fields and widgets may be provided by contributed modules, which you can find in the <a href="@contrib">contributed module section of Drupal.org</a>.', array('@modules' => url('admin/modules'), '@contrib' => 'http://drupal.org/project/modules', '@options' => url('admin/help/options')));
 
       // Make a list of all widget and field modules currently enabled, ordered
       // by displayed module name (module names are not translated).
@@ -95,6 +95,7 @@ function field_help($path, $arg) {
       $info = system_get_info('module');
       $field_widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
       $field_types = \Drupal::service('plugin.manager.field.field_type')->getConfigurableDefinitions();
+      $providers = array();
       foreach (array_merge($field_types, $field_widgets) as $plugin) {
         $providers[] = $plugin['provider'];
       }
@@ -113,11 +114,14 @@ function field_help($path, $arg) {
           }
         }
       }
-      $item_list = array(
-        '#theme' => 'item_list',
-        '#items' => $items,
-      );
-      $output .= drupal_render($item_list);
+      if ($items) {
+        $output .= ' ' . t('Currently enabled field and input widget modules:');
+        $item_list = array(
+          '#theme' => 'item_list',
+          '#items' => $items,
+        );
+        $output .= drupal_render($item_list);
+      }
       return $output;
   }
 }

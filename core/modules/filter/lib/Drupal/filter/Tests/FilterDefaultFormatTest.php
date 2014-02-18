@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the default filter functionality in the Filter module.
  */
 class FilterDefaultFormatTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('filter');
+
   public static function getInfo() {
     return array(
       'name' => 'Default text format functionality',

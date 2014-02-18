@@ -128,7 +128,7 @@ EOD;
     // Spot check several known simple configuration files.
     $element = $this->xpath('//select[@name="config_name"]');
     $options = $this->getAllOptions($element[0]);
-    $expected_options = array('filter.settings', 'system.site', 'user.settings');
+    $expected_options = array('system.site', 'user.settings');
     foreach ($options as &$option) {
       $option = (string) $option;
     }

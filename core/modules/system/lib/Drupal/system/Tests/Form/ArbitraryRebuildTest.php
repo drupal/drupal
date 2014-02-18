@@ -19,7 +19,7 @@ class ArbitraryRebuildTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test');
+  public static $modules = array('text', 'form_test');
 
   public static function getInfo() {
     return array(

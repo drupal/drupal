@@ -16,7 +16,7 @@ class FormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('form_test', 'file', 'datetime');
+  public static $modules = array('filter', 'form_test', 'file', 'datetime');
 
   public static function getInfo() {
     return array(

@@ -17,6 +17,13 @@ use Drupal\simpletest\WebTestBase;
 abstract class ContentTranslationTestBase extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('text');
+
+  /**
    * The entity type being tested.
    *
    * @var string

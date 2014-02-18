@@ -20,7 +20,7 @@ class ContactSitewideTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('contact', 'field_ui');
+  public static $modules = array('text', 'contact', 'field_ui');
 
   public static function getInfo() {
     return array(

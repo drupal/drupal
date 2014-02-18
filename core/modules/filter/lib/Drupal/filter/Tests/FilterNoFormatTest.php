@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests the behavior of check_markup() when it is called without text format.
  */
 class FilterNoFormatTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('filter');
+
   public static function getInfo() {
     return array(
       'name' => 'Unassigned text format functionality',
