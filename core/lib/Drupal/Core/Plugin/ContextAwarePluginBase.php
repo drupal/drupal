@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Plugin;
 
-use Drupal\Component\Plugin\ContextAwarePluginBase as PluginBase;
+use Drupal\Component\Plugin\ContextAwarePluginBase as ComponentContextAwarePluginBase;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
@@ -20,7 +20,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * the Context class. This code is exactly the same as what is in Component
  * ContextAwarePluginBase but it is using a different Context class.
  */
-abstract class ContextAwarePluginBase extends PluginBase {
+abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase {
 
   /**
    * Override of \Drupal\Component\Plugin\ContextAwarePluginBase::__construct().
