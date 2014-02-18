@@ -9,18 +9,40 @@
  * layer. Each theme can take control over most of Drupal's output, and
  * has complete control over the CSS.
  *
- * Inside Drupal, the theme layer is utilized by the use of the theme()
+ * Inside Drupal, the theme layer is utilized by the use of the _theme()
  * function, which is passed the name of a component (the theme hook)
  * and an array of variables. For example,
- * theme('table', array('header' => $header, 'rows' => $rows));
- * Additionally, the theme() function can take an array of theme
+ * _theme('table', array('header' => $header, 'rows' => $rows));
+ * Additionally, the _theme() function can take an array of theme
  * hooks, which can be used to provide 'fallback' implementations to
  * allow for more specific control of output. For example, the function:
- * theme(array('table__foo', 'table'), $variables) would look to see if
+ * _theme(array('table__foo', 'table'), $variables) would look to see if
  * 'table__foo' is registered anywhere; if it is not, it would 'fall back'
  * to the generic 'table' implementation. This can be used to attach specific
  * theme functions to named objects, allowing the themer more control over
  * specific types of output.
+ *
+ * Calling the _theme() function directly is highly discouraged. Building a
+ * renderable array is preferred. For example, rather than calling
+ * _theme('table', array()) in-place, one can assemble a renderable array as
+ * follows:
+ *
+ * @code
+ * $table = array(
+ *   '#type' => 'table',
+ *   '#header' => '',
+ *   '#rows' => array(),
+ * );
+ * @endcode
+ *
+ * Note that a table is defined as a type as well as a theme function. Building
+ * it as a type is preferred. The $table array can simply be passed along as
+ * a renderable array in a page build process. If necessary, the array may be
+ * rendered to a string by calling drupal_render().
+ *
+ * @code
+ * $output = drupal_render($table);
+ * @endcode
  *
  * As of Drupal 6, every theme hook is required to be registered by the
  * module that owns it, so that Drupal can tell what to do with it and
@@ -55,10 +77,11 @@
  *
  * The theme system is described and defined in theme.inc.
  *
- * @see theme()
+ * @see _theme()
  * @see hook_theme()
  * @see hooks
  * @see callbacks
+ * @see system_element_info()
  *
  * @} End of "defgroup themeable".
  */
@@ -98,7 +121,7 @@ function hook_form_system_theme_settings_alter(&$form, &$form_state) {
  * preprocess variables for a specific theme hook, whether implemented as a
  * template or function.
  *
- * For more detailed information, see theme().
+ * For more detailed information, see _theme().
  *
  * @param $variables
  *   The variables array (modify in place).
@@ -146,7 +169,7 @@ function hook_preprocess(&$variables, $hook) {
  * hook. It should only be used if a module needs to override or add to the
  * theme preprocessing for a theme hook it didn't define.
  *
- * For more detailed information, see theme().
+ * For more detailed information, see _theme().
  *
  * @param $variables
  *   The variables array (modify in place).

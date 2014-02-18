@@ -249,7 +249,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests that theme() works right after loading a module.
+   * Tests that _theme() works right after loading a module.
    */
   function testEnableModulesTheme() {
     $original_element = $element = array(
@@ -258,7 +258,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
       '#attributes' => array(),
     );
     $this->enableModules(array('system'));
-    // theme() throws an exception if modules are not loaded yet.
+    // _theme() throws an exception if modules are not loaded yet.
     $this->assertTrue(drupal_render($element));
 
     $element = $original_element;

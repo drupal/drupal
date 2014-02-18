@@ -48,9 +48,9 @@ class TwigDebugMarkupTest extends WebTestBase {
 
     // Create a node and test different features of the debug markup.
     $node = $this->drupalCreateNode();
-    $output = theme('node', node_view($node));
+    $output = _theme('node', node_view($node));
     $this->assertTrue(strpos($output, '<!-- THEME DEBUG -->') !== FALSE, 'Twig debug markup found in theme output when debug is enabled.');
-    $this->assertTrue(strpos($output, "CALL: theme('node')") !== FALSE, 'Theme call information found.');
+    $this->assertTrue(strpos($output, "CALL: _theme('node')") !== FALSE, 'Theme call information found.');
     $this->assertTrue(strpos($output, 'x node--1' . $extension) !== FALSE, 'Node ID specific template shown as current template.');
     $this->assertTrue(strpos($output, '* node' . $extension) !== FALSE, 'Base template file found.');
     $template_filename = $templates['node__1']['path'] . '/' . $templates['node__1']['template'] . $extension;
@@ -59,7 +59,7 @@ class TwigDebugMarkupTest extends WebTestBase {
     // Create another node and make sure the template suggestions shown in the
     // debug markup are correct.
     $node2 = $this->drupalCreateNode();
-    $output = theme('node', node_view($node2));
+    $output = _theme('node', node_view($node2));
     $this->assertTrue(strpos($output, '* node--2' . $extension) !== FALSE, 'Node ID specific template suggestion found.');
     $this->assertTrue(strpos($output, 'x node' . $extension) !== FALSE, 'Base template file shown as current template.');
 
@@ -68,7 +68,7 @@ class TwigDebugMarkupTest extends WebTestBase {
     $this->rebuildContainer();
     $this->resetAll();
 
-    $output = theme('node', node_view($node));
+    $output = _theme('node', node_view($node));
     $this->assertFalse(strpos($output, '<!-- THEME DEBUG -->') !== FALSE, 'Twig debug markup not found in theme output when debug is disabled.');
   }
 

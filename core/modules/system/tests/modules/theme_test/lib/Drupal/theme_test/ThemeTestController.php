@@ -55,7 +55,7 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing a theme override.
    */
   public function testTemplate() {
-    return theme('theme_test_template_test');
+    return _theme('theme_test_template_test');
   }
 
   /**
@@ -65,12 +65,12 @@ class ThemeTestController extends ControllerBase {
    *   An HTML string containing the themed output.
    */
   public function testSuggestion() {
-    return theme(array('theme_test__suggestion', 'theme_test'), array());
+    return _theme(array('theme_test__suggestion', 'theme_test'), array());
   }
 
 /**
  * This is for testing that the theme can have hook_*_alter() implementations
- * that run during page callback execution, even before theme() is called for
+ * that run during page callback execution, even before _theme() is called for
  * the first time.
  *
  * @return string

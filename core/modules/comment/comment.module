@@ -1395,7 +1395,6 @@ function template_preprocess_comment(&$variables) {
   $variables['commented_entity'] = $commented_entity;
 
   $account = comment_prepare_author($comment);
-  // @todo Do not call theme() here. We do this for purposes of t().
   $username = array(
     '#theme' => 'username',
     '#account' => $account,
@@ -1446,7 +1445,6 @@ function template_preprocess_comment(&$variables) {
     $comment_parent = $comment->getParentComment();
     $account_parent = comment_prepare_author($comment_parent);
     $variables['parent_comment'] = $comment_parent;
-    // @todo Do not call theme() here. We do this for purposes of t().
     $username = array(
       '#theme' => 'username',
       '#account' => $account_parent,

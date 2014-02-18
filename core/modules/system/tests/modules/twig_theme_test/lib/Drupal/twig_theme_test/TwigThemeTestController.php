@@ -16,7 +16,7 @@ class TwigThemeTestController {
    * Menu callback for testing PHP variables in a Twig template.
    */
   public function phpVariablesRender() {
-    return theme('twig_theme_test_php_variables');
+    return _theme('twig_theme_test_php_variables');
   }
 
   /**

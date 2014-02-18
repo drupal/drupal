@@ -35,7 +35,7 @@ function twig_init($template) {
 /**
  * Renders a Twig template.
  *
- * If the Twig debug setting is enabled, HTML comments including theme() call
+ * If the Twig debug setting is enabled, HTML comments including _theme() call
  * and template file name suggestions will surround the template markup.
  *
  * @param $template_file
@@ -56,7 +56,7 @@ function twig_render_template($template_file, $variables) {
   );
   if (settings()->get('twig_debug', FALSE)) {
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
-    $output['debug_prefix'] .= "\n<!-- CALL: theme('{$variables['theme_hook_original']}') -->";
+    $output['debug_prefix'] .= "\n<!-- CALL: _theme('{$variables['theme_hook_original']}') -->";
     if (!empty($variables['theme_hook_suggestions'])) {
       $extension = twig_extension();
       $current_template = basename($template_file);

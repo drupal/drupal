@@ -36,10 +36,10 @@ function pager_find_page($element = 0) {
 }
 
 /**
- * Initializes a pager for theme('pager').
+ * Initializes a pager for _theme('pager').
  *
  * This function sets up the necessary global variables so that future calls
- * to theme('pager') will render a pager that correctly corresponds to the
+ * to _theme('pager') will render a pager that correctly corresponds to the
  * items being displayed.
  *
  * If the items being displayed result from a database query performed using
@@ -67,10 +67,14 @@ function pager_find_page($element = 0) {
  *   // Next, retrieve and display the items for the current page.
  *   $offset = $num_per_page * $page;
  *   $result = mymodule_select("SELECT * FROM data " . $where . " LIMIT %d, %d", $offset, $num_per_page)->fetchAll();
- *   $output = theme('mymodule_results', array('result' => $result));
+ *   $output = drupal_render(
+ *     '#theme' => 'mymodule_results',
+ *     '#result' => $result,
+ *   );
  *
  *   // Finally, display the pager controls, and return.
- *   $output .= theme('pager');
+ *   $pager = array('#theme' => 'pager');
+ *   $output .= drupal_render($pager);
  *   return $output;
  * @endcode
  *
@@ -93,10 +97,16 @@ function pager_find_page($element = 0) {
  *   pager_default_initialize($result->total, $num_per_page);
  *
  *   // Display the search results.
- *   $output = theme('search_results', array('results' => $result->data, 'type' => 'remote'));
+ *   $search_results = array(
+ *     '#theme' => 'search_results',
+ *     '#results' => $result->data,
+ *     '#type' => 'remote',
+ *   );
+ *   $output = drupal_render($search_results);
  *
  *   // Finally, display the pager controls, and return.
- *   $output .= theme('pager');
+ *   $pager = array('#theme' => 'pager');
+ *   $output .= drupal_render($pager);
  *   return $output;
  * @endcode
  *
@@ -148,9 +158,9 @@ function pager_get_query_parameters() {
  *
  * Default template: pager.html.twig.
  *
- * Menu callbacks that display paged query results should call theme('pager') to
- * retrieve a pager control so that users can view other results. Format a list
- * of nearby pages with additional query results.
+ * Menu callbacks that display paged query results should call _theme('pager')
+ * to retrieve a pager control so that users can view other results. Format a
+ * list of nearby pages with additional query results.
  *
  * @param array $variables
  *   An associative array containing:

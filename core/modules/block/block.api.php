@@ -20,7 +20,7 @@
  * If the module wishes to act on the rendered HTML of the block rather than
  * the structured content array, it may use this hook to add a #post_render
  * callback. Alternatively, it could also implement hook_preprocess_HOOK() for
- * block.html.twig. See drupal_render() and theme() documentation respectively
+ * block.html.twig. See drupal_render() and _theme() documentation respectively
  * for details.
  *
  * In addition to hook_block_view_alter(), which is called for all blocks, there

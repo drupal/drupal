@@ -219,7 +219,8 @@ use Drupal\Component\Utility\Json;
  * @code
  *   $commands = array();
  *   $commands[] = ajax_command_replace(NULL, $output);
- *   $commands[] = ajax_command_prepend(NULL, theme('status_messages'));
+ *   $status_messages = array('#theme' => 'status_messages');
+ *   $commands[] = ajax_command_prepend(NULL, drupal_render($status_messages));
  *   return array('#type' => 'ajax', '#commands' => $commands);
  * @endcode
  *

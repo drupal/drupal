@@ -401,15 +401,15 @@ function drupal_find_base_themes($themes, $key) {
  * Generates themed output.
  *
  * All requests for themed output must go through this function (however,
- * calling the theme() function directly is strongly discouraged - see next
- * paragraph). It examines the request and routes it to the appropriate
+ * calling the _theme() function directly is very strongly discouraged - see
+ * next paragraph). It examines the request and routes it to the appropriate
  * @link themeable theme function or template @endlink, by checking the theme
  * registry.
  *
  * Avoid calling this function directly. It is preferable to replace direct
- * calls to the theme() function with calls to drupal_render() by passing a
+ * calls to the _theme() function with calls to drupal_render() by passing a
  * render array with a #theme key to drupal_render(), which in turn calls
- * theme().
+ * _theme().
  *
  * @section sec_theme_hooks Theme Hooks
  * Most commonly, the first argument to this function is the name of the theme
@@ -473,21 +473,21 @@ function drupal_find_base_themes($themes, $key) {
  * hook_theme_suggestions_HOOK_alter() or the generic
  * hook_theme_suggestions_alter(). These alter hooks are used to manipulate an
  * array of suggested alternate theme hooks to use, in reverse order of
- * priority. theme() will use the highest priority implementation that exists.
- * If none exists, theme() will use the implementation for the theme hook it was
- * called with. These suggestions are similar to and are used for similar
- * reasons as calling theme() with an array as the $hook parameter (see below).
+ * priority. _theme() will use the highest priority implementation that exists.
+ * If none exists, _theme() will use the implementation for the theme hook it
+ * was called with. These suggestions are similar to and are used for similar
+ * reasons as calling _theme() with an array as the $hook parameter (see below).
  * The difference is whether the suggestions are determined by the code that
- * calls theme() or by altering the suggestions via the suggestion alter hooks.
+ * calls _theme() or by altering the suggestions via the suggestion alter hooks.
  *
  * @param $hook
  *   The name of the theme hook to call. If the name contains a
  *   double-underscore ('__') and there isn't an implementation for the full
  *   name, the part before the '__' is checked. This allows a fallback to a
- *   more generic implementation. For example, if theme('links__node', ...) is
+ *   more generic implementation. For example, if _theme('links__node', ...) is
  *   called, but there is no implementation of that theme hook, then the
  *   'links' implementation is used. This process is iterative, so if
- *   theme('links__contextual__node', ...) is called, theme() checks for the
+ *   _theme('links__contextual__node', ...) is called, _theme() checks for the
  *   following implementations, and uses the first one that exists:
  *   - links__contextual__node
  *   - links__contextual
@@ -495,7 +495,7 @@ function drupal_find_base_themes($themes, $key) {
  *   This allows themes to create specific theme implementations for named
  *   objects and contexts of otherwise generic theme hooks. The $hook parameter
  *   may also be an array, in which case the first theme hook that has an
- *   implementation is used. This allows for the code that calls theme() to
+ *   implementation is used. This allows for the code that calls _theme() to
  *   explicitly specify the fallback order in a situation where using the '__'
  *   convention is not desired or is insufficient.
  * @param $variables
@@ -514,13 +514,13 @@ function drupal_find_base_themes($themes, $key) {
  * @see hook_theme()
  * @see template_preprocess()
  */
-function theme($hook, $variables = array()) {
+function _theme($hook, $variables = array()) {
   static $default_attributes;
   // If called before all modules are loaded, we do not necessarily have a full
   // theme registry to work with, and therefore cannot process the theme
   // request properly. See also \Drupal\Core\Theme\Registry::get().
   if (!\Drupal::moduleHandler()->isLoaded() && !defined('MAINTENANCE_MODE')) {
-    throw new Exception(t('theme() may not be called until all modules are loaded.'));
+    throw new Exception(t('_theme() may not be called until all modules are loaded.'));
   }
 
   /** @var \Drupal\Core\Utility\ThemeRegistry $theme_registry */
@@ -558,7 +558,7 @@ function theme($hook, $variables = array()) {
         watchdog('theme', 'Theme hook %hook not found.', array('%hook' => $hook), WATCHDOG_WARNING);
       }
       // There is no theme implementation for the hook passed. Return FALSE so
-      // the function calling theme() can differentiate between a hook that
+      // the function calling _theme() can differentiate between a hook that
       // exists and renders an empty string and a hook that is not implemented.
       return FALSE;
     }
@@ -622,7 +622,7 @@ function theme($hook, $variables = array()) {
 
   // Invoke hook_theme_suggestions_HOOK().
   $suggestions = Drupal::moduleHandler()->invokeAll('theme_suggestions_' . $base_theme_hook, array($variables));
-  // If theme() was invoked with a direct theme suggestion like
+  // If _theme() was invoked with a direct theme suggestion like
   // '#theme' => 'node__article', add it to the suggestions array before
   // invoking suggestion alter hooks.
   if (isset($info['base hook'])) {
@@ -638,8 +638,8 @@ function theme($hook, $variables = array()) {
   \Drupal::moduleHandler()->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
   // Check if each suggestion exists in the theme registry, and if so,
-  // use it instead of the hook that theme() was called with. For example, a
-  // function may call theme('node', ...), but a module can add
+  // use it instead of the hook that _theme() was called with. For example, a
+  // function may call _theme('node', ...), but a module can add
   // 'node__article' as a suggestion via hook_theme_suggestions_HOOK_alter(),
   // enabling a theme to have an alternate template file for article nodes.
   foreach (array_reverse($suggestions) as $suggestion) {
@@ -1352,7 +1352,7 @@ function template_preprocess_links(&$variables) {
  *     to an empty string, but can be set to NULL for the attribute to be
  *     omitted. Usually, neither omission nor an empty string satisfies
  *     accessibility requirements, so it is strongly encouraged for code
- *     calling theme('image') to pass a meaningful value for this variable.
+ *     calling _theme('image') to pass a meaningful value for this variable.
  *     - http://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
  *     - http://www.w3.org/TR/xhtml1/dtds.html
  *     - http://dev.w3.org/html5/spec/Overview.html#alt
@@ -1956,10 +1956,10 @@ function _theme_table_cell($cell, $header = FALSE) {
  * This function is called for theme hooks implemented as templates only, not
  * for theme hooks implemented as functions. This preprocess function is the
  * first in the sequence of preprocessing functions that are called when
- * preparing variables for a template. See theme() for more details about the
+ * preparing variables for a template. See _theme() for more details about the
  * full sequence.
  *
- * @see theme()
+ * @see _theme()
  */
 function template_preprocess(&$variables, $hook, $info) {
   // Tell all templates where they are located.
@@ -2580,10 +2580,10 @@ function drupal_common_theme() {
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
       // allows the alt attribute to be omitted in some cases. Therefore,
       // default the alt attribute to an empty string, but allow code calling
-      // theme('image') to pass explicit NULL for it to be omitted. Usually,
+      // _theme('image') to pass explicit NULL for it to be omitted. Usually,
       // neither omission nor an empty string satisfies accessibility
       // requirements, so it is strongly encouraged for code calling
-      // theme('image') to pass a meaningful value for the alt variable.
+      // _theme('image') to pass a meaningful value for the alt variable.
       // - http://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
       // - http://www.w3.org/TR/xhtml1/dtds.html
       // - http://dev.w3.org/html5/spec/Overview.html#alt

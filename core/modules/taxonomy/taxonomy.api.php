@@ -282,7 +282,7 @@ function hook_taxonomy_term_view(\Drupal\taxonomy\Entity\Term $term, \Drupal\Cor
  * structured content array, it may use this hook to add a #post_render
  * callback. Alternatively, it could also implement
  * hook_preprocess_HOOK() for taxonomy-term.html.twig. See drupal_render() and
- * theme() documentation respectively for details.
+ * _theme() documentation respectively for details.
  *
  * @param $build
  *   A renderable array representing the taxonomy term content.

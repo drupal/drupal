@@ -1376,7 +1376,7 @@ function base_path() {
  * Adds a LINK tag with a distinct 'rel' attribute to the page's HEAD.
  *
  * This function can be called as long the HTML header hasn't been sent, which
- * on normal pages is up through the preprocess step of theme('html'). Adding
+ * on normal pages is up through the preprocess step of _theme('html'). Adding
  * a link will overwrite a prior link with the exact same 'rel' and 'href'
  * attributes.
  *
@@ -2822,8 +2822,15 @@ function drupal_get_library($module, $name = NULL) {
  * into a table. The table must have an ID attribute set. If using
  * theme_table(), the ID may be set as follows:
  * @code
- * $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'my-module-table')));
- * return $output;
+ * $table = array(
+ *   '#type' => 'table',
+ *   '#header' => $header,
+ *   '#rows' => $rows,
+ *   '#attributes' => array(
+ *     'id' => 'my-module-table',
+ *   ),
+ * );
+ * return drupal_render($table);
  * @endcode
  *
  * In the theme function for the form, a special class must be added to each
@@ -3654,9 +3661,9 @@ function drupal_render_page($page) {
  *     $elements['#sorted'] = TRUE to avoid sorting them a second time.
  *   - The main render phase to produce #children for this element takes place:
  *     - If this element has #theme defined and #theme is an implemented theme
- *       hook/suggestion then theme() is called and must render both the element
- *       and its children. If #render_children is set, theme() will not be
- *       called. #render_children is usually only set internally by theme() so
+ *       hook/suggestion then _theme() is called and must render both the element
+ *       and its children. If #render_children is set, _theme() will not be
+ *       called. #render_children is usually only set internally by _theme() so
  *       that we can avoid the situation where drupal_render() called from
  *       within a theme preprocess function creates an infinite loop.
  *     - If this element does not have a defined #theme, or the defined #theme
@@ -3674,7 +3681,7 @@ function drupal_render_page($page) {
  *     drupal_process_attached().
  *   - If this element has an array of #theme_wrappers defined and
  *     #render_children is not set, #children is then re-rendered by passing the
- *     element in its current state to theme() successively for each item in
+ *     element in its current state to _theme() successively for each item in
  *     #theme_wrappers. Since #theme and #theme_wrappers hooks often define
  *     variables with the same names it is possible to explicitly override each
  *     attribute passed to each #theme_wrappers hook by setting the hook name as
@@ -3734,7 +3741,7 @@ function drupal_render_page($page) {
  *   The rendered HTML.
  *
  * @see element_info()
- * @see theme()
+ * @see _theme()
  * @see drupal_process_states()
  * @see drupal_process_attached()
  */
@@ -3807,11 +3814,11 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // property is set, do not call the #theme function to prevent infinite
   // recursion.
   if ($theme_is_implemented && !isset($elements['#render_children'])) {
-    $elements['#children'] = theme($elements['#theme'], $elements);
+    $elements['#children'] = _theme($elements['#theme'], $elements);
 
-    // If theme() returns FALSE this means that the hook in #theme was not found
-    // in the registry and so we need to update our flag accordingly. This is
-    // common for theme suggestions.
+    // If _theme() returns FALSE this means that the hook in #theme was not
+    // found in the registry and so we need to update our flag accordingly. This
+    // is common for theme suggestions.
     $theme_is_implemented = ($elements['#children'] !== FALSE);
   }
 
@@ -3854,7 +3861,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
       // If the value of a #theme_wrappers item is an array then the theme hook
       // is found in the key of the item and the value contains attribute
       // overrides. Attribute overrides replace key/value pairs in $elements for
-      // only this theme() call. This allows #theme hooks and #theme_wrappers
+      // only this _theme() call. This allows #theme hooks and #theme_wrappers
       // hooks to share variable names without conflict or ambiguity.
       $wrapper_elements = $elements;
       if (is_string($key)) {
@@ -3867,7 +3874,7 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
         $wrapper_hook = $value;
       }
 
-      $elements['#children'] = theme($wrapper_hook, $wrapper_elements);
+      $elements['#children'] = _theme($wrapper_hook, $wrapper_elements);
     }
   }
 

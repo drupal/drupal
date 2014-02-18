@@ -41,7 +41,7 @@ class ThemeTest extends WebTestBase {
    * Render arrays that use a render element and templates (and hence call
    * template_preprocess()) must ensure the attributes at different occasions
    * are all merged correctly:
-   *   - $variables['attributes'] as passed in to theme()
+   *   - $variables['attributes'] as passed in to _theme()
    *   - the render element's #attributes
    *   - any attributes set in the template's preprocessing function
    */
@@ -58,21 +58,21 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
-   * Test that theme() returns expected data types.
+   * Test that _theme() returns expected data types.
    */
   function testThemeDataTypes() {
-    // theme_test_false is an implemented theme hook so theme() should return a
+    // theme_test_false is an implemented theme hook so _theme() should return a
     // string, even though the theme function itself can return anything.
     $foos = array('null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo');
     foreach ($foos as $type => $example) {
-      $output = theme('theme_test_foo', array('foo' => $example));
-      $this->assertTrue(is_string($output), format_string('theme() returns a string for data type !type.', array('!type' => $type)));
+      $output = _theme('theme_test_foo', array('foo' => $example));
+      $this->assertTrue(is_string($output), format_string('_theme() returns a string for data type !type.', array('!type' => $type)));
     }
 
-    // suggestionnotimplemented is not an implemented theme hook so theme()
+    // suggestionnotimplemented is not an implemented theme hook so _theme()
     // should return FALSE instead of a string.
-    $output = theme(array('suggestionnotimplemented'));
-    $this->assertIdentical($output, FALSE, 'theme() returns FALSE when a hook suggestion is not implemented.');
+    $output = _theme(array('suggestionnotimplemented'));
+    $this->assertIdentical($output, FALSE, '_theme() returns FALSE when a hook suggestion is not implemented.');
   }
 
   /**

@@ -42,7 +42,12 @@ class ThemeTestSubscriber extends ContainerAware implements EventSubscriberInter
       // theme_test_request_listener_page_callback() to test that even when the
       // theme system is initialized this early, it is still capable of
       // returning output and theming the page as a whole.
-      $GLOBALS['theme_test_output'] = theme('more_link', array('url' => 'user', 'title' => 'Themed output generated in a KernelEvents::REQUEST listener'));
+      $more_link = array(
+        '#theme' => 'more_link',
+        '#url' => 'user',
+        '#title' => 'Themed output generated in a KernelEvents::REQUEST listener',
+      );
+      $GLOBALS['theme_test_output'] = drupal_render($more_link);
     }
   }
 
