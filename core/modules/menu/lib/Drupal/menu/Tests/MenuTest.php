@@ -479,6 +479,66 @@ class MenuTest extends MenuWebTestBase {
   }
 
   /**
+   * Test that cache tags are properly set and bubbled up to the page cache.
+   *
+   * Ensures that invalidation of the "menu:<menu name>" cache tags works.
+   */
+  public function testMenuBlockPageCacheTags() {
+    // Enable page caching.
+    $config = \Drupal::config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
+    // Create a Llama menu, add a link to it and place the corresponding block.
+    $menu = entity_create('menu', array(
+      'id' => 'llama',
+      'label' => 'Llama',
+      'description' => 'Description text',
+    ));
+    $menu->save();
+    $menu_link = entity_create('menu_link', array(
+      'link_path' => '<front>',
+      'link_title' => 'Vicuña',
+      'menu_name' => 'llama',
+    ));
+    $menu_link->save();
+    $block = $this->drupalPlaceBlock('system_menu_block:llama', array('label' => 'Llama', 'module' => 'system', 'region' => 'footer'));
+
+    // Prime the page cache.
+    $this->drupalGet('test-page');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+
+    // Verify a cache hit, but also the presence of the correct cache tags.
+    $this->drupalGet('test-page');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $cid_parts = array(url('test-page', array('absolute' => TRUE)), 'html');
+    $cid = sha1(implode(':', $cid_parts));
+    $cache_entry = \Drupal::cache('page')->get($cid);
+    $this->assertIdentical($cache_entry->tags, array('content:1', 'menu:llama'));
+
+    // The "Llama" menu is modified.
+    $menu->label = 'Awesome llama';
+    $menu->save();
+
+    // Verify that after the modified menu, there is a cache miss.
+    $this->drupalGet('test-page');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+
+    // Verify a cache hit.
+    $this->drupalGet('test-page');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+
+    // A link in the "Llama" menu is modified.
+    $menu_link->link_title = 'Guanaco';
+    $menu_link->save();
+
+    // Verify that after the modified menu link, there is a cache miss.
+    $this->drupalGet('test-page');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+  }
+
+  /**
    * Tests menu link bundles.
    */
   public function testMenuBundles() {

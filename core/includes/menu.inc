@@ -1047,6 +1047,9 @@ function menu_tree_output($tree) {
     // Add the theme wrapper for outer markup.
     // Allow menu-specific theme overrides.
     $build['#theme_wrappers'][] = 'menu_tree__' . strtr($data['link']['menu_name'], '-', '_');
+    // Set cache tag.
+    $menu_name = $data['link']['menu_name'];
+    $build['#cache']['tags']['menu'][$menu_name] = $menu_name;
   }
 
   return $build;
@@ -1705,10 +1708,7 @@ function menu_list_system_menus() {
  * Returns an array of links to be rendered as the Main menu.
  */
 function menu_main_menu() {
-  $config = \Drupal::config('menu.settings');
-  $menu_enabled = \Drupal::moduleHandler()->moduleExists('menu');
-  // When menu module is not enabled, we need a hardcoded default value.
-  $main_links_source = $menu_enabled ? $config->get('main_links') : 'main';
+  $main_links_source = _menu_get_links_source('main_links', 'main');
   return menu_navigation_links($main_links_source);
 }
 
@@ -1716,11 +1716,8 @@ function menu_main_menu() {
  * Returns an array of links to be rendered as the Secondary links.
  */
 function menu_secondary_menu() {
-  $config = \Drupal::config('menu.settings');
-  $menu_enabled = \Drupal::moduleHandler()->moduleExists('menu');
-  // When menu module is not enabled, we need a hardcoded default value.
-  $main_links_source = $menu_enabled ? $config->get('main_links') : 'main';
-  $secondary_links_source = $menu_enabled ? $config->get('secondary_links') : 'account';
+  $main_links_source = _menu_get_links_source('main_links', 'main');
+  $secondary_links_source = _menu_get_links_source('secondary_links', 'account');
 
   // If the secondary menu source is set as the primary menu, we display the
   // second level of the primary menu.
@@ -1730,6 +1727,22 @@ function menu_secondary_menu() {
   else {
     return menu_navigation_links($secondary_links_source, 0);
   }
+}
+
+/**
+ * Returns the source of links of a menu.
+ *
+ * @param string $name
+ *   A string configuration key of menu link source.
+ * @param string $default
+ *   Default menu name.
+ *
+ * @return string
+ *   Returns menu name, if exist
+ */
+function _menu_get_links_source($name, $default) {
+  $config = \Drupal::config('menu.settings');
+  return \Drupal::moduleHandler()->moduleExists('menu') ? $config->get($name) : $default;
 }
 
 /**
@@ -2348,15 +2361,6 @@ function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
  */
 function menu_get_active_trail() {
   return menu_set_active_trail();
-}
-
-/**
- * Clears the cached cached data for a single named menu.
- */
-function menu_cache_clear($menu_name = 'tools') {
-  Cache::deleteTags(array('menu' => $menu_name));
-  // Also clear the menu system static caches.
-  menu_reset_static_cache();
 }
 
 /**

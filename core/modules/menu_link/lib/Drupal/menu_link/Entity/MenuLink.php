@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_link\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Url;
@@ -446,9 +447,9 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
       }
     }
 
-    foreach ($affected_menus as $menu_name) {
-      menu_cache_clear($menu_name);
-    }
+    Cache::invalidateTags(array('menu' => array_keys($affected_menus)));
+    // Also clear the menu system static caches.
+    menu_reset_static_cache();
     _menu_clear_page_cache();
   }
 
@@ -523,10 +524,12 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     // Check the has_children status of the parent.
     $storage_controller->updateParentalStatus($this);
 
-    menu_cache_clear($this->menu_name);
+    Cache::invalidateTags(array('menu' => $this->menu_name));
     if (isset($this->original) && $this->menu_name != $this->original->menu_name) {
-      menu_cache_clear($this->original->menu_name);
+      Cache::invalidateTags(array('menu' => $this->original->menu_name));
     }
+    // Also clear the menu system static caches.
+    menu_reset_static_cache();
 
     // Now clear the cache.
     _menu_clear_page_cache();
