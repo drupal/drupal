@@ -14,7 +14,7 @@ use Drupal\Core\Field\FieldDefinition;
 /**
  * Defines the contact message entity.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "contact_message",
  *   label = @Translation("Contact message"),
  *   controllers = {

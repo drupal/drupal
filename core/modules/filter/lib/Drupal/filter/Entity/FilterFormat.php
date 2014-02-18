@@ -17,7 +17,7 @@ use Drupal\filter\Plugin\FilterInterface;
 /**
  * Represents a text format.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "filter_format",
  *   label = @Translation("Text format"),
  *   controllers = {
@@ -28,7 +28,6 @@ use Drupal\filter\Plugin\FilterInterface;
  *     },
  *     "list" = "Drupal\filter\FilterFormatListController",
  *     "access" = "Drupal\filter\FilterFormatAccessController",
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
  *   config_prefix = "filter.format",
  *   admin_permission = "administer filters",

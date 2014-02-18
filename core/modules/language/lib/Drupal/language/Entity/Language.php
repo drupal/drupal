@@ -15,11 +15,10 @@ use Drupal\language\LanguageInterface;
 /**
  * Defines the Language entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "language_entity",
  *   label = @Translation("Language"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\language\LanguageListController",
  *     "access" = "Drupal\language\LanguageAccessController",
  *     "form" = {

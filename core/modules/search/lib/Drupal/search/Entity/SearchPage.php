@@ -17,7 +17,7 @@ use Drupal\search\SearchPageInterface;
 /**
  * Defines a configured search page.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "search_page",
  *   label = @Translation("Search page"),
  *   controllers = {

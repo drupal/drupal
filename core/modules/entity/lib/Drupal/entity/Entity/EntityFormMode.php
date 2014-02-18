@@ -27,17 +27,17 @@ use Drupal\entity\EntityFormModeInterface;
  * @see entity_get_form_modes()
  * @see hook_entity_form_mode_info_alter()
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "form_mode",
  *   label = @Translation("Form mode"),
  *   controllers = {
+ *     "storage" = "Drupal\entity\EntityDisplayModeStorageController",
  *     "list" = "Drupal\entity\EntityFormModeListController",
  *     "form" = {
  *       "add" = "Drupal\entity\Form\EntityFormModeAddForm",
  *       "edit" = "Drupal\entity\Form\EntityDisplayModeEditForm",
  *       "delete" = "Drupal\entity\Form\EntityDisplayModeDeleteForm"
- *     },
- *     "storage" = "Drupal\entity\EntityDisplayModeStorageController"
+ *     }
  *   },
  *   admin_permission = "administer display modes",
  *   config_prefix = "entity.form_mode",

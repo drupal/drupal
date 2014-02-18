@@ -21,7 +21,7 @@ use Drupal\field\FieldInterface;
  * @todo use 'field' as the id once hook_field_load() and friends
  * are removed.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "field_entity",
  *   label = @Translation("Field"),
  *   controllers = {

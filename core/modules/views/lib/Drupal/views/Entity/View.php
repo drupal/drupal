@@ -18,7 +18,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Defines a View configuration entity class.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "view",
  *   label = @Translation("View"),
  *   controllers = {

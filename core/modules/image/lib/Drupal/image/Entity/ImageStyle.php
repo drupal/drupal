@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 /**
  * Defines an image style configuration entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "image_style",
  *   label = @Translation("Image style"),
  *   controllers = {
@@ -29,7 +29,6 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *       "delete" = "Drupal\image\Form\ImageStyleDeleteForm",
  *       "flush" = "Drupal\image\Form\ImageStyleFlushForm"
  *     },
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\image\ImageStyleListController",
  *   },
  *   admin_permission = "administer image styles",

@@ -15,7 +15,7 @@ use Drupal\shortcut\ShortcutSetInterface;
 /**
  * Defines the Shortcut configuration entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "shortcut_set",
  *   label = @Translation("Shortcut set"),
  *   controllers = {

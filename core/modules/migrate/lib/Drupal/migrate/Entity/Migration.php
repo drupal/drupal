@@ -17,14 +17,12 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  * The migration entity stores the information about a single migration, like
  * the source, process and destination plugins.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "migration",
  *   label = @Translation("Migration"),
  *   module = "migrate",
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\Core\Config\Entity\DraggableListController",
- *     "access" = "Drupal\Core\Entity\EntityAccessController",
  *     "form" = {
  *       "add" = "Drupal\Core\Entity\EntityFormController",
  *       "edit" = "Drupal\Core\Entity\EntityFormController",

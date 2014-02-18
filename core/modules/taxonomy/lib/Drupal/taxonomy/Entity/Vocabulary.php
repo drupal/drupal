@@ -14,7 +14,7 @@ use Drupal\taxonomy\VocabularyInterface;
 /**
  * Defines the taxonomy vocabulary entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "taxonomy_vocabulary",
  *   label = @Translation("Taxonomy vocabulary"),
  *   controllers = {

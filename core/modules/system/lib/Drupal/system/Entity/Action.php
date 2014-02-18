@@ -16,12 +16,9 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
 /**
  * Defines the configured action entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "action",
  *   label = @Translation("Action"),
- *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
- *   },
  *   admin_permission = "administer actions",
  *   config_prefix = "system.action",
  *   entity_keys = {

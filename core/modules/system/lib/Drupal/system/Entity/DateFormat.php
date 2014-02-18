@@ -15,11 +15,10 @@ use Drupal\system\DateFormatInterface;
 /**
  * Defines the Date Format configuration entity class.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "date_format",
  *   label = @Translation("Date format"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\system\DateFormatAccessController",
  *     "list" = "Drupal\system\DateFormatListController",
  *     "form" = {

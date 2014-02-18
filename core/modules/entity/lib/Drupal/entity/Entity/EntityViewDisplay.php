@@ -16,7 +16,7 @@ use Drupal\entity\EntityDisplayBase;
  * Configuration entity that contains display options for all components of a
  * rendered entity in a given view mode.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "entity_view_display",
  *   label = @Translation("Entity view display"),
  *   controllers = {

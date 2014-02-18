@@ -16,7 +16,7 @@ use Drupal\user\UserInterface;
 /**
  * Defines the user entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "user",
  *   label = @Translation("User"),
  *   controllers = {

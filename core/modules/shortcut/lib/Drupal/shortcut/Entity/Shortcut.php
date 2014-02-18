@@ -17,12 +17,11 @@ use Drupal\shortcut\ShortcutInterface;
 /**
  * Defines the shortcut entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "shortcut",
  *   label = @Translation("Shortcut link"),
  *   module = "shortcut",
  *   controllers = {
- *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "access" = "Drupal\shortcut\ShortcutAccessController",
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutFormController",

@@ -10,11 +10,10 @@ namespace Drupal\entity_test\Entity;
 /**
  * Test entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "entity_test_label",
  *   label = @Translation("Entity Test label"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder"
  *   },
  *   base_table = "entity_test",

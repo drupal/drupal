@@ -17,7 +17,7 @@ use Drupal\user\UserInterface;
 /**
  * Defines the file entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "file",
  *   label = @Translation("File"),
  *   controllers = {

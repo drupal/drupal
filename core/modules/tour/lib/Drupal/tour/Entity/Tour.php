@@ -14,11 +14,10 @@ use Drupal\tour\TourInterface;
 /**
  * Defines the configured tour entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "tour",
  *   label = @Translation("Tour"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "view_builder" = "Drupal\tour\TourViewBuilder"
  *   },
  *   config_prefix = "tour.tour",

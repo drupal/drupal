@@ -164,13 +164,6 @@ class EntityType implements EntityTypeInterface {
   protected $translatable = FALSE;
 
   /**
-   * Returns the config prefix used by the configuration entity type.
-   *
-   * @var string
-   */
-  protected $config_prefix;
-
-  /**
    * The human-readable name of the type.
    *
    * @var string
@@ -541,7 +534,7 @@ class EntityType implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getConfigPrefix() {
-    return isset($this->config_prefix) ? $this->config_prefix : FALSE;
+    return FALSE;
   }
 
   /**

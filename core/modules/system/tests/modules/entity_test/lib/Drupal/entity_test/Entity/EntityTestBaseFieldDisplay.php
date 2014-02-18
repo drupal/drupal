@@ -12,11 +12,10 @@ use Drupal\Core\Field\FieldDefinition;
 /**
  * Defines a test entity class for base fields display.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "entity_test_base_field_display",
  *   label = @Translation("Test entity - base field display"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"

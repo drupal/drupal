@@ -19,7 +19,7 @@ use Drupal\user\UserInterface;
 /**
  * Defines the comment entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "comment",
  *   label = @Translation("Comment"),
  *   bundle_label = @Translation("Content type"),

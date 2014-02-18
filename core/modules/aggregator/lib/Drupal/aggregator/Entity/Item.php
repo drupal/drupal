@@ -15,7 +15,7 @@ use Drupal\Core\Field\FieldDefinition;
 /**
  * Defines the aggregator item entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "aggregator_item",
  *   label = @Translation("Aggregator feed item"),
  *   controllers = {

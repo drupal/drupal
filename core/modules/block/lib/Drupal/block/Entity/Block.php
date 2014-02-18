@@ -15,11 +15,10 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 /**
  * Defines a Block configuration entity class.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "block",
  *   label = @Translation("Block"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\block\BlockAccessController",
  *     "view_builder" = "Drupal\block\BlockViewBuilder",
  *     "list" = "Drupal\block\BlockListController",

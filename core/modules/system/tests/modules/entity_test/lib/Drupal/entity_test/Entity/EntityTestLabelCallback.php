@@ -10,12 +10,9 @@ namespace Drupal\entity_test\Entity;
 /**
  * Test entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "entity_test_label_callback",
  *   label = @Translation("Entity test label callback"),
- *   controllers = {
- *     "storage" = "Drupal\Core\Entity\FieldableDatabaseStorageController"
- *   },
  *   field_cache = FALSE,
  *   base_table = "entity_test",
  *   revision_table = "entity_test_revision",

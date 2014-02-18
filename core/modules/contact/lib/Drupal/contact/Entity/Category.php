@@ -14,7 +14,7 @@ use Drupal\contact\CategoryInterface;
 /**
  * Defines the contact category entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "contact_category",
  *   label = @Translation("Contact category"),
  *   controllers = {

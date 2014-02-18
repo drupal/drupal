@@ -3234,7 +3234,7 @@ function hook_link_alter(&$variables) {
  * To annotate a class as a plugin, add code similar to the following to the
  * end of the documentation block immediately preceding the class declaration:
  * @code
- * * @EntityType(
+ * * @ContentEntityType(
  * *   id = "comment",
  * *   label = @Translation("Comment"),
  * *   ...

@@ -13,12 +13,9 @@ use Drupal\editor\EditorInterface;
 /**
  * Defines the configured text editor entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "editor",
  *   label = @Translation("Editor"),
- *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
- *   },
  *   config_prefix = "editor.editor",
  *   entity_keys = {
  *     "id" = "format",

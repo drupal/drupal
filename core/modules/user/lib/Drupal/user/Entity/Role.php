@@ -15,7 +15,7 @@ use Drupal\user\RoleInterface;
 /**
  * Defines the user role entity class.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "user_role",
  *   label = @Translation("Role"),
  *   controllers = {

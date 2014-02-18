@@ -13,7 +13,7 @@ use Drupal\config_test\ConfigTestInterface;
 /**
  * Defines the ConfigTest configuration entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "config_test",
  *   label = @Translation("Test configuration"),
  *   controllers = {

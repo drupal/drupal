@@ -17,7 +17,7 @@ use Drupal\taxonomy\TermInterface;
 /**
  * Defines the taxonomy term entity.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "taxonomy_term",
  *   label = @Translation("Taxonomy term"),
  *   bundle_label = @Translation("Vocabulary"),

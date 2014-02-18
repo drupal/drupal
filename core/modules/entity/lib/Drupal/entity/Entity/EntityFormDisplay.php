@@ -14,12 +14,9 @@ use Drupal\entity\EntityDisplayBase;
  * Configuration entity that contains widget options for all components of a
  * entity form in a given form mode.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "entity_form_display",
  *   label = @Translation("Entity form display"),
- *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
- *   },
  *   config_prefix = "entity.form_display",
  *   entity_keys = {
  *     "id" = "id",

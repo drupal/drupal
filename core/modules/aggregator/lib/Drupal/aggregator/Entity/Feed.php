@@ -16,7 +16,7 @@ use Drupal\aggregator\FeedInterface;
 /**
  * Defines the aggregator feed entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "aggregator_feed",
  *   label = @Translation("Aggregator feed"),
  *   controllers = {

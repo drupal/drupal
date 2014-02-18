@@ -16,11 +16,10 @@ use Drupal\node\NodeTypeInterface;
 /**
  * Defines the Node type configuration entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "node_type",
  *   label = @Translation("Content type"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\node\NodeTypeAccessController",
  *     "form" = {
  *       "add" = "Drupal\node\NodeTypeFormController",

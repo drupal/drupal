@@ -15,11 +15,10 @@ use Drupal\system\MenuInterface;
 /**
  * Defines the Menu configuration entity class.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "menu",
  *   label = @Translation("Menu"),
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\system\MenuAccessController"
  *   },
  *   config_prefix = "system.menu",

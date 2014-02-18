@@ -17,7 +17,7 @@ use Drupal\field\FieldInstanceInterface;
 /**
  * Defines the Field instance entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "field_instance",
  *   label = @Translation("Field instance"),
  *   controllers = {
