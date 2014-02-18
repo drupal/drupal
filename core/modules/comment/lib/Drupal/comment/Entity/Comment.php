@@ -229,7 +229,8 @@ class Comment extends ContentEntityBase implements CommentInterface {
 
     $fields['subject'] = FieldDefinition::create('string')
       ->setLabel(t('Subject'))
-      ->setDescription(t('The comment title or subject.'));
+      ->setDescription(t('The comment title or subject.'))
+      ->setSetting('max_length', 64);
 
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
@@ -242,19 +243,27 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $fields['name'] = FieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t("The comment author's name."))
-      ->setSetting('default_value', '');
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 60,
+      ))
+      ->setConstraints(array('CommentName' => array()));
 
     $fields['mail'] = FieldDefinition::create('email')
       ->setLabel(t('Email'))
       ->setDescription(t("The comment author's e-mail address."));
 
-    $fields['homepage'] = FieldDefinition::create('string')
+    $fields['homepage'] = FieldDefinition::create('uri')
       ->setLabel(t('Homepage'))
-      ->setDescription(t("The comment author's home page address."));
+      ->setDescription(t("The comment author's home page address."))
+      // URIs are not length limited by RFC 2616, but we can only store 255
+      // characters in our comment DB schema.
+      ->setSetting('max_length', 255);
 
     $fields['hostname'] = FieldDefinition::create('string')
       ->setLabel(t('Hostname'))
-      ->setDescription(t("The comment author's hostname."));
+      ->setDescription(t("The comment author's hostname."))
+      ->setSetting('max_length', 128);
 
     // @todo Convert to a "created" field in https://drupal.org/node/2145103.
     $fields['created'] = FieldDefinition::create('integer')
@@ -273,16 +282,18 @@ class Comment extends ContentEntityBase implements CommentInterface {
 
     $fields['thread'] = FieldDefinition::create('string')
       ->setLabel(t('Thread place'))
-      ->setDescription(t("The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length."));
+      ->setDescription(t("The alphadecimal representation of the comment's place in a thread, consisting of a base 36 string prefixed by an integer indicating its length."))
+      ->setSetting('max_length', 255);
 
     $fields['entity_type'] = FieldDefinition::create('string')
       ->setLabel(t('Entity type'))
       ->setDescription(t('The entity type to which this comment is attached.'));
 
-    $fields['field_id'] = FieldDefinition::create('entity_reference')
+    // @todo Convert to the entity_reference field in
+    // https://drupal.org/node/2149859.
+    $fields['field_id'] = FieldDefinition::create('string')
       ->setLabel(t('Field ID'))
-      ->setDescription(t('The comment field id.'))
-      ->setSetting('target_type', 'field_entity');
+      ->setDescription(t('The comment field id.'));
 
     $fields['field_name'] = FieldDefinition::create('string')
       ->setLabel(t('Comment field name'))
