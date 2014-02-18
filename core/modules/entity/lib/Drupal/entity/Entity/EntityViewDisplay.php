@@ -19,9 +19,6 @@ use Drupal\entity\EntityDisplayBase;
  * @ConfigEntityType(
  *   id = "entity_view_display",
  *   label = @Translation("Entity view display"),
- *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
- *   },
  *   config_prefix = "entity.view_display",
  *   entity_keys = {
  *     "id" = "id",
