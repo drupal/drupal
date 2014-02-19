@@ -64,11 +64,11 @@ function entity_reference_field_widget_info_alter(&$info) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update() for 'field_entity'.
+ * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  *
  * Reset the instance handler settings, when the target type is changed.
  */
-function entity_reference_field_entity_update(FieldInterface $field) {
+function entity_reference_field_config_update(FieldInterface $field) {
   if ($field->type != 'entity_reference') {
     // Only act on entity reference fields.
     return;
@@ -219,7 +219,7 @@ function entity_reference_create_instance($entity_type, $bundle, $field_name, $f
         'target_type' => $target_entity_type,
       ),
     );
-    entity_create('field_entity', $field)->save();
+    entity_create('field_config', $field)->save();
   }
 
   if (empty($instance)) {
@@ -233,7 +233,7 @@ function entity_reference_create_instance($entity_type, $bundle, $field_name, $f
         'handler_settings' => $selection_handler_settings,
       ),
     );
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_instance_config', $instance)->save();
   }
 }
 

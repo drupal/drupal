@@ -43,16 +43,16 @@ function options_field_settings_form_value_boolean_allowed_values($element, $inp
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update() for 'field_entity'.
+ * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  */
-function options_field_entity_update(FieldInterface $field) {
+function options_field_config_update(FieldInterface $field) {
   drupal_static_reset('options_allowed_values');
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
+ * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
-function options_field_entity_delete(FieldInterface $field) {
+function options_field_config_delete(FieldInterface $field) {
   drupal_static_reset('options_allowed_values');
 }
 

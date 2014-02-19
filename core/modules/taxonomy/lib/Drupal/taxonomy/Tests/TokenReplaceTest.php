@@ -29,7 +29,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
     $this->field_name = 'taxonomy_' . $this->vocabulary->id();
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $this->field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
@@ -44,7 +44,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
       ),
     ))->save();
 
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $this->field_name,
       'bundle' => 'article',
       'entity_type' => 'node',

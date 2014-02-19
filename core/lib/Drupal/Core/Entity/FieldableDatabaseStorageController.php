@@ -17,7 +17,7 @@ use Drupal\field\FieldInfo;
 use Drupal\field\FieldUpdateForbiddenException;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
-use Drupal\field\Entity\Field;
+use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -1099,7 +1099,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
     // We need to account for deleted fields and instances. The method runs
     // before the instance definitions are updated, so we need to fetch them
     // using the old bundle name.
-    $instances = entity_load_multiple_by_properties('field_instance', array('entity_type' => $this->entityTypeId, 'bundle' => $bundle, 'include_deleted' => TRUE));
+    $instances = entity_load_multiple_by_properties('field_instance_config', array('entity_type' => $this->entityTypeId, 'bundle' => $bundle, 'include_deleted' => TRUE));
     foreach ($instances as $instance) {
       $field = $instance->getField();
       $table_name = static::_fieldTableName($field);
@@ -1451,7 +1451,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *   unique among all other fields.
    */
   static public function _fieldColumnName(FieldInterface $field, $column) {
-    return in_array($column, Field::getReservedColumns()) ? $column : $field->getName() . '_' . $column;
+    return in_array($column, FieldConfig::getReservedColumns()) ? $column : $field->getName() . '_' . $column;
   }
 
 }

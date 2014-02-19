@@ -76,7 +76,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
     );
     $field_definition['settings'] = array_merge($field_definition['settings'], $field_settings);
-    $field = entity_create('field_entity', $field_definition);
+    $field = entity_create('field_config', $field_definition);
     $field->save();
 
     $this->attachFileField($name, $entity_type, $bundle, $instance_settings, $widget_settings);
@@ -109,7 +109,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       'settings' => array(),
     );
     $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_instance_config', $instance)->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')
       ->setComponent($name, array(

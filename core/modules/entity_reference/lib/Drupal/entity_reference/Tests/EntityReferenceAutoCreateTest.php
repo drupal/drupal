@@ -36,7 +36,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $referenced = $this->drupalCreateContentType();
     $this->referenced_type = $referenced->type;
 
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => 'test_field',
       'entity_type' => 'node',
       'translatable' => FALSE,
@@ -48,7 +48,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
       'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
 
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'label' => 'Entity reference field',
       'field_name' => 'test_field',
       'entity_type' => 'node',

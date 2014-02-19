@@ -52,12 +52,12 @@ class TelephoneFieldTest extends WebTestBase {
   function testTelephoneField() {
 
     // Add the telepone field to the article content type.
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => 'field_telephone',
       'entity_type' => 'node',
       'type' => 'telephone',
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => 'field_telephone',
       'label' => 'Telephone Number',
       'entity_type' => 'node',

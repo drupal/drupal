@@ -49,7 +49,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $path = $entity_route->getPath();
 
         $route = new Route(
-          "$path/fields/{field_instance}",
+          "$path/fields/{field_instance_config}",
           array(
             '_form' => '\Drupal\field_ui\Form\FieldInstanceEditForm',
             '_title_callback' => '\Drupal\field_ui\Form\FieldInstanceEditForm::getTitle',
@@ -59,15 +59,15 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("field_ui.instance_edit_$entity_type_id", $route);
 
         $route = new Route(
-          "$path/fields/{field_instance}/field",
+          "$path/fields/{field_instance_config}/field",
           array('_form' => '\Drupal\field_ui\Form\FieldEditForm'),
           array('_permission' => 'administer ' . $entity_type_id . ' fields')
         );
         $collection->add("field_ui.field_edit_$entity_type_id", $route);
 
         $route = new Route(
-          "$path/fields/{field_instance}/delete",
-          array('_entity_form' => 'field_instance.delete'),
+          "$path/fields/{field_instance_config}/delete",
+          array('_entity_form' => 'field_instance_config.delete'),
           array('_field_ui_field_delete_access' => 'administer ' . $entity_type_id . ' fields')
         );
         $collection->add("field_ui.delete_$entity_type_id", $route);

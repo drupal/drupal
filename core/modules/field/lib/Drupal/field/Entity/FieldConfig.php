@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\Entity\Field.
+ * Contains \Drupal\field\Entity\FieldConfig.
  */
 
 namespace Drupal\field\Entity;
@@ -18,14 +18,11 @@ use Drupal\field\FieldInterface;
 /**
  * Defines the Field entity.
  *
- * @todo use 'field' as the id once hook_field_load() and friends
- * are removed.
- *
  * @ConfigEntityType(
- *   id = "field_entity",
+ *   id = "field_config",
  *   label = @Translation("Field"),
  *   controllers = {
- *     "storage" = "Drupal\field\FieldStorageController"
+ *     "storage" = "Drupal\field\FieldConfigStorageController"
  *   },
  *   config_prefix = "field.field",
  *   entity_keys = {
@@ -35,7 +32,7 @@ use Drupal\field\FieldInterface;
  *   }
  * )
  */
-class Field extends ConfigEntityBase implements FieldInterface {
+class FieldConfig extends ConfigEntityBase implements FieldInterface {
 
   /**
    * The maximum length of the field name, in characters.
@@ -185,13 +182,6 @@ class Field extends ConfigEntityBase implements FieldInterface {
   protected $schema;
 
   /**
-   * The original field.
-   *
-   * @var \Drupal\field\Entity\Field
-   */
-  public $original = NULL;
-
-  /**
    * The data definition of a field item.
    *
    * @var \Drupal\Core\TypedData\DataDefinition
@@ -199,7 +189,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
   protected $itemDefinition;
 
   /**
-   * Constructs a Field object.
+   * Constructs a FieldConfig object.
    *
    * @param array $values
    *   An array of field properties, keyed by property name. Most array
@@ -212,14 +202,14 @@ class Field extends ConfigEntityBase implements FieldInterface {
    *   - type: required.
    *
    * In most cases, Field entities are created via
-   * entity_create('field_entity', $values)), where $values is the same
+   * entity_create('field_config', $values)), where $values is the same
    * parameter as in this constructor.
    *
    * @see entity_create()
    *
    * @ingroup field_crud
    */
-  public function __construct(array $values, $entity_type = 'field_entity') {
+  public function __construct(array $values, $entity_type = 'field_config') {
     // Check required properties.
     if (empty($values['name'])) {
       throw new FieldException('Attempt to create an unnamed field.');
@@ -304,8 +294,8 @@ class Field extends ConfigEntityBase implements FieldInterface {
     // Assign the ID.
     $this->id = $this->id();
 
-    // Field name cannot be longer than Field::NAME_MAX_LENGTH characters. We
-    // use Unicode::strlen() because the DB layer assumes that column widths
+    // Field name cannot be longer than FieldConfig::NAME_MAX_LENGTH characters.
+    // We use Unicode::strlen() because the DB layer assumes that column widths
     // are given in characters rather than bytes.
     if (Unicode::strlen($this->name) > static::NAME_MAX_LENGTH) {
       throw new FieldException(format_string(
@@ -386,10 +376,10 @@ class Field extends ConfigEntityBase implements FieldInterface {
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $fields) {
     $state = \Drupal::state();
-    $instance_controller = \Drupal::entityManager()->getStorageController('field_instance');
+    $instance_controller = \Drupal::entityManager()->getStorageController('field_instance_config');
 
     // Delete instances first. Note: when deleting a field through
-    // FieldInstance::postDelete(), the instances have been deleted already, so
+    // FieldInstanceConfig::postDelete(), the instances have been deleted already, so
     // no instances will be found here.
     $instance_ids = array();
     foreach ($fields as $field) {
@@ -563,8 +553,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
    * @param bool $translatable
    *   Whether the field is translatable.
    *
-   * @return \Drupal\field\Entity\Field
-   *   The object itself for chaining.
+   * @return $this
    */
   public function setTranslatable($translatable) {
     $this->translatable = $translatable;

@@ -40,7 +40,7 @@ class SelectionTest extends WebTestBase {
     }
 
     // Create a field and instance.
-    $field = entity_create('field_entity', array(
+    $field = entity_create('field_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
@@ -51,7 +51,7 @@ class SelectionTest extends WebTestBase {
       'cardinality' => '1',
     ));
     $field->save();
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',

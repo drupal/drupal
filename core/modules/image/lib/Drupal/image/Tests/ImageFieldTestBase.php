@@ -64,41 +64,37 @@ abstract class ImageFieldTestBase extends WebTestBase {
    *   A list of widget settings that will be added to the widget defaults.
    */
   function createImageField($name, $type_name, $field_settings = array(), $instance_settings = array(), $widget_settings = array()) {
-    $field = array(
+    entity_create('field_config', array(
       'name' => $name,
       'entity_type' => 'node',
       'type' => 'image',
-      'settings' => array(),
+      'settings' => $field_settings,
       'cardinality' => !empty($field_settings['cardinality']) ? $field_settings['cardinality'] : 1,
-    );
-    $field['settings'] = array_merge($field['settings'], $field_settings);
-    entity_create('field_entity', $field)->save();
+    ))->save();
 
-    $instance = array(
-      'field_name' => $field['name'],
+    $field_instance_config = entity_create('field_instance_config', array(
+      'field_name' => $name,
       'label' => $name,
       'entity_type' => 'node',
       'bundle' => $type_name,
       'required' => !empty($instance_settings['required']),
       'description' => !empty($instance_settings['description']) ? $instance_settings['description'] : '',
-      'settings' => array(),
-    );
-    $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-    $field_instance = entity_create('field_instance', $instance);
-    $field_instance->save();
+      'settings' => $instance_settings,
+    ));
+    $field_instance_config->save();
 
     entity_get_form_display('node', $type_name, 'default')
-      ->setComponent($field['name'], array(
+      ->setComponent($name, array(
         'type' => 'image_image',
         'settings' => $widget_settings,
       ))
       ->save();
 
     entity_get_display('node', $type_name, 'default')
-      ->setComponent($field['name'])
+      ->setComponent($name)
       ->save();
 
-    return $field_instance;
+    return $field_instance_config;
 
   }
 

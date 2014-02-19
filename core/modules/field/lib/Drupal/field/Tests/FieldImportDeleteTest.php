@@ -51,8 +51,8 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $this->installConfig(array('field_test_config'));
 
     // Get the uuid's for the fields.
-    $field_uuid = entity_load('field_entity', $field_id)->uuid();
-    $field_uuid_2 = entity_load('field_entity', $field_id_2)->uuid();
+    $field_uuid = entity_load('field_config', $field_id)->uuid();
+    $field_uuid_2 = entity_load('field_config', $field_id_2)->uuid();
 
     $active = $this->container->get('config.storage');
     $staging = $this->container->get('config.storage.staging');
@@ -67,15 +67,15 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
     $this->configImporter()->import();
 
     // Check that the fields and instances are gone.
-    $field = entity_load('field_entity', $field_id, TRUE);
+    $field = entity_load('field_config', $field_id, TRUE);
     $this->assertFalse($field, 'The field was deleted.');
-    $field_2 = entity_load('field_entity', $field_id_2, TRUE);
+    $field_2 = entity_load('field_config', $field_id_2, TRUE);
     $this->assertFalse($field_2, 'The second field was deleted.');
-    $instance = entity_load('field_instance', $instance_id, TRUE);
+    $instance = entity_load('field_instance_config', $instance_id, TRUE);
     $this->assertFalse($instance, 'The field instance was deleted.');
-    $instance_2a = entity_load('field_instance', $instance_id_2a, TRUE);
+    $instance_2a = entity_load('field_instance_config', $instance_id_2a, TRUE);
     $this->assertFalse($instance_2a, 'The second field instance on test bundle was deleted.');
-    $instance_2b = entity_load('field_instance', $instance_id_2b, TRUE);
+    $instance_2b = entity_load('field_instance_config', $instance_id_2b, TRUE);
     $this->assertFalse($instance_2b, 'The second field instance on test bundle 2 was deleted.');
 
     // Check that all config files are gone.

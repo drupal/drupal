@@ -55,7 +55,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->tag_vocabulary->save();
 
     // Create the tag field itself.
-    $this->tag_field = entity_create('field_entity', array(
+    $this->tag_field = entity_create('field_config', array(
       'name' => 'field_views_testing_tags',
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
@@ -78,7 +78,7 @@ class TaggedWithTest extends WizardTestBase {
       'entity_type' => 'node',
       'bundle' => $this->node_type_with_tags->type,
     );
-    entity_create('field_instance', $this->tag_instance)->save();
+    entity_create('field_instance_config', $this->tag_instance)->save();
 
     entity_get_form_display('node', $this->node_type_with_tags->type, 'default')
       ->setComponent('field_views_testing_tags', array(
@@ -189,7 +189,7 @@ class TaggedWithTest extends WizardTestBase {
     // "tagged with" form element should not appear for it too.
     $instance = $this->tag_instance;
     $instance['bundle'] = $this->node_type_without_tags->type;
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_instance_config', $instance)->save();
     entity_get_form_display('node', $this->node_type_without_tags->type, 'default')
       ->setComponent('field_views_testing_tags', array(
         'type' => 'taxonomy_autocomplete',

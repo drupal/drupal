@@ -15,7 +15,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   /**
    * The field instance.
    *
-   * @var \Drupal\field\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstanceConfig
    */
   protected $instance;
 
@@ -121,7 +121,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     );
     for ($i = 1; $i <= 3; $i++) {
       $field_names[$i] = 'field_' . $i;
-      $field = entity_create('field_entity', array(
+      $field = entity_create('field_config', array(
         'name' => $field_names[$i],
         'entity_type' => $entity_type,
         'type' => 'test_field',
@@ -129,7 +129,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       $field->save();
       $field_ids[$i] = $field->uuid();
       foreach ($field_bundles_map[$i] as $bundle) {
-        entity_create('field_instance', array(
+        entity_create('field_instance_config', array(
           'field_name' => $field_names[$i],
           'entity_type' => $entity_type,
           'bundle' => $bundles[$bundle],
@@ -314,7 +314,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Add an instance to that bundle.
     $this->instance_definition['bundle'] = $new_bundle;
-    entity_create('field_instance', $this->instance_definition)->save();
+    entity_create('field_instance_config', $this->instance_definition)->save();
 
     // Save an entity with data in the field.
     $entity = entity_create($entity_type, array('type' => $this->instance->bundle));
@@ -353,7 +353,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Add an instance to that bundle.
     $this->instance_definition['bundle'] = $new_bundle;
-    entity_create('field_instance', $this->instance_definition)->save();
+    entity_create('field_instance_config', $this->instance_definition)->save();
 
     // Create a second field for the test bundle
     $field_name = drupal_strtolower($this->randomName() . '_field_name');
@@ -363,7 +363,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       'type' => 'test_field',
       'cardinality' => 1,
     );
-    entity_create('field_entity', $field)->save();
+    entity_create('field_config', $field)->save();
     $instance = array(
       'field_name' => $field_name,
       'entity_type' => $entity_type,
@@ -372,7 +372,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       'description' => $this->randomName() . '_description',
       'weight' => mt_rand(0, 127),
     );
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_instance_config', $instance)->save();
 
     // Save an entity with data for both fields
     $entity = entity_create($entity_type, array('type' => $this->instance->bundle));
@@ -397,8 +397,8 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->assertTrue(empty($entity->{$field_name}), 'No data for second field');
 
     // Verify that the instances are gone.
-    $this->assertFalse(entity_load('field_instance', 'entity_test.' . $this->instance->bundle . '.' . $this->field_name), "First field is deleted");
-    $this->assertFalse(entity_load('field_instance', 'entity_test.' . $instance['bundle']. '.' . $field_name), "Second field is deleted");
+    $this->assertFalse(entity_load('field_instance_config', 'entity_test.' . $this->instance->bundle . '.' . $this->field_name), "First field is deleted");
+    $this->assertFalse(entity_load('field_instance_config', 'entity_test.' . $instance['bundle']. '.' . $field_name), "Second field is deleted");
   }
 
 }

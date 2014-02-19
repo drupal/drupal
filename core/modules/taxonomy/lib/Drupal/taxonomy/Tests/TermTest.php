@@ -45,9 +45,9 @@ class TermTest extends TaxonomyTestBase {
         ),
       ),
     );
-    entity_create('field_entity', $field)->save();
+    entity_create('field_config', $field)->save();
 
-    $this->instance = entity_create('field_instance', array(
+    $this->instance = entity_create('field_instance_config', array(
       'field_name' => $field_name,
       'bundle' => 'article',
       'entity_type' => 'node',

@@ -24,14 +24,14 @@ class NumberFieldTest extends WebTestBase {
   /**
    * A field to use in this class.
    *
-   * @var \Drupal\field\Entity\Field
+   * @var \Drupal\field\Entity\FieldConfig
    */
   protected $field;
 
   /**
    * A field instance to use in this test class.
    *
-   * @var \Drupal\field\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstanceConfig
    */
   protected $instance;
 
@@ -63,7 +63,7 @@ class NumberFieldTest extends WebTestBase {
   function testNumberDecimalField() {
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomName());
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'number_decimal',
@@ -71,7 +71,7 @@ class NumberFieldTest extends WebTestBase {
         'precision' => 8, 'scale' => 4, 'decimal_separator' => '.',
       )
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -208,19 +208,19 @@ class NumberFieldTest extends WebTestBase {
     // Create a content type containing float and integer fields.
     $this->drupalCreateContentType(array('type' => $type));
 
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $float_field,
       'entity_type' => 'node',
       'type' => 'number_float',
     ))->save();
 
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $integer_field,
       'entity_type' => 'node',
       'type' => 'number_integer',
     ))->save();
 
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $float_field,
       'entity_type' => 'node',
       'bundle' => $type,
@@ -230,7 +230,7 @@ class NumberFieldTest extends WebTestBase {
       ),
     ))->save();
 
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $integer_field,
       'entity_type' => 'node',
       'bundle' => $type,

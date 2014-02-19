@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\FieldListController.
+ * Contains \Drupal\field_ui\FieldConfigListController.
  */
 
 namespace Drupal\field_ui;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a listing of fields.
  */
-class FieldListController extends ConfigEntityListController {
+class FieldConfigListController extends ConfigEntityListController {
 
   /**
    * An array of information about field types.
@@ -48,7 +48,7 @@ class FieldListController extends ConfigEntityListController {
   protected $fieldTypeManager;
 
   /**
-   * Constructs a new EntityListController object.
+   * Constructs a new FieldConfigListController object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.

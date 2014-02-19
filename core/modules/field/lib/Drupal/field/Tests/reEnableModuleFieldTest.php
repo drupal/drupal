@@ -49,13 +49,13 @@ class reEnableModuleFieldTest extends WebTestBase {
   function testReEnabledField() {
 
     // Add a telephone field to the article content type.
-    $field = entity_create('field_entity', array(
+    $field = entity_create('field_config', array(
       'name' => 'field_telephone',
       'entity_type' => 'node',
       'type' => 'telephone',
     ));
     $field->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => 'field_telephone',
       'label' => 'Telephone Number',
       'entity_type' => 'node',

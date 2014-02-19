@@ -33,7 +33,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->vocabulary = $this->createVocabulary();
 
     $this->field_name_1 = drupal_strtolower($this->randomName());
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $this->field_name_1,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
@@ -47,7 +47,7 @@ class TermIndexTest extends TaxonomyTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $this->field_name_1,
       'bundle' => 'article',
       'entity_type' => 'node',
@@ -64,7 +64,7 @@ class TermIndexTest extends TaxonomyTestBase {
       ->save();
 
     $this->field_name_2 = drupal_strtolower($this->randomName());
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $this->field_name_2,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
@@ -78,7 +78,7 @@ class TermIndexTest extends TaxonomyTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $this->field_name_2,
       'bundle' => 'article',
       'entity_type' => 'node',

@@ -56,13 +56,13 @@ class FieldAccessTest extends FieldTestBase {
       'entity_type' => 'node',
       'type' => 'text',
     );
-    entity_create('field_entity', $field)->save();
+    entity_create('field_config', $field)->save();
     $instance = array(
       'field_name' => $field['name'],
       'entity_type' => 'node',
       'bundle' => $content_type,
     );
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_instance_config', $instance)->save();
 
     // Assign display properties for the 'default' and 'teaser' view modes.
     foreach (array('default', 'teaser') as $view_mode) {

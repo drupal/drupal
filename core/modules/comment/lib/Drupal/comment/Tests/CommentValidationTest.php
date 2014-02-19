@@ -46,13 +46,13 @@ class CommentValidationTest extends EntityUnitTestBase {
    */
   public function testValidation() {
     // Add comment field to content.
-    $this->entityManager->getStorageController('field_entity')->create(array(
+    $this->entityManager->getStorageController('field_config')->create(array(
       'entity_type' => 'node',
       'name' => 'comment',
       'type' => 'comment',
     ))->save();
     // Add comment field instance to page content.
-    $this->entityManager->getStorageController('field_instance')->create(array(
+    $this->entityManager->getStorageController('field_instance_config')->create(array(
       'field_name' => 'comment',
       'entity_type' => 'node',
       'bundle' => 'page',

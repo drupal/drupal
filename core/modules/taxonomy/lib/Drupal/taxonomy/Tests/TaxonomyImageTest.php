@@ -44,7 +44,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     // Add a field instance to the vocabulary.
     $entity_type = 'taxonomy_term';
     $name = 'field_test';
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $name,
       'entity_type' => $entity_type,
       'type' => 'image',
@@ -52,7 +52,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
         'uri_scheme' => 'private',
       ),
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $name,
       'entity_type' => $entity_type,
       'bundle' => $this->vocabulary->id(),

@@ -76,28 +76,28 @@ abstract class EntityLanguageTestBase extends EntityUnitTestBase {
 
     // Create field instances in all entity variations.
     foreach (entity_test_entity_types() as $entity_type) {
-      entity_create('field_entity', array(
+      entity_create('field_config', array(
         'name' => $this->field_name,
         'entity_type' => $entity_type,
         'type' => 'text',
         'cardinality' => 4,
         'translatable' => TRUE,
       ))->save();
-      entity_create('field_instance', array(
+      entity_create('field_instance_config', array(
         'field_name' => $this->field_name,
         'entity_type' => $entity_type,
         'bundle' => $entity_type,
       ))->save();
-      $this->instance[$entity_type] = entity_load('field_instance', $entity_type . '.' . $entity_type . '.' . $this->field_name);
+      $this->instance[$entity_type] = entity_load('field_instance_config', $entity_type . '.' . $entity_type . '.' . $this->field_name);
 
-      entity_create('field_entity', array(
+      entity_create('field_config', array(
         'name' => $this->untranslatable_field_name,
         'entity_type' => $entity_type,
         'type' => 'text',
         'cardinality' => 4,
         'translatable' => FALSE,
       ))->save();
-      entity_create('field_instance', array(
+      entity_create('field_instance_config', array(
         'field_name' => $this->untranslatable_field_name,
         'entity_type' => $entity_type,
         'bundle' => $entity_type,

@@ -37,7 +37,7 @@ class ApiDataTest extends FieldTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
     );
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_instance_config', $instance)->save();
 
     // Now create some example nodes/users for the view result.
     for ($i = 0; $i < 5; $i++) {

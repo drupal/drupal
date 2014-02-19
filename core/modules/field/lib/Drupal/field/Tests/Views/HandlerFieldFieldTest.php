@@ -48,7 +48,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     $this->setUpFields(3);
 
     // Setup a field with cardinality > 1.
-    $this->fields[3] = $field = entity_create('field_entity', array(
+    $this->fields[3] = $field = entity_create('field_config', array(
       'name' => 'field_name_3',
       'entity_type' => 'node',
       'type' => 'text',
@@ -56,7 +56,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
     ));
     $field->save();
     // Setup a field that will have no value.
-    $this->fields[4] = $field = entity_create('field_entity', array(
+    $this->fields[4] = $field = entity_create('field_config', array(
       'name' => 'field_name_4',
       'entity_type' => 'node',
       'type' => 'text',

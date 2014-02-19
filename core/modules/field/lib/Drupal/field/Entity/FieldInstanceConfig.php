@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\Entity\FieldInstance.
+ * Contains \Drupal\field\Entity\FieldInstanceConfig.
  */
 
 namespace Drupal\field\Entity;
@@ -18,10 +18,10 @@ use Drupal\field\FieldInstanceInterface;
  * Defines the Field instance entity.
  *
  * @ConfigEntityType(
- *   id = "field_instance",
+ *   id = "field_instance_config",
  *   label = @Translation("Field instance"),
  *   controllers = {
- *     "storage" = "Drupal\field\FieldInstanceStorageController"
+ *     "storage" = "Drupal\field\FieldInstanceConfigStorageController"
  *   },
  *   config_prefix = "field.instance",
  *   entity_keys = {
@@ -31,7 +31,7 @@ use Drupal\field\FieldInstanceInterface;
  *   }
  * )
  */
-class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
+class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceInterface {
 
   /**
    * The instance ID.
@@ -162,9 +162,9 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * The function will be called with the following arguments:
    * - \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being created.
-   * - \Drupal\field\Entity\Field $field
+   * - \Drupal\field\Entity\FieldConfig $field
    *   The field object.
-   * - \Drupal\field\Entity\FieldInstance $instance
+   * - \Drupal\field\Entity\FieldInstanceConfig $instance
    *   The field instance object.
    * - string $langcode
    *   The language of the entity being created.
@@ -196,7 +196,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * The field ConfigEntity object corresponding to $field_uuid.
    *
-   * @var \Drupal\field\Entity\Field
+   * @var \Drupal\field\Entity\FieldConfig
    */
   protected $field;
 
@@ -208,13 +208,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   protected $bundle_rename_allowed = FALSE;
 
   /**
-   * The original instance.
-   *
-   * @var \Drupal\field\Entity\FieldInstance
-   */
-  public $original = NULL;
-
-  /**
    * The data definition of a field item.
    *
    * @var \Drupal\Core\TypedData\DataDefinition
@@ -222,7 +215,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   protected $itemDefinition;
 
   /**
-   * Constructs a FieldInstance object.
+   * Constructs a FieldInstanceConfig object.
    *
    * @param array $values
    *   An array of field instance properties, keyed by property name. Most
@@ -238,14 +231,14 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    *   - bundle: required.
    *
    * In most cases, Field instance entities are created via
-   * entity_create('field_instance', $values), where $values is the same
+   * entity_create('field_instance_config', $values), where $values is the same
    * parameter as in this constructor.
    *
    * @see entity_create()
    *
    * @ingroup field_crud
    */
-  public function __construct(array $values, $entity_type = 'field_instance') {
+  public function __construct(array $values, $entity_type = 'field_instance_config') {
     // Field instances configuration is stored with a 'field_uuid' property
     // unambiguously identifying the field.
     if (isset($values['field_uuid'])) {
@@ -400,7 +393,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $instances) {
-    $field_controller = \Drupal::entityManager()->getStorageController('field_entity');
+    $field_controller = \Drupal::entityManager()->getStorageController('field_config');
 
     // Clear the cache upfront, to refresh the results of getBundles().
     field_cache_clear();

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field_ui\Form\FieldDeleteForm.
+ * Contains \Drupal\field_ui\Form\FieldInstanceConfigDeleteForm.
  */
 
 namespace Drupal\field_ui\Form;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form for removing a field instance from a bundle.
  */
-class FieldDeleteForm extends EntityConfirmFormBase {
+class FieldInstanceConfigDeleteForm extends EntityConfirmFormBase {
 
   /**
    * The entity manager.
@@ -25,7 +25,7 @@ class FieldDeleteForm extends EntityConfirmFormBase {
   protected $entityManager;
 
   /**
-   * Constructs a new FieldDeleteForm object.
+   * Constructs a new FieldInstanceConfigDeleteForm object.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.

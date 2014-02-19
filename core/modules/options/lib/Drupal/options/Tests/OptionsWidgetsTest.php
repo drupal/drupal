@@ -24,21 +24,21 @@ class OptionsWidgetsTest extends FieldTestBase {
  /**
    * A field with cardinality 1 to use in this test class.
    *
-   * @var \Drupal\field\Entity\Field
+   * @var \Drupal\field\Entity\FieldConfig
    */
   protected $card_1;
 
   /**
    * A field with cardinality 2 to use in this test class.
    *
-   * @var \Drupal\field\Entity\Field
+   * @var \Drupal\field\Entity\FieldConfig
    */
   protected $card_2;
 
   /**
    * A boolean field to use in this test class.
    *
-   * @var \Drupal\field\Entity\Field
+   * @var \Drupal\field\Entity\FieldConfig
    */
   protected $bool;
 
@@ -62,7 +62,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     parent::setUp();
 
     // Field with cardinality 1.
-    $this->card_1 = entity_create('field_entity', array(
+    $this->card_1 = entity_create('field_config', array(
       'name' => 'card_1',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
@@ -75,7 +75,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->card_1->save();
 
     // Field with cardinality 2.
-    $this->card_2 = entity_create('field_entity', array(
+    $this->card_2 = entity_create('field_config', array(
       'name' => 'card_2',
       'entity_type' => 'entity_test',
       'type' => 'list_integer',
@@ -88,7 +88,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->card_2->save();
 
     // Boolean field.
-    $this->bool = entity_create('field_entity', array(
+    $this->bool = entity_create('field_config', array(
       'name' => 'bool',
       'entity_type' => 'entity_test',
       'type' => 'list_boolean',
@@ -109,7 +109,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testRadioButtons() {
     // Create an instance of the 'single value' field.
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => $this->card_1->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -166,7 +166,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testCheckBoxes() {
     // Create an instance of the 'multiple values' field.
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => $this->card_2->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -256,7 +256,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testSelectListSingle() {
     // Create an instance of the 'single value' field.
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => $this->card_1->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -356,7 +356,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testSelectListMultiple() {
     // Create an instance of the 'multiple values' field.
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => $this->card_2->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -477,7 +477,7 @@ class OptionsWidgetsTest extends FieldTestBase {
    */
   function testOnOffCheckbox() {
     // Create an instance of the 'boolean' field.
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $this->bool->getName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -533,7 +533,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Create a test field instance.
     $field_name = 'bool';
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'list_boolean',
@@ -542,7 +542,7 @@ class OptionsWidgetsTest extends FieldTestBase {
         'allowed_values' => array(0 => 'Zero', 1 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
       ),
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $field_name,
       'entity_type' => 'node',
       'bundle' => 'page',

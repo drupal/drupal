@@ -5,16 +5,12 @@
  * Install, update and uninstall functions for the Comment module.
  */
 
-use Drupal\Core\Language\Language;
-use Drupal\comment\Plugin\Field\FieldType\CommentItem;
-use Drupal\field\Entity\Field;
-
 /**
  * Implements hook_uninstall().
  */
 function comment_uninstall() {
   // Remove the comment fields.
-  $fields = entity_load_multiple_by_properties('field_entity', array('type' => 'comment'));
+  $fields = entity_load_multiple_by_properties('field_config', array('type' => 'comment'));
   foreach ($fields as $field) {
     entity_invoke_bundle_hook('delete', 'comment', $field->entity_type . '__' . $field->name);
     $field->delete();

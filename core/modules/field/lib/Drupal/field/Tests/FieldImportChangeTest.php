@@ -51,7 +51,7 @@ class FieldImportChangeTest extends FieldUnitTestBase {
     $this->configImporter()->import();
 
     // Check that the updated config was correctly imported.
-    $instance = entity_load('field_instance', $instance_id);
+    $instance = entity_load('field_instance_config', $instance_id);
     $this->assertEqual($instance->getLabel(), $new_label, 'Instance label updated');
   }
 }

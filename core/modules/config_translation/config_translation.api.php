@@ -52,7 +52,7 @@ function hook_config_translation_info(&$info) {
       if ($entity_type->isFieldable() && !empty($base_route)) {
         $info[$entity_type_id . '_fields'] = array(
           'base_route_name' => 'field_ui.instance_edit_' . $entity_type_id,
-          'entity_type' => 'field_instance',
+          'entity_type' => 'field_instance_config',
           'title' => t('!label field'),
           'class' => '\Drupal\config_translation\ConfigFieldInstanceMapper',
           'base_entity_type' => $entity_type_id,

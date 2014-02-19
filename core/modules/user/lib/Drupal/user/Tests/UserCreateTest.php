@@ -52,7 +52,7 @@ class UserCreateTest extends WebTestBase {
         'default_image' => FALSE,
       ),
     );
-    entity_create('field_entity', $field)->save();
+    entity_create('field_config', $field)->save();
 
     $instance = array(
       'field_name' => $field_name,
@@ -72,7 +72,7 @@ class UserCreateTest extends WebTestBase {
         'default_image' => 0,
       ),
     );
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_instance_config', $instance)->save();
 
     // Test user creation page for valid fields.
     $this->drupalGet('admin/people/create');

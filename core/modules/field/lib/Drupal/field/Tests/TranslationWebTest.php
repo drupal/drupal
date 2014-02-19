@@ -38,14 +38,14 @@ class TranslationWebTest extends FieldTestBase {
   /**
    * The field to use in this test.
    *
-   * @var \Drupal\field\Entity\Field
+   * @var \Drupal\field\Entity\FieldConfig
    */
   protected $field;
 
   /**
    * The field instance to use in this test.
    *
-   * @var \Drupal\field\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstanceConfig
    */
   protected $instance;
 
@@ -69,16 +69,16 @@ class TranslationWebTest extends FieldTestBase {
       'cardinality' => 4,
       'translatable' => TRUE,
     );
-    entity_create('field_entity', $field)->save();
-    $this->field = entity_load('field_entity', $this->entity_type . '.' . $this->field_name);
+    entity_create('field_config', $field)->save();
+    $this->field = entity_load('field_config', $this->entity_type . '.' . $this->field_name);
 
     $instance = array(
       'field_name' => $this->field_name,
       'entity_type' => $this->entity_type,
       'bundle' => $this->entity_type,
     );
-    entity_create('field_instance', $instance)->save();
-    $this->instance = entity_load('field_instance', 'entity_test.' . $instance['bundle'] . '.' . $this->field_name);
+    entity_create('field_instance_config', $instance)->save();
+    $this->instance = entity_load('field_instance_config', 'entity_test.' . $instance['bundle'] . '.' . $this->field_name);
 
     entity_get_form_display($this->entity_type, $this->entity_type, 'default')
       ->setComponent($this->field_name)

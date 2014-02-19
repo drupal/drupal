@@ -5,9 +5,6 @@
  * Install, update and uninstall functions for File module.
  */
 
-use Drupal\Core\Entity\FieldableDatabaseStorageController;
-use Drupal\field\Entity\Field;
-
 /**
  * Implements hook_schema().
  */

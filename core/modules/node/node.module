@@ -415,7 +415,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
   $field = field_info_field('node', 'body');
   $instance = field_info_instance('node', 'body', $type->id());
   if (empty($field)) {
-    $field = entity_create('field_entity', array(
+    $field = entity_create('field_config', array(
       'name' => 'body',
       'entity_type' => 'node',
       'type' => 'text_with_summary',
@@ -423,7 +423,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
     $field->save();
   }
   if (empty($instance)) {
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => 'body',
       'entity_type' => 'node',
       'bundle' => $type->id(),

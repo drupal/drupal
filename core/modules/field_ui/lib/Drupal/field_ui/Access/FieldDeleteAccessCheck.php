@@ -21,7 +21,7 @@ class FieldDeleteAccessCheck implements AccessInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
-    $field_instance = $request->attributes->get('field_instance');
+    $field_instance = $request->attributes->get('field_instance_config');
     if (!$field_instance->getField()->isLocked()) {
       $permission = $route->getRequirement('_field_ui_field_delete_access');
       return $account->hasPermission($permission) ? static::ALLOW : static::DENY;

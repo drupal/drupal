@@ -83,13 +83,13 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
       ->method('access')
       ->will($this->returnValue(FALSE));
 
-    $field_with_access = $this->getMockBuilder('Drupal\field\Entity\Field')
+    $field_with_access = $this->getMockBuilder('Drupal\field\Entity\FieldConfig')
       ->disableOriginalConstructor()
       ->getMock();
     $field_with_access->expects($this->any())
       ->method('access')
       ->will($this->returnValue(TRUE));
-    $field_without_access = $this->getMockBuilder('Drupal\field\Entity\Field')
+    $field_without_access = $this->getMockBuilder('Drupal\field\Entity\FieldConfig')
       ->disableOriginalConstructor()
       ->getMock();
     $field_without_access->expects($this->any())

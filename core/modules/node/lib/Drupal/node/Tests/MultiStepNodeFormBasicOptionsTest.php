@@ -37,7 +37,7 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
 
     // Create an unlimited cardinality field.
     $this->field_name = drupal_strtolower($this->randomName());
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $this->field_name,
       'entity_type' => 'node',
       'type' => 'text',
@@ -45,7 +45,7 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
     ))->save();
 
     // Attach an instance of the field to the page content type.
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'node',
       'bundle' => 'page',

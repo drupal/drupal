@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Entity\Query\QueryException;
-use Drupal\field\Entity\Field;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Field as FieldInfo;
 
 /**
@@ -118,7 +118,7 @@ class Tables implements TablesInterface {
           $next = $specifiers[$key + 1];
           // Is this a field column?
           $columns = $field->getColumns();
-          if (isset($columns[$next]) || in_array($next, Field::getReservedColumns())) {
+          if (isset($columns[$next]) || in_array($next, FieldConfig::getReservedColumns())) {
             // Use it.
             $column = $next;
             // Do not process it again.

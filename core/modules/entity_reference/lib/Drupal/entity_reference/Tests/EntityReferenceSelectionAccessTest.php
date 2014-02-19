@@ -61,7 +61,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    */
   public function testNodeHandler() {
     // Create a field and instance.
-    $field = entity_create('field_entity', array(
+    $field = entity_create('field_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
@@ -73,7 +73,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'cardinality' => '1',
     ));
     $field->save();
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',
@@ -205,7 +205,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    */
   public function testUserHandler() {
     // Create a field and instance.
-    $field = entity_create('field_entity', array(
+    $field = entity_create('field_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
@@ -216,7 +216,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'cardinality' => '1',
     ));
     $field->save();
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',
@@ -350,7 +350,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
    */
   public function testCommentHandler() {
     // Create a field and instance.
-    $field = entity_create('field_entity', array(
+    $field = entity_create('field_config', array(
       'name' => 'test_field',
       'entity_type' => 'entity_test',
       'translatable' => FALSE,
@@ -362,7 +362,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       'cardinality' => '1',
     ));
     $field->save();
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',

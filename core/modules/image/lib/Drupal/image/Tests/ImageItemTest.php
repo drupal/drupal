@@ -49,13 +49,13 @@ class ImageItemTest extends FieldUnitTestBase {
 
     $this->installSchema('file', array('file_managed', 'file_usage'));
 
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => 'image_test',
       'entity_type' => 'entity_test',
       'type' => 'image',
       'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'image_test',
       'bundle' => 'entity_test',

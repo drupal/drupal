@@ -67,7 +67,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
     $this->formatter_type = 'text_plain';
     $this->formatter_settings = array();
 
-    $this->field = entity_create('field_entity', array(
+    $this->field = entity_create('field_config', array(
       'name' => $this->field_name,
       'entity_type' => $this->entity_type,
       'type' => $this->field_type,
@@ -75,7 +75,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
     ));
     $this->field->save();
 
-    $this->instance = entity_create('field_instance', array(
+    $this->instance = entity_create('field_instance_config', array(
       'entity_type' => $this->entity_type,
       'bundle' => $this->bundle,
       'field_name' => $this->field_name,

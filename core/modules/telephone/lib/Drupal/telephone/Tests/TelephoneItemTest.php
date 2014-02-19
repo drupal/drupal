@@ -35,12 +35,12 @@ class TelephoneItemTest extends FieldUnitTestBase {
     parent::setUp();
 
     // Create a telephone field and instance for validation.
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => 'field_test',
       'entity_type' => 'entity_test',
       'type' => 'telephone',
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'field_test',
       'bundle' => 'entity_test',

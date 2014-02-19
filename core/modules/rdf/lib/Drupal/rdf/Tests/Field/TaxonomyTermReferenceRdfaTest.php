@@ -59,7 +59,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
     ));
     $vocabulary->save();
 
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => $this->fieldName,
       'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
@@ -73,7 +73,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
         ),
       ),
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
       'bundle' => 'entity_test',

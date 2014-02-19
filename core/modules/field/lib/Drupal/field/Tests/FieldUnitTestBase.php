@@ -67,7 +67,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $instance_definition = 'instance_definition' . $suffix;
 
     $this->$field_name = drupal_strtolower($this->randomName() . '_field_name' . $suffix);
-    $this->$field = entity_create('field_entity', array(
+    $this->$field = entity_create('field_config', array(
       'name' => $this->$field_name,
       'entity_type' => $entity_type,
       'type' => 'test_field',
@@ -85,7 +85,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
         'test_instance_setting' => $this->randomName(),
       ),
     );
-    $this->$instance = entity_create('field_instance', $this->$instance_definition);
+    $this->$instance = entity_create('field_instance_config', $this->$instance_definition);
     $this->$instance->save();
 
     entity_get_form_display($entity_type, $bundle, 'default')

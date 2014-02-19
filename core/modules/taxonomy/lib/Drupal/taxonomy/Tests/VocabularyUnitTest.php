@@ -145,12 +145,12 @@ class VocabularyUnitTest extends TaxonomyTestBase {
    */
   function testTaxonomyVocabularyChangeMachineName() {
     // Add a field instance to the vocabulary.
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => 'field_test',
       'entity_type' => 'taxonomy_term',
       'type' => 'test_field',
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => 'field_test',
       'entity_type' => 'taxonomy_term',
       'bundle' => $this->vocabulary->id(),
@@ -184,14 +184,14 @@ class VocabularyUnitTest extends TaxonomyTestBase {
       'type' => 'text',
       'cardinality' => 4
     );
-    entity_create('field_entity', $this->field_definition)->save();
+    entity_create('field_config', $this->field_definition)->save();
     $this->instance_definition = array(
       'field_name' => $this->field_name,
       'entity_type' => 'taxonomy_term',
       'bundle' => $this->vocabulary->id(),
       'label' => $this->randomName() . '_label',
     );
-    entity_create('field_instance', $this->instance_definition)->save();
+    entity_create('field_instance_config', $this->instance_definition)->save();
 
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     module_uninstall(array('taxonomy'));
@@ -203,7 +203,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     // an instance of this field on the same bundle name should be successful.
     $this->vocabulary->enforceIsNew();
     $this->vocabulary->save();
-    entity_create('field_entity', $this->field_definition)->save();
-    entity_create('field_instance', $this->instance_definition)->save();
+    entity_create('field_config', $this->field_definition)->save();
+    entity_create('field_instance_config', $this->instance_definition)->save();
   }
 }

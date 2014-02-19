@@ -13,7 +13,7 @@
  * (restricted access) in a given translation.
  */
 function node_access_test_language_install() {
-  $field_private = entity_create('field_entity', array(
+  $field_private = entity_create('field_config', array(
     'name' => 'field_private',
     'entity_type' => 'node',
     'type' => 'list_boolean',
@@ -25,7 +25,7 @@ function node_access_test_language_install() {
   ));
   $field_private->save();
 
-  entity_create('field_instance', array(
+  entity_create('field_instance_config', array(
     'field_name' => $field_private->name,
     'entity_type' => 'node',
     'bundle' => 'page',
@@ -39,5 +39,5 @@ function node_access_test_language_install() {
  * Implements hook_uninstall().
  */
 function node_access_test_language_uninstall() {
-  entity_load('field_instance', 'node.page.field_private')->delete();
+  entity_load('field_instance_config', 'node.page.field_private')->delete();
 }

@@ -236,9 +236,9 @@ function comment_count_unpublished() {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert() for 'field_instance'.
+ * Implements hook_ENTITY_TYPE_insert() for 'field_instance_config'.
  */
-function comment_field_instance_insert(FieldInstanceInterface $instance) {
+function comment_field_instance_config_insert(FieldInstanceInterface $instance) {
   if ($instance->getType() == 'comment' && !$instance->isSyncing()) {
     \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getName());
     \Drupal::cache()->delete('comment_entity_info');
@@ -246,9 +246,9 @@ function comment_field_instance_insert(FieldInstanceInterface $instance) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
+ * Implements hook_ENTITY_TYPE_create() for 'field_instance_config'.
  */
-function comment_field_instance_create(FieldInstanceInterface $instance) {
+function comment_field_instance_config_create(FieldInstanceInterface $instance) {
   if ($instance->getType() == 'comment' && !$instance->isSyncing()) {
     // Assign default values for the field instance.
     if (!isset($instance->default_value)) {
@@ -267,9 +267,9 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update() for 'field_instance'.
+ * Implements hook_ENTITY_TYPE_update() for 'field_instance_config'.
  */
-function comment_field_instance_update(FieldInstanceInterface $instance) {
+function comment_field_instance_config_update(FieldInstanceInterface $instance) {
   if ($instance->getType() == 'comment') {
     \Drupal::entityManager()->getViewBuilder($instance->entity_type)->resetCache();
     // Comment field settings also affects the rendering of *comment* entities,
@@ -279,9 +279,9 @@ function comment_field_instance_update(FieldInstanceInterface $instance) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
+ * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
-function comment_field_entity_delete(FieldInterface $field) {
+function comment_field_config_delete(FieldInterface $field) {
   if ($field->getType() == 'comment') {
     // Delete all fields and displays attached to the comment bundle.
     entity_invoke_bundle_hook('delete', 'comment', $field->getName());
@@ -290,9 +290,9 @@ function comment_field_entity_delete(FieldInterface $field) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
+ * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
  */
-function comment_field_instance_delete(FieldInstanceInterface $instance) {
+function comment_field_instance_config_delete(FieldInstanceInterface $instance) {
   if ($instance->getType() == 'comment') {
     // Delete all comments that used by the entity bundle.
     $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_id = :field_id", array(

@@ -60,7 +60,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Test adding a field that defaults to COMMENT_CLOSED.
     $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', COMMENT_CLOSED);
-    $field = entity_load('field_instance', 'node.test_node_type.who_likes_ponies');
+    $field = entity_load('field_instance_config', 'node.test_node_type.who_likes_ponies');
     $this->assertEqual($field->default_value[0]['status'], COMMENT_CLOSED);
   }
 
@@ -73,7 +73,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Drop default comment field added in CommentTestBase::setup().
-    entity_load('field_entity', 'node.comment')->delete();
+    entity_load('field_config', 'node.comment')->delete();
     if ($field = $this->container->get('field.info')->getField('node', 'comment_node_forum')) {
       $field->delete();
     }

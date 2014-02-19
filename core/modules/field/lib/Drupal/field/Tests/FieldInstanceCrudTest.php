@@ -15,7 +15,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
   /**
    * The field entity.
    *
-   * @var \Drupal\field\Entity\Field
+   * @var \Drupal\field\Entity\FieldConfig
    */
   protected $field;
 
@@ -49,7 +49,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
-    $this->field = entity_create('field_entity', $this->field_definition);
+    $this->field = entity_create('field_config', $this->field_definition);
     $this->field->save();
     $this->instance_definition = array(
       'field_name' => $this->field->getName(),
@@ -68,7 +68,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
    * Test the creation of a field instance.
    */
   function testCreateFieldInstance() {
-    $instance = entity_create('field_instance', $this->instance_definition);
+    $instance = entity_create('field_instance_config', $this->instance_definition);
     $instance->save();
 
     // Read the configuration. Check against raw configuration data rather than
@@ -88,7 +88,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Guarantee that the field/bundle combination is unique.
     try {
-      entity_create('field_instance', $this->instance_definition)->save();
+      entity_create('field_instance_config', $this->instance_definition)->save();
       $this->fail(t('Cannot create two instances with the same field / bundle combination.'));
     }
     catch (EntityStorageException $e) {
@@ -98,7 +98,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     // Check that the specified field exists.
     try {
       $this->instance_definition['field_name'] = $this->randomName();
-      entity_create('field_instance', $this->instance_definition)->save();
+      entity_create('field_instance_config', $this->instance_definition)->save();
       $this->fail(t('Cannot create an instance of a non-existing field.'));
     }
     catch (FieldException $e) {
@@ -112,10 +112,10 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
    * Test reading back an instance definition.
    */
   function testReadFieldInstance() {
-    entity_create('field_instance', $this->instance_definition)->save();
+    entity_create('field_instance_config', $this->instance_definition)->save();
 
     // Read the instance back.
-    $instance = entity_load('field_instance', 'entity_test.' . $this->instance_definition['bundle'] . '.' . $this->instance_definition['field_name']);
+    $instance = entity_load('field_instance_config', 'entity_test.' . $this->instance_definition['bundle'] . '.' . $this->instance_definition['field_name']);
     $this->assertTrue($this->instance_definition['field_name'] == $instance->getName(), 'The field was properly read.');
     $this->assertTrue($this->instance_definition['entity_type'] == $instance->entity_type, 'The field was properly read.');
     $this->assertTrue($this->instance_definition['bundle'] == $instance->bundle, 'The field was properly read.');
@@ -125,17 +125,17 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
    * Test the update of a field instance.
    */
   function testUpdateFieldInstance() {
-    entity_create('field_instance', $this->instance_definition)->save();
+    entity_create('field_instance_config', $this->instance_definition)->save();
 
     // Check that basic changes are saved.
-    $instance = entity_load('field_instance', 'entity_test.' . $this->instance_definition['bundle'] . '.' . $this->instance_definition['field_name']);
+    $instance = entity_load('field_instance_config', 'entity_test.' . $this->instance_definition['bundle'] . '.' . $this->instance_definition['field_name']);
     $instance->required = !$instance->isRequired();
     $instance->label = $this->randomName();
     $instance->description = $this->randomName();
     $instance->settings['test_instance_setting'] = $this->randomName();
     $instance->save();
 
-    $instance_new = entity_load('field_instance', 'entity_test.' . $this->instance_definition['bundle'] . '.' . $this->instance_definition['field_name']);
+    $instance_new = entity_load('field_instance_config', 'entity_test.' . $this->instance_definition['bundle'] . '.' . $this->instance_definition['field_name']);
     $this->assertEqual($instance->isRequired(), $instance_new->isRequired(), '"required" change is saved');
     $this->assertEqual($instance->getLabel(), $instance_new->getLabel(), '"label" change is saved');
     $this->assertEqual($instance->getDescription(), $instance_new->getDescription(), '"description" change is saved');
@@ -153,27 +153,27 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Create two instances for the same field so we can test that only one
     // is deleted.
-    entity_create('field_instance', $this->instance_definition)->save();
+    entity_create('field_instance_config', $this->instance_definition)->save();
     $another_instance_definition = $this->instance_definition;
     $another_instance_definition['bundle'] .= '_another_bundle';
-    entity_create('field_instance', $another_instance_definition)->save();
+    entity_create('field_instance_config', $another_instance_definition)->save();
 
     // Test that the first instance is not deleted, and then delete it.
-    $instance = current(entity_load_multiple_by_properties('field_instance', array('entity_type' => 'entity_test', 'field_name' => $this->instance_definition['field_name'], 'bundle' => $this->instance_definition['bundle'], 'include_deleted' => TRUE)));
+    $instance = current(entity_load_multiple_by_properties('field_instance_config', array('entity_type' => 'entity_test', 'field_name' => $this->instance_definition['field_name'], 'bundle' => $this->instance_definition['bundle'], 'include_deleted' => TRUE)));
     $this->assertTrue(!empty($instance) && empty($instance->deleted), 'A new field instance is not marked for deletion.');
     $instance->delete();
 
     // Make sure the instance is marked as deleted when the instance is
     // specifically loaded.
-    $instance = current(entity_load_multiple_by_properties('field_instance', array('entity_type' => 'entity_test', 'field_name' => $this->instance_definition['field_name'], 'bundle' => $this->instance_definition['bundle'], 'include_deleted' => TRUE)));
+    $instance = current(entity_load_multiple_by_properties('field_instance_config', array('entity_type' => 'entity_test', 'field_name' => $this->instance_definition['field_name'], 'bundle' => $this->instance_definition['bundle'], 'include_deleted' => TRUE)));
     $this->assertTrue(!empty($instance->deleted), 'A deleted field instance is marked for deletion.');
 
     // Try to load the instance normally and make sure it does not show up.
-    $instance = entity_load('field_instance', 'entity_test.' . '.' . $this->instance_definition['bundle'] . '.' . $this->instance_definition['field_name']);
+    $instance = entity_load('field_instance_config', 'entity_test.' . '.' . $this->instance_definition['bundle'] . '.' . $this->instance_definition['field_name']);
     $this->assertTrue(empty($instance), 'A deleted field instance is not loaded by default.');
 
     // Make sure the other field instance is not deleted.
-    $another_instance = entity_load('field_instance', 'entity_test.' . $another_instance_definition['bundle'] . '.' . $another_instance_definition['field_name']);
+    $another_instance = entity_load('field_instance_config', 'entity_test.' . $another_instance_definition['bundle'] . '.' . $another_instance_definition['field_name']);
     $this->assertTrue(!empty($another_instance) && empty($another_instance->deleted), 'A non-deleted field instance is not marked for deletion.');
   }
 
@@ -186,18 +186,18 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Check that deletion of a field deletes its instances.
     $field = $this->field;
-    entity_create('field_instance', $this->instance_definition)->save();
-    entity_create('field_instance', $instance_definition_2)->save();
+    entity_create('field_instance_config', $this->instance_definition)->save();
+    entity_create('field_instance_config', $instance_definition_2)->save();
     $field->delete();
     $this->assertFalse(field_info_instance('entity_test', $this->instance_definition['bundle'], $field->name));
     $this->assertFalse(field_info_instance('entity_test', $instance_definition_2['bundle'], $field->name));
 
     // Chack that deletion of the last instance deletes the field.
-    $field = entity_create('field_entity', $this->field_definition);
+    $field = entity_create('field_config', $this->field_definition);
     $field->save();
-    $instance = entity_create('field_instance', $this->instance_definition);
+    $instance = entity_create('field_instance_config', $this->instance_definition);
     $instance->save();
-    $instance_2 = entity_create('field_instance', $instance_definition_2);
+    $instance_2 = entity_create('field_instance_config', $instance_definition_2);
     $instance_2->save();
     $instance->delete();
     $this->assertTrue(field_info_field('entity_test', $field->name));
@@ -206,13 +206,13 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Check that deletion of all instances of the same field simultaneously
     // deletes the field.
-    $field = entity_create('field_entity', $this->field_definition);
+    $field = entity_create('field_config', $this->field_definition);
     $field->save();
-    $instance = entity_create('field_instance', $this->instance_definition);
+    $instance = entity_create('field_instance_config', $this->instance_definition);
     $instance->save();
-    $instance_2 = entity_create('field_instance', $instance_definition_2);
+    $instance_2 = entity_create('field_instance_config', $instance_definition_2);
     $instance_2->save();
-    $instance_controller = $this->container->get('entity.manager')->getStorageController('field_instance');
+    $instance_controller = $this->container->get('entity.manager')->getStorageController('field_instance_config');
     $instance_controller->delete(array($instance, $instance_2));
     $this->assertFalse(field_info_field('entity_test', $field->name));
   }

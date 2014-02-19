@@ -97,8 +97,8 @@ class DisplayApiTest extends FieldUnitTestBase {
       ),
     );
 
-    entity_create('field_entity', $field)->save();
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_config', $field)->save();
+    entity_create('field_instance_config', $instance)->save();
     // Create a display for the default view mode.
     entity_get_display($instance['entity_type'], $instance['bundle'], 'default')
       ->setComponent($this->field_name, $this->display_options['default'])

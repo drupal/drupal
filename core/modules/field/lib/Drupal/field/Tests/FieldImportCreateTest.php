@@ -35,11 +35,11 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     $instance_id_2b = "entity_test.test_bundle.$field_name_2";
 
     // Check that the fields and instances do not exist yet.
-    $this->assertFalse(entity_load('field_entity', $field_id));
-    $this->assertFalse(entity_load('field_instance', $instance_id));
-    $this->assertFalse(entity_load('field_entity', $field_id_2));
-    $this->assertFalse(entity_load('field_instance', $instance_id_2a));
-    $this->assertFalse(entity_load('field_instance', $instance_id_2b));
+    $this->assertFalse(entity_load('field_config', $field_id));
+    $this->assertFalse(entity_load('field_instance_config', $instance_id));
+    $this->assertFalse(entity_load('field_config', $field_id_2));
+    $this->assertFalse(entity_load('field_instance_config', $instance_id_2a));
+    $this->assertFalse(entity_load('field_instance_config', $instance_id_2b));
 
     // Create a second bundle for the 'Entity test' entity type.
     entity_test_create_bundle('test_bundle');
@@ -49,13 +49,13 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     \Drupal::moduleHandler()->install(array('field_test_config'));
 
     // A field with one instance.
-    $field = entity_load('field_entity', $field_id);
+    $field = entity_load('field_config', $field_id);
     $this->assertTrue($field, 'The field was created.');
-    $instance = entity_load('field_instance', $instance_id);
+    $instance = entity_load('field_instance_config', $instance_id);
     $this->assertTrue($instance, 'The field instance was deleted.');
 
     // A field with multiple instances.
-    $field_2 = entity_load('field_entity', $field_id_2);
+    $field_2 = entity_load('field_config', $field_id_2);
     $this->assertTrue($field_2, 'The second field was created.');
     $this->assertTrue($instance->bundle, 'test_bundle', 'The second field instance was created on bundle test_bundle.');
     $this->assertTrue($instance->bundle, 'test_bundle_2', 'The second field instance was created on bundle test_bundle_2.');
@@ -106,15 +106,15 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     $this->configImporter()->import();
 
     // Check that the field and instance were created.
-    $field = entity_load('field_entity', $field_id);
+    $field = entity_load('field_config', $field_id);
     $this->assertTrue($field, 'Test import field from staging exists');
-    $instance = entity_load('field_instance', $instance_id);
+    $instance = entity_load('field_instance_config', $instance_id);
     $this->assertTrue($instance, 'Test import field instance from staging exists');
-    $field = entity_load('field_entity', $field_id_2);
+    $field = entity_load('field_config', $field_id_2);
     $this->assertTrue($field, 'Test import field 2 from staging exists');
-    $instance = entity_load('field_instance', $instance_id_2a);
+    $instance = entity_load('field_instance_config', $instance_id_2a);
     $this->assertTrue($instance, 'Test import field instance 2a from staging exists');
-    $instance = entity_load('field_instance', $instance_id_2b);
+    $instance = entity_load('field_instance_config', $instance_id_2b);
     $this->assertTrue($instance, 'Test import field instance 2b from staging exists');
   }
 }

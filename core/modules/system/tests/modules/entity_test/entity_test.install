@@ -17,14 +17,14 @@ function entity_test_install() {
   );
   foreach ($entity_types as $entity_type) {
     // Auto-create fields for testing.
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => 'field_test_text',
       'entity_type' => $entity_type,
       'type' => 'text',
       'cardinality' => 1,
       'translatable' => FALSE,
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'entity_type' => $entity_type,
       'field_name' => 'field_test_text',
       'bundle' => $entity_type,

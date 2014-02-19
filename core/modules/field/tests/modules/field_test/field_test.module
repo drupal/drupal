@@ -72,14 +72,14 @@ function field_test_menu() {
  *   field_test_memorize();
  *
  *   // call some Field API functions that invoke field_test hooks
- *   entity_create('field_entity', $field_definition)->save();
+ *   entity_create('field_config', $field_definition)->save();
  *
  *   // retrieve and reset the memorized hook call data
  *   $mem = field_test_memorize();
  *
- *   // make sure hook_field_create_field() is invoked correctly
- *   assertEqual(count($mem['field_test_field_entity_create']), 1);
- *   assertEqual($mem['field_test_field_entity_create'][0], array($field));
+ *   // make sure hook_field_config_create() is invoked correctly
+ *   assertEqual(count($mem['field_test_field_config_create']), 1);
+ *   assertEqual($mem['field_test_field_config_create'][0], array($field));
  * @endcode
  *
  * @param $key
@@ -104,9 +104,9 @@ function field_test_memorize($key = NULL, $value = NULL) {
 }
 
 /**
- * Memorize calls to field_test_field_entity_create() for field creation.
+ * Memorize calls to field_test_field_config_create() for field creation.
  */
-function field_test_field_entity_create(FieldInterface $field) {
+function field_test_field_config_create(FieldInterface $field) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }

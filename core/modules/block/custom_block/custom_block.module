@@ -176,7 +176,7 @@ function custom_block_add_body_field($block_type_id, $label = 'Block body') {
   $field = field_info_field('custom_block', 'body');
   $instance = field_info_instance('custom_block', 'body', $block_type_id);
   if (empty($field)) {
-    $field = entity_create('field_entity', array(
+    $field = entity_create('field_config', array(
       'name' => 'body',
       'entity_type' => 'custom_block',
       'type' => 'text_with_summary',
@@ -184,7 +184,7 @@ function custom_block_add_body_field($block_type_id, $label = 'Block body') {
     $field->save();
   }
   if (empty($instance)) {
-    $instance = entity_create('field_instance', array(
+    $instance = entity_create('field_instance_config', array(
       'field_name' => 'body',
       'entity_type' => 'custom_block',
       'bundle' => $block_type_id,

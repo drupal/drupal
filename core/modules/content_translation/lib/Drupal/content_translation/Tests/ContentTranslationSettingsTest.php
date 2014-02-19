@@ -188,13 +188,13 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'entity_type' => 'node',
       'type' => 'text',
     );
-    entity_create('field_entity', $field)->save();
+    entity_create('field_config', $field)->save();
     $instance = array(
       'field_name' => 'article_text',
       'entity_type' => 'node',
       'bundle' => 'article',
     );
-    entity_create('field_instance', $instance)->save();
+    entity_create('field_instance_config', $instance)->save();
 
     // Tests that field instance doesn't have translatable setting if bundle
     // is not translatable.

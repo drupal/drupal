@@ -45,13 +45,13 @@ class FileItemTest extends FieldUnitTestBase {
     $this->installSchema('file', 'file_managed');
     $this->installSchema('file', 'file_usage');
 
-    entity_create('field_entity', array(
+    entity_create('field_config', array(
       'name' => 'file_test',
       'entity_type' => 'entity_test',
       'type' => 'file',
       'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'entity_type' => 'entity_test',
       'field_name' => 'file_test',
       'bundle' => 'entity_test',

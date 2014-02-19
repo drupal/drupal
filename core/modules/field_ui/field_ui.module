@@ -134,8 +134,8 @@ function field_ui_element_info() {
  */
 function field_ui_entity_info(&$entity_info) {
   /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_info['field_instance']->setFormClass('delete', 'Drupal\field_ui\Form\FieldDeleteForm');
-  $entity_info['field_entity']->setListClass('Drupal\field_ui\FieldListController');
+  $entity_info['field_instance_config']->setFormClass('delete', 'Drupal\field_ui\Form\FieldInstanceConfigDeleteForm');
+  $entity_info['field_config']->setListClass('Drupal\field_ui\FieldConfigListController');
 
   foreach ($entity_info as $info) {
     if ($bundle = $info->getBundleOf()) {

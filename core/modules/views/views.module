@@ -534,25 +534,25 @@ function views_language_list($field = 'name', $flags = Language::STATE_ALL) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
+ * Implements hook_ENTITY_TYPE_create() for 'field_instance_config'.
  */
-function views_field_instance_create(FieldInstanceInterface $field_instance) {
+function views_field_instance_config_create(FieldInstanceInterface $field_instance) {
   cache('views_info')->deleteAll();
   cache('views_results')->deleteAll();
 }
 
 /**
- * Implements hook_ENTITY_TYPE_update() for 'field_instance'.
+ * Implements hook_ENTITY_TYPE_update() for 'field_instance_config'.
  */
-function views_field_instance_update(FieldInstanceInterface $field_instance) {
+function views_field_instance_config_update(FieldInstanceInterface $field_instance) {
   cache('views_info')->deleteAll();
   cache('views_results')->deleteAll();
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
+ * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
  */
-function views_field_instance_delete(FieldInstanceInterface $field_instance) {
+function views_field_instance_config_delete(FieldInstanceInterface $field_instance) {
   cache('views_info')->deleteAll();
   cache('views_results')->deleteAll();
 }

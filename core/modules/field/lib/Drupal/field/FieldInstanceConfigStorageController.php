@@ -2,12 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\field\FieldStorageController.
+ * Contains \Drupal\field\FieldInstanceConfigStorageController.
  */
 
 namespace Drupal\field;
 
-use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -15,21 +14,20 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\KeyValueStore\StateInterface;
 
 /**
- * Controller class for fields.
+ * Controller class for field instances.
+ *
+ * Note: the class take no special care about importing instances after their
+ * field in importCreate(), since this is guaranteed by the alphabetical order
+ * (field.field.* entries are processed before field.instance.* entries).
+ * @todo Revisit after http://drupal.org/node/1944368.
  */
-class FieldStorageController extends ConfigStorageController {
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandler
-   */
-  protected $moduleHandler;
+class FieldInstanceConfigStorageController extends ConfigStorageController {
 
   /**
    * The entity manager.
@@ -46,7 +44,7 @@ class FieldStorageController extends ConfigStorageController {
   protected $state;
 
   /**
-   * Constructs a FieldStorageController object.
+   * Constructs a FieldInstanceConfigStorageController object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
@@ -60,15 +58,12 @@ class FieldStorageController extends ConfigStorageController {
    *   The UUID service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
-   *   The module handler.
    * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, UuidInterface $uuid_service, EntityManagerInterface $entity_manager, ModuleHandler $module_handler, StateInterface $state) {
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, UuidInterface $uuid_service, EntityManagerInterface $entity_manager, StateInterface $state) {
     parent::__construct($entity_type, $config_factory, $config_storage, $entity_query_factory, $uuid_service);
     $this->entityManager = $entity_manager;
-    $this->moduleHandler = $module_handler;
     $this->state = $state;
   }
 
@@ -83,9 +78,21 @@ class FieldStorageController extends ConfigStorageController {
       $container->get('entity.query'),
       $container->get('uuid'),
       $container->get('entity.manager'),
-      $container->get('module_handler'),
       $container->get('state')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function importDelete($name, Config $new_config, Config $old_config) {
+    // If the field has been deleted in the same import, the instance will be
+    // deleted by then, and there is nothing left to do. Just return TRUE so
+    // that the file does not get written to active store.
+    if (!$old_config->get()) {
+      return TRUE;
+    }
+    return parent::importDelete($name, $new_config, $old_config);
   }
 
   /**
@@ -96,53 +103,58 @@ class FieldStorageController extends ConfigStorageController {
     $include_deleted = isset($conditions['include_deleted']) ? $conditions['include_deleted'] : FALSE;
     unset($conditions['include_deleted']);
 
-    // Get fields stored in configuration.
-    if (isset($conditions['entity_type']) && isset($conditions['field_name'])) {
+    // Get instances stored in configuration.
+    if (isset($conditions['entity_type']) && isset($conditions['bundle']) && isset($conditions['field_name'])) {
       // Optimize for the most frequent case where we do have a specific ID.
-      $id = $conditions['entity_type'] . $conditions['field_name'];
-      $fields = $this->entityManager->getStorageController($this->entityTypeId)->loadMultiple(array($id));
+      $id = $conditions['entity_type'] . '.' . $conditions['bundle'] . '.' . $conditions['field_name'];
+      $instances = $this->entityManager->getStorageController($this->entityTypeId)->loadMultiple(array($id));
     }
     else {
-      // No specific ID, we need to examine all existing fields.
-      $fields = $this->entityManager->getStorageController($this->entityTypeId)->loadMultiple();
+      // No specific ID, we need to examine all existing instances.
+      $instances = $this->entityManager->getStorageController($this->entityTypeId)->loadMultiple();
     }
 
-    // Merge deleted fields (stored in state) if needed.
+    // Merge deleted instances (stored in state) if needed.
     if ($include_deleted) {
-      $deleted_fields = $this->state->get('field.field.deleted') ?: array();
-      foreach ($deleted_fields as $id => $config) {
-        $fields[$id] = $this->entityManager->getStorageController($this->entityTypeId)->create($config);
+      $deleted_instances = $this->state->get('field.instance.deleted') ?: array();
+      foreach ($deleted_instances as $id => $config) {
+        $instances[$id] = $this->entityManager->getStorageController($this->entityTypeId)->create($config);
       }
     }
 
-    // Collect matching fields.
-    $matching_fields = array();
-    foreach ($fields as $field) {
+    // Collect matching instances.
+    $matching_instances = array();
+    foreach ($instances as $instance) {
+      // Some conditions are checked against the field.
+      $field = $instance->getField();
+
+      // Only keep the instance if it matches all conditions.
       foreach ($conditions as $key => $value) {
         // Extract the actual value against which the condition is checked.
         switch ($key) {
-          case 'field_name';
+          case 'field_name':
             $checked_value = $field->name;
             break;
 
+          case 'field_id':
+            $checked_value = $instance->field_uuid;
+            break;
+
           default:
-            $checked_value = $field->$key;
+            $checked_value = $instance->$key;
             break;
         }
 
-        // Skip to the next field as soon as one condition does not match.
+        // Skip to the next instance as soon as one condition does not match.
         if ($checked_value != $value) {
           continue 2;
         }
       }
 
-      // When returning deleted fields, key the results by UUID since they can
-      // include several fields with the same ID.
-      $key = $include_deleted ? $field->uuid : $field->id;
-      $matching_fields[$key] = $field;
+      $matching_instances[] = $instance;
     }
 
-    return $matching_fields;
-
+    return $matching_instances;
   }
+
 }

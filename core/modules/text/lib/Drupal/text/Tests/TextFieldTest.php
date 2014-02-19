@@ -48,7 +48,7 @@ class TextFieldTest extends WebTestBase {
   function testTextFieldValidation() {
     // Create a field with settings to validate.
     $max_length = 3;
-    $this->field = entity_create('field_entity', array(
+    $this->field = entity_create('field_config', array(
       'name' => drupal_strtolower($this->randomName()),
       'entity_type' => 'entity_test',
       'type' => 'text',
@@ -57,7 +57,7 @@ class TextFieldTest extends WebTestBase {
       )
     ));
     $this->field->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $this->field->name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -91,13 +91,13 @@ class TextFieldTest extends WebTestBase {
   function _testTextfieldWidgets($field_type, $widget_type) {
     // Setup a field and instance
     $this->field_name = drupal_strtolower($this->randomName());
-    $this->field = entity_create('field_entity', array(
+    $this->field = entity_create('field_config', array(
       'name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => $field_type
     ));
     $this->field->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -158,13 +158,13 @@ class TextFieldTest extends WebTestBase {
   function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
     // Setup a field and instance
     $this->field_name = drupal_strtolower($this->randomName());
-    $this->field = entity_create('field_entity', array(
+    $this->field = entity_create('field_config', array(
       'name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => $field_type
     ));
     $this->field->save();
-    entity_create('field_instance', array(
+    entity_create('field_instance_config', array(
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
