@@ -232,53 +232,6 @@ function path_entity_field_info($entity_type) {
 }
 
 /**
- * Implements hook_entity_insert().
- *
- * @todo: Move this to methods on the FieldItem class.
- */
-function path_entity_insert(EntityInterface $entity) {
-  if ($entity instanceof ContentEntityInterface && $entity->hasField('path')) {
-    $entity->path->alias = trim($entity->path->alias);
-    // Only save a non-empty alias.
-    if (!empty($entity->path->alias)) {
-      // Ensure fields for programmatic executions.
-      $langcode = $entity->language()->id;
-      \Drupal::service('path.crud')->save($entity->getSystemPath(), $entity->path->alias, $langcode);
-    }
-  }
-}
-
-/**
- * Implements hook_entity_update().
- */
-function path_entity_update(EntityInterface $entity) {
-  if ($entity instanceof ContentEntityInterface && $entity->hasField('path')) {
-    $entity->path->alias = trim($entity->path->alias);
-    // Delete old alias if user erased it.
-    if ($entity->path->pid && !$entity->path->alias) {
-      \Drupal::service('path.crud')->delete(array('pid' => $entity->path->pid));
-    }
-    // Only save a non-empty alias.
-    if ($entity->path->alias) {
-      $pid = $entity->path->pid;
-      // Ensure fields for programmatic executions.
-      $langcode = $entity->language()->id;
-      \Drupal::service('path.crud')->save($entity->getSystemPath(), $entity->path->alias, $langcode, $pid);
-    }
-  }
-}
-
-/**
- * Implements hook_entity_predelete().
- */
-function path_entity_predelete(EntityInterface $entity) {
-  if ($entity instanceof ContentEntityInterface && $entity->hasField('path')) {
-    // Delete all aliases associated with this term.
-    \Drupal::service('path.crud')->delete(array('source' => $entity->getSystemPath()));
-  }
-}
-
-/**
  * Implements hook_library_info().
  */
 function path_library_info() {

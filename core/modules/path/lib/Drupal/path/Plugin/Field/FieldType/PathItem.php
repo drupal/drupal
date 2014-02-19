@@ -33,7 +33,7 @@ class PathItem extends FieldItemBase {
   static $propertyDefinitions;
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
+   * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
     if (!isset(static::$propertyDefinitions)) {
@@ -51,6 +51,57 @@ class PathItem extends FieldItemBase {
    */
   public static function schema(FieldDefinitionInterface $field_definition) {
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave() {
+    $this->alias = trim($this->alias);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function insert() {
+    if ($this->alias) {
+      $entity = $this->getEntity();
+
+      // Ensure fields for programmatic executions.
+      $langcode = $entity->language()->id;
+
+      if ($path = \Drupal::service('path.crud')->save($entity->getSystemPath(), $this->alias, $langcode)) {
+        $this->pid = $path['pid'];
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function update() {
+    // Delete old alias if user erased it.
+    if ($this->pid && !$this->alias) {
+      \Drupal::service('path.crud')->delete(array('pid' => $this->pid));
+    }
+    // Only save a non-empty alias.
+    elseif ($this->alias) {
+      $entity = $this->getEntity();
+
+      // Ensure fields for programmatic executions.
+      $langcode = $entity->language()->id;
+
+      \Drupal::service('path.crud')->save($entity->getSystemPath(), $this->alias, $langcode, $this->pid);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete() {
+    // Delete all aliases associated with this entity.
+    $entity = $this->getEntity();
+    \Drupal::service('path.crud')->delete(array('source' => $entity->getSystemPath()));
   }
 
 }
