@@ -88,6 +88,7 @@ class NodeRevision extends WizardPluginBase {
 
     // Add permission-based access control.
     $display_options['access']['type'] = 'perm';
+    $display_options['access']['provider'] = 'user';
     $display_options['access']['perm'] = 'view revisions';
 
     // Remove the default fields, since we are customizing them here.

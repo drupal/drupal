@@ -2234,7 +2234,11 @@ abstract class DisplayPluginBase extends PluginBase {
           $plugin = Views::pluginManager($plugin_type)->createInstance($form_state['values'][$plugin_type]['type']);
           if ($plugin) {
             $plugin->init($this->view, $this, $plugin_options['options']);
-            $plugin_options = array('type' => $form_state['values'][$plugin_type]['type'], 'options' => $plugin->options);
+            $plugin_options = array(
+              'type' => $form_state['values'][$plugin_type]['type'],
+              'options' => $plugin->options,
+              'provider' => $plugin->definition['provider']
+            );
             $this->setOption($plugin_type, $plugin_options);
             if ($plugin->usesOptions()) {
               $form_state['view']->addFormToStack('display', $this->display['id'], $plugin_type . '_options');

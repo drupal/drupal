@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Wizard;
 
+use Drupal\Component\Utility\String;
+
 /**
  * Tests creating views with the wizard and viewing them on the listing page.
  */
@@ -170,11 +172,15 @@ class BasicTest extends WizardTestBase {
     // @see \Drupal\views\Tests\Plugin\DisplayUnitTest
     $view = views_get_view($random_id);
     $displays = $view->storage->get('display');
-    foreach (array('query', 'exposed_form', 'pager', 'style', 'row') as $type) {
-      foreach ($displays as $display) {
-        $this->assertFalse(empty($display['display_options'][$type]['options']), format_string('Default options found for @plugin.', array('@plugin' => $type)));
+
+    foreach ($displays as $display) {
+      $this->assertIdentical($display['provider'], 'views', 'Expected provider found for display.');
+
+      foreach (array('query', 'exposed_form', 'pager', 'style', 'row') as $type) {
+        $this->assertFalse(empty($display['display_options'][$type]['options']), String::format('Default options found for @plugin.', array('@plugin' => $type)));
+        $this->assertIdentical($display['display_options'][$type]['provider'], 'views', String::format('Expected provider found for @plugin.', array('@plugin' => $type)));
       }
     }
-
   }
+
 }

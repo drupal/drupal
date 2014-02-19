@@ -176,6 +176,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
     }
 
     $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
+
     if (empty($plugin)) {
       $plugin['title'] = t('Broken');
     }
@@ -208,6 +209,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       'id' => $id,
       'display_title' => $title,
       'position' => count($this->display),
+      'provider' => $plugin['provider'],
       'display_options' => array(),
     );
 

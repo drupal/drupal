@@ -111,6 +111,14 @@ class DisplayTest extends UITestBase {
 
     $this->assertNoLink('Master*', 0, 'Make sure the master display is not marked as changed.');
     $this->assertLink('Page*', 0, 'Make sure the added display is marked as changed.');
+
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", array('path' => 'test/path'), t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
+
+    // Test that the new view display contains the correct provider.
+    $view = Views::getView($view['id']);
+    $displays = $view->storage->get('display');
+    $this->assertIdentical($displays['page_1']['provider'], 'views', 'The expected provider was added to the new display.');
   }
 
   /**
