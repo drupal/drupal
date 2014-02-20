@@ -128,13 +128,13 @@ class ModuleApiTest extends WebTestBase {
   }
 
   /**
-   * Test that module_invoke_all() can load a hook defined in hook_hook_info().
+   * Test that \Drupal::moduleHandler()->invokeAll() can load a hook defined in hook_hook_info().
    */
   function testModuleInvokeAll() {
     \Drupal::moduleHandler()->install(array('module_test'), FALSE);
     $this->resetAll();
     $this->drupalGet('module-test/hook-dynamic-loading-invoke-all');
-    $this->assertText('success!', 'module_invoke_all() dynamically loads a hook defined in hook_hook_info().');
+    $this->assertText('success!', '\Drupal::moduleHandler()->invokeAll() dynamically loads a hook defined in hook_hook_info().');
   }
 
   /**

@@ -182,7 +182,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
     parent::disable();
 
     // Allow modules to react on text format deletion.
-    module_invoke_all('filter_format_disable', $this);
+    \Drupal::moduleHandler()->invokeAll('filter_format_disable', array($this));
 
     // Clear the filter cache whenever a text format is disabled.
     filter_formats_reset();

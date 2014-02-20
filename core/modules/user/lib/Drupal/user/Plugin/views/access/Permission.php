@@ -44,7 +44,7 @@ class Permission extends AccessPluginBase {
   }
 
   public function summaryTitle() {
-    $permissions = module_invoke_all('permission');
+    $permissions = \Drupal::moduleHandler()->invokeAll('permission');
     if (isset($permissions[$this->options['perm']])) {
       return $permissions[$this->options['perm']]['title'];
     }

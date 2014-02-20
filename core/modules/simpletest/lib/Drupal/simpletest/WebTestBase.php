@@ -622,7 +622,7 @@ abstract class WebTestBase extends TestBase {
     $available = &drupal_static(__FUNCTION__);
 
     if (!isset($available) || $reset) {
-      $available = array_keys(module_invoke_all('permission'));
+      $available = array_keys(\Drupal::moduleHandler()->invokeAll('permission'));
     }
 
     $valid = TRUE;

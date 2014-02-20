@@ -113,7 +113,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
     }
 
     // Invoke hook_entity_prepare_view().
-    module_invoke_all('entity_prepare_view', $this->entityTypeId, $entities, $displays, $view_mode);
+    \Drupal::moduleHandler()->invokeAll('entity_prepare_view', array($this->entityTypeId, $entities, $displays, $view_mode));
 
     // Let the displays build their render arrays.
     foreach ($entities_by_bundle as $bundle => $bundle_entities) {
@@ -225,8 +225,8 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
     foreach ($entities as $key => $entity) {
       $entity_view_mode = isset($entity->content['#view_mode']) ? $entity->content['#view_mode'] : $view_mode;
       $display = $displays[$entity_view_mode][$entity->bundle()];
-      module_invoke_all($view_hook, $entity, $display, $entity_view_mode, $langcode);
-      module_invoke_all('entity_view', $entity, $display, $entity_view_mode, $langcode);
+      \Drupal::moduleHandler()->invokeAll($view_hook, array($entity, $display, $entity_view_mode, $langcode));
+      \Drupal::moduleHandler()->invokeAll('entity_view', array($entity, $display, $entity_view_mode, $langcode));
 
       $build[$key] = $entity->content;
       // We don't need duplicate rendering info in $entity->content.

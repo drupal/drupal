@@ -36,7 +36,7 @@ class AdminTest extends WebTestBase {
     // Create an administrator with all permissions, as well as a regular user
     // who can only access administration pages and perform some Locale module
     // administrative tasks, but not all of them.
-    $this->admin_user = $this->drupalCreateUser(array_keys(module_invoke_all('permission')));
+    $this->admin_user = $this->drupalCreateUser(array_keys(\Drupal::moduleHandler()->invokeAll('permission')));
     $this->web_user = $this->drupalCreateUser(array(
       'access administration pages',
       'translate interface',

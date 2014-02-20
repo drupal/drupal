@@ -72,7 +72,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
 
     // Initialize settings, merging module-provided defaults.
     $default_settings = $plugin->getDefaultSettings();
-    $default_settings += module_invoke_all('editor_default_settings', $this->editor);
+    $default_settings += \Drupal::moduleHandler()->invokeAll('editor_default_settings', array($this->editor));
     drupal_alter('editor_default_settings', $default_settings, $this->editor);
     $this->settings += $default_settings;
   }

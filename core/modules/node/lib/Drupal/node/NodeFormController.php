@@ -331,7 +331,7 @@ class NodeFormController extends ContentEntityFormController {
     }
 
     // Invoke hook_node_validate() for validation needed by modules.
-    // Can't use module_invoke_all(), because $form_state must
+    // Can't use \Drupal::moduleHandler()->invokeAll(), because $form_state must
     // be receivable by reference.
     foreach (\Drupal::moduleHandler()->getImplementations('node_validate') as $module) {
       $function = $module . '_node_validate';

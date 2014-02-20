@@ -4,7 +4,7 @@
  * Contains \Drupal\comment\Tests\Entity\CommentTest
  */
 
-namespace Drupal\comment\Tests\Entity {
+namespace Drupal\comment\Tests\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
@@ -33,6 +33,7 @@ class CommentLockTest extends UnitTestCase {
    */
   public function testLocks() {
     $container = new ContainerBuilder();
+    $container->set('module_handler', $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface'));
     $container->set('current_user', $this->getMock('Drupal\Core\Session\AccountInterface'));
     $container->register('request', 'Symfony\Component\HttpFoundation\Request');
     $lock = $this->getMock('Drupal\Core\Lock\LockBackendInterface');
@@ -82,10 +83,3 @@ class CommentLockTest extends UnitTestCase {
   }
 
 }
-}
-namespace {
-if (!function_exists('module_invoke_all')) {
-  function module_invoke_all() {}
-}
-}
-

@@ -389,9 +389,9 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
    */
   protected function invokeHook($hook, EntityInterface $entity) {
     // Invoke the hook.
-    module_invoke_all($this->entityTypeId . '_' . $hook, $entity);
+    $this->moduleHandler->invokeAll($this->entityTypeId . '_' . $hook, array($entity));
     // Invoke the respective entity-level hook.
-    module_invoke_all('entity_' . $hook, $entity, $this->entityTypeId);
+    $this->moduleHandler->invokeAll('entity_' . $hook, array($entity, $this->entityTypeId));
   }
 
   /**
