@@ -5,6 +5,7 @@
  * The content translation administration forms.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
@@ -194,10 +195,10 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
               'bundle' => array(
                 '#prefix' => '<span class="visually-hidden">',
                 '#suffix' => '</span> ',
-                '#markup' => check_plain($element[$bundle]['settings']['#label']),
+                '#markup' => String::checkPlain($element[$bundle]['settings']['#label']),
               ),
               'field' => array(
-                '#markup' => check_plain($field_element['#label']),
+                '#markup' => String::checkPlain($field_element['#label']),
               ),
             ),
             'class' => array('field'),
@@ -228,15 +229,15 @@ function _content_translation_preprocess_language_content_settings_table(&$varia
                   'bundle' => array(
                     '#prefix' => '<span class="visually-hidden">',
                     '#suffix' => '</span> ',
-                    '#markup' => check_plain($element[$bundle]['settings']['#label']),
+                    '#markup' => String::checkPlain($element[$bundle]['settings']['#label']),
                   ),
                   'field' => array(
                     '#prefix' => '<span class="visually-hidden">',
                     '#suffix' => '</span> ',
-                    '#markup' => check_plain($field_element['#label']),
+                    '#markup' => String::checkPlain($field_element['#label']),
                   ),
                   'columns' => array(
-                    '#markup' => check_plain($column_label),
+                    '#markup' => String::checkPlain($column_label),
                   ),
                 ),
                 'class' => array('column'),
