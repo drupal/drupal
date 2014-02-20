@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Component\Utility\String;
 use Drupal\field\Field;
 
 /**
@@ -686,7 +687,7 @@ function template_preprocess_forums(&$variables) {
         // them is a shadow copy.
         if ($variables['tid'] != $topic->forum_tid) {
           $variables['topics'][$id]->moved = TRUE;
-          $variables['topics'][$id]->title = check_plain($topic->getTitle());
+          $variables['topics'][$id]->title = String::checkPlain($topic->getTitle());
           $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->forum_tid");
         }
         else {
@@ -778,7 +779,7 @@ function template_preprocess_forum_list(&$variables) {
   foreach ($variables['forums'] as $id => $forum) {
     $variables['forums'][$id]->description = filter_xss_admin($forum->description->value);
     $variables['forums'][$id]->link = url("forum/" . $forum->id());
-    $variables['forums'][$id]->name = check_plain($forum->label());
+    $variables['forums'][$id]->name = String::checkPlain($forum->label());
     $variables['forums'][$id]->is_container = !empty($forum->forum_container->value);
     $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
     $row++;
