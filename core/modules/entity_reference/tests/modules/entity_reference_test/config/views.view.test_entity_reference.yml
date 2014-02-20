@@ -115,5 +115,4 @@ label: 'Entity reference'
 module: entity_reference_test
 id: test_entity_reference
 tag: ''
-uuid: d82ab7cf-088c-485a-9d00-c77876e2fa76
 langcode: en

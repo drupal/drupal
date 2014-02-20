@@ -42,5 +42,4 @@ label: test_view_display_template
 module: views
 id: test_view_display_template
 tag: ''
-uuid: a8e37ebf-573e-4cb9-83f5-a259f12bdc7a
 langcode: en

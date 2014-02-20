@@ -51,5 +51,4 @@ id: test_comment_user_uid
 tag: default
 base_field: nid
 module: comment_test_views
-uuid: 8f8244da-6e5e-4a8c-a17a-13ae6a3e4a88
 langcode: und

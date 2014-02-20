@@ -141,4 +141,3 @@ module: views
 id: test_comment_row
 tag: ''
 langcode: en
-uuid: fb77b691-eeef-4ac8-8382-15f5fd25aae0

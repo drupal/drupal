@@ -663,8 +663,9 @@ function drupal_install_system($install_state) {
     ->set('enabled.system', 0)
     ->save();
 
-  // Update the module list to include it.
+  // Update the module list to include it. Reboot the kernel too.
   \Drupal::moduleHandler()->setModuleList(array('system' => $system_path . '/system.module'));
+  $kernel->updateModules(array('system' => $system_path . '/system.module'));
 
   \Drupal::service('config.installer')->installDefaultConfig('module', 'system');
 

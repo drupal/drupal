@@ -64,5 +64,4 @@ label: test_comment_rss
 module: views
 id: test_comment_rss
 tag: ''
-uuid: 0a29eea8-0dc4-45bd-a6d2-4b3ae711c7d4
 langcode: und

@@ -1,5 +1,4 @@
 id: user.user.compact
-uuid: 70911b08-bf47-4a3f-b400-f99cf136effd
 targetEntityType: user
 bundle: user
 mode: compact

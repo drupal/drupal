@@ -1,5 +1,4 @@
 id: comment_unpublish_action
-uuid: 64c41e18-26c2-4e54-9747-71018ea27877
 label: 'Unpublish comment'
 status: true
 langcode: en

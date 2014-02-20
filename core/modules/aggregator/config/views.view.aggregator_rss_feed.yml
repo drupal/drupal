@@ -140,5 +140,4 @@ label: 'Aggregator RSS feed'
 module: views
 id: aggregator_rss_feed
 tag: aggregator
-uuid: 7dfa5cb7-2248-4d52-8c00-cd8e02d1e78e
 langcode: en

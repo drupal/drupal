@@ -35,6 +35,13 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   public $status = TRUE;
 
   /**
+   * The UUID for this entity.
+   *
+   * @var string
+   */
+  public $uuid;
+
+  /**
    * Whether the config is being created, updated or deleted through the
    * import process.
    *

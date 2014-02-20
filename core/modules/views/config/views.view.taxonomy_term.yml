@@ -233,5 +233,4 @@ label: 'Taxonomy term'
 module: taxonomy
 id: taxonomy_term
 tag: default
-uuid: e0dea92e-a4c9-4442-a518-2499bfe17d73
 langcode: en

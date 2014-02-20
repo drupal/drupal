@@ -166,4 +166,3 @@ module: views
 id: test_aggregator_items
 tag: ''
 langcode: en
-uuid: 19dd643f-9324-44df-ac72-0be915b334d1

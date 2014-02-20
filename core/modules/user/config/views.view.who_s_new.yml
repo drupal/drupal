@@ -163,5 +163,4 @@ label: 'Who''s new'
 module: views
 id: who_s_new
 tag: default
-uuid: 8b2c05e3-046b-447f-922b-43a832220667
 langcode: en

@@ -193,5 +193,4 @@ label: test_node_view
 module: views
 id: test_node_view
 tag: ''
-uuid: 377e9d79-57ea-4836-a100-a255c58e40ca
 langcode: en

@@ -244,5 +244,4 @@ label: 'Search Test'
 module: views
 id: test_search
 tag: ''
-uuid: f19c4fd2-af74-4d70-8500-a1037ca434bb
 langcode: en

@@ -1,6 +1,5 @@
 format: full_html
 name: 'Full HTML'
-uuid: 3d5d6be5-ac96-4a1b-bc00-c8725edead3c
 status: true
 weight: 1
 roles:

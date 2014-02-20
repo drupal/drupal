@@ -1,5 +1,4 @@
 id: node.article.field_image
-uuid: 9601b8f1-65a9-46a6-a500-d072d1232449
 entity_type: node
 bundle: article
 field_name: field_image

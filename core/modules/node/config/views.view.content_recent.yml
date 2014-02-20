@@ -458,5 +458,4 @@ label: 'Recent content'
 module: views
 id: content_recent
 tag: default
-uuid: 22208367-bde8-4977-ae04-4f1a34383ae3
 langcode: en

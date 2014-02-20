@@ -1,6 +1,5 @@
 format: restricted_html
 name: 'Restricted HTML'
-uuid: 5bbb3d96-1278-4390-8200-ed08941c4a8f
 status: true
 weight: 0
 roles:

@@ -1,5 +1,4 @@
 id: node_delete_action
-uuid: 39dc5faa-8f59-4740-a100-b69e7975e6dd
 label: 'Delete selected content'
 status: true
 langcode: en

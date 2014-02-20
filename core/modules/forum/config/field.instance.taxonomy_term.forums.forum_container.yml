@@ -1,5 +1,4 @@
 id: taxonomy_term.forums.forum_container
-uuid: 8421d585-f6ef-4209-ad00-cfb30a1ab075
 status: true
 langcode: en
 entity_type: taxonomy_term

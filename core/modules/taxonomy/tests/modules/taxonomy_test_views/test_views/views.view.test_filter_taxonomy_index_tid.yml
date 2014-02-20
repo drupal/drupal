@@ -169,5 +169,4 @@ label: test_filter_taxonomy_index_tid
 module: views
 id: test_filter_taxonomy_index_tid
 tag: ''
-uuid: b8bb8999-3e2c-4170-9500-ebafe26e5a78
 langcode: en

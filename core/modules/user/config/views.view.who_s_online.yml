@@ -194,5 +194,4 @@ label: 'Who''s online block'
 module: views
 id: who_s_online
 tag: default
-uuid: 67a78cad-cf14-4f0d-9705-05d50cd84eaa
 langcode: en
