@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 class FormTest extends WebTestBase {
@@ -94,7 +95,7 @@ class FormTest extends WebTestBase {
     $elements['file']['empty_values'] = $empty_strings;
 
     // Regular expression to find the expected marker on required elements.
-    $required_marker_preg = '@<label.*<span class="form-required" aria-hidden="true">\*</span></label>@';
+    $required_marker_preg = '@<(?:label|legend).*<span class="form-required" aria-hidden="true">\*</span>.*</(?:label|legend)>@';
 
     // Go through all the elements and all the empty values for them.
     foreach ($elements as $type => $data) {
@@ -520,7 +521,12 @@ class FormTest extends WebTestBase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $this->assertEqual(count($disabled_elements), 39, 'The correct elements have the disabled property in the HTML code.');
+    $actual_count = count($disabled_elements);
+    $expected_count = 41;
+    $this->assertEqual($actual_count, $expected_count, String::format('Found @actual elements with disabled property (expected @expected).', array(
+      '@actual' => count($disabled_elements),
+      '@expected' => $expected_count,
+    )));
 
     $this->drupalPostForm(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);

@@ -951,9 +951,22 @@ function theme_fieldset($variables) {
   element_set_attributes($element, array('id'));
   _form_set_attributes($element, array('form-wrapper'));
 
+  $element['#attributes']['class'][] = 'form-item';
+
   if (!empty($element['#description'])) {
     $description_id = $element['#attributes']['id'] . '--description';
     $element['#attributes']['aria-describedby'] = $description_id;
+  }
+
+  // If the element is required, a required marker is appended to the label.
+  // @see theme_form_element_label()
+  $required = '';
+  if (!empty($element['#required'])) {
+    $marker = array(
+      '#theme' => 'form_required_marker',
+      '#element' => $element,
+    );
+    $required = drupal_render($marker);
   }
 
   $legend_attributes = array();
@@ -962,19 +975,25 @@ function theme_fieldset($variables) {
   }
 
   $output = '<fieldset' . new Attribute($element['#attributes']) . '>';
-  if (!empty($element['#title'])) {
+
+  if ((isset($element['#title']) && $element['#title'] !== '') || !empty($element['#required'])) {
     // Always wrap fieldset legends in a SPAN for CSS positioning.
-    $output .= '<legend' . new Attribute($legend_attributes) . '><span class="fieldset-legend">' . $element['#title'] . '</span></legend>';
+    $output .= '<legend' . new Attribute($legend_attributes) . '><span class="fieldset-legend">';
+    $output .= t('!title!required', array('!title' => $element['#title'], '!required' => $required));
+    $output .= '</span></legend>';
   }
   $output .= '<div class="fieldset-wrapper">';
-  if (!empty($element['#description'])) {
-    $attributes = array('class' => 'fieldset-description', 'id' => $description_id);
-    $output .= '<div' . new Attribute($attributes) . '>' . $element['#description'] . '</div>';
 
+  if (isset($element['#field_prefix'])) {
+    $output .= '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ';
   }
   $output .= $element['#children'];
-  if (isset($element['#value'])) {
-    $output .= $element['#value'];
+  if (isset($element['#field_suffix'])) {
+    $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
+  }
+  if (!empty($element['#description'])) {
+    $attributes = array('class' => 'description', 'id' => $description_id);
+    $output .= '<div' . new Attribute($attributes) . '>' . $element['#description'] . '</div>';
   }
   $output .= '</div>';
   $output .= "</fieldset>\n";
@@ -1259,7 +1278,10 @@ function form_pre_render_conditional_form_element($element) {
   }
 
   if (isset($element['#title']) || isset($element['#description'])) {
-    $element['#theme_wrappers'][] = 'form_element';
+    // @see #type 'fieldgroup'
+    $element['#theme_wrappers'][] = 'fieldset';
+    $element['#attributes']['class'][] = 'fieldgroup';
+    $element['#attributes']['class'][] = 'form-composite';
   }
   return $element;
 }

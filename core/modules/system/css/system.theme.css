@@ -55,6 +55,7 @@ tr.even .form-item {
   margin-bottom: 0;
   white-space: nowrap;
 }
+.form-composite > .fieldset-wrapper > .description,
 .form-item .description {
   font-size: 0.85em;
 }
@@ -62,6 +63,7 @@ label.option {
   display: inline;
   font-weight: normal;
 }
+.form-composite > legend,
 h4.label {
   font-size: inherit;
   font-weight: bold;
