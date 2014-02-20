@@ -411,7 +411,7 @@ function _batch_finished() {
       if (is_callable($batch_set['finished'])) {
         $queue = _batch_queue($batch_set);
         $operations = $queue->getAllItems();
-        $batch_set['finished']($batch_set['success'], $batch_set['results'], $operations, format_interval($batch_set['elapsed'] / 1000));
+        call_user_func_array($batch_set['finished'], array($batch_set['success'], $batch_set['results'], $operations, format_interval($batch_set['elapsed'] / 1000)));
       }
     }
   }
