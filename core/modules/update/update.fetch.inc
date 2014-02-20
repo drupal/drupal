@@ -11,10 +11,10 @@
  * @param $context
  *   Reference to an array used for Batch API storage.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\update\UpdateManager::fetchDataBatch()
- *
  * @see \Drupal\update\UpdateManager::fetchDataBatch()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('update.manager')->fetchDataBatch().
  */
 function update_fetch_data_batch(&$context) {
   \Drupal::service('update.manager')->fetchDataBatch($context);
@@ -23,10 +23,10 @@ function update_fetch_data_batch(&$context) {
 /**
  * Attempts to drain the queue of tasks for release history data to fetch.
  *
- *  @deprecated as of Drupal 8.0. Use
- *   \Drupal\update\UpdateFetcher::fetchData()
- *
  * @see \Drupal\update\UpdateFetcher::fetchData()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('update.processor')->fetchData().
  */
 function _update_fetch_data() {
   \Drupal::service('update.processor')->fetchData();
@@ -44,10 +44,10 @@ function _update_fetch_data() {
  * @return
  *   TRUE if we fetched parsable XML, otherwise FALSE.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\update\UpdateFetcher::processFetchTask()
- *
  * @see \Drupal\update\UpdateFetcher::processFetchTask()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('update.processor')->processFetchTask().
  */
 function _update_process_fetch_task($project) {
   return \Drupal::service('update.processor')->processFetchTask($project);
@@ -56,10 +56,10 @@ function _update_process_fetch_task($project) {
 /**
  * Clears out all the available update data and initiates re-fetching.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\update\UpdateManager::refreshUpdateData()
- *
  * @see \Drupal\update\UpdateManager::refreshUpdateData()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('update.manager')->refreshUpdateData().
  */
 function _update_refresh() {
   \Drupal::service('update.manager')->refreshUpdateData();
@@ -76,10 +76,10 @@ function _update_refresh() {
  *   update_get_projects(), including keys such as 'name' (short name), and the
  *   'info' array with data from a .info.yml file for the project.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\update\UpdateFetcher::createFetchTask()
- *
  * @see \Drupal\update\UpdateFetcher::createFetchTask()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('update.processor')->createFetchTask().
  */
 function _update_create_fetch_task($project) {
   \Drupal::service('update.processor')->createFetchTask($project);

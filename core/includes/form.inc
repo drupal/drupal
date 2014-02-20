@@ -106,7 +106,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Returns a renderable form array for a given form ID.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->getForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->getForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::getForm().
  */
 function drupal_get_form($form_arg) {
   return call_user_func_array(array(\Drupal::formBuilder(), 'getForm'), func_get_args());
@@ -115,7 +118,10 @@ function drupal_get_form($form_arg) {
 /**
  * Builds and processes a form for a given form ID.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->buildForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->buildForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::buildForm().
  */
 function drupal_build_form($form_id, &$form_state) {
   return \Drupal::formBuilder()->buildForm($form_id, $form_state);
@@ -124,7 +130,10 @@ function drupal_build_form($form_id, &$form_state) {
 /**
  * Retrieves default values for the $form_state array.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->getFormStateDefaults()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->getFormStateDefaults().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::getFormStateDefaults().
  */
 function form_state_defaults() {
   return \Drupal::formBuilder()->getFormStateDefaults();
@@ -133,7 +142,10 @@ function form_state_defaults() {
 /**
  * Constructs a new $form from the information in $form_state.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->rebuildForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->rebuildForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
  */
 function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
   return \Drupal::formBuilder()->rebuildForm($form_id, $form_state, $old_form);
@@ -142,7 +154,10 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
 /**
  * Fetches a form from the cache.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->getCache()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->getCache().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::getCache().
  */
 function form_get_cache($form_build_id, &$form_state) {
   return \Drupal::formBuilder()->getCache($form_build_id, $form_state);
@@ -151,7 +166,10 @@ function form_get_cache($form_build_id, &$form_state) {
 /**
  * Stores a form in the cache.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->setCache()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->setCache().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::setCache().
  */
 function form_set_cache($form_build_id, $form, $form_state) {
   \Drupal::formBuilder()->setCache($form_build_id, $form, $form_state);
@@ -209,7 +227,10 @@ function form_load_include(&$form_state, $type, $module, $name = NULL) {
 /**
  * Retrieves, populates, and processes a form.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->submitForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->submitForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::submitForm().
  */
 function drupal_form_submit($form_arg, &$form_state) {
   \Drupal::formBuilder()->submitForm($form_arg, $form_state);
@@ -218,7 +239,10 @@ function drupal_form_submit($form_arg, &$form_state) {
 /**
  * Retrieves the structured array that defines a given form.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->retrieveForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->retrieveForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::retrieveForm().
  */
 function drupal_retrieve_form($form_id, &$form_state) {
   return \Drupal::formBuilder()->retrieveForm($form_id, $form_state);
@@ -227,7 +251,10 @@ function drupal_retrieve_form($form_id, &$form_state) {
 /**
  * Processes a form submission.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->processForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->processForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::processForm().
  */
 function drupal_process_form($form_id, &$form, &$form_state) {
   \Drupal::formBuilder()->processForm($form_id, $form, $form_state);
@@ -236,7 +263,10 @@ function drupal_process_form($form_id, &$form, &$form_state) {
 /**
  * Prepares a structured form array.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->prepareForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->prepareForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::prepareForm().
  */
 function drupal_prepare_form($form_id, &$form, &$form_state) {
   \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
@@ -245,7 +275,10 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
 /**
  * Validates user-submitted form data in the $form_state array.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->validateForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->validateForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::validateForm().
  */
 function drupal_validate_form($form_id, &$form, &$form_state) {
   \Drupal::formBuilder()->validateForm($form_id, $form, $form_state);
@@ -254,7 +287,10 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
 /**
  * Redirects the user to a URL after a form has been processed.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->redirectForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->redirectForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::redirectForm().
  */
 function drupal_redirect_form($form_state) {
   return \Drupal::formBuilder()->redirectForm($form_state);
@@ -263,7 +299,10 @@ function drupal_redirect_form($form_state) {
 /**
  * Executes custom validation and submission handlers for a given form.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->executeHandlers()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->executeHandlers().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::executeHandlers().
  */
 function form_execute_handlers($type, &$form, &$form_state) {
   \Drupal::formBuilder()->executeHandlers($type, $form, $form_state);
@@ -272,7 +311,10 @@ function form_execute_handlers($type, &$form, &$form_state) {
 /**
  * Files an error against a form element.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->setErrorByName()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->setErrorByName().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::setErrorByName().
  */
 function form_set_error($name, array &$form_state, $message = '') {
   \Drupal::formBuilder()->setErrorByName($name, $form_state, $message);
@@ -281,7 +323,10 @@ function form_set_error($name, array &$form_state, $message = '') {
 /**
  * Clears all errors against all form elements made by form_set_error().
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->clearErrors()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->clearErrors().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::clearErrors().
  */
 function form_clear_error(array &$form_state) {
   \Drupal::formBuilder()->clearErrors($form_state);
@@ -290,7 +335,10 @@ function form_clear_error(array &$form_state) {
 /**
  * Returns an associative array of all errors.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->getErrors()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->getErrors().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::getErrors().
  */
 function form_get_errors(array &$form_state) {
   return \Drupal::formBuilder()->getErrors($form_state);
@@ -299,7 +347,10 @@ function form_get_errors(array &$form_state) {
 /**
  * Returns the error message filed against the given form element.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->getError()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->getError().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::getError().
  */
 function form_get_error($element, array &$form_state) {
   return \Drupal::formBuilder()->getError($element, $form_state);
@@ -308,7 +359,10 @@ function form_get_error($element, array &$form_state) {
 /**
  * Flags an element as having an error.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->setError()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->setError().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::setError().
  */
 function form_error(&$element, array &$form_state, $message = '') {
   \Drupal::formBuilder()->setError($element, $form_state, $message);
@@ -317,7 +371,10 @@ function form_error(&$element, array &$form_state, $message = '') {
 /**
  * Builds and processes all elements in the structured form array.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->doBuildForm()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->doBuildForm().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::doBuildForm().
  */
 function form_builder($form_id, &$element, &$form_state) {
   return \Drupal::formBuilder()->doBuildForm($form_id, $element, $form_state);
@@ -718,7 +775,10 @@ function form_type_token_value($element, $input = FALSE) {
 /**
  * Changes submitted form values during form validation.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->setValue()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->setValue().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::setValue().
  */
 function form_set_value($element, $value, &$form_state) {
   \Drupal::formBuilder()->setValue($element, $value, $form_state);
@@ -737,7 +797,10 @@ function form_set_value($element, $value, &$form_state) {
  * @return
  *   An array with all hierarchical elements flattened to a single array.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::formBuilder()->flattenOptions()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::formBuilder()->flattenOptions().
+ *
+ * @see \Drupal\Core\Form\FormBuilderInterface::flattenOptions().
  */
 function form_options_flatten($array) {
   return \Drupal::formBuilder()->flattenOptions($array);

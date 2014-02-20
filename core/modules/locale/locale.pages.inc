@@ -41,7 +41,8 @@ function locale_translation_manual_status() {
  *
  * @see locale_menu()
  *
- * @deprecated Use \Drupal\locale\Form\LocaleForm::status()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\locale\Form\LocaleForm::status().
  */
 function locale_translation_status_form($form, &$form_state) {
   module_load_include('translation.inc', 'locale');

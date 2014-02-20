@@ -77,7 +77,7 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *
    * @throws \Drupal\Core\Routing\GeneratorNotInitializedException.
    *
-   * @deprecated since version 8.0
+   * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
    *   System paths should not be used - use route names and parameters.
    */
   public function generateFromPath($path = NULL, $options = array());
@@ -94,7 +94,7 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    * @return string
    *  The internal Drupal path corresponding to the route.
    *
-   * @deprecated since version 8.0
+   * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
    *   System paths should not be used - use route names and parameters.
    */
   public function getPathFromRoute($name, $parameters = array());

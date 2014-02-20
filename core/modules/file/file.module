@@ -110,8 +110,8 @@ function file_load($fid, $reset = FALSE) {
 /**
  * Returns the file usage service.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::service('file.usage') instead, or
- *   even better have the file usage service injected into your object.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('file.usage').
  *
  * @return \Drupal\file\FileUsage\FileUsageInterface.
  */

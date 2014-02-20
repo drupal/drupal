@@ -117,7 +117,8 @@ function language_menu_link_defaults() {
 /**
  * Editing or deleting locked languages should not be possible.
  *
- * @deprecated Use \Drupal\language\LanguageAccessController instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\language\LanguageAccessController.
  */
 function language_access_language_edit_or_delete($language) {
   return !$language->locked && \Drupal::currentUser()->hasPermission('administer languages');

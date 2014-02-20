@@ -429,8 +429,8 @@ function _user_role_permissions_update($roles) {
  * @return bool
  *   Boolean TRUE if the current user has the requested permission.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\Core\Session\AccountInterface::hasPermission()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Session\AccountInterface::hasPermission().
  */
 function user_access($string, AccountInterface $account = NULL) {
   global $user;
@@ -567,7 +567,8 @@ function user_preprocess_block(&$variables) {
  *   this result must ensure that check_plain() is called on it before it is
  *   printed to the page.
  *
- * @deprecated Use \Drupal\Core\Session\Interface::getUsername() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Session\Interface::getUsername().
  */
 function user_format_name(AccountInterface $account) {
   return $account->getUsername();
@@ -696,7 +697,8 @@ function user_is_anonymous() {
  * @return bool
  *   TRUE if the user is logged in, FALSE if the user is anonymous.
  *
- * @deprecated Use \Drupal\Core\Session\UserSession::isAuthenticated().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Session\UserSession::isAuthenticated().
  */
 function user_is_logged_in() {
   return $GLOBALS['user']->isAuthenticated();

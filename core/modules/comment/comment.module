@@ -1121,7 +1121,8 @@ function comment_user_predelete($account) {
 /**
  * Loads comment entities from the database.
  *
- * @deprecated Use entity_load_multiple('comment', $cids) instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use entity_load_multiple('comment', $cids).
  *
  * @param array $cids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.

@@ -14,7 +14,8 @@ use Drupal\Component\Utility\Crypt;
 /**
  * Menu callback; process one time login link and redirects to the user page on success.
  *
- * @deprecated Use \Drupal\user\Form\UserForm::resetPass()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\user\Form\UserForm::resetPass().
  */
 function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $action = NULL) {
   global $user;
@@ -123,7 +124,8 @@ function template_preprocess_user(&$variables) {
  * @see user_cancel_confirm_form()
  * @see user_cancel_url()
  *
- * @deprecated Use \Drupal\user\Controller\UserController::confirmCancel()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\user\Controller\UserController::confirmCancel().
  */
 function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
   // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.

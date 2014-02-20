@@ -426,7 +426,8 @@ function drupal_get_feeds($delimiter = "\n") {
  * @return
  *   An array containing query parameters, which can be used for url().
  *
- * @deprecated as of Drupal 8.0. Use Url::filterQueryParameters() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Url::filterQueryParameters().
  */
 function drupal_get_query_parameters(array $query = NULL, array $exclude = array(), $parent = '') {
   if (!isset($query)) {
@@ -439,10 +440,10 @@ function drupal_get_query_parameters(array $query = NULL, array $exclude = array
  * Parses an array into a valid, rawurlencoded query string.
  *
  * @see drupal_get_query_parameters()
- * @deprecated as of Drupal 8.0. Use Url::buildQuery() instead.
  * @ingroup php_wrappers
  *
- * @deprecated as of Drupal 8.0. Use Url::buildQuery() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Url::buildQuery().
  */
 function drupal_http_build_query(array $query, $parent = '') {
   return Url::buildQuery($query, $parent);
@@ -518,7 +519,8 @@ function drupal_get_destination() {
  * @see url()
  * @ingroup php_wrappers
  *
- * @deprecated as of Drupal 8.0. Use Url::parse() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Url::parse().
  */
 function drupal_parse_url($url) {
   return Url::parse($url);
@@ -535,7 +537,8 @@ function drupal_parse_url($url) {
  * @param $path
  *   The Drupal path to encode.
  *
- * @deprecated as of Drupal 8.0. Use Url::encodePath() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Url::encodePath().
  */
 function drupal_encode_path($path) {
   return Url::encodePath($path);
@@ -550,7 +553,8 @@ function drupal_encode_path($path) {
  * @return
  *   TRUE if the URL has the same domain and base path.
  *
- * @deprecated as of Drupal 8.0. Use Url::externalIsLocal() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Url::externalIsLocal().
  */
 function _external_url_is_local($url) {
   return Url::externalIsLocal($url, base_path());
@@ -609,7 +613,8 @@ function valid_email_address($mail) {
  *
  * @see \Drupal\Component\Utility\Url::isValid()
  *
- * @deprecated as of Drupal 8.0. Use Url::isValid() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Url::isValid().
  */
 function valid_url($url, $absolute = FALSE) {
   return Url::isValid($url, $absolute);
@@ -631,8 +636,8 @@ function valid_url($url, $absolute = FALSE) {
  * @return bool
  *   TRUE if no step mismatch has occurred, or FALSE otherwise.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\Component\Utility\Number::validStep() directly instead
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Number::validStep().
  */
 function valid_number_step($value, $step, $offset = 0.0) {
   return Number::validStep($value, $step, $offset);
@@ -901,8 +906,10 @@ function format_xml_elements($array) {
  *
  * @see t()
  * @see format_string()
+ * @see \Drupal\Core\StringTranslation\TranslationManager->formatPlural()
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::translation()->formatPlural()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::translation()->formatPlural().
  */
 function format_plural($count, $singular, $plural, array $args = array(), array $options = array()) {
   return \Drupal::translation()->formatPlural($count, $singular, $plural, $args, $options);
@@ -984,7 +991,10 @@ function format_size($size, $langcode = NULL) {
  * @return
  *   A translated string representation of the interval.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::service('date')->formatInterval().
+ * @see \Drupal\Core\Datetime\Date::formatInterval()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('date')->formatInterval().
  */
 function format_interval($interval, $granularity = 2, $langcode = NULL) {
   return \Drupal::service('date')->formatInterval($interval, $granularity, $langcode);
@@ -2977,9 +2987,11 @@ function drupal_clear_js_cache() {
  * We use HTML-safe strings, with several characters escaped.
  *
  * @see drupal_json_decode()
+ *
  * @ingroup php_wrappers
- * @deprecated as of Drupal 8.0. Use Drupal\Component\Utility\Json::encode()
- *   directly instead.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Json::encode().
  */
 function drupal_json_encode($var) {
   return Json::encode($var);
@@ -2989,9 +3001,11 @@ function drupal_json_encode($var) {
  * Converts an HTML-safe JSON string into its PHP equivalent.
  *
  * @see drupal_json_encode()
+ *
  * @ingroup php_wrappers
- * @deprecated as of Drupal 8.0. Use Drupal\Component\Utility\Json::decode()
- *   directly instead.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Json::decode().
  */
 function drupal_json_decode($var) {
   return Json::decode($var);
@@ -3003,9 +3017,10 @@ function drupal_json_decode($var) {
  * @return string
  *   The private key.
  *
- * @see \Drupal\Core\Access\CsrfTokenManager
+ * @see \Drupal\Core\Access\CsrfTokenGenerator
  *
- * @deprecated as of Drupal 8.0. Use the 'private_key' service instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('private_key')->get().
  */
 function drupal_get_private_key() {
   return \Drupal::service('private_key')->get();
@@ -3028,10 +3043,11 @@ function drupal_get_private_key() {
  *   'drupal_private_key' configuration variable.
  *
  * @see drupal_get_hash_salt()
- * @see \Drupal\Core\Access\CsrfTokenManager
+ * @see \Drupal\Core\Access\CsrfTokenGenerator
  * @see drupal_session_start()
  *
- * @deprecated as of Drupal 8.0. Use the csrf_token service instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::csrfToken()->get().
  */
 function drupal_get_token($value = '') {
   return \Drupal::csrfToken()->get($value);
@@ -3051,9 +3067,10 @@ function drupal_get_token($value = '') {
  *   True for a valid token, false for an invalid token. When $skip_anonymous
  *   is true, the return value will always be true for anonymous users.
  *
- * @see \Drupal\Core\Access\CsrfTokenManager
+ * @see \Drupal\Core\Access\CsrfTokenGenerator
  *
- * @deprecated as of Drupal 8.0. Use the csrf_token service instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use return \Drupal::csrfToken()->validate().
  */
 function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
   return \Drupal::csrfToken()->validate($token, $value, $skip_anonymous);
@@ -4528,9 +4545,8 @@ function drupal_render_cid_create($elements) {
  * @return int
  *   The comparison result for uasort().
  *
- * @see \Drupal\Component\Utility\SortArray::sortByWeightProperty()
- *
- * @deprecated as of Drupal 8.0. Use SortArray::sortByWeightProperty() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\SortArray::sortByWeightProperty().
  */
 function element_sort($a, $b) {
   return SortArray::sortByWeightProperty($a, $b);
@@ -4552,9 +4568,8 @@ function element_sort($a, $b) {
  * @return int
  *   The comparison result for uasort().
  *
- * @see \Drupal\Component\Utility\SortArray::sortByTitleProperty()
- *
- * @deprecated as of Drupal 8.0. Use SortArray::sortByTitleProperty() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\SortArray::sortByTitleProperty().
  */
 function element_sort_by_title($a, $b) {
   return SortArray::sortByTitleProperty($a, $b);
@@ -4615,9 +4630,8 @@ function element_info_property($type, $property_name, $default = NULL) {
  * @return int
  *   The comparison result for uasort().
  *
- * @see \Drupal\Component\Utility\SortArray::sortByTitleElement()
- *
- * @deprecated as of Drupal 8.0. Use SortArray::sortByTitleElement() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\SortArray::sortByTitleElement().
  */
 function drupal_sort_title($a, $b) {
   return SortArray::sortByTitleElement($a, $b);
@@ -4626,9 +4640,8 @@ function drupal_sort_title($a, $b) {
 /**
  * Checks if the key is a property.
  *
- * @see \Drupal\Core\Render\Element::property()
- *
- * @deprecated as of Drupal 8.0. Use Element::property() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Render\Element::property().
  */
 function element_property($key) {
   return Element::property($key);
@@ -4637,9 +4650,8 @@ function element_property($key) {
 /**
  * Gets properties of a structured array element (keys beginning with '#').
  *
- * @see \Drupal\Core\Render\Element::properties()
- *
- * @deprecated as of Drupal 8.0. Use Element::properties() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Render\Element::properties().
  */
 function element_properties($element) {
   return Element::properties($element);
@@ -4648,9 +4660,8 @@ function element_properties($element) {
 /**
  * Checks if the key is a child.
  *
- * @see \Drupal\Core\Render\Element::child()
- *
- * @deprecated as of Drupal 8.0. Use Element::child() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Render\Element::child().
  */
 function element_child($key) {
   return Element::child($key);
@@ -4670,9 +4681,8 @@ function element_child($key) {
  * @return
  *   The array keys of the element's children.
  *
- * @see \Drupal\Core\Render\Element::children()
- *
- * @deprecated as of Drupal 8.0. Use Element::children() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Render\Element::children().
  */
 function element_children(&$elements, $sort = FALSE) {
   return Element::children($elements, $sort);
@@ -4687,9 +4697,8 @@ function element_children(&$elements, $sort = FALSE) {
  * @return
  *   The array keys of the element's visible children.
  *
- * @see \Drupal\Core\Render\Element::getVisibleChildren()
- *
- * @deprecated as of Drupal 8.0. Use Element::getVisibleChildren() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Render\Element::getVisibleChildren().
  */
 function element_get_visible_children(array $elements) {
   return Element::getVisibleChildren($elements);
@@ -4707,9 +4716,8 @@ function element_get_visible_children(array $elements) {
  *   except for the leading '#', then an attribute name value is sufficient and
  *   no property name needs to be specified.
  *
- * @see \Drupal\Core\Render\Element::setAttributes()
- *
- * @deprecated as of Drupal 8.0. Use Element::setAttributes() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Render\Element::setAttributes().
  */
 function element_set_attributes(array &$element, array $map) {
   Element::setAttributes($element, $map);
@@ -4726,8 +4734,8 @@ function element_set_attributes(array &$element, array $map) {
  *
  * @see \Drupal\Core\Extension\InfoParser::parse().
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::service('info_parser')->parse()
- *   instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('info_parser')->parse().
  */
 function drupal_parse_info_file($filename) {
   return \Drupal::service('info_parser')->parse($filename);
@@ -4761,9 +4769,9 @@ function watchdog_severity_levels() {
  * Explodes a string of tags into an array.
  *
  * @see drupal_implode_tags()
- * @see \Drupal\Component\Utility\String::explodeTags().
  *
- * @deprecated as of Drupal 8.0. Use Tags::explode() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Tags::explode().
  */
 function drupal_explode_tags($tags) {
   return Tags::explode($tags);
@@ -4773,9 +4781,9 @@ function drupal_explode_tags($tags) {
  * Implodes an array of tags into a string.
  *
  * @see drupal_explode_tags()
- * @see \Drupal\Component\Utility\String::implodeTags().
  *
- * @deprecated as of Drupal 8.0. Use Tags::implode() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\Tags::implode().
  */
 function drupal_implode_tags($tags) {
   return Tags::implode($tags);

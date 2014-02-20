@@ -827,7 +827,9 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
  * @param $append
  *   Whether to append the value to an existing header or to replace it.
  *
- * @deprecated Header handling is being shifted to a Symfony response object.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Symfony\Component\HttpFoundation\Response->headers->set().
+ *   See https://drupal.org/node/2181523.
  */
 function drupal_add_http_header($name, $value, $append = FALSE) {
   // The headers as name/value pairs.
@@ -860,7 +862,9 @@ function drupal_add_http_header($name, $value, $append = FALSE) {
  *   A string containing the header value, or FALSE if the header has been set,
  *   or NULL if the header has not been set.
  *
- * @deprecated Header handling is being shifted to a Symfony response object.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Symfony\Component\HttpFoundation\Response->headers->get().
+ *   See https://drupal.org/node/2181523.
  */
 function drupal_get_http_header($name = NULL) {
   $headers = &drupal_static('drupal_http_headers', array());
@@ -879,7 +883,8 @@ function drupal_get_http_header($name = NULL) {
  * Header names are case-insensitive, but for maximum compatibility they should
  * follow "common form" (see RFC 2616, section 4.2).
  *
- * @deprecated Header handling is being shifted to a Symfony response object.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   See https://drupal.org/node/2181523.
  */
 function _drupal_set_preferred_header_name($name = NULL) {
   static $header_names = array();
@@ -902,7 +907,8 @@ function _drupal_set_preferred_header_name($name = NULL) {
  *   (optional) If TRUE and headers have already been sent, send only the
  *   specified headers.
  *
- * @deprecated Header handling is being shifted to a Symfony response object.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   See https://drupal.org/node/2181523.
  */
 function drupal_send_headers($default_headers = array(), $only_default = FALSE) {
   $headers_sent = &drupal_static(__FUNCTION__, FALSE);
@@ -958,7 +964,8 @@ function drupal_send_headers($default_headers = array(), $only_default = FALSE) 
  *
  * @see drupal_page_set_cache()
  *
- * @deprecated Header handling is being shifted to a Symfony response object.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   See https://drupal.org/node/2181523.
  */
 function drupal_page_header() {
   $headers_sent = &drupal_static(__FUNCTION__, FALSE);
@@ -1148,12 +1155,11 @@ function format_string($string, array $args = array()) {
 /**
  * Encodes special characters in a plain-text string for display as HTML.
  *
- * @see \Drupal\Component\Utility\String::checkPlain()
  * @see drupal_validate_utf8()
  * @ingroup sanitization
  *
- * @deprecated as of Drupal 8.0. Use
- *   Drupal\Component\Utility\String::checkPlain() directly instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Component\Utility\String::checkPlain().
  */
 function check_plain($text) {
   return String::checkPlain($text);
@@ -1846,8 +1852,8 @@ function drupal_get_bootstrap_phase() {
 /**
  * Returns the list of enabled modules.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->getModuleList().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::moduleHandler()->getModuleList().
  *
  * @see \Drupal\Core\Extension\ModuleHandler::getModuleList()
  */
@@ -1859,8 +1865,8 @@ function module_list() {
 /**
  * Determines which modules are implementing a hook.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->getImplementations($hook).
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::moduleHandler()->getImplementations($hook).
  *
  * @see \Drupal\Core\Extension\ModuleHandler::getImplementations()
  */
@@ -1893,8 +1899,8 @@ function module_invoke($module, $hook) {
  * All arguments are passed by value. Use drupal_alter() if you need to pass
  * arguments by reference.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->invokeAll($hook).
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::moduleHandler()->invokeAll($hook).
  *
  * @see drupal_alter()
  * @see \Drupal\Core\Extension\ModuleHandler::invokeAll()
@@ -1909,8 +1915,8 @@ function module_invoke_all($hook) {
 /**
  * Passes alterable variables to specific hook_TYPE_alter() implementations.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->alter($hook).
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::moduleHandler()->alter($hook).
  *
  * @see \Drupal\Core\Extension\ModuleHandler::alter()
  */
@@ -1921,8 +1927,8 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
 /**
  * Determines whether a given module exists.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->moduleExists($module).
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::moduleHandler()->moduleExists($module).
  *
  * @see \Drupal\Core\Extension\ModuleHandler::moduleExists()
  */
@@ -1933,8 +1939,8 @@ function module_exists($module) {
 /**
  * Determines whether a module implements a hook.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->implementsHook($module, $hook).
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::moduleHandler()->implementsHook($module, $hook).
  *
  * @see \Drupal\Core\Extension\ModuleHandler::implementsHook()
  */
@@ -2073,8 +2079,8 @@ function drupal_language_initialize() {
  * @param string $type
  *   The type of language object needed, e.g. Language::TYPE_INTERFACE.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::languageManager()->getCurrentLanguage().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::languageManager()->getCurrentLanguage().
  */
 function language($type) {
   return \Drupal::languageManager()->getCurrentLanguage($type);
@@ -2092,8 +2098,8 @@ function language($type) {
  *   An associative array of languages, keyed by the language code, ordered by
  *   weight ascending and name ascending.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::languageManager()->getLanguages() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::languageManager()->getLanguages().
  */
 function language_list($flags = Language::STATE_CONFIGURABLE) {
   return \Drupal::languageManager()->getLanguages($flags);
@@ -2110,8 +2116,8 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
  *
  * @see \Drupal\Core\Language\LanguageManager::getLanguage()
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::languageManager()->getLanguage()
- *   instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::languageManager()->getLanguage().
  */
 function language_load($langcode) {
   return \Drupal::languageManager()->getLanguage($langcode);
@@ -2123,8 +2129,10 @@ function language_load($langcode) {
  * @return \Drupal\Core\Language\Language
  *   A language object.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::languageManager()->getDefaultLanguage() instead.
+ * @see \Drupal\Core\Language\LanguageManager::getLanguage()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::languageManager()->getDefaultLanguage().
  */
 function language_default() {
   return \Drupal::languageManager()->getDefaultLanguage();
@@ -2624,8 +2632,8 @@ function drupal_check_memory_limit($required, $memory_limit = NULL) {
 /**
  * Get locking layer instance.
  *
- * @deprecated Use \Drupal::lock() instead, or even better have the lock service
- *   injected into your object.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::lock().
  *
  * @return \Drupal\Core\Lock\LockBackendInterface
  */

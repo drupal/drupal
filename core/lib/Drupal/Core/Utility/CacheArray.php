@@ -61,7 +61,8 @@ use Drupal\Core\Cache\Cache;
  * procedural code. Extending classes may wish to alter this behavior, for
  * example by overriding offsetSet() and adding an automatic call to persist().
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\Core\Cache\CacheCollector instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Cache\CacheCollector.
  *
  * @see SchemaCache
  */

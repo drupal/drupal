@@ -370,7 +370,10 @@ function entity_create($entity_type, array $values = array()) {
  *
  * @return \Drupal\Core\Entity\EntityStorageControllerInterface
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getStorageController().
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getStorageController().
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::entityManager()->getStorageController().
  */
 function entity_get_controller($entity_type) {
   return \Drupal::entityManager()
@@ -408,7 +411,10 @@ function entity_page_label(EntityInterface $entity, $langcode = NULL) {
  * @return \Drupal\Core\Entity\EntityAccessControllerInterface
  *   An entity access controller instance.
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getAccessController().
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getAccessController().
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::entityManager()->getAccessController().
  */
 function entity_access_controller($entity_type) {
   return \Drupal::entityManager()
@@ -424,7 +430,10 @@ function entity_access_controller($entity_type) {
  * @return \Drupal\Core\Entity\EntityListControllerInterface
  *   An entity list controller.
  *
- * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getFormController().
+ * @see \Drupal\Core\Entity\EntityManagerInterface::getListController().
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::entityManager()->getListController().
  */
 function entity_list_controller($entity_type) {
   return \Drupal::entityManager()

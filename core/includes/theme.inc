@@ -72,7 +72,10 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  *   Boolean TRUE if the theme is enabled or is the site administration theme;
  *   FALSE otherwise.
  *
- * @deprecated Use \Drupal::service('access_check.theme')->checkAccess().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('access_check.theme')->checkAccess().
+ *
+ * @see \Drupal\Core\Theme\ThemeAccessCheck::checkAccess().
  */
 function drupal_theme_access($theme) {
   if (is_object($theme)) {
@@ -362,7 +365,10 @@ function drupal_theme_rebuild() {
  *     names. This element is not set if there are no themes on the system that
  *     declare this theme as their base theme.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::service('theme_handler')->listInfo().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('theme_handler')->listInfo().
+ *
+ * @see \Drupal\Core\Extension\ThemeHandler::listInfo().
  */
 function list_themes($refresh = FALSE) {
   /** @var \Drupal\Core\Extension\ThemeHandler $theme_handler */
@@ -391,7 +397,10 @@ function list_themes($refresh = FALSE) {
  *   Returns an array of all of the theme's ancestors; the first element's value
  *   will be NULL if an error occurred.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::service('theme_handler')->getBaseThemes().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('theme_handler')->getBaseThemes().
+ *
+ * @see \Drupal\Core\Extension\ThemeHandler::getBaseThemes().
  */
 function drupal_find_base_themes($themes, $key) {
   return \Drupal::service('theme_handler')->getBaseThemes($themes, $key);
@@ -1089,7 +1098,10 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
  * @param $theme_list
  *   An array of theme names.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::service('theme_handler')->enable().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('theme_handler')->enable().
+ *
+ * @see \Drupal\Core\Extension\ThemeHandler::enable().
  */
 function theme_enable($theme_list) {
   \Drupal::service('theme_handler')->enable($theme_list);
@@ -1101,7 +1113,10 @@ function theme_enable($theme_list) {
  * @param $theme_list
  *   An array of theme names.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal::service('theme_handler')->disable().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('theme_handler')->disable().
+ *
+ * @see \Drupal\Core\Extension\ThemeHandler::disable().
  */
 function theme_disable($theme_list) {
   \Drupal::service('theme_handler')->disable($theme_list);

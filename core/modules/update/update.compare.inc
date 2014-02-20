@@ -48,10 +48,10 @@
  *   - base_themes: If the project is a theme it contains an associative array
  *     of all base-themes.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\update\UpdateManager::getProjects()
- *
  * @see \Drupal\update\UpdateManager::getProjects()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('update.manager')->getProjects().
  */
 function update_get_projects() {
   return \Drupal::service('update.manager')->getProjects();
@@ -572,10 +572,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
  *   update_calculate_project_data() or update_get_projects(), or an empty array
  *   when the storage is cleared.
  *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal\update\UpdateManager::projectStorage()
- *
  * @see \Drupal\update\UpdateManager::projectStorage()
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::service('update.manager')->projectStorage().
  */
 function update_project_storage($key) {
   return \Drupal::service('update.manager')->projectStorage($key);

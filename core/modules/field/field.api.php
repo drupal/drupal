@@ -318,7 +318,8 @@ function hook_field_formatter_info_alter(array &$info) {
  *   The language the field values are going to be entered in. If no language is
  *   provided the default site language will be used.
  *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use the entity system instead, see https://drupal.org/developing/api/entity
  */
 function hook_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$form, &$form_state, $langcode) {
   // Add a checkbox allowing a given field to be emptied.
@@ -346,7 +347,8 @@ function hook_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$f
  * @param $form_state
  *   An associative array containing the current state of the form.
  *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use the entity system instead, see https://drupal.org/developing/api/entity
  */
 function hook_field_attach_extract_form_values(\Drupal\Core\Entity\EntityInterface $entity, $form, &$form_state) {
   // Sample case of an 'Empty the field' checkbox added on the form, allowing

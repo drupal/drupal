@@ -739,7 +739,8 @@ function views_library_info() {
  * @return
  *   A keyed array of in the form of 'base_table' => 'Description'.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::fetchPluginNames().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::fetchPluginNames().
  */
 function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
   return Views::fetchPluginNames($type, $key, $base);
@@ -751,7 +752,8 @@ function views_fetch_plugin_names($type, $key = NULL, $base = array()) {
  * @return array
  *   An array of plugin definitions for all types.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getPluginDefinitions().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::getPluginDefinitions().
  */
 function views_get_plugin_definitions() {
   return Views::getPluginDefinitions();
@@ -769,7 +771,8 @@ function views_get_plugin_definitions() {
  *   - views: An array of enabled Views that are currently using this plugin,
  *     keyed by machine name.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::pluginList().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::pluginList().
  */
 function views_plugin_list() {
   return Views::pluginList();
@@ -778,7 +781,8 @@ function views_plugin_list() {
 /**
  * Get enabled display extenders.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getEnabledDisplayExtenders().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::getEnabledDisplayExtenders().
  */
 function views_get_enabled_display_extenders() {
   return Views::getEnabledDisplayExtenders();
@@ -800,7 +804,8 @@ function views_get_enabled_display_extenders() {
  * );
  * @endcode
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getApplicableViews().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::getApplicableViews().
  */
 function views_get_applicable_views($type) {
   return Views::getApplicableViews($type);
@@ -809,7 +814,8 @@ function views_get_applicable_views($type) {
 /**
  * Returns an array of all views as fully loaded $view objects.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getAllViews().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::getAllViews().
  */
 function views_get_all_views() {
   return Views::getAllViews();
@@ -818,7 +824,8 @@ function views_get_all_views() {
 /**
  * Returns an array of all enabled views, as fully loaded $view objects.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getEnabledViews().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::getEnabledViews().
  */
 function views_get_enabled_views() {
   return Views::getEnabledViews();
@@ -827,7 +834,8 @@ function views_get_enabled_views() {
 /**
  * Returns an array of all disabled views, as fully loaded $view objects.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getDisabledViews().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::getDisabledViews().
  */
 function views_get_disabled_views() {
   return Views::getDisabledViews();
@@ -858,7 +866,8 @@ function views_get_disabled_views() {
  *  an associative array for use in select.
  *  - key: view name and display id separated by ':', or the view name only
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getViewsAsOptions().
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::getViewsAsOptions().
  */
 function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclude_view = NULL, $optgroup = FALSE, $sort = FALSE) {
   return Views::getViewsAsOptions($views_only, $filter, $exclude_view, $optgroup, $sort);
@@ -919,8 +928,8 @@ function views_disable_view(View $view) {
  * @return \Drupal\views\ViewExecutable
  *   A reference to the $view object.
  *
- * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getView().
- *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\views\Views::getView().
  */
 function views_get_view($name) {
   return Views::getView($name);

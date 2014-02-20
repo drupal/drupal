@@ -42,7 +42,7 @@ function cache($bin = 'cache') {
  * @param array $tags
  *   The list of tags to invalidate cache items for.
  *
- * @deprecated 8.x
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal\Core\Cache\Cache::invalidateTags().
  */
 function cache_invalidate_tags(array $tags) {

@@ -289,7 +289,8 @@ function _drupal_get_error_level() {
  * @return string
  *   A plain-text line-wrapped string ready to be put inside <pre>.
  *
- * @deprecated Use \Drupal\Core\Utility\Error::formatBacktrace() instead.
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\Core\Utility\Error::formatBacktrace().
  */
 function format_backtrace(array $backtrace) {
   return Error::formatBacktrace($backtrace);

@@ -153,7 +153,8 @@ function theme_language_negotiation_configure_browser_form_table($variables) {
 /**
  * Returns the content language settings form.
  *
- * @deprecated Use \Drupal\language\Controller\LanguageController::contentSettings()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\language\Controller\LanguageController::contentSettings().
  */
 function language_content_settings_page() {
   return drupal_get_form('language_content_settings_form', language_entity_supported());

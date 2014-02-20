@@ -13,7 +13,8 @@ use Drupal\taxonomy\Entity\Term;
  * @param \Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term entity.
  *
- * @deprecated Use \Drupal\taxonomy\Controller\TaxonomyController::termPage()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\taxonomy\Controller\TaxonomyController::termPage().
  */
 function taxonomy_term_page(Term $term) {
   $build['#attached']['drupal_add_feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
@@ -65,7 +66,8 @@ function taxonomy_term_page(Term $term) {
  * @param \Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term entity.
  *
- * @deprecated Use \Drupal\taxonomy\Controller\TaxonomyController::termFeed()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\taxonomy\Controller\TaxonomyController::termFeed().
  */
 function taxonomy_term_feed(Term $term) {
   $channel['link'] = url('taxonomy/term/' . $term->id(), array('absolute' => TRUE));

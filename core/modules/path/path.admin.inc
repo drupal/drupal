@@ -14,7 +14,8 @@ use Drupal\Component\Utility\String;
  * When filter key passed, perform a standard search on the given key,
  * and return the list of matching URL aliases.
  *
- * @deprecated Use \Drupal\path\Controller\PathController::adminOverview()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\path\Controller\PathController::adminOverview().
  */
 function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
@@ -109,7 +110,8 @@ function path_admin_overview($keys = NULL) {
  *
  * @see path_menu()
  *
- * @deprecated Use \Drupal\path\Controller\PathController::adminEdit() or
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0. Use
+ *   \Drupal\path\Controller\PathController::adminAdd() or
  *   \Drupal\path\Controller\PathController::adminEdit()
  */
 function path_admin_edit($path = array()) {

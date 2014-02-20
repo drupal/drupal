@@ -112,7 +112,8 @@ function template_preprocess_node_preview(&$variables) {
  *
  * @see node_menu()
  *
- * @deprecated Use \Drupal\node\Controller\NodeController::revisionOverview()
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\node\Controller\NodeController::revisionOverview().
  */
 function node_revision_overview($node) {
   $build['#title'] = t('Revisions for %title', array('%title' => $node->label()));
