@@ -7,6 +7,7 @@
 
 namespace Drupal\contact;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
 use Drupal\user\UserInterface;
@@ -61,12 +62,12 @@ class MessageFormController extends ContentEntityFormController {
       $form['name']['#type'] = 'item';
       $form['name']['#value'] = $user->getUsername();
       $form['name']['#required'] = FALSE;
-      $form['name']['#markup'] = check_plain($user->getUsername());
+      $form['name']['#markup'] = String::checkPlain($user->getUsername());
 
       $form['mail']['#type'] = 'item';
       $form['mail']['#value'] = $user->getEmail();
       $form['mail']['#required'] = FALSE;
-      $form['mail']['#markup'] = check_plain($user->getEmail());
+      $form['mail']['#markup'] = String::checkPlain($user->getEmail());
     }
 
     // The user contact form has a preset recipient.

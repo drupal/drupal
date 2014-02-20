@@ -9,6 +9,7 @@ namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Component\Utility\String;
 
 /**
  * Render controller for contact messages.
@@ -28,7 +29,7 @@ class MessageViewBuilder extends EntityViewBuilder {
         $entity->content['message'] = array(
           '#type' => 'item',
           '#title' => t('Message'),
-          '#markup' => check_plain($entity->getMessage()),
+          '#markup' => String::checkPlain($entity->getMessage()),
         );
       }
     }

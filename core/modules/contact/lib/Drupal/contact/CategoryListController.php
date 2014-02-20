@@ -6,6 +6,7 @@
 
 namespace Drupal\contact;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -35,7 +36,7 @@ class CategoryListController extends ConfigEntityListController {
       $row['selected'] = t('No');
     }
     else {
-      $row['recipients'] = check_plain(implode(', ', $entity->recipients));
+      $row['recipients'] = String::checkPlain(implode(', ', $entity->recipients));
       $default_category = \Drupal::config('contact.settings')->get('default_category');
       $row['selected'] = ($default_category == $entity->id() ? t('Yes') : t('No'));
     }
