@@ -5,6 +5,7 @@
  * Administration functions for language.module.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Language\LanguageManager;
 
 /**
@@ -273,7 +274,7 @@ function template_preprocess_language_content_settings_table(&$variables) {
           'data' => array(
             '#prefix' => '<label>',
             '#suffix' => '</label>',
-            '#markup' => check_plain($element[$bundle]['settings']['#label']),
+            '#markup' => String::checkPlain($element[$bundle]['settings']['#label']),
           ),
           'class' => array('bundle'),
         ),

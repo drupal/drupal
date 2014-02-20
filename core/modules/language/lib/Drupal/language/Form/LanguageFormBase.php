@@ -7,6 +7,7 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Language\Language;
 
@@ -72,7 +73,7 @@ abstract class LanguageFormBase extends EntityFormController {
     if (!isset($form['langcode_view']) && preg_match('@[^a-zA-Z_-]@', $form_state['values']['langcode'])) {
       $this->setFormError('langcode', $form_state, $this->t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => $form['langcode']['#title'])));
     }
-    if ($form_state['values']['name'] != check_plain($form_state['values']['name'])) {
+    if ($form_state['values']['name'] != String::checkPlain($form_state['values']['name'])) {
       $this->setFormError('name', $form_state, $this->t('%field cannot contain any markup.', array('%field' => $form['name']['#title'])));
     }
   }
