@@ -5,6 +5,7 @@
  * Allows users to create and organize related content in an outline.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
@@ -661,7 +662,7 @@ function template_preprocess_book_navigation(&$variables) {
 
   // Provide extra variables for themers. Not needed by default.
   $variables['book_id'] = $book_link['bid'];
-  $variables['book_title'] = check_plain($book_link['link_title']);
+  $variables['book_title'] = String::checkPlain($book_link['link_title']);
   $variables['book_url'] = 'node/' . $book_link['bid'];
   $variables['current_depth'] = $book_link['depth'];
   $variables['tree'] = '';
@@ -678,7 +679,7 @@ function template_preprocess_book_navigation(&$variables) {
         'href' => $prev_href,
       );
       $variables['prev_url'] = $prev_href;
-      $variables['prev_title'] = check_plain($prev['title']);
+      $variables['prev_title'] = String::checkPlain($prev['title']);
     }
 
     if ($book_link['plid'] && $parent = book_link_load($book_link['plid'])) {
@@ -688,7 +689,7 @@ function template_preprocess_book_navigation(&$variables) {
         'href' => $parent_href,
       );
       $variables['parent_url'] = $parent_href;
-      $variables['parent_title'] = check_plain($parent['title']);
+      $variables['parent_title'] = String::checkPlain($parent['title']);
     }
 
     if ($next = book_next($book_link)) {
@@ -698,7 +699,7 @@ function template_preprocess_book_navigation(&$variables) {
         'href' => $next_href,
       );
       $variables['next_url'] = $next_href;
-      $variables['next_title'] = check_plain($next['title']);
+      $variables['next_title'] = String::checkPlain($next['title']);
     }
   }
 
@@ -736,7 +737,7 @@ function template_preprocess_book_export_html(&$variables) {
   global $base_url;
   $language_interface = language(Language::TYPE_INTERFACE);
 
-  $variables['title'] = check_plain($variables['title']);
+  $variables['title'] = String::checkPlain($variables['title']);
   $variables['base_url'] = $base_url;
   $variables['language'] = $language_interface;
   $variables['language_rtl'] = ($language_interface->direction == Language::DIRECTION_RTL);
@@ -762,7 +763,7 @@ function template_preprocess_book_export_html(&$variables) {
  */
 function template_preprocess_book_node_export_html(&$variables) {
   $variables['depth'] = $variables['node']->book['depth'];
-  $variables['title'] = check_plain($variables['node']->label());
+  $variables['title'] = String::checkPlain($variables['node']->label());
   $variables['content'] = $variables['node']->rendered;
 }
 
