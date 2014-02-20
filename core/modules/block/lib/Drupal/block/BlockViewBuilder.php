@@ -7,6 +7,7 @@
 
 namespace Drupal\block;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -61,7 +62,7 @@ class BlockViewBuilder extends EntityViewBuilder {
           '#base_plugin_id' => $base_id,
           '#derivative_plugin_id' => $derivative_id,
         );
-        $build[$key]['#configuration']['label'] = check_plain($configuration['label']);
+        $build[$key]['#configuration']['label'] = String::checkPlain($configuration['label']);
 
         // Place the $content returned by the block plugin into a 'content'
         // child element, as a way to allow the plugin to have complete control
