@@ -108,8 +108,8 @@ class Token {
    *   - sanitize: A boolean flag indicating that tokens should be sanitized for
    *     display to a web browser. Defaults to TRUE. Developers who set this
    *     option to FALSE assume responsibility for running filter_xss(),
-   *     check_plain() or other appropriate scrubbing functions before displaying
-   *     data to users.
+   *     String::checkPlain() or other appropriate scrubbing functions before
+   *     displaying data to users.
    *
    * @return string
    *   Text with tokens replaced.
@@ -200,7 +200,7 @@ class Token {
    *     encoding or truncation to a specific length.
    *   - sanitize: A boolean flag indicating that tokens should be sanitized for
    *     display to a web browser. Developers who set this option to FALSE assume
-   *     responsibility for running filter_xss(), check_plain() or other
+   *     responsibility for running filter_xss(), String::checkPlain() or other
    *     appropriate scrubbing functions before displaying data to users.
    *
    * @return array

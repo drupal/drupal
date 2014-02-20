@@ -9,6 +9,7 @@ namespace Drupal\Core\Field;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Component\Utility\String;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -74,7 +75,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     if ($this->handlesMultipleValues() || isset($get_delta)) {
       $delta = isset($get_delta) ? $get_delta : 0;
       $element = array(
-        '#title' => check_plain($this->fieldDefinition->getLabel()),
+        '#title' => String::checkPlain($this->fieldDefinition->getLabel()),
         '#description' => field_filter_xss(\Drupal::token()->replace($this->fieldDefinition->getDescription())),
       );
       $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
@@ -161,7 +162,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $id_prefix = implode('-', array_merge($parents, array($field_name)));
     $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
 
-    $title = check_plain($this->fieldDefinition->getLabel());
+    $title = String::checkPlain($this->fieldDefinition->getLabel());
     $description = field_filter_xss(\Drupal::token()->replace($this->fieldDefinition->getDescription()));
 
     $elements = array();
