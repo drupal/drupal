@@ -246,6 +246,19 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->rebuildContainer();
     $this->doTestTranslations('node', $values);
 
+    // Enable the translation language renderer.
+    $view = \Drupal::entityManager()->getStorageController('view')->load('frontpage');
+    $display = &$view->getDisplay('default');
+    $display['display_options']['row']['options']['rendering_language'] = 'translation_language_renderer';
+    $view->save();
+
+    // Test that the frontpage view displays all translated nodes correctly by
+    // checking that the title for each translation is present.
+    $this->drupalGet('node');
+    foreach ($this->langcodes as $langcode) {
+      $this->assertText($values[$langcode]['title'][0]['value']);
+    }
+
     // Test that the node page displays the correct translations.
     $this->doTestTranslations('node/' . $node->id(), $values);
   }

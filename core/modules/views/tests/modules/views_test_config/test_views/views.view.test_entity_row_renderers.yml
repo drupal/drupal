@@ -1,0 +1,38 @@
+base_table: node
+core: 8.x
+description: ''
+status: true
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: teaser
+          rendering_language: translation_language_renderer
+          links: 0
+      sorts:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          plugin_id: standard
+label: ''
+id: test_entity_row_renderers
+tag: ''
+

@@ -178,7 +178,7 @@ function user_attach_accounts(array $entities) {
   }
   $uids = array_unique($uids);
   $accounts = user_load_multiple($uids);
-  $anonymous = drupal_anonymous_user();
+  $anonymous = entity_create('user', array('uid' => 0));
   foreach ($entities as $id => $entity) {
     if (isset($accounts[$entity->getOwnerId()])) {
       $entities[$id]->setOwner($accounts[$entity->getOwnerId()]);
