@@ -1255,17 +1255,14 @@ function install_settings_form_submit($form, &$form_state) {
     'value'    => $database,
     'required' => TRUE,
   );
-  $settings['drupal_hash_salt'] = (object) array(
+  $settings['settings']['hash_salt'] = (object) array(
     'value'    => Crypt::randomStringHashed(55),
     'required' => TRUE,
   );
-
   // Remember the profile which was used.
-  $settings['settings'] = array(
-    'install_profile' => (object) array(
-      'value' => $install_state['parameters']['profile'],
-      'required' => TRUE,
-    ),
+  $settings['settings']['install_profile'] = (object) array(
+    'value' => $install_state['parameters']['profile'],
+    'required' => TRUE,
   );
 
   drupal_rewrite_settings($settings);

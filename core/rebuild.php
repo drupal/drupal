@@ -24,7 +24,7 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 if (settings()->get('rebuild_access', FALSE) ||
   (isset($_GET['token'], $_GET['timestamp']) &&
     ((REQUEST_TIME - $_GET['timestamp']) < 300) &&
-    ($_GET['token'] === Crypt::hmacBase64($_GET['timestamp'], $GLOBALS['drupal_hash_salt']))
+    ($_GET['token'] === Crypt::hmacBase64($_GET['timestamp'], settings()->get('hash_salt')))
   )) {
 
   drupal_rebuild();

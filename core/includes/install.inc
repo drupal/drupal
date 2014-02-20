@@ -7,6 +7,7 @@
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Settings;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 
@@ -199,8 +200,14 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
   }
   // Build list of setting names and insert the values into the global namespace.
   $variable_names = array();
+  $settings_settings = array();
   foreach ($settings as $setting => $data) {
-    _drupal_rewrite_settings_global($GLOBALS[$setting], $data);
+    if ($setting != 'settings') {
+      _drupal_rewrite_settings_global($GLOBALS[$setting], $data);
+    }
+    else {
+      _drupal_rewrite_settings_global($settings_settings, $data);
+    }
     $variable_names['$'. $setting] = $setting;
   }
   $contents = file_get_contents(DRUPAL_ROOT . '/' . $settings_file);
@@ -306,6 +313,14 @@ function drupal_rewrite_settings($settings = array(), $settings_file = NULL) {
     // Write the new settings file.
     if (file_put_contents(DRUPAL_ROOT . '/' . $settings_file, $buffer) === FALSE) {
       throw new Exception(t('Failed to modify %settings. Verify the file permissions.', array('%settings' => $settings_file)));
+    }
+    else {
+      // In case any $settings variables were written, import them into the
+      // Settings singleton.
+      if (!empty($settings_settings)) {
+        $old_settings = settings()->getAll();
+        new Settings($settings_settings + $old_settings);
+      }
     }
   }
   else {

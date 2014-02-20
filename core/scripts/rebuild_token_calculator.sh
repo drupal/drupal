@@ -19,6 +19,6 @@ if (!drupal_is_cli()) {
 }
 
 $timestamp = time();
-$token = Crypt::hmacBase64($timestamp, $drupal_hash_salt);
+$token = Crypt::hmacBase64($timestamp, settings()->get('hash_salt'));
 
 print "timestamp=$timestamp&token=$token\n";

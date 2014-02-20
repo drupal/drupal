@@ -491,7 +491,7 @@ function drupal_valid_http_host($host) {
  */
 function drupal_settings_initialize() {
   // Export these settings.php variables to the global namespace.
-  global $base_url, $databases, $cookie_domain, $drupal_hash_salt, $config_directories, $config;
+  global $base_url, $databases, $cookie_domain, $config_directories, $config;
   $settings = array();
   $config = array();
 
@@ -1662,10 +1662,13 @@ function drupal_get_user_timezone() {
  *   A salt based on information in settings.php, not in the database.
  */
 function drupal_get_hash_salt() {
-  global $drupal_hash_salt, $databases;
-  // If the $drupal_hash_salt variable is empty, a hash of the serialized
-  // database credentials is used as a fallback salt.
-  return empty($drupal_hash_salt) ? hash('sha256', serialize($databases)) : $drupal_hash_salt;
+  $hash_salt = settings()->get('hash_salt');
+  // This should never happen, as it breaks user logins and many other services.
+  // Therefore, explicitly notify the user (developer) by throwing an exception.
+  if (empty($hash_salt)) {
+    throw new \RuntimeException('Missing $settings[\'hash_salt\'] in settings.php.');
+  }
+  return $hash_salt;
 }
 
 /**
