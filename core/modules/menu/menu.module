@@ -106,11 +106,11 @@ function menu_menu_link_defaults() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_type_build().
  */
-function menu_entity_info(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_info['menu']
+function menu_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_types['menu']
     ->setFormClass('add', 'Drupal\menu\MenuFormController')
     ->setFormClass('edit', 'Drupal\menu\MenuFormController')
     ->setFormClass('delete', 'Drupal\menu\Form\MenuDeleteForm')
@@ -119,7 +119,7 @@ function menu_entity_info(&$entity_info) {
     ->setLinkTemplate('delete-form', 'menu.delete_menu')
     ->setLinkTemplate('edit-form', 'menu.menu_edit');
 
-  $entity_info['menu_link']
+  $entity_types['menu_link']
     ->setFormClass('delete', 'Drupal\menu\Form\MenuLinkDeleteForm')
     ->setFormClass('reset', 'Drupal\menu\Form\MenuLinkResetForm')
     ->setLinkTemplate('delete-form', 'menu.link_delete');

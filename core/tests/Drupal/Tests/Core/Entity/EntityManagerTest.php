@@ -106,7 +106,7 @@ class EntityManagerTest extends UnitTestCase {
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
-      ->with('entity_info')
+      ->with('entity_type_build')
       ->will($this->returnValue(array()));
 
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');

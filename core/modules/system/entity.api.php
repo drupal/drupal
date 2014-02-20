@@ -99,18 +99,18 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
  * Modules may implement this hook to add information to defined entity types,
  * as defined in \Drupal\Core\Entity\EntityTypeInterface.
  *
- * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+ * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  *   An associative array of all entity type definitions, keyed by the entity
  *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
  * @see \Drupal\Core\Entity\EntityTypeInterface
  */
-function hook_entity_info(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+function hook_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   // Add a form controller for a custom node form without overriding the default
-  // node form. To override the default node form, use hook_entity_info_alter().
-  $entity_info['node']->setFormClass('mymodule_foo', 'Drupal\mymodule\NodeFooFormController');
+  // node form. To override the default node form, use hook_entity_type_alter().
+  $entity_types['node']->setFormClass('mymodule_foo', 'Drupal\mymodule\NodeFooFormController');
 }
 
 /**
@@ -122,20 +122,20 @@ function hook_entity_info(&$entity_info) {
  * provided by modules can be altered here.
  *
  * Do not use this hook to add information to entity types, unless you are just
- * filling-in default values. Use hook_entity_info() instead.
+ * filling-in default values. Use hook_entity_type_build() instead.
  *
- * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
+ * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  *   An associative array of all entity type definitions, keyed by the entity
  *   type name. Passed by reference.
  *
  * @see \Drupal\Core\Entity\Entity
  * @see \Drupal\Core\Entity\EntityTypeInterface
  */
-function hook_entity_info_alter(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+function hook_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageControllerInterface interface.
-  $entity_info['node']->setStorageClass('Drupal\mymodule\MyCustomNodeStorageController');
+  $entity_types['node']->setStorageClass('Drupal\mymodule\MyCustomNodeStorageController');
 }
 
 /**

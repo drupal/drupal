@@ -55,7 +55,7 @@ function content_translation_module_implements_alter(&$implementations, $hook) {
   switch ($hook) {
     // Move some of our hook implementations to the end of the list.
     case 'menu_alter':
-    case 'entity_info_alter':
+    case 'entity_type_alter':
       $group = $implementations['content_translation'];
       unset($implementations['content_translation']);
       $implementations['content_translation'] = $group;
@@ -74,10 +74,10 @@ function content_translation_language_types_info_alter(array &$language_types) {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_type_alter().
  *
  * The content translation UI relies on the entity info to provide its features.
- * See the documentation of hook_entity_info() in the Entity API documentation
+ * See the documentation of hook_entity_type_build() in the Entity API documentation
  * for more details on all the entity info keys that may be defined.
  *
  * To make Content Translation automatically support an entity type some keys
@@ -100,24 +100,24 @@ function content_translation_language_types_info_alter(array &$language_types) {
  *
  * @see \Drupal\Core\Entity\Annotation\EntityType
  */
-function content_translation_entity_info_alter(array &$entity_info) {
+function content_translation_entity_type_alter(array &$entity_types) {
   // Provide defaults for translation info.
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  foreach ($entity_info as $entity_type => &$info) {
-    if ($info->isTranslatable()) {
-      if (!$info->hasControllerClass('translation')) {
-        $info->setControllerClass('translation', 'Drupal\content_translation\ContentTranslationController');
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  foreach ($entity_types as $entity_type) {
+    if ($entity_type->isTranslatable()) {
+      if (!$entity_type->hasControllerClass('translation')) {
+        $entity_type->setControllerClass('translation', 'Drupal\content_translation\ContentTranslationController');
       }
 
-      $translation = $info->get('translation');
+      $translation = $entity_type->get('translation');
       if (!$translation || !isset($translation['content_translation'])) {
         $translation['content_translation'] = array();
       }
 
-      if ($info->hasLinkTemplate('canonical')) {
+      if ($entity_type->hasLinkTemplate('canonical')) {
         // Provide default route names for the translation paths.
-        if (!$info->hasLinkTemplate('drupal:content-translation-overview')) {
-          $info->setLinkTemplate('drupal:content-translation-overview', "content_translation.translation_overview_$entity_type");
+        if (!$entity_type->hasLinkTemplate('drupal:content-translation-overview')) {
+          $entity_type->setLinkTemplate('drupal:content-translation-overview', "content_translation.translation_overview_" . $entity_type->id());
         }
         // @todo Remove this as soon as menu access checks rely on the
         //   controller. See https://drupal.org/node/2155787.
@@ -125,7 +125,7 @@ function content_translation_entity_info_alter(array &$entity_info) {
           'access_callback' => 'content_translation_translate_access',
         );
       }
-      $info->set('translation', $translation);
+      $entity_type->set('translation', $translation);
     }
   }
 }

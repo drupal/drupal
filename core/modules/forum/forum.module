@@ -203,12 +203,12 @@ function forum_menu_local_tasks(&$data, $route_name) {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_type_build().
  */
-function forum_entity_info(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+function forum_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   // Register forum specific form controllers.
-  $entity_info['taxonomy_term']
+  $entity_types['taxonomy_term']
     ->setFormClass('forum', 'Drupal\forum\Form\ForumFormController')
     ->setFormClass('container', 'Drupal\forum\Form\ContainerFormController')
     ->setLinkTemplate('forum-delete-form', 'forum.delete')

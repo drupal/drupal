@@ -58,16 +58,16 @@ function entity_test_entity_types($filter = NULL) {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_type_alter().
  */
-function entity_test_entity_info_alter(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+function entity_test_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   foreach (entity_test_entity_types() as $entity_type) {
     // Optionally specify a translation handler for testing translations.
     if (\Drupal::state()->get('entity_test.translation')) {
-      $translation = $entity_info[$entity_type]->get('translation');
+      $translation = $entity_types[$entity_type]->get('translation');
       $translation[$entity_type] = TRUE;
-      $entity_info[$entity_type]->set('translation', $translation);
+      $entity_types[$entity_type]->set('translation', $translation);
     }
   }
 }

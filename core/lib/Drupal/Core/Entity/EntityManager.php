@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Manages entity type plugin definitions.
  *
  * Each entity type definition array is set in the entity type's
- * annotation and altered by hook_entity_info_alter().
+ * annotation and altered by hook_entity_type_alter().
  *
  * The defaults for the plugin definition are provided in
  * \Drupal\Core\Entity\EntityManagerInterface::defaults.
@@ -38,7 +38,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\Core\Entity\Annotation\EntityType
  * @see \Drupal\Core\Entity\EntityInterface
  * @see \Drupal\Core\Entity\EntityTypeInterface
- * @see hook_entity_info_alter()
+ * @see hook_entity_type_alter()
  */
 class EntityManager extends PluginManagerBase implements EntityManagerInterface {
 
@@ -134,7 +134,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    *   The string translationManager.
    */
   public function __construct(\Traversable $namespaces, ContainerInterface $container, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, TranslationInterface $translation_manager) {
-    // Allow the plugin definition to be altered by hook_entity_info_alter().
+    // Allow the plugin definition to be altered by hook_entity_type_alter().
 
     $this->moduleHandler = $module_handler;
     $this->cache = $cache;
@@ -143,9 +143,9 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
     $this->translationManager = $translation_manager;
 
     $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
-    $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
-    $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getCurrentLanguage()->id, 'cache', Cache::PERMANENT, array('entity_info' => TRUE));
+    $this->discovery = new InfoHookDecorator($this->discovery, 'entity_type_build');
+    $this->discovery = new AlterDecorator($this->discovery, 'entity_type');
+    $this->discovery = new CacheDecorator($this->discovery, 'entity_type:' . $this->languageManager->getCurrentLanguage()->id, 'cache', Cache::PERMANENT, array('entity_types' => TRUE));
 
     $this->container = $container;
   }
@@ -352,7 +352,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
           }
         }
 
-        $this->cache->set($cid, $this->entityFieldInfo[$entity_type_id], Cache::PERMANENT, array('entity_info' => TRUE, 'entity_field_info' => TRUE));
+        $this->cache->set($cid, $this->entityFieldInfo[$entity_type_id], Cache::PERMANENT, array('entity_types' => TRUE, 'entity_field_info' => TRUE));
       }
     }
 
@@ -414,7 +414,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
-        $this->cache->set("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, array('entity_info' => TRUE));
+        $this->cache->set("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, array('entity_types' => TRUE));
       }
     }
 

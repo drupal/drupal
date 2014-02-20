@@ -341,7 +341,7 @@ function node_type_get_names() {
     return $cache->data;
   }
   // Not using node_type_get_types() or entity_load_multiple() here, to allow
-  // this function being used in hook_entity_info() implementations.
+  // this function being used in hook_entity_type_build() implementations.
   // @todo Consider to convert this into a generic config entity helper.
   $config_names = config_get_storage_names_with_prefix('node.type.');
   $names = array();

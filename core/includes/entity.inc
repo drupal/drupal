@@ -11,33 +11,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 
 /**
- * Gets the entity definition for an entity type.
- *
- * @param string|null $entity_type
- *   (optional) The entity type (e.g. 'node'). Leave NULL to retrieve
- *   information for all entity types.
- *
- * @return array
- *   An array containing the entity type's definition, as retrieved with
- *   \Drupal\Core\Entity\EntityManagerInterface. If $entity_type is NULL, an
- *   associative array of all entity type definitions keyed by entity type is
- *   returned.
- *
- * @see \Drupal\Core\Entity\EntityManagerInterface
- * @see hook_entity_info_alter()
- *
- * @deprecated Use \Drupal\Core\Entity\EntityManagerInterface::getDefinitions() directly.
- */
-function entity_get_info($entity_type = NULL) {
-  if (empty($entity_type)) {
-    return \Drupal::entityManager()->getDefinitions();
-  }
-  else {
-    return \Drupal::entityManager()->getDefinition($entity_type);
-  }
-}
-
-/**
  * Resets the cached information about entity types.
  */
 function entity_info_cache_clear() {
@@ -131,7 +104,7 @@ function entity_get_form_modes($entity_type = NULL) {
         $form_modes[$form_mode_entity_type][$form_mode_name] = (array) $form_mode;
       }
       drupal_alter('entity_form_mode_info', $form_modes);
-      cache()->set("entity_form_mode_info:$langcode", $form_modes, Cache::PERMANENT, array('entity_info' => TRUE));
+      cache()->set("entity_form_mode_info:$langcode", $form_modes, Cache::PERMANENT, array('entity_types' => TRUE));
     }
   }
 
@@ -169,7 +142,7 @@ function entity_get_view_modes($entity_type = NULL) {
         $view_modes[$view_mode_entity_type][$view_mode_name] = (array) $view_mode;
       }
       drupal_alter('entity_view_mode_info', $view_modes);
-      cache()->set("entity_view_mode_info:$langcode", $view_modes, Cache::PERMANENT, array('entity_info' => TRUE));
+      cache()->set("entity_view_mode_info:$langcode", $view_modes, Cache::PERMANENT, array('entity_types' => TRUE));
     }
   }
 

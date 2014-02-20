@@ -314,10 +314,10 @@ class FieldInfoTest extends FieldUnitTestBase {
 
     // Now rebuild the field info cache, and set a variable which will cause
     // the cache to be cleared while it's being rebuilt; see
-    // field_test_entity_info(). Ensure the test field is still in the returned
+    // field_test_entity_type_build(). Ensure the test field is still in the returned
     // array.
     field_info_cache_clear();
-    \Drupal::state()->set('field_test.clear_info_cache_in_hook_entity_info', TRUE);
+    \Drupal::state()->set('field_test.clear_info_cache_in_hook_entity_type_build', TRUE);
     $fields = field_info_fields();
     $this->assertTrue(isset($fields[$field->uuid]), 'The test field is found in the array returned by field_info_fields() even if its cache is cleared while being rebuilt.');
   }

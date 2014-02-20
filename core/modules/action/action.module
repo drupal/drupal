@@ -71,11 +71,11 @@ function action_menu_link_defaults() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_type_build().
  */
-function action_entity_info(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_info['action']
+function action_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_types['action']
     ->setFormClass('add', 'Drupal\action\ActionAddFormController')
     ->setFormClass('edit', 'Drupal\action\ActionEditFormController')
     ->setFormClass('delete', 'Drupal\action\Form\ActionDeleteForm')

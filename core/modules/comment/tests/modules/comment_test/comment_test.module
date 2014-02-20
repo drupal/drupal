@@ -9,15 +9,15 @@
 use Drupal\comment\CommentInterface;
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_type_alter().
  */
-function comment_test_entity_info_alter(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+function comment_test_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   if (\Drupal::languageManager()->isMultilingual()) {
     // Enable language handling for comment fields.
-    $translation = $entity_info['comment']->get('translation');
+    $translation = $entity_types['comment']->get('translation');
     $translation['comment_test'] = TRUE;
-    $entity_info['comment']->set('translation', $translation);
+    $entity_types['comment']->set('translation', $translation);
   }
 }
 

@@ -130,16 +130,16 @@ function field_ui_element_info() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_type_build().
  */
-function field_ui_entity_info(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_info['field_instance_config']->setFormClass('delete', 'Drupal\field_ui\Form\FieldInstanceConfigDeleteForm');
-  $entity_info['field_config']->setListClass('Drupal\field_ui\FieldConfigListController');
+function field_ui_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_types['field_instance_config']->setFormClass('delete', 'Drupal\field_ui\Form\FieldInstanceConfigDeleteForm');
+  $entity_types['field_config']->setListClass('Drupal\field_ui\FieldConfigListController');
 
-  foreach ($entity_info as $info) {
-    if ($bundle = $info->getBundleOf()) {
-      $info
+  foreach ($entity_types as $entity_type) {
+    if ($bundle = $entity_type->getBundleOf()) {
+      $entity_type
         ->setLinkTemplate('field_ui-fields', "field_ui.overview_$bundle")
         ->setLinkTemplate('field_ui-form-display', "field_ui.form_display_overview_$bundle")
         ->setLinkTemplate('field_ui-display', "field_ui.display_overview_$bundle");

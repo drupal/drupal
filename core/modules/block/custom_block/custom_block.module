@@ -136,15 +136,15 @@ function custom_block_load($id) {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_type_alter().
  */
-function custom_block_entity_info_alter(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
+function custom_block_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
   // Add a translation handler for fields if the language module is enabled.
   if (\Drupal::moduleHandler()->moduleExists('language')) {
-    $translation = $entity_info['custom_block']->get('translation');
+    $translation = $entity_types['custom_block']->get('translation');
     $translation['custom_block'] = TRUE;
-    $entity_info['custom_block']->set('translation', $translation);
+    $entity_types['custom_block']->set('translation', $translation);
   }
 }
 

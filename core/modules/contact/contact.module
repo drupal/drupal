@@ -100,11 +100,11 @@ function contact_menu_link_defaults() {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_type_alter().
  */
-function contact_entity_info_alter(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_info['user']->setLinkTemplate('contact-form', 'contact.personal_page');
+function contact_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_types['user']->setLinkTemplate('contact-form', 'contact.personal_page');
 }
 
 /**

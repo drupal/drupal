@@ -86,11 +86,11 @@ function views_ui_menu_link_defaults() {
 }
 
 /**
- * Implements hook_entity_info().
+ * Implements hook_entity_type_build().
  */
-function views_ui_entity_info(&$entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  $entity_info['view']
+function views_ui_entity_type_build(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  $entity_types['view']
     ->setFormClass('edit', 'Drupal\views_ui\ViewEditFormController')
     ->setFormClass('add', 'Drupal\views_ui\ViewAddFormController')
     ->setFormClass('preview', 'Drupal\views_ui\ViewPreviewFormController')

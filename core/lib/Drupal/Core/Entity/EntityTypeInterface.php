@@ -10,8 +10,8 @@ namespace Drupal\Core\Entity;
 /**
  * Provides an interface for an entity type and its metadata.
  *
- * Additional information can be provided by modules: hook_entity_info() can be
- * implemented to define new properties, while hook_entity_info_alter() can be
+ * Additional information can be provided by modules: hook_entity_type_build() can be
+ * implemented to define new properties, while hook_entity_type_alter() can be
  * implemented to alter existing data and fill-in defaults. Module-specific
  * properties should be documented in the hook implementations defining them.
  */

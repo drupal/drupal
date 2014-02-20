@@ -85,11 +85,11 @@ function config_translation_theme() {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_type_alter().
  */
-function config_translation_entity_info_alter($entity_info) {
-  /** @var $entity_info \Drupal\Core\Entity\EntityTypeInterface[] */
-  foreach ($entity_info as $entity_type_id => $entity_type) {
+function config_translation_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  foreach ($entity_types as $entity_type_id => $entity_type) {
     if ($entity_type->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
       if ($entity_type_id == 'block') {
         $class = 'Drupal\config_translation\Controller\ConfigTranslationBlockListController';

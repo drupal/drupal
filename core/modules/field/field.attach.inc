@@ -29,12 +29,12 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  * The Field Attach API uses the concept of bundles: the set of fields for a
  * given entity is defined on a per-bundle basis. The collection of bundles for
  * an entity type is added to the entity definition with
- * hook_entity_info_alter(). For instance, node_entity_info_alter() exposes
+ * hook_entity_type_alter(). For instance, node_entity_type_alter() exposes
  * each node type as its own bundle. This means that the set of fields of a
  * node is determined by the node type.
  *
  * The Field API reads the bundle name for a given entity from a particular
- * property of the entity object, and hook_entity_info_alter() defines which
+ * property of the entity object, and hook_entity_type_alter() defines which
  * property to use. For instance, \Drupal\node\Entity\Node specifies:
  * @code
  *   entity_keys = {

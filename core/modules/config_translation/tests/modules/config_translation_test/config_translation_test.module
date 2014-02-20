@@ -6,12 +6,12 @@
  */
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_type_alter().
  */
-function config_translation_test_entity_info_alter(&$entity_info) {
+function config_translation_test_entity_type_alter(array &$entity_types) {
   // Remove entity definition for these entity types from config_test module.
-  unset($entity_info['config_test_no_status']);
-  unset($entity_info['config_query_test']);
+  unset($entity_types['config_test_no_status']);
+  unset($entity_types['config_query_test']);
 }
 
 /**
