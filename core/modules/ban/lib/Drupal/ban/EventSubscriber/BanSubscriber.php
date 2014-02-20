@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Drupal\ban\BanIpManager;
+use Drupal\Component\Utility\String;
 
 /**
  * Ban subscriber for controller requests.
@@ -45,7 +46,7 @@ class BanSubscriber implements EventSubscriberInterface {
   public function onKernelRequestBannedIpCheck(GetResponseEvent $event) {
     $ip = $event->getRequest()->getClientIp();
     if ($this->manager->isDenied($ip)) {
-      $response = new Response('Sorry, ' . check_plain($ip) . ' has been banned.', 403);
+      $response = new Response('Sorry, ' . String::checkPlain($ip) . ' has been banned.', 403);
       $event->setResponse($response);
     }
   }
