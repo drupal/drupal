@@ -4,7 +4,7 @@
  * @file
  * Administration pages for image settings.
  */
-
+use Drupal\Component\Utility\String;
 /**
  * Returns HTML for a listing of the effects within a specific image style.
  *
@@ -154,7 +154,7 @@ function theme_image_style_preview($variables) {
     '#attributes' => $preview_image,
   );
   $output .= '<div class="preview-image-wrapper">';
-  $output .= check_plain($style->label()) . ' (' . l(t('view actual size'), file_create_url($preview_file) . '?' . time()) . ')';
+  $output .= String::checkPlain($style->label()) . ' (' . l(t('view actual size'), file_create_url($preview_file) . '?' . time()) . ')';
   $output .= '<div class="preview-image modified-image" style="' . $preview_image['style'] . '">';
   $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . drupal_render($image) . '</a>';
   $output .= '<div class="height" style="height: ' . $preview_height . 'px"><span>' . $preview_image['height'] . 'px</span></div>';
@@ -213,7 +213,7 @@ function theme_image_resize_summary($variables) {
   $data = $variables['data'];
 
   if ($data['width'] && $data['height']) {
-    return check_plain($data['width']) . 'x' . check_plain($data['height']);
+    return String::checkPlain($data['width']) . 'x' . String::checkPlain($data['height']);
   }
   else {
     return ($data['width']) ? t('width @width', array('@width' => $data['width'])) : t('height @height', array('@height' => $data['height']));
