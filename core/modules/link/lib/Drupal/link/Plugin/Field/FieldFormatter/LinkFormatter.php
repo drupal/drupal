@@ -8,6 +8,7 @@
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -137,7 +138,7 @@ class LinkFormatter extends FormatterBase {
 
       if (!empty($settings['url_only']) && !empty($settings['url_plain'])) {
         $element[$delta] = array(
-          '#markup' => check_plain($link_title),
+          '#markup' => String::checkPlain($link_title),
         );
       }
       else {

@@ -5,6 +5,8 @@
  * Defines simple link field types.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * Implements hook_help().
  */
@@ -60,7 +62,7 @@ function link_theme() {
  */
 function template_preprocess_link_formatter_link_separate(&$variables) {
   if (!empty($variables['title'])) {
-    $variables['title'] = check_plain($variables['title']);
+    $variables['title'] = String::checkPlain($variables['title']);
   }
   $variables['link'] = l($variables['url_title'], $variables['href'], $variables['options']);
 }

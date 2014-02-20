@@ -8,6 +8,7 @@
 namespace Drupal\link\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Component\Utility\String;
 
 /**
  * Tests link field widgets and formatters.
@@ -347,41 +348,41 @@ class LinkFieldTest extends WebTestBase {
           case 'trim_length':
             $url = $url1;
             $title = isset($new_value) ? truncate_utf8($title1, $new_value, FALSE, TRUE) : $title1;
-            $this->assertRaw('<a href="' . check_plain($url) . '">' . check_plain($title) . '</a>');
+            $this->assertRaw('<a href="' . String::checkPlain($url) . '">' . String::checkPlain($title) . '</a>');
 
             $url = $url2;
             $title = isset($new_value) ? truncate_utf8($title2, $new_value, FALSE, TRUE) : $title2;
-            $this->assertRaw('<a href="' . check_plain($url) . '">' . check_plain($title) . '</a>');
+            $this->assertRaw('<a href="' . String::checkPlain($url) . '">' . String::checkPlain($title) . '</a>');
             break;
 
           case 'rel':
             $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
-            $this->assertRaw('<a href="' . check_plain($url1) . '"' . $rel . '>' . check_plain($title1) . '</a>');
-            $this->assertRaw('<a href="' . check_plain($url2) . '"' . $rel . '>' . check_plain($title2) . '</a>');
+            $this->assertRaw('<a href="' . String::checkPlain($url1) . '"' . $rel . '>' . String::checkPlain($title1) . '</a>');
+            $this->assertRaw('<a href="' . String::checkPlain($url2) . '"' . $rel . '>' . String::checkPlain($title2) . '</a>');
             break;
 
           case 'target':
             $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
-            $this->assertRaw('<a href="' . check_plain($url1) . '"' . $target . '>' . check_plain($title1) . '</a>');
-            $this->assertRaw('<a href="' . check_plain($url2) . '"' . $target . '>' . check_plain($title2) . '</a>');
+            $this->assertRaw('<a href="' . String::checkPlain($url1) . '"' . $target . '>' . String::checkPlain($title1) . '</a>');
+            $this->assertRaw('<a href="' . String::checkPlain($url2) . '"' . $target . '>' . String::checkPlain($title2) . '</a>');
             break;
 
           case 'url_only':
             // In this case, $new_value is an array.
             if (!$new_value['url_only']) {
-              $this->assertRaw('<a href="' . check_plain($url1) . '">' . check_plain($title1) . '</a>');
-              $this->assertRaw('<a href="' . check_plain($url2) . '">' . check_plain($title2) . '</a>');
+              $this->assertRaw('<a href="' . String::checkPlain($url1) . '">' . String::checkPlain($title1) . '</a>');
+              $this->assertRaw('<a href="' . String::checkPlain($url2) . '">' . String::checkPlain($title2) . '</a>');
             }
             else {
               if (empty($new_value['url_plain'])) {
-                $this->assertRaw('<a href="' . check_plain($url1) . '">' . check_plain($url1) . '</a>');
-                $this->assertRaw('<a href="' . check_plain($url2) . '">' . check_plain($url2) . '</a>');
+                $this->assertRaw('<a href="' . String::checkPlain($url1) . '">' . String::checkPlain($url1) . '</a>');
+                $this->assertRaw('<a href="' . String::checkPlain($url2) . '">' . String::checkPlain($url2) . '</a>');
               }
               else {
-                $this->assertNoRaw('<a href="' . check_plain($url1) . '">' . check_plain($url1) . '</a>');
-                $this->assertNoRaw('<a href="' . check_plain($url2) . '">' . check_plain($url2) . '</a>');
-                $this->assertRaw(check_plain($url1));
-                $this->assertRaw(check_plain($url2));
+                $this->assertNoRaw('<a href="' . String::checkPlain($url1) . '">' . String::checkPlain($url1) . '</a>');
+                $this->assertNoRaw('<a href="' . String::checkPlain($url2) . '">' . String::checkPlain($url2) . '</a>');
+                $this->assertRaw(String::checkPlain($url1));
+                $this->assertRaw(String::checkPlain($url2));
               }
             }
             break;
@@ -469,7 +470,7 @@ class LinkFieldTest extends WebTestBase {
             $url = $url1;
             $url_title = isset($new_value) ? truncate_utf8($url, $new_value, FALSE, TRUE) : $url;
             $expected = '<div class="link-item">';
-            $expected .= '<div class="link-url"><a href="' . check_plain($url) . '">' . check_plain($url_title) . '</a></div>';
+            $expected .= '<div class="link-url"><a href="' . String::checkPlain($url) . '">' . String::checkPlain($url_title) . '</a></div>';
             $expected .= '</div>';
             $this->assertRaw($expected);
 
@@ -477,22 +478,22 @@ class LinkFieldTest extends WebTestBase {
             $url_title = isset($new_value) ? truncate_utf8($url, $new_value, FALSE, TRUE) : $url;
             $title = isset($new_value) ? truncate_utf8($title2, $new_value, FALSE, TRUE) : $title2;
             $expected = '<div class="link-item">';
-            $expected .= '<div class="link-title">' . check_plain($title) . '</div>';
-            $expected .= '<div class="link-url"><a href="' . check_plain($url) . '">' . check_plain($url_title) . '</a></div>';
+            $expected .= '<div class="link-title">' . String::checkPlain($title) . '</div>';
+            $expected .= '<div class="link-url"><a href="' . String::checkPlain($url) . '">' . String::checkPlain($url_title) . '</a></div>';
             $expected .= '</div>';
             $this->assertRaw($expected);
             break;
 
           case 'rel':
             $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
-            $this->assertRaw('<div class="link-url"><a href="' . check_plain($url1) . '"' . $rel . '>' . check_plain($url1) . '</a></div>');
-            $this->assertRaw('<div class="link-url"><a href="' . check_plain($url2) . '"' . $rel . '>' . check_plain($url2) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . String::checkPlain($url1) . '"' . $rel . '>' . String::checkPlain($url1) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . String::checkPlain($url2) . '"' . $rel . '>' . String::checkPlain($url2) . '</a></div>');
             break;
 
           case 'target':
             $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
-            $this->assertRaw('<div class="link-url"><a href="' . check_plain($url1) . '"' . $target . '>' . check_plain($url1) . '</a></div>');
-            $this->assertRaw('<div class="link-url"><a href="' . check_plain($url2) . '"' . $target . '>' . check_plain($url2) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . String::checkPlain($url1) . '"' . $target . '>' . String::checkPlain($url1) . '</a></div>');
+            $this->assertRaw('<div class="link-url"><a href="' . String::checkPlain($url2) . '"' . $target . '>' . String::checkPlain($url2) . '</a></div>');
             break;
         }
       }
