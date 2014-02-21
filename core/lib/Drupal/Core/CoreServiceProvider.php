@@ -54,6 +54,10 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $this->registerModuleHandler($container);
     $this->registerUuid($container);
 
+    // Add the compiler pass that lets service providers modify existing
+    // service definitions. This pass must come first so that later
+    // list-building passes are operating on the post-alter services list.
+    $container->addCompilerPass(new ModifyServiceDefinitionsPass());
     $container->addCompilerPass(new RegisterRouteFiltersPass());
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
@@ -75,9 +79,6 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     // Add the compiler pass that will process the tagged theme negotiator
     // service.
     $container->addCompilerPass(new ThemeNegotiatorPass());
-    // Add the compiler pass that lets service providers modify existing
-    // service definitions.
-    $container->addCompilerPass(new ModifyServiceDefinitionsPass());
     // Add the compiler pass that will process tagged authentication services.
     $container->addCompilerPass(new RegisterAuthenticationPass());
     // Register Twig extensions.
