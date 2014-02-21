@@ -49,21 +49,21 @@ class PathAliasTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Check the path alias whitelist cache.
-    $whitelist = cache()->get('path_alias_whitelist');
+    $whitelist = \Drupal::cache()->get('path_alias_whitelist');
     $this->assertTrue($whitelist->data['node']);
     $this->assertFalse($whitelist->data['admin']);
 
     // Visit the system path for the node and confirm a cache entry is
     // created.
-    cache('path')->deleteAll();
+    \Drupal::cache('path')->deleteAll();
     // Make sure the path is not converted to the alias.
     $this->drupalGet($edit['source'], array('alias' => TRUE));
-    $this->assertTrue(cache('path')->get($edit['source']), 'Cache entry was created.');
+    $this->assertTrue(\Drupal::cache('path')->get($edit['source']), 'Cache entry was created.');
 
     // Visit the alias for the node and confirm a cache entry is created.
-    cache('path')->deleteAll();
+    \Drupal::cache('path')->deleteAll();
     $this->drupalGet($edit['alias']);
-    $this->assertTrue(cache('path')->get($edit['source']), 'Cache entry was created.');
+    $this->assertTrue(\Drupal::cache('path')->get($edit['source']), 'Cache entry was created.');
   }
 
   /**

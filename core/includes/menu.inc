@@ -1086,7 +1086,7 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
 
   if (!isset($tree[$cid])) {
     // If the static variable doesn't have the data, check {cache_menu}.
-    $cache = cache('menu')->get($cid);
+    $cache = \Drupal::cache('menu')->get($cid);
     if ($cache && isset($cache->data)) {
       // If the cache entry exists, it contains the parameters for
       // menu_build_tree().
@@ -1113,7 +1113,7 @@ function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
       }
 
       // Cache the tree building parameters using the page-specific cid.
-      cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
+      \Drupal::cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
     }
 
     // Build the tree using the parameters; the resulting tree will be cached
@@ -1231,7 +1231,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
 
     if (!isset($tree[$cid])) {
       // If the static variable doesn't have the data, check {cache_menu}.
-      $cache = cache('menu')->get($cid);
+      $cache = \Drupal::cache('menu')->get($cid);
       if ($cache && isset($cache->data)) {
         // If the cache entry exists, it contains the parameters for
         // menu_build_tree().
@@ -1299,7 +1299,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
           $tree_parameters['active_trail'] = $active_trail;
         }
         // Cache the tree building parameters using the page-specific cid.
-        cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
+        \Drupal::cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
       }
 
       // Build the tree using the parameters; the resulting tree will be cached
@@ -1367,7 +1367,7 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
 
   // If we do not have this tree in the static cache, check {cache_menu}.
   if (!isset($trees[$tree_cid])) {
-    $cache = cache('menu')->get($tree_cid);
+    $cache = \Drupal::cache('menu')->get($tree_cid);
     if ($cache && isset($cache->data)) {
       $trees[$tree_cid] = $cache->data;
     }
@@ -1410,7 +1410,7 @@ function _menu_build_tree($menu_name, array $parameters = array()) {
     menu_tree_collect_node_links($data['tree'], $data['node_links']);
 
     // Cache the data, if it is not already in the cache.
-    cache('menu')->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
+    \Drupal::cache('menu')->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
     $trees[$tree_cid] = $data;
   }
 
@@ -2370,7 +2370,7 @@ function menu_get_active_trail() {
  * might have been made to the router items or menu links.
  */
 function menu_cache_clear_all() {
-  cache('menu')->deleteAll();
+  \Drupal::cache('menu')->deleteAll();
   menu_reset_static_cache();
 }
 
@@ -2720,13 +2720,13 @@ function _menu_clear_page_cache() {
   // Clear the page and block caches, but at most twice, including at
   //  the end of the page load when there are multiple links saved or deleted.
   if ($cache_cleared == 0) {
-    cache_invalidate_tags(array('content' => TRUE));
+    Cache::invalidateTags(array('content' => TRUE));
     // Keep track of which menus have expanded items.
     _menu_set_expanded_menus();
     $cache_cleared = 1;
   }
   elseif ($cache_cleared == 1) {
-    drupal_register_shutdown_function('cache_invalidate_tags', array('content' => TRUE));
+    drupal_register_shutdown_function('Drupal\Core\Cache\Cache::invalidateTags', array('content' => TRUE));
     // Keep track of which menus have expanded items.
     drupal_register_shutdown_function('_menu_set_expanded_menus');
     $cache_cleared = 2;

@@ -8,6 +8,7 @@
 namespace Drupal\node;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
@@ -483,7 +484,7 @@ class NodeFormController extends ContentEntityFormController {
     }
 
     // Clear the page and block caches.
-    cache_invalidate_tags(array('content' => TRUE));
+    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

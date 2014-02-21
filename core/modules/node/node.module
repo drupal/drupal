@@ -337,7 +337,7 @@ function node_type_get_types() {
  */
 function node_type_get_names() {
   $cid = 'node_type:names:' . language(Language::TYPE_INTERFACE)->id;
-  if ($cache = cache()->get($cid)) {
+  if ($cache = \Drupal::cache()->get($cid)) {
     return $cache->data;
   }
   // Not using node_type_get_types() or entity_load_multiple() here, to allow
@@ -349,7 +349,7 @@ function node_type_get_names() {
     $config = \Drupal::config($config_name);
     $names[$config->get('type')] = $config->get('name');
   }
-  cache()->set($cid, $names, Cache::PERMANENT, array(
+  \Drupal::cache()->set($cid, $names, Cache::PERMANENT, array(
     'node_type' => array_keys($names),
     'node_types' => TRUE,
   ));
@@ -1755,7 +1755,7 @@ function node_access_rebuild($batch_mode = FALSE) {
   if (!isset($batch)) {
     drupal_set_message(t('Content permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
-    cache_invalidate_tags(array('content' => TRUE));
+    Cache::invalidateTags(array('content' => TRUE));
   }
 }
 
@@ -1819,7 +1819,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
   else {
     drupal_set_message(t('The content access permissions have not been properly rebuilt.'), 'error');
   }
-  cache_invalidate_tags(array('content' => TRUE));
+  Cache::invalidateTags(array('content' => TRUE));
 }
 
 /**

@@ -421,7 +421,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
   $cache_id = '';
   if ($cache) {
     $cache_id = $format->format . ':' . $langcode . ':' . hash('sha256', $text);
-    if ($cached = cache('filter')->get($cache_id)) {
+    if ($cached = \Drupal::cache('filter')->get($cache_id)) {
       return $cached->data;
     }
   }
@@ -460,7 +460,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
   // automatically flushed when the text format is updated.
   // @see \Drupal\filter\Entity\FilterFormat::save()
   if ($cache) {
-    cache('filter')->set($cache_id, $text, Cache::PERMANENT, array('filter_format' => $format->id()));
+    \Drupal::cache('filter')->set($cache_id, $text, Cache::PERMANENT, array('filter_format' => $format->id()));
   }
 
   return $text;

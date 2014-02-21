@@ -10,6 +10,7 @@ namespace Drupal\block;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -412,7 +413,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
       $entity->save();
     }
     drupal_set_message(t('The block settings have been updated.'));
-    cache_invalidate_tags(array('content' => TRUE));
+    Cache::invalidateTags(array('content' => TRUE));
   }
 
 }

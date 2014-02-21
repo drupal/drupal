@@ -69,21 +69,21 @@ use Drupal\Core\Cache\Cache;
 abstract class CacheArray implements \ArrayAccess {
 
   /**
-   * A cid to pass to cache()->set() and cache()->get().
+   * A cid to pass to \Drupal::cache()->set() and \Drupal::cache()->get().
    *
    * @var string
    */
   protected $cid;
 
   /**
-   * A tags array to pass to cache()->set().
+   * A tags array to pass to \Drupal::cache()->set().
    *
    * @var array
    */
   protected $tags;
 
   /**
-   * A bin to pass to cache()->set() and cache()->get().
+   * A bin to pass to \Drupal::cache()->set() and \Drupal::cache()->get().
    *
    * @var string
    */
@@ -118,7 +118,7 @@ abstract class CacheArray implements \ArrayAccess {
     $this->bin = $bin;
     $this->tags = $tags;
 
-    if ($cached = cache($bin)->get($this->cid)) {
+    if ($cached = \Drupal::cache($bin)->get($this->cid)) {
      $this->storage = $cached->data;
     }
   }
@@ -203,10 +203,10 @@ abstract class CacheArray implements \ArrayAccess {
     // To implement locking for cache misses, override __construct().
     $lock_name = $this->cid . ':' . $this->bin;
     if (!$lock || lock()->acquire($lock_name)) {
-      if ($cached = cache($this->bin)->get($this->cid)) {
+      if ($cached = \Drupal::cache($this->bin)->get($this->cid)) {
         $data = $cached->data + $data;
       }
-      cache($this->bin)->set($this->cid, $data, Cache::PERMANENT, $this->tags);
+      \Drupal::cache($this->bin)->set($this->cid, $data, Cache::PERMANENT, $this->tags);
       if ($lock) {
         lock()->release($lock_name);
       }
@@ -219,7 +219,7 @@ abstract class CacheArray implements \ArrayAccess {
   public function clear() {
     $this->storage = array();
     $this->keysToPersist = array();
-    cache($this->bin)->delete($this->cid);
+    \Drupal::cache($this->bin)->delete($this->cid);
   }
 
   /**

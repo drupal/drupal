@@ -452,7 +452,7 @@ function simpletest_test_get_all($module = NULL) {
 
     // Load test information from cache if available, otherwise retrieve the
     // information from each tests getInfo() method.
-    if ($cache = cache()->get($cid)) {
+    if ($cache = \Drupal::cache()->get($cid)) {
       $groups = $cache->data;
     }
     else {
@@ -532,7 +532,7 @@ function simpletest_test_get_all($module = NULL) {
 
       // Allow modules extending core tests to disable originals.
       drupal_alter('simpletest', $groups);
-      cache()->set($cid, $groups);
+      \Drupal::cache()->set($cid, $groups);
     }
   }
   return $all_groups[$cid];
@@ -611,8 +611,8 @@ function simpletest_clean_environment() {
   }
 
   // Detect test classes that have been added, renamed or deleted.
-  cache()->delete('simpletest');
-  cache()->delete('simpletest_phpunit');
+  \Drupal::cache()->delete('simpletest');
+  \Drupal::cache()->delete('simpletest_phpunit');
 }
 
 /**

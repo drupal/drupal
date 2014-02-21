@@ -134,7 +134,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
       foreach ($entities as $id => $entity) {
         $cids[] = "field:{$this->entityTypeId}:$id";
       }
-      $cache = cache('field')->getMultiple($cids);
+      $cache = \Drupal::cache('field')->getMultiple($cids);
       // Put the cached field values back into the entities and remove them from
       // the list of entities to query.
       foreach ($entities as $id => $entity) {
@@ -183,7 +183,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
             }
           }
           $cid = "field:{$this->entityTypeId}:$id";
-          cache('field')->set($cid, $data);
+          \Drupal::cache('field')->set($cid, $data);
         }
       }
     }
@@ -207,7 +207,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
     if ($update) {
       $entity_type = $entity->getEntityType();
       if ($entity_type->isFieldDataCacheable()) {
-        cache('field')->delete('field:' . $entity->getEntityTypeId() . ':' . $entity->id());
+        \Drupal::cache('field')->delete('field:' . $entity->getEntityTypeId() . ':' . $entity->id());
       }
     }
   }
@@ -227,7 +227,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
 
     $entity_type = $entity->getEntityType();
     if ($entity_type->isFieldDataCacheable()) {
-      cache('field')->delete('field:' . $entity->getEntityTypeId() . ':' . $entity->id());
+      \Drupal::cache('field')->delete('field:' . $entity->getEntityTypeId() . ':' . $entity->id());
     }
   }
 

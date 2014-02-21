@@ -154,7 +154,7 @@ class FilterAdminTest extends WebTestBase {
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Allowed HTML tag added.');
 
-    $this->assertTrue(cache('filter')->isEmpty(), 'Cache cleared.');
+    $this->assertTrue(\Drupal::cache('filter')->isEmpty(), 'Cache cleared.');
 
     $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', array(
       ':first' => 'filters[' . $first_filter . '][weight]',

@@ -65,7 +65,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
 
   if (!isset($schema) || $rebuild) {
     // Try to load the schema from cache.
-    if (!$rebuild && $cached = cache()->get('schema')) {
+    if (!$rebuild && $cached = \Drupal::cache()->get('schema')) {
       $schema = $cached->data;
     }
     // Otherwise, rebuild the schema cache.
@@ -82,7 +82,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
         // That would break modules which use $schema further down the line.
         $current = (array) \Drupal::moduleHandler()->invoke($module, 'schema');
         // Set 'module' and 'name' keys for each table, and remove descriptions,
-        // as they needlessly slow down cache()->get() for every single request.
+        // as they needlessly slow down \Drupal::cache()->get() for every single request.
         _drupal_schema_initialize($current, $module);
         $schema = array_merge($schema, $current);
       }
@@ -94,7 +94,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
       // If the schema is empty, avoid saving it: some database engines require
       // the schema to perform queries, and this could lead to infinite loops.
       if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
-        cache()->set('schema', $schema, Cache::PERMANENT, array('schema' => TRUE));
+        \Drupal::cache()->set('schema', $schema, Cache::PERMANENT, array('schema' => TRUE));
       }
     }
   }

@@ -24,6 +24,9 @@ use Drupal\Core\Cache\Cache;
  *   The cache object associated with the specified bin.
  *
  * @see \Drupal\Core\Cache\CacheBackendInterface
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal::cache().
  */
 function cache($bin = 'cache') {
   return \Drupal::cache($bin);

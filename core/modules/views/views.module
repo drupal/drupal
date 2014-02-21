@@ -537,24 +537,24 @@ function views_language_list($field = 'name', $flags = Language::STATE_ALL) {
  * Implements hook_ENTITY_TYPE_create() for 'field_instance_config'.
  */
 function views_field_instance_config_create(FieldInstanceInterface $field_instance) {
-  cache('views_info')->deleteAll();
-  cache('views_results')->deleteAll();
+  \Drupal::cache('views_info')->deleteAll();
+  \Drupal::cache('views_results')->deleteAll();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update() for 'field_instance_config'.
  */
 function views_field_instance_config_update(FieldInstanceInterface $field_instance) {
-  cache('views_info')->deleteAll();
-  cache('views_results')->deleteAll();
+  \Drupal::cache('views_info')->deleteAll();
+  \Drupal::cache('views_results')->deleteAll();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
  */
 function views_field_instance_config_delete(FieldInstanceInterface $field_instance) {
-  cache('views_info')->deleteAll();
-  cache('views_results')->deleteAll();
+  \Drupal::cache('views_info')->deleteAll();
+  \Drupal::cache('views_results')->deleteAll();
 }
 
 /**
@@ -562,7 +562,7 @@ function views_field_instance_config_delete(FieldInstanceInterface $field_instan
  */
 function views_invalidate_cache() {
   // Clear the views cache.
-  cache('views_info')->deleteAll();
+  \Drupal::cache('views_info')->deleteAll();
 
   // Clear the page and block cache.
   Cache::deleteTags(array('content' => TRUE));

@@ -36,7 +36,7 @@ class TwigEnvironment extends \Twig_Environment {
    */
   public function __construct(\Twig_LoaderInterface $loader = NULL, $options = array(), ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
     // @todo Pass as arguments from the DIC.
-    $this->cache_object = cache();
+    $this->cache_object = \Drupal::cache();
 
     // Set twig path namespace for themes and modules.
     $namespaces = $module_handler->getModuleList();

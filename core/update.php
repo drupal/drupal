@@ -52,7 +52,7 @@ define('MAINTENANCE_MODE', 'update');
  */
 function update_selection_page() {
   // Make sure there is no stale theme registry.
-  cache()->deleteAll();
+  \Drupal::cache()->deleteAll();
 
   drupal_set_title('Drupal database update');
   $elements = \Drupal::formBuilder()->getForm('Drupal\Core\Update\Form\UpdateScriptSelectionForm');

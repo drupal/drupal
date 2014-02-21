@@ -3197,7 +3197,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
       if ($page_compressed) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
-      cache('page')->set($cache->cid, $cache->data, $cache->expire, $cache->tags);
+      \Drupal::cache('page')->set($cache->cid, $cache->data, $cache->expire, $cache->tags);
     }
     return $cache;
   }
@@ -4091,7 +4091,7 @@ function drupal_render_cache_get(array $elements) {
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
 
-  if (!empty($cid) && $cache = cache($bin)->get($cid)) {
+  if (!empty($cid) && $cache = \Drupal::cache($bin)->get($cid)) {
     $cached_element = $cache->data;
     // Add additional libraries, JavaScript, CSS and other data attached
     // to this element.
@@ -4145,7 +4145,7 @@ function drupal_render_cache_set(&$markup, array $elements) {
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
   $tags = drupal_render_collect_cache_tags($elements);
-  cache($bin)->set($cid, $data, $expire, $tags);
+  \Drupal::cache($bin)->set($cid, $data, $expire, $tags);
 }
 
 /**
@@ -4433,7 +4433,7 @@ function drupal_cache_tags_page_get(Response $response) {
  *   added to this string and is also part of the cache key in
  *   drupal_render_cache_set() and drupal_render_cache_get().
  * @param $expire
- *   The cache expire time, passed eventually to cache()->set().
+ *   The cache expire time, passed eventually to \Drupal::cache()->set().
  * @param $granularity
  *   One or more granularity constants passed to drupal_render_cid_parts().
  *

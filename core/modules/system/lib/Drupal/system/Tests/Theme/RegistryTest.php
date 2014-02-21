@@ -44,7 +44,7 @@ class RegistryTest extends WebTestBase {
     $lock_backend = \Drupal::lock();
     $registry = new ThemeRegistry($cid, $cache, $lock_backend, array('theme_registry' => TRUE), $this->container->get('module_handler')->isLoaded());
 
-    $this->assertTrue(cache()->get($cid), 'Cache entry was created.');
+    $this->assertTrue(\Drupal::cache()->get($cid), 'Cache entry was created.');
 
     // Trigger a cache miss for an offset.
     $this->assertTrue($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry.');
@@ -52,12 +52,12 @@ class RegistryTest extends WebTestBase {
     // the cache entry when it is destroyed, usually at the end of the request.
     // Before that happens, manually delete the cache entry we created earlier
     // so that the new entry is written from scratch.
-    cache()->delete($cid);
+    \Drupal::cache()->delete($cid);
 
     // Destroy the class so that it triggers a cache write for the offset.
     $registry->destruct();
 
-    $this->assertTrue(cache()->get($cid), 'Cache entry was created.');
+    $this->assertTrue(\Drupal::cache()->get($cid), 'Cache entry was created.');
 
     // Create a new instance of the class. Confirm that both the offset
     // requested previously, and one that has not yet been requested are both

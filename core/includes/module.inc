@@ -30,7 +30,7 @@
  */
 function system_list($type) {
   $lists = &drupal_static(__FUNCTION__);
-  if ($cached = cache('bootstrap')->get('system_list')) {
+  if ($cached = \Drupal::cache('bootstrap')->get('system_list')) {
     $lists = $cached->data;
   }
   else {
@@ -92,7 +92,7 @@ function system_list($type) {
       // Set the theme engine prefix.
       $lists['theme'][$key]->prefix = ($lists['theme'][$key]->info['engine'] == 'theme') ? $base_key : $lists['theme'][$key]->info['engine'];
     }
-    cache('bootstrap')->set('system_list', $lists);
+    \Drupal::cache('bootstrap')->set('system_list', $lists);
   }
   // To avoid a separate database lookup for the filepath, prime the
   // drupal_get_filename() static cache with all enabled modules and themes.
@@ -110,8 +110,8 @@ function system_list_reset() {
   drupal_static_reset('system_list');
   drupal_static_reset('system_rebuild_module_data');
   drupal_static_reset('list_themes');
-  cache('bootstrap')->delete('system_list');
-  cache()->delete('system_info');
+  \Drupal::cache('bootstrap')->delete('system_list');
+  \Drupal::cache()->delete('system_info');
   // Remove last known theme data state.
   // This causes system_list() to call system_rebuild_theme_data() on its next
   // invocation. When enabling a module that implements hook_system_info_alter()

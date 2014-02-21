@@ -38,8 +38,8 @@ namespace Drupal\Core\Cache;
  * To access your custom cache bin, specify the name of the bin when storing
  * or retrieving cached data:
  * @code
- *  cache('custom_bin')->set($cid, $data, $expire);
- *  cache('custom_bin')->get($cid);
+ *  \Drupal::cache('custom_bin')->set($cid, $data, $expire);
+ *  \Drupal::cache('custom_bin')->get($cid);
  * @endcode
  *
  * There are two ways to "remove" a cache item:
@@ -66,7 +66,7 @@ namespace Drupal\Core\Cache;
  * the other requests can proceed using the stale value. As soon as the cache
  * item has been updated, all future requests will use the updated value.
  *
- * @see cache()
+ * @see \Drupal::cache()
  * @see \Drupal\Core\Cache\DatabaseBackend
  */
 interface CacheBackendInterface {

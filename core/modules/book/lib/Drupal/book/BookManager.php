@@ -562,7 +562,7 @@ class BookManager {
 
     if (!isset($tree[$cid])) {
       // If the static variable doesn't have the data, check {cache_menu}.
-      $cache = cache('menu')->get($cid);
+      $cache = \Drupal::cache('menu')->get($cid);
       if ($cache && isset($cache->data)) {
         // If the cache entry exists, it contains the parameters for
         // menu_build_tree().
@@ -589,7 +589,7 @@ class BookManager {
         }
 
         // Cache the tree building parameters using the page-specific cid.
-        cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
+        \Drupal::cache('menu')->set($cid, $tree_parameters, Cache::PERMANENT, array('menu' => $menu_name));
       }
 
       // Build the tree using the parameters; the resulting tree will be cached
@@ -733,7 +733,7 @@ class BookManager {
 
     // If we do not have this tree in the static cache, check {cache_menu}.
     if (!isset($trees[$tree_cid])) {
-      $cache = cache('menu')->get($tree_cid);
+      $cache = \Drupal::cache('menu')->get($tree_cid);
       if ($cache && isset($cache->data)) {
         $trees[$tree_cid] = $cache->data;
       }
@@ -776,7 +776,7 @@ class BookManager {
       $this->bookTreeCollectNodeLinks($data['tree'], $data['node_links']);
 
       // Cache the data, if it is not already in the cache.
-      cache('menu')->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
+      \Drupal::cache('menu')->set($tree_cid, $data, Cache::PERMANENT, array('menu' => $menu_name));
       $trees[$tree_cid] = $data;
     }
 
@@ -993,12 +993,12 @@ class BookManager {
     $cid = 'links:' . $link['menu_name'] . ':subtree-cid:' . $link['mlid'];
 
     if (!isset($tree[$cid])) {
-      $cache = cache('menu')->get($cid);
+      $cache = \Drupal::cache('menu')->get($cid);
 
       if ($cache && isset($cache->data)) {
         // If the cache entry exists, it will just be the cid for the actual data.
         // This avoids duplication of large amounts of data.
-        $cache = cache('menu')->get($cache->data);
+        $cache = \Drupal::cache('menu')->get($cache->data);
 
         if ($cache && isset($cache->data)) {
           $data = $cache->data;
@@ -1029,11 +1029,11 @@ class BookManager {
         $tree_cid = 'links:' . $item['menu_name'] . ':subtree-data:' . hash('sha256', serialize($data));
         // Cache the data, if it is not already in the cache.
 
-        if (!cache('menu')->get($tree_cid)) {
-          cache('menu')->set($tree_cid, $data);
+        if (!\Drupal::cache('menu')->get($tree_cid)) {
+          \Drupal::cache('menu')->set($tree_cid, $data);
         }
         // Cache the cid of the (shared) data using the menu and item-specific cid.
-        cache('menu')->set($cid, $tree_cid);
+        \Drupal::cache('menu')->set($cid, $tree_cid);
       }
       // Check access for the current user to each item in the tree.
       $this->bookTreeCheckAccess($data['tree'], $data['node_links']);

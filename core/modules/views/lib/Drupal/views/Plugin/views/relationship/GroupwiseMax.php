@@ -170,7 +170,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    */
   public function submitOptionsForm(&$form, &$form_state) {
     $cid = 'views_relationship_groupwise_max:' . $this->view->storage->id() . ':' . $this->view->current_display . ':' . $this->options['id'];
-    cache('views_results')->delete($cid);
+    \Drupal::cache('views_results')->delete($cid);
   }
 
   /**
@@ -357,13 +357,13 @@ class GroupwiseMax extends RelationshipPluginBase {
     else {
       // Get the stored subquery SQL string.
       $cid = 'views_relationship_groupwise_max:' . $this->view->storage->id() . ':' . $this->view->current_display . ':' . $this->options['id'];
-      $cache = cache('views_results')->get($cid);
+      $cache = \Drupal::cache('views_results')->get($cid);
       if (isset($cache->data)) {
         $def['left_query'] = $cache->data;
       }
       else {
         $def['left_query'] = $this->leftQuery($this->options);
-        cache('views_results')->set($cid, $def['left_query']);
+        \Drupal::cache('views_results')->set($cid, $def['left_query']);
       }
     }
 

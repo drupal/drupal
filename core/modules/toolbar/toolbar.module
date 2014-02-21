@@ -575,7 +575,7 @@ function toolbar_library_info() {
 function _toolbar_get_subtrees_hash() {
   $uid = \Drupal::currentUser()->id();
   $cid = _toolbar_get_user_cid($uid);
-  if ($cache = cache('toolbar')->get($cid)) {
+  if ($cache = \Drupal::cache('toolbar')->get($cid)) {
     $hash = $cache->data;
   }
   else {
@@ -585,7 +585,7 @@ function _toolbar_get_subtrees_hash() {
     // caches later, based on the user's ID regardless of language.
     // Clear the cache when the 'locale' tag is deleted. This ensures a fresh
     // subtrees rendering when string translations are made.
-    cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user' => array($uid), 'locale' => TRUE,));
+    \Drupal::cache('toolbar')->set($cid, $hash, Cache::PERMANENT, array('user' => array($uid), 'locale' => TRUE,));
   }
   return $hash;
 }
@@ -647,7 +647,7 @@ function _toolbar_get_user_cid($uid) {
  *   (optional) The user ID whose toolbar cache entry to clear.
  */
 function _toolbar_clear_user_cache($uid = NULL) {
-  $cache = cache('toolbar');
+  $cache = \Drupal::cache('toolbar');
   if (!$cache->isEmpty()) {
     // Clear by the 'user' tag in order to delete all caches, in any language,
     // associated with this user.

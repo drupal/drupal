@@ -35,7 +35,7 @@ abstract class CacheTestBase extends WebTestBase {
       $bin = $this->default_bin;
     }
 
-    $cached = cache($bin)->get($cid);
+    $cached = \Drupal::cache($bin)->get($cid);
 
     return isset($cached->data) && $cached->data == $var;
   }
@@ -84,7 +84,7 @@ abstract class CacheTestBase extends WebTestBase {
       $cid = $this->default_cid;
     }
 
-    $cached = cache($bin)->get($cid);
+    $cached = \Drupal::cache($bin)->get($cid);
     $this->assertFalse($cached, $message);
   }
 }

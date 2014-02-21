@@ -94,7 +94,7 @@ function entity_get_form_modes($entity_type = NULL) {
   $form_modes = &drupal_static(__FUNCTION__);
   if (!$form_modes) {
     $langcode = language(Language::TYPE_INTERFACE)->id;
-    if ($cache = cache()->get("entity_form_mode_info:$langcode")) {
+    if ($cache = \Drupal::cache()->get("entity_form_mode_info:$langcode")) {
       $form_modes = $cache->data;
     }
     else {
@@ -104,7 +104,7 @@ function entity_get_form_modes($entity_type = NULL) {
         $form_modes[$form_mode_entity_type][$form_mode_name] = (array) $form_mode;
       }
       drupal_alter('entity_form_mode_info', $form_modes);
-      cache()->set("entity_form_mode_info:$langcode", $form_modes, Cache::PERMANENT, array('entity_types' => TRUE));
+      \Drupal::cache()->set("entity_form_mode_info:$langcode", $form_modes, Cache::PERMANENT, array('entity_types' => TRUE));
     }
   }
 
@@ -132,7 +132,7 @@ function entity_get_view_modes($entity_type = NULL) {
   $view_modes = &drupal_static(__FUNCTION__);
   if (!$view_modes) {
     $langcode = language(Language::TYPE_INTERFACE)->id;
-    if ($cache = cache()->get("entity_view_mode_info:$langcode")) {
+    if ($cache = \Drupal::cache()->get("entity_view_mode_info:$langcode")) {
       $view_modes = $cache->data;
     }
     else {
@@ -142,7 +142,7 @@ function entity_get_view_modes($entity_type = NULL) {
         $view_modes[$view_mode_entity_type][$view_mode_name] = (array) $view_mode;
       }
       drupal_alter('entity_view_mode_info', $view_modes);
-      cache()->set("entity_view_mode_info:$langcode", $view_modes, Cache::PERMANENT, array('entity_types' => TRUE));
+      \Drupal::cache()->set("entity_view_mode_info:$langcode", $view_modes, Cache::PERMANENT, array('entity_types' => TRUE));
     }
   }
 
