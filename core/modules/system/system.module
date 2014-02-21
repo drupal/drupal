@@ -334,8 +334,8 @@ function system_element_info() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_route_name' => FALSE,
-    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
-    '#pre_render' => array('form_pre_render_textfield'),
+    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern', 'form_process_group'),
+    '#pre_render' => array('form_pre_render_textfield', 'form_pre_render_group'),
     '#theme' => 'input__textfield',
     '#theme_wrappers' => array('form_element'),
   );
@@ -441,7 +441,8 @@ function system_element_info() {
     '#cols' => 60,
     '#rows' => 5,
     '#resizable' => 'vertical',
-    '#process' => array('ajax_process_form'),
+    '#process' => array('ajax_process_form', 'form_process_group'),
+    '#pre_render' => array('form_pre_render_group'),
     '#theme' => 'textarea',
     '#theme_wrappers' => array('form_element'),
   );
@@ -469,8 +470,8 @@ function system_element_info() {
   $types['checkbox'] = array(
     '#input' => TRUE,
     '#return_value' => 1,
-    '#process' => array('form_process_checkbox', 'ajax_process_form'),
-    '#pre_render' => array('form_pre_render_checkbox'),
+    '#process' => array('form_process_checkbox', 'ajax_process_form', 'form_process_group'),
+    '#pre_render' => array('form_pre_render_checkbox', 'form_pre_render_group'),
     '#theme' => 'input__checkbox',
     '#theme_wrappers' => array('form_element'),
     '#title_display' => 'after',

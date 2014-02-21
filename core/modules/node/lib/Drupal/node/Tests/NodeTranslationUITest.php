@@ -155,17 +155,17 @@ class NodeTranslationUITest extends ContentTranslationUITest {
         'created' => REQUEST_TIME - mt_rand(0, 1000),
       );
       $edit = array(
-        'name' => $user->getUsername(),
-        'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
-        'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
+        'uid' => $user->getUsername(),
+        'created[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
+        'created[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
       );
       $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity), array('language' => $languages[$langcode]));
     }
 
     $entity = entity_load($this->entityTypeId, $this->entityId, TRUE);
     foreach ($this->langcodes as $langcode) {
-      $this->assertEqual($entity->translation[$langcode]['uid'] == $values[$langcode]['uid'], 'Translation author correctly stored.');
-      $this->assertEqual($entity->translation[$langcode]['created'] == $values[$langcode]['created'], 'Translation date correctly stored.');
+      $this->assertEqual($entity->translation[$langcode]['uid'], $values[$langcode]['uid'], 'Translation author correctly stored.');
+      $this->assertEqual($entity->translation[$langcode]['created'], $values[$langcode]['created'], 'Translation date correctly stored.');
     }
   }
 

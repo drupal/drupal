@@ -46,7 +46,8 @@ function datetime_element_info() {
   $types['datetime'] = array(
     '#input' => TRUE,
     '#element_validate' => array('datetime_datetime_validate'),
-    '#process' => array('datetime_datetime_form_process'),
+    '#process' => array('datetime_datetime_form_process', 'form_process_group'),
+    '#pre_render' => array('form_pre_render_group'),
     '#theme' => 'datetime_form',
     '#theme_wrappers' => array('datetime_wrapper'),
     '#date_date_format' => $date_format,
@@ -991,11 +992,11 @@ function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
   $format_type = datetime_default_format_type();
 
   // Alter the 'Authored on' date to use datetime.
-  $form['author']['date']['#type'] = 'datetime';
+  $form['created']['#type'] = 'datetime';
   $date_format = entity_load('date_format', 'html_date')->getPattern($format_type);
   $time_format = entity_load('date_format', 'html_time')->getPattern($format_type);
-  $form['author']['date']['#description'] = t('Format: %format. Leave blank to use the time of form submission.', array('%format' => datetime_format_example($date_format . ' ' . $time_format)));
-  unset($form['author']['date']['#maxlength']);
+  $form['created']['#description'] = t('Format: %format. Leave blank to use the time of form submission.', array('%format' => datetime_format_example($date_format . ' ' . $time_format)));
+  unset($form['created']['#maxlength']);
 }
 
 /**

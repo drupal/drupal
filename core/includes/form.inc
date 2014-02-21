@@ -1072,7 +1072,7 @@ function theme_fieldset($variables) {
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #attributes, #children, #collapsed, #collapsible,
- *     #description, #id, #title, #value.
+ *     #description, #id, #title, #value, #optional.
  *
  * @ingroup themeable
  */
@@ -2041,9 +2041,6 @@ function form_process_group(&$element, &$form_state) {
     $form_state['groups'][$group][] = &$element;
   }
 
-  // Contains form element summary functionalities.
-  $element['#attached']['library'][] = array('system', 'drupal.form');
-
   return $element;
 }
 
@@ -2068,6 +2065,14 @@ function form_pre_render_details($element) {
   $element['#attached']['library'][] = array('system', 'drupal.collapse');
   if (empty($element['#collapsed'])) {
     $element['#attributes']['open'] = 'open';
+  }
+
+  // Do not render optional details elements if there are no children.
+  if (isset($element['#parents'])) {
+    $group = implode('][', $element['#parents']);
+    if (!empty($element['#optional']) && !element_get_visible_children($element['#groups'][$group])) {
+      $element['#printed'] = TRUE;
+    }
   }
 
   return $element;
@@ -2110,6 +2115,9 @@ function form_pre_render_group($element) {
   }
 
   if (isset($element['#group'])) {
+    // Contains form element summary functionalities.
+    $element['#attached']['library'][] = array('system', 'drupal.form');
+
     $group = $element['#group'];
     // If this element belongs to a group, but the group-holding element does
     // not exist, we need to render it (at its original location).

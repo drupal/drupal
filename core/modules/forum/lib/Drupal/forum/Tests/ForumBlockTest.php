@@ -174,8 +174,8 @@ class ForumBlockTest extends WebTestBase {
         'body[0][value]' => $body,
         // Forum posts are ordered by timestamp, so force a unique timestamp by
         // adding the index.
-        'date[date]' => $date->format('Y-m-d'),
-        'date[time]' => $date->format('H:i:s'),
+        'created[date]' => $date->format('Y-m-d'),
+        'created[time]' => $date->format('H:i:s'),
       );
 
       // Create the forum topic, preselecting the forum ID via a URL parameter.
