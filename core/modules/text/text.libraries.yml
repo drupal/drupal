@@ -1,0 +1,8 @@
+drupal.text:
+  version: VERSION
+  js:
+    text.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal

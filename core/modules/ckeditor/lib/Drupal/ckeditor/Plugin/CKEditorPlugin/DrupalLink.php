@@ -33,7 +33,7 @@ class DrupalLink extends CKEditorPluginBase {
    */
   public function getLibraries(Editor $editor) {
     return array(
-      array('system', 'drupal.ajax'),
+      array('core', 'drupal.ajax'),
     );
   }
 

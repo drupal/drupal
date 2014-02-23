@@ -37,8 +37,8 @@ function editor_test_editor_js_settings_alter(&$settings) {
     return;
   }
 
-  if (isset($settings['full_html'])) {
-    $settings['full_html']['editorSettings']['ponyModeEnabled'] = FALSE;
+  if (isset($settings['editor']['formats']['full_html'])) {
+    $settings['editor']['formats']['full_html']['editorSettings']['ponyModeEnabled'] = FALSE;
   }
 }
 

@@ -1,0 +1,9 @@
+jquery.farbtastic:
+  version: 0.1
+  js:
+    assets/vendor/farbtastic/farbtastic.js: {}
+  css:
+    component:
+      assets/vendor/farbtastic/farbtastic.css: {}
+  dependencies:
+    - core/jquery

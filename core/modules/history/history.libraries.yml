@@ -1,0 +1,9 @@
+drupal.history:
+  version: VERSION
+  js:
+    js/history.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+    - core/drupal
+    - core/drupal.ajax

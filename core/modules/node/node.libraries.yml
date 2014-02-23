@@ -1,0 +1,26 @@
+drupal.node:
+  version: VERSION
+  js:
+    node.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.form
+
+drupal.node.preview:
+  version: VERSION
+  js:
+    node.preview.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+drupal.content_types:
+  version: VERSION
+  js:
+    content_types.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.form

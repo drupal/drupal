@@ -730,7 +730,7 @@ function template_preprocess_views_view_table(&$variables) {
   }
 
   if (!empty($options['sticky'])) {
-    $variables['view']->element['#attached']['library'][] = array('system', 'drupal.tableheader');
+    $variables['view']->element['#attached']['library'][] = array('core', 'drupal.tableheader');
     $variables['attributes']['class'][] = "sticky-enabled";
   }
   $variables['attributes']['class'][] = 'cols-' . count($variables['header']);
@@ -753,7 +753,7 @@ function template_preprocess_views_view_table(&$variables) {
   // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
   // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
   if (isset($variables['header']) && $responsive) {
-    $variables['view']->element['#attached']['library'][] = array('system', 'drupal.tableresponsive');
+    $variables['view']->element['#attached']['library'][] = array('core', 'drupal.tableresponsive');
     // Add 'responsive-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
     $variables['attributes']['class'][] = 'responsive-enabled';

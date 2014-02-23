@@ -46,93 +46,52 @@ function edit_page_build(&$page) {
 }
 
 /**
- * Implements hook_library_info().
- */
-function edit_library_info() {
-  $path = drupal_get_path('module', 'edit');
-  $options = array(
-    'scope' => 'footer',
-  );
-  $libraries['edit'] = array(
-    'title' => 'Edit: in-place editing',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      // Core.
-      $path . '/js/edit.js' => $options,
-      $path . '/js/util.js' => $options,
-      // Models.
-      $path . '/js/models/BaseModel.js' => $options,
-      $path . '/js/models/AppModel.js' => $options,
-      $path . '/js/models/EntityModel.js' => $options,
-      $path . '/js/models/FieldModel.js' => $options,
-      $path . '/js/models/EditorModel.js' => $options,
-      // Views.
-      $path . '/js/views/AppView.js' => $options,
-      $path . '/js/views/FieldDecorationView.js' => $options,
-      $path . '/js/views/EntityDecorationView.js' => $options,
-      $path . '/js/views/EntityToolbarView.js' => $options,
-      $path . '/js/views/ContextualLinkView.js' => $options,
-      $path . '/js/views/FieldToolbarView.js' => $options,
-      $path . '/js/views/EditorView.js' => $options,
-      // Other.
-      $path . '/js/theme.js' => $options,
-    ),
-    'css' => array(
-      $path . '/css/edit.module.css' => array(),
-      $path . '/css/edit.theme.css' => array(),
-      $path . '/css/edit.icons.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'underscore'),
-      array('system', 'backbone'),
-      array('system', 'jquery.form'),
-      array('system', 'jquery.ui.position'),
-      array('system', 'drupal'),
-      array('system', 'drupal.displace'),
-      array('system', 'drupal.form'),
-      array('system', 'drupal.ajax'),
-      array('system', 'drupal.debounce'),
-      array('system', 'drupalSettings'),
-      array('system', 'drupal.dialog'),
-    ),
-  );
-  $libraries['edit.inPlaceEditor.form'] = array(
-    'title' => 'Form in-place editor',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/js/editors/formEditor.js' => $options,
-    ),
-    'dependencies' => array(
-      array('edit', 'edit'),
-    ),
-  );
-  $libraries['edit.inPlaceEditor.plainText'] = array(
-    'title' => 'Plain text in-place editor',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/js/editors/plainTextEditor.js' => $options,
-    ),
-    'dependencies' => array(
-      array('edit', 'edit'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
- * Implement hook_library_info_alter().
+ * Implements hook_library_alter().
  *
- * Allow the admin theme to override the Edit entity toolbar's default styling.
- * We must do it this way, because an admin theme's hooks do not fire while on
- * the front-end.
+ * Includes additional stylesheets defined by the admin theme to allow it to
+ * customize the Edit toolbar appearance.
+ *
+ * An admin theme can specify CSS files to make the front-end administration
+ * experience of in-place editing match the administration experience in the
+ * back-end.
+ *
+ * The CSS files can be specified via the "edit_stylesheets" property in the
+ * .info.yml file:
+ * @code
+ * edit_stylesheets:
+ *   - css/edit.css
+ * @endcode
+ *
+ * The library needs to be dynamically enhanced, because an admin theme normally
+ * does not participate in the front-end.
+ *
+ * @param string $theme
+ *   (optional) Internal use only. A base theme name for which to retrieve the
+ *   'edit_stylesheets' property.
+ *
+ * @todo Remove this in favor of the 'stylesheets-additional' property proposed
+ *   in https://drupal.org/node/1209958
  */
-function edit_library_info_alter(&$libraries, $module) {
-  if ($module == 'edit' && isset($libraries['edit'])) {
-    $css = _edit_theme_css();
-    foreach ($css as $css_file) {
-      $libraries['edit']['css'][$css_file] = array();
+function edit_library_alter(array &$library, $extension, $name, $theme = NULL) {
+  if ($extension == 'edit' && $name == 'edit') {
+    // Retrieve the admin theme.
+    if (!isset($theme)) {
+      $theme = Drupal::config('system.theme')->get('admin');
+    }
+    if ($theme && $theme_path = drupal_get_path('theme', $theme)) {
+      $info = system_get_info('theme', $theme);
+      // Recurse to process base theme(s) first.
+      if (isset($info['base theme'])) {
+        edit_library_alter($library, $extension, $name, $info['base theme']);
+      }
+      if (isset($info['edit_stylesheets']) && is_array($info['edit_stylesheets'])) {
+        foreach ($info['edit_stylesheets'] as $path) {
+          $library['css'][$theme_path . '/' . $path] = array(
+            'group' => CSS_AGGREGATE_THEME,
+            'weight' => CSS_SKIN,
+          );
+        }
+      }
     }
   }
 }
@@ -186,41 +145,3 @@ function edit_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisp
   $build['#attributes']['data-edit-entity-id'] = $entity->getEntityTypeId() . '/' . $entity->id();
 }
 
-/**
- * Retrieves the admin theme's Edit stylesheets.
- *
- * Admin themes may specify CSS files to make the front-end administration
- * experience of in-place editing match the administration experience on the
- * Drupal back-end.
- * They can specify such CSS files using the "edit_stylesheets" key in
- * the theme .info.yml file.
- *
- * @code
- * edit_stylesheets[] = css/edit.css
- * @endcode
- *
- * @param string|NULL $theme
- *   The theme name for which to retrieve the edit_stylesheets CSS files.
- *
- * @return array
- *   An array of CSS file paths.
- */
-function _edit_theme_css($theme = NULL) {
-  $css = array();
-  if (!isset($theme)) {
-    $theme = Drupal::config('system.theme')->get('admin');
-  }
-  if ($theme_path = drupal_get_path('theme', $theme)) {
-    $info = system_get_info('theme', $theme);
-    if (isset($info['edit_stylesheets'])) {
-      $css = $info['edit_stylesheets'];
-      foreach ($css as $key => $path) {
-        $css[$key] = $theme_path . '/' . $path;
-      }
-    }
-    if (isset($info['base theme'])) {
-      $css = array_merge(_edit_theme_css($info['base theme'], $css));
-    }
-  }
-  return $css;
-}

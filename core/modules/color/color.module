@@ -774,38 +774,3 @@ function _color_rgb2hsl($rgb) {
 
   return array($h, $s, $l);
 }
-
-/**
- * Implements hook_library_info().
- */
-function color_library_info() {
-  $libraries['drupal.color'] = array(
-    'title' => 'Color',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'color') . '/color.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'jquery.once'),
-      array('system', 'jquery.farbtastic'),
-      array('color', 'drupal.color.preview'),
-    ),
-  );
-  $libraries['drupal.color.preview'] = array(
-    'title' => 'Color preview',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'color') . '/preview.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'jquery.once'),
-    ),
-  );
-
-  return $libraries;
-}

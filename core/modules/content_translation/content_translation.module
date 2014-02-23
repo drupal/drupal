@@ -415,30 +415,6 @@ function content_translation_delete_access(EntityInterface $entity, Language $la
 }
 
 /**
- * Implements hook_library_info().
- */
-function content_translation_library_info() {
-  $path = drupal_get_path('module', 'content_translation');
-  $libraries['drupal.content_translation.admin'] = array(
-    'title' => 'Content translation UI',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/content_translation.admin.js' => array(),
-    ),
-    'css' => array(
-      $path . '/css/content_translation.admin.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'jquery.once'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Returns the key name used to store the configuration setting.
  *
  * Based on the entity type and bundle, the keys used to store configuration

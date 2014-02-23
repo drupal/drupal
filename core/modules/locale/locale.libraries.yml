@@ -1,0 +1,17 @@
+drupal.locale.admin:
+  version: VERSION
+  js:
+    locale.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+
+drupal.locale.datepicker:
+  version: VERSION
+  js:
+    locale.datepicker.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings

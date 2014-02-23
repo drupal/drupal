@@ -1898,50 +1898,6 @@ function node_language_delete($language) {
 }
 
 /**
- * Implements hook_library_info().
- */
-function node_library_info() {
-  $libraries['drupal.node'] = array(
-    'title' => 'Node',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'node') . '/node.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'drupal.form'),
-    ),
-  );
-  $libraries['drupal.node.preview'] = array(
-    'title' => 'Node preview',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'node') . '/node.preview.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-    ),
-  );
-  $libraries['drupal.content_types'] = array(
-    'title' => 'Content types',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'node') . '/content_types.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupal.form'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Marks a node to be re-indexed by the node_search plugin.
  *
  * @param int $nid

@@ -195,16 +195,3 @@ function config_translation_config_translation_type_info_alter(&$definitions) {
   $definitions['date_format']['form_element_class'] = '\Drupal\config_translation\FormElement\DateFormat';
 }
 
-/**
- * Implements hook_library_info().
- */
-function config_translation_library_info() {
-  $libraries['drupal.config_translation.admin'] = array(
-    'title' => 'Configuration translation admin',
-    'version' => \Drupal::VERSION,
-    'css' => array(
-      drupal_get_path('module', 'config_translation') . '/css/config_translation.admin.css' => array(),
-    ),
-  );
-  return $libraries;
-}

@@ -162,7 +162,7 @@ class BulkForm extends FieldPluginBase {
    */
   public function viewsForm(&$form, &$form_state) {
     // Add the tableselect javascript.
-    $form['#attached']['library'][] = array('system', 'drupal.tableselect');
+    $form['#attached']['library'][] = array('core', 'drupal.tableselect');
 
     // Only add the bulk form options and buttons if there are results.
     if (!empty($this->view->result)) {

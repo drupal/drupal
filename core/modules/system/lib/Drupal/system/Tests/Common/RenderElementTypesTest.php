@@ -12,18 +12,32 @@ use Drupal\Component\Utility\Url;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the markup of core render element types passed to drupal_render().
  */
-class RenderElementTypesTest extends WebTestBase {
+class RenderElementTypesTest extends DrupalUnitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('system');
+
   public static function getInfo() {
     return array(
       'name' => 'Render element types',
       'description' => 'Tests the markup of core render element types passed to drupal_render().',
       'group' => 'Common',
     );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+    $this->installConfig(array('system'));
+    $this->container->get('theme_handler')->enable(array('stark'));
   }
 
   /**
@@ -173,11 +187,9 @@ class RenderElementTypesTest extends WebTestBase {
     $path = drupal_get_path('module', 'system');
     $default_css = array(
       '#attached' => array(
-        'css' => array(
-          $path . '/css/system.module.css',
-          $path . '/css/system.admin.css',
-          $path . '/css/system.maintenance.css',
-          $path . '/css/system.theme.css',
+        'library' => array(
+          array('core', 'normalize'),
+          array('system', 'maintenance'),
         ),
       ),
     );
@@ -230,7 +242,7 @@ EOT;
     );
 
     // We have to reset drupal_add_css between each test.
-    drupal_static_reset('_drupal_add_css');
+    drupal_static_reset();
 
     // Test basic string for maintenance page content.
     $elements = array(
@@ -248,7 +260,7 @@ EOT;
     $this->assertElements($elements);
 
     // Test render array for maintenance page content.
-    drupal_static_reset('_drupal_add_css');
+    drupal_static_reset();
     $elements[0]['name'] = "#theme 'maintenance_page' with content as a render array";
     $elements[0]['value']['#content'] = array('#markup' => '<span>foo</span>');
     $this->assertElements($elements);

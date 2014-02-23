@@ -1929,51 +1929,6 @@ function user_toolbar() {
 }
 
 /**
- * Implements hook_library_info().
- */
-function user_library_info() {
-  $path = drupal_get_path('module', 'user');
-  $libraries['drupal.user'] = array(
-    'title' => 'User',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/user.js' => array(),
-    ),
-    'css' => array(
-      $path . '/css/user.module.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'jquery.once'),
-    ),
-  );
-
-  $libraries['drupal.user.permissions'] = array(
-    'title' => 'User permissions',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/user.permissions.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-    ),
-  );
-
-  $libraries['drupal.user.icons'] = array(
-    'title' => 'User icon styling',
-    'version' => \Drupal::VERSION,
-    'css' => array(
-      $path . '/css/user.icons.css' => array(),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Logs the current user out.
  */
 function user_logout() {

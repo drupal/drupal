@@ -1,0 +1,41 @@
+drupal.editor.admin:
+  version: VERSION
+  js:
+    js/editor.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+drupal.editor:
+  version: VERSION
+  js:
+    js/editor.js: {}
+  css:
+    component:
+      css/editor.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/drupal.dialog
+
+drupal.editor.dialog:
+  version: VERSION
+  js:
+    js/editor.dialog.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.dialog
+    - core/drupal.ajax
+    - core/drupalSettings
+
+edit.inPlaceEditor.formattedText:
+  version: VERSION
+  js:
+    js/editor.formattedTextEditor.js: { scope: footer, attributes: { defer: true } }
+  dependencies:
+    - edit/edit
+    - editor/drupal.editor
+    - core/drupal.ajax
+    - core/drupalSettings

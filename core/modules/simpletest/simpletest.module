@@ -710,32 +710,6 @@ function simpletest_mail_alter(&$message) {
 }
 
 /**
- * Implements hook_library_info().
- */
-function simpletest_library_info() {
-  $libraries['drupal.simpletest'] = array(
-    'title' => 'Simpletest',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'simpletest') . '/simpletest.js' => array(),
-    ),
-    'css' => array(
-      drupal_get_path('module', 'simpletest') . '/css/simpletest.module.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'jquery.once'),
-      array('system', 'drupal.tableselect'),
-      array('system', 'drupal.debounce'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Gets PHPUnit Classes.
  *
  * @param string $module

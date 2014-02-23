@@ -83,10 +83,10 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     $form['#tree'] = TRUE;
 
-    $form['#attached']['library'][] = array('system', 'jquery.ui.tabs');
-    $form['#attached']['library'][] = array('system', 'jquery.ui.dialog');
-    $form['#attached']['library'][] = array('system', 'drupal.states');
-    $form['#attached']['library'][] = array('system', 'drupal.tabledrag');
+    $form['#attached']['library'][] = array('core', 'jquery.ui.tabs');
+    $form['#attached']['library'][] = array('core', 'jquery.ui.dialog');
+    $form['#attached']['library'][] = array('core', 'drupal.states');
+    $form['#attached']['library'][] = array('core', 'drupal.tabledrag');
 
     if (!\Drupal::config('views.settings')->get('no_javascript')) {
       $form['#attached']['library'][] = array('views_ui', 'views_ui.admin');

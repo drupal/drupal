@@ -90,68 +90,6 @@ function contextual_permission() {
 }
 
 /**
- * Implements hook_library_info().
- */
-function contextual_library_info() {
-  $path = drupal_get_path('module', 'contextual');
-  // Add the JavaScript, with a group and weight such that it will run
-  // before core/modules/contextual/js/contextual.toolbar.js.
-  $options = array(
-    'group' => JS_LIBRARY,
-    'weight' => -2,
-  );
-  $libraries['drupal.contextual-links'] = array(
-    'title' => 'Contextual Links',
-    'website' => 'http://drupal.org/node/473268',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      // Core.
-      $path . '/js/contextual.js' => $options,
-      // Models.
-      $path . '/js/models/StateModel.js' => $options,
-      // Views.
-      $path . '/js/views/AuralView.js' => $options,
-      $path . '/js/views/KeyboardView.js' => $options,
-      $path . '/js/views/RegionView.js' => $options,
-      $path . '/js/views/VisualView.js' => $options,
-    ),
-    'css' => array(
-      $path . '/css/contextual.module.css' => array(),
-      $path . '/css/contextual.theme.css' => array(),
-      $path . '/css/contextual.icons.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'backbone'),
-      array('system', 'modernizr'),
-      array('system', 'jquery.once'),
-    ),
-  );
-  $libraries['drupal.contextual-toolbar'] = array(
-    'title' => 'Contextual Links Toolbar Tab',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/js/contextual.toolbar.js' => array('group' => JS_LIBRARY),
-    ),
-    'css' => array(
-      $path . '/css/contextual.toolbar.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'backbone'),
-      array('system', 'jquery.once'),
-      array('system', 'drupal.tabbingmanager'),
-      array('system', 'drupal.announce'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Implements hook_element_info().
  */
 function contextual_element_info() {

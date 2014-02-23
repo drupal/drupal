@@ -1,0 +1,65 @@
+drupal.ckeditor:
+  version: VERSION
+  js:
+    js/ckeditor.js: {}
+  css:
+    state:
+      css/ckeditor.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.debounce
+    - core/ckeditor
+    - editor/drupal.editor
+drupal.ckeditor.admin:
+  version: VERSION
+  js:
+    js/ckeditor.admin.js: {}
+  css:
+    theme:
+      css/ckeditor.admin.css: {}
+      /core/assets/vendor/ckeditor/skins/moono/editor.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.ui.sortable
+    - core/jquery.ui.draggable
+    - core/jquery.ui.touch-punch
+    - core/backbone
+    - core/drupal.dialog
+    - core/drupal.announce
+    - core/ckeditor
+    - editor/drupal.editor.admin
+    # Ensure to run after core/drupal.vertical-tabs.
+    - core/drupal.vertical-tabs
+
+drupal.ckeditor.drupalimage.admin:
+  version: VERSION
+  js:
+    js/ckeditor.drupalimage.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/drupal.vertical-tabs
+    - core/drupalSettings
+
+drupal.ckeditor.stylescombo.admin:
+  version: VERSION
+  js:
+    js/ckeditor.stylescombo.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/drupal.vertical-tabs
+    - core/drupalSettings
+
+drupal.ckeditor.drupalimagecaption-theme:
+  version: VERSION
+  js:
+    js/plugins/drupalimagecaption/theme.js: {}
+  dependencies:
+    - core/ckeditor

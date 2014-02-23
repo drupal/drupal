@@ -1,3 +1,6 @@
+/**
+ * Base framework for Drupal-specific JavaScript, behaviors, and settings.
+ */
 window.Drupal = { behaviors: {}, locale: {} };
 
 // Class indicating that JS is enabled; used for styling purpose.

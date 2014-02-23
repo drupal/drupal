@@ -1,0 +1,23 @@
+views_ui.admin:
+  version: VERSION
+  js:
+    js/ajax.js: {}
+    js/dialog.views.js: {}
+    js/views-admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.form
+    - core/drupal.ajax
+    - views/views.ajax
+
+views_ui.listing:
+  version: VERSION
+  js:
+    js/views_ui.listing.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once

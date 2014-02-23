@@ -191,7 +191,7 @@ function _batch_progress_page() {
         ),
       ),
       'library' => array(
-        array('system', 'drupal.batch'),
+        array('core', 'drupal.batch'),
       ),
     ),
   );

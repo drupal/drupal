@@ -547,37 +547,3 @@ function block_language_delete($language) {
     }
   }
 }
-
-/**
- * Implements hook_library_info().
- */
-function block_library_info() {
-  $libraries['drupal.block'] = array(
-    'title' => 'Block',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'block') . '/block.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-    ),
-  );
-  $libraries['drupal.block.admin'] = array(
-    'title' => 'Block admin',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'block') . '/js/block.admin.js' => array(),
-    ),
-    'css' => array(
-      drupal_get_path('module', 'block') . '/css/block.admin.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupal.ajax'),
-    ),
-  );
-
-  return $libraries;
-}

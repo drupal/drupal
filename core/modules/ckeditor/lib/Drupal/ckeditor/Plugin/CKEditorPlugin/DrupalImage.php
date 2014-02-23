@@ -34,7 +34,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getLibraries(Editor $editor) {
     return array(
-      array('system', 'drupal.ajax'),
+      array('core', 'drupal.ajax'),
     );
   }
 

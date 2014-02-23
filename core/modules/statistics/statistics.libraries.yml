@@ -1,0 +1,8 @@
+drupal.statistics:
+  version: VERSION
+  js:
+    statistics.js: { scope: footer }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings

@@ -77,8 +77,8 @@ class EditorManager extends DefaultPluginManager {
       // Libraries.
       $attachments['library'] = array_merge($attachments['library'], $plugin->getLibraries($editor));
 
-      // JavaScript settings.
-      $settings[$format_id] = array(
+      // Format-specific JavaScript settings.
+      $settings['editor']['formats'][$format_id] = array(
         'format' => $format_id,
         'editor' => $editor->editor,
         'editorSettings' => $plugin->getJSSettings($editor),
@@ -87,7 +87,7 @@ class EditorManager extends DefaultPluginManager {
       );
     }
 
-    // We have all JavaScript settings, allow other modules to alter them.
+    // Allow other modules to alter all JavaScript settings.
     drupal_alter('editor_js_settings', $settings);
 
     if (empty($attachments['library']) && empty($settings)) {
@@ -96,7 +96,7 @@ class EditorManager extends DefaultPluginManager {
 
     $attachments['js'][] = array(
       'type' => 'setting',
-      'data' => array('editor' => array('formats' => $settings)),
+      'data' => $settings,
     );
 
     return $attachments;

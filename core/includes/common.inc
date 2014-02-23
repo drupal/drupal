@@ -12,6 +12,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\MapArray;
 use Drupal\Component\Utility\NestedArray;
@@ -2679,7 +2681,7 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
  * @see form_example_states_form()
  */
 function drupal_process_states(&$elements) {
-  $elements['#attached']['library'][] = array('system', 'drupal.states');
+  $elements['#attached']['library'][] = array('core', 'drupal.states');
   // Elements of '#type' => 'item' are not actual form input elements, but we
   // still want to be able to show/hide them. Since there's no actual HTML input
   // element available, setting #attributes does not make sense, but a wrapper
@@ -2710,7 +2712,6 @@ function drupal_process_states(&$elements) {
  *   its dependencies could not be added.
  *
  * @see drupal_get_library()
- * @see hook_library_info()
  * @see hook_library_info_alter()
  */
 function drupal_add_library($module, $name, $every_page = NULL) {
@@ -2719,6 +2720,10 @@ function drupal_add_library($module, $name, $every_page = NULL) {
   // Only process the library if it exists and it was not added already.
   if (!isset($added[$module][$name])) {
     if ($library = drupal_get_library($module, $name)) {
+      // Allow modules and themes to dynamically attach request and context
+      // specific data for this library; e.g., localization.
+      drupal_alter('library', $library, $module, $name);
+
       // Add all components within the library.
       $elements['#attached'] = array(
         'library' => $library['dependencies'],
@@ -2727,10 +2732,6 @@ function drupal_add_library($module, $name, $every_page = NULL) {
       );
       foreach (array('js', 'css') as $type) {
         foreach ($elements['#attached'][$type] as $data => $options) {
-          // Apply the JS_LIBRARY group if it isn't explicitly given.
-          if ($type == 'js' && !isset($options['group'])) {
-            $elements['#attached']['js'][$data]['group'] = JS_LIBRARY;
-          }
           // Set the every_page flag if one was passed.
           if (isset($every_page)) {
             $elements['#attached'][$type][$data]['every_page'] = $every_page;
@@ -2762,62 +2763,179 @@ function drupal_add_library($module, $name, $every_page = NULL) {
  * - Two (or more) modules can still register the same library and use it
  *   without conflicts in case the libraries are loaded on certain pages only.
  *
- * @param $module
- *   The name of a module that registered a library.
+ * @param $extension
+ *   The name of the extension that registered a library.
  * @param $name
  *   (optional) The name of a registered library to retrieve. By default, all
- *   libraries registered by $module are returned.
+ *   libraries registered by $extension are returned.
  *
  * @return
  *   The definition of the requested library, if $name was passed and it exists,
  *   or FALSE if it does not exist. If no $name was passed, an associative array
- *   of libraries registered by $module is returned (which may be empty).
+ *   of libraries registered by $extension is returned (which may be empty).
  *
  * @see drupal_add_library()
- * @see hook_library_info()
  * @see hook_library_info_alter()
  *
  * @todo The purpose of drupal_get_*() is completely different to other page
  *   requisite API functions; find and use a different name.
  */
-function drupal_get_library($module, $name = NULL) {
+function drupal_get_library($extension, $name = NULL) {
   $libraries = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($libraries[$module])) {
-    // Retrieve all libraries associated with the module.
-    $module_libraries = \Drupal::moduleHandler()->invoke($module, 'library_info');
-    if (empty($module_libraries)) {
-      $module_libraries = array();
-    }
-    // Allow modules to alter the module's registered libraries.
-    drupal_alter('library_info', $module_libraries, $module);
+  if (!isset($libraries[$extension]) && ($cache = cache()->get('library:info:' . $extension))) {
+    $libraries[$extension] = $cache->data;
+  }
 
-    foreach ($module_libraries as $key => $data) {
-      if (is_array($data)) {
-        // Add default elements to allow for easier processing.
-        $module_libraries[$key] += array('dependencies' => array(), 'js' => array(), 'css' => array());
-        foreach ($module_libraries[$key]['js'] as $file => $options) {
-          if (is_scalar($options)) {
-            // The JavaScript or CSS file has been specified in shorthand
-            // format, without an array of options. In this case $options is the
-            // filename. Convert the shorthand version and remove the old array
-            // key.
-            unset($module_libraries[$key]['js'][$file]);
-            $file = $options;
+  if (!isset($libraries[$extension])) {
+    $libraries[$extension] = array();
+    if ($extension === 'core') {
+      $path = 'core';
+      $extension_type = 'core';
+    }
+    else {
+      // @todo Add a $type argument OR automatically figure out the type based
+      //   on current extension data, possibly using a module->theme fallback.
+      $path = drupal_get_path('module', $extension);
+      $extension_type = 'module';
+      if (!$path) {
+        $path = drupal_get_path('theme', $extension);
+        $extension_type = 'theme';
+      }
+    }
+    $library_file = $path . '/' . $extension . '.libraries.yml';
+
+    if ($library_file && file_exists(DRUPAL_ROOT . '/' . $library_file)) {
+      $libraries[$extension] = array();
+      $parser = new Parser();
+      try {
+        $libraries[$extension] = $parser->parse(file_get_contents(DRUPAL_ROOT . '/' . $library_file));
+      }
+      catch (ParseException $e) {
+        // Rethrow a more helpful exception, since ParseException lacks context.
+        throw new \RuntimeException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
+      }
+      // Allow modules to alter the module's registered libraries.
+      drupal_alter('library_info', $libraries[$extension], $extension);
+    }
+
+    foreach ($libraries[$extension] as $id => &$library) {
+      if (!isset($library['js']) && !isset($library['css']) && !isset($library['settings'])) {
+        throw new \RuntimeException(sprintf("Incomplete library definition for '%s' in %s", $id, $library_file));
+      }
+      $library += array('dependencies' => array(), 'js' => array(), 'css' => array());
+
+      if (isset($library['version'])) {
+        // @todo Retrieve version of a non-core extension.
+        if ($library['version'] === 'VERSION') {
+          $library['version'] = \Drupal::VERSION;
+        }
+        // Remove 'v' prefix from external library versions.
+        elseif ($library['version'][0] === 'v') {
+          $library['version'] = substr($library['version'], 1);
+        }
+      }
+
+      foreach (array('js', 'css') as $type) {
+        // Prepare (flatten) the SMACSS-categorized definitions.
+        // @todo After Asset(ic) changes, retain the definitions as-is and
+        //   properly resolve dependencies for all (css) libraries per category,
+        //   and only once prior to rendering out an HTML page.
+        if ($type == 'css' && !empty($library[$type])) {
+          foreach ($library[$type] as $category => $files) {
+            foreach ($files as $source => $options) {
+              if (!isset($options['weight'])) {
+                $options['weight'] = 0;
+              }
+              // Apply the corresponding weight defined by CSS_* constants.
+              $options['weight'] += constant('CSS_' . strtoupper($category == 'theme' ? 'skin' : $category));
+              $library[$type][$source] = $options;
+            }
+            unset($library[$type][$category]);
           }
-          $module_libraries[$key]['js'][$file]['version'] = $module_libraries[$key]['version'];
+        }
+        foreach ($library[$type] as $source => $options) {
+          unset($library[$type][$source]);
+          // Allow to omit the options hashmap in YAML declarations.
+          if (!is_array($options)) {
+            $options = array();
+          }
+          if ($type == 'js' && isset($options['weight']) && $options['weight'] > 0) {
+            throw new \UnexpectedValueException("The $extension/$id library defines a positive weight for '$source'. Only negative weights are allowed (but should be avoided). Instead of a positive weight, specify accurate dependencies for this library.");
+          }
+          // Unconditionally apply default groups for the defined asset files.
+          // The library system is a dependency management system. Each library
+          // properly specifies its dependencies instead of relying on a custom
+          // processing order.
+          if ($type == 'js') {
+            $options['group'] = JS_LIBRARY;
+          }
+          elseif ($type == 'css') {
+            $options['group'] = $extension_type == 'theme' ? CSS_AGGREGATE_THEME : CSS_AGGREGATE_DEFAULT;
+          }
+          // By default, all library assets are files.
+          if (!isset($options['type'])) {
+            $options['type'] = 'file';
+          }
+          if ($options['type'] == 'external') {
+            $options['data'] = $source;
+          }
+          // Determine the file asset URI.
+          else {
+            if ($source[0] === '/') {
+              // An absolute path maps to DRUPAL_ROOT / base_path().
+              if ($source[1] !== '/') {
+                $options['data'] = substr($source, 1);
+              }
+              // A protocol-free URI (e.g., //cdn.com/example.js) is external.
+              else {
+                $options['type'] = 'external';
+                $options['data'] = $source;
+              }
+            }
+            // A stream wrapper URI (e.g., public://generated_js/example.js).
+            elseif (file_valid_uri($source)) {
+              $options['data'] = $source;
+            }
+            // By default, file paths are relative to the registering extension.
+            else {
+              $options['data'] = $path . '/' . $source;
+            }
+          }
+          $options['version'] = $library['version'];
+
+          $library[$type][] = $options;
+        }
+      }
+      // @todo Introduce drupal_add_settings().
+      if (isset($library['settings'])) {
+        $library['js'][] = array(
+          'type' => 'setting',
+          'data' => $library['settings'],
+        );
+        unset($library['settings']);
+      }
+      // @todo Convert all uses of #attached[library][]=array('provider','name')
+      //   into #attached[library][]='provider/name' and remove this.
+      foreach ($library['dependencies'] as $i => $dependency) {
+        if (!is_array($dependency)) {
+          $library['dependencies'][$i] = explode('/', $dependency, 2);
         }
       }
     }
-    $libraries[$module] = $module_libraries;
+    cache()->set('library:info:' . $extension, $libraries[$extension], Cache::PERMANENT, array(
+      'extension' => array(TRUE, $extension),
+      'library_info' => array(TRUE),
+    ));
   }
+
   if (isset($name)) {
-    if (!isset($libraries[$module][$name])) {
-      $libraries[$module][$name] = FALSE;
+    if (!isset($libraries[$extension][$name])) {
+      $libraries[$extension][$name] = FALSE;
     }
-    return $libraries[$module][$name];
+    return $libraries[$extension][$name];
   }
-  return $libraries[$module];
+  return $libraries[$extension];
 }
 
 /**
@@ -2968,7 +3086,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
     'limit' => $options['limit'],
   );
 
-  $element['#attached']['library'][] = array('system', 'drupal.tabledrag');
+  $element['#attached']['library'][] = array('core', 'drupal.tabledrag');
   $element['#attached']['js'][] = array('data' => $settings, 'type' => 'setting');
 }
 
@@ -3531,7 +3649,7 @@ function drupal_pre_render_links($element) {
  * Pre-render callback: Attaches the dropbutton library and required markup.
  */
 function drupal_pre_render_dropbutton($element) {
-  $element['#attached']['library'][] = array('system', 'drupal.dropbutton');
+  $element['#attached']['library'][] = array('core', 'drupal.dropbutton');
   $element['#attributes']['class'][] = 'dropbutton';
   if (!isset($element['#theme_wrappers'])) {
     $element['#theme_wrappers'] = array();

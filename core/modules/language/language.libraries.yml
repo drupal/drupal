@@ -1,0 +1,8 @@
+language.admin:
+  version: VERSION
+  js:
+    language.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once

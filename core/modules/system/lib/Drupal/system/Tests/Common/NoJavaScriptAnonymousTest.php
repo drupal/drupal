@@ -65,16 +65,11 @@ class NoJavaScriptAnonymousTest extends WebTestBase {
     $this->assertNoRaw('var drupalSettings = {', 'drupalSettings is not set.');
 
     // Ensure the HTML5 shiv exists.
-    $system_libraries = system_library_info();
-    $html5_shiv_version = $system_libraries['html5shiv']['version'];
-    $html5_shiv_markup = 'core/assets/vendor/html5shiv/html5.js?v=' . $html5_shiv_version . '"></script>';
-    $this->assertRaw($html5_shiv_markup, 'HTML5 shiv JavaScript exists.');
+    $this->assertRaw('html5shiv/html5.js', 'HTML5 shiv JavaScript exists.');
 
     // Ensure no other JavaScript file exists on the page, while ignoring the
     // HTML5 shiv.
-    $content = $this->drupalGetContent();
-    $this->drupalSetContent(str_replace($html5_shiv_markup, '', $content));
-    $this->assertNoRaw('.js', "No other JavaScript exists.");
+    $this->assertNoPattern('/(?<!html5)\.js/', "No other JavaScript exists.");
   }
 
 }

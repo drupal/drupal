@@ -9,26 +9,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Implements hook_library_info().
- */
-function text_library_info() {
-  $libraries['drupal.text'] = array(
-    'title' => 'Text',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'text') . '/text.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'jquery.once'),
-      array('system', 'drupal'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Implements hook_help().
  */
 function text_help($path, $arg) {

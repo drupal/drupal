@@ -1590,7 +1590,7 @@ function theme_table($variables) {
 
   // Add sticky headers, if applicable.
   if (count($header) && $sticky) {
-    drupal_add_library('system', 'drupal.tableheader');
+    drupal_add_library('core', 'drupal.tableheader');
     // Add 'sticky-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
     $attributes['class'][] = 'sticky-enabled';
@@ -1599,7 +1599,7 @@ function theme_table($variables) {
   // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
   // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
   if (count($header) && $responsive) {
-    drupal_add_library('system', 'drupal.tableresponsive');
+    drupal_add_library('core', 'drupal.tableresponsive');
     // Add 'responsive-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
     $attributes['class'][] = 'responsive-enabled';
@@ -2157,7 +2157,7 @@ function template_preprocess_html(&$variables) {
     drupal_add_html_head($element, $name);
   }
 
-  drupal_add_library('system', 'html5shiv', TRUE);
+  drupal_add_library('core', 'html5shiv', TRUE);
 
   $variables['page_top'][] = array('#markup' => $page->getBodyTop());
   $variables['page_bottom'][] = array('#markup' => $page->getBodyBottom());
@@ -2431,26 +2431,8 @@ function template_preprocess_maintenance_page(&$variables) {
 
   // These are usually added from system_page_build() except maintenance.css.
   // When the database is inactive it's not called so we add it here.
-  $default_css['library'][] = array('system', 'normalize');
-  $path = drupal_get_path('module', 'system');
-  // Adjust the weights to load these early.
-  $default_css['css'][$path . '/css/system.module.css'] = array(
-    'weight' => CSS_COMPONENT - 10,
-    'every_page' => TRUE,
-  );
-  $default_css['css'][$path . '/css/system.theme.css'] = array(
-    'weight' => CSS_SKIN - 10,
-    'every_page' => TRUE,
-  );
-  // Unlike regular pages, the admin.css is added for every maintenance page.
-  $default_css['css'][$path . '/css/system.admin.css'] = array(
-    'weight' => CSS_COMPONENT - 10,
-    'every_page' => TRUE,
-  );
-  $default_css['css'][$path . '/css/system.maintenance.css'] = array(
-    'weight' => CSS_COMPONENT - 10,
-    'every_page' => TRUE,
-  );
+  $default_css['library'][] = array('core', 'normalize');
+  $default_css['library'][] = array('system', 'maintenance');
   $attached = array('#attached' => $default_css);
   drupal_render($attached);
   $variables['messages'] = array(

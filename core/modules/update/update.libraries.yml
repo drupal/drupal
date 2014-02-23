@@ -1,0 +1,5 @@
+drupal.update.admin:
+  version: VERSION
+  css:
+    theme:
+      css/update.admin.css: {}

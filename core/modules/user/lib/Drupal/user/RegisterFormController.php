@@ -44,7 +44,7 @@ class RegisterFormController extends AccountFormController {
       return new RedirectResponse(url('user/' . $user->id(), array('absolute' => TRUE)));
     }
 
-    $form['#attached']['library'][] = array('system', 'jquery.cookie');
+    $form['#attached']['library'][] = array('core', 'jquery.cookie');
     $form['#attributes']['class'][] = 'user-info-from-cookie';
 
     // Start with the default user account fields.

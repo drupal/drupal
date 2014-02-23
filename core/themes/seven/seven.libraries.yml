@@ -1,0 +1,20 @@
+install-page:
+  version: VERSION
+  js:
+    js/mobile.install.js: {}
+  css:
+    theme:
+      install-page.css: {}
+  dependencies:
+    - system/maintenance
+
+drupal.nav-tabs:
+  version: VERSION
+  js:
+    js/nav-tabs.js: {}
+  dependencies:
+    - core/matchmedia
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/jquery.intrinsic

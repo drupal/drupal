@@ -1,5 +1,8 @@
 /**
  * Manages elements that can offset the size of the viewport.
+ *
+ * Measures and reports viewport offset dimensions from elements like the
+ * toolbar that can potentially displace the positioning of other elements.
  */
 (function ($, Drupal, debounce) {
 

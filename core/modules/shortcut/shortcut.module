@@ -501,32 +501,3 @@ function shortcut_toolbar() {
 
   return $items;
 }
-
-/**
- * Implements hook_library_info().
- */
-function shortcut_library_info() {
-  $path = drupal_get_path('module', 'shortcut');
-  $libraries['drupal.shortcut.admin'] = array(
-    'title' => 'Shortcut configuration',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/shortcut.admin.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-    ),
-  );
-  $libraries['drupal.shortcut'] = array(
-    'title' => 'Shortcut UI',
-    'version' => \Drupal::VERSION,
-    'css' => array(
-      $path . '/css/shortcut.module.css' => array(),
-      $path . '/css/shortcut.theme.css' => array(),
-      $path . '/css/shortcut.icons.css' => array(),
-    ),
-  );
-
-  return $libraries;
-}

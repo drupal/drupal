@@ -40,54 +40,6 @@ function tour_permission() {
 }
 
 /**
- * Implements hook_library_info().
- */
-function tour_library_info() {
-  $path = drupal_get_path('module', 'tour');
-
-  $libraries['tour'] = array(
-    'title' => 'Tour',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/js/tour.js' => array('group' => JS_LIBRARY),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'backbone'),
-      array('tour', 'jquery.joyride'),
-      array('tour', 'tour-styling'),
-    ),
-  );
-
-  $libraries['tour-styling'] = array(
-    'title' => 'Tour',
-    'version' => \Drupal::VERSION,
-    'css' => array(
-      $path . '/css/tour.module.css' => array('media' => 'screen'),
-    ),
-  );
-
-  $libraries['jquery.joyride'] = array(
-    'title' => 'Joyride',
-    'website' => 'https://github.com/zurb/joyride',
-    'version' => '2.0.3',
-    'js' => array(
-      $path . '/js/jquery.joyride-2.0.3.js' => array(),
-    ),
-    'css' => array(
-      $path . '/css/joyride-2.0.3.css' => array('media' => 'screen'),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'jquery.cookie'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Implements hook_toolbar().
  */
 function tour_toolbar() {

@@ -230,23 +230,3 @@ function path_entity_field_info($entity_type) {
     return $info;
   }
 }
-
-/**
- * Implements hook_library_info().
- */
-function path_library_info() {
-  $libraries['drupal.path'] = array(
-    'title' => 'Path',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'path') . '/path.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupal.form'),
-    ),
-  );
-
-  return $libraries;
-}

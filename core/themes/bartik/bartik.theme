@@ -110,23 +110,6 @@ function bartik_preprocess_maintenance_page(&$variables) {
 }
 
 /**
- * Implements hook_library_info().
- */
-function bartik_library_info() {
-  $path = drupal_get_path('theme', 'bartik');
-  $libraries['maintenance_page'] = array(
-    'version' => \DRUPAL::VERSION,
-    'css' => array(
-      $path . '/css/maintenance-page.css' => array(
-        'group' => CSS_AGGREGATE_THEME,
-      ),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Implements hook_preprocess_HOOK() for node templates.
  */
 function bartik_preprocess_node(&$variables) {

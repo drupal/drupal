@@ -826,23 +826,3 @@ function book_node_type_update(NodeTypeInterface $type) {
 function book_link_load($mlid) {
   return entity_load('menu_link', $mlid);
 }
-
-/**
- * Implements hook_library_info().
- */
-function book_library_info() {
-  $libraries['drupal.book'] = array(
-    'title' => 'Book',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'book') . '/book.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupal.form'),
-    ),
-  );
-
-  return $libraries;
-}

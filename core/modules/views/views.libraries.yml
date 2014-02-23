@@ -1,0 +1,33 @@
+views.module:
+  version: VERSION
+  css:
+    component:
+      css/views.module.css: {}
+
+views.ajax:
+  version: VERSION
+  js:
+    js/base.js: {}
+    js/ajax_view.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.form
+    - core/drupal.ajax
+
+views.contextual-links:
+  version: VERSION
+  js:
+    # Ensure to run before contextual/drupal.contextual-links.
+    js/views-contextual.js: { weight: -10 }
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+views.exposed-form:
+  version: VERSION
+  css:
+    component:
+      css/views.exposed_form.css: {}

@@ -1,0 +1,678 @@
+# All libraries are defined in alphabetical order.
+
+backbone:
+  remote: https://github.com/jashkenas/backbone
+  version: 1.1.0
+  js:
+    assets/vendor/backbone/backbone.js: { weight: -19 }
+  dependencies:
+    - core/underscore
+
+classList:
+  remote: https://github.com/eligrey/classList.js
+  # @todo Stable release required for Drupal 8.0.
+  version: master
+  js:
+    assets/vendor/classList/classList.min.js: { weight: -21, browsers: { IE: 'lte IE 9', '!IE': false } }
+
+ckeditor:
+  remote: https://github.com/ckeditor/ckeditor-dev
+  # @todo Stable release required for Drupal 8.0.
+  version: 4.2-dev
+  commit: 887d81ac1824008b690e439a1b29eb4f13b51212
+  js:
+    assets/vendor/ckeditor/ckeditor.js: { preprocess: false }
+
+domready:
+  remote: https://github.com/ded/domready
+  # @todo Stable release required for Drupal 8.0.
+  version: master
+  js:
+    assets/vendor/domready/ready.min.js: { weight: -21 }
+
+drupal:
+  version: VERSION
+  js:
+    misc/drupal.js: { weight: -18 }
+  dependencies:
+    - core/domready
+
+drupalSettings:
+  version: VERSION
+  settings: {}
+
+drupal.active-link:
+  version: VERSION
+  js:
+    misc/active-link.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/classList
+
+drupal.ajax:
+  version: VERSION
+  js:
+    misc/ajax.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.progress
+    - core/jquery.once
+
+drupal.announce:
+  version: VERSION
+  js:
+    misc/announce.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.debounce
+
+drupal.autocomplete:
+  version: VERSION
+  js:
+    misc/autocomplete.js: { weight: -1 }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/jquery.ui.autocomplete
+
+drupal.batch:
+  version: VERSION
+  js:
+    misc/batch.js: { cache: false }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/drupal.progress
+    - core/jquery.once
+
+drupal.collapse:
+  version: VERSION
+  js:
+    misc/collapse.js: {}
+  dependencies:
+    - core/jquery
+    - core/modernizr
+    - core/drupal
+    - core/drupal.form
+    - core/jquery.once
+
+drupal.debounce:
+  version: VERSION
+  js:
+    misc/debounce.js: {}
+  dependencies:
+    # @todo Remove Drupal dependency.
+    - core/drupal
+
+drupal.dialog:
+  version: VERSION
+  js:
+    misc/dialog.js: {}
+    misc/dialog.position.js: {}
+  css:
+    theme:
+      misc/dialog.theme.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.debounce
+    - core/drupal.displace
+    - core/jquery.ui.dialog
+
+drupal.dialog.ajax:
+  version: VERSION
+  js:
+    misc/dialog.ajax.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax
+    - core/drupal.dialog
+
+drupal.displace:
+  version: VERSION
+  js:
+    misc/displace.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.debounce
+
+drupal.dropbutton:
+  version: VERSION
+  js:
+    misc/dropbutton/dropbutton.js: {}
+  css:
+    component:
+      misc/dropbutton/dropbutton.css: {}
+    theme:
+      misc/dropbutton/dropbutton.theme.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+
+drupal.form:
+  version: VERSION
+  js:
+    misc/form.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.debounce
+    - core/jquery.cookie
+    - core/jquery.once
+
+drupal.machine-name:
+  version: VERSION
+  js:
+    misc/machine-name.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
+drupal.progress:
+  version: VERSION
+  js:
+    misc/progress.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings
+
+drupal.states:
+  version: VERSION
+  js:
+    misc/states.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+
+drupal.tabbingmanager:
+  version: VERSION
+  js:
+    misc/tabbingmanager.js: {}
+  dependencies:
+    - core/jquery
+    # Supplies the ':tabbable' pseudo selector.
+    - core/jquery.ui
+    - core/drupal
+
+drupal.tabledrag:
+  version: VERSION
+  js:
+    misc/tabledrag.js: { weight: -1 }
+  dependencies:
+    - core/jquery
+    - core/modernizr
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.cookie
+
+drupal.tableheader:
+  version: VERSION
+  js:
+    misc/tableheader.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/drupal.displace
+
+drupal.tableresponsive:
+  version: VERSION
+  js:
+    misc/tableresponsive.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+
+drupal.tableselect:
+  version: VERSION
+  js:
+    misc/tableselect.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+
+drupal.timezone:
+  version: VERSION
+  js:
+    misc/timezone.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+drupal.vertical-tabs:
+  version: VERSION
+  js:
+    # Load before core/drupal.collapse.
+    misc/vertical-tabs.js: { weight: -1 }
+  css:
+    component:
+      misc/vertical-tabs.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.form
+
+html5shiv:
+  remote: https://github.com/aFarkas/html5shiv
+  version: 3.6.2
+  js:
+    assets/vendor/html5shiv/html5.js: { weight: -22, browsers: { IE: 'lte IE 8', '!IE': false } }
+
+jquery:
+  remote: https://github.com/jquery/jquery
+  version: 2.0.3
+  js:
+    assets/vendor/jquery/jquery.js: { weight: -20 }
+
+jquery.cookie:
+  # @todo jquery.cookie.js was never supposed to be distributed with jQuery UI.
+  # @see https://drupal.org/node/2161217
+  remote: https://github.com/carhartl/jquery-cookie
+  version: v1.0
+  js:
+    assets/vendor/jquery.ui/external/jquery.cookie.js: {}
+  dependencies:
+    - core/jquery
+
+jquery.farbtastic:
+  remote: https://github.com/mattfarina/farbtastic
+  # @todo Ping @robloach or @mattfarina to retroactively create this release.
+  version: 1.2
+  js:
+    assets/vendor/farbtastic/farbtastic.js: {}
+  css:
+    component:
+      assets/vendor/farbtastic/farbtastic.css: {}
+  dependencies:
+    - core/jquery
+
+jquery.form:
+  remote: https://github.com/malsup/form
+  version: 3.39
+  js:
+    assets/vendor/jquery-form/jquery.form.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.cookie
+
+jquery.intrinsic:
+  version: VERSION
+  js:
+    misc/jquery.intrinsic.js: {}
+  dependencies:
+    - core/jquery
+
+jquery.once:
+  remote: https://github.com/RobLoach/jquery-once
+  version: 1.2.3
+  js:
+    assets/vendor/jquery-once/jquery.once.js: { weight: -19 }
+  dependencies:
+    - core/jquery
+
+jquery.ui:
+  remote: https://github.com/jquery/jquery-ui
+  version: &jquery_ui 1.10.2
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.core.js: { weight: -11 }
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.core.css: {}
+    theme:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.theme.css: {}
+  dependencies:
+    - core/jquery
+
+jquery.ui.accordion:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.accordion.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.accordion.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.autocomplete:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.autocomplete.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.autocomplete.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.position
+    - core/jquery.ui.menu
+
+jquery.ui.button:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.button.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.button.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.datepicker:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.datepicker.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.datepicker.css: {}
+  dependencies:
+    - core/jquery.ui
+
+jquery.ui.dialog:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.dialog.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.dialog.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.button
+    - core/jquery.ui.draggable
+    - core/jquery.ui.mouse
+    - core/jquery.ui.position
+    - core/jquery.ui.resizable
+
+jquery.ui.draggable:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.draggable.js: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.droppable:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.droppable.js: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.mouse
+    - core/jquery.ui.draggable
+
+jquery.ui.effects.core:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.core.js: { weight: -9 }
+
+jquery.ui.effects.blind:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.blind.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.bounce:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.bounce.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.clip:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.clip.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.drop:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.drop.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.explode:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.explode.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.fade:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.fade.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.fold:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.fold.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.highlight:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.highlight.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.pulsate:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.pulsate.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.scale:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.scale.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.shake:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.shake.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.slide:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.slide.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.effects.transfer:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.effects.transfer.js: {}
+  dependencies:
+    - core/jquery.ui.effects.core
+
+jquery.ui.menu:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.menu.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.menu.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.mouse:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.mouse.js: {}
+  dependencies:
+    - core/jquery.ui.widget
+
+jquery.ui.position:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.position.js: {}
+
+jquery.ui.progressbar:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.progressbar.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.progressbar.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.resizable:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.resizable.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.resizable.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.mouse
+
+jquery.ui.selectable:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.selectable.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.selectable.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.slider:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.slider.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.slider.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.sortable:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.sortable.js: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.mouse
+    - core/jquery.ui.widget
+
+jquery.ui.spinner:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.spinner.js: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.button
+
+jquery.ui.tabs:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.tabs.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.tabs.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+
+jquery.ui.tooltip:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.tooltip.js: {}
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/jquery.ui.tooltip.css: {}
+  dependencies:
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.position
+
+jquery.ui.touch-punch:
+  remote: https://github.com/furf/jquery-ui-touch-punch
+  version: 0.2.2
+  js:
+    assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js: {}
+  dependencies:
+    - core/jquery.ui
+
+jquery.ui.widget:
+  version: *jquery_ui
+  js:
+    assets/vendor/jquery.ui/ui/jquery.ui.widget.js: { weight: -10 }
+  dependencies:
+    - core/jquery.ui
+
+matchmedia:
+  remote: https://github.com/paulirish/matchMedia.js
+  # @todo Contribute upstream and replace with upstream version.
+  # @see http://drupal.org/node/1815602
+  version: VERSION
+  js:
+    misc/matchmedia.js: {}
+  dependencies:
+    - core/drupal.debounce
+
+modernizr:
+  remote: https://github.com/Modernizr/Modernizr
+  version: v2.6.2
+  js:
+    assets/vendor/modernizr/modernizr.min.js: { every_page: true, preprocess: 0, scope: header, weight: -21 }
+
+normalize:
+  remote: https://github.com/necolas/normalize.css
+  version: v2.1.2
+  css:
+    base:
+      assets/vendor/normalize-css/normalize.css: { every_page: true, weight: -20 }
+
+underscore:
+  remote: https://github.com/jashkenas/underscore
+  version: 1.5.2
+  js:
+    assets/vendor/underscore/underscore.js: { weight: -20 }
+

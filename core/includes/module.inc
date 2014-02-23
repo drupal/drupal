@@ -5,6 +5,7 @@
  * API for loading and interacting with Drupal modules.
  */
 
+use Drupal\Core\Cache\Cache;
 
 /**
  * Builds a list of bootstrap modules and enabled modules and themes.
@@ -112,6 +113,13 @@ function system_list_reset() {
   drupal_static_reset('list_themes');
   \Drupal::cache('bootstrap')->delete('system_list');
   \Drupal::cache()->delete('system_info');
+
+  // Clear the library info cache.
+  // Libraries may be provided by all extension types, and may be altered by any
+  // other extensions (types) due to the nature of drupal_alter() and the fact
+  // that profiles are recorded and handled as modules.
+  Cache::invalidateTags(array('extension' => TRUE));
+
   // Remove last known theme data state.
   // This causes system_list() to call system_rebuild_theme_data() on its next
   // invocation. When enabling a module that implements hook_system_info_alter()

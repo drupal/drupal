@@ -184,44 +184,6 @@ function views_ui_permission() {
 }
 
 /**
- * Implements hook_library_info().
- */
-function views_ui_library_info() {
-  $libraries = array();
-
-  $path = drupal_get_path('module', 'views_ui') . '/js/';
-
-  $libraries['views_ui.admin'] = array(
-    'title' => 'Views UI ADMIN',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . 'ajax.js' => array('group' => JS_DEFAULT),
-      $path . 'dialog.views.js' => array('group' => JS_DEFAULT),
-      $path . 'views-admin.js' => array('group' => JS_DEFAULT),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'jquery.once'),
-      array('system', 'jquery.form'),
-      array('system', 'drupal.ajax'),
-      array('views', 'views.ajax'),
-    ),
-  );
-
-  $libraries['views_ui.listing'] = array(
-    'title' => 'Views UI listing',
-    'version' => Drupal::VERSION,
-    'js' => array(
-      $path . 'views_ui.listing.js' => array('group' => JS_DEFAULT),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Implements hook_preprocess_HOOK() for views templates.
  */
 function views_ui_preprocess_views_view(&$variables) {
@@ -382,30 +344,6 @@ function views_ui_contextual_links_suppress_push() {
  */
 function views_ui_contextual_links_suppress_pop() {
   views_ui_contextual_links_suppress(((int) views_ui_contextual_links_suppress())-1);
-}
-
-/**
- * This is part of a patch to address a jQueryUI bug.  The bug is responsible
- * for the inability to scroll a page when a modal dialog is active. If the content
- * of the dialog extends beyond the bottom of the viewport, the user is only able
- * to scroll with a mousewheel or up/down keyboard keys.
- *
- * @see http://bugs.jqueryui.com/ticket/4671
- * @see https://bugs.webkit.org/show_bug.cgi?id=19033
- * @see /js/jquery.ui.dialog.patch.js
- * @see /js/jquery.ui.dialog.min.js
- *
- * The javascript patch overwrites the $.ui.dialog.overlay.events object to remove
- * the mousedown, mouseup and click events from the list of events that are bound
- * in $.ui.dialog.overlay.create.
- */
-
-function views_ui_library_alter(&$libraries, $module) {
-  if ($module == 'system' && isset($libraries['jquery.ui.dialog'])) {
-    if (version_compare($libraries['jquery.ui.dialog']['version'], '1.7.2', '>=')) {
-      $libraries['jquery.ui.dialog']['js'][drupal_get_path('module', 'views') . '/js/jquery.ui.dialog.patch.js'] = array();
-    }
-  }
 }
 
 /**

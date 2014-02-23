@@ -184,27 +184,6 @@ function history_user_delete($account) {
 }
 
 /**
- * Implements hook_library_info().
- */
-function history_library_info() {
-  $libraries['drupal.history'] = array(
-    'title' => 'History',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'history') . '/js/history.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupalSettings'),
-      array('system', 'drupal'),
-      array('system', 'drupal.ajax'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * #post_render_cache callback; attaches the last read timestamp for a node.
  *
  * @param array $element

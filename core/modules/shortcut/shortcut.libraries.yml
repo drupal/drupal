@@ -1,0 +1,16 @@
+drupal.shortcut.admin:
+  version: VERSION
+  js:
+    shortcut.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+drupal.shortcut:
+  version: VERSION
+  css:
+    component:
+      css/shortcut.module.css: {}
+    theme:
+      css/shortcut.theme.css: {}
+      css/shortcut.icons.css: {}

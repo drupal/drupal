@@ -145,7 +145,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     }
     $entities = $this->load();
     $form['#theme'] = array('block_list');
-    $form['#attached']['library'][] = array('system', 'drupal.tableheader');
+    $form['#attached']['library'][] = array('core', 'drupal.tableheader');
     $form['#attached']['library'][] = array('block', 'drupal.block');
     $form['#attached']['library'][] = array('block', 'drupal.block.admin');
     $form['#attributes']['class'][] = 'clearfix';

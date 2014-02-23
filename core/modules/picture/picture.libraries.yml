@@ -1,0 +1,10 @@
+# @todo Move into /core/assets and core.library.yml.
+picturefill:
+  remote: https://github.com/scottjehl/picturefill
+  # @todo Contribute upstream and/or replace with upstream version.
+  # @see https://drupal.org/node/1775530
+  version: VERSION
+  js:
+    picturefill/picturefill.js: { weight: -10 }
+  dependencies:
+    - core/matchmedia

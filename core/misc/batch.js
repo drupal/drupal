@@ -1,3 +1,6 @@
+/**
+ * Drupal's batch API.
+ */
 (function ($, Drupal) {
 
   "use strict";

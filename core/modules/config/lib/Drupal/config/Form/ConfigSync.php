@@ -155,7 +155,7 @@ class ConfigSync extends FormBase {
     }
 
     // Add the AJAX library to the form for dialog support.
-    $form['#attached']['library'][] = array('system', 'drupal.ajax');
+    $form['#attached']['library'][] = array('core', 'drupal.ajax');
 
     foreach ($storage_comparer->getChangelist() as $config_change_type => $config_files) {
       if (empty($config_files)) {

@@ -9,43 +9,6 @@ use Drupal\Core\Template\RenderWrapper;
 use Drupal\Component\Utility\String;
 
 /**
- * Implements hook_library_info().
- */
-function seven_library_info() {
-  $path = drupal_get_path('theme', 'seven');
-
-  $libraries['install-page'] = array(
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      $path . '/js/mobile.install.js' => array(
-        'group' => JS_THEME,
-      ),
-    ),
-    'css' => array(
-      $path . '/install-page.css' => array(
-        'group' => CSS_AGGREGATE_THEME,
-      ),
-    ),
-  );
-
-  $libraries['drupal.nav-tabs'] = array(
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('theme', 'seven') . '/js/nav-tabs.js' => array('group' => JS_THEME),
-    ),
-    'dependencies' => array(
-      array('system', 'matchmedia'),
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'jquery.once'),
-      array('system', 'jquery.intrinsic'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Implements hook_preprocess_HOOK() for page templates.
  */
 function seven_preprocess_page(&$variables) {
@@ -271,7 +234,7 @@ function seven_menu_local_action($variables) {
   $libraries = array(
     '#attached' => array(
       'library' => array(
-        array('system', 'modernizr'),
+        array('core', 'modernizr'),
       ),
     ),
   );
@@ -298,7 +261,7 @@ function seven_menu_local_action($variables) {
 function seven_element_info_alter(&$type) {
   // We require Modernizr for button styling.
   if (isset($type['button'])) {
-    $type['button']['#attached']['library'][] = array('system', 'modernizr');
+    $type['button']['#attached']['library'][] = array('core', 'modernizr');
   }
 }
 
@@ -311,13 +274,7 @@ function seven_preprocess_install_page(&$variables) {
 
   // Normally we could attach libraries via hook_page_alter(), but when the
   // database is inactive it's not called so we add them here.
-  $libraries = array(
-    '#attached' => array(
-      'library' => array(
-        array('seven', 'install-page'),
-      ),
-    ),
-  );
+  $libraries['#attached']['library'][] = array('seven', 'install-page');
   drupal_render($libraries);
 }
 

@@ -95,13 +95,11 @@ function hook_editor_default_settings_alter(&$default_settings, $editor) {
  * @param array $settings
  *   All the settings that will be added to the page via _drupal_add_js() for
  *   the text formats to which a user has access.
- * @param array $formats
- *   The list of format objects for which settings are being added.
  */
-function hook_editor_js_settings_alter(array &$settings, array $formats) {
-  if (isset($formats['basic_html'])) {
-    $settings['basic_html']['editor'][] = 'MyDifferentEditor';
-    $settings['basic_html']['editorSettings']['buttons'] = array('strong', 'italic', 'underline');
+function hook_editor_js_settings_alter(array &$settings) {
+  if (isset($settings['editor']['formats']['basic_html'])) {
+    $settings['editor']['formats']['basic_html']['editor'] = 'MyDifferentEditor';
+    $settings['editor']['formats']['basic_html']['editorSettings']['buttons'] = array('strong', 'italic', 'underline');
   }
 }
 

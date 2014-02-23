@@ -2079,7 +2079,7 @@ function install_configure_form($form, &$form_state, &$install_state) {
 
   $form['#attached']['library'][] = array('system', 'drupal.system');
   // Add JavaScript time zone detection.
-  $form['#attached']['library'][] = array('system', 'drupal.timezone');
+  $form['#attached']['library'][] = array('core', 'drupal.timezone');
   // We add these strings as settings because JavaScript translation does not
   // work during installation.
   $js = array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')));

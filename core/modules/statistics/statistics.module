@@ -261,28 +261,6 @@ function statistics_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hook_library_info().
- */
-function statistics_library_info() {
-  $libraries['drupal.statistics'] = array(
-    'title' => 'Statistics',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'statistics') . '/statistics.js' => array(
-        'scope' => 'footer'
-      ),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-    ),
-  );
-
-  return $libraries;
-}
-
-/**
  * Implements hook_block_alter().
  *
  * Removes the "popular" block from display if the module is not configured

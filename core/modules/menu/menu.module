@@ -698,34 +698,3 @@ function menu_preprocess_block(&$variables) {
     $variables['attributes']['role'] = 'navigation';
   }
 }
-
-/**
- * Implements hook_library_info().
- */
-function menu_library_info() {
-  $libraries['drupal.menu'] = array(
-    'title' => 'Menu',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'menu') . '/menu.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupal.form'),
-    ),
-  );
-  $libraries['drupal.menu.admin'] = array(
-    'title' => 'Menu admin',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'menu') . '/menu.admin.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-    ),
-  );
-
-  return $libraries;
-}

@@ -944,27 +944,3 @@ function taxonomy_taxonomy_term_delete(Term $term) {
 /**
  * @} End of "defgroup taxonomy_index".
  */
-
-/**
- * Implements hook_library_info().
- */
-function taxonomy_library_info() {
-  $libraries['drupal.taxonomy'] = array(
-    'title' => 'Taxonomy',
-    'version' => \Drupal::VERSION,
-    'js' => array(
-      drupal_get_path('module', 'taxonomy') . '/taxonomy.js' => array(),
-    ),
-    'css' => array(
-      drupal_get_path('module', 'taxonomy') . '/css/taxonomy.module.css' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'drupal.tabledrag'),
-    ),
-  );
-
-  return $libraries;
-}

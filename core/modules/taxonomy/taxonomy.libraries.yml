@@ -1,0 +1,12 @@
+drupal.taxonomy:
+  version: VERSION
+  js:
+    taxonomy.js: {}
+  css:
+    component:
+      css/taxonomy.module.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.tabledrag
