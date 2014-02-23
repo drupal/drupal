@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
-use Drupal\field\FieldInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_views_data().
@@ -480,7 +480,7 @@ function file_views_data() {
  *
  * @see field_views_field_default_views_data()
  */
-function file_field_views_data(FieldInterface $field) {
+function file_field_views_data(FieldConfigInterface $field) {
   $data = field_views_field_default_views_data($field);
   foreach ($data as $table_name => $table_data) {
     // Add the relationship only on the fid field.
@@ -501,7 +501,7 @@ function file_field_views_data(FieldInterface $field) {
  *
  * Views integration to provide reverse relationships on file fields.
  */
-function file_field_views_data_views_data_alter(array &$data, FieldInterface $field) {
+function file_field_views_data_views_data_alter(array &$data, FieldConfigInterface $field) {
   $entity_type_id = $field->entity_type;
   $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
   $field_name = $field->getName();

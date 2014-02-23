@@ -52,7 +52,7 @@ function field_info_field_map() {
  *   non-deleted field. For deleted fields, use field_info_field_by_id().
  *
  * @return
- *   The \Drupal\field\FieldInterface field definition, as returned by
+ *   The \Drupal\field\FieldConfigInterface field definition, as returned by
  *   entity_load_multiple_by_properties(), NULL if the field was not found.
  *
  * @see field_info_field_by_id()
@@ -71,7 +71,7 @@ function field_info_field($entity_type, $field_name) {
  *   The ID of the field to retrieve. $field_id can refer to a deleted field.
  *
  * @return
- *   The \Drupal\field\FieldInterface field definition, as returned by
+ *   The \Drupal\field\FieldConfigInterface field definition, as returned by
  *   entity_load_multiple_by_properties(), NULL if the field was not found.
  *
  * @see field_info_field()
@@ -93,8 +93,8 @@ function field_info_field_by_id($field_id) {
  * field_info_instances($entity_type, $bundle), it is recommended to use the
  * getField() method on each $instance instead.
  *
- * @return \Drupal\field\FieldInterface[]
- *   An array of FieldInterface configuration entities, keyed by UUID.
+ * @return \Drupal\field\FieldConfigInterface[]
+ *   An array of FieldConfigInterface configuration entities, keyed by UUID.
  *
  * @see field_info_field()
  * @see field_info_field_by_id()

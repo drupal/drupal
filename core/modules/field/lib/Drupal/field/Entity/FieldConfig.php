@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldException;
-use Drupal\field\FieldInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Defines the Field entity.
@@ -32,7 +32,7 @@ use Drupal\field\FieldInterface;
  *   }
  * )
  */
-class FieldConfig extends ConfigEntityBase implements FieldInterface {
+class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
 
   /**
    * The maximum length of the field name, in characters.

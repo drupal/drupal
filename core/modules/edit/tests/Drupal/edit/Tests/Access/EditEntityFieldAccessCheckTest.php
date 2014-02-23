@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\edit\Access\EditEntityFieldAccessCheck;
 use Drupal\Tests\UnitTestCase;
-use Drupal\field\FieldInterface;
+use Drupal\field\FieldConfigInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -110,14 +110,14 @@ class EditEntityFieldAccessCheckTest extends UnitTestCase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   A mocked entity.
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   A mocked field.
    * @param bool|null $expected_result
    *   The expected result of the access call.
    *
    * @dataProvider providerTestAccess
    */
-  public function testAccess(EntityInterface $entity, FieldInterface $field = NULL, $expected_result) {
+  public function testAccess(EntityInterface $entity, FieldConfigInterface $field = NULL, $expected_result) {
     $route = new Route('/edit/form/test_entity/1/body/und/full', array(), array('_access_edit_entity_field' => 'TRUE'));
     $request = new Request();
 

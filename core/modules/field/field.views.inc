@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\field\FieldInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_views_data().
@@ -59,13 +59,13 @@ function field_views_data_alter(&$data) {
 /**
  * Determines whether the entity type the field appears in is SQL based.
  *
- * @param \Drupal\field\FieldInterface $field
+ * @param \Drupal\field\FieldConfigInterface $field
  *   The field definition.
  *
  * @return bool
  *   True if the entity type uses DatabaseStorageController.
  */
-function _field_views_is_sql_entity_type(FieldInterface $field) {
+function _field_views_is_sql_entity_type(FieldConfigInterface $field) {
   $entity_manager = \Drupal::entityManager();
   if ($entity_manager->getDefinition($field->entity_type) && $entity_manager->getStorageController($field->entity_type) instanceof FieldableDatabaseStorageController) {
     return TRUE;
@@ -102,13 +102,13 @@ function field_views_field_label($entity_type, $field_name) {
 /**
  * Default views data implementation for a field.
  *
- * @param \Drupal\field\FieldInterface $field
+ * @param \Drupal\field\FieldConfigInterface $field
  *   The field definition.
  *
  * @return array
  *   The default views data for the field.
  */
-function field_views_field_default_views_data(FieldInterface $field) {
+function field_views_field_default_views_data(FieldConfigInterface $field) {
   $data = array();
 
   // Check the field type is available.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\FieldInstanceInterface.
+ * Contains \Drupal\field\FieldInstanceConfigInterface.
  */
 
 namespace Drupal\field;
@@ -13,12 +13,12 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 /**
  * Provides an interface defining a field instance entity.
  */
-interface FieldInstanceInterface extends ConfigEntityInterface, FieldDefinitionInterface {
+interface FieldInstanceConfigInterface extends ConfigEntityInterface, FieldDefinitionInterface {
 
   /**
    * Returns the field entity for this instance.
    *
-   * @return \Drupal\field\FieldInterface
+   * @return \Drupal\field\FieldConfigInterface
    *   The field entity for this instance.
    */
   public function getField();

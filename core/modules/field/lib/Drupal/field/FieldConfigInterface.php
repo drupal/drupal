@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\field\FieldInterface.
+ * Contains \Drupal\field\FieldConfigInterface.
  */
 
 namespace Drupal\field;
@@ -13,7 +13,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 /**
  * Provides an interface defining a field entity.
  */
-interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface {
+interface FieldConfigInterface extends ConfigEntityInterface, FieldDefinitionInterface {
 
   /**
    * Returns the list of bundles where the field has instances.

@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\field\FieldException;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldInstanceConfigInterface;
 
 /**
  * Defines the Field instance entity.
@@ -31,7 +31,7 @@ use Drupal\field\FieldInstanceInterface;
  *   }
  * )
  */
-class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceInterface {
+class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfigInterface {
 
   /**
    * The instance ID.

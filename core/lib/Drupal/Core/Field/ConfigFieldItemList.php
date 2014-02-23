@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldInstanceConfigInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\field\Field;
 
@@ -19,7 +19,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
   /**
    * The Field instance definition.
    *
-   * @var \Drupal\field\FieldInstanceInterface
+   * @var \Drupal\field\FieldInstanceConfigInterface
    */
   protected $instance;
 
@@ -29,7 +29,7 @@ class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListIn
   public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     // Definition can be the field config or field instance.
-    if ($definition instanceof FieldInstanceInterface) {
+    if ($definition instanceof FieldInstanceConfigInterface) {
       $this->instance = $definition;
     }
   }

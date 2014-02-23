@@ -15,8 +15,8 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\field\FieldInfo;
 use Drupal\field\FieldUpdateForbiddenException;
-use Drupal\field\FieldInterface;
-use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldInstanceConfigInterface;
 use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -820,7 +820,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
             $delta_count[$row->entity_id][$row->langcode] = 0;
           }
 
-          if ($field->getCardinality() == FieldInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getCardinality()) {
+          if ($field->getCardinality() == FieldConfigInterface::CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getCardinality()) {
             $item = array();
             // For each column declared by the field, populate the item from the
             // prefixed database column.
@@ -906,7 +906,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
           $query->values($record);
           $revision_query->values($record);
 
-          if ($field->getCardinality() != FieldInterface::CARDINALITY_UNLIMITED && ++$delta_count == $field->getCardinality()) {
+          if ($field->getCardinality() != FieldConfigInterface::CARDINALITY_UNLIMITED && ++$delta_count == $field->getCardinality()) {
             break;
           }
         }
@@ -960,7 +960,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * {@inheritdoc}
    */
-  public function onFieldCreate(FieldInterface $field) {
+  public function onFieldCreate(FieldConfigInterface $field) {
     $schema = $this->_fieldSqlSchema($field);
     foreach ($schema as $name => $table) {
       $this->database->schema()->createTable($name, $table);
@@ -970,7 +970,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * {@inheritdoc}
    */
-  public function onFieldUpdate(FieldInterface $field) {
+  public function onFieldUpdate(FieldConfigInterface $field) {
     $original = $field->original;
 
     if (!$field->hasData()) {
@@ -1057,7 +1057,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * {@inheritdoc}
    */
-  public function onFieldDelete(FieldInterface $field) {
+  public function onFieldDelete(FieldConfigInterface $field) {
     // Mark all data associated with the field for deletion.
     $table = static::_fieldTableName($field);
     $revision_table = static::_fieldRevisionTableName($field);
@@ -1078,7 +1078,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * {@inheritdoc}
    */
-  public function onInstanceDelete(FieldInstanceInterface $instance) {
+  public function onInstanceDelete(FieldInstanceConfigInterface $instance) {
     $field = $instance->getField();
     $table_name = static::_fieldTableName($field);
     $revision_name = static::_fieldRevisionTableName($field);
@@ -1118,7 +1118,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * {@inheritdoc}
    */
-  protected function readFieldItemsToPurge(EntityInterface $entity, FieldInstanceInterface $instance) {
+  protected function readFieldItemsToPurge(EntityInterface $entity, FieldInstanceConfigInterface $instance) {
     $field = $instance->getField();
     $table_name = static::_fieldTableName($field);
     $query = $this->database->select($table_name, 't', array('fetch' => \PDO::FETCH_ASSOC))
@@ -1133,7 +1133,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * {@inheritdoc}
    */
-  public function purgeFieldItems(EntityInterface $entity, FieldInstanceInterface $instance) {
+  public function purgeFieldItems(EntityInterface $entity, FieldInstanceConfigInterface $instance) {
     $field = $instance->getField();
     $table_name = static::_fieldTableName($field);
     $revision_name = static::_fieldRevisionTableName($field);
@@ -1148,7 +1148,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   /**
    * {@inheritdoc}
    */
-  public function onFieldPurge(FieldInterface $field) {
+  public function onFieldPurge(FieldConfigInterface $field) {
     $table_name = static::_fieldTableName($field);
     $revision_name = static::_fieldRevisionTableName($field);
     $this->database->schema()->dropTable($table_name);
@@ -1162,7 +1162,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    * strongly discouraged. This function is not considered part of the public
    * API and modules relying on it might break even in minor releases.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field object
    * @param array $schema
    *   The field schema array. Mandatory for upgrades, omit otherwise.
@@ -1173,7 +1173,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *
    * @see hook_schema()
    */
-  public static function _fieldSqlSchema(FieldInterface $field, array $schema = NULL) {
+  public static function _fieldSqlSchema(FieldConfigInterface $field, array $schema = NULL) {
     if ($field->deleted) {
       $description_current = "Data storage for deleted field {$field->uuid()} ({$field->entity_type}, {$field->getName()}).";
       $description_revision = "Revision archive storage for deleted field {$field->uuid()} ({$field->entity_type}, {$field->getName()}).";
@@ -1331,14 +1331,14 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    * support. Always call entity_load() before using the data found in the
    * table.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field object.
    *
    * @return string
    *   A string containing the generated name for the database table.
    *
    */
-  static public function _fieldTableName(FieldInterface $field) {
+  static public function _fieldTableName(FieldConfigInterface $field) {
     if ($field->deleted) {
       // When a field is a deleted, the table is renamed to
       // {field_deleted_data_FIELD_UUID}. To make sure we don't end up with
@@ -1361,13 +1361,13 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    * support. Always call entity_load() before using the data found in the
    * table.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field object.
    *
    * @return string
    *   A string containing the generated name for the database table.
    */
-  static public function _fieldRevisionTableName(FieldInterface $field) {
+  static public function _fieldRevisionTableName(FieldConfigInterface $field) {
     if ($field->deleted) {
       // When a field is a deleted, the table is renamed to
       // {field_deleted_revision_FIELD_UUID}. To make sure we don't end up with
@@ -1386,7 +1386,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    * The method accounts for a maximum table name length of 64 characters, and
    * takes care of disambiguation.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field object.
    * @param bool $revision
    *   TRUE for revision table, FALSE otherwise.
@@ -1394,7 +1394,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    * @return string
    *   The final table name.
    */
-  static protected function _generateFieldTableName(FieldInterface $field, $revision) {
+  static protected function _generateFieldTableName(FieldConfigInterface $field, $revision) {
     $separator = $revision ? '_revision__' : '__';
     $table_name = $field->entity_type . $separator .  $field->name;
     // Limit the string to 48 characters, keeping a 16 characters margin for db
@@ -1418,7 +1418,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    * strongly discouraged. This function is not considered part of the public
    * API and modules relying on it might break even in minor releases.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field structure
    * @param string $index
    *   The name of the index.
@@ -1427,7 +1427,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *   A string containing a generated index name for a field data table that is
    *   unique among all other fields.
    */
-  static public function _fieldIndexName(FieldInterface $field, $index) {
+  static public function _fieldIndexName(FieldConfigInterface $field, $index) {
     return $field->getName() . '_' . $index;
   }
 
@@ -1441,7 +1441,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    * support. Always call entity_load() before using the data found in the
    * table.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field object.
    * @param string $column
    *   The name of the column.
@@ -1450,7 +1450,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
    *   A string containing a generated column name for a field data table that is
    *   unique among all other fields.
    */
-  static public function _fieldColumnName(FieldInterface $field, $column) {
+  static public function _fieldColumnName(FieldConfigInterface $field, $column) {
     return in_array($column, FieldConfig::getReservedColumns()) ? $column : $field->getName() . '_' . $column;
   }
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Plugin\Field\FieldFormatter;
 
-use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldInstanceConfigInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 
 /**
@@ -28,7 +28,7 @@ abstract class ImageFormatterBase extends FileFormatterBase {
         $default_image = $this->getFieldSetting('default_image');
         // If we are dealing with a configurable field, look in both
         // instance-level and field-level settings.
-        if (empty($default_image['fid']) && $this->fieldDefinition instanceof FieldInstanceInterface) {
+        if (empty($default_image['fid']) && $this->fieldDefinition instanceof FieldInstanceConfigInterface) {
           $default_image = $this->fieldDefinition->getField()->getSetting('default_image');
         }
 

@@ -9,7 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\field\FieldInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -68,7 +68,7 @@ function entity_reference_field_widget_info_alter(&$info) {
  *
  * Reset the instance handler settings, when the target type is changed.
  */
-function entity_reference_field_config_update(FieldInterface $field) {
+function entity_reference_field_config_update(FieldConfigInterface $field) {
   if ($field->type != 'entity_reference') {
     // Only act on entity reference fields.
     return;

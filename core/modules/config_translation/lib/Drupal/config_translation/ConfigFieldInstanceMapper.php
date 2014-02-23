@@ -21,7 +21,7 @@ class ConfigFieldInstanceMapper extends ConfigEntityMapper {
   /**
    * Loaded entity instance to help produce the translation interface.
    *
-   * @var \Drupal\field\FieldInstanceInterface
+   * @var \Drupal\field\FieldInstanceConfigInterface
    */
   protected $entity;
 

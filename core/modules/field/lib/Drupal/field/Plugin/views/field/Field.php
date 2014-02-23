@@ -43,7 +43,7 @@ class Field extends FieldPluginBase {
   /**
    * The field information as returned by field_info_field().
    *
-   * @var \Drupal\field\FieldInterface
+   * @var \Drupal\field\FieldConfigInterface
    */
   public $field_info;
 

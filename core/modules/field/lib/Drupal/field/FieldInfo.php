@@ -70,7 +70,7 @@ class FieldInfo {
   /**
    * List of $field structures keyed by ID. Includes deleted fields.
    *
-   * @var \Drupal\field\FieldInterface[]
+   * @var \Drupal\field\FieldConfigInterface[]
    */
   protected $fieldsById = array();
 
@@ -215,7 +215,7 @@ class FieldInfo {
   /**
    * Returns all fields, including deleted ones.
    *
-   * @return \Drupal\field\FieldInterface[]
+   * @return \Drupal\field\FieldConfigInterface[]
    *   An array of field entities, keyed by field ID.
    */
   public function getFields() {
@@ -306,7 +306,7 @@ class FieldInfo {
    * @param string $field_name
    *   The field name.
    *
-   * @return \Drupal\field\FieldInterface|null
+   * @return \Drupal\field\FieldConfigInterface|null
    *   The field definition, or NULL if no field was found.
    */
   public function getField($entity_type, $field_name) {
@@ -342,7 +342,7 @@ class FieldInfo {
    * @param string $field_id
    *   The field ID.
    *
-   * @return \Drupal\field\FieldInterface|null
+   * @return \Drupal\field\FieldConfigInterface|null
    *   The field entity, or NULL if no field was found.
    */
   public function getFieldById($field_id) {
@@ -386,7 +386,7 @@ class FieldInfo {
    * @param string $bundle
    *   The bundle name.
    *
-   * @return \Drupal\field\FieldInstanceInterface[]
+   * @return \Drupal\field\FieldInstanceConfigInterface[]
    *   An array of field instance entities, keyed by field name.
    */
   public function getBundleInstances($entity_type, $bundle) {
@@ -500,7 +500,7 @@ class FieldInfo {
    * @param string $field_name
    *   The field name for the instance.
    *
-   * @return \Drupal\field\FieldInstanceInterface|null
+   * @return \Drupal\field\FieldInstanceConfigInterface|null
    *   The field instance entity, or NULL if it does not exist.
    */
   function getInstance($entity_type, $bundle, $field_name) {
@@ -551,13 +551,13 @@ class FieldInfo {
   /**
    * Prepares a field for the current run-time context.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field entity to update.
    *
-   * @return \Drupal\field\FieldInterface
+   * @return \Drupal\field\FieldConfigInterface
    *   The field that was prepared.
    */
-  public function prepareField(FieldInterface $field) {
+  public function prepareField(FieldConfigInterface $field) {
     // Make sure all expected field settings are present.
     $field->settings += $this->fieldTypeManager->getDefaultSettings($field->getType());
 
@@ -567,13 +567,13 @@ class FieldInfo {
   /**
    * Prepares a field instance for the current run-time context.
    *
-   * @param \Drupal\field\FieldInstanceInterface $instance
+   * @param \Drupal\field\FieldInstanceConfigInterface $instance
    *   The field instance entity to prepare.
    *
-   * @return \Drupal\field\FieldInstanceInterface
+   * @return \Drupal\field\FieldInstanceConfigInterface
    *   The field instance that was prepared.
    */
-  public function prepareInstance(FieldInstanceInterface $instance) {
+  public function prepareInstance(FieldInstanceConfigInterface $instance) {
     // Make sure all expected instance settings are present.
     $instance->settings += $this->fieldTypeManager->getDefaultInstanceSettings($instance->getType());
 

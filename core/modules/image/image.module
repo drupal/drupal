@@ -10,8 +10,8 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\file\Entity\File;
-use Drupal\field\FieldInterface;
-use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldInstanceConfigInterface;
 
 /**
  * Image style constant for user presets in the database.
@@ -457,7 +457,7 @@ function image_entity_presave(EntityInterface $entity) {
 /**
  * Implements hook_ENTITY_TYPE_update() for 'field_config'.
  */
-function image_field_config_update(FieldInterface $field) {
+function image_field_config_update(FieldConfigInterface $field) {
   if ($field->type != 'image') {
     // Only act on image fields.
     return;
@@ -497,7 +497,7 @@ function image_field_config_update(FieldInterface $field) {
 /**
  * Implements hook_ENTITY_TYPE_update() for 'field_instance_config'.
  */
-function image_field_instance_config_update(FieldInstanceInterface $field_instance) {
+function image_field_instance_config_update(FieldInstanceConfigInterface $field_instance) {
   $field = $field_instance->getField();
   if ($field->type != 'image') {
     // Only act on image fields.
@@ -535,7 +535,7 @@ function image_field_instance_config_update(FieldInstanceInterface $field_instan
 /**
  * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
  */
-function image_field_config_delete(FieldInterface $field) {
+function image_field_config_delete(FieldConfigInterface $field) {
   if ($field->type != 'image') {
     // Only act on image fields.
     return;
@@ -551,7 +551,7 @@ function image_field_config_delete(FieldInterface $field) {
 /**
  * Implements hook_ENTITY_TYPE_delete() for 'field_instance_config'.
  */
-function image_field_instance_config_delete(FieldInstanceInterface $field_instance) {
+function image_field_instance_config_delete(FieldInstanceConfigInterface $field_instance) {
   $field = $field_instance->getField();
   if ($field->type != 'image') {
     // Only act on image fields.

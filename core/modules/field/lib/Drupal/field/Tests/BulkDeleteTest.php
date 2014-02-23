@@ -9,7 +9,7 @@ namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\FieldInterface;
+use Drupal\field\FieldConfigInterface;
 
 
 /**

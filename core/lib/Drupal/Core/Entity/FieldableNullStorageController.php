@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Query\QueryException;
-use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldInstanceConfigInterface;
 
 /**
  * Defines a null entity controller class.
@@ -97,13 +97,13 @@ class FieldableNullStorageController extends FieldableEntityStorageControllerBas
   /**
    * {@inheritdoc}
    */
-  protected function readFieldItemsToPurge(EntityInterface $entity, FieldInstanceInterface $instance) {
+  protected function readFieldItemsToPurge(EntityInterface $entity, FieldInstanceConfigInterface $instance) {
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function purgeFieldItems(EntityInterface $entity, FieldInstanceInterface $instance) {
+  protected function purgeFieldItems(EntityInterface $entity, FieldInstanceConfigInterface $instance) {
   }
 
 }

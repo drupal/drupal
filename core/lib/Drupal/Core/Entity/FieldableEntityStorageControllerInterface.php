@@ -7,26 +7,26 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\field\FieldInterface;
-use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldInstanceConfigInterface;
 
 interface FieldableEntityStorageControllerInterface extends EntityStorageControllerInterface {
 
   /**
    * Allows reaction to the creation of a configurable field.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field being created.
    */
-  public function onFieldCreate(FieldInterface $field);
+  public function onFieldCreate(FieldConfigInterface $field);
 
   /**
    * Allows reaction to the update of a configurable field.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field being updated.
    */
-  public function onFieldUpdate(FieldInterface $field);
+  public function onFieldUpdate(FieldConfigInterface $field);
 
   /**
    * Allows reaction to the deletion of a configurable field.
@@ -34,28 +34,28 @@ interface FieldableEntityStorageControllerInterface extends EntityStorageControl
    * Stored values should not be wiped at once, but marked as 'deleted' so that
    * they can go through a proper purge process later on.
    *
-   * @param \Drupal\field\FieldInterface $field
+   * @param \Drupal\field\FieldConfigInterface $field
    *   The field being deleted.
    *
    * @see fieldPurgeData()
    */
-  public function onFieldDelete(FieldInterface $field);
+  public function onFieldDelete(FieldConfigInterface $field);
 
   /**
    * Allows reaction to the creation of a configurable field instance.
    *
-   * @param \Drupal\field\FieldInstanceInterface $instance
+   * @param \Drupal\field\FieldInstanceConfigInterface $instance
    *   The instance being created.
    */
-  public function onInstanceCreate(FieldInstanceInterface $instance);
+  public function onInstanceCreate(FieldInstanceConfigInterface $instance);
 
   /**
    * Allows reaction to the update of a configurable field instance.
    *
-   * @param \Drupal\field\FieldInstanceInterface $instance
+   * @param \Drupal\field\FieldInstanceConfigInterface $instance
    *   The instance being updated.
    */
-  public function onInstanceUpdate(FieldInstanceInterface $instance);
+  public function onInstanceUpdate(FieldInstanceConfigInterface $instance);
 
   /**
    * Allows reaction to the deletion of a configurable field instance.
@@ -63,12 +63,12 @@ interface FieldableEntityStorageControllerInterface extends EntityStorageControl
    * Stored values should not be wiped at once, but marked as 'deleted' so that
    * they can go through a proper purge process later on.
    *
-   * @param \Drupal\field\FieldInstanceInterface $instance
+   * @param \Drupal\field\FieldInstanceConfigInterface $instance
    *   The instance being deleted.
    *
    * @see fieldPurgeData()
    */
-  public function onInstanceDelete(FieldInstanceInterface $instance);
+  public function onInstanceDelete(FieldInstanceConfigInterface $instance);
 
   /**
    * Allows reaction to a bundle being created.
@@ -109,17 +109,17 @@ interface FieldableEntityStorageControllerInterface extends EntityStorageControl
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity whose field data is being purged.
-   * @param \Drupal\field\FieldInstanceInterface $instance
+   * @param \Drupal\field\FieldInstanceConfigInterface $instance
    *   The deleted field instance whose data is being purged.
    */
-  public function onFieldItemsPurge(EntityInterface $entity, FieldInstanceInterface $instance);
+  public function onFieldItemsPurge(EntityInterface $entity, FieldInstanceConfigInterface $instance);
 
   /**
    * Performs final cleanup after all data on all instances has been purged.
    *
-   * @param \Drupal\field\FieldInterface $instance
+   * @param \Drupal\field\FieldConfigInterface $instance
    *   The field being purged.
    */
-  public function onFieldPurge(FieldInterface $field);
+  public function onFieldPurge(FieldConfigInterface $field);
 
 }

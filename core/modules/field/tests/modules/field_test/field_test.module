@@ -1,7 +1,7 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\FieldInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * @file
@@ -106,7 +106,7 @@ function field_test_memorize($key = NULL, $value = NULL) {
 /**
  * Memorize calls to field_test_field_config_create() for field creation.
  */
-function field_test_field_config_create(FieldInterface $field) {
+function field_test_field_config_create(FieldConfigInterface $field) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
