@@ -83,7 +83,7 @@ class ConfigSync extends FormBase {
    *   The lock object.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   Event dispatcher.
-   * @param \Drupal\Core\Config\ConfigManager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   Configuration manager.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
