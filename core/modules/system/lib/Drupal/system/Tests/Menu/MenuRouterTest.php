@@ -64,7 +64,6 @@ class MenuRouterTest extends WebTestBase {
     $this->doTestTitleMenuCallback();
     $this->doTestMenuOptionalPlaceholders();
     $this->doTestMenuOnRoute();
-    $this->doTestMenuGetItemNoAncestors();
     $this->doTestMenuName();
     $this->doTestMenuItemTitlesCases();
     $this->doTestMenuLinkMaintain();
@@ -203,14 +202,6 @@ class MenuRouterTest extends WebTestBase {
 
     $this->assertEqual($child_link['plid'], $parent_link['mlid'], 'The parent of a directly attached child is correct.');
     $this->assertEqual($unattached_child_link['plid'], $parent_link['mlid'], 'The parent of a non-directly attached child is correct.');
-  }
-
-  /**
-   * Test menu_get_item() with empty ancestors.
-   */
-  protected function doTestMenuGetItemNoAncestors() {
-    \Drupal::state()->set('menu.masks', array());
-    $this->drupalGet('');
   }
 
   /**

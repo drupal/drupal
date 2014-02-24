@@ -10,5 +10,5 @@ custom_block_add_action:
   appears_on:
     - block.admin_display
     - block.admin_display_theme
+    - custom_block.list
   class: \Drupal\custom_block\Plugin\Menu\LocalAction\CustomBlockAddLocalAction
-

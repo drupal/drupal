@@ -8,6 +8,9 @@
 namespace Drupal\system\Form;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
@@ -39,13 +42,29 @@ class ModulesListForm extends FormBase {
   protected $keyValueExpirable;
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
+   * The query factory.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryFactory
+   */
+  protected $queryFactory;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
       $container->get('keyvalue.expirable')->get('module_list'),
-      $container->get('access_manager')
+      $container->get('access_manager'),
+      $container->get('entity.manager'),
+      $container->get('entity.query')
     );
   }
 
@@ -58,11 +77,17 @@ class ModulesListForm extends FormBase {
    *   The key value expirable factory.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   Access manager.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
+   *   The entity query factory.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager, EntityManagerInterface $entity_manager, QueryFactory $query_factory) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
     $this->accessManager = $access_manager;
+    $this->entityManager = $entity_manager;
+    $this->queryFactory = $query_factory;
   }
 
   /**
@@ -199,7 +224,11 @@ class ModulesListForm extends FormBase {
     $row['links']['configure'] = array();
     if ($module->status && isset($module->info['configure'])) {
       if ($this->accessManager->checkNamedRoute($module->info['configure'], array(), \Drupal::currentUser())) {
-        $item = menu_get_item(trim($this->url($module->info['configure']), '/'));
+        $result = $this->queryFactory->get('menu_link')
+          ->condition('route_name', $module->info['configure'])
+          ->execute();
+        $menu_items = $this->entityManager->getStorageController('menu_link')->loadMultiple($result);
+        $item = reset($menu_items);
         $row['links']['configure'] = array(
           '#type' => 'link',
           '#title' => $this->t('Configure'),

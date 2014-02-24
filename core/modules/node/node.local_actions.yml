@@ -3,3 +3,8 @@ node.type_add:
   title: 'Add content type'
   appears_on:
     - node.overview_types
+node.add_page:
+  route_name: node.add_page
+  title: 'Add content'
+  appears_on:
+    - node.content_overview

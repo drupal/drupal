@@ -73,6 +73,16 @@ abstract class LocalTaskIntegrationTest extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($manager, $accessManager);
 
+    $route_provider = $this->getMock('Drupal\Core\Routing\RouteProviderInterface');
+    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'routeProvider');
+    $property->setAccessible(TRUE);
+    $property->setValue($manager, $route_provider);
+
+    $route_builder = $this->getMock('Drupal\Core\Routing\RouteBuilderInterface');
+    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'routeBuilder');
+    $property->setAccessible(TRUE);
+    $property->setValue($manager, $route_builder);
+
     $this->moduleHandler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandlerInterface')
       ->disableOriginalConstructor()
       ->getMock();

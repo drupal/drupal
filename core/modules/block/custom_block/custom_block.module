@@ -38,25 +38,6 @@ function custom_block_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu_local_tasks().
- */
-function custom_block_menu_local_tasks(&$data, $route_name) {
-  if ($route_name == 'custom_block.list') {
-    // @todo Move to a LocalAction plugin when https://drupal.org/node/2045267
-    //   allows local actions to work with query strings.
-    $item = menu_get_item('block/add');
-    if ($item['access']) {
-      // Add a destination parameter.
-      $item['localized_options']['query']['destination'] = 'admin/structure/block/custom-blocks';
-      $data['actions']['block/add'] = array(
-        '#theme' => 'menu_local_action',
-        '#link' => $item,
-      );
-    }
-  }
-}
-
-/**
  * Implements hook_menu().
  */
 function custom_block_menu() {

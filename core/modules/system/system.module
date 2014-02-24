@@ -1879,14 +1879,23 @@ function system_get_module_admin_tasks($module, $info) {
 
   // Append link for permissions.
   if (\Drupal::moduleHandler()->implementsHook($module, 'permission')) {
-    $item = menu_get_item('admin/people/permissions');
-    if (!empty($item['access'])) {
-      $item['link_path'] = $item['href'];
-      $item['title'] = t('Configure @module permissions', array('@module' => $info['name']));
-      unset($item['description']);
-      $item['localized_options']['fragment'] = 'module-' . $module;
-      $item = entity_create('menu_link', $item);
-      $admin_tasks["admin/people/permissions#module-$module"] = $item;
+    /** @var \Drupal\Core\Access\AccessManager $access_manager */
+    $access_manager = \Drupal::service('access_manager');
+    /** @var \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage_controller */
+    $menu_link_storage_controller = \Drupal::entityManager()
+      ->getStorageController('menu_link');
+    if ($access_manager->checkNamedRoute('user.admin_permissions', array(), \Drupal::currentUser())) {
+      $path = \Drupal::urlGenerator()
+        ->getPathFromRoute('user.admin_permissions');
+      $options = array();
+      $options['fragment'] = 'module-' . $module;
+      $menu_link = $menu_link_storage_controller->create(array(
+        'route_name' => 'user.admin_permissions',
+        'link_path' => $path,
+        'title' => t('Configure @module permissions', array('@module' => $info['name'])),
+        'localized_options' => $options
+      ));
+      $admin_tasks["user.admin.people.permissions.$module"] = $menu_link;
     }
   }
 

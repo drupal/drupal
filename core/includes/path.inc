@@ -224,10 +224,6 @@ function drupal_valid_path($path, $dynamic_allowed = FALSE) {
       $route_name = $item['route_name'];
     }
   }
-  else {
-    $item = menu_get_item($path);
-    $route_name = $item['route_name'];
-  }
   // Check the new routing system.
   if (!empty($route_name)) {
     $map = array();
@@ -239,5 +235,5 @@ function drupal_valid_path($path, $dynamic_allowed = FALSE) {
     $item['access'] = menu_item_route_access($route, $path, $map, $request);
   }
   $menu_admin = FALSE;
-  return $item && $item['access'];
+  return !empty($item['access']);
 }

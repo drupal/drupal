@@ -329,7 +329,7 @@ function shortcut_valid_link($path) {
   }
 
   // An empty path is valid too and will be converted to <front>.
-  return (!url_is_external($path) && (\Drupal::service('router.route_provider')->getRoutesByPattern('/' . $path)->count() > 0 || menu_get_item($path))) || empty($path) || $path == '<front>';
+  return (!url_is_external($path) && (\Drupal::service('router.route_provider')->getRoutesByPattern('/' . $path)->count() > 0)) || empty($path) || $path == '<front>';
 }
 
 /**

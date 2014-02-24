@@ -18,6 +18,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
+use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,6 +85,13 @@ class LocalTaskManager extends DefaultPluginManager {
   protected $routeProvider;
 
   /**
+   * The route builder.
+   *
+   * @var \Drupal\Core\Routing\RouteBuilderInterface
+   */
+  protected $routeBuilder;
+
+  /**
    * The access manager.
    *
    * @var \Drupal\Core\Access\AccessManager
@@ -106,6 +114,8 @@ class LocalTaskManager extends DefaultPluginManager {
    *   The request object to use for building titles and paths for plugin instances.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider to load routes by name.
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
+   *   The route builder.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
@@ -117,13 +127,14 @@ class LocalTaskManager extends DefaultPluginManager {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account) {
+  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, RouteBuilderInterface $route_builder, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, AccessManager $access_manager, AccountInterface $account) {
     $this->discovery = new YamlDiscovery('local_tasks', $module_handler->getModuleDirectories());
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;
     $this->routeProvider = $route_provider;
+    $this->routeBuilder = $route_builder;
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->alterInfo($module_handler, 'local_tasks');
@@ -177,6 +188,9 @@ class LocalTaskManager extends DefaultPluginManager {
         $children = $cache->data['children'];
       }
       else {
+        // Maybe some code asked to rebuild the routes, so rebuild the router
+        // as we rely on having proper existing routes in dynamic local tasks.
+        $this->routeBuilder->rebuildIfNeeded();
         $definitions = $this->getDefinitions();
         // We build the hierarchy by finding all tabs that should
         // appear on the current route.

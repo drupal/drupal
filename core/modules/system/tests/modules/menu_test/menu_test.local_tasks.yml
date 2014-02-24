@@ -67,3 +67,18 @@ menu_test.tasks_settings_tab:
   title: 'Settings'
   weight: 100
   base_route: menu_test.tasks_tasks
+
+menu_test.router_test1:
+  route_name: menu_test.router_test1
+  title: 'Local task A'
+  base_route: menu_test.router_test1
+
+menu_test.router_test2:
+  route_name: menu_test.router_test2
+  title: 'Local task B'
+  base_route: menu_test.router_test1
+
+menu_test.router_test3:
+  route_name: menu_test.router_test3
+  title: 'Local task C'
+  base_route: menu_test.router_test1

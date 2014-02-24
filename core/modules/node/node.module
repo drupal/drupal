@@ -1009,23 +1009,6 @@ function node_menu_link_defaults() {
 }
 
 /**
- * Implements hook_menu_local_tasks().
- */
-function node_menu_local_tasks(&$data, $route_name) {
-  // Add action link to 'node/add' on 'admin/content' page.
-  // @todo Switch to inspecting route name in https://drupal.org/node/2021161.
-  if (current_path() == 'admin/content') {
-    $item = menu_get_item('node/add');
-    if ($item['access']) {
-      $data['actions'][] = array(
-        '#theme' => 'menu_local_action',
-        '#link' => $item,
-      );
-    }
-  }
-}
-
-/**
  * Title callback: Displays the node's title.
  *
  * @param \Drupal\node\NodeInterface $node

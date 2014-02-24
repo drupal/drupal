@@ -8,9 +8,11 @@ namespace Drupal\system;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * System Manager Service.
@@ -61,6 +63,13 @@ class SystemManager {
   const REQUIREMENT_ERROR = 2;
 
   /**
+   * The request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
    * Constructs a SystemManager object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -74,6 +83,16 @@ class SystemManager {
     $this->moduleHandler = $module_handler;
     $this->database = $database;
     $this->menuLinkStorage = $entity_manager->getStorageController('menu_link');
+  }
+
+  /**
+   * Sets the current request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function setRequest(Request $request) {
+    $this->request = $request;
   }
 
   /**
@@ -160,7 +179,9 @@ class SystemManager {
    *   A render array suitable for drupal_render.
    */
   public function getBlockContents() {
-    $item = menu_get_item();
+    $route_name = $this->request->attributes->get(RouteObjectInterface::ROUTE_NAME);
+    $items = $this->menuLinkStorage->loadByProperties(array('route_name' => $route_name));
+    $item = reset($items);
     if ($content = $this->getAdminBlock($item)) {
       $output = array(
         '#theme' => 'admin_block_content',
@@ -185,14 +206,6 @@ class SystemManager {
    *   An array of menu items, as expected by theme_admin_block_content().
    */
   public function getAdminBlock($item) {
-    // If we are calling this function for a menu item that corresponds to a
-    // local task (for example, admin/tasks), then we want to retrieve the
-    // parent item's child links, not this item's (since this item won't have
-    // any).
-    if ($item['tab_root'] != $item['path']) {
-      $item = menu_get_item($item['tab_root_href']);
-    }
-
     if (!isset($item['mlid'])) {
       $menu_links = $this->menuLinkStorage->loadByProperties(array('link_path' => $item['path'], 'module' => 'system'));
       if ($menu_links) {

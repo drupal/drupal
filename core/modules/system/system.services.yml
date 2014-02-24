@@ -6,6 +6,8 @@ services:
   system.manager:
     class: Drupal\system\SystemManager
     arguments: ['@module_handler', '@database', '@entity.manager']
+    calls:
+      - [setRequest, ['@?request=']]
   system.breadcrumb.default:
     class: Drupal\system\PathBasedBreadcrumbBuilder
     arguments: ['@request', '@entity.manager', '@access_manager', '@router', '@path_processor_manager', '@config.factory',  '@title_resolver']

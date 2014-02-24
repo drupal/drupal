@@ -614,8 +614,8 @@ class BookManager {
    * @return array
    *   A structured array to be rendered by drupal_render().
    *
-   * Note: copied from menu_tree_output() but some hacky code using
-   * menu_get_item() was removed.
+   * @todo This was copied from menu_tree_output() but with some changes that
+   *   may be obsolete. Attempt to resolve the differences.
    */
   public function bookTreeOutput(array $tree) {
     $build = array();
