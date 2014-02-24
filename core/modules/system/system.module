@@ -1576,7 +1576,7 @@ function _system_rebuild_module_data() {
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info.yml files if necessary.
     $type = 'module';
-    drupal_alter('system_info', $modules[$key]->info, $modules[$key], $type);
+    \Drupal::moduleHandler()->alter('system_info', $modules[$key]->info, $modules[$key], $type);
   }
 
   // It is possible that a module was marked as required by

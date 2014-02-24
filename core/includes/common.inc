@@ -358,7 +358,7 @@ function _drupal_default_html_head() {
   */
 function drupal_get_html_head() {
   $elements = drupal_add_html_head();
-  drupal_alter('html_head', $elements);
+  \Drupal::moduleHandler()->alter('html_head', $elements);
   return drupal_render($elements);
 }
 
@@ -1621,9 +1621,9 @@ function _drupal_add_css($data = NULL, $options = NULL) {
  *   (optional) An array of CSS files. If no array is provided, the default
  *   stylesheets array is used instead.
  * @param $skip_alter
- *   (optional) If set to TRUE, this function skips calling drupal_alter() on
- *   $css, useful when the calling function passes a $css array that has already
- *   been altered.
+ *   (optional) If set to TRUE, this function skips calling
+ *   \Drupal::moduleHandler->alter() on $css, useful when the calling function
+ *   passes a $css array that has already been altered.
  *
  * @return
  *   A string of XHTML CSS tags.
@@ -1639,7 +1639,7 @@ function drupal_get_css($css = NULL, $skip_alter = FALSE) {
 
   // Allow modules and themes to alter the CSS items.
   if (!$skip_alter) {
-    drupal_alter('css', $css);
+    \Drupal::moduleHandler()->alter('css', $css);
   }
 
   // Sort CSS items, so that they appear in the correct order.
@@ -2252,9 +2252,9 @@ function drupal_js_defaults($data = NULL) {
  *   (optional) An array with all JavaScript code. Defaults to the default
  *   JavaScript array for the given scope.
  * @param bool $skip_alter
- *   (optional) If set to TRUE, this function skips calling drupal_alter() on
- *   $javascript, useful when the calling function passes a $javascript array
- *   that has already been altered.
+ *   (optional) If set to TRUE, this function skips calling
+ *   \Drupal::moduleHandler->alter() on $javascript, useful when the calling
+ *   function passes a $javascript array that has already been altered.
  * @param bool $is_ajax
  *   (optional) If set to TRUE, this function is called from an Ajax request and
  *   adds javascript settings to update ajaxPageState values.
@@ -2276,7 +2276,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
 
   // Allow modules to alter the JavaScript.
   if (!$skip_alter) {
-    drupal_alter('js', $javascript);
+    \Drupal::moduleHandler()->alter('js', $javascript);
   }
 
   // Filter out elements of the given scope.
@@ -2722,7 +2722,7 @@ function drupal_add_library($module, $name, $every_page = NULL) {
     if ($library = drupal_get_library($module, $name)) {
       // Allow modules and themes to dynamically attach request and context
       // specific data for this library; e.g., localization.
-      drupal_alter('library', $library, $module, $name);
+      \Drupal::moduleHandler()->alter('library', $library, $module, $name);
 
       // Add all components within the library.
       $elements['#attached'] = array(
@@ -2816,7 +2816,7 @@ function drupal_get_library($extension, $name = NULL) {
         throw new \RuntimeException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
       }
       // Allow modules to alter the module's registered libraries.
-      drupal_alter('library_info', $libraries[$extension], $extension);
+      \Drupal::moduleHandler()->alter('library_info', $libraries[$extension], $extension);
     }
 
     foreach ($libraries[$extension] as $id => &$library) {
@@ -3705,7 +3705,7 @@ function drupal_prepare_page($page) {
   }
   // Modules alter the $page as needed. Blocks are populated into regions like
   // 'sidebar_first', 'footer', etc.
-  drupal_alter('page', $page);
+  \Drupal::moduleHandler()->alter('page', $page);
 
   // The "main" and "secondary" menus are never part of the page-level render
   // array and therefore their cache tags will never bubble up into the page
@@ -4713,7 +4713,7 @@ function element_info($type) {
       $cache[$element_type]['#type'] = $element_type;
     }
     // Allow modules to alter the element type defaults.
-    drupal_alter('element_info', $cache);
+    \Drupal::moduleHandler()->alter('element_info', $cache);
   }
 
   return isset($cache[$type]) ? $cache[$type] : array();
@@ -5154,7 +5154,7 @@ function drupal_get_updaters() {
   $updaters = &drupal_static(__FUNCTION__);
   if (!isset($updaters)) {
     $updaters = \Drupal::moduleHandler()->invokeAll('updater_info');
-    drupal_alter('updater_info', $updaters);
+    \Drupal::moduleHandler()->alter('updater_info', $updaters);
     uasort($updaters, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
   }
   return $updaters;
@@ -5174,7 +5174,7 @@ function drupal_get_filetransfer_info() {
   $info = &drupal_static(__FUNCTION__);
   if (!isset($info)) {
     $info = \Drupal::moduleHandler()->invokeAll('filetransfer_info');
-    drupal_alter('filetransfer_info', $info);
+    \Drupal::moduleHandler()->alter('filetransfer_info', $info);
     uasort($info, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
   }
   return $info;

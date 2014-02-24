@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Common;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests alteration of arguments passed to drupal_alter().
+ * Tests alteration of arguments passed to \Drupal::moduleHandler->alter().
  */
 class AlterTest extends WebTestBase {
 
@@ -24,7 +24,7 @@ class AlterTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Alter hook functionality',
-      'description' => 'Tests alteration of arguments passed to drupal_alter().',
+      'description' => 'Tests alteration of arguments passed to \Drupal::moduleHandler->alter().',
       'group' => 'Common',
     );
   }
@@ -46,13 +46,13 @@ class AlterTest extends WebTestBase {
     // Verify alteration of a single argument.
     $array_copy = $array;
     $array_expected = array('foo' => 'Drupal theme');
-    drupal_alter('drupal_alter', $array_copy);
+    \Drupal::moduleHandler()->alter('drupal_alter', $array_copy);
     $this->assertEqual($array_copy, $array_expected, 'Single array was altered.');
 
     $entity_copy = clone $entity;
     $entity_expected = clone $entity;
     $entity_expected->foo = 'Drupal theme';
-    drupal_alter('drupal_alter', $entity_copy);
+    \Drupal::moduleHandler()->alter('drupal_alter', $entity_copy);
     $this->assertEqual($entity_copy, $entity_expected, 'Single object was altered.');
 
     // Verify alteration of multiple arguments.
@@ -63,17 +63,17 @@ class AlterTest extends WebTestBase {
     $entity_expected->foo = 'Drupal theme';
     $array2_copy = $array;
     $array2_expected = array('foo' => 'Drupal theme');
-    drupal_alter('drupal_alter', $array_copy, $entity_copy, $array2_copy);
-    $this->assertEqual($array_copy, $array_expected, 'First argument to drupal_alter() was altered.');
-    $this->assertEqual($entity_copy, $entity_expected, 'Second argument to drupal_alter() was altered.');
-    $this->assertEqual($array2_copy, $array2_expected, 'Third argument to drupal_alter() was altered.');
+    \Drupal::moduleHandler()->alter('drupal_alter', $array_copy, $entity_copy, $array2_copy);
+    $this->assertEqual($array_copy, $array_expected, 'First argument to \Drupal::moduleHandler->alter() was altered.');
+    $this->assertEqual($entity_copy, $entity_expected, 'Second argument to \Drupal::moduleHandler->alter() was altered.');
+    $this->assertEqual($array2_copy, $array2_expected, 'Third argument to \Drupal::moduleHandler->alter() was altered.');
 
-    // Verify alteration order when passing an array of types to drupal_alter().
+    // Verify alteration order when passing an array of types to \Drupal::moduleHandler->alter().
     // common_test_module_implements_alter() places 'block' implementation after
     // other modules.
     $array_copy = $array;
     $array_expected = array('foo' => 'Drupal block theme');
-    drupal_alter(array('drupal_alter', 'drupal_alter_foo'), $array_copy);
+    \Drupal::moduleHandler()->alter(array('drupal_alter', 'drupal_alter_foo'), $array_copy);
     $this->assertEqual($array_copy, $array_expected, 'hook_TYPE_alter() implementations ran in correct order.');
   }
 }

@@ -20,7 +20,7 @@ function file_mimetype_mapping() {
   if (!isset($mapping)) {
     $mapping = file_default_mimetype_mapping();
     // Allow modules to alter the default mapping.
-    drupal_alter('file_mimetype_mapping', $mapping);
+    \Drupal::moduleHandler()->alter('file_mimetype_mapping', $mapping);
   }
   return $mapping;
 }

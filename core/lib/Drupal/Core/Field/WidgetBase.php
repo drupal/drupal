@@ -261,7 +261,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         'delta' => $delta,
         'default' => !empty($entity->field_ui_default_value),
       );
-      drupal_alter(array('field_widget_form', 'field_widget_' . $this->getPluginId() . '_form'), $element, $form_state, $context);
+      \Drupal::moduleHandler()->alter(array('field_widget_form', 'field_widget_' . $this->getPluginId() . '_form'), $element, $form_state, $context);
     }
 
     return $element;

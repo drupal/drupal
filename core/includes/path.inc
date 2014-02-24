@@ -160,7 +160,7 @@ function path_get_admin_paths() {
   $patterns = &drupal_static(__FUNCTION__);
   if (!isset($patterns)) {
     $paths = \Drupal::moduleHandler()->invokeAll('admin_paths');
-    drupal_alter('admin_paths', $paths);
+    \Drupal::moduleHandler()->alter('admin_paths', $paths);
     // Combine all admin paths into one array, and likewise for non-admin paths,
     // for easier handling.
     $patterns = array();

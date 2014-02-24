@@ -537,7 +537,7 @@ class FieldInfo {
     // shape of the hook, we have no other way than collecting extra fields on
     // all bundles.
     $extra = $this->moduleHandler->invokeAll('field_extra_fields');
-    drupal_alter('field_extra_fields', $extra);
+    $this->moduleHandler->alter('field_extra_fields', $extra);
     $info = isset($extra[$entity_type][$bundle]) ? $extra[$entity_type][$bundle] : array();
     $info += array('form' => array(), 'display' => array());
 

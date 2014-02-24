@@ -144,7 +144,7 @@ function locale_translation_project_list() {
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE, $additional_whitelist);
 
     // Allow other modules to alter projects before fetching and comparing.
-    drupal_alter('locale_translation_projects', $projects);
+    \Drupal::moduleHandler()->alter('locale_translation_projects', $projects);
   }
   return $projects;
 }

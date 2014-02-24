@@ -79,7 +79,7 @@ class NodeAccessRecordsTest extends NodeTestBase {
     foreach ($operations as $op) {
       $grants = node_test_node_grants($op, $web_user);
       $altered_grants = $grants;
-      drupal_alter('node_grants', $altered_grants, $web_user, $op);
+      \Drupal::moduleHandler()->alter('node_grants', $altered_grants, $web_user, $op);
       $this->assertNotEqual($grants, $altered_grants, format_string('Altered the %op grant for a user.', array('%op' => $op)));
     }
 

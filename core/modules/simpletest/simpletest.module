@@ -531,7 +531,7 @@ function simpletest_test_get_all($module = NULL) {
       }
 
       // Allow modules extending core tests to disable originals.
-      drupal_alter('simpletest', $groups);
+      \Drupal::moduleHandler()->alter('simpletest', $groups);
       \Drupal::cache()->set($cid, $groups);
     }
   }

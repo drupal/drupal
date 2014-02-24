@@ -222,7 +222,7 @@ function contextual_pre_render_links($element) {
   $element['#links'] = $links;
 
   // Allow modules to alter the renderable contextual links element.
-  drupal_alter('contextual_links_view', $element, $items);
+  \Drupal::moduleHandler()->alter('contextual_links_view', $element, $items);
 
   // If there are no links, tell drupal_render() to abort rendering.
   if (empty($element['#links'])) {

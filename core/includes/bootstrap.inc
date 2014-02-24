@@ -1896,13 +1896,13 @@ function module_invoke($module, $hook) {
 /**
  * Invokes a hook in all enabled modules that implement it.
  *
- * All arguments are passed by value. Use drupal_alter() if you need to pass
- * arguments by reference.
+ * All arguments are passed by value. Use \Drupal::moduleHandler()->alter() if
+ * you need to pass arguments by reference.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::moduleHandler()->invokeAll($hook).
  *
- * @see drupal_alter()
+ * @see \Drupal\Core\Extension\ModuleHandler::alter()
  * @see \Drupal\Core\Extension\ModuleHandler::invokeAll()
  */
 function module_invoke_all($hook) {

@@ -116,8 +116,9 @@ function system_list_reset() {
 
   // Clear the library info cache.
   // Libraries may be provided by all extension types, and may be altered by any
-  // other extensions (types) due to the nature of drupal_alter() and the fact
-  // that profiles are recorded and handled as modules.
+  // other extensions (types) due to the nature of
+  // \Drupal\Core\Extension\ModuleHandler::alter() and the fact that profiles
+  // are recorded and handled as modules.
   Cache::invalidateTags(array('extension' => TRUE));
 
   // Remove last known theme data state.

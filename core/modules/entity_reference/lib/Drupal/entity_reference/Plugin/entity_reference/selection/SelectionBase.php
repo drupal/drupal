@@ -309,7 +309,7 @@ class SelectionBase implements SelectionInterface {
 
     $query->alterTags = array($tag => TRUE);
     $query->alterMetaData['base_table'] = $base_table;
-    drupal_alter(array('query', 'query_' . $tag), $query);
+    \Drupal::moduleHandler()->alter(array('query', 'query_' . $tag), $query);
 
     // Restore the tags and metadata.
     $query->alterTags = $old_tags;

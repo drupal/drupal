@@ -153,7 +153,7 @@ function update_calculate_project_data($available) {
   // Give other modules a chance to alter the status (for example, to allow a
   // contrib module to provide fine-grained settings to ignore specific
   // projects or releases).
-  drupal_alter('update_status', $projects);
+  \Drupal::moduleHandler()->alter('update_status', $projects);
 
   // Store the site's update status for at most 1 hour.
   \Drupal::keyValueExpirable('update')->setWithExpire('update_project_data', $projects, 3600);

@@ -209,7 +209,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
 
       // Allow modules to change the view mode.
       $entity_view_mode = $view_mode;
-      drupal_alter('entity_view_mode', $entity_view_mode, $entity, $context);
+      $this->moduleHandler->alter('entity_view_mode', $entity_view_mode, $entity, $context);
       // Store entities for rendering by view_mode.
       $view_modes[$entity_view_mode][$entity->id()] = $entity;
     }
@@ -248,7 +248,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       $build[$key]['#weight'] = $weight++;
 
       // Allow modules to modify the render array.
-      drupal_alter(array($view_hook, 'entity_view'), $build[$key], $entity, $display);
+      $this->moduleHandler->alter(array($view_hook, 'entity_view'), $build[$key], $entity, $display);
     }
 
     return $build;

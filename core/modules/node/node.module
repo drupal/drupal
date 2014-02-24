@@ -1547,7 +1547,7 @@ function node_access_grants($op, $account = NULL) {
   // Fetch node access grants from other modules.
   $grants = \Drupal::moduleHandler()->invokeAll('node_grants', array($account, $op));
   // Allow modules to alter the assigned grants.
-  drupal_alter('node_grants', $grants, $account, $op);
+  \Drupal::moduleHandler()->alter('node_grants', $grants, $account, $op);
 
   return array_merge(array('all' => array(0)), $grants);
 }

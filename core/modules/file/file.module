@@ -660,7 +660,7 @@ function file_file_download($uri, $field_type = 'file') {
           'field' => $field,
           'file' => $file,
         );
-        drupal_alter('file_download_access', $grants, $context);
+        \Drupal::moduleHandler()->alter('file_download_access', $grants, $context);
 
         if (in_array(TRUE, $grants)) {
           // If TRUE is returned, access is granted and no further checks are

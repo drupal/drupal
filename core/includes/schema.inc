@@ -86,7 +86,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
         _drupal_schema_initialize($current, $module);
         $schema = array_merge($schema, $current);
       }
-      drupal_alter('schema', $schema);
+      \Drupal::moduleHandler()->alter('schema', $schema);
 
       if ($rebuild) {
         Cache::deleteTags(array('schema' => TRUE));

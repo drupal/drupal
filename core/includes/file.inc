@@ -448,7 +448,7 @@ function file_stream_wrapper_get_instance_by_scheme($scheme) {
 function file_create_url($uri) {
   // Allow the URI to be altered, e.g. to serve a file from a CDN or static
   // file server.
-  drupal_alter('file_url', $uri);
+  \Drupal::moduleHandler()->alter('file_url', $uri);
 
   $scheme = file_uri_scheme($uri);
 

@@ -106,7 +106,7 @@ class AjaxResponse extends JsonResponse {
       else {
         $function = '_drupal_add_' . $type;
         $items[$type] = $function();
-        drupal_alter($type, $items[$type]);
+        \Drupal::moduleHandler()->alter($type, $items[$type]);
         // @todo Inline CSS and JS items are indexed numerically. These can't be
         //   reliably diffed with array_diff_key(), since the number can change
         //   due to factors unrelated to the inline content, so for now, we
@@ -166,7 +166,7 @@ class AjaxResponse extends JsonResponse {
     }
 
     $commands = $this->commands;
-    drupal_alter('ajax_render', $commands);
+    \Drupal::moduleHandler()->alter('ajax_render', $commands);
 
     return $commands;
   }

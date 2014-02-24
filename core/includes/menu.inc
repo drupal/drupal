@@ -485,7 +485,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     if ($router_item) {
       // Allow modules to alter the router item before it is translated and
       // checked for access.
-      drupal_alter('menu_get_item', $router_item, $path, $original_map);
+      \Drupal::moduleHandler()->alter('menu_get_item', $router_item, $path, $original_map);
 
       $map = _menu_translate($router_item, $original_map);
       $router_item['original_map'] = $original_map;
@@ -903,7 +903,7 @@ function _menu_link_translate(&$item) {
   // options array. For performance reasons we only invoke this hook if the link
   // has the 'alter' flag set in the options array.
   if (!empty($item['options']['alter'])) {
-    drupal_alter('translated_menu_link', $item, $map);
+    \Drupal::moduleHandler()->alter('translated_menu_link', $item, $map);
   }
 }
 
@@ -2451,7 +2451,7 @@ function menu_router_build($save = FALSE) {
     }
   }
   // Alter the menu as defined in modules, keys are like user/%user.
-  drupal_alter('menu', $callbacks);
+  \Drupal::moduleHandler()->alter('menu', $callbacks);
   \Drupal::configFactory()->setOverrideState($old_state);
   foreach ($callbacks as $path => $router_item) {
     // If the menu item is a default local task and incorrectly references a

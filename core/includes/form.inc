@@ -3257,7 +3257,7 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
     // The batch is now completely built. Allow other modules to make changes
     // to the batch so that it is easier to reuse batch processes in other
     // environments.
-    drupal_alter('batch', $batch);
+    \Drupal::moduleHandler()->alter('batch', $batch);
 
     // Assign an arbitrary id: don't rely on a serial column in the 'batch'
     // table, since non-progressive batches skip database storage completely.

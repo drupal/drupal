@@ -2031,7 +2031,7 @@ function _template_preprocess_default_variables() {
   }
 
   // Give modules a chance to alter the default template variables.
-  drupal_alter('template_preprocess_default_variables', $variables);
+  \Drupal::moduleHandler()->alter('template_preprocess_default_variables', $variables);
 
   return $variables;
 }

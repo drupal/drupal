@@ -162,7 +162,7 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $reply = 
   }
 
   // Invoke hook_mail_alter() to allow all modules to alter the resulting e-mail.
-  drupal_alter('mail', $message);
+  \Drupal::moduleHandler()->alter('mail', $message);
 
   // Retrieve the responsible implementation for this message.
   $system = drupal_mail_system($module, $key);

@@ -75,9 +75,10 @@ function _drupal_maintenance_theme() {
 
   $themes = list_themes();
 
-  // list_themes() triggers a drupal_alter() in maintenance mode, but we can't
-  // let themes alter the .info.yml data until we know a theme's base themes. So
-  // don't set global $theme until after list_themes() builds its cache.
+  // list_themes() triggers a \Drupal\Core\Extension\ModuleHandler::alter() in
+  // maintenance mode, but we can't let themes alter the .info.yml data until
+  // we know a theme's base themes. So don't set global $theme until after
+  // list_themes() builds its cache.
   $theme = $custom_theme;
 
   // Store the identifier for retrieving theme settings with.

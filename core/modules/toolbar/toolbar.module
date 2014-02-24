@@ -194,7 +194,7 @@ function toolbar_pre_render($element) {
   // Get toolbar items from all modules that implement hook_toolbar().
   $items = \Drupal::moduleHandler()->invokeAll('toolbar');
   // Allow for altering of hook_toolbar().
-  drupal_alter('toolbar', $items);
+  \Drupal::moduleHandler()->alter('toolbar', $items);
   // Sort the children.
   uasort($items, 'element_sort');
 

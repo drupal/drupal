@@ -405,7 +405,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       drupal_get_path('module', 'ckeditor') . '/css/ckeditor-iframe.css',
       drupal_get_path('module', 'system') . '/css/system.module.css',
     );
-    drupal_alter('ckeditor_css', $css, $editor);
+    $this->moduleHandler->alter('ckeditor_css', $css, $editor);
     $css = array_merge($css, _ckeditor_theme_css());
     $css = array_map('file_create_url', $css);
 
