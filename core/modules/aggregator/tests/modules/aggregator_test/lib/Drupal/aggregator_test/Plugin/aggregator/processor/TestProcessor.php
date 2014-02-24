@@ -9,7 +9,7 @@ namespace Drupal\aggregator_test\Plugin\aggregator\processor;
 
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
-use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -98,7 +98,7 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
   /**
    * {@inheritdoc}
    */
-  public function process(Feed $feed) {
+  public function process(FeedInterface $feed) {
     foreach ($feed->items as &$item) {
       // Prepend our test string.
       $item['title'] = 'testProcessor' . $item['title'];
@@ -108,7 +108,7 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
   /**
    * {@inheritdoc}
    */
-  public function remove(Feed $feed) {
+  public function remove(FeedInterface $feed) {
     // Append a random number, just to change the feed description.
     $feed->description->value .= rand(0, 10);
   }
@@ -116,7 +116,7 @@ class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInt
   /**
    * {@inheritdoc}
    */
-  public function postProcess(Feed $feed) {
+  public function postProcess(FeedInterface $feed) {
     // Double the refresh rate.
     $feed->refresh->value *= 2;
     $feed->save();

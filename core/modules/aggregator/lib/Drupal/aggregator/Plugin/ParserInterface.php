@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Plugin;
 
-use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\FeedInterface;
 
 /**
  * Defines an interface for aggregator parser implementations.
@@ -24,7 +24,7 @@ interface ParserInterface {
   /**
    * Parses feed data.
    *
-   * @param \Drupal\aggregator\Entity\Feed $feed
+   * @param \Drupal\aggregator\FeedInterface $feed
    *   An object describing the resource to be parsed.
    *   $feed->source_string->value contains the raw feed data. Parse the data
    *   and add the following properties to the $feed object:
@@ -48,6 +48,6 @@ interface ParserInterface {
    * @return bool
    *   TRUE if parsing was successful, FALSE otherwise.
    */
-  public function parse(Feed $feed);
+  public function parse(FeedInterface $feed);
 
 }

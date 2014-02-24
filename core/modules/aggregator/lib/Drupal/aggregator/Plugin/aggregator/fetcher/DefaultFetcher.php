@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 
 use Drupal\aggregator\Plugin\FetcherInterface;
-use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Exception\BadResponseException;
@@ -57,7 +57,7 @@ class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function fetch(Feed $feed) {
+  public function fetch(FeedInterface $feed) {
     $request = $this->httpClient->get($feed->getUrl());
     $feed->source_string = FALSE;
 

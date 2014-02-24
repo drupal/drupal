@@ -5,7 +5,7 @@
  * Used to aggregate syndicated content (RSS, RDF, and Atom).
  */
 
-use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\FeedInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 
 /**
@@ -211,10 +211,10 @@ function aggregator_queue_info() {
 /**
  * Checks a news feed for new items.
  *
- * @param \Drupal\aggregator\Entity\Feed $feed
+ * @param \Drupal\aggregator\FeedInterface $feed
  *   An object describing the feed to be refreshed.
  */
-function aggregator_refresh(Feed $feed) {
+function aggregator_refresh(FeedInterface $feed) {
   // Store feed URL to track changes.
   $feed_url = $feed->getUrl();
 
@@ -300,7 +300,7 @@ function aggregator_refresh(Feed $feed) {
  * @param int $fid
  *   The feed id.
  *
- * @return \Drupal\aggregator\Entity\Feed
+ * @return \Drupal\aggregator\FeedInterface
  *   An object describing the feed.
  */
 function aggregator_feed_load($fid) {

@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Plugin\aggregator\processor;
 
 use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
-use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -127,7 +127,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * {@inheritdoc}
    */
-  public function process(Feed $feed) {
+  public function process(FeedInterface $feed) {
     if (!is_array($feed->items)) {
       return;
     }
@@ -184,7 +184,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
   /**
    * {@inheritdoc}
    */
-  public function remove(Feed $feed) {
+  public function remove(FeedInterface $feed) {
     $iids = Database::getConnection()->query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchCol();
     if ($iids) {
       entity_delete_multiple('aggregator_item', $iids);
@@ -198,7 +198,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    *
    * Expires items from a feed depending on expiration settings.
    */
-  public function postProcess(Feed $feed) {
+  public function postProcess(FeedInterface $feed) {
     $aggregator_clear = $this->configuration['items']['expire'];
 
     if ($aggregator_clear != AGGREGATOR_CLEAR_NEVER) {

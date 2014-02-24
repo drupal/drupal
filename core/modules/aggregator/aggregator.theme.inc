@@ -80,8 +80,8 @@ function theme_aggregator_page_opml($variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - source: A Drupal\aggregator\Entity\Feed instance representing
- *     the feed source.
+ *   - source: A Drupal\aggregator\FeedInterface object representing the feed
+ *     source.
  *   - summary_items: An array of feed items.
  */
 function template_preprocess_aggregator_summary_items(&$variables) {
@@ -133,8 +133,8 @@ function template_preprocess_aggregator_summary_item(&$variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - aggregator_feed: A Drupal\aggregator\Entity\Feed instance
- *     representing the feed source.
+ *   - aggregator_feed: A Drupal\aggregator\FeedInterface object representing
+ *     the feed source.
  */
 function template_preprocess_aggregator_feed_source(&$variables) {
   $feed = $variables['aggregator_feed'];

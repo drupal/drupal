@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Plugin;
 
-use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\FeedInterface;
 
 /**
  * Defines an interface for aggregator processor implementations.
@@ -23,15 +23,14 @@ interface ProcessorInterface {
   /**
    * Processes feed data.
    *
-   * @param \Drupal\aggregator\Entity\Feed $feed
+   * @param \Drupal\aggregator\FeedInterface $feed
    *   A feed object representing the resource to be processed.
    *   $feed->items contains an array of feed items downloaded and parsed at the
    *   parsing stage. See \Drupal\aggregator\Plugin\FetcherInterface::parse()
    *   for the basic format of a single item in the $feed->items array.
    *   For the exact format refer to the particular parser in use.
-   *
    */
-  public function process(Feed $feed);
+  public function process(FeedInterface $feed);
 
   /**
    * Refreshes feed information.
@@ -39,12 +38,12 @@ interface ProcessorInterface {
    * Called after the processing of the feed is completed by all selected
    * processors.
    *
-   * @param \Drupal\aggregator\Entity\Feed $feed
+   * @param \Drupal\aggregator\FeedInterface $feed
    *   Object describing feed.
    *
    * @see aggregator_refresh()
    */
-  public function postProcess(Feed $feed);
+  public function postProcess(FeedInterface $feed);
 
   /**
    * Removes stored feed data.
@@ -52,10 +51,9 @@ interface ProcessorInterface {
    * Called by aggregator if either a feed is deleted or a user clicks on
    * "remove items".
    *
-   * @param \Drupal\aggregator\Entity\Feed $feed
+   * @param \Drupal\aggregator\FeedInterface $feed
    *   The $feed object whose items are being removed.
-   *
    */
-  public function remove(Feed $feed);
+  public function remove(FeedInterface $feed);
 
 }

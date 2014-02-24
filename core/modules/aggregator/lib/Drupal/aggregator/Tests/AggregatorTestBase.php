@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
-use Drupal\aggregator\Entity\Feed;
+use Drupal\aggregator\FeedInterface;
 
 /**
  * Defines a base class for testing the Aggregator module.
@@ -47,7 +47,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    * @param array $edit
    *   Array with additional form fields.
    *
-   * @return \Drupal\aggregator\Entity\Feed $feed
+   * @return \Drupal\aggregator\FeedInterface
    *   Full feed object if possible.
    *
    * @see getFeedEditArray()
@@ -65,10 +65,10 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Deletes an aggregator feed.
    *
-   * @param \Drupal\aggregator\Entity\Feed $feed
+   * @param \Drupal\aggregator\FeedInterface $feed
    *   Feed object representing the feed.
    */
-  function deleteFeed(Feed $feed) {
+  function deleteFeed(FeedInterface $feed) {
     $this->drupalPostForm('admin/config/services/aggregator/delete/feed/' . $feed->id(), array(), t('Delete'));
     $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->label())), 'Feed deleted successfully.');
   }
@@ -110,7 +110,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    * @param array $values
    *   (optional) Default values to initialize object properties with.
    *
-   * @return \Drupal\aggregator\Entity\Feed
+   * @return \Drupal\aggregator\FeedInterface
    *   A feed object.
    */
   function getFeedEditObject($feed_url = NULL, array $values = array()) {
@@ -147,12 +147,12 @@ abstract class AggregatorTestBase extends WebTestBase {
    * This method simulates a click to
    * admin/config/services/aggregator/update/$fid.
    *
-   * @param \Drupal\aggregator\Entity\Feed $feed
+   * @param \Drupal\aggregator\FeedInterface $feed
    *   Feed object representing the feed.
    * @param int|null $expected_count
    *   Expected number of feed items. If omitted no check will happen.
    */
-  function updateFeedItems(Feed $feed, $expected_count = NULL) {
+  function updateFeedItems(FeedInterface $feed, $expected_count = NULL) {
     // First, let's ensure we can get to the rss xml.
     $this->drupalGet($feed->getUrl());
     $this->assertResponse(200, format_string('!url is reachable.', array('!url' => $feed->getUrl())));
@@ -181,10 +181,10 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Confirms an item removal from a feed.
    *
-   * @param  \Drupal\aggregator\Entity\Feed $feed
+   * @param \Drupal\aggregator\FeedInterface $feed
    *   Feed object representing the feed.
    */
-  function removeFeedItems(Feed $feed) {
+  function removeFeedItems(FeedInterface $feed) {
     $this->drupalPostForm('admin/config/services/aggregator/remove/' . $feed->id(), array(), t('Remove items'));
     $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->label())), 'Feed items removed.');
   }
@@ -192,12 +192,12 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Adds and removes feed items and ensure that the count is zero.
    *
-   * @param  \Drupal\aggregator\Entity\Feed $feed
+   * @param \Drupal\aggregator\FeedInterface $feed
    *   Feed object representing the feed.
    * @param int $expected_count
    *   Expected number of feed items.
    */
-  function updateAndRemove(Feed $feed, $expected_count) {
+  function updateAndRemove(FeedInterface $feed, $expected_count) {
     $this->updateFeedItems($feed, $expected_count);
     $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchField();
     $this->assertTrue($count);
