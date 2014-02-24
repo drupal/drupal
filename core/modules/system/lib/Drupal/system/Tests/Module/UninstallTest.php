@@ -40,4 +40,14 @@ class UninstallTest extends WebTestBase {
     // Are the perms defined by module_test removed?
     $this->assertFalse(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
   }
+
+  /**
+   * Tests the Uninstall page.
+   */
+  function testUninstallPage() {
+    $account = $this->drupalCreateUser(array('administer modules'));
+    $this->drupalLogin($account);
+    $this->drupalGet('admin/modules/uninstall');
+    $this->assertTitle(t('Uninstall') . ' | Drupal');
+  }
 }
