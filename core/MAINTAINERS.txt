@@ -374,7 +374,9 @@ Shortcut module
 - ?
 
 Simpletest module
-- Jimmy Berry 'boombatower' http://drupal.org/user/214218
+- Daniel F. Kudwien 'sun' http://drupal.org/user/54136
+- Sascha Grossenbacher 'Berdir' http://drupal.org/user/214652
+- Alex Pott 'alexpott' http://drupal.org/user/157725
 
 Statistics module
 - Tim Millwood 'timmillwood' http://drupal.org/user/227849
