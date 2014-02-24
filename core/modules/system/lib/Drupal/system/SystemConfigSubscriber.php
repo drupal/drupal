@@ -22,7 +22,7 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   static function getSubscribedEvents() {
-    $events[ConfigEvents::VALIDATE][] = array('onConfigImporterValidate', 20);
+    $events[ConfigEvents::IMPORT_VALIDATE][] = array('onConfigImporterValidate', 20);
     return $events;
   }
 
@@ -42,4 +42,3 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
     }
   }
 }
-

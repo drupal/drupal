@@ -21,9 +21,9 @@ class BatchConfigImporter extends ConfigImporter {
     // Ensure that the changes have been validated.
     $this->validate();
 
-    if (!$this->lock->acquire(static::ID)) {
+    if (!$this->lock->acquire(static::LOCK_ID)) {
       // Another process is synchronizing configuration.
-      throw new ConfigImporterException(sprintf('%s is already importing', static::ID));
+      throw new ConfigImporterException(sprintf('%s is already importing', static::LOCK_ID));
     }
     $this->totalToProcess = 0;
     foreach(array('create', 'delete', 'update') as $op) {
@@ -48,9 +48,9 @@ class BatchConfigImporter extends ConfigImporter {
       $context['finished'] = 1;
     }
     if ($context['finished'] >= 1) {
-      $this->notify('import');
+      $this->eventDispatcher->dispatch(ConfigEvents::IMPORT, new ConfigImporterEvent($this));
       // The import is now complete.
-      $this->lock->release(static::ID);
+      $this->lock->release(static::LOCK_ID);
       $this->reset();
     }
   }

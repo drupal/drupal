@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * The ConfigImporter has a identifier which is used to construct event names.
  * The events fired during an import are:
- * - ConfigEvents::VALIDATE: Events listening can throw a
+ * - ConfigEvents::IMPORT_VALIDATE: Events listening can throw a
  *   \Drupal\Core\Config\ConfigImporterException to prevent an import from
  *   occurring.
  *   @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
@@ -33,9 +34,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ConfigImporter extends DependencySerialization {
 
   /**
-   * The name used to identify events and the lock.
+   * The name used to identify the lock.
    */
-  const ID = 'config.importer';
+  const LOCK_ID = 'config_importer';
 
   /**
    * The storage comparer used to discover configuration changes.
@@ -201,9 +202,9 @@ class ConfigImporter extends DependencySerialization {
       // Ensure that the changes have been validated.
       $this->validate();
 
-      if (!$this->lock->acquire(static::ID)) {
+      if (!$this->lock->acquire(static::LOCK_ID)) {
         // Another process is synchronizing configuration.
-        throw new ConfigImporterException(sprintf('%s is already importing', static::ID));
+        throw new ConfigImporterException(sprintf('%s is already importing', static::LOCK_ID));
       }
       // First pass deleted, then new, and lastly changed configuration, in order
       // to handle dependencies correctly.
@@ -215,10 +216,11 @@ class ConfigImporter extends DependencySerialization {
         }
       }
       // Allow modules to react to a import.
-      $this->notify('import');
+      $this->eventDispatcher->dispatch(ConfigEvents::IMPORT, new ConfigImporterEvent($this));
+
 
       // The import is now complete.
-      $this->lock->release(static::ID);
+      $this->lock->release(static::LOCK_ID);
       $this->reset();
     }
     return $this;
@@ -235,7 +237,7 @@ class ConfigImporter extends DependencySerialization {
       if (!$this->storageComparer->validateSiteUuid()) {
         throw new ConfigImporterException('Site UUID in source storage does not match the target storage.');
       }
-      $this->notify('validate');
+      $this->eventDispatcher->dispatch(ConfigEvents::IMPORT_VALIDATE, new ConfigImporterEvent($this));
       $this->validated = TRUE;
     }
     return $this;
@@ -323,33 +325,13 @@ class ConfigImporter extends DependencySerialization {
   }
 
   /**
-   * Dispatches a config importer event.
-   *
-   * @param string $event_name
-   *   The name of the config importer event to dispatch.
-   */
-  protected function notify($event_name) {
-    $this->eventDispatcher->dispatch(static::ID . '.' . $event_name, new ConfigImporterEvent($this));
-  }
-
-  /**
    * Determines if a import is already running.
    *
    * @return bool
    *   TRUE if an import is already running, FALSE if not.
    */
   public function alreadyImporting() {
-    return !$this->lock->lockMayBeAvailable(static::ID);
-  }
-
-  /**
-   * Returns the identifier for events and locks.
-   *
-   * @return string
-   *   The identifier for events and locks.
-   */
-  public function getId() {
-    return static::ID;
+    return !$this->lock->lockMayBeAvailable(static::LOCK_ID);
   }
 
 }

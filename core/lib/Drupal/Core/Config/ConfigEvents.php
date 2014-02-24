@@ -47,7 +47,7 @@ final class ConfigEvents {
    * @see \Drupal\Core\Config\ConfigImporter::validate().
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber::onConfigImporterValidate().
    */
-  const VALIDATE = 'config.importer.validate';
+  const IMPORT_VALIDATE = 'config.importer.validate';
 
   /**
    * Name of event fired when when importing configuration to target storage.
