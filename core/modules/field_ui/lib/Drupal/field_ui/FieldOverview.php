@@ -288,6 +288,7 @@ class FieldOverview extends OverviewBase {
     // We can set the 'rows_order' element, needed by theme_field_ui_table(),
     // here instead of a #pre_render callback because this form doesn't have the
     // tabledrag behavior anymore.
+    $table['#regions']['content']['rows_order'] = array();
     foreach (element_children($table) as $name) {
       $table['#regions']['content']['rows_order'][] = $name;
     }
