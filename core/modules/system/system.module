@@ -193,6 +193,7 @@ function system_theme() {
     'admin_block_content' => array(
       'variables' => array('content' => NULL),
       'file' => 'system.admin.inc',
+      'template' => 'admin-block-content',
     ),
     'system_admin_index' => array(
       'variables' => array('menu_items' => NULL),

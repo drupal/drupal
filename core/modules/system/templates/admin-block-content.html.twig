@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the content of an administrative block.
+ *
+ * Available variables:
+ * - content: A list containing information about the block. Each element
+ *   of the array represents an administrative menu item, and must at least
+ *   contain the keys 'title', 'link_path', and 'localized_options', which are
+ *   passed to l(). A 'description' key may also be provided.
+ * - attributes: HTML attributes to be added to the element.
+ *
+ * @see template_preprocess_admin_block_content()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if content %}
+  <dl{{ attributes }}>
+    {% for item in content %}
+      <dt>{{ item.link }}</dt>
+      {% if item.description %}
+        <dd>{{ item.description }}</dd>
+      {% endif %}
+    {% endfor %}
+  </dl>
+{% endif %}

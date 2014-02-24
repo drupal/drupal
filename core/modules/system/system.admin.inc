@@ -125,36 +125,36 @@ function theme_admin_block($variables) {
 }
 
 /**
- * Returns HTML for the content of an administrative block.
+ * Prepares variables for administrative content block templates.
+ *
+ * Default template: admin-block-content.html.twig.
  *
  * @param $variables
  *   An associative array containing:
  *   - content: An array containing information about the block. Each element
  *     of the array represents an administrative menu item, and must at least
- *     contain the keys 'title', 'href', and 'localized_options', which are
+ *     contain the keys 'title', 'link_path', and 'localized_options', which are
  *     passed to l(). A 'description' key may also be provided.
  *
  * @ingroup themeable
  */
-function theme_admin_block_content($variables) {
-  $content = $variables['content'];
-  $output = '';
-
-  if (!empty($content)) {
-    $class = 'admin-list';
-    if ($compact = system_admin_compact_mode()) {
-      $class .= ' compact';
+function template_preprocess_admin_block_content(&$variables) {
+  if (!empty($variables['content'])) {
+    $compact = system_admin_compact_mode();
+    $variables['attributes'] = array('class' => array('admin-list'));
+    if ($compact) {
+      $variables['attributes']['class'][] = 'compact';
     }
-    $output .= '<dl class="' . $class . '">';
-    foreach ($content as $item) {
-      $output .= '<dt>' . l($item['title'], $item['link_path'], $item['localized_options']) . '</dt>';
+    foreach ($variables['content'] as $key => $item) {
+      $variables['content'][$key]['link'] = l($item['title'], $item['link_path'], $item['localized_options']);
       if (!$compact && isset($item['description'])) {
-        $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
+        $variables['content'][$key]['description'] = filter_xss_admin($item['description']);
+      }
+      else {
+        $variables['content'][$key]['description'] = FALSE;
       }
     }
-    $output .= '</dl>';
   }
-  return $output;
 }
 
 /**
