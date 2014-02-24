@@ -101,6 +101,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/form-display/{form_mode_name}",
           array(
             '_form' => '\Drupal\field_ui\FormDisplayOverview',
+            '_title' => 'Manage form display',
           ) + $defaults,
           array('_field_ui_form_mode_access' => 'administer ' . $entity_type_id . ' form display')
         );
@@ -120,7 +121,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/display/{view_mode_name}",
           array(
             '_form' => '\Drupal\field_ui\DisplayOverview',
-            'view_mode_name' => NULL,
+            '_title' => 'Manage display',
           ) + $defaults,
           array('_field_ui_view_mode_access' => 'administer ' . $entity_type_id . ' display')
         );

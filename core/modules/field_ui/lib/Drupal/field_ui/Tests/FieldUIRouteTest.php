@@ -17,7 +17,7 @@ class FieldUIRouteTest extends WebTestBase {
   /**
    * Modules to enable.
    */
-  public static $modules = array('field_ui_test', 'node');
+  public static $modules = array('field_ui_test');
 
   /**
    * {@inheritdoc}
@@ -36,8 +36,6 @@ class FieldUIRouteTest extends WebTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
-
     $this->drupalLogin($this->root_user);
   }
 
@@ -50,17 +48,36 @@ class FieldUIRouteTest extends WebTestBase {
     // @see \Drupal\field_ui\FieldOverview::getRegions()
     //$this->assertText('No fields are present yet.');
 
-    $this->drupalGet('admin/structure/types/manage/article/fields');
+    $this->drupalGet('admin/config/people/accounts/fields');
     $this->assertTitle('Manage fields | Drupal');
     $this->assertLocalTasks();
 
-    $this->drupalGet('admin/structure/types/manage/article');
+    // Test manage display tabs and titles.
+    $this->drupalGet('admin/config/people/accounts/display/compact');
+    $this->assertResponse(403);
+
+    $this->drupalGet('admin/config/people/accounts/display');
+    $this->assertTitle('Manage display | Drupal');
     $this->assertLocalTasks();
 
-    $this->drupalGet('admin/structure/types/manage/article/form-display');
+    $edit = array('display_modes_custom[compact]' => TRUE);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalGet('admin/config/people/accounts/display/compact');
+    $this->assertTitle('Manage display | Drupal');
     $this->assertLocalTasks();
 
-    $this->drupalGet('admin/structure/types/manage/article/display');
+    // Test manage form display tabs and titles.
+    $this->drupalGet('admin/config/people/accounts/form-display/register');
+    $this->assertResponse(403);
+
+    $this->drupalGet('admin/config/people/accounts/form-display');
+    $this->assertTitle('Manage form display | Drupal');
+    $this->assertLocalTasks();
+
+    $edit = array('display_modes_custom[register]' => TRUE);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalGet('admin/config/people/accounts/form-display/register');
+    $this->assertTitle('Manage form display | Drupal');
     $this->assertLocalTasks();
   }
 
@@ -68,7 +85,7 @@ class FieldUIRouteTest extends WebTestBase {
    * Asserts that local tasks exists.
    */
   public function assertLocalTasks() {
-    $this->assertLink('Edit');
+    $this->assertLink('Settings');
     $this->assertLink('Manage fields');
     $this->assertLink('Manage display');
     $this->assertLink('Manage form display');
