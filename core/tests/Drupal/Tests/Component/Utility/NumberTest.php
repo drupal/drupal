@@ -13,14 +13,14 @@ use Drupal\Component\Utility\Number;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests number step validation by valid_number_step().
+ * Tests number step validation by Number::validStep().
  */
 class NumberTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
       'name' => 'Number step validation',
-      'description' => 'Tests number step validation by valid_number_step()',
+      'description' => 'Tests number step validation by Number::validStep()',
       'group' => 'Common',
     );
   }
@@ -43,7 +43,7 @@ class NumberTest extends UnitTestCase {
   }
 
   /**
-   * Tests valid_number_step() with offset.
+   * Tests Number::validStep() with offset.
    *
    * @param numeric $value
    *   The value argument for Number::validStep().

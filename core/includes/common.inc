@@ -623,29 +623,6 @@ function valid_url($url, $absolute = FALSE) {
 }
 
 /**
- * Verifies that a number is a multiple of a given step.
- *
- * @see \Drupal\Component\Utility\Number::validStep()
- *
- * @param numeric $value
- *   The value that needs to be checked.
- * @param numeric $step
- *   The step scale factor. Must be positive.
- * @param numeric $offset
- *   (optional) An offset, to which the difference must be a multiple of the
- *   given step.
- *
- * @return bool
- *   TRUE if no step mismatch has occurred, or FALSE otherwise.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\Number::validStep().
- */
-function valid_number_step($value, $step, $offset = 0.0) {
-  return Number::validStep($value, $step, $offset);
-}
-
-/**
  * @} End of "defgroup validation".
  */
 
