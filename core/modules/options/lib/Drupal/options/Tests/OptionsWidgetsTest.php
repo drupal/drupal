@@ -69,7 +69,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       'cardinality' => 1,
       'settings' => array(
         // Make sure that 0 works as an option.
-        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>'),
+        'allowed_values' => array(0 => 'Zero', 1 => 'One', 2 => 'Some <script>dangerous</script> & unescaped <strong>markup</strong>', 3 => 'Some HTML encoded markup with &lt; &amp; &gt;'),
       ),
     ));
     $this->card_1->save();
@@ -135,6 +135,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNoFieldChecked('edit-card-1-1');
     $this->assertNoFieldChecked('edit-card-1-2');
     $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
+    $this->assertRaw('Some HTML encoded markup with &lt; &amp; &gt;');
 
     // Select first option.
     $edit = array('card_1' => 0);
