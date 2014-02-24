@@ -512,7 +512,7 @@ function install_begin_request(&$install_state) {
     $task = NULL;
 
     // Do not install over a configured settings.php.
-    if (!empty($GLOBALS['databases'])) {
+    if (Database::getConnectionInfo()) {
       throw new Exception(install_already_done_error());
     }
   }
@@ -1076,9 +1076,8 @@ function install_verify_completed_task() {
  * Verifies that settings.php specifies a valid database connection.
  */
 function install_verify_database_settings() {
-  global $databases;
-  if (!empty($databases)) {
-    $database = $databases['default']['default'];
+  if ($database = Database::getConnectionInfo()) {
+    $database = $database['default'];
     $settings_file = './' . conf_path(FALSE) . '/settings.php';
     $errors = install_database_errors($database, $settings_file);
     if (empty($errors)) {
@@ -1099,8 +1098,6 @@ function install_verify_database_settings() {
  * @ingroup forms
  */
 function install_settings_form($form, &$form_state, &$install_state) {
-  global $databases;
-
   $conf_path = './' . conf_path(FALSE);
   $settings_file = $conf_path . '/settings.php';
 
@@ -1109,25 +1106,33 @@ function install_settings_form($form, &$form_state, &$install_state) {
   $drivers = drupal_get_database_types();
   $drivers_keys = array_keys($drivers);
 
-  // If database connection settings have been prepared in settings.php already,
-  // then the existing values need to be taken over.
+  // Unless there is input for this form (for a non-interactive installation,
+  // input originates from the $settings array passed into install_drupal()),
+  // check whether database connection settings have been prepared in
+  // settings.php already.
   // Note: The installer even executes this form if there is a valid database
   // connection already, since the submit handler of this form is responsible
   // for writing all $settings to settings.php (not limited to $databases).
-  if (isset($databases['default']['default'])) {
-    $default_driver = $databases['default']['default']['driver'];
-    $default_options = $databases['default']['default'];
+  if (!isset($form_state['input']['driver']) && $database = Database::getConnectionInfo()) {
+    $form_state['input']['driver'] = $database['default']['driver'];
+    $form_state['input'][$database['default']['driver']] = $database['default'];
   }
-  // Otherwise, use the database connection settings from the form input.
-  // For a non-interactive installation, this is derived from the original
-  // $settings array passed into install_drupal().
-  elseif (isset($form_state['input']['driver'])) {
+
+  if (isset($form_state['input']['driver'])) {
     $default_driver = $form_state['input']['driver'];
+    // In case of database connection info from settings.php, as well as for a
+    // programmed form submission (non-interactive installer), the table prefix
+    // information is usually normalized into an array already, but the form
+    // element only allows to configure one default prefix for all tables.
+    $prefix = &$form_state['input'][$default_driver]['prefix'];
+    if (isset($prefix) && is_array($prefix)) {
+      $prefix = $prefix['default'];
+    }
     $default_options = $form_state['input'][$default_driver];
   }
-  // If there is no database information at all yet, just suggest the first
-  // available driver as default value, so that its settings form is made
-  // visible via #states when JavaScript is enabled (see below).
+  // If there is no database information yet, suggest the first available driver
+  // as default value, so that its settings form is made visible via #states
+  // when JavaScript is enabled (see below).
   else {
     $default_driver = current($drivers_keys);
     $default_options = array();
@@ -1203,7 +1208,6 @@ function install_settings_form_validate($form, &$form_state) {
  * Checks a database connection and returns any errors.
  */
 function install_database_errors($database, $settings_file) {
-  global $databases;
   $errors = array();
 
   // Check database type.
@@ -1215,18 +1219,13 @@ function install_database_errors($database, $settings_file) {
   else {
     // Run driver specific validation
     $errors += $database_types[$driver]->validateDatabaseSettings($database);
-
+    if (!empty($errors)) {
+      // No point to try further.
+      return $errors;
+    }
     // Run tasks associated with the database type. Any errors are caught in the
     // calling function.
-    $databases['default']['default'] = $database;
-    // Just changing the global doesn't get the new information processed.
-    // We need to close any active connections and tell the Database class to
-    // re-parse $databases.
-    if (Database::isActiveConnection()) {
-      Database::closeConnection();
-    }
-    Database::parseConnectionInfo();
-
+    Database::addConnectionInfo('default', 'default', $database);
     try {
       db_run_tasks($driver);
     }

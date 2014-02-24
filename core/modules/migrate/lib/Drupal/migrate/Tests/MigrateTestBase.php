@@ -40,7 +40,7 @@ class MigrateTestBase extends WebTestBase {
     $database = SqlBase::getDatabaseConnection($migration->id(), array('database' => $connection_info['default']));
     foreach (array('source', 'destination', 'idMap') as $key) {
       $configuration = $migration->get($key);
-      $configuration['database'] = $database;
+      $configuration['database'] = $connection_info['default'];
       $migration->set($key, $configuration);
     }
 
