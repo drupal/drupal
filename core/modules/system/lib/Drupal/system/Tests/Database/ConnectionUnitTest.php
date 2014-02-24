@@ -52,6 +52,8 @@ class ConnectionUnitTest extends UnitTestBase {
     // and closed in this test.
     // @see TestBase::changeDatabasePrefix()
     Database::addConnectionInfo('default', 'monitor', $connection_info['default']);
+    global $databases;
+    $databases['default']['monitor'] = $connection_info['default'];
     $this->monitor = Database::getConnection('monitor');
   }
 
