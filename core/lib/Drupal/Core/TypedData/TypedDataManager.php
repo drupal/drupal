@@ -133,6 +133,56 @@ class TypedDataManager extends DefaultPluginManager {
   }
 
   /**
+   * Creates a new data definition object.
+   *
+   * While data definitions objects may be created directly if the definition
+   * class used by a data type is known, this method allows the creation of data
+   * definitions for any given data type.
+   *
+   * E.g., if a definition for a map is to be created, the following code
+   * could be used instead of calling this method with the argument 'map':
+   * @code
+   *   $map_definition = \Drupal\Core\TypedData\MapDataDefinition::create();
+   * @endcode
+   *
+   * @param string $data_type
+   *   The data type, for which a data definition should be created.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface
+   *   A data definition for the given data type.
+   *
+   * @see \Drupal\Core\TypedData\TypedDataManager::createListDataDefinition()
+   */
+  public function createDataDefinition($data_type) {
+    $type_definition = $this->getDefinition($data_type);
+    if (!isset($type_definition)) {
+      throw new \InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $data_type)));
+    }
+    $class = $type_definition['definition_class'];
+    return $class::createFromDataType($data_type);
+  }
+
+  /**
+   * Creates a new list data definition for items of the given data type.
+   *
+   * @param string $item_type
+   *   The item type, for which a list data definition should be created.
+   *
+   * @return \Drupal\Core\TypedData\ListDataDefinitionInterface
+   *   A list definition for items of the given data type.
+   *
+   * @see \Drupal\Core\TypedData\TypedDataManager::createDataDefinition()
+   */
+  public function createListDataDefinition($item_type) {
+    $type_definition = $this->getDefinition($item_type);
+    if (!isset($type_definition)) {
+      throw new \InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $item_type)));
+    }
+    $class = $type_definition['list_definition_class'];
+    return $class::createFromItemType($item_type);
+  }
+
+  /**
    * Implements \Drupal\Component\Plugin\PluginManagerInterface::getInstance().
    *
    * @param array $options
@@ -188,10 +238,10 @@ class TypedDataManager extends DefaultPluginManager {
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
   public function getPropertyInstance(TypedDataInterface $object, $property_name, $value = NULL) {
-    $definition = $object->getRoot()->getDefinition();
+    $definition = $object->getRoot()->getDataDefinition();
     // If the definition is a list, we need to look at the data type and the
     // settings of its item definition.
-    if ($definition instanceof ListDefinition) {
+    if ($definition instanceof ListDataDefinition) {
       $definition = $definition->getItemDefinition();
     }
     $key = $definition->getDataType();
@@ -209,7 +259,7 @@ class TypedDataManager extends DefaultPluginManager {
       // Create the initial prototype. For that we need to fetch the definition
       // of the to be created property instance from the parent.
       if ($object instanceof ComplexDataInterface) {
-        $definition = $object->getPropertyDefinition($property_name);
+        $definition = $object->getDataDefinition()->getPropertyDefinition($property_name);
       }
       elseif ($object instanceof ListInterface) {
         $definition = $object->getItemDefinition();
@@ -364,6 +414,12 @@ class TypedDataManager extends DefaultPluginManager {
     // Check if the class provides allowed values.
     if (is_subclass_of($class,'Drupal\Core\TypedData\AllowedValuesInterface')) {
       $constraints[] = $validation_manager->create('AllowedValues', array());
+    }
+    // Add any constraints about referenced data.
+    if ($definition instanceof DataReferenceDefinitionInterface) {
+      foreach ($definition->getTargetDefinition()->getConstraints() as $name => $options) {
+        $constraints[] = $validation_manager->create($name, $options);
+      }
     }
 
     return $constraints;

@@ -65,13 +65,13 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
 
     // Check type detection on elements with undefined types.
     $config = config_typed()->get('config_test.someschema');
-    $definition = $config['testitem']->getDefinition();
+    $definition = $config['testitem']->getDataDefinition();
     $expected = array();
     $expected['label'] = 'Test item';
     $expected['class'] = '\Drupal\Core\TypedData\Plugin\DataType\String';
     $expected['type'] = 'string';
     $this->assertEqual($definition, $expected, 'Automatic type detection on string item worked.');
-    $definition = $config['testlist']->getDefinition();
+    $definition = $config['testlist']->getDataDefinition();
     $expected = array();
     $expected['label'] = 'Test list';
     $expected['class'] = '\Drupal\Core\Config\Schema\Property';
@@ -132,7 +132,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
 
     // Most complex case, get metadata for actual configuration element.
     $effects = config_typed()->get('image.style.medium')->get('effects');
-    $definition = $effects['bddf0d06-42f9-4c75-a700-a33cafa25ea0']['data']->getDefinition();
+    $definition = $effects['bddf0d06-42f9-4c75-a700-a33cafa25ea0']['data']->getDataDefinition();
     // This should be the schema for image.effect.image_scale, reuse previous one.
     $expected['type'] =  'image.effect.image_scale';
 
@@ -164,7 +164,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
 
     // Test fetching parent one level up.
     $entry = $config_data->get('one_level');
-    $definition = $entry['testitem']->getDefinition();
+    $definition = $entry['testitem']->getDataDefinition();
     $expected = array(
       'type' => 'config_test.someschema.with_parents.key_1',
       'label' => 'Test item nested one level',
@@ -174,7 +174,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
 
     // Test fetching parent two levels up.
     $entry = $config_data->get('two_levels');
-    $definition = $entry['wrapper']['testitem']->getDefinition();
+    $definition = $entry['wrapper']['testitem']->getDataDefinition();
     $expected = array(
       'type' => 'config_test.someschema.with_parents.key_2',
       'label' => 'Test item nested two levels',
@@ -184,7 +184,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
 
     // Test fetching parent three levels up.
     $entry = $config_data->get('three_levels');
-    $definition = $entry['wrapper_1']['wrapper_2']['testitem']->getDefinition();
+    $definition = $entry['wrapper_1']['wrapper_2']['testitem']->getDataDefinition();
     $expected = array(
       'type' => 'config_test.someschema.with_parents.key_3',
       'label' => 'Test item nested three levels',
@@ -202,13 +202,13 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $property = $meta->get('name');
     $this->assertTrue($property instanceof StringInterface, 'Got the right wrapper fo the site name property.');
     $this->assertEqual($property->getValue(), 'Drupal', 'Got the right string value for site name data.');
-    $definition = $property->getDefinition();
+    $definition = $property->getDataDefinition();
     $this->assertTrue($definition['translatable'], 'Got the right translatability setting for site name data.');
 
     $property = $meta->get('page')->get('front');
     $this->assertTrue($property instanceof StringInterface, 'Got the right wrapper fo the page.front property.');
     $this->assertEqual($property->getValue(), 'user', 'Got the right value for page.front data.');
-    $definition = $property->getDefinition();
+    $definition = $property->getDataDefinition();
     $this->assertTrue(empty($definition['translatable']), 'Got the right translatability setting for page.front data.');
 
     // Check nested array of properties.

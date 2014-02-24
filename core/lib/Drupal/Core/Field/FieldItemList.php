@@ -157,20 +157,6 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinition($name) {
-    return $this->first()->getPropertyDefinition($name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPropertyDefinitions() {
-    return $this->first()->getPropertyDefinitions();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function __get($property_name) {
     return $this->first()->__get($property_name);
   }

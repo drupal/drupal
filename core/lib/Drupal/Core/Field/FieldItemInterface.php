@@ -24,6 +24,31 @@ use Drupal\Core\TypedData\ComplexDataInterface;
 interface FieldItemInterface extends ComplexDataInterface {
 
   /**
+   * Defines field item properties.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
+   *   An array of property definitions of contained properties, keyed by
+   *   property name.
+   *
+   * @see \Drupal\Core\Field\FieldDefinition
+   */
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition);
+
+  /**
+   * Returns the name of the main property, if any.
+   *
+   * Some field items consist mainly of one main property, e.g. the value of a
+   * text field or the @code target_id @endcode of an entity reference. If the
+   * field item has no main property, the method returns NULL.
+   *
+   * @return string|null
+   *   The name of the value property, or NULL if there is none.
+   *
+   * @see \Drupal\Core\Field\FieldDefinition
+   */
+  public static function mainPropertyName();
+
+  /**
    * Returns the schema for the field.
    *
    * This method is static because the field schema information is needed on
@@ -40,7 +65,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   following key/value pairs:
    *   - columns: An array of Schema API column specifications, keyed by column
    *     name. The columns need to be a subset of the properties defined in
-   *     getPropertyDefinitions(). It is recommended to avoid having the column
+   *     propertyDefinitions(). It is recommended to avoid having the column
    *     definitions depend on field settings when possible. No assumptions
    *     should be made on how storage engines internally use the original
    *     column name to structure their storage.
@@ -170,21 +195,5 @@ interface FieldItemInterface extends ComplexDataInterface {
    * called for entity types that support revisioning.
    */
   public function deleteRevision();
-
-  /**
-   * Returns the name of the main property, if any.
-   *
-   * Some field items consist mainly of one main property, e.g. the value of a
-   * text field or the @code target_id @endcode of an entity reference. If the
-   * field item has no main property, the method returns NULL.
-   *
-   * @return string|null
-   *   The name of the value property, or NULL if there is none.
-   *
-   * @todo: Move this to ComplexDataInterface once we improved Typed data to do
-   *   not enforce having all methods on the data objects.
-   *   https://drupal.org/node/2002134
-   */
-  public function getMainPropertyName();
 
 }

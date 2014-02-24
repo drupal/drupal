@@ -20,6 +20,7 @@ use Drupal\Core\Field\ConfigFieldItemInterface;
  *   label = @Translation("File"),
  *   description = @Translation("This field stores the ID of a file as an integer value."),
  *   settings = {
+ *     "target_type" = "file",
  *     "display_field" = "0",
  *     "display_default" = "0",
  *     "uri_scheme" = ""
@@ -36,15 +37,6 @@ use Drupal\Core\Field\ConfigFieldItemInterface;
  * )
  */
 class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
-
-  /**
-   * Property definitions of the contained properties.
-   *
-   * @see FileItem::getPropertyDefinitions()
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
 
   /**
    * {@inheritdoc}
@@ -87,19 +79,16 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    $this->definition->setSetting('target_type', 'file');
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties = parent::propertyDefinitions($field_definition);
 
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions = parent::getPropertyDefinitions();
+    $properties['display'] = DataDefinition::create('boolean')
+      ->setLabel(t('Flag to control whether this file should be displayed when viewing content'));
 
-      static::$propertyDefinitions['display'] = DataDefinition::create('boolean')
-        ->setLabel(t('Flag to control whether this file should be displayed when viewing content'));
+    $properties['description'] = DataDefinition::create('string')
+      ->setLabel(t('A description of the file'));
 
-      static::$propertyDefinitions['description'] = DataDefinition::create('string')
-        ->setLabel(t('A description of the file'));
-    }
-    return static::$propertyDefinitions;
+    return $properties;
   }
 
   /**

@@ -374,14 +374,6 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
   /**
    * {@inheritdoc}
    */
-  public function getFieldDefinitionsByConstraints($entity_type, array $constraints) {
-    // @todo: Add support for specifying multiple bundles.
-    return $this->getFieldDefinitions($entity_type, isset($constraints['Bundle']) ? $constraints['Bundle'] : NULL);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function clearCachedFieldDefinitions() {
     unset($this->entityFieldInfo);
     unset($this->fieldDefinitions);

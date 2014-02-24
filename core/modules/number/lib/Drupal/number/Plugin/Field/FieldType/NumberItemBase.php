@@ -15,13 +15,6 @@ use Drupal\Core\Field\ConfigFieldItemBase;
 abstract class NumberItemBase extends ConfigFieldItemBase {
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
-
-  /**
    * {@inheritdoc}
    */
   public function instanceSettingsForm(array $form, array &$form_state) {

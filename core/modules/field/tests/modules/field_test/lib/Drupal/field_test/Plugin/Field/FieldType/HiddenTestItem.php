@@ -7,8 +7,8 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field_test\Plugin\Field\FieldType\TestItem;
 
 /**
  * Defines the 'hidden_test' entity field item.
@@ -25,23 +25,13 @@ use Drupal\field_test\Plugin\Field\FieldType\TestItem;
 class HiddenTestItem extends TestItem {
 
   /**
-   * Property definitions of the contained properties.
-   *
-   * @see TestItem::getPropertyDefinitions()
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  static $propertyDefinitions;
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('integer')
+      ->setLabel(t('Test integer value'));
 
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
-   */
-  public function getPropertyDefinitions() {
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = DataDefinition::create('integer')
-        ->setLabel(t('Test integer value'));
-    }
-    return static::$propertyDefinitions;
+    return $properties;
   }
 
 }

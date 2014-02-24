@@ -38,7 +38,6 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *   An array of entity field definitions, keyed by field name.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
-   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitionsByConstraints()
    */
   public function getFieldDefinitions($entity_type_id, $bundle = NULL);
 
@@ -68,30 +67,6 @@ interface EntityManagerInterface extends PluginManagerInterface {
    *     and values.
    */
   public function getAdminRouteInfo($entity_type_id, $bundle);
-
-  /**
-   * Gets an array of entity field definitions based on validation constraints.
-   *
-   * @param string $entity_type
-   *   The entity type to get field definitions for.
-   * @param array $constraints
-   *   An array of entity constraints as used for entities in typed data
-   *   definitions, i.e. an array optionally including a 'Bundle' key.
-   *   For example the constraints used by an entity reference could be:
-   *
-   * @code
-   *   array(
-   *     'Bundle' => 'article',
-   *   )
-   * @endcode
-   *
-   * @return array
-   *   An array of field definitions of entity fields, keyed by field
-   *   name.
-   *
-   * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
-   */
-  public function getFieldDefinitionsByConstraints($entity_type, array $constraints);
 
   /**
    * Creates a new storage controller instance.

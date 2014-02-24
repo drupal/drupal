@@ -30,7 +30,7 @@ class AllowedValuesConstraintValidator extends ChoiceValidator {
 
       // If the data is complex, we have to validate its main property.
       if ($typed_data instanceof ComplexDataInterface) {
-        $name = $typed_data->getMainPropertyName();
+        $name = $typed_data->getDataDefinition()->getMainPropertyName();
         if (!isset($name)) {
           throw new \LogicException('Cannot validate allowed values for complex data without a main property.');
         }

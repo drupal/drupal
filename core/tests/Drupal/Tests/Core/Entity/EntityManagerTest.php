@@ -541,23 +541,6 @@ class EntityManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getFieldDefinitionsByConstraints() method.
-   *
-   * @covers ::getFieldDefinitionsByConstraints()
-   */
-  public function testGetFieldDefinitionsByConstraints() {
-    $field_definition = $this->setUpEntityWithFieldDefinition();
-
-    $this->moduleHandler->expects($this->exactly(2))
-      ->method('invokeAll')
-      ->will($this->returnValue(array()));
-
-    $expected = array('id' => $field_definition);
-    $this->assertSame($expected, $this->entityManager->getFieldDefinitionsByConstraints('test_entity_type', array()));
-    $this->assertSame($expected, $this->entityManager->getFieldDefinitionsByConstraints('test_entity_type', array('Bundle' => 'test_entity_bundle')));
-  }
-
-  /**
    * Prepares an entity that defines a field definition.
    *
    * @param bool $custom_invoke_all

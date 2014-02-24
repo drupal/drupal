@@ -7,8 +7,8 @@
 
 namespace Drupal\image\Plugin\Field\FieldType;
 
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
 /**
@@ -19,6 +19,7 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  *   label = @Translation("Image"),
  *   description = @Translation("This field stores the ID of an image file as an integer value."),
  *   settings = {
+ *     "target_type" = "file",
  *     "uri_scheme" = "",
  *     "default_image" = {
  *       "fid" = NULL,
@@ -117,25 +118,22 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    $this->definition->setSetting('target_type', 'file');
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties = parent::propertyDefinitions($field_definition);
 
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions = parent::getPropertyDefinitions();
+    $properties['alt'] = DataDefinition::create('string')
+      ->setLabel(t("Alternative image text, for the image's 'alt' attribute."));
 
-      static::$propertyDefinitions['alt'] = DataDefinition::create('string')
-        ->setLabel(t("Alternative image text, for the image's 'alt' attribute."));
+    $properties['title'] = DataDefinition::create('string')
+      ->setLabel(t("Image title text, for the image's 'title' attribute."));
 
-      static::$propertyDefinitions['title'] = DataDefinition::create('string')
-        ->setLabel(t("Image title text, for the image's 'title' attribute."));
+    $properties['width'] = DataDefinition::create('integer')
+      ->setLabel(t('The width of the image in pixels.'));
 
-      static::$propertyDefinitions['width'] = DataDefinition::create('integer')
-        ->setLabel(t('The width of the image in pixels.'));
+    $properties['height'] = DataDefinition::create('integer')
+      ->setLabel(t('The height of the image in pixels.'));
 
-      static::$propertyDefinitions['height'] = DataDefinition::create('integer')
-        ->setLabel(t('The height of the image in pixels.'));
-    }
-    return static::$propertyDefinitions;
+    return $properties;
   }
 
   /**

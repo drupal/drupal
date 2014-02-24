@@ -10,9 +10,14 @@ namespace Drupal\Core\TypedData;
 /**
  * Base class for typed data references.
  *
- * Implementing classes have to implement at least
- * \Drupal\Core\TypedData\DataReferenceInterface::getTargetDefinition() and
+ * Data types based on this base class need to be named
+ * "{TARGET_TYPE}_reference", whereas {TARGET_TYPE} is the referenced data type.
+ * For example, an entity reference data type would have to be named
+ * "entity_reference".
+ * Beside that, implementing classes have to implement at least
  * \Drupal\Core\TypedData\DataReferenceInterface::getTargetIdentifier().
+ *
+ * @see \Drupal\Core\TypedData\DataReferenceDefinition
  */
 abstract class DataReferenceBase extends TypedData implements DataReferenceInterface  {
 
@@ -43,7 +48,7 @@ abstract class DataReferenceBase extends TypedData implements DataReferenceInter
    * {@inheritdoc}
    */
   public function setValue($value, $notify = TRUE) {
-    $this->target = \Drupal::typedDataManager()->create($this->getTargetDefinition(), $value);
+    $this->target = \Drupal::typedDataManager()->create($this->definition->getTargetDefinition(), $value);
     // Notify the parent of any changes.
     if ($notify && isset($this->parent)) {
       $this->parent->onChange($this->name);

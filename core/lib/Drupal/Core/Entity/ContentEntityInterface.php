@@ -72,4 +72,25 @@ interface ContentEntityInterface extends EntityInterface, RevisionableInterface,
    */
   public function hasField($field_name);
 
+  /**
+   * Gets the definition of a contained field.
+   *
+   * @param string $name
+   *   The name of the field.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface|false
+   *   The definition of the field or FALSE if the field does not exist.
+   */
+  public function getFieldDefinition($name);
+
+  /**
+   * Gets an array of field definitions of all contained fields.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   *   An array of field definitions, keyed by field name.
+   *
+   * @see \Drupal\Core\Entity\EntityManagerInterface::getFieldDefinitions()
+   */
+  public function getFieldDefinitions();
+
 }

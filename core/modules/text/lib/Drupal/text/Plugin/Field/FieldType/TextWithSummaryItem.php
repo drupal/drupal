@@ -7,8 +7,8 @@
 
 namespace Drupal\text\Plugin\Field\FieldType;
 
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'text_with_summary' field type.
@@ -28,30 +28,22 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 class TextWithSummaryItem extends TextItemBase {
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
-
-  /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions = parent::getPropertyDefinitions();
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties = parent::propertyDefinitions($field_definition);
 
-      static::$propertyDefinitions['summary'] = DataDefinition::create('string')
-        ->setLabel(t('Summary text value'));
+    $properties['summary'] = DataDefinition::create('string')
+      ->setLabel(t('Summary text value'));
 
-      static::$propertyDefinitions['summary_processed'] = DataDefinition::create('string')
-        ->setLabel(t('Processed summary text'))
-        ->setDescription(t('The summary text value with the text format applied.'))
-        ->setComputed(TRUE)
-        ->setClass('\Drupal\text\TextProcessed')
-        ->setSetting('text source', 'summary');
-    }
-    return static::$propertyDefinitions;
+    $properties['summary_processed'] = DataDefinition::create('string')
+      ->setLabel(t('Processed summary text'))
+      ->setDescription(t('The summary text value with the text format applied.'))
+      ->setComputed(TRUE)
+      ->setClass('\Drupal\text\TextProcessed')
+      ->setSetting('text source', 'summary');
+
+    return $properties;
   }
 
   /**

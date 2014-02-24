@@ -170,7 +170,7 @@ class LocaleTypedConfig extends Element {
    */
   protected function translateElement(\Drupal\Core\TypedData\TypedDataInterface $element, array $options) {
     if ($this->canTranslate($options['source'], $options['target'])) {
-      $definition = $element->getDefinition();
+      $definition = $element->getDataDefinition();
       $value = $element->getValue();
       if ($value && !empty($definition['translatable'])) {
         $context = isset($definition['locale context']) ? $definition['locale context'] : '';

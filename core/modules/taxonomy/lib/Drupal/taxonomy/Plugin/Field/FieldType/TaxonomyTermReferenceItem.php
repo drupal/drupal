@@ -21,6 +21,7 @@ use Drupal\Core\TypedData\AllowedValuesInterface;
  *   label = @Translation("Term Reference"),
  *   description = @Translation("This field stores a reference to a taxonomy term."),
  *   settings = {
+ *     "target_type" = "taxonomy_term",
  *     "options_list_callback" = NULL,
  *     "allowed_values" = {
  *       {
@@ -84,14 +85,6 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements ConfigFie
       }
       return $options;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPropertyDefinitions() {
-    $this->definition['settings']['target_type'] = 'taxonomy_term';
-    return parent::getPropertyDefinitions();
   }
 
   /**

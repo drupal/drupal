@@ -10,8 +10,9 @@ namespace Drupal\field\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\field\FieldException;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\field\FieldInstanceConfigInterface;
 
 /**
@@ -210,7 +211,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * The data definition of a field item.
    *
-   * @var \Drupal\Core\TypedData\DataDefinition
+   * @var \Drupal\Core\TypedData\FieldItemDataDefinition
    */
   protected $itemDefinition;
 
@@ -485,14 +486,6 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * {@inheritdoc}
    */
-  public function getPropertyNames() {
-    $schema = $this->field->getSchema();
-    return array_keys($schema['columns']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isTranslatable() {
     return $this->field->translatable;
   }
@@ -640,6 +633,24 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     $this->__construct($values);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function createFromDataType($type) {
+    // Forward to the field definition class for creating new data definitions
+    // via the typed manager.
+    return FieldDefinition::createFromDataType($type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createFromItemType($item_type) {
+    // Forward to the field definition class for creating new data definitions
+    // via the typed manager.
+    return FieldDefinition::createFromItemType($item_type);
+  }
+
   public function getDataType() {
     return 'list';
   }
@@ -691,10 +702,38 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    */
   public function getItemDefinition() {
     if (!isset($this->itemDefinition)) {
-      $this->itemDefinition = DataDefinition::create('field_item:' . $this->field->type)
+      $this->itemDefinition = FieldItemDataDefinition::create($this)
         ->setSettings($this->getSettings());
     }
     return $this->itemDefinition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyDefinition($name) {
+    return $this->field->getPropertyDefinition($name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyDefinitions() {
+    return $this->field->getPropertyDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyNames() {
+    return $this->field->getPropertyNames();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMainPropertyName() {
+    return $this->field->getMainPropertyName();
   }
 
   /**

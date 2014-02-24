@@ -24,24 +24,13 @@ use Drupal\Core\TypedData\DataDefinition;
 class IntegerItem extends FieldItemBase {
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @see IntegerItem::getPropertyDefinitions()
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
-
-  /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('integer')
+      ->setLabel(t('Integer value'));
 
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = DataDefinition::create('integer')
-        ->setLabel(t('Integer value'));
-    }
-    return static::$propertyDefinitions;
+    return $properties;
   }
 
   /**

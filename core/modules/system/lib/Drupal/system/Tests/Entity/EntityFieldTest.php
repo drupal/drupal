@@ -9,10 +9,12 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Language\Language;
-use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
@@ -26,7 +28,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    *
    * @var array
    */
-  public static $modules = array('filter', 'text', 'node');
+  public static $modules = array('filter', 'text', 'node', 'user');
 
   public static function getInfo() {
     return array(
@@ -360,29 +362,54 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type .': User field found.');
     $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type .': Test-text-field field found.');
 
+    // Test deriving further metadata.
+    $this->assertTrue($definitions['name'] instanceof FieldDefinitionInterface);
+    $field_item_definition = $definitions['name']->getItemDefinition();
+    $this->assertTrue($field_item_definition instanceof ComplexDataDefinitionInterface);
+    $this->assertEqual($field_item_definition->getDataType(), 'field_item:string');
+    $value_definition = $field_item_definition->getPropertyDefinition('value');
+    $this->assertTrue($value_definition instanceof DataDefinitionInterface);
+    $this->assertEqual($value_definition->getDataType(), 'string');
+
+    // Test deriving metadata from references.
+    $entity_definition = \Drupal\Core\Entity\TypedData\EntityDataDefinition::create($entity_type);
+    $reference_definition = $entity_definition->getPropertyDefinition('langcode')
+      ->getPropertyDefinition('language')
+      ->getTargetDefinition();
+    $this->assertEqual($reference_definition->getDataType(), 'language');
+
+    $reference_definition = $entity_definition->getPropertyDefinition('user_id')
+      ->getPropertyDefinition('entity')
+      ->getTargetDefinition();
+
+    $this->assertTrue($reference_definition instanceof \Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface, 'Definition of the referenced user retrieved.');
+    $this->assertEqual($reference_definition->getEntityTypeId(), 'user', 'Referenced entity is of type "user".');
+
+    // Test propagating down.
+    $name_definition = $reference_definition->getPropertyDefinition('name');
+    $this->assertTrue($name_definition instanceof FieldDefinitionInterface);
+    $this->assertEqual($name_definition->getPropertyDefinition('value')->getDataType(), 'string');
+
     // Test introspecting an entity object.
     // @todo: Add bundles and test bundles as well.
     $entity = entity_create($entity_type);
 
-    $definitions = $entity->getPropertyDefinitions();
+    $definitions = $entity->getFieldDefinitions();
     $this->assertEqual($definitions['name']->getType(), 'string', $entity_type .': Name field found.');
     $this->assertEqual($definitions['user_id']->getType(), 'entity_reference', $entity_type .': User field found.');
     $this->assertEqual($definitions['field_test_text']->getType(), 'text', $entity_type .': Test-text-field field found.');
 
-    $name_properties = $entity->name->getPropertyDefinitions();
+    $name_properties = $entity->name->getFieldDefinition()->getPropertyDefinitions();
     $this->assertEqual($name_properties['value']->getDataType(), 'string', $entity_type .': String value property of the name found.');
 
-    $userref_properties = $entity->user_id->getPropertyDefinitions();
+    $userref_properties = $entity->user_id->getFieldDefinition()->getPropertyDefinitions();
     $this->assertEqual($userref_properties['target_id']->getDataType(), 'integer', $entity_type .': Entity id property of the user found.');
     $this->assertEqual($userref_properties['entity']->getDataType(), 'entity_reference', $entity_type .': Entity reference property of the user found.');
 
-    $textfield_properties = $entity->field_test_text->getPropertyDefinitions();
+    $textfield_properties = $entity->field_test_text->getFieldDefinition()->getPropertyDefinitions();
     $this->assertEqual($textfield_properties['value']->getDataType(), 'string', $entity_type .': String value property of the test-text field found.');
     $this->assertEqual($textfield_properties['format']->getDataType(), 'filter_format', $entity_type .': String format field of the test-text field found.');
     $this->assertEqual($textfield_properties['processed']->getDataType(), 'string', $entity_type .': String processed property of the test-text field found.');
-
-    // @todo: Once the user entity has definitions, continue testing getting
-    // them from the $userref_values['entity'] property.
 
     // Make sure provided contextual information is right.
     $this->assertIdentical($entity->getRoot(), $entity, 'Entity is root object.');
@@ -446,7 +473,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     }
 
     $properties = $entity->getProperties();
-    $this->assertEqual(array_keys($properties), array_keys($entity->getPropertyDefinitions()), format_string('%entity_type: All properties returned.', array('%entity_type' => $entity_type)));
+    $this->assertEqual(array_keys($properties), array_keys($entity->getDataDefinition()->getPropertyDefinitions()), format_string('%entity_type: All properties returned.', array('%entity_type' => $entity_type)));
     $this->assertEqual($properties, iterator_to_array($entity->getIterator()), format_string('%entity_type: Entity iterator iterates over all properties.', array('%entity_type' => $entity_type)));
   }
 

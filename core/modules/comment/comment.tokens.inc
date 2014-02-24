@@ -257,7 +257,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
         case 'comment-count':
           $count = 0;
           $fields = array_keys(\Drupal::service('comment.manager')->getFields($entity->getEntityTypeId()));
-          $definitions = array_keys($entity->getPropertyDefinitions());
+          $definitions = array_keys($entity->getFieldDefinitions());
           $valid_fields = array_intersect($fields, $definitions);
           foreach ($valid_fields as $field_name) {
             $count += $entity->get($field_name)->comment_count;

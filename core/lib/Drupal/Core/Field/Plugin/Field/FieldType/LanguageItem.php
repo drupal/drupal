@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\DataReferenceDefinition;
 
 /**
  * Defines the 'language' entity field item.
@@ -30,30 +31,20 @@ use Drupal\Core\TypedData\DataDefinition;
 class LanguageItem extends FieldItemBase {
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @see LanguageItem::getPropertyDefinitions()
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  static $propertyDefinitions;
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('string')
+      ->setLabel(t('Language code'));
 
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
-   */
-  public function getPropertyDefinitions() {
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = DataDefinition::create('string')
-        ->setLabel(t('Language code'));
-
-      static::$propertyDefinitions['language'] = DataDefinition::create('language_reference')
-        ->setLabel(t('Language object'))
-        ->setDescription(t('The referenced language'))
+    $properties['language'] = DataReferenceDefinition::create('language')
+      ->setLabel(t('Language object'))
+      ->setDescription(t('The referenced language'))
       // The language object is retrieved via the language code.
-        ->setComputed(TRUE)
-        ->setReadOnly(FALSE);
-    }
-    return static::$propertyDefinitions;
+      ->setComputed(TRUE)
+      ->setReadOnly(FALSE);
+
+    return $properties;
   }
 
   /**

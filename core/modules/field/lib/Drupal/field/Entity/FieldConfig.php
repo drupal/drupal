@@ -11,7 +11,8 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\field\FieldException;
 use Drupal\field\FieldConfigInterface;
 
@@ -180,6 +181,15 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    * @var array
    */
   protected $schema;
+
+  /**
+   * An array of field property definitions.
+   *
+   * @var \Drupal\Core\TypedData\DataDefinitionInterface[]
+   *
+   * @see \Drupal\Core\TypedData\ComplexDataDefinitionInterface::getPropertyDefinitions()
+   */
+  protected $propertyDefinitions;
 
   /**
    * The data definition of a field item.
@@ -433,8 +443,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   public function getSchema() {
     if (!isset($this->schema)) {
       // Get the schema from the field item class.
-      $definition = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->type);
-      $class = $definition['class'];
+      $class = $this->getFieldItemClass();
       $schema = $class::schema($this);
       // Fill in default values for optional entries.
       $schema += array('indexes' => array(), 'foreign keys' => array());
@@ -530,14 +539,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     else {
       return NULL;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPropertyNames() {
-    $schema = $this->getSchema();
-    return array_keys($schema['columns']);
   }
 
   /**
@@ -712,6 +713,24 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * {@inheritdoc}
    */
+  public static function createFromDataType($type) {
+    // Forward to the field definition class for creating new data definitions
+    // via the typed manager.
+    return FieldDefinition::createFromDataType($type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createFromItemType($item_type) {
+    // Forward to the field definition class for creating new data definitions
+    // via the typed manager.
+    return FieldDefinition::createFromItemType($item_type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDataType() {
     return 'list';
   }
@@ -766,10 +785,65 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
    */
   public function getItemDefinition() {
     if (!isset($this->itemDefinition)) {
-      $this->itemDefinition = DataDefinition::create('field_item:' . $this->type)
+      $this->itemDefinition = FieldItemDataDefinition::create($this)
         ->setSettings($this->getSettings());
     }
     return $this->itemDefinition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyDefinition($name) {
+    if (!isset($this->propertyDefinitions)) {
+      $this->getPropertyDefinitions();
+    }
+    if (isset($this->propertyDefinitions[$name])) {
+      return $this->propertyDefinitions[$name];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyDefinitions() {
+    if (!isset($this->propertyDefinitions)) {
+      $class = $this->getFieldItemClass();
+      $this->propertyDefinitions = $class::propertyDefinitions($this);
+    }
+    return $this->propertyDefinitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyNames() {
+    return array_keys($this->getPropertyDefinitions());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMainPropertyName() {
+    $class = $this->getFieldItemClass();
+    return $class::mainPropertyName();
+  }
+
+  /**
+   * Helper to retrieve the field item class.
+   *
+   * @todo: Remove once getClass() adds in defaults. See
+   * https://drupal.org/node/2116341.
+   */
+  protected function getFieldItemClass() {
+    if ($class = $this->getItemDefinition()->getClass()) {
+      return $class;
+    }
+    else {
+      $type_definition = \Drupal::typedDataManager()
+        ->getDefinition($this->getItemDefinition()->getDataType());
+      return $type_definition['class'];
+    }
   }
 
 }

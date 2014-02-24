@@ -14,9 +14,40 @@ namespace Drupal\Core\TypedData;
  * For example, a plugin could describe its parameters using data definitions
  * in order to specify what kind of data is required for it.
  *
+ * Definitions that describe lists or complex data have to implement the
+ * respective interfaces, such that the metadata about contained list items or
+ * properties can be retrieved from the definition.
+ *
  * @see \Drupal\Core\TypedData\DataDefinition
+ * @see \Drupal\Core\TypedData\ListDefinitionInterface
+ * @see \Drupal\Core\TypedData\ComplexDataDefinitionInterface
+ * @see \Drupal\Core\TypedData\DataReferenceDefinitionInterface
+ * @see \Drupal\Core\TypedData\TypedDataInterface
  */
 interface DataDefinitionInterface {
+
+  /**
+   * Creates a new data definition object.
+   *
+   * This method is typically used by
+   * \Drupal\Core\TypedData\TypedDataManager::createDataDefinition() to build a
+   * definition object for an arbitrary data type. When the definition class is
+   * known, it is recommended to directly use the static create() method on that
+   * class instead; e.g.:
+   * @code
+   *   $map_definition = \Drupal\Core\TypedData\MapDataDefinition::create();
+   * @endcode
+   *
+   * @param string $data_type
+   *   The data type, for which a data definition should be created.
+   *
+   * @throws \InvalidArgumentException
+   *   If an unsupported data type gets passed to the class; e.g., 'string' to a
+   *   definition class handling 'entity:* data types.
+   *
+   * @return static
+   */
+   public static function createFromDataType($data_type);
 
   /**
    * Returns the data type of the data.

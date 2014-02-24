@@ -413,7 +413,7 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
 function comment_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   // Add the comment page number to the cache key if render caching is enabled.
   if (isset($build['#cache']) && isset($build['#cache']['keys']) && \Drupal::request()->query->has('page')) {
-    foreach ($entity->getPropertyDefinitions() as $field_name => $definition) {
+    foreach ($entity->getFieldDefinitions() as $field_name => $definition) {
       if (isset($build[$field_name]) && $definition->getType() === 'comment') {
         $display_options = $display->getComponent($field_name);
         $pager_id = $display_options['settings']['pager_id'];
@@ -887,7 +887,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
 /**
  * Implements hook_entity_load().
  *
- * @see \Drupal\comment\Plugin\Field\FieldType\CommentItem::getPropertyDefinitions()
+ * @see \Drupal\comment\Plugin\Field\FieldType\CommentItem::propertyDefinitions()
  */
 function comment_entity_load($entities, $entity_type) {
   if (!\Drupal::service('comment.manager')->getFields($entity_type)) {

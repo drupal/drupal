@@ -1009,10 +1009,10 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getDefinition().
+   * Implements \Drupal\Core\TypedData\TypedDataInterface::getDataDefinition().
    */
-  public function getDefinition() {
-    return $this->storage->getDefinition();
+  public function getDataDefinition() {
+    return $this->storage->getDataDefinition();
   }
 
   /**

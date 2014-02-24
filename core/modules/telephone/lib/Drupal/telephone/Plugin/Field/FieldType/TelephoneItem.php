@@ -8,8 +8,8 @@
 namespace Drupal\telephone\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\ConfigFieldItemBase;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'telephone' field type.
@@ -23,13 +23,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  * )
  */
 class TelephoneItem extends ConfigFieldItemBase {
-
-  /**
-   * Definitions of the contained properties.
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
 
   /**
    * {@inheritdoc}
@@ -49,12 +42,11 @@ class TelephoneItem extends ConfigFieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = DataDefinition::create('string')
-        ->setLabel(t('Telephone number'));
-    }
-    return static::$propertyDefinitions;
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('string')
+      ->setLabel(t('Telephone number'));
+
+    return $properties;
   }
 
   /**

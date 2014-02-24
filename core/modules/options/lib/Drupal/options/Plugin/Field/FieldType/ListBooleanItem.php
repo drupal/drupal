@@ -29,13 +29,6 @@ use Drupal\Core\TypedData\DataDefinition;
 class ListBooleanItem extends ListItemBase {
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
-
-  /**
    * {@inheritdoc}
    */
   public static function schema(FieldDefinitionInterface $field_definition) {
@@ -52,12 +45,11 @@ class ListBooleanItem extends ListItemBase {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = DataDefinition::create('boolean')
-        ->setLabel(t('Boolean value'));
-    }
-    return static::$propertyDefinitions;
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('boolean')
+      ->setLabel(t('Boolean value'));
+
+    return $properties;
   }
 
 }

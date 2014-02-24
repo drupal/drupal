@@ -24,24 +24,13 @@ use Drupal\Core\TypedData\DataDefinition;
 class FloatItem extends FieldItemBase {
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @see IntegerItem::getPropertyDefinitions()
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  static $propertyDefinitions;
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('float')
+      ->setLabel(t('Float value'));
 
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
-   */
-  public function getPropertyDefinitions() {
-
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = DataDefinition::create('float')
-        ->setLabel(t('Float value'));
-    }
-    return static::$propertyDefinitions;
+    return $properties;
   }
 
   /**

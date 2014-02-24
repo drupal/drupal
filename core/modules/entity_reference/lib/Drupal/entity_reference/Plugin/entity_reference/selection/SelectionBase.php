@@ -102,7 +102,7 @@ class SelectionBase implements SelectionInterface {
 
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
     if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
-      // @todo Use Entity::getPropertyDefinitions() when all entity types are
+      // @todo Use Entity::getFieldDefinitions() when all entity types are
       // converted to the new Field API.
       $fields = drupal_map_assoc(drupal_schema_fields_sql($entity_type->getBaseTable()));
       foreach (field_info_instances($target_type) as $bundle_instances) {

@@ -264,7 +264,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     foreach ($schema as $key => $element) {
       // Make the specific element key, "$base_key.$key".
       $element_key = implode('.', array_filter(array($base_key, $key)));
-      $definition = $element->getDefinition() + array('label' => $this->t('N/A'));
+      $definition = $element->getDataDefinition() + array('label' => $this->t('N/A'));
       if ($element instanceof Element) {
         // Build sub-structure and include it with a wrapper in the form
         // if there are any translatable elements there.
@@ -299,7 +299,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
         }
       }
       else {
-        $definition = $element->getDefinition();
+        $definition = $element->getDataDefinition();
 
         // Invoke hook_config_translation_type_info_alter() implementations to
         // alter the configuration types.

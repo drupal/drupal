@@ -18,6 +18,8 @@ namespace Drupal\Core\TypedData;
  *
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
+ *
+ * @see \Drupal\Core\TypedData\ComplexDataDefinitionInterface
  */
 interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
 
@@ -90,26 +92,6 @@ interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
    *   If a read-only property is set.
    */
   public function setPropertyValues($values);
-
-  /**
-   * Gets the definition of a contained property.
-   *
-   * @param string $name
-   *   The name of property.
-   *
-   * @return array|FALSE
-   *   The definition of the property or FALSE if the property does not exist.
-   */
-  public function getPropertyDefinition($name);
-
-  /**
-   * Gets an array of property definitions of contained properties.
-   *
-   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
-   *   An array of property definitions of contained properties, keyed by
-   *   property name.
-   */
-  public function getPropertyDefinitions();
 
   /**
    * Determines whether the data structure is empty.

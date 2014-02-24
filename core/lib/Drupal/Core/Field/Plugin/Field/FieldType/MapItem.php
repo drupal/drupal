@@ -9,6 +9,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'map' entity field type.
@@ -16,11 +17,21 @@ use Drupal\Core\Field\FieldItemBase;
  * @FieldType(
  *   id = "map",
  *   label = @Translation("Map"),
- *   description = @Translation("An entity field containing a map value."),
+ *   description = @Translation("An entity field for storing a serialized array of values."),
  *   configurable = FALSE
  * )
  */
 class MapItem extends FieldItemBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('string')
+      ->setLabel(t('Serialized values'));
+
+    return $properties;
+  }
 
   /**
    * {@inheritdoc}

@@ -35,23 +35,13 @@ use Drupal\Core\Field\ConfigFieldItemBase;
 class TestItem extends ConfigFieldItemBase implements PrepareCacheInterface {
 
   /**
-   * Property definitions of the contained properties.
-   *
-   * @see TestItem::getPropertyDefinitions()
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
-
-  /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = DataDefinition::create('integer')
-        ->setLabel(t('Test integer value'));
-    }
-    return static::$propertyDefinitions;
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('integer')
+      ->setLabel(t('Test integer value'));
+
+    return $properties;
   }
 
   /**

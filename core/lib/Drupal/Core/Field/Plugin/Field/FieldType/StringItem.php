@@ -27,24 +27,13 @@ use Drupal\Core\TypedData\DataDefinition;
 class StringItem extends FieldItemBase {
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @see StringItem::getPropertyDefinitions()
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
-
-  /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['value'] = DataDefinition::create('string')
+      ->setLabel(t('Text value'));
 
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['value'] = DataDefinition::create('string')
-        ->setLabel(t('Text value'));
-    }
-    return static::$propertyDefinitions;
+    return $properties;
   }
 
   /**

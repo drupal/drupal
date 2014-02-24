@@ -2,18 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\LanguageReference.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\LanguageReference.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\TypedData\Plugin\DataType;
 
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataReferenceBase;
 
 /**
  * Defines the 'language_reference' data type.
  *
- * This serves as 'language' property of entity reference field items and gets
+ * This serves as 'language' property of language field items and gets
  * its value set from the parent, i.e. LanguageItem.
  *
  * The plain value is the language object, i.e. an instance of
@@ -22,17 +21,11 @@ use Drupal\Core\TypedData\DataReferenceBase;
  *
  * @DataType(
  *   id = "language_reference",
- *   label = @Translation("Language reference")
+ *   label = @Translation("Language reference"),
+ *   definition_class = "\Drupal\Core\TypedData\DataReferenceDefinition"
  * )
  */
 class LanguageReference extends DataReferenceBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getTargetDefinition() {
-    return DataDefinition::create('language');
-  }
 
   /**
    * {@inheritdoc}
@@ -41,4 +34,5 @@ class LanguageReference extends DataReferenceBase {
     $language = $this->getTarget();
     return isset($language) ? $language->id() : NULL;
   }
+
 }

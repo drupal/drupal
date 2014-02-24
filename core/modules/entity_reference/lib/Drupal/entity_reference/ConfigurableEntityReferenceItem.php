@@ -76,40 +76,25 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Con
   }
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @see ConfigurableEntityReferenceItem::getPropertyDefinitions()
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
-
-  /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    $settings = $this->definition->getSettings();
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $settings = $field_definition->getSettings();
     $target_type = $settings['target_type'];
 
-    // Definitions vary by entity type and bundle, so key them accordingly.
-    $key = $target_type . ':';
-    $key .= isset($settings['target_bundle']) ? $settings['target_bundle'] : '';
+    // Call the parent to define the target_id and entity properties.
+    $properties = parent::propertyDefinitions($field_definition);
 
-    if (!isset(static::$propertyDefinitions[$key])) {
-      // Call the parent to define the target_id and entity properties.
-      parent::getPropertyDefinitions();
-
-      // Only add the revision ID property if the target entity type supports
-      // revisions.
-      $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
-      if ($target_type_info->hasKey('revision') && $target_type_info->getRevisionTable()) {
-        static::$propertyDefinitions[$key]['revision_id'] = DataDefinition::create('integer')
-          ->setLabel(t('Revision ID'))
-          ->setConstraints(array('Range' => array('min' => 0)));
-      }
+    // Only add the revision ID property if the target entity type supports
+    // revisions.
+    $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
+    if ($target_type_info->hasKey('revision') && $target_type_info->getRevisionTable()) {
+      $properties['revision_id'] = DataDefinition::create('integer')
+        ->setLabel(t('Revision ID'))
+        ->setConstraints(array('Range' => array('min' => 0)));
     }
 
-    return static::$propertyDefinitions[$key];
+    return $properties;
   }
 
   /**

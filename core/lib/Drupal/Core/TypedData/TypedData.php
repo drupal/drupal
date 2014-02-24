@@ -79,7 +79,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * {@inheritdoc}
    */
-  public function getDefinition() {
+  public function getDataDefinition() {
     return $this->definition;
   }
 

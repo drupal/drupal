@@ -667,7 +667,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
   protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
     $record = new \stdClass();
     $values = array();
-    $definitions = $entity->getPropertyDefinitions();
+    $definitions = $entity->getFieldDefinitions();
     $schema = drupal_get_schema($this->entityType->get($table_key));
     $is_new = $entity->isNew();
 

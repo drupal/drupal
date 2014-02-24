@@ -335,7 +335,7 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
 function field_attach_form_validate(ContentEntityInterface $entity, $form, &$form_state, array $options = array()) {
   $has_violations = FALSE;
   foreach ($entity as $field_name => $field) {
-    $definition = $field->getDefinition();
+    $definition = $field->getFieldDefinition();
     if ($definition->isConfigurable() && (empty($options['field_name']) || $options['field_name'] == $field_name)) {
       $field_violations = $field->validate();
       if (count($field_violations)) {

@@ -108,7 +108,13 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
   }
 
   /**
-   * Implements Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinition().
+   * Gets the definition of a contained property.
+   *
+   * @param string $name
+   *   The name of property.
+   *
+   * @return array|FALSE
+   *   The definition of the property or FALSE if the property does not exist.
    */
   public function getPropertyDefinition($name) {
     if (isset($this->definition['mapping'][$name])) {
@@ -120,7 +126,11 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
   }
 
   /**
-   * Implements Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
+   * Gets an array of property definitions of contained properties.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
+   *   An array of property definitions of contained properties, keyed by
+   *   property name.
    */
   public function getPropertyDefinitions() {
     $list = array();

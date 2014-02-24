@@ -112,7 +112,7 @@ class UserValidationTest extends DrupalUnitTestBase {
     $violations = $user->validate();
     // @todo There are two violations because EmailItem::getConstraints()
     //   overlaps with the implicit constraint of the 'email' property type used
-    //   in EmailItem::getPropertyDefinitions(). Resolve this in
+    //   in EmailItem::propertyDefinitions(). Resolve this in
     //   https://drupal.org/node/2023465.
     $this->assertEqual(count($violations), 2, 'Violations found when email is too long');
     $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');

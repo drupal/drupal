@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\ListDefinition.
+ * Contains \Drupal\Core\TypedData\ListDataDefinition.
  */
 
 namespace Drupal\Core\TypedData;
 
 /**
- * A class for defining data based on defined data types.
+ * A typed data definition class for defining lists.
  */
-class ListDefinition extends DataDefinition implements ListDefinitionInterface {
+class ListDataDefinition extends DataDefinition implements ListDataDefinitionInterface {
 
   /**
    * The data definition of a list item.
@@ -25,21 +25,36 @@ class ListDefinition extends DataDefinition implements ListDefinitionInterface {
    * @param string $item_type
    *   The data type of the list items; e.g., 'string', 'integer' or 'any'.
    *
-   * @return \Drupal\Core\TypedData\ListDefinition
+   * @return \Drupal\Core\TypedData\ListDataDefinition
    *   A new List Data Definition object.
    */
   public static function create($item_type) {
-    return new static(array(), DataDefinition::create($item_type));
+    return static::createFromItemType($item_type);
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @param
    */
-  public function __construct(array $definition = array(), DataDefinitionInterface $item_definition = NULL) {
-    parent::__construct($definition);
-    $this->itemDefinition = isset($item_definition) ? $item_definition : DataDefinition::create('any');
+  public static function createFromDataType($type) {
+    $definition = parent::createFromDataType($type);
+    // If nothing else given, default to a list of 'any' items.
+    $definition->itemDefinition = DataDefinition::create('any');
+    return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createFromItemType($item_type) {
+    return new static(array(), \Drupal::typedDataManager()->createDataDefinition($item_type));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $values = array(), DataDefinitionInterface $item_definition = NULL) {
+    $this->definition = $values;
+    $this->itemDefinition = $item_definition;
   }
 
   /**

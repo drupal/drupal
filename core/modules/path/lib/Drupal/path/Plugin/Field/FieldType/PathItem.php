@@ -24,26 +24,14 @@ use Drupal\Core\TypedData\DataDefinition;
 class PathItem extends FieldItemBase {
 
   /**
-   * Definitions of the contained properties.
-   *
-   * @see PathItem::getPropertyDefinitions()
-   *
-   * @var array
-   */
-  static $propertyDefinitions;
-
-  /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions['alias'] = DataDefinition::create('string')
+  public static function propertyDefinitions(FieldDefinitionInterface $field_definition) {
+    $properties['alias'] = DataDefinition::create('string')
         ->setLabel(t('Path alias'));
-
-      static::$propertyDefinitions['pid'] = DataDefinition::create('string')
+    $properties['pid'] = DataDefinition::create('string')
         ->setLabel(t('Path id'));
-    }
-    return static::$propertyDefinitions;
+    return $properties;
   }
 
   /**

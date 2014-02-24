@@ -18,16 +18,22 @@ use Drupal\Core\TypedData\DataReferenceBase;
  *
  * The plain value of this reference is the entity object, i.e. an instance of
  * \Drupal\Core\Entity\EntityInterface. For setting the value the entity object
- * or the entity ID may be passed, whereas passing the ID is only supported if
- * an 'entity type' constraint is specified.
+ * or the entity ID may be passed.
  *
- * Some supported constraints (below the definition's 'constraints' key) are:
- *  - EntityType: The entity type. Required.
- *  - Bundle: (optional) The bundle or an array of possible bundles.
+ * Note that the definition of the referenced entity's type is required, whereas
+ * defining referencable entity bundle(s) is optional. A reference defining the
+ * type and bundle of the referenced entity can be created as following:
+ * @code
+ * $definition = \Drupal\Core\Entity\EntityDefinition::create($entity_type)
+ *   ->addConstraint('Bundle', $bundle);
+ * \Drupal\Core\TypedData\DataReferenceDefinition::create('entity')
+ *   ->setTargetDefinition($definition);
+ * @endcode
  *
  * @DataType(
  *   id = "entity_reference",
- *   label = @Translation("Entity reference")
+ *   label = @Translation("Entity reference"),
+ *   definition_class = "\Drupal\Core\TypedData\DataReferenceDefinition"
  * )
  */
 class EntityReference extends DataReferenceBase {
@@ -40,19 +46,13 @@ class EntityReference extends DataReferenceBase {
   protected $id;
 
   /**
-   * {@inheritdoc}
+   * Returns the definition of the referenced entity.
+   *
+   * @return \Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface
+   *   The reference target's definition.
    */
   public function getTargetDefinition() {
-    $definition = array(
-      'type' => 'entity',
-    );
-    if (isset($this->definition['constraints']['EntityType'])) {
-      $definition['type'] .= ':' . $this->definition['constraints']['EntityType'];
-    }
-    if (isset($this->definition['constraints']['Bundle']) && is_string($this->definition['constraints']['Bundle'])) {
-      $definition['type'] .= ':' . $this->definition['constraints']['Bundle'];
-    }
-    return $definition;
+    return $this->definition->getTargetDefinition();
   }
 
   /**
@@ -62,7 +62,7 @@ class EntityReference extends DataReferenceBase {
     if (!isset($this->target) && isset($this->id)) {
       // If we have a valid reference, return the entity object which is typed
       // data itself.
-      $this->target = entity_load($this->definition->getConstraint('EntityType'), $this->id);
+      $this->target = entity_load($this->getTargetDefinition()->getEntityTypeId(), $this->id);
     }
     return $this->target;
   }
@@ -99,7 +99,7 @@ class EntityReference extends DataReferenceBase {
     if (!isset($value) || $value instanceof EntityInterface) {
       $this->target = $value;
     }
-    elseif (!is_scalar($value) || (($constraints = $this->definition->getConstraints()) && empty($constraints['EntityType']))) {
+    elseif (!is_scalar($value) || $this->getTargetDefinition()->getEntityTypeId() === NULL) {
       throw new \InvalidArgumentException('Value is not a valid entity.');
     }
     else {

@@ -124,20 +124,6 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   public function __unset($property_name);
 
   /**
-   * Gets the definition of a property of the first field item.
-   *
-   * @see \Drupal\Core\Field\FieldItemInterface::getPropertyDefinition()
-   */
-  public function getPropertyDefinition($name);
-
-  /**
-   * Gets an array of property definitions of the first field item.
-   *
-   * @see \Drupal\Core\Field\FieldItemInterface::getPropertyDefinitions()
-   */
-  public function getPropertyDefinitions();
-
-  /**
    * Defines custom presave behavior for field values.
    *
    * This method is called before either insert() or update() methods, and

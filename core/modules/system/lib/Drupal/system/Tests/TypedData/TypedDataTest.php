@@ -9,7 +9,8 @@ namespace Drupal\system\Tests\TypedData;
 
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\ListDefinition;
+use Drupal\Core\TypedData\ListDataDefinition;
+use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -318,7 +319,7 @@ class TypedDataTest extends DrupalUnitTestBase {
   public function testTypedDataLists() {
     // Test working with an existing list of strings.
     $value = array('one', 'two', 'three');
-    $typed_data = $this->createTypedData(ListDefinition::create('string'), $value);
+    $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
     $this->assertEqual($typed_data->getValue(), $value, 'List value has been set.');
     // Test iterating.
     $count = 0;
@@ -410,9 +411,12 @@ class TypedDataTest extends DrupalUnitTestBase {
       'two' => 'zwei',
       'three' => 'drei',
     );
-    $typed_data = $this->createTypedData(array(
-      'type' => 'map',
-    ), $value);
+    $definition = MapDataDefinition::create()
+      ->setPropertyDefinition('one', DataDefinition::create('string'))
+      ->setPropertyDefinition('two', DataDefinition::create('string'))
+      ->setPropertyDefinition('three', DataDefinition::create('string'));
+
+    $typed_data = $this->createTypedData($definition, $value);
 
     // Test iterating.
     $count = 0;
@@ -423,10 +427,10 @@ class TypedDataTest extends DrupalUnitTestBase {
     $this->assertEqual($count, 3);
 
     // Test retrieving metadata.
-    $this->assertEqual(array_keys($typed_data->getPropertyDefinitions()), array_keys($value));
-    $definition = $typed_data->getPropertyDefinition('one');
-    $this->assertEqual($definition->getDataType(), 'any');
-    $this->assertFalse($typed_data->getPropertyDefinition('invalid'));
+    $this->assertEqual(array_keys($typed_data->getDataDefinition()->getPropertyDefinitions()), array_keys($value));
+    $definition = $typed_data->getDataDefinition()->getPropertyDefinition('one');
+    $this->assertEqual($definition->getDataType(), 'string');
+    $this->assertNull($typed_data->getDataDefinition()->getPropertyDefinition('invalid'));
 
     // Test getting and setting properties.
     $this->assertEqual($typed_data->get('one')->getValue(), 'eins');
@@ -450,8 +454,11 @@ class TypedDataTest extends DrupalUnitTestBase {
     $this->assertEqual($typed_data->get('two')->getValue(), 'zwei');
     $this->assertEqual($typed_data->get('three')->getValue(), 'drei');
 
+    // Test setting a not defined property. It shouldn't show up in the
+    // properties, but be kept in the values.
     $typed_data->setValue(array('foo' => 'bar'));
-    $this->assertEqual(array_keys($typed_data->getProperties()), array('foo'));
+    $this->assertEqual(array_keys($typed_data->getProperties()), array('one', 'two', 'three'));
+    $this->assertEqual(array_keys($typed_data->getValue()), array('foo', 'one', 'two', 'three'));
 
     // Test getting the string representation.
     $typed_data->setValue(array('one' => 'eins', 'two' => '', 'three' => 'drei'));
@@ -492,10 +499,11 @@ class TypedDataTest extends DrupalUnitTestBase {
       $this->pass('Exception thrown:' . $e->getMessage());
     }
 
-    // Test adding a new entry to the map.
+    // Test adding a new property to the map.
+    $typed_data->getDataDefinition()->setPropertyDefinition('zero', DataDefinition::create('any'));
     $typed_data->set('zero', 'null');
     $this->assertEqual($typed_data->get('zero')->getValue(), 'null');
-    $definition = $typed_data->getPropertyDefinition('zero');
+    $definition = $typed_data->get('zero')->getDataDefinition();
     $this->assertEqual($definition->getDataType(), 'any', 'Definition for a new map entry returned.');
   }
 

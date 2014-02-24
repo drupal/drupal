@@ -164,7 +164,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
   protected function getElement(array $definition) {
     $element = $this->getMock('Drupal\Core\TypedData\TypedDataInterface');
     $element->expects($this->any())
-      ->method('getDefinition')
+      ->method('getDataDefinition')
       ->will($this->returnValue($definition));
     return $element;
   }

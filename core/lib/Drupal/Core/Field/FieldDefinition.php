@@ -8,14 +8,30 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\ListDefinition;
+use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
+use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\field\FieldException;
 
 /**
  * A class for defining entity fields.
  */
-class FieldDefinition extends ListDefinition implements FieldDefinitionInterface {
+class FieldDefinition extends ListDataDefinition implements FieldDefinitionInterface {
+
+  /**
+   * The field type.
+   *
+   * @var string
+   */
+  protected $type;
+
+  /**
+   * An array of field property definitions.
+   *
+   * @var \Drupal\Core\TypedData\DataDefinitionInterface[]
+   *
+   * @see \Drupal\Core\TypedData\ComplexDataDefinitionInterface::getPropertyDefinitions()
+   */
+  protected $propertyDefinitions;
 
   /**
    * The field schema.
@@ -39,15 +55,25 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    *   A new field definition object.
    */
   public static function create($type) {
+    $field_definition = new static(array());
+    $field_definition->type = $type;
+    $field_definition->itemDefinition = FieldItemDataDefinition::create($field_definition);
     // Create a definition for the items, and initialize it with the default
     // settings for the field type.
     // @todo Cleanup in https://drupal.org/node/2116341.
-    $item_definition = DataDefinition::create('field_item:' . $type);
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     $default_settings = $field_type_manager->getDefaultSettings($type) + $field_type_manager->getDefaultInstanceSettings($type);
-    $item_definition->setSettings($default_settings);
+    $field_definition->itemDefinition->setSettings($default_settings);
+    return $field_definition;
+  }
 
-    return new static(array(), $item_definition);
+  /**
+   * {@inheritdoc}
+   */
+  public static function createFromItemType($item_type) {
+    // The data type of a field item is in the form of "field_item:$field_type".
+    $parts = explode(':', $item_type, 2);
+    return static::create($parts[1]);
   }
 
   /**
@@ -75,10 +101,7 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    * {@inheritdoc}
    */
   public function getType() {
-    $data_type = $this->getItemDefinition()->getDataType();
-    // Cut of the leading field_item: prefix from 'field_item:FIELD_TYPE'.
-    $parts = explode(':', $data_type);
-    return $parts[1];
+    return $this->type;
   }
 
   /**
@@ -123,13 +146,6 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
   public function setSetting($setting_name, $value) {
     $this->getItemDefinition()->setSetting($setting_name, $value);
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPropertyNames() {
-    return array_keys(\Drupal::typedDataManager()->create($this->getItemDefinition())->getPropertyDefinitions());
   }
 
   /**
@@ -283,6 +299,71 @@ class FieldDefinition extends ListDefinition implements FieldDefinitionInterface
    */
   public function getDefaultValue(EntityInterface $entity) {
     return $this->getSetting('default_value');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyDefinition($name) {
+    if (!isset($this->propertyDefinitions)) {
+      $this->getPropertyDefinitions();
+    }
+    if (isset($this->propertyDefinitions[$name])) {
+      return $this->propertyDefinitions[$name];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyDefinitions() {
+    if (!isset($this->propertyDefinitions)) {
+      $class = $this->getFieldItemClass();
+      $this->propertyDefinitions = $class::propertyDefinitions($this);
+    }
+    return $this->propertyDefinitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyNames() {
+    return array_keys($this->getPropertyDefinitions());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMainPropertyName() {
+    $class = $this->getFieldItemClass();
+    return $class::mainPropertyName();
+  }
+
+  /**
+   * Helper to retrieve the field item class.
+   *
+   * @todo: Remove once getClass() adds in defaults. See
+   * https://drupal.org/node/2116341.
+   */
+  protected function getFieldItemClass() {
+    if ($class = $this->getItemDefinition()->getClass()) {
+      return $class;
+    }
+    else {
+      $type_definition = \Drupal::typedDataManager()
+        ->getDefinition($this->getItemDefinition()->getDataType());
+      return $type_definition['class'];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    // Do not serialize the statically cached property definitions.
+    $vars = get_object_vars($this);
+    unset($vars['propertyDefinitions']);
+    return array_keys($vars);
   }
 
   /**
