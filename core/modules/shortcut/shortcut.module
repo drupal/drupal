@@ -407,8 +407,8 @@ function shortcut_preprocess_page(&$variables) {
     }
 
     $query = array(
-     'link' => $link,
-     'name' => drupal_get_title(),
+      'link' => $link,
+      'name' => $variables['title'],
     );
     $query += drupal_get_destination();
 
