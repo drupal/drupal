@@ -20,7 +20,6 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *   id = "action",
  *   label = @Translation("Action"),
  *   admin_permission = "administer actions",
- *   config_prefix = "system.action",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

@@ -32,7 +32,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *     "list" = "Drupal\image\ImageStyleListController",
  *   },
  *   admin_permission = "administer image styles",
- *   config_prefix = "image.style",
+ *   config_prefix = "style",
  *   entity_keys = {
  *     "id" = "name",
  *     "label" = "label",

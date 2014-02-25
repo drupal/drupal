@@ -29,7 +29,7 @@ use Drupal\filter\Plugin\FilterInterface;
  *     "list" = "Drupal\filter\FilterFormatListController",
  *     "access" = "Drupal\filter\FilterFormatAccessController",
  *   },
- *   config_prefix = "filter.format",
+ *   config_prefix = "format",
  *   admin_permission = "administer filters",
  *   entity_keys = {
  *     "id" = "format",

@@ -27,7 +27,6 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
  *       "delete" = "Drupal\block\Form\BlockDeleteForm"
  *     }
  *   },
- *   config_prefix = "block.block",
  *   admin_permission = "administer blocks",
  *   fieldable = FALSE,
  *   entity_keys = {

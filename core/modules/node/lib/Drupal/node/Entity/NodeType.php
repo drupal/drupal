@@ -29,7 +29,7 @@ use Drupal\node\NodeTypeInterface;
  *     "list" = "Drupal\node\NodeTypeListController",
  *   },
  *   admin_permission = "administer content types",
- *   config_prefix = "node.type",
+ *   config_prefix = "type",
  *   bundle_of = "node",
  *   entity_keys = {
  *     "id" = "type",

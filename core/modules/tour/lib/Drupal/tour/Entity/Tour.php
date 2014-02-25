@@ -20,7 +20,6 @@ use Drupal\tour\TourInterface;
  *   controllers = {
  *     "view_builder" = "Drupal\tour\TourViewBuilder"
  *   },
- *   config_prefix = "tour.tour",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

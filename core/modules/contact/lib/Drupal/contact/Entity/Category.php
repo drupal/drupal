@@ -26,7 +26,7 @@ use Drupal\contact\CategoryInterface;
  *       "delete" = "Drupal\contact\Form\CategoryDeleteForm"
  *     }
  *   },
- *   config_prefix = "contact.category",
+ *   config_prefix = "category",
  *   admin_permission = "administer contact forms",
  *   bundle_of = "contact_message",
  *   entity_keys = {

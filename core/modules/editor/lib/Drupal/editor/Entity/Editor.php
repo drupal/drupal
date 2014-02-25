@@ -16,7 +16,6 @@ use Drupal\editor\EditorInterface;
  * @ConfigEntityType(
  *   id = "editor",
  *   label = @Translation("Editor"),
- *   config_prefix = "editor.editor",
  *   entity_keys = {
  *     "id" = "format",
  *     "uuid" = "uuid"

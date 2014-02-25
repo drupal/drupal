@@ -17,7 +17,7 @@ use Drupal\entity\EntityDisplayBase;
  * @ConfigEntityType(
  *   id = "entity_form_display",
  *   label = @Translation("Entity form display"),
- *   config_prefix = "entity.form_display",
+ *   config_prefix = "form_display",
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

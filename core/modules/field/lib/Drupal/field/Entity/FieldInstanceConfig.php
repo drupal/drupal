@@ -24,7 +24,7 @@ use Drupal\field\FieldInstanceConfigInterface;
  *   controllers = {
  *     "storage" = "Drupal\field\FieldInstanceConfigStorageController"
  *   },
- *   config_prefix = "field.instance",
+ *   config_prefix = "instance",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

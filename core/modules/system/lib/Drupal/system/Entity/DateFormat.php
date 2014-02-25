@@ -27,7 +27,6 @@ use Drupal\system\DateFormatInterface;
  *       "delete" = "Drupal\system\Form\DateFormatDeleteForm"
  *     }
  *   },
- *   config_prefix = "system.date_format",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

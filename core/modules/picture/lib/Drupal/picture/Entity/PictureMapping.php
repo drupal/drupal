@@ -27,7 +27,7 @@ use Drupal\picture\PictureMappingInterface;
  *   },
  *   list_path = "admin/config/media/picturemapping",
  *   admin_permission = "administer pictures",
- *   config_prefix = "picture.mappings",
+ *   config_prefix = "mappings",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

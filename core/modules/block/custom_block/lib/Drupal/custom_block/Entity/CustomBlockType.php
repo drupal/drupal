@@ -27,7 +27,7 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *     "list" = "Drupal\custom_block\CustomBlockTypeListController"
  *   },
  *   admin_permission = "administer blocks",
- *   config_prefix = "custom_block.type",
+ *   config_prefix = "type",
  *   bundle_of = "custom_block",
  *   entity_keys = {
  *     "id" = "id",

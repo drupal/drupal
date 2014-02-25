@@ -30,7 +30,7 @@ use Drupal\shortcut\ShortcutSetInterface;
  *       "delete" = "Drupal\shortcut\Form\ShortcutSetDeleteForm"
  *     }
  *   },
- *   config_prefix = "shortcut.set",
+ *   config_prefix = "set",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

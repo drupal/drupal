@@ -28,7 +28,7 @@ use Drupal\user\RoleInterface;
  *     }
  *   },
  *   admin_permission = "administer permissions",
- *   config_prefix = "user.role",
+ *   config_prefix = "role",
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",

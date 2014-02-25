@@ -39,7 +39,7 @@ use Drupal\search\SearchPageInterface;
  *     "disable" = "search.disable",
  *     "set-default" = "search.set_default"
  *   },
- *   config_prefix = "search.page",
+ *   config_prefix = "page",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

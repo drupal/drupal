@@ -25,7 +25,7 @@ use Drupal\config_test\ConfigTestInterface;
  *     },
  *     "access" = "Drupal\config_test\ConfigTestAccessController"
  *   },
- *   config_prefix = "config_test.dynamic",
+ *   config_prefix = "dynamic",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

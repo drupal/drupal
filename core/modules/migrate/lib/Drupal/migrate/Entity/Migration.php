@@ -29,7 +29,6 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  *       "delete" = "Drupal\Core\Entity\EntityFormController"
  *     }
  *   },
- *   config_prefix = "migrate.migration",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

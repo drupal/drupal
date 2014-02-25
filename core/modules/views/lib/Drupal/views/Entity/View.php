@@ -26,7 +26,6 @@ use Drupal\views\ViewExecutable;
  *     "access" = "Drupal\views\ViewAccessController"
  *   },
  *   admin_permission = "administer views",
- *   config_prefix = "views.view",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
