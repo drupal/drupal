@@ -11,7 +11,7 @@
   Drupal.behaviors.batch = {
     attach: function (context, settings) {
       var batch = settings.batch;
-      var $progress = $('#progress').once('batch');
+      var $progress = $('[data-drupal-progress]').once('batch');
       var progressBar;
 
       // Success: redirect to the summary.
