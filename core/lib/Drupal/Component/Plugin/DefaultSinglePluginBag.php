@@ -7,8 +7,6 @@
 
 namespace Drupal\Component\Plugin;
 
-use Drupal\Component\Utility\MapArray;
-
 /**
  * Provides a default plugin bag for a plugin type.
  *
@@ -35,18 +33,27 @@ class DefaultSinglePluginBag extends PluginBag {
   protected $configuration;
 
   /**
+   * The instance ID used for this plugin bag.
+   *
+   * @var string
+   */
+  protected $instanceId;
+
+  /**
    * Constructs a new DefaultSinglePluginBag object.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
    *   The manager to be used for instantiating plugins.
-   * @param array $instance_ids
-   *   The IDs of the plugin instances with which we are dealing.
+   * @param string $instance_id
+   *   The ID of the plugin instance.
    * @param array $configuration
    *   An array of configuration.
    */
-  public function __construct(PluginManagerInterface $manager, array $instance_ids, array $configuration) {
+  public function __construct(PluginManagerInterface $manager, $instance_id, array $configuration) {
     $this->manager = $manager;
-    $this->instanceIDs = MapArray::copyValuesToKeys($instance_ids);
+    $this->instanceId = $instance_id;
+    // This is still needed by the parent PluginBag class.
+    $this->instanceIDs = array($instance_id => $instance_id);
     $this->configuration = $configuration;
   }
 
@@ -55,6 +62,31 @@ class DefaultSinglePluginBag extends PluginBag {
    */
   protected function initializePlugin($instance_id) {
     $this->set($instance_id, $this->manager->createInstance($instance_id, $this->configuration));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    $plugin = $this->get($this->instanceId);
+    if ($plugin instanceof ConfigurablePluginInterface) {
+      return $plugin->getConfiguration();
+    }
+    else {
+      return $this->configuration;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration($configuration) {
+    $plugin = $this->get($this->instanceId);
+    if ($plugin instanceof ConfigurablePluginInterface) {
+      $plugin->setConfiguration($configuration);
+    }
+    $this->configuration = $configuration;
+    return $this;
   }
 
 }

@@ -41,7 +41,7 @@ class DefaultSinglePluginBagTest extends PluginBagTestBase {
       ->method('createInstance')
       ->will($this->returnValue($this->pluginInstances['apple']));
 
-    $this->defaultPluginBag = new DefaultSinglePluginBag($this->pluginManager, array_keys($this->pluginInstances), array('id' => 'apple', 'key' => 'value'));
+    $this->defaultPluginBag = new DefaultSinglePluginBag($this->pluginManager, 'apple', array('id' => 'apple', 'key' => 'value'));
   }
 
   /**

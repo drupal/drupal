@@ -42,4 +42,18 @@ class TestPluginBag extends PluginBag {
     $this->pluginInstances[$instance_id] = $this->manager->createInstance($instance_id, array());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration($configuration) {
+    return $this;
+  }
+
 }

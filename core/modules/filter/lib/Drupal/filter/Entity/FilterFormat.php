@@ -9,6 +9,7 @@ namespace Drupal\filter\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\FilterBag;
@@ -44,7 +45,7 @@ use Drupal\filter\Plugin\FilterInterface;
  *   }
  * )
  */
-class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
+class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, EntityWithPluginBagInterface {
 
   /**
    * Unique machine name of the format.
@@ -136,6 +137,11 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
   /**
    * {@inheritdoc}
    */
+  protected $pluginConfigKey = 'filters';
+
+  /**
+   * {@inheritdoc}
+   */
   public function id() {
     return $this->format;
   }
@@ -144,11 +150,19 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
    * {@inheritdoc}
    */
   public function filters($instance_id = NULL) {
+    $filter_bag = $this->getPluginBag();
+    if (isset($instance_id)) {
+      return $filter_bag->get($instance_id);
+    }
+    return $filter_bag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginBag() {
     if (!isset($this->filterBag)) {
       $this->filterBag = new FilterBag(\Drupal::service('plugin.manager.filter'), $this->filters);
-    }
-    if (isset($instance_id)) {
-      return $this->filterBag->get($instance_id);
     }
     return $this->filterBag;
   }
@@ -159,7 +173,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
   public function setFilterConfig($instance_id, array $configuration) {
     $this->filters[$instance_id] = $configuration;
     if (isset($this->filterBag)) {
-      $this->filterBag->setConfiguration($instance_id, $configuration);
+      $this->filterBag->setInstanceConfiguration($instance_id, $configuration);
     }
     return $this;
   }
@@ -169,9 +183,13 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
    */
   public function getExportProperties() {
     $properties = parent::getExportProperties();
-    // Sort and export the configuration of all filters.
-    $properties['filters'] = $this->filters()->sort()->getConfiguration();
-
+    // @todo Make self::$weight and self::$cache protected and add them here.
+    $names = array(
+      'filters',
+    );
+    foreach ($names as $name) {
+      $properties[$name] = $this->get($name);
+    }
     return $properties;
   }
 
@@ -195,6 +213,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    // Ensure the filters have been sorted before saving.
+    $this->filters()->sort();
+
     parent::preSave($storage_controller);
 
     $this->name = trim($this->label());

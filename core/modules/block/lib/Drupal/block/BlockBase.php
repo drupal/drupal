@@ -108,6 +108,10 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
       '#default_value' => ($this->configuration['label_display'] === BlockInterface::BLOCK_LABEL_VISIBLE),
       '#return_value' => BlockInterface::BLOCK_LABEL_VISIBLE,
     );
+    $form['cache'] = array(
+      '#type' => 'value',
+      '#value' => $this->configuration['cache'],
+    );
 
     // Add plugin-specific settings for this block type.
     $form += $this->blockForm($form, $form_state);

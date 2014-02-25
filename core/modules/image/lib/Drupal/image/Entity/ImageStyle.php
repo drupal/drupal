@@ -8,6 +8,7 @@
 namespace Drupal\image\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\image\ImageEffectBag;
 use Drupal\image\ImageEffectInterface;
@@ -45,7 +46,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *   }
  * )
  */
-class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
+class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginBagInterface {
 
   /**
    * The name of the image style to use as replacement upon delete.
@@ -88,6 +89,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    * @var \Drupal\image\ImageEffectBag
    */
   protected $effectsBag;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $pluginConfigKey = 'effects';
 
   /**
    * Overrides Drupal\Core\Entity\Entity::id().
@@ -358,6 +364,13 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
   /**
    * {@inheritdoc}
    */
+  public function getPluginBag() {
+    return $this->getEffects();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function saveImageEffect(array $configuration) {
     $effect_id = $this->getEffects()->updateConfiguration($configuration);
     $this->save();
@@ -369,7 +382,12 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    */
   public function getExportProperties() {
     $properties = parent::getExportProperties();
-    $properties['effects'] = $this->getEffects()->getConfiguration();
+    $names = array(
+      'effects',
+    );
+    foreach ($names as $name) {
+      $properties[$name] = $this->get($name);
+    }
     return $properties;
   }
 
@@ -394,4 +412,5 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
     $this->set('name', $name);
     return $this;
   }
+
 }

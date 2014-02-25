@@ -359,15 +359,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     // controller of the current request.
     $form_state['controller'] = $this;
 
-    // Copy top-level form values to entity properties, without changing
-    // existing entity properties that are not being edited by
-    // this form.
-    // @todo: This relies on a method that only exists for config and content
-    //   entities, in a different way. Consider moving this logic to a config
-    //   entity specific implementation.
-    foreach ($form_state['values'] as $key => $value) {
-      $entity->set($key, $value);
-    }
+    $this->copyFormValuesToEntity($entity, $form_state);
 
     // Invoke all specified builders for copying form values to entity
     // properties.
@@ -378,6 +370,26 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
     }
 
     return $entity;
+  }
+
+  /**
+   * Copies top-level form values to entity properties
+   *
+   * This should not change existing entity properties that are not being edited
+   * by this form.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity the current form should operate upon.
+   * @param array $form_state
+   *   An associative array containing the current state of the form.
+   */
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form_state) {
+    // @todo: This relies on a method that only exists for config and content
+    //   entities, in a different way. Consider moving this logic to a config
+    //   entity specific implementation.
+    foreach ($form_state['values'] as $key => $value) {
+      $entity->set($key, $value);
+    }
   }
 
   /**

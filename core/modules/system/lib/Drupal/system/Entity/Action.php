@@ -8,7 +8,7 @@
 namespace Drupal\system\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Core\Action\ActionBag;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
@@ -27,7 +27,7 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *   }
  * )
  */
-class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
+class Action extends ConfigEntityBase implements ActionConfigEntityInterface, EntityWithPluginBagInterface {
 
   /**
    * The name (plugin ID) of the action.
@@ -81,17 +81,23 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $values, $entity_type) {
-    parent::__construct($values, $entity_type);
+  protected $pluginConfigKey = 'configuration';
 
-    $this->pluginBag = new ActionBag(\Drupal::service('plugin.manager.action'), array($this->plugin), $this->configuration);
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginBag() {
+    if (!$this->pluginBag) {
+      $this->pluginBag = new ActionBag(\Drupal::service('plugin.manager.action'), $this->plugin, $this->configuration);
+    }
+    return $this->pluginBag;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPlugin() {
-    return $this->pluginBag->get($this->plugin);
+    return $this->getPluginBag()->get($this->plugin);
   }
 
   /**
@@ -99,7 +105,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
    */
   public function setPlugin($plugin_id) {
     $this->plugin = $plugin_id;
-    $this->pluginBag->addInstanceId($plugin_id);
+    $this->getPluginBag()->addInstanceId($plugin_id);
   }
 
   /**
@@ -156,19 +162,6 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
       $properties[$name] = $this->get($name);
     }
     return $properties;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
-    parent::preSave($storage_controller);
-
-    $plugin = $this->getPlugin();
-    // If this plugin has any configuration, ensure that it is set.
-    if ($plugin instanceof ConfigurablePluginInterface) {
-      $this->set('configuration', $plugin->getConfiguration());
-    }
   }
 
 }

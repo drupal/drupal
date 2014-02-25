@@ -140,18 +140,18 @@ class DefaultPluginBagTest extends PluginBagTestBase {
   }
 
   /**
-   * Tests the setConfiguration() method.
+   * Tests the setInstanceConfiguration() method.
    *
-   * @see \Drupal\Component\Plugin\DefaultPluginBag::setConfiguration()
+   * @see \Drupal\Component\Plugin\DefaultPluginBag::setInstanceConfiguration()
    */
-  public function testSetConfiguration() {
+  public function testSetInstanceConfiguration() {
     $this->setupPluginBag($this->exactly(3));
     $expected = array(
       'id' => 'cherry',
       'key' => 'value',
       'custom' => 'bananas',
     );
-    $this->defaultPluginBag->setConfiguration('cherry', $expected);
+    $this->defaultPluginBag->setInstanceConfiguration('cherry', $expected);
     $config = $this->defaultPluginBag->getConfiguration();
     $this->assertSame($expected, $config['cherry']);
   }
@@ -203,7 +203,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
     $this->setupPluginBag($this->exactly(4));
     $instance = $this->pluginManager->createInstance('cherry', $this->config['cherry']);
     $this->defaultPluginBag->set('cherry2', $instance);
-    $this->defaultPluginBag->setConfiguration('cherry2', $this->config['cherry']);
+    $this->defaultPluginBag->setInstanceConfiguration('cherry2', $this->config['cherry']);
 
     $expected = array(
       'banana',

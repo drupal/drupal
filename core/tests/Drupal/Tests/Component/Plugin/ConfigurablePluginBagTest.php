@@ -61,7 +61,7 @@ class ConfigurablePluginBagTest extends PluginBagTestBase {
   public function testConfigurableSetConfiguration() {
     $this->setupPluginBag($this->exactly(3));
     $this->defaultPluginBag->getConfiguration();
-    $this->defaultPluginBag->setConfiguration('apple', array('value' => 'pineapple'));
+    $this->defaultPluginBag->setInstanceConfiguration('apple', array('value' => 'pineapple'));
 
     $expected = $this->config;
     $expected['apple'] = array('value' => 'pineapple');

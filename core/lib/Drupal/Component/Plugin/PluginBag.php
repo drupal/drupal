@@ -35,6 +35,24 @@ abstract class PluginBag implements \Iterator, \Countable {
   abstract protected function initializePlugin($instance_id);
 
   /**
+   * Returns the current configuration of all plugins in this bag.
+   *
+   * @return array
+   *   An array of up-to-date plugin configuration.
+   */
+  abstract public function getConfiguration();
+
+  /**
+   * Sets the configuration for all plugins in this bag.
+   *
+   * @param array $configuration
+   *   An array of up-to-date plugin configuration.
+   *
+   * @return $this
+   */
+  abstract public function setConfiguration($configuration);
+
+  /**
    * Clears all instantiated plugins.
    */
   public function clear() {

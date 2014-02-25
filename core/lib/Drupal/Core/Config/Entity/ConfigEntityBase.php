@@ -28,6 +28,20 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   protected $originalId;
 
   /**
+   * The name of the property that is used to store plugin configuration.
+   *
+   * This is needed when the entity utilizes a PluginBag, to dictate where the
+   * plugin configuration should be stored.
+   *
+   * @todo Move this to a trait along with
+   *   \Drupal\Core\Config\Entity\EntityWithPluginBagInterface, and give it a
+   *   default value of 'configuration'.
+   *
+   * @var string
+   */
+  protected $pluginConfigKey;
+
+  /**
    * The enabled/disabled status of the configuration entity.
    *
    * @var bool
@@ -101,6 +115,15 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function set($property_name, $value) {
+    // @todo When \Drupal\Core\Config\Entity\EntityWithPluginBagInterface moves
+    //   to a trait, switch to class_uses() instead.
+    if ($this instanceof EntityWithPluginBagInterface) {
+      if ($property_name == $this->pluginConfigKey) {
+        // If external code updates the settings, pass it along to the plugin.
+        $this->getPluginBag()->setConfiguration($value);
+      }
+    }
+
     $this->{$property_name} = $value;
   }
 
@@ -191,6 +214,14 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     parent::preSave($storage_controller);
+
+    // @todo When \Drupal\Core\Config\Entity\EntityWithPluginBagInterface moves
+    //   to a trait, switch to class_uses() instead.
+    if ($this instanceof EntityWithPluginBagInterface) {
+      // Any changes to the plugin configuration must be saved to the entity's
+      // copy as well.
+      $this->set($this->pluginConfigKey, $this->getPluginBag()->getConfiguration());
+    }
 
     // Ensure this entity's UUID does not exist with a different ID, regardless
     // of whether it's new or updated.

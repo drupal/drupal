@@ -56,7 +56,7 @@ class SearchPluginBagTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->pluginManager = $this->getMock('Drupal\Component\Plugin\PluginManagerInterface');
-    $this->searchPluginBag = new SearchPluginBag($this->pluginManager, array('banana'), array('id' => 'banana', 'color' => 'yellow'), 'fruit_stand');
+    $this->searchPluginBag = new SearchPluginBag($this->pluginManager, 'banana', array('id' => 'banana', 'color' => 'yellow'), 'fruit_stand');
   }
 
   /**
