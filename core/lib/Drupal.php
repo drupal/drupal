@@ -277,6 +277,7 @@ class Drupal {
    * or off.
    *
    * @return \Drupal\Core\Config\ConfigFactoryInterface
+   *   The configuration factory service.
    */
   public static function configFactory() {
     return static::$container->get('config.factory');
