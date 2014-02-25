@@ -1797,7 +1797,6 @@ function _drupal_bootstrap_kernel() {
 function _drupal_bootstrap_page_cache() {
   global $user;
 
-  require_once __DIR__ . '/cache.inc';
   require_once __DIR__ . '/database.inc';
   // Check for a cache mode force from settings.php.
   if (settings()->get('page_cache_without_database')) {

@@ -2760,7 +2760,7 @@ function drupal_add_library($module, $name, $every_page = NULL) {
 function drupal_get_library($extension, $name = NULL) {
   $libraries = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($libraries[$extension]) && ($cache = cache()->get('library:info:' . $extension))) {
+  if (!isset($libraries[$extension]) && ($cache = \Drupal::cache()->get('library:info:' . $extension))) {
     $libraries[$extension] = $cache->data;
   }
 
@@ -2900,7 +2900,7 @@ function drupal_get_library($extension, $name = NULL) {
         }
       }
     }
-    cache()->set('library:info:' . $extension, $libraries[$extension], Cache::PERMANENT, array(
+    \Drupal::cache()->set('library:info:' . $extension, $libraries[$extension], Cache::PERMANENT, array(
       'extension' => array(TRUE, $extension),
       'library_info' => array(TRUE),
     ));
