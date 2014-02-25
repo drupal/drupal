@@ -15,6 +15,7 @@ use Drupal\Component\Utility\String;
  * Tests the functionality of the 'Manage fields' screen.
  */
 class ManageFieldsTest extends FieldUiTestBase {
+
   public static function getInfo() {
     return array(
       'name' => 'Manage fields',

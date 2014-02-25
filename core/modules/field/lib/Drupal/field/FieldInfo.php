@@ -12,6 +12,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Provides field and instance definitions for the current runtime environment.
@@ -59,6 +60,13 @@ class FieldInfo {
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $config;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
 
   /**
    * Lightweight map of fields across entity types and bundles.
@@ -134,12 +142,15 @@ class FieldInfo {
    *   The module handler class to use for invoking hooks.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The 'field type' plugin manager.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager to use.
    */
-  public function __construct(CacheBackendInterface $cache_backend, ConfigFactoryInterface $config, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager) {
+  public function __construct(CacheBackendInterface $cache_backend, ConfigFactoryInterface $config, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager, LanguageManagerInterface $language_manager) {
     $this->cacheBackend = $cache_backend;
     $this->moduleHandler = $module_handler;
     $this->config = $config;
     $this->fieldTypeManager = $field_type_manager;
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -527,8 +538,11 @@ class FieldInfo {
       return $this->bundleExtraFields[$entity_type][$bundle];
     }
 
-    // Read from the persistent cache.
-    if ($cached = $this->cacheBackend->get("field_info:bundle_extra:$entity_type:$bundle")) {
+    // Read from the persistent cache. Since hook_field_extra_fields() and
+    // hook_field_extra_fields_alter() might contain t() calls, we cache per
+    // language.
+    $langcode = $this->languageManager->getCurrentLanguage()->id;
+    if ($cached = $this->cacheBackend->get("field_info:bundle_extra:$langcode:$entity_type:$bundle")) {
       $this->bundleExtraFields[$entity_type][$bundle] = $cached->data;
       return $this->bundleExtraFields[$entity_type][$bundle];
     }
@@ -543,7 +557,7 @@ class FieldInfo {
 
     // Store in the 'static' and persistent caches.
     $this->bundleExtraFields[$entity_type][$bundle] = $info;
-    $this->cacheBackend->set("field_info:bundle_extra:$entity_type:$bundle", $info, Cache::PERMANENT, array('field_info' => TRUE));
+    $this->cacheBackend->set("field_info:bundle_extra:$langcode:$entity_type:$bundle", $info, Cache::PERMANENT, array('field_info' => TRUE));
 
     return $this->bundleExtraFields[$entity_type][$bundle];
   }
