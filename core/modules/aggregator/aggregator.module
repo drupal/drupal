@@ -88,48 +88,6 @@ function aggregator_theme() {
 }
 
 /**
- * Implements hook_menu().
- */
-function aggregator_menu() {
-  $items['admin/config/services/aggregator'] = array(
-    'title' => 'Feed aggregator',
-    'description' => "Configure which content your site aggregates from other sites, and how often it polls them.",
-    'route_name' => 'aggregator.admin_overview',
-    'weight' => 10,
-  );
-  $items['admin/config/services/aggregator/remove/%aggregator_feed'] = array(
-    'title' => 'Remove items',
-    'route_name' => 'aggregator.feed_items_delete',
-  );
-  $items['admin/config/services/aggregator/update/%aggregator_feed'] = array(
-    'title' => 'Update items',
-    'route_name' => 'aggregator.feed_refresh',
-  );
-  $items['aggregator'] = array(
-    'title' => 'Feed aggregator',
-    'weight' => 5,
-    'route_name' => 'aggregator.page_last',
-  );
-  $items['aggregator/sources'] = array(
-    'title' => 'Sources',
-    'route_name' => 'aggregator.sources',
-  );
-  $items['aggregator/sources/%aggregator_feed'] = array(
-    'route_name' => 'aggregator.feed_view',
-  );
-  $items['admin/config/services/aggregator/edit/feed/%aggregator_feed'] = array(
-    'title' => 'Edit feed',
-    'route_name' => 'aggregator.feed_edit',
-  );
-  $items['admin/config/services/aggregator/delete/feed/%aggregator_feed'] = array(
-    'title' => 'Delete feed',
-    'route_name' => 'aggregator.feed_delete',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function aggregator_menu_link_defaults() {

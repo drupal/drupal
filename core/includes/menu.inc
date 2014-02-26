@@ -13,6 +13,7 @@ use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Entity\MenuLink;
+use Drupal\menu_link\MenuLinkInterface;
 use Drupal\menu_link\MenuLinkStorageController;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -561,7 +562,10 @@ function _menu_check_access(&$item, $map) {
  *   (link title attribute) matches the description, it is translated as well.
  */
 function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
-  $title_callback = $item['title_callback'];
+  // Allow default menu links to be translated.
+  // @todo Figure out a proper way to support translations of menu links, see
+  //   https://drupal.org/node/2193777.
+  $title_callback = $item instanceof MenuLinkInterface && !$item->customized ? 't' :  $item['title_callback'];
   $item['localized_options'] = $item['options'];
   // All 'class' attributes are assumed to be an array during rendering, but
   // links stored in the database may use an old string value.
@@ -580,6 +584,8 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   if (!$link_translate || !isset($item['link_title']) || ($item['title'] == $item['link_title'])) {
     // t() is a special case. Since it is used very close to all the time,
     // we handle it directly instead of using indirect, slower methods.
+    // @todo Recheck this line once https://drupal.org/node/2084421 is in.
+    $item['title'] = isset($item['link_title']) ? $item['link_title'] : $item['title'];
     if ($title_callback == 't') {
       if (empty($item['title_arguments'])) {
         $item['title'] = t($item['title']);
@@ -2395,7 +2401,7 @@ function menu_link_rebuild_defaults() {
   if ($all_links) {
     $query = \Drupal::entityQuery('menu_link')
       ->condition('machine_name', array_keys($all_links), 'NOT IN')
-      ->condition('machine_name', NULL, '<>')
+      ->exists('machine_name')
       ->condition('external', 0)
       ->condition('updated', 0)
       ->condition('customized', 0)

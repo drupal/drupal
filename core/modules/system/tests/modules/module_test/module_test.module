@@ -69,25 +69,6 @@ function module_test_hook_info() {
 }
 
 /**
- * Implements hook_menu().
- */
-function module_test_menu() {
-  $items['module-test/hook-dynamic-loading-invoke'] = array(
-    'title' => 'Test hook dynamic loading (invoke)',
-    'route_name' => 'module_test.dynamic_invoke',
-  );
-  $items['module-test/hook-dynamic-loading-invoke-all'] = array(
-    'title' => 'Test hook dynamic loading (invoke_all)',
-    'route_name' => 'module_test.dynamic_invoke_all',
-  );
-  $items['module-test/class-loading'] = array(
-    'title' => 'Test loading a class from another module',
-    'route_name' => 'module_test.class_loading',
-  );
-  return $items;
-}
-
-/**
  * Page callback for 'hook dynamic loading' test.
  *
  * If the hook is dynamically loaded correctly, the menu callback should

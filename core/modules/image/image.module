@@ -84,41 +84,6 @@ function image_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function image_menu() {
-  $items = array();
-
-  $items['admin/config/media/image-styles'] = array(
-    'title' => 'Image styles',
-    'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
-    'route_name' => 'image.style_list',
-  );
-  $items['admin/config/media/image-styles/manage/%image_style'] = array(
-    'title' => 'Edit style',
-    'description' => 'Configure an image style.',
-    'route_name' => 'image.style_edit',
-  );
-  $items['admin/config/media/image-styles/manage/%/effects/%'] = array(
-    'title' => 'Edit image effect',
-    'description' => 'Edit an existing effect within a style.',
-    'route_name' => 'image.effect_edit_form',
-  );
-  $items['admin/config/media/image-styles/manage/%image_style/effects/%/delete'] = array(
-    'title' => 'Delete image effect',
-    'description' => 'Delete an existing effect from a style.',
-    'route_name' => 'image.effect_delete',
-  );
-  $items['admin/config/media/image-styles/manage/%/add/%'] = array(
-    'title' => 'Add image effect',
-    'description' => 'Add a new effect to a style.',
-    'route_name' => 'image.effect_add_form',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function image_menu_link_defaults() {

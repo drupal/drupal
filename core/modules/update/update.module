@@ -145,22 +145,6 @@ function update_page_build() {
 }
 
 /**
- * Implements hook_menu().
- */
-function update_menu() {
-  $items = array();
-
-  $items['admin/reports/updates'] = array(
-    'title' => 'Available updates',
-    'description' => 'Get a status report about available updates for your installed modules and themes.',
-    'route_name' => 'update.status',
-    'weight' => -50,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function update_menu_link_defaults() {

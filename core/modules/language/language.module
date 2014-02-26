@@ -69,29 +69,6 @@ function language_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function language_menu() {
-  // Base language management and configuration.
-  $items['admin/config/regional/language'] = array(
-    'title' => 'Languages',
-    'description' => 'Configure languages for content and the user interface.',
-    'route_name' => 'language.admin_overview',
-    'weight' => 0,
-  );
-
-  // Content language settings.
-  $items['admin/config/regional/content-language'] = array(
-    'title' => 'Content language',
-    'description' => 'Configure language support for content.',
-    'route_name' => 'language.content_settings_page',
-    'weight' => 10,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function language_menu_link_defaults() {

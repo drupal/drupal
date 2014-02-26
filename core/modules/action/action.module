@@ -45,18 +45,6 @@ function action_permission() {
 }
 
 /**
- * Implements hook_menu().
- */
-function action_menu() {
-  $items['admin/config/system/actions'] = array(
-    'title' => 'Actions',
-    'description' => 'Manage the actions defined for your site.',
-    'route_name' => 'action.admin',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function action_menu_link_defaults() {

@@ -38,33 +38,6 @@ function custom_block_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function custom_block_menu() {
-  $items['admin/structure/block/custom-blocks'] = array(
-    'title' => 'Custom block library',
-    'description' => 'Manage custom blocks.',
-    'route_name' => 'custom_block.list',
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  $items['admin/structure/block/custom-blocks/manage/%custom_block_type'] = array(
-    'title' => 'Edit custom block type',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(5),
-    'route_name' => 'custom_block.type_edit',
-  );
-
-  $items['block/add'] = array(
-    'title' => 'Add custom block',
-    'description' => 'Add custom block',
-    'route_name' => 'custom_block.add_page',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function custom_block_menu_link_defaults() {
@@ -72,6 +45,11 @@ function custom_block_menu_link_defaults() {
     'link_title' => 'Add custom block',
     'description' => 'Add custom block',
     'route_name' => 'custom_block.add_page',
+  );
+  $items['custom_block.list'] = array(
+    'link_title' => 'Custom block library',
+    'parent' => 'block.admin.structure',
+    'description' => 'Manage custom blocks.',
   );
 
   return $links;

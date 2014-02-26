@@ -18,18 +18,19 @@ function tour_test_admin_paths() {
 }
 
 /**
- * Implements hook_menu().
+ * Implements hook_menu_link_defaults().
  */
-function tour_test_menu() {
-  $items['tour-test-1'] = array(
+function hook_menu_link_defaults() {
+  $links['tour_test.1'] = array(
     'route_name' => 'tour_test.1',
-    'title' => 'Tour test 1'
+    'link_title' => 'Tour test 1'
   );
-  $items['tour-test-2/subpath'] = array(
+  $links['tour_test.2'] = array(
     'route_name' => 'tour_test.2',
-    'title' => 'Tour test 2'
+    'link_title' => 'Tour test 2'
   );
-  return $items;
+
+  return $links;
 }
 
 /**

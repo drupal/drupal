@@ -54,28 +54,6 @@ function path_permission() {
 }
 
 /**
- * Implements hook_menu().
- */
-function path_menu() {
-  $items['admin/config/search/path'] = array(
-    'title' => 'URL aliases',
-    'description' => "Change your site's URL paths by aliasing them.",
-    'route_name' => 'path.admin_overview',
-    'weight' => -5,
-  );
-  $items['admin/config/search/path/edit/%path'] = array(
-    'title' => 'Edit alias',
-    'route_name' => 'path.admin_edit',
-  );
-  $items['admin/config/search/path/delete/%path'] = array(
-    'title' => 'Delete alias',
-    'route_name' => 'path.delete',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function path_menu_link_defaults() {

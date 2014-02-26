@@ -39,18 +39,10 @@ function editor_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu_alter().
+ * Implements hook_menu_link_defaults_alter().
  *
  * Rewrites the menu entries for filter module that relate to the configuration
  * of text editors.
- */
-function editor_menu_alter(&$items) {
-  $items['admin/config/content/formats']['title'] = 'Text formats and editors';
-  $items['admin/config/content/formats']['description'] = 'Configure how user-contributed content is filtered and formatted, as well as the text editor user interface (WYSIWYGs or toolbars).';
-}
-
-/**
- * Implements hook_menu_link_defaults_alter().
  */
 function editor_menu_link_defaults_alter(array &$links) {
   $links['filter.admin.formats']['link_title'] = 'Text formats and editors';

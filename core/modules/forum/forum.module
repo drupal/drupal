@@ -95,40 +95,6 @@ function forum_theme() {
 }
 
 /**
- * Implements hook_menu().
- */
-function forum_menu() {
-  $items['forum'] = array(
-    'title' => 'Forums',
-    'route_name' => 'forum.index',
-  );
-  $items['forum/%forum'] = array(
-    'title' => 'Forums',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(1),
-    'route_name' => 'forum.page',
-  );
-  $items['admin/structure/forum'] = array(
-    'title' => 'Forums',
-    'description' => 'Control forum hierarchy settings.',
-    'route_name' => 'forum.overview',
-  );
-  $items['admin/structure/forum/edit/container/%taxonomy_term'] = array(
-    'title' => 'Edit container',
-    'route_name' => 'forum.edit_container',
-  );
-  $items['admin/structure/forum/edit/forum/%taxonomy_term'] = array(
-    'title' => 'Edit forum',
-    'route_name' => 'forum.edit_forum',
-  );
-  $items['admin/structure/forum/delete/forum/%taxonomy_term'] = array(
-    'title' => 'Delete forum',
-    'route_name' => 'forum.delete',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function forum_menu_link_defaults() {

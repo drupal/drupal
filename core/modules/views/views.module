@@ -271,51 +271,6 @@ function views_permission() {
 }
 
 /**
- * Implement hook_menu_alter().
- */
-function views_menu_alter(&$callbacks) {
-  $our_paths = array();
-  $views = views_get_applicable_views('uses_hook_menu');
-  foreach ($views as $data) {
-    list($view, $display_id) = $data;
-    $result = $view->executeHookMenu($display_id, $callbacks);
-    if (is_array($result)) {
-      // The menu system doesn't support having two otherwise
-      // identical paths with different placeholders.  So we
-      // want to remove the existing items from the menu whose
-      // paths would conflict with ours.
-
-      // First, we must find any existing menu items that may
-      // conflict.  We use a regular expression because we don't
-      // know what placeholders they might use.  Note that we
-      // first construct the regex itself by replacing %views_arg
-      // in the display path, then we use this constructed regex
-      // (which will be something like '#^(foo/%[^/]*/bar)$#') to
-      // search through the existing paths.
-      $regex = '#^(' . preg_replace('#%views_arg#', '%[^/]*', implode('|', array_keys($result))) . ')$#';
-      $matches = preg_grep($regex, array_keys($callbacks));
-
-      // Remove any conflicting items that were found.
-      foreach ($matches as $path) {
-        // Don't remove the paths we just added!
-        if (!isset($our_paths[$path])) {
-          unset($callbacks[$path]);
-        }
-      }
-      foreach ($result as $path => $item) {
-        if (!isset($callbacks[$path])) {
-          // Add a new item, possibly replacing (and thus effectively
-          // overriding) one that we removed above.
-          $callbacks[$path] = $item;
-        }
-        $our_paths[$path] = TRUE;
-      }
-    }
-    $view->destroy();
-  }
-}
-
-/**
  * Implements hook_menu_link_defaults_alter().
  */
 function views_menu_link_defaults_alter(array &$links) {

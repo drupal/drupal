@@ -302,6 +302,11 @@ services:
     calls:
       - [setContext, ['@router.request_context']]
       - [add, ['@router.dynamic']]
+  router.path_roots_subscriber:
+    class: Drupal\Core\EventSubscriber\PathRootsSubscriber
+    arguments: ['@state']
+    tags:
+      - { name: event_subscriber }
   entity.query:
     class: Drupal\Core\Entity\Query\QueryFactory
     arguments: ['@entity.manager']

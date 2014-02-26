@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
+use Drupal\locale\TranslationString;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -258,6 +259,26 @@ class LinksTest extends WebTestBase {
     $menu_link = entity_load('menu_link', $menu_link->id());
     $this->assertEqual($menu_link->route_name, 'router_test.3');
     $this->assertEqual($menu_link->route_parameters, array('value' => 'test'));
+  }
+
+  /**
+   * Tests uninstall a module providing default links.
+   */
+  public function testModuleUninstalledMenuLinks() {
+    \Drupal::moduleHandler()->install(array('menu_test'));
+    \Drupal::service('router.builder')->rebuild();
+    menu_link_rebuild_defaults();
+    $result = $menu_link = \Drupal::entityQuery('menu_link')->condition('machine_name', 'menu_test')->execute();
+    $menu_links = \Drupal::entityManager()->getStorageController('menu_link')->loadMultiple($result);
+    $this->assertEqual(count($menu_links), 1);
+    $menu_link = reset($menu_links);
+    $this->assertEqual($menu_link->machine_name, 'menu_test');
+
+    // Uninstall the module and ensure the menu link got removed.
+    \Drupal::moduleHandler()->uninstall(array('menu_test'));
+    $result = $menu_link = \Drupal::entityQuery('menu_link')->condition('machine_name', 'menu_test')->execute();
+    $menu_links = \Drupal::entityManager()->getStorageController('menu_link')->loadMultiple($result);
+    $this->assertEqual(count($menu_links), 0);
   }
 
 }

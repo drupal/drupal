@@ -178,28 +178,6 @@ function comment_theme() {
 }
 
 /**
- * Implements hook_menu().
- */
-function comment_menu() {
-  $items['admin/structure/comments'] = array(
-    'title' => 'Comment forms',
-    'description' => 'Manage fields and displays settings for comment forms.',
-    'route_name' => 'comment.bundle_list',
-  );
-  $items['admin/structure/comments/manage/%'] = array(
-    'title' => 'Comment form',
-    'route_name' => 'comment.bundle',
-  );
-  $items['admin/content/comment'] = array(
-    'title' => 'Comments',
-    'description' => 'List and edit site comments and the comment approval queue.',
-    'route_name' => 'comment.admin',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function comment_menu_link_defaults() {
@@ -220,12 +198,12 @@ function comment_menu_link_defaults() {
 }
 
 /**
- * Implements hook_menu_alter().
+ * Implements hook_menu_link_defaults_alter()
  */
-function comment_menu_alter(&$items) {
-  if (isset($items['admin/content'])) {
+function comment_menu_links_defaults_alter(&$links) {
+  if (isset($links['node.admin.content'])) {
     // Add comments to the description for admin/content if any.
-    $items['admin/content']['description'] = 'Administer content and comments.';
+    $links['node.admin.content']['description'] = 'Administer content and comments.';
   }
 }
 

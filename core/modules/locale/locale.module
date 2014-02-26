@@ -168,27 +168,6 @@ function locale_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function locale_menu() {
-  // Translation functionality.
-  $items['admin/config/regional/translate'] = array(
-    'title' => 'User interface translation',
-    'description' => 'Translate the built-in user interface.',
-    'route_name' => 'locale.translate_page',
-    'weight' => 15,
-  );
-
-  $items['admin/reports/translations'] = array(
-    'title' => 'Available translation updates',
-    'route_name' => 'locale.translate_status',
-    'description' => 'Get a status report about available interface translations for your installed modules and themes.',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function locale_menu_link_defaults() {

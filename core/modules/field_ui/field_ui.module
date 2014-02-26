@@ -53,20 +53,6 @@ function field_ui_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function field_ui_menu() {
-  $items['admin/reports/fields'] = array(
-    'title' => 'Field list',
-    'description' => 'Overview of fields on all entity types.',
-    'route_name' => 'field_ui.list',
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function field_ui_menu_link_defaults() {

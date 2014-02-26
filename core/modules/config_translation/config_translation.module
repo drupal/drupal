@@ -32,20 +32,6 @@ function config_translation_help($path) {
 }
 
 /**
- * Implements hook_menu().
- */
-function config_translation_menu() {
-  $items = array();
-  $items['admin/config/regional/config-translation'] = array(
-    'title' => 'Configuration translation',
-    'description' => 'Translate the configuration.',
-    'route_name' => 'config_translation.mapper_list',
-    'weight' => 30,
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function config_translation_menu_link_defaults() {

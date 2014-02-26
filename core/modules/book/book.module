@@ -163,28 +163,6 @@ function book_node_links_alter(array &$node_links, NodeInterface $node, array &$
 }
 
 /**
- * Implements hook_menu().
- */
-function book_menu() {
-  $items['admin/structure/book'] = array(
-    'title' => 'Books',
-    'description' => "Manage your site's book outlines.",
-    'route_name' => 'book.admin',
-  );
-  $items['book'] = array(
-    'title' => 'Books',
-    'route_name' => 'book.render',
-    'type' => MENU_SUGGESTED_ITEM,
-  );
-  $items['node/%node/outline/remove'] = array(
-    'title' => 'Remove from outline',
-    'route_name' => 'book.remove',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function book_menu_link_defaults() {

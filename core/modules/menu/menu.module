@@ -63,36 +63,6 @@ function menu_permission() {
 }
 
 /**
- * Implements hook_menu().
- */
-function menu_menu() {
-  $items['admin/structure/menu'] = array(
-    'title' => 'Menus',
-    'description' => 'Add new menus to your site, edit existing menus, and rename and reorganize menu links.',
-    'route_name' => 'menu.overview_page',
-  );
-  $items['admin/structure/menu/manage/%menu'] = array(
-    'title' => 'Edit menu',
-    'route_name' => 'menu.menu_edit',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(4),
-  );
-  $items['admin/structure/menu/item/%menu_link/edit'] = array(
-    'title' => 'Edit menu link',
-    'route_name' => 'menu.link_edit',
-  );
-  $items['admin/structure/menu/item/%menu_link/reset'] = array(
-    'title' => 'Reset menu link',
-    'route_name' => 'menu.link_reset',
-  );
-  $items['admin/structure/menu/item/%menu_link/delete'] = array(
-    'title' => 'Delete menu link',
-    'route_name' => 'menu.link_delete',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function menu_menu_link_defaults() {

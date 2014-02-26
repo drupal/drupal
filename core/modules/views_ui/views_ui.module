@@ -38,29 +38,6 @@ function views_ui_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function views_ui_menu() {
-  $items = array();
-
-  // Top-level Views module pages (not tied to a particular View).
-  $items['admin/structure/views'] = array(
-    'title' => 'Views',
-    'description' => 'Manage customized lists of content.',
-    'route_name' => 'views_ui.list',
-  );
-
-  // A page in the Reports section to show usage of plugins in all views.
-  $items['admin/reports/views-plugins'] = array(
-    'title' => 'Views plugins',
-    'description' => 'Overview of plugins used in all views.',
-    'route_name' => 'views_ui.reports_plugins',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function views_ui_menu_link_defaults() {

@@ -244,10 +244,6 @@ function content_translation_menu() {
  *   https://drupal.org/node/1987882 and https://drupal.org/node/2047633.
  */
 function content_translation_menu_alter(array &$items) {
-  // Clarify where translation settings are located.
-  $items['admin/config/regional/content-language']['title'] = 'Content language and translation';
-  $items['admin/config/regional/content-language']['description'] = 'Configure language and translation support for content.';
-
   // Check that the declared menu base paths are actually valid.
   foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
     if (content_translation_enabled($entity_type_id)) {

@@ -411,6 +411,7 @@ class ToolbarAdminMenuTest extends WebTestBase {
       'translation' => 'untranslated',
     );
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $this->assertNoText(t('No strings available'));
     $this->assertText($name, 'Search found the string as untranslated.');
 
     // Assume this is the only result.

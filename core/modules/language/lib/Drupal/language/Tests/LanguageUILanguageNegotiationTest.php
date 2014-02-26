@@ -111,7 +111,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
     // We will look for this string in the admin/config screen to see if the
     // corresponding translated string is shown.
-    $default_string = 'Configure languages for content and the user interface';
+    $default_string = 'Hide descriptions';
 
     // First visit this page to make sure our target string is searchable.
     $this->drupalGet('admin/config');

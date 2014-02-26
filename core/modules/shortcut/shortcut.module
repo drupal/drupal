@@ -62,33 +62,6 @@ function shortcut_permission() {
 }
 
 /**
- * Implements hook_menu().
- */
-function shortcut_menu() {
-  $items['admin/config/user-interface/shortcut'] = array(
-    'title' => 'Shortcuts',
-    'description' => 'Add and modify shortcut sets.',
-    'route_name' => 'shortcut.set_admin',
-  );
-  $items['admin/config/user-interface/shortcut/manage/%shortcut_set'] = array(
-    'title' => 'Edit shortcuts',
-    'route_name' => 'shortcut.set_customize',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(5),
-  );
-  $items['admin/config/user-interface/shortcut/link/%shortcut'] = array(
-    'title' => 'Edit shortcut',
-    'route_name' => 'shortcut.link_edit',
-  );
-  $items['admin/config/user-interface/shortcut/link/%shortcut/delete'] = array(
-    'title' => 'Delete shortcut',
-    'route_name' => 'shortcut.link_delete',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function shortcut_menu_link_defaults() {
@@ -389,7 +362,6 @@ function shortcut_preprocess_page(&$variables) {
   // shortcuts and if the page's actual content is being shown (for example,
   // we do not want to display it on "access denied" or "page not found"
   // pages).
-
   // Load the router item corresponding to the current page.
   $request = \Drupal::request();
   $item = array();

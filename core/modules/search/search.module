@@ -139,30 +139,6 @@ function search_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hook_menu().
- */
-function search_menu() {
-  $items['search'] = array(
-    'title' => 'Search',
-    'type' => MENU_SUGGESTED_ITEM,
-    'route_name' => 'search.view',
-  );
-  $items['admin/config/search/settings'] = array(
-    'title' => 'Search settings',
-    'description' => 'Configure relevance settings for search and other indexing options.',
-    'route_name' => 'search.settings',
-    'weight' => -10,
-  );
-  $items['admin/config/search/settings/reindex'] = array(
-    'title' => 'Clear index',
-    'route_name' => 'search.reindex_confirm',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function search_menu_link_defaults() {

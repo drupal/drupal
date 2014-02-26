@@ -58,19 +58,6 @@ function config_file_download($uri) {
 }
 
 /**
- * Implements hook_menu().
- */
-function config_menu() {
-  $items['admin/config/development/configuration'] = array(
-    'title' => 'Configuration management',
-    'description' => 'Import, export, or synchronize your site configuration.',
-    'route_name' => 'config.sync',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function config_menu_link_defaults() {

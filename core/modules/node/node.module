@@ -937,53 +937,6 @@ function _node_revision_access(NodeInterface $node, $op = 'view', $account = NUL
 }
 
 /**
- * Implements hook_menu().
- */
-function node_menu() {
-  $items['admin/content'] = array(
-    'title' => 'Content',
-    'description' => 'Find and manage content.',
-    'route_name' => 'node.content_overview',
-    'weight' => -10,
-  );
-
-  $items['admin/structure/types'] = array(
-    'title' => 'Content types',
-    'description' => 'Manage content types, including default status, front page promotion, comment settings, etc.',
-    'route_name' => 'node.overview_types',
-  );
-  $items['node/add'] = array(
-    'title' => 'Add content',
-    'route_name' => 'node.add_page',
-  );
-  $items['node/add/%node_type'] = array(
-    'description callback' => 'node_type_get_description',
-    'description arguments' => array(2),
-    'route_name' => 'node.add',
-  );
-  $items['node/%node'] = array(
-    'title callback' => 'node_page_title',
-    'title arguments' => array(1),
-    // The controller also sets the #title in case the routes' title is
-    // overridden by a menu link.
-    'route_name' => 'node.view',
-  );
-  $items['node/%node/revisions/%node_revision/view'] = array(
-    'title' => 'Revisions',
-    'route_name' => 'node.revision_show',
-  );
-  $items['node/%node/revisions/%node_revision/revert'] = array(
-    'title' => 'Revert to earlier revision',
-    'route_name' => 'node.revision_revert_confirm',
-  );
-  $items['node/%node/revisions/%node_revision/delete'] = array(
-    'title' => 'Delete earlier revision',
-    'route_name' => 'node.revision_delete_confirm',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function node_menu_link_defaults() {

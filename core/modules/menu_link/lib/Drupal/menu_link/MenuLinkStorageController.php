@@ -218,8 +218,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       ->condition('base.link_path', 'admin/%', 'LIKE')
       ->condition('base.hidden', 0, '>=')
       ->condition('base.module', 'system')
-      ->condition('m.number_parts', 1, '>')
-      ->condition('m.page_callback', 'system_admin_menu_block_page', '<>');
+      ->condition('base.route_name', 'system.admin', '<>');
     $ids = $query->execute()->fetchCol(1);
 
     return $this->loadMultiple($ids);

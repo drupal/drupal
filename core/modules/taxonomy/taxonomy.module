@@ -233,33 +233,6 @@ function taxonomy_theme() {
 }
 
 /**
- * Implements hook_menu().
- */
-function taxonomy_menu() {
-  $items['admin/structure/taxonomy'] = array(
-    'title' => 'Taxonomy',
-    'description' => 'Manage tagging, categorization, and classification of your content.',
-    'route_name' => 'taxonomy.vocabulary_list',
-  );
-
-  $items['taxonomy/term/%taxonomy_term'] = array(
-    'title' => 'Taxonomy term',
-    'title callback' => 'taxonomy_term_title',
-    'title arguments' => array(2),
-    'route_name' => 'taxonomy.term_page',
-  );
-  $items['taxonomy/term/%taxonomy_term/feed'] = array(
-    'title' => 'Taxonomy term',
-    'title callback' => 'taxonomy_term_title',
-    'title arguments' => array(2),
-    'route_name' => 'taxonomy.term_feed',
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function taxonomy_menu_link_defaults() {

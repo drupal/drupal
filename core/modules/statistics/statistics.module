@@ -79,19 +79,6 @@ function statistics_node_links_alter(array &$node_links, NodeInterface $entity, 
 }
 
 /**
- * Implements hook_menu().
- */
-function statistics_menu() {
-  $items['admin/config/system/statistics'] = array(
-    'title' => 'Statistics',
-    'description' => 'Control details about what and how your site logs content statistics.',
-    'route_name' => 'statistics.settings',
-    'weight' => -15,
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function statistics_menu_link_defaults() {

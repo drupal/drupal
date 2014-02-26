@@ -95,36 +95,6 @@ function filter_element_info() {
 }
 
 /**
- * Implements hook_menu().
- */
-function filter_menu() {
-  $items['filter/tips'] = array(
-    'title' => 'Compose tips',
-    'type' => MENU_SUGGESTED_ITEM,
-    'route_name' => 'filter.tips_all',
-  );
-  $items['filter/tips/%'] = array(
-    'title' => 'Compose tips',
-    'route_name' => 'filter.tips',
-  );
-  $items['admin/config/content/formats'] = array(
-    'title' => 'Text formats',
-    'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
-    'route_name' => 'filter.admin_overview',
-  );
-  $items['admin/config/content/formats/manage/%'] = array(
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(5),
-    'route_name' => 'filter.format_edit',
-  );
-  $items['admin/config/content/formats/manage/%/disable'] = array(
-    'title' => 'Disable text format',
-    'route_name' => 'filter.admin_disable',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function filter_menu_link_defaults() {

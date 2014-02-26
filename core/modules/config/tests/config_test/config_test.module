@@ -11,32 +11,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
 /**
- * Implements hook_menu().
- */
-function config_test_menu() {
-  $items['admin/structure/config_test'] = array(
-    'title' => 'Test configuration',
-    'route_name' => 'config_test.list_page',
-  );
-  $items['admin/structure/config_test/manage/%config_test'] = array(
-    'route_name' => 'config_test.entity',
-  );
-  $items['admin/structure/config_test/manage/%config_test/delete'] = array(
-    'title' => 'Delete',
-    'route_name' => 'config_test.entity_delete',
-  );
-  $items['admin/structure/config_test/manage/%config_test/enable'] = array(
-    'title' => 'Enable',
-    'route_name' => 'config_test.entity_enable',
-  );
-  $items['admin/structure/config_test/manage/%config_test/disable'] = array(
-    'title' => 'Disable',
-    'route_name' => 'config_test.entity_disable',
-  );
-  return $items;
-}
-
-/**
  * Loads a ConfigTest object.
  *
  * @param string $id

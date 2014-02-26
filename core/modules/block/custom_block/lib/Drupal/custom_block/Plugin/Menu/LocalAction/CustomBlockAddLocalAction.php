@@ -29,6 +29,10 @@ class CustomBlockAddLocalAction extends LocalActionDefault {
     if ($request->attributes->get(RouteObjectInterface::ROUTE_NAME) == 'custom_block.list') {
       $options['query']['destination'] = 'admin/structure/block/custom-blocks';
     }
+    // Adds a destination on custom block listing.
+    if ($request->attributes->get(RouteObjectInterface::ROUTE_NAME) == 'custom_block.list') {
+      $options['query']['destination'] = 'admin/structure/block/custom-blocks';
+    }
     return $options;
   }
 

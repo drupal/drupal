@@ -93,29 +93,6 @@ function block_permission() {
 }
 
 /**
- * Implements hook_menu().
- *
- * @todo Clarify the documentation for the per-plugin block admin links.
- */
-function block_menu() {
-  $items['admin/structure/block'] = array(
-    'title' => 'Block layout',
-    'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
-    'route_name' => 'block.admin_display',
-  );
-  $items['admin/structure/block/manage/%block'] = array(
-    'title' => 'Configure block',
-    'route_name' => 'block.admin_edit',
-  );
-  $items['admin/structure/block/add/%/%'] = array(
-    'title' => 'Place block',
-    'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'route_name' => 'block.admin_add',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function block_menu_link_defaults() {
