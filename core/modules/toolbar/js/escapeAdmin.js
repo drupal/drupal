@@ -29,7 +29,7 @@
     attach: function () {
       var $toolbarEscape = $('[data-toolbar-escape-admin]').once('escapeAdmin');
       if ($toolbarEscape.length) {
-        if (pathInfo.currentPathIsAdmin && escapeAdminPath) {
+        if (pathInfo.currentPathIsAdmin && escapeAdminPath !== null) {
           $toolbarEscape.attr('href', Drupal.url(escapeAdminPath));
           $toolbarEscape.closest('.toolbar-tab').removeClass('hidden');
         }
