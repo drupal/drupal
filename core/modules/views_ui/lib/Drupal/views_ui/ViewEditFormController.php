@@ -225,6 +225,10 @@ class ViewEditFormController extends ViewFormControllerBase {
         array($this, 'cancel'),
       ),
     );
+    if ($this->entity->isLocked()) {
+      $actions['submit']['#access'] = FALSE;
+      $actions['cancel']['#access'] = FALSE;
+    }
     return $actions;
   }
 
@@ -235,6 +239,9 @@ class ViewEditFormController extends ViewFormControllerBase {
     parent::validate($form, $form_state);
 
     $view = $this->entity;
+    if ($view->isLocked()) {
+      $this->setFormError('', $form_state, $this->t('Changes cannot be made to a locked view.'));
+    }
     foreach ($view->getExecutable()->validate() as $display_errors) {
       foreach ($display_errors as $error) {
         $this->setFormError('', $form_state, $error);
