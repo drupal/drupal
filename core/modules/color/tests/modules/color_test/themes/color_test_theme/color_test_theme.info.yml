@@ -1,0 +1,6 @@
+name: 'Color test theme'
+type: theme
+description: 'Theme for testing the color module'
+version: VERSION
+core: 8.x
+hidden: true

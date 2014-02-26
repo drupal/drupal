@@ -114,6 +114,22 @@ function color_get_info($theme) {
   $file = DRUPAL_ROOT . '/' . $path . '/color/color.inc';
   if ($path && file_exists($file)) {
     include $file;
+    // Add in default values.
+    $info += array(
+      // CSS files (excluding @import) to rewrite with new color scheme.
+      'css' => array(),
+      // Files to copy.
+      'copy' => array(),
+      // Gradient definitions.
+      'gradients' => array(),
+      // Color areas to fill (x, y, width, height).
+      'fill' => array(),
+      // Coordinates of all the theme slices (x, y, width, height) with their
+      // filename as used in the stylesheet.
+      'slices' => array(),
+      // Reference color used for blending.
+      'blend_target' => '#ffffff',
+    );
     $theme_info[$theme] = $info;
     return $info;
   }
@@ -245,9 +261,11 @@ function template_preprocess_color_scheme_form(&$variables) {
   $info = $form['info']['#value'];
   $path = drupal_get_path('theme', $theme) . '/';
 
-  $preview_css_path = $path . $info['preview_css'];
+  if (isset($info['preview_css'])) {
+    $preview_css_path = $path . $info['preview_css'];
+    $form['scheme']['#attached']['css'][$preview_css_path] = array();
+  }
   $preview_js_path = isset($info['preview_js']) ? $path . $info['preview_js'] : drupal_get_path('module', 'color') . '/' . 'preview.js';
-  $form['scheme']['#attached']['css'][$preview_css_path] = array();
   // Add the JS at a weight below color.js.
   $form['scheme']['#attached']['js'][$preview_js_path] = array('weight' => -1);
 
@@ -344,23 +362,25 @@ function color_scheme_form_submit($form, &$form_state) {
   }
 
   // Make sure enough memory is available.
-  // Fetch source image dimensions.
-  $source = drupal_get_path('theme', $theme) . '/' . $info['base_image'];
-  list($width, $height) = getimagesize($source);
+  if (isset($info['base_image'])) {
+    // Fetch source image dimensions.
+    $source = drupal_get_path('theme', $theme) . '/' . $info['base_image'];
+    list($width, $height) = getimagesize($source);
 
-  // We need at least a copy of the source and a target buffer of the same
-  // size (both at 32bpp).
-  $required = $width * $height * 8;
-  // We intend to prevent color scheme changes if there isn't enough memory
-  // available.  memory_get_usage(TRUE) returns a more accurate number than
-  // memory_get_usage(), therefore we won't inadvertently reject a color
-  // scheme change based on a faulty memory calculation.
-  $usage = memory_get_usage(TRUE);
-  $memory_limit = ini_get('memory_limit');
-  $size = parse_size($memory_limit);
-  if (!drupal_check_memory_limit($usage + $required, $memory_limit)) {
-    drupal_set_message(t('There is not enough memory available to PHP to change this theme\'s color scheme. You need at least %size more. Check the <a href="@url">PHP documentation</a> for more information.', array('%size' => format_size($usage + $required - $size), '@url' => 'http://www.php.net/manual/ini.core.php#ini.sect.resource-limits')), 'error');
-    return;
+    // We need at least a copy of the source and a target buffer of the same
+    // size (both at 32bpp).
+    $required = $width * $height * 8;
+    // We intend to prevent color scheme changes if there isn't enough memory
+    // available.  memory_get_usage(TRUE) returns a more accurate number than
+    // memory_get_usage(), therefore we won't inadvertently reject a color
+    // scheme change based on a faulty memory calculation.
+    $usage = memory_get_usage(TRUE);
+    $memory_limit = ini_get('memory_limit');
+    $size = parse_size($memory_limit);
+    if (!drupal_check_memory_limit($usage + $required, $memory_limit)) {
+      drupal_set_message(t('There is not enough memory available to PHP to change this theme\'s color scheme. You need at least %size more. Check the <a href="@url">PHP documentation</a> for more information.', array('%size' => format_size($usage + $required - $size), '@url' => 'http://www.php.net/manual/ini.core.php#ini.sect.resource-limits')), 'error');
+      return;
+    }
   }
 
   // Delete old files.
@@ -408,7 +428,7 @@ function color_scheme_form_submit($form, &$form_state) {
   }
 
   // Render new images, if image has been provided.
-  if ($info['base_image']) {
+  if (isset($info['base_image'])) {
     _color_render_images($theme, $info, $paths, $palette);
   }
 

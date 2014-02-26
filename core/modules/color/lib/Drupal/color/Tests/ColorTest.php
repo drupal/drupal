@@ -19,7 +19,7 @@ class ColorTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('color');
+  public static $modules = array('color', 'color_test');
 
   protected $big_user;
   protected $themes;
@@ -44,6 +44,11 @@ class ColorTest extends WebTestBase {
       'bartik' => array(
         'palette_input' => 'palette[bg]',
         'scheme' => 'slate',
+        'scheme_color' => '#3b3b3b',
+      ),
+      'color_test_theme' => array(
+        'palette_input' => 'palette[bg]',
+        'scheme' => '',
         'scheme_color' => '#3b3b3b',
       ),
     );
@@ -90,10 +95,12 @@ class ColorTest extends WebTestBase {
 
     $this->drupalGet('<front>');
     $stylesheets = \Drupal::config('color.' . $theme)->get('stylesheets');
-    $this->assertPattern('|' . file_create_url($stylesheets[0]) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
+    foreach ($stylesheets as $stylesheet) {
+      $this->assertPattern('|' . file_create_url($stylesheet) . '|', 'Make sure the color stylesheet is included in the content. (' . $theme . ')');
+      $stylesheet_content = join("\n", file($stylesheet));
+      $this->assertTrue(strpos($stylesheet_content, 'color: #123456') !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
+    }
 
-    $stylesheet_content = join("\n", file($stylesheets[0]));
-    $this->assertTrue(strpos($stylesheet_content, 'color: #123456') !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
 
     $this->drupalGet($settings_path);
     $this->assertResponse(200);
@@ -102,8 +109,10 @@ class ColorTest extends WebTestBase {
 
     $this->drupalGet('<front>');
     $stylesheets = \Drupal::config('color.' . $theme)->get('stylesheets');
-    $stylesheet_content = join("\n", file($stylesheets[0]));
-    $this->assertTrue(strpos($stylesheet_content, 'color: ' . $test_values['scheme_color']) !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
+    foreach ($stylesheets as $stylesheet) {
+      $stylesheet_content = join("\n", file($stylesheet));
+      $this->assertTrue(strpos($stylesheet_content, 'color: ' . $test_values['scheme_color']) !== FALSE, 'Make sure the color we changed is in the color stylesheet. (' . $theme . ')');
+    }
 
     // Test with aggregated CSS turned on.
     $config = \Drupal::config('system.performance');

@@ -119,21 +119,8 @@ $info = array(
     ),
   ),
 
-  // Color areas to fill (x, y, width, height).
-  'fill' => array(),
-
-  // Coordinates of all the theme slices (x, y, width, height)
-  // with their filename as used in the stylesheet.
-  'slices' => array(),
-
-  // Reference color used for blending. Matches the base.png's colors.
-  'blend_target' => '#ffffff',
-
   // Preview files.
   'preview_css' => 'color/preview.css',
   'preview_js' => 'color/preview.js',
   'preview_html' => 'color/preview.html',
-
-  // Base file for image generation.
-  'base_image' => 'color/base.png',
 );
