@@ -2140,11 +2140,11 @@ function menu_reset_static_cache() {
  *   in parallel and the current thread just waited for completion.
  */
 function menu_router_rebuild() {
-  if (!lock()->acquire(__FUNCTION__)) {
+  if (!\Drupal::lock()->acquire(__FUNCTION__)) {
     // Wait for another request that is already doing this work.
     // We choose to block here since otherwise the router item may not
     // be available during routing resulting in a 404.
-    lock()->wait(__FUNCTION__);
+    \Drupal::lock()->wait(__FUNCTION__);
     return FALSE;
   }
 
@@ -2164,7 +2164,7 @@ function menu_router_rebuild() {
     watchdog_exception('menu', $e);
   }
 
-  lock()->release(__FUNCTION__);
+  \Drupal::lock()->release(__FUNCTION__);
   return TRUE;
 }
 

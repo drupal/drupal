@@ -12,6 +12,8 @@ namespace Drupal\Core\Lock;
  *
  * This implementation won't actually lock anything and will always succeed on
  * lock attempts.
+ *
+ * @ingroup lock
  */
 class NullLockBackend implements LockBackendInterface {
 

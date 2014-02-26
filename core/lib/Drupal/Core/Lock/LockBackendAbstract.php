@@ -9,6 +9,8 @@ namespace Drupal\Core\Lock;
 
 /**
  * Non backend related common methods implementation for lock backends.
+ *
+ * @ingroup lock
  */
 abstract class LockBackendAbstract implements LockBackendInterface {
 

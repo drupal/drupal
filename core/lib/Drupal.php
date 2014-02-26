@@ -245,6 +245,8 @@ class Drupal {
    * Returns the locking layer instance.
    *
    * @return \Drupal\Core\Lock\LockBackendInterface
+   *
+   * @ingroup lock
    */
   public static function lock() {
     return static::$container->get('lock');

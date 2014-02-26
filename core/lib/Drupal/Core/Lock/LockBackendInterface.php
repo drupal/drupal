@@ -8,7 +8,63 @@
 namespace Drupal\Core\Lock;
 
 /**
+ * @defgroup lock Locking mechanisms
+ * @{
+ * Functions to coordinate long-running operations across requests.
+ *
+ * In most environments, multiple Drupal page requests (a.k.a. threads or
+ * processes) will execute in parallel. This leads to potential conflicts or
+ * race conditions when two requests execute the same code at the same time. A
+ * common example of this is a rebuild like menu_router_rebuild() where we
+ * invoke many hook implementations to get and process data from all active
+ * modules, and then delete the current data in the database to insert the new
+ * afterwards.
+ *
+ * This is a cooperative, advisory lock system. Any long-running operation
+ * that could potentially be attempted in parallel by multiple requests should
+ * try to acquire a lock before proceeding. By obtaining a lock, one request
+ * notifies any other requests that a specific operation is in progress which
+ * must not be executed in parallel.
+ *
+ * To use this API, pick a unique name for the lock. A sensible choice is the
+ * name of the function performing the operation. A very simple example use of
+ * this API:
+ * @code
+ * function mymodule_long_operation() {
+ *   $lock = \Drupal::lock();
+ *   if ($lock->acquire('mymodule_long_operation')) {
+ *     // Do the long operation here.
+ *     // ...
+ *     $lock->release('mymodule_long_operation');
+ *   }
+ * }
+ * @endcode
+ *
+ * If a function acquires a lock it should always release it when the operation
+ * is complete by calling $lock->release(), as in the example.
+ *
+ * A function that has acquired a lock may attempt to renew a lock (extend the
+ * duration of the lock) by calling $lock->acquire() again during the operation.
+ * Failure to renew a lock is indicative that another request has acquired the
+ * lock, and that the current operation may need to be aborted.
+ *
+ * If a function fails to acquire a lock it may either immediately return, or
+ * it may call $lock->wait() if the rest of the current page request requires
+ * that the operation in question be complete. After $lock->wait() returns, the
+ * function may again attempt to acquire the lock, or may simply allow the page
+ * request to proceed on the assumption that a parallel request completed the
+ * operation.
+ *
+ * $lock->acquire() and $lock->wait() will automatically break (delete) a lock
+ * whose duration has exceeded the timeout specified when it was acquired.
+ *
+ * @} End of "defgroup lock".
+ */
+
+/**
  * Lock backend interface.
+ *
+ * @ingroup lock
  */
 interface LockBackendInterface {
 

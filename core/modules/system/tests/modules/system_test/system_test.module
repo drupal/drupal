@@ -77,8 +77,8 @@ function system_test_system_info_alter(&$info, $file, $type) {
  * @deprecated \Drupal\system_test\Controller\SystemTestController::lockAcquire()
  */
 function system_test_lock_acquire() {
-  if (lock()->acquire('system_test_lock_acquire')) {
-    lock()->release('system_test_lock_acquire');
+  if (\Drupal::lock()->acquire('system_test_lock_acquire')) {
+    \Drupal::lock()->release('system_test_lock_acquire');
     return 'TRUE: Lock successfully acquired in system_test_lock_acquire()';
   }
   else {
@@ -92,7 +92,7 @@ function system_test_lock_acquire() {
  * @deprecated \Drupal\system_test\Controller\SystemTestController::lockExit()
  */
 function system_test_lock_exit() {
-  if (lock()->acquire('system_test_lock_exit', 900)) {
+  if (\Drupal::lock()->acquire('system_test_lock_exit', 900)) {
     echo 'TRUE: Lock successfully acquired in system_test_lock_exit()';
     // The shut-down function should release the lock.
     exit();
