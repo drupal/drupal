@@ -145,6 +145,7 @@ class SimpletestResultsForm extends FormBase {
       $form['result']['results'][$group] = array(
         '#type' => 'details',
         '#title' => $info['name'],
+        '#open' => TRUE,
         '#description' => $info['description'],
       );
       $form['result']['results'][$group]['summary'] = $summary;
@@ -178,7 +179,7 @@ class SimpletestResultsForm extends FormBase {
 
       // Set summary information.
       $group_summary['#ok'] = $group_summary['#fail'] + $group_summary['#exception'] == 0;
-      $form['result']['results'][$group]['#collapsed'] = $group_summary['#ok'];
+      $form['result']['results'][$group]['#open'] = !$group_summary['#ok'];
 
       // Store test group (class) as for use in filter.
       $filter[$group_summary['#ok'] ? 'pass' : 'fail'][] = $group;

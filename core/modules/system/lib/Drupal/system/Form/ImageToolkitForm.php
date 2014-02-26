@@ -78,7 +78,7 @@ class ImageToolkitForm extends ConfigFormBase {
       $form['image_toolkit_settings'][$id] = array(
         '#type' => 'details',
         '#title' => $this->t('@toolkit settings', array('@toolkit' => $definition['title'])),
-        '#collapsed' => FALSE,
+        '#open' => TRUE,
         '#tree' => TRUE,
         '#states' => array(
           'visible' => array(

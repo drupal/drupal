@@ -57,7 +57,6 @@ class DblogClearLogForm extends FormBase {
       '#type' => 'details',
       '#title' => $this->t('Clear log messages'),
       '#description' => $this->t('This will permanently remove the log messages from the database.'),
-      '#collapsed' => TRUE,
     );
     $form['dblog_clear']['clear'] = array(
       '#type' => 'submit',

@@ -45,6 +45,7 @@ function color_form_system_theme_settings_alter(&$form, &$form_state) {
     $form['color'] = array(
       '#type' => 'details',
       '#title' => t('Color scheme'),
+      '#open' => TRUE,
       '#weight' => -1,
       '#attributes' => array('id' => 'color_scheme_form'),
       '#theme' => 'color_scheme_form',

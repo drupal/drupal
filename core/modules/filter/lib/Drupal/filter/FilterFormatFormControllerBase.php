@@ -190,6 +190,7 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
         $form['filters']['settings'][$name] = array(
           '#type' => 'details',
           '#title' => $filter->getLabel(),
+          '#open' => TRUE,
           '#weight' => $filter->weight,
           '#parents' => array('filters', $name, 'settings'),
           '#group' => 'filter_settings',

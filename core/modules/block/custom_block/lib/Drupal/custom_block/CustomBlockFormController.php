@@ -134,9 +134,8 @@ class CustomBlockFormController extends ContentEntityFormController {
     $form['revision_information'] = array(
       '#type' => 'details',
       '#title' => $this->t('Revision information'),
-      '#collapsible' => TRUE,
-      // Collapsed by default when "Create new revision" is unchecked.
-      '#collapsed' => !$block->isNewRevision(),
+      // Open by default when "Create new revision" is checked.
+      '#open' => $block->isNewRevision(),
       '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('custom-block-form-revision-information'),

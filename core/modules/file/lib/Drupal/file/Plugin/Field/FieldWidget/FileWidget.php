@@ -145,6 +145,7 @@ class FileWidget extends WidgetBase {
       // building up the full list (like draggable table rows).
       $elements['#file_upload_delta'] = $delta;
       $elements['#type'] = 'details';
+      $elements['#open'] = TRUE;
       $elements['#theme'] = 'file_widget_multiple';
       $elements['#theme_wrappers'] = array('details');
       $elements['#process'] = array(array(get_class($this), 'processMultiple'));

@@ -29,6 +29,7 @@ class SimpletestSettingsForm extends ConfigFormBase {
     $form['general'] = array(
       '#type' => 'details',
       '#title' => $this->t('General'),
+      '#open' => TRUE,
     );
     $form['general']['simpletest_clear_results'] = array(
       '#type' => 'checkbox',
@@ -47,7 +48,6 @@ class SimpletestSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => $this->t('HTTP authentication'),
       '#description' => $this->t('HTTP auth settings to be used by the SimpleTest browser during testing. Useful when the site requires basic HTTP authentication.'),
-      '#collapsed' => TRUE,
     );
     $form['httpauth']['simpletest_httpauth_method'] = array(
       '#type' => 'select',

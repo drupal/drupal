@@ -156,6 +156,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
         $form['plugins'][$plugin_id] = array(
           '#type' => 'details',
           '#title' => $definitions[$plugin_id]['label'],
+          '#open' => TRUE,
           '#group' => 'editor][settings][plugin_settings',
           '#attributes' => array(
             'data-ckeditor-plugin-id' => $plugin_id,

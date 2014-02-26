@@ -158,6 +158,7 @@ class SearchPageListController extends DraggableListController implements FormIn
     $form['status'] = array(
       '#type' => 'details',
       '#title' => $this->t('Indexing status'),
+      '#open' => TRUE,
     );
     $form['status']['status'] = array('#markup' => $status);
     $form['status']['wipe'] = array(
@@ -171,7 +172,8 @@ class SearchPageListController extends DraggableListController implements FormIn
     // Indexing throttle:
     $form['indexing_throttle'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Indexing throttle')
+      '#title' => $this->t('Indexing throttle'),
+      '#open' => TRUE,
     );
     $form['indexing_throttle']['cron_limit'] = array(
       '#type' => 'select',
@@ -183,7 +185,8 @@ class SearchPageListController extends DraggableListController implements FormIn
     // Indexing settings:
     $form['indexing_settings'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Indexing settings')
+      '#title' => $this->t('Indexing settings'),
+      '#open' => TRUE,
     );
     $form['indexing_settings']['info'] = array(
       '#markup' => $this->t('<p><em>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</em></p><p><em>The default settings should be appropriate for the majority of sites.</em></p>')
@@ -206,6 +209,7 @@ class SearchPageListController extends DraggableListController implements FormIn
     $form['search_pages'] = array(
       '#type' => 'details',
       '#title' => $this->t('Search pages'),
+      '#open' => TRUE,
     );
     $form['search_pages']['add_page'] = array(
       '#type' => 'container',

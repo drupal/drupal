@@ -186,6 +186,7 @@ class ConfigurableEntityReferenceItem extends EntityReferenceItem implements Con
     $form['handler'] = array(
       '#type' => 'details',
       '#title' => t('Reference type'),
+      '#open' => TRUE,
       '#tree' => TRUE,
       '#process' => array('_entity_reference_form_process_merge_parent'),
     );

@@ -31,6 +31,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
     $form['cache'] = array(
       '#type' => 'details',
       '#title' => $this->t('Caching'),
+      '#open' => TRUE,
     );
 
     $form['cache']['skip_cache'] = array(
@@ -49,6 +50,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
     $form['debug'] = array(
       '#type' => 'details',
       '#title' => $this->t('Debugging'),
+      '#open' => TRUE,
     );
 
     $form['debug']['sql_signature'] = array(
@@ -70,6 +72,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
     if (!empty($options)) {
       $form['extenders'] = array(
         '#type' => 'details',
+        '#open' => TRUE,
       );
       $form['extenders']['display_extenders'] = array(
         '#title' => $this->t('Display extenders'),

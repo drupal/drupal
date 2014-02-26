@@ -65,6 +65,7 @@ class PerformanceForm extends ConfigFormBase {
     $form['clear_cache'] = array(
       '#type' => 'details',
       '#title' => t('Clear cache'),
+      '#open' => TRUE,
     );
 
     $form['clear_cache']['clear'] = array(
@@ -76,6 +77,7 @@ class PerformanceForm extends ConfigFormBase {
     $form['caching'] = array(
       '#type' => 'details',
       '#title' => t('Caching'),
+      '#open' => TRUE,
     );
 
     $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
@@ -106,6 +108,7 @@ class PerformanceForm extends ConfigFormBase {
     $form['bandwidth_optimization'] = array(
       '#type' => 'details',
       '#title' => t('Bandwidth optimization'),
+      '#open' => TRUE,
       '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
     );
 

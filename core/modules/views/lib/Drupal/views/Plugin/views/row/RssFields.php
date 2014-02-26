@@ -89,7 +89,7 @@ class RssFields extends RowPluginBase {
     $form['guid_field_options'] = array(
       '#type' => 'details',
       '#title' => t('GUID settings'),
-      '#collapsed' => FALSE,
+      '#open' => TRUE,
     );
     $form['guid_field_options']['guid_field'] = array(
       '#type' => 'select',

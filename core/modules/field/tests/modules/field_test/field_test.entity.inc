@@ -60,6 +60,7 @@ function field_test_entity_nested_form($form, &$form_state, EntityInterface $ent
   $form['entity_2'] = array(
     '#type' => 'details',
     '#title' => t('Second entity'),
+    '#open' => TRUE,
     '#tree' => TRUE,
     '#parents' => array('entity_2'),
     '#weight' => 50,

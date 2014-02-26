@@ -142,6 +142,7 @@ class FieldInstanceEditForm extends FormBase {
       $element += array(
         '#type' => 'details',
         '#title' => $this->t('Default value'),
+        '#open' => TRUE,
         '#description' => $this->t('The default value for this field, used when creating new content.'),
       );
       $form['instance']['default_value'] = $element;

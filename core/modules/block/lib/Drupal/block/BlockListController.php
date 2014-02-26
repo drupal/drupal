@@ -348,6 +348,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
         $form['place_blocks']['list'][$category_key] = array(
           '#type' => 'details',
           '#title' => $category,
+          '#open' => TRUE,
           'content' => array(
             '#theme' => 'links',
             '#links' => array(),

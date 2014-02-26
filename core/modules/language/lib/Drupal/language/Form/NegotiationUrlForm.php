@@ -43,6 +43,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       '#type' => 'details',
       '#tree' => TRUE,
       '#title' => t('Path prefix configuration'),
+      '#open' => TRUE,
       '#description' => t('Language codes or other custom text to use as a path prefix for URL language detection. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "deutsch" as the path prefix code for German results in URLs like "example.com/deutsch/contact".'),
       '#states' => array(
         'visible' => array(
@@ -56,6 +57,7 @@ class NegotiationUrlForm extends ConfigFormBase {
       '#type' => 'details',
       '#tree' => TRUE,
       '#title' => t('Domain configuration'),
+      '#open' => TRUE,
       '#description' => t('The domain names to use for these languages. Leave blank for the default language. Use with caution in a production environment.<strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
       '#states' => array(
         'visible' => array(

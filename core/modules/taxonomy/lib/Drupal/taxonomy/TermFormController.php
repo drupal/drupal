@@ -89,7 +89,7 @@ class TermFormController extends ContentEntityFormController {
     $form['relations'] = array(
       '#type' => 'details',
       '#title' => $this->t('Relations'),
-      '#collapsed' => ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE),
+      '#open' => $vocabulary->hierarchy == TAXONOMY_HIERARCHY_MULTIPLE,
       '#weight' => 10,
     );
 

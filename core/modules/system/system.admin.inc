@@ -391,7 +391,6 @@ function theme_system_modules_details($variables) {
       '#title' => '<span class="text"> ' . drupal_render($module['description']) . '</span>',
       '#attributes' => array('id' => $module['enable']['#id'] . '-description'),
       '#description' => $description,
-      '#collapsed' => TRUE,
     );
     $col4 = drupal_render($details);
     $row[] = array('class' => array('description', 'expand'), 'data' => $col4);

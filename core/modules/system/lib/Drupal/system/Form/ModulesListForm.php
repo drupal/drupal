@@ -145,6 +145,7 @@ class ModulesListForm extends FormBase {
       $form['modules'][$package] += array(
         '#type' => 'details',
         '#title' => $this->t($package),
+        '#open' => TRUE,
         '#theme' => 'system_modules_details',
         '#header' => array(
           array('data' => '<span class="visually-hidden">' . $this->t('Installed') . '</span>', 'class' => array('checkbox')),

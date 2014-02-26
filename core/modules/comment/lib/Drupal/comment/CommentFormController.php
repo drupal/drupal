@@ -118,7 +118,6 @@ class CommentFormController extends ContentEntityFormController {
       $form['author'] += array(
         '#type' => 'details',
         '#title' => $this->t('Administration'),
-        '#collapsed' => TRUE,
       );
     }
 

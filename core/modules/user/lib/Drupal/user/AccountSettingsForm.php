@@ -66,6 +66,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['anonymous_settings'] = array(
       '#type' => 'details',
       '#title' => $this->t('Anonymous users'),
+      '#open' => TRUE,
     );
     $form['anonymous_settings']['anonymous'] = array(
       '#type' => 'textfield',
@@ -79,6 +80,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['admin_role'] = array(
       '#type' => 'details',
       '#title' => $this->t('Administrator role'),
+      '#open' => TRUE,
     );
     // Do not allow users to set the anonymous or authenticated user roles as the
     // administrator role.
@@ -98,6 +100,7 @@ class AccountSettingsForm extends ConfigFormBase {
       $form['language'] = array(
         '#type' => 'details',
         '#title' => $this->t('Language settings'),
+        '#open' => TRUE,
         '#tree' => TRUE,
       );
       $form_state['content_translation']['key'] = 'language';
@@ -108,6 +111,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['registration_cancellation'] = array(
       '#type' => 'details',
       '#title' => $this->t('Registration and cancellation'),
+      '#open' => TRUE,
     );
     $form['registration_cancellation']['user_register'] = array(
       '#type' => 'radios',
@@ -151,6 +155,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['personalization'] = array(
       '#type' => 'details',
       '#title' => $this->t('Personalization'),
+      '#open' => TRUE,
       '#access' => $filter_exists,
     );
     $form['personalization']['user_signatures'] = array(
@@ -180,7 +185,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_admin_created'] = array(
       '#type' => 'details',
       '#title' => $this->t('Welcome (new user created by administrator)'),
-      '#collapsed' => ($config->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY),
+      '#open' => $config->get('register') == USER_REGISTER_ADMINISTRATORS_ONLY,
       '#description' => $this->t('Edit the welcome e-mail messages sent to new member accounts created by an administrator.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -200,7 +205,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_pending_approval'] = array(
       '#type' => 'details',
       '#title' => $this->t('Welcome (awaiting approval)'),
-      '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL),
+      '#open' => $config->get('register') == USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL,
       '#description' => $this->t('Edit the welcome e-mail messages sent to new members upon registering, when administrative approval is required.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -220,7 +225,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_pending_approval_admin'] = array(
       '#type' => 'details',
       '#title' => $this->t('Admin (user awaiting approval)'),
-      '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL),
+      '#open' => $config->get('register') == USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL,
       '#description' => $this->t('Edit the e-mail notifying the site administrator that there are new members awaiting administrative approval.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -240,7 +245,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_no_approval_required'] = array(
       '#type' => 'details',
       '#title' => $this->t('Welcome (no approval required)'),
-      '#collapsed' => ($config->get('register') != USER_REGISTER_VISITORS),
+      '#open' => $config->get('register') == USER_REGISTER_VISITORS,
       '#description' => $this->t('Edit the welcome e-mail messages sent to new members upon registering, when no administrator approval is required.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -260,7 +265,6 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_password_reset'] = array(
       '#type' => 'details',
       '#title' => $this->t('Password recovery'),
-      '#collapsed' => TRUE,
       '#description' => $this->t('Edit the e-mail messages sent to users who request a new password.') . ' ' . $email_token_help,
       '#group' => 'email',
       '#weight' => 10,
@@ -281,7 +285,6 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_activated'] = array(
       '#type' => 'details',
       '#title' => $this->t('Account activation'),
-      '#collapsed' => TRUE,
       '#description' => $this->t('Enable and edit e-mail messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -315,7 +318,6 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_blocked'] = array(
       '#type' => 'details',
       '#title' => $this->t('Account blocked'),
-      '#collapsed' => TRUE,
       '#description' => $this->t('Enable and edit e-mail messages sent to users when their accounts are blocked.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -349,7 +351,6 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_cancel_confirm'] = array(
       '#type' => 'details',
       '#title' => $this->t('Account cancellation confirmation'),
-      '#collapsed' => TRUE,
       '#description' => $this->t('Edit the e-mail messages sent to users when they attempt to cancel their accounts.') . ' ' . $email_token_help,
       '#group' => 'email',
     );
@@ -369,7 +370,6 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_canceled'] = array(
       '#type' => 'details',
       '#title' => $this->t('Account canceled'),
-      '#collapsed' => TRUE,
       '#description' => $this->t('Enable and edit e-mail messages sent to users when their accounts are canceled.') . ' ' . $email_token_help,
       '#group' => 'email',
     );

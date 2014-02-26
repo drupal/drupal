@@ -122,6 +122,7 @@ class RenderWebTest extends WebTestBase {
 
     $element = array(
       '#type' => 'details',
+      '#open' => TRUE,
       '#title' => $this->randomName(),
     );
     $this->assertRenderedElement($element, '//details/summary[contains(., :title)]', array(
@@ -130,6 +131,7 @@ class RenderWebTest extends WebTestBase {
 
     $element = array(
       '#type' => 'details',
+      '#open' => TRUE,
       '#title' => $this->randomName(),
     );
     $this->assertRenderedElement($element, '//details');

@@ -119,6 +119,7 @@ class CommentAdminOverview extends FormBase {
     $form['options'] = array(
       '#type' => 'details',
       '#title' => $this->t('Update options'),
+      '#open' => TRUE,
       '#attributes' => array('class' => array('container-inline')),
     );
 

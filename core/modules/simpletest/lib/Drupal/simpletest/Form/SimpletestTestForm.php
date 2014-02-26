@@ -48,6 +48,7 @@ class SimpletestTestForm extends FormBase {
     $form['tests'] = array(
       '#type' => 'details',
       '#title' => $this->t('Tests'),
+      '#open' => TRUE,
       '#description' => $this->t('Select the test(s) or test group(s) you would like to run, and click <em>Run tests</em>.'),
     );
 
@@ -61,10 +62,6 @@ class SimpletestTestForm extends FormBase {
     $form_state['storage']['PHPUnit'] = $groups['PHPUnit'];
 
     foreach ($groups as $group => $tests) {
-      $form['tests']['table'][$group] = array(
-        '#collapsed' => TRUE,
-      );
-
       foreach ($tests as $class => $info) {
         $form['tests']['table'][$group][$class] = array(
           '#type' => 'checkbox',

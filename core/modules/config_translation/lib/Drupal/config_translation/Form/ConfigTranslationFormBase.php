@@ -293,8 +293,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
           $build[$key] = array(
             '#type' => 'details',
             '#title' => (!empty($title) ? (strip_tags($title) . ' ') : '') . $this->t($definition['label']),
-            '#collapsible' => TRUE,
-            '#collapsed' => $collapsed,
+            '#open' => !$collapsed,
           ) + $sub_build;
         }
       }

@@ -1070,7 +1070,6 @@ function node_form_block_form_alter(&$form, &$form_state) {
   $form['visibility']['node_type'] = array(
     '#type' => 'details',
     '#title' => t('Content types'),
-    '#collapsed' => TRUE,
     '#group' => 'visibility',
     '#weight' => 5,
   );

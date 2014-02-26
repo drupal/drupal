@@ -122,6 +122,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     $form['theme_settings'] = array(
       '#type' => 'details',
       '#title' => t('Toggle display'),
+      '#open' => TRUE,
       '#description' => t('Enable or disable the display of certain page elements.'),
     );
     foreach ($toggles as $name => $title) {
@@ -145,6 +146,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       $form['logo'] = array(
         '#type' => 'details',
         '#title' => t('Logo image settings'),
+        '#open' => TRUE,
         '#attributes' => array('class' => array('theme-settings-bottom')),
         '#states' => array(
           // Hide the logo image settings fieldset when logo display is disabled.
@@ -185,6 +187,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       $form['favicon'] = array(
         '#type' => 'details',
         '#title' => t('Shortcut icon settings'),
+        '#open' => TRUE,
         '#description' => t("Your shortcut icon, or 'favicon', is displayed in the address bar and bookmarks of most browsers."),
         '#states' => array(
           // Hide the shortcut icon settings fieldset when shortcut icon display
@@ -261,6 +264,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         $form['engine_specific'] = array(
           '#type' => 'details',
           '#title' => t('Theme-engine-specific settings'),
+          '#open' => TRUE,
           '#description' => t('These settings only exist for the themes based on the %engine theme engine.', array('%engine' => $themes[$theme]->prefix)),
         );
         $function($form, $form_state);

@@ -156,6 +156,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $form['no_argument'] = array(
       '#type' => 'details',
       '#title' => $argument_text['filter value not present'],
+      '#open' => TRUE,
     );
     // Everything in the details is floated, so the last element needs to
     // clear those floats.
@@ -175,7 +176,6 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $form['exception'] = array(
       '#type' => 'details',
       '#title' => t('Exceptions'),
-      '#collapsed' => TRUE,
       '#fieldset' => 'no_argument',
     );
     $form['exception']['value'] = array(
@@ -221,6 +221,7 @@ abstract class ArgumentPluginBase extends HandlerBase {
     $form['argument_present'] = array(
       '#type' => 'details',
       '#title' => $argument_text['filter value present'],
+      '#open' => TRUE,
     );
     $form['title_enable'] = array(
       '#type' => 'checkbox',

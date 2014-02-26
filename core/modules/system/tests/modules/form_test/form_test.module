@@ -527,7 +527,7 @@ function _form_test_vertical_tabs_form($form, &$form_state) {
     '#type' => 'details',
     '#title' => t('Tab 1'),
     '#group' => 'vertical_tabs',
-    '#access' => user_access('access vertical_tab_test tabs')
+    '#access' => user_access('access vertical_tab_test tabs'),
   );
   $form['tab1']['field1'] = array(
     '#title' => t('Field 1'),
@@ -537,7 +537,7 @@ function _form_test_vertical_tabs_form($form, &$form_state) {
     '#type' => 'details',
     '#title' => t('Tab 2'),
     '#group' => 'vertical_tabs',
-    '#access' => user_access('access vertical_tab_test tabs')
+    '#access' => user_access('access vertical_tab_test tabs'),
   );
   $form['tab2']['field2'] = array(
     '#title' => t('Field 2'),
@@ -2054,10 +2054,12 @@ function form_test_group_details() {
   $form['details'] = array(
     '#type' => 'details',
     '#title' => 'Root element',
+    '#open' => TRUE,
   );
   $form['meta'] = array(
     '#type' => 'details',
     '#title' => 'Group element',
+    '#open' => TRUE,
     '#group' => 'details',
   );
   $form['meta']['element'] = array(
@@ -2079,6 +2081,7 @@ function form_test_group_container() {
   $form['meta'] = array(
     '#type' => 'details',
     '#title' => 'Group element',
+    '#open' => TRUE,
     '#group' => 'container',
   );
   $form['meta']['element'] = array(

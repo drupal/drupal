@@ -201,7 +201,6 @@ class BookManager {
       '#type' => 'details',
       '#title' => $this->t('Book outline'),
       '#weight' => 10,
-      '#collapsed' => TRUE,
       '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('book-outline-form'),

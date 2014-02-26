@@ -214,6 +214,7 @@ abstract class AccountFormController extends ContentEntityFormController {
     $form['signature_settings'] = array(
       '#type' => 'details',
       '#title' => $this->t('Signature settings'),
+      '#open' => TRUE,
       '#weight' => 1,
       '#access' => (!$register && $config->get('signatures')),
     );
@@ -245,6 +246,7 @@ abstract class AccountFormController extends ContentEntityFormController {
     $form['language'] = array(
       '#type' => $this->languageManager->isMultilingual() ? 'details' : 'container',
       '#title' => $this->t('Language settings'),
+      '#open' => TRUE,
       // Display language selector when either creating a user on the admin
       // interface or editing a user account.
       '#access' => !$register || $user->hasPermission('administer users'),

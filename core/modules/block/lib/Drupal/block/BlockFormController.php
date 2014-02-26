@@ -127,7 +127,6 @@ class BlockFormController extends EntityFormController {
     $form['visibility']['path'] = array(
       '#type' => 'details',
       '#title' => $this->t('Pages'),
-      '#collapsed' => TRUE,
       '#group' => 'visibility',
       '#weight' => 0,
     );
@@ -183,7 +182,6 @@ class BlockFormController extends EntityFormController {
       $form['visibility']['language'] = array(
         '#type' => 'details',
         '#title' => $this->t('Languages'),
-        '#collapsed' => TRUE,
         '#group' => 'visibility',
         '#weight' => 5,
       );
@@ -216,7 +214,6 @@ class BlockFormController extends EntityFormController {
     $form['visibility']['role'] = array(
       '#type' => 'details',
       '#title' => $this->t('Roles'),
-      '#collapsed' => TRUE,
       '#group' => 'visibility',
       '#weight' => 10,
     );

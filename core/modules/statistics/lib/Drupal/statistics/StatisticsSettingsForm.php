@@ -64,6 +64,7 @@ class StatisticsSettingsForm extends ConfigFormBase {
     $form['content'] = array(
       '#type' => 'details',
       '#title' => t('Content viewing counter settings'),
+      '#open' => TRUE,
     );
     $form['content']['statistics_count_content_views'] = array(
       '#type' => 'checkbox',

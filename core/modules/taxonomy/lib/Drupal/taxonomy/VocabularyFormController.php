@@ -58,6 +58,7 @@ class VocabularyFormController extends EntityFormController {
       $form['default_terms_language'] = array(
         '#type' => 'details',
         '#title' => $this->t('Terms language'),
+        '#open' => TRUE,
       );
       $form['default_terms_language']['default_language'] = array(
         '#type' => 'language_configuration',

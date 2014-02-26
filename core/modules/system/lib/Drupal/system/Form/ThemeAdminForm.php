@@ -30,6 +30,7 @@ class ThemeAdminForm extends FormBase {
     $form['admin_theme'] = array(
       '#type' => 'details',
       '#title' => $this->t('Administration theme'),
+      '#open' => TRUE,
     );
     $form['admin_theme']['admin_theme'] = array(
       '#type' => 'select',

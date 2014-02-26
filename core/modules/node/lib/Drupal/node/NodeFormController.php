@@ -108,8 +108,8 @@ class NodeFormController extends ContentEntityFormController {
       '#type' => 'details',
       '#group' => 'advanced',
       '#title' => t('Revision information'),
-      // Collapsed by default when "Create new revision" is unchecked.
-      '#collapsed' => !$node->isNewRevision(),
+      // Open by default when "Create new revision" is checked.
+      '#open' => $node->isNewRevision(),
       '#attributes' => array(
         'class' => array('node-form-revision-information'),
       ),
@@ -147,7 +147,6 @@ class NodeFormController extends ContentEntityFormController {
     $form['author'] = array(
       '#type' => 'details',
       '#title' => t('Authoring information'),
-      '#collapsed' => TRUE,
       '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('node-form-author'),
@@ -190,7 +189,6 @@ class NodeFormController extends ContentEntityFormController {
     $form['options'] = array(
       '#type' => 'details',
       '#title' => t('Promotion options'),
-      '#collapsed' => TRUE,
       '#group' => 'advanced',
       '#attributes' => array(
         'class' => array('node-form-options'),

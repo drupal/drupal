@@ -557,7 +557,7 @@ function system_element_info() {
     '#attributes' => array('class' => array('fieldgroup')),
   );
   $types['details'] = array(
-    '#collapsed' => FALSE,
+    '#open' => FALSE,
     '#value' => NULL,
     '#process' => array('form_process_group', 'ajax_process_form'),
     '#pre_render' => array('form_pre_render_details', 'form_pre_render_group'),
@@ -1391,6 +1391,7 @@ function system_user_timezone(&$form, &$form_state) {
   $form['timezone'] = array(
     '#type' => 'details',
     '#title' => t('Locale settings'),
+    '#open' => TRUE,
     '#weight' => 6,
   );
   $form['timezone']['timezone'] = array(

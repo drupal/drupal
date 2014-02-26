@@ -113,6 +113,7 @@ class MenuFormController extends EntityFormController {
       $form['default_menu_links_language'] = array(
         '#type' => 'details',
         '#title' => t('Menu links language'),
+        '#open' => TRUE,
       );
       $form['default_menu_links_language']['default_language'] = array(
         '#type' => 'language_configuration',

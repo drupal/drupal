@@ -30,7 +30,7 @@ class DblogFilterForm extends FormBase {
     $form['filters'] = array(
       '#type' => 'details',
       '#title' => $this->t('Filter log messages'),
-      '#collapsed' => empty($_SESSION['dblog_overview_filter']),
+      '#open' => !empty($_SESSION['dblog_overview_filter']),
     );
     foreach ($filters as $key => $filter) {
       $form['filters']['status'][$key] = array(

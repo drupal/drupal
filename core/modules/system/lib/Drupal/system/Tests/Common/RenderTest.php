@@ -345,6 +345,7 @@ class RenderTest extends DrupalUnitTestBase {
     $subchild_js = drupal_get_path('module', 'book') . '/book.js';
     $element = array(
       '#type' => 'details',
+      '#open' => TRUE,
       '#cache' => array(
         'keys' => array('simpletest', 'drupal_render', 'children_attached'),
       ),
@@ -353,6 +354,7 @@ class RenderTest extends DrupalUnitTestBase {
     );
     $element['child'] = array(
       '#type' => 'details',
+      '#open' => TRUE,
       '#attached' => array('js' => array($child_js)),
       '#title' => 'Child',
     );
@@ -558,6 +560,7 @@ class RenderTest extends DrupalUnitTestBase {
     $context_3 = array('baz' => $this->randomContextValue());
     $test_element = array(
       '#type' => 'details',
+      '#open' => TRUE,
       '#cache' => array(
         'keys' => array('simpletest', 'drupal_render', 'children_post_render_cache'),
       ),
@@ -573,6 +576,7 @@ class RenderTest extends DrupalUnitTestBase {
     );
     $test_element['child'] = array(
       '#type' => 'details',
+      '#open' => TRUE,
       '#post_render_cache' => array(
         'common_test_post_render_cache' => array($context_2)
       ),

@@ -92,8 +92,7 @@ class CommentItem extends ConfigFieldItemBase {
     $element['comment'] = array(
       '#type' => 'details',
       '#title' => t('Comment form settings'),
-      '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
+      '#open' => TRUE,
       '#bundle' => "{$entity_type}__{$field_name}",
       '#process' => array(array(get_class($this), 'processSettingsElement')),
       '#attributes' => array(

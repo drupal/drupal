@@ -354,7 +354,6 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     $form['global_tokens'] = array(
       '#type' => 'details',
       '#title' => t('Available global token replacements'),
-      '#collapsed' => TRUE,
     );
     $form['global_tokens']['list'] = array(
       '#theme' => 'item_list',

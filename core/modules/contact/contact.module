@@ -224,6 +224,7 @@ function contact_form_user_form_alter(&$form, &$form_state) {
   $form['contact'] = array(
     '#type' => 'details',
     '#title' => t('Contact settings'),
+    '#open' => TRUE,
     '#weight' => 5,
   );
   $account = $form_state['controller']->getEntity();
@@ -258,6 +259,7 @@ function contact_form_user_admin_settings_alter(&$form, &$form_state) {
   $form['contact'] = array(
     '#type' => 'details',
     '#title' => t('Contact settings'),
+    '#open' => TRUE,
     '#weight' => 0,
   );
   $form['contact']['contact_default_status'] = array(

@@ -94,6 +94,7 @@ class CronForm extends ConfigFormBase {
     $form['cron'] = array(
       '#title' => t('Cron settings'),
       '#type' => 'details',
+      '#open' => TRUE,
     );
     $form['cron']['cron_safe_threshold'] = array(
       '#type' => 'select',

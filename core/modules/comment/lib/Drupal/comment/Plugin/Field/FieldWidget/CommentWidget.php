@@ -68,9 +68,9 @@ class CommentWidget extends WidgetBase {
     if (isset($form['advanced'])) {
       $element += array(
         '#type' => 'details',
-        // Collapse this field when the selected value is the same as stored in
+        // Open the details when the selected value is different to the stored
         // default values for the field instance.
-        '#collapsed' => ($items->status == $field_default_values[0]['status']),
+        '#open' => ($items->status != $field_default_values[0]['status']),
         '#group' => 'advanced',
         '#attributes' => array(
           'class' => array('comment-' . drupal_html_class($element['#entity_type']) . '-settings-form'),

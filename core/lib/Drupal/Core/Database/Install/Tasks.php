@@ -247,7 +247,6 @@ abstract class Tasks {
     $form['advanced_options'] = array(
       '#type' => 'details',
       '#title' => t('Advanced options'),
-      '#collapsed' => TRUE,
       '#weight' => 10,
     );
 

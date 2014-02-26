@@ -283,8 +283,10 @@ function path_admin_form_submit($form, &$form_state) {
  */
 function path_admin_filter_form($form, &$form_state, $keys = '') {
   $form['#attributes'] = array('class' => array('search-form'));
-  $form['basic'] = array('#type' => 'details',
+  $form['basic'] = array(
+    '#type' => 'details',
     '#title' => t('Filter aliases'),
+    '#open' => TRUE,
     '#attributes' => array('class' => array('container-inline')),
   );
   $form['basic']['filter'] = array(

@@ -501,7 +501,6 @@ class ViewEditFormController extends ViewFormControllerBase {
     $build['columns']['third'] = array(
       '#type' => 'details',
       '#title' => $this->t('Advanced'),
-      '#collapsed' => TRUE,
       '#theme_wrappers' => array('details'),
       '#attributes' => array(
         'class' => array(
@@ -510,11 +509,8 @@ class ViewEditFormController extends ViewFormControllerBase {
         ),
       ),
     );
-
     // Collapse the details by default.
-    if (\Drupal::config('views.settings')->get('ui.show.advanced_column')) {
-      $build['columns']['third']['#collapsed'] = FALSE;
-    }
+    $build['columns']['third']['#open'] = \Drupal::config('views.settings')->get('ui.show.advanced_column');
 
     // Each option (e.g. title, access, display as grid/table/list) fits into one
     // of several "buckets," or boxes (Format, Fields, Sort, and so on).
