@@ -372,7 +372,7 @@ function content_translation_view_access(EntityInterface $entity, $langcode, Acc
  */
 function content_translation_add_access(EntityInterface $entity, Language $source = NULL, Language $target = NULL) {
   $source = !empty($source) ? $source : $entity->language();
-  $target = !empty($target) ? $target : language(Language::TYPE_CONTENT);
+  $target = !empty($target) ? $target : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
   return $source->id != $target->id && isset($languages[$source->id]) && isset($languages[$target->id]) && !isset($translations[$target->id]) && content_translation_access($entity, 'create');
@@ -388,7 +388,7 @@ function content_translation_add_access(EntityInterface $entity, Language $sourc
  *   content language.
  */
 function content_translation_edit_access(EntityInterface $entity, Language $language = NULL) {
-  $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
+  $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
   return isset($languages[$language->id]) && $language->id != $entity->getUntranslated()->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'update');
@@ -404,7 +404,7 @@ function content_translation_edit_access(EntityInterface $entity, Language $lang
  *   content language.
  */
 function content_translation_delete_access(EntityInterface $entity, Language $language = NULL) {
-  $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
+  $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
   return isset($languages[$language->id]) && $language->id != $entity->getUntranslated()->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'delete');

@@ -285,7 +285,7 @@ abstract class CachePluginBase extends PluginBase {
         'build_info' => $build_info,
         'roles' => $user->getRoles(),
         'super-user' => $user->id() == 1, // special caching for super user.
-        'langcode' => language(Language::TYPE_INTERFACE)->id,
+        'langcode' => \Drupal::languageManager()->getCurrentLanguage()->id,
         'base_url' => $GLOBALS['base_url'],
       );
       $request = \Drupal::request();
@@ -315,7 +315,7 @@ abstract class CachePluginBase extends PluginBase {
         'roles' => $user->getRoles(),
         'super-user' => $user->id() == 1, // special caching for super user.
         'theme' => $GLOBALS['theme'],
-        'langcode' => language(Language::TYPE_INTERFACE)->id,
+        'langcode' => \Drupal::languageManager()->getCurrentLanguage()->id,
         'base_url' => $GLOBALS['base_url'],
       );
 

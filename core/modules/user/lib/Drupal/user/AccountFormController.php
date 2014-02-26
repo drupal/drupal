@@ -72,7 +72,7 @@ abstract class AccountFormController extends ContentEntityFormController {
     $user = $this->currentUser();
     $config = \Drupal::config('user.settings');
 
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $register = $account->isAnonymous();
     $admin = $user->hasPermission('administer users');
 

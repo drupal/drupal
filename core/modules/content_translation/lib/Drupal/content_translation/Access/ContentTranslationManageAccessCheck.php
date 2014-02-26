@@ -56,7 +56,7 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
           $source = language_load($request->attributes->get('source'));
           $target = language_load($request->attributes->get('target'));
           $source = !empty($source) ? $source : $entity->language();
-          $target = !empty($target) ? $target : language(Language::TYPE_CONTENT);
+          $target = !empty($target) ? $target : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
           return ($source->id != $target->id
             && isset($languages[$source->id])
             && isset($languages[$target->id])
@@ -67,7 +67,7 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
         case 'update':
         case 'delete':
           $language = language_load($request->attributes->get('language'));
-          $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
+          $language = !empty($language) ? $language : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
           return isset($languages[$language->id])
             && $language->id != $entity->getUntranslated()->language()->id
             && isset($translations[$language->id])

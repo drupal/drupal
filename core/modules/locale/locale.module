@@ -315,7 +315,7 @@ function locale_translatable_language_list() {
  *   plural formula.
  */
 function locale_get_plural($count, $langcode = NULL) {
-  $language_interface = language(Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   // Used to locally cache the plural formulas for all languages.
   $plural_formulas = &drupal_static(__FUNCTION__, array());
@@ -583,7 +583,7 @@ function locale_js_alter(&$javascript) {
  *   applicable.
  */
 function locale_js_translate(array $files = array()) {
-  $language_interface = language(Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   $dir = 'public://' . \Drupal::config('locale.settings')->get('javascript.directory');
   $parsed = \Drupal::state()->get('system.javascript_parsed') ?: array();
@@ -644,7 +644,7 @@ function locale_library_alter(array &$library, $module, $name) {
     // the behavior executes early. JS_LIBRARY is the default.
     $library['dependencies'][] = array('locale', 'drupal.locale.datepicker');
 
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $settings['jquery']['ui']['datepicker'] = array(
       'isRTL' => $language_interface->direction == Language::DIRECTION_RTL,
       'firstDay' => \Drupal::config('system.date')->get('first_day'),
@@ -820,7 +820,7 @@ function locale_system_file_system_settings_submit(&$form, $form_state) {
  */
 function locale_preprocess_node(&$variables) {
   if ($variables['node']->language()->id != Language::LANGCODE_NOT_SPECIFIED) {
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     $node_language = $variables['node']->language();
     if ($node_language->id != $language_interface->id) {
@@ -1270,7 +1270,7 @@ function _locale_invalidate_js($langcode = NULL) {
 function _locale_rebuild_js($langcode = NULL) {
   $config = \Drupal::config('locale.settings');
   if (!isset($langcode)) {
-    $language = language(Language::TYPE_INTERFACE);
+    $language = \Drupal::languageManager()->getCurrentLanguage();
   }
   else {
     // Get information about the locale.

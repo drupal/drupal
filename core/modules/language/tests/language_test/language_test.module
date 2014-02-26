@@ -13,8 +13,8 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
  */
 function language_test_page_build() {
   language_test_store_language_negotiation();
-  if (isset(language(Language::TYPE_INTERFACE)->id) && isset(language(Language::TYPE_INTERFACE)->method_id)) {
-    drupal_set_message(t('Language negotiation method: @name', array('@name' => language(Language::TYPE_INTERFACE)->method_id)));
+  if (isset(\Drupal::languageManager()->getCurrentLanguage()->id) && isset(\Drupal::languageManager()->getCurrentLanguage()->method_id)) {
+    drupal_set_message(t('Language negotiation method: @name', array('@name' => \Drupal::languageManager()->getCurrentLanguage()->method_id)));
   }
 }
 

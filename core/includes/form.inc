@@ -1898,7 +1898,7 @@ function form_validate_table($element, &$form_state) {
  */
 function form_process_machine_name($element, &$form_state) {
   // We need to pass the langcode to the client.
-  $language = language(Language::TYPE_INTERFACE);
+  $language = \Drupal::languageManager()->getCurrentLanguage();
 
   // Apply default form element properties.
   $element += array(

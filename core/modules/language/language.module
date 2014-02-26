@@ -402,7 +402,7 @@ function language_get_default_langcode($entity_type, $bundle) {
   }
 
   $default_value = NULL;
-  $language_interface = language(Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
   switch ($configuration['langcode']) {
     case 'site_default':
       $default_value = language_default()->id;

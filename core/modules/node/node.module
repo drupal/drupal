@@ -336,7 +336,7 @@ function node_type_get_types() {
  *   An array of node type labels, keyed by the node type name.
  */
 function node_type_get_names() {
-  $cid = 'node_type:names:' . language(Language::TYPE_INTERFACE)->id;
+  $cid = 'node_type:names:' . \Drupal::languageManager()->getCurrentLanguage()->id;
   if ($cache = \Drupal::cache()->get($cid)) {
     return $cache->data;
   }
@@ -1147,7 +1147,7 @@ function node_block_access($block) {
  */
 function node_feed($nids = FALSE, $channel = array()) {
   global $base_url;
-  $language_content = language(Language::TYPE_CONTENT);
+  $language_content = \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT);
   $rss_config = \Drupal::config('system.rss');
 
   if ($nids === FALSE) {

@@ -552,7 +552,7 @@ class BookManager {
    */
   public function bookTreeAllData($menu_name, $link = NULL, $max_depth = NULL) {
     $tree = &drupal_static('menu_tree_all_data', array());
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // Use $mlid as a flag for whether the data being loaded is for the whole tree.
     $mlid = isset($link['mlid']) ? $link['mlid'] : 0;
@@ -721,7 +721,7 @@ class BookManager {
   protected function _menu_build_tree($menu_name, array $parameters = array()) {
     // Static cache of already built menu trees.
     $trees = &drupal_static('menu_build_tree', array());
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // Build the cache id; sort parents to prevent duplicate storage and remove
     // default parameter values.

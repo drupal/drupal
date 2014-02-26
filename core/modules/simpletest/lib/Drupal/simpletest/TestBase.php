@@ -973,7 +973,7 @@ abstract class TestBase {
     // Create the database prefix for this test.
     $this->prepareDatabasePrefix();
 
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // When running the test runner within a test, back up the original database
     // prefix.

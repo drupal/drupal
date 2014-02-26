@@ -13,7 +13,7 @@ use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 /**
  * Defines an interface for generating a url from a route or system path.
  *
- * Provides additional methods and options not present in the base interface. 
+ * Provides additional methods and options not present in the base interface.
  */
 interface UrlGeneratorInterface extends VersatileGeneratorInterface {
 
@@ -55,7 +55,7 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *   - 'language': An optional language object. If the path being linked to is
    *     internal to the site, $options['language'] is used to look up the alias
    *     for the URL. If $options['language'] is omitted, the language will be
-   *     obtained from language(Language::TYPE_URL).
+   *     obtained from \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_URL).
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP, but HTTPS can
@@ -121,8 +121,8 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    *     absolute link (beginning with http:). Useful for links that will be
    *     displayed outside the site, such as in an RSS feed.
    *   - 'language': An optional language object used to look up the alias
-   *     for the URL. If $options['language'] is omitted, the language will be
-   *     obtained from language(Language::TYPE_URL).
+   *     for the URL. If $options['language'] is omitted, it defaults to the
+   *     current language for the language type Language::TYPE_URL.
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. if mixed mode sessions are permitted, TRUE enforces HTTPS

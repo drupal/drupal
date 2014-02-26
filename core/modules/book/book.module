@@ -713,7 +713,7 @@ function template_preprocess_book_navigation(&$variables) {
  */
 function template_preprocess_book_export_html(&$variables) {
   global $base_url;
-  $language_interface = language(Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   $variables['title'] = String::checkPlain($variables['title']);
   $variables['base_url'] = $base_url;

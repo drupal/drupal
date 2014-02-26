@@ -341,7 +341,7 @@ function hook_views_query_substitutions(ViewExecutable $view) {
   return array(
     '***CURRENT_VERSION***' => \Drupal::VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
-    '***CURRENT_LANGUAGE***' => language(\Drupal\Core\Language\Language::TYPE_CONTENT)->id,
+    '***CURRENT_LANGUAGE***' => \Drupal::languageManager()->getCurrentLanguage(\Drupal\Core\Language\Language::TYPE_CONTENT)->id,
     '***DEFAULT_LANGUAGE***' => language_default()->id,
   );
 }

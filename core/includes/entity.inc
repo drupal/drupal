@@ -93,7 +93,7 @@ function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = N
 function entity_get_form_modes($entity_type = NULL) {
   $form_modes = &drupal_static(__FUNCTION__);
   if (!$form_modes) {
-    $langcode = language(Language::TYPE_INTERFACE)->id;
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
     if ($cache = \Drupal::cache()->get("entity_form_mode_info:$langcode")) {
       $form_modes = $cache->data;
     }
@@ -131,7 +131,7 @@ function entity_get_form_modes($entity_type = NULL) {
 function entity_get_view_modes($entity_type = NULL) {
   $view_modes = &drupal_static(__FUNCTION__);
   if (!$view_modes) {
-    $langcode = language(Language::TYPE_INTERFACE)->id;
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
     if ($cache = \Drupal::cache()->get("entity_view_mode_info:$langcode")) {
       $view_modes = $cache->data;
     }

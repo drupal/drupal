@@ -50,7 +50,7 @@ class MailTest extends WebTestBase implements MailInterface {
    * Assert that the pluggable mail system is functional.
    */
   public function testPluggableFramework() {
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // Use MailTestCase for sending a message.
     drupal_mail('simpletest', 'mail_test', 'testing@example.com', $language_interface->id);
@@ -65,7 +65,7 @@ class MailTest extends WebTestBase implements MailInterface {
    * @see simpletest_mail_alter()
    */
   public function testCancelMessage() {
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // Reset the class variable holding a copy of the last sent message.
     self::$sent_message = NULL;
@@ -81,7 +81,7 @@ class MailTest extends WebTestBase implements MailInterface {
    * Checks the From: and Reply-to: headers.
    */
   public function testFromAndReplyToHeader() {
-    global $language;
+    $language = \Drupal::languageManager()->getCurrentLanguage();
 
     // Reset the class variable holding a copy of the last sent message.
     self::$sent_message = NULL;

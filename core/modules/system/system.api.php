@@ -348,7 +348,7 @@ function hook_library_alter(array &$library, $extension, $name) {
     // hook_library_info_alter() already.
     $library['dependencies'][] = array('locale', 'drupal.locale.datepicker');
 
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $settings['jquery']['ui']['datepicker'] = array(
       'isRTL' => $language_interface->direction == Language::DIRECTION_RTL,
       'firstDay' => \Drupal::config('system.date')->get('first_day'),
@@ -1388,7 +1388,7 @@ function hook_template_preprocess_default_variables_alter(&$variables) {
  */
 function hook_watchdog(array $log_entry) {
   global $base_url;
-  $language_interface = language(\Drupal\Core\Language\Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   $severity_list = array(
     WATCHDOG_EMERGENCY     => t('Emergency'),

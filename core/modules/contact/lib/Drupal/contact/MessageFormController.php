@@ -141,7 +141,7 @@ class MessageFormController extends ContentEntityFormController {
   public function save(array $form, array &$form_state) {
     global $user;
 
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $message = $this->entity;
 
     $sender = clone user_load($user->id());

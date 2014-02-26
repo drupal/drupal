@@ -43,7 +43,7 @@ class UserTokenReplaceTest extends WebTestBase {
    */
   function testUserTokenReplacement() {
     $token_service = \Drupal::token();
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $url_options = array(
       'absolute' => TRUE,
       'language' => $language_interface,

@@ -1334,7 +1334,7 @@ function system_page_build(&$page) {
       array(
         'path' => current_path(),
         'front' => drupal_is_front_page(),
-        'language' => language(\Drupal\Core\Language\Language::TYPE_URL)->id,
+        'language' => \Drupal::languageManager()->getCurrentLanguage(\Drupal\Core\Language\Language::TYPE_URL)->id,
         'query' => \Drupal::service('request')->query->all(),
       )
     );

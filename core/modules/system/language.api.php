@@ -25,7 +25,7 @@
  *   The current path.
  */
 function hook_language_switch_links_alter(array &$links, $type, $path) {
-  $language_interface = language(\Drupal\Core\Language\Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   if ($type == \Drupal\Core\Language\Language::TYPE_CONTENT && isset($links[$language_interface->id])) {
     foreach ($links[$language_interface->id] as $link) {
@@ -69,7 +69,7 @@ function hook_language_switch_links_alter(array &$links, $type, $path) {
  * Here is a code snippet to transliterate some text:
  * @code
  * // Use the current default interface language.
- * $langcode = language(\Drupal\Core\Language\Language::TYPE_INTERFACE)->id;
+ * $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
  * // Instantiate the transliteration class.
  * $trans = \Drupal::transliteration();
  * // Use this to transliterate some text.

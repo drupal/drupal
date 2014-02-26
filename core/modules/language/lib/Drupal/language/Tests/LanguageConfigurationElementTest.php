@@ -83,7 +83,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     // Current interface.
     language_save_default_configuration('custom_type', 'custom_bundle', array('langcode' => 'current_interface', 'language_show' => TRUE));
     $langcode = language_get_default_langcode('custom_type', 'custom_bundle');
-    $language_interface = language(Language::TYPE_INTERFACE);
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $this->assertEqual($langcode, $language_interface->id);
 
     // Site's default.

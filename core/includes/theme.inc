@@ -2191,7 +2191,7 @@ function template_preprocess_html(&$variables) {
  * @see drupal_render_page()
  */
 function template_preprocess_page(&$variables) {
-  $language_interface = language(Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
   $site_config = \Drupal::config('system.site');
 
   // Move some variables to the top level for themer convenience and template cleanliness.
@@ -2365,7 +2365,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  * @see system_page_build()
  */
 function template_preprocess_maintenance_page(&$variables) {
-  $language_interface = language(Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   // Initializes attributes which are specific to the html element.
   $variables['html_attributes'] = new Attribute;

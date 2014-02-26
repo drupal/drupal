@@ -20,7 +20,7 @@ use Drupal\Core\Template\Attribute;
  */
 function template_preprocess_ckeditor_settings_toolbar(&$variables) {
   // Simplify the language direction information for toolbar buttons.
-  $language_interface = language(Language::TYPE_INTERFACE);
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
   $language_direction = $language_interface->direction ? 'rtl' : 'ltr';
 
   // Create lists of active and disabled buttons.

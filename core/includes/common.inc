@@ -768,7 +768,7 @@ function filter_xss_bad_protocol($string) {
  * Arbitrary elements may be added using the $args associative array.
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  $langcode = $langcode ? $langcode : language(Language::TYPE_CONTENT)->id;
+  $langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage(Language::TYPE_CONTENT)->id;
 
   $output = "<channel>\n";
   $output .= ' <title>' . String::checkPlain($title) . "</title>\n";
