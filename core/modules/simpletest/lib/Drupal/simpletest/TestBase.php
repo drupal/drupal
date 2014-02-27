@@ -933,11 +933,7 @@ abstract class TestBase {
     $connection_info = Database::getConnectionInfo('default');
     Database::renameConnection('default', 'simpletest_original_default');
     foreach ($connection_info as $target => $value) {
-      // Replace the full table prefix definition to ensure that no table
-      // prefixes of the test runner leak into the test.
-      $connection_info[$target]['prefix'] = array(
-        'default' => $value['prefix']['default'] . $this->databasePrefix,
-      );
+      $connection_info[$target]['prefix'] = $value['prefix']['default'] . $this->databasePrefix;
     }
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
   }
@@ -1172,10 +1168,11 @@ abstract class TestBase {
     usleep(50000);
 
     // Remove all prefixed tables.
+    // @todo Connection prefix info is not normalized into an array.
     $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
-    $original_prefix = $original_connection_info['default']['prefix']['default'];
+    $original_prefix = is_array($original_connection_info['default']['prefix']) ? $original_connection_info['default']['prefix']['default'] : $original_connection_info['default']['prefix'];
     $test_connection_info = Database::getConnectionInfo('default');
-    $test_prefix = $test_connection_info['default']['prefix']['default'];
+    $test_prefix = is_array($test_connection_info['default']['prefix']) ? $test_connection_info['default']['prefix']['default'] : $test_connection_info['default']['prefix'];
     if ($original_prefix != $test_prefix) {
       $tables = Database::getConnection()->schema()->findTables($test_prefix . '%');
       $prefix_length = strlen($test_prefix);
@@ -1196,6 +1193,10 @@ abstract class TestBase {
     // Restore original database connection.
     Database::removeConnection('default');
     Database::renameConnection('simpletest_original_default', 'default');
+    // @see TestBase::changeDatabasePrefix()
+    global $databases;
+    $connection_info = Database::getConnectionInfo('default');
+    $databases['default']['default'] = $connection_info['default'];
 
     // Restore original globals.
     if (isset($this->originalThemeKey)) {
