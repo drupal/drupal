@@ -11,8 +11,9 @@ use Drupal\Component\Utility\String;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
+
 /**
- * Parses extension .info.yml files.
+ * Class that parses Drupal module's, theme's and profile's .info.yml files.
  */
 class InfoParser implements InfoParserInterface {
 
@@ -21,7 +22,7 @@ class InfoParser implements InfoParserInterface {
    *
    * @var array
    */
-  protected static $parsedInfos = array();
+  protected $parsedInfos = array();
 
   /**
    * Symfony YAML parser object.
@@ -34,29 +35,29 @@ class InfoParser implements InfoParserInterface {
    * {@inheritdoc}
    */
   public function parse($filename) {
-    if (!isset(static::$parsedInfos[$filename])) {
+    if (!isset($this->parsedInfos[$filename])) {
       if (!file_exists($filename)) {
-        static::$parsedInfos[$filename] = array();
+        $this->parsedInfos[$filename] = array();
       }
       else {
         try {
-          static::$parsedInfos[$filename] = $this->getParser()->parse(file_get_contents($filename));
+          $this->parsedInfos[$filename] = $this->getParser()->parse(file_get_contents($filename));
         }
         catch (ParseException $e) {
           $message = String::format("Unable to parse !file. Parser error !error.", array('!file' => $filename, '!error' => $e->getMessage()));
           throw new InfoParserException($message, $filename);
         }
-        $missing_keys = array_diff($this->getRequiredKeys(), array_keys(static::$parsedInfos[$filename]));
+        $missing_keys = array_diff($this->getRequiredKeys(), array_keys($this->parsedInfos[$filename]));
         if (!empty($missing_keys)) {
           $message = format_plural(count($missing_keys), 'Missing required key (!missing_keys) in !file.', 'Missing required keys (!missing_keys) in !file.', array('!missing_keys' => implode(', ', $missing_keys), '!file' => $filename));
           throw new InfoParserException($message, $filename);
         }
-        if (isset(static::$parsedInfos[$filename]['version']) && static::$parsedInfos[$filename]['version'] === 'VERSION') {
-          static::$parsedInfos[$filename]['version'] = \Drupal::VERSION;
+        if (isset($this->parsedInfos[$filename]['version']) && $this->parsedInfos[$filename]['version'] === 'VERSION') {
+          $this->parsedInfos[$filename]['version'] = \Drupal::VERSION;
         }
       }
     }
-    return static::$parsedInfos[$filename];
+    return $this->parsedInfos[$filename];
   }
 
   /**
@@ -79,7 +80,7 @@ class InfoParser implements InfoParserInterface {
    *   An array of required keys.
    */
   protected function getRequiredKeys() {
-    return array('type', 'core', 'name');
+    return array('name', 'type');
   }
 
 }

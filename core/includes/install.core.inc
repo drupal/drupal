@@ -13,7 +13,7 @@ use Drupal\Core\Database\Install\TaskException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
-use Drupal\Core\Extension\ExtensionDiscovery;
+
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -494,21 +494,7 @@ function install_begin_request(&$install_state) {
     // Override the module list with a minimal set of modules.
     $module_handler->setModuleList(array('system' => 'core/modules/system/system.module'));
   }
-  // After setting up a custom and finite module list in a custom low-level
-  // bootstrap like here, ensure to use ModuleHandler::loadAll() so that
-  // ModuleHandler::isLoaded() returns TRUE, since that is a condition being
-  // checked by other subsystems (e.g., the theme system).
-  $module_handler->loadAll();
-
-  // Add list of all available profiles to the installation state.
-  $listing = new ExtensionDiscovery();
-  $listing->setProfileDirectories(array());
-  $install_state['profiles'] += $listing->scan('profile');
-
-  // Prime drupal_get_filename()'s static cache.
-  foreach ($install_state['profiles'] as $name => $profile) {
-    drupal_get_filename('profile', $name, $profile->uri);
-  }
+  $module_handler->load('system');
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -542,6 +528,9 @@ function install_begin_request(&$install_state) {
 
   // Modify the installation state as appropriate.
   $install_state['completed_task'] = $task;
+
+  // Add the list of available profiles to the installation state.
+  $install_state['profiles'] += drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles');
 }
 
 /**

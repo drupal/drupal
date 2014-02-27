@@ -1053,6 +1053,25 @@ function hook_system_breadcrumb_alter(array &$breadcrumb, array $attributes, arr
 }
 
 /**
+ * Return additional themes provided by modules.
+ *
+ * Only use this hook for testing purposes. Use a hidden MYMODULE_test.module
+ * to implement this hook. Testing themes should be hidden, too.
+ *
+ * This hook is invoked from _system_rebuild_theme_data() and allows modules to
+ * register additional themes outside of the regular 'themes' directories of a
+ * Drupal installation.
+ *
+ * @return
+ *   An associative array. Each key is the system name of a theme and each value
+ *   is the corresponding path to the theme's .info.yml file.
+ */
+function hook_system_theme_info() {
+  $themes['mymodule_test_theme'] = drupal_get_path('module', 'mymodule') . '/mymodule_test_theme/mymodule_test_theme.info.yml';
+  return $themes;
+}
+
+/**
  * Alter the information parsed from module and theme .info.yml files
  *
  * This hook is invoked in _system_rebuild_module_data() and in

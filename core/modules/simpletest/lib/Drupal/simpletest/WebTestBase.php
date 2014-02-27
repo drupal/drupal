@@ -792,7 +792,7 @@ abstract class WebTestBase extends TestBase {
       'required' => TRUE,
     );
     // Add the parent profile's search path to the child site's search paths.
-    // @see \Drupal\Core\Extension\ExtensionDiscovery::getProfileDirectories()
+    // @see drupal_system_listing()
     $settings['conf']['simpletest.settings']['parent_profile'] = (object) array(
       'value' => $this->originalProfile,
       'required' => TRUE,

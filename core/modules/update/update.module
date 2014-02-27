@@ -596,7 +596,7 @@ function theme_update_last_check($variables) {
  * an .info.yml file which claims that the code is compatible with the current
  * version of Drupal core.
  *
- * @see \Drupal\Core\Extension\ExtensionDiscovery
+ * @see drupal_system_listing()
  * @see _system_rebuild_module_data()
  */
 function update_verify_update_archive($project, $archive_file, $directory) {

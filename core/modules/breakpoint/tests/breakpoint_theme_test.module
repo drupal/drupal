@@ -1,0 +1,13 @@
+<?php
+/**
+ * @file
+ * Test breakpoint functionality for breakpoints provided by themes.
+ */
+
+/**
+ * Implements hook_system_theme_info().
+ */
+function breakpoint_theme_test_system_theme_info() {
+  $themes['breakpoint_test_theme'] = drupal_get_path('module', 'breakpoint_theme_test') . '/themes/breakpoint_test_theme/breakpoint_test_theme.info.yml';
+  return $themes;
+}

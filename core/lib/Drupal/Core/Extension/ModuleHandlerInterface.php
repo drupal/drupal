@@ -71,8 +71,7 @@ interface ModuleHandlerInterface {
    *
    * @param array $modules
    *   An array of module objects keyed by module name. Each object contains
-   *   information discovered during a Drupal\Core\Extension\ExtensionDiscovery
-   *   scan.
+   *   information discovered during a Drupal\Core\SystemListing scan.
    *
    * @return
    *   The same array with the new keys for each module:
@@ -81,7 +80,7 @@ interface ModuleHandlerInterface {
    *   - required_by: An array with the keys being the modules that will not work
    *     without this module.
    *
-   * @see \Drupal\Core\Extension\ExtensionDiscovery
+   * @see \Drupal\Core\SystemListing
    */
   public function buildModuleDependencies(array $modules);
 

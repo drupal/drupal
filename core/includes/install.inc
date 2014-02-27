@@ -10,7 +10,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Extension\ExtensionDiscovery;
 
 /**
  * Requirement severity -- Informational message only.
@@ -124,17 +123,22 @@ function drupal_detect_database_types() {
 }
 
 /**
- * Returns all supported database driver installer objects.
+ * Returns all supported database installer objects that are compiled into PHP.
  *
- * @return \Drupal\Core\Database\Install\Tasks[]
- *   An array of available database driver installer objects.
+ * @return
+ *  An array of database installer objects compiled into PHP.
  */
 function drupal_get_database_types() {
   $databases = array();
   $drivers = array();
 
-  // The internal database driver name is any valid PHP identifier.
-  $mask = '/^' . DRUPAL_PHP_FUNCTION_PATTERN . '$/';
+  // We define a driver as a directory in /core/includes/database that in turn
+  // contains a database.inc file. That allows us to drop in additional drivers
+  // without modifying the installer.
+  require_once __DIR__ . '/database.inc';
+  // Allow any valid PHP identifier.
+  // @see http://www.php.net/manual/en/language.variables.basics.php.
+  $mask = '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/';
   $files = file_scan_directory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', $mask, array('recurse' => FALSE));
   if (is_dir(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database')) {
     $files += file_scan_directory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, array('recurse' => FALSE));
@@ -580,16 +584,15 @@ function drupal_verify_profile($install_state) {
   }
   $info = $install_state['profile_info'];
 
-  // Get the list of available modules for the selected installation profile.
-  $listing = new ExtensionDiscovery();
+  // Get a list of modules that exist in Drupal's assorted subdirectories.
   $present_modules = array();
-  foreach ($listing->scan('module') as $present_module) {
+  foreach (drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules') as $present_module) {
     $present_modules[] = $present_module->name;
   }
 
   // The installation profile is also a module, which needs to be installed
   // after all the other dependencies have been installed.
-  $present_modules[] = $profile;
+  $present_modules[] = drupal_get_profile();
 
   // Verify that all of the profile's required modules are present.
   $missing_modules = array_diff($info['dependencies'], $present_modules);
@@ -973,7 +976,9 @@ function drupal_requirements_url($severity) {
 function drupal_check_profile($profile, array $install_state) {
   include_once __DIR__ . '/file.inc';
 
-  if (!isset($profile) || !isset($install_state['profiles'][$profile])) {
+  $profile_file = $install_state['profiles'][$profile]->uri;
+
+  if (!isset($profile) || !file_exists($profile_file)) {
     throw new Exception(install_no_profile_error());
   }
 
