@@ -5067,6 +5067,11 @@ function drupal_get_private_key() {
  * @param $value
  *   An additional value to base the token on.
  *
+ * The generated token is based on the session ID of the current user. Normally,
+ * anonymous users do not have a session, so the generated token will be
+ * different on every page request. To generate a token for users without a
+ * session, manually start a session prior to calling this function.
+ *
  * @return string
  *   A 43-character URL-safe token for validation, based on the user session ID,
  *   the hash salt provided from drupal_get_hash_salt(), and the
