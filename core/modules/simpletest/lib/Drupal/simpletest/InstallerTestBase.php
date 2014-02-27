@@ -2,21 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\InstallerTest.
+ * Contains \Drupal\simpletest\InstallerTestBase.
  */
 
-namespace Drupal\system\Tests;
+namespace Drupal\simpletest;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Session\UserSession;
-use Drupal\simpletest\WebTestBase;
 
 /**
- * Allows testing of the interactive installer.
- *
- * @todo Move majority of code into new Drupal\simpletest\InstallerTestBase.
+ * Base class for testing the interactive installer.
  */
-class InstallerTest extends WebTestBase {
+abstract class InstallerTestBase extends WebTestBase {
 
   /**
    * Custom settings.php values to write for a test run.
@@ -68,14 +64,6 @@ class InstallerTest extends WebTestBase {
    * @var bool
    */
   protected $isInstalled = FALSE;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Installer tests',
-      'description' => 'Tests the interactive installer.',
-      'group' => 'Installer',
-    );
-  }
 
   /**
    * Overrides WebTestBase::setUp().
@@ -209,16 +197,6 @@ class InstallerTest extends WebTestBase {
     if ($this->isInstalled) {
       parent::refreshVariables();
     }
-  }
-
-  /**
-   * Ensures that the user page is available after every test installation.
-   */
-  public function testInstaller() {
-    $this->assertUrl('user/1');
-    $this->assertResponse(200);
-    // Confirm that we are logged-in after installation.
-    $this->assertText($this->root_user->getUsername());
   }
 
 }

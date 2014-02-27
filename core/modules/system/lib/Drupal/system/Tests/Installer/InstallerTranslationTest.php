@@ -7,12 +7,12 @@
 
 namespace Drupal\system\Tests\Installer;
 
-use Drupal\system\Tests\InstallerTest;
+use Drupal\simpletest\InstallerTestBase;
 
 /**
  * Tests the installer translation detection.
  */
-class InstallerTranslationTest extends InstallerTest {
+class InstallerTranslationTest extends InstallerTestBase {
 
   /**
    * Overrides the language code in which to install Drupal.
