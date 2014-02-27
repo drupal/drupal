@@ -126,7 +126,7 @@ class LinkFormatter extends FormatterBase {
 
       // If the title field value is available, use it for the link text.
       if (empty($settings['url_only']) && !empty($item->title)) {
-        // Unsanitizied token replacement here because $options['html'] is FALSE
+        // Unsanitized token replacement here because $options['html'] is FALSE
         // by default in l().
         $link_title = \Drupal::token()->replace($item->title, array($entity->getEntityTypeId() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
       }
