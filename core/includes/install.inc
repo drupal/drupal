@@ -872,8 +872,6 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
   }
 
   // chmod() will work if the web server is running as owner of the file.
-  // If PHP safe_mode is enabled the currently executing script must also
-  // have the same owner.
   if (@chmod($file, $mod)) {
     return TRUE;
   }

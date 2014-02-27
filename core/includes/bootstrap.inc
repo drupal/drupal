@@ -32,7 +32,7 @@ use Drupal\Core\Session\UserSession;
 /**
  * Minimum supported version of PHP.
  */
-const DRUPAL_MINIMUM_PHP = '5.3.10';
+const DRUPAL_MINIMUM_PHP = '5.4.2';
 
 /**
  * Minimum recommended value of PHP memory_limit.
@@ -452,13 +452,6 @@ function drupal_environment_initialize() {
   // Override PHP settings required for Drupal to work properly.
   // sites/default/default.settings.php contains more runtime settings.
   // The .htaccess file contains settings that cannot be changed at runtime.
-
-  // Deny execution with enabled "magic quotes" (both GPC and runtime).
-  if (get_magic_quotes_gpc() || get_magic_quotes_runtime()) {
-    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error');
-    print "PHP's 'magic_quotes_gpc' and 'magic_quotes_runtime' settings are not supported and must be disabled.";
-    exit;
-  }
 
   // Use session cookies, not transparent sessions that puts the session id in
   // the query string.

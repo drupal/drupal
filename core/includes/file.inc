@@ -666,7 +666,7 @@ function file_valid_uri($uri) {
  *   will rename the file until the $destination is unique.
  * - Provides a fallback using realpaths if the move fails using stream
  *   wrappers. This can occur because PHP's copy() function does not properly
- *   support streams if safe_mode or open_basedir are enabled. See
+ *   support streams if open_basedir is enabled. See
  *   https://bugs.php.net/bug.php?id=60456
  *
  * @param $source
@@ -1087,8 +1087,8 @@ function file_unmanaged_delete_recursive($path, $callback = NULL) {
 /**
  * Moves an uploaded file to a new location.
  *
- * PHP's move_uploaded_file() does not properly support streams if safe_mode
- * or open_basedir are enabled, so this function fills that gap.
+ * PHP's move_uploaded_file() does not properly support streams if open_basedir
+ * is enabled, so this function fills that gap.
  *
  * Compatibility: normal paths and stream wrappers.
  *
@@ -1106,9 +1106,9 @@ function file_unmanaged_delete_recursive($path, $callback = NULL) {
  */
 function drupal_move_uploaded_file($filename, $uri) {
   $result = @move_uploaded_file($filename, $uri);
-  // PHP's move_uploaded_file() does not properly support streams if safe_mode
-  // or open_basedir are enabled so if the move failed, try finding a real path
-  // and retry the move operation.
+  // PHP's move_uploaded_file() does not properly support streams if
+  // open_basedir is enabled so if the move failed, try finding a real path and
+  // retry the move operation.
   if (!$result) {
     if ($realpath = drupal_realpath($uri)) {
       $result = move_uploaded_file($filename, $realpath);

@@ -74,25 +74,6 @@ function system_requirements($phase) {
     return $requirements;
   }
 
-  // Test PHP register_globals setting.
-  $requirements['php_register_globals'] = array(
-    'title' => t('PHP register globals'),
-  );
-  $register_globals = trim(ini_get('register_globals'));
-  // Unfortunately, ini_get() may return many different values, and we can't
-  // be certain which values mean 'on', so we instead check for 'not off'
-  // since we never want to tell the user that their site is secure
-  // (register_globals off), when it is in fact on. We can only guarantee
-  // register_globals is off if the value returned is 'off', '', or 0.
-  if (!empty($register_globals) && strtolower($register_globals) != 'off') {
-    $requirements['php_register_globals']['description'] = t('<em>register_globals</em> is enabled. Drupal requires this configuration directive to be disabled. Your site may not be secure when <em>register_globals</em> is enabled. The PHP manual has instructions for <a href="@url">how to change configuration settings</a>.', array('@url' => 'http://php.net/configuration.changes'));
-    $requirements['php_register_globals']['severity'] = REQUIREMENT_ERROR;
-    $requirements['php_register_globals']['value'] = t("Enabled ('@value')", array('@value' => $register_globals));
-  }
-  else {
-    $requirements['php_register_globals']['value'] = t('Disabled');
-  }
-
   // Test for PHP extensions.
   $requirements['php_extensions'] = array(
     'title' => t('PHP extensions'),

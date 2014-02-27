@@ -25,9 +25,6 @@ DirectoryIndex index.php index.html index.htm
 
 # PHP 5, Apache 1 and 2.
 <IfModule mod_php5.c>
-  php_flag magic_quotes_gpc                 off
-  php_flag magic_quotes_sybase              off
-  php_flag register_globals                 off
   php_flag session.auto_start               off
   php_value mbstring.http_input             pass
   php_value mbstring.http_output            pass
