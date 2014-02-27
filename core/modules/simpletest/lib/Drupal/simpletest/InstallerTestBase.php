@@ -131,7 +131,7 @@ abstract class InstallerTestBase extends WebTestBase {
     // Manually configure the test mail collector implementation to prevent
     // tests from sending out e-mails and collect them in state instead.
     \Drupal::config('system.mail')
-      ->set('interface.default', 'Drupal\Core\Mail\TestMailCollector')
+      ->set('interface.default', 'test_mail_collector')
       ->save();
 
     // When running from run-tests.sh we don't get an empty current path which

@@ -1,2 +1,2 @@
 interface:
- default: 'Drupal\Core\Mail\PhpMail'
+ default: 'php_mail'

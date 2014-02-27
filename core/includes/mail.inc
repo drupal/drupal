@@ -84,7 +84,7 @@ use Drupal\Component\Utility\Xss;
  *   called to complete the $message structure which will already contain common
  *   defaults.
  * @param string $key
- *   A key to identify the e-mail sent. The final e-mail id for e-mail altering
+ *   A key to identify the e-mail sent. The final message ID for e-mail altering
  *   will be {$module}_{$key}.
  * @param string $to
  *   The e-mail address or addresses where the message will be sent to. The
@@ -193,23 +193,23 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $reply = 
 }
 
 /**
- * Returns an object that implements Drupal\Core\Mail\MailInterface.
+ * Returns an instance of the mail plugin to use for a given message ID.
  *
  * @param string $module
  *   The module name which was used by drupal_mail() to invoke hook_mail().
  * @param string $key
- *   A key to identify the e-mail sent. The final e-mail ID for the e-mail
+ *   A key to identify the e-mail sent. The final message ID for the e-mail
  *   alter hook in drupal_mail() would have been {$module}_{$key}.
  *
  * @return \Drupal\Core\Mail\MailInterface
- *   An object that implements Drupal\Core\Mail\MailInterface.
+ *   A mail plugin instance.
  *
- * @throws \Exception
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  *
- * @see \Drupal\Core\Mail\MailFactory::get()
+ * @see \Drupal\Core\Mail\MailManager::getInstance()
  */
 function drupal_mail_system($module, $key) {
-  return \Drupal::service('mail.factory')->get($module, $key);
+  return \Drupal::service('plugin.manager.mail')->getInstance(array('module' => $module, 'key' => $key));
 }
 
 /**

@@ -2560,6 +2560,19 @@ function hook_archiver_info_alter(&$info) {
 }
 
 /**
+ * Alter the list of mail backend plugin definitions.
+ *
+ * @param array $info
+ *   The mail backend plugin definitions to be altered.
+ *
+ * @see \Drupal\Core\Annotation\Mail
+ * @see \Drupal\Core\Mail\MailManager
+ */
+function hook_mail_backend_info_alter(&$info) {
+  unset($info['test_mail_collector']);
+}
+
+/**
  * Alters theme operation links.
  *
  * @param $theme_groups

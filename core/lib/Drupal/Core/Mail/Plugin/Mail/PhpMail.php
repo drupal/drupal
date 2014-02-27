@@ -2,13 +2,21 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Mail\PhpMail.
+ * Contains Drupal\Core\Mail\Plugin\Mail\PhpMail.
  */
 
-namespace Drupal\Core\Mail;
+namespace Drupal\Core\Mail\Plugin\Mail;
+
+use Drupal\Core\Mail\MailInterface;
 
 /**
- * The default Drupal mail backend using PHP's mail function.
+ * Defines the default Drupal mail backend, using PHP's native mail() function.
+ *
+ * @Mail(
+ *   id = "php_mail",
+ *   label = @Translation("Default PHP mailer"),
+ *   description = @Translation("Sends the message as plain text, using PHP's native mail() function.")
+ * )
  */
 class PhpMail implements MailInterface {
 

@@ -840,7 +840,7 @@ abstract class WebTestBase extends TestBase {
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
     \Drupal::config('system.mail')
-      ->set('interface.default', 'Drupal\Core\Mail\TestMailCollector')
+      ->set('interface.default', 'test_mail_collector')
       ->save();
 
     // Restore the original Simpletest batch.
