@@ -31,7 +31,6 @@ use Drupal\user\RoleInterface;
  *   config_prefix = "role",
  *   entity_keys = {
  *     "id" = "id",
- *     "uuid" = "uuid",
  *     "weight" = "weight",
  *     "label" = "label"
  *   },

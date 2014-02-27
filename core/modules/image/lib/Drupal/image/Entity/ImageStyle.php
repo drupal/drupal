@@ -36,8 +36,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *   config_prefix = "style",
  *   entity_keys = {
  *     "id" = "name",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   },
  *   links = {
  *     "flush-form" = "image.style_flush",

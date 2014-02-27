@@ -38,13 +38,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfigStorageController extends EntityStorageControllerBase implements ConfigStorageControllerInterface {
 
   /**
-   * Name of the entity's UUID property.
-   *
-   * @var string
-   */
-  protected $uuidKey = 'uuid';
-
-  /**
    * The UUID service.
    *
    * @var \Drupal\Component\Uuid\UuidInterface
@@ -261,8 +254,8 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
     $entity->enforceIsNew();
 
     // Assign a new UUID if there is none yet.
-    if (!isset($entity->{$this->uuidKey})) {
-      $entity->{$this->uuidKey} = $this->uuidService->generate();
+    if (!$entity->uuid()) {
+      $entity->set('uuid', $this->uuidService->generate());
     }
     $entity->postCreate($this);
 

@@ -42,8 +42,7 @@ use Drupal\entity\EntityViewModeInterface;
  *   admin_permission = "administer display modes",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   },
  *   links = {
  *     "delete-form" = "entity.view_mode_delete",

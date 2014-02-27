@@ -78,6 +78,13 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
     ));
     $entity->save();
 
+    // Ensure that the configuration entity can be loaded by UUID.
+    $entity_loaded_by_uuid = entity_load_by_uuid($entity_type->id(), $entity->uuid());
+    // Compare UUIDs as the objects are not identical since
+    // $entity->enforceIsNew is FALSE and $entity_loaded_by_uuid->enforceIsNew
+    // is NULL.
+    $this->assertIdentical($entity->uuid(), $entity_loaded_by_uuid->uuid());
+
     $entities = $this->storage->loadByProperties();
     $this->assertEqual(count($entities), 3, 'Three entities are loaded when no properties are specified.');
 

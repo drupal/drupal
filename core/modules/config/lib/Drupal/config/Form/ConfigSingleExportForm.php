@@ -75,7 +75,7 @@ class ConfigSingleExportForm extends FormBase {
    */
   public function buildForm(array $form, array &$form_state, $config_type = NULL, $config_name = NULL) {
     foreach ($this->entityManager->getDefinitions() as $entity_type => $definition) {
-      if ($definition->getConfigPrefix() && $definition->hasKey('uuid')) {
+      if ($definition->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
         $this->definitions[$entity_type] = $definition;
       }
     }

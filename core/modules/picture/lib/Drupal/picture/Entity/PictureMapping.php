@@ -30,8 +30,7 @@ use Drupal\picture\PictureMappingInterface;
  *   config_prefix = "mappings",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   },
  *   links = {
  *     "edit-form" = "picture.mapping_page_edit",

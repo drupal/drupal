@@ -32,8 +32,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *   entity_keys = {
  *     "id" = "vid",
  *     "label" = "name",
- *     "weight" = "weight",
- *     "uuid" = "uuid"
+ *     "weight" = "weight"
  *   },
  *   links = {
  *     "add-form" = "taxonomy.term_add",

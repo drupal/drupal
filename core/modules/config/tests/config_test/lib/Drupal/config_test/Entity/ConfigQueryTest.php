@@ -23,8 +23,7 @@ namespace Drupal\config_test\Entity;
  *   config_prefix = "query",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   }
  * )
  *

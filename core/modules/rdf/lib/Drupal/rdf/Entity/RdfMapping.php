@@ -19,8 +19,7 @@ use Drupal\rdf\RdfMappingInterface;
  *   label = @Translation("RDF mapping"),
  *   config_prefix = "mapping",
  *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid"
+ *     "id" = "id"
  *   }
  * )
  */

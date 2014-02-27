@@ -28,8 +28,7 @@ use Drupal\field\FieldConfigInterface;
  *   config_prefix = "field",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "id",
- *     "uuid" = "uuid"
+ *     "label" = "id"
  *   }
  * )
  */

@@ -17,8 +17,7 @@ use Drupal\editor\EditorInterface;
  *   id = "editor",
  *   label = @Translation("Editor"),
  *   entity_keys = {
- *     "id" = "format",
- *     "uuid" = "uuid"
+ *     "id" = "format"
  *   }
  * )
  */

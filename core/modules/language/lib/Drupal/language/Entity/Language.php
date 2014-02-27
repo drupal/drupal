@@ -32,8 +32,7 @@ use Drupal\language\LanguageInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "weight" = "weight",
- *     "uuid" = "uuid"
+ *     "weight" = "weight"
  *   },
  *   links = {
  *     "delete-form" = "language.delete",

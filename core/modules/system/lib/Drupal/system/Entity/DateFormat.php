@@ -29,8 +29,7 @@ use Drupal\system\DateFormatInterface;
  *   },
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   },
  *   admin_permission = "administer site configuration",
  *   links = {

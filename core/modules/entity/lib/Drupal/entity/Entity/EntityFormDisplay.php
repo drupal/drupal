@@ -20,7 +20,6 @@ use Drupal\entity\EntityDisplayBase;
  *   config_prefix = "form_display",
  *   entity_keys = {
  *     "id" = "id",
- *     "uuid" = "uuid",
  *     "status" = "status"
  *   }
  * )

@@ -35,7 +35,6 @@ use Drupal\filter\Plugin\FilterInterface;
  *   entity_keys = {
  *     "id" = "format",
  *     "label" = "name",
- *     "uuid" = "uuid",
  *     "weight" = "weight",
  *     "status" = "status"
  *   },

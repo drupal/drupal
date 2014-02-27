@@ -24,8 +24,7 @@ use Drupal\system\MenuInterface;
  *   admin_permission = "administer menu",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   }
  * )
  */

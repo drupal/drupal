@@ -44,7 +44,6 @@ use Drupal\search\SearchPageInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid",
  *     "weight" = "weight",
  *     "status" = "status"
  *   }

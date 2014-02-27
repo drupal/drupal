@@ -31,8 +31,7 @@ use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
  *   fieldable = FALSE,
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   },
  *   links = {
  *     "delete-form" = "block.admin_block_delete",

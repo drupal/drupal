@@ -23,8 +23,7 @@ use Drupal\breakpoint\InvalidBreakpointMediaQueryException;
  *   label = @Translation("Breakpoint"),
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   }
  * )
  */

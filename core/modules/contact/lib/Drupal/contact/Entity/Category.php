@@ -31,8 +31,7 @@ use Drupal\contact\CategoryInterface;
  *   bundle_of = "contact_message",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   },
  *   links = {
  *     "delete-form" = "contact.category_delete",

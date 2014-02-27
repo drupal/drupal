@@ -29,7 +29,6 @@ use Drupal\config_test\ConfigTestInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid",
  *     "status" = "status"
  *   },
  *   links = {

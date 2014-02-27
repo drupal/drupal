@@ -31,8 +31,7 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *   bundle_of = "custom_block",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   },
  *   links = {
  *     "delete-form" = "custom_block.type_delete",

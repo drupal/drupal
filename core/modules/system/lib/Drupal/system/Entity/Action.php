@@ -22,8 +22,7 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *   admin_permission = "administer actions",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   }
  * )
  */

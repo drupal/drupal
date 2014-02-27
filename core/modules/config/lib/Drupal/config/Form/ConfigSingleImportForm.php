@@ -122,7 +122,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
 
     $entity_types = array();
     foreach ($this->entityManager->getDefinitions() as $entity_type => $definition) {
-      if ($definition->getConfigPrefix() && $definition->hasKey('uuid')) {
+      if ($definition->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
         $entity_types[$entity_type] = $definition->getLabel();
       }
     }
@@ -187,21 +187,20 @@ class ConfigSingleImportForm extends ConfirmFormBase {
         $this->setFormError('import', $form_state, $this->t('Missing ID key "@id_key" for this @entity_type import.', array('@id_key' => $id_key, '@entity_type' => $definition->getLabel())));
         return;
       }
-      $uuid_key = $definition->getKey('uuid');
       // If there is an existing entity, ensure matching ID and UUID.
       if ($entity = $entity_storage->load($data[$id_key])) {
         $this->configExists = $entity;
-        if (!isset($data[$uuid_key])) {
+        if (!isset($data['uuid'])) {
           $this->setFormError('import', $form_state, $this->t('An entity with this machine name already exists but the import did not specify a UUID.'));
           return;
         }
-        if ($data[$uuid_key] !== $entity->uuid()) {
+        if ($data['uuid'] !== $entity->uuid()) {
           $this->setFormError('import', $form_state, $this->t('An entity with this machine name already exists but the UUID does not match.'));
           return;
         }
       }
       // If there is no entity with a matching ID, check for a UUID match.
-      elseif (isset($data[$uuid_key]) && $entity_storage->loadByProperties(array($uuid_key => $data[$uuid_key]))) {
+      elseif (isset($data['uuid']) && $entity_storage->loadByProperties(array('uuid' => $data['uuid']))) {
         $this->setFormError('import', $form_state, $this->t('An entity with this UUID already exists but the machine name does not match.'));
       }
     }

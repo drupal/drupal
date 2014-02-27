@@ -240,7 +240,12 @@ function entity_revision_delete($entity_type, $revision_id) {
  */
 function entity_load_by_uuid($entity_type_id, $uuid, $reset = FALSE) {
   $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
-  if (!$uuid_key = $entity_type->getKey('uuid')) {
+
+  // Configuration entities do not use annotations to set the UUID key.
+  if ($entity_type->isSubclassOf('Drupal\Core\Config\Entity\ConfigEntityInterface')) {
+    $uuid_key = 'uuid';
+  }
+  elseif (!$uuid_key = $entity_type->getKey('uuid')) {
     throw new EntityStorageException("Entity type $entity_type_id does not support UUIDs.");
   }
 

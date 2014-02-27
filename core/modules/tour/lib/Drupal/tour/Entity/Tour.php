@@ -22,8 +22,7 @@ use Drupal\tour\TourInterface;
  *   },
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   }
  * )
  */

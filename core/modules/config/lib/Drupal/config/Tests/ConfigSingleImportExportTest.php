@@ -124,7 +124,7 @@ EOD;
     $this->drupalLogin($this->drupalCreateUser(array('export configuration')));
 
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple');
-    $this->assertFieldByXPath('//select[@name="config_type"]//option', t('Date format'), 'The date format entity type is selected when specified in the URL.');
+    $this->assertFieldByXPath('//select[@name="config_type"]//option[@selected="selected"]', t('Simple configuration'), 'The simple configuration option is selected when specified in the URL.');
     // Spot check several known simple configuration files.
     $element = $this->xpath('//select[@name="config_name"]');
     $options = $this->getAllOptions($element[0]);
@@ -138,10 +138,10 @@ EOD;
     $this->assertFieldByXPath('//textarea[@name="export"]', "toolkit: gd\n", 'The expected system configuration is displayed.');
 
     $this->drupalGet('admin/config/development/configuration/single/export/date_format');
-    $this->assertFieldByXPath('//select[@name="config_type"]//option', t('Date format'), 'The date format entity type is selected when specified in the URL.');
+    $this->assertFieldByXPath('//select[@name="config_type"]//option[@selected="selected"]', t('Date format'), 'The date format entity type is selected when specified in the URL.');
 
     $this->drupalGet('admin/config/development/configuration/single/export/date_format/fallback');
-    $this->assertFieldByXPath('//select[@name="config_name"]//option', t('Fallback date format'), 'The fallback date format config entity is selected when specified in the URL.');
+    $this->assertFieldByXPath('//select[@name="config_name"]//option[@selected="selected"]', t('Fallback date format'), 'The fallback date format config entity is selected when specified in the URL.');
 
     $fallback_date = \Drupal::entityManager()->getStorageController('date_format')->load('fallback');
     $data = \Drupal::service('config.storage')->encode($fallback_date->getExportProperties());

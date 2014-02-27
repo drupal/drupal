@@ -32,8 +32,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "weight" = "weight",
- *     "uuid" = "uuid"
+ *     "weight" = "weight"
  *   }
  * )
  */

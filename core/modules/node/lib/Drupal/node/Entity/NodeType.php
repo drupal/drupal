@@ -33,8 +33,7 @@ use Drupal\node\NodeTypeInterface;
  *   bundle_of = "node",
  *   entity_keys = {
  *     "id" = "type",
- *     "label" = "name",
- *     "uuid" = "uuid"
+ *     "label" = "name"
  *   },
  *   links = {
  *     "add-form" = "node.add",

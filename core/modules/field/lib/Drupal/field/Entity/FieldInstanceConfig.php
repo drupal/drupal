@@ -27,8 +27,7 @@ use Drupal\field\FieldInstanceConfigInterface;
  *   config_prefix = "instance",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   }
  * )
  */

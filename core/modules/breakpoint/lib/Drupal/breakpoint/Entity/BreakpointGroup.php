@@ -20,8 +20,7 @@ use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
  *   label = @Translation("Breakpoint group"),
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "label" = "label"
  *   }
  * )
  */
