@@ -96,13 +96,16 @@ function _simpletest_format_summary_line($summary) {
 }
 
 /**
- * Actually runs tests.
+ * Runs tests.
  *
  * @param $test_list
  *   List of tests to run.
  * @param $reporter
  *   Which reporter to use. Allowed values are: text, xml, html and drupal,
  *   drupal being the default.
+ *
+ * @return string
+ *   The test ID.
  */
 function simpletest_run_tests($test_list, $reporter = 'drupal') {
   $test_id = db_insert('simpletest_test_id')
@@ -150,17 +153,17 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
 }
 
 /**
- * Executes phpunit tests and returns the results of the run.
+ * Executes PHPUnit tests and returns the results of the run.
  *
  * @param $test_id
  *   The current test ID.
  * @param $unescaped_test_classnames
  *   An array of test class names, including full namespaces, to be passed as
- *   a regular expression to phpunit's --filter option.
+ *   a regular expression to PHPUnit's --filter option.
  *
  * @return array
- *   The parsed results of phpunit's junit xml output, in the format of the
- *   simpletest table's schema.
+ *   The parsed results of PHPUnit's JUnit XML output, in the format of
+ *   {simpletest}'s schema.
  */
 function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames) {
   $phpunit_file = simpletest_phpunit_xml_filepath($test_id);
@@ -169,14 +172,14 @@ function simpletest_run_phpunit_tests($test_id, array $unescaped_test_classnames
 }
 
 /**
- * Inserts the parsed phpunit results into the simpletest table.
+ * Inserts the parsed PHPUnit results into {simpletest}.
  *
- * @param array $phpunit_results
- *   An array of test results returned from simpletest_phpunit_xml_to_rows.
+ * @param array[] $phpunit_results
+ *   An array of test results returned from simpletest_phpunit_xml_to_rows().
  */
 function simpletest_process_phpunit_results($phpunit_results) {
-  // Insert the results of the phpunit test run into the db so the results are
-  // displayed along with simpletest's results.
+  // Insert the results of the PHPUnit test run into the database so the results
+  // are displayed along with Simpletest's results.
   if (!empty($phpunit_results)) {
     $query = db_insert('simpletest')->fields(array_keys($phpunit_results[0]));
     foreach ($phpunit_results as $result) {
@@ -187,12 +190,13 @@ function simpletest_process_phpunit_results($phpunit_results) {
 }
 
 /**
- * Returns the path to use for phpunit's --log-junit option.
+ * Returns the path to use for PHPUnit's --log-junit option.
  *
  * @param $test_id
  *   The current test ID.
+ *
  * @return string
- *   Path to the phpunit xml file to use for the current test_id.
+ *   Path to the PHPUnit XML file to use for the current $test_id.
  */
 function simpletest_phpunit_xml_filepath($test_id) {
   return drupal_realpath('public://simpletest') . '/phpunit-' . $test_id . '.xml';
@@ -202,20 +206,23 @@ function simpletest_phpunit_xml_filepath($test_id) {
  * Returns the path to core's phpunit.xml.dist configuration file.
  *
  * @return string
- *   Path to core's phpunit.xml.dist configuration file.
+ *   The path to core's phpunit.xml.dist configuration file.
  */
 function simpletest_phpunit_configuration_filepath() {
   return DRUPAL_ROOT . '/core/phpunit.xml.dist';
 }
 
 /**
- * Executes the phpunit command.
+ * Executes the PHPUnit command.
  *
  * @param array $unescaped_test_classnames
  *   An array of test class names, including full namespaces, to be passed as
- *   a regular expression to phpunit's --filter option.
+ *   a regular expression to PHPUnit's --filter option.
  * @param string $phpunit_file
- *   A filepath to use for phpunit's --log-junit option.
+ *   A filepath to use for PHPUnit's --log-junit option.
+ *
+ * @return string
+ *  The results as returned by exec().
  */
 function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpunit_file) {
   $phpunit_bin = simpletest_phpunit_command();
@@ -249,6 +256,9 @@ function simpletest_phpunit_run_command(array $unescaped_test_classnames, $phpun
 
 /**
  * Returns the command to run PHPUnit.
+ *
+ * @return string
+ *   The command that can be run through exec().
  */
 function simpletest_phpunit_command() {
   // Don't use the committed version in composer's bin dir if running on
@@ -345,7 +355,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  *
  * @param $test_id
  *   The test ID to get the last test from.
- * @return
+ * @return array
  *   Array containing the last database prefix used and the last test class
  *   that ran.
  */
@@ -356,7 +366,7 @@ function simpletest_last_test_get($test_id) {
 }
 
 /**
- * Read the error log and report any errors as assertion failures.
+ * Reads the error log and reports any errors as assertion failures.
  *
  * The errors in the log should only be fatal errors since any other errors
  * will have been recorded by the error handler.
@@ -368,8 +378,8 @@ function simpletest_last_test_get($test_id) {
  * @param $test_class
  *   The test class to which the log relates.
  *
- * @return
- *   Found any entries in log.
+ * @return bool
+ *   Whether any fatal errors were found.
  */
 function simpletest_log_read($test_id, $database_prefix, $test_class) {
   $log = DRUPAL_ROOT . '/sites/simpletest/' . substr($database_prefix, 10) . '/error.log';
@@ -396,7 +406,7 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
 }
 
 /**
- * Get a list of all of the tests provided by the system.
+ * Gets a list of all of the tests provided by the system.
  *
  * The list of test classes is loaded by searching the designated directory for
  * each module for files matching the PSR-0 standard. Once loaded the test list
@@ -406,11 +416,9 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *   Name of a module. If set then only tests belonging to this module are
  *   returned.
  *
- * @return
- *   An array of tests keyed with the groups specified in each of the tests
- *   getInfo() method and then keyed by the test class. An example of the array
- *   structure is provided below.
- *
+ * @return array[]
+ *   An array of tests keyed with the groups specified in each of the tests'
+ *   getInfo() methods and then keyed by the test classes. For example:
  *   @code
  *     $groups['Block'] => array(
  *       'BlockTestCase' => array(
@@ -549,7 +557,19 @@ function simpletest_classloader_register() {
 }
 
 /**
- * Generate test file.
+ * Generates test file.
+ *
+ * @param string $filename
+ *   The name of the file, including the path.
+ * @param int $width
+ *   The number of characters on one line.
+ * @param int $lines
+ *   The number of lines in the file.
+ * @param string $type
+ *   (optional) The type, for example: "text", "binary", or "binary-text".
+ *
+ * @return string
+ *   The name of the file, including the path.
  */
 function simpletest_generate_file($filename, $width, $lines, $type = 'binary-text') {
   $size = $width * $lines - $lines;
@@ -579,7 +599,7 @@ function simpletest_generate_file($filename, $width, $lines, $type = 'binary-tex
 }
 
 /**
- * Remove all temporary database tables and directories.
+ * Removes all temporary database tables and directories.
  */
 function simpletest_clean_environment() {
   simpletest_clean_database();
@@ -598,7 +618,7 @@ function simpletest_clean_environment() {
 }
 
 /**
- * Remove prefixed tables from the database from crashed tests.
+ * Removes prefixed tables from the database from crashed tests.
  */
 function simpletest_clean_database() {
   $tables = db_find_tables(Database::getConnection()->prefixTables('{simpletest}') . '%');
@@ -622,7 +642,7 @@ function simpletest_clean_database() {
 }
 
 /**
- * Find all leftover temporary directories and remove them.
+ * Finds all leftover temporary directories and removes them.
  */
 function simpletest_clean_temporary_directories() {
   $count = 0;
@@ -646,12 +666,13 @@ function simpletest_clean_temporary_directories() {
 }
 
 /**
- * Clear the test result tables.
+ * Clears the test result tables.
  *
  * @param $test_id
  *   Test ID to remove results for, or NULL to remove all results.
- * @return
- *   The number of results removed.
+ *
+ * @return int
+ *   The number of results that were removed.
  */
 function simpletest_clean_results_table($test_id = NULL) {
   if (\Drupal::config('simpletest.settings')->get('clear_results')) {
@@ -692,7 +713,7 @@ function simpletest_mail_alter(&$message) {
 }
 
 /**
- * Gets PHPUnit Classes.
+ * Gets PHPUnit classes.
  *
  * @param string $module
  *   Name of a module. If set then only tests belonging to this module is
@@ -700,6 +721,9 @@ function simpletest_mail_alter(&$message) {
  *
  * @return array
  *   Returns an array of test classes.
+ *
+ * @throws \RuntimeException
+ *   This is thrown when anything is wrong with a test.
  */
 function simpletest_phpunit_get_available_tests($module = NULL) {
   // Try to load the class names array from cache.
@@ -742,15 +766,16 @@ function simpletest_phpunit_get_available_tests($module = NULL) {
 }
 
 /**
- * Converts phpunit's junit xml output to an array.
- *
- * The returned array of rows is in a format that can be inserted into the
- * simpletest results table.
+ * Converts PHPUnit's JUnit XML output to an array.
  *
  * @param $test_id
  *   The current test ID.
  * @param $phpunit_xml_file
- *   Path to the phpunit xml file.
+ *   Path to the PHPUnit XML file.
+ *
+ * @return array[]
+ *   The results as array of rows in a format that can be inserted into
+ *   {simpletest}.
  */
 function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
   $contents = @file_get_contents($phpunit_xml_file);
@@ -776,20 +801,20 @@ function simpletest_phpunit_xml_to_rows($test_id, $phpunit_xml_file) {
 }
 
 /**
- * Find all testcases recursively from a testsuite list.
+ * Finds all test cases recursively from a test suite list.
  *
  * @param \SimpleXMLElement[] $suite
- *   The list of testcases contained in the PHPUnit XML.
+ *   The list of test cases contained in the PHPUnit XML.
  *
  * @return array
- *   A list of all testcases.
+ *   A list of all test cases.
  */
 function simpletest_phpunit_find_testcases($suite) {
   $testcases = array();
 
   foreach ($suite as $testcase) {
     // Beside from being 'testcases', it could be also a group of testcases.
-    // This happens if you use a data provider in the phpunit tests.
+    // This happens if you use a data provider in the PHPUnit tests.
     if ($testcase->getName() === 'testcase') {
       $testcases[] = $testcase;
     }
@@ -805,17 +830,17 @@ function simpletest_phpunit_find_testcases($suite) {
 }
 
 /**
- * Converts a PHPUnit testcase result to a simpletest result row.
+ * Converts a PHPUnit test case result to a {simpletest} result row.
  *
  * @param int $test_id
  *   The current test ID.
  * @param \SimpleXMLElement $testcase
- *   The PHPUnit testcase represented as XML element.
+ *   The PHPUnit test case represented as XML element.
  * @param string $file
  *   The path to test file, which was executed.
  *
  * @return array
- *   An array containg the simpletest result row.
+ *   An array containing the {simpletest} result row.
  */
 function simpletest_phpunit_testcase_to_row($test_id, \SimpleXMLElement $testcase, $file) {
   $message = '';
