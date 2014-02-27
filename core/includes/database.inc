@@ -39,12 +39,14 @@ use Drupal\Core\Database\Query\Condition;
  * For example, one might wish to return a list of the most recent 10 rows
  * authored by a given user. Instead of directly issuing the SQL query
  * @code
- * SELECT e.id, e.title, e.created FROM example e WHERE e.uid = $uid LIMIT 0, 10;
+ * SELECT e.id, e.title, e.created FROM example e WHERE e.uid = $uid
+ *   ORDER BY e.created DESC LIMIT 0, 10;
  * @endcode
  * one would instead call the Drupal functions:
  * @code
  * $result = db_query_range('SELECT e.id, e.title, e.created
- *   FROM {example} e WHERE e.uid = :uid', 0, 10, array(':uid' => $uid));
+ *   FROM {example} e WHERE e.uid = :uid
+ *   ORDER BY e.created DESC', 0, 10, array(':uid' => $uid));
  * foreach ($result as $record) {
  *   // Perform operations on $record->title, etc. here.
  * }
