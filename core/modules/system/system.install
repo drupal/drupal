@@ -264,6 +264,39 @@ function system_requirements($phase) {
     $requirements['settings.php']['title'] = t('Configuration files');
   }
 
+  // Test the contents of the .htaccess files.
+  if ($phase == 'runtime') {
+    // Try to write the .htaccess files first, to prevent false alarms in case
+    // (for example) the /tmp directory was wiped.
+    file_ensure_htaccess();
+    $htaccess_files['public://.htaccess'] = array(
+      'title' => t('Public files directory'),
+      'directory' => drupal_realpath('public://'),
+    );
+    if (\Drupal::config('system.file')->get('path.private')) {
+      $htaccess_files['private://.htaccess'] = array(
+        'title' => t('Private files directory'),
+        'directory' => drupal_realpath('private://'),
+      );
+    }
+    $htaccess_files['temporary://.htaccess'] = array(
+      'title' => t('Temporary files directory'),
+      'directory' => drupal_realpath('temporary://'),
+    );
+    foreach ($htaccess_files as $htaccess_file => $info) {
+      // Check for the string which was added to the recommended .htaccess file
+      // in the latest security update.
+      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
+        $requirements[$htaccess_file] = array(
+          'title' => $info['title'],
+          'value' => t('Not fully protected'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => t('See <a href="@url">@url</a> for information about the recommended .htaccess file which should be added to the %directory directory to help protect against arbitrary code execution.', array('@url' => 'http://drupal.org/SA-CORE-2013-003', '%directory' => $info['directory'])),
+        );
+      }
+    }
+  }
+
   // Report cron status.
   if ($phase == 'runtime') {
     $cron_config = \Drupal::config('system.cron');
@@ -560,7 +593,7 @@ function system_install() {
     ->save();
 
   // Populate the cron key state variable.
-  $cron_key = Crypt::randomStringHashed(55);
+  $cron_key = Crypt::randomBytesBase64(55);
   \Drupal::state()->set('system.cron_key', $cron_key);
 
   // Populate the site UUID.

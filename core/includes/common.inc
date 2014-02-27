@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\Number;
 use Drupal\Component\Utility\Settings;
@@ -3195,6 +3196,10 @@ function _drupal_bootstrap_code() {
 
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
+  // Ensure mt_rand() is reseeded to prevent random values from one page load
+  // being exploited to predict random values in subsequent page loads.
+  $seed = unpack("L", Crypt::randomBytes(4));
+  mt_srand($seed[1]);
 
   // Set the allowed protocols once we have the config available.
   $allowed_protocols = \Drupal::config('system.filter')->get('protocols');
@@ -4294,7 +4299,7 @@ function drupal_pre_render_render_cache_placeholder($element) {
   if (!is_array($context)) {
     throw new Exception(t('#context must be an array.'));
   }
-  $token = \Drupal\Component\Utility\Crypt::randomStringHashed(55);
+  $token = \Drupal\Component\Utility\Crypt::randomBytesBase64(55);
 
   // Generate placeholder markup and store #post_render_cache callback.
   $element['#markup'] = drupal_render_cache_generate_placeholder($callback, $context, $token);

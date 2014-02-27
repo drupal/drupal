@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\StreamWrapper\LocalStream;
-use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
+use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\String;
 use Drupal\Core\StreamWrapper\PublicStream;
 
@@ -579,17 +579,16 @@ function file_ensure_htaccess() {
 /**
  * Creates a .htaccess file in the given directory.
  *
- * @param $directory
+ * @param string $directory
  *   The directory.
- * @param $private
- *   FALSE indicates that $directory should be an open and public directory.
- *   The default is TRUE which indicates a private and protected directory.
- *
- * @return bool
- *   TRUE if the .htaccess file could be created or existed already, FALSE
- *   otherwise.
+ * @param bool $private
+ *   (Optional) FALSE indicates that $directory should be a web-accessible
+ *   directory. Defaults to TRUE which indicates a private directory.
+ * @param bool $force_overwrite
+ *   (Optional) Set to TRUE to attempt to overwrite the existing .htaccess file
+ *   if one is already present. Defaults to FALSE.
  */
-function file_save_htaccess($directory, $private = TRUE) {
+function file_save_htaccess($directory, $private = TRUE, $force_overwrite = FALSE) {
   if (file_uri_scheme($directory)) {
     $htaccess_path = file_stream_wrapper_uri_normalize($directory . '/.htaccess');
   }
@@ -598,19 +597,11 @@ function file_save_htaccess($directory, $private = TRUE) {
     $htaccess_path = $directory . '/.htaccess';
   }
 
-  if (file_exists($htaccess_path)) {
+  if (file_exists($htaccess_path) && !$force_overwrite) {
     // Short circuit if the .htaccess file already exists.
     return TRUE;
   }
-
-  if ($private) {
-    // Private .htaccess file.
-    $htaccess_lines = MTimeProtectedFastFileStorage::HTACCESS;
-  }
-  else {
-    // Public .htaccess file.
-    $htaccess_lines = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks";
-  }
+  $htaccess_lines = file_htaccess_lines($private);
 
   // Write the .htaccess file.
   if (file_exists($directory) && is_writable($directory) && file_put_contents($htaccess_path, $htaccess_lines)) {
@@ -621,6 +612,23 @@ function file_save_htaccess($directory, $private = TRUE) {
     watchdog('security', "Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", $variables, WATCHDOG_ERROR);
     return FALSE;
   }
+}
+
+/**
+ * Returns the standard .htaccess lines that Drupal writes to file directories.
+ *
+ * @param bool $private
+ *   (Optional) Set to FALSE to return the .htaccess lines for a web-accessible
+ *   public directory. The default is TRUE, which returns the .htaccess lines
+ *   for a private directory that should not be web-accessible.
+ *
+ * @return string
+ *   The desired contents of the .htaccess file.
+ *
+ * @see file_create_htaccess()
+ */
+function file_htaccess_lines($private = TRUE) {
+  return FileStorage::htaccessLines($private);
 }
 
 /**

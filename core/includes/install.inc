@@ -457,7 +457,7 @@ function drupal_install_config_directories() {
   // Add a randomized config directory name to settings.php, unless it was
   // manually defined in the existing already.
   if (empty($config_directories)) {
-    $config_directories_hash = Crypt::randomStringHashed(55);
+    $config_directories_hash = Crypt::randomBytesBase64(55);
     $settings['config_directories'] = array(
       CONFIG_ACTIVE_DIRECTORY => (object) array(
         'value' => conf_path() . '/files/config_' . $config_directories_hash . '/active',

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage.
+ * Contains \Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage.
  */
 
 namespace Drupal\Component\PhpStorage;
@@ -40,13 +40,6 @@ namespace Drupal\Component\PhpStorage;
 class MTimeProtectedFastFileStorage extends FileStorage {
 
   /**
-   * The .htaccess code to make a directory private.
-   *
-   * Disabling Options Indexes is particularly important.
-   */
-  const HTACCESS="SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nDeny from all\nOptions None\nOptions +FollowSymLinks";
-
-  /**
    * The secret used in the HMAC.
    *
    * @var string
@@ -74,10 +67,6 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    */
   public function save($name, $data) {
     $this->ensureDirectory($this->directory);
-    $htaccess_path =  $this->directory . '/.htaccess';
-    if (!file_exists($htaccess_path) && file_put_contents($htaccess_path, self::HTACCESS)) {
-      @chmod($htaccess_path, 0444);
-    }
 
     // Write the file out to a temporary location. Prepend with a '.' to keep it
     // hidden from listings and web servers.

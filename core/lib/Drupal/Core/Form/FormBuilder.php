@@ -329,7 +329,7 @@ class FormBuilder implements FormBuilderInterface {
       $form['#build_id'] = $old_form['#build_id'];
     }
     else {
-      $form['#build_id'] = 'form-' . Crypt::hashBase64(uniqid(mt_rand(), TRUE) . mt_rand());
+      $form['#build_id'] = 'form-' . Crypt::randomBytesBase64();
     }
 
     // #action defaults to request_uri(), but in case of Ajax and other partial
@@ -672,7 +672,7 @@ class FormBuilder implements FormBuilderInterface {
     // @see self::buildForm()
     // @see self::rebuildForm()
     if (!isset($form['#build_id'])) {
-      $form['#build_id'] = 'form-' . Crypt::hashBase64(uniqid(mt_rand(), TRUE) . mt_rand());
+      $form['#build_id'] = 'form-' . Crypt::randomBytesBase64();
     }
     $form['form_build_id'] = array(
       '#type' => 'hidden',

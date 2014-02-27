@@ -43,7 +43,10 @@ class HtaccessUnitTest extends DrupalUnitTestBase {
     mkdir($public, 0777, TRUE);
     $this->assertTrue(file_save_htaccess($public, FALSE));
     $content = file_get_contents($public . '/.htaccess');
-    $this->assertIdentical($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks");
+    $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
+    $this->assertTrue(strpos($content, "Options None") !== FALSE);
+    $this->assertTrue(strpos($content, "Options +FollowSymLinks") !== FALSE);
+    $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003") !== FALSE);
     $this->assertFilePermissions($public . '/.htaccess', 0444);
 
     $this->assertTrue(file_save_htaccess($public, FALSE));
@@ -52,7 +55,11 @@ class HtaccessUnitTest extends DrupalUnitTestBase {
     mkdir($private, 0777, TRUE);
     $this->assertTrue(file_save_htaccess($private));
     $content = file_get_contents($private . '/.htaccess');
-    $this->assertIdentical($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nDeny from all\nOptions None\nOptions +FollowSymLinks");
+    $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
+    $this->assertTrue(strpos($content, "Deny from all") !== FALSE);
+    $this->assertTrue(strpos($content, "Options None") !== FALSE);
+    $this->assertTrue(strpos($content, "Options +FollowSymLinks") !== FALSE);
+    $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003") !== FALSE);
     $this->assertFilePermissions($private . '/.htaccess', 0444);
 
     $this->assertTrue(file_save_htaccess($private));
@@ -61,7 +68,11 @@ class HtaccessUnitTest extends DrupalUnitTestBase {
     mkdir($stream, 0777, TRUE);
     $this->assertTrue(file_save_htaccess($stream));
     $content = file_get_contents($stream . '/.htaccess');
-    $this->assertIdentical($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nDeny from all\nOptions None\nOptions +FollowSymLinks");
+    $this->assertTrue(strpos($content,"SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006") !== FALSE);
+    $this->assertTrue(strpos($content,"Deny from all") !== FALSE);
+    $this->assertTrue(strpos($content,"Options None") !== FALSE);
+    $this->assertTrue(strpos($content,"Options +FollowSymLinks") !== FALSE);
+    $this->assertTrue(strpos($content, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003") !== FALSE);
     $this->assertFilePermissions($stream . '/.htaccess', 0444);
 
     $this->assertTrue(file_save_htaccess($stream));

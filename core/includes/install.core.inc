@@ -1255,7 +1255,7 @@ function install_settings_form_submit($form, &$form_state) {
     'required' => TRUE,
   );
   $settings['settings']['hash_salt'] = (object) array(
-    'value'    => Crypt::randomStringHashed(55),
+    'value'    => Crypt::randomBytesBase64(55),
     'required' => TRUE,
   );
   // Remember the profile which was used.

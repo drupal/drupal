@@ -62,7 +62,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
           watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->getUsername(), '%timestamp' => $timestamp));
           drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.'));
           // Let the user's password be changed without the current password check.
-          $token = Crypt::randomStringHashed(55);
+          $token = Crypt::randomBytesBase64(55);
           $_SESSION['pass_reset_' . $user->id()] = $token;
           return new RedirectResponse(url('user/' . $user->id() . '/edit', array(
             'query' => array('pass-reset-token' => $token),

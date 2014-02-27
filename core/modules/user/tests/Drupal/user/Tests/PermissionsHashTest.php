@@ -112,7 +112,7 @@ class PermissionsHashTest extends UnitTestCase {
       ->will($this->returnValue($roles_1_updated));
 
     // Mocked private key + cache services.
-    $random = Crypt::randomStringHashed(55);
+    $random = Crypt::randomBytesBase64(55);
     $this->private_key = $this->getMockBuilder('Drupal\Core\PrivateKey')
       ->disableOriginalConstructor()
       ->setMethods(array('get'))
@@ -202,7 +202,7 @@ namespace {
       static $salt;
 
       if (!isset($salt)) {
-        $salt = Drupal\Component\Utility\Crypt::randomStringHashed(55);
+        $salt = Drupal\Component\Utility\Crypt::randomBytesBase64(55);
       }
 
       return $salt;

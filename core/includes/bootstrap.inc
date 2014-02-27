@@ -2024,7 +2024,7 @@ function drupal_generate_test_ua($prefix) {
     else {
       // Generate and save a new hash salt for a test run.
       // Consumed by drupal_valid_test_ua() before settings.php is loaded.
-      $private_key = Crypt::randomStringHashed(55);
+      $private_key = Crypt::randomBytesBase64(55);
       file_put_contents($key_file, $private_key);
     }
     // The file properties add more entropy not easily accessible to others.

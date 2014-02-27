@@ -64,7 +64,7 @@ class PrivateKey {
    *   The private key.
    */
   protected function create() {
-    return Crypt::randomStringHashed(55);
+    return Crypt::randomBytesBase64(55);
   }
 
 }
