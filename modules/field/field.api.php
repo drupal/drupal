@@ -1587,7 +1587,7 @@ function hook_field_attach_rename_bundle($entity_type, $bundle_old, $bundle_new)
  * @param $entity_type
  *   The type of entity; for example, 'node' or 'user'.
  * @param $bundle
- *   The bundle that was just deleted.
+ *   The name of the bundle that was just deleted.
  * @param $instances
  *   An array of all instances that existed for the bundle before it was
  *   deleted.
