@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Theme;
 
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -28,7 +29,7 @@ class EntityFilteringThemeTest extends WebTestBase {
   /**
    * A list of all available themes.
    *
-   * @var array
+   * @var \Drupal\Core\Extension\Extension[]
    */
   protected $themes;
 
@@ -81,9 +82,10 @@ class EntityFilteringThemeTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    // Enable all available themes for testing.
-    $this->themes = array_keys(list_themes());
-    theme_enable($this->themes);
+    // Enable all available non-testing themes.
+    $listing = new ExtensionDiscovery();
+    $this->themes = $listing->scan('theme', FALSE);
+    theme_enable(array_keys($this->themes));
 
     // Create a test user.
     $this->user = $this->drupalCreateUser(array('access content', 'access user profiles'));
@@ -133,9 +135,9 @@ class EntityFilteringThemeTest extends WebTestBase {
     );
 
     // Check each path in all available themes.
-    foreach ($this->themes as $theme) {
+    foreach ($this->themes as $name => $theme) {
       \Drupal::config('system.theme')
-        ->set('default', $theme)
+        ->set('default', $name)
         ->save();
       foreach ($paths as $path) {
         $this->drupalGet($path);

@@ -29,20 +29,20 @@ class ProjectInfo {
    * files for each module or theme, which is important data which is used when
    * deciding if the available update data should be invalidated.
    *
-   * @param $projects
+   * @param array $projects
    *   Reference to the array of project data of what's installed on this site.
-   * @param $list
+   * @param \Drupal\Core\Extension\Extension[] $list
    *   Array of data to process to add the relevant info to the $projects array.
-   * @param $project_type
+   * @param string $project_type
    *   The kind of data in the list. Can be 'module' or 'theme'.
-   * @param $status
+   * @param bool $status
    *   Boolean that controls what status (enabled or disabled) to process out of
    *   the $list and add to the $projects array.
-   * @param $additional_whitelist
+   * @param array $additional_whitelist
    *   (optional) Array of additional elements to be collected from the .info.yml
    *   file. Defaults to array().
    */
-  function processInfoList(&$projects, $list, $project_type, $status, $additional_whitelist = array()) {
+  function processInfoList(array &$projects, array $list, $project_type, $status, array $additional_whitelist = array()) {
     foreach ($list as $file) {
       // A disabled or hidden base theme of an enabled sub-theme still has all
       // of its code run by the sub-theme, so we include it in our "enabled"
@@ -178,13 +178,11 @@ class ProjectInfo {
   /**
    * Determines what project a given file object belongs to.
    *
-   * @param $file
-   *   A file object as returned by system_get_files_database().
+   * @param \Drupal\Core\Extension\Extension $file
+   *   An extension object.
    *
-   * @return
+   * @return string
    *   The canonical project short name.
-   *
-   * @see system_get_files_database()
    */
   function getProjectName($file) {
     $project_name = '';

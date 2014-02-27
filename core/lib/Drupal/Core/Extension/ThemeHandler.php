@@ -13,7 +13,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Routing\RouteBuilder;
-use Drupal\Core\SystemListingInfo;
 
 /**
  * Default theme handler using the config system for enabled/disabled themes.
@@ -87,11 +86,11 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $routeBuilder;
 
   /**
-   * The system listing info
+   * An extension discovery instance.
    *
-   * @var \Drupal\Core\SystemListingInfo
+   * @var \Drupal\Core\Extension\ExtensionDiscovery
    */
-  protected $systemListingInfo;
+  protected $extensionDiscovery;
 
   /**
    * Constructs a new ThemeHandler.
@@ -110,17 +109,17 @@ class ThemeHandler implements ThemeHandlerInterface {
    *   database.
    * @param \Drupal\Core\Routing\RouteBuilder $route_builder
    *   (optional) The route builder to rebuild the routes if a theme is enabled.
-   * @param \Drupal\Core\SystemListingInfo $system_list_info
-   *   (optional) The system listing info.
+   * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
+   *   (optional) A extension discovery instance (for unit tests).
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, InfoParserInterface $info_parser, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, SystemListingInfo $system_list_info = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, InfoParserInterface $info_parser, ConfigInstallerInterface $config_installer = NULL, RouteBuilder $route_builder = NULL, ExtensionDiscovery $extension_discovery = NULL) {
     $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
     $this->cacheBackend = $cache_backend;
     $this->infoParser = $info_parser;
     $this->configInstaller = $config_installer;
     $this->routeBuilder = $route_builder;
-    $this->systemListingInfo = $system_list_info;
+    $this->extensionDiscovery = $extension_discovery;
   }
 
   /**
@@ -243,24 +242,9 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function rebuildThemeData() {
-    // Find themes.
-    $listing = $this->getSystemListingInfo();
-    $themes = $listing->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'themes', 'name', 1);
-    // Allow modules to add further themes.
-    if ($module_themes = $this->moduleHandler->invokeAll('system_theme_info')) {
-      foreach ($module_themes as $name => $uri) {
-        // @see file_scan_directory()
-        $themes[$name] = (object) array(
-          'uri' => $uri,
-          'filename' => pathinfo($uri, PATHINFO_FILENAME),
-          'name' => $name,
-        );
-      }
-    }
-
-    // Find theme engines.
-    $listing = $this->getSystemListingInfo();
-    $engines = $listing->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.engine$/', 'themes/engines', 'name', 1);
+    $listing = $this->getExtensionDiscovery();
+    $themes = $listing->scan('theme');
+    $engines = $listing->scan('theme_engine');
 
     // Set defaults for theme info.
     $defaults = array(
@@ -288,20 +272,15 @@ class ThemeHandler implements ThemeHandlerInterface {
     // Read info files for each theme.
     foreach ($themes as $key => $theme) {
       $themes[$key]->filename = $theme->uri;
-      $themes[$key]->info = $this->infoParser->parse($theme->uri) + $defaults;
-
-      // Skip this extension if its type is not theme.
-      if (!isset($themes[$key]->info['type']) || $themes[$key]->info['type'] != 'theme') {
-        unset($themes[$key]);
-        continue;
-      }
+      $themes[$key]->info = $this->infoParser->parse($theme->getPathname()) + $defaults;
 
       // Add the info file modification time, so it becomes available for
       // contributed modules to use for ordering theme lists.
-      $themes[$key]->info['mtime'] = filemtime($theme->uri);
+      $themes[$key]->info['mtime'] = $theme->getMTime();
 
       // Invoke hook_system_info_alter() to give installed modules a chance to
       // modify the data in the .info.yml files if necessary.
+      // @todo Remove $type argument, obsolete with $theme->getType().
       $type = 'theme';
       $this->moduleHandler->alter('system_info', $themes[$key]->info, $themes[$key], $type);
 
@@ -316,12 +295,10 @@ class ThemeHandler implements ThemeHandlerInterface {
         $themes[$key]->template = TRUE;
       }
 
-      // Prefix stylesheets and scripts with module path.
-      $path = dirname($theme->uri);
+      // Prefix stylesheets, scripts, and screenshot with theme path.
+      $path = $theme->getPath();
       $theme->info['stylesheets'] = $this->themeInfoPrefixPath($theme->info['stylesheets'], $path);
       $theme->info['scripts'] = $this->themeInfoPrefixPath($theme->info['scripts'], $path);
-
-      // Give the screenshot proper path information.
       if (!empty($themes[$key]->info['screenshot'])) {
         $themes[$key]->info['screenshot'] = $path . '/' . $themes[$key]->info['screenshot'];
       }
@@ -330,7 +307,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     // Now that we've established all our master themes, go back and fill in
     // data for sub-themes.
     foreach ($sub_themes as $key) {
-      $themes[$key]->base_themes = $this->doGetBaseThemes($themes, $key);
+      $themes[$key]->base_themes = $this->getBaseThemes($themes, $key);
       // Don't proceed if there was a problem with the root base theme.
       if (!current($themes[$key]->base_themes)) {
         continue;
@@ -436,23 +413,23 @@ class ThemeHandler implements ThemeHandlerInterface {
         return array($base_key => NULL);
       }
       $used_themes[$base_key] = TRUE;
-      return $this->getBaseThemes($themes, $base_key, $used_themes) + $current_base_theme;
+      return $this->doGetBaseThemes($themes, $base_key, $used_themes) + $current_base_theme;
     }
     // If we get here, then this is our parent theme.
     return $current_base_theme;
   }
 
   /**
-   * Returns a system listing info object.
+   * Returns an extension discovery object.
    *
-   * @return \Drupal\Core\SystemListingInfo
-   *   The system listing object.
+   * @return \Drupal\Core\Extension\ExtensionDiscovery
+   *   The extension discovery object.
    */
-  protected function getSystemListingInfo() {
-    if (!isset($this->systemListingInfo)) {
-      $this->systemListingInfo = new SystemListingInfo();
+  protected function getExtensionDiscovery() {
+    if (!isset($this->extensionDiscovery)) {
+      $this->extensionDiscovery = new ExtensionDiscovery();
     }
-    return $this->systemListingInfo;
+    return $this->extensionDiscovery;
   }
 
   /**

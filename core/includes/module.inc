@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Extension\ExtensionDiscovery;
 
 /**
  * Builds a list of bootstrap modules and enabled modules and themes.
@@ -298,14 +299,19 @@ function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) 
  * Returns an array of modules required by core.
  */
 function drupal_required_modules() {
-  $files = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'modules');
+  $listing = new ExtensionDiscovery();
+  $files = $listing->scan('module');
   $required = array();
 
-  // An installation profile is required and one must always be loaded.
-  $required[] = drupal_get_profile();
+  // Unless called by the installer, an installation profile is required and
+  // must always be loaded. drupal_get_profile() also returns the installation
+  // profile in the installer, but only after it has been selected.
+  if ($profile = drupal_get_profile()) {
+    $required[] = $profile;
+  }
 
   foreach ($files as $name => $file) {
-    $info = \Drupal::service('info_parser')->parse($file->uri);
+    $info = \Drupal::service('info_parser')->parse($file->getPathname());
     if (!empty($info) && !empty($info['required']) && $info['required']) {
       $required[] = $name;
     }

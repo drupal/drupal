@@ -12,6 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Url;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\RenderWrapper;
@@ -65,10 +66,10 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
 /**
  * Determines if a theme is available to use.
  *
- * @param $theme
+ * @param string|\Drupal\Core\Extension\Extension $theme
  *   Either the name of a theme or a full theme object.
  *
- * @return
+ * @return bool
  *   Boolean TRUE if the theme is enabled or is the site administration theme;
  *   FALSE otherwise.
  *
@@ -78,7 +79,7 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  * @see \Drupal\Core\Theme\ThemeAccessCheck::checkAccess().
  */
 function drupal_theme_access($theme) {
-  if (is_object($theme)) {
+  if ($theme instanceof Extension) {
     $theme = $theme->name;
   }
   return \Drupal::service('access_check.theme')->checkAccess($theme);
@@ -121,19 +122,9 @@ function drupal_theme_initialize() {
  *
  * This function is useful to initialize a theme when no database is present.
  *
- * @param $theme
- *   An object with the following information:
- *     filename
- *       The .info.yml file for this theme. The 'path' to
- *       the theme will be in this file's directory. (Required)
- *     owner
- *       The path to the .theme file or the .engine file to load for
- *       the theme. (Required)
- *     stylesheet
- *       The primary stylesheet for the theme. (Optional)
- *     engine
- *       The name of theme engine to use. (Optional)
- * @param $base_theme
+ * @param \Drupal\Core\Extension\Extension $theme
+ *   The theme extension object.
+ * @param \Drupal\Core\Extension\Extension[] $base_theme
  *    An optional array of objects that represent the 'base theme' if the
  *    theme is meant to be derivative of another theme. It requires
  *    the same information as the $theme object. It should be in

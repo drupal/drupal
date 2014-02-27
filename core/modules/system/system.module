@@ -8,6 +8,7 @@
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\block\BlockPluginInterface;
 use Drupal\menu_link\MenuLinkInterface;
@@ -1520,22 +1521,23 @@ function system_get_info($type, $name = NULL) {
 /**
  * Helper function to scan and collect module .info.yml data.
  *
- * @return
+ * @return \Drupal\Core\Extension\Extension[]
  *   An associative array of module information.
  */
 function _system_rebuild_module_data() {
+  $listing = new ExtensionDiscovery();
   // Find modules
-  $modules = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0);
+  $modules = $listing->scan('module');
 
   // Find installation profiles.
-  $profiles = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles', 'name', 0);
+  $profiles = $listing->scan('profile');
 
   // Include the installation profile in modules that are loaded.
-  $profile = drupal_get_profile();
-  $modules[$profile] = $profiles[$profile];
-
-  // Installation profile hooks are always executed last.
-  $modules[$profile]->weight = 1000;
+  if ($profile = drupal_get_profile()) {
+    $modules[$profile] = $profiles[$profile];
+    // Installation profile hooks are always executed last.
+    $modules[$profile]->weight = 1000;
+  }
 
   // Set defaults for module info.
   $defaults = array(
@@ -1553,17 +1555,11 @@ function _system_rebuild_module_data() {
     $modules[$key]->filename = $module->uri;
 
     // Look for the info file.
-    $module->info = \Drupal::service('info_parser')->parse(dirname($module->uri) . '/' . $module->name . '.info.yml');
-
-    // Skip modules/profiles that don't provide info or have the wrong type.
-    if (empty($module->info) || !isset($module->info['type']) || !in_array($module->info['type'], array('module', 'profile'))) {
-      unset($modules[$key]);
-      continue;
-    }
+    $module->info = \Drupal::service('info_parser')->parse($module->getPathname());
 
     // Add the info file modification time, so it becomes available for
     // contributed modules to use for ordering module lists.
-    $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info.yml');
+    $module->info['mtime'] = $module->getMTime();
 
     // Merge in defaults and save.
     $modules[$key]->info = $module->info + $defaults;
@@ -1576,6 +1572,7 @@ function _system_rebuild_module_data() {
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info.yml files if necessary.
+    // @todo Remove $type argument, obsolete with $module->getType().
     $type = 'module';
     \Drupal::moduleHandler()->alter('system_info', $modules[$key]->info, $modules[$key], $type);
   }
@@ -1587,7 +1584,7 @@ function _system_rebuild_module_data() {
   }
 
 
-  if (isset($modules[$profile])) {
+  if ($profile && isset($modules[$profile])) {
     // The installation profile is required, if it's a valid module.
     $modules[$profile]->info['required'] = TRUE;
     // Add a default distribution name if the profile did not provide one. This
@@ -1603,9 +1600,9 @@ function _system_rebuild_module_data() {
 /**
  * Ensures that dependencies of required modules are also required.
  *
- * @param \stdClass $module
+ * @param \Drupal\Core\Extension\Extension $module
  *   The module info.
- * @param array $modules
+ * @param \Drupal\Core\Extension\Extension[] $modules
  *   The array of all module info.
  */
 function _system_rebuild_module_data_ensure_required($module, &$modules) {
@@ -1624,7 +1621,7 @@ function _system_rebuild_module_data_ensure_required($module, &$modules) {
 /**
  * Rebuild, save, and return data about all currently available modules.
  *
- * @return
+ * @return \Drupal\Core\Extension\Extension[]
  *   Array of all available modules and their data.
  */
 function system_rebuild_module_data() {
@@ -1636,14 +1633,13 @@ function system_rebuild_module_data() {
     $modules = _system_rebuild_module_data();
     $files = array();
     ksort($modules);
-    // Add name, status, weight, and schema version.
+    // Add status, weight, and schema version.
     $installed_modules = (array) \Drupal::config('system.module')->get('enabled');
-    foreach ($modules as $module => $record) {
-      $record->name = $module;
-      $record->weight = isset($installed_modules[$module]) ? $installed_modules[$module] : 0;
-      $record->status = (int) isset($installed_modules[$module]);
-      $record->schema_version = SCHEMA_UNINSTALLED;
-      $files[$module] = $record->filename;
+    foreach ($modules as $name => $module) {
+      $module->weight = isset($installed_modules[$name]) ? $installed_modules[$name] : 0;
+      $module->status = (int) isset($installed_modules[$name]);
+      $module->schema_version = SCHEMA_UNINSTALLED;
+      $files[$name] = $module->uri;
     }
     $modules = \Drupal::moduleHandler()->buildModuleDependencies($modules);
     $modules_cache = $modules;
@@ -1658,7 +1654,7 @@ function system_rebuild_module_data() {
 /**
  * Helper function to scan and collect theme .info.yml data and their engines.
  *
- * @return
+ * @return \Drupal\Core\Extension\Extension[]
  *   An associative array of themes information.
  *
  * @see \Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData()
@@ -1673,7 +1669,7 @@ function _system_rebuild_theme_data() {
 /**
  * Rebuild, save, and return data about all currently available themes.
  *
- * @return
+ * @return \Drupal\Core\Extension\Extension[]
  *   Array of all available themes and their data.
  */
 function system_rebuild_theme_data() {
@@ -1690,7 +1686,7 @@ function system_rebuild_theme_data() {
   $files = array();
   foreach ($themes as $name => $theme) {
     $theme->status = (int) isset($enabled_themes[$name]);
-    $files[$name] = $theme->filename;
+    $files[$name] = $theme->uri;
   }
   // Replace last known theme data state.
   // @todo Obsolete with proper installation status for themes.

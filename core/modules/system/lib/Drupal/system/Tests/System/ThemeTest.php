@@ -254,9 +254,12 @@ class ThemeTest extends WebTestBase {
    * Test that themes can't be enabled when the base theme or engine is missing.
    */
   function testInvalidTheme() {
-    \Drupal::moduleHandler()->install(array('theme_page_test'));
+    // theme_page_test_system_info_alter() un-hides all hidden themes.
+    $this->container->get('module_handler')->install(array('theme_page_test'));
+    // Clear the system_list() and theme listing cache to pick up the change.
+    $this->container->get('theme_handler')->reset();
     $this->drupalGet('admin/appearance');
-    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => 'not_real_test_basetheme')), 'Invalid base theme check succeeded.');
-    $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => 'not_real_engine')), 'Invalid theme engine check succeeded.');
+    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => 'not_real_test_basetheme')));
+    $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => 'not_real_engine')));
   }
 }

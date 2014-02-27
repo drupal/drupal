@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Url;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Utility\Title;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\ClassLoader\ApcClassLoader;
@@ -655,7 +656,7 @@ function _drupal_request_initialize() {
 function drupal_get_filename($type, $name, $filename = NULL) {
   // The location of files will not change during the request, so do not use
   // drupal_static().
-  static $files = array(), $dirs = array();
+  static $files = array();
 
   // Profiles are converted into modules in system_rebuild_module_data().
   // @todo Remove false-exposure of profiles as modules.
@@ -667,72 +668,31 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     $files[$type] = array();
   }
 
-  if (!empty($filename)) {
+  if (isset($filename)) {
     $files[$type][$name] = $filename;
   }
-  elseif (isset($files[$type][$name])) {
-    // nothing
-  }
-  else {
-    // Verify that we have an keyvalue service before using it. This is required
-    // because this function is called during installation.
-    // @todo Inject database connection into KeyValueStore\DatabaseStorage.
-    if (\Drupal::hasService('keyvalue') && function_exists('db_query')) {
-      if ($type == 'module') {
-        if (empty($files[$type])) {
-          $files[$type] = \Drupal::moduleHandler()->getModuleList();
-        }
-        if (isset($files[$type][$name])) {
-          return $files[$type][$name];
-        }
-      }
-      try {
-        $file_list = \Drupal::state()->get('system.' . $type . '.files');
-        if ($file_list && isset($file_list[$name]) && file_exists(DRUPAL_ROOT . '/' . $file_list[$name])) {
-          $files[$type][$name] = $file_list[$name];
-        }
-      }
-      catch (Exception $e) {
-        // The keyvalue service raised an exception because the backend might
-        // be down. We have a fallback for this case so we hide the error
-        // completely.
-      }
+  elseif (!isset($files[$type][$name])) {
+    // If the pathname of the requested extension is not known, try to retrieve
+    // the list of extension pathnames from various providers, checking faster
+    // providers first.
+    // Retrieve the current module list (derived from the service container).
+    if ($type == 'module' && \Drupal::hasService('module_handler')) {
+      $files[$type] += \Drupal::moduleHandler()->getModuleList();
     }
-    // Fallback to searching the filesystem if the database could not find the
-    // file or the file returned by the database is not found.
+    // If still unknown, retrieve the file list prepared in state by
+    // system_rebuild_module_data() and system_rebuild_theme_data().
+    if (!isset($files[$type][$name]) && \Drupal::hasService('state')) {
+      $files[$type] += \Drupal::state()->get('system.' . $type . '.files', array());
+    }
+    // If still unknown, perform a filesystem scan.
     if (!isset($files[$type][$name])) {
-      // We have consistent directory naming: modules, themes...
-      $dir = $type . 's';
-      if ($type == 'theme_engine') {
-        $dir = 'themes/engines';
-        $extension = 'engine';
+      $listing = new ExtensionDiscovery();
+      // Prevent an infinite recursion by this legacy function.
+      if ($original_type == 'profile') {
+        $listing->setProfileDirectories(array());
       }
-      elseif ($type == 'theme') {
-        $extension = 'info.yml';
-      }
-      // Profiles are converted into modules in system_rebuild_module_data().
-      // @todo Remove false-exposure of profiles as modules.
-      elseif ($original_type == 'profile') {
-        $dir = 'profiles';
-        $extension = 'profile';
-      }
-      else {
-        $extension = $type;
-      }
-
-      if (!isset($dirs[$dir][$extension])) {
-        $dirs[$dir][$extension] = TRUE;
-        if (!function_exists('drupal_system_listing')) {
-          require_once __DIR__ . '/common.inc';
-        }
-        // Scan the appropriate directories for all files with the requested
-        // extension, not just the file we are currently looking for. This
-        // prevents unnecessary scans from being repeated when this function is
-        // called more than once in the same page request.
-        $matches = drupal_system_listing("/^" . DRUPAL_PHP_FUNCTION_PATTERN . "\.$extension$/", $dir);
-        foreach ($matches as $matched_name => $file) {
-          $files[$type][$matched_name] = $file->uri;
-        }
+      foreach ($listing->scan($original_type) as $extension_name => $file) {
+        $files[$type][$extension_name] = $file->uri;
       }
     }
   }

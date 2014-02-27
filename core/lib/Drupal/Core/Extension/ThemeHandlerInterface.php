@@ -37,7 +37,7 @@ interface ThemeHandlerInterface {
    * Retrieved from the database, if available and the site is not in
    * maintenance mode; otherwise compiled freshly from the filesystem.
    *
-   * @return array
+   * @return \Drupal\Core\Extension\Extension[]
    *   An associative array of the currently available themes. The keys are the
    *   themes' machine names and the values are objects having the following
    *   properties:
@@ -81,10 +81,10 @@ interface ThemeHandlerInterface {
   public function reset();
 
   /**
-   * Helper function to scan and collect theme .info.yml data and their engines.
+   * Scans and collects theme extension data and their engines.
    *
-   * @return array
-   *   An associative array of themes information.
+   * @return \Drupal\Core\Extension\Extension[]
+   *   An associative array of theme extensions.
    */
   public function rebuildThemeData();
 
@@ -94,7 +94,7 @@ interface ThemeHandlerInterface {
    * Themes can inherit templates and function implementations from earlier
    * themes.
    *
-   * @param array $themes
+   * @param \Drupal\Core\Extension\Extension[] $themes
    *   An array of available themes.
    * @param string $theme
    *   The name of the theme whose base we are looking for.
