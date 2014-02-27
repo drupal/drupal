@@ -57,7 +57,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
     $this->drupalGet('admin/config/development/testing');
     $this->assertText('Installation profile module tests helper');
     $edit = array(
-      'Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest' => TRUE,
+      'tests[Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest]' => TRUE,
     );
     $this->drupalPostForm(NULL, $edit, t('Run tests'));
     $this->assertText('SystemListingCompatibleTest test executed.');

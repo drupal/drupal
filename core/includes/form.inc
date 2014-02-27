@@ -1785,52 +1785,81 @@ function form_process_table($element, &$form_state) {
     // tableselect element behaves as if it had been of #type checkboxes or
     // radios.
     foreach (element_children($element) as $key) {
+      $row = &$element[$key];
+      // Prepare the element #parents for the tableselect form element.
+      // Their values have to be located in child keys (#tree is ignored), since
+      // form_validate_table() has to be able to validate whether input (for the
+      // parent #type 'table' element) has been submitted.
+      $element_parents = array_merge($element['#parents'], array($key));
+
+      // Since the #parents of the tableselect form element will equal the
+      // #parents of the row element, prevent FormBuilder from auto-generating
+      // an #id for the row element, since drupal_html_id() would automatically
+      // append a suffix to the tableselect form element's #id otherwise.
+      $row['#id'] = drupal_html_id('edit-' . implode('-', $element_parents) . '-row');
+
       // Do not overwrite manually created children.
-      if (!isset($element[$key]['select'])) {
+      if (!isset($row['select'])) {
         // Determine option label; either an assumed 'title' column, or the
         // first available column containing a #title or #markup.
         // @todo Consider to add an optional $element[$key]['#title_key']
         //   defaulting to 'title'?
-        $title = '';
-        if (!empty($element[$key]['title']['#title'])) {
-          $title = $element[$key]['title']['#title'];
+        unset($label_element);
+        $title = NULL;
+        if (isset($row['title']['#type']) && $row['title']['#type'] == 'label') {
+          $label_element = &$row['title'];
         }
         else {
-          foreach (element_children($element[$key]) as $column) {
-            if (isset($element[$key][$column]['#title'])) {
-              $title = $element[$key][$column]['#title'];
-              break;
-            }
-            if (isset($element[$key][$column]['#markup'])) {
-              $title = $element[$key][$column]['#markup'];
-              break;
+          if (!empty($row['title']['#title'])) {
+            $title = $row['title']['#title'];
+          }
+          else {
+            foreach (element_children($row) as $column) {
+              if (isset($row[$column]['#title'])) {
+                $title = $row[$column]['#title'];
+                break;
+              }
+              if (isset($row[$column]['#markup'])) {
+                $title = $row[$column]['#markup'];
+                break;
+              }
             }
           }
-        }
-        if ($title !== '') {
-          $title = t('Update !title', array('!title' => $title));
+          if (isset($title) && $title !== '') {
+            $title = t('Update !title', array('!title' => $title));
+          }
         }
 
         // Prepend the select column to existing columns.
-        $element[$key] = array('select' => array()) + $element[$key];
-        $element[$key]['select'] += array(
+        $row = array('select' => array()) + $row;
+        $row['select'] += array(
           '#type' => $element['#multiple'] ? 'checkbox' : 'radio',
-          '#title' => $title,
-          '#title_display' => 'invisible',
+          '#id' => drupal_html_id('edit-' . implode('-', $element_parents)),
           // @todo If rows happen to use numeric indexes instead of string keys,
           //   this results in a first row with $key === 0, which is always FALSE.
           '#return_value' => $key,
           '#attributes' => $element['#attributes'],
+          '#wrapper_attributes' => array(
+            'class' => array('table-select'),
+          ),
         );
-        $element_parents = array_merge($element['#parents'], array($key));
         if ($element['#multiple']) {
-          $element[$key]['select']['#default_value'] = isset($value[$key]) ? $key : NULL;
-          $element[$key]['select']['#parents'] = $element_parents;
+          $row['select']['#default_value'] = isset($value[$key]) ? $key : NULL;
+          $row['select']['#parents'] = $element_parents;
         }
         else {
-          $element[$key]['select']['#default_value'] = ($element['#default_value'] == $key ? $key : NULL);
-          $element[$key]['select']['#parents'] = $element['#parents'];
-          $element[$key]['select']['#id'] = drupal_html_id('edit-' . implode('-', $element_parents));
+          $row['select']['#default_value'] = ($element['#default_value'] == $key ? $key : NULL);
+          $row['select']['#parents'] = $element['#parents'];
+        }
+        if ($label_element) {
+          $label_element['#id'] = $row['select']['#id'] . '--label';
+          $label_element['#for'] = $row['select']['#id'];
+          $row['select']['#attributes']['aria-labelledby'] = $label_element['#id'];
+          $row['select']['#title_display'] = 'none';
+        }
+        else {
+          $row['select']['#title'] = $title;
+          $row['select']['#title_display'] = 'invisible';
         }
       }
     }
@@ -2958,7 +2987,17 @@ function theme_form_element_label($variables) {
     $attributes['class'] = 'visually-hidden';
   }
 
-  if (!empty($element['#id'])) {
+  // A #for property of a dedicated #type 'label' element as precedence.
+  if (!empty($element['#for'])) {
+    $attributes['for'] = $element['#for'];
+    // A custom #id allows the referenced form input element to refer back to
+    // the label element; e.g., in the 'aria-labelledby' attribute.
+    if (!empty($element['#id'])) {
+      $attributes['id'] = $element['#id'];
+    }
+  }
+  // Otherwise, point to the #id of the form input element.
+  elseif (!empty($element['#id'])) {
     $attributes['for'] = $element['#id'];
   }
 

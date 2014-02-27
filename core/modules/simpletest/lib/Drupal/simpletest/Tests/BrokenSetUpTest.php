@@ -89,7 +89,7 @@ class BrokenSetUpTest extends WebTestBase {
     if (!$this->isInChildSite()) {
       // Verify that a broken setUp() method is caught.
       file_put_contents($this->sharedTriggerFile, 'setup');
-      $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
+      $edit['tests[Drupal\simpletest\Tests\BrokenSetUpTest]'] = TRUE;
       $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
       $this->assertRaw('Broken setup');
       $this->assertNoRaw('The setUp() method has run.');
@@ -100,7 +100,7 @@ class BrokenSetUpTest extends WebTestBase {
 
       // Verify that a broken tearDown() method is caught.
       file_put_contents($this->sharedTriggerFile, 'teardown');
-      $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
+      $edit['tests[Drupal\simpletest\Tests\BrokenSetUpTest]'] = TRUE;
       $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
       $this->assertNoRaw('Broken setup');
       $this->assertRaw('The setUp() method has run.');
@@ -111,7 +111,7 @@ class BrokenSetUpTest extends WebTestBase {
 
       // Verify that a broken test method is caught.
       file_put_contents($this->sharedTriggerFile, 'test');
-      $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
+      $edit['tests[Drupal\simpletest\Tests\BrokenSetUpTest]'] = TRUE;
       $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
       $this->assertNoRaw('Broken setup');
       $this->assertRaw('The setUp() method has run.');

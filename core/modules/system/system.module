@@ -520,6 +520,9 @@ function system_element_info() {
   );
 
   // Form structure.
+  $types['label'] = array(
+    '#theme' => 'form_element_label',
+  );
   $types['item'] = array(
     // Forms that show author fields to both anonymous and authenticated users
     // need to dynamically switch between #type 'textfield' and #type 'item' to

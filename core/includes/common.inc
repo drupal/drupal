@@ -1921,18 +1921,7 @@ function drupal_html_id($id) {
   }
   $seen_ids = &drupal_static(__FUNCTION__, $seen_ids_init);
 
-  $id = strtr(drupal_strtolower($id), array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
-
-  // As defined in http://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
-  // only contain letters, digits ([0-9]), hyphens ("-"), underscores ("_"),
-  // colons (":"), and periods ("."). We strip out any character not in that
-  // list. Note that the CSS spec doesn't allow colons or periods in identifiers
-  // (http://www.w3.org/TR/CSS21/syndata.html#characters), so we strip those two
-  // characters as well.
-  $id = preg_replace('/[^A-Za-z0-9\-_]/', '', $id);
-
-  // Removing multiple consecutive hyphens.
-  $id = preg_replace('/\-+/', '-', $id);
+  $id = drupal_clean_id_identifier($id);
   // Ensure IDs are unique by appending a counter after the first occurrence.
   // The counter needs to be appended with a delimiter that does not exist in
   // the base ID. Requiring a unique delimiter helps ensure that we really do
@@ -1945,6 +1934,36 @@ function drupal_html_id($id) {
     $seen_ids[$id] = 1;
   }
 
+  return $id;
+}
+
+/**
+ * Prepares a string for use as a valid HTML ID.
+ *
+ * Only use this function when you want to intentionally skip the uniqueness
+ * guarantee of drupal_html_id().
+ *
+ * @param string $id
+ *   The ID to clean.
+ *
+ * @return string
+ *   The cleaned ID.
+ *
+ * @see drupal_html_id()
+ */
+function drupal_clean_id_identifier($id) {
+  $id = strtr(drupal_strtolower($id), array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
+
+  // As defined in http://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
+  // only contain letters, digits ([0-9]), hyphens ("-"), underscores ("_"),
+  // colons (":"), and periods ("."). We strip out any character not in that
+  // list. Note that the CSS spec doesn't allow colons or periods in identifiers
+  // (http://www.w3.org/TR/CSS21/syndata.html#characters), so we strip those two
+  // characters as well.
+  $id = preg_replace('/[^A-Za-z0-9\-_]/', '', $id);
+
+  // Removing multiple consecutive hyphens.
+  $id = preg_replace('/\-+/', '-', $id);
   return $id;
 }
 

@@ -162,7 +162,7 @@ class SimpleTestTest extends WebTestBase {
         $this->drupalGet('admin/config/development/testing');
 
         $edit = array();
-        $edit['Drupal\simpletest\Tests\SimpleTestTest'] = TRUE;
+        $edit['tests[Drupal\simpletest\Tests\SimpleTestTest]'] = TRUE;
         $this->drupalPostForm(NULL, $edit, t('Run tests'));
 
         // Parse results and confirm that they are correct.

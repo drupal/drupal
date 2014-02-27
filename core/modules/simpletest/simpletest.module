@@ -26,6 +26,10 @@ function simpletest_help($path, $arg) {
       $output .= '<p>' . t('After the tests run, a message will be displayed next to each test group indicating whether tests within it passed, failed, or had exceptions. A pass means that the test returned the expected results, while fail means that it did not. An exception normally indicates an error outside of the test, such as a PHP warning or notice. If there were failures or exceptions, the results will be expanded to show details, and the tests that had failures or exceptions will be indicated in red or pink rows. You can then use these results to refine your code and tests, until all tests pass.') . '</p></dd>';
       $output .= '</dl>';
       return $output;
+
+    case 'admin/config/development/testing':
+      $output = t('Select the test(s) or test group(s) you would like to run, and click <em>Run tests</em>.');
+      return $output;
   }
 }
 
@@ -61,10 +65,6 @@ function simpletest_permission() {
  */
 function simpletest_theme() {
   return array(
-    'simpletest_test_table' => array(
-      'render element' => 'table',
-      'file' => 'simpletest.theme.inc',
-    ),
     'simpletest_result_summary' => array(
       'render element' => 'form',
       'file' => 'simpletest.theme.inc',
