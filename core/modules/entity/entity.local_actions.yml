@@ -1,0 +1,13 @@
+entity.view_mode_add:
+  route_name: entity.view_mode_add
+  title: 'Add new view mode'
+  weight: 1
+  appears_on:
+    - entity.view_mode_list
+
+entity.form_mode_add:
+  route_name: entity.form_mode_add
+  title: 'Add new form mode'
+  weight: 1
+  appears_on:
+    - entity.form_mode_list

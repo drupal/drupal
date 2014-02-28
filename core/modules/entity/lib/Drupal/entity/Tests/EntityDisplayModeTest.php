@@ -39,6 +39,8 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->drupalLogin($this->drupalCreateUser(array('administer display modes')));
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertResponse(200);
+    $this->assertText(t('Add new view mode'));
+    $this->assertLinkByHref('admin/structure/display-modes/view/add');
 
     $this->drupalGet('admin/structure/display-modes/view/add/entity_test_mulrev');
     $this->assertResponse(404);
@@ -75,6 +77,8 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->drupalLogin($this->drupalCreateUser(array('administer display modes')));
     $this->drupalGet('admin/structure/display-modes/form');
     $this->assertResponse(200);
+    $this->assertText(t('Add new form mode'));
+    $this->assertLinkByHref('admin/structure/display-modes/form/add');
 
     $this->drupalGet('admin/structure/display-modes/form/add/entity_test_no_label');
     $this->assertResponse(404);
