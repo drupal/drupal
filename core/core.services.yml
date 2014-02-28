@@ -151,7 +151,7 @@ services:
     arguments: [path_alias_whitelist, '@cache.cache', '@lock', '@state', '@database']
   path.alias_manager:
     class: Drupal\Core\Path\AliasManager
-    arguments: ['@database', '@path.alias_whitelist', '@language_manager']
+    arguments: ['@path.crud', '@path.alias_whitelist', '@language_manager']
   http_client_simpletest_subscriber:
     class: Drupal\Core\Http\Plugin\SimpletestHttpRequestSubscriber
   http_default_client:

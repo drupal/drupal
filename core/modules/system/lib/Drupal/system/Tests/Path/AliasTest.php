@@ -169,8 +169,8 @@ class AliasTest extends PathUnitTestBase {
 
     // Create AliasManager and Path object.
     $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $connection);
-    $aliasManager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
     $path = new Path($connection, $this->container->get('module_handler'));
+    $aliasManager = new AliasManager($path, $whitelist, $this->container->get('language_manager'));
 
     // No alias for user and admin yet, so should be NULL.
     $this->assertNull($whitelist->get('user'));
