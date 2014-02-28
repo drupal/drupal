@@ -95,7 +95,7 @@ class FilterEntityBundleTest extends ViewTestBase {
       // Test each bundle type.
       $view->initDisplay();
       $filters = $view->display_handler->getOption('filters');
-      $filters['type']['value'] = drupal_map_assoc(array($key));
+      $filters['type']['value'] = array($key => $key);
       $view->display_handler->setOption('filters', $filters);
       $this->executeView($view);
 
@@ -107,7 +107,7 @@ class FilterEntityBundleTest extends ViewTestBase {
     // Test an invalid bundle type to make sure we have no results.
     $view->initDisplay();
     $filters = $view->display_handler->getOption('filters');
-    $filters['type']['value'] = drupal_map_assoc(array('type_3'));
+    $filters['type']['value'] = array('type_3' => 'type_3');
     $view->display_handler->setOption('filters', $filters);
     $this->executeView($view);
 

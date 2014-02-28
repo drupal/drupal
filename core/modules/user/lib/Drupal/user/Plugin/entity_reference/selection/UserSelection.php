@@ -67,7 +67,7 @@ class UserSelection extends SelectionBase {
         '#type' => 'checkboxes',
         '#title' => t('Restrict to the selected roles'),
         '#required' => TRUE,
-        '#options' => array_diff_key(user_role_names(TRUE), drupal_map_assoc(array(DRUPAL_AUTHENTICATED_RID))),
+        '#options' => array_diff_key(user_role_names(TRUE), array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID)),
         '#default_value' => $selection_handler_settings['filter']['role'],
       );
     }

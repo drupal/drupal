@@ -44,10 +44,11 @@ class NumberDecimalFormatter extends DefaultNumberFormatter {
       '#default_value' => $this->getSetting('decimal_separator'),
       '#weight' => 5,
     );
+    $range = range(0, 10);
     $elements['scale'] = array(
       '#type' => 'select',
       '#title' => t('Scale', array(), array('decimal places')),
-      '#options' => drupal_map_assoc(range(0, 10)),
+      '#options' => array_combine($range, $range),
       '#default_value' => $this->getSetting('scale'),
       '#description' => t('The number of digits to the right of the decimal.'),
       '#weight' => 6,

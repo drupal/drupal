@@ -410,7 +410,8 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
 
     if ($this->revisionTable) {
       // Add all fields from the {entity_revision} table.
-      $entity_revision_fields = drupal_map_assoc(drupal_schema_fields_sql($this->entityType->getRevisionTable()));
+      $entity_revision_fields = drupal_schema_fields_sql($this->entityType->getRevisionTable());
+      $entity_revision_fields = array_combine($entity_revision_fields, $entity_revision_fields);
       // The ID field is provided by entity, so remove it.
       unset($entity_revision_fields[$this->idKey]);
 

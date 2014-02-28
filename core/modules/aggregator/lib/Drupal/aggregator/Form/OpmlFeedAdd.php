@@ -80,8 +80,8 @@ class OpmlFeedAdd extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200,
-      64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
+    $intervals = array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200);
+    $period = array_map('format_interval', array_combine($intervals, $intervals));
 
     $form['upload'] = array(
       '#type' => 'file',

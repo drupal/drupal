@@ -80,7 +80,8 @@ class PerformanceForm extends ConfigFormBase {
       '#open' => TRUE,
     );
 
-    $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
+    $period = array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400);
+    $period = array_map('format_interval', array_combine($period, $period));
     $period[0] = '<' . t('none') . '>';
     $form['caching']['page_cache_maximum_age'] = array(
       '#type' => 'select',

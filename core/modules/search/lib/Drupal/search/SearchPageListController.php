@@ -7,7 +7,6 @@
 
 namespace Drupal\search;
 
-use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\DraggableListController;
 use Drupal\Core\Entity\EntityInterface;
@@ -167,7 +166,8 @@ class SearchPageListController extends DraggableListController implements FormIn
       '#submit' => array(array($this, 'searchAdminReindexSubmit')),
     );
 
-    $items = MapArray::copyValuesToKeys(array(10, 20, 50, 100, 200, 500));
+    $items = array(10, 20, 50, 100, 200, 500);
+    $items = array_combine($items, $items);
 
     // Indexing throttle:
     $form['indexing_throttle'] = array(

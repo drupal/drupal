@@ -258,6 +258,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $display_options = $entity_display->getComponent($field_name);
     $label = $field_definition->getLabel();
 
+    $regions = array_keys($this->getRegions());
     $field_row = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
       '#row_type' => 'field',
@@ -282,7 +283,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
           '#type' => 'select',
           '#title' => $this->t('Label display for @title', array('@title' => $label)),
           '#title_display' => 'invisible',
-          '#options' => drupal_map_assoc(array_keys($this->getRegions())),
+          '#options' => array_combine($regions, $regions),
           '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $field_name, 'parent'),
@@ -432,6 +433,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
   protected function buildExtraFieldRow($field_id, $extra_field, EntityDisplayInterface $entity_display) {
     $display_options = $entity_display->getComponent($field_id);
 
+    $regions = array_keys($this->getRegions());
     $extra_field_row = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
       '#row_type' => 'extra_field',
@@ -453,7 +455,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
           '#type' => 'select',
           '#title' => $this->t('Parents for @title', array('@title' => $extra_field['label'])),
           '#title_display' => 'invisible',
-          '#options' => drupal_map_assoc(array_keys($this->getRegions())),
+          '#options' => array_combine($regions, $regions),
           '#empty_value' => '',
           '#attributes' => array('class' => array('field-parent')),
           '#parents' => array('fields', $field_id, 'parent'),

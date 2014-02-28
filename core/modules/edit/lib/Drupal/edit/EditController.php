@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldInfo;
@@ -221,7 +220,7 @@ class EditController extends ControllerBase {
       // Re-render the updated field for other view modes (i.e. for other
       // instances of the same logical field on the user's page).
       $other_view_mode_ids = $request->request->get('other_view_modes') ?: array();
-      $other_view_modes = MapArray::copyValuesToKeys($other_view_mode_ids, $render_field_in_view_mode);
+      $other_view_modes = array_map($render_field_in_view_mode, array_combine($other_view_mode_ids, $other_view_mode_ids));
 
       $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));
     }

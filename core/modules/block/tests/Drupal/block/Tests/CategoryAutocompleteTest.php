@@ -8,7 +8,6 @@
 namespace Drupal\block\Tests;
 
 use Drupal\block\Controller\CategoryAutocompleteController;
-use Drupal\Component\Utility\MapArray;
 use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +62,7 @@ class CategoryAutocompleteTest extends UnitTestCase {
   public function testAutocompleteSuggestions($string, $suggestions) {
     $suggestions = array_map(function ($suggestion) {
       return String::checkPlain($suggestion);
-    }, MapArray::copyValuesToKeys($suggestions));
+    }, array_combine($suggestions, $suggestions));
     $result = $this->autocompleteController->autocomplete(new Request(array('q' => $string)));
     $this->assertSame($suggestions, json_decode($result->getContent(), TRUE));
   }

@@ -559,7 +559,7 @@ function form_type_checkboxes_value($element, $input = FALSE) {
         unset($input[$key]);
       }
     }
-    return drupal_map_assoc($input);
+    return array_combine($input, $input);
   }
   else {
     return array();
@@ -588,10 +588,11 @@ function form_type_table_value(array $element, $input = FALSE) {
     // @todo D8: Remove this inconsistency.
     if ($input === FALSE) {
       $element += array('#default_value' => array());
-      return drupal_map_assoc(array_keys(array_filter($element['#default_value'])));
+      $value = array_keys(array_filter($element['#default_value']));
+      return array_combine($value, $value);
     }
     else {
-      return is_array($input) ? drupal_map_assoc($input) : array();
+      return is_array($input) ? array_combine($input, $input) : array();
     }
   }
 }
@@ -666,7 +667,7 @@ function form_type_tableselect_value($element, $input = FALSE) {
       return $value;
     }
     else {
-      return is_array($input) ? drupal_map_assoc($input) : array();
+      return is_array($input) ? array_combine($input, $input) : array();
     }
   }
 }
@@ -711,7 +712,7 @@ function form_type_select_value($element, $input = FALSE) {
       // unselected. A disabled multi-select always submits NULL, and the
       // default value should be used.
       if (empty($element['#disabled'])) {
-        return (is_array($input)) ? drupal_map_assoc($input) : array();
+        return (is_array($input)) ? array_combine($input, $input) : array();
       }
       else {
         return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : array();

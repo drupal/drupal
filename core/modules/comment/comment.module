@@ -843,7 +843,7 @@ function comment_form_field_ui_field_edit_form_alter(&$form, $form_state) {
   if ($form['#field']->getType() == 'comment') {
     // We only support posting one comment at the time so it doesn't make sense
     // to let the site builder choose anything else.
-    $form['field']['cardinality_container']['cardinality']['#options'] = drupal_map_assoc(array(1));
+    $form['field']['cardinality_container']['cardinality']['#options'] = array(1 => 1);
     $form['field']['cardinality_container']['#access'] = FALSE;
   }
 }
@@ -1531,7 +1531,8 @@ function template_preprocess_comment_wrapper(&$variables) {
  * Returns an array of "comments per page" values that users can select from.
  */
 function _comment_per_page() {
-  return drupal_map_assoc(array(10, 30, 50, 70, 90, 150, 200, 250, 300));
+  $comments_per_page = array(10, 30, 50, 70, 90, 150, 200, 250, 300);
+  return array_combine($comments_per_page, $comments_per_page);
 }
 
 /**

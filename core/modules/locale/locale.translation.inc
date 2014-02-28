@@ -73,7 +73,7 @@ function locale_translation_get_projects($project_names = array()) {
 
   // Return the requested project names or all projects.
   if ($project_names) {
-    return array_intersect_key($projects, drupal_map_assoc($project_names));
+    return array_intersect_key($projects, array_combine($project_names, $project_names));
   }
   return $projects;
 }

@@ -192,7 +192,8 @@ class DefaultViewsTest extends ViewTestBase {
     $view = views_get_view('archive');
     $view->setDisplay('page_1');
     $this->executeView($view);
-    $column_map = drupal_map_assoc(array('nid', 'created_year_month', 'num_records'));
+    $columns = array('nid', 'created_year_month', 'num_records');
+    $column_map = array_combine($columns, $columns);
     // Create time of additional nodes created in the setup method.
     $created_year_month = date('Ym', REQUEST_TIME - 3600);
     $expected_result = array(

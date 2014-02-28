@@ -17,7 +17,6 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\RenderWrapper;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Render\Element;
 
 /**
@@ -1291,10 +1290,11 @@ function template_preprocess_links(&$variables) {
       // Use the array key as class name.
       $li_attributes['class'][] = drupal_html_class($key);
 
+      $keys = array('title', 'href', 'route_name', 'route_parameters');
       $link_element = array(
         '#type' => 'link',
         '#title' => $link['title'],
-        '#options' => array_diff_key($link, MapArray::copyValuesToKeys(array('title', 'href', 'route_name', 'route_parameters'))),
+        '#options' => array_diff_key($link, array_combine($keys, $keys)),
         '#href' => $link['href'],
         '#route_name' => $link['route_name'],
         '#route_parameters' => $link['route_parameters'],

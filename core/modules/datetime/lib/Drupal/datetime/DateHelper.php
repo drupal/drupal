@@ -292,7 +292,8 @@ class DateHelper {
       $max = intval(date('Y', REQUEST_TIME) + 3);
     }
     $none = array('' => '');
-    $range = drupal_map_assoc(range($min, $max));
+    $range = range($min, $max);
+    $range = array_combine($range, $range);
     return !$required ? $none + $range : $range;
   }
 
@@ -323,7 +324,8 @@ class DateHelper {
       $max = 31;
     }
     $none = array('' => '');
-    $range = drupal_map_assoc(range(1, $max));
+    $range = range(1, $max);
+    $range = array_combine($range, $range);
     return !$required ? $none + $range : $range;
   }
 

@@ -7,7 +7,6 @@
 
 namespace Drupal\views\EventSubscriber;
 
-use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Page\HtmlPage;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\KeyValueStore\StateInterface;
@@ -104,7 +103,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $id = $view->storage->id();
         $this->viewsDisplayPairs[] = $id . '.' . $display_id;
       }
-      $this->viewsDisplayPairs = MapArray::copyValuesToKeys($this->viewsDisplayPairs);
+      $this->viewsDisplayPairs = array_combine($this->viewsDisplayPairs, $this->viewsDisplayPairs);
     }
     return $this->viewsDisplayPairs;
   }

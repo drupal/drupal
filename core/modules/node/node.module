@@ -1264,11 +1264,12 @@ function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
  * @see node_form_system_site_information_settings_form_submit()
  */
 function node_form_system_site_information_settings_form_alter(&$form, &$form_state, $form_id) {
+  $options = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30);
   $form['front_page']['default_nodes_main'] = array(
     '#type' => 'select',
     '#title' => t('Number of posts on front page'),
     '#default_value' => \Drupal::config('node.settings')->get('items_per_page'),
-    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+    '#options' => array_combine($options, $options),
     '#access' => (\Drupal::config('system.site')->get('page.front') == 'node'),
     '#description' => t('The maximum number of posts displayed on overview pages such as the front page.'),
   );

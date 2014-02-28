@@ -8,7 +8,6 @@
 namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Component\Utility\MapArray;
 use Drupal\Component\Utility\String;
 
 /**
@@ -32,7 +31,8 @@ class NodeTypeFormController extends EntityFormController {
 
     $node_settings = $type->getModuleSettings('node');
     // Prepare node options to be used for 'checkboxes' form element.
-    $node_settings['options'] = MapArray::copyValuesToKeys(array_keys(array_filter($node_settings['options'])));
+    $keys = array_keys(array_filter($node_settings['options']));
+    $node_settings['options'] = array_combine($keys, $keys);
     $form['name'] = array(
       '#title' => t('Name'),
       '#type' => 'textfield',

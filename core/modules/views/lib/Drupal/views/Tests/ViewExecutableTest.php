@@ -309,7 +309,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->assertIdentical(spl_object_hash($view->getResponse()), spl_object_hash($new_response), 'New response object correctly set.');
 
     // Test the generateHandlerId() method.
-    $test_ids = drupal_map_assoc(array('test', 'test_1'));
+    $test_ids = array('test' => 'test', 'test_1' => 'test_1');
     $this->assertEqual($view->generateHandlerId('new', $test_ids), 'new');
     $this->assertEqual($view->generateHandlerId('test', $test_ids), 'test_2');
 

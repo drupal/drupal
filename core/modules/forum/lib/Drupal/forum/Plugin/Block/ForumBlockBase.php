@@ -39,11 +39,12 @@ abstract class ForumBlockBase extends BlockBase {
    * Overrides \Drupal\block\BlockBase::blockForm().
    */
   public function blockForm($form, &$form_state) {
+    $range = range(2, 20);
     $form['block_count'] = array(
       '#type' => 'select',
       '#title' => t('Number of topics'),
       '#default_value' => $this->configuration['block_count'],
-      '#options' => drupal_map_assoc(range(2, 20)),
+      '#options' => array_combine($range, $range),
     );
     return $form;
   }

@@ -559,7 +559,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     );
 
     // Note: reversed to reflect that higher number = higher ranking.
-    $options = drupal_map_assoc(range(0, 10));
+    $range = range(0, 10);
+    $options = array_combine($range, $range);
     foreach ($this->getRankings() as $var => $values) {
       $form['content_ranking']['factors']["rankings_$var"] = array(
         '#title' => $values['title'],

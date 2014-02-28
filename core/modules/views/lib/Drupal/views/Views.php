@@ -7,7 +7,6 @@
 
 namespace Drupal\views;
 
-use Drupal\Component\Utility\MapArray;
 use Drupal\Component\Utility\String;
 
 /**
@@ -150,7 +149,7 @@ class Views {
   public static function getEnabledDisplayExtenders() {
     $enabled = array_filter((array) \Drupal::config('views.settings')->get('display_extenders'));
 
-    return MapArray::copyValuesToKeys($enabled);
+    return array_combine($enabled, $enabled);
   }
 
   /**

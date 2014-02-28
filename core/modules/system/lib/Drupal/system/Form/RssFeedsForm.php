@@ -32,11 +32,12 @@ class RssFeedsForm extends ConfigFormBase {
       '#default_value' => $rss_config->get('channel.description'),
       '#description' => t('Description of your site, included in each feed.')
     );
+    $options = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30);
     $form['feed_default_items'] = array(
       '#type' => 'select',
       '#title' => t('Number of items in each feed'),
       '#default_value' => $rss_config->get('items.limit'),
-      '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+      '#options' => array_combine($options, $options),
       '#description' => t('Default number of items to include in each feed.')
     );
     $form['feed_item_length'] = array(

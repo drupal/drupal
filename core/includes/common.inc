@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Drupal\Component\PhpStorage\PhpStorageFactory;
-use Drupal\Component\Utility\MapArray;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
@@ -1288,15 +1287,6 @@ function l($text, $path, array $options = array()) {
   $text = $variables['options']['html'] ? $variables['text'] : String::checkPlain($variables['text']);
 
   return '<a href="' . $url . '"' . $attributes . '>' . $text . '</a>';
-}
-
-/**
- * Forms an associative array from a linear array.
- *
- * @see \Drupal\Component\Utility\MapArray::copyValuesToKeys()
- */
-function drupal_map_assoc($array, $callable = NULL) {
-  return MapArray::copyValuesToKeys($array, $callable);
 }
 
 /**

@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Language\Language;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 
@@ -495,7 +494,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $controller = $this->entityManager->getViewBuilder($entity_type);
     $build = $controller->view($entity);
     $this->assertEqual($build['label']['#markup'], $values[$current_langcode]['name'], 'By default the entity is rendered in the current language.');
-    $langcodes = MapArray::copyValuesToKeys($this->langcodes);
+    $langcodes = array_combine($this->langcodes, $this->langcodes);
     // We have no translation for the $langcode2 langauge, hence the expected
     // result is the topmost existing translation, that is $langcode.
     $langcodes[$langcode2] = $langcode;

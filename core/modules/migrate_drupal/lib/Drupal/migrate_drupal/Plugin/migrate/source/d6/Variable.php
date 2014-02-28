@@ -46,7 +46,7 @@ class Variable extends Drupal6SqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return drupal_map_assoc($this->variables);
+    return array_combine($this->variables, $this->variables);
   }
 
   /**

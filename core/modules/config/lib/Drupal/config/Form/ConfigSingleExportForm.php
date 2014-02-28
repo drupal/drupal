@@ -7,7 +7,6 @@
 
 namespace Drupal\config\Form;
 
-use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -182,7 +181,8 @@ class ConfigSingleExportForm extends FormBase {
       }, $this->definitions);
 
       // Find all config, and then filter our anything matching a config prefix.
-      $names = MapArray::copyValuesToKeys($this->configStorage->listAll());
+      $names = $this->configStorage->listAll();
+      $names = array_combine($names, $names);
       foreach ($names as $config_name) {
         foreach ($config_prefixes as $config_prefix) {
           if (strpos($config_name, $config_prefix) === 0) {

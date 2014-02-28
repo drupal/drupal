@@ -113,7 +113,7 @@ class Node extends ArgumentValidatorPluginBase {
           return FALSE;
         }
 
-        $test = drupal_map_assoc($nids->value);
+        $test = array_combine($nids->value, $nids->value);
         $titles = array();
 
         $nodes = node_load_multiple($nids->value);

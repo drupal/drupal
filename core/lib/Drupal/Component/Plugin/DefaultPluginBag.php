@@ -8,7 +8,6 @@
 namespace Drupal\Component\Plugin;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Component\Utility\MapArray;
 
 /**
  * Provides a default plugin bag for a plugin type.
@@ -63,7 +62,8 @@ class DefaultPluginBag extends PluginBag {
     $this->configurations = $configurations;
 
     if (!empty($configurations)) {
-      $this->instanceIDs = MapArray::copyValuesToKeys(array_keys($configurations));
+      $instance_ids = array_keys($configurations);
+      $this->instanceIDs = array_combine($instance_ids, $instance_ids);
       // Store the original order of the instance IDs for export.
       $this->originalOrder = $this->instanceIDs;
     }

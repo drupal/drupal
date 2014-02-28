@@ -398,10 +398,11 @@ function template_preprocess_views_view_summary(&$variables) {
     $url_options['query'] = $view->exposed_raw_input;
   }
 
-  $active_urls = drupal_map_assoc(array(
+  $active_urls = array(
     url(current_path(), array('alias' => TRUE)), // force system path
     url(current_path()), // could be an alias
-  ));
+  );
+  $active_urls = array_combine($active_urls, $active_urls);
 
   // Collect all arguments foreach row, to be able to alter them for example
   // by the validator. This is not done per single argument value, because this
@@ -456,12 +457,13 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
   }
 
   $count = 0;
-  $active_urls = drupal_map_assoc(array(
+  $active_urls = array(
     // Force system path.
     url(current_path(), array('alias' => TRUE)),
     // Could be an alias.
     url(current_path()),
-  ));
+  );
+  $active_urls = array_combine($active_urls, $active_urls);
 
   // Collect all arguments for each row, to be able to alter them for example
   // by the validator. This is not done per single argument value, because

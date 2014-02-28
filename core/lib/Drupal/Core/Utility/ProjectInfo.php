@@ -224,7 +224,7 @@ class ProjectInfo {
       'version',
     );
     $whitelist = array_merge($whitelist, $additional_whitelist);
-    return array_intersect_key($info, drupal_map_assoc($whitelist));
+    return array_intersect_key($info, array_combine($whitelist, $whitelist));
   }
 
 }

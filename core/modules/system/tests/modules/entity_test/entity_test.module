@@ -54,7 +54,7 @@ function entity_test_entity_types($filter = NULL) {
     $types[] = 'entity_test_rev';
   }
   $types[] = 'entity_test_mulrev';
-  return drupal_map_assoc($types);
+  return array_combine($types, $types);
 }
 
 /**
