@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Provides a resource for database watchdog log entries.
  *
- * @Plugin(
+ * @RestResource(
  *   id = "dblog",
  *   label = @Translation("Watchdog database log")
  * )
