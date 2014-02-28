@@ -192,4 +192,13 @@ class RouterTest extends WebTestBase {
 
     $this->assertRaw('abcde', 'Correct body was found.');
   }
+
+  /**
+   * Tests that routes no longer exist for a module that has been uninstalled.
+   */
+  public function testRouterUninstall() {
+    \Drupal::moduleHandler()->uninstall(array('router_test'));
+    $route_count = \Drupal::database()->query('SELECT COUNT(*) FROM {router} WHERE provider = :provider', array(':provider' => 'router_test'))->fetchField();
+    $this->assertEqual(0, $route_count, 'All router_test routes have been removed on uninstall.');
+  }
 }
