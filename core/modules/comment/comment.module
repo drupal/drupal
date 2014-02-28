@@ -226,7 +226,6 @@ function comment_count_unpublished() {
 function comment_field_instance_config_insert(FieldInstanceConfigInterface $instance) {
   if ($instance->getType() == 'comment' && !$instance->isSyncing()) {
     \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getName());
-    \Drupal::cache()->delete('comment_entity_info');
   }
 }
 
@@ -269,7 +268,6 @@ function comment_field_config_delete(FieldConfigInterface $field) {
   if ($field->getType() == 'comment') {
     // Delete all fields and displays attached to the comment bundle.
     entity_invoke_bundle_hook('delete', 'comment', $field->getName());
-    \Drupal::cache()->delete('comment_entity_info');
   }
 }
 
@@ -284,7 +282,6 @@ function comment_field_instance_config_delete(FieldInstanceConfigInterface $inst
       ':field_id' => $instance->getEntityTypeId() . '__' . $instance->getName(),
     ))->fetchCol();
     entity_delete_multiple('comment', $comments);
-    \Drupal::cache()->delete('comment_entity_info');
   }
 }
 
