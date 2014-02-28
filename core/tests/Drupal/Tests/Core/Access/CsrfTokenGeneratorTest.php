@@ -5,12 +5,12 @@
  * Contains \Drupal\Tests\Core\Access\CsrfTokenGeneratorTest.
  */
 
-namespace Drupal\Tests\Core\Access {
+namespace Drupal\Tests\Core\Access;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Component\Utility\Crypt;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Utility\Settings;
 
 /**
  * Tests the CSRF token generator.
@@ -48,7 +48,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
       ->method('get')
       ->will($this->returnValue($this->key));
 
-    $this->generator = new CsrfTokenGenerator($private_key);
+    $this->generator = new CsrfTokenGenerator($private_key, new Settings(array('hash_salt' => 'test')));
   }
 
   /**
@@ -152,17 +152,4 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
     );
   }
 
-}
-
-}
-
-/**
- * @todo Remove this when https://drupal.org/node/2036259 is resolved.
- */
-namespace {
-  if (!function_exists('drupal_get_hash_salt')) {
-    function drupal_get_hash_salt() {
-      return hash('sha256', 'test_hash_salt');
-    }
-  }
 }
