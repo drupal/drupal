@@ -11,6 +11,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\entity\Entity\EntityViewDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -147,7 +148,7 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
 
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
-    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && !isset($entity->in_preview) && $this->entityType->isRenderCacheable()) {
+    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $entity->isDefaultRevision() && $this->entityType->isRenderCacheable()) {
       $return['#cache'] = array(
         'keys' => array('entity_view', $this->entityTypeId, $entity->id(), $view_mode),
         'granularity' => DRUPAL_CACHE_PER_ROLE,
@@ -157,6 +158,10 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
           $this->entityTypeId => array($entity->id()),
         ),
       );
+
+      if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
+        $return['#cache']['keys'][] = $langcode;
+      }
     }
 
     return $return;

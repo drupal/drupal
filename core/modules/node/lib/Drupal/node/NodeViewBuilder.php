@@ -59,6 +59,20 @@ class NodeViewBuilder extends EntityViewBuilder {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getBuildDefaults(EntityInterface $entity, $view_mode, $langcode) {
+    $defaults = parent::getBuildDefaults($entity, $view_mode, $langcode);
+
+    // Don't cache nodes that are in 'preview' mode.
+    if (isset($defaults['#cache']) && isset($entity->in_preview)) {
+      unset($defaults['#cache']);
+    }
+
+    return $defaults;
+  }
+
+  /**
    * #post_render_cache callback; replaces the placeholder with node links.
    *
    * Renders the links on a node.

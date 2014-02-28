@@ -118,6 +118,7 @@ class UserPictureTest extends WebTestBase {
       ->set('features.node_user_picture', FALSE)
       ->set('features.comment_user_picture', FALSE)
       ->save();
+    \Drupal::entityManager()->getViewBuilder('comment')->resetCache();
 
     $this->drupalGet('node/' . $node->id());
     $this->assertNoRaw(file_uri_target($file->getFileUri()), 'User picture not found on node and comment.');

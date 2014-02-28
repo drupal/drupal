@@ -134,6 +134,7 @@ class RowPluginTest extends NodeTestBase {
 
     // Test with links disabled.
     $view->rowPlugin->options['links'] = FALSE;
+    \Drupal::entityManager()->getViewBuilder('node')->resetCache();
     $output = $view->preview();
     $output = drupal_render($output);
     $this->drupalSetContent($output);
@@ -143,6 +144,7 @@ class RowPluginTest extends NodeTestBase {
 
     // Test with links enabled.
     $view->rowPlugin->options['links'] = TRUE;
+    \Drupal::entityManager()->getViewBuilder('node')->resetCache();
     $output = $view->preview();
     $output = drupal_render($output);
     $this->drupalSetContent($output);

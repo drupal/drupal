@@ -620,7 +620,6 @@ function system_element_info() {
   $types['render_cache_placeholder'] = array(
     '#callback' => '',
     '#context' => array(),
-    '#pre_render' => array('drupal_pre_render_render_cache_placeholder'),
   );
 
   return $types;

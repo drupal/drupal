@@ -40,7 +40,6 @@ use Drupal\user\UserInterface;
  *   uri_callback = "node_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
- *   render_cache = FALSE,
  *   entity_keys = {
  *     "id" = "nid",
  *     "revision" = "vid",

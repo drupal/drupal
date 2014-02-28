@@ -18,6 +18,7 @@ use Drupal\field\FieldInstanceConfigInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\user\EntityOwnerInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Comments are displayed in a flat list - expanded.
@@ -255,7 +256,6 @@ function comment_field_instance_config_create(FieldInstanceConfigInterface $inst
  */
 function comment_field_instance_config_update(FieldInstanceConfigInterface $instance) {
   if ($instance->getType() == 'comment') {
-    \Drupal::entityManager()->getViewBuilder($instance->entity_type)->resetCache();
     // Comment field settings also affects the rendering of *comment* entities,
     // not only the *commented* entities.
     \Drupal::entityManager()->getViewBuilder('comment')->resetCache();
@@ -409,44 +409,44 @@ function comment_entity_view_alter(&$build, EntityInterface $entity, EntityViewD
 }
 
 /**
- * Implements hook_entity_view().
+ * Implements hook_node_links_alter().
  */
-function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode) {
-  if ($entity->getEntityTypeId() != 'node') {
-    // Comment links are only added to node entity type for backwards
-    // compatibility. Should you require comment links for other entity types
-    // you can do-so by implementing a new field formatter.
-    // @todo Make this configurable from the formatter see
-    //   http://drupal.org/node/1901110
-    return;
-  }
+function comment_node_links_alter(array &$node_links, NodeInterface $node, array &$context) {
+  // Comment links are only added to node entity type for backwards
+  // compatibility. Should you require comment links for other entity types you
+  // can do so by implementing a new field formatter.
+  // @todo Make this configurable from the formatter see
+  //   http://drupal.org/node/1901110
+
+  $view_mode = $context['view_mode'];
   if ($view_mode == 'search_index' || $view_mode == 'search_result' || $view_mode == 'print') {
-    // Do not add any links if the entity displayed for:
+    // Do not add any links if the node displayed for:
     // - search indexing.
     // - constructing a search result excerpt.
     // - print.
     return;
   }
+
   $fields = \Drupal::service('comment.manager')->getFields('node');
   foreach ($fields as $field_name => $detail) {
-    // Skip fields that entity does not have.
-    if (!$entity->hasField($field_name)) {
+    // Skip fields that the node does not have.
+    if (!$node->hasField($field_name)) {
       continue;
     }
     $links = array();
-    $commenting_status = $entity->get($field_name)->status;
+    $commenting_status = $node->get($field_name)->status;
     if ($commenting_status) {
-      $instance = \Drupal::service('field.info')->getInstance('node', $entity->bundle(), $field_name);
-      // Entity have commenting open or close.
+      $instance = \Drupal::service('field.info')->getInstance('node', $node->bundle(), $field_name);
+      // Node have commenting open or close.
       if ($view_mode == 'rss') {
         // Add a comments RSS element which is a URL to the comments of this node.
         $options = array(
           'fragment' => 'comments',
           'absolute' => TRUE,
         );
-        $entity->rss_elements[] = array(
+        $node->rss_elements[] = array(
           'key' => 'comments',
-          'value' => $entity->url('canonical', $options),
+          'value' => $node->url('canonical', $options),
         );
       }
       elseif ($view_mode == 'teaser') {
@@ -454,13 +454,13 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
         // or a link to add new comments if the user has permission, the node
         // is open to new comments, and there currently are none.
         if (user_access('access comments')) {
-          if (!empty($entity->get($field_name)->comment_count)) {
+          if (!empty($node->get($field_name)->comment_count)) {
             $links['comment-comments'] = array(
-              'title' => format_plural($entity->get($field_name)->comment_count, '1 comment', '@count comments'),
+              'title' => format_plural($node->get($field_name)->comment_count, '1 comment', '@count comments'),
               'attributes' => array('title' => t('Jump to the first comment of this posting.')),
               'fragment' => 'comments',
               'html' => TRUE,
-            ) + $entity->urlInfo();
+            ) + $node->urlInfo();
             if (\Drupal::moduleHandler()->moduleExists('history')) {
               $links['comment-new-comments'] = array(
                 'title' => '',
@@ -468,7 +468,7 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
                 'attributes' => array(
                   'class' => 'hidden',
                   'title' => t('Jump to the first new comment of this posting.'),
-                  'data-history-node-last-comment-timestamp' => $entity->get($field_name)->last_comment_timestamp,
+                  'data-history-node-last-comment-timestamp' => $node->get($field_name)->last_comment_timestamp,
                   'data-history-node-field-name' => $field_name,
                 ),
                 'html' => TRUE,
@@ -488,32 +488,32 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
             if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
               $links['comment-add']['route_name'] = 'comment.reply';
               $links['comment-add']['route_parameters'] = array(
-                'entity_type' => $entity->getEntityTypeId(),
-                'entity_id' => $entity->id(),
+                'entity_type' => $node->getEntityTypeId(),
+                'entity_id' => $node->id(),
                 'field_name' => $field_name,
               );
             }
             else {
-              $links['comment-add'] += $entity->urlInfo();
+              $links['comment-add'] += $node->urlInfo();
             }
           }
           else {
             $links['comment-forbidden'] = array(
-              'title' => \Drupal::service('comment.manager')->forbiddenMessage($entity, $field_name),
+              'title' => \Drupal::service('comment.manager')->forbiddenMessage($node, $field_name),
               'html' => TRUE,
             );
           }
         }
       }
       else {
-        // Entity in other view modes: add a "post comment" link if the user is
-        // allowed to post comments and if this entity is allowing new comments.
+        // Node in other view modes: add a "post comment" link if the user is
+        // allowed to post comments and if this node is allowing new comments.
         if ($commenting_status == COMMENT_OPEN) {
           $comment_form_location = $instance->getSetting('form_location');
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
-            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($entity->get($field_name)->comment_count) && user_access('access comments'))) {
+            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($node->get($field_name)->comment_count) && user_access('access comments'))) {
               $links['comment-add'] = array(
                 'title' => t('Add new comment'),
                 'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
@@ -522,19 +522,19 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
               if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
                 $links['comment-add']['route_name'] = 'comment.reply';
                 $links['comment-add']['route_parameters'] = array(
-                  'entity_type' => $entity->getEntityTypeId(),
-                  'entity_id' => $entity->id(),
+                  'entity_type' => $node->getEntityTypeId(),
+                  'entity_id' => $node->id(),
                   'field_name' => $field_name,
                 );
               }
               else {
-                $links['comment-add'] += $entity->urlInfo();
+                $links['comment-add'] += $node->urlInfo();
               }
             }
           }
           else {
             $links['comment-forbidden'] = array(
-              'title' => \Drupal::service('comment.manager')->forbiddenMessage($entity, $field_name),
+              'title' => \Drupal::service('comment.manager')->forbiddenMessage($node, $field_name),
               'html' => TRUE,
             );
           }
@@ -542,21 +542,23 @@ function comment_entity_view(EntityInterface $entity, EntityViewDisplayInterface
       }
     }
 
-    $entity->content['links']['comment__' . $field_name] = array(
-      '#theme' => 'links__entity__comment__' . $field_name,
-      '#links' => $links,
-      '#attributes' => array('class' => array('links', 'inline')),
-    );
-    if ($view_mode == 'teaser' && \Drupal::moduleHandler()->moduleExists('history') && \Drupal::currentUser()->isAuthenticated()) {
-      $entity->content['links']['#attached']['library'][] = array('comment', 'drupal.node-new-comments-link');
+    if (!empty($links)) {
+      $node_links['comment__' . $field_name] = array(
+        '#theme' => 'links__entity__comment__' . $field_name,
+        '#links' => $links,
+        '#attributes' => array('class' => array('links', 'inline')),
+      );
+      if ($view_mode == 'teaser' && \Drupal::moduleHandler()->moduleExists('history') && \Drupal::currentUser()->isAuthenticated()) {
+        $node_links['comment__' . $field_name]['#attached']['library'][] = array('comment', 'drupal.node-new-comments-link');
 
-      // Embed the metadata for the "X new comments" link (if any) on this node.
-      $entity->content['links']['#post_render_cache']['history_attach_timestamp'] = array(
-        array('node_id' => $entity->id()),
-      );
-      $entity->content['links']['#post_render_cache']['Drupal\comment\CommentViewBuilder::attachNewCommentsLinkMetadata'] = array(
-        array('entity_type' => $entity->getEntityTypeId(), 'entity_id' => $entity->id(), 'field_name' => $field_name),
-      );
+        // Embed the metadata for the "X new comments" link (if any) on this node.
+        $node_links['comment__' . $field_name]['#post_render_cache']['history_attach_timestamp'] = array(
+          array('node_id' => $node->id()),
+        );
+        $node_links['comment__' . $field_name]['#post_render_cache']['Drupal\comment\CommentViewBuilder::attachNewCommentsLinkMetadata'] = array(
+          array('entity_type' => $node->getEntityTypeId(), 'entity_id' => $node->id(), 'field_name' => $field_name),
+        );
+      }
     }
   }
 }
@@ -1320,10 +1322,10 @@ function comment_preview(CommentInterface $comment, array &$form_state) {
     // always addressed by reference we ensure changes are not lost by setting
     // the value back to its original state after the call to entity_view().
     $field_name = $comment->getFieldName();
-    $original_value = $entity->get($field_name);
-    $entity->set($field_name, COMMENT_HIDDEN);
+    $original_status = $entity->get($field_name)->status;
+    $entity->get($field_name)->status = COMMENT_HIDDEN;
     $build = entity_view($entity, 'full');
-    $entity->set($field_name, $original_value);
+    $entity->get($field_name)->status = $original_status;
   }
 
   $preview_build['comment_output_below'] = $build;

@@ -37,7 +37,6 @@ use Drupal\user\UserInterface;
  *   uri_callback = "comment_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
- *   render_cache = FALSE,
  *   entity_keys = {
  *     "id" = "cid",
  *     "bundle" = "field_id",
@@ -186,6 +185,15 @@ class Comment extends ContentEntityBase implements CommentInterface {
     foreach ($entities as $id => $entity) {
       $storage_controller->updateEntityStatistics($entity);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function referencedEntities() {
+    $referenced_entities = parent::referencedEntities();
+    $referenced_entities[] = $this->getCommentedEntity();
+    return $referenced_entities;
   }
 
   /**
