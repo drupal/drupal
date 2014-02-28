@@ -8,7 +8,6 @@
 namespace Drupal\Core\Access;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\PrivateKey;
 use Drupal\Core\Session\AccountInterface;
 
@@ -34,23 +33,13 @@ class CsrfTokenGenerator {
   protected $currentUser;
 
   /**
-   * The settings instance.
-   *
-   * @var \Drupal\Component\Utility\Settings
-   */
-  protected $settings;
-
-  /**
    * Constructs the token generator.
    *
    * @param \Drupal\Core\PrivateKey $private_key
    *   The private key service.
-   * @param \Drupal\Component\Utility\Settings $settings
-   *   The settings instance.
    */
-  public function __construct(PrivateKey $private_key, Settings $settings) {
+  public function __construct(PrivateKey $private_key) {
     $this->privateKey = $private_key;
-    $this->settings = $settings;
   }
 
   /**
@@ -83,7 +72,7 @@ class CsrfTokenGenerator {
    * @see drupal_session_start()
    */
   public function get($value = '') {
-    return Crypt::hmacBase64($value, session_id() . $this->privateKey->get() . $this->settings->get('hash_salt'));
+    return Crypt::hmacBase64($value, session_id() . $this->privateKey->get() . drupal_get_hash_salt());
   }
 
   /**
