@@ -4863,24 +4863,6 @@ function element_set_attributes(array &$element, array $map) {
 }
 
 /**
- * Parses Drupal module and theme .info.yml files.
- *
- * @param string $filename
- *   The file we are parsing. Accepts file with relative or absolute path.
- *
- * @return array
- *   The info array.
- *
- * @see \Drupal\Core\Extension\InfoParser::parse().
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('info_parser')->parse().
- */
-function drupal_parse_info_file($filename) {
-  return \Drupal::service('info_parser')->parse($filename);
-}
-
-/**
  * Returns a list of severity levels, as defined in RFC 3164.
  *
  * @return
