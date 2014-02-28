@@ -228,7 +228,7 @@ class CommentViewBuilder extends EntityViewBuilder {
       if ($entity->access('create')) {
         $links['comment-reply'] = array(
           'title' => t('Reply'),
-          'href' => "comment/reply/{$entity->getCommentedEntityId()}/{$entity->getCommentedEntityId()}/{$entity->getFieldName()}/{$entity->id()}",
+          'href' => "comment/reply/{$entity->getCommentedEntityTypeId()}/{$entity->getCommentedEntityId()}/{$entity->getFieldName()}/{$entity->id()}",
           'html' => TRUE,
         );
       }

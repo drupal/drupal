@@ -460,6 +460,11 @@ class ForumTest extends WebTestBase {
     $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
     $this->assertResponse(200);
 
+    // Test replying to a comment.
+    $this->clickLink('Reply');
+    $this->assertResponse(200);
+    $this->assertFieldByName('comment_body[0][value]');
+
     // Login as the first user.
     $this->drupalLogin($this->admin_user);
     // Check that forum renders properly.
