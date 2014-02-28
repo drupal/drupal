@@ -636,32 +636,6 @@ function valid_url($url, $absolute = FALSE) {
  */
 
 /**
- * Strips dangerous protocols (e.g. 'javascript:') from a URI.
- *
- * This function must be called for all URIs within user-entered input prior
- * to being output to an HTML attribute value. It is often called as part of
- * check_url() or filter_xss(), but those functions return an HTML-encoded
- * string, so this function can be called independently when the output needs to
- * be a plain-text string for passing to t(), l(),
- * Drupal\Core\Template\Attribute, or another function that will call
- * \Drupal\Component\Utility\String::checkPlain() separately.
- *
- * @param $uri
- *   A plain-text URI that might contain dangerous protocols.
- *
- * @return
- *   A plain-text URI stripped of dangerous protocols. As with all plain-text
- *   strings, this return value must not be output to an HTML page without
- *   \Drupal\Component\Utility\String::checkPlain() being called on it. However,
- *   it can be passed to functions expecting plain-text strings.
- *
- * @see \Drupal\Component\Utility\Url::stripDangerousProtocols()
- */
-function drupal_strip_dangerous_protocols($uri) {
-  return Url::stripDangerousProtocols($uri);
-}
-
-/**
  * Strips dangerous protocols from a URI and encodes it for output to HTML.
  *
  * @param $uri
