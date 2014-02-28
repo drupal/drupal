@@ -1,3 +1,4 @@
+core: 8.x
 name: common_test
 type: module
 description: 'testing info file parsing'

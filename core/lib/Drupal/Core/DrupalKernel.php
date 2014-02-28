@@ -13,6 +13,7 @@ use Drupal\Core\CoreServiceProvider;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -83,7 +84,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * An array of module data objects.
    *
    * The data objects have the same data structure as returned by
-   * file_scan_directory() but only the uri property is used.
+   * ExtensionDiscovery but only the uri property is used.
    *
    * @var array
    */
@@ -297,19 +298,28 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function moduleData($module) {
     if (!$this->moduleData) {
       // First, find profiles.
-      $profiles_scanner = new SystemListing();
-      $all_profiles = $profiles_scanner->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles');
-      $profiles = array_keys(array_intersect_key($this->moduleList, $all_profiles));
+      $listing = new ExtensionDiscovery();
+      $listing->setProfileDirectories(array());
+      $all_profiles = $listing->scan('profile');
+      $profiles = array_intersect_key($all_profiles, $this->moduleList);
+
       // If a module is within a profile directory but specifies another
       // profile for testing, it needs to be found in the parent profile.
-      if (($parent_profile_config = $this->configStorage->read('simpletest.settings')) && isset($parent_profile_config['parent_profile']) && $parent_profile_config['parent_profile'] != $profiles[0]) {
+      $settings = $this->configStorage->read('simpletest.settings');
+      $parent_profile = !empty($settings['parent_profile']) ? $settings['parent_profile'] : NULL;
+      if ($parent_profile && !isset($profiles[$parent_profile])) {
         // In case both profile directories contain the same extension, the
         // actual profile always has precedence.
-        array_unshift($profiles, $parent_profile_config['parent_profile']);
+        $profiles = array($parent_profile => $all_profiles[$parent_profile]) + $profiles;
       }
+
+      $profile_directories = array_map(function ($profile) {
+        return $profile->getPath();
+      }, $profiles);
+      $listing->setProfileDirectories($profile_directories);
+
       // Now find modules.
-      $modules_scanner = new SystemListing($profiles);
-      $this->moduleData = $all_profiles + $modules_scanner->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules');
+      $this->moduleData = $profiles + $listing->scan('module');
     }
     return isset($this->moduleData[$module]) ? $this->moduleData[$module] : FALSE;
   }

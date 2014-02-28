@@ -72,7 +72,7 @@ class InfoParserUnitTest extends DrupalUnitTestBase {
       $this->fail('Expected InfoParserException not thrown when reading missing_keys.info.txt');
     }
     catch (InfoParserException $e) {
-      $expected_message = 'Missing required keys (name, type) in core/modules/system/tests/fixtures/missing_keys.info.txt.';
+      $expected_message = "Missing required keys (type, core, name) in $filename.";
       $this->assertEqual($e->getMessage(), $expected_message);
     }
 
@@ -83,7 +83,7 @@ class InfoParserUnitTest extends DrupalUnitTestBase {
       $this->fail('Expected InfoParserException not thrown when reading missing_key.info.txt');
     }
     catch (InfoParserException $e) {
-      $expected_message = 'Missing required key (type) in core/modules/system/tests/fixtures/missing_key.info.txt.';
+      $expected_message = "Missing required key (type) in $filename.";
       $this->assertEqual($e->getMessage(), $expected_message);
     }
 

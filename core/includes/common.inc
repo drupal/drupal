@@ -19,7 +19,6 @@ use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
-use Drupal\Core\SystemListingInfo;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element;
 
@@ -3284,19 +3283,6 @@ function drupal_page_set_cache(Response $response, Request $request) {
     }
     return $cache;
   }
-}
-
-/**
- * This function is kept only for backward compatibility.
- *
- * @see \Drupal\Core\SystemListing::scan().
- */
-function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
-  // As SystemListing is required to build a dependency injection container
-  // from scratch and SystemListingInfo only extends SystemLising, this
-  // class needs to be hardwired.
-  $listing = new SystemListingInfo();
-  return $listing->scan($mask, $directory, $key, $min_depth);
 }
 
 /**

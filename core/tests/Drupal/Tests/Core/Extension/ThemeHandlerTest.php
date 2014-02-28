@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Extension;
 
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\ThemeHandler;
 use Drupal\Core\Config\ConfigInstaller;
@@ -65,11 +66,11 @@ class ThemeHandlerTest extends UnitTestCase {
   protected $configInstaller;
 
   /**
-   * The system listing info.
+   * The extension discovery.
    *
-   * @var \Drupal\Core\SystemListingInfo|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ExtensionDiscovery|\PHPUnit_Framework_MockObject_MockObject
    */
-  protected $systemListingInfo;
+  protected $extensionDiscovery;
 
   /**
    * The tested theme handler.
@@ -101,10 +102,10 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->routeBuilder = $this->getMockBuilder('Drupal\Core\Routing\RouteBuilder')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->systemListingInfo = $this->getMockBuilder('Drupal\Core\SystemListingInfo')
+    $this->extensionDiscovery = $this->getMockBuilder('Drupal\Core\Extension\ExtensionDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->cacheBackend, $this->infoParser, $this->configInstaller, $this->routeBuilder, $this->systemListingInfo);
+    $this->themeHandler = new TestThemeHandler($this->configFactory, $this->moduleHandler, $this->cacheBackend, $this->infoParser, $this->configInstaller, $this->routeBuilder, $this->extensionDiscovery);
 
     $this->getContainerWithCacheBins($this->cacheBackend);
   }
@@ -145,17 +146,12 @@ class ThemeHandlerTest extends UnitTestCase {
       ->expects($this->once())
       ->method('save');
 
-    $this->systemListingInfo->expects($this->any())
+    $this->extensionDiscovery->expects($this->any())
       ->method('scan')
       ->will($this->returnValue(array()));
 
     // Ensure that the themes_enabled hook is fired.
     $this->moduleHandler->expects($this->at(0))
-      ->method('invokeAll')
-      ->with('system_theme_info')
-      ->will($this->returnValue(array()));
-
-    $this->moduleHandler->expects($this->at(1))
       ->method('invokeAll')
       ->with('themes_enabled', array($theme_list));
 
@@ -186,27 +182,25 @@ class ThemeHandlerTest extends UnitTestCase {
       ->method('clear')
       ->will($this->returnSelf());
 
-    $this->systemListingInfo->expects($this->any())
+    $this->extensionDiscovery->expects($this->any())
       ->method('scan')
       ->will($this->returnValue(array()));
 
     $this->themeHandler->enable(array('bartik'));
-    $this->themeHandler->systemList['bartik'] = (object) array(
-      'name' => 'bartik',
-      'info' => array(
-        'stylesheets' => array(
-          'all' => array(
-            'css/layout.css',
-            'css/style.css',
-            'css/colors.css',
-          ),
+    $this->themeHandler->systemList['bartik'] = new Extension('theme', DRUPAL_ROOT . '/core/themes/bartik/bartik.info.yml', 'bartik.info.yml');
+    $this->themeHandler->systemList['bartik']->info = array(
+      'stylesheets' => array(
+        'all' => array(
+          'css/layout.css',
+          'css/style.css',
+          'css/colors.css',
         ),
-        'scripts' => array(
-          'example' => 'theme.js',
-        ),
-        'engine' => 'twig',
-        'base theme' => 'stark',
       ),
+      'scripts' => array(
+        'example' => 'theme.js',
+      ),
+      'engine' => 'twig',
+      'base theme' => 'stark',
     );
 
     $list_info = $this->themeHandler->listInfo();
@@ -218,18 +212,16 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->assertEquals('stark', $list_info['bartik']->base_theme);
     $this->assertEquals(0, $list_info['bartik']->status);
 
-    $this->themeHandler->systemList['seven'] = (object) array(
-      'name' => 'seven',
-      'info' => array(
-        'stylesheets' => array(
-          'screen' => array(
-            'style.css',
-          ),
+    $this->themeHandler->systemList['seven'] = new Extension('theme', DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', 'seven.info.yml');
+    $this->themeHandler->systemList['seven']->info = array(
+      'stylesheets' => array(
+        'screen' => array(
+          'style.css',
         ),
-        'scripts' => array(),
       ),
-      'status' => 1,
+      'scripts' => array(),
     );
+    $this->themeHandler->systemList['seven']->status = 1;
 
     $this->themeHandler->enable(array('seven'));
 
@@ -246,14 +238,11 @@ class ThemeHandlerTest extends UnitTestCase {
    * @see \Drupal\Core\Extension\ThemeHandler::rebuildThemeData()
    */
   public function testRebuildThemeData() {
-    $this->systemListingInfo->expects($this->at(0))
+    $this->extensionDiscovery->expects($this->at(0))
       ->method('scan')
-      ->with($this->anything(), 'themes', 'name', 1)
+      ->with('theme')
       ->will($this->returnValue(array(
-        'seven' => (object) array(
-          'name' => 'seven',
-          'uri' => DRUPAL_ROOT . '/core/themes/seven/seven.info.yml',
-        ),
+        'seven' => new Extension('theme', DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', 'seven.info.yml'),
       )));
     $this->infoParser->expects($this->once())
       ->method('parse')
@@ -271,7 +260,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $info = $theme_data['seven'];
 
     // Ensure some basic properties.
-    $this->assertInstanceOf('stdClass', $info);
+    $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info);
     $this->assertEquals('seven', $info->name);
     $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', $info->uri);
     $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', $info->filename);

@@ -15,13 +15,6 @@ use Drupal\breakpoint\Entity\Breakpoint;
  */
 class BreakpointThemeTest extends BreakpointGroupTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('breakpoint_theme_test');
-
   public static function getInfo() {
     return array(
       'name' => 'Breakpoint theme functionality',

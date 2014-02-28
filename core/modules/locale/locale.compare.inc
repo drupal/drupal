@@ -162,7 +162,7 @@ function locale_translation_project_list() {
  * project = myproject" in its .info.yml file. This function will add a project
  * "myproject" to the info data.
  *
- * @param array $data
+ * @param \Drupal\Core\Extension\Extension[] $data
  *   Array of .info.yml file data.
  * @param string $type
  *   The project type. i.e. module, theme.

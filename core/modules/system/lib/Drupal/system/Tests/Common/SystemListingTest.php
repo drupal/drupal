@@ -7,12 +7,13 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests scanning system directories in drupal_system_listing().
  */
-class SystemListingTest extends WebTestBase {
+class SystemListingTest extends DrupalUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Drupal system listing',
@@ -55,11 +56,16 @@ class SystemListingTest extends WebTestBase {
 
     // Now scan the directories and check that the files take precedence as
     // expected.
-    $files = drupal_system_listing('/\.module$/', 'modules');
+    $listing = new ExtensionDiscovery();
+    $listing->setProfileDirectories(array('core/profiles/testing'));
+    $files = $listing->scan('module');
     foreach ($expected_directories as $module => $directories) {
       $expected_directory = array_shift($directories);
-      $expected_filename = "$expected_directory/$module/$module.module";
-      $this->assertEqual($files[$module]->uri, $expected_filename, format_string('Module @module was found at @filename.', array('@module' => $module, '@filename' => $expected_filename)));
+      $expected_uri = "$expected_directory/$module/$module.module";
+      $this->assertEqual($files[$module]->uri, $expected_uri, format_string('Module @actual was found at @expected.', array(
+        '@actual' => $files[$module]->uri,
+        '@expected' => $expected_uri,
+      )));
     }
   }
 }

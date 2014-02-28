@@ -599,9 +599,10 @@ class ModuleHandler implements ModuleHandlerInterface {
         $this->load($module);
         module_load_install($module);
 
-        // Flush theme info caches, since (testing) modules can implement
-        // hook_system_theme_info() to register additional themes.
-        system_list_reset();
+        // Clear the static cache of system_rebuild_module_data() to pick up the
+        // new module, since it merges the installation status of modules into
+        // its statically cached list.
+        drupal_static_reset('system_rebuild_module_data');
 
         // Update the kernel to include it.
         // This reboots the kernel to register the module's bundle and its
@@ -742,10 +743,10 @@ class ModuleHandler implements ModuleHandlerInterface {
       // Remove any potential cache bins provided by the module.
       $this->removeCacheBins($module);
 
-      // Refresh the system list to exclude the uninstalled modules.
-      // @todo Only needed to rebuild theme info.
-      // @see system_list_reset()
-      system_list_reset();
+      // Clear the static cache of system_rebuild_module_data() to pick up the
+      // new module, since it merges the installation status of modules into
+      // its statically cached list.
+      drupal_static_reset('system_rebuild_module_data');
 
       // Clear the entity info cache.
       entity_info_cache_clear();

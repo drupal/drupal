@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Extension\ExtensionDiscovery;
+
 /**
  * Storage controller used by the Drupal installer.
  *
@@ -110,9 +112,14 @@ class InstallStorage extends FileStorage {
    */
   protected function getAllFolders() {
     if (!isset($this->folders)) {
-      $this->folders = $this->getComponentNames('profile', array(drupal_get_profile()));
-      $this->folders += $this->getComponentNames('module', array_keys(drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules', 'name', 0)));
-      $this->folders += $this->getComponentNames('theme', array_keys(drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'themes')));
+      $this->folders = array();
+      // @todo Refactor getComponentNames() to use the extension list directly.
+      if ($profile = drupal_get_profile()) {
+        $this->folders += $this->getComponentNames('profile', array($profile));
+      }
+      $listing = new ExtensionDiscovery();
+      $this->folders += $this->getComponentNames('module', array_keys($listing->scan('module')));
+      $this->folders += $this->getComponentNames('theme', array_keys($listing->scan('theme')));
     }
     return $this->folders;
   }

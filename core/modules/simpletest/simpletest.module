@@ -2,6 +2,7 @@
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Page\HtmlPage;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\simpletest\TestBase;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -430,14 +431,13 @@ function simpletest_log_read($test_id, $database_prefix, $test_class) {
  *   @endcode
  */
 function simpletest_test_get_all($module = NULL) {
-  $all_groups = &drupal_static(__FUNCTION__);
+  static $all_groups = array();
   $cid = "simpletest:$module";
 
   if (!isset($all_groups[$cid])) {
     $all_groups[$cid] = array();
     $groups = &$all_groups[$cid];
-    // Make sure that namespaces for disabled modules are registered so that the
-    // checks below will find them.
+    // Register namespaces (extensions are not necessarily enabled).
     simpletest_classloader_register();
 
     // Load test information from cache if available, otherwise retrieve the
@@ -447,24 +447,27 @@ function simpletest_test_get_all($module = NULL) {
     }
     else {
       // Select all PSR-0 classes in the Tests namespace of all modules.
-      $classes = array();
-      $module_data = system_rebuild_module_data();
-      $all_data = $module_data + system_rebuild_theme_data();
-      $all_data += drupal_system_listing('/\.profile$/', 'profiles', 'name');
+      $listing = new ExtensionDiscovery();
+      $all_data = $listing->scan('module', TRUE);
       // If module is set then we keep only that one module.
       if (isset($module)) {
         $all_data = array(
           $module => $all_data[$module],
         );
       }
+      else {
+        $all_data += $listing->scan('profile', TRUE);
+        $all_data += $listing->scan('theme', TRUE);
+      }
+      $classes = array();
       foreach ($all_data as $name => $data) {
         // Build directory in which the test files would reside.
-        $tests_dir = DRUPAL_ROOT . '/' . dirname($data->uri) . '/lib/Drupal/' . $name . '/Tests';
+        $tests_dir = DRUPAL_ROOT . '/' . $data->getPath() . '/lib/Drupal/' . $name . '/Tests';
         // Scan it for test files if it exists.
         if (is_dir($tests_dir)) {
-          $files = file_scan_directory($tests_dir, '/.*\.php/');
+          $files = file_scan_directory($tests_dir, '/\.php$/');
           if (!empty($files)) {
-            $basedir = DRUPAL_ROOT . '/' . dirname($data->uri) . '/lib/';
+            $basedir = DRUPAL_ROOT . '/' . $data->getPath() . '/lib/';
             foreach ($files as $file) {
               // Convert the file name into the namespaced class name.
               $replacements = array(
@@ -532,23 +535,36 @@ function simpletest_test_get_all($module = NULL) {
  * Registers namespaces for disabled modules.
  */
 function simpletest_classloader_register() {
-  // @see drupal_get_filename()
+  // Use the same cache prefix as simpletest_test_get_all().
+  $cid = "simpletest::all";
   $types = array(
-    'theme_engine' => array('dir' => 'themes/engines', 'extension' => 'engine'),
-    'module' => array('dir' => 'modules', 'extension' => 'module'),
-    'theme' => array('dir' => 'themes', 'extension' => 'info'),
-    'profile' => array('dir' => 'profiles', 'extension' => 'profile'),
+    'theme_engine',
+    'module',
+    'theme',
+    'profile',
   );
 
-  $classloader = drupal_classloader();
+  if ($cache = \Drupal::cache()->get($cid)) {
+    $extensions = $cache->data;
+  }
+  else {
+    $listing = new ExtensionDiscovery();
+    $extensions = array();
+    foreach ($types as $type) {
+      foreach ($listing->scan($type, TRUE) as $name => $file) {
+        $extensions[$type][$name] = $file->uri;
+      }
+    }
+    \Drupal::cache()->set($cid, $extensions);
+  }
 
-  foreach ($types as $type => $info) {
-    $matches = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.' . $info['extension'] . '$/', $info['dir']);
-    foreach ($matches as $name => $file) {
-      drupal_classloader_register($name, dirname($file->uri));
-      $classloader->add('Drupal\\' . $name . '\\Tests', DRUPAL_ROOT . '/' . dirname($file->uri) . '/tests');
+  $classloader = drupal_classloader();
+  foreach ($types as $type) {
+    foreach ($extensions[$type] as $name => $uri) {
+      drupal_classloader_register($name, dirname($uri));
+      $classloader->add('Drupal\\' . $name . '\\Tests', DRUPAL_ROOT . '/' . dirname($uri) . '/tests');
       // While being there, prime drupal_get_filename().
-      drupal_get_filename($type, $name, $file->uri);
+      drupal_get_filename($type, $name, $uri);
     }
   }
 

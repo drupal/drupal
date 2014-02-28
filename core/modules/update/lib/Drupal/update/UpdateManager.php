@@ -166,7 +166,7 @@ class UpdateManager implements UpdateManagerInterface {
       $this->keyValueStore->delete($key);
     }
     else {
-      $projects = $this->keyValueStore->get($key);
+      $projects = $this->keyValueStore->get($key, array());
     }
     return $projects;
   }
