@@ -7,9 +7,9 @@
 
 namespace Drupal\book\Form;
 
+use Drupal\book\BookManagerInterface;
 use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\book\BookManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,7 +27,7 @@ class BookOutlineForm extends ContentEntityFormController {
   /**
    * BookManager service.
    *
-   * @var \Drupal\book\BookManager
+   * @var \Drupal\book\BookManagerInterface
    */
   protected $bookManager;
 
@@ -36,10 +36,10 @@ class BookOutlineForm extends ContentEntityFormController {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\book\BookManager $book_manager
+   * @param \Drupal\book\BookManagerInterface $book_manager
    *   The BookManager service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, BookManager $book_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, BookManagerInterface $book_manager) {
     parent::__construct($entity_manager);
     $this->bookManager = $book_manager;
   }
@@ -79,7 +79,7 @@ class BookOutlineForm extends ContentEntityFormController {
     if (!isset($this->entity->book['parent_depth_limit'])) {
       $this->entity->book['parent_depth_limit'] = $this->bookManager->getParentDepthLimit($this->entity->book);
     }
-    $form = $this->bookManager->addFormElements($form, $form_state, $this->entity, $this->currentUser());
+    $form = $this->bookManager->addFormElements($form, $form_state, $this->entity, $this->currentUser(), FALSE);
 
     return $form;
   }
@@ -113,10 +113,9 @@ class BookOutlineForm extends ContentEntityFormController {
       return;
     }
 
-    $book_link['menu_name'] = $this->bookManager->createMenuName($book_link['bid']);
     $this->entity->book = $book_link;
     if ($this->bookManager->updateOutline($this->entity)) {
-      if ($this->entity->book['parent_mismatch']) {
+      if (isset($this->entity->book['parent_mismatch']) && $this->entity->book['parent_mismatch']) {
         // This will usually only happen when JS is disabled.
         drupal_set_message($this->t('The post has been added to the selected book. You may now position it relative to other pages.'));
         $form_state['redirect_route'] = $this->entity->urlInfo('book-outline-form');

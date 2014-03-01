@@ -19,11 +19,11 @@ use Drupal\node\NodeInterface;
 class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
 
   /**
-   * The menu link storage controller.
+   * The node storage controller.
    *
-   * @var \Drupal\menu_link\MenuLinkStorageControllerInterface
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
    */
-  protected $menuLinkStorage;
+  protected $nodeStorage;
 
   /**
    * The access manager.
@@ -50,7 +50,7 @@ class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
    *   The current user account.
    */
   public function __construct(EntityManagerInterface $entity_manager, AccessManager $access_manager, AccountInterface $account) {
-    $this->menuLinkStorage = $entity_manager->getStorageController('menu_link');
+    $this->nodeStorage = $entity_manager->getStorageController('node');
     $this->accessManager = $access_manager;
     $this->account = $account;
   }
@@ -68,22 +68,22 @@ class BookBreadcrumbBuilder extends BreadcrumbBuilderBase {
    * {@inheritdoc}
    */
   public function build(array $attributes) {
-    $mlids = array();
+    $book_nids = array();
     $links = array($this->l($this->t('Home'), '<front>'));
     $book = $attributes['node']->book;
     $depth = 1;
     // We skip the current node.
     while (!empty($book['p' . ($depth + 1)])) {
-      $mlids[] = $book['p' . $depth];
+      $book_nids[] = $book['p' . $depth];
       $depth++;
     }
-    $menu_links = $this->menuLinkStorage->loadMultiple($mlids);
-    if (count($menu_links) > 0) {
+    $parent_books = $this->nodeStorage->loadMultiple($book_nids);
+    if (count($parent_books) > 0) {
       $depth = 1;
       while (!empty($book['p' . ($depth + 1)])) {
-        if (!empty($menu_links[$book['p' . $depth]]) && ($menu_link = $menu_links[$book['p' . $depth]])) {
-          if ($this->accessManager->checkNamedRoute($menu_link->route_name, $menu_link->route_parameters, $this->account)) {
-            $links[] = $this->l($menu_link->label(), $menu_link->route_name, $menu_link->route_parameters, $menu_link->options);
+        if (!empty($parent_books[$book['p' . $depth]]) && ($parent_book = $parent_books[$book['p' . $depth]])) {
+          if ($parent_book->access('view', $this->account)) {
+            $links[] = $this->l($parent_book->label(), 'node.view', array('node' => $parent_book->id()));
           }
         }
         $depth++;

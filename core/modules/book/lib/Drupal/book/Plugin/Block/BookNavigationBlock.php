@@ -111,7 +111,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
         if ($book['bid'] == $current_bid) {
           // If the current page is a node associated with a book, the menu
           // needs to be retrieved.
-          $data = \Drupal::service('book.manager')->bookTreeAllData($node->book['menu_name'], $node->book);
+          $data = \Drupal::service('book.manager')->bookTreeAllData($node->book['bid'], $node->book);
           $book_menus[$book_id] = \Drupal::service('book.manager')->bookTreeOutput($data);
         }
         else {
@@ -140,7 +140,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
       $nid = $select->execute()->fetchField();
       // Only show the block if the user has view access for the top-level node.
       if ($nid) {
-        $tree = \Drupal::service('book.manager')->bookTreeAllData($node->book['menu_name'], $node->book);
+        $tree = \Drupal::service('book.manager')->bookTreeAllData($node->book['bid'], $node->book);
         // There should only be one element at the top level.
         $data = array_shift($tree);
         $below = \Drupal::service('book.manager')->bookTreeOutput($data['below']);

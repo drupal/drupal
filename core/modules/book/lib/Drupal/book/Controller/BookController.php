@@ -9,6 +9,7 @@ namespace Drupal\book\Controller;
 
 use Drupal\book\BookManager;
 use Drupal\book\BookExport;
+use Drupal\book\BookManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -24,7 +25,7 @@ class BookController implements ContainerInjectionInterface {
   /**
    * The book manager.
    *
-   * @var \Drupal\book\BookManager
+   * @var BookManagerInterface
    */
   protected $bookManager;
 
@@ -38,12 +39,12 @@ class BookController implements ContainerInjectionInterface {
   /**
    * Constructs a BookController object.
    *
-   * @param \Drupal\book\BookManager $bookManager
+   * @param BookManagerInterface $bookManager
    *   The book manager.
    * @param \Drupal\book\BookExport $bookExport
    *   The book export service.
    */
-  public function __construct(BookManager $bookManager, BookExport $bookExport) {
+  public function __construct(BookManagerInterface $bookManager, BookExport $bookExport) {
     $this->bookManager = $bookManager;
     $this->bookExport = $bookExport;
   }
@@ -72,7 +73,7 @@ class BookController implements ContainerInjectionInterface {
     // Add any recognized books to the table list.
     foreach ($this->bookManager->getAllBooks() as $book) {
       $row = array(
-        l($book['title'], $book['href'], $book['options']),
+        l($book['title'], $book['link_path'], isset($book['options']) ? $book['options'] : array()),
       );
       $links = array();
       $links['edit'] = array(

@@ -92,8 +92,8 @@ class BookTest extends WebTestBase {
      */
     $nodes = array();
     $nodes[] = $this->createBookNode($book->id()); // Node 0.
-    $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['mlid']); // Node 1.
-    $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['mlid']); // Node 2.
+    $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['nid']); // Node 1.
+    $nodes[] = $this->createBookNode($book->id(), $nodes[0]->book['nid']); // Node 2.
     $nodes[] = $this->createBookNode($book->id()); // Node 3.
     $nodes[] = $this->createBookNode($book->id()); // Node 4.
 
@@ -122,7 +122,26 @@ class BookTest extends WebTestBase {
     $this->checkBookNode($nodes[4], NULL, $nodes[3], $book, FALSE, array($book));
 
     $this->drupalLogout();
+    $this->drupalLogin($this->book_author);
+    /*
+     * Add Node 5 under Node 3.
+     * Book
+     *  |- Node 0
+     *   |- Node 1
+     *   |- Node 2
+     *  |- Node 3
+     *   |- Node 5
+     *  |- Node 4
+     */
 
+
+    $nodes[] = $this->createBookNode($book->id(), $nodes[3]->book['nid']); // Node 5.
+    $this->drupalLogout();
+    $this->drupalLogin($this->web_user);
+    // Verify the new outline - make sure we don't get stale cached data.
+    $this->checkBookNode($nodes[3], array($nodes[5]), $nodes[2], $book, $nodes[5], array($book));
+    $this->checkBookNode($nodes[4], NULL, $nodes[5], $book, FALSE, array($book));
+    $this->drupalLogout();
     // Create a second book, and move an existing book page into it.
     $this->drupalLogin($this->book_author);
     $other_book = $this->createBookNode('new');
@@ -250,8 +269,11 @@ class BookTest extends WebTestBase {
     if ($parent !== NULL) {
       $this->drupalPostForm('node/add/book', $edit, t('Change book (update list of parents)'));
 
-      $edit['book[plid]'] = $parent;
+      $edit['book[pid]'] = $parent;
       $this->drupalPostForm(NULL, $edit, t('Save'));
+      // Make sure the parent was flagged as having children.
+      $parent_node = \Drupal::entityManager()->getStorageController('node')->loadUnchanged($parent);
+      $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
     }
     else {
       $this->drupalPostForm('node/add/book', $edit, t('Save'));
@@ -493,7 +515,7 @@ class BookTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
     $node1 = $this->createBookNode($book->id());
     $node2 = $this->createBookNode($book->id());
-    $plid = $node1->book['mlid'];
+    $pid = $node1->book['nid'];
 
     // Head to admin screen and attempt to re-order.
     $this->drupalGet('admin/structure/book/' . $book->id());
@@ -501,19 +523,42 @@ class BookTest extends WebTestBase {
       "table[book-admin-{$node1->id()}][weight]" => 1,
       "table[book-admin-{$node2->id()}][weight]" => 2,
       // Put node 2 under node 1.
-      "table[book-admin-{$node2->id()}][plid]" => $plid,
+      "table[book-admin-{$node2->id()}][pid]" => $pid,
     );
     $this->drupalPostForm(NULL, $edit, t('Save book pages'));
     // Verify weight was updated.
     $this->assertFieldByName("table[book-admin-{$node1->id()}][weight]", 1);
     $this->assertFieldByName("table[book-admin-{$node2->id()}][weight]", 2);
-    $this->assertFieldByName("table[book-admin-{$node2->id()}][plid]", $plid);
+    $this->assertFieldByName("table[book-admin-{$node2->id()}][pid]", $pid);
   }
 
   /**
    * Tests outline of a book.
    */
   public function testBookOutline() {
+    $this->drupalLogin($this->book_author);
+
+    // Create new node not yet a book.
+    $empty_book = $this->drupalCreateNode(array('type' => 'book'));
+    $this->drupalGet('node/' . $empty_book->id() . '/outline');
+    $this->assertNoLink(t('Book outline'), 'Book Author is not allowed to outline');
+
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('node/' . $empty_book->id() . '/outline');
+    $this->assertRaw(t('Book outline'));
+    $this->assertOptionSelected('edit-book-bid', 0, 'Node does not belong to a book');
+
+    $edit = array();
+    $edit['book[bid]'] = '1';
+    $this->drupalPostForm('node/' . $empty_book->id() . '/outline', $edit, t('Add to book outline'));
+    $node = \Drupal::entityManager()->getStorageController('node')->load($empty_book->id());
+    // Test the book array.
+    $this->assertEqual($node->book['nid'], $empty_book->id());
+    $this->assertEqual($node->book['bid'], $empty_book->id());
+    $this->assertEqual($node->book['depth'], 1);
+    $this->assertEqual($node->book['p1'], $empty_book->id());
+    $this->assertEqual($node->book['pid'], '0');
+
     // Create new book.
     $this->drupalLogin($this->book_author);
     $book = $this->createBookNode('new');
@@ -521,5 +566,24 @@ class BookTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('node/' . $book->id() . '/outline');
     $this->assertRaw(t('Book outline'));
+
+    // Create a new node and set the book after the node was created.
+    $node = $this->drupalCreateNode(array('type' => 'book'));
+    $edit = array();
+    $edit['book[bid]'] = $node->id();
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $node = \Drupal::entityManager()->getStorageController('node')->load($node->id());
+
+    // Test the book array.
+    $this->assertEqual($node->book['nid'], $node->id());
+    $this->assertEqual($node->book['bid'], $node->id());
+    $this->assertEqual($node->book['depth'], 1);
+    $this->assertEqual($node->book['p1'], $node->id());
+    $this->assertEqual($node->book['pid'], '0');
+
+    // Test the form itself.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertOptionSelected('edit-book-bid', $node->id());
   }
+
 }
