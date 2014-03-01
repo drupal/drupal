@@ -18,13 +18,16 @@ display:
           distinct: false
           slave: false
           query_tags: {  }
+        provider: views
       title: 'Monthly archive'
       access:
         type: none
         options: {  }
+        provider: views
       cache:
         type: none
         options: {  }
+        provider: views
       exposed_form:
         type: basic
         options:
@@ -35,6 +38,7 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+        provider: views
       pager:
         type: mini
         options:
@@ -53,6 +57,7 @@ display:
           tags:
             previous: ‹‹
             next: ››
+        provider: views
       sorts:
         created:
           id: created
@@ -107,12 +112,14 @@ display:
           default_row_class: true
           row_class_special: true
           uses_fields: false
+        provider: views
       row:
         type: 'entity:node'
         options:
           view_mode: teaser
           links: true
           comments: false
+        provider: node
       header: {  }
       footer: {  }
       empty: {  }
@@ -127,6 +134,7 @@ display:
       query:
         type: views_query
         options: {  }
+        provider: views
       path: archive
   block_1:
     id: block_1
@@ -137,6 +145,7 @@ display:
       query:
         type: views_query
         options: {  }
+        provider: views
       defaults:
         arguments: false
       arguments:

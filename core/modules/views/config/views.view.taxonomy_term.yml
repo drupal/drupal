@@ -18,12 +18,15 @@ display:
           distinct: false
           slave: false
           query_tags: {  }
+        provider: views
       access:
         type: none
         options: {  }
+        provider: views
       cache:
         type: none
         options: {  }
+        provider: views
       exposed_form:
         type: basic
         options:
@@ -34,6 +37,7 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+        provider: views
       pager:
         type: mini
         options:
@@ -52,6 +56,7 @@ display:
           tags:
             previous: ‹‹
             next: ››
+        provider: views
       sorts:
         sticky:
           id: sticky
@@ -162,12 +167,14 @@ display:
           default_row_class: true
           row_class_special: true
           uses_fields: false
+        provider: views
       row:
         type: 'entity:node'
         options:
           view_mode: teaser
           links: true
           comments: false
+        provider: views
       header: {  }
       footer: {  }
       empty: {  }
@@ -182,6 +189,7 @@ display:
       query:
         type: views_query
         options: {  }
+        provider: views
       path: taxonomy/term/%
   feed_1:
     id: feed_1
@@ -192,6 +200,7 @@ display:
       query:
         type: views_query
         options: {  }
+        provider: views
       pager:
         type: full
         options:
@@ -213,6 +222,7 @@ display:
             first: '« first'
             last: 'last »'
           quantity: 9
+        provider: views
       path: taxonomy/term/%/%/feed
       displays:
         page: page
@@ -223,12 +233,14 @@ display:
           description: ''
           grouping: {  }
           uses_fields: false
+        provider: views
       row:
         type: node_rss
         options:
           relationship: none
           item_length: default
           links: false
+        provider: views
 label: 'Taxonomy term'
 module: taxonomy
 id: taxonomy_term

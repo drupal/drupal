@@ -23,9 +23,11 @@ display:
         type: perm
         options:
           perm: 'access content'
+        provider: user
       cache:
         type: none
         options: {  }
+        provider: views
       query:
         type: views_query
         options:
@@ -34,6 +36,7 @@ display:
           slave: false
           query_comment: false
           query_tags: {  }
+        provider: views
       exposed_form:
         type: basic
         options:
@@ -44,15 +47,19 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+        provider: views
       pager:
         type: some
         options:
           items_per_page: 5
           offset: 0
+        provider: views
       style:
         type: html_list
+        provider: views
       row:
         type: fields
+        provider: views
       fields:
         name:
           id: name

@@ -14,8 +14,10 @@ display:
         type: perm
         options:
           perm: 'administer users'
+        provider: user
       cache:
         type: none
+        provider: views
       query:
         type: views_query
         options:
@@ -24,6 +26,7 @@ display:
           slave: false
           query_comment: false
           query_tags: {  }
+        provider: views
       exposed_form:
         type: basic
         options:
@@ -34,6 +37,7 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+        provider: views
       pager:
         type: full
         options:
@@ -55,6 +59,7 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
+        provider: views
       style:
         type: table
         options:
@@ -135,8 +140,10 @@ display:
               responsive: ''
           default: created
           empty_table: true
+        provider: views
       row:
         type: fields
+        provider: views
       fields:
         user_bulk_form:
           id: user_bulk_form

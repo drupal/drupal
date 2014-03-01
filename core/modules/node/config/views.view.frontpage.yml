@@ -10,9 +10,11 @@ display:
         type: perm
         options:
           perm: 'access content'
+        provider: user
       cache:
         type: none
         options: {  }
+        provider: views
       empty:
         area_text_custom:
           admin_label: ''
@@ -129,6 +131,7 @@ display:
             first: '« first'
             last: 'last »'
           quantity: 9
+        provider: views
       query:
         type: views_query
         options:
@@ -137,6 +140,7 @@ display:
           slave: false
           query_comment: false
           query_tags: {  }
+        provider: views
       row:
         type: 'entity:node'
         options:
@@ -144,6 +148,7 @@ display:
           comments: false
           links: true
           view_mode: teaser
+        provider: views
       sorts:
         sticky:
           admin_label: ''
@@ -213,18 +218,21 @@ display:
         options:
           items_per_page: 10
           offset: 0
+        provider: views
       style:
         type: rss
         options:
           description: ''
           grouping: {  }
           uses_fields: false
+        provider: views
       row:
         type: node_rss
         options:
           relationship: none
           item_length: default
           links: false
+        provider: views
 label: Frontpage
 module: node
 id: frontpage

@@ -22,17 +22,22 @@ display:
         type: perm
         options:
           perm: 'access comments'
+        provider: user
       cache:
         type: none
+        provider: views
       query:
         type: views_query
+        provider: views
       exposed_form:
         type: basic
+        provider: views
       pager:
         type: some
         options:
           items_per_page: 10
           offset: 0
+        provider: views
       style:
         type: html_list
         options:
@@ -43,6 +48,7 @@ display:
           type: ul
           wrapper_class: item-list
           class: ''
+        provider: views
       row:
         type: fields
         options:
@@ -52,6 +58,7 @@ display:
             changed: changed
           separator: ' '
           hide_empty: false
+        provider: views
       relationships:
         node:
           field: node

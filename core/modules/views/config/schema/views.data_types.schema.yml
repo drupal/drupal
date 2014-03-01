@@ -23,6 +23,8 @@ views_display:
           label: 'Pager type'
         options:
           type: views.pager.[%parent.type]
+        provider:
+          label: 'Provider'
     exposed_form:
       type: mapping
       label: 'Exposed form'
@@ -32,6 +34,8 @@ views_display:
         options:
           label: 'Options'
           type: views.exposed_form.[%parent.type]
+        provider:
+          label: 'Provider'
     access:
       type: mapping
       label: 'Access'
@@ -41,9 +45,16 @@ views_display:
           label: 'Access type'
         options:
           type: views.access.[%parent.type]
+        provider:
+          label: 'Provider'
     cache:
       type: views.cache.[type]
       label: 'Caching'
+      mapping:
+        type:
+          label: 'Cache type'
+        provider:
+          label: 'Provider'
     empty:
       type: sequence
       label: 'No results behavior'
@@ -85,6 +96,8 @@ views_display:
           label: 'Type'
         options:
           type: views.style.[%parent.type]
+        provider:
+          label: 'Provider'
     row:
       type: mapping
       label: 'Row'
@@ -93,6 +106,8 @@ views_display:
           label: 'Row type'
         options:
           type: views.row.[%parent.type]
+        provider:
+          label: 'Provider'
     query:
       type: mapping
       label: 'Query'
@@ -102,6 +117,8 @@ views_display:
           label: 'Query type'
         options:
           type: views.query.[%parent.type]
+        provider:
+          label: 'Provider'
     defaults:
       type: mapping
       label: 'Defaults'
