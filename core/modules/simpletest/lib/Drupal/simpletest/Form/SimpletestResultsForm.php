@@ -261,7 +261,7 @@ class SimpletestResultsForm extends FormBase {
     $form_execute = array();
     $form_state_execute = array('values' => array());
     foreach ($classes as $class) {
-      $form_state_execute['values'][$class] = 1;
+      $form_state_execute['values']['tests'][$class] = $class;
     }
 
     // Submit the simpletest test form to rerun the tests.
