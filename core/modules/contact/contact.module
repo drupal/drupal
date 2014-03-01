@@ -84,7 +84,7 @@ function contact_entity_type_alter(array &$entity_types) {
  */
 function contact_entity_bundle_info() {
   $bundles = array();
-  foreach (config_get_storage_names_with_prefix('contact.category.') as $config_name) {
+  foreach (\Drupal::configFactory()->listAll('contact.category.') as $config_name) {
     $config = \Drupal::config($config_name);
     $bundles['contact_message'][$config->get('id')]['label'] = $config->get('label');
   }

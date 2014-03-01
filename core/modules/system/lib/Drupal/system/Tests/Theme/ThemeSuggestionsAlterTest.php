@@ -43,7 +43,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
 
     // Enable test_theme, it contains a template suggested by theme_test.module
     // in theme_test_theme_suggestions_theme_test_suggestion_provided().
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
 
@@ -59,7 +59,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->assertText('Original template for testing hook_theme_suggestions_alter().');
 
     // Enable test_theme and test that themes can alter template suggestions.
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('theme-test/general-suggestion-alter');
@@ -80,7 +80,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->assertText('Original template for testing hook_theme_suggestions_HOOK_alter().');
 
     // Enable test_theme and test that themes can alter template suggestions.
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('theme-test/suggestion-alter');
@@ -101,7 +101,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->drupalGet('theme-test/specific-suggestion-alter');
     $this->assertText('Template for testing specific theme calls.');
 
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
 
@@ -125,7 +125,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
     $this->assertText('Original theme function.');
 
     // Enable test_theme and test that themes can alter theme suggestions.
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('theme-test/function-suggestion-alter');
@@ -146,7 +146,7 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
    */
   function testExecutionOrder() {
     // Enable our test theme and module.
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
     \Drupal::moduleHandler()->install(array('theme_suggestions_test'));

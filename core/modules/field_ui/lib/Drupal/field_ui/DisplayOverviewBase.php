@@ -8,6 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -41,6 +42,13 @@ abstract class DisplayOverviewBase extends OverviewBase {
   protected $fieldTypes;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructs a new DisplayOverviewBase.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -49,12 +57,15 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   The field type manager.
    * @param \Drupal\Component\Plugin\PluginManagerBase $plugin_manager
    *   The widget or formatter plugin manager.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The configuration factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager) {
+  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, ConfigFactoryInterface $config_factory) {
     parent::__construct($entity_manager);
 
     $this->fieldTypes = $field_type_manager->getConfigurableDefinitions();
     $this->pluginManager = $plugin_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -64,7 +75,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
     return new static(
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('plugin.manager.field.widget')
+      $container->get('plugin.manager.field.widget'),
+      $container->get('config.factory')
     );
   }
 
@@ -772,7 +784,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $display_entity_type = $this->getDisplayType();
     $entity_type = $this->entityManager->getDefinition($display_entity_type);
     $config_prefix = $entity_type->getConfigPrefix();
-    $ids = config_get_storage_names_with_prefix($config_prefix . '.' . $this->entity_type . '.' . $this->bundle . '.');
+    $ids = $this->configFactory->listAll($config_prefix . '.' . $this->entity_type . '.' . $this->bundle . '.');
     foreach ($ids as $id) {
       $config_id = str_replace($config_prefix . '.', '', $id);
       list(,, $display_mode) = explode('.', $config_id);

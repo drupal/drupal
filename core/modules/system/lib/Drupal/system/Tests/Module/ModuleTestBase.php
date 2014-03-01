@@ -137,7 +137,7 @@ abstract class ModuleTestBase extends WebTestBase {
    *   TRUE if no configuration was found, FALSE otherwise.
    */
   function assertNoModuleConfig($module) {
-    $names = config_get_storage_names_with_prefix($module . '.');
+    $names = \Drupal::configFactory()->listAll($module . '.');
     return $this->assertFalse($names, format_string('No configuration found for @module module.', array('@module' => $module)));
   }
 

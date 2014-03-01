@@ -100,7 +100,7 @@ function menu_entity_type_build(array &$entity_types) {
  */
 function menu_entity_bundle_info() {
   $bundles = array();
-  $config_names = config_get_storage_names_with_prefix('system.menu.');
+  $config_names = \Drupal::configFactory()->listAll('system.menu.');
   foreach ($config_names as $config_name) {
     $config = \Drupal::config($config_name);
     $bundles['menu_link'][$config->get('id')] = array(

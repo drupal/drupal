@@ -112,7 +112,7 @@ function custom_block_entity_type_alter(array &$entity_types) {
  */
 function custom_block_entity_bundle_info() {
   $bundles = array();
-  foreach (config_get_storage_names_with_prefix('custom_block.type.') as $config_name) {
+  foreach (\Drupal::configFactory()->listAll('custom_block.type.') as $config_name) {
     $config = \Drupal::config($config_name);
     $bundles['custom_block'][$config->get('id')]['label'] = $config->get('label');
   }

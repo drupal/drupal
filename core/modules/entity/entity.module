@@ -81,7 +81,7 @@ function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) 
   // Rename entity displays.
   $entity_type = \Drupal::entityManager()->getDefinition('entity_view_display');
   if ($bundle_old !== $bundle_new) {
-    $ids = config_get_storage_names_with_prefix('entity.view_display.' . $entity_type_id . '.' . $bundle_old . '.');
+    $ids = \Drupal::configFactory()->listAll('entity.view_display.' . $entity_type_id . '.' . $bundle_old . '.');
     foreach ($ids as $id) {
       $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
       $display = entity_load('entity_view_display', $id);
@@ -95,7 +95,7 @@ function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) 
   // Rename entity form displays.
   $entity_type = \Drupal::entityManager()->getDefinition('entity_form_display');
   if ($bundle_old !== $bundle_new) {
-    $ids = config_get_storage_names_with_prefix('entity.form_display.' . $entity_type_id . '.' . $bundle_old . '.');
+    $ids = \Drupal::configFactory()->listAll('entity.form_display.' . $entity_type_id . '.' . $bundle_old . '.');
     foreach ($ids as $id) {
       $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
       $form_display = entity_load('entity_form_display', $id);
@@ -113,7 +113,7 @@ function entity_entity_bundle_rename($entity_type_id, $bundle_old, $bundle_new) 
 function entity_entity_bundle_delete($entity_type_id, $bundle) {
   // Remove entity displays of the deleted bundle.
   $entity_type = \Drupal::entityManager()->getDefinition('entity_view_display');
-  $ids = config_get_storage_names_with_prefix('entity.view_display.' . $entity_type_id . '.' . $bundle . '.');
+  $ids = \Drupal::configFactory()->listAll('entity.view_display.' . $entity_type_id . '.' . $bundle . '.');
   foreach ($ids as &$id) {
     $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
   }
@@ -121,7 +121,7 @@ function entity_entity_bundle_delete($entity_type_id, $bundle) {
 
   // Remove entity form displays of the deleted bundle.
   $entity_type = \Drupal::entityManager()->getDefinition('entity_form_display');
-  $ids = config_get_storage_names_with_prefix('entity.form_display.' . $entity_type_id . '.' . $bundle . '.');
+  $ids = \Drupal::configFactory()->listAll('entity.form_display.' . $entity_type_id . '.' . $bundle . '.');
   foreach ($ids as &$id) {
     $id = ConfigStorageController::getIDFromConfigName($id, $entity_type->getConfigPrefix());
   }

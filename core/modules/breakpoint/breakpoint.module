@@ -79,7 +79,7 @@ function breakpoint_modules_uninstalled($modules) {
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  */
 function _breakpoint_delete_breakpoints($list, $source_type) {
-  $ids = config_get_storage_names_with_prefix('breakpoint.breakpoint_group.' . $source_type . '.');
+  $ids = \Drupal::configFactory()->listAll('breakpoint.breakpoint_group.' . $source_type . '.');
   $entity_manager = \Drupal::entityManager();
   $entity_type = $entity_manager->getDefinition('breakpoint_group');
 

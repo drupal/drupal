@@ -146,7 +146,7 @@ function content_translation_entity_bundle_info_alter(&$bundles) {
  * Implements hook_entity_field_info_alter().
  */
 function content_translation_entity_field_info_alter(&$info, $entity_type) {
-  $translation_settings = config('content_translation.settings')->get($entity_type);
+  $translation_settings = \Drupal::config('content_translation.settings')->get($entity_type);
 
   if ($translation_settings) {
     // Currently field translatability is defined per-field but we may want to

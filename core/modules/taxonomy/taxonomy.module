@@ -435,7 +435,7 @@ function taxonomy_vocabulary_get_names() {
 
   if (!isset($names)) {
     $names = array();
-    $config_names = config_get_storage_names_with_prefix('taxonomy.vocabulary.');
+    $config_names = \Drupal::configFactory()->listAll('taxonomy.vocabulary.');
     foreach ($config_names as $config_name) {
       $id = substr($config_name, strlen('taxonomy.vocabulary.'));
       $names[$id] = $id;

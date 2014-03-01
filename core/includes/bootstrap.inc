@@ -1714,9 +1714,6 @@ function _drupal_bootstrap_configuration() {
   // Detect string handling method.
   Unicode::check();
 
-  // Load the procedural configuration system helper functions.
-  require_once __DIR__ . '/config.inc';
-
   // Set the Drupal custom error handler. (requires \Drupal::config())
   set_error_handler('_drupal_error_handler');
   set_exception_handler('_drupal_exception_handler');

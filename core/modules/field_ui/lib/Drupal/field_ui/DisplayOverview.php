@@ -8,6 +8,7 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -43,9 +44,11 @@ class DisplayOverview extends DisplayOverviewBase {
    *   The widget or formatter plugin manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler class to use for invoking hooks.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The configuration factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManager $field_type_manager, PluginManagerBase $plugin_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct($entity_manager, $field_type_manager, $plugin_manager);
+  public function __construct(EntityManagerInterface $entity_manager, FieldTypePluginManager $field_type_manager, PluginManagerBase $plugin_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
+    parent::__construct($entity_manager, $field_type_manager, $plugin_manager, $config_factory);
     $this->moduleHandler = $module_handler;
   }
 
@@ -57,8 +60,9 @@ class DisplayOverview extends DisplayOverviewBase {
       $container->get('entity.manager'),
       $container->get('plugin.manager.field.field_type'),
       $container->get('plugin.manager.field.formatter'),
-      $container->get('module_handler')
-    );
+      $container->get('module_handler'),
+      $container->get('config.factory')
+  );
   }
 
   /**

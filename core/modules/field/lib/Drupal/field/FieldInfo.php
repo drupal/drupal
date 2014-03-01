@@ -59,7 +59,7 @@ class FieldInfo {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * The language manager.
@@ -136,7 +136,7 @@ class FieldInfo {
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend to use.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory object to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler class to use for invoking hooks.
@@ -145,10 +145,10 @@ class FieldInfo {
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager to use.
    */
-  public function __construct(CacheBackendInterface $cache_backend, ConfigFactoryInterface $config, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(CacheBackendInterface $cache_backend, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager, LanguageManagerInterface $language_manager) {
     $this->cacheBackend = $cache_backend;
     $this->moduleHandler = $module_handler;
-    $this->config = $config;
+    $this->configFactory = $config_factory;
     $this->fieldTypeManager = $field_type_manager;
     $this->languageManager = $language_manager;
   }
@@ -201,13 +201,13 @@ class FieldInfo {
     $map = array();
 
     // Get fields.
-    foreach (config_get_storage_names_with_prefix('field.field.') as $config_id) {
-      $field_config = $this->config->get($config_id)->get();
+    foreach ($this->configFactory->listAll('field.field.') as $config_id) {
+      $field_config = $this->configFactory->get($config_id)->get();
       $fields[$field_config['uuid']] = $field_config;
     }
     // Get field instances.
-    foreach (config_get_storage_names_with_prefix('field.instance.') as $config_id) {
-      $instance_config = $this->config->get($config_id)->get();
+    foreach ($this->configFactory->listAll('field.instance.') as $config_id) {
+      $instance_config = $this->configFactory->get($config_id)->get();
       $field_uuid = $instance_config['field_uuid'];
       if (isset($fields[$field_uuid])) {
         $field = $fields[$field_uuid];
