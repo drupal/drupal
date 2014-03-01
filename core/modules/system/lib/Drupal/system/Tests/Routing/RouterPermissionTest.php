@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Routing;
 
+use Drupal\Core\Routing\RequestHelper;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -37,17 +38,6 @@ class RouterPermissionTest extends WebTestBase {
     $path = 'router_test/test7';
     $this->drupalGet($path);
     $this->assertResponse(403, "Access denied for a route where we don't have a permission");
-    // An invalid path should throw an exception.
-    $map = array();
-    $route = \Drupal::service('router.route_provider')->getRouteByName('router_test.7');
-    try {
-      menu_item_route_access($route, $path . 'invalid', $map);
-      $exception = FALSE;
-    }
-    catch (ResourceNotFoundException $e) {
-      $exception = TRUE;
-    }
-    $this->assertTrue($exception, 'A ResourceNotFoundException was thrown while checking access for an invalid route.');
 
     $this->drupalGet('router_test/test8');
     $this->assertResponse(403, 'Access denied by default if no access specified');

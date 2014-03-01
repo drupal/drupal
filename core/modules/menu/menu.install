@@ -17,7 +17,6 @@ function menu_install() {
   // \Drupal\Core\Extension\ModuleHandler::install().
   // @see https://drupal.org/node/2181151
   \Drupal::service('router.builder')->rebuild();
-  menu_router_rebuild();
   if (\Drupal::moduleHandler()->moduleExists('node')) {
     $node_types = array_keys(node_type_get_names());
     foreach ($node_types as $type_id) {
@@ -33,5 +32,5 @@ function menu_install() {
  * Implements hook_uninstall().
  */
 function menu_uninstall() {
-  menu_router_rebuild();
+  \Drupal::service('router.builder')->setRebuildNeeded();
 }

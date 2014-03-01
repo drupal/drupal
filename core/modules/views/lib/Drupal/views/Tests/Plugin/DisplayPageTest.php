@@ -54,7 +54,7 @@ class DisplayPageTest extends ViewUnitTestBase {
     parent::setUp();
 
     // Setup the needed tables in order to make the drupal router working.
-    $this->installSchema('system', array('menu_router', 'url_alias'));
+    $this->installSchema('system', array('url_alias'));
     $this->installSchema('menu_link', 'menu_links');
   }
 

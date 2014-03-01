@@ -182,62 +182,6 @@ function content_translation_entity_operation_alter(array &$operations, \Drupal\
 }
 
 /**
- * Implements hook_menu().
- *
- * @todo Split this into route definition and menu link definition. See
- *   https://drupal.org/node/1987882 and https://drupal.org/node/2047633.
- */
-function content_translation_menu() {
-  $items = array();
-
-  // Create tabs for all possible entity types.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    // Provide the translation UI only for enabled types.
-    if (content_translation_enabled($entity_type_id)) {
-      $path = _content_translation_link_to_router_path($entity_type_id, $entity_type->getLinkTemplate('canonical'));
-      $entity_position = count(explode('/', $path)) - 1;
-      $keys = array_flip(array('load_arguments'));
-      $translation = $entity_type->get('translation');
-      $menu_info = array_intersect_key($translation['content_translation'], $keys) + array('file' => 'content_translation.pages.inc');
-      $item = array();
-
-      // Plugin annotations cannot contain spaces, thus we need to restore them
-      // from underscores.
-      foreach ($menu_info as $key => $value) {
-        $item[str_replace('_', ' ', $key)] = $value;
-      }
-
-      // Add translation callback.
-      // @todo Add the access callback instead of replacing it as soon as the
-      // routing system supports multiple callbacks.
-      $language_position = $entity_position + 3;
-      $args = array($entity_position, $language_position, $language_position + 1);
-      $items["$path/translations/add/%language/%language"] = array(
-        'title' => 'Add',
-        'route_name' => "content_translation.translation_add_$entity_type_id",
-        'weight' => 1,
-      );
-
-      // Edit translation callback.
-      $args = array($entity_position, $language_position);
-      $items["$path/translations/edit/%language"] = array(
-        'title' => 'Edit',
-        'route_name' => "content_translation.translation_edit_$entity_type_id",
-        'weight' => 1,
-      );
-
-      // Delete translation callback.
-      $items["$path/translations/delete/%language"] = array(
-        'title' => 'Delete',
-        'route_name' => "content_translation.delete_$entity_type_id",
-      ) + $item;
-    }
-  }
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_alter().
  *
  * @todo Split this into route definition and menu link definition. See
@@ -973,7 +917,7 @@ function content_translation_language_configuration_element_submit(array $form, 
   if (content_translation_enabled($context['entity_type'], $context['bundle']) != $enabled) {
     content_translation_set_config($context['entity_type'], $context['bundle'], 'enabled', $enabled);
     entity_info_cache_clear();
-    menu_router_rebuild();
+    \Drupal::service('router.builder')->setRebuildNeeded();
   }
 }
 
@@ -1041,5 +985,5 @@ function content_translation_save_settings($settings) {
 
   // Ensure entity and menu router information are correctly rebuilt.
   entity_info_cache_clear();
-  menu_router_rebuild();
+  \Drupal::service('router.builder')->setRebuildNeeded();
 }

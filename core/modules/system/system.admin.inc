@@ -30,12 +30,6 @@ function system_theme_default() {
         ->set('default', $theme)
         ->save();
 
-      // Rebuild the menu. This duplicates the menu_router_rebuild() in
-      // theme_enable(). However, modules must know the current default theme in
-      // order to use this information in hook_menu() or hook_menu_alter()
-      // implementations, and saving the configuration before the theme_enable()
-      // could result in a race condition where the theme is default but not
-      // enabled.
       \Drupal::service('router.builder')->setRebuildNeeded();
 
       // The status message depends on whether an admin theme is currently in use:

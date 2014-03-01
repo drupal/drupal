@@ -8,147 +8,6 @@
 use Drupal\menu_link\Entity\MenuLink;
 
 /**
- * Implements hook_menu().
- */
-function menu_test_menu() {
-  // The name of the menu changes during the course of the test. Using a GET.
-  $items['menu_name_test'] = array(
-    'title' => 'Test menu_name router item',
-    'route_name' => 'menu_test.menu_name_test',
-    'menu_name' => menu_test_menu_name(),
-  );
-  // This item uses SystemController::systemAdminMenuBlockPage() to list child
-  // items.
-  $items['menu_callback_description'] = array(
-    'title' => 'Menu item title',
-    'description' => 'Menu item description parent',
-    'route_name' => 'menu_test.callback_description',
-  );
-  // This item tests the description key.
-  $items['menu_callback_description/description-plain'] = array(
-    'title' => 'Menu item with a regular description',
-    'description' => 'Menu item description text',
-    'route_name' => 'menu_test.callback_description_plain',
-  );
-  // This item tests using a description callback.
-  $items['menu_callback_description/description-callback'] = array(
-    'title' => 'Menu item with a description set with a callback',
-    'description callback' => 'check_plain',
-    'description arguments' => array('<strong>Menu item description arguments</strong>'),
-    'route_name' => 'menu_test.callback_description_callback',
-  );
-  // Use FALSE as 'title callback' to bypass t().
-  $items['menu_no_title_callback'] = array(
-    'title' => 'A title with @placeholder',
-    'title callback' => FALSE,
-    'title arguments' => array('@placeholder' => 'some other text'),
-    'route_name' => 'menu_test.menu_no_title_callback',
-  );
-
-  // Hidden link for menu_link_maintain tests
-  $items['menu_test_maintain/%'] = array(
-    'title' => 'Menu maintain test',
-    'route_name' => 'menu_test.menu_test_maintain',
-   );
-  // Hierarchical tests.
-  $items['menu-test/hierarchy/parent'] = array(
-    'title' => 'Parent menu router',
-    'route_name' => 'menu_test.hierarchy_parent',
-  );
-  $items['menu-test/hierarchy/parent/child'] = array(
-    'title' => 'Child menu router',
-    'route_name' => 'menu_test.hierarchy_parent_child',
-  );
-  $items['menu-test/hierarchy/parent/child2/child'] = array(
-    'title' => 'Unattached subchild router',
-    'route_name' => 'menu_test.hierarchy_parent_child2',
-  );
-  // Theme callback tests.
-  $items['menu-test/theme-callback/%/inheritance'] = array(
-    'title' => 'Page that tests theme negotiation inheritance.',
-    'route_name' => 'menu_test.theme_callback_inheritance',
-  );
-  $items['menu-test/no-theme-callback'] = array(
-    'title' => 'Page that displays different themes without using a theme negotiation.',
-    'route_name' => 'menu_test.no_theme_callback',
-  );
-  // Path containing "exotic" characters.
-  $path = "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
-    "%23%25%26%2B%2F%3F" . // Characters that look like a percent-escaped string.
-    "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
-  $items[$path] = array(
-    'title' => '"Exotic" path',
-    'route_name' => 'menu_test.exotic_path',
-  );
-
-  // Hidden tests; base parents.
-  // Same structure as in Menu and Block modules. Since those structures can
-  // change, we need to simulate our own in here.
-  $items['menu-test'] = array(
-    'title' => 'Menu test root',
-    'route_name' => 'menu_test.menu_test',
-  );
-
-  // Menu trail tests.
-  // @see MenuTrailTestCase
-  $items['menu-test/menu-trail'] = array(
-    'title' => 'Menu trail - Case 1',
-    'route_name' => 'menu_test.menu_trail',
-  );
-  $items['admin/config/development/menu-trail'] = array(
-    'title' => 'Menu trail - Case 2',
-    'description' => 'Tests menu_tree_set_path()',
-    'route_name' => 'menu_test.menu_trail_admin',
-  );
-  $items['menu-test/custom-403-page'] = array(
-    'title' => 'Custom 403 page',
-    'route_name' => 'menu_test.custom_403',
-  );
-  $items['menu-test/custom-404-page'] = array(
-    'title' => 'Custom 404 page',
-    'route_name' => 'menu_test.custom_404',
-  );
-
-  // Test the access key.
-  $items['menu-title-test/case1'] = array(
-    'title' => 'Example title - Case 1',
-    'route_name' => 'menu_test.title_test_case1',
-  );
-  $items['menu-title-test/case2'] = array(
-    'title' => 'Example title',
-    'title callback' => 'menu_test_title_callback',
-    'route_name' => 'menu_test.title_test_case2',
-  );
-  $items['menu-title-test/case3'] = array(
-    // Title gets completely ignored. Good thing, too.
-    'title' => 'Bike sheds full of blue smurfs WRONG',
-    'route_name' => 'menu_test.title_test_case3',
-  );
-
-  $items['menu-test-local-action'] = array(
-    'title' => 'Local action parent',
-    'route_name' => 'menu_test.local_action1',
-  );
-
-  $items['menu-local-task-test/tasks'] = array(
-    'title' => 'Local tasks',
-    'route_name' => 'menu_test.local_task_test_tasks',
-  );
-  $items['menu-test/optional'] = array(
-    'title' => 'Test optional placeholder',
-    'route_name' => 'menu_test.optional_placeholder',
-    'type' => MENU_LOCAL_TASK,
-  );
-
-  $items['menu-test/context'] = array(
-    'title' => \Drupal::config('menu_test.menu_item')->get('title'),
-    'route_name' => 'menu_test.context',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function menu_test_menu_link_defaults() {
@@ -170,12 +29,6 @@ function menu_test_menu_link_defaults() {
     'link_title' => 'Menu item with a regular description',
     'description' => 'Menu item description text',
     'route_name' => 'menu_test.callback_description_plain',
-    'parent' => 'menu_test.menu_callback_description',
-  );
-  // This item tests using a description callback.
-  $items['menu_callback_description.description-callback'] = array(
-    'link_title' => 'Menu item with a description set with a callback',
-    'route_name' => 'menu_test.callback_description_callback',
     'parent' => 'menu_test.menu_callback_description',
   );
 
@@ -335,36 +188,6 @@ function menu_test_menu_local_tasks_alter(&$data, $route_name) {
     $data['tabs'][0]['foo']['#link']['title'] = 'Advanced settings';
     $data['tabs'][0]['foo']['#weight'] = 110;
   }
-}
-
-/**
- * Argument callback: Loads an argument using a function for hook_menu().
- *
- * @param string $arg1
- *   A parameter passed in via the URL.
- *
- * @return false
- *   Always return NULL.
- *
- * @see menu_test_menu();
- */
-function menu_test_argument_load($arg1) {
-  return NULL;
-}
-
-/**
- * Argument callback: Loads an argument using a function for hook_menu().
- *
- * @param string $arg1
- *   A parameter passed in via the URL.
- *
- * @return false
- *   Always return NULL.
- *
- * @see menu_test_menu();
- */
-function menu_test_other_argument_load($arg1) {
-  return NULL;
 }
 
 /**

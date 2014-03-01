@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests the access check for menu tree using both hook_menu() and route items.
+ * Tests the access check for menu tree using both menu links and route items.
  */
 
 class TreeAccessTest extends DrupalUnitTestBase {
@@ -43,7 +43,7 @@ class TreeAccessTest extends DrupalUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Menu tree access',
-      'description' => 'Tests the access check for menu tree using both hook_menu() and route items.',
+      'description' => 'Tests the access check for menu tree using both menu links and route items.',
       'group' => 'Menu',
     );
   }

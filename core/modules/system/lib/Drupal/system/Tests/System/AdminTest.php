@@ -53,12 +53,10 @@ class AdminTest extends WebTestBase {
 
     // Verify that all visible, top-level administration links are listed on
     // the main administration page.
-    foreach (menu_get_router() as $path => $item) {
-      if (strpos($path, 'admin/') === 0 && ($item['type'] & MENU_VISIBLE_IN_TREE) && $item['_number_parts'] == 2) {
-        $this->assertLink($item['title']);
-        $this->assertLinkByHref($path);
-        $this->assertText($item['description']);
-      }
+    foreach ($this->getTopLevelMenuLinks() as $item) {
+      $this->assertLink($item['title']);
+      $this->assertLinkByHref($item['link_path']);
+      $this->assertText($item['localized_options']['attributes']['title']);
     }
 
     // For each administrative listing page on which the Locale module appears,
@@ -108,6 +106,31 @@ class AdminTest extends WebTestBase {
         $this->assertNoLinkByHref("admin/people/permissions#module-locale");
       }
     }
+  }
+
+  /**
+   * Returns all top level menu links.
+   *
+   * @return \Drupal\menu_link\MenuLinkInterface[]
+   */
+  protected function getTopLevelMenuLinks() {
+    $route_provider = \Drupal::service('router.route_provider');
+    $routes = array();
+    foreach ($route_provider->getAllRoutes() as $key => $value) {
+      $path = $value->getPath();
+      if (strpos($path, '/admin/') === 0 && count(explode('/', $path)) == 3) {
+        $routes[$key] = $key;
+      }
+    }
+    $menu_link_ids = \Drupal::entityQuery('menu_link')
+      ->condition('route_name', $routes)
+      ->execute();
+
+    $menu_items = \Drupal::entityManager()->getStorageController('menu_link')->loadMultiple($menu_link_ids);
+    foreach ($menu_items as &$menu_item) {
+      _menu_link_translate($menu_item);
+    }
+    return $menu_items;
   }
 
   /**

@@ -5,19 +5,12 @@
  * API for the Drupal menu system.
  */
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
-use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Template\Attribute;
-use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkInterface;
-use Drupal\menu_link\MenuLinkStorageController;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
 
 /**
  * @defgroup menu Menu and routing system
@@ -44,9 +37,9 @@ use Symfony\Component\Routing\Route;
  *   the stuff in the routing.yml file means.
  *
  * @section Defining menu links
- * Once you have a route defined, you can use hook_menu() to define links
- * for your module's paths in the main Navigation menu or other menus. See
- * the hook_menu() documentation for more details.
+ * Once you have a route defined, you can use hook_menu_link_defaults() to
+ * define links for your module's paths in the main Navigation menu or other
+ * menus. See the hook_menu_link_defaults() documentation for more details.
  *
  * @todo The rest of this topic has not been reviewed or updated for Drupal 8.x
  *   and is not correct!
@@ -126,11 +119,6 @@ const MENU_IS_ROOT = 0x0001;
 const MENU_VISIBLE_IN_TREE = 0x0002;
 
 /**
- * Internal menu flag -- menu item is visible in the breadcrumb.
- */
-const MENU_VISIBLE_IN_BREADCRUMB = 0x0004;
-
-/**
  * Internal menu flag -- menu item links back to its parent.
  */
 const MENU_LINKS_TO_PARENT = 0x0008;
@@ -170,7 +158,7 @@ const MENU_IS_LOCAL_TASK = 0x0080;
  * the administrator. Use this for most menu items. It is the default value if
  * no menu item type is specified.
  */
-define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB);
+define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE);
 
 /**
  * Menu type -- A hidden, internal callback, typically used for API calls.
@@ -188,58 +176,10 @@ const MENU_CALLBACK = 0x0000;
  * Note for the value: 0x0010 was a flag which is no longer used, but this way
  * the values of MENU_CALLBACK and MENU_SUGGESTED_ITEM are separate.
  */
-define('MENU_SUGGESTED_ITEM', MENU_VISIBLE_IN_BREADCRUMB | 0x0010);
-
-/**
- * Menu type -- A task specific to the parent item, usually rendered as a tab.
- *
- * Local tasks are menu items that describe actions to be performed on their
- * parent item. An example is the path "node/52/edit", which performs the
- * "edit" task on "node/52".
- */
-define('MENU_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_VISIBLE_IN_BREADCRUMB);
-
-/**
- * Menu type -- The "default" local task, which is initially active.
- *
- * Every set of local tasks should provide one "default" task, that links to the
- * same path as its parent when clicked.
- */
-define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT | MENU_VISIBLE_IN_BREADCRUMB);
-
-/**
- * Menu type -- A task specific to the parent, which is never rendered.
- *
- * Sibling local tasks are not rendered themselves, but affect the active
- * trail and need their sibling tasks rendered as tabs.
- */
-define('MENU_SIBLING_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_VISIBLE_IN_BREADCRUMB);
+define('MENU_SUGGESTED_ITEM', 0x0010);
 
 /**
  * @} End of "defgroup menu_item_types".
- */
-
-/**
- * @defgroup menu_context_types Menu context types
- * @{
- * Flags for use in the "context" attribute of menu router items.
- */
-
-/**
- * Internal menu flag: Invisible local task.
- *
- * This flag may be used for local tasks like "Delete", so custom modules and
- * themes can alter the default context and expose the task by altering menu.
- */
-const MENU_CONTEXT_NONE = 0x0000;
-
-/**
- * Internal menu flag: Local task should be displayed in page context.
- */
-const MENU_CONTEXT_PAGE = 0x0001;
-
-/**
- * @} End of "defgroup menu_context_types".
  */
 
 /**
@@ -247,16 +187,6 @@ const MENU_CONTEXT_PAGE = 0x0001;
  * @{
  * Status codes for menu callbacks.
  */
-
-/**
- * Internal menu status code -- Menu item was not found.
- */
-const MENU_NOT_FOUND = 404;
-
-/**
- * Internal menu status code -- Menu item access is denied.
- */
-const MENU_ACCESS_DENIED = 403;
 
 /**
  * Internal menu status code -- Menu item inaccessible because site is offline.
@@ -277,12 +207,6 @@ const MENU_SITE_ONLINE = 5;
  * @{
  * Parameters for a menu tree.
  */
-
- /**
- * The maximum number of path elements for a menu callback
- */
-const MENU_MAX_PARTS = 9;
-
 
 /**
  * The maximum depth of a menu links tree - matches the number of p columns.
@@ -312,260 +236,17 @@ const MENU_MAX_DEPTH = 9;
 const MENU_PREFERRED_LINK = '1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91';
 
 /**
- * Returns the ancestors (and relevant placeholders) for any given path.
- *
- * For example, the ancestors of node/12345/edit are:
- * - node/12345/edit
- * - node/12345/%
- * - node/%/edit
- * - node/%/%
- * - node/12345
- * - node/%
- * - node
- *
- * To generate these, we will use binary numbers. Each bit represents a
- * part of the path. If the bit is 1, then it represents the original
- * value while 0 means wildcard. If the path is node/12/edit/foo
- * then the 1011 bitstring represents node/%/edit/foo where % means that
- * any argument matches that part. We limit ourselves to using binary
- * numbers that correspond the patterns of wildcards of router items that
- * actually exists. This list of 'masks' is built in menu_router_rebuild().
- *
- * @param $parts
- *   An array of path parts, for the above example
- *   array('node', '12345', 'edit').
- *
- * @return
- *   An array which contains the ancestors and placeholders. Placeholders
- *   simply contain as many '%s' as the ancestors.
- */
-function menu_get_ancestors($parts) {
-  $number_parts = count($parts);
-  $ancestors = array();
-  $length =  $number_parts - 1;
-  $end = (1 << $number_parts) - 1;
-  $masks = \Drupal::state()->get('menu.masks');
-  // If the optimized menu.masks array is not available use brute force to get
-  // the correct $ancestors and $placeholders returned. Do not use this as the
-  // default value of the menu.masks variable to avoid building such a big
-  // array.
-  if (!$masks) {
-    $masks = range(511, 1);
-  }
-  // Only examine patterns that actually exist as router items (the masks).
-  foreach ($masks as $i) {
-    if ($i > $end) {
-      // Only look at masks that are not longer than the path of interest.
-      continue;
-    }
-    elseif ($i < (1 << $length)) {
-      // We have exhausted the masks of a given length, so decrease the length.
-      --$length;
-    }
-    $current = '';
-    for ($j = $length; $j >= 0; $j--) {
-      // Check the bit on the $j offset.
-      if ($i & (1 << $j)) {
-        // Bit one means the original value.
-        $current .= $parts[$length - $j];
-      }
-      else {
-        // Bit zero means means wildcard.
-        $current .= '%';
-      }
-      // Unless we are at offset 0, add a slash.
-      if ($j) {
-        $current .= '/';
-      }
-    }
-    $ancestors[] = $current;
-  }
-  return $ancestors;
-}
-
-/**
- * Unserializes menu data, using a map to replace path elements.
- *
- * The menu system stores various path-related information (such as the 'page
- * arguments' and 'access arguments' components of a menu item) in the database
- * using serialized arrays, where integer values in the arrays represent
- * arguments to be replaced by values from the path. This function first
- * unserializes such menu information arrays, and then does the path
- * replacement.
- *
- * The path replacement acts on each integer-valued element of the unserialized
- * menu data array ($data) using a map array ($map, which is typically an array
- * of path arguments) as a list of replacements. For instance, if there is an
- * element of $data whose value is the number 2, then it is replaced in $data
- * with $map[2]; non-integer values in $data are left alone.
- *
- * As an example, an unserialized $data array with elements ('node_load', 1)
- * represents instructions for calling the node_load() function. Specifically,
- * this instruction says to use the path component at index 1 as the input
- * parameter to node_load(). If the path is 'node/123', then $map will be the
- * array ('node', 123), and the returned array from this function will have
- * elements ('node_load', 123), since $map[1] is 123. This return value will
- * indicate specifically that node_load(123) is to be called to load the node
- * whose ID is 123 for this menu item.
- *
- * @param $data
- *   A serialized array of menu data, as read from the database.
- * @param $map
- *   A path argument array, used to replace integer values in $data; an integer
- *   value N in $data will be replaced by value $map[N]. Typically, the $map
- *   array is generated from a call to the arg() function.
- *
- * @return
- *   The unserialized $data array, with path arguments replaced.
- */
-function menu_unserialize($data, $map) {
-  if ($data = unserialize($data)) {
-    foreach ($data as $k => $v) {
-      if (is_int($v)) {
-        $data[$k] = isset($map[$v]) ? $map[$v] : '';
-      }
-    }
-    return $data;
-  }
-  else {
-    return array();
-  }
-}
-
-/**
- * Loads objects into the map as defined in the $item['load_functions'].
- *
- * @param $item
- *   A menu router or menu link item
- * @param $map
- *   An array of path arguments; for example, array('node', '5').
- *
- * @return
- *   Returns TRUE for success, FALSE if an object cannot be loaded.
- *   Names of object loading functions are placed in $item['load_functions'].
- *   Loaded objects are placed in $map[]; keys are the same as keys in the
- *   $item['load_functions'] array.
- *   $item['access'] is set to FALSE if an object cannot be loaded.
- */
-function _menu_load_objects(&$item, &$map) {
-  if ($load_functions = $item['load_functions']) {
-    // If someone calls this function twice, then unserialize will fail.
-    if (!is_array($load_functions)) {
-      $load_functions = unserialize($load_functions);
-    }
-    $path_map = $map;
-    foreach ($load_functions as $index => $function) {
-      if ($function) {
-        $value = isset($path_map[$index]) ? $path_map[$index] : '';
-        if (is_array($function)) {
-          // Set up arguments for the load function. These were pulled from
-          // 'load arguments' in the hook_menu() entry, but they need
-          // some processing. In this case the $function is the key to the
-          // load_function array, and the value is the list of arguments.
-          list($function, $args) = each($function);
-          $load_functions[$index] = $function;
-
-          // Some arguments are placeholders for dynamic items to process.
-          foreach ($args as $i => $arg) {
-            if ($arg === '%index') {
-              // Pass on argument index to the load function, so multiple
-              // occurrences of the same placeholder can be identified.
-              $args[$i] = $index;
-            }
-            if ($arg === '%map') {
-              // Pass on menu map by reference. The accepting function must
-              // also declare this as a reference if it wants to modify
-              // the map.
-              $args[$i] = &$map;
-            }
-            if (is_int($arg)) {
-              $args[$i] = isset($path_map[$arg]) ? $path_map[$arg] : '';
-            }
-          }
-          array_unshift($args, $value);
-          $return = call_user_func_array($function, $args);
-        }
-        else {
-          $return = $function($value);
-        }
-        // If callback returned an error or there is no callback, trigger 404.
-        if (empty($return)) {
-          $item['access'] = FALSE;
-          $map = FALSE;
-          return FALSE;
-        }
-        $map[$index] = $return;
-      }
-    }
-    $item['load_functions'] = $load_functions;
-  }
-  return TRUE;
-}
-
-/**
- * Checks access to a menu item using the access callback.
- *
- * @param $item
- *   A menu router or menu link item
- * @param $map
- *   An array of path arguments; for example, array('node', '5').
- *
- * @return
- *   $item['access'] becomes TRUE if the item is accessible, FALSE otherwise.
- */
-function _menu_check_access(&$item, $map) {
-  // Determine access callback, which will decide whether or not the current
-  // user has access to this path.
-  $callback = empty($item['access_callback']) ? 0 : trim($item['access_callback']);
-  // Check for a TRUE or FALSE value.
-  if (is_numeric($callback)) {
-    $item['access'] = (bool) $callback;
-  }
-  else {
-    $arguments = menu_unserialize($item['access_arguments'], $map);
-    // As call_user_func_array is quite slow and user_access is a very common
-    // callback, it is worth making a special case for it.
-    if ($callback == 'user_access') {
-      $item['access'] = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
-    }
-    else {
-      $item['access'] = call_user_func_array($callback, $arguments);
-    }
-  }
-}
-
-/**
- * Localizes the router item title using t() or another callback.
+ * Localizes a menu link title using t() if possible.
  *
  * Translate the title and description to allow storage of English title
  * strings in the database, yet display of them in the language required
  * by the current user.
  *
  * @param $item
- *   A menu router item or a menu link item.
- * @param $map
- *   The path as an array with objects already replaced. E.g., for path
- *   node/123 $map would be array('node', $node) where $node is the node
- *   object for node 123.
- * @param $link_translate
- *   TRUE if we are translating a menu link item; FALSE if we are
- *   translating a menu router item.
- *
- * @return
- *   No return value.
- *   $item['title'] is localized according to $item['title_callback'].
- *   If an item's callback is check_plain(), $item['options']['html'] becomes
- *   TRUE.
- *   $item['description'] is computed using $item['description_callback'] if
- *   specified; otherwise it is translated using t().
- *   When doing link translation and the $item['options']['attributes']['title']
- *   (link title attribute) matches the description, it is translated as well.
+ *   A menu link entity.
  */
-function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
+function _menu_item_localize(&$item) {
   // Allow default menu links to be translated.
-  // @todo Figure out a proper way to support translations of menu links, see
-  //   https://drupal.org/node/2193777.
-  $title_callback = $item instanceof MenuLinkInterface && !$item->customized ? 't' :  $item['title_callback'];
   $item['localized_options'] = $item['options'];
   // All 'class' attributes are assumed to be an array during rendering, but
   // links stored in the database may use an old string value.
@@ -575,220 +256,19 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   if (isset($item['options']['attributes']['class']) && is_string($item['options']['attributes']['class'])) {
     $item['localized_options']['attributes']['class'] = explode(' ', $item['options']['attributes']['class']);
   }
-  // If we are translating the title of a menu link, and its title is the same
-  // as the corresponding router item, then we can use the title information
-  // from the router. If it's customized, then we need to use the link title
-  // itself; can't localize.
-  // If we are translating a router item (tabs, page, breadcrumb), then we
-  // can always use the information from the router item.
-  if (!$link_translate || !isset($item['link_title']) || ($item['title'] == $item['link_title'])) {
-    // t() is a special case. Since it is used very close to all the time,
-    // we handle it directly instead of using indirect, slower methods.
-    // @todo Recheck this line once https://drupal.org/node/2084421 is in.
-    $item['title'] = isset($item['link_title']) ? $item['link_title'] : $item['title'];
-    if ($title_callback == 't') {
-      if (empty($item['title_arguments'])) {
-        $item['title'] = t($item['title']);
-      }
-      else {
-        $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
-      }
-    }
-    elseif ($title_callback) {
-      if (empty($item['title_arguments'])) {
-        $item['title'] = $title_callback($item['title']);
-      }
-      else {
-        $item['title'] = call_user_func_array($title_callback, menu_unserialize($item['title_arguments'], $map));
-      }
-      // Avoid calling check_plain again on l() function.
-      if ($title_callback == 'check_plain') {
-        $item['localized_options']['html'] = TRUE;
-      }
-    }
-  }
-  elseif ($link_translate) {
-    $item['title'] = $item['link_title'];
-  }
-
-  // Translate description, see the motivation above.
-  if (!empty($item['description'])) {
-    $original_description = $item['description'];
-  }
-  if (!empty($item['description_arguments']) || !empty($item['description'])) {
-    $description_callback = $item['description_callback'];
-    // If the description callback is t(), call it directly.
-    if ($description_callback == 't') {
-      if (empty($item['description_arguments'])) {
-        $item['description'] = t($item['description']);
-      }
-      else {
-        $item['description'] = t($item['description'], menu_unserialize($item['description_arguments'], $map));
-      }
-    }
-    elseif ($description_callback) {
-      // If there are no arguments, call the description callback directly.
-      if (empty($item['description_arguments'])) {
-        $item['description'] = $description_callback($item['description']);
-      }
-      // Otherwise, use call_user_func_array() to pass the arguments.
-      else {
-        $item['description'] = call_user_func_array($description_callback, menu_unserialize($item['description_arguments'], $map));
-      }
-    }
-  }
-  // If the title and description are the same, use the translated description
-  // as a localized title.
-  if ($link_translate && isset($original_description) && isset($item['options']['attributes']['title']) && $item['options']['attributes']['title'] == $original_description) {
-    $item['localized_options']['attributes']['title'] = $item['description'];
-  }
-}
-
-/**
- * Handles dynamic path translation and menu access control.
- *
- * When a user arrives on a page such as node/5, this function determines
- * what "5" corresponds to, by inspecting the page's menu path definition,
- * node/%node. This will call node_load(5) to load the corresponding node
- * object.
- *
- * It also works in reverse, to allow the display of tabs and menu items which
- * contain these dynamic arguments, translating node/%node to node/5.
- *
- * Translation of menu item titles and descriptions are done here to
- * allow for storage of English strings in the database, and translation
- * to the language required to generate the current page.
- *
- * @param $router_item
- *   A menu router item
- * @param $map
- *   An array of path arguments; for example, array('node', '5').
- * @param $to_arg
- *   Execute $item['to_arg_functions'] or not. Use only if you want to render a
- *   path from the menu table, for example tabs.
- *
- * @return
- *   Returns the map with objects loaded as defined in the
- *   $item['load_functions']. $item['access'] becomes TRUE if the item is
- *   accessible, FALSE otherwise. $item['href'] is set according to the map.
- *   If an error occurs during calling the load_functions (like trying to load
- *   a non-existent node) then this function returns FALSE.
- */
-function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
-  if ($to_arg && !empty($router_item['to_arg_functions'])) {
-    // Fill in missing path elements, such as the current uid.
-    _menu_link_map_translate($map, $router_item['to_arg_functions']);
-  }
-  // The $path_map saves the pieces of the path as strings, while elements in
-  // $map may be replaced with loaded objects.
-  $path_map = $map;
-  if (!empty($router_item['load_functions']) && !_menu_load_objects($router_item, $map)) {
-    // An error occurred loading an object.
-    $router_item['access'] = FALSE;
-    return FALSE;
-  }
-  // Avoid notices until we remove this function.
-  // @see https://drupal.org/node/2107533
-  $tab_root_map = array();
-  $tab_parent_map = array();
-  // Generate the link path for the page request or local tasks.
-  $link_map = explode('/', $router_item['path']);
-  if (isset($router_item['tab_root'])) {
-    $tab_root_map = explode('/', $router_item['tab_root']);
-  }
-  if (isset($router_item['tab_parent'])) {
-    $tab_parent_map = explode('/', $router_item['tab_parent']);
-  }
-  for ($i = 0; $i < $router_item['number_parts']; $i++) {
-    if ($link_map[$i] == '%') {
-      $link_map[$i] = $path_map[$i];
-    }
-    if (isset($tab_root_map[$i]) && $tab_root_map[$i] == '%') {
-      $tab_root_map[$i] = $path_map[$i];
-    }
-    if (isset($tab_parent_map[$i]) && $tab_parent_map[$i] == '%') {
-      $tab_parent_map[$i] = $path_map[$i];
-    }
-  }
-  $router_item['href'] = implode('/', $link_map);
-  $router_item['tab_root_href'] = implode('/', $tab_root_map);
-  $router_item['tab_parent_href'] = implode('/', $tab_parent_map);
-  $router_item['options'] = array();
-  if (!empty($router_item['route_name'])) {
-    // Route-provided menu items do not have menu loaders, so replace the map
-    // with the link map.
-    $map = $link_map;
-
-    $route_provider = \Drupal::getContainer()->get('router.route_provider');
-    $route = $route_provider->getRouteByName($router_item['route_name']);
-    $router_item['access'] = menu_item_route_access($route, $router_item['href'], $map);
+  // If the menu link is defined in code and not customized, we can use t().
+  if (!empty($item['machine_name']) && !$item['customized']) {
+    // @todo Figure out a proper way to support translations of menu links, see
+    //   https://drupal.org/node/2193777.
+    $item['title'] = t($item['link_title']);
   }
   else {
-    // @todo: Remove once all routes are converted.
-    _menu_check_access($router_item, $map);
+    $item['title'] = $item['link_title'];
   }
-
-  // For performance, don't localize an item the user can't access.
-  if ($router_item['access']) {
-    _menu_item_localize($router_item, $map);
-  }
-
-  return $map;
-}
-
-/**
- * Translates the path elements in the map using any to_arg helper function.
- *
- * @param $map
- *   An array of path arguments; for example, array('node', '5').
- * @param $to_arg_functions
- *   An array of helper functions; for example, array(2 => 'menu_tail_to_arg').
- *
- * @see hook_menu()
- */
-function _menu_link_map_translate(&$map, $to_arg_functions) {
-  $to_arg_functions = unserialize($to_arg_functions);
-  foreach ($to_arg_functions as $index => $function) {
-    // Translate place-holders into real values.
-    $arg = $function(!empty($map[$index]) ? $map[$index] : '', $map, $index);
-    if (!empty($map[$index]) || isset($arg)) {
-      $map[$index] = $arg;
-    }
-    else {
-      unset($map[$index]);
-    }
-  }
-}
-
-/**
- * Returns a string containing the path relative to the current index.
- */
-function menu_tail_to_arg($arg, $map, $index) {
-  return implode('/', array_slice($map, $index));
-}
-
-/**
- * Loads the path as one string relative to the current index.
- *
- * To use this load function, you must specify the load arguments
- * in the router item as:
- * @code
- * $item['load arguments'] = array('%map', '%index');
- * @endcode
- *
- * @see search_menu().
- */
-function menu_tail_load($arg, &$map, $index) {
-  $arg = implode('/', array_slice($map, $index));
-  $map = array_slice($map, 0, $index);
-  return $arg;
 }
 
 /**
  * Provides menu link unserializing, access control, and argument handling.
- *
- * This function is similar to _menu_translate(), but it also does
- * link-specific preparation (such as always calling to_arg() functions).
  *
  * @param array $item
  *   The passed in item has the following keys:
@@ -829,7 +309,7 @@ function _menu_link_translate(&$item) {
     }
     // For performance, don't localize a link the user can't access.
     if ($item['access']) {
-      _menu_item_localize($item, array(), TRUE);
+      _menu_item_localize($item);
     }
   }
 
@@ -842,60 +322,7 @@ function _menu_link_translate(&$item) {
 }
 
 /**
- * Checks access to a menu item by mocking a request for a path.
- *
- * @param \Symfony\Component\Routing\Route $route
- *   Router for the given menu item.
- * @param string $href
- *   The menu path with '%' replaced by arguments.
- * @param array $map
- *   An array of path arguments; for example, array('node', '5').
- * @param \Symfony\Component\HttpFoundation\Request $request
- *   The current request object, used to find the current route.
- *
- * @return bool
- *   TRUE if the user has access or FALSE if the user should be presented
- *   with access denied.
- *
- */
-function menu_item_route_access(Route $route, $href, &$map, Request $request = NULL) {
-  if (!isset($request)) {
-    $request = RequestHelper::duplicate(\Drupal::request(), '/' . $href);
-    $request->attributes->set('_system_path', $href);
-  }
-  // Attempt to match this path to provide a fully built request to the
-  // access checker.
-  try {
-    $request->attributes->add(\Drupal::service('router')->matchRequest($request));
-  }
-  catch (ParamNotConvertedException $e) {
-    return FALSE;
-  }
-
-  // Populate the map with any matching values from the request.
-  $path_bits = explode('/', trim($route->getPath(), '/'));
-  foreach ($map as $index => $map_item) {
-    $matches = array();
-    // Search for placeholders wrapped by curly braces. For example, a path
-    // 'foo/{bar}/baz' would return 'bar'.
-    if (isset($path_bits[$index]) && preg_match('/{(?<placeholder>.*)}/', $path_bits[$index], $matches)) {
-      // If that placeholder is present on the request attributes, replace the
-      // placeholder in the map with the value.
-      if ($request->attributes->has($matches['placeholder'])) {
-        $map[$index] = $request->attributes->get($matches['placeholder']);
-      }
-    }
-  }
-
-  return \Drupal::service('access_manager')->check($route, $request, \Drupal::currentUser());
-}
-
-/**
  * Renders a menu tree based on the current path.
- *
- * The tree is expanded based on the current path and dynamic paths are also
- * changed according to the defined to_arg functions (for example the 'My
- * account' link is changed from user/% to a link with the current user's uid).
  *
  * @param $menu_name
  *   The name of the menu.
@@ -1124,7 +551,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
 
   // Check if the active trail has been overridden for this menu tree.
   $active_path = menu_tree_get_path($menu_name);
-  // Load the router item corresponding to the current page.
+  // Load the request corresponding to the current page.
   $request = \Drupal::request();
   $system_path = NULL;
   if ($route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME)) {
@@ -2064,9 +1491,9 @@ function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
         foreach ($menu_names as $menu_name) {
           if (empty($preferred_links[$path][$menu_name]) && isset($candidates[$link_path][$menu_name])) {
             $candidate_item = $candidates[$link_path][$menu_name];
-            $map = explode('/', $path);
-            _menu_translate($candidate_item, $map);
+            $candidate_item['access'] = \Drupal::service('access_manager')->checkNamedRoute($candidate_item['route_name'], $candidate_item['route_parameters'], \Drupal::currentUser());
             if ($candidate_item['access']) {
+              _menu_item_localize($candidate_item);
               $preferred_links[$path][$menu_name] = $candidate_item;
               if (empty($preferred_links[$path][MENU_PREFERRED_LINK])) {
                 // Store the most specific link.
@@ -2126,139 +1553,6 @@ function menu_reset_static_cache() {
   drupal_static_reset('menu_tree_all_data');
   drupal_static_reset('menu_tree_page_data');
   drupal_static_reset('menu_link_get_preferred');
-}
-
-/**
- * Populates the database tables used by various menu functions.
- *
- * This function will clear and populate the {menu_router} table, add entries
- * to {menu_links} for new router items, and then remove stale items from
- * {menu_links}.
- *
- * @return
- *   TRUE if the menu was rebuilt, FALSE if another thread was rebuilding
- *   in parallel and the current thread just waited for completion.
- */
-function menu_router_rebuild() {
-  if (!\Drupal::lock()->acquire(__FUNCTION__)) {
-    // Wait for another request that is already doing this work.
-    // We choose to block here since otherwise the router item may not
-    // be available during routing resulting in a 404.
-    \Drupal::lock()->wait(__FUNCTION__);
-    return FALSE;
-  }
-
-  $transaction = db_transaction();
-
-  try {
-    // Ensure the route based router is up to date.
-    \Drupal::service('router.builder')->rebuildIfNeeded();
-    list($menu) = menu_router_build(TRUE);
-    menu_link_rebuild_defaults();
-    // Clear the menu, page and block caches.
-    menu_cache_clear_all();
-    _menu_clear_page_cache();
-  }
-  catch (Exception $e) {
-    $transaction->rollback();
-    watchdog_exception('menu', $e);
-  }
-
-  \Drupal::lock()->release(__FUNCTION__);
-  return TRUE;
-}
-
-/**
- * Collects and alters the menu definitions.
- *
- * @param bool $save
- *   (optional) Save the new router to the database. Defaults to FALSE.
- */
-function menu_router_build($save = FALSE) {
-  // Ensure that all configuration used to build the menu items are loaded
-  // without overrides.
-  $old_state = \Drupal::configFactory()->getOverrideState();
-  \Drupal::configFactory()->setOverrideState(FALSE);
-  // We need to manually call each module so that we can know which module
-  // a given item came from.
-  $callbacks = array();
-  foreach (\Drupal::moduleHandler()->getImplementations('menu') as $module) {
-    $router_items = call_user_func($module . '_menu');
-    if (isset($router_items) && is_array($router_items)) {
-      foreach (array_keys($router_items) as $path) {
-        $router_items[$path]['module'] = $module;
-      }
-      $callbacks = array_merge($callbacks, $router_items);
-    }
-  }
-  // Alter the menu as defined in modules, keys are like user/%user.
-  \Drupal::moduleHandler()->alter('menu', $callbacks);
-  \Drupal::configFactory()->setOverrideState($old_state);
-  foreach ($callbacks as $path => $router_item) {
-    // If the menu item is a default local task and incorrectly references a
-    // route, remove it.
-    // @todo This may be removed later depending on the outcome of
-    // http://drupal.org/node/1889790
-    if (isset($router_item['type']) && $router_item['type'] == MENU_DEFAULT_LOCAL_TASK) {
-      unset($callbacks[$path]['route_name']);
-    }
-    // If the menu item references a route, normalize the route information
-    // into the old structure. Note that routes are keyed by name, not path,
-    // so the path of the route takes precedence.
-    if (isset($router_item['route_name'])) {
-      $router_item['page callback'] = 'USES_ROUTE';
-      $router_item['access callback'] = TRUE;
-      $new_path = _menu_router_translate_route($router_item['route_name']);
-
-      unset($callbacks[$path]);
-      $callbacks[$new_path] = $router_item;
-    }
-  }
-  list($menu, $masks) = _menu_router_build($callbacks, $save);
-  _menu_router_cache($menu);
-
-  return array($menu, $masks);
-}
-
-/**
- * Translates a route name to its router item path.
- *
- * @param string $route_name
- *   The route name to translate.
- *
- * @return string
- *   The translated path pattern from the route.
- */
-function _menu_router_translate_route($route_name) {
-  $outline = \Drupal::service('router.route_provider')
-    ->getRouteByName($route_name)
-    ->compile()
-    ->getPatternOutline();
-  return trim($outline, '/');
-}
-
-/**
- * Stores the menu router if we have it in memory.
- */
-function _menu_router_cache($new_menu = NULL) {
-  $menu = &drupal_static(__FUNCTION__);
-
-  if (isset($new_menu)) {
-    $menu = $new_menu;
-  }
-  return $menu;
-}
-
-/**
- * Gets the menu router.
- */
-function menu_get_router() {
-  // Check first if we have it in memory already.
-  $menu = _menu_router_cache();
-  if (empty($menu)) {
-    list($menu) = menu_router_build();
-  }
-  return $menu;
 }
 
 /**
@@ -2487,358 +1781,6 @@ function _menu_set_expanded_menus() {
   \Drupal::state()->set('menu_expanded', $names);
 }
 
-/**
- * Finds the router path which will serve this path.
- *
- * @param $link_path
- *  The path for we are looking up its router path.
- *
- * @return
- *  A path from $menu keys or empty if $link_path points to a nonexisting
- *  place.
- */
-function _menu_find_router_path($link_path) {
-  // $menu will only have data during a menu rebuild.
-  $menu = _menu_router_cache();
-
-  $router_path = $link_path;
-  $parts = explode('/', $link_path, MENU_MAX_PARTS);
-  $ancestors = menu_get_ancestors($parts);
-
-  if (empty($menu)) {
-    // Not during a menu rebuild, so look up in the database.
-    $router_path = (string) db_select('menu_router')
-      ->fields('menu_router', array('path'))
-      ->condition('path', $ancestors, 'IN')
-      ->orderBy('fit', 'DESC')
-      ->range(0, 1)
-      ->execute()->fetchField();
-  }
-  elseif (!isset($menu[$router_path])) {
-    // Add an empty router path as a fallback.
-    $ancestors[] = '';
-    foreach ($ancestors as $router_path) {
-      if (isset($menu[$router_path])) {
-        // Exit the loop leaving $router_path as the first match.
-        break;
-      }
-    }
-    // If we did not find the path, $router_path will be the empty string
-    // at the end of $ancestors.
-  }
-  return $router_path;
-}
-
-/**
- * Builds the router table based on the data from hook_menu().
- */
-function _menu_router_build($callbacks, $save = FALSE) {
-  // First pass: separate callbacks from paths, making paths ready for
-  // matching. Calculate fitness, and fill some default values.
-  $menu = array();
-  $masks = array();
-  $path_roots = array();
-  foreach ($callbacks as $path => $item) {
-    $load_functions = array();
-    $to_arg_functions = array();
-    $fit = 0;
-    $move = FALSE;
-
-    $parts = explode('/', $path, MENU_MAX_PARTS);
-    $path_roots[$parts[0]] = $parts[0];
-    $number_parts = count($parts);
-    // We store the highest index of parts here to save some work in the fit
-    // calculation loop.
-    $slashes = $number_parts - 1;
-    // Extract load and to_arg functions.
-    foreach ($parts as $k => $part) {
-      $match = FALSE;
-      // Look for wildcards in the form allowed to be used in PHP functions,
-      // because we are using these to construct the load function names.
-      if (preg_match('/^%(|' . DRUPAL_PHP_FUNCTION_PATTERN . ')$/', $part, $matches)) {
-        if (empty($matches[1])) {
-          $match = TRUE;
-          $load_functions[$k] = NULL;
-        }
-        else {
-          if (function_exists($matches[1] . '_to_arg')) {
-            $to_arg_functions[$k] = $matches[1] . '_to_arg';
-            $load_functions[$k] = NULL;
-            $match = TRUE;
-          }
-          if (function_exists($matches[1] . '_load')) {
-            $function = $matches[1] . '_load';
-            // Create an array of arguments that will be passed to the _load
-            // function when this menu path is checked, if 'load arguments'
-            // exists.
-            $load_functions[$k] = isset($item['load arguments']) ? array($function => $item['load arguments']) : $function;
-            $match = TRUE;
-          }
-        }
-      }
-      if ($match) {
-        $parts[$k] = '%';
-      }
-      else {
-        $fit |=  1 << ($slashes - $k);
-      }
-    }
-    if ($fit) {
-      $move = TRUE;
-    }
-    else {
-      // If there is no %, it fits maximally.
-      $fit = (1 << $number_parts) - 1;
-    }
-    $masks[$fit] = 1;
-    $item['_load_functions'] = $load_functions;
-    $item['to_arg_functions'] = empty($to_arg_functions) ? '' : serialize($to_arg_functions);
-    $item += array(
-      'title' => '',
-      'type' => MENU_NORMAL_ITEM,
-      'module' => '',
-      '_number_parts' => $number_parts,
-      '_parts' => $parts,
-      '_fit' => $fit,
-    );
-    $item += array(
-      // Default MENU_DEFAULT_LOCAL_TASKs to a weight of -10, so they appear as
-      // first tab by default.
-      'weight' => ($item['type'] & MENU_DEFAULT_LOCAL_TASK) == MENU_DEFAULT_LOCAL_TASK ? -10 : 0,
-      '_visible' => (bool) ($item['type'] & MENU_VISIBLE_IN_BREADCRUMB),
-      '_tab' => (bool) ($item['type'] & MENU_IS_LOCAL_TASK),
-    );
-    if ($move) {
-      $new_path = implode('/', $item['_parts']);
-      $menu[$new_path] = $item;
-      $sort[$new_path] = $number_parts;
-    }
-    else {
-      $menu[$path] = $item;
-      $sort[$path] = $number_parts;
-    }
-  }
-  array_multisort($sort, SORT_NUMERIC, $menu);
-  // Apply inheritance rules.
-  foreach ($menu as $path => $v) {
-    $item = &$menu[$path];
-    if (!$item['_tab']) {
-      // Non-tab items.
-      $item['tab_parent'] = '';
-      $item['tab_root'] = $path;
-    }
-    // If not specified, assign the default tab type for local tasks.
-    elseif (!isset($item['context'])) {
-      $item['context'] = MENU_CONTEXT_PAGE;
-    }
-    for ($i = $item['_number_parts'] - 1; $i; $i--) {
-      $parent_path = implode('/', array_slice($item['_parts'], 0, $i));
-      if (isset($menu[$parent_path])) {
-
-        $parent = &$menu[$parent_path];
-
-        // If we have no menu name, try to inherit it from parent items.
-        if (!isset($item['menu_name'])) {
-          // If the parent item of this item does not define a menu name (and no
-          // previous iteration assigned one already), try to find the menu name
-          // of the parent item in the currently stored menu links.
-          if (!isset($parent['menu_name'])) {
-            $menu_name = db_query("SELECT menu_name FROM {menu_links} WHERE link_path = :link_path AND module = 'system'", array(':link_path' => $parent_path))->fetchField();
-            if ($menu_name) {
-              $parent['menu_name'] = $menu_name;
-            }
-          }
-          // If the parent item defines a menu name, inherit it.
-          if (!empty($parent['menu_name'])) {
-            $item['menu_name'] = $parent['menu_name'];
-          }
-        }
-        if (!isset($item['tab_parent'])) {
-          // Parent stores the parent of the path.
-          $item['tab_parent'] = $parent_path;
-        }
-        if (!isset($item['tab_root']) && !$parent['_tab']) {
-          $item['tab_root'] = $parent_path;
-        }
-        // If an access callback is not found for a default local task we use
-        // the callback from the parent, since we expect them to be identical.
-        // In all other cases, the access parameters must be specified.
-        if (($item['type'] == MENU_DEFAULT_LOCAL_TASK) && !isset($item['access callback']) && isset($parent['access callback'])) {
-          $item['access callback'] = $parent['access callback'];
-          if (!isset($item['access arguments']) && isset($parent['access arguments'])) {
-            $item['access arguments'] = $parent['access arguments'];
-          }
-        }
-        // Same for page callbacks.
-        if (!isset($item['page callback']) && isset($parent['page callback'])) {
-          $item['page callback'] = $parent['page callback'];
-          if (!isset($item['page arguments']) && isset($parent['page arguments'])) {
-            $item['page arguments'] = $parent['page arguments'];
-          }
-          if (!isset($item['file path']) && isset($parent['file path'])) {
-            $item['file path'] = $parent['file path'];
-          }
-          if (!isset($item['file']) && isset($parent['file'])) {
-            $item['file'] = $parent['file'];
-            if (empty($item['file path']) && isset($item['module']) && isset($parent['module']) && $item['module'] != $parent['module']) {
-              $item['file path'] = drupal_get_path('module', $parent['module']);
-            }
-          }
-        }
-        // Same for load arguments: if a loader doesn't have any explict
-        // arguments, try to find arguments in the parent.
-        if (!isset($item['load arguments'])) {
-          foreach ($item['_load_functions'] as $k => $function) {
-            // This loader doesn't have any explict arguments...
-            if (!is_array($function)) {
-              // ... check the parent for a loader at the same position
-              // using the same function name and defining arguments...
-              if (isset($parent['_load_functions'][$k]) && is_array($parent['_load_functions'][$k]) && key($parent['_load_functions'][$k]) === $function) {
-                // ... and inherit the arguments on the child.
-                $item['_load_functions'][$k] = $parent['_load_functions'][$k];
-              }
-            }
-          }
-        }
-      }
-    }
-    if (!isset($item['access callback']) && isset($item['access arguments'])) {
-      // Default callback.
-      $item['access callback'] = 'user_access';
-    }
-    if (!isset($item['access callback']) || empty($item['page callback'])) {
-      $item['access callback'] = 0;
-    }
-    if (is_bool($item['access callback'])) {
-      $item['access callback'] = intval($item['access callback']);
-    }
-
-    $item['load_functions'] = empty($item['_load_functions']) ? '' : serialize($item['_load_functions']);
-    $item += array(
-      'access arguments' => array(),
-      'access callback' => '',
-      'page arguments' => array(),
-      'page callback' => '',
-      'title arguments' => array(),
-      'title callback' => 't',
-      'description' => '',
-      'description arguments' => array(),
-      'description callback' => 't',
-      'position' => '',
-      'context' => 0,
-      'tab_parent' => '',
-      'tab_root' => $path,
-      'path' => $path,
-      'file' => '',
-      'file path' => '',
-      'include file' => '',
-      'route_name' => '',
-    );
-
-    // Calculate out the file to be included for each callback, if any.
-    if ($item['file']) {
-      $file_path = $item['file path'] ? $item['file path'] : drupal_get_path('module', $item['module']);
-      $item['include file'] = $file_path . '/' . $item['file'];
-    }
-  }
-
-  // Sort the masks so they are in order of descending fit.
-  $masks = array_keys($masks);
-  rsort($masks);
-
-  if ($save) {
-    $path_roots = array_values($path_roots);
-    // Update the path roots variable and reset the path alias whitelist cache
-    // if the list has changed.
-    if ($path_roots != \Drupal::state()->get('menu_path_roots')) {
-      \Drupal::state()->set('menu_path_roots', array_values($path_roots));
-      \Drupal::service('path.alias_manager')->cacheClear();
-    }
-    _menu_router_save($menu, $masks);
-  }
-
-  return array($menu, $masks);
-}
-
-/**
- * Saves data from menu_router_build() to the router table.
- */
-function _menu_router_save($menu, $masks) {
-  // Delete the existing router since we have some data to replace it.
-  db_truncate('menu_router')->execute();
-
-  // Prepare insert object.
-  $insert = db_insert('menu_router')
-    ->fields(array(
-      'path',
-      'load_functions',
-      'to_arg_functions',
-      'access_callback',
-      'access_arguments',
-      'page_callback',
-      'page_arguments',
-      'fit',
-      'number_parts',
-      'context',
-      'tab_parent',
-      'tab_root',
-      'title',
-      'title_callback',
-      'title_arguments',
-      'type',
-      'description',
-      'description_callback',
-      'description_arguments',
-      'position',
-      'weight',
-      'include_file',
-      'route_name',
-    ));
-
-  $num_records = 0;
-
-  foreach ($menu as $item) {
-    // Fill in insert object values.
-    $insert->values(array(
-      'path' => $item['path'],
-      'load_functions' => $item['load_functions'],
-      'to_arg_functions' => $item['to_arg_functions'],
-      'access_callback' => $item['access callback'],
-      'access_arguments' => serialize($item['access arguments']),
-      'page_callback' => $item['page callback'],
-      'page_arguments' => serialize($item['page arguments']),
-      'fit' => $item['_fit'],
-      'number_parts' => $item['_number_parts'],
-      'context' => $item['context'],
-      'tab_parent' => $item['tab_parent'],
-      'tab_root' => $item['tab_root'],
-      'title' => $item['title'],
-      'title_callback' => $item['title callback'],
-      'title_arguments' => ($item['title arguments'] ? serialize($item['title arguments']) : ''),
-      'type' => $item['type'],
-      'description' => $item['description'],
-      'description_callback' => $item['description callback'],
-      'description_arguments' => ($item['description arguments'] ? serialize($item['description arguments']) : ''),
-      'position' => $item['position'],
-      'weight' => $item['weight'],
-      'include_file' => $item['include file'],
-      'route_name' => $item['route_name'],
-    ));
-
-    // Execute in batches to avoid the memory overhead of all of those records
-    // in the query object.
-    if (++$num_records == 20) {
-      $insert->execute();
-      $num_records = 0;
-    }
-  }
-  // Insert any remaining records.
-  $insert->execute();
-  // Store the masks.
-  \Drupal::state()->set('menu.masks', $masks);
-
-  return $menu;
-}
 
 /**
  * Checks whether the site is in maintenance mode.

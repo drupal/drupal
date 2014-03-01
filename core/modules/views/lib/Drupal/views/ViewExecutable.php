@@ -1512,28 +1512,6 @@ class ViewExecutable extends DependencySerialization {
   }
 
   /**
-   * Called to get hook_menu() information from the view and the named display handler.
-   *
-   * @param $display_id
-   *   A display id.
-   * @param $callbacks
-   *   A menu callback array passed from views_menu_alter().
-   */
-  public function executeHookMenu($display_id = NULL, &$callbacks = array()) {
-    // Prepare the view with the information we have.
-
-    // This was probably already called, but it's good to be safe.
-    if (!$this->setDisplay($display_id)) {
-      return FALSE;
-    }
-
-    // Execute the view
-    if (isset($this->display_handler)) {
-      return $this->display_handler->executeHookMenu($callbacks);
-    }
-  }
-
-  /**
    * Returns default menu links from the view and the named display handler.
    *
    * @param string $display_id

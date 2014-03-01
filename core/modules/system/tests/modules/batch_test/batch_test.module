@@ -6,20 +6,6 @@
  */
 
 /**
- * Implements hook_menu().
- */
-function batch_test_menu() {
-  $items = array();
-
-  $items['batch-test'] = array(
-    'title' => 'Batch test',
-    'route_name' => 'batch_test.test_form',
-  );
-
-  return $items;
-}
-
-/**
  * Form constructor for a batch selection form.
  *
  * @see batch_test_simple_form_submit()

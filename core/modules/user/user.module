@@ -686,40 +686,6 @@ function theme_username($variables) {
 }
 
 /**
- * Determines if the current user is anonymous.
- *
- * @return bool
- *   TRUE if the user is anonymous, FALSE if the user is authenticated.
- */
-function user_is_anonymous() {
-  // Menu administrators can see items for anonymous when administering.
-  return $GLOBALS['user']->isAnonymous() || !empty($GLOBALS['menu_admin']);
-}
-
-/**
- * Determines if the current user is logged in.
- *
- * @return bool
- *   TRUE if the user is logged in, FALSE if the user is anonymous.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Core\Session\UserSession::isAuthenticated().
- */
-function user_is_logged_in() {
-  return $GLOBALS['user']->isAuthenticated();
-}
-
-/**
- * Determines if the current user has access to the user registration page.
- *
- * @return bool
- *   TRUE if the user is not already logged in and can register for an account.
- */
-function user_register_access() {
-  return user_is_anonymous() && (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY);
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function user_menu_link_defaults() {
@@ -814,81 +780,6 @@ function user_admin_paths() {
     'user/*/translations/*' => TRUE,
   );
   return $paths;
-}
-
-/**
- * Returns $arg or the user ID of the current user if $arg is '%' or empty.
- *
- * Deprecated. Use %user_uid_optional instead.
- *
- * @todo D8: Remove.
- */
-function user_uid_only_optional_to_arg($arg) {
-  return user_uid_optional_to_arg($arg);
-}
-
-/**
- * Load either a specified or the current user account.
- *
- * @param $uid
- *   An optional user ID of the user to load. If not provided, the current
- *   user's ID will be used.
- * @return
- *   A fully-loaded $user object upon successful user load, NULL if user
- *   cannot be loaded.
- *
- * @see user_load()
- * @todo rethink the naming of this in Drupal 8.
- */
-function user_uid_optional_load($uid = NULL) {
-  if (!isset($uid)) {
-    $uid = $GLOBALS['user']->id();
-  }
-  return user_load($uid);
-}
-
-/**
- * Returns $arg or the user ID of the current user if $arg is '%' or empty.
- *
- * @todo rethink the naming of this in Drupal 8.
- */
-function user_uid_optional_to_arg($arg) {
-  // Give back the current user uid when called from eg. tracker, aka.
-  // with an empty arg. Also use the current user uid when called from
-  // the menu with a % for the current account link.
-  return empty($arg) || $arg == '%' ? $GLOBALS['user']->id() : $arg;
-}
-
-/**
- * Menu item title callback for the 'user' path.
- *
- * Anonymous users should see a title based on the requested page, but
- * authenticated users are expected to see "My account".
- */
-function user_menu_title() {
-  if ($GLOBALS['user']->isAnonymous()) {
-    switch (current_path()) {
-      case 'user' :
-      case 'user/login' :
-        return t('Log in');
-      case 'user/register' :
-        return t('Create new account');
-      case 'user/password' :
-        return t('Request new password');
-      default :
-        return t('User account');
-    }
-  }
-  else {
-    return t('My account');
-  }
-}
-
-/**
- * Menu item title callback - use the user name.
- */
-function user_page_title(UserInterface $account = NULL) {
-  return $account ? $account->getUsername() : '';
 }
 
 /**

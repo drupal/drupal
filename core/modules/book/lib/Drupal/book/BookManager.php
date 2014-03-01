@@ -865,7 +865,7 @@ class BookManager {
    * Provides menu link access control, translation, and argument handling.
    *
    * This function is similar to _menu_translate(), but it also does
-   * link-specific preparation (such as always calling to_arg() functions).
+   * link-specific preparation.
    *
    * @param $item
    *   A menu link.

@@ -326,7 +326,7 @@ services:
     arguments: ['@router.dumper', '@lock', '@event_dispatcher', '@module_handler', '@controller_resolver', '@state']
   router.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\RouterRebuildSubscriber
-    arguments: ['@router.builder']
+    arguments: ['@router.builder', '@lock']
     tags:
       - { name: event_subscriber }
   path.alias_manager.cached:

@@ -7,15 +7,9 @@
 
 namespace Drupal\menu_link;
 
-use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\field\FieldInfo;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 
 /**
  * Controller class for menu links.
@@ -26,47 +20,11 @@ use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 class MenuLinkStorageController extends DatabaseStorageController implements MenuLinkStorageControllerInterface {
 
   /**
-   * Contains all {menu_router} fields without weight.
-   *
-   * @var array
-   */
-  protected static $routerItemFields;
-
-  /**
    * Indicates whether the delete operation should re-parent children items.
    *
    * @var bool
    */
   protected $preventReparenting = FALSE;
-
-  /**
-   * The route provider service.
-   *
-   * @var \Symfony\Cmf\Component\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * Overrides DatabaseStorageController::__construct().
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection to be used.
-   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
-   *   The UUID Service.
-   * @param \Symfony\Cmf\Component\Routing\RouteProviderInterface $route_provider
-   *   The route provider service.
-   */
-  public function __construct(EntityTypeInterface $entity_type, Connection $database, UuidInterface $uuid_service, RouteProviderInterface $route_provider) {
-    parent::__construct($entity_type, $database, $uuid_service);
-
-    $this->routeProvider = $route_provider;
-
-    if (empty(static::$routerItemFields)) {
-      static::$routerItemFields = array_diff(drupal_schema_fields_sql('menu_router'), array('weight'));
-    }
-  }
 
   /**
    * {@inheritdoc}
@@ -78,29 +36,6 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       $values['bundle'] = $values['menu_name'];
     }
     return parent::create($values);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
-      $entity_type,
-      $container->get('database'),
-      $container->get('uuid'),
-      $container->get('router.route_provider')
-    );
-  }
-
-  /**
-   * Overrides DatabaseStorageController::buildQuery().
-   */
-  protected function buildQuery($ids, $revision_id = FALSE) {
-    $query = parent::buildQuery($ids, $revision_id);
-    // Specify additional fields from the {menu_router} table.
-    $query->leftJoin('menu_router', 'm', 'base.link_path = m.path');
-    $query->fields('m', static::$routerItemFields);
-    return $query;
   }
 
   /**

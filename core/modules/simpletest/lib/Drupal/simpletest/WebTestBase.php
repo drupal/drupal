@@ -324,7 +324,7 @@ abstract class WebTestBase extends TestBase {
     );
     $type = entity_create('node_type', $values);
     $status = $type->save();
-    menu_router_rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     $this->assertEqual($status, SAVED_NEW, String::format('Created content type %type.', array('%type' => $type->id())));
 

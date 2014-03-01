@@ -49,7 +49,7 @@ class FilterBooleanOperatorStringTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('system', array('menu_router', 'key_value_expire'));
+    $this->installSchema('system', array('key_value_expire'));
   }
 
 

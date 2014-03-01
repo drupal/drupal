@@ -4,18 +4,3 @@
  * @file
  * Dummy module implementing a form to test user password validation
  */
-
-/**
- * Implements hook_menu().
- *
- * Sets up a form that allows a user to validate password.
- */
-function user_form_test_menu() {
-  $items = array();
-  $items['user_form_test_current_password/%user'] = array(
-    'title' => 'User form test for current password validation',
-    'route_name' => 'user_form_test.current_password',
-    'type' => MENU_SUGGESTED_ITEM,
-  );
-  return $items;
-}

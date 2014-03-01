@@ -70,7 +70,7 @@ class BasicAuth implements AuthenticationProviderInterface {
    */
   public function handleException(GetResponseForExceptionEvent $event) {
     $exception = $event->getException();
-    if (user_is_anonymous() && $exception instanceof AccessDeniedHttpException) {
+    if ($GLOBALS['user']->isAnonymous() && $exception instanceof AccessDeniedHttpException) {
       if (!$this->applies($event->getRequest())) {
         $site_name = $this->configFactory->get('system.site')->get('name');
         global $base_url;

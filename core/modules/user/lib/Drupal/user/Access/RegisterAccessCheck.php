@@ -21,6 +21,6 @@ class RegisterAccessCheck implements AccessInterface {
    * Implements AccessCheckInterface::access().
    */
   public function access(Route $route, Request $request, AccountInterface $account) {
-    return ($account->isAnonymous() && (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY)) ? static::ALLOW : static::DENY;
+    return ($request->attributes->get('_menu_admin') || $account->isAnonymous()) && (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) ? static::ALLOW : static::DENY;
   }
 }

@@ -37,7 +37,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         return;
       }
 
-      if (user_is_anonymous()) {
+      if ($user->isAnonymous()) {
         switch ($path) {
           case 'user':
             // Forward anonymous user to login page.
