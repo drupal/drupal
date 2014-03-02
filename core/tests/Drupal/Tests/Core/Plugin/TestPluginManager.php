@@ -41,8 +41,10 @@ class TestPluginManager extends DefaultPluginManager {
       $this->discovery->setDefinition($key, $definition);
     }
 
-    if ($module_handler && $alter_hook) {
-      $this->alterInfo($module_handler, $alter_hook);
+    $this->moduleHandler = $module_handler;
+
+    if ($alter_hook) {
+      $this->alterInfo($alter_hook);
     }
   }
 

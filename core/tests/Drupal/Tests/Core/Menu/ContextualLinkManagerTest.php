@@ -88,6 +88,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $this->pluginDiscovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
     $this->accessManager = $this->getMockBuilder('Drupal\Core\Access\AccessManager')
       ->disableOriginalConstructor()
       ->getMock();
@@ -113,16 +114,18 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $property->setAccessible(TRUE);
     $property->setValue($this->contextualLinkManager, $this->accessManager);
 
+    $property = new \ReflectionProperty('Drupal\Core\Menu\ContextualLinkManager', 'moduleHandler');
+    $property->setAccessible(TRUE);
+    $property->setValue($this->contextualLinkManager, $this->moduleHandler);
+
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->returnValue(new Language(array('id' => 'en'))));
 
-    $this->moduleHandler = $this->getMock('\Drupal\Core\Extension\ModuleHandlerInterface');
-
     $method = new \ReflectionMethod('Drupal\Core\Menu\ContextualLinkManager', 'alterInfo');
     $method->setAccessible(TRUE);
-    $method->invoke($this->contextualLinkManager, $this->moduleHandler, 'contextual_links_plugins');
+    $method->invoke($this->contextualLinkManager, 'contextual_links_plugins');
 
     $this->contextualLinkManager->setCacheBackend($this->cacheBackend, $language_manager, 'contextual_links_plugins');
   }

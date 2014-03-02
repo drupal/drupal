@@ -49,10 +49,10 @@ class FormatterPluginManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LanguageManager $language_manager, FieldTypePluginManagerInterface $field_type_manager) {
 
-    parent::__construct('Plugin/Field/FieldFormatter', $namespaces, 'Drupal\Core\Field\Annotation\FieldFormatter');
+    parent::__construct('Plugin/Field/FieldFormatter', $namespaces, $module_handler, 'Drupal\Core\Field\Annotation\FieldFormatter');
 
     $this->setCacheBackend($cache_backend, $language_manager, 'field_formatter_types_plugins');
-    $this->alterInfo($module_handler, 'field_formatter_info');
+    $this->alterInfo('field_formatter_info');
     $this->fieldTypeManager = $field_type_manager;
   }
 

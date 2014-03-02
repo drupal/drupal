@@ -52,9 +52,9 @@ class BlockManager extends DefaultPluginManager {
    *   The translation manager.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager) {
-    parent::__construct('Plugin/Block', $namespaces, 'Drupal\block\Annotation\Block');
+    parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\block\Annotation\Block');
 
-    $this->alterInfo($module_handler, 'block');
+    $this->alterInfo('block');
     $this->setCacheBackend($cache_backend, $language_manager, 'block_plugins');
     $this->translationManager = $translation_manager;
   }

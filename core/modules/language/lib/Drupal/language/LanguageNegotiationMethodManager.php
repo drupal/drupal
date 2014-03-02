@@ -28,11 +28,11 @@ class LanguageNegotiationMethodManager extends DefaultPluginManager {
    *   An object that implements ModuleHandlerInterface
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/LanguageNegotiation', $namespaces);
+    parent::__construct('Plugin/LanguageNegotiation', $namespaces, $module_handler);
     $this->cacheBackend = $cache_backend;
     $this->cacheKeyPrefix = 'language_negotiation_plugins';
     $this->cacheKey = 'language_negotiation_plugins';
-    $this->alterInfo($module_handler, 'language_negotiation_info');
+    $this->alterInfo('language_negotiation_info');
   }
 
 }

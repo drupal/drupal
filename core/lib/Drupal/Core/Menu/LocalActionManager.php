@@ -128,12 +128,12 @@ class LocalActionManager extends DefaultPluginManager {
     $this->factory = new ContainerFactory($this);
     $this->routeProvider = $route_provider;
     $this->accessManager = $access_manager;
+    $this->moduleHandler = $module_handler;
     $this->account = $account;
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;
-    $this->alterInfo($module_handler, 'menu_local_actions');
+    $this->alterInfo('menu_local_actions');
     $this->setCacheBackend($cache_backend, $language_manager, 'local_action_plugins', array('local_action' => TRUE));
-
   }
 
   /**

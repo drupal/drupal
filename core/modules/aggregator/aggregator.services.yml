@@ -1,10 +1,10 @@
 services:
   plugin.manager.aggregator.fetcher:
     class: Drupal\aggregator\Plugin\AggregatorPluginManager
-    arguments: [fetcher, '@container.namespaces', '@cache.cache', '@language_manager']
+    arguments: [fetcher, '@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
   plugin.manager.aggregator.parser:
     class: Drupal\aggregator\Plugin\AggregatorPluginManager
-    arguments: [parser, '@container.namespaces', '@cache.cache', '@language_manager']
+    arguments: [parser, '@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
   plugin.manager.aggregator.processor:
     class: Drupal\aggregator\Plugin\AggregatorPluginManager
-    arguments: [processor, '@container.namespaces', '@cache.cache', '@language_manager']
+    arguments: [processor, '@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']

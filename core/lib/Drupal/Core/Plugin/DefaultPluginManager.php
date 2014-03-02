@@ -106,15 +106,18 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param string $plugin_definition_annotation_name
    *   (optional) The name of the annotation that contains the plugin definition.
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
    */
-  public function __construct($subdir, \Traversable $namespaces, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
+  public function __construct($subdir, \Traversable $namespaces, ModuleHandlerInterface $module_handler, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin') {
     $this->subdir = $subdir;
     $this->discovery = new AnnotatedClassDiscovery($subdir, $namespaces, $plugin_definition_annotation_name);
     $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
     $this->factory = new ContainerFactory($this);
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -150,13 +153,10 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   /**
    * Initializes the alter hook.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke the alter hook with.
    * @param string $alter_hook
    *   Name of the alter hook.
    */
-  protected function alterInfo(ModuleHandlerInterface $module_handler, $alter_hook) {
-    $this->moduleHandler = $module_handler;
+  protected function alterInfo($alter_hook) {
     $this->alterHook = $alter_hook;
   }
 
@@ -266,6 +266,13 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     }
     if ($this->alterHook) {
       $this->moduleHandler->alter($this->alterHook, $definitions);
+    }
+    // If this plugin was provided by a module that does not exist, remove the
+    // plugin definition.
+    foreach ($definitions as $plugin_id => $plugin_definition) {
+      if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array('Core', 'Component')) && !$this->moduleHandler->moduleExists($plugin_definition['provider'])) {
+        unset($definitions[$plugin_id]);
+      }
     }
     return $definitions;
   }

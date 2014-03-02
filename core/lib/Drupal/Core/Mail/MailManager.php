@@ -50,8 +50,8 @@ class MailManager extends DefaultPluginManager {
    *   The configuration factory.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
-    parent::__construct('Plugin/Mail', $namespaces, 'Drupal\Core\Annotation\Mail');
-    $this->alterInfo($module_handler, 'mail_backend_info');
+    parent::__construct('Plugin/Mail', $namespaces, $module_handler, 'Drupal\Core\Annotation\Mail');
+    $this->alterInfo('mail_backend_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'mail_backend_plugins');
     $this->mailConfig = $config_factory->get('system.mail');
   }

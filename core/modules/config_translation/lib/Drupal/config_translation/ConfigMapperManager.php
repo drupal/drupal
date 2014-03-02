@@ -35,6 +35,13 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
   protected $typedConfigManager;
 
   /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * {@inheritdoc}
    */
   protected $defaults = array(
@@ -77,7 +84,10 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     $this->factory = new ContainerFactory($this);
 
     // Let others alter definitions with hook_config_translation_info_alter().
-    $this->alterInfo($module_handler, 'config_translation_info');
+    $this->moduleHandler = $module_handler;
+    $this->themeHandler = $theme_handler;
+
+    $this->alterInfo('config_translation_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'config_translation_info_plugins');
   }
 
@@ -102,6 +112,28 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     if (!isset($definition['base_route_name'])) {
       throw new InvalidPluginDefinitionException($plugin_id, String::format("The plugin definition of the mapper '%plugin_id' does not contain a base_route_name.", array('%plugin_id' => $plugin_id)));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function findDefinitions() {
+    $definitions = $this->discovery->getDefinitions();
+    foreach ($definitions as $plugin_id => &$definition) {
+      $this->processDefinition($definition, $plugin_id);
+    }
+    if ($this->alterHook) {
+      $this->moduleHandler->alter($this->alterHook, $definitions);
+    }
+
+    // If this plugin was provided by a module that does not exist, remove the
+    // plugin definition.
+    foreach ($definitions as $plugin_id => $plugin_definition) {
+      if (isset($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array('Core', 'Component')) && (!$this->moduleHandler->moduleExists($plugin_definition['provider']) && !in_array($plugin_definition['provider'], array_keys($this->themeHandler->listInfo())))) {
+        unset($definitions[$plugin_id]);
+      }
+    }
+    return $definitions;
   }
 
   /**

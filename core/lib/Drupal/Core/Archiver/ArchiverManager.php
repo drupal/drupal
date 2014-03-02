@@ -31,8 +31,8 @@ class ArchiverManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Archiver', $namespaces, 'Drupal\Core\Archiver\Annotation\Archiver');
-    $this->alterInfo($module_handler, 'archiver_info');
+    parent::__construct('Plugin/Archiver', $namespaces, $module_handler, 'Drupal\Core\Archiver\Annotation\Archiver');
+    $this->alterInfo('archiver_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'archiver_info_plugins');
   }
 

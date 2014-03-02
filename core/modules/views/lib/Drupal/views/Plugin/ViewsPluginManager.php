@@ -35,7 +35,7 @@ class ViewsPluginManager extends DefaultPluginManager {
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($type);
-    parent::__construct("Plugin/views/$type", $namespaces, $plugin_definition_annotation_name);
+    parent::__construct("Plugin/views/$type", $namespaces, $module_handler, $plugin_definition_annotation_name);
 
     $this->defaults += array(
       'parent' => 'parent',
@@ -43,7 +43,7 @@ class ViewsPluginManager extends DefaultPluginManager {
       'register_theme' => TRUE,
     );
 
-    $this->alterInfo($module_handler, 'views_plugins_' . $type);
+    $this->alterInfo('views_plugins_' . $type);
     $this->setCacheBackend($cache_backend, $language_manager, 'views_' . $type . '_plugins');
   }
 

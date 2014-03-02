@@ -39,8 +39,8 @@ class FilterPluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Filter', $namespaces, 'Drupal\filter\Annotation\Filter');
-    $this->alterInfo($module_handler, 'filter_info');
+    parent::__construct('Plugin/Filter', $namespaces, $module_handler, 'Drupal\filter\Annotation\Filter');
+    $this->alterInfo('filter_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'filter_plugins', array('filter_formats' => TRUE));
   }
 

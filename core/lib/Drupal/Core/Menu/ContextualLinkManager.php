@@ -100,7 +100,8 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
     $this->controllerResolver = $controller_resolver;
     $this->accessManager = $access_manager;
     $this->account = $account;
-    $this->alterInfo($module_handler, 'contextual_links_plugins');
+    $this->moduleHandler = $module_handler;
+    $this->alterInfo('contextual_links_plugins');
     $this->setCacheBackend($cache_backend, $language_manager, 'contextual_links_plugins');
   }
 

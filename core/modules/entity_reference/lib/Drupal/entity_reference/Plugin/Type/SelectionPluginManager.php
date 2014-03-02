@@ -33,7 +33,8 @@ class SelectionPluginManager extends DefaultPluginManager {
     // method and don't need the derivative discovery decorator.
     $this->factory = new ReflectionFactory($this);
 
-    $this->alterInfo($module_handler, 'entity_reference_selection');
+    $this->moduleHandler = $module_handler;
+    $this->alterInfo('entity_reference_selection');
     $this->setCacheBackend($cache_backend, $language_manager, 'entity_reference_selection_plugins');
   }
 

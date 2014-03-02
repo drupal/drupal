@@ -31,9 +31,9 @@ class TipPluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/tour/tip', $namespaces, 'Drupal\tour\Annotation\Tip');
+    parent::__construct('Plugin/tour/tip', $namespaces, $module_handler, 'Drupal\tour\Annotation\Tip');
 
-    $this->alterInfo($module_handler, 'tour_tips_info');
+    $this->alterInfo('tour_tips_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'tour_plugins');
   }
 

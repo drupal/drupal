@@ -33,10 +33,10 @@ class ConditionManager extends DefaultPluginManager implements ExecutableManager
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    $this->alterInfo($module_handler, 'condition_info');
+    $this->alterInfo('condition_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'condition_plugins');
 
-    parent::__construct('Plugin/Condition', $namespaces, 'Drupal\Core\Condition\Annotation\Condition');
+    parent::__construct('Plugin/Condition', $namespaces, $module_handler, 'Drupal\Core\Condition\Annotation\Condition');
   }
 
   /**

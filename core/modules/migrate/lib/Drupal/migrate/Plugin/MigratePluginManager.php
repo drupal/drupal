@@ -39,8 +39,8 @@ class MigratePluginManager extends DefaultPluginManager {
    *   The annotation class name.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
-    parent::__construct("Plugin/migrate/$type", $namespaces, $annotation);
-    $this->alterInfo($module_handler, 'migrate_' . $type . '_info');
+    parent::__construct("Plugin/migrate/$type", $namespaces, $module_handler, $annotation);
+    $this->alterInfo('migrate_' . $type . '_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'migrate_plugins_' . $type);
   }
 

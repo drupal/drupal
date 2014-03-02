@@ -605,7 +605,7 @@ services:
       - { name: event_subscriber }
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
-    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@config.factory']
+    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@config.factory', '@module_handler']
   image.toolkit:
     class: Drupal\Core\ImageToolkit\ImageToolkitInterface
     factory_method: getDefaultToolkit
