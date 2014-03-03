@@ -128,7 +128,7 @@ Markup
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 
 Migrate
-- Károly Négyesi 'chx' http://drupal.org/user/9446
+- Ben Dougherty 'benjy' https://drupal.org/user/1852732
 - Mike Ryan 'mikeryan' http://drupal.org/user/4420
 
 Menu system
