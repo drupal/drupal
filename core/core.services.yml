@@ -278,6 +278,11 @@ services:
     arguments: ['@database', '@router.builder']
     tags:
       - { name: event_subscriber }
+  router.route_preloader:
+    class: Drupal\Core\Routing\RoutePreloader
+    arguments: ['@router.route_provider', '@state', '@content_negotiation']
+    tags:
+      - { name: 'event_subscriber' }
   router.matcher.final_matcher:
     class: Drupal\Core\Routing\UrlMatcher
   router.matcher:
