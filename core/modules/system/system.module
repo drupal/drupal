@@ -153,6 +153,14 @@ function system_help($path, $arg) {
  */
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
+    // Normally theme suggestion templates are only picked up when they are in
+    // themes. We explicitly define the block__system_branding_block theme
+    // suggestion here so that the template in core/modules/system/templates
+    // is picked up.
+    'block__system_branding_block' => array(
+      'base hook' => 'block',
+      'template' => 'block--system-branding-block',
+    ),
     'system_themes_page' => array(
       'variables' => array(
         'theme_groups' => NULL,
@@ -1218,6 +1226,21 @@ function system_user_timezone(&$form, &$form_state) {
  */
 function system_preprocess_block(&$variables) {
   switch ($variables['base_plugin_id']) {
+    case 'system_branding_block':
+      $variables['site_logo'] = '';
+      if ($variables['content']['site_logo']['#access'] && $variables['content']['site_logo']['#uri']) {
+        $variables['site_logo'] = $variables['content']['site_logo']['#uri'];
+      }
+      $variables['site_name'] = '';
+      if ($variables['content']['site_name']['#access'] && $variables['content']['site_name']['#markup']) {
+        $variables['site_name'] = $variables['content']['site_name']['#markup'];
+      }
+      $variables['site_slogan'] = '';
+      if ($variables['content']['site_slogan']['#access'] && $variables['content']['site_slogan']['#markup']) {
+        $variables['site_slogan'] = $variables['content']['site_slogan']['#markup'];
+      }
+      break;
+
     case 'system_powered_by_block':
       $variables['attributes']['role'] = 'complementary';
       break;

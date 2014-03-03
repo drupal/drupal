@@ -139,12 +139,12 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $expected[] = '    ';
     $expected[] = '';
     $expected[] = '  <div class="content">';
-    $expected[] = '    ';
-    $expected[] = '  </div>';
+    $expected[] = '          ';
+    $expected[] = '      </div>';
     $expected[] = '</div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
-    $this->assertEqual(drupal_render($output), $expected_output, 'The block rendered correctly.');
+    $this->assertEqual(drupal_render($output), $expected_output);
 
     // Reset the HTML IDs so that the next render is not affected.
     drupal_static_reset('drupal_html_id');
@@ -167,12 +167,12 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     $expected[] = '    ';
     $expected[] = '';
     $expected[] = '  <div class="content">';
-    $expected[] = '    ';
-    $expected[] = '  </div>';
+    $expected[] = '          ';
+    $expected[] = '      </div>';
     $expected[] = '</div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
-    $this->assertEqual(drupal_render($output), $expected_output, 'The block rendered correctly.');
+    $this->assertEqual(drupal_render($output), $expected_output);
     // Clean up this entity.
     $entity->delete();
   }

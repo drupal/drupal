@@ -54,7 +54,9 @@ a:active,
 .region-header a,
 .region-header li a.active,
 #name-and-slogan,
+.site-branding-block,
 #name-and-slogan a,
+.site-branding-block a,
 #secondary-menu-links li a {
   color: #fffeff;
 }

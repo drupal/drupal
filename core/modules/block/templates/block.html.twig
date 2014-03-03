@@ -49,6 +49,8 @@
   {{ title_suffix }}
 
   <div{{ content_attributes }}>
-    {{ content }}
+    {% block content %}
+      {{ content }}
+    {% endblock %}
   </div>
 </div>

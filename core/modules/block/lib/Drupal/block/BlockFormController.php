@@ -93,6 +93,13 @@ class BlockFormController extends EntityFormController {
    */
   public function form(array $form, array &$form_state) {
     $entity = $this->entity;
+
+    // Store theme settings in $form_state for use below.
+    if (!$theme = $entity->get('theme')) {
+      $theme = $this->configFactory->get('system.theme')->get('default');
+    }
+    $form_state['block_theme'] = $theme;
+
     $form['#tree'] = TRUE;
     $form['settings'] = $entity->getPlugin()->buildConfigurationForm(array(), $form_state);
 
@@ -226,10 +233,10 @@ class BlockFormController extends EntityFormController {
     );
 
     // Theme settings.
-    if ($theme = $entity->get('theme')) {
+    if ($entity->get('theme')) {
       $form['theme'] = array(
         '#type' => 'value',
-        '#value' => $entity->get('theme'),
+        '#value' => $theme,
       );
     }
     else {
@@ -239,7 +246,6 @@ class BlockFormController extends EntityFormController {
           $theme_options[$theme_name] = $theme_info->info['name'];
         }
       }
-      $theme = $this->configFactory->get('system.theme')->get('default');
       $form['theme'] = array(
         '#type' => 'select',
         '#options' => $theme_options,
@@ -251,6 +257,7 @@ class BlockFormController extends EntityFormController {
         ),
       );
     }
+
     // Region settings.
     $form['region'] = array(
       '#type' => 'select',
