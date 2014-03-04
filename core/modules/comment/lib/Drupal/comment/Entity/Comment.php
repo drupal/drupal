@@ -193,7 +193,9 @@ class Comment extends ContentEntityBase implements CommentInterface {
    */
   public function referencedEntities() {
     $referenced_entities = parent::referencedEntities();
-    $referenced_entities[] = $this->getCommentedEntity();
+    if ($this->getCommentedEntityId()) {
+      $referenced_entities[] = $this->getCommentedEntity();
+    }
     return $referenced_entities;
   }
 
