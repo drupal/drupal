@@ -320,7 +320,7 @@ function views_preprocess_page(&$variables) {
   // page.html.twig, so we can only find it using JavaScript. We therefore
   // remove the "contextual-region" class from the <body> tag here and add
   // JavaScript that will insert it back in the correct place.
-  if (!empty($variables['page']['#views_contextual_links'])) {
+  if (!empty($variables['page']['#views_contextual_links']) && isset($variables['attributes']['class'])) {
     /** @var \Drupal\Core\Page\HtmlPage $page_object */
     $page_object = $variables['page']['#page'];
     $attributes = $page_object->getBodyAttributes();

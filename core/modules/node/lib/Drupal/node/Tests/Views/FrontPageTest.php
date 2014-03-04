@@ -149,4 +149,20 @@ class FrontPageTest extends ViewTestBase {
     $this->assertFalse($found_nids, $message);
   }
 
+  /**
+   * Tests the frontpage when logged in as admin.
+   */
+  public function testAdminFrontPage() {
+    // When a user with sufficient permissions is logged in, views_ui adds
+    // contextual links to the homepage view. This verifies there are no errors.
+    \Drupal::moduleHandler()->install(array('views_ui'));
+    // Login root user with sufficient permissions.
+    $this->drupalLogin($this->root_user);
+    // Test frontpage view.
+    $this->drupalGet('node');
+    $this->assertResponse(200);
+    // Check that the frontpage view was rendered.
+    $this->assertPattern('/class=".+view-frontpage/', 'Frontpage view was rendered');
+  }
+
 }
