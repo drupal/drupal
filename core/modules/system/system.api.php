@@ -158,9 +158,8 @@ function hook_data_type_info_alter(&$data_types) {
  * @return
  *   An associative array where the key is the queue name and the value is
  *   again an associative array. Possible keys are:
- *   - 'worker callback': A PHP callable to call. It will be called
- *     with one argument, the item created via
- *     \Drupal\Core\Queue\QueueInterface::createItem().
+ *   - 'worker callback': A PHP callable to call that is an implementation of
+ *     callback_queue_worker().
  *   - 'cron': (optional) An associative array containing the optional key:
  *     - 'time': (optional) How much time Drupal cron should spend on calling
  *       this worker in seconds. Defaults to 15.
@@ -198,6 +197,28 @@ function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
   $queues['aggregator_feeds']['cron']['time'] = 90;
+}
+
+/**
+ * Work on a single queue item.
+ *
+ * Callback for hook_queue_info().
+ *
+ * @param $queue_item_data
+ *   The data that was passed to \Drupal\Core\Queue\QueueInterface::createItem()
+ *   when the item was queued.
+ *
+ * @throws \Exception
+ *   The worker callback may throw an exception to indicate there was a problem.
+ *   The cron process will log the exception, and leave the item in the queue to
+ *   be processed again later.
+ *
+ * @see \Drupal\Core\Cron::run()
+ */
+function callback_queue_worker($queue_item_data) {
+  $node = node_load($queue_item_data);
+  $node->title = 'Updated title';
+  $node->save();
 }
 
 /**
