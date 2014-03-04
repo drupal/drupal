@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Plugin\PluginBagTestBase.
+ * Contains \Drupal\Tests\Core\Plugin\PluginBagTestBase.
  */
 
-namespace Drupal\Tests\Component\Plugin;
+namespace Drupal\Tests\Core\Plugin;
 
-use Drupal\Component\Plugin\DefaultPluginBag;
+use Drupal\Core\Plugin\DefaultPluginBag;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -25,7 +25,7 @@ abstract class PluginBagTestBase extends UnitTestCase {
   /**
    * The tested plugin bag.
    *
-   * @var \Drupal\Component\Plugin\DefaultPluginBag|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Plugin\DefaultPluginBag|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $defaultPluginBag;
 

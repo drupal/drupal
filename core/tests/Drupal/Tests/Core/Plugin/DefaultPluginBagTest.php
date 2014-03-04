@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Plugin\DefaultPluginBagTest.
+ * Contains \Drupal\Tests\Core\Plugin\DefaultPluginBagTest.
  */
 
-namespace Drupal\Tests\Component\Plugin;
+namespace Drupal\Tests\Core\Plugin;
 
 /**
  * Tests the default plugin bag.
  *
- * @see \Drupal\Component\Plugin\DefaultPluginBag
+ * @see \Drupal\Core\Plugin\DefaultPluginBag
  *
  * @group Drupal
  * @group Drupal_Plugin
@@ -31,7 +31,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
   /**
    * Tests the has method.
    *
-   * @see \Drupal\Component\Plugin\DefaultPluginBag::has()
+   * @see \Drupal\Core\Plugin\DefaultPluginBag::has()
    */
   public function testHas() {
     $this->setupPluginBag();
@@ -47,7 +47,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
   /**
    * Tests the get method.
    *
-   * @see \Drupal\Component\Plugin\DefaultPluginBag::get()
+   * @see \Drupal\Core\Plugin\DefaultPluginBag::get()
    */
   public function testGet() {
     $this->setupPluginBag($this->once());
@@ -105,7 +105,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
   /**
    * Tests the configuration getter method.
    *
-   * @see \Drupal\Component\Plugin\DefaultPluginBag::getConfiguration()
+   * @see \Drupal\Core\Plugin\DefaultPluginBag::getConfiguration()
    */
   public function testGetConfiguration() {
     $this->setupPluginBag($this->exactly(3));
@@ -130,7 +130,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
   /**
    * Tests the removeInstanceId() method.
    *
-   * @see \Drupal\Component\Plugin\DefaultPluginBag::removeInstanceId()
+   * @see \Drupal\Core\Plugin\DefaultPluginBag::removeInstanceId()
    */
   public function testRemoveInstanceId() {
     $this->setupPluginBag($this->exactly(2));
@@ -142,7 +142,7 @@ class DefaultPluginBagTest extends PluginBagTestBase {
   /**
    * Tests the setInstanceConfiguration() method.
    *
-   * @see \Drupal\Component\Plugin\DefaultPluginBag::setInstanceConfiguration()
+   * @see \Drupal\Core\Plugin\DefaultPluginBag::setInstanceConfiguration()
    */
   public function testSetInstanceConfiguration() {
     $this->setupPluginBag($this->exactly(3));

@@ -7,7 +7,7 @@
 
 namespace Drupal\image;
 
-use Drupal\Component\Plugin\DefaultPluginBag;
+use Drupal\Core\Plugin\DefaultPluginBag;
 
 /**
  * A collection of image effects.

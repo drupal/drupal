@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Plugin\DefaultSinglePluginBagTest.
+ * Contains \Drupal\Tests\Core\Plugin\DefaultSinglePluginBagTest.
  */
 
-namespace Drupal\Tests\Component\Plugin;
+namespace Drupal\Tests\Core\Plugin;
 
-use Drupal\Component\Plugin\DefaultSinglePluginBag;
+use Drupal\Core\Plugin\DefaultSinglePluginBag;
 
 /**
  * Tests the default single plugin bag.
  *
- * @see \Drupal\Component\Plugin\DefaultSinglePluginBag
+ * @see \Drupal\Core\Plugin\DefaultSinglePluginBag
  *
  * @group Drupal
  * @group Drupal_Plugin

@@ -10,7 +10,7 @@ namespace Drupal\block;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\String;
-use Drupal\Component\Plugin\DefaultSinglePluginBag;
+use Drupal\Core\Plugin\DefaultSinglePluginBag;
 
 /**
  * Provides a collection of block plugins.

@@ -2,10 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Plugin\DefaultSinglePluginBag.
+ * Contains \Drupal\Core\Plugin\DefaultSinglePluginBag.
  */
 
-namespace Drupal\Component\Plugin;
+namespace Drupal\Core\Plugin;
+
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Component\Plugin\PluginBag;
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
  * Provides a default plugin bag for a plugin type.

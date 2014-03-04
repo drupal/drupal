@@ -7,7 +7,7 @@
 
 namespace Drupal\search\Plugin;
 
-use Drupal\Component\Plugin\DefaultSinglePluginBag;
+use Drupal\Core\Plugin\DefaultSinglePluginBag;
 use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**

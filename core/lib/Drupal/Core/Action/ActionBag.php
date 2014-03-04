@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Action;
 
-use Drupal\Component\Plugin\DefaultSinglePluginBag;
+use Drupal\Core\Plugin\DefaultSinglePluginBag;
 
 /**
  * Provides a container for lazily loading Action plugins.

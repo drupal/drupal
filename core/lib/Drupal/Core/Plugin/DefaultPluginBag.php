@@ -2,12 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Plugin\DefaultPluginBag.
+ * Contains \Drupal\Core\Plugin\DefaultPluginBag.
  */
 
-namespace Drupal\Component\Plugin;
+namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Component\Plugin\PluginBag;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
  * Provides a default plugin bag for a plugin type.

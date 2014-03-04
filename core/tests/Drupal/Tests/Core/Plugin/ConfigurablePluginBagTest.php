@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Plugin\ConfigurablePluginBagTest.
+ * Contains \Drupal\Tests\Core\Plugin\ConfigurablePluginBagTest.
  */
 
-namespace Drupal\Tests\Component\Plugin;
+namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\PluginBase;
@@ -14,7 +14,7 @@ use Drupal\Component\Plugin\PluginBase;
  * Tests the default plugin bag with configurable plugins.
  *
  * @see \Drupal\Component\Plugin\ConfigurablePluginInterface
- * @see \Drupal\Component\Plugin\DefaultPluginBag
+ * @see \Drupal\Core\Plugin\DefaultPluginBag
  *
  * @group Drupal
  * @group Drupal_Plugin
