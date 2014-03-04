@@ -40,7 +40,7 @@ function theme_language_negotiation_configure_form($variables) {
 
   foreach ($form['#language_types'] as $type) {
     $rows = array();
-    $title = '<h4 class="label">' . $form[$type]['#title'] . '</h4>';
+    $title = '<h2>' . $form[$type]['#title'] . '</h2>';
     $description = '<div class="description">' . $form[$type]['#description'] . '</div>';
 
     foreach ($form[$type]['title'] as $id => $element) {
