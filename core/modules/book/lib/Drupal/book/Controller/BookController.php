@@ -25,7 +25,7 @@ class BookController implements ContainerInjectionInterface {
   /**
    * The book manager.
    *
-   * @var BookManagerInterface
+   * @var \Drupal\book\BookManagerInterface
    */
   protected $bookManager;
 
@@ -39,7 +39,7 @@ class BookController implements ContainerInjectionInterface {
   /**
    * Constructs a BookController object.
    *
-   * @param BookManagerInterface $bookManager
+   * @param \Drupal\book\BookManagerInterface $bookManager
    *   The book manager.
    * @param \Drupal\book\BookExport $bookExport
    *   The book export service.
