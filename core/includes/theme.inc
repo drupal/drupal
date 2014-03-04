@@ -569,13 +569,6 @@ function _theme($hook, $variables = array()) {
   // point path_to_theme() to the currently used theme path:
   $theme_path = $info['theme path'];
 
-  // Include a file if the theme function or variable preprocessor is held
-  // elsewhere.
-  if (!empty($info['includes'])) {
-    foreach ($info['includes'] as $include_file) {
-      include_once DRUPAL_ROOT . '/' . $include_file;
-    }
-  }
 
   // If a renderable array is passed as $variables, then set $variables to
   // the arguments expected by the theme function.
@@ -645,6 +638,14 @@ function _theme($hook, $variables = array()) {
     if ($theme_registry->has($suggestion)) {
       $info = $theme_registry->get($suggestion);
       break;
+    }
+  }
+
+  // Include a file if the theme function or variable preprocessor is held
+  // elsewhere.
+  if (!empty($info['includes'])) {
+    foreach ($info['includes'] as $include_file) {
+      include_once DRUPAL_ROOT . '/' . $include_file;
     }
   }
 

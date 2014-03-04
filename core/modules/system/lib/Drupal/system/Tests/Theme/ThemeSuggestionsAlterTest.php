@@ -139,6 +139,24 @@ class ThemeSuggestionsAlterTest extends WebTestBase {
   }
 
   /**
+   * Tests that theme suggestion alter hooks work with theme hook includes.
+   */
+  public function testSuggestionsAlterInclude() {
+    // Check the original theme output.
+    $this->drupalGet('theme-test/suggestion-alter-include');
+    $this->assertText('Original function before altering theme suggestions.');
+
+    // Enable theme_suggestions_test module and make two requests to make sure
+    // the include file is always loaded. The file will always be included for
+    // the first request because the theme registry is being rebuilt.
+    \Drupal::moduleHandler()->install(array('theme_suggestions_test'));
+    $this->drupalGet('theme-test/suggestion-alter-include');
+    $this->assertText('Function suggested via suggestion alter hook found in include file.', 'Include file loaded for initial request.');
+    $this->drupalGet('theme-test/suggestion-alter-include');
+    $this->assertText('Function suggested via suggestion alter hook found in include file.', 'Include file loaded for second request.');
+  }
+
+  /**
    * Tests execution order of theme suggestion alter hooks.
    *
    * hook_theme_suggestions_alter() should fire before

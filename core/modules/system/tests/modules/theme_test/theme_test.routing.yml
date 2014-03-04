@@ -92,3 +92,10 @@ function_suggestion_alter:
     _content: '\Drupal\theme_test\ThemeTestController::functionSuggestionAlter'
   requirements:
     _access: 'TRUE'
+
+suggestion_alter_include:
+  path: '/theme-test/suggestion-alter-include'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::suggestionAlterInclude'
+  requirements:
+    _access: 'TRUE'
