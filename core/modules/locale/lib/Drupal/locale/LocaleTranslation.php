@@ -63,6 +63,13 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
   protected $lock;
 
   /**
+   * The translate english configuration value.
+   *
+   * @var bool
+   */
+  protected $translateEnglish;
+
+  /**
    * Constructs a translator using a string storage.
    *
    * @param \Drupal\locale\StringStorageInterface $storage
@@ -86,8 +93,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    */
   public function getStringTranslation($langcode, $string, $context) {
     // If the language is not suitable for locale module, just return.
-    $translate_english = $this->configFactory->get('locale.settings')->get('translate_english');
-    if ($langcode == Language::LANGCODE_SYSTEM || ($langcode == 'en' && !$translate_english)) {
+    if ($langcode == Language::LANGCODE_SYSTEM || ($langcode == 'en' && !$this->canTranslateEnglish())) {
       return FALSE;
     }
     // Strings are cached by langcode, context and roles, using instances of the
@@ -100,9 +106,23 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
   }
 
   /**
+   * Gets translate english configuration value.
+   *
+   * @return bool
+   *   TRUE if english should be translated, FALSE if not.
+   */
+  protected function canTranslateEnglish() {
+    if (!isset($this->translateEnglish)) {
+      $this->translateEnglish = $this->configFactory->get('locale.settings')->get('translate_english');
+    }
+    return $this->translateEnglish;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function reset() {
+    unset($this->translateEnglish);
     $this->translations = array();
   }
 
