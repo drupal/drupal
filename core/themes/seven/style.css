@@ -435,7 +435,6 @@ li.tabs__tab a {
   color: #333;
   margin-left: 0.8125em;
   margin-right: 0.8125em;
-  padding: 0 0 40px 0;
   position: relative;
 }
 @media screen and (min-width:28.125em) { /* 450px */
@@ -1571,12 +1570,6 @@ details.fieldset-no-legend {
   screen and (min-width: 780px),
   (orientation: landscape) and (min-device-height: 780px) {
 
-  [class*="page-node-add-"] #page,
-  .page-node-edit #page {
-    padding-top: 0;
-    margin-right: 0;
-  }
-
   [class*="page-node-add-"] #console,
   .page-node-edit #console {
     margin: 0 2em;
@@ -1585,49 +1578,6 @@ details.fieldset-no-legend {
   .page-node-edit .messages {
     margin-top: 1em;
     margin-bottom: 1em;
-  }
-
-  .layout-node-form {
-    overflow: hidden;
-    position: relative;
-  }
-  /**
-   * Draw a bottom border on the meta settings region
-   * @todo Better ideas welcome.
-   */
-  .layout-node-form:before {
-    content: '';
-    display: block;
-    height: 0;
-    width: 34.9%;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border-top: 1px solid #bfbfbf;
-  }
-
-  .layout-region-node-secondary {
-    /**
-     * 1. Applies the Position Is Everything technique for equal-height columns;
-     *    @see http://www.positioniseverything.net/articles/onetruelayout/equalheight
-     * 2. When animating the height of elements within this region, prevent
-     *    vertical jittering of elements further down in the document flow.
-     */
-    margin-bottom: -999em; /* 1 */
-    padding-bottom: 999em; /* 1 */
-    display: table; /* 2 */
-
-    background-color: #f7f7f7;
-    border-left: 1px solid #bfbfbf;
-  }
-
-  .entity-meta {
-    border-left: 0;
-    border-right: 0;
-    border-bottom: 1px solid #ffffff;
-  }
-  .entity-meta-header {
-    border-top: 0;
   }
 }
 @media
