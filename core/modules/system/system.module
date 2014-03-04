@@ -1014,7 +1014,7 @@ function system_authorized_init($callback, $file, $arguments = array(), $page_ti
   );
 
   if (isset($page_title)) {
-    $_SESSION['authorize_operation']['page_title'] = $page_title;
+    $_SESSION['authorize_page_title'] = $page_title;
   }
 }
 

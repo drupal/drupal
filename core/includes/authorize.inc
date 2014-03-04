@@ -290,10 +290,6 @@ function authorize_run_operation($filetransfer) {
   $operation = $_SESSION['authorize_operation'];
   unset($_SESSION['authorize_operation']);
 
-  if (!empty($operation['page_title'])) {
-    drupal_set_title($operation['page_title']);
-  }
-
   require_once DRUPAL_ROOT . '/' . $operation['file'];
   call_user_func_array($operation['callback'], array_merge(array($filetransfer), $operation['arguments']));
 }
