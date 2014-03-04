@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\field\Field;
 use Drupal\taxonomy\VocabularyInterface;
 
 /**
@@ -111,19 +112,30 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
     elseif ($this->getOriginalId() != $this->id()) {
       // Reflect machine name changes in the definitions of existing 'taxonomy'
       // fields.
-      $fields = entity_load_multiple('field_config');
+      $field_ids = array();
+      $field_map = Field::fieldInfo()->getFieldMap();
+      foreach ($field_map as $entity_type => $fields) {
+        foreach ($fields as $field => $info) {
+          if ($info['type'] == 'taxonomy_term_reference') {
+            $field_ids[] = $entity_type . '.' . $field;
+          }
+        }
+      }
+
+      $fields = \Drupal::entityManager()->getStorageController('field_config')->loadMultiple($field_ids);
+
       foreach ($fields as $field) {
         $update_field = FALSE;
-        if ($field->getType() == 'taxonomy_term_reference') {
-          foreach ($field->settings['allowed_values'] as &$value) {
-            if ($value['vocabulary'] == $this->getOriginalId()) {
-              $value['vocabulary'] = $this->id();
-              $update_field = TRUE;
-            }
+
+        foreach ($field->settings['allowed_values'] as &$value) {
+          if ($value['vocabulary'] == $this->getOriginalId()) {
+            $value['vocabulary'] = $this->id();
+            $update_field = TRUE;
           }
-          if ($update_field) {
-            $field->save();
-          }
+        }
+
+        if ($update_field) {
+          $field->save();
         }
       }
       // Update bundles.
