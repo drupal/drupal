@@ -315,13 +315,10 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
       ));
     }
 
-    // Disallow reserved field names. This can't prevent all field name
-    // collisions with existing entity properties, but some is better than
-    // none.
-    foreach ($entity_manager->getDefinitions() as $entity_type_id => $entity_type) {
-      if (in_array($this->name, $entity_type->getKeys())) {
-        throw new FieldException(format_string('Attempt to create field %name which is reserved by entity type %type.', array('%name' => $this->name, '%type' => $entity_type_id)));
-      }
+    // Disallow reserved field names.
+    $disallowed_field_names = array_keys($entity_manager->getBaseFieldDefinitions($this->entity_type));
+    if (in_array($this->name, $disallowed_field_names)) {
+      throw new FieldException(format_string('Attempt to create field %name which is reserved by entity type %type.', array('%name' => $this->name, '%type' => $this->entity_type)));
     }
 
     // Check that the field type is known.

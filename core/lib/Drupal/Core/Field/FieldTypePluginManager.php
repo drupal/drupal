@@ -14,8 +14,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Plugin manager for 'field type' plugins.
- *
- * @todo Add FieldTypePluginManagerInterface in https://drupal.org/node/2175415.
  */
 class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
 

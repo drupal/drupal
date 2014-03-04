@@ -385,6 +385,7 @@ class FieldOverview extends OverviewBase {
    * Overrides \Drupal\field_ui\OverviewBase::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
+    $error = FALSE;
     $form_values = $form_state['values']['fields'];
     $destinations = array();
 
@@ -438,7 +439,8 @@ class FieldOverview extends OverviewBase {
         $form_state['fields_added']['_add_new_field'] = $values['field_name'];
       }
       catch (\Exception $e) {
-        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $instance->getLabel(), '!message' => $e->getMessage())), 'error');
+        $error = TRUE;
+        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $instance['label'], '!message' => $e->getMessage())), 'error');
       }
     }
 
@@ -487,7 +489,8 @@ class FieldOverview extends OverviewBase {
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
         }
         catch (\Exception $e) {
-          drupal_set_message($this->t('There was a problem creating field instance %label: @message.', array('%label' => $instance->getLabel(), '@message' => $e->getMessage())), 'error');
+          $error = TRUE;
+          drupal_set_message($this->t('There was a problem creating field instance %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())), 'error');
         }
       }
     }
@@ -497,7 +500,7 @@ class FieldOverview extends OverviewBase {
       $destinations[] = $destination['destination'];
       $form_state['redirect_route'] = FieldUI::getNextDestination($destinations, $form_state);
     }
-    else {
+    elseif (!$error) {
       drupal_set_message($this->t('Your settings have been saved.'));
     }
   }

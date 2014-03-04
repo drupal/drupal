@@ -384,6 +384,32 @@ class ManageFieldsTest extends FieldUiTestBase {
   }
 
   /**
+   * Tests that Field UI respects disallowed field names.
+   */
+  function testDisallowedFieldNames() {
+    // Reset the field prefix so we can test properly.
+    \Drupal::config('field_ui.settings')->set('field_prefix', '')->save();
+
+    $label = 'Disallowed field';
+    $edit = array(
+      'fields[_add_new_field][label]' => $label,
+      'fields[_add_new_field][type]' => 'test_field',
+    );
+
+    // Try with an entity key.
+    $edit['fields[_add_new_field][field_name]'] = 'title';
+    $bundle_path = 'admin/structure/types/manage/' . $this->type;
+    $this->drupalPostForm("$bundle_path/fields",  $edit, t('Save'));
+    $this->assertText(t('There was a problem creating field Disallowed field: Attempt to create field title which is reserved by entity type node.', array('%label' => $label)), 'Field was not saved.');
+
+    // Try with a base field.
+    $edit['fields[_add_new_field][field_name]'] = 'sticky';
+    $bundle_path = 'admin/structure/types/manage/' . $this->type;
+    $this->drupalPostForm("$bundle_path/fields",  $edit, t('Save'));
+    $this->assertText(t('There was a problem creating field Disallowed field: Attempt to create field sticky which is reserved by entity type node.', array('%label' => $label)), 'Field was not saved.');
+  }
+
+  /**
    * Tests that Field UI respects locked fields.
    */
   function testLockedField() {
