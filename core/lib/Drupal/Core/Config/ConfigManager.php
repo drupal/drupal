@@ -50,6 +50,12 @@ class ConfigManager implements ConfigManagerInterface {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The configuration factory.
+   * @param \Drupal\Core\Config\TypedConfigManager $typed_config_manager
+   *   The typed config manager.
+   * @param \Drupal\Core\StringTranslation\TranslationManager $string_translation
+   *   The string translation service.
    */
   public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, TypedConfigManager $typed_config_manager, TranslationManager $string_translation) {
     $this->entityManager = $entity_manager;
@@ -80,8 +86,8 @@ class ConfigManager implements ConfigManagerInterface {
    */
   public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $name) {
     // @todo Replace with code that can be autoloaded.
-    //   https://drupal.org/node/2188595
-    require_once DRUPAL_ROOT . '/core/lib/Drupal/Component/Diff/DiffEngine.php';
+    //   https://drupal.org/node/1848266
+    require_once __DIR__ . '/../../Component/Diff/DiffEngine.php';
 
     // The output should show configuration object differences formatted as YAML.
     // But the configuration is not necessarily stored in files. Therefore, they
@@ -108,7 +114,7 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  function createSnapshot(StorageInterface $source_storage, StorageInterface $snapshot_storage) {
+  public function createSnapshot(StorageInterface $source_storage, StorageInterface $snapshot_storage) {
     $snapshot_storage->deleteAll();
     foreach ($source_storage->listAll() as $name) {
       $snapshot_storage->write($name, $source_storage->read($name));
@@ -116,14 +122,9 @@ class ConfigManager implements ConfigManagerInterface {
   }
 
   /**
-   * Uninstalls the default configuration of a given extension.
-   *
-   * @param string $type
-   *   The extension type; e.g., 'module' or 'theme'.
-   * @param string $name
-   *   The name of the module or theme to install default configuration for.
+   * {@inheritdoc}
    */
-  function uninstall($type, $name) {
+  public function uninstall($type, $name) {
     $config_names = $this->configFactory->listAll($name . '.');
     foreach ($config_names as $config_name) {
       $this->configFactory->get($config_name)->delete();
@@ -135,4 +136,5 @@ class ConfigManager implements ConfigManagerInterface {
       $this->typedConfigManager->clearCachedDefinitions();
     }
   }
+
 }

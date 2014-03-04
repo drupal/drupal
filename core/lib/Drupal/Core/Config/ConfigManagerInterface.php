@@ -21,7 +21,7 @@ interface ConfigManagerInterface {
    * @return string|null
    *   Either the entity type name, or NULL if none match.
    */
-  function getEntityTypeIdByName($name);
+  public function getEntityTypeIdByName($name);
 
   /**
    * Gets the entity manager.
