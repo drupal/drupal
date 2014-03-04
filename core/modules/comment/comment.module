@@ -1034,7 +1034,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
 function comment_cron() {
   // Store the maximum possible comments per thread (used for node search
   // ranking by reply count).
-  \Drupal::state()->set('comment.node_comment_statistics_scale', 1.0 / max(1, db_query('SELECT MAX(comment_count) FROM {comment_entity_statistics}')->fetchField()));
+  \Drupal::state()->set('comment.node_comment_statistics_scale', 1.0 / max(1.0, db_query('SELECT MAX(comment_count) FROM {comment_entity_statistics}')->fetchField()));
 }
 
 /**
@@ -1547,9 +1547,12 @@ function comment_ranking() {
         // nodes.
         'on' => "ces.entity_id = i.sid AND ces.entity_type = 'node' AND ces.field_id = 'node__comment'",
       ),
-      // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
-      'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * :scale)',
-      'arguments' => array(':scale' => (float) \Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
+      // Inverse law that maps the highest reply count on the site to 1 and 0
+      // to 0. Note that the CAST here is necessary for PostgreSQL, because the
+      // PostgreSQL PDO driver sometimes puts values in as strings instead of
+      // numbers in complex expressions like this.
+      'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * (CAST (:comment_scale AS DECIMAL(10, 4))))',
+      'arguments' => array(':comment_scale' => \Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
     ),
   );
 }

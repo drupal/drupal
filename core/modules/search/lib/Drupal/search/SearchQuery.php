@@ -132,6 +132,13 @@ class SearchQuery extends SelectExtender {
   protected $multiply = array();
 
   /**
+   * The number of 'i.relevance' occurrences in score expressions.
+   *
+   * @var int
+   */
+  protected $relevance_count = 0;
+
+  /**
    * Whether or not search expressions were ignored.
    *
    * The maximum number of AND/OR combinations exceeded can be configured to
@@ -384,31 +391,41 @@ class SearchQuery extends SelectExtender {
    * expression can reference 'calculated_score', which will be the total
    * calculated score value.
    *
-   * @param $score
+   * @param string $score
    *   The score expression, which should evaluate to a number between 0 and 1.
    *   The string 'i.relevance' in a score expression will be replaced by a
    *   measure of keyword relevance between 0 and 1.
-   * @param $arguments
+   * @param array $arguments
    *   Query arguments needed to provide values to the score expression.
-   * @param $multiply
+   * @param float $multiply
    *   If set, the score is multiplied with this value. However, all scores
    *   with multipliers are then divided by the total of all multipliers, so
    *   that overall, the normalization is maintained.
    *
-   * @return object
-   *   The updated query object.
+   * @return $this
    */
   public function addScore($score, $arguments = array(), $multiply = FALSE) {
     if ($multiply) {
       $i = count($this->multiply);
       // Modify the score expression so it is multiplied by the multiplier,
       // with a divisor to renormalize.
-      $score = "CAST(:multiply_$i AS DECIMAL) * COALESCE(( " . $score . "), 0) / CAST(:total_$i AS DECIMAL)";
+      $score = "(CAST (:multiply_$i AS DECIMAL(10,4))) * COALESCE(($score), 0) / (CAST (:total_$i AS DECIMAL(10,4)))";
       // Add an argument for the multiplier. The :total_$i argument is taken
       // care of in the execute() method, which is when the total divisor is
       // calculated.
       $arguments[':multiply_' . $i] = $multiply;
       $this->multiply[] = $multiply;
+    }
+
+    // Search scoring needs a way to include a keyword relevance in the score.
+    // For historical reasons, this is done by putting 'i.relevance' into the
+    // search expression. So, use string replacement to change this to a
+    // calculated query expression, counting the number of occurrences so
+    // in the execute() method we can add arguments.
+    while (($pos = strpos($score, 'i.relevance')) !== FALSE) {
+      $pieces = explode('i.relevance', $score, 2);
+      $score = implode('((CAST (:normalization_' . $this->relevance_count . ' AS DECIMAL(10,4))) * i.score * t.count)', $pieces);
+      $this->relevance_count++;
     }
 
     $this->scores[] = $score;
@@ -430,7 +447,6 @@ class SearchQuery extends SelectExtender {
    */
   public function execute()
   {
-
     if (!$this->executedFirstPass) {
       $this->executeFirstPass();
     }
@@ -457,13 +473,11 @@ class SearchQuery extends SelectExtender {
       }
     }
 
-    // Replace the pseudo-expression 'i.relevance' with a measure of keyword
-    // relevance in all score expressions, using string replacement. Careful
-    // though! If you just print out a float, some locales use ',' as the
-    // decimal separator in PHP, while SQL always uses '.'. So, make sure to
-    // set the number format correctly.
-    $relevance = number_format((1.0 / $this->normalize), 10, '.', '');
-    $this->scores = str_replace('i.relevance', '(' . $relevance . ' * i.score * t.count)', $this->scores);
+    // Add arguments for the keyword relevance normalization number.
+    $normalization = 1.0 / $this->normalize;
+    for ($i = 0; $i < $this->relevance_count; $i++ ) {
+      $this->scoresArguments[':normalization_' . $i] = $normalization;
+    }
 
     // Add all scores together to form a query field.
     $this->addExpression('SUM(' . implode(' + ', $this->scores) . ')', 'calculated_score', $this->scoresArguments);
