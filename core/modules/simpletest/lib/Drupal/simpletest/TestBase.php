@@ -1042,12 +1042,7 @@ abstract class TestBase {
       stream_wrapper_unregister($scheme);
     }
 
-    // Reset statics before the old container is replaced so that objects with a
-    // __destruct() method still have access to it.
-    // All static variables need to be reset before the database prefix is
-    // changed, since \Drupal\Core\Utility\CacheArray implementations attempt to
-    // write back to persistent caches when they are destructed.
-    // @todo: Remove once they have been converted to services.
+    // Reset statics.
     drupal_static_reset();
 
     // Reset and create a new service container.
@@ -1081,9 +1076,6 @@ abstract class TestBase {
     ini_set('error_log', DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
 
     // Change the database prefix.
-    // All static variables need to be reset before the database prefix is
-    // changed, since \Drupal\Core\Utility\CacheArray implementations attempt to
-    // write back to persistent caches when they are destructed.
     $this->changeDatabasePrefix();
 
     // Remove all configuration overrides.

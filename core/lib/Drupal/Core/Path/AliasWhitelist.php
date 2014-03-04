@@ -14,7 +14,7 @@ use Drupal\Core\KeyValueStore\StateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
 /**
- * Extends CacheArray to build the path alias whitelist over time.
+ * Extends CacheCollector to build the path alias whitelist over time.
  */
 class AliasWhitelist extends CacheCollector implements AliasWhitelistInterface {
 

@@ -7,7 +7,6 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Utility\SchemaCache;
 
 /**
  * @addtogroup schemaapi
@@ -33,11 +32,8 @@ const SCHEMA_UNINSTALLED = -1;
 function drupal_get_schema($table = NULL, $rebuild = FALSE) {
   static $schema;
 
-  if ($rebuild || !isset($table)) {
+  if ($rebuild || !isset($schema)) {
     $schema = drupal_get_complete_schema($rebuild);
-  }
-  elseif (!isset($schema)) {
-    $schema = new SchemaCache();
   }
 
   if (!isset($table)) {
@@ -88,13 +84,10 @@ function drupal_get_complete_schema($rebuild = FALSE) {
       }
       \Drupal::moduleHandler()->alter('schema', $schema);
 
-      if ($rebuild) {
-        Cache::deleteTags(array('schema' => TRUE));
-      }
       // If the schema is empty, avoid saving it: some database engines require
       // the schema to perform queries, and this could lead to infinite loops.
       if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
-        \Drupal::cache()->set('schema', $schema, Cache::PERMANENT, array('schema' => TRUE));
+        \Drupal::cache()->set('schema', $schema, Cache::PERMANENT);
       }
     }
   }
