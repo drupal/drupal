@@ -10,7 +10,7 @@ namespace Drupal\file\Tests;
 /**
  *  This will run tests against the file validation functions (file_validate_*).
  */
-class ValidatorTest extends FileManagedTestBase {
+class ValidatorTest extends FileManagedUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File validator tests',
@@ -129,12 +129,11 @@ class ValidatorTest extends FileManagedTestBase {
    * Test file_validate_size().
    */
   function testFileValidateSize() {
-    $user = $this->container->get('current_user');
-    $original_user = $user;
-    drupal_save_session(FALSE);
-
     // Run these tests as a regular user.
-    $user = $this->drupalCreateUser();
+    $user = entity_create('user', array('uid' => 2, 'name' => $this->randomName()));
+    $user->enforceIsNew();
+    $user->save();
+    $this->container->set('current_user', $user);
 
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.
     $file = entity_create('file', array('filesize' => 1000));
@@ -146,8 +145,5 @@ class ValidatorTest extends FileManagedTestBase {
     $this->assertEqual(count($errors), 1, 'Error for the user being over their limit.', 'File');
     $errors = file_validate_size($file, 1, 1);
     $this->assertEqual(count($errors), 2, 'Errors for both the file and their limit.', 'File');
-
-    $user = $original_user;
-    drupal_save_session(TRUE);
   }
 }

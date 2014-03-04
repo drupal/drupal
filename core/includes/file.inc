@@ -199,12 +199,14 @@ const FILE_STATUS_PERMANENT = 1;
  * @see hook_stream_wrappers_alter()
  */
 function file_get_stream_wrappers($filter = STREAM_WRAPPERS_ALL) {
-  $wrappers_storage = &drupal_static(__FUNCTION__);
+  $wrappers_storage = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($wrappers_storage)) {
+  if (empty($wrappers_storage)) {
+    // Initialize $wrappers_storage, so that we are not calling this method
+    // repeatedly if no stream wrappers exist.
+    $wrappers_storage[STREAM_WRAPPERS_ALL] = array();
     $wrappers = array();
-    $container = \Drupal::getContainer();
-    if (is_object($container) && $container->has('module_handler')) {
+    if (\Drupal::hasService('module_handler')) {
       $wrappers = \Drupal::moduleHandler()->invokeAll('stream_wrappers');
       foreach ($wrappers as $scheme => $info) {
         // Add defaults.

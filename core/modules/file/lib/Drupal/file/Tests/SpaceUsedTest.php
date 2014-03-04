@@ -10,7 +10,7 @@ namespace Drupal\file\Tests;
 /**
  *  This will run tests against the $file_managed->spaceUsed() function.
  */
-class SpaceUsedTest extends FileManagedTestBase {
+class SpaceUsedTest extends FileManagedUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File space used tests',

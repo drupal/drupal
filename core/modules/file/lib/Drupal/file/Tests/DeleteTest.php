@@ -10,7 +10,7 @@ namespace Drupal\file\Tests;
 /**
  * Deletion related tests.
  */
-class DeleteTest extends FileManagedTestBase {
+class DeleteTest extends FileManagedUnitTestBase {
   public static function getInfo() {
     return array(
       'name' => 'File delete',
