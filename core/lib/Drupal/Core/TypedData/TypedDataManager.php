@@ -83,7 +83,7 @@ class TypedDataManager extends DefaultPluginManager {
    * @return \Drupal\Core\TypedData\TypedDataInterface
    *   The instantiated typed data object.
    */
-  public function createInstance($data_type, array $configuration) {
+  public function createInstance($data_type, array $configuration = array()) {
     $data_definition = $configuration['data_definition'];
     $type_definition = $this->getDefinition($data_type);
 

@@ -22,6 +22,6 @@ interface FactoryInterface {
    * @return object
    *   A fully configured plugin instance.
    */
-  public function createInstance($plugin_id, array $configuration);
+  public function createInstance($plugin_id, array $configuration = array());
 
 }
