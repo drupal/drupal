@@ -35,12 +35,14 @@
  * For example, one might wish to return a list of the most recent 10 nodes
  * authored by a given user. Instead of directly issuing the SQL query
  * @code
- * SELECT n.nid, n.title, n.created FROM node n WHERE n.uid = $uid LIMIT 0, 10;
+ * SELECT n.nid, n.title, n.created FROM node n WHERE n.uid = $uid
+ *   ORDER BY n.created DESC LIMIT 0, 10;
  * @endcode
  * one would instead call the Drupal functions:
  * @code
  * $result = db_query_range('SELECT n.nid, n.title, n.created
- *   FROM {node} n WHERE n.uid = :uid', 0, 10, array(':uid' => $uid));
+ *   FROM {node} n WHERE n.uid = :uid
+ *   ORDER BY n.created DESC', 0, 10, array(':uid' => $uid));
  * foreach ($result as $record) {
  *   // Perform operations on $record->title, etc. here.
  * }
