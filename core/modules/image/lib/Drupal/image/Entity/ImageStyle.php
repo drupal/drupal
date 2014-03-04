@@ -267,9 +267,6 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     drupal_theme_rebuild();
 
     // Clear page caches when flushing.
-    if ($module_handler->moduleExists('block')) {
-      \Drupal::cache('block')->deleteAll();
-    }
     \Drupal::cache('page')->deleteAll();
     return $this;
   }

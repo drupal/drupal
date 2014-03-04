@@ -31,7 +31,7 @@ abstract class AggregatorTestBase extends WebTestBase {
       $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
     }
 
-    $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content'));
+    $web_user = $this->drupalCreateUser(array('access administration pages', 'administer news feeds', 'access news feeds', 'create article content'));
     $this->drupalLogin($web_user);
   }
 

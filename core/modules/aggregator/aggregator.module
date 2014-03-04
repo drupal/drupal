@@ -96,6 +96,7 @@ function aggregator_menu_link_defaults() {
     'link_title' => 'Feed aggregator',
     'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
     'route_name' => 'aggregator.admin_overview',
+    'parent' => 'system.admin.config.services',
     'weight' => 10,
   );
   $links['aggregator'] = array(
