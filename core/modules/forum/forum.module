@@ -33,7 +33,7 @@ function forum_help($path, $arg) {
       $output .= '<dt>' . t('Setting up forum structure') . '</dt>';
       $output .= '<dd>' . t('Visit the <a href="!forums">Forums page</a> to set up containers and forums to hold your discussion topics.', array('!forums' => \Drupal::url('forum.overview'))) . '</dd>';
       $output .= '<dt>' . t('Starting a discussion') . '</dt>';
-      $output .= '<dd>' . t('The <a href="!create-topic">Forum topic</a> link on the <a href="!content-add">Add new content</a> page creates the first post of a new threaded discussion, or thread.', array('!create-topic' => \Drupal::url('node.add', array('node_type' => 'forum')), '!content-add' => \Drupal::url('node.add_page'))) . '</dd>';
+      $output .= '<dd>' . t('The <a href="!create-topic">Forum topic</a> link on the <a href="!content-add">Add content</a> page creates the first post of a new threaded discussion, or thread.', array('!create-topic' => \Drupal::url('node.add', array('node_type' => 'forum')), '!content-add' => \Drupal::url('node.add_page'))) . '</dd>';
       $output .= '<dt>' . t('Navigating in the Forum') . '</dt>';
       $output .= '<dd>' . t('Enabling the Forum module provides a default <em>Forums</em> menu item in the Tools menu that links to the <a href="!forums">Forums page</a>.', array('!forums' => \Drupal::url('forum.index'))) . '</dd>';
       $output .= '<dt>' . t('Moving forum topics') . '</dt>';

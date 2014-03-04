@@ -37,7 +37,7 @@ class NodeTypeFormController extends EntityFormController {
       '#title' => t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->name,
-      '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add new content</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
+      '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
     );
@@ -52,7 +52,7 @@ class NodeTypeFormController extends EntityFormController {
         'source' => array('name'),
       ),
       '#description' => t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %node-add page, in which underscores will be converted into hyphens.', array(
-        '%node-add' => t('Add new content'),
+        '%node-add' => t('Add content'),
       )),
     );
 
@@ -60,7 +60,7 @@ class NodeTypeFormController extends EntityFormController {
       '#title' => t('Description'),
       '#type' => 'textarea',
       '#default_value' => $type->description,
-      '#description' => t('Describe this content type. The text will be displayed on the <em>Add new content</em> page.'),
+      '#description' => t('Describe this content type. The text will be displayed on the <em>Add content</em> page.'),
     );
 
     $form['additional_settings'] = array(

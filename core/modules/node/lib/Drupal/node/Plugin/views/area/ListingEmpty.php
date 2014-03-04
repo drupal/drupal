@@ -68,7 +68,7 @@ class ListingEmpty extends AreaPluginBase {
         '#links' => array(
           array(
             'href' => 'node/add',
-            'title' => $this->t('Add new content'),
+            'title' => $this->t('Add content'),
           ),
         ),
         '#access' => $this->accessManager->checkNamedRoute('node.add_page', array(), $account),

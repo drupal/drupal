@@ -549,11 +549,11 @@ function hook_menu_local_tasks(&$data, $route_name) {
   $data['actions']['node/add'] = array(
     '#theme' => 'menu_local_action',
     '#link' => array(
-      'title' => t('Add new content'),
+      'title' => t('Add content'),
       'href' => 'node/add',
       'localized_options' => array(
         'attributes' => array(
-          'title' => t('Add new content'),
+          'title' => t('Add content'),
         ),
       ),
     ),
@@ -567,7 +567,7 @@ function hook_menu_local_tasks(&$data, $route_name) {
       'href' => 'node/add',
       'localized_options' => array(
         'attributes' => array(
-          'title' => t('Add new content'),
+          'title' => t('Add content'),
         ),
       ),
     ),
@@ -730,7 +730,7 @@ function hook_page_alter(&$page) {
   // Add help text to the user login block.
   $page['sidebar_first']['user_login']['help'] = array(
     '#weight' => -10,
-    '#markup' => t('To post comments or add new content, you first have to log in.'),
+    '#markup' => t('To post comments or add content, you first have to log in.'),
   );
 }
 
