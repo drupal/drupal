@@ -102,7 +102,7 @@ class TermFieldTest extends TaxonomyTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName($this->field_name, '', 'Widget is displayed.');
+    $this->assertFieldByName($this->field_name, NULL, 'Widget is displayed.');
 
     // Submit with some value.
     $edit = array(
