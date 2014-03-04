@@ -319,41 +319,8 @@ function drupal_theme_rebuild() {
  * @param $refresh
  *   Whether to reload the list of themes from the database. Defaults to FALSE.
  *
- * @return
- *   An associative array of the currently available themes. The keys are the
- *   themes' machine names and the values are objects having the following
- *   properties:
- *   - filename: The filepath and name of the .info.yml file.
- *   - name: The machine name of the theme.
- *   - status: 1 for enabled, 0 for disabled themes.
- *   - info: The contents of the .info.yml file.
- *   - stylesheets: A two dimensional array, using the first key for the
- *     media attribute (e.g. 'all'), the second for the name of the file
- *     (e.g. style.css). The value is a complete filepath (e.g.
- *     themes/bartik/style.css). Not set if no stylesheets are defined in the
- *     .info.yml file.
- *   - scripts: An associative array of JavaScripts, using the filename as key
- *     and the complete filepath as value. Not set if no scripts are defined in
- *     the .info.yml file.
- *   - prefix: The base theme engine prefix.
- *   - engine: The machine name of the theme engine.
- *   - base_theme: If this is a sub-theme, the machine name of the base theme
- *     defined in the .info.yml file. Otherwise, the element is not set.
- *   - base_themes: If this is a sub-theme, an associative array of the
- *     base-theme ancestors of this theme, starting with this theme's base
- *     theme, then the base theme's own base theme, etc. Each entry has an
- *     array key equal to the theme's machine name, and a value equal to the
- *     human-readable theme name; if a theme with matching machine name does
- *     not exist in the system, the value will instead be NULL (and since the
- *     system would not know whether that theme itself has a base theme, that
- *     will end the array of base themes). This is not set if the theme is not
- *     a sub-theme.
- *   - sub_themes: An associative array of themes on the system that are
- *     either direct sub-themes (that is, they declare this theme to be
- *     their base theme), direct sub-themes of sub-themes, etc. The keys are
- *     the themes' machine names, and the values are the themes' human-readable
- *     names. This element is not set if there are no themes on the system that
- *     declare this theme as their base theme.
+ * @return array
+ *   An associative array of the currently available themes.
  *
  * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
  *   Use \Drupal::service('theme_handler')->listInfo().
@@ -370,30 +337,6 @@ function list_themes($refresh = FALSE) {
   }
 
   return $theme_handler->listInfo();
-}
-
-/**
- * Finds all the base themes for the specified theme.
- *
- * Themes can inherit templates and function implementations from earlier
- * themes.
- *
- * @param $themes
- *   An array of available themes.
- * @param $key
- *   The name of the theme whose base we are looking for.
- *
- * @return
- *   Returns an array of all of the theme's ancestors; the first element's value
- *   will be NULL if an error occurred.
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal::service('theme_handler')->getBaseThemes().
- *
- * @see \Drupal\Core\Extension\ThemeHandler::getBaseThemes().
- */
-function drupal_find_base_themes($themes, $key) {
-  return \Drupal::service('theme_handler')->getBaseThemes($themes, $key);
 }
 
 /**

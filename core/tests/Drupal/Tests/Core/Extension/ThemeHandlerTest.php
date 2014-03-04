@@ -244,6 +244,12 @@ class ThemeHandlerTest extends UnitTestCase {
       ->will($this->returnValue(array(
         'seven' => new Extension('theme', DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', 'seven.info.yml'),
       )));
+    $this->extensionDiscovery->expects($this->at(1))
+      ->method('scan')
+      ->with('theme_engine')
+      ->will($this->returnValue(array(
+        'twig' => new Extension('theme_engine', DRUPAL_ROOT . '/core/themes/engines/twig.info.yml', 'twig.info.yml'),
+      )));
     $this->infoParser->expects($this->once())
       ->method('parse')
       ->with(DRUPAL_ROOT . '/core/themes/seven/seven.info.yml')
@@ -264,6 +270,8 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->assertEquals('seven', $info->name);
     $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', $info->uri);
     $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', $info->filename);
+    $this->assertEquals(DRUPAL_ROOT . '/core/themes/engines/twig.info.yml', $info->owner);
+    $this->assertEquals('twig', $info->prefix);
 
     $this->assertEquals('twig', $info->info['engine']);
     $this->assertEquals(array(), $info->info['scripts']);
@@ -278,6 +286,60 @@ class ThemeHandlerTest extends UnitTestCase {
       ),
     ), $info->info['stylesheets']);
     $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/screenshot.png', $info->info['screenshot']);
+  }
+
+  /**
+   * Tests rebuild the theme data with theme parents.
+   */
+  public function testRebuildThemeDataWithThemeParents() {
+    $this->extensionDiscovery->expects($this->at(0))
+      ->method('scan')
+      ->with('theme')
+      ->will($this->returnValue(array(
+        'test_subtheme' => new Extension('theme', DRUPAL_ROOT . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml', 'test_subtheme.info.yml'),
+        'test_basetheme' => new Extension('theme', DRUPAL_ROOT . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml', 'test_basetheme.info.yml'),
+      )));
+    $this->extensionDiscovery->expects($this->at(1))
+      ->method('scan')
+      ->with('theme_engine')
+      ->will($this->returnValue(array(
+        'twig' => new Extension('theme_engine', DRUPAL_ROOT . '/core/themes/engines/twig.info.yml', 'twig.info.yml'),
+      )));
+    $this->infoParser->expects($this->at(0))
+      ->method('parse')
+      ->with(DRUPAL_ROOT . '/core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml')
+      ->will($this->returnCallback(function ($file) {
+        $info_parser = new InfoParser();
+        return $info_parser->parse($file);
+      }));
+    $this->infoParser->expects($this->at(1))
+      ->method('parse')
+      ->with(DRUPAL_ROOT . '/core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml')
+      ->will($this->returnCallback(function ($file) {
+        $info_parser = new InfoParser();
+        return $info_parser->parse($file);
+      }));
+
+    $theme_data = $this->themeHandler->rebuildThemeData();
+    $this->assertCount(2, $theme_data);
+
+    $info_basetheme = $theme_data['test_basetheme'];
+    $info_subtheme = $theme_data['test_subtheme'];
+
+    // Ensure some basic properties.
+    $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info_basetheme);
+    $this->assertEquals('test_basetheme', $info_basetheme->name);
+    $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info_subtheme);
+    $this->assertEquals('test_subtheme', $info_subtheme->name);
+
+    // Test the parent/child-theme properties.
+    $info_subtheme->info['base theme'] = 'test_basetheme';
+    $info_basetheme->sub_themes = array('test_subtheme');
+
+    $this->assertEquals(DRUPAL_ROOT . '/core/themes/engines/twig.info.yml', $info_basetheme->owner);
+    $this->assertEquals('twig', $info_basetheme->prefix);
+    $this->assertEquals(DRUPAL_ROOT . '/core/themes/engines/twig.info.yml', $info_subtheme->owner);
+    $this->assertEquals('twig', $info_subtheme->prefix);
   }
 
   /**

@@ -271,62 +271,63 @@ class ThemeHandler implements ThemeHandlerInterface {
     $sub_themes = array();
     // Read info files for each theme.
     foreach ($themes as $key => $theme) {
-      $themes[$key]->filename = $theme->uri;
-      $themes[$key]->info = $this->infoParser->parse($theme->getPathname()) + $defaults;
+      $theme->filename = $theme->uri;
+      $theme->info = $this->infoParser->parse($theme->getPathname()) + $defaults;
 
       // Add the info file modification time, so it becomes available for
       // contributed modules to use for ordering theme lists.
-      $themes[$key]->info['mtime'] = $theme->getMTime();
+      $theme->info['mtime'] = $theme->getMTime();
 
       // Invoke hook_system_info_alter() to give installed modules a chance to
       // modify the data in the .info.yml files if necessary.
       // @todo Remove $type argument, obsolete with $theme->getType().
       $type = 'theme';
-      $this->moduleHandler->alter('system_info', $themes[$key]->info, $themes[$key], $type);
+      $this->moduleHandler->alter('system_info', $theme->info, $theme, $type);
 
-      if (!empty($themes[$key]->info['base theme'])) {
+      if (!empty($theme->info['base theme'])) {
         $sub_themes[] = $key;
       }
 
-      $engine = $themes[$key]->info['engine'];
+      // Defaults to 'twig' (see $defaults above).
+      $engine = $theme->info['engine'];
       if (isset($engines[$engine])) {
-        $themes[$key]->owner = $engines[$engine]->uri;
-        $themes[$key]->prefix = $engines[$engine]->name;
-        $themes[$key]->template = TRUE;
+        $theme->owner = $engines[$engine]->uri;
+        $theme->prefix = $engines[$engine]->name;
       }
 
       // Prefix stylesheets, scripts, and screenshot with theme path.
       $path = $theme->getPath();
       $theme->info['stylesheets'] = $this->themeInfoPrefixPath($theme->info['stylesheets'], $path);
       $theme->info['scripts'] = $this->themeInfoPrefixPath($theme->info['scripts'], $path);
-      if (!empty($themes[$key]->info['screenshot'])) {
-        $themes[$key]->info['screenshot'] = $path . '/' . $themes[$key]->info['screenshot'];
+      if (!empty($theme->info['screenshot'])) {
+        $theme->info['screenshot'] = $path . '/' . $theme->info['screenshot'];
       }
     }
 
-    // Now that we've established all our master themes, go back and fill in
-    // data for sub-themes.
+    // After establishing the full list of available themes, fill in data for
+    // sub-themes.
     foreach ($sub_themes as $key) {
-      $themes[$key]->base_themes = $this->getBaseThemes($themes, $key);
-      // Don't proceed if there was a problem with the root base theme.
-      if (!current($themes[$key]->base_themes)) {
+      $sub_theme = $themes[$key];
+      // The $base_themes property is optional; only set for sub themes.
+      // @see ThemeHandlerInterface::listInfo()
+      $sub_theme->base_themes = $this->getBaseThemes($themes, $key);
+      // empty() cannot be used here, since ThemeHandler::doGetBaseThemes() adds
+      // the key of a base theme with a value of NULL in case it is not found,
+      // in order to prevent needless iterations.
+      if (!current($sub_theme->base_themes)) {
         continue;
       }
-      $base_key = key($themes[$key]->base_themes);
-      foreach (array_keys($themes[$key]->base_themes) as $base_theme) {
-        $themes[$base_theme]->sub_themes[$key] = $themes[$key]->info['name'];
+      // Determine the root base theme.
+      $root_key = key($sub_theme->base_themes);
+      // Build the list of sub-themes for each of the theme's base themes.
+      foreach (array_keys($sub_theme->base_themes) as $base_theme) {
+        $themes[$base_theme]->sub_themes[$key] = $sub_theme->info['name'];
       }
-      // Copy the 'owner' and 'engine' over if the top level theme uses a theme
-      // engine.
-      if (isset($themes[$base_key]->owner)) {
-        if (isset($themes[$base_key]->info['engine'])) {
-          $themes[$key]->info['engine'] = $themes[$base_key]->info['engine'];
-          $themes[$key]->owner = $themes[$base_key]->owner;
-          $themes[$key]->prefix = $themes[$base_key]->prefix;
-        }
-        else {
-          $themes[$key]->prefix = $key;
-        }
+      // Add the theme engine info from the root base theme.
+      if (isset($themes[$root_key]->owner)) {
+        $sub_theme->info['engine'] = $themes[$root_key]->info['engine'];
+        $sub_theme->owner = $themes[$root_key]->owner;
+        $sub_theme->prefix = $themes[$root_key]->prefix;
       }
     }
 
