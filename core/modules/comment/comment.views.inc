@@ -603,13 +603,13 @@ function comment_views_data_alter(&$data) {
   );
 
   // Provide a integration for each entity type except comment.
-  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
-    if ($entity_type == 'comment' || !$entity_info->isFieldable() || !$entity_info->getBaseTable()) {
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type_id => $entity_type) {
+    if ($entity_type_id == 'comment' || !$entity_type->isFieldable() || !$entity_type->getBaseTable()) {
       continue;
     }
-    $fields = \Drupal::service('comment.manager')->getFields($entity_type);
-    $base_table = $entity_info->getBaseTable();
-    $args = array('@entity_type' => $entity_type);
+    $fields = \Drupal::service('comment.manager')->getFields($entity_type_id);
+    $base_table = $entity_type->getBaseTable();
+    $args = array('@entity_type' => $entity_type_id);
 
     if ($fields) {
       $data[$base_table]['comments_link'] = array(
@@ -620,9 +620,9 @@ function comment_views_data_alter(&$data) {
         ),
       );
 
-      if ($entity_type == 'node') {
+      if ($entity_type_id == 'node') {
         // Node properties lives in data_table.
-        $table = $entity_info->getDataTable();
+        $table = $entity_type->getDataTable();
       }
       else {
         $table = $base_table;
@@ -636,16 +636,16 @@ function comment_views_data_alter(&$data) {
           'name field' => 'name',
           'id' => 'argument_comment_user_uid',
           'no group by' => TRUE,
-          'entity_type' => $entity_type,
-          'entity_id' => $entity_info->getKey('id'),
+          'entity_type' => $entity_type_id,
+          'entity_id' => $entity_type->getKey('id'),
         ),
         'filter' => array(
           'field' => 'uid',
           'name table' => 'users',
           'name field' => 'name',
           'id' => 'comment_user_uid',
-          'entity_type' => $entity_type,
-          'entity_id' => $entity_info->getKey('id'),
+          'entity_type' => $entity_type_id,
+          'entity_id' => $entity_type->getKey('id'),
         ),
       );
 
@@ -658,16 +658,16 @@ function comment_views_data_alter(&$data) {
             'label' => t('Comments'),
             'base' => 'comment',
             'base field' => 'entity_id',
-            'relationship field' => $entity_info->getKey('id'),
+            'relationship field' => $entity_type->getKey('id'),
             'id' => 'standard',
             'extra' => array(
               array(
                 'field' => 'entity_type',
-                'value' => $entity_type,
+                'value' => $entity_type_id,
               ),
               array(
                 'field' => 'field_id',
-                'value' => $entity_type . '.' . $field_name,
+                'value' => $entity_type_id . '.' . $field_name,
               ),
             ),
           ),
