@@ -27,7 +27,7 @@ function statistics_help($path, $arg) {
       $output .= '</dl>';
       return $output;
     case 'admin/config/system/statistics':
-      return '<p>' . t('Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.', array('@statistics' => url('admin/reports/hits'))) . '</p>';
+      return '<p>' . t('Settings for the statistical information that Drupal will keep about the site.') . '</p>';
   }
 }
 
