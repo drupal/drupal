@@ -97,7 +97,7 @@ const CSS_BASE = -200;
 const CSS_LAYOUT = -100;
 
 /**
- * The default weight for CSS rules that style design components (and their associated states and skins.)
+ * The default weight for CSS rules that style design components (and their associated states and themes.)
  */
 const CSS_COMPONENT = 0;
 
@@ -107,9 +107,9 @@ const CSS_COMPONENT = 0;
 const CSS_STATE = 100;
 
 /**
- * The default weight for CSS rules that style skins and are not included with components.
+ * The default weight for CSS rules that style themes and are not included with components.
  */
-const CSS_SKIN = 200;
+const CSS_THEME = 200;
 
 /**
  * The default group for JavaScript settings added to the page.
@@ -1457,9 +1457,9 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     - CSS_BASE: Styles for HTML elements ("base" styles).
  *     - CSS_LAYOUT: Styles that layout a page.
  *     - CSS_COMPONENT: Styles for design components (and their associated
- *       states and skins.)
+ *       states and themes.)
  *     - CSS_STATE: Styles for states that are not included with components.
- *     - CSS_SKIN: Styles for skins that are not included with components.
+ *     - CSS_THEME: Styles for themes that are not included with components.
  *     The weight numbers follow the SMACSS convention of CSS categorization.
  *     See http://drupal.org/node/1887922
  *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
@@ -2808,7 +2808,7 @@ function drupal_get_library($extension, $name = NULL) {
                 $options['weight'] = 0;
               }
               // Apply the corresponding weight defined by CSS_* constants.
-              $options['weight'] += constant('CSS_' . strtoupper($category == 'theme' ? 'skin' : $category));
+              $options['weight'] += constant('CSS_' . strtoupper($category));
               $library[$type][$source] = $options;
             }
             unset($library[$type][$category]);

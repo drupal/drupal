@@ -88,7 +88,7 @@ function edit_library_alter(array &$library, $extension, $name, $theme = NULL) {
         foreach ($info['edit_stylesheets'] as $path) {
           $library['css'][$theme_path . '/' . $path] = array(
             'group' => CSS_AGGREGATE_THEME,
-            'weight' => CSS_SKIN,
+            'weight' => CSS_THEME,
           );
         }
       }
