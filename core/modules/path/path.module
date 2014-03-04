@@ -5,6 +5,7 @@
  * Enables users to rename URLs.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -197,14 +198,14 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implements hook_entity_field_info().
+ * Implements hook_entity_base_field_info().
  */
-function path_entity_field_info($entity_type) {
-  if ($entity_type === 'taxonomy_term' || $entity_type === 'node') {
-    $info['definitions']['path'] = FieldDefinition::create('path')
+function path_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'taxonomy_term' || $entity_type->id() === 'node') {
+    $fields['path'] = FieldDefinition::create('path')
       ->setLabel(t('The path alias'))
       ->setComputed(TRUE);
 
-    return $info;
+    return $fields;
   }
 }

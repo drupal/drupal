@@ -9,6 +9,7 @@ namespace Drupal\contact\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\contact\MessageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 
 /**
@@ -139,7 +140,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions($entity_type) {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['category'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Category ID'))
       ->setDescription(t('The ID of the associated category.'))

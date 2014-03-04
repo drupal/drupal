@@ -10,7 +10,6 @@ namespace Drupal\entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 
 /**
@@ -325,20 +324,14 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * Returns the definitions of the fields that are candidate for display.
    */
   protected function getFieldDefinitions() {
+    // Entity displays are sometimes created for non-content entities.
+    // @todo Prevent this in https://drupal.org/node/2095195.
+    if (!\Drupal::entityManager()->getDefinition($this->targetEntityType)->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
+      return array();
+    }
+
     if (!isset($this->fieldDefinitions)) {
-      // @todo Replace this with \Drupal::entityManager()->getFieldDefinition()
-      //   when it can hand the $instance objects (and then reconsider the
-      //   $this->fieldDefinitions static cache ?)
-      //   https://drupal.org/node/2114707
-      $entity_manager = \Drupal::entityManager();
-      $entity_type = $entity_manager->getDefinition($this->targetEntityType);
-      $definitions = array();
-      if ($entity_type->isSubclassOf('\Drupal\Core\Entity\ContentEntityInterface')) {
-        $entity = _field_create_entity_from_ids((object) array('entity_type' => $this->targetEntityType, 'bundle' => $this->bundle, 'entity_id' => NULL));
-        foreach ($entity as $field_name => $items) {
-          $definitions[$field_name] = $items->getFieldDefinition();
-        }
-      }
+      $definitions = \Drupal::entityManager()->getFieldDefinitions($this->targetEntityType, $this->bundle);
 
       // The display only cares about fields that specify display options.
       // Discard base fields that are not rendered through formatters / widgets.

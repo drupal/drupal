@@ -100,7 +100,7 @@ class EntityTypedDataDefinitionTest extends DrupalUnitTestBase {
     $field_definitions = $entity_definition->getPropertyDefinitions();
     // Comparison should ignore the internal static cache, so compare the
     // serialized objects instead.
-    $this->assertEqual(serialize($field_definitions), serialize(\Drupal::entityManager()->getFieldDefinitions('node')));
+    $this->assertEqual(serialize($field_definitions), serialize(\Drupal::entityManager()->getBaseFieldDefinitions('node')));
     $this->assertEqual($entity_definition->getPropertyDefinition('title')->getItemDefinition()->getDataType(), 'field_item:text');
     $this->assertNull($entity_definition->getMainPropertyName());
     $this->assertNull($entity_definition->getPropertyDefinition('invalid'));

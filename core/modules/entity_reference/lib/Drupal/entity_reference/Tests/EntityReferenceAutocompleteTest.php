@@ -23,14 +23,14 @@ class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
    *
    * @var string
    */
-  protected $entityType = 'entity_test_label';
+  protected $entityType = 'entity_test';
 
   /**
    * The bundle used in this test.
    *
    * @var string
    */
-  protected $bundle = 'entity_test_label';
+  protected $bundle = 'entity_test';
 
   /**
    * The name of the field used in this test.

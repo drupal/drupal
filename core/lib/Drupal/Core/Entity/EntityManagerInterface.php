@@ -23,23 +23,38 @@ interface EntityManagerInterface extends PluginManagerInterface {
   public function getEntityTypeLabels();
 
   /**
-   * Gets an array of content entity field definitions.
+   * Gets the base field definitions for a content entity type.
    *
-   * If a bundle is passed, fields specific to this bundle are included.
+   * Only fields that are not specific to a given bundle or set of bundles are
+   * returned. This excludes configurable fields, as they are always attached
+   * to a specific bundle.
    *
    * @param string $entity_type_id
-   *   The entity type to get field definitions for. Only entity types that
-   *   implement \Drupal\Core\Entity\ContentEntityInterface are supported.
-   * @param string $bundle
-   *   (optional) The entity bundle for which to get field definitions. If NULL
-   *   is passed, no bundle-specific fields are included. Defaults to NULL.
+   *   The entity type ID. Only entity types that implement
+   *   \Drupal\Core\Entity\ContentEntityInterface are supported.
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
-   *   An array of entity field definitions, keyed by field name.
+   *   The array of base field definitions for the entity type, keyed by field
+   *   name.
    *
-   * @see \Drupal\Core\TypedData\TypedDataManager::create()
+   * @throws \LogicException
+   *   Thrown if one of the entity keys is flagged as translatable.
    */
-  public function getFieldDefinitions($entity_type_id, $bundle = NULL);
+  public function getBaseFieldDefinitions($entity_type_id);
+
+  /**
+   * Gets the field definitions for a specific bundle.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID. Only entity types that implement
+   *   \Drupal\Core\Entity\ContentEntityInterface are supported.
+   * @param string $bundle
+   *   The bundle.
+   *
+   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   *   The array of field definitions for the bundle, keyed by field name.
+   */
+  public function getFieldDefinitions($entity_type_id, $bundle);
 
   /**
    * Creates a new access controller instance.

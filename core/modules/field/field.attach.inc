@@ -124,31 +124,18 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
  * @param $options
  *   An associative array of options, as provided to field_invoke_method(). Only
  *   the following keys are considered:
- *   - deleted
  *   - field_name
- *   - field_id
  *   See field_invoke_method() for details.
  *
  * @return
  *   The array of selected field definitions.
  */
 function _field_invoke_get_field_definitions($entity_type, $bundle, $options) {
-  // @todo Replace with \Drupal::entityManager()->getFieldDefinition() after
-  //   [#2047229] lands.
-  $entity = _field_create_entity_from_ids((object) array('entity_type' => $entity_type, 'bundle' => $bundle, 'entity_id' => NULL));
-  $field_definitions = array();
+  $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type, $bundle);
   if (isset($options['field_name'])) {
-    if ($entity->hasField($options['field_name'])) {
-      $field_definitions[] = $entity->get($options['field_name'])->getFieldDefinition();
-    }
+    $definitions = array_intersect_key($definitions, array($options['field_name'] => TRUE));
   }
-  else {
-    foreach ($entity as $items) {
-      $field_definitions[] = $items->getFieldDefinition();
-    }
-  }
-
-  return $field_definitions;
+  return $definitions;
 }
 
 /**

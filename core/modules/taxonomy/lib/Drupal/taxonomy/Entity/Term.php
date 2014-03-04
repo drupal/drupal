@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\DataDefinition;
@@ -197,7 +198,7 @@ class Term extends ContentEntityBase implements TermInterface {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions($entity_type) {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['tid'] = FieldDefinition::create('integer')
       ->setLabel(t('Term ID'))
       ->setDescription(t('The term ID.'))

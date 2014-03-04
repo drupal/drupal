@@ -69,6 +69,7 @@ class CommentValidationTest extends EntityUnitTestBase {
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
+      'comment_body' => $this->randomName(),
     ));
 
     $violations = $comment->validate();

@@ -7,8 +7,10 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Entity\EntityViewDisplay;
+use Drupal\field\Field;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -189,29 +191,14 @@ function field_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Implements hook_entity_field_info() to define all configured fields.
+ * Implements hook_entity_bundle_field_info().
  */
-function field_entity_field_info($entity_type) {
-  $property_info = array();
-
-  foreach (field_info_instances($entity_type) as $bundle_name => $instances) {
-    $optional = $bundle_name != $entity_type;
-    // @todo: Improve hook_entity_field_info() to allow per-bundle field
-    // definitions, such that we can pass on field instances as field
-    // definitions here. See https://drupal.org/node/2114707.
-
-    foreach ($instances as $field_name => $instance) {
-      if ($optional) {
-        $property_info['optional'][$field_name] = $instance->getField();
-        $property_info['bundle map'][$bundle_name][] = $field_name;
-      }
-      else {
-        $property_info['definitions'][$field_name] = $instance->getField();
-      }
-    }
+function field_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  if ($entity_type->isFieldable()) {
+    // Configurable fields, which are always attached to a specific bundle, are
+    // added 'by bundle'.
+    return Field::fieldInfo()->getBundleInstances($entity_type->id(), $bundle);
   }
-
-  return $property_info;
 }
 
 /**

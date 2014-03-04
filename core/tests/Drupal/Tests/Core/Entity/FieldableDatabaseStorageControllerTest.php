@@ -77,7 +77,7 @@ class FieldableDatabaseStorageControllerTest extends UnitTestCase {
       ->with('test_entity')
       ->will($this->returnValue($definition));
     $entity_manager->expects($this->any())
-      ->method('getFieldDefinitions')
+      ->method('getBaseFieldDefinitions')
       ->with('test_entity')
       ->will($this->returnValue($fields));
 

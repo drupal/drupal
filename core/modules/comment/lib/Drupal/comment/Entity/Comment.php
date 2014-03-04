@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Number;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\DataDefinition;
@@ -210,7 +211,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions($entity_type) {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['cid'] = FieldDefinition::create('integer')
       ->setLabel(t('Comment ID'))
       ->setDescription(t('The comment ID.'))

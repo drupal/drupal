@@ -104,17 +104,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   The array of field definitions
    */
   protected function getFieldDefinitions() {
-    // @todo Replace this entire implementation with
-    //   \Drupal::entityManager()->getFieldDefinition() when it can hand the
-    //   $instance objects - https://drupal.org/node/2114707
-    $entity = _field_create_entity_from_ids((object) array('entity_type' => $this->entity_type, 'bundle' => $this->bundle, 'entity_id' => NULL));
-    $field_definitions = array();
-    foreach ($entity as $field_name => $items) {
-      $field_definitions[$field_name] = $items->getFieldDefinition();
-    }
-
     $context = $this->displayContext;
-    return array_filter($field_definitions, function(FieldDefinitionInterface $field_definition) use ($context) {
+    return array_filter($this->entityManager->getFieldDefinitions($this->entity_type, $this->bundle), function(FieldDefinitionInterface $field_definition) use ($context) {
       return $field_definition->isDisplayConfigurable($context);
     });
   }

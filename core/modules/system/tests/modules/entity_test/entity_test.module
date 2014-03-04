@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -73,12 +74,12 @@ function entity_test_entity_type_alter(array &$entity_types) {
 }
 
 /**
- * Implements hook_entity_field_info_alter().
+ * Implements hook_entity_base_field_info_alter().
  */
-function entity_test_entity_field_info_alter(&$info, $entity_type) {
-  if ($entity_type == 'entity_test_mulrev' && ($names = \Drupal::state()->get('entity_test.field_definitions.translatable'))) {
+function entity_test_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'entity_test_mulrev' && ($names = \Drupal::state()->get('entity_test.field_definitions.translatable'))) {
     foreach ($names as $name => $value) {
-      $info['definitions'][$name]->setTranslatable($value);
+      $fields[$name]->setTranslatable($value);
     }
   }
 }

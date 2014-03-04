@@ -7,60 +7,16 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\field\FieldInstanceConfigInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\field\Field;
-
 /**
  * Represents a configurable entity field item list.
  */
 class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListInterface {
 
   /**
-   * The Field instance definition.
-   *
-   * @var \Drupal\field\FieldInstanceConfigInterface
-   */
-  protected $instance;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct($definition, $name = NULL, TypedDataInterface $parent = NULL) {
-    parent::__construct($definition, $name, $parent);
-    // Definition can be the field config or field instance.
-    if ($definition instanceof FieldInstanceConfigInterface) {
-      $this->instance = $definition;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldDefinition() {
-    // Configurable fields have the field_config entity injected as definition,
-    // but we want to return the more specific field instance here.
-    // @todo: Overhaul this once we have per-bundle field definitions injected,
-    // see https://drupal.org/node/2114707.
-    if (!isset($this->instance)) {
-      $entity = $this->getEntity();
-      $instances = Field::fieldInfo()->getBundleInstances($entity->getEntityTypeId(), $entity->bundle());
-      if (isset($instances[$this->getName()])) {
-        $this->instance = $instances[$this->getName()];
-      }
-      else {
-        // For base fields, fall back to return the general definition.
-        return parent::getFieldDefinition();
-      }
-    }
-    return $this->instance;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getConstraints() {
-    $constraints = array();
+    $constraints = parent::getConstraints();
     // Check that the number of values doesn't exceed the field cardinality. For
     // form submitted values, this can only happen with 'multiple value'
     // widgets.

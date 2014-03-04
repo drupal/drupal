@@ -213,9 +213,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public function getDataDefinition() {
     $definition = EntityDataDefinition::create($this->getEntityTypeId());
-    if ($this->bundle() != $this->getEntityTypeId()) {
-      $definition->setBundles(array($this->bundle()));
-    }
+    $definition->setBundles(array($this->bundle()));
     return $definition;
   }
 
@@ -485,8 +483,7 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
    */
   public function getFieldDefinitions() {
     if (!isset($this->fieldDefinitions)) {
-      $bundle = $this->bundle != $this->entityTypeId ? $this->bundle : NULL;
-      $this->fieldDefinitions = \Drupal::entityManager()->getFieldDefinitions($this->entityTypeId, $bundle);
+      $this->fieldDefinitions = \Drupal::entityManager()->getFieldDefinitions($this->entityTypeId, $this->bundle());
     }
     return $this->fieldDefinitions;
   }
@@ -985,6 +982,13 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
     }
 
     return $referenced_entities;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+    return array();
   }
 
 }

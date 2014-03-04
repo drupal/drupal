@@ -268,7 +268,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
       }
 
       $data = $query->execute();
-      $field_definitions = \Drupal::entityManager()->getFieldDefinitions($this->entityTypeId);
+      $field_definitions = \Drupal::entityManager()->getBaseFieldDefinitions($this->entityTypeId);
       $translations = array();
       if ($this->revisionDataTable) {
         $data_column_names = array_flip(array_diff(drupal_schema_fields_sql($this->entityType->getRevisionDataTable()), drupal_schema_fields_sql($this->entityType->getBaseTable())));
@@ -1187,7 +1187,7 @@ class FieldableDatabaseStorageController extends FieldableEntityStorageControlle
     $entity_type_id = $field->entity_type;
     $entity_manager = \Drupal::entityManager();
     $entity_type = $entity_manager->getDefinition($entity_type_id);
-    $definitions = $entity_manager->getFieldDefinitions($entity_type_id);
+    $definitions = $entity_manager->getBaseFieldDefinitions($entity_type_id);
 
     // Define the entity ID schema based on the field definitions.
     $id_definition = $definitions[$entity_type->getKey('id')];

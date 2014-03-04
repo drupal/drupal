@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\entity_test\Entity\EntityTestRev;
 
@@ -46,7 +47,7 @@ class EntityTestMulRev extends EntityTestRev {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions($entity_type) {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['revision_id'] = FieldDefinition::create('integer')

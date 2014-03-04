@@ -162,7 +162,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // Create two entities.
     $entity1 = entity_create('entity_test', array('id' => 1, 'type' => 'entity_test'));
     $entity1->{$this->field_name}->setValue($this->_generateTestFieldValues(1));
-    $entity2 = entity_create('entity_test', array('id' => 2, 'type' => 'test_bundle'));
+    $entity2 = entity_create('entity_test', array('id' => 2, 'type' => 'entity_test'));
     $entity2->{$this->field_name}->setValue($this->_generateTestFieldValues(1));
 
     // Run buildMultiple(), and check that the entities come out as expected.

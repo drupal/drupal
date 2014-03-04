@@ -102,7 +102,7 @@ class Entity extends ArgumentValidatorPluginBase {
       }
       $bundles_title = $entity_type->getBundleLabel() ?: $this->t('Bundles');
       if ($entity_type->isSubclassOf('Drupal\Core\Entity\ContentEntityInterface')) {
-        $fields = $this->entityManager->getFieldDefinitions($entity_type_id);
+        $fields = $this->entityManager->getBaseFieldDefinitions($entity_type_id);
       }
       $bundle_name = (empty($fields) || empty($fields[$bundle_type]['label'])) ? t('bundles') : $fields[$bundle_type]['label'];
       $form['bundles'] = array(
