@@ -6,7 +6,7 @@ tour:
     - core/jquery
     - core/drupal
     - core/backbone
-    - tour/jquery.joyride
+    - core/jquery.joyride
     - tour/tour-styling
 
 tour-styling:
@@ -14,16 +14,3 @@ tour-styling:
   css:
     component:
       css/tour.module.css: { media: screen }
-
-# @todo Move into /core/assets and core.library.yml.
-jquery.joyride:
-  remote: https://github.com/zurb/joyride
-  version: v2.0.3
-  js:
-    js/jquery.joyride-2.0.3.js: {}
-  css:
-    component:
-      css/joyride-2.0.3.css: { media: screen }
-  dependencies:
-    - core/jquery
-    - core/jquery.cookie
