@@ -3248,9 +3248,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
     $cache = (object) array(
       'cid' => drupal_page_cache_get_cid($request),
       'data' => array(
-        'path' => $request->attributes->get('_system_path'),
         'body' => $response->getContent(),
-        'title' => drupal_get_title(),
         'headers' => array(),
         // We need to store whether page was compressed or not,
         // because by the time it is read, the configuration might change.

@@ -1769,9 +1769,6 @@ function _drupal_bootstrap_page_cache() {
     if (is_object($cache)) {
       $response = new Response();
       $response->headers->set('X-Drupal-Cache', 'HIT');
-      // Restore the metadata cached with the page.
-      _current_path($cache->data['path']);
-      drupal_set_title($cache->data['title'], PASS_THROUGH);
       date_default_timezone_set(drupal_get_user_timezone());
 
       drupal_serve_page_from_cache($cache, $response, $request);
