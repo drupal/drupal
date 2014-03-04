@@ -249,43 +249,6 @@ function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Menu callback: displays the 'Add new entity_test' form.
- *
- * @param string $entity_type
- *   Name of the entity type for which a create form should be displayed.
- *
- * @return array
- *   The processed form for a new entity_test.
- *
- * @see entity_test_menu()
- *
- * @deprecated \Drupal\entity_test\Controller\EntityTestController::testAdd()
- */
-function entity_test_add($entity_type) {
-  drupal_set_title(t('Create an @type', array('@type' => $entity_type)));
-  $entity = entity_create($entity_type);
-  return \Drupal::service('entity.form_builder')->getForm($entity);
-}
-
-/**
- * Menu callback: displays the 'Edit existing entity_test' form.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to be edited.
- *
- * @return array
- *   The processed form for the edited entity.
- *
- * @see entity_test_menu()
- *
- * @deprecated \Drupal\entity_test\Controller\EntityTestController::testEdit()
- */
-function entity_test_edit(EntityInterface $entity) {
-  drupal_set_title($entity->label(), PASS_THROUGH);
-  return \Drupal::service('entity.form_builder')->getForm($entity);
-}
-
-/**
  * Loads a test entity.
  *
  * @param int $id
