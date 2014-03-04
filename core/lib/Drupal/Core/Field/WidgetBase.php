@@ -218,17 +218,61 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           '#value' => t('Add another item'),
           '#attributes' => array('class' => array('field-add-more-submit')),
           '#limit_validation_errors' => array(array_merge($parents, array($field_name))),
-          '#submit' => array('field_add_more_submit'),
+          '#submit' => array(array(get_class($this), 'addMoreSubmit')),
           '#ajax' => array(
-              'callback' => 'field_add_more_js',
-              'wrapper' => $wrapper_id,
-              'effect' => 'fade',
+            'callback' => array(get_class($this), 'addMoreAjax'),
+            'wrapper' => $wrapper_id,
+            'effect' => 'fade',
           ),
         );
       }
     }
 
     return $elements;
+  }
+
+  /**
+   * Submission handler for the "Add another item" button.
+   */
+  public static function addMoreSubmit(array $form, array &$form_state) {
+    $button = $form_state['triggering_element'];
+
+    // Go one level up in the form, to the widgets container.
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $field_name = $element['#field_name'];
+    $parents = $element['#field_parents'];
+
+    // Increment the items count.
+    $field_state = field_form_get_state($parents, $field_name, $form_state);
+    $field_state['items_count']++;
+    field_form_set_state($parents, $field_name, $form_state, $field_state);
+
+    $form_state['rebuild'] = TRUE;
+  }
+
+  /**
+   * Ajax callback for the "Add another item" button.
+   *
+   * This returns the new page content to replace the page content made obsolete
+   * by the form submission.
+   */
+  public static function addMoreAjax(array $form, array $form_state) {
+    $button = $form_state['triggering_element'];
+
+    // Go one level up in the form, to the widgets container.
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+
+    // Ensure the widget allows adding additional items.
+    if ($element['#cardinality'] != FieldDefinitionInterface::CARDINALITY_UNLIMITED) {
+      return;
+    }
+
+    // Add a DIV around the delta receiving the Ajax effect.
+    $delta = $element['#max_delta'];
+    $element[$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($element[$delta]['#prefix']) ? $element[$delta]['#prefix'] : '');
+    $element[$delta]['#suffix'] = (isset($element[$delta]['#suffix']) ? $element[$delta]['#suffix'] : '') . '</div>';
+
+    return $element;
   }
 
   /**
