@@ -5,10 +5,6 @@
  * Administration page callbacks for the Book module.
  */
 
-use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\Language;
-
 /**
  * Returns HTML for a book administration form.
  *

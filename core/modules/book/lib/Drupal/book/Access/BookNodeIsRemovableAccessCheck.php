@@ -7,7 +7,6 @@
 
 namespace Drupal\book\Access;
 
-use Drupal\book\BookManager;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;

@@ -9,7 +9,6 @@ namespace Drupal\book;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\node\NodeInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides methods for exporting book to different formats.

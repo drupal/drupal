@@ -7,7 +7,6 @@
 
 namespace Drupal\book\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 

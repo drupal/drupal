@@ -7,7 +7,6 @@
 
 namespace Drupal\book\Controller;
 
-use Drupal\book\BookManager;
 use Drupal\book\BookExport;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
