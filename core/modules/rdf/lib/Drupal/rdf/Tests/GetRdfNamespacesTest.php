@@ -24,7 +24,7 @@ class GetRdfNamespacesTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'RDF namespaces',
-      'description' => 'Test hook_rdf_namespaces() and ensure only "safe" namespaces are returned.',
+      'description' => 'Test hook_rdf_namespaces().',
       'group' => 'RDF',
     );
   }
@@ -39,6 +39,16 @@ class GetRdfNamespacesTest extends WebTestBase {
     $this->assertEqual($ns['rdfs'], 'http://www.w3.org/2000/01/rdf-schema#', 'A prefix declared once is included.');
     $this->assertEqual($ns['foaf'], 'http://xmlns.com/foaf/0.1/', 'The same prefix declared in several implementations of hook_rdf_namespaces() is valid as long as all the namespaces are the same.');
     $this->assertEqual($ns['foaf1'], 'http://xmlns.com/foaf/0.1/', 'Two prefixes can be assigned the same namespace.');
-    $this->assertEqual($ns['dc'], 'http://purl.org/dc/terms/', 'When a prefix has conflicting namespaces, the first declared one is used.');
+
+    // Enable rdf_conflicting_namespaces to ensure that an exception is thrown
+    // when RDF namespaces are conflicting.
+    \Drupal::moduleHandler()->install(array('rdf_conflicting_namespaces'), TRUE);
+    try {
+      $ns = rdf_get_namespaces();
+      $this->fail('Expected exception not thrown for conflicting namespace declaration.');
+    }
+    catch (\Exception $e) {
+      $this->pass('Expected exception thrown: ' . $e->getMessage());
+    }
   }
 }

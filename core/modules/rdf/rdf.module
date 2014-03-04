@@ -5,7 +5,6 @@
  * Enables semantically enriched output for Drupal sites in the form of RDFa.
  */
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -113,8 +112,13 @@ function rdf_get_namespaces() {
   // namespace, do not use \Drupal::moduleHandler()->invokeAll().
   foreach (\Drupal::moduleHandler()->getImplementations('rdf_namespaces') as $module) {
     $function = $module . '_rdf_namespaces';
-    if (function_exists($function)) {
-      $namespaces = NestedArray::mergeDeep($function(), $namespaces);
+    foreach($function() as $prefix => $namespace) {
+      if (array_key_exists($prefix, $namespaces) && $namespace !== $namespaces[$prefix]) {
+        throw new Exception(t('Tried to map @prefix to @namespace, but @prefix is already mapped to @orig_namespace.', array('@prefix' => $prefix, '@namespace' => $namespace, '@orig_namespace' => $namespaces[$prefix])));
+      }
+      else {
+        $namespaces[$prefix] = $namespace;
+      }
     }
   }
   return $namespaces;

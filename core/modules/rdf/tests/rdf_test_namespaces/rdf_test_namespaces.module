@@ -10,7 +10,6 @@
  */
 function rdf_test_namespaces_rdf_namespaces() {
   return array(
-    'dc'       => 'http://purl.org/conflicting/namespace',
     'foaf'     => 'http://xmlns.com/foaf/0.1/',
     'foaf1'    => 'http://xmlns.com/foaf/0.1/',
   );

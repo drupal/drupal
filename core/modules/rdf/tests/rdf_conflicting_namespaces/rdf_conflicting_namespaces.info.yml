@@ -1,0 +1,9 @@
+name: 'RDF module conflicting namespaces test'
+type: module
+description: 'Test conflicting namespace declaration.'
+package: Testing
+version: VERSION
+core: 8.x
+hidden: true
+dependencies:
+  - rdf
