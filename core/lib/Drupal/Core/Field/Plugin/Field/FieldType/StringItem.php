@@ -44,7 +44,7 @@ class StringItem extends FieldItemBase {
       'columns' => array(
         'value' => array(
           'type' => 'varchar',
-          'length' => $field_definition->getSetting('max_length'),
+          'length' => (int) $field_definition->getSetting('max_length'),
           'not null' => FALSE,
         ),
       ),
