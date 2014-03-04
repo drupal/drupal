@@ -628,6 +628,10 @@ function template_preprocess_username(&$variables) {
   $name = $variables['name_raw'] = $account->getUsername();
   if (drupal_strlen($name) > 20) {
     $name = drupal_substr($name, 0, 15) . '...';
+    $variables['truncated'] = TRUE;
+  }
+  else {
+    $variables['truncated'] = FALSE;
   }
   $variables['name'] = check_plain($name);
   $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
@@ -659,6 +663,7 @@ function template_preprocess_username(&$variables) {
  *   An associative array containing:
  *   - account: The user object to format.
  *   - name: The user's name, sanitized.
+ *   - truncated: A boolean indicating if $variables['name'] has been shortened.
  *   - extra: Additional text to append to the user's name, sanitized.
  *   - link_path: The path or URL of the user's profile page, home page, or
  *     other desired page to link to for more information about the user.

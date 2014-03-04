@@ -414,6 +414,11 @@ function rdf_preprocess_username(&$variables) {
   if (!empty($variables['homepage']) && !empty($homepage_mapping)) {
     $attributes['rel'] = $homepage_mapping['properties'];
   }
+  // Long usernames are truncated by template_preprocess_username(). Store the
+  // full name in the content attribute so it can be extracted in RDFa.
+  if ($variables['truncated']) {
+    $attributes['content'] = check_plain($variables['name_raw']);
+  }
   // The remaining attributes can have multiple values listed, with whitespace
   // separating the values in the RDFa attributes
   // (see http://www.w3.org/TR/rdfa-syntax/#rdfa-attributes).
