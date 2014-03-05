@@ -35,9 +35,6 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
   function testNewDefaultThemeBlocks() {
     $default_theme = \Drupal::config('system.theme')->get('default');
 
-    // Add several block instances.
-    $this->drupalLogin($this->drupalCreateUser(array('administer blocks')));
-
     // Add two instances of the user login block.
     $this->drupalPlaceBlock('user_login_block', array(
       'id' => $default_theme . '_' . strtolower($this->randomName(8)),
@@ -50,7 +47,6 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
     $this->drupalPlaceBlock('system_powered_by_block', array(
       'id' => $default_theme . '_' . strtolower($this->randomName(8)),
     ));
-    $this->drupalLogout();
 
     // Enable a different theme.
     $new_theme = 'bartik';

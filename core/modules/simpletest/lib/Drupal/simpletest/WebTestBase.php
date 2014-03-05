@@ -338,9 +338,6 @@ abstract class WebTestBase extends TestBase {
   /**
    * Creates a block instance based on default settings.
    *
-   * Note: Until this can be done programmatically, the active user account
-   * must have permission to administer blocks.
-   *
    * @param string $plugin_id
    *   The plugin ID of the block type for this block instance.
    * @param array $settings
