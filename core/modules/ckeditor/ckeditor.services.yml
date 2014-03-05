@@ -2,10 +2,3 @@ services:
   plugin.manager.ckeditor.plugin:
     class: Drupal\ckeditor\CKEditorPluginManager
     parent: default_plugin_manager
-  cache.ckeditor.languages:
-    class: Drupal\Core\Cache\CacheBackendInterface
-    tags:
-      - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
-    arguments: [ckeditor]
