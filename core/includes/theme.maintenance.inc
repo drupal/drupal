@@ -91,7 +91,6 @@ function _drupal_maintenance_theme() {
     $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
     $ancestor = $themes[$ancestor]->base_theme;
   }
-  _drupal_theme_initialize($themes[$theme], array_reverse($base_theme), '_theme_load_offline_registry');
   _drupal_theme_initialize($themes[$theme], array_reverse($base_theme));
   // Prime the theme registry.
   // @todo Remove global theme variables.
