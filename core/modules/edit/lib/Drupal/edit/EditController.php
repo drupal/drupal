@@ -204,14 +204,8 @@ class EditController extends ControllerBase {
       $entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
 
       // Closure to render the field given a view mode.
-      // @todo Drupal 8 will — but does not yet — require PHP 5.4:
-      //       https://drupal.org/node/2152073. One of the new features in that
-      //       version is $this support for closures. See
-      //       http://php.net/manual/en/migration54.new-features.php.
-      //       That will allow us to get rid of this ugly $that = $this mess.
-      $that = $this;
-      $render_field_in_view_mode = function ($view_mode_id) use ($entity, $field_name, $langcode, $that) {
-        return $that->renderField($entity, $field_name, $langcode, $view_mode_id);
+      $render_field_in_view_mode = function ($view_mode_id) use ($entity, $field_name, $langcode) {
+        return $this->renderField($entity, $field_name, $langcode, $view_mode_id);
       };
 
       // Re-render the updated field.
@@ -269,13 +263,8 @@ class EditController extends ControllerBase {
    *   Rendered HTML.
    *
    * @see hook_edit_render_field()
-   *
-   * @todo Until Drupal 8 requires PHP 5.4, we cannot call $this inside a
-   *       closure (see higher), which also means anything called from a closure
-   *       must be public. So, until https://drupal.org/node/2152073 lands, use
-   *       "public" instead of "protected".
    */
-  public function renderField(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
+  protected function renderField(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
     $entity_view_mode_ids = array_keys(entity_get_view_modes($entity->getEntityTypeId()));
     if (in_array($view_mode_id, $entity_view_mode_ids)) {
       $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
