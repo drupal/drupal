@@ -1852,7 +1852,7 @@ function form_process_table($element, &$form_state) {
           $row['select']['#default_value'] = ($element['#default_value'] == $key ? $key : NULL);
           $row['select']['#parents'] = $element['#parents'];
         }
-        if ($label_element) {
+        if (isset($label_element)) {
           $label_element['#id'] = $row['select']['#id'] . '--label';
           $label_element['#for'] = $row['select']['#id'];
           $row['select']['#attributes']['aria-labelledby'] = $label_element['#id'];
