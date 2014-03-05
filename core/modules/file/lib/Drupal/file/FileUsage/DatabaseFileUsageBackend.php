@@ -50,7 +50,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
    */
   public function add(File $file, $module, $type, $id, $count = 1) {
     $this->connection->merge($this->tableName)
-      ->key(array(
+      ->keys(array(
         'fid' => $file->id(),
         'module' => $module,
         'type' => $type,

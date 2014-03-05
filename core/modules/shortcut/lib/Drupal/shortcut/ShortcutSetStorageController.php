@@ -30,7 +30,7 @@ class ShortcutSetStorageController extends ConfigStorageController implements Sh
    */
   public function assignUser(ShortcutSetInterface $shortcut_set, $account) {
     db_merge('shortcut_set_users')
-      ->key(array('uid' => $account->id()))
+      ->key('uid', $account->id())
       ->fields(array('set_name' => $shortcut_set->id()))
       ->execute();
     drupal_static_reset('shortcut_current_displayed_set');

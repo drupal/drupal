@@ -87,7 +87,7 @@ class DatabaseStorage extends StorageBase {
    */
   public function set($key, $value) {
     $this->connection->merge($this->table)
-      ->key(array(
+      ->keys(array(
         'name' => $key,
         'collection' => $this->collection,
       ))

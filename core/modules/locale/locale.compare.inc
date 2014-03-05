@@ -103,7 +103,7 @@ function locale_translation_build_projects() {
 
     // Create or update the project record.
     db_merge('locale_project')
-      ->key(array('name' => $project->name))
+      ->key('name', $project->name)
       ->fields(array(
         'name' => $project->name,
         'project_type' => $project->project_type,

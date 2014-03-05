@@ -196,7 +196,7 @@ class DatabaseBackend implements CacheBackendInterface {
     }
 
     $this->connection->merge($this->bin)
-      ->key(array('cid' => $cid))
+      ->key('cid', $cid)
       ->fields($fields)
       ->execute();
   }
@@ -248,7 +248,7 @@ class DatabaseBackend implements CacheBackendInterface {
         $this->connection->merge('cache_tags')
           ->insertFields(array('deletions' => 1))
           ->expression('deletions', 'deletions + 1')
-          ->key(array('tag' => $tag))
+          ->key('tag', $tag)
           ->execute();
       }
       catch (\Exception $e) {
@@ -317,7 +317,7 @@ class DatabaseBackend implements CacheBackendInterface {
         $this->connection->merge('cache_tags')
           ->insertFields(array('invalidations' => 1))
           ->expression('invalidations', 'invalidations + 1')
-          ->key(array('tag' => $tag))
+          ->key('tag', $tag)
           ->execute();
       }
     }

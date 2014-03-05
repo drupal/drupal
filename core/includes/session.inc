@@ -208,7 +208,7 @@ function _drupal_session_write($sid, $value) {
       }
 
       db_merge('sessions')
-        ->key($key)
+        ->keys($key)
         ->fields($fields)
         ->execute();
     }

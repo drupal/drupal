@@ -83,7 +83,7 @@ class CommentStorageController extends FieldableDatabaseStorageController implem
           'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
           'last_comment_uid' => $last_reply->uid,
         ))
-        ->key(array(
+        ->keys(array(
           'entity_id' => $comment->getCommentedEntityId(),
           'entity_type' => $comment->getCommentedEntityTypeId(),
           'field_id' => $comment->getFieldId(),

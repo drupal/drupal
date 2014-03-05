@@ -155,7 +155,7 @@ class StringDatabaseStorage implements StringStorageInterface {
           elseif ($lid === TRUE) {
             // This is a new location to add, take care not to duplicate.
             $this->connection->merge('locales_location', $this->options)
-              ->key(array('sid' => $string->getId(), 'type' => $type, 'name' => $name))
+              ->keys(array('sid' => $string->getId(), 'type' => $type, 'name' => $name))
               ->fields(array('version' => \Drupal::VERSION))
               ->execute();
             $created = TRUE;
@@ -506,7 +506,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     }
     if (!empty($values) && $keys = $this->dbStringKeys($string)) {
       return $this->connection->merge($this->dbStringTable($string), $this->options)
-        ->key($keys)
+        ->keys($keys)
         ->fields($values)
         ->execute();
     }

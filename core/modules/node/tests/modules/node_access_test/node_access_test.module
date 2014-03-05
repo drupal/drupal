@@ -144,7 +144,7 @@ function node_access_test_node_update(NodeInterface $node) {
  */
 function _node_access_test_node_write(NodeInterface $node) {
   db_merge('node_access_test')
-    ->key(array('nid' => $node->id()))
+    ->key('nid', $node->id())
     ->fields(array('private' => (int) $node->private->value))
     ->execute();
 }

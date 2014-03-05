@@ -249,7 +249,7 @@ function search_update_totals() {
     // Apply Zipf's law to equalize the probability distribution.
     $total = log10(1 + 1/(max(1, $total)));
     db_merge('search_total')
-      ->key(array('word' => $word))
+      ->key('word', $word)
       ->fields(array('count' => $total))
       ->execute();
   }
@@ -532,7 +532,7 @@ function search_index($sid, $type, $text, $langcode) {
     // appropriately. If not, we create a new record with the appropriate
     // starting score.
     db_merge('search_index')
-      ->key(array(
+      ->keys(array(
         'word' => $word,
         'sid' => $sid,
         'langcode' => $langcode,

@@ -17,7 +17,7 @@ if (\Drupal::config('statistics.settings')->get('count_content_views')) {
   $nid = filter_input(INPUT_POST, 'nid', FILTER_VALIDATE_INT);
   if ($nid) {
     \Drupal::database()->merge('node_counter')
-      ->key(array('nid' => $nid))
+      ->key('nid', $nid)
       ->fields(array(
         'daycount' => 1,
         'totalcount' => 1,

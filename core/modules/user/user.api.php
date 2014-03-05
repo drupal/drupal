@@ -422,7 +422,7 @@ function hook_user_role_insert($role) {
 function hook_user_role_update($role) {
   // Save extra fields provided by the module to user roles.
   db_merge('my_module_table')
-    ->key(array('rid' => $role->id()))
+    ->key('rid', $role->id())
     ->fields(array(
       'role_description' => $role->description
     ))

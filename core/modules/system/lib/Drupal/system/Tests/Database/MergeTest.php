@@ -30,7 +30,7 @@ class MergeTest extends DatabaseTestBase {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
     $result = db_merge('test_people')
-      ->key(array('job' => 'Presenter'))
+      ->key('job', 'Presenter')
       ->fields(array(
         'age' => 31,
         'name' => 'Tiffany',
@@ -55,7 +55,7 @@ class MergeTest extends DatabaseTestBase {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
     $result = db_merge('test_people')
-      ->key(array('job' => 'Speaker'))
+      ->key('job', 'Speaker')
       ->fields(array(
         'age' => 31,
         'name' => 'Tiffany',
@@ -83,7 +83,7 @@ class MergeTest extends DatabaseTestBase {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
     db_merge('test_people')
-      ->key(array('job' => 'Speaker'))
+      ->key('job', 'Speaker')
       ->insertFields(array('age' => 31))
       ->updateFields(array('name' => 'Tiffany'))
       ->execute();
@@ -104,7 +104,7 @@ class MergeTest extends DatabaseTestBase {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
     db_merge('test_people')
-      ->key(array('job' => 'Speaker'))
+      ->key('job', 'Speaker')
       ->insertFields(array(
         'age' => 31,
         'name' => 'Tiffany',
@@ -137,7 +137,7 @@ class MergeTest extends DatabaseTestBase {
     // once as an expression. This test will only pass if the expression wins,
     // which is what is supposed to happen.
     db_merge('test_people')
-      ->key(array('job' => 'Speaker'))
+      ->key('job', 'Speaker')
       ->fields(array('name' => 'Tiffany'))
       ->insertFields(array('age' => 31))
       ->expression('age', 'age + :age', array(':age' => 4))
@@ -159,7 +159,7 @@ class MergeTest extends DatabaseTestBase {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
     db_merge('test_people')
-      ->key(array('job' => 'Presenter'))
+      ->key('job', 'Presenter')
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -178,7 +178,7 @@ class MergeTest extends DatabaseTestBase {
     $num_records_before = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
 
     db_merge('test_people')
-      ->key(array('job' => 'Speaker'))
+      ->key('job', 'Speaker')
       ->execute();
 
     $num_records_after = db_query('SELECT COUNT(*) FROM {test_people}')->fetchField();
@@ -190,7 +190,7 @@ class MergeTest extends DatabaseTestBase {
     $this->assertEqual($person->job, 'Speaker', 'Job skipped correctly.');
 
     db_merge('test_people')
-      ->key(array('job' => 'Speaker'))
+      ->key('job', 'Speaker')
       ->insertFields(array('age' => 31))
       ->execute();
 

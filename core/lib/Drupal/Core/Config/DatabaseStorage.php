@@ -116,7 +116,7 @@ class DatabaseStorage implements StorageInterface {
     $data = $this->encode($data);
     $options = array('return' => Database::RETURN_AFFECTED) + $this->options;
     return (bool) $this->connection->merge($this->table, $options)
-      ->key(array('name' => $name))
+      ->key('name', $name)
       ->fields(array('data' => $data))
       ->execute();
   }

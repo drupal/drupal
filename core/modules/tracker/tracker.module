@@ -262,7 +262,7 @@ function _tracker_add($nid, $uid, $changed) {
 
   // Update the node-level data.
   db_merge('tracker_node')
-    ->key(array('nid' => $nid))
+    ->key('nid', $nid)
     ->fields(array(
       'changed' => $changed,
       'published' => $node->status,
@@ -271,7 +271,7 @@ function _tracker_add($nid, $uid, $changed) {
 
   // Create or update the user-level data.
   db_merge('tracker_user')
-    ->key(array(
+    ->keys(array(
       'nid' => $nid,
       'uid' => $uid,
     ))

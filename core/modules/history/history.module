@@ -107,7 +107,7 @@ function history_write($nid, $account = NULL) {
 
   if ($account->isAuthenticated()) {
     db_merge('history')
-      ->key(array(
+      ->keys(array(
         'uid' => $account->id(),
         'nid' => $nid,
       ))
