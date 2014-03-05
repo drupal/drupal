@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\field\FieldUpdateForbiddenException;
+use Drupal\field\FieldConfigUpdateForbiddenException;
 
 /**
  * Exposes "pseudo-field" components on fieldable entities.
@@ -409,14 +409,14 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
  * that cannot be updated.
  *
  * To forbid the update from occurring, throw a
- * Drupal\field\FieldUpdateForbiddenException.
+ * Drupal\field\FieldConfigUpdateForbiddenException.
  *
- * @param $field
+ * @param \Drupal\field\FieldConfigInterface $field
  *   The field as it will be post-update.
- * @param $prior_field
+ * @param \Drupal\field\FieldConfigInterface $prior_field
  *   The field as it is pre-update.
  */
-function hook_field_update_forbid($field, $prior_field) {
+function hook_field_config_update_forbid(\Drupal\field\FieldConfigInterface $field, \Drupal\field\FieldConfigInterface $prior_field) {
   // A 'list' field stores integer keys mapped to display values. If
   // the new field will have fewer values, and any data exists for the
   // abandoned keys, the field will have no way to display them. So,
@@ -431,7 +431,7 @@ function hook_field_update_forbid($field, $prior_field) {
       ->range(0, 1)
       ->execute();
     if ($found) {
-      throw new FieldUpdateForbiddenException("Cannot update a list field not to include keys with existing data");
+      throw new FieldConfigUpdateForbiddenException("Cannot update a list field not to include keys with existing data");
     }
   }
 }

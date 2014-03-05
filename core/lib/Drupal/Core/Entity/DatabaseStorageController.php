@@ -15,7 +15,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\field\FieldInfo;
-use Drupal\field\FieldUpdateForbiddenException;
+use Drupal\field\FieldConfigUpdateForbiddenException;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
 use Drupal\field\Entity\FieldConfig;

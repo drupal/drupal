@@ -9,7 +9,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\field\FieldException;
+use Drupal\field\FieldConfigInterface;
+use Drupal\field\FieldConfigUpdateForbiddenException;
 
 /**
  * Implements hook_field_widget_info_alter().
@@ -19,11 +20,11 @@ function field_test_field_widget_info_alter(&$info) {
 }
 
 /**
- * Implements hook_field_update_forbid().
+ * Implements hook_field_config_update_forbid().
  */
-function field_test_field_update_forbid($field, $prior_field) {
+function field_test_field_config_update_forbid(FieldConfigInterface $field, FieldConfigInterface $prior_field) {
   if ($field->getType() == 'test_field' && $field->getSetting('unchangeable') != $prior_field->getSetting('unchangeable')) {
-    throw new FieldException("field_test 'unchangeable' setting cannot be changed'");
+    throw new FieldConfigUpdateForbiddenException("field_test 'unchangeable' setting cannot be changed'");
   }
 }
 

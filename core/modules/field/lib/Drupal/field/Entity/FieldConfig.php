@@ -360,8 +360,8 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     $this->settings += $field_type_manager->getDefaultSettings($this->type);
 
     // See if any module forbids the update by throwing an exception. This
-    // invokes hook_field_update_forbid().
-    $module_handler->invokeAll('field_update_forbid', array($this, $this->original));
+    // invokes hook_field_config_update_forbid().
+    $module_handler->invokeAll('field_config_update_forbid', array($this, $this->original));
 
     // Notify the storage controller. The controller can reject the definition
     // update as invalid by raising an exception, which stops execution before
