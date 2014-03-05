@@ -32,9 +32,9 @@ function hook_edit_editor_alter(&$editors) {
  * Returns a renderable array for the value of a single field in an entity.
  *
  * To integrate with in-place field editing when a non-standard render pipeline
- * is used (field_view_field() is not sufficient to render back the field
- * following in-place editing in the exact way it was displayed originally),
- * implement this hook.
+ * is used (FieldItemListInterface::view() is not sufficient to render back the
+ * field following in-place editing in the exact way it was displayed
+ * originally), implement this hook.
  *
  * Edit module integrates with HTML elements with data-edit-field-id attributes.
  * For example:
@@ -67,12 +67,12 @@ function hook_edit_editor_alter(&$editors) {
  * @return
  *   A renderable array for the field value.
  *
- * @see field_view_field()
+ * @see \Drupal\Core\Field\FieldItemListInterface::view()
  */
 function hook_edit_render_field(Drupal\Core\Entity\EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
   return array(
     '#prefix' => '<div class="example-markup">',
-    'field' => field_view_field($entity, $field_name, $view_mode_id, $langcode),
+    'field' => $entity->getTranslation($langcode)->get($field_name)->view($view_mode_id),
     '#suffix' => '</div>',
   );
 }

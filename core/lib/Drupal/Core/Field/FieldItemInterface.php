@@ -156,6 +156,22 @@ interface FieldItemInterface extends ComplexDataInterface {
   public function __unset($property_name);
 
   /**
+   * Returns a renderable array for a single field item.
+   *
+   * @param array $display_options
+   *   Can be either the name of a view mode, or an array of display settings.
+   *   See EntityViewBuilderInterface::viewField() for more information.
+   *
+   * @return array
+   *   A renderable array for the field item.
+   *
+   * @see \Drupal\Core\Entity\EntityViewBuilderInterface::viewField()
+   * @see \Drupal\Core\Entity\EntityViewBuilderInterface::viewFieldItem()
+   * @see \Drupal\Core\Field\FieldItemListInterface::view()
+   */
+  public function view($display_options = array());
+
+  /**
    * Defines custom presave behavior for field values.
    *
    * This method is called before either insert() or update() methods, and

@@ -267,7 +267,8 @@ class EditController extends ControllerBase {
   protected function renderField(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
     $entity_view_mode_ids = array_keys(entity_get_view_modes($entity->getEntityTypeId()));
     if (in_array($view_mode_id, $entity_view_mode_ids)) {
-      $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
+      $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
+      $output = $entity->get($field_name)->view($view_mode_id);
     }
     else {
       // Each part of a custom (non-Entity Display) view mode ID is separated

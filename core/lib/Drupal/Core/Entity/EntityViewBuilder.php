@@ -9,6 +9,8 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
@@ -278,6 +280,67 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function viewField(FieldItemListInterface $items, $display_options = array()) {
+    $output = array();
+    $entity = $items->getEntity();
+    $field_name = $items->getFieldDefinition()->getName();
+
+    // Get the display object.
+    if (is_string($display_options)) {
+      $view_mode = $display_options;
+      $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+      foreach ($entity as $name => $items) {
+        if ($name != $field_name) {
+          $display->removeComponent($name);
+        }
+      }
+    }
+    else {
+      $view_mode = '_custom';
+      $display = entity_create('entity_view_display', array(
+        'targetEntityType' => $entity->getEntityTypeId(),
+        'bundle' => $entity->bundle(),
+        'mode' => $view_mode,
+        'status' => TRUE,
+      ));
+      $display->setComponent($field_name, $display_options);
+    }
+
+    $build = $display->build($entity);
+    if (isset($build[$field_name])) {
+      $output = $build[$field_name];
+    }
+
+    return $output;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function viewFieldItem(FieldItemInterface $item, $display = array()) {
+    $entity = $item->getEntity();
+    $field_name = $item->getFieldDefinition()->getName();
+
+    // Clone the entity since we are going to modify field values.
+    $clone = clone $entity;
+
+    // Push the item as the single value for the field, and defer to viewField()
+    // to build the render array for the whole list.
+    $clone->{$field_name}->setValue(array($item->getValue()));
+    $elements = $this->viewField($clone->{$field_name}, $display);
+
+    // Extract the part of the render array we need.
+    $output = isset($elements[0]) ? $elements[0] : array();
+    if (isset($elements['#access'])) {
+      $output['#access'] = $elements['#access'];
+    }
+
+    return $output;
+  }
+
+  /*
    * Returns TRUE if the view mode is cacheable.
    *
    * @param string $view_mode

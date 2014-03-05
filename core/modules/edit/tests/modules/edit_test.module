@@ -41,10 +41,11 @@ function edit_test_entity_view_alter(&$build, EntityInterface $entity, EntityVie
 /**
  * Implements hook_edit_render_field().
  */
-function edit_test_edit_render_field(Drupal\Core\Entity\EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
+function edit_test_edit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
+  $entity = \Drupal::entityManager()->getTranslationFromContext($entity, $langcode);
   return array(
     '#prefix' => '<div class="edit-test-wrapper">',
-    'field' => field_view_field($entity, $field_name),
+    'field' => $entity->get($field_name)->view($view_mode_id),
     '#suffix' => '</div>',
   );
 }

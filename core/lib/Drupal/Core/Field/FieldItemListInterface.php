@@ -164,4 +164,19 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    */
   public function deleteRevision();
 
+  /**
+   * Returns a renderable array for the field items.
+   *
+   * @param array $display_options
+   *   Can be either the name of a view mode, or an array of display settings.
+   *   See EntityViewBuilderInterface::viewField() for more information.
+   *
+   * @return array
+   *   A renderable array for the field values.
+   *
+   * @see \Drupal\Core\Entity\EntityViewBuilderInterface::viewField()
+   * @see \Drupal\Core\Field\FieldItemInterface::view()
+   */
+  public function view($display_options = array());
+
 }

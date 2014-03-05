@@ -2659,7 +2659,7 @@ function hook_tokens_alter(array &$replacements, array $context) {
     // Alter the [node:title] token, and replace it with the rendered content
     // of a field (field_title).
     if (isset($context['tokens']['title'])) {
-      $title = field_view_field($node, 'field_title', 'default', $langcode);
+      $title = $node->field_title->view('default');
       $replacements[$context['tokens']['title']] = drupal_render($title);
     }
   }

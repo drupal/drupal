@@ -685,9 +685,7 @@ class Field extends FieldPluginBase {
       'views_field' => $this,
       'views_row_id' => $this->view->row_index,
     );
-
-    $langcode = $this->field_langcode($entity);
-    $render_array = field_view_field($entity, $this->definition['field_name'], $display, $langcode);
+    $render_array = $entity->get($this->definition['field_name'])->view($display);
 
     $items = array();
     if ($this->options['field_api_classes']) {
@@ -696,10 +694,10 @@ class Field extends FieldPluginBase {
 
     foreach (element_children($render_array) as $count) {
       $items[$count]['rendered'] = $render_array[$count];
-      // field_view_field() adds an #access property to the render array that
-      // determines whether or not the current user is allowed to view the
-      // field in the context of the current entity. We need to respect this
-      // parameter when we pull out the children of the field array for
+      // FieldItemListInterface::view() adds an #access property to the render
+      // array that determines whether or not the current user is allowed to
+      // view the field in the context of the current entity. We need to respect
+      // this parameter when we pull out the children of the field array for
       // rendering.
       if (isset($render_array['#access'])) {
         $items[$count]['rendered']['#access'] = $render_array['#access'];
@@ -727,7 +725,10 @@ class Field extends FieldPluginBase {
    */
   function process_entity(EntityInterface $entity) {
     $processed_entity = clone $entity;
+
     $langcode = $this->field_langcode($processed_entity);
+    $processed_entity = $processed_entity->getTranslation($langcode);
+
     // If we are grouping, copy our group fields into the cloned entity.
     // It's possible this will cause some weirdness, but there's only
     // so much we can hope to do.
@@ -752,10 +753,10 @@ class Field extends FieldPluginBase {
       if ($data) {
         // Now, overwrite the original value with our aggregated value.
         // This overwrites it so there is always just one entry.
-        $processed_entity->getTranslation($langcode)->{$this->definition['field_name']} = array($base_value);
+        $processed_entity->{$this->definition['field_name']} = array($base_value);
       }
       else {
-        $processed_entity->getTranslation($langcode)->{$this->definition['field_name']} = array();
+        $processed_entity->{$this->definition['field_name']} = array();
       }
     }
 
@@ -766,7 +767,7 @@ class Field extends FieldPluginBase {
 
     // We are supposed to show only certain deltas.
     if ($this->limit_values && !empty($processed_entity->{$this->definition['field_name']})) {
-      $all_values = !empty($processed_entity->getTranslation($langcode)->{$this->definition['field_name']}) ? $processed_entity->getTranslation($langcode)->{$this->definition['field_name']}->getValue() : array();
+      $all_values = !empty($processed_entity->{$this->definition['field_name']}) ? $processed_entity->{$this->definition['field_name']}->getValue() : array();
       if ($this->options['delta_reversed']) {
         $all_values = array_reverse($all_values);
       }
@@ -812,7 +813,7 @@ class Field extends FieldPluginBase {
           }
         }
       }
-      $processed_entity->getTranslation($langcode)->{$this->definition['field_name']} = $new_values;
+      $processed_entity->{$this->definition['field_name']} = $new_values;
     }
 
     return $processed_entity;
@@ -866,9 +867,9 @@ class Field extends FieldPluginBase {
 
       // Give the Entity Field API a chance to fallback to a different language
       // (or Language::LANGCODE_NOT_SPECIFIED), in case the field has no data
-      // for the selected language. field_view_field() does this as well, but
-      // since the returned language code is used before calling it, the
-      // fallback needs to happen explicitly.
+      // for the selected language. FieldItemListInterface::view() does this as
+      // well, but since the returned language code is used before calling it,
+      // the fallback needs to happen explicitly.
       $langcode = $this->entityManager->getTranslationFromContext($entity, $langcode)->language()->id;
 
       return $langcode;

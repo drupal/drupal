@@ -123,8 +123,9 @@ function edit_preprocess_field(&$variables) {
   $entity = $element['#object'];
 
   // Edit module only supports view modes, not dynamically defined "display
-  // options" (which field_view_field() always names the "_custom" view mode).
-  // @see field_view_field()
+  // options" (which \Drupal\Core\Field\FieldItemListInterface::view() always
+  // names the "_custom" view mode).
+  // @see \Drupal\Core\Field\FieldItemListInterface::view()
   // @see https://drupal.org/node/2120335
   if ($element['#view_mode'] === '_custom') {
     return;

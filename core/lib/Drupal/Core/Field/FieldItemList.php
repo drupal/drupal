@@ -278,4 +278,12 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function view($display_options = array()) {
+    $view_builder = \Drupal::entityManager()->getViewBuilder($this->getEntity()->getEntityTypeId());
+    return $view_builder->viewField($this, $display_options);
+  }
+
 }
