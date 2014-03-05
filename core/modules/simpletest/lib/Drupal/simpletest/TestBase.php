@@ -1342,7 +1342,9 @@ abstract class TestBase {
     }
 
     // Starting with a space means that length might not be what is expected.
-    if (preg_match('/^\s/', $string)) {
+    // Starting with an @ sign causes CURL to fail if used in conjunction with a
+    // file upload, see https://drupal.org/node/2174997.
+    if (preg_match('/^(\s|@)/', $string)) {
       return FALSE;
     }
 
