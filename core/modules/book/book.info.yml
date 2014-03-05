@@ -5,6 +5,5 @@ package: Core
 version: VERSION
 core: 8.x
 dependencies:
-  - menu_link
   - node
 configure: book.settings

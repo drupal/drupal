@@ -546,8 +546,8 @@ class BookManager implements BookManagerInterface {
       // Make sure drupal_render() does not re-order the links.
       $build['#sorted'] = TRUE;
       // Add the theme wrapper for outer markup.
-      // Allow menu-specific theme overrides.
-      $build['#theme_wrappers'][] = 'menu_tree__book_toc_' . $data['link']['nid'];
+      // Allow book-specific theme overrides.
+      $build['#theme_wrappers'][] = 'book_tree__book_toc_' . $data['link']['bid'];
     }
 
     return $build;
@@ -919,8 +919,9 @@ class BookManager implements BookManagerInterface {
           $this->_menu_tree_check_access($tree[$key]['below']);
         }
         // The weights are made a uniform 5 digits by adding 50000 as an offset.
-        // After _menu_link_translate(), $item['title'] has the localized link title.
-        // Adding the mlid to the end of the index insures that it is unique.
+        // After calling $this->bookLinkTranslate(), $item['title'] has the
+        // translated title. Adding the nid to the end of the index insures that
+        // it is unique.
         $new_tree[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['nid']] = $tree[$key];
       }
     }

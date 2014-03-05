@@ -9,11 +9,8 @@
  * Implements hook_uninstall().
  */
 function book_uninstall() {
-  // Delete menu links.
-  db_delete('menu_links')
-    ->condition('module', 'book')
-    ->execute();
-  menu_cache_clear_all();
+  // Clear book data out of the cache.
+  \Drupal::cache('menu')->deleteAll();
 }
 
 /**
@@ -21,7 +18,7 @@ function book_uninstall() {
  */
 function book_schema() {
   $schema['book'] = array(
-  'description' => 'Stores book outline information. Uniquely connects each node in the outline to a link in {menu_links}',
+  'description' => 'Stores book outline information. Uniquely defines the location of each node in the book outline',
     'fields' => array(
       'nid' => array(
         'type' => 'int',
@@ -38,7 +35,7 @@ function book_schema() {
         'description' => "The book ID is the {book}.nid of the top-level page.",
       ),
       'pid' => array(
-        'description' => 'The parent ID (pid) is the id of the node above in the hierarchy, or zero if the node is at the top level in its menu.',
+        'description' => 'The parent ID (pid) is the id of the node above in the hierarchy, or zero if the node is at the top level in its outline.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

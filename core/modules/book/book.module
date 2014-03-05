@@ -29,7 +29,7 @@ function book_help($path, $arg) {
       $output .= '<dt>' . t('Book navigation') . '</dt>';
       $output .= '<dd>' . t("Book pages have a default book-specific navigation block. This navigation block contains links that lead to the previous and next pages in the book, and to the level above the current page in the book's structure. This block can be enabled on the <a href='!admin-block'>Blocks administration page</a>. For book pages to show up in the book navigation, they must be added to a book outline.", array('!admin-block' => \Drupal::url('block.admin_display'))) . '</dd>';
       $output .= '<dt>' . t('Collaboration') . '</dt>';
-      $output .= '<dd>' . t('Books can be created collaboratively, as they allow users with appropriate permissions to add pages into existing books, and add those pages to a custom table of contents menu.') . '</dd>';
+      $output .= '<dd>' . t('Books can be created collaboratively, as they allow users with appropriate permissions to add pages into existing books, and add those pages to a custom table of contents.') . '</dd>';
       $output .= '<dt>' . t('Printing books') . '</dt>';
       $output .= '<dd>' . t("Users with the <em>View printer-friendly books</em> permission can select the <em>printer-friendly version</em> link visible at the bottom of a book page's content to generate a printer-friendly display of the page and all of its subsections.") . '</dd>';
       $output .= '</dl>';
@@ -49,6 +49,10 @@ function book_theme() {
     'book_navigation' => array(
       'variables' => array('book_link' => NULL),
       'template' => 'book-navigation',
+    ),
+    'book_tree' => array(
+      'render element' => 'tree',
+      'template' => 'book-tree',
     ),
     'book_link' => array(
       'render element' => 'element',
@@ -712,6 +716,13 @@ function template_preprocess_book_node_export_html(&$variables) {
   $variables['depth'] = $variables['node']->book['depth'];
   $variables['title'] = String::checkPlain($variables['node']->label());
   $variables['content'] = $variables['node']->rendered;
+}
+
+/**
+ * Implements template_preprocess_HOOK() for theme_book_tree().
+ */
+function template_preprocess_book_tree(&$variables) {
+  $variables['tree'] = $variables['tree']['#children'];
 }
 
 /**
