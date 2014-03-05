@@ -7,7 +7,7 @@
 
 namespace Drupal\field_ui;
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Static service container wrapper for Field UI.
@@ -59,7 +59,7 @@ class FieldUI {
       $next_destination['options']['query']['destinations'] = $destinations;
     }
     else {
-      $options = Url::parse($next_destination);
+      $options = UrlHelper::parse($next_destination);
       if ($destinations) {
         $options['query']['destinations'] = $destinations;
       }

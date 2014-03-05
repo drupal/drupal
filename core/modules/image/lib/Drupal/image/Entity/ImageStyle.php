@@ -14,7 +14,7 @@ use Drupal\image\ImageEffectBag;
 use Drupal\image\ImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
@@ -231,7 +231,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     $file_url = file_create_url($uri);
     // Append the query string with the token, if necessary.
     if ($token_query) {
-      $file_url .= (strpos($file_url, '?') !== FALSE ? '&' : '?') . Url::buildQuery($token_query);
+      $file_url .= (strpos($file_url, '?') !== FALSE ? '&' : '?') . UrlHelper::buildQuery($token_query);
     }
 
     return $file_url;

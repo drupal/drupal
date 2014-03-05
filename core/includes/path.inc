@@ -5,7 +5,7 @@
  * Functions to handle paths in Drupal.
  */
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\RequestHelper;
 
@@ -193,7 +193,7 @@ function path_get_admin_paths() {
  */
 function drupal_valid_path($path) {
   // External URLs and the front page are always valid.
-  if ($path == '<front>' || Url::isExternal($path)) {
+  if ($path == '<front>' || UrlHelper::isExternal($path)) {
     return TRUE;
   }
 

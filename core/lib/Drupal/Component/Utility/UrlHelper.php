@@ -2,17 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Utility\Url.
+ * Contains \Drupal\Component\Utility\UrlHelper.
  */
 
 namespace Drupal\Component\Utility;
 
 /**
  * Helper class URL based methods.
- *
- * @todo Rename to UrlHelper in https://drupal.org/node/2184653.
  */
-class Url {
+class UrlHelper {
 
   /**
    * The list of allowed protocols.
@@ -121,7 +119,7 @@ class Url {
    * The returned array contains a 'path' that may be passed separately to url().
    * For example:
    * @code
-   *   $options = Url::parse(\Drupal::request()->query->get('destination'));
+   *   $options = UrlHelper::parse(\Drupal::request()->query->get('destination'));
    *   $my_url = url($options['path'], $options);
    *   $my_link = l('Example link', $options['path'], $options);
    * @endcode

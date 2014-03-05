@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Form;
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerialization;
@@ -126,7 +126,7 @@ class ViewsForm extends DependencySerialization implements FormInterface, Contai
     $form = array();
 
     $query = $this->request->query->all();
-    $query = Url::filterQueryParameters($query, array(), '');
+    $query = UrlHelper::filterQueryParameters($query, array(), '');
 
     $form['#action'] = $this->urlGenerator->generateFromPath($view->getUrl(), array('query' => $query));
     // Tell the preprocessor whether it should hide the header, footer, pager...

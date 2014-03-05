@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\String;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
@@ -180,7 +180,7 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
     // Add favicon.
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
-    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => Url::stripDangerousProtocols($favicon), 'type' => $type));
+    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => UrlHelper::stripDangerousProtocols($favicon), 'type' => $type));
 
     // Build CSS links.
     drupal_static_reset('_drupal_add_css');

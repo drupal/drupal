@@ -5,7 +5,7 @@
  * Adds contextual links to perform actions related to elements on a page.
  */
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -267,8 +267,8 @@ function contextual_contextual_links_view_alter(&$element, $items) {
 function _contextual_links_to_id($contextual_links) {
   $ids = array();
   foreach ($contextual_links as $group => $args) {
-    $route_parameters = Url::buildQuery($args['route_parameters']);
-    $metadata = Url::buildQuery((isset($args['metadata'])) ? $args['metadata'] : array());
+    $route_parameters = UrlHelper::buildQuery($args['route_parameters']);
+    $metadata = UrlHelper::buildQuery((isset($args['metadata'])) ? $args['metadata'] : array());
     $ids[] = "{$group}:{$route_parameters}:{$metadata}";
   }
   return implode('|', $ids);

@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Form;
 
 use Drupal\aggregator\FeedStorageControllerInterface;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -158,7 +158,7 @@ class OpmlFeedAdd extends FormBase {
     // @todo Move this functionality to a processor.
     foreach ($feeds as $feed) {
       // Ensure URL is valid.
-      if (!Url::isValid($feed['url'], TRUE)) {
+      if (!UrlHelper::isValid($feed['url'], TRUE)) {
         drupal_set_message($this->t('The URL %url is invalid.', array('%url' => $feed['url'])), 'warning');
         continue;
       }

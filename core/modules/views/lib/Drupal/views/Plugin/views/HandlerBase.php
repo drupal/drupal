@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -230,7 +230,7 @@ abstract class HandlerBase extends PluginBase {
         $value = Xss::filterAdmin($value);
         break;
       case 'url':
-        $value = String::checkPlain(Url::stripDangerousProtocols($value));
+        $value = String::checkPlain(UrlHelper::stripDangerousProtocols($value));
         break;
       default:
         $value = String::checkPlain($value);

@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Template\Attribute;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Returns the current page being requested for display within a pager.
@@ -148,7 +148,7 @@ function pager_default_initialize($total, $limit, $element = 0) {
 function pager_get_query_parameters() {
   $query = &drupal_static(__FUNCTION__);
   if (!isset($query)) {
-    $query = Url::filterQueryParameters(\Drupal::request()->query->all(), array('page'));
+    $query = UrlHelper::filterQueryParameters(\Drupal::request()->query->all(), array('page'));
   }
   return $query;
 }

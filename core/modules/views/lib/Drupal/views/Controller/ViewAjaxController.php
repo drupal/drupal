@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Controller;
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
@@ -115,7 +115,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Overwrite the destination.
         // @see drupal_get_destination()
         $origin_destination = $path;
-        $query = Url::buildQuery($request->query->all());
+        $query = UrlHelper::buildQuery($request->query->all());
         if ($query != '') {
           $origin_destination .= '?' . $query;
         }

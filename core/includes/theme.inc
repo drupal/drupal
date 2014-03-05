@@ -9,7 +9,7 @@
  */
 
 use Drupal\Component\Utility\String;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Extension\Extension;
@@ -2026,7 +2026,7 @@ function template_preprocess_html(&$variables) {
     $type = theme_get_setting('favicon.mimetype');
     $build['#attached']['drupal_add_html_head_link'][][] = array(
       'rel' => 'shortcut icon',
-      'href' => Url::stripDangerousProtocols($favicon),
+      'href' => UrlHelper::stripDangerousProtocols($favicon),
       'type' => $type,
     );
     drupal_render($build);
@@ -2315,7 +2315,7 @@ function template_preprocess_maintenance_page(&$variables) {
     $type = theme_get_setting('favicon.mimetype');
     $build['#attached']['drupal_add_html_head_link'][][] = array(
       'rel' => 'shortcut icon',
-      'href' => Url::stripDangerousProtocols($favicon),
+      'href' => UrlHelper::stripDangerousProtocols($favicon),
       'type' => $type,
     );
     drupal_render($build);

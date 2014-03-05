@@ -7,7 +7,7 @@
 
 namespace Drupal\Tests\Core\EventSubscriber;
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\EventSubscriber\ExceptionListener;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,7 +90,7 @@ class ExceptionListenerTest extends UnitTestCase {
     $this->exceptionListener->onKernelException($event);
 
     $response = $event->getResponse();
-    $this->assertEquals('POST name=druplicon&pass=12345', $response->getContent() . " " . Url::buildQuery($request->request->all()));
+    $this->assertEquals('POST name=druplicon&pass=12345', $response->getContent() . " " . UrlHelper::buildQuery($request->request->all()));
   }
 
   /**
@@ -100,14 +100,14 @@ class ExceptionListenerTest extends UnitTestCase {
     $request = Request::create('/test', 'GET', array('name' => 'druplicon', 'pass' => '12345'));
 
     $this->kernel->expects($this->once())->method('handle')->will($this->returnCallback(function (Request $request) {
-      return new Response($request->getMethod() . ' ' . Url::buildQuery($request->query->all()));
+      return new Response($request->getMethod() . ' ' . UrlHelper::buildQuery($request->query->all()));
     }));
 
     $event = new GetResponseForExceptionEvent($this->kernel, $request, 'foo', new \Exception('foo'));
     $this->exceptionListener->onKernelException($event);
 
     $response = $event->getResponse();
-    $this->assertEquals('GET name=druplicon&pass=12345 ', $response->getContent() . " " . Url::buildQuery($request->request->all()));
+    $this->assertEquals('GET name=druplicon&pass=12345 ', $response->getContent() . " " . UrlHelper::buildQuery($request->request->all()));
   }
 
 }

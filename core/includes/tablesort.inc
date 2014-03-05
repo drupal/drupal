@@ -3,7 +3,7 @@
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * @file
@@ -106,7 +106,7 @@ function tablesort_cell($cell, $header, $ts, $i) {
  *   page request except for those pertaining to table sorting.
  */
 function tablesort_get_query_parameters() {
-  return Url::filterQueryParameters(\Drupal::request()->query->all(), array('sort', 'order'));
+  return UrlHelper::filterQueryParameters(\Drupal::request()->query->all(), array('sort', 'order'));
 }
 
 /**

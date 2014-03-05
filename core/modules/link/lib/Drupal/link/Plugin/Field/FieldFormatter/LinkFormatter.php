@@ -7,7 +7,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;
@@ -170,7 +170,7 @@ class LinkFormatter extends FormatterBase {
     $settings = $this->getSettings();
 
     // Split out the link into the parts required for url(): path and options.
-    $parsed_url = Url::parse($item->url);
+    $parsed_url = UrlHelper::parse($item->url);
     $result = array(
       'path' => $parsed_url['path'],
       'options' => array(

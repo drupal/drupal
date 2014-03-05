@@ -7,7 +7,7 @@
 
 namespace Drupal\Core;
 
-use Drupal\Component\Utility\Url as UrlHelper;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Routing\MatchingRouteNotFoundException;
 use Drupal\Core\Routing\UrlGeneratorInterface;

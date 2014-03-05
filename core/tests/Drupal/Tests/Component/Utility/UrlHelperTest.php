@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Component\Utility;
 
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
 
@@ -21,8 +21,8 @@ class UrlTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Url Tests'),
-      'description' => t('Tests the Url utility class.'),
+      'name' => t('UrlHelper Tests'),
+      'description' => t('Tests the UrlHelper utility class.'),
       'group' => t('Path API'),
     );
   }
@@ -43,7 +43,7 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests Url::buildQuery().
+   * Tests UrlHelper::buildQuery().
    *
    * @param array $query
    *   The array of query parameters.
@@ -55,7 +55,7 @@ class UrlTest extends UnitTestCase {
    * @dataProvider providerTestBuildQuery
    */
   public function testBuildQuery($query, $expected, $message) {
-    $this->assertEquals(Url::buildQuery($query), $expected, $message);
+    $this->assertEquals(UrlHelper::buildQuery($query), $expected, $message);
   }
 
   /**
@@ -100,7 +100,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testValidAbsolute($url, $scheme) {
     $test_url = $scheme . '://' . $url;
-    $valid_url = Url::isValid($test_url, TRUE);
+    $valid_url = UrlHelper::isValid($test_url, TRUE);
     $this->assertTrue($valid_url, String::format('@url is a valid URL.', array('@url' => $test_url)));
   }
 
@@ -130,7 +130,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testInvalidAbsolute($url, $scheme) {
     $test_url = $scheme . '://' . $url;
-    $valid_url = Url::isValid($test_url, TRUE);
+    $valid_url = UrlHelper::isValid($test_url, TRUE);
     $this->assertFalse($valid_url, String::format('@url is NOT a valid URL.', array('@url' => $test_url)));
   }
 
@@ -163,7 +163,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testValidRelative($url, $prefix) {
     $test_url = $prefix . $url;
-    $valid_url = Url::isValid($test_url);
+    $valid_url = UrlHelper::isValid($test_url);
     $this->assertTrue($valid_url, String::format('@url is a valid URL.', array('@url' => $test_url)));
   }
 
@@ -193,7 +193,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testInvalidRelative($url, $prefix) {
     $test_url = $prefix . $url;
-    $valid_url = Url::isValid($test_url);
+    $valid_url = UrlHelper::isValid($test_url);
     $this->assertFalse($valid_url, String::format('@url is NOT a valid URL.', array('@url' => $test_url)));
   }
 
@@ -213,7 +213,7 @@ class UrlTest extends UnitTestCase {
    * @see \Drupal\Component\Utility\Url::filterQueryParameters().
    */
   public function testFilterQueryParameters($query, $exclude, $expected) {
-    $filtered = Url::filterQueryParameters($query, $exclude);
+    $filtered = UrlHelper::filterQueryParameters($query, $exclude);
     $this->assertEquals($expected, $filtered, 'The query was not properly filtered.');
   }
 
@@ -252,7 +252,7 @@ class UrlTest extends UnitTestCase {
    * @see \Drupal\Component\Utility\Url::parse()
    */
   public function testParse($url, $expected) {
-    $parsed = Url::parse($url);
+    $parsed = UrlHelper::parse($url);
     $this->assertEquals($expected, $parsed, 'The url was not properly parsed.');
   }
 
@@ -307,7 +307,7 @@ class UrlTest extends UnitTestCase {
    * @dataProvider providerTestEncodePath
    */
   public function testEncodePath($path, $expected) {
-    $encoded = Url::encodePath($path);
+    $encoded = UrlHelper::encodePath($path);
     $this->assertEquals($expected, $encoded);
   }
 
@@ -336,7 +336,7 @@ class UrlTest extends UnitTestCase {
    * @dataProvider providerTestIsExternal
    */
   public function testIsExternal($path, $expected) {
-    $isExternal = Url::isExternal($path);
+    $isExternal = UrlHelper::isExternal($path);
     $this->assertEquals($expected, $isExternal);
   }
 
@@ -366,8 +366,8 @@ class UrlTest extends UnitTestCase {
    * @dataProvider providerTestFilterBadProtocol
    */
   public function testFilterBadProtocol($uri, $expected, $protocols) {
-    Url::setAllowedProtocols($protocols);
-    $filtered = Url::filterBadProtocol($uri);
+    UrlHelper::setAllowedProtocols($protocols);
+    $filtered = UrlHelper::filterBadProtocol($uri);
     $this->assertEquals($expected, $filtered);
   }
 
@@ -403,8 +403,8 @@ class UrlTest extends UnitTestCase {
    * @dataProvider providerTestStripDangerousProtocols
    */
   public function testStripDangerousProtocols($uri, $expected, $protocols) {
-    Url::setAllowedProtocols($protocols);
-    $stripped = Url::stripDangerousProtocols($uri);
+    UrlHelper::setAllowedProtocols($protocols);
+    $stripped = UrlHelper::stripDangerousProtocols($uri);
     $this->assertEquals($expected, $stripped);
   }
 
