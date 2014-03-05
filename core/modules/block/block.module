@@ -251,7 +251,7 @@ function _block_rehash($theme = NULL) {
       $block->disable()->save();
     }
     // Set region to none if not enabled.
-    if (!$status) {
+    if (!$status && $region != BlockInterface::BLOCK_REGION_NONE) {
       $block->set('region', BlockInterface::BLOCK_REGION_NONE);
       $block->save();
     }
