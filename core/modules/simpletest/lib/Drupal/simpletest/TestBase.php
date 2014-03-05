@@ -761,10 +761,22 @@ abstract class TestBase {
    *   methods during debugging.
    */
   public function run(array $methods = array()) {
+    $class = get_class($this);
+
+    if ($missing_requirements = $this->checkRequirements()) {
+      $object_info = new \ReflectionObject($this);
+      $caller = array(
+        'file' => $object_info->getFileName(),
+      );
+      foreach ($missing_requirements as $missing_requirement) {
+        TestBase::insertAssert($this->testId, $class, FALSE, $missing_requirement, 'Requirements check', $caller);
+      }
+      return;
+    }
+
     TestServiceProvider::$currentTest = $this;
     $simpletest_config = \Drupal::config('simpletest.settings');
 
-    $class = get_class($this);
     // Unless preset from run-tests.sh, retrieve the current verbose setting.
     if (!isset($this->verbose)) {
       $this->verbose = $simpletest_config->get('verbose');
@@ -791,85 +803,76 @@ abstract class TestBase {
     set_error_handler(array($this, 'errorHandler'));
     // Iterate through all the methods in this class, unless a specific list of
     // methods to run was passed.
-    $class_methods = get_class_methods($class);
+    $test_methods = array_filter(get_class_methods($class), function ($method) {
+      return strpos($method, 'test') === 0;
+    });
     if ($methods) {
-      $class_methods = array_intersect($class_methods, $methods);
+      $test_methods = array_intersect($test_methods, $methods);
     }
-    $missing_requirements = $this->checkRequirements();
-    if (!empty($missing_requirements)) {
-      $missing_requirements_object = new \ReflectionObject($this);
+    if (defined("$class::SORT_METHODS")) {
+      sort($test_methods);
+    }
+    foreach ($test_methods as $method) {
+      // Insert a fail record. This will be deleted on completion to ensure
+      // that testing completed.
+      $method_info = new \ReflectionMethod($class, $method);
       $caller = array(
-        'file' => $missing_requirements_object->getFileName(),
+        'file' => $method_info->getFileName(),
+        'line' => $method_info->getStartLine(),
+        'function' => $class . '->' . $method . '()',
       );
-      foreach ($missing_requirements as $missing_requirement) {
-        TestBase::insertAssert($this->testId, $class, FALSE, $missing_requirement, 'Requirements check.', $caller);
+      $test_completion_check_id = TestBase::insertAssert($this->testId, $class, FALSE, 'The test did not complete due to a fatal error.', 'Completion check', $caller);
+
+      try {
+        $this->prepareEnvironment();
       }
+      catch (\Exception $e) {
+        $this->exceptionHandler($e);
+        // The prepareEnvironment() method isolates the test from the parent
+        // Drupal site by creating a random database prefix and test site
+        // directory. If this fails, a test would possibly operate in the
+        // parent site. Therefore, the entire test run for this test class
+        // has to be aborted.
+        // restoreEnvironment() cannot be called, because we do not know
+        // where exactly the environment setup failed.
+        break;
+      }
+
+      try {
+        $this->setUp();
+      }
+      catch (\Exception $e) {
+        $this->exceptionHandler($e);
+        // Abort if setUp() fails, since all test methods will fail.
+        // But ensure to clean up and restore the environment, since
+        // prepareEnvironment() succeeded.
+        $this->restoreEnvironment();
+        break;
+      }
+      try {
+        $this->$method();
+      }
+      catch (\Exception $e) {
+        $this->exceptionHandler($e);
+      }
+      try {
+        $this->tearDown();
+      }
+      catch (\Exception $e) {
+        $this->exceptionHandler($e);
+        // If a test fails to tear down, abort the entire test class, since
+        // it is likely that all tests will fail in the same way and a
+        // failure here only results in additional test artifacts that have
+        // to be manually deleted.
+        $this->restoreEnvironment();
+        break;
+      }
+
+      $this->restoreEnvironment();
+      // Remove the test method completion check record.
+      TestBase::deleteAssert($test_completion_check_id);
     }
-    else {
-      if (defined("$class::SORT_METHODS")) {
-        sort($class_methods);
-      }
-      foreach ($class_methods as $method) {
-        // If the current method starts with "test", run it - it's a test.
-        if (strtolower(substr($method, 0, 4)) == 'test') {
-          // Insert a fail record. This will be deleted on completion to ensure
-          // that testing completed.
-          $method_info = new \ReflectionMethod($class, $method);
-          $caller = array(
-            'file' => $method_info->getFileName(),
-            'line' => $method_info->getStartLine(),
-            'function' => $class . '->' . $method . '()',
-          );
-          $completion_check_id = TestBase::insertAssert($this->testId, $class, FALSE, 'The test did not complete due to a fatal error.', 'Completion check', $caller);
-          try {
-            $this->prepareEnvironment();
-          }
-          catch (\Exception $e) {
-            $this->exceptionHandler($e);
-            // The prepareEnvironment() method isolates the test from the parent
-            // Drupal site by creating a random database prefix and test site
-            // directory. If this fails, a test would possibly operate in the
-            // parent site. Therefore, the entire test run for this test class
-            // has to be aborted.
-            // restoreEnvironment() cannot be called, because we do not know
-            // where exactly the environment setup failed.
-            break;
-          }
-          try {
-            $this->setUp();
-          }
-          catch (\Exception $e) {
-            $this->exceptionHandler($e);
-            // Abort if setUp() fails, since all test methods will fail.
-            // But ensure to clean up and restore the environment, since
-            // prepareEnvironment() succeeded.
-            $this->restoreEnvironment();
-            break;
-          }
-          try {
-            $this->$method();
-          }
-          catch (\Exception $e) {
-            $this->exceptionHandler($e);
-          }
-          try {
-            $this->tearDown();
-          }
-          catch (\Exception $e) {
-            $this->exceptionHandler($e);
-            // If a test fails to tear down, abort the entire test class, since
-            // it is likely that all tests will fail in the same way and a
-            // failure here only results in additional test artifacts that have
-            // to be manually deleted.
-            $this->restoreEnvironment();
-            break;
-          }
-          $this->restoreEnvironment();
-          // Remove the completion check record.
-          TestBase::deleteAssert($completion_check_id);
-        }
-      }
-    }
+
     TestServiceProvider::$currentTest = NULL;
     // Clear out the error messages and restore error handler.
     drupal_get_messages();
