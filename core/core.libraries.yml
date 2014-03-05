@@ -251,6 +251,7 @@ drupal.tableselect:
   dependencies:
     - core/drupal
     - core/jquery
+    - core/jquery.once
 
 drupal.timezone:
   version: VERSION
@@ -258,6 +259,7 @@ drupal.timezone:
     misc/timezone.js: {}
   dependencies:
     - core/jquery
+    - core/jquery.once
     - core/drupal
 
 drupal.vertical-tabs:
@@ -270,6 +272,7 @@ drupal.vertical-tabs:
       misc/vertical-tabs.css: {}
   dependencies:
     - core/jquery
+    - core/jquery.once
     - core/drupal
     - core/drupalSettings
     - core/drupal.form

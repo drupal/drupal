@@ -14,6 +14,7 @@ drupal.node.preview:
     node.preview.js: {}
   dependencies:
     - core/jquery
+    - core/jquery.once
     - core/drupal
 
 drupal.content_types:

@@ -28,6 +28,7 @@ edit:
       css/edit.icons.css: {}
   dependencies:
     - core/jquery
+    - core/jquery.once
     - core/underscore
     - core/backbone
     - core/jquery.form

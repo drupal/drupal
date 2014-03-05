@@ -16,6 +16,7 @@ drupal.user.permissions:
     user.permissions.js: {}
   dependencies:
     - core/jquery
+    - core/jquery.once
     - core/drupal
     - core/drupalSettings
 

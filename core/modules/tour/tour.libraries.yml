@@ -4,6 +4,7 @@ tour:
     js/tour.js: {}
   dependencies:
     - core/jquery
+    - core/jquery.once
     - core/drupal
     - core/backbone
     - core/jquery.joyride
