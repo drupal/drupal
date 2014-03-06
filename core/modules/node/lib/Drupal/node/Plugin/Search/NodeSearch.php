@@ -96,7 +96,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    */
   protected $advanced = array(
     'type' => array('column' => 'n.type'),
-    'langcode' => array('column' => 'i.langcode'),
+    'language' => array('column' => 'i.langcode'),
     'author' => array('column' => 'n.uid'),
     'term' => array('column' => 'ti.tid', 'join' => array('table' => 'taxonomy_index', 'alias' => 'ti', 'condition' => 'n.nid = ti.nid')),
   );
@@ -432,7 +432,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     // Add languages.
     $language_options = array();
-    foreach (language_list(Language::STATE_ALL) as $langcode => $language) {
+    $language_list = \Drupal::languageManager()->getLanguages(Language::STATE_ALL);
+    foreach ($language_list as $langcode => $language) {
       // Make locked languages appear special in the list.
       $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
     }

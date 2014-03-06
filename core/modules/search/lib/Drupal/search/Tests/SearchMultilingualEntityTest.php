@@ -8,6 +8,7 @@
 namespace Drupal\search\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\field\Field;
 
 /**
  * Tests entities with multilingual fields.
@@ -50,7 +51,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     // Make the body field translatable. The title is already translatable by
     // definition. The parent class has already created the article and page
     // content types.
-    $field = field_info_field('node', 'body');
+    $field = Field::fieldInfo()->getField('node', 'body');
     $field->translatable = TRUE;
     $field->save();
 
@@ -133,10 +134,27 @@ class SearchMultilingualEntityTest extends SearchTestBase {
     $this->assertEqual($search_result[1]['title'], 'Second node this is the English title', 'The search finds the correct English title.');
 
     // Now filter for Hungarian results only.
-    $plugin->setSearch('English OR Hungarian', array('f' => array('langcode:hu')), array());
+    $plugin->setSearch('English OR Hungarian', array('f' => array('language:hu')), array());
     $search_result = $plugin->execute();
 
     $this->assertEqual(count($search_result), 1, 'The search found only one result');
     $this->assertEqual($search_result[0]['title'], 'Third node this is the Hungarian title', 'The search finds the correct Hungarian title.');
+
+    // Test for search with common key word across multiple languages.
+    $plugin->setSearch('node', array(), array());
+    $search_result = $plugin->execute();
+
+    $this->assertEqual(count($search_result), 6, 'The search found total six results');
+
+    // Test with language filters and common key word.
+    $plugin->setSearch('node', array('f' => array('language:hu')), array());
+    $search_result = $plugin->execute();
+
+    $this->assertEqual(count($search_result), 2, 'The search found 2 results');
+
+    // Test to check for the language of result items.
+    foreach($search_result as $result) {
+      $this->assertEqual($result['langcode'], 'hu', 'The search found the correct Hungarian result');
+    }
   }
 }

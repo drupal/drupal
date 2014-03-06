@@ -7,6 +7,9 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\Core\Language\Language;
+use Drupal\field\Field;
+
 /**
  * Test node search with multiple languages.
  */
@@ -33,6 +36,62 @@ class SearchLanguageTest extends SearchTestBase {
     // Create and login user.
     $test_user = $this->drupalCreateUser(array('access content', 'search content', 'use advanced search', 'administer nodes', 'administer languages', 'access administration pages', 'administer site configuration'));
     $this->drupalLogin($test_user);
+
+    // Add a new language.
+    $language = new Language(array(
+      'id' => 'es',
+      'name' => 'Spanish',
+    ));
+    language_save($language);
+
+    // Make the body field translatable. The title is already translatable by
+    // definition. The parent class has already created the article and page
+    // content types.
+    $field = Field::fieldInfo()->getField('node', 'body');
+    $field->translatable = TRUE;
+    $field->save();
+
+    // Create a few page nodes with multilingual body values.
+    $default_format = filter_default_format();
+    $nodes = array(
+      array(
+        'title' => 'First node en',
+        'type' => 'page',
+        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'langcode' => 'en',
+      ),
+      array(
+        'title' => 'Second node this is the Spanish title',
+        'type' => 'page',
+        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'langcode' => 'es',
+      ),
+      array(
+        'title' => 'Third node en',
+        'type' => 'page',
+        'body' => array(array('value' => $this->randomName(32), 'format' => $default_format)),
+        'langcode' => 'en',
+      ),
+    );
+    $this->searchable_nodes = array();
+    foreach ($nodes as $setting) {
+      $this->searchable_nodes[] = $this->drupalCreateNode($setting);
+    }
+
+    // Add English translation to the second node.
+    $translation = $this->searchable_nodes[1]->addTranslation('en', array('title' => 'Second node en'));
+    $translation->body->value = $this->randomName(32);
+    $this->searchable_nodes[1]->save();
+
+    // Add Spanish translation to the third node.
+    $translation = $this->searchable_nodes[2]->addTranslation('es', array('title' => 'Third node es'));
+    $translation->body->value = $this->randomName(32);
+    $this->searchable_nodes[2]->save();
+
+    // Update the index and then run the shutdown method.
+    $plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $plugin->updateIndex();
+    search_update_totals();
   }
 
   function testLanguages() {
@@ -59,6 +118,17 @@ class SearchLanguageTest extends SearchTestBase {
     $parts = parse_url($url);
     $query_string = isset($parts['query']) ? rawurldecode($parts['query']) : '';
     $this->assertTrue(strpos($query_string, '=language:fr') !== FALSE, 'Language filter language:fr add to the query string.');
+
+    // Search for keyword node and language filter as Spanish.
+    $edit = array('keys' => 'node', 'language[es]' => TRUE);
+    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
+    // Check for Spanish results.
+    $this->assertLink('Second node this is the Spanish title', 0, 'Second node Spanish title found in search results');
+    $this->assertLink('Third node es', 0, 'Third node Spanish found in search results');
+    // Ensure that results doesn't contain other language nodes.
+    $this->assertNoLink('First node en', 'Search results does not contain first English node');
+    $this->assertNoLink('Second node en', 'Search results does not contain second English node');
+    $this->assertNoLink('Third node en', 'Search results does not contain third English node');
 
     // Change the default language and delete English.
     $path = 'admin/config/regional/settings';
