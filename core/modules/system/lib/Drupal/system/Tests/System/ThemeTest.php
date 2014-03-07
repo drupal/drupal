@@ -235,7 +235,7 @@ class ThemeTest extends WebTestBase {
     // Enable Bartik and set it as the default theme.
     theme_enable(array('bartik'));
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Set default'));
+    $this->clickLink(t('Set as default'));
     $this->assertEqual(\Drupal::config('system.theme')->get('default'), 'bartik');
 
     drupal_flush_all_caches();
@@ -245,7 +245,7 @@ class ThemeTest extends WebTestBase {
     $this->assertText('Bartik(' . t('active tab') . ')', 'Default local task on blocks admin page is the default theme.');
     // Switch back to Stark and test again to test that the menu cache is cleared.
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Set default'), 0);
+    $this->clickLink(t('Set as default'), 0);
     $this->drupalGet('admin/structure/block');
     $this->assertText('Stark(' . t('active tab') . ')', 'Default local task on blocks admin page has changed.');
   }

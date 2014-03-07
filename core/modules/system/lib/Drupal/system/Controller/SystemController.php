@@ -259,7 +259,7 @@ class SystemController extends ControllerBase {
               );
             }
             $theme->operations[] = array(
-              'title' => $this->t('Set default'),
+              'title' => $this->t('Set as default'),
               'route_name' => 'system.theme_set_default',
               'query' => $query,
               'attributes' => array('title' => $this->t('Set !theme as default theme', array('!theme' => $theme->info['name']))),
@@ -275,7 +275,7 @@ class SystemController extends ControllerBase {
             'attributes' => array('title' => $this->t('Enable !theme theme', array('!theme' => $theme->info['name']))),
           );
           $theme->operations[] = array(
-            'title' => $this->t('Enable and set default'),
+            'title' => $this->t('Enable and set as default'),
             'route_name' => 'system.theme_set_default',
             'query' => $query,
             'attributes' => array('title' => $this->t('Enable !theme as default theme', array('!theme' => $theme->info['name']))),

@@ -319,7 +319,7 @@ system.themes_page:
 system.theme_set_default:
   path: '/admin/appearance/default'
   defaults:
-    _title: 'Set default theme'
+    _title: 'Set as default theme'
     _content: '\Drupal\system\Controller\SystemController::themeSetDefault'
   requirements:
     _permission: 'administer themes'
