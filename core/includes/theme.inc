@@ -2120,9 +2120,6 @@ function template_preprocess_html(&$variables) {
  * Uses the arg() function to generate a series of page template suggestions
  * based on the current path.
  *
- * Any changes to variables in this preprocessor should also be changed inside
- * template_preprocess_maintenance_page() to keep all of them consistent.
- *
  * @see drupal_render_page()
  */
 function template_preprocess_page(&$variables) {
@@ -2377,19 +2374,12 @@ function template_preprocess_maintenance_page(&$variables) {
 
   $variables['head_title_array']  = $head_title;
   $variables['head_title']        = implode(' | ', $head_title);
-  $variables['base_path']         = base_path();
   $variables['front_page']        = url();
-  $variables['breadcrumb']        = '';
-  $variables['feed_icons']        = '';
   $variables['help']              = '';
   $variables['language']          = $language_interface;
-  $variables['language']->dir     = $language_interface->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo.url');
-  $variables['main_menu']         = array();
-  $variables['secondary_menu']    = array();
   $variables['site_name']         = (theme_get_setting('features.name') ? String::checkPlain($site_name) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_slogan) : '');
-  $variables['tabs']              = '';
 
   // Compile a list of classes that are going to be applied to the body element.
   $variables['attributes']['class'][] = 'maintenance-page';
