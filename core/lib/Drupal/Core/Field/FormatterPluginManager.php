@@ -167,13 +167,15 @@ class FormatterPluginManager extends DefaultPluginManager {
    */
   public function getOptions($field_type = NULL) {
     if (!isset($this->formatterOptions)) {
-      $field_types = $this->fieldTypeManager->getDefinitions();
       $options = array();
-      foreach ($this->getDefinitions() as $name => $formatter) {
-        foreach ($formatter['field_types'] as $formatter_field_type) {
+      $field_types = $this->fieldTypeManager->getDefinitions();
+      $formatter_types = $this->getDefinitions();
+      uasort($formatter_types, array('Drupal\Component\Utility\SortArray', 'sortByWeightElement'));
+      foreach ($formatter_types as $name => $formatter_type) {
+        foreach ($formatter_type['field_types'] as $formatter_field_type) {
           // Check that the field type exists.
           if (isset($field_types[$formatter_field_type])) {
-            $options[$formatter_field_type][$name] = $formatter['label'];
+            $options[$formatter_field_type][$name] = $formatter_type['label'];
           }
         }
       }

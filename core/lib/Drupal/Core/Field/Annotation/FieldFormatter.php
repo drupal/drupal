@@ -74,4 +74,13 @@ class FieldFormatter extends Plugin {
    */
   public $settings = array();
 
+  /**
+   * An integer to determine the weight of this formatter relative to other
+   * formatter in the Field UI when selecting a formatter for a given field
+   * instance.
+   *
+   * @var int optional
+   */
+  public $weight = NULL;
+
 }

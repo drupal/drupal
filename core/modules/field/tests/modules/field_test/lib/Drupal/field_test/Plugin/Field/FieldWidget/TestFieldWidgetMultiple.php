@@ -25,7 +25,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *   settings = {
  *     "test_widget_setting_multiple" = "dummy test string"
  *   },
- *   multiple_values = TRUE
+ *   multiple_values = TRUE,
+ *   weight = 10
  * )
  */
 class TestFieldWidgetMultiple extends WidgetBase {

@@ -51,11 +51,27 @@ class ManageDisplayTest extends FieldUiTestBase {
     $setting_name = key($default_settings);
     $setting_value = $display_options['settings'][$setting_name];
 
-    // Display the "Manage display" screen and check that the expected formatter is
-    // selected.
+    // Display the "Manage display" screen and check that the expected formatter
+    // is selected.
     $this->drupalGet($manage_display);
     $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
     $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
+
+    // Check whether formatter weights are respected.
+    $result = $this->xpath('//select[@id=:id]/option', array(':id' => 'edit-fields-field-test-type'));
+    $options = array_map(function($item) {
+      return (string) $item->attributes()->value[0];
+    }, $result);
+    $expected_options = array (
+      'field_no_settings',
+      'field_empty_test',
+      'field_empty_setting',
+      'field_test_default',
+      'field_test_multiple',
+      'field_test_with_prepare_view',
+      'hidden',
+    );
+    $this->assertEqual($options, $expected_options, 'The expected formatter ordering is respected.');
 
     // Change the formatter and check that the summary is updated.
     $edit = array('fields[field_test][type]' => 'field_test_multiple', 'refresh_rows' => 'field_test');
@@ -138,6 +154,18 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->drupalGet($manage_display);
     $this->assertFieldByName('fields[field_test][type]', $widget_type, 'The expected widget is selected.');
     $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
+
+    // Check whether widget weights are respected.
+    $result = $this->xpath('//select[@id=:id]/option', array(':id' => 'edit-fields-field-test-type'));
+    $options = array_map(function($item) {
+      return (string) $item->attributes()->value[0];
+    }, $result);
+    $expected_options = array (
+      'test_field_widget',
+      'test_field_widget_multiple',
+      'hidden',
+    );
+    $this->assertEqual($options, $expected_options, 'The expected widget ordering is respected.');
 
     // Change the widget and check that the summary is updated.
     $edit = array('fields[field_test][type]' => 'test_field_widget_multiple', 'refresh_rows' => 'field_test');

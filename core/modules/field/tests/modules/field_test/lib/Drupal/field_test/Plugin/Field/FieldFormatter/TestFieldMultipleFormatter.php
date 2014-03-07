@@ -22,7 +22,8 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   },
  *   settings = {
  *     "test_formatter_setting_multiple" = "dummy test string"
- *   }
+ *   },
+ *   weight = 5
  * )
  */
 class TestFieldMultipleFormatter extends FormatterBase {
