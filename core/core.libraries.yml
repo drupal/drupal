@@ -25,8 +25,7 @@ ckeditor:
 
 domready:
   remote: https://github.com/ded/domready
-  # @todo Stable release required for Drupal 8.0.
-  version: master
+  version: 1.0.4
   js:
     assets/vendor/domready/ready.min.js: { weight: -21 }
 
