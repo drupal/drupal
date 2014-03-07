@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -469,7 +470,9 @@ function theme_system_modules_uninstall($variables) {
 }
 
 /**
- * Returns HTML for the Appearance page.
+ * Prepares variables for appearance page templates.
+ *
+ * Default template: system-themes-page.html.twig.
  *
  * @param $variables
  *   An associative array containing:
@@ -478,10 +481,10 @@ function theme_system_modules_uninstall($variables) {
  *
  * @ingroup themeable
  */
-function theme_system_themes_page($variables) {
+function template_preprocess_system_themes_page(&$variables) {
+  $groups = array();
   $theme_groups = $variables['theme_groups'];
-
-  $output = '<div id="system-themes-page">';
+  $variables['attributes']['id'] = 'system-themes-page';
 
   foreach ($variables['theme_group_titles'] as $state => $title) {
     if (!count($theme_groups[$state])) {
@@ -489,66 +492,70 @@ function theme_system_themes_page($variables) {
       continue;
     }
     // Start new theme group.
-    $output .= '<div class="system-themes-list system-themes-list-'. $state .' clearfix"><h2>'. $title .'</h2>';
+    $theme_group = array();
+    $theme_group['state'] = $state;
+    $theme_group['title'] = $title;
+    $theme_group['themes'] = array();
+    $theme_group['attributes'] = new Attribute(array('class' => array('system-themes-list', 'system-themes-list-' . $state, 'clearfix')));
 
     foreach ($theme_groups[$state] as $theme) {
+      $current_theme = array();
 
-      // Theme the screenshot.
+      // Screenshot depicting the theme.
       if ($theme->screenshot) {
-        $image = array(
+        $current_theme['screenshot'] = array(
           '#theme' => 'image',
           '#uri' => $theme->screenshot['uri'],
           '#alt' => $theme->screenshot['alt'],
           '#title' => $theme->screenshot['title'],
           '#attributes' => $theme->screenshot['attributes'],
         );
-        $screenshot = drupal_render($image);
       }
       else {
-        $screenshot = '<div class="no-screenshot"><div class="no-screenshot__text">' . t('no screenshot') . '</div></div>';
+        $current_theme['screenshot'] = array();
       }
 
       // Localize the theme description.
-      $description = t($theme->info['description']);
+      $current_theme['description'] = t($theme->info['description']);
 
-      // Style theme info
-      $notes = count($theme->notes) ? ' (' . join(', ', $theme->notes) . ')' : '';
+      // Style theme info.
       $theme->classes[] = 'theme-selector';
       $theme->classes[] = 'clearfix';
-      $output .= '<div class="'. join(' ', $theme->classes) .'">' . $screenshot . '<div class="theme-info"><h3>' . $theme->info['name'] . ' ' . (isset($theme->info['version']) ? $theme->info['version'] : '') . $notes . '</h3><div class="theme-description">' . $description . '</div>';
+      $current_theme['attributes'] = new Attribute(array('class' => $theme->classes));
+      $current_theme['name'] = $theme->info['name'];
+      $current_theme['version'] = isset($theme->info['version']) ? $theme->info['version'] : '';
+      $current_theme['notes'] = $theme->notes;
 
       // Make sure to provide feedback on compatibility.
+      $current_theme['incompatible'] = '';
       if (!empty($theme->incompatible_core)) {
-        $output .= '<div class="incompatible">' . t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => \Drupal::CORE_COMPATIBILITY)) . '</div>';
+        $current_theme['incompatible'] = t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => \Drupal::CORE_COMPATIBILITY));
       }
       elseif (!empty($theme->incompatible_php)) {
         if (substr_count($theme->info['php'], '.') < 2) {
           $theme->info['php'] .= '.*';
         }
-        $output .= '<div class="incompatible">' . t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $theme->info['php'], '!php_version' => phpversion())) . '</div>';
+        $current_theme['incompatible'] = t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $theme->info['php'], '!php_version' => phpversion()));
       }
       elseif (!empty($theme->incompatible_base)) {
-        $output .= '<div class="incompatible">' . t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => $theme->info['base theme'])) . '</div>';
+        $current_theme['incompatible'] = t('This theme requires the base theme @base_theme to operate correctly.', array('@base_theme' => $theme->info['base theme']));
       }
       elseif (!empty($theme->incompatible_engine)) {
-        $output .= '<div class="incompatible">' . t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => $theme->info['engine'])) . '</div>';
+        $current_theme['incompatible'] = t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => $theme->info['engine']));
       }
-      else {
-        $links = array(
-          '#theme' => 'links',
-          '#links' => $theme->operations,
-          '#attributes' => array(
-            'class' => array('operations', 'clearfix'),
-          ),
-        );
-        $output .= drupal_render($links);
-      }
-      $output .= '</div></div>';
-    }
-    $output .= '</div>';
-  }
-  $output .= '</div>';
 
-  return $output;
+      // Build operation links.
+      $current_theme['operations'] = array(
+        '#theme' => 'links',
+        '#links' => $theme->operations,
+        '#attributes' => array(
+          'class' => array('operations', 'clearfix'),
+        ),
+      );
+      $theme_group['themes'][] = $current_theme;
+    }
+    $groups[] = $theme_group;
+  }
+  $variables['theme_groups'] = $groups;
 }
 

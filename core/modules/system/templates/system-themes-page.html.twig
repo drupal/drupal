@@ -1,0 +1,61 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Appearance page.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the main container.
+ * - theme_groups: A list of theme groups. Each theme group contains:
+ *   - attributes: HTML attributes specific to this theme group.
+ *   - title: Title for the theme group.
+ *   - state: State of the theme group, e.g. enabled or disabled.
+ *   - themes: A list of themes within the theme group. Each theme contains:
+ *     - attributes: HTML attributes specific to this theme.
+ *     - screenshot: A screenshot representing the theme.
+ *     - description: Description of the theme.
+ *     - name: Theme name.
+ *     - version: The theme's version number.
+ *     - notes: Identifies what context this theme is being used in, e.g.,
+ *       default theme, admin theme.
+ *     - incompatible: Text describing any compatibility issues.
+ *     - operations: A list of operation links, e.g., Settings, Enable, Disable,
+ *       etc. these links should only be displayed if the theme is compatible.
+ *
+ * @see template_preprocess_system_themes_page()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes }}>
+  {% for theme_group in theme_groups %}
+    <div{{ theme_group.attributes }}>
+      <h2>{{ theme_group.title }}</h2>
+      {% for theme in theme_group.themes %}
+        <div{{ theme.attributes }}>
+          {% if theme.screenshot %}
+            {{ theme.screenshot }}
+          {% else %}
+            <div class="no-screenshot">
+              <div class="no-screenshot__text">{{ "no screenshot"|t }}</div>
+            </div>
+          {% endif %}
+          <div class="theme-info">
+            <h3>
+              {{- theme.name }} {{ theme.version -}}
+              {% if theme.notes %}
+                ({{ theme.notes|join(', ') }})
+              {%- endif -%}
+            </h3>
+            <div class="theme-description">{{ theme.description }}</div>
+            {# Display operation links if the theme is compatible. #}
+            {% if theme.incompatible %}
+              <div class="incompatible">{{ theme.incompatible }}</div>
+            {% else %}
+              {{ theme.operations }}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
