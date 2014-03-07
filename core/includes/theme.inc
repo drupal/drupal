@@ -2592,6 +2592,7 @@ function drupal_common_theme() {
     ),
     'fieldset' => array(
       'render element' => 'element',
+      'template' => 'fieldset',
     ),
     'details' => array(
       'render element' => 'element',

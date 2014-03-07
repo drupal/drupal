@@ -9,6 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Number;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
@@ -1001,68 +1002,59 @@ function form_get_options($element, $key) {
 }
 
 /**
- * Returns HTML for a fieldset form element and its children.
+ * Prepares variables for fieldset element templates.
  *
- * @param $variables
+ * Default template: fieldset.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #attributes, #children, #description, #id,
- *     #title, #value.
- *
- * @ingroup themeable
+ *     Properties used: #attributes, #children, #description, #id, #title,
+ *     #value.
  */
-function theme_fieldset($variables) {
+function template_preprocess_fieldset(&$variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id'));
   _form_set_attributes($element, array('form-wrapper'));
-
-  $element['#attributes']['class'][] = 'form-item';
-
-  if (!empty($element['#description'])) {
-    $description_id = $element['#attributes']['id'] . '--description';
-    $element['#attributes']['aria-describedby'] = $description_id;
-  }
+  $variables['attributes'] = $element['#attributes'];
+  $variables['attributes']['class'][] = 'form-item';
 
   // If the element is required, a required marker is appended to the label.
-  // @see theme_form_element_label()
-  $required = '';
+  $variables['required'] = '';
   if (!empty($element['#required'])) {
-    $marker = array(
+    $variables['required'] = array(
       '#theme' => 'form_required_marker',
       '#element' => $element,
     );
-    $required = drupal_render($marker);
   }
 
+  $variables['prefix'] = isset($element['#field_prefix']) ? $element['#field_prefix'] : NULL;
+  $variables['suffix'] = isset($element['#field_suffix']) ? $element['#field_suffix'] : NULL;
+  $variables['children'] = $element['#children'];
+
+  // Build legend properties.
+  $variables['legend'] = array();
   $legend_attributes = array();
   if (isset($element['#title_display']) && $element['#title_display'] == 'invisible') {
     $legend_attributes['class'][] = 'visually-hidden';
   }
+  $variables['legend']['attributes'] = new Attribute($legend_attributes);
+  $variables['legend']['title'] = (isset($element['#title']) && $element['#title'] !== '') ? Xss::filterAdmin($element['#title']) : '';
 
-  $output = '<fieldset' . new Attribute($element['#attributes']) . '>';
-
-  if ((isset($element['#title']) && $element['#title'] !== '') || !empty($element['#required'])) {
-    // Always wrap fieldset legends in a SPAN for CSS positioning.
-    $output .= '<legend' . new Attribute($legend_attributes) . '><span class="fieldset-legend">';
-    $output .= t('!title!required', array('!title' => $element['#title'], '!required' => $required));
-    $output .= '</span></legend>';
-  }
-  $output .= '<div class="fieldset-wrapper">';
-
-  if (isset($element['#field_prefix'])) {
-    $output .= '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ';
-  }
-  $output .= $element['#children'];
-  if (isset($element['#field_suffix'])) {
-    $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
-  }
+  // Build description properties.
+  $variables['description'] = array();
   if (!empty($element['#description'])) {
-    $attributes = array('class' => 'description', 'id' => $description_id);
-    $output .= '<div' . new Attribute($attributes) . '>' . $element['#description'] . '</div>';
+    $description_id = $element['#attributes']['id'] . '--description';
+    $description_attributes = array(
+      'class' => 'description',
+      'id' => $description_id,
+    );
+    $variables['description']['attributes'] = new Attribute($description_attributes);
+    $variables['description']['content'] = $element['#description'];
+
+    // Add the description's id to the fieldset aria attributes.
+    $variables['attributes']['aria-describedby'] = $description_id;
   }
-  $output .= '</div>';
-  $output .= "</fieldset>\n";
-  return $output;
 }
 
 /**

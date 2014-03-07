@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a fieldset element and its children.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the fieldset element.
+ * - required: The required marker or empty if the associated fieldset is
+ *   not required.
+ * - legend: The legend element containing the following properties:
+ *   - title: Title of the fieldset, intended for use as the text of the legend.
+ *   - attributes: HTML attributes to apply to the legend.
+ * - description: The description element containing the following properties:
+ *   - content: The description content of the fieldset.
+ *   - attributes: HTML attributes to apply to the description container.
+ * - children: The rendered child elements of the fieldset.
+ * - prefix: The content to add before the fieldset children.
+ * - suffix: The content to add after the fieldset children.
+ *
+ * @see template_preprocess_fieldset()
+ *
+ * @ingroup themeable
+ */
+#}
+<fieldset{{ attributes }}>
+  {% if legend.title is not empty or required -%}
+    {#  Always wrap fieldset legends in a SPAN for CSS positioning. #}
+    <legend{{ legend.attributes }}><span class="fieldset-legend">{{ legend.title }}{{ required }}</span></legend>
+  {%- endif %}
+  <div class="fieldset-wrapper">
+    {% if prefix %}
+      <span class="field-prefix">{{ prefix }}</span>
+    {% endif %}
+    {{ children }}
+    {% if suffix %}
+      <span class="field-suffix">{{ suffix }}</span>
+    {% endif %}
+    {% if description.content %}
+      <div{{ description.attributes }}>{{ description.content }}</div>
+    {% endif %}
+  </div>
+</fieldset>
