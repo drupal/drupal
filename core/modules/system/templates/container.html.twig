@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Default theme implementation of a container used to wrap child elements.
+ *
+ * Used for grouped form items. Can also be used as a #theme_wrapper for any
+ * renderable element, to surround it with a <div> and HTML attributes.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - children: The rendered child elements of the container.
+ *
+ * @see template_preprocess_container()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes }}>{{ children }}</div>
