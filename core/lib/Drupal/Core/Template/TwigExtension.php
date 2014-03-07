@@ -21,25 +21,24 @@ class TwigExtension extends \Twig_Extension {
     // @todo re-add unset => twig_unset if this is really needed
     return array(
       // @todo Remove URL function once http://drupal.org/node/1778610 is resolved.
-      'url' => new \Twig_Function_Function('url'),
-      // These functions will receive a TwigReference object, if a render array is detected
-      'hide' => new TwigReferenceFunction('twig_hide'),
-      'render_var' => new TwigReferenceFunction('twig_render_var'),
-      'show' => new TwigReferenceFunction('twig_show'),
+      new \Twig_SimpleFunction('url', 'url'),
+      // This function will receive a renderable array, if an array is detected.
+      new \Twig_SimpleFunction('render_var', 'twig_render_var'),
     );
   }
 
   public function getFilters() {
     return array(
-      't' => new \Twig_Filter_Function('t'),
-      'trans' => new \Twig_Filter_Function('t'),
+      new \Twig_SimpleFilter('t', 't'),
+      new \Twig_SimpleFilter('trans', 't'),
       // The "raw" filter is not detectable when parsing "trans" tags. To detect
       // which prefix must be used for translation (@, !, %), we must clone the
       // "raw" filter and give it identifiable names. These filters should only
       // be used in "trans" tags.
       // @see TwigNodeTrans::compileString()
-      'passthrough' => new \Twig_Filter_Function('twig_raw_filter'),
-      'placeholder' => new \Twig_Filter_Function('twig_raw_filter'),
+      new \Twig_SimpleFilter('passthrough', 'twig_raw_filter'),
+      new \Twig_SimpleFilter('placeholder', 'twig_raw_filter'),
+      new \Twig_SimpleFilter('without', 'twig_without'),
     );
   }
 
@@ -53,8 +52,6 @@ class TwigExtension extends \Twig_Extension {
 
   public function getTokenParsers() {
     return array(
-      new TwigFunctionTokenParser('hide'),
-      new TwigFunctionTokenParser('show'),
       new TwigTransTokenParser(),
     );
   }

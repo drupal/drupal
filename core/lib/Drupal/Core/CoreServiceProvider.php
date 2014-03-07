@@ -125,7 +125,6 @@ class CoreServiceProvider implements ServiceProviderInterface  {
         // When in the installer, twig_cache must be FALSE until we know the
         // files folder is writable.
         'cache' => drupal_installation_attempted() ? FALSE : settings()->get('twig_cache', TRUE),
-        'base_template_class' => 'Drupal\Core\Template\TwigTemplate',
         // @todo Remove in followup issue
         // @see http://drupal.org/node/1712444.
         'autoescape' => FALSE,

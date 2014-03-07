@@ -8,7 +8,6 @@
 namespace Drupal\twig_extension_test\TwigExtension;
 
 use Drupal\Core\Template\TwigExtension;
-use Drupal\Core\Template\TwigReferenceFunction;
 
 /**
  * A test Twig extension that adds a custom function and a custom filter.

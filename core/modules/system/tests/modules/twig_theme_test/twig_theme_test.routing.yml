@@ -11,3 +11,10 @@ twig_theme_test.trans:
     _content: '\Drupal\twig_theme_test\TwigThemeTestController::transBlockRender'
   requirements:
     _access: 'TRUE'
+
+twig_theme_test.filter:
+  path: '/twig-theme-test/filter'
+  defaults:
+    _content: '\Drupal\twig_theme_test\TwigThemeTestController::testFilterRender'
+  requirements:
+    _access: 'TRUE'

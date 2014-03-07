@@ -15,11 +15,9 @@
  * @ingroup themeable
  */
 #}
-{% hide(form.advanced) %}
-{% hide(form.actions) %}
 <div class="layout-node-form clearfix">
   <div class="layout-region layout-region-node-main">
-    {{ form }}
+    {{ form|without('advanced', 'actions') }}
   </div>
   <div class="layout-region layout-region-node-secondary">
     {{ form.advanced }}

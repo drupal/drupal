@@ -4,7 +4,6 @@
  * @file
  * Handles integration of Twig templates with the Drupal theme system.
  */
-use Drupal\Core\Template\TwigReference;
 
 /**
  * Implements hook_theme().
@@ -119,10 +118,6 @@ function twig_render_template($template_file, $variables) {
  * @see TwigNodeVisitor
  */
 function twig_render_var($arg) {
-  if ($arg instanceof TwigReference) {
-    $arg = &$arg->getReference();
-  }
-
   // Check for numeric zero.
   if ($arg === 0) {
     return 0;
@@ -154,27 +149,29 @@ function twig_render_var($arg) {
 }
 
 /**
- * Wrapper around hide() that does not return the content.
+ * Removes child elements from a copy of the original array.
  *
- * @see hide
- */
-function twig_hide($element) {
-  if ($element instanceof TwigReference) {
-    $element = &$element->getReference();
-    hide($element);
-  }
-  // @todo Add warning in else case
-}
-
-/**
- * Wrapper around show() that does not return the content.
+ * Creates a copy of the renderable array and removes child elements by key
+ * specified throught filter's arguments. The copy can be printed without these
+ * elements. The original renderable array is still available and can be used
+ * to print child elements in their entirety in the twig template.
  *
- * @see show
+ * @param array $element
+ *   The parent renderable array to exclude the child items.
+ * @param string[] $args, ...
+ *   The string keys of $element to prevent printing.
+ *
+ * @return array
+ *   The filtered renderable array.
  */
-function twig_show($element) {
-  if ($element instanceof TwigReference) {
-    $element = &$element->getReference();
-    show($element);
+function twig_without($element) {
+  $filtered_element = $element;
+  $args = func_get_args();
+  unset($args[0]);
+  foreach ($args as $arg) {
+    if (isset($filtered_element[$arg])) {
+      unset($filtered_element[$arg]);
+    }
   }
-  // @todo Add warning in else case
+  return $filtered_element;
 }

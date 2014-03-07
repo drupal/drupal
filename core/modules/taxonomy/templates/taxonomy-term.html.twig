@@ -8,10 +8,10 @@
  * - name: Name of the current term.
  * - content: Items for the content of the term (fields and description).
  *   Use 'content' to print them all, or print a subset such as
- *   'content.description'. Use the following code to temporarily suppress the
- *   printing of a given element:
+ *   'content.description'. Use the following code to exclude the
+ *   printing of a given child element:
  *   @code
- *   {% hide(content.description) %}
+ *   {{ content|without('description') }}
  *   @endcode
  * - attributes: HTML attributes for the wrapper. The 'class' attribute
  *   contains the following classes by default:

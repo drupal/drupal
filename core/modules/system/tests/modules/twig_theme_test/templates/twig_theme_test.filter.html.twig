@@ -1,0 +1,14 @@
+<div><strong>No author:</strong> {{ quote|without('author') }}.</div>
+<div><strong>Complete quote after without:</strong> {{ quote }}.</div>
+<div><strong>Only author:</strong> {{ quote.author }}.</div>
+<div><strong>No author or date:</strong> {{ quote|without('date', 'author') }}.</div>
+<div><strong>Only date:</strong> {{ quote.date }}.</div>
+<div><strong>Complete quote again for good measure:</strong> {{ quote }}.</div>
+<div><strong>Marked-up:</strong>
+  <blockquote>
+    <p>{{ quote.content }}</p>
+    <footer>
+      &ndash; <cite><a href="#">{{ quote.author }}</a> <em>({{ quote.date }})</em></cite>
+    </footer>
+  </blockquote>
+</div>
