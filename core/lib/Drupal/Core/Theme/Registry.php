@@ -154,7 +154,7 @@ class Registry implements DestructableInterface {
       }
       // #2: The testing framework only cares for the global $theme variable at
       // this point. Cope with that.
-      if ($GLOBALS['theme'] != $GLOBALS['theme_info']->name) {
+      if ($GLOBALS['theme'] != $GLOBALS['theme_info']->getName()) {
         unset($this->runtimeRegistry);
         unset($this->registry);
         $this->initializeTheme();
@@ -207,7 +207,7 @@ class Registry implements DestructableInterface {
     if (isset($this->registry)) {
       return $this->registry;
     }
-    if ($cache = $this->cache->get('theme_registry:' . $this->theme->name)) {
+    if ($cache = $this->cache->get('theme_registry:' . $this->theme->getName())) {
       $this->registry = $cache->data;
     }
     else {
@@ -230,7 +230,7 @@ class Registry implements DestructableInterface {
    */
   public function getRuntime() {
     if (!isset($this->runtimeRegistry)) {
-      $this->runtimeRegistry = new ThemeRegistry('theme_registry:runtime:' . $this->theme->name, $this->cache, $this->lock, array('theme_registry' => TRUE), $this->moduleHandler->isLoaded());
+      $this->runtimeRegistry = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->cache, $this->lock, array('theme_registry' => TRUE), $this->moduleHandler->isLoaded());
     }
     return $this->runtimeRegistry;
   }
@@ -239,7 +239,7 @@ class Registry implements DestructableInterface {
    * Persists the theme registry in the cache backend.
    */
   protected function setCache() {
-    $this->cache->set('theme_registry:' . $this->theme->name, $this->registry, Cache::PERMANENT, array('theme_registry' => TRUE));
+    $this->cache->set('theme_registry:' . $this->theme->getName(), $this->registry, Cache::PERMANENT, array('theme_registry' => TRUE));
   }
 
   /**
@@ -319,20 +319,20 @@ class Registry implements DestructableInterface {
     // Process each base theme.
     foreach ($this->baseThemes as $base) {
       // If the base theme uses a theme engine, process its hooks.
-      $base_path = dirname($base->filename);
+      $base_path = $base->getPath();
       if ($this->engine) {
-        $this->processExtension($cache, $this->engine, 'base_theme_engine', $base->name, $base_path);
+        $this->processExtension($cache, $this->engine, 'base_theme_engine', $base->getName(), $base_path);
       }
-      $this->processExtension($cache, $base->name, 'base_theme', $base->name, $base_path);
+      $this->processExtension($cache, $base->getName(), 'base_theme', $base->getName(), $base_path);
     }
 
     // And then the same thing, but for the theme.
     if ($this->engine) {
-      $this->processExtension($cache, $this->engine, 'theme_engine', $this->theme->name, dirname($this->theme->filename));
+      $this->processExtension($cache, $this->engine, 'theme_engine', $this->theme->getName(), $this->theme->getPath());
     }
 
     // Finally, hooks provided by the theme itself.
-    $this->processExtension($cache, $this->theme->name, 'theme', $this->theme->name, dirname($this->theme->filename));
+    $this->processExtension($cache, $this->theme->getName(), 'theme', $this->theme->getName(), $this->theme->getPath());
 
     // Let modules alter the registry.
     $this->moduleHandler->alter('theme_registry', $cache);

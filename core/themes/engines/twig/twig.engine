@@ -4,6 +4,8 @@
  * @file
  * Handles integration of Twig templates with the Drupal theme system.
  */
+
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Template\TwigReference;
 
 /**
@@ -25,10 +27,9 @@ function twig_extension() {
 /**
  * Implements hook_init().
  */
-function twig_init($template) {
-  $file = dirname($template->filename) . '/' . $template->name . '.theme';
-  if (file_exists($file)) {
-    include_once DRUPAL_ROOT . '/' . $file;
+function twig_init(Extension $theme) {
+  if (file_exists($theme->uri)) {
+    include_once DRUPAL_ROOT . '/' . $theme->uri;
   }
 }
 

@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Extension\Extension;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -19,9 +20,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  * module or theme short name ($file->name) and the subarrays contain settings
  * just for that module or theme.
  */
-function update_test_system_info_alter(&$info, $file) {
+function update_test_system_info_alter(&$info, Extension $file) {
   $setting = \Drupal::config('update_test.settings')->get('system_info');
-  foreach (array('#all', $file->name) as $id) {
+  foreach (array('#all', $file->getName()) as $id) {
     if (!empty($setting[$id])) {
       foreach ($setting[$id] as $key => $value) {
         $info[$key] = $value;
