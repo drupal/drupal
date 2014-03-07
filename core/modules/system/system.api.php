@@ -2249,7 +2249,7 @@ function hook_uninstall() {
  * installer to pause and display a page to the user by returning any themed
  * output that should be displayed on that page (but see below for tasks that
  * use the form API or batch API; the return values of these task functions are
- * handled differently). You should also use drupal_set_title() within the task
+ * handled differently). You should also use #title within the task
  * callback function to set a custom page title. For some tasks, however, you
  * may want to simply do some processing and pass control to the next task
  * without ending the page request; to indicate this, simply do not send back

@@ -91,20 +91,13 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
     $target = call_user_func($target_function, $field_definition);
 
     if (method_exists($target, $method)) {
-      $items = $entity->get($field_definition->getName());
+      $field_name = $field_definition->getName();
+      $items = $entity->get($field_name);
       $items->filterEmptyItems();
 
       $result = $target->$method($items, $a, $b);
-
       if (isset($result)) {
-        // For methods with array results, we merge results together.
-        // For methods with scalar results, we collect results in an array.
-        if (is_array($result)) {
-          $return = array_merge($return, $result);
-        }
-        else {
-          $return[] = $result;
-        }
+        $return[$field_name] = $result;
       }
     }
   }

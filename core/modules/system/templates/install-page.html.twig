@@ -12,14 +12,14 @@
  */
 #}
 <!DOCTYPE html>
-<html lang="{{ language.langcode }}" dir="{{ language.dir }}">
+<html{{ html_attributes }}>
 <head>
   {{ head }}
   <title>{{ head_title }}</title>
   {{ styles }}
   {{ scripts }}
 </head>
-<body class="install-page">
+<body class="{{ attributes.class }}">
 
   <div class="l-container">
 

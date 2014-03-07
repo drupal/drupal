@@ -218,19 +218,22 @@ function _drupal_log_error($error, $fatal = FALSE) {
     }
 
     if ($fatal) {
-      // Should not translate the string to avoid errors producing more errors.
-      drupal_set_title('Error');
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
       // Should not translate the string to avoid errors producing more errors.
       $message = 'The website has encountered an error. Please try again later.';
       if ($is_installer) {
         // install_display_output() prints the output and ends script execution.
-        install_display_output($message, $GLOBALS['install_state']);
+        $output = array(
+          '#title' => 'Error',
+          '#markup' => $message,
+        );
+        install_display_output($output, $GLOBALS['install_state']);
       }
       else {
         $output = array(
           '#theme' => 'maintenance_page',
+          '#title' => 'Error',
           '#content' => $message,
         );
         $output = drupal_render($output);

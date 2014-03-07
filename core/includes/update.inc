@@ -147,7 +147,6 @@ function update_check_requirements($skip_warnings = FALSE) {
   // them if the caller has indicated they should be skipped.
   if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$skip_warnings)) {
     update_task_list('requirements');
-    drupal_set_title('Requirements problem');
     $status = array(
       '#theme' => 'status_report',
       '#requirements' => $requirements,
@@ -157,6 +156,7 @@ function update_check_requirements($skip_warnings = FALSE) {
     drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
     $maintenance_page = array(
       '#theme' => 'maintenance_page',
+      '#title' => 'Requirements problem',
       '#content' => $status_report,
     );
     print drupal_render($maintenance_page);

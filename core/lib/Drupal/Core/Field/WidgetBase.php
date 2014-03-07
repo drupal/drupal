@@ -111,25 +111,21 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     // Most widgets need their internal structure preserved in submitted values.
     $elements += array('#tree' => TRUE);
 
-    $return = array(
-      $field_name => array(
-        // Aid in theming of widgets by rendering a classified container.
-        '#type' => 'container',
-        // Assign a different parent, to keep the main id for the widget itself.
-        '#parents' => array_merge($parents, array($field_name . '_wrapper')),
-        '#attributes' => array(
-          'class' => array(
-            'field-type-' . drupal_html_class($this->fieldDefinition->getType()),
-            'field-name-' . drupal_html_class($field_name),
-            'field-widget-' . drupal_html_class($this->getPluginId()),
-          ),
+    return array(
+      // Aid in theming of widgets by rendering a classified container.
+      '#type' => 'container',
+      // Assign a different parent, to keep the main id for the widget itself.
+      '#parents' => array_merge($parents, array($field_name . '_wrapper')),
+      '#attributes' => array(
+        'class' => array(
+          'field-type-' . drupal_html_class($this->fieldDefinition->getType()),
+          'field-name-' . drupal_html_class($field_name),
+          'field-widget-' . drupal_html_class($this->getPluginId()),
         ),
-        '#access' => $items->access('edit'),
-        'widget' => $elements,
       ),
+      '#access' => $items->access('edit'),
+      'widget' => $elements,
     );
-
-    return $return;
   }
 
   /**

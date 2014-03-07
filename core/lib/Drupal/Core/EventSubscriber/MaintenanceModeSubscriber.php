@@ -44,9 +44,9 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     if ($request->attributes->get('_maintenance') != MENU_SITE_ONLINE && !($response instanceof RedirectResponse)) {
       // Deliver the 503 page.
       drupal_maintenance_theme();
-      drupal_set_title(t('Site under maintenance'));
       $maintenance_page = array(
         '#theme' => 'maintenance_page',
+        '#title' => t('Site under maintenance'),
         '#content' => filter_xss_admin(
           t(\Drupal::config('system.maintenance')->get('message'), array('@site' => \Drupal::config('system.site')->get('name')))
         ),

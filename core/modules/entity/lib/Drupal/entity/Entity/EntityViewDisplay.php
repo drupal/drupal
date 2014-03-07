@@ -230,7 +230,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
         // Then let the formatter build the output for each entity.
         foreach ($entities as $key => $entity) {
           $items = $entity->get($field_name);
-          $build[$key] += $formatter->view($items);
+          $build[$key][$field_name] = $formatter->view($items);
         }
       }
     }

@@ -2437,6 +2437,7 @@ function template_preprocess_maintenance_page(&$variables) {
  */
 function template_preprocess_install_page(&$variables) {
   template_preprocess_maintenance_page($variables);
+  $variables['attributes']['class'][] = 'install-page';
   // Override the site name that is displayed on the page, since Drupal is
   // still in the process of being installed.
   $variables['site_name'] = drupal_install_profile_distribution_name();
@@ -2551,7 +2552,7 @@ function drupal_common_theme() {
       'template' => 'maintenance-page',
     ),
     'install_page' => array(
-      'variables' => array('content' => NULL, 'show_messages' => TRUE),
+      'variables' => array('content' => NULL, 'show_messages' => TRUE, 'page' => array()),
       'template' => 'install-page',
     ),
     'task_list' => array(

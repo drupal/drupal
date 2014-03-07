@@ -10,6 +10,9 @@ use Drupal\Core\CoreServiceProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Install\TaskException;
+use Drupal\Core\Installer\Exception\AlreadyInstalledException;
+use Drupal\Core\Installer\Exception\InstallerException;
+use Drupal\Core\Installer\Exception\NoProfilesException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
@@ -89,12 +92,24 @@ function install_drupal($settings = array()) {
   $interactive = empty($settings);
   $install_state = $settings + array('interactive' => $interactive) + install_state_defaults();
 
-  // Begin the page request. This adds information about the current state of
-  // the Drupal installation to the passed-in array.
-  install_begin_request($install_state);
-  // Based on the installation state, run the remaining tasks for this page
-  // request, and collect any output.
-  $output = install_run_tasks($install_state);
+  try {
+    // Begin the page request. This adds information about the current state of
+    // the Drupal installation to the passed-in array.
+    install_begin_request($install_state);
+    // Based on the installation state, run the remaining tasks for this page
+    // request, and collect any output.
+    $output = install_run_tasks($install_state);
+  }
+  catch (InstallerException $e) {
+    // In the non-interactive installer, exceptions are always thrown directly.
+    if (!$install_state['interactive']) {
+      throw $e;
+    }
+    $output = array(
+      '#title' => $e->getTitle(),
+      '#markup' => $e->getMessage(),
+    );
+  }
 
   // After execution, all tasks might be complete, in which case
   // $install_state['installation_finished'] is TRUE. In case the last task
@@ -526,7 +541,7 @@ function install_begin_request(&$install_state) {
 
     // Do not install over a configured settings.php.
     if (!empty($GLOBALS['databases'])) {
-      throw new Exception(install_already_done_error());
+      throw new AlreadyInstalledException($container->get('string_translation'));
     }
   }
 
@@ -536,7 +551,7 @@ function install_begin_request(&$install_state) {
     $config = glob(config_get_config_directory(CONFIG_ACTIVE_DIRECTORY) . '/*.' . FileStorage::getFileExtension());
     if (!empty($config)) {
       $task = NULL;
-      throw new Exception(install_already_done_error());
+      throw new AlreadyInstalledException($container->get('string_translation'));
     }
   }
 
@@ -627,7 +642,7 @@ function install_run_task($task, &$install_state) {
       // rendered, which means the task is not complete yet.
       if (empty($form_state['executed'])) {
         $install_state['task_not_complete'] = TRUE;
-        return drupal_render($form);
+        return $form;
       }
       // Otherwise, return nothing so the next task will run in the same
       // request.
@@ -647,7 +662,7 @@ function install_run_task($task, &$install_state) {
       drupal_form_submit($function, $form_state);
       $errors = form_get_errors($form_state);
       if (!empty($errors)) {
-        throw new Exception(implode("\n", $errors));
+        throw new InstallerException(implode("\n", $errors));
       }
     }
   }
@@ -954,7 +969,7 @@ function install_full_redirect_url($install_state) {
 /**
  * Displays themed installer output and ends the page request.
  *
- * Installation tasks should use drupal_set_title() to set the desired page
+ * Installation tasks should use #title to set the desired page
  * title, but otherwise this function takes care of theming the overall page
  * output during every step of the installation.
  *
@@ -1000,7 +1015,17 @@ function install_display_output($output, $install_state) {
     );
     drupal_add_region_content('sidebar_first', drupal_render($task_list));
   }
-  $install_page = array('#theme' => 'install_page', '#content' => $output);
+  $install_page = array(
+    '#theme' => 'install_page',
+    // $output has to be rendered here, because the install page template is not
+    // wrapped into the html template, which means that any #attached libraries
+    // in $output will not be loaded, because the wrapping HTML has been printed
+    // already.
+    '#content' => drupal_render($output),
+  );
+  if (isset($output['#title'])) {
+    $install_page['#page']['#title'] = $output['#title'];
+  }
   print drupal_render($install_page);
   exit;
 }
@@ -1072,11 +1097,11 @@ function install_verify_completed_task() {
   }
   // Do not trigger an error if the database query fails, since the database
   // might not be set up yet.
-  catch (Exception $e) {
+  catch (\Exception $e) {
   }
   if (isset($task)) {
     if ($task == 'done') {
-      throw new Exception(install_already_done_error());
+      throw new AlreadyInstalledException(\Drupal::service('string_translation'));
     }
     return $task;
   }
@@ -1114,7 +1139,7 @@ function install_settings_form($form, &$form_state, &$install_state) {
   $conf_path = './' . conf_path(FALSE);
   $settings_file = $conf_path . '/settings.php';
 
-  drupal_set_title(t('Database configuration'));
+  $form['#title'] = t('Database configuration');
 
   $drivers = drupal_get_database_types();
   $drivers_keys = array_keys($drivers);
@@ -1305,26 +1330,21 @@ function install_settings_form_submit($form, &$form_state) {
  */
 function install_select_profile(&$install_state) {
   if (empty($install_state['parameters']['profile'])) {
-    // Try to find a profile.
-    $profile = _install_select_profile($install_state['profiles']);
-    if (empty($profile)) {
-      // We still don't have a profile, so display a form for selecting one.
-      // Only do this in the case of interactive installations, since this is
-      // not a real form with submit handlers (the database isn't even set up
-      // yet), rather just a convenience method for setting parameters in the
-      // URL.
-      if ($install_state['interactive']) {
-        include_once __DIR__ . '/form.inc';
-        drupal_set_title(t('Select an installation profile'));
-        $form = drupal_get_form('install_select_profile_form', $install_state);
-        return drupal_render($form);
-      }
-      else {
-        throw new Exception(install_no_profile_error());
-      }
+    // If there are no profiles at all, installation cannot proceed.
+    if (empty($install_state['profiles'])) {
+      throw new NoProfilesException(\Drupal::service('string_translation'));
+    }
+    // Try to automatically select a profile.
+    if ($profile = _install_select_profile($install_state['profiles'])) {
+      $install_state['parameters']['profile'] = $profile;
     }
     else {
-      $install_state['parameters']['profile'] = $profile;
+      // The non-interactive installer requires a profile parameter.
+      if (!$install_state['interactive']) {
+        throw new InstallerException(t('Missing profile parameter.'));
+      }
+      // Otherwise, display a form to select a profile.
+      return drupal_get_form('install_select_profile_form', $install_state);
     }
   }
 }
@@ -1384,9 +1404,10 @@ function _install_select_profile($profiles) {
  * @ingroup forms
  */
 function install_select_profile_form($form, &$form_state, $install_state) {
+  $form['#title'] = t('Select an installation profile');
+
   $profiles = array();
   $names = array();
-
   foreach ($install_state['profiles'] as $profile) {
     $details = install_profile_info($profile->getName());
     // Skip this extension if its type is not profile.
@@ -1560,10 +1581,7 @@ function install_select_language(&$install_state) {
     // translation files were found the form shows a select list of the
     // corresponding languages to choose from.
     if ($install_state['interactive']) {
-      drupal_set_title(t('Choose language'));
-      include_once __DIR__ . '/form.inc';
-      $elements = drupal_get_form('install_select_language_form', count($files) > 1 ? $files : array());
-      return drupal_render($elements);
+      return drupal_get_form('install_select_language_form', count($files) > 1 ? $files : array());
     }
     // If we are performing a non-interactive installation. If only one language
     // (English) is available, assume the user knows what he is doing. Otherwise
@@ -1574,7 +1592,7 @@ function install_select_language(&$install_state) {
         return;
       }
       else {
-        throw new Exception(t('Sorry, you must select a language to continue the installation.'));
+        throw new InstallerException(t('Sorry, you must select a language to continue the installation.'));
       }
     }
   }
@@ -1594,6 +1612,8 @@ function install_select_language_form($form, &$form_state, $files = array()) {
   $standard_languages = LanguageManager::getStandardLanguageList();
   $select_options = array();
   $browser_options = array();
+
+  $form['#title'] = t('Choose language');
 
   // Build a select list with language names in native language for the user
   // to choose from. And build a list of available languages for the browser
@@ -1873,24 +1893,6 @@ function _install_get_version_info($version) {
 }
 
 /**
- * Indicates that there are no profiles available.
- */
-function install_no_profile_error() {
-  drupal_set_title(t('No profiles available'));
-  return t('We were unable to find any installation profiles. Installation profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.');
-}
-
-/**
- * Indicates that Drupal has already been installed.
- */
-function install_already_done_error() {
-  global $base_url;
-
-  drupal_set_title(t('Drupal already installed'));
-  return t('<ul><li>To start over, you must empty your existing database, delete your active configuration, and copy <em>default.settings.php</em> over <em>settings.php</em>.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To locate your active configuration, view the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/core/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url));
-}
-
-/**
  * Loads information about the chosen profile during installation.
  *
  * @param $install_state
@@ -1906,7 +1908,7 @@ function install_load_profile(&$install_state) {
     $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], $install_state['parameters']['langcode']);
   }
   else {
-    throw new Exception(t('Sorry, the profile you have chosen cannot be loaded.'));
+    throw new InstallerException(t('Sorry, the profile you have chosen cannot be loaded.'));
   }
 }
 
@@ -2072,7 +2074,7 @@ function _install_prepare_import($langcode) {
  * @ingroup forms
  */
 function install_configure_form($form, &$form_state, &$install_state) {
-  drupal_set_title(t('Configure site'));
+  $form['#title'] = t('Configure site');
 
   // Warn about settings.php permissions risk
   $settings_dir = conf_path();
@@ -2174,8 +2176,6 @@ function install_finished(&$install_state) {
   // registered by the installation profile are registered correctly.
   drupal_flush_all_caches();
 
-  drupal_set_title(t('@drupal installation complete', array('@drupal' => drupal_install_profile_distribution_name())), PASS_THROUGH);
-
   $messages = drupal_set_message();
   $output = '<p>' . t('Congratulations, you installed @drupal!', array('@drupal' => drupal_install_profile_distribution_name())) . '</p>';
   // Ensure the URL that is generated for the home page does not have 'install.php'
@@ -2197,7 +2197,11 @@ function install_finished(&$install_state) {
   $snapshot = \Drupal::service('config.storage.snapshot');
   \Drupal::service('config.manager')->createSnapshot($active, $snapshot);
 
-  return $output;
+  $build = array(
+    '#title' => t('@drupal installation complete', array('@drupal' => drupal_install_profile_distribution_name())),
+    '#markup' => $output,
+  );
+  return $build;
 }
 
 /**
@@ -2525,7 +2529,7 @@ function install_check_requirements($install_state) {
  *   in the URL. Otherwise, no output is returned, so that the next task can be
  *   run in the same page request.
  *
- * @thows \Exception
+ * @throws \Drupal\Core\Installer\Exception\InstallerException
  */
 function install_display_requirements($install_state, $requirements) {
   // Check the severity of the requirements reported.
@@ -2536,14 +2540,13 @@ function install_display_requirements($install_state, $requirements) {
   // and indicating a desire to continue anyway. See drupal_requirements_url().
   if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($install_state['parameters']['continue']))) {
     if ($install_state['interactive']) {
-      drupal_set_title(t('Requirements problem'));
-      $status_report = array(
+      $build['#title'] = t('Requirements problem');
+      $build['report'] = array(
         '#theme' => 'status_report',
         '#requirements' => $requirements,
+        '#suffix' => t('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity)))),
       );
-      $status_report = drupal_render($status_report);
-      $status_report .= t('Check the messages and <a href="!url">try again</a>.', array('!url' => check_url(drupal_requirements_url($severity))));
-      return $status_report;
+      return $build;
     }
     else {
       // Throw an exception showing any unmet requirements.
@@ -2557,7 +2560,7 @@ function install_display_requirements($install_state, $requirements) {
         }
       }
       if (!empty($failures)) {
-        throw new \Exception(implode("\n\n", $failures));
+        throw new InstallerException(implode("\n\n", $failures));
       }
     }
   }
