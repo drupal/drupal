@@ -7,6 +7,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
@@ -34,9 +35,6 @@ use Drupal\Core\Lock\LockBackendInterface;
  * editing certain data, or even to restrict other users from editing it at
  * the same time. It is the responsibility of the implementation to decide
  * when and whether one owner can use or update another owner's data.
- *
- * @todo We could add getIfOwner() or setIfOwner() methods to make this more
- *   explicit.
  */
 class TempStore {
 
@@ -85,7 +83,7 @@ class TempStore {
    * @param mixed $owner
    *   The owner key to store along with the data (e.g. a user or session ID).
    */
-  function __construct(KeyValueStoreExpirableInterface $storage, LockBackendInterface $lockBackend, $owner) {
+  public function __construct(KeyValueStoreExpirableInterface $storage, LockBackendInterface $lockBackend, $owner) {
     $this->storage = $storage;
     $this->lockBackend = $lockBackend;
     $this->owner = $owner;
@@ -100,8 +98,25 @@ class TempStore {
    * @return mixed
    *   The data associated with the key, or NULL if the key does not exist.
    */
-  function get($key) {
+  public function get($key) {
     if ($object = $this->storage->get($key)) {
+      return $object->data;
+    }
+  }
+
+  /**
+   * Retrieves a value from this TempStore for a given key.
+   *
+   * Only returns the value if the value is owned by $this->owner.
+   *
+   * @param string $key
+   *   The key of the data to retrieve.
+   *
+   * @return mixed
+   *   The data associated with the key, or NULL if the key does not exist.
+   */
+  public function getIfOwner($key) {
+    if (($object = $this->storage->get($key)) && ($object->owner == $this->owner)) {
       return $object->data;
     }
   }
@@ -117,7 +132,7 @@ class TempStore {
    * @return bool
    *   TRUE if the data was set, or FALSE if it already existed.
    */
-  function setIfNotExists($key, $value) {
+  public function setIfNotExists($key, $value) {
     $value = (object) array(
       'owner' => $this->owner,
       'data' => $value,
@@ -129,18 +144,46 @@ class TempStore {
   /**
    * Stores a particular key/value pair in this TempStore.
    *
+   * Only stores the given key/value pair if it does not exist yet or is owned
+   * by $this->owner.
+   *
+   * @param string $key
+   *   The key of the data to store.
+   * @param mixed $value
+   *   The data to store.
+   *
+   * @return bool
+   *   TRUE if the data was set, or FALSE if it already exists and is not owned
+   * by $this->user.
+   */
+  public function setIfOwner($key, $value) {
+    if ($this->setIfNotExists($key, $value)) {
+      return TRUE;
+    }
+
+    if (($object = $this->storage->get($key)) && ($object->owner == $this->owner)) {
+      $this->set($key, $value);
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Stores a particular key/value pair in this TempStore.
+   *
    * @param string $key
    *   The key of the data to store.
    * @param mixed $value
    *   The data to store.
    */
-  function set($key, $value) {
+  public function set($key, $value) {
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
       if (!$this->lockBackend->acquire($key)) {
-        throw new TempStoreException(format_string("Couldn't acquire lock to update item %key in %collection temporary storage.", array(
+        throw new TempStoreException(String::format("Couldn't acquire lock to update item %key in %collection temporary storage.", array(
           '%key' => $key,
-          '%collection' => $this->storage->collection,
+          '%collection' => $this->storage->getCollectionName(),
         )));
       }
     }
@@ -164,7 +207,7 @@ class TempStore {
    *   An object with the owner and updated time if the key has a value, or
    *   NULL otherwise.
    */
-  function getMetadata($key) {
+  public function getMetadata($key) {
     // Fetch the key/value pair and its metadata.
     $object = $this->storage->get($key);
     if ($object) {
@@ -180,18 +223,42 @@ class TempStore {
    * @param string $key
    *   The key of the data to delete.
    */
-  function delete($key) {
+  public function delete($key) {
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
       if (!$this->lockBackend->acquire($key)) {
-        throw new TempStoreException(format_string("Couldn't acquire lock to delete item %key from %collection temporary storage.", array(
+        throw new TempStoreException(String::format("Couldn't acquire lock to delete item %key from %collection temporary storage.", array(
           '%key' => $key,
-          '%collection' => $this->storage->collection,
+          '%collection' => $this->storage->getCollectionName(),
         )));
       }
     }
     $this->storage->delete($key);
     $this->lockBackend->release($key);
+  }
+
+  /**
+   * Deletes data from the store for a given key and releases the lock on it.
+   *
+   * Only delete the given key if it is owned by $this->owner.
+   *
+   * @param string $key
+   *   The key of the data to delete.
+   *
+   * @return bool
+   *   TRUE if the object was deleted or does not exist, FALSE if it exists but
+   *   is not owned by $this->owner.
+   */
+  public function deleteIfOwner($key) {
+    if (!$object = $this->storage->get($key)) {
+      return TRUE;
+    }
+    elseif ($object->owner == $this->owner) {
+      $this->delete($key);
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
 }
