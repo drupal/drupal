@@ -48,17 +48,10 @@ function ckeditor_theme() {
  * Implements hook_ckeditor_css_alter().
  */
 function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
-    $filters = array();
-    if (!empty($editor->format)) {
-      $filters = entity_load('filter_format', $editor->format)
-        ->filters()
-        ->getAll();
-    }
-
   // Add the filter caption CSS if the text format associated with this text
   // editor uses the filter_caption filter. This is used by the included
   // CKEditor DrupalImageCaption plugin.
-  if (isset($filters['filter_caption']) && $filters['filter_caption']->status) {
+  if ($editor->getFilterFormat()->filters('filter_caption')->status) {
     $css[] = drupal_get_path('module', 'filter') . '/css/filter.caption.css';
   }
 }

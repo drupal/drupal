@@ -15,7 +15,7 @@ use Drupal\editor\EditorInterface;
  *
  * @ConfigEntityType(
  *   id = "editor",
- *   label = @Translation("Editor"),
+ *   label = @Translation("Text Editor"),
  *   entity_keys = {
  *     "id" = "format"
  *   }
@@ -53,14 +53,21 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   public $image_upload = array();
 
   /**
-   * Overrides Drupal\Core\Entity\Entity::id().
+   * The filter format this text editor is associated with.
+   *
+   * @var \Drupal\filter\FilterFormatInterface
+   */
+  protected $filterFormat;
+
+  /**
+   * {@inheritdoc}
    */
   public function id() {
     return $this->format;
   }
 
   /**
-   * Overrides Drupal\Core\Entity\Entity::__construct()
+   * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
@@ -73,6 +80,16 @@ class Editor extends ConfigEntityBase implements EditorInterface {
     $default_settings += \Drupal::moduleHandler()->invokeAll('editor_default_settings', array($this->editor));
     \Drupal::moduleHandler()->alter('editor_default_settings', $default_settings, $this->editor);
     $this->settings += $default_settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFilterFormat() {
+    if (!$this->filterFormat) {
+      $this->filterFormat = \Drupal::entityManager()->getStorageController('filter_format')->load($this->format);
+    }
+    return $this->filterFormat;
   }
 
 }

@@ -286,7 +286,7 @@ class Internal extends CKEditorPluginBase {
    */
   protected function generateAllowedContentSetting(Editor $editor) {
     // When nothing is disallowed, set allowedContent to true.
-    $format = entity_load('filter_format', $editor->format);
+    $format = $editor->getFilterFormat();
     $filter_types = $format->getFilterTypes();
     if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $filter_types)) {
       return TRUE;
