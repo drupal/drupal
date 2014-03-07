@@ -39,16 +39,13 @@ class TwigEnvironment extends \Twig_Environment {
     $this->cache_object = \Drupal::cache();
 
     // Set twig path namespace for themes and modules.
-    $namespaces = array();
-    foreach ($module_handler->getModuleList() as $name => $filename) {
-      $namespaces[$name] = dirname($filename);
-    }
-    foreach ($theme_handler->listInfo() as $name => $extension) {
-      $namespaces[$name] = $extension->getPath();
+    $namespaces = $module_handler->getModuleList();
+    foreach ($theme_handler->listInfo() as $theme => $info) {
+      $namespaces[$theme] = $info->filename;
     }
 
-    foreach ($namespaces as $name => $path) {
-      $templatesDirectory = $path . '/templates';
+    foreach ($namespaces as $name => $filename) {
+      $templatesDirectory = dirname($filename) . '/templates';
       if (file_exists($templatesDirectory)) {
         $loader->addPath($templatesDirectory, $name);
       }

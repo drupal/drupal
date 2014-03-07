@@ -11,7 +11,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
@@ -177,14 +176,14 @@ class ModulesListForm extends FormBase {
    *
    * @param array $modules
    *   The list existing modules.
-   * @param \Drupal\Core\Extension\Extension $module
+   * @param object $module
    *   The module for which to build the form row.
    * @param $distribution
    *
    * @return array
    *   The form row for the given module.
    */
-  protected function buildRow(array $modules, Extension $module, $distribution) {
+  protected function buildRow(array $modules, $module, $distribution) {
     // Set the basic properties.
     $row['#required'] = array();
     $row['#requires'] = array();
@@ -200,12 +199,12 @@ class ModulesListForm extends FormBase {
 
     // Generate link for module's help page, if there is one.
     $row['links']['help'] = array();
-    if ($help && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
-      if ($this->moduleHandler->invoke($module->getName(), 'help', array('admin/help#' . $module->getName(), $help))) {
+    if ($help && $module->status && in_array($module->name, $this->moduleHandler->getImplementations('help'))) {
+      if ($this->moduleHandler->invoke($module->name, 'help', array("admin/help#$module->name", $help))) {
         $row['links']['help'] = array(
           '#type' => 'link',
           '#title' => $this->t('Help'),
-          '#href' => 'admin/help/' . $module->getName(),
+          '#href' => "admin/help/$module->name",
           '#options' => array('attributes' => array('class' =>  array('module-link', 'module-link-help'), 'title' => $this->t('Help'))),
         );
       }
@@ -213,12 +212,12 @@ class ModulesListForm extends FormBase {
 
     // Generate link for module's permission, if the user has access to it.
     $row['links']['permissions'] = array();
-    if ($module->status && user_access('administer permissions') && in_array($module->getName(), $this->moduleHandler->getImplementations('permission'))) {
+    if ($module->status && user_access('administer permissions') && in_array($module->name, $this->moduleHandler->getImplementations('permission'))) {
       $row['links']['permissions'] = array(
         '#type' => 'link',
         '#title' => $this->t('Permissions'),
         '#href' => 'admin/people/permissions',
-        '#options' => array('fragment' => 'module-' . $module->getName(), 'attributes' => array('class' => array('module-link', 'module-link-permissions'), 'title' => $this->t('Configure permissions'))),
+        '#options' => array('fragment' => 'module-' . $module->name, 'attributes' => array('class' => array('module-link', 'module-link-permissions'), 'title' => $this->t('Configure permissions'))),
       );
     }
 

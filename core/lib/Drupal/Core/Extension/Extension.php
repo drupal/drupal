@@ -15,9 +15,11 @@ class Extension implements \Serializable {
   /**
    * The type of the extension (e.g., 'module').
    *
+   * @todo Replace all uses of $type with getType() method.
+   *
    * @var string
    */
-  protected $type;
+  public $type;
 
   /**
    * The relative pathname of the extension (e.g., 'core/modules/node/node.info.yml').
@@ -25,6 +27,15 @@ class Extension implements \Serializable {
    * @var string
    */
   protected $pathname;
+
+  /**
+   * The internal name of the extension (e.g., 'node').
+   *
+   * @todo Replace all uses of $name with getName() method.
+   *
+   * @var string
+   */
+  public $name;
 
   /**
    * The relative pathname of the main extension file (e.g., 'core/modules/node/node.module').
@@ -39,9 +50,21 @@ class Extension implements \Serializable {
   /**
    * The filename of the main extension file (e.g., 'node.module').
    *
+   * Note that this is not necessarily a filename but a pathname and also not
+   * necessarily the filename of the info file. Due to legacy code and property
+   * value overloading, it is either the filename of the main extension file or
+   * the relative pathname of the main extension file (== $uri), depending on
+   * whether the object has been post-processed or not.
+   *
+   * @see _system_rebuild_module_data()
+   * @see \Drupal\Core\Extension\ThemeHandler::rebuildThemeData()
+   *
+   * @todo Remove this property and do not require .module/.profile files.
+   * @see https://drupal.org/node/340723
+   *
    * @var string
    */
-  protected $filename;
+  public $filename;
 
   /**
    * An SplFileInfo instance for the extension's info file.
@@ -67,6 +90,7 @@ class Extension implements \Serializable {
     $this->type = $type;
     $this->pathname = $pathname;
     // Set legacy public properties.
+    $this->name = basename($pathname, '.info.yml');
     $this->filename = $filename;
     $this->uri = dirname($pathname) . '/' . $filename;
   }
@@ -183,6 +207,7 @@ class Extension implements \Serializable {
     // @todo Remove these properties and do not require .module/.profile files.
     // @see https://drupal.org/node/340723
     // @see Extension::$filename
+    $this->name = basename($data['pathname'], '.info.yml');
     $this->uri = dirname($data['pathname']) . '/' . $data['filename'];
     $this->filename = $data['filename'];
 

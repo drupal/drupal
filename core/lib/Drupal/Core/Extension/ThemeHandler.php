@@ -220,7 +220,7 @@ class ThemeHandler implements ThemeHandlerInterface {
         if (!isset($theme->status)) {
           $theme->status = 0;
         }
-        $this->list[$theme->getName()] = $theme;
+        $this->list[$theme->name] = $theme;
       }
     }
     return $this->list;
@@ -271,6 +271,7 @@ class ThemeHandler implements ThemeHandlerInterface {
     $sub_themes = array();
     // Read info files for each theme.
     foreach ($themes as $key => $theme) {
+      $theme->filename = $theme->uri;
       $theme->info = $this->infoParser->parse($theme->getPathname()) + $defaults;
 
       // Add the info file modification time, so it becomes available for
@@ -291,7 +292,7 @@ class ThemeHandler implements ThemeHandlerInterface {
       $engine = $theme->info['engine'];
       if (isset($engines[$engine])) {
         $theme->owner = $engines[$engine]->uri;
-        $theme->prefix = $engines[$engine]->getName();
+        $theme->prefix = $engines[$engine]->name;
       }
 
       // Prefix stylesheets, scripts, and screenshot with theme path.

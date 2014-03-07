@@ -63,7 +63,7 @@ function system_list($type) {
         $lists['filepaths'][] = array(
           'type' => 'theme',
           'name' => $name,
-          'filepath' => $theme->getPathname(),
+          'filepath' => $theme->filename,
         );
       }
     }

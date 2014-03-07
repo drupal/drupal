@@ -278,14 +278,14 @@ class ExtensionDiscovery {
     // e.g. new modules were introduced in core while older contrib modules with
     // the same name still exist in a later search path.
     foreach ($all_files as $file) {
-      if (isset($files[$file->getName()])) {
+      if (isset($files[$file->name])) {
         // Skip the extension if it is incompatible with Drupal core.
         $info = $this->getInfoParser()->parse($file->getPathname());
         if (!isset($info['core']) || $info['core'] != \Drupal::CORE_COMPATIBILITY) {
           continue;
         }
       }
-      $files[$file->getName()] = $file;
+      $files[$file->name] = $file;
     }
     return $files;
   }
@@ -366,12 +366,16 @@ class ExtensionDiscovery {
       $name = $fileinfo->getBasename('.info.yml');
       $pathname = $dir_prefix . $fileinfo->getSubPathname();
 
-      // Determine whether the extension has a main extension file.
+      // Supply main extension filename being used throughout Drupal.
+      // For themes, the filename is the info file itself.
+      if ($type == 'theme') {
+        $filename = $fileinfo->getFilename();
+      }
       // For theme engines, the file extension is .engine.
-      if ($type == 'theme_engine') {
+      elseif ($type == 'theme_engine') {
         $filename = $name . '.engine';
       }
-      // For profiles/modules/themes, it is the extension type.
+      // Otherwise, it is .module/.profile; i.e., the extension type.
       else {
         $filename = $name . '.' . $type;
       }

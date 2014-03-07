@@ -49,7 +49,7 @@ class SystemListingTest extends DrupalUnitTestBase {
     // meaning, so assert their presence first.
     foreach ($expected_directories as $module => $directories) {
       foreach ($directories as $directory) {
-        $filename = "$directory/$module/$module.info.yml";
+        $filename = "$directory/$module/$module.module";
         $this->assertTrue(file_exists(DRUPAL_ROOT . '/' . $filename), format_string('@filename exists.', array('@filename' => $filename)));
       }
     }
@@ -61,9 +61,9 @@ class SystemListingTest extends DrupalUnitTestBase {
     $files = $listing->scan('module');
     foreach ($expected_directories as $module => $directories) {
       $expected_directory = array_shift($directories);
-      $expected_uri = "$expected_directory/$module/$module.info.yml";
-      $this->assertEqual($files[$module]->getPathname(), $expected_uri, format_string('Module @actual was found at @expected.', array(
-        '@actual' => $files[$module]->getPathname(),
+      $expected_uri = "$expected_directory/$module/$module.module";
+      $this->assertEqual($files[$module]->uri, $expected_uri, format_string('Module @actual was found at @expected.', array(
+        '@actual' => $files[$module]->uri,
         '@expected' => $expected_uri,
       )));
     }

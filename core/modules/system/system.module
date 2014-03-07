@@ -8,7 +8,6 @@
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Utility\ModuleInfo;
 use Drupal\block\BlockPluginInterface;
@@ -1378,6 +1377,10 @@ function _system_rebuild_module_data() {
 
   // Read info files for each module.
   foreach ($modules as $key => $module) {
+    // The module system uses the key 'filename' instead of 'uri' so copy the
+    // value so it will be used by the modules system.
+    $modules[$key]->filename = $module->uri;
+
     // Look for the info file.
     $module->info = \Drupal::service('info_parser')->parse($module->getPathname());
 
@@ -1434,7 +1437,7 @@ function _system_rebuild_module_data_ensure_required($module, &$modules) {
     foreach ($module->info['dependencies'] as $dependant) {
       if (!isset($modules[$dependant]->info['required'])) {
         $modules[$dependant]->info['required'] = TRUE;
-        $modules[$dependant]->info['explanation'] = t('Dependency of required module @module', array('@module' => $module->info['name']));
+        $modules[$dependant]->info['explanation'] = t('Dependency of required module @module', array('@module' => $module->name));
         // Ensure any dependencies it has are required.
         _system_rebuild_module_data_ensure_required($modules[$dependant], $modules);
       }
@@ -1592,7 +1595,7 @@ function system_sort_themes($a, $b) {
 /**
  * Implements hook_system_info_alter().
  */
-function system_system_info_alter(&$info, Extension $file, $type) {
+function system_system_info_alter(&$info, $file, $type) {
   // Remove page-top and page-bottom from the blocks UI since they are reserved for
   // modules to populate from outside the blocks system.
   if ($type == 'theme') {

@@ -79,7 +79,7 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  */
 function drupal_theme_access($theme) {
   if ($theme instanceof Extension) {
-    $theme = $theme->getName();
+    $theme = $theme->name;
   }
   return \Drupal::service('access_check.theme')->checkAccess($theme);
 }
@@ -135,7 +135,7 @@ function _drupal_theme_initialize($theme, $base_theme = array()) {
   $theme_info = $theme;
   $base_theme_info = $base_theme;
 
-  $theme_path = $theme->getPath();
+  $theme_path = dirname($theme->filename);
 
   // Prepare stylesheets from this theme as well as all ancestor themes.
   // We work it this way so that we can have child themes override parent
@@ -155,7 +155,7 @@ function _drupal_theme_initialize($theme, $base_theme = array()) {
         }
       }
     }
-    $base_theme_path = $base->getPath();
+    $base_theme_path = dirname($base->filename);
     if (!empty($base->info['stylesheets-remove'])) {
       foreach ($base->info['stylesheets-remove'] as $basename) {
         $theme->stylesheets_remove[$basename] = $base_theme_path . '/' . $basename;
@@ -793,7 +793,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   $theme_paths = array();
   foreach (list_themes() as $theme_info) {
     if (!empty($theme_info->base_theme)) {
-      $theme_paths[$theme_info->base_theme][$theme_info->getName()] = $theme_info->getPath();
+      $theme_paths[$theme_info->base_theme][$theme_info->name] = dirname($theme_info->filename);
     }
   }
   foreach ($theme_paths as $basetheme => $subthemes) {
@@ -955,7 +955,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
       if ($cache[$theme]->get('features.logo')) {
         $logo_path = $cache[$theme]->get('logo.path');
         if ($cache[$theme]->get('logo.use_default')) {
-          $cache[$theme]->set('logo.url', file_create_url($theme_object->getPath() . '/logo.png'));
+          $cache[$theme]->set('logo.url', file_create_url(dirname($theme_object->filename) . '/logo.png'));
         }
         elseif ($logo_path) {
           $cache[$theme]->set('logo.url', file_create_url($logo_path));
@@ -966,7 +966,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
       if ($cache[$theme]->get('features.favicon')) {
         $favicon_path = $cache[$theme]->get('favicon.path');
         if ($cache[$theme]->get('favicon.use_default')) {
-          if (file_exists($favicon = $theme_object->getPath() . '/favicon.ico')) {
+          if (file_exists($favicon = dirname($theme_object->filename) . '/favicon.ico')) {
             $cache[$theme]->set('favicon.url', file_create_url($favicon));
           }
           else {

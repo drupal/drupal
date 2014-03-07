@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Extension\Extension;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -62,20 +61,20 @@ function system_theme_default() {
  *   incompatible files as the keys, their values being TRUE.
  * @param $files
  *   The set of files that will be tested.
- * @param \Drupal\Core\Extension\Extension $file
+ * @param $file
  *   The file at which the check starts.
  * @return
  *   Returns TRUE if an incompatible file is found, NULL (no return value)
  *   otherwise.
  */
-function _system_is_incompatible(&$incompatible, $files, Extension $file) {
-  if (isset($incompatible[$file->getName()])) {
+function _system_is_incompatible(&$incompatible, $files, $file) {
+  if (isset($incompatible[$file->name])) {
     return TRUE;
   }
   // Recursively traverse required modules, looking for incompatible modules.
   foreach ($file->requires as $requires) {
     if (isset($files[$requires]) && _system_is_incompatible($incompatible, $files, $files[$requires])) {
-      $incompatible[$file->getName()] = TRUE;
+      $incompatible[$file->name] = TRUE;
       return TRUE;
     }
   }

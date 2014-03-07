@@ -573,7 +573,9 @@ function drupal_verify_profile($install_state) {
   include_once __DIR__ . '/common.inc';
 
   $profile = $install_state['parameters']['profile'];
-  if (!isset($profile) || !isset($install_state['profiles'][$profile])) {
+  $profile_file = $install_state['profiles'][$profile]->uri;
+
+  if (!isset($profile) || !file_exists($profile_file)) {
     throw new Exception(install_no_profile_error());
   }
   $info = $install_state['profile_info'];
@@ -582,7 +584,7 @@ function drupal_verify_profile($install_state) {
   $listing = new ExtensionDiscovery();
   $present_modules = array();
   foreach ($listing->scan('module') as $present_module) {
-    $present_modules[] = $present_module->getName();
+    $present_modules[] = $present_module->name;
   }
 
   // The installation profile is also a module, which needs to be installed

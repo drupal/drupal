@@ -72,7 +72,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
       $directories[$module] = dirname($filename);
     }
     foreach ($theme_handler->listInfo() as $theme) {
-      $directories[$theme->getName()] = $theme->getPath();
+      $directories[$theme->name] = dirname($theme->filename);
     }
 
     // Check for files named MODULE.config_translation.yml and

@@ -8,7 +8,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\field\Field;
@@ -158,11 +157,11 @@ function field_cron() {
  * Goes through a list of all modules that provide a field type and makes them
  * required if there are any active fields of that type.
  */
-function field_system_info_alter(&$info, Extension $file, $type) {
+function field_system_info_alter(&$info, $file, $type) {
   // It is not safe to call entity_load_multiple_by_properties() during
   // maintenance mode.
   if ($type == 'module' && !defined('MAINTENANCE_MODE')) {
-    $fields = entity_load_multiple_by_properties('field_config', array('module' => $file->getName(), 'include_deleted' => TRUE));
+    $fields = entity_load_multiple_by_properties('field_config', array('module' => $file->name, 'include_deleted' => TRUE));
     if ($fields) {
       $info['required'] = TRUE;
 

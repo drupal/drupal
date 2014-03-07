@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Theme;
 
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
 
@@ -76,7 +75,10 @@ class RegistryTest extends UnitTestCase {
    */
   public function testGetRegistryForModule() {
     $this->setupTheme('test_theme');
-    $this->registry->setTheme(new Extension('theme', 'core/modules/system/tests/themes/test_theme/test_theme.info.yml', 'test_theme.theme'));
+    $this->registry->setTheme((object) array(
+      'name' => 'test_theme',
+      'filename' => 'core/modules/system/tests/themes/test_theme/test_theme.theme',
+    ));
     $this->registry->setBaseThemes(array());
 
     // Include the module so that hook_theme can be called.
@@ -118,7 +120,7 @@ class RegistryTest extends UnitTestCase {
 
 class TestRegistry extends Registry {
 
-  public function setTheme(Extension $theme) {
+  public function setTheme(\stdClass $theme) {
     $this->theme = $theme;
   }
 
