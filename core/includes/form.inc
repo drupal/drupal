@@ -876,7 +876,9 @@ function form_process_select($element) {
 }
 
 /**
- * Returns HTML for a select form element.
+ * Prepares variables for select element templates.
+ *
+ * Default template: select.html.twig.
  *
  * It is possible to group options together; to do this, change the format of
  * $options to an associative array in which the keys are group labels, and the
@@ -887,15 +889,14 @@ function form_process_select($element) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #options, #description, #extra,
  *     #multiple, #required, #name, #attributes, #size.
- *
- * @ingroup themeable
  */
-function theme_select($variables) {
+function template_preprocess_select(&$variables) {
   $element = $variables['element'];
   element_set_attributes($element, array('id', 'name', 'size'));
   _form_set_attributes($element, array('form-select'));
 
-  return '<select' . new Attribute($element['#attributes']) . '>' . form_select_options($element) . '</select>';
+  $variables['attributes'] = $element['#attributes'];
+  $variables['options'] = form_select_options($element);
 }
 
 /**
