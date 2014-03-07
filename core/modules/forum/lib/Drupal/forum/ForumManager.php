@@ -140,19 +140,18 @@ class ForumManager implements ForumManagerInterface {
     $forum_per_page = $config->get('topics.page_limit');
     $sortby = $config->get('topics.order');
 
-    global $forum_topic_list_header;
     $user = \Drupal::currentUser();
 
-    $forum_topic_list_header = array(
+    $header = array(
       array('data' => $this->t('Topic'), 'field' => 'f.title'),
       array('data' => $this->t('Replies'), 'field' => 'f.comment_count'),
       array('data' => $this->t('Last reply'), 'field' => 'f.last_comment_timestamp'),
     );
 
     $order = $this->getTopicOrder($sortby);
-    for ($i = 0; $i < count($forum_topic_list_header); $i++) {
-      if ($forum_topic_list_header[$i]['field'] == $order['field']) {
-        $forum_topic_list_header[$i]['sort'] = $order['sort'];
+    for ($i = 0; $i < count($header); $i++) {
+      if ($header[$i]['field'] == $order['field']) {
+        $header[$i]['sort'] = $order['sort'];
       }
     }
 
@@ -165,7 +164,7 @@ class ForumManager implements ForumManagerInterface {
       ->addTag('node_access')
       ->addMetaData('base_table', 'forum_index')
       ->orderBy('f.sticky', 'DESC')
-      ->orderByHeader($forum_topic_list_header)
+      ->orderByHeader($header)
       ->limit($forum_per_page);
 
     $count_query = $this->connection->select('forum_index', 'f');
@@ -207,7 +206,7 @@ class ForumManager implements ForumManagerInterface {
 
       $query
         ->orderBy('f.sticky', 'DESC')
-        ->orderByHeader($forum_topic_list_header)
+        ->orderByHeader($header)
         ->condition('n.nid', $nids)
         // @todo This should be actually filtering on the desired node language
         //   and just fall back to the default language.
@@ -266,7 +265,7 @@ class ForumManager implements ForumManagerInterface {
       $topics[$topic->id()] = $topic;
     }
 
-    return $topics;
+    return array('topics' => $topics, 'header' => $header);
 
   }
 

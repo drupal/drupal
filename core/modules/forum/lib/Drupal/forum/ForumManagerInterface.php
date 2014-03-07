@@ -21,7 +21,7 @@ interface ForumManagerInterface {
    *   Term ID.
    *
    * @return array
-   *   Array of topics.
+   *   Array with keys 'topics' and 'header'.
    */
   public function getTopics($tid);
 

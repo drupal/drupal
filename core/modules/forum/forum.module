@@ -74,7 +74,7 @@ function forum_theme() {
   return array(
     'forums' => array(
       'template' => 'forums',
-      'variables' => array('forums' => array(), 'topics' => array(), 'topics_pager' => array(), 'parents' => NULL, 'term' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
+      'variables' => array('forums' => array(), 'topics' => array(), 'topics_pager' => array(), 'parents' => NULL, 'term' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL, 'header' => array()),
     ),
     'forum_list' => array(
       'template' => 'forum-list',
@@ -623,7 +623,7 @@ function template_preprocess_forums(&$variables) {
     }
 
     if ($variables['term'] && empty($variables['term']->forum_container->value) && !empty($variables['topics'])) {
-      global $forum_topic_list_header;
+      $forum_topic_list_header = $variables['header'];
 
       $table = array(
         '#theme' => 'table__forum_topic_list',
