@@ -2680,16 +2680,16 @@ function form_pre_render_color($element) {
 }
 
 /**
- * Returns HTML for a form.
+ * Prepares variables for form templates.
+ *
+ * Default template: form.html.twig.
  *
  * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #action, #method, #attributes, #children
- *
- * @ingroup themeable
  */
-function theme_form($variables) {
+function template_preprocess_form(&$variables) {
   $element = $variables['element'];
   if (isset($element['#action'])) {
     $element['#attributes']['action'] = UrlHelper::stripDangerousProtocols($element['#action']);
@@ -2698,8 +2698,8 @@ function theme_form($variables) {
   if (empty($element['#attributes']['accept-charset'])) {
     $element['#attributes']['accept-charset'] = "UTF-8";
   }
-  // Anonymous DIV to satisfy XHTML compliance.
-  return '<form' . new Attribute($element['#attributes']) . '><div>' . $element['#children'] . '</div></form>';
+  $variables['attributes'] = $element['#attributes'];
+  $variables['children'] = $element['#children'];
 }
 
 /**

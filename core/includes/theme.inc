@@ -2608,6 +2608,7 @@ function drupal_common_theme() {
     ),
     'form' => array(
       'render element' => 'element',
+      'template' => 'form',
     ),
     'textarea' => array(
       'render element' => 'element',
