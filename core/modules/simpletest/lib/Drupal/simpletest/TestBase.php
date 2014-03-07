@@ -806,6 +806,11 @@ abstract class TestBase {
     $test_methods = array_filter(get_class_methods($class), function ($method) {
       return strpos($method, 'test') === 0;
     });
+    if (empty($test_methods)) {
+      // Call $this->assert() here because we need to pass along custom caller
+      // information, lest the wrong originating code file/line be identified.
+      $this->assert(FALSE, 'No test methods found.', 'Requirements', array('function' => __METHOD__ . '()', 'file' => __FILE__, 'line' => __LINE__));
+    }
     if ($methods) {
       $test_methods = array_intersect($test_methods, $methods);
     }

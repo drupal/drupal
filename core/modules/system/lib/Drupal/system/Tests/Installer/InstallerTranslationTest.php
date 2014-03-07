@@ -59,4 +59,12 @@ class InstallerTranslationTest extends InstallerTestBase {
     parent::setUpConfirm();
   }
 
+  /**
+   * Verifies that installation succeeded.
+   */
+  public function testInstaller() {
+    $this->assertUrl('user/1');
+    $this->assertResponse(200);
+  }
+
 }
