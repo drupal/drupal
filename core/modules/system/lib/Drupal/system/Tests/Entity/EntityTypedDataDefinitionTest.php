@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\TypedData\EntityTypedDataDefinitionTest.
+ * Contains \Drupal\system\Tests\Entity\EntityTypedDataDefinitionTest.
  */
 
 namespace Drupal\system\Tests\Entity;
@@ -101,7 +101,7 @@ class EntityTypedDataDefinitionTest extends DrupalUnitTestBase {
     // Comparison should ignore the internal static cache, so compare the
     // serialized objects instead.
     $this->assertEqual(serialize($field_definitions), serialize(\Drupal::entityManager()->getBaseFieldDefinitions('node')));
-    $this->assertEqual($entity_definition->getPropertyDefinition('title')->getItemDefinition()->getDataType(), 'field_item:text');
+    $this->assertEqual($entity_definition->getPropertyDefinition('title')->getItemDefinition()->getDataType(), 'field_item:string');
     $this->assertNull($entity_definition->getMainPropertyName());
     $this->assertNull($entity_definition->getPropertyDefinition('invalid'));
 

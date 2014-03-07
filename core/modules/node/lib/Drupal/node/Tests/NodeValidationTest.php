@@ -54,7 +54,7 @@ class NodeValidationTest extends EntityUnitTestBase {
     $violations = $node->validate();
     $this->assertEqual(count($violations), 1, 'Violation found when title is too long.');
     $this->assertEqual($violations[0]->getPropertyPath(), 'title.0.value');
-    $this->assertEqual($violations[0]->getMessage(), '<em class="placeholder">Title</em>: the text may not be longer than 255 characters.');
+    $this->assertEqual($violations[0]->getMessage(), '<em class="placeholder">Title</em>: may not be longer than 255 characters.');
 
     $node->set('title', NULL);
     $violations = $node->validate();

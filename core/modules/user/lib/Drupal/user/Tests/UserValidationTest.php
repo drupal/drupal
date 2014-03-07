@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserValidationTest.
+ * Contains \Drupal\user\Tests\UserValidationTest.
  */
 
 namespace Drupal\user\Tests;
@@ -160,6 +160,8 @@ class UserValidationTest extends DrupalUnitTestBase {
     $violations = $entity->validate();
     $this->assertEqual(count($violations), 1, "Violation found when $field_name is too long.");
     $this->assertEqual($violations[0]->getPropertyPath(), "$field_name.0.value");
-    $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', array('%limit' => $length)));
+    $field_label = $entity->get($field_name)->getFieldDefinition()->getLabel();
+    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', array('%name' => $field_label, '@max' => $length)));
   }
+
 }

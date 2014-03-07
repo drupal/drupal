@@ -170,3 +170,12 @@ function text_filter_format_update($format) {
 function text_filter_format_disable($format) {
   field_cache_clear();
 }
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function text_field_formatter_info_alter(&$info) {
+  $info['string']['field_types'][] = 'text';
+  $info['string']['field_types'][] = 'text_with_summary';
+  $info['string']['field_types'][] = 'text_long';
+}

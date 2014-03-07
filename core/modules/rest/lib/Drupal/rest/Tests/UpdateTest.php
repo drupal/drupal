@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\rest\test\UpdateTest.
+ * Contains \Drupal\rest\test\UpdateTest.
  */
 
 namespace Drupal\rest\Tests;
@@ -149,7 +149,7 @@ class UpdateTest extends RESTTestBase {
     $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $invalid_serialized, $this->defaultMimeType);
     $this->assertResponse(422);
     $error = drupal_json_decode($response);
-    $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nuuid.0.value: This value is too long. It should have <em class=\"placeholder\">128</em> characters or less.\n");
+    $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nuuid.0.value: <em class=\"placeholder\">UUID</em>: may not be longer than 128 characters.\n");
 
     // Try to update an entity without proper permissions.
     $this->drupalLogout();
@@ -162,4 +162,5 @@ class UpdateTest extends RESTTestBase {
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(404);
   }
+
 }

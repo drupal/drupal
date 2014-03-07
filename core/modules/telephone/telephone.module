@@ -26,20 +26,8 @@ function telephone_help($path, $arg) {
 }
 
 /**
- * Implements hook_field_info_alter().
- */
-function telephone_field_info_alter(&$info) {
-  if (\Drupal::moduleHandler()->moduleExists('text')) {
-    $info['telephone']['default_formatter'] = 'text_plain';
-  }
-}
-
-
-/**
  * Implements hook_field_formatter_info_alter().
  */
 function telephone_field_formatter_info_alter(&$info) {
-  if (isset($info['text_plain'])) {
-    $info['text_plain']['field_types'][] = 'telephone';
-  }
+  $info['string']['field_types'][] = 'telephone';
 }

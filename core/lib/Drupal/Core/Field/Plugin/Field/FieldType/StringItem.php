@@ -21,7 +21,9 @@ use Drupal\Core\TypedData\DataDefinition;
  *   settings = {
  *     "max_length" = "255"
  *   },
- *   configurable = FALSE
+ *   configurable = FALSE,
+ *   default_widget = "string",
+ *   default_formatter = "string"
  * )
  */
 class StringItem extends FieldItemBase {
@@ -60,7 +62,12 @@ class StringItem extends FieldItemBase {
     if ($max_length = $this->getSetting('max_length')) {
       $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
       $constraints[] = $constraint_manager->create('ComplexData', array(
-        'value' => array('Length' => array('max' => $max_length))
+        'value' => array(
+          'Length' => array(
+            'max' => $max_length,
+            'maxMessage' => t('%name: may not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length)),
+          ),
+        ),
       ));
     }
 

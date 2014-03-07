@@ -378,7 +378,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Language code'))
       ->setDescription(t('The node language code.'));
 
-    $fields['title'] = FieldDefinition::create('text')
+    $fields['title'] = FieldDefinition::create('string')
       ->setLabel(t('Title'))
       ->setDescription(t('The title of this node, always treated as non-markup plain text.'))
       ->setRequired(TRUE)
@@ -386,15 +386,14 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setSettings(array(
         'default_value' => '',
         'max_length' => 255,
-        'text_processing' => 0,
       ))
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
-        'type' => 'text_default',
+        'type' => 'string',
         'weight' => -5,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'text_textfield',
+        'type' => 'string',
         'weight' => -5,
       ))
       ->setDisplayConfigurable('form', TRUE);

@@ -73,7 +73,7 @@ class TextFieldRdfaTest extends FieldRdfaTestBase {
    * Tests the plain formatter.
    */
   public function testPlainFormatter() {
-    $this->assertFormatterRdfa('text_plain', 'http://schema.org/text', $this->testValue);
+    $this->assertFormatterRdfa('string', 'http://schema.org/text', $this->testValue);
   }
 
   /**

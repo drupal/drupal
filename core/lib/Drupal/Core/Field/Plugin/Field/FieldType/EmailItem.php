@@ -18,7 +18,9 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "email",
  *   label = @Translation("E-mail"),
  *   description = @Translation("An entity field containing an e-mail value."),
- *   configurable = FALSE
+ *   configurable = FALSE,
+ *   default_widget = "string",
+ *   default_formatter = "string"
  * )
  */
 class EmailItem extends FieldItemBase {

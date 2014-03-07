@@ -110,16 +110,6 @@ entity_view_display.field.text_default:
       sequence:
         - type: string
 
-entity_view_display.field.text_plain:
-  type: entity_field_view_display_base
-  label: 'Plain text display format settings'
-  mapping:
-    settings:
-      type: sequence
-      label: 'Settings'
-      sequence:
-        - type: string
-
 entity_view_display.field.text_summary_or_trimmed:
   type: entity_field_view_display_base
   label: 'Summary or trimmed text display format settings'

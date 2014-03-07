@@ -73,7 +73,7 @@ class FieldUITest extends FieldTestBase {
     }, $result);
     // @todo Replace this sort by assertArray once it's in.
     sort($options, SORT_STRING);
-    $this->assertEqual($options, array('text_default', 'text_plain', 'text_trimmed'), 'The text formatters for a simple text field appear as expected.');
+    $this->assertEqual($options, array('string', 'text_default', 'text_trimmed'), 'The text formatters for a simple text field appear as expected.');
 
     $this->drupalPostForm(NULL, array('options[type]' => 'text_trimmed'), t('Apply'));
 

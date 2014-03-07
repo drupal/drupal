@@ -19,7 +19,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   label = @Translation("Telephone number"),
  *   description = @Translation("This field stores a telephone number in the database."),
  *   default_widget = "telephone_default",
- *   default_formatter = "telephone_link"
+ *   default_formatter = "string"
  * )
  */
 class TelephoneItem extends ConfigFieldItemBase {
