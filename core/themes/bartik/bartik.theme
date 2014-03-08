@@ -169,8 +169,8 @@ function bartik_field__taxonomy_term_reference($variables) {
 }
 
 /**
-+ * Helper function for handling the site name and slogan.
-+ */
+ * Helper function for handling the site name and slogan.
+ */
 function _bartik_process_page(&$variables) {
   $site_config = \Drupal::config('system.site');
   // Always print the site name and slogan, but if they are toggled off, we'll
