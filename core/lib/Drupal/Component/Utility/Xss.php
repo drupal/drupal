@@ -70,8 +70,6 @@ class Xss {
     if (!Unicode::validateUtf8($string)) {
       return '';
     }
-    // Store the text format.
-    static::split($html_tags, TRUE, $mode);
     // Remove NULL characters (ignored by some browsers).
     $string = str_replace(chr(0), '', $string);
     // Remove Netscape 4 JS entities.
@@ -86,7 +84,10 @@ class Xss {
     $string = preg_replace('/&amp;#[Xx]0*((?:[0-9A-Fa-f]{2})+;)/', '&#x\1', $string);
     // Named entities.
     $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
-
+    $html_tags = array_flip($html_tags);
+    $splitter = function ($matches) use ($html_tags, $mode) {
+      return static::split($matches[1], $html_tags, $mode);
+    };
     return preg_replace_callback('%
       (
       <(?=[^a-zA-Z!/])  # a lone <
@@ -96,7 +97,7 @@ class Xss {
       <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
       |                 # or
       >                 # just a >
-      )%x', 'static::split', $string);
+      )%x', $splitter, $string);
   }
 
   /**
@@ -123,32 +124,20 @@ class Xss {
   /**
    * Processes an HTML tag.
    *
-   * @param array $matches
-   *   An array with various meaning depending on the value of $store.
-   *   If $store is TRUE then the array contains the allowed tags.
-   *   If $store is FALSE then the array has one element, the HTML tag to process.
-   * @param bool $store
-   *   Whether to store $matches.
-   * @param bool $mode
-   *   (optional) Ignored when $store is FALSE, otherwise used to determine
-   *   whether $matches is a list of allowed (if FILTER_MODE_WHITELIST) or
+   * @param string $string
+   *   The HTML tag to process.
+   * @param array $html_tags
+   *   An array where the keys are the allowed tags and the values are not
+   *   used.
+   * @param bool $split_mode
+   *   Whether $html_tags is a list of allowed (if FILTER_MODE_WHITELIST) or
    *   disallowed (if FILTER_MODE_BLACKLIST) HTML tags.
    *
    * @return string
    *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
    *   version of the HTML element.
    */
-  protected static function split($matches, $store = FALSE, $mode = Xss::FILTER_MODE_WHITELIST) {
-    static $html_tags, $split_mode;
-
-    if ($store) {
-      $html_tags = array_flip($matches);
-      $split_mode = $mode;
-      return;
-    }
-
-    $string = $matches[1];
-
+  protected static function split($string, $html_tags, $split_mode) {
     if (substr($string, 0, 1) != '<') {
       // We matched a lone ">" character.
       return '&gt;';
