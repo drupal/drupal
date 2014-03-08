@@ -162,6 +162,9 @@ class CommentAdminTest extends CommentTestBase {
     // Make sure titles visible.
     $this->assertText('Field name');
     $this->assertText('Used in');
+    $this->assertText('Description');
+    // Make sure the description is present.
+    $this->assertText('Default comment field');
     // Manage fields.
     $this->clickLink('Manage fields');
     $this->assertResponse(200);

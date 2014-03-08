@@ -80,6 +80,10 @@ class AdminController extends ControllerBase {
   public function overviewBundles() {
     $header = array(
       'field_name' => $this->t('Field name'),
+      'description' => array(
+        'data' => $this->t('Description'),
+        'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
+      ),
       'usage' => array(
         'data' => $this->t('Used in'),
         'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
@@ -118,6 +122,7 @@ class AdminController extends ControllerBase {
         );
         $row['data']['field_name']['data'] = $field_info->get('locked') ? $this->t('@label (@field_name) (Locked)', $tokens) : $this->t('@label (@field_name)', $tokens);
 
+        $row['data']['description']['data'] = $field_info->getSetting('description');
         $row['data']['usage']['data'] = array(
           '#theme' => 'item_list',
           '#items' => array(),

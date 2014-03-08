@@ -147,6 +147,9 @@ class CommentManager implements CommentManagerInterface {
         'name' => $field_name,
         'type' => 'comment',
         'translatable' => '0',
+        'settings' => array(
+          'description' => 'Default comment field',
+        ),
       ));
       // Create the field.
       $field->save();

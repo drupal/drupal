@@ -18,6 +18,9 @@ use Drupal\Core\Field\ConfigFieldItemBase;
  *   id = "comment",
  *   label = @Translation("Comments"),
  *   description = @Translation("This field manages configuration and presentation of comments on an entity."),
+ *   settings = {
+ *     "description" = "",
+ *   },
  *   instance_settings = {
  *     "default_mode" = COMMENT_MODE_THREADED,
  *     "per_page" = 50,
@@ -192,6 +195,21 @@ class CommentItem extends ConfigFieldItemBase {
         'content_translation'
       );
     }
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, array &$form_state, $has_data) {
+    $element = array();
+
+    $element['description'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Field description'),
+      '#description' => t('Describe this comment field. The text will be displayed on the <em>Comments Forms</em> page.'),
+      '#default_value' => $this->getSetting('description'),
+    );
     return $element;
   }
 
