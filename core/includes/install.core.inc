@@ -2728,7 +2728,7 @@ function install_configure_form_submit($form, &$form_state) {
   $account->pass = $form_state['values']['account']['pass'];
   $account->name = $form_state['values']['account']['name'];
   $account->save();
-  // Load global $user and perform final login tasks.
+  // Load current user and perform final login tasks.
   $account = user_load(1);
   user_login_finalize($account);
 

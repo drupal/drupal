@@ -4571,7 +4571,7 @@ function drupal_render_cache_by_query($query, $function, $expire = Cache::PERMAN
  *   $granularity was passed in, more parts are added.
  */
 function drupal_render_cid_parts($granularity = NULL) {
-  global $theme, $base_root, $user;
+  global $theme, $base_root;
 
   $cid_parts[] = $theme;
 
@@ -4588,10 +4588,10 @@ function drupal_render_cid_parts($granularity = NULL) {
     // resource drag for sites with many users, so when a module is being
     // equivocal, we favor the less expensive 'PER_ROLE' pattern.
     if ($granularity & DRUPAL_CACHE_PER_ROLE) {
-      $cid_parts[] = 'r.' . implode(',', $user->getRoles());
+      $cid_parts[] = 'r.' . implode(',', \Drupal::currentUser()->getRoles());
     }
     elseif ($granularity & DRUPAL_CACHE_PER_USER) {
-      $cid_parts[] = 'u.' . $user->id();
+      $cid_parts[] = 'u.' . \Drupal::currentUser()->id();
     }
 
     if ($granularity & DRUPAL_CACHE_PER_PAGE) {

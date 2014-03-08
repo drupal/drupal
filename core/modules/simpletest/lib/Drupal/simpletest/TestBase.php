@@ -973,8 +973,7 @@ abstract class TestBase {
    * @see TestBase::beforePrepareEnvironment()
    */
   private function prepareEnvironment() {
-    global $user;
-
+    $user = \Drupal::currentUser();
     // Allow (base) test classes to backup global state information.
     $this->beforePrepareEnvironment();
 
@@ -1013,9 +1012,6 @@ abstract class TestBase {
     // Ensure that the current session is not changed by the new environment.
     require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
     drupal_save_session(FALSE);
-    // Run all tests as a anonymous user by default, web tests will replace that
-    // during the test set up.
-    $user = drupal_anonymous_user();
 
     // Save and clean the shutdown callbacks array because it is static cached
     // and will be changed by the test run. Otherwise it will contain callbacks
@@ -1070,7 +1066,10 @@ abstract class TestBase {
 
     $request = Request::create('/');
     $this->container->set('request', $request);
-    $this->container->set('current_user', $GLOBALS['user']);
+
+    // Run all tests as a anonymous user by default, web tests will replace that
+    // during the test set up.
+    $this->container->set('current_user', drupal_anonymous_user());
 
     \Drupal::setContainer($this->container);
 
@@ -1122,9 +1121,9 @@ abstract class TestBase {
     // DrupalKernel replaces the container in \Drupal::getContainer() with a
     // different object, so we need to replace the instance on this test class.
     $this->container = \Drupal::getContainer();
-    // The global $user is set in TestBase::prepareEnvironment().
+    // The current user is set in TestBase::prepareEnvironment().
     $this->container->set('request', $request);
-    $this->container->set('current_user', $GLOBALS['user']);
+    $this->container->set('current_user', \Drupal::currentUser());
   }
 
   /**
@@ -1145,8 +1144,6 @@ abstract class TestBase {
    * @see TestBase::prepareEnvironment()
    */
   private function restoreEnvironment() {
-    global $user;
-
     // Reset all static variables.
     // Unsetting static variables will potentially invoke destruct methods,
     // which might call into functions that prime statics and caches again.
@@ -1230,7 +1227,7 @@ abstract class TestBase {
     $callbacks = $this->originalShutdownCallbacks;
 
     // Restore original user session.
-    $user = $this->originalUser;
+    $this->container->set('current_user', $this->originalUser);
     drupal_save_session(TRUE);
   }
 

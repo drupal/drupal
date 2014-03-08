@@ -125,7 +125,7 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
   }
 
   if ($type == 'current-user') {
-    $account = user_load($GLOBALS['user']->id());
+    $account = user_load(\Drupal::currentUser()->id());
     $replacements += $token_service->generate('user', $tokens, array('user' => $account), $options);
   }
 

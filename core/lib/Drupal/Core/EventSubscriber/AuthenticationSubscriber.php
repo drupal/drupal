@@ -78,13 +78,13 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    *
    * The priority for request must be higher than the highest event subscriber
-   * accessing the global $user.
+   * accessing the current user.
    * The priority for the response must be as low as possible allowing e.g the
    * Cookie provider to send all relevant session data to the user.
    */
   public static function getSubscribedEvents() {
     // Priority must be higher than LanguageRequestSubscriber as LanguageManager
-    // access global $user in case language module enabled.
+    // access current user in case language module enabled.
     $events[KernelEvents::REQUEST][] = array('onKernelRequestAuthenticate', 300);
     $events[KernelEvents::RESPONSE][] = array('onRespond', 0);
     $events[KernelEvents::EXCEPTION][] = array('onException', 0);

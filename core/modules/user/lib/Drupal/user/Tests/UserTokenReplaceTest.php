@@ -57,7 +57,7 @@ class UserTokenReplaceTest extends WebTestBase {
     $this->drupalLogin($user2);
 
     $account = user_load($user1->id());
-    $global_account = user_load($GLOBALS['user']->id());
+    $global_account = user_load(\Drupal::currentUser()->id());
 
     // Generate and test sanitized tokens.
     $tests = array();

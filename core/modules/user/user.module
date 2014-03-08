@@ -963,8 +963,6 @@ function user_pass_rehash($password, $timestamp, $login) {
  * @see _user_cancel()
  */
 function user_cancel($edit, $uid, $method) {
-  global $user;
-
   $account = user_load($uid);
 
   if (!$account) {
@@ -997,7 +995,7 @@ function user_cancel($edit, $uid, $method) {
   );
 
   // After cancelling account, ensure that user is logged out.
-  if ($account->id() == $user->id()) {
+  if ($account->id() == \Drupal::currentUser()->id()) {
     // Batch API stores data in the session, so use the finished operation to
     // manipulate the current user's session id.
     $batch['finished'] = '_user_cancel_session_regenerate';
@@ -1574,8 +1572,6 @@ function user_form_process_password_confirm($element) {
   );
 
   if (\Drupal::config('user.settings')->get('password_strength')) {
-
-    global $user;
     $password_settings['showStrengthIndicator'] = TRUE;
     $password_settings += array(
       'strengthTitle' => t('Password strength:'),
@@ -1590,7 +1586,7 @@ function user_form_process_password_confirm($element) {
       'fair' => t('Fair'),
       'good' => t('Good'),
       'strong' => t('Strong'),
-      'username' => $user->getUsername(),
+      'username' => \Drupal::currentUser()->getUsername(),
     );
   }
 
@@ -1676,7 +1672,7 @@ function user_file_download_access($field, EntityInterface $entity, File $file) 
  * Implements hook_toolbar().
  */
 function user_toolbar() {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // Add logout & user account links or login link.
   if ($user->isAuthenticated()) {
@@ -1750,7 +1746,7 @@ function user_toolbar() {
  * Logs the current user out.
  */
 function user_logout() {
-  global $user;
+  $user = \Drupal::currentUser();
 
   watchdog('user', 'Session closed for %name.', array('%name' => $user->getUsername()));
 

@@ -109,21 +109,21 @@ class User extends ArgumentValidatorPluginBase {
     // However, is_integer() will always fail, since $argument is a string.
     if (is_numeric($argument) && $argument == (int)$argument) {
       if ($type == 'uid' || $type == 'either') {
-        if ($argument == $GLOBALS['user']->id()) {
+        if ($argument == \Drupal::currentUser()->id()) {
           // If you assign an object to a variable in PHP, the variable
           // automatically acts as a reference, not a copy, so we use
           // clone to ensure that we don't actually mess with the
-          // real global $user object.
-          $account = clone $GLOBALS['user'];
+          // real current user object.
+          $account = clone \Drupal::currentUser();
         }
         $condition = 'uid';
       }
     }
     else {
       if ($type == 'name' || $type == 'either') {
-        $name = $GLOBALS['user']->getUserName() ?: \Drupal::config('user.settings')->get('anonymous');
+        $name = \Drupal::currentUser()->getUserName() ?: \Drupal::config('user.settings')->get('anonymous');
         if ($argument == $name) {
-          $account = clone $GLOBALS['user'];
+          $account = clone \Drupal::currentUser();
         }
         $condition = 'name';
       }

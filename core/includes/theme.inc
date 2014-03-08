@@ -88,7 +88,7 @@ function drupal_theme_access($theme) {
  * Initializes the theme system by loading the theme.
  */
 function drupal_theme_initialize() {
-  global $theme, $user, $theme_key;
+  global $theme, $theme_key;
 
   // If $theme is already set, assume the others are set, too, and do nothing
   if (isset($theme)) {
@@ -1693,8 +1693,7 @@ function theme_table($variables) {
  */
 function theme_mark($variables) {
   $type = $variables['status'];
-  global $user;
-  if ($user->isAuthenticated()) {
+  if (\Drupal::currentUser()->isAuthenticated()) {
     if ($type == MARK_NEW) {
       return ' <span class="marker">' . t('new') . '</span>';
     }

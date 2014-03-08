@@ -120,7 +120,7 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
 
     // Test as a non-admin.
     $normal_user = $this->drupalCreateUser(array('access content'));
-    $GLOBALS['user'] = $normal_user;
+    $this->container->set('current_user', $normal_user);
 
     $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($instance);
 

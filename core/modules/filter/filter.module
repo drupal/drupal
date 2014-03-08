@@ -466,7 +466,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
  *   The expanded element.
  */
 function filter_process_format($element) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // Ensure that children appear as subkeys of this element.
   $element['#tree'] = TRUE;
@@ -639,9 +639,7 @@ function filter_form_access_denied($element) {
  *   - id: Filter ID.
  */
 function _filter_tips($format_id, $long = FALSE) {
-  global $user;
-
-  $formats = filter_formats($user);
+  $formats = filter_formats(\Drupal::currentUser());
 
   $tips = array();
 

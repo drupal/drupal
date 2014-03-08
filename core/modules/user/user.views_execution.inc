@@ -13,6 +13,5 @@ use Drupal\views\ViewExecutable;
  * Allow replacement of current userid so we can cache these queries.
  */
 function user_views_query_substitutions(ViewExecutable $view) {
-  global $user;
-  return array('***CURRENT_USER***' => $user->id());
+  return array('***CURRENT_USER***' => \Drupal::currentUser()->id());
 }
