@@ -123,11 +123,13 @@ class FieldUiLocalTask extends DerivativeBase implements ContainerDerivativeInte
           'title' => 'Default',
           'route_name' => "field_ui.form_display_overview_$entity_type_id",
           'parent_id' => "field_ui.fields:form_display_overview_$entity_type_id",
+          'weight' => -1,
         );
         $this->derivatives['field_display_default_' . $entity_type_id] = array(
           'title' => 'Default',
           'route_name' => "field_ui.display_overview_$entity_type_id",
           'parent_id' => "field_ui.fields:display_overview_$entity_type_id",
+          'weight' => -1,
         );
 
         // One local task for each form mode.

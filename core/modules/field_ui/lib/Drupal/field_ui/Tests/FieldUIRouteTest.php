@@ -79,6 +79,7 @@ class FieldUIRouteTest extends WebTestBase {
     $this->drupalGet('admin/config/people/accounts/form-display/register');
     $this->assertTitle('Manage form display | Drupal');
     $this->assertLocalTasks();
+    $this->assert(count($this->xpath('//ul/li[1]/a[contains(text(), :text)]', array(':text' => 'Default'))) == 1, 'Default secondary tab is in first position.');
   }
 
   /**
