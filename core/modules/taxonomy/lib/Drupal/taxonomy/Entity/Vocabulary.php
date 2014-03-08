@@ -54,13 +54,6 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
   public $vid;
 
   /**
-   * The vocabulary UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * Name of the vocabulary.
    *
    * @var string

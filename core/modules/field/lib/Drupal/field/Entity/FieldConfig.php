@@ -66,15 +66,6 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   public $name;
 
   /**
-   * The field UUID.
-   *
-   * This is assigned automatically when the field is created.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The name of the entity type the field can be attached to.
    *
    * @var string

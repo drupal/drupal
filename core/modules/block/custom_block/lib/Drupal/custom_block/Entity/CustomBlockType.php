@@ -49,13 +49,6 @@ class CustomBlockType extends ConfigEntityBase implements CustomBlockTypeInterfa
   public $id;
 
   /**
-   * The custom block type UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The custom block type label.
    *
    * @var string

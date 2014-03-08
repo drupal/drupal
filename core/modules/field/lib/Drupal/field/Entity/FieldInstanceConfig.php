@@ -45,15 +45,6 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   public $id;
 
   /**
-   * The instance UUID.
-   *
-   * This is assigned automatically when the instance is created.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The name of the field attached to the bundle by this instance.
    *
    * @var string

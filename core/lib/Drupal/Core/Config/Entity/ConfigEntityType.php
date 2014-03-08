@@ -51,6 +51,15 @@ class ConfigEntityType extends EntityType {
   /**
    * {@inheritdoc}
    */
+  public function getKeys() {
+    // Always add a default 'uuid' key.
+    return array('uuid' => 'uuid') + parent::getKeys();
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
   public function getBaseTable() {
     return FALSE;
   }

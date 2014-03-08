@@ -46,15 +46,6 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
   public $id;
 
   /**
-   * The migration UUID.
-   *
-   * This is assigned automatically when the migration is created.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The human-readable label for the migration.
    *
    * @var string

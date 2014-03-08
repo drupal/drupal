@@ -52,13 +52,6 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
   public $id;
 
   /**
-   * The UUID for the configuration entity.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The human-readable name of the configuration entity.
    *
    * @var string

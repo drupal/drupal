@@ -52,13 +52,6 @@ class Breakpoint extends ConfigEntityBase implements BreakpointInterface {
   public $id;
 
   /**
-   * The breakpoint UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The breakpoint name (machine name) as specified by theme or module.
    *
    * @var string

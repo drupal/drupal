@@ -38,13 +38,6 @@ class Menu extends ConfigEntityBase implements MenuInterface {
   public $id;
 
   /**
-   * The menu UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The human-readable name of the menu entity.
    *
    * @var string

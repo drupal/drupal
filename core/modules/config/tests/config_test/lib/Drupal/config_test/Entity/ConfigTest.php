@@ -49,13 +49,6 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   public $id;
 
   /**
-   * The UUID for the configuration entity.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The human-readable name of the configuration entity.
    *
    * @var string

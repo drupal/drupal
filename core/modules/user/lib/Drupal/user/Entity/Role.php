@@ -51,13 +51,6 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public $id;
 
   /**
-   * The UUID of this role.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The human-readable label of this role.
    *
    * @var string

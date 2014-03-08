@@ -174,11 +174,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    * {@inheritdoc}
    */
   public function createDuplicate() {
-    $duplicate = clone $this;
-    $duplicate->set($this->getEntityType()->getKey('id'), NULL);
-
-    // @todo Inject the UUID service into the Entity class once possible.
-    $duplicate->set('uuid', \Drupal::service('uuid')->generate());
+    $duplicate = parent::createDuplicate();
 
     // Prevent the new duplicate from being misinterpreted as a rename.
     $duplicate->setOriginalId(NULL);

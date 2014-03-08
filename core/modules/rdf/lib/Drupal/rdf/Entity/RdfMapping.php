@@ -33,13 +33,6 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
   public $id;
 
   /**
-   * UUID for the config entity.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * Entity type to be mapped.
    *
    * @var string

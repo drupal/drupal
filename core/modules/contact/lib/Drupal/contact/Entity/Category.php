@@ -49,13 +49,6 @@ class Category extends ConfigEntityBase implements CategoryInterface {
   public $id;
 
   /**
-   * The category UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The category label.
    *
    * @var string

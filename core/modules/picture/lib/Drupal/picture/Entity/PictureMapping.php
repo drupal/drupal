@@ -48,13 +48,6 @@ class PictureMapping extends ConfigEntityBase implements PictureMappingInterface
   public $id;
 
   /**
-   * The picture UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The picture label.
    *
    * @var string

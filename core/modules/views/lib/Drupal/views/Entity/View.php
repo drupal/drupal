@@ -96,13 +96,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   protected $base_field = 'nid';
 
   /**
-   * The UUID for this entity.
-   *
-   * @var string
-   */
-  public $uuid = NULL;
-
-  /**
    * Stores a reference to the executable version of this view.
    *
    * @var \Drupal\views\ViewExecutable

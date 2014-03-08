@@ -69,13 +69,6 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   public $name;
 
   /**
-   * The UUID for this entity.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * Weight of this format in the text format selector.
    *
    * The first/lowest text format that is accessible for a user is used as

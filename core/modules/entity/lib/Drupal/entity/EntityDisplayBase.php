@@ -25,13 +25,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public $id;
 
   /**
-   * Unique UUID for the config entity.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * Entity type to be displayed.
    *
    * @var string

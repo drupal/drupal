@@ -43,13 +43,6 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
   public $label;
 
   /**
-   * The UUID of the action.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The action type.
    *
    * @var string

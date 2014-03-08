@@ -34,13 +34,6 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
   public $id;
 
   /**
-   * The breakpoint group UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The breakpoint group machine name.
    *
    * @var string

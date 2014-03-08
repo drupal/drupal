@@ -50,15 +50,6 @@ class Language extends ConfigEntityBase implements LanguageInterface {
   public $id;
 
   /**
-   * The language UUID.
-   *
-   * This is assigned automatically when the language is created.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The human-readable label for the language.
    *
    * @var string

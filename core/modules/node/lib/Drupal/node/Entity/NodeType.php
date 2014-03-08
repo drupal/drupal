@@ -54,13 +54,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
   public $type;
 
   /**
-   * The UUID of the node type.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The human-readable name of the node type.
    *
    * @var string

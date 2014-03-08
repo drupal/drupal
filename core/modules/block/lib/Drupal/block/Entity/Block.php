@@ -49,13 +49,6 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   public $id;
 
   /**
-   * The block UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The plugin instance settings.
    *
    * @var array
