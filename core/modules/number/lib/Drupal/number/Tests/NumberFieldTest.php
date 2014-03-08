@@ -150,45 +150,195 @@ class NumberFieldTest extends WebTestBase {
    * Test number_integer field.
    */
   function testNumberIntegerField() {
-    // Display the "Add content type" form.
-    $this->drupalGet('admin/structure/types/add');
+    $minimum = rand(-4000, -2000);
+    $maximum = rand(2000, 4000);
 
-    // Add a content type.
-    $name = $this->randomName();
-    $type = drupal_strtolower($name);
-    $edit = array('name' => $name, 'type' => $type);
-    $this->drupalPostForm(NULL, $edit, t('Save and manage fields'));
+    // Create a field with settings to validate.
+    $field_name = drupal_strtolower($this->randomName());
+    entity_create('field_config', array(
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'number_integer',
+    ))->save();
 
-    // Add an integer field to the newly-created type.
-    $label = $this->randomName();
-    $field_name = drupal_strtolower($label);
+    entity_create('field_instance_config', array(
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+      'settings' => array(
+        'min' => $minimum, 'max' => $maximum,
+      )
+    ))->save();
+
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, array(
+        'type' => 'number',
+        'settings' => array(
+          'placeholder' => '4'
+        ),
+      ))
+      ->save();
+    entity_get_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, array(
+        'type' => 'number_integer',
+      ))
+      ->save();
+
+    // Display creation form.
+    $this->drupalGet('entity_test/add');
+    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
+    $this->assertRaw('placeholder="4"');
+
+    // Submit a valid integer
+    $value = rand($minimum, $maximum);
     $edit = array(
-      'fields[_add_new_field][label]'=> $label,
-      'fields[_add_new_field][field_name]' => $field_name,
-      'fields[_add_new_field][type]' => 'number_integer',
+      'user_id' => 1,
+      'name' => $this->randomName(),
+      "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    $id = $match[1];
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
 
-    // Add prefix and suffix for the newly-created field.
-    $prefix = $this->randomName();
-    $suffix = $this->randomName();
+    // Try to set a value below the minimum value
+    $this->drupalGet('entity_test/add');
     $edit = array(
-      'instance[settings][prefix]' => $prefix,
-      'instance[settings][suffix]' => $suffix,
-    );
-    $this->drupalPostForm("admin/structure/types/manage/$type/fields/node.$type.field_$field_name", $edit, t('Save settings'));
-
-    // Set the formatter to "unformatted" and to "number_integer", and just
-    // check that the settings summary does not generate warnings.
-    $this->drupalGet("admin/structure/types/manage/$type/display");
-    $edit = array(
-      "fields[field_$field_name][type]" => 'number_unformatted',
+      'user_id' => 1,
+      'name' => $this->randomName(),
+      "{$field_name}[0][value]" => $minimum - 1,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertRaw(t('%name must be higher than or equal to %minimum.', array('%name' => $field_name, '%minimum' => $minimum)), 'Correctly failed to save integer value less than minimum allowed value.');
+
+    // Try to set a decimal value
+    $this->drupalGet('entity_test/add');
     $edit = array(
-      "fields[field_$field_name][type]" => 'number_integer',
+      'user_id' => 1,
+      'name' => $this->randomName(),
+      "{$field_name}[0][value]" => 1.5,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertRaw(t('%name is not a valid number.', array('%name' => $field_name)), 'Correctly failed to save decimal value to integer field.');
+
+    // Try to set a value above the maximum value
+    $this->drupalGet('entity_test/add');
+    $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomName(),
+      "{$field_name}[0][value]" => $maximum + 1,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertRaw(t('%name must be lower than or equal to %maximum.', array('%name' => $field_name, '%maximum' => $maximum)), 'Correctly failed to save integer value greater than maximum allowed value.');
+
+    // Test with valid entries.
+    $valid_entries = array(
+      '-1234',
+      '0',
+      '1234',
+    );
+
+    foreach ($valid_entries as $valid_entry) {
+      $this->drupalGet('entity_test/add');
+      $edit = array(
+        'user_id' => 1,
+        'name' => $this->randomName(),
+        "{$field_name}[0][value]" => $valid_entry,
+      );
+      $this->drupalPostForm(NULL, $edit, t('Save'));
+      preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+      $id = $match[1];
+      $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
+      $this->assertRaw($valid_entry, 'Value is displayed.');
+    }
+  }
+
+  /**
+  * Test number_float field.
+  */
+  function testNumberFloatField() {
+    // Create a field with settings to validate.
+    $field_name = drupal_strtolower($this->randomName());
+    entity_create('field_config', array(
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'number_float',
+    ))->save();
+
+    entity_create('field_instance_config', array(
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+    ))->save();
+
+    entity_get_form_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, array(
+        'type' => 'number',
+        'settings' => array(
+          'placeholder' => '0.00'
+        ),
+      ))
+      ->save();
+
+    entity_get_display('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, array(
+        'type' => 'number_decimal',
+      ))
+      ->save();
+
+    // Display creation form.
+    $this->drupalGet('entity_test/add');
+    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
+    $this->assertRaw('placeholder="0.00"');
+
+    // Submit a signed decimal value within the allowed precision and scale.
+    $value = '-1234.5678';
+    $edit = array(
+      'user_id' => 1,
+      'name' => $this->randomName(),
+      "{$field_name}[0][value]" => $value,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
+    $id = $match[1];
+    $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
+    $this->assertRaw(round($value, 2), 'Value is displayed.');
+
+    // Try to create entries with more than one decimal separator; assert fail.
+    $wrong_entries = array(
+      '3.14.159',
+      '0..45469',
+      '..4589',
+      '6.459.52',
+      '6.3..25',
+    );
+
+    foreach ($wrong_entries as $wrong_entry) {
+      $this->drupalGet('entity_test/add');
+      $edit = array(
+        "{$field_name}[0][value]" => $wrong_entry,
+      );
+      $this->drupalPostForm(NULL, $edit, t('Save'));
+      $this->assertRaw(t('%name must be a number.', array('%name' => $field_name)), 'Correctly failed to save float value with more than one decimal point.');
+    }
+
+    // Try to create entries with minus sign not in the first position.
+    $wrong_entries = array(
+      '3-3',
+      '4-',
+      '1.3-',
+      '1.2-4',
+      '-10-10',
+    );
+
+    foreach ($wrong_entries as $wrong_entry) {
+      $this->drupalGet('entity_test/add');
+      $edit = array(
+        "{$field_name}[0][value]" => $wrong_entry,
+      );
+      $this->drupalPostForm(NULL, $edit, t('Save'));
+      $this->assertRaw(t('%name must be a number.', array('%name' => $field_name)), 'Correctly failed to save float value with minus sign in the wrong position.');
+    }
   }
 
   /**
