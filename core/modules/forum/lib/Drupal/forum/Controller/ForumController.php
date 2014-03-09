@@ -82,7 +82,7 @@ class ForumController extends ControllerBase {
     $taxonomy_term->parents = $this->forumManager->getParents($taxonomy_term->id());
 
     if (empty($taxonomy_term->forum_container->value)) {
-      $build = $this->forumManager->getTopics($taxonomy_term->id());
+      $build = $this->forumManager->getTopics($taxonomy_term->id(), $this->currentUser());
       $topics = $build['topics'];
       $header = $build['header'];
     }
