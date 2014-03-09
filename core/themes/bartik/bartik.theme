@@ -100,7 +100,7 @@ function bartik_preprocess_maintenance_page(&$variables) {
   $libraries = array(
     '#attached' => array(
       'library' => array(
-        array('bartik', 'maintenance_page'),
+        'bartik/maintenance_page',
       ),
     ),
   );

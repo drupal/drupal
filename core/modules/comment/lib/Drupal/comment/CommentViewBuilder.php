@@ -138,9 +138,9 @@ class CommentViewBuilder extends EntityViewBuilder {
       if (!isset($entity->content['#attached'])) {
         $entity->content['#attached'] = array();
       }
-      $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-by-viewer');
+      $entity->content['#attached']['library'][] = 'comment/drupal.comment-by-viewer';
       if ($this->moduleHandler->moduleExists('history') &&  \Drupal::currentUser()->isAuthenticated()) {
-        $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-new-indicator');
+        $entity->content['#attached']['library'][] = 'comment/drupal.comment-new-indicator';
 
         // Embed the metadata for the comment "new" indicators on this node.
         $entity->content['#post_render_cache']['history_attach_timestamp'] = array(

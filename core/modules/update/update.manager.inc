@@ -82,7 +82,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
     return $form;
   }
 
-  $form['#attached']['library'][] = array('update', 'drupal.update.admin');
+  $form['#attached']['library'][] = 'update/drupal.update.admin';
 
   // This will be a nested array. The first key is the kind of project, which
   // can be either 'enabled', 'disabled', 'manual' (projects which require

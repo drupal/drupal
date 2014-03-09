@@ -104,7 +104,7 @@ function path_form_node_form_alter(&$form, $form_state) {
       'class' => array('path-form'),
     ),
     '#attached' => array(
-      'library' => array(array('path', 'drupal.path')),
+      'library' => array('path/drupal.path'),
     ),
     '#access' => $account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases'),
     '#weight' => 30,

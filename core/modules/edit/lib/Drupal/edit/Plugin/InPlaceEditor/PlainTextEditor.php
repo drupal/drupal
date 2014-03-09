@@ -47,7 +47,7 @@ class PlainTextEditor extends InPlaceEditorBase {
   public function getAttachments() {
     return array(
       'library' => array(
-        array('edit', 'edit.inPlaceEditor.plainText'),
+        'edit/edit.inPlaceEditor.plainText',
       ),
     );
   }

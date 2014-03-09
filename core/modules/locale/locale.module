@@ -638,11 +638,11 @@ function locale_js_translate(array $files = array()) {
  *
  * Provides the language support for the jQuery UI Date Picker.
  */
-function locale_library_alter(array &$library, $module, $name) {
-  if ($module == 'core' && $name == 'jquery.ui.datepicker') {
+function locale_library_alter(array &$library, $name) {
+  if ($name == 'core/jquery.ui.datepicker') {
     // locale.datepicker.js should be added in the JS_LIBRARY group, so that
     // the behavior executes early. JS_LIBRARY is the default.
-    $library['dependencies'][] = array('locale', 'drupal.locale.datepicker');
+    $library['dependencies'][] = 'locale/drupal.locale.datepicker';
 
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $settings['jquery']['ui']['datepicker'] = array(

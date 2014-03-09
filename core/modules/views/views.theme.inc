@@ -127,7 +127,7 @@ function template_preprocess_views_view(&$variables) {
       ),
     );
     $view->element['#attached']['js'][] = array('type' => 'setting', 'data' => $settings);
-    $view->element['#attached']['library'][] = array('views', 'views.ajax');
+    $view->element['#attached']['library'][] = 'views/views.ajax';
   }
 
   // If form fields were found in the view, reformat the view output as a form.
@@ -732,7 +732,7 @@ function template_preprocess_views_view_table(&$variables) {
   }
 
   if (!empty($options['sticky'])) {
-    $variables['view']->element['#attached']['library'][] = array('core', 'drupal.tableheader');
+    $variables['view']->element['#attached']['library'][] = 'core/drupal.tableheader';
     $variables['attributes']['class'][] = "sticky-enabled";
   }
   $variables['attributes']['class'][] = 'cols-' . count($variables['header']);
@@ -755,7 +755,7 @@ function template_preprocess_views_view_table(&$variables) {
   // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
   // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
   if (isset($variables['header']) && $responsive) {
-    $variables['view']->element['#attached']['library'][] = array('core', 'drupal.tableresponsive');
+    $variables['view']->element['#attached']['library'][] = 'core/drupal.tableresponsive';
     // Add 'responsive-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
     $variables['attributes']['class'][] = 'responsive-enabled';
@@ -1066,7 +1066,7 @@ function template_preprocess_views_exposed_form(&$variables) {
   }
 
   // Include basic theming for exposed forms.
-  $form['#attached']['library'][] = array('views', 'views.exposed-form');
+  $form['#attached']['library'][] = 'views/views.exposed-form';
 
   foreach ($form['#info'] as $info) {
     if (!empty($info['label'])) {

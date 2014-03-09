@@ -28,20 +28,20 @@ class MergeAttachmentsTest extends DrupalUnitTestBase {
   function testLibraryMerging() {
     $a['#attached'] = array(
       'library' => array(
-        array('core', 'drupal'),
-        array('core', 'drupalSettings'),
+        'core/drupal',
+        'core/drupalSettings',
       ),
     );
     $b['#attached'] = array(
       'library' => array(
-        array('core', 'jquery'),
+        'core/jquery',
       ),
     );
     $expected['#attached'] = array(
       'library' => array(
-        array('core', 'drupal'),
-        array('core', 'drupalSettings'),
-        array('core', 'jquery'),
+        'core/drupal',
+        'core/drupalSettings',
+        'core/jquery',
       ),
     );
     $this->assertIdentical($expected['#attached'], drupal_merge_attached($a['#attached'], $b['#attached']), 'Attachments merged correctly.');
@@ -49,22 +49,22 @@ class MergeAttachmentsTest extends DrupalUnitTestBase {
     // Merging in the opposite direction yields the opposite library order.
     $expected['#attached'] = array(
       'library' => array(
-        array('core', 'jquery'),
-        array('core', 'drupal'),
-        array('core', 'drupalSettings'),
+        'core/jquery',
+        'core/drupal',
+        'core/drupalSettings',
       ),
     );
     $this->assertIdentical($expected['#attached'], drupal_merge_attached($b['#attached'], $a['#attached']), 'Attachments merged correctly; opposite merging yields opposite order.');
 
     // Merging with duplicates: duplicates are simply retained, it's up to the
     // rest of the system to handle duplicates.
-    $b['#attached']['library'][] = array('core', 'drupalSettings');
+    $b['#attached']['library'][] = 'core/drupalSettings';
     $expected['#attached'] = array(
       'library' => array(
-        array('core', 'drupal'),
-        array('core', 'drupalSettings'),
-        array('core', 'jquery'),
-        array('core', 'drupalSettings'),
+        'core/drupal',
+        'core/drupalSettings',
+        'core/jquery',
+        'core/drupalSettings',
       ),
     );
     $this->assertIdentical($expected['#attached'], drupal_merge_attached($a['#attached'], $b['#attached']), 'Attachments merged correctly; duplicates are retained.');

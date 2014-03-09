@@ -145,7 +145,7 @@ function history_node_view_alter(&$build, EntityInterface $node, EntityViewDispl
         ),
       ),
       'library' => array(
-        array('history', 'drupal.history'),
+        'history/drupal.history',
       ),
     );
   }

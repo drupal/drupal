@@ -546,7 +546,7 @@ function comment_node_links_alter(array &$node_links, NodeInterface $node, array
         '#attributes' => array('class' => array('links', 'inline')),
       );
       if ($view_mode == 'teaser' && \Drupal::moduleHandler()->moduleExists('history') && \Drupal::currentUser()->isAuthenticated()) {
-        $node_links['comment__' . $field_name]['#attached']['library'][] = array('comment', 'drupal.node-new-comments-link');
+        $node_links['comment__' . $field_name]['#attached']['library'][] = 'comment/drupal.node-new-comments-link';
 
         // Embed the metadata for the "X new comments" link (if any) on this node.
         $node_links['comment__' . $field_name]['#post_render_cache']['history_attach_timestamp'] = array(

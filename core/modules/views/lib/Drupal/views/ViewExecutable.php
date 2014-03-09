@@ -445,7 +445,7 @@ class ViewExecutable extends DependencySerialization {
     $this->user = $user;
 
     // Add the default css for a view.
-    $this->element['#attached']['library'][] = array('views', 'views.module');
+    $this->element['#attached']['library'][] = 'views/views.module';
   }
 
   /**

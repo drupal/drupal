@@ -80,7 +80,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   function testAddSetting() {
     // Add a file in order to test default settings.
-    drupal_add_library('core', 'drupalSettings');
+    drupal_add_library('core/drupalSettings');
     $javascript = _drupal_add_js();
     $last_settings = reset($javascript['settings']['data']);
     $this->assertTrue(array_key_exists('currentPath', $last_settings['path']), 'The current path JavaScript setting is set correctly.');
@@ -106,7 +106,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testAttributes() {
     $default_query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
 
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('http://example.com/script.js', array('attributes' => array('defer' => 'defer')));
     _drupal_add_js('core/misc/collapse.js', array('attributes' => array('defer' => 'defer')));
     $javascript = drupal_get_js();
@@ -127,7 +127,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
 
     $default_query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
 
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('http://example.com/script.js', array('attributes' => array('defer' => 'defer')));
     _drupal_add_js('core/misc/collapse.js', array('attributes' => array('defer' => 'defer')));
     $javascript = drupal_get_js();
@@ -143,7 +143,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests drupal_get_js() for JavaScript settings.
    */
   function testHeaderSetting() {
-    drupal_add_library('core', 'drupalSettings');
+    drupal_add_library('core/drupalSettings');
 
     $javascript = drupal_get_js('header');
     $this->assertTrue(strpos($javascript, 'basePath') > 0, 'Rendered JavaScript header returns basePath setting.');
@@ -205,7 +205,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests to see if resetting the JavaScript empties the cache.
    */
   function testReset() {
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('core/misc/collapse.js');
     drupal_static_reset('_drupal_add_js');
     $this->assertEqual(array(), _drupal_add_js(), 'Resetting the JavaScript correctly empties the cache.');
@@ -215,7 +215,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests adding inline scripts.
    */
   function testAddInline() {
-    drupal_add_library('core', 'jquery');
+    drupal_add_library('core/jquery');
     $inline = 'jQuery(function () { });';
     $javascript = _drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $this->assertTrue(array_key_exists('core/assets/vendor/jquery/jquery.js', $javascript), 'jQuery is added when inline scripts are added.');
@@ -227,7 +227,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests rendering an external JavaScript file.
    */
   function testRenderExternal() {
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     $external = 'http://example.com/example.js';
     _drupal_add_js($external, 'external');
     $javascript = drupal_get_js();
@@ -239,7 +239,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests drupal_get_js() with a footer scope.
    */
   function testFooterHTML() {
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     $inline = 'jQuery(function () { });';
     _drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $javascript = drupal_get_js('footer');
@@ -250,7 +250,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests _drupal_add_js() sets preproccess to FALSE when cache is also FALSE.
    */
   function testNoCache() {
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     $javascript = _drupal_add_js('core/misc/collapse.js', array('cache' => FALSE));
     $this->assertFalse($javascript['core/misc/collapse.js']['preprocess'], 'Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.');
   }
@@ -259,7 +259,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests adding a JavaScript file with a different group.
    */
   function testDifferentGroup() {
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     $javascript = _drupal_add_js('core/misc/collapse.js', array('group' => JS_THEME));
     $this->assertEqual($javascript['core/misc/collapse.js']['group'], JS_THEME, 'Adding a JavaScript file with a different group caches the given group.');
   }
@@ -280,7 +280,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
   function testBrowserConditionalComments() {
     $default_query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
 
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('core/misc/collapse.js', array('browsers' => array('IE' => 'lte IE 8', '!IE' => FALSE)));
     _drupal_add_js('jQuery(function () { });', array('type' => 'inline', 'browsers' => array('IE' => FALSE)));
     $javascript = drupal_get_js();
@@ -296,7 +296,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests JavaScript versioning.
    */
   function testVersionQueryString() {
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('core/misc/collapse.js', array('version' => 'foo'));
     _drupal_add_js('core/misc/ajax.js', array('version' => 'bar'));
     $javascript = drupal_get_js();
@@ -313,7 +313,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     // ahead of ones without. The order of JavaScript execution must be the
     // same regardless of whether aggregation is enabled, so ensure this
     // expected order, first with aggregation off.
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('core/misc/ajax.js');
     _drupal_add_js('core/misc/collapse.js', array('every_page' => TRUE));
     _drupal_add_js('core/misc/autocomplete.js');
@@ -333,7 +333,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $config = \Drupal::config('system.performance');
     $config->set('js.preprocess', 1);
     $config->save();
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('core/misc/ajax.js');
     _drupal_add_js('core/misc/collapse.js', array('every_page' => TRUE));
     _drupal_add_js('core/misc/autocomplete.js');
@@ -356,7 +356,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     drupal_static_reset('_drupal_add_js');
 
     // Add two JavaScript files to the current request and build the cache.
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('core/misc/ajax.js');
     _drupal_add_js('core/misc/autocomplete.js');
 
@@ -377,7 +377,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     // Reset variables and add a file in a different scope first.
     \Drupal::state()->delete('system.js_cache_files');
     drupal_static_reset('_drupal_add_js');
-    drupal_add_library('core', 'drupal');
+    drupal_add_library('core/drupal');
     _drupal_add_js('some/custom/javascript_file.js', array('scope' => 'footer'));
     _drupal_add_js('core/misc/ajax.js');
     _drupal_add_js('core/misc/autocomplete.js');
@@ -448,7 +448,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     // JavaScript files are sorted first by group, then by the 'every_page'
     // flag, then by weight (see drupal_sort_css_js()), so to test the effect of
     // weight, we need the other two options to be the same.
-    drupal_add_library('core', 'jquery');
+    drupal_add_library('core/jquery');
     _drupal_add_js('core/misc/collapse.js', array('group' => JS_LIBRARY, 'every_page' => TRUE, 'weight' => -21));
     $javascript = drupal_get_js();
     $this->assertTrue(strpos($javascript, 'core/misc/collapse.js') < strpos($javascript, 'core/assets/vendor/jquery/jquery.js'), 'Rendering a JavaScript file above jQuery.');
@@ -475,7 +475,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Adds a library to the page and tests for both its JavaScript and its CSS.
    */
   function testLibraryRender() {
-    $result = drupal_add_library('core', 'jquery.farbtastic');
+    $result = drupal_add_library('core/jquery.farbtastic');
     $this->assertTrue($result !== FALSE, 'Library was added without errors.');
     $scripts = drupal_get_js();
     $styles = drupal_get_css();
@@ -490,11 +490,11 @@ class JavaScriptTest extends DrupalUnitTestBase {
    */
   function testLibraryAlter() {
     // Verify that common_test altered the title of Farbtastic.
-    $library = drupal_get_library('core', 'jquery.farbtastic');
+    $library = drupal_get_library('core/jquery.farbtastic');
     $this->assertEqual($library['version'], '0.0', 'Registered libraries were altered.');
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
-    drupal_add_library('core', 'jquery.farbtastic');
+    drupal_add_library('core/jquery.farbtastic');
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'core/assets/vendor/jquery-form/jquery.form.js'), 'Altered library dependencies are added to the page.');
   }
@@ -505,7 +505,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * @see common_test.library.yml
    */
   function testLibraryNameConflicts() {
-    $farbtastic = drupal_get_library('common_test', 'jquery.farbtastic');
+    $farbtastic = drupal_get_library('common_test/jquery.farbtastic');
     $this->assertEqual($farbtastic['version'], '0.1', 'Alternative libraries can be added to the page.');
   }
 
@@ -513,11 +513,11 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests non-existing libraries.
    */
   function testLibraryUnknown() {
-    $result = drupal_get_library('unknown', 'unknown');
+    $result = drupal_get_library('unknown/unknown');
     $this->assertFalse($result, 'Unknown library returned FALSE.');
     drupal_static_reset('drupal_get_library');
 
-    $result = drupal_add_library('unknown', 'unknown');
+    $result = drupal_add_library('unknown/unknown');
     $this->assertFalse($result, 'Unknown library returned FALSE.');
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'unknown') === FALSE, 'Unknown library was not added to the page.');
@@ -527,7 +527,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
    * Tests the addition of libraries through the #attached['library'] property.
    */
   function testAttachedLibrary() {
-    $element['#attached']['library'][] = array('core', 'jquery.farbtastic');
+    $element['#attached']['library'][] = 'core/jquery.farbtastic';
     drupal_render($element);
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'core/assets/vendor/farbtastic/farbtastic.js'), 'The attached_library property adds the additional libraries.');
@@ -546,10 +546,10 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $this->assertEqual($libraries, array(), 'Retrieving libraries from a module not declaring any libraries returns an emtpy array.');
 
     // Retrieve a specific library by module and name.
-    $farbtastic = drupal_get_library('common_test', 'jquery.farbtastic');
+    $farbtastic = drupal_get_library('common_test/jquery.farbtastic');
     $this->assertEqual($farbtastic['version'], '0.1', 'Retrieved a single library.');
     // Retrieve a non-existing library by module and name.
-    $farbtastic = drupal_get_library('common_test', 'foo');
+    $farbtastic = drupal_get_library('common_test/foo');
     $this->assertIdentical($farbtastic, FALSE, 'Retrieving a non-existing library returns FALSE.');
   }
 

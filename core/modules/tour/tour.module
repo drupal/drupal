@@ -65,7 +65,7 @@ function tour_toolbar() {
     ),
     '#attached' => array(
       'library' => array(
-        array('tour', 'tour'),
+        'tour/tour',
       ),
     ),
   );

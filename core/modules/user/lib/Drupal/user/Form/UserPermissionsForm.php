@@ -174,7 +174,7 @@ class UserPermissionsForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save permissions'));
 
-    $form['#attached']['library'][] = array('user', 'drupal.user.permissions');
+    $form['#attached']['library'][] = 'user/drupal.user.permissions';
 
     return $form;
   }

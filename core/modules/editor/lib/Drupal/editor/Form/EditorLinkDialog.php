@@ -38,7 +38,7 @@ class EditorLinkDialog extends FormBase {
     $input = isset($form_state['input']['editor_object']) ? $form_state['input']['editor_object'] : array();
 
     $form['#tree'] = TRUE;
-    $form['#attached']['library'][] = array('editor', 'drupal.editor.dialog');
+    $form['#attached']['library'][] = 'editor/drupal.editor.dialog';
     $form['#prefix'] = '<div id="editor-link-dialog-form">';
     $form['#suffix'] = '</div>';
 

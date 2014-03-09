@@ -43,7 +43,7 @@ function content_translation_field_sync_widget(FieldDefinitionInterface $field) 
       '#default_value' => !empty($translation_sync) ? $translation_sync : $default,
       '#attached' => array(
         'library' => array(
-          array('content_translation', 'drupal.content_translation.admin'),
+          'content_translation/drupal.content_translation.admin',
         ),
         'js' => array(
           array('data' => array('contentTranslationDependentOptions' => $settings), 'type' => 'setting'),
@@ -71,7 +71,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
   }
   $form['entity_types']['#default_value'] = $default;
 
-  $form['#attached']['library'][] = array('content_translation', 'drupal.content_translation.admin');
+  $form['#attached']['library'][] = 'content_translation/drupal.content_translation.admin';
   $form['#attached']['js'][] = array('data' => drupal_get_path('module', 'content_translation') . '/content_translation.admin.js', 'type' => 'file');
 
   $dependent_options_settings = array();

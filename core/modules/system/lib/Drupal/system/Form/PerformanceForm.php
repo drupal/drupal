@@ -58,7 +58,7 @@ class PerformanceForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $form['#attached']['library'][] = array('system', 'drupal.system');
+    $form['#attached']['library'][] = 'system/drupal.system';
 
     $config = $this->configFactory->get('system.performance');
 

@@ -2473,7 +2473,7 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
   // Add the libraries first.
   $success = TRUE;
   foreach ($elements['#attached']['library'] as $library) {
-    if (drupal_add_library($library[0], $library[1]) === FALSE) {
+    if (drupal_add_library($library) === FALSE) {
       $success = FALSE;
       // Exit if the dependency is missing.
       if ($dependency_check) {
@@ -2641,7 +2641,7 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
  * @see form_example_states_form()
  */
 function drupal_process_states(&$elements) {
-  $elements['#attached']['library'][] = array('core', 'drupal.states');
+  $elements['#attached']['library'][] = 'core/drupal.states';
   // Elements of '#type' => 'item' are not actual form input elements, but we
   // still want to be able to show/hide them. Since there's no actual HTML input
   // element available, setting #attributes does not make sense, but a wrapper
@@ -2660,9 +2660,7 @@ function drupal_process_states(&$elements) {
  * depending module, without having to add all files of the library separately.
  * Each library is only loaded once.
  *
- * @param $module
- *   The name of the module that registered the library.
- * @param $name
+ * @param $library_name
  *   The name of the library to add.
  * @param $every_page
  *   Set to TRUE if this library is added to every page on the site.
@@ -2674,15 +2672,16 @@ function drupal_process_states(&$elements) {
  * @see drupal_get_library()
  * @see hook_library_info_alter()
  */
-function drupal_add_library($module, $name, $every_page = NULL) {
+function drupal_add_library($library_name, $every_page = NULL) {
   $added = &drupal_static(__FUNCTION__, array());
 
+  list($extension, $name) = explode('/', $library_name, 2);
   // Only process the library if it exists and it was not added already.
-  if (!isset($added[$module][$name])) {
-    if ($library = drupal_get_library($module, $name)) {
+  if (!isset($added[$extension][$name])) {
+    if ($library = drupal_get_library($library_name)) {
       // Allow modules and themes to dynamically attach request and context
       // specific data for this library; e.g., localization.
-      \Drupal::moduleHandler()->alter('library', $library, $module, $name);
+      \Drupal::moduleHandler()->alter('library', $library, $library_name);
 
       // Add all components within the library.
       $elements['#attached'] = array(
@@ -2699,15 +2698,15 @@ function drupal_add_library($module, $name, $every_page = NULL) {
         }
       }
 
-      $added[$module][$name] = drupal_process_attached($elements, TRUE);
+      $added[$extension][$name] = drupal_process_attached($elements, TRUE);
     }
     else {
       // Requested library does not exist.
-      $added[$module][$name] = FALSE;
+      $added[$extension][$name] = FALSE;
     }
   }
 
-  return $added[$module][$name];
+  return $added[$extension][$name];
 }
 
 /**
@@ -2723,16 +2722,14 @@ function drupal_add_library($module, $name, $every_page = NULL) {
  * - Two (or more) modules can still register the same library and use it
  *   without conflicts in case the libraries are loaded on certain pages only.
  *
- * @param $extension
- *   The name of the extension that registered a library.
- * @param $name
- *   (optional) The name of a registered library to retrieve. By default, all
- *   libraries registered by $extension are returned.
+ * @param $library_name
+ *   The name of a registered library to retrieve. By default, all
+ *   libraries registered by the extension are returned.
  *
  * @return
  *   The definition of the requested library, if $name was passed and it exists,
  *   or FALSE if it does not exist. If no $name was passed, an associative array
- *   of libraries registered by $extension is returned (which may be empty).
+ *   of libraries registered by the module is returned (which may be empty).
  *
  * @see drupal_add_library()
  * @see hook_library_info_alter()
@@ -2740,9 +2737,12 @@ function drupal_add_library($module, $name, $every_page = NULL) {
  * @todo The purpose of drupal_get_*() is completely different to other page
  *   requisite API functions; find and use a different name.
  */
-function drupal_get_library($extension, $name = NULL) {
+function drupal_get_library($library_name) {
   $libraries = &drupal_static(__FUNCTION__, array());
 
+  $library_info = explode('/', $library_name, 2);
+  $extension = $library_info[0];
+  $name = isset($library_info[1]) ? $library_info[1] : NULL;
   if (!isset($libraries[$extension]) && ($cache = \Drupal::cache()->get('library:info:' . $extension))) {
     $libraries[$extension] = $cache->data;
   }
@@ -2874,13 +2874,6 @@ function drupal_get_library($extension, $name = NULL) {
           'data' => $library['settings'],
         );
         unset($library['settings']);
-      }
-      // @todo Convert all uses of #attached[library][]=array('provider','name')
-      //   into #attached[library][]='provider/name' and remove this.
-      foreach ($library['dependencies'] as $i => $dependency) {
-        if (!is_array($dependency)) {
-          $library['dependencies'][$i] = explode('/', $dependency, 2);
-        }
       }
     }
     \Drupal::cache()->set('library:info:' . $extension, $libraries[$extension], Cache::PERMANENT, array(
@@ -3046,7 +3039,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
     'limit' => $options['limit'],
   );
 
-  $element['#attached']['library'][] = array('core', 'drupal.tabledrag');
+  $element['#attached']['library'][] = 'core/drupal.tabledrag';
   $element['#attached']['js'][] = array('data' => $settings, 'type' => 'setting');
 }
 
@@ -3598,7 +3591,7 @@ function drupal_pre_render_links($element) {
  * Pre-render callback: Attaches the dropbutton library and required markup.
  */
 function drupal_pre_render_dropbutton($element) {
-  $element['#attached']['library'][] = array('core', 'drupal.dropbutton');
+  $element['#attached']['library'][] = 'core/drupal.dropbutton';
   $element['#attributes']['class'][] = 'dropbutton';
   if (!isset($element['#theme_wrappers'])) {
     $element['#theme_wrappers'] = array();

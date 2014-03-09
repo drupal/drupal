@@ -362,12 +362,12 @@ function hook_library_info_alter(&$libraries, $module) {
  *
  * @see drupal_add_library()
  */
-function hook_library_alter(array &$library, $extension, $name) {
-  if ($extension == 'core' && $name == 'jquery.ui.datepicker') {
+function hook_library_alter(array &$library, $name) {
+  if ($name == 'core/jquery.ui.datepicker') {
     // Note: If the added assets do not depend on additional request-specific
     // data supplied here, consider to statically register it directly via
     // hook_library_info_alter() already.
-    $library['dependencies'][] = array('locale', 'drupal.locale.datepicker');
+    $library['dependencies'][] = 'locale/drupal.locale.datepicker';
 
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $settings['jquery']['ui']['datepicker'] = array(
@@ -436,7 +436,7 @@ function hook_page_build(&$page) {
   $path = drupal_get_path('module', 'foo');
   // Add JavaScript/CSS assets to all pages.
   // @see drupal_process_attached()
-  $page['#attached']['js'][$path . '/foo.css'] = array('every_page' => TRUE);
+  $page['#attached']['js'][$path . '/foo.js'] = array('every_page' => TRUE);
   $page['#attached']['css'][$path . '/foo.base.css'] = array('every_page' => TRUE);
   $page['#attached']['css'][$path . '/foo.theme.css'] = array('every_page' => TRUE);
 

@@ -34,7 +34,7 @@ function contextual_toolbar() {
     ),
     '#attached' => array(
       'library' => array(
-        array('contextual', 'drupal.contextual-toolbar'),
+        'contextual/drupal.contextual-toolbar',
       ),
     ),
   );
@@ -56,7 +56,7 @@ function contextual_page_build(&$page) {
     return;
   }
 
-  $page['#attached']['library'][] = array('contextual', 'drupal.contextual-links');
+  $page['#attached']['library'][] = 'contextual/drupal.contextual-links';
 }
 
 /**
@@ -104,7 +104,7 @@ function contextual_element_info() {
     '#attributes' => array('class' => array('contextual-links')),
     '#attached' => array(
       'library' => array(
-        array('contextual', 'drupal.contextual-links'),
+        'contextual/drupal.contextual-links',
       ),
     ),
   );

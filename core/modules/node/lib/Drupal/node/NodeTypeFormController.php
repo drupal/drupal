@@ -66,7 +66,7 @@ class NodeTypeFormController extends EntityFormController {
     $form['additional_settings'] = array(
       '#type' => 'vertical_tabs',
       '#attached' => array(
-        'library' => array(array('node', 'drupal.content_types')),
+        'library' => array('node/drupal.content_types'),
       ),
     );
 

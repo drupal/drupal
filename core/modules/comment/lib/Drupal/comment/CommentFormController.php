@@ -98,7 +98,7 @@ class CommentFormController extends ContentEntityFormController {
     $is_admin = $comment->id() && $this->currentUser->hasPermission('administer comments');
 
     if (!$this->currentUser->isAuthenticated() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-      $form['#attached']['library'][] = array('core', 'jquery.cookie');
+      $form['#attached']['library'][] = 'core/jquery.cookie';
       $form['#attributes']['class'][] = 'user-info-from-cookie';
     }
 

@@ -63,7 +63,7 @@ function file_element_info() {
     '#multiple' => FALSE,
     '#extended' => FALSE,
     '#attached' => array(
-      'library' => array(array('file','drupal.file')),
+      'library' => array('file/drupal.file'),
     ),
   );
   return $types;

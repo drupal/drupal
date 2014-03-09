@@ -32,7 +32,7 @@ class FormEditor extends InPlaceEditorBase {
   public function getAttachments() {
     return array(
       'library' => array(
-        array('edit', 'edit.inPlaceEditor.form'),
+        'edit/edit.inPlaceEditor.form',
       ),
     );
   }

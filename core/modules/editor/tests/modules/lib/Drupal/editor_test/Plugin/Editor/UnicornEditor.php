@@ -58,7 +58,7 @@ class UnicornEditor extends EditorBase {
    */
   public function getLibraries(EditorEntity $editor) {
     return array(
-      array('edit_test', 'unicorn'),
+      'edit_test/unicorn',
     );
   }
 

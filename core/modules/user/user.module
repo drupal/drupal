@@ -1594,7 +1594,7 @@ function user_form_process_password_confirm($element) {
     'password' => $password_settings,
   );
 
-  $element['#attached']['library'][] = array('user', 'drupal.user');
+  $element['#attached']['library'][] = 'user/drupal.user';
   // Ensure settings are only added once per page.
   static $already_added = FALSE;
   if (!$already_added) {
@@ -1734,7 +1734,7 @@ function user_toolbar() {
     '#weight' => 100,
     '#attached' => array(
       'library' => array(
-        array('user', 'drupal.user.icons'),
+        'user/drupal.user.icons',
       ),
     ),
   );

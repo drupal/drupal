@@ -55,7 +55,7 @@ class WysiwygEditor extends InPlaceEditorBase {
   public function getAttachments() {
     return array(
       'library' => array(
-        array('edit_test', 'not-existing-wysiwyg'),
+        'edit_test/not-existing-wysiwyg',
       ),
     );
   }

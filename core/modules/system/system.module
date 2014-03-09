@@ -1126,10 +1126,10 @@ function system_filetransfer_info() {
  */
 function system_page_build(&$page) {
   // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
-  $page['#attached']['library'][] = array('core', 'normalize');
-  $page['#attached']['library'][] = array('system', 'base');
+  $page['#attached']['library'][] = 'core/normalize';
+  $page['#attached']['library'][] = 'system/base';
   if (path_is_admin(current_path())) {
-    $page['#attached']['library'][] = array('system', 'admin');
+    $page['#attached']['library'][] = 'system/admin';
   }
 
   // Handle setting the "active" class on links by:
@@ -1140,7 +1140,7 @@ function system_page_build(&$page) {
   // @see template_preprocess_links()
   // @see \Drupal\system\Controller\SystemController::setLinkActiveClass
   if (\Drupal::currentUser()->isAuthenticated()) {
-    $page['#attached']['library'][] = array('core', 'drupal.active-link');
+    $page['#attached']['library'][] = 'core/drupal.active-link';
   }
   else {
     $page['#post_render_cache']['\Drupal\system\Controller\SystemController::setLinkActiveClass'] = array(
@@ -1218,7 +1218,7 @@ function system_user_timezone(&$form, &$form_state) {
   if (!$account->getTimezone() && $account->id() == $user->id() && empty($form_state['input']['timezone'])) {
     $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Confirm the selection and click save.');
     $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
-    drupal_add_library('core', 'drupal.timezone');
+    drupal_add_library('core/drupal.timezone');
   }
 }
 

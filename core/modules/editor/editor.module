@@ -145,7 +145,7 @@ function editor_form_filter_format_form_alter(&$form, &$form_state) {
     '#id' => 'editor-settings-wrapper',
     '#attached' => array(
       'library' => array(
-        array('editor', 'drupal.editor.admin'),
+        'editor/drupal.editor.admin',
       ),
     ),
   );
@@ -297,7 +297,7 @@ function editor_pre_render_format($element) {
   }
 
   // Attach Text Editor module's (this module) library.
-  $element['#attached']['library'][] = array('editor', 'drupal.editor');
+  $element['#attached']['library'][] = 'editor/drupal.editor';
 
   // Attach attachments for all available editors.
   $manager = \Drupal::service('plugin.manager.editor');

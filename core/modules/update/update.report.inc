@@ -297,7 +297,7 @@ function theme_update_report($variables) {
   $assets = array(
     '#attached' => array(
       'library' => array(
-        array('update', 'drupal.update.admin'),
+        'update/drupal.update.admin',
       ),
     )
   );

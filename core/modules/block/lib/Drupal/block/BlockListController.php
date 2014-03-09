@@ -145,9 +145,9 @@ class BlockListController extends ConfigEntityListController implements FormInte
     }
     $entities = $this->load();
     $form['#theme'] = array('block_list');
-    $form['#attached']['library'][] = array('core', 'drupal.tableheader');
-    $form['#attached']['library'][] = array('block', 'drupal.block');
-    $form['#attached']['library'][] = array('block', 'drupal.block.admin');
+    $form['#attached']['library'][] = 'core/drupal.tableheader';
+    $form['#attached']['library'][] = 'block/drupal.block';
+    $form['#attached']['library'][] = 'block/drupal.block.admin';
     $form['#attributes']['class'][] = 'clearfix';
 
     // Add a last region for disabled blocks.

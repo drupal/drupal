@@ -161,7 +161,7 @@ function locale_translation_status_form($form, &$form_state) {
     '#after_build' => array('locale_translation_language_table'),
   );
 
-  $form['#attached']['library'][] = array('locale', 'drupal.locale.admin');
+  $form['#attached']['library'][] = 'locale/drupal.locale.admin';
   $form['#attached']['css'] = array(drupal_get_path('module', 'locale') . '/css/locale.admin.css');
 
   $form['actions'] = array('#type' => 'actions');

@@ -318,7 +318,7 @@ class OverviewTerms extends FormBase {
         'group' => 'term-depth',
         'hidden' => FALSE,
       );
-      $form['terms']['#attached']['library'][] = array('taxonomy', 'drupal.taxonomy');
+      $form['terms']['#attached']['library'][] = 'taxonomy/drupal.taxonomy';
       $form['terms']['#attached']['js'][] = array(
         'data' => array('taxonomy' => array('backStep' => $back_step, 'forwardStep' => $forward_step)),
         'type' => 'setting',

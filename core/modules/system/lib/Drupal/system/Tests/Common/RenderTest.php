@@ -608,8 +608,8 @@ class RenderTest extends DrupalUnitTestBase {
           array('type' => 'setting', 'data' => array('foo' => 'bar'))
         ),
         'library' => array(
-          array('core', 'drupal.collapse'),
-          array('core', 'drupal.collapse'),
+          'core/drupal.collapse',
+          'core/drupal.collapse',
         ),
       ),
       '#post_render_cache' => array(
@@ -691,8 +691,8 @@ class RenderTest extends DrupalUnitTestBase {
           array('type' => 'setting', 'data' => array('foo' => 'bar'))
         ),
         'library' => array(
-          array('core', 'drupal.collapse'),
-          array('core', 'drupal.collapse'),
+          'core/drupal.collapse',
+          'core/drupal.collapse',
         ),
       ),
       '#post_render_cache' => array(
@@ -718,7 +718,7 @@ class RenderTest extends DrupalUnitTestBase {
     $expected_child_element = array(
       '#attached' => array(
         'library' => array(
-          array('core', 'drupal.collapse'),
+          'core/drupal.collapse',
         ),
       ),
       '#post_render_cache' => array(

@@ -97,7 +97,7 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
   public function settingsForm(array $form, array &$form_state, $has_data) {
     $element = array();
 
-    $element['#attached']['library'][] = array('file', 'drupal.file');
+    $element['#attached']['library'][] = 'file/drupal.file';
 
     $element['display_field'] = array(
       '#type' => 'checkbox',

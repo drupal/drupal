@@ -58,7 +58,7 @@ class ConfigTranslationEntityListController extends EntityListController impleme
 
     $build['table'] = $table;
     $build['table']['#attributes']['class'][] = 'config-translation-entity-list';
-    $build['#attached']['library'][] = array('system', 'drupal.system.modules');
+    $build['#attached']['library'][] = 'system/drupal.system.modules';
 
     return $build;
   }

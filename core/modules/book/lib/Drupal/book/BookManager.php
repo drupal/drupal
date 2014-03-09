@@ -175,7 +175,7 @@ class BookManager implements BookManagerInterface {
         'class' => array('book-outline-form'),
       ),
       '#attached' => array(
-        'library' => array(array('book', 'drupal.book')),
+        'library' => array('book/drupal.book'),
       ),
       '#tree' => TRUE,
     );

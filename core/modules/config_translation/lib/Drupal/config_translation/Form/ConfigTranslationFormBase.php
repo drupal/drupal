@@ -180,7 +180,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     $form_state['config_translation_language'] = $this->language;
     $form_state['config_translation_source_language'] = $this->sourceLanguage;
 
-    $form['#attached']['library'][] = array('config_translation', 'drupal.config_translation.admin');
+    $form['#attached']['library'][] = 'config_translation/drupal.config_translation.admin';
 
     $form['config_names'] = array(
       '#type' => 'container',

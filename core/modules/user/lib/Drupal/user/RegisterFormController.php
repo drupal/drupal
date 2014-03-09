@@ -44,7 +44,7 @@ class RegisterFormController extends AccountFormController {
       return new RedirectResponse(url('user/' . \Drupal::currentUser()->id(), array('absolute' => TRUE)));
     }
 
-    $form['#attached']['library'][] = array('core', 'jquery.cookie');
+    $form['#attached']['library'][] = 'core/jquery.cookie';
     $form['#attributes']['class'][] = 'user-info-from-cookie';
 
     // Start with the default user account fields.

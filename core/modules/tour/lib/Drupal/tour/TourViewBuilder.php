@@ -68,7 +68,7 @@ class TourViewBuilder extends EntityViewBuilder {
     }
     // If at least one tour was built, attach the tour library.
     if ($build) {
-      $build['#attached']['library'][] = array('tour', 'tour');
+      $build['#attached']['library'][] = 'tour/tour';
     }
     return $build;
   }

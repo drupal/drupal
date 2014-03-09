@@ -101,7 +101,7 @@ class ContentLanguageSettingsForm extends ConfigFormBase {
       '#labels' => $labels,
       '#attached' => array(
         'library' => array(
-          array('language', 'drupal.language.admin'),
+          'language/drupal.language.admin',
         ),
       ),
     );

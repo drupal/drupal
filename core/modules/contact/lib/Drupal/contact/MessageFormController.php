@@ -53,7 +53,7 @@ class MessageFormController extends ContentEntityFormController {
       '#required' => TRUE,
     );
     if ($user->isAnonymous()) {
-      $form['#attached']['library'][] = array('core', 'jquery.cookie');
+      $form['#attached']['library'][] = 'core/jquery.cookie';
       $form['#attributes']['class'][] = 'user-info-from-cookie';
     }
     // Do not allow authenticated users to alter the name or e-mail values to

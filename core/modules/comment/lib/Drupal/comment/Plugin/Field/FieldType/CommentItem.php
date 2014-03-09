@@ -102,7 +102,7 @@ class CommentItem extends ConfigFieldItemBase {
         'class' => array('comment-instance-settings-form'),
       ),
       '#attached' => array(
-        'library' => array(array('comment', 'drupal.comment')),
+        'library' => array('comment/drupal.comment'),
       ),
     );
     $element['comment']['default_mode'] = array(

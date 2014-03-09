@@ -184,12 +184,11 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
 
     // Build CSS links.
     drupal_static_reset('_drupal_add_css');
-    $path = drupal_get_path('module', 'system');
     $default_css = array(
       '#attached' => array(
         'library' => array(
-          array('core', 'normalize'),
-          array('system', 'maintenance'),
+          'core/normalize',
+          'system/maintenance',
         ),
       ),
     );

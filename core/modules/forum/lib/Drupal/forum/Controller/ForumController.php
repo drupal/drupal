@@ -143,7 +143,7 @@ class ForumController extends ControllerBase {
       '#sortby' => $config->get('topics.order'),
       '#forums_per_page' => $config->get('topics.page_limit'),
     );
-    $build['#attached']['library'][] = array('forum', 'forum.index');
+    $build['#attached']['library'][] = 'forum/forum.index';
     if (empty($term->forum_container->value)) {
       $build['#attached']['drupal_add_feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->label());
     }

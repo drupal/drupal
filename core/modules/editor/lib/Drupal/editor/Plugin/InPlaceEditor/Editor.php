@@ -88,7 +88,7 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
     $attachments = $manager->getAttachments($formats);
 
     // Also include editor.module's formatted text editor.
-    $attachments['library'][] = array('editor', 'edit.inPlaceEditor.formattedText');
+    $attachments['library'][] = 'editor/edit.inPlaceEditor.formattedText';
 
     return $attachments;
   }

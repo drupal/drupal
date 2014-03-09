@@ -58,7 +58,7 @@ class SimpletestTestForm extends FormBase {
       '#empty' => $this->t('No tests to display.'),
       '#attached' => array(
         'library' => array(
-          array('simpletest', 'drupal.simpletest'),
+          'simpletest/drupal.simpletest',
         ),
       ),
     );

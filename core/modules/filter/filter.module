@@ -501,7 +501,7 @@ function filter_process_format($element) {
   $element['value'] += element_info($element['#base_type']);
 
   // Turn original element into a text format wrapper.
-  $element['#attached']['library'][] = array('filter', 'drupal.filter');
+  $element['#attached']['library'][] = 'filter/drupal.filter';
 
   // Setup child container for the text format widget.
   $element['format'] = array(
@@ -1144,5 +1144,5 @@ function filter_filter_secure_image_alter(&$image) {
  * Implements hook_page_build().
  */
 function filter_page_build(&$page) {
-  $page['#attached']['library'][] = array('filter', 'caption');
+  $page['#attached']['library'][] = 'filter/caption';
 }

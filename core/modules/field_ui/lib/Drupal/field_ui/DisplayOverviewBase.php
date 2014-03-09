@@ -236,7 +236,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save'));
 
-    $form['#attached']['library'][] = array('field_ui', 'drupal.field_ui');
+    $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
 
     return $form;
   }

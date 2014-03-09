@@ -202,7 +202,7 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
     '#default_value' => $scheme_name,
     '#attached' => array(
       'library' => array(
-        array('color', 'drupal.color'),
+        'color/drupal.color',
       ),
       // Add custom CSS.
       'css' => array(

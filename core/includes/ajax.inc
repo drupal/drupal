@@ -332,8 +332,8 @@ function ajax_pre_render_element($element) {
 
   // Attach JavaScript settings to the element.
   if (isset($element['#ajax']['event'])) {
-    $element['#attached']['library'][] = array('core', 'jquery.form');
-    $element['#attached']['library'][] = array('core', 'drupal.ajax');
+    $element['#attached']['library'][] = 'core/jquery.form';
+    $element['#attached']['library'][] = 'core/drupal.ajax';
 
     $settings = $element['#ajax'];
 

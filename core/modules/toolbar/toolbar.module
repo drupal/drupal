@@ -68,7 +68,7 @@ function toolbar_element_info() {
     '#theme' => 'toolbar',
     '#attached' => array(
       'library' => array(
-        array('toolbar', 'toolbar'),
+        'toolbar/toolbar',
       ),
     ),
     // Metadata for the toolbar wrapping element.
@@ -346,7 +346,7 @@ function toolbar_toolbar() {
     ),
     '#attached' => array(
       'library' => array(
-        array('toolbar', 'toolbar.escapeAdmin'),
+        'toolbar/toolbar.escapeAdmin',
       ),
     ),
     '#weight' => -20,

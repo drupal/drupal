@@ -84,7 +84,7 @@ function template_preprocess_node_preview(&$variables) {
 
   // Render trimmed teaser version of the post.
   $node_teaser = node_view($node, 'teaser');
-  $node_teaser['#attached']['library'][] = array('node', 'drupal.node.preview');
+  $node_teaser['#attached']['library'][] = 'node/drupal.node.preview';
   $variables['teaser'] = $node_teaser;
   // Render full version of the post.
   $node_full = node_view($node, 'full');

@@ -34,7 +34,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
    */
   public function getLibraries(Editor $editor) {
     return array(
-      array('core', 'drupal.ajax'),
+      'core/drupal.ajax',
     );
   }
 
@@ -69,7 +69,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
   public function settingsForm(array $form, array &$form_state, Editor $editor) {
     form_load_include($form_state, 'inc', 'editor', 'editor.admin');
     $form['image_upload'] = editor_image_upload_settings_form($editor);
-    $form['image_upload']['#attached']['library'][] = array('ckeditor', 'drupal.ckeditor.drupalimage.admin');
+    $form['image_upload']['#attached']['library'][] = 'ckeditor/drupal.ckeditor.drupalimage.admin';
     $form['image_upload']['#element_validate'][] = array($this, 'validateImageUploadSettings');
     return $form;
   }

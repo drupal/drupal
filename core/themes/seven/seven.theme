@@ -47,7 +47,7 @@ function seven_menu_local_tasks(&$variables) {
   if (!empty($variables['primary'])) {
     $variables['primary']['#attached'] = array(
       'library' => array(
-        array('seven', 'drupal.nav-tabs'),
+        'seven/drupal.nav-tabs',
       ),
     );
     $variables['primary']['#prefix'] = '<h2 id="primary-tabs-title" class="visually-hidden">' . t('Primary tabs') . '</h2>';
@@ -61,7 +61,7 @@ function seven_menu_local_tasks(&$variables) {
   if (!empty($variables['secondary'])) {
     $variables['secondary']['#attached'] = array(
       'library' => array(
-        array('seven', 'drupal.nav-tabs'),
+        'seven/drupal.nav-tabs',
       ),
     );
     $variables['secondary']['#prefix'] = '<h2 id="secondary-tabs-title" class="visually-hidden">' . t('Secondary tabs') . '</h2>';
@@ -234,7 +234,7 @@ function seven_menu_local_action($variables) {
   $libraries = array(
     '#attached' => array(
       'library' => array(
-        array('core', 'modernizr'),
+        'core/modernizr',
       ),
     ),
   );
@@ -261,7 +261,7 @@ function seven_menu_local_action($variables) {
 function seven_element_info_alter(&$type) {
   // We require Modernizr for button styling.
   if (isset($type['button'])) {
-    $type['button']['#attached']['library'][] = array('core', 'modernizr');
+    $type['button']['#attached']['library'][] = 'core/modernizr';
   }
 }
 
@@ -274,7 +274,7 @@ function seven_preprocess_install_page(&$variables) {
 
   // Normally we could attach libraries via hook_page_alter(), but when the
   // database is inactive it's not called so we add them here.
-  $libraries['#attached']['library'][] = array('seven', 'install-page');
+  $libraries['#attached']['library'][] = 'seven/install-page';
   drupal_render($libraries);
 }
 

@@ -42,7 +42,7 @@ function edit_page_build(&$page) {
     return;
   }
 
-  $page['#attached']['library'][] = array('edit', 'edit');
+  $page['#attached']['library'][] = 'edit/edit';
 }
 
 /**
@@ -72,8 +72,8 @@ function edit_page_build(&$page) {
  * @todo Remove this in favor of the 'stylesheets-additional' property proposed
  *   in https://drupal.org/node/1209958
  */
-function edit_library_alter(array &$library, $extension, $name, $theme = NULL) {
-  if ($extension == 'edit' && $name == 'edit') {
+function edit_library_alter(array &$library, $name, $theme = NULL) {
+  if ($name == 'edit/edit') {
     // Retrieve the admin theme.
     if (!isset($theme)) {
       $theme = Drupal::config('system.theme')->get('admin');
@@ -82,7 +82,7 @@ function edit_library_alter(array &$library, $extension, $name, $theme = NULL) {
       $info = system_get_info('theme', $theme);
       // Recurse to process base theme(s) first.
       if (isset($info['base theme'])) {
-        edit_library_alter($library, $extension, $name, $info['base theme']);
+        edit_library_alter($library, $name, $info['base theme']);
       }
       if (isset($info['edit_stylesheets']) && is_array($info['edit_stylesheets'])) {
         foreach ($info['edit_stylesheets'] as $path) {

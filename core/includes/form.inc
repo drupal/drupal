@@ -1641,7 +1641,7 @@ function theme_tableselect($variables) {
     // checkboxes/radios in the first table column.
     if ($element['#js_select']) {
       // Add a "Select all" checkbox.
-      $table['#attached']['library'][] = array('core', 'drupal.tableselect');
+      $table['#attached']['library'][] = 'core/drupal.tableselect';
       array_unshift($header, array('class' => array('select-all')));
     }
     else {
@@ -1763,7 +1763,7 @@ function form_process_table($element, &$form_state) {
     // Add a "Select all" checkbox column to the header.
     // @todo D8: Rename into #select_all?
     if ($element['#js_select']) {
-      $element['#attached']['library'][] = array('core', 'drupal.tableselect');
+      $element['#attached']['library'][] = 'core/drupal.tableselect';
       array_unshift($element['#header'], array('class' => array('select-all')));
     }
     // Add an empty header column for radio buttons or when a "Select all"
@@ -1992,7 +1992,7 @@ function form_process_machine_name($element, &$form_state) {
       'langcode' => $language->id,
     ),
   );
-  $element['#attached']['library'][] = array('core', 'drupal.machine-name');
+  $element['#attached']['library'][] = 'core/drupal.machine-name';
   $element['#attached']['js'][] = $js_settings;
 
   return $element;
@@ -2085,7 +2085,7 @@ function form_pre_render_details($element) {
   _form_set_attributes($element, array('form-wrapper'));
 
   // Collapsible details.
-  $element['#attached']['library'][] = array('core', 'drupal.collapse');
+  $element['#attached']['library'][] = 'core/drupal.collapse';
   if (!empty($element['#open'])) {
     $element['#attributes']['open'] = 'open';
   }
@@ -2139,7 +2139,7 @@ function form_pre_render_group($element) {
 
   if (isset($element['#group'])) {
     // Contains form element summary functionalities.
-    $element['#attached']['library'][] = array('core', 'drupal.form');
+    $element['#attached']['library'][] = 'core/drupal.form';
 
     $group = $element['#group'];
     // If this element belongs to a group, but the group-holding element does
@@ -2188,7 +2188,7 @@ function form_process_vertical_tabs($element, &$form_state) {
     $element['#title_display'] = 'invisible';
   }
 
-  $element['#attached']['library'][] = array('core', 'drupal.vertical-tabs');
+  $element['#attached']['library'][] = 'core/drupal.vertical-tabs';
 
   // The JavaScript stores the currently selected tab in this hidden
   // field so that the active tab can be restored the next time the
@@ -2278,7 +2278,7 @@ function form_process_autocomplete($element, &$form_state) {
   }
   if ($access) {
     $element['#attributes']['class'][] = 'form-autocomplete';
-    $element['#attached']['library'][] = array('core', 'drupal.autocomplete');
+    $element['#attached']['library'][] = 'core/drupal.autocomplete';
     // Provide a data attribute for the JavaScript behavior to bind to.
     $element['#attributes']['data-autocomplete-path'] = $path;
   }

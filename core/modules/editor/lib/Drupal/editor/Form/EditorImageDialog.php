@@ -41,7 +41,7 @@ class EditorImageDialog extends FormBase {
     $image_element = $form_state['image_element'];
 
     $form['#tree'] = TRUE;
-    $form['#attached']['library'][] = array('editor', 'drupal.editor.dialog');
+    $form['#attached']['library'][] = 'editor/drupal.editor.dialog';
     $form['#prefix'] = '<div id="editor-image-dialog-form">';
     $form['#suffix'] = '</div>';
 

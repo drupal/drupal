@@ -69,7 +69,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
       '#rows' => $this->getSetting('summary_rows'),
       '#description' => t('Leave blank to use trimmed value of full text as the summary.'),
       '#attached' => array(
-        'library' => array(array('text', 'drupal.text')),
+        'library' => array('text/drupal.text'),
       ),
       '#attributes' => array('class' => array('text-summary')),
       '#prefix' => '<div class="text-summary-wrapper">',

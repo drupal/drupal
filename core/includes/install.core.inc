@@ -1947,9 +1947,9 @@ function install_configure_form($form, &$form_state, &$install_state) {
     drupal_set_message(t('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, consult the <a href="@handbook_url">online handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'warning');
   }
 
-  $form['#attached']['library'][] = array('system', 'drupal.system');
+  $form['#attached']['library'][] = 'system/drupal.system';
   // Add JavaScript time zone detection.
-  $form['#attached']['library'][] = array('core', 'drupal.timezone');
+  $form['#attached']['library'][] = 'core/drupal.timezone';
   // We add these strings as settings because JavaScript translation does not
   // work during installation.
   $js = array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')));

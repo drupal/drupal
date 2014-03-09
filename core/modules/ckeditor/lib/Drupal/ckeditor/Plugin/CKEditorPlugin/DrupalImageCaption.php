@@ -42,7 +42,7 @@ class DrupalImageCaption extends PluginBase implements CKEditorPluginInterface, 
    */
   public function getLibraries(Editor $editor) {
     return array(
-      array('ckeditor', 'drupal.ckeditor.drupalimagecaption-theme'),
+      'ckeditor/drupal.ckeditor.drupalimagecaption-theme',
     );
   }
 

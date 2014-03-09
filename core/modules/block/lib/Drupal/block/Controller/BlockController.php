@@ -41,7 +41,7 @@ class BlockController extends ControllerBase {
           )
         ),
         'library' => array(
-          array('block', 'drupal.block.admin'),
+          'block/drupal.block.admin',
         ),
       ),
     );

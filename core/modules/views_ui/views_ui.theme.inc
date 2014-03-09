@@ -499,7 +499,7 @@ function template_preprocess_views_ui_view_preview_section(&$variables) {
       '#links' => $links,
       '#attributes' => array('class' => array('contextual-links')),
       '#attached' => array(
-        'library' => array(array('contextual', 'drupal.contextual-links')),
+        'library' => array('contextual/drupal.contextual-links'),
       ),
     );
     $variables['links'] = $build;
