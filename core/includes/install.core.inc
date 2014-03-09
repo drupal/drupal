@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Settings;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\CoreServiceProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Install\TaskException;
@@ -18,7 +17,6 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -255,15 +253,7 @@ function install_state_defaults() {
  *   modified with information gleaned from the beginning of the page request.
  */
 function install_begin_request(&$install_state) {
-  // A request object from the HTTPFoundation to tell us about the request.
   $request = Request::createFromGlobals();
-
-  // Create a minimal container so that t() and $request will work. This
-  // container will be overriden but it's needed for the very early installation
-  // process when database tasks run.
-  $container = new ContainerBuilder();
-  $container->set('request', $request);
-  \Drupal::setContainer($container);
 
   // Add any installation parameters passed in via the URL.
   if ($install_state['interactive']) {
@@ -280,10 +270,6 @@ function install_begin_request(&$install_state) {
 
   // Allow command line scripts to override server variables used by Drupal.
   require_once __DIR__ . '/bootstrap.inc';
-
-  if (!$install_state['interactive']) {
-    drupal_override_server_variables($install_state['server']);
-  }
 
   // Initialize conf_path().
   // This primes the site path to be used during installation. By not requiring
@@ -321,23 +307,22 @@ function install_begin_request(&$install_state) {
   include_once __DIR__ . '/session.inc';
   require_once __DIR__ . '/entity.inc';
 
-  // If we have a language selected and it is not yet saved in the system (eg.
-  // pre-database data screens we are unable to persistently store the default
-  // language), we should set language_default so the proper language is used to
-  // display installer pages as early as possible.
-  $default_language_values = Language::$defaultValues;
-  if (!empty($install_state['parameters']['langcode']) && $default_language_values['id'] != $install_state['parameters']['langcode']) {
-    $default_language_values = array('id' => $install_state['parameters']['langcode']);
-  }
-  // Register the 'language_manager' service.
-  $container->setParameter('language.default_values', $default_language_values);
-  $container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
+  // Create a minimal mocked container to support calls to t() in the pre-kernel
+  // base system verification code paths below. The strings are not actually
+  // used or output for these calls.
+  // @todo Separate API level checks from UI-facing error messages.
+  $container = new ContainerBuilder();
+  $container->setParameter('language.default_values', Language::$defaultValues);
+  $container
+    ->register('language.default', 'Drupal\Core\Language\LanguageDefault')
     ->addArgument('%language.default_values%');
-  $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+  $container
+    ->register('language_manager', 'Drupal\Core\Language\LanguageManager')
     ->addArgument(new Reference('language.default'));
+  $container
+    ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
+    ->addArgument(new Reference('language_manager'));
 
-  // Register the translation services.
-  install_register_translation_service($container);
   \Drupal::setContainer($container);
 
   // Determine whether base system services are ready to operate.
@@ -361,141 +346,35 @@ function install_begin_request(&$install_state) {
     }
   }
 
-  if ($install_state['base_system_verified']) {
-    $kernel = new DrupalKernel('install', drupal_classloader(), FALSE);
-    $kernel->boot();
-    $container = $kernel->getContainer();
-    // Add the file translation service to the container.
-    $container->set('string_translator.file_translation', install_file_translation_service());
-    $container->get('string_translation')->addTranslator($container->get('string_translator.file_translation'));
+  // Replace services with in-memory and null implementations. This kernel is
+  // replaced with a regular one in drupal_install_system().
+  if (!$install_state['base_system_verified']) {
+    $environment = 'install';
+    $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\InstallerServiceProvider';
   }
-  // Replace services with in-memory implementations and specialized installer
-  // implementations. This service container is reverted to a regular
-  // DrupalKernel in install_bootstrap_full().
   else {
-    // @todo Move into a proper Drupal\Core\DependencyInjection\InstallContainerBuilder.
-    $container = new ContainerBuilder();
-    $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
-
-    $container->register('config.storage', 'Drupal\Core\Config\InstallStorage');
-
-    $container->register('config.storage.schema', 'Drupal\Core\Config\Schema\SchemaStorage')
-      ->addArgument(new Reference('config.storage'));
-
-    $container->register('config.typed', 'Drupal\Core\Config\TypedConfigManager')
-      ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('config.storage.schema'))
-      ->addArgument(new Reference('cache.config'));
-
-    $container->setParameter('language.default_values', Language::$defaultValues);
-    $container->register('language.default', 'Drupal\Core\Language\LanguageDefault')
-      ->addArgument('%language.default_values%');
-
-    $container->register('config.factory', 'Drupal\Core\Config\ConfigFactory')
-      ->addArgument(new Reference('config.storage'))
-      ->addArgument(new Reference('event_dispatcher'))
-      ->addArgument(new Reference('config.typed'));
-
-    // Register the 'language_manager' service.
-    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager')
-      ->addArgument(new Reference('language.default'));
-
-    // Register the translation services.
-    install_register_translation_service($container);
-
-    foreach (array('bootstrap', 'config', 'cache', 'menu', 'page', 'path') as $bin) {
-      $container
-        ->register("cache.$bin", 'Drupal\Core\Cache\MemoryBackend')
-        ->addArgument($bin);
-    }
-
-    // The install process cannot use the database lock backend since the database
-    // is not fully up, so we use a null backend implementation during the
-    // installation process. This will also speed up the installation process.
-    // The site being installed will use the real lock backend when doing AJAX
-    // requests but, except for a WSOD, there is no chance for a a lock to stall
-    // (as opposed to the cache backend) so we can afford having a null
-    // implementation here.
-    $container->register('lock', 'Drupal\Core\Lock\NullLockBackend');
-
-    $container
-      ->register('theme.registry', 'Drupal\Core\Theme\Registry')
-      ->addArgument(new Reference('cache.cache'))
-      ->addArgument(new Reference('lock'))
-      ->addArgument(new Reference('module_handler'))
-      ->addTag('needs_destruction');
-
-    // Register a module handler for managing enabled modules.
-    $container
-      ->register('module_handler', 'Drupal\Core\Extension\ModuleHandler');
-
-    // Register the Guzzle HTTP client for fetching translation files from a
-    // remote translation server such as localization.drupal.org.
-    $container->register('http_default_client', 'Guzzle\Http\Client')
-      ->addArgument(NULL)
-      ->addArgument(array(
-        'curl.CURLOPT_TIMEOUT' => 30.0,
-        'curl.CURLOPT_MAXREDIRS' => 3,
-      ))
-      ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
-
-    $container->register('settings', 'Drupal\Component\Utility\Settings')
-      ->setFactoryClass('Drupal\Component\Utility\Settings')
-      ->setFactoryMethod('getSingleton');
-
-    $container
-      ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
-    $container
-      ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
-
-    $container->register('state', 'Drupal\Core\KeyValueStore\State')
-      ->addArgument(new Reference('keyvalue'));
-
-    // Register Twig template engine for use during install.
-    CoreServiceProvider::registerTwig($container);
-
-    $container->register('url_generator', 'Drupal\Core\Routing\NullGenerator');
-
-    $container->register('form_builder', 'Drupal\Core\Form\FormBuilder')
-      ->addArgument(new Reference('module_handler'))
-      ->addArgument(new Reference('keyvalue.expirable'))
-      ->addArgument(new Reference('event_dispatcher'))
-      ->addArgument(new Reference('url_generator'))
-      ->addArgument(new Reference('string_translation'))
-      ->addArgument(new Reference('csrf_token', ContainerInterface::IGNORE_ON_INVALID_REFERENCE))
-      ->addArgument(new Reference('http_kernel', ContainerInterface::IGNORE_ON_INVALID_REFERENCE))
-      ->addMethodCall('setRequest', array(new Reference('request')));
-
-    // Register UUID.
-    CoreServiceProvider::registerUuid($container);
-
-    // Register the CSS and JavaScript asset collection renderers.
-    $container->register('asset.css.collection_renderer', 'Drupal\Core\Asset\CssCollectionRenderer')
-      ->addArgument(new Reference('state'));
-    $container->register('asset.js.collection_renderer', 'Drupal\Core\Asset\JsCollectionRenderer')
-      ->addArgument(new Reference('state'));
-
-    // Register the info parser.
-    $container->register('info_parser', 'Drupal\Core\Extension\InfoParser');
-
-    $container->register('theme_handler', 'Drupal\Core\Extension\ThemeHandler')
-      ->addArgument(new Reference('config.factory'))
-      ->addArgument(new Reference('module_handler'))
-      ->addArgument(new Reference('cache.cache'))
-      ->addArgument(new Reference('info_parser'));
-
-    // Overrides can not work at this point since this would cause the
-    // ConfigFactory to try to load language override configuration which is not
-    // supported by \Drupal\Core\Config\InstallStorage since loading a
-    // non-existing file would throw an exception.
-    $container->get('config.factory')->setOverrideState(FALSE);
+    $environment = 'prod';
   }
 
-  // Set the request in the kernel to the new created Request above
-  // so it is available to the rest of the installation process.
-  $container->set('request', $request);
+  $kernel = new DrupalKernel($environment, drupal_classloader(), FALSE);
+  $kernel->boot();
 
-  \Drupal::setContainer($container);
+  // Enter the request scope and add the Request.
+  // @todo Remove this after converting all installer screens into controllers.
+  $container = $kernel->getContainer();
+  $container->enterScope('request');
+  $container->set('request', $request, 'request');
+
+  // Register the file translation service.
+  if (isset($GLOBALS['config']['locale.settings']['translation.path'])) {
+    $directory = $GLOBALS['config']['locale.settings']['translation.path'];
+  }
+  else {
+    $directory = conf_path() . '/files/translations';
+  }
+  $container->set('string_translator.file_translation', new FileTranslation($directory));
+  $container->get('string_translation')
+    ->addTranslator($container->get('string_translator.file_translation'));
 
   // Set up $language, so t() caller functions will still work.
   drupal_language_initialize();
@@ -626,47 +505,8 @@ function install_run_task($task, &$install_state) {
   $function = $task['function'];
 
   if ($task['type'] == 'form') {
-    if ($install_state['interactive']) {
-      // For interactive forms, build the form and ensure that it will not
-      // redirect, since the installer handles its own redirection only after
-      // marking the form submission task complete.
-      $form_state = array(
-        // We need to pass $install_state by reference in order for forms to
-        // modify it, since the form API will use it in call_user_func_array(),
-        // which requires that referenced variables be passed explicitly.
-        'build_info' => array('args' => array(&$install_state)),
-        'no_redirect' => TRUE,
-      );
-      $form = drupal_build_form($function, $form_state);
-      // If a successful form submission did not occur, the form needs to be
-      // rendered, which means the task is not complete yet.
-      if (empty($form_state['executed'])) {
-        $install_state['task_not_complete'] = TRUE;
-        return $form;
-      }
-      // Otherwise, return nothing so the next task will run in the same
-      // request.
-      return;
-    }
-    else {
-      // For non-interactive forms, submit the form programmatically with the
-      // values taken from the installation state. Throw an exception if any
-      // errors were encountered.
-      $form_state = array(
-        'values' => !empty($install_state['forms'][$function]) ? $install_state['forms'][$function] : array(),
-        // We need to pass $install_state by reference in order for forms to
-        // modify it, since the form API will use it in call_user_func_array(),
-        // which requires that referenced variables be passed explicitly.
-        'build_info' => array('args' => array(&$install_state)),
-      );
-      drupal_form_submit($function, $form_state);
-      $errors = form_get_errors($form_state);
-      if (!empty($errors)) {
-        throw new InstallerException(implode("\n", $errors));
-      }
-    }
+    return install_get_form($function, $install_state);
   }
-
   elseif ($task['type'] == 'batch') {
     // Start a new batch based on the task function, if one is not running
     // already.
@@ -931,6 +771,57 @@ function install_tasks_to_display($install_state) {
     }
   }
   return $displayed_tasks;
+}
+
+/**
+ * Builds and processes a form for the installer environment.
+ *
+ * Ensures that FormBuilder does not redirect after submitting a form, since the
+ * installer uses a custom step/flow logic via install_run_tasks().
+ *
+ * @param string|array $form_id
+ *   The form ID to build and process.
+ * @param array $install_state
+ *   The current state of the installation.
+ *
+ * @return array|null
+ *   A render array containing the form to render, or NULL in case the form was
+ *   successfully submitted.
+ *
+ * @throws \Drupal\Core\Installer\Exception\InstallerException
+ */
+function install_get_form($form_id, array &$install_state) {
+  // Ensure the form will not redirect, since install_run_tasks() uses a custom
+  // redirection logic.
+  $form_state = array(
+    'build_info' => array(
+      'args' => array(&$install_state),
+    ),
+    'no_redirect' => TRUE,
+  );
+  if ($install_state['interactive']) {
+    $form = drupal_build_form($form_id, $form_state);
+    // If the form submission was not successful, the form needs to be rendered,
+    // which means the task is not complete yet.
+    if (empty($form_state['executed'])) {
+      $install_state['task_not_complete'] = TRUE;
+      return $form;
+    }
+  }
+  else {
+    // For non-interactive installs, submit the form programmatically with the
+    // values taken from the installation state.
+    $form_state['values'] = array();
+    if (!empty($install_state['forms'][$form_id])) {
+      $form_state['values'] = $install_state['forms'][$form_id];
+    }
+    drupal_form_submit($form_id, $form_state);
+
+    // Throw an exception in case of any form validation error.
+    if ($errors = form_get_errors($form_state)) {
+      throw new InstallerException(implode("\n", $errors));
+    }
+  }
 }
 
 /**
@@ -1344,7 +1235,7 @@ function install_select_profile(&$install_state) {
         throw new InstallerException(t('Missing profile parameter.'));
       }
       // Otherwise, display a form to select a profile.
-      return drupal_get_form('install_select_profile_form', $install_state);
+      return install_get_form('install_select_profile_form', $install_state);
     }
   }
 }
@@ -1493,53 +1384,6 @@ function install_find_translations() {
 }
 
 /**
- * Build a file translation service for installation.
- *
- * @return \Drupal\Core\StringTranslation\Translator\FileTranslation
- *   File translation service for the installer.
- */
-function install_file_translation_service() {
-  static $translation;
-  if (!isset($translation)) {
-    $translation = new FileTranslation(install_translations_directory());
-  }
-  return $translation;
-}
-
-/**
- * Finds the translations directory for the installation.
- *
- * @return string
- *   The path to the installation directory.
- */
-function install_translations_directory() {
-  if (isset($GLOBALS['conf']['locale.settings']['translation.path'])) {
-    $directory = $GLOBALS['conf']['locale.settings']['translation.path'];
-  }
-  else {
-    $directory = conf_path() . '/files/translations';
-  }
-  return $directory;
-}
-
-/**
- * Build a file translation service for installation.
- *
- * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
- *   The container to append translation related services.
- */
-function install_register_translation_service(ContainerBuilder $container) {
-  $container->register('string_translator.file_translation', 'Drupal\Core\StringTranslation\Translator\FileTranslation')
-    ->addArgument(install_translations_directory());
-  $container->register('string_translator.custom_strings', 'Drupal\Core\StringTranslation\Translator\CustomStrings')
-    ->addArgument(settings());
-  $container->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
-    ->addArgument(new Reference('language_manager'))
-    ->addMethodCall('addTranslator', array(new Reference('string_translator.file_translation')))
-    ->addMethodCall('addTranslator', array(new Reference('string_translator.custom_strings')));
-}
-
-/**
  * Selects which language to use during installation.
  *
  * @param $install_state
@@ -1557,7 +1401,6 @@ function install_select_language(&$install_state) {
   // Find all available translation files.
   $files = install_find_translations();
   $install_state['translations'] += $files;
-  $request_params = \Drupal::request()->request;
 
   // If a valid language code is set, continue with the next installation step.
   // When translations from the localization server are used, any language code
@@ -1565,9 +1408,9 @@ function install_select_language(&$install_state) {
   // langauges available at http://localize.drupal.org.
   // When files from the translation directory are used, we only accept
   // languages for which a file is available.
-  if ($request_params->has('langcode')) {
+  if (!empty($install_state['parameters']['langcode'])) {
     $standard_languages = LanguageManager::getStandardLanguageList();
-    $langcode = $request_params->get('langcode');
+    $langcode = $install_state['parameters']['langcode'];
     if ($langcode == 'en' || isset($files[$langcode]) || isset($standard_languages[$langcode])) {
       $install_state['parameters']['langcode'] = $langcode;
       return;
@@ -1581,7 +1424,7 @@ function install_select_language(&$install_state) {
     // translation files were found the form shows a select list of the
     // corresponding languages to choose from.
     if ($install_state['interactive']) {
-      return drupal_get_form('install_select_language_form', count($files) > 1 ? $files : array());
+      return install_get_form('install_select_language_form', $install_state);
     }
     // If we are performing a non-interactive installation. If only one language
     // (English) is available, assume the user knows what he is doing. Otherwise
@@ -1601,14 +1444,19 @@ function install_select_language(&$install_state) {
 /**
  * Form constructor for the language selection form.
  *
- * @param array $files
- *   (optional) An associative array of file URIs keyed by language code as
- *   returned by file_scan_directory(). Defaults to all standard languages.
+ * @param $install_state
+ *   An array of information about the current installation state.
  *
  * @see file_scan_directory()
  * @ingroup forms
  */
-function install_select_language_form($form, &$form_state, $files = array()) {
+function install_select_language_form($form, &$form_state, &$install_state) {
+  if (count($install_state['translations']) > 1) {
+    $files = $install_state['translations'];
+  }
+  else {
+    $files = array();
+  }
   $standard_languages = LanguageManager::getStandardLanguageList();
   $select_options = array();
   $browser_options = array();
@@ -1665,6 +1513,14 @@ function install_select_language_form($form, &$form_state, $files = array()) {
     '#button_type' => 'primary',
   );
   return $form;
+}
+
+/**
+ * Form submission handler for the language selection form.
+ */
+function install_select_language_form_submit($form, &$form_state) {
+  $install_state = &$form_state['build_info']['args'][0];
+  $install_state['parameters']['langcode'] = $form_state['values']['langcode'];
 }
 
 /**

@@ -625,19 +625,16 @@ function drupal_install_system($install_state) {
   // Create tables.
   drupal_install_schema('system');
 
-  if (!\Drupal::hasService('kernel')) {
-    // Immediately boot a kernel to have real services ready. If there's already
-    // an initialized request object in the pre-kernel container, persist it in
-    // the post-kernel container.
-    if (\Drupal::getContainer()->initialized('request')) {
-      $request = \Drupal::request();
-    }
-    $kernel = new DrupalKernel('install', drupal_classloader(), FALSE);
-    $kernel->boot();
-    if (isset($request)) {
-      \Drupal::getContainer()->set('request', $request);
-    }
+  // Immediately boot a new kernel into the regular production environment.
+  $request = \Drupal::hasRequest() ? \Drupal::request() : FALSE;
 
+  unset($GLOBALS['conf']['container_service_providers']['InstallerServiceProvider']);
+  $kernel = new DrupalKernel('prod', drupal_classloader(), FALSE);
+  $kernel->boot();
+
+  if ($request) {
+    $kernel->getContainer()->enterScope('request');
+    $kernel->getContainer()->set('request', $request, 'request');
   }
 
   $system_path = drupal_get_path('module', 'system');

@@ -12,7 +12,13 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 /**
  * Storage controller used by the Drupal installer.
  *
- * @see install_begin_request()
+ * This storage performs a full filesystem scan to discover all available
+ * extensions and reads from all default config directories that exist.
+ *
+ * This special implementation MUST NOT be used anywhere else than the early
+ * installer environment.
+ *
+ * @see \Drupal\Core\DependencyInjection\InstallServiceProvider
  */
 class InstallStorage extends FileStorage {
 

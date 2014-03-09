@@ -9,6 +9,7 @@ namespace Drupal\Core;
 
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
+use Drupal\Core\Config\NullStorage;
 use Drupal\Core\CoreServiceProvider;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
@@ -205,7 +206,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function discoverServiceProviders() {
-    $this->configStorage = BootstrapConfigStorageFactory::get();
     $serviceProviders = array(
       'CoreServiceProvider' => new CoreServiceProvider(),
     );
@@ -217,7 +217,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Ensure we know what modules are enabled and that their namespaces are
     // registered.
     if (!isset($this->moduleList)) {
-      $module_list = $this->configStorage->read('system.module');
+      $module_list = $this->getConfigStorage()->read('system.module');
       $this->moduleList = isset($module_list['enabled']) ? $module_list['enabled'] : array();
     }
     $module_filenames = $this->getModuleFileNames();
@@ -305,7 +305,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
       // If a module is within a profile directory but specifies another
       // profile for testing, it needs to be found in the parent profile.
-      $settings = $this->configStorage->read('simpletest.settings');
+      $settings = $this->getConfigStorage()->read('simpletest.settings');
       $parent_profile = !empty($settings['parent_profile']) ? $settings['parent_profile'] : NULL;
       if ($parent_profile && !isset($profiles[$parent_profile])) {
         // In case both profile directories contain the same extension, the
@@ -374,8 +374,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->containerNeedsDumping = FALSE;
     $persist = $this->getServicesToPersist();
     // The request service requires custom persisting logic, since it is also
-    // potentially scoped. During Drupal installation, there is a request
-    // service without a request scope.
+    // potentially scoped.
     $request_scope = FALSE;
     if (isset($this->container)) {
       if ($this->container->isScopeActive('request')) {
@@ -525,10 +524,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // avoids the circular dependencies that would created by
     // \Drupal\language\LanguageServiceProvider::alter() and allows the default
     // language to not be English in the installer.
-    $system = BootstrapConfigStorageFactory::get()->read('system.site');
     $default_language_values = Language::$defaultValues;
-    if ($default_language_values['id'] != $system['langcode']) {
-      $default_language_values = array('id' => $system['langcode'], 'default' => TRUE);
+    if ($system = $this->getConfigStorage()->read('system.site')) {
+      if ($default_language_values['id'] != $system['langcode']) {
+        $default_language_values = array('id' => $system['langcode'], 'default' => TRUE);
+      }
     }
     $container->setParameter('language.default_values', $default_language_values);
 
@@ -645,6 +645,25 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->storage = PhpStorageFactory::get('service_container');
     }
     return $this->storage;
+  }
+
+  /**
+   * Returns the active configuration storage to use during building the container.
+   *
+   * @return \Drupal\Core\Config\StorageInterface
+   */
+  protected function getConfigStorage() {
+    if (!isset($this->configStorage)) {
+      // The active configuration storage may not exist yet; e.g., in the early
+      // installer. Catch the exception thrown by config_get_config_directory().
+      try {
+        $this->configStorage = BootstrapConfigStorageFactory::get();
+      }
+      catch (\Exception $e) {
+        $this->configStorage = new NullStorage();
+      }
+    }
+    return $this->configStorage;
   }
 
   /**
