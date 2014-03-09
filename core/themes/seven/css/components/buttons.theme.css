@@ -80,9 +80,6 @@
   border-color: #1e5c90;
   color: #fff;
 }
-.button--primary:focus {
-  border-color: #0087db;
-}
 .button--primary:hover {
   box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25);
 }
