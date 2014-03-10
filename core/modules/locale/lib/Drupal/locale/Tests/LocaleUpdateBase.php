@@ -270,8 +270,8 @@ EOF;
       'version' => '',
     );
     foreach ($data as $file) {
-      $file = (object) array_merge($default, $file);
-      drupal_write_record('locale_file', $file);
+      $file = array_merge($default, $file);
+      db_insert('locale_file')->fields($file)->execute();
     }
   }
 

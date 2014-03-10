@@ -866,22 +866,23 @@ function locale_translation_get_file_history() {
  *
  * @return integer
  *   FALSE on failure. Otherwise SAVED_NEW or SAVED_UPDATED.
- *
- * @see drupal_write_record()
  */
 function locale_translation_update_file_history($file) {
-  // Update or write new record.
-  if (db_query("SELECT project FROM {locale_file} WHERE project = :project AND langcode = :langcode", array(':project' => $file->project, ':langcode' => $file->langcode))->fetchField()) {
-    $update = array('project', 'langcode');
-  }
-  else {
-    $update = array();
-  }
-  $result = drupal_write_record('locale_file', $file, $update);
+  $status = db_merge('locale_file')
+    ->key(array(
+      'project' => $file->project,
+      'langcode' => $file->langcode,
+    ))
+    ->fields(array(
+      'version' => $file->version,
+      'timestamp' => $file->timestamp,
+      'last_checked' => $file->last_checked,
+    ))
+    ->execute();
   // The file history has changed, flush the static cache now.
   // @todo Can we make this more fine grained?
   drupal_static_reset('locale_translation_get_file_history');
-  return $result;
+  return $status;
 }
 
 /**

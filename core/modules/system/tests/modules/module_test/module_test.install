@@ -28,6 +28,10 @@ function module_test_schema() {
  * Implements hook_install().
  */
 function module_test_install() {
-  $record = array('data' => 'Data inserted in hook_install()');
-  drupal_write_record('module_test', $record);
+  $schema = drupal_get_schema('module_test');
+  db_insert('module_test')
+    ->fields(array(
+      'data' => $schema['fields']['data']['type'],
+    ))
+    ->execute();
 }

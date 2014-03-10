@@ -24,19 +24,19 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
 
     // Create records for a couple of users with different sizes.
     $file = array('uid' => 2, 'uri' => 'public://example1.txt', 'filesize' => 50, 'status' => FILE_STATUS_PERMANENT);
-    drupal_write_record('file_managed', $file);
+    db_insert('file_managed')->fields($file)->execute();
     $file = array('uid' => 2, 'uri' => 'public://example2.txt', 'filesize' => 20, 'status' => FILE_STATUS_PERMANENT);
-    drupal_write_record('file_managed', $file);
+    db_insert('file_managed')->fields($file)->execute();
     $file = array('uid' => 3, 'uri' => 'public://example3.txt', 'filesize' => 100, 'status' => FILE_STATUS_PERMANENT);
-    drupal_write_record('file_managed', $file);
+    db_insert('file_managed')->fields($file)->execute();
     $file = array('uid' => 3, 'uri' => 'public://example4.txt', 'filesize' => 200, 'status' => FILE_STATUS_PERMANENT);
-    drupal_write_record('file_managed', $file);
+    db_insert('file_managed')->fields($file)->execute();
 
     // Now create some non-permanent files.
     $file = array('uid' => 2, 'uri' => 'public://example5.txt', 'filesize' => 1, 'status' => 0);
-    drupal_write_record('file_managed', $file);
+    db_insert('file_managed')->fields($file)->execute();
     $file = array('uid' => 3, 'uri' => 'public://example6.txt', 'filesize' => 3, 'status' => 0);
-    drupal_write_record('file_managed', $file);
+    db_insert('file_managed')->fields($file)->execute();
   }
 
   /**

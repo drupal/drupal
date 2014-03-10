@@ -381,12 +381,10 @@ function hook_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
     ->fetchField();
 
   // Log the count in a table that records this statistic for deleted entities.
-  $ref_count_record = (object) array(
-    'count' => $count,
-    'type' => $type,
-    'id' => $id,
-  );
-  drupal_write_record('example_deleted_entity_statistics', $ref_count_record);
+  db_merge('example_deleted_entity_statistics')
+    ->key(array('type' => $type, 'id' => $id))
+    ->fields(array('count' => $count))
+    ->execute();
 }
 
 /**

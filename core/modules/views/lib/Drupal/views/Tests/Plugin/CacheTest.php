@@ -64,7 +64,7 @@ class CacheTest extends PluginTestBase {
       'age' => 29,
       'job' => 'Banjo',
     );
-    drupal_write_record('views_test_data', $record);
+    db_insert('views_test_data')->fields($record)->execute();
 
     // The Result should be the same as before, because of the caching.
     $view = views_get_view('test_cache');
@@ -106,8 +106,7 @@ class CacheTest extends PluginTestBase {
       'age' => 29,
       'job' => 'Banjo',
     );
-
-    drupal_write_record('views_test_data', $record);
+    db_insert('views_test_data')->fields($record)->execute();
 
     // The Result changes, because the view is not cached.
     $view = views_get_view('test_cache');

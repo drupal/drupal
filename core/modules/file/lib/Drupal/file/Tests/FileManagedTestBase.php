@@ -161,9 +161,11 @@ abstract class FileManagedTestBase extends WebTestBase {
     $file->status = 0;
     // Write the record directly rather than using the API so we don't invoke
     // the hooks.
-    $this->assertNotIdentical(drupal_write_record('file_managed', $file), FALSE, 'The file was added to the database.', 'Create test file');
-
-    return entity_create('file', (array) $file);
+    $file = (array) $file;
+    $file['fid'] = db_insert('file_managed')
+      ->fields($file)
+      ->execute();
+    return entity_create('file', $file);
   }
 
   /**
