@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the combine filter handler.
@@ -35,7 +36,7 @@ class FilterCombineTest extends ViewUnitTestBase {
   }
 
   public function testFilterCombineContains() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     $fields = $view->displayHandlers->get('default')->getOption('fields');

@@ -1516,7 +1516,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#title' => t('Access'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('access', $this->getType(), array($this->view->storage->get('base_table'))),
+          '#options' => Views::fetchPluginNames('access', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $access['type'],
         );
 
@@ -1553,7 +1553,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#title' => t('Caching'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('cache', $this->getType(), array($this->view->storage->get('base_table'))),
+          '#options' => Views::fetchPluginNames('cache', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $cache['type'],
         );
 
@@ -1647,7 +1647,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#title' => t('Style'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('style', $this->getType(), array($this->view->storage->get('base_table'))),
+          '#options' => Views::fetchPluginNames('style', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $style_plugin->definition['id'],
           '#description' => t('If the style you choose has settings, be sure to click the settings button that will appear next to it in the View summary.'),
         );
@@ -1696,7 +1696,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#title' => t('Row'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('row', $this->getType(), array($this->view->storage->get('base_table'))),
+          '#options' => Views::fetchPluginNames('row', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $row_plugin_instance->definition['id'],
         );
 
@@ -1790,7 +1790,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#title' => t('Exposed form'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('exposed_form', $this->getType(), array($this->view->storage->get('base_table'))),
+          '#options' => Views::fetchPluginNames('exposed_form', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $exposed_form['type'],
         );
 
@@ -1826,7 +1826,7 @@ abstract class DisplayPluginBase extends PluginBase {
           '#title' => t('Pager'),
           '#title_display' => 'invisible',
           '#type' => 'radios',
-          '#options' => views_fetch_plugin_names('pager', !$this->usesPager() ? 'basic' : NULL, array($this->view->storage->get('base_table'))),
+          '#options' => Views::fetchPluginNames('pager', !$this->usesPager() ? 'basic' : NULL, array($this->view->storage->get('base_table'))),
           '#default_value' => $pager['type'],
         );
 
@@ -2233,7 +2233,7 @@ abstract class DisplayPluginBase extends PluginBase {
    * @return string
    *   The required display type. Defaults to 'normal'.
    *
-   * @see views_fetch_plugin_names()
+   * @see \Drupal\views\Views::fetchPluginNames()
    */
   protected function getType() {
     return 'normal';

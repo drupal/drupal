@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests for core Drupal\views\Plugin\views\sort\SortPluginBase handler.
@@ -33,7 +34,7 @@ class SortTest extends ViewUnitTestBase {
    * Tests numeric ordering of the result set.
    */
   public function testNumericOrdering() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the ordering
@@ -86,7 +87,7 @@ class SortTest extends ViewUnitTestBase {
    * Tests string ordering of the result set.
    */
   public function testStringOrdering() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the ordering

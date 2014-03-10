@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Date handler.
@@ -36,7 +37,7 @@ class FieldDateTest extends ViewUnitTestBase {
   }
 
   public function testFieldDate() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     $view->displayHandlers->get('default')->overrideOption('fields', array(

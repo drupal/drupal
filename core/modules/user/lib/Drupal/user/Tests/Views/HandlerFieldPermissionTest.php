@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests\Views;
 
+use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Tests\ViewUnitTestBase;
 
@@ -38,7 +39,7 @@ class HandlerFieldPermissionTest extends UserUnitTestBase {
   public function testFieldPermission() {
     $this->setupPermissionTestData();
 
-    $view = views_get_view('test_field_permission');
+    $view = Views::getView('test_field_permission');
     $this->executeView($view);
     $view->initStyle();
     $view->render();

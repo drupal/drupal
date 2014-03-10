@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the Drupal\node\Plugin\views\field\Type handler.
  */
@@ -38,7 +40,7 @@ class FieldTypeTest extends NodeTestBase {
       'node_field_data_type' => 'node_field_data_type',
     );
 
-    $view = views_get_view('test_field_type');
+    $view = Views::getView('test_field_type');
     $this->executeView($view);
     $this->assertIdenticalResultset($view, $expected_result, $column_map, 'The correct node type was displayed.');
   }

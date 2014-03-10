@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\views\Views;
+
 /**
  * Tests the 'view' element type.
  */
@@ -55,7 +57,7 @@ class ViewElementTest extends ViewTestBase {
    * Tests the rendered output and form output of a view element.
    */
   public function testViewElement() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Set the content as our rendered array.

@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the argument_comment_user_uid handler.
  */
@@ -28,7 +30,7 @@ class ArgumentUserUIDTest extends CommentTestBase {
   }
 
   function testCommentUserUIDTest() {
-    $view = views_get_view('test_comment_user_uid');
+    $view = Views::getView('test_comment_user_uid');
     $this->executeView($view, array($this->account->id()));
     $result_set = array(
       array(

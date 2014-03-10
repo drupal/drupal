@@ -7,6 +7,8 @@
 
 namespace Drupal\field\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the UI of the field field handler.
  *
@@ -87,7 +89,7 @@ class FieldUITest extends FieldTestBase {
 
     // Save the view and test whether the settings are saved.
     $this->drupalPostForm('admin/structure/views/view/test_view_fieldapi', array(), t('Save'));
-    $view = views_get_view('test_view_fieldapi');
+    $view = Views::getView('test_view_fieldapi');
     $view->initHandlers();
     $this->assertEqual($view->field['field_name_0']->options['type'], 'text_trimmed');
     $this->assertEqual($view->field['field_name_0']->options['settings']['trim_length'], $random_number);

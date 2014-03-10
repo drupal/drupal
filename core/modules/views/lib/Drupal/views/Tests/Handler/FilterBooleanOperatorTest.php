@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the BooleanOperator filter handler.
@@ -52,7 +53,7 @@ class FilterBooleanOperatorTest extends ViewUnitTestBase {
    * Tests the BooleanOperator filter.
    */
   public function testFilterBooleanOperator() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Add a the status boolean filter.
@@ -103,7 +104,7 @@ class FilterBooleanOperatorTest extends ViewUnitTestBase {
    */
   public function testFilterGroupedExposed() {
     $filters = $this->getGroupedExposedFilters();
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
 
     $view->setExposedInput(array('status' => 1));
     $view->setDisplay();

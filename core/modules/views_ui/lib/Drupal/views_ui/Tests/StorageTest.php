@@ -8,6 +8,7 @@
 namespace Drupal\views_ui\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\views\Views;
 
 /**
  * Tests the UI of storage properties of views.
@@ -57,7 +58,7 @@ class StorageTest extends UITestBase {
     $this->drupalPostForm("admin/structure/views/nojs/edit-details/$view_name/default", $edit, t('Apply'));
     $this->drupalPostForm(NULL, array(), t('Save'));
 
-    $view = views_get_view($view_name);
+    $view = Views::getView($view_name);
 
     foreach (array('label', 'tag', 'description', 'langcode') as $property) {
       $this->assertEqual($view->storage->get($property), $edit[$property], format_string('Make sure the property @property got probably saved.', array('@property' => $property)));

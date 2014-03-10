@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\views\Views;
+
 /**
  * Tests that views hooks are registered when defined in $module.views.inc.
  *
@@ -69,7 +71,7 @@ class ViewsHooksTest extends ViewUnitTestBase {
    * Tests the hooks.
    */
   public function testHooks() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
 
     // Test each hook is found in the implementations array and is invoked.
     foreach (static::$hooks as $hook => $type) {

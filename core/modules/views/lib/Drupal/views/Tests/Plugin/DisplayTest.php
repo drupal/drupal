@@ -57,7 +57,7 @@ class DisplayTest extends PluginTestBase {
    * @see \Drupal\views_test_data\Plugin\views\display\DisplayTest
    */
   public function testDisplayPlugin() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
 
     // Add a new 'display_test' display and test it's there.
     $view->storage->addDisplay('display_test');
@@ -146,7 +146,7 @@ class DisplayTest extends PluginTestBase {
    * Tests the overriding of filter_groups.
    */
   public function testFilterGroupsOverriding() {
-    $view = views_get_view('test_filter_groups');
+    $view = Views::getView('test_filter_groups');
     $view->initDisplay();
 
     // mark is as overridden, yes FALSE, means overridden.
@@ -159,7 +159,7 @@ class DisplayTest extends PluginTestBase {
    * Tests the getAttachedDisplays method.
    */
   public function testGetAttachedDisplays() {
-    $view = views_get_view('test_get_attach_displays');
+    $view = Views::getView('test_get_attach_displays');
 
     // Both the feed_1 and the feed_2 display are attached to the page display.
     $view->setDisplay('page_1');
@@ -175,7 +175,7 @@ class DisplayTest extends PluginTestBase {
   public function testReadMore() {
     $expected_more_text = 'custom more text';
 
-    $view = views_get_view('test_display_more');
+    $view = Views::getView('test_display_more');
     $this->executeView($view);
 
     $output = $view->preview();
@@ -200,7 +200,7 @@ class DisplayTest extends PluginTestBase {
     $more_text = $view->display_handler->useMoreText();
     $this->assertEqual($more_text, $expected_more_text, 'The right more text is chosen.');
 
-    $view = views_get_view('test_display_more');
+    $view = Views::getView('test_display_more');
     $view->setDisplay();
     $view->display_handler->setOption('use_more', 0);
     $this->executeView($view);
@@ -210,7 +210,7 @@ class DisplayTest extends PluginTestBase {
     $result = $this->xpath('//div[@class=:class]/a', array(':class' => 'more-link'));
     $this->assertTrue(empty($result), 'The more link is not shown.');
 
-    $view = views_get_view('test_display_more');
+    $view = Views::getView('test_display_more');
     $view->setDisplay();
     $view->display_handler->setOption('use_more', 0);
     $view->display_handler->setOption('use_more_always', 0);

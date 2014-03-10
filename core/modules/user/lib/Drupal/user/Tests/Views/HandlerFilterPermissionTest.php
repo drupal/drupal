@@ -9,6 +9,7 @@ namespace Drupal\user\Tests\Views;
 
 use Drupal\Component\Utility\String;
 use Drupal\user\Tests\Views\UserUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the permissions filter handler.
@@ -44,7 +45,7 @@ class HandlerFilterPermissionTest extends UserUnitTestBase {
     $this->setupPermissionTestData();
 
     $column_map = array('uid' => 'uid');
-    $view = views_get_view('test_filter_permission');
+    $view = Views::getView('test_filter_permission');
 
     // Filter by a non existing permission.
     $view->initHandlers();

@@ -134,7 +134,7 @@ class DisplayTestCRUD extends UITestBase {
     $this->assertNoText(t('Page settings'));
 
     $this->drupalPostForm(NULL, array(), t('Save'));
-    $view = views_get_view($view['id']);
+    $view = Views::getView($view['id']);
     $view->initDisplay();
 
     $page_2 = $view->displayHandlers->get('page_2');

@@ -7,6 +7,7 @@
 
 namespace Drupal\file\Tests\Views;
 
+use Drupal\views\Views;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -71,7 +72,7 @@ class ExtensionViewsFieldTest extends ViewUnitTestBase {
    * Tests file extension views field handler extension_detect_tar option.
    */
   public function testFileExtensionTarOption() {
-    $view = views_get_view('file_extension_view');
+    $view = Views::getView('file_extension_view');
     $view->setDisplay();
 
     $this->executeView($view);

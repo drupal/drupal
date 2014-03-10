@@ -201,8 +201,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $style_options = views_fetch_plugin_names('style', 'normal', array($this->base_table));
-    $feed_row_options = views_fetch_plugin_names('row', 'feed', array($this->base_table));
+    $style_options = Views::fetchPluginNames('style', 'normal', array($this->base_table));
+    $feed_row_options = Views::fetchPluginNames('row', 'feed', array($this->base_table));
     $path_prefix = url(NULL, array('absolute' => TRUE));
 
     // Add filters and sorts which apply to the view as a whole.
@@ -548,7 +548,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   protected function rowStyleOptions() {
     // Get all available row plugins by default.
-    $options = views_fetch_plugin_names('row', 'normal', array($this->base_table));
+    $options = Views::fetchPluginNames('row', 'normal', array($this->base_table));
     return $options;
   }
 

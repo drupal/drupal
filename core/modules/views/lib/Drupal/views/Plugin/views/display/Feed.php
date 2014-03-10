@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Component\Utility\String;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -50,7 +51,7 @@ class Feed extends PathPluginBase {
     // Set the default row style. Ideally this would be part of the option
     // definition, but in this case it's dependent on the view's base table,
     // which we don't know until init().
-    $row_plugins = views_fetch_plugin_names('row', $this->getType(), array($view->storage->get('base_table')));
+    $row_plugins = Views::fetchPluginNames('row', $this->getType(), array($view->storage->get('base_table')));
     $default_row_plugin = key($row_plugins);
     if (empty($this->options['row']['type'])) {
       $this->options['row']['type'] = $default_row_plugin;

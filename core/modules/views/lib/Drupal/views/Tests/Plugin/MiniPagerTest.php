@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
+
 /**
  * Tests the mini pager plugin
  *
@@ -115,7 +117,7 @@ class MiniPagerTest extends PluginTestBase {
     $this->assertNoText('‹‹ test', 'The previous link does not appear on the page.');
     $this->assertText($this->nodes[19]->label());
 
-    $view = views_get_view('test_mini_pager');
+    $view = Views::getView('test_mini_pager');
     $this->executeView($view);
     $this->assertIdentical($view->get_total_rows, NULL, 'The query was not forced to calculate the total number of results.');
     $this->assertIdentical($view->total_rows, 1, 'The pager calculated the total number of rows.');

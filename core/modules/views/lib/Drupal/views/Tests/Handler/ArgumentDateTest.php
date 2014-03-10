@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the core date argument handlers.
@@ -68,7 +69,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
    * @see \Drupal\node\Plugin\views\argument\CreatedFullDate
    */
   public function testCreatedFullDateHandler() {
-    $view = views_get_view('test_argument_date');
+    $view = Views::getView('test_argument_date');
     $view->setDisplay('default');
     $this->executeView($view, array('20000102'));
     $expected = array();
@@ -99,7 +100,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
    * @see \Drupal\node\Plugin\views\argument\CreatedDay
    */
   public function testDayHandler() {
-    $view = views_get_view('test_argument_date');
+    $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_1');
     $this->executeView($view, array('02'));
     $expected = array();
@@ -129,7 +130,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
    * @see \Drupal\node\Plugin\views\argument\CreatedMonth
    */
   public function testMonthHandler() {
-    $view = views_get_view('test_argument_date');
+    $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_2');
     $this->executeView($view, array('01'));
     $expected = array();
@@ -168,7 +169,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
       ->condition('id', 5)
       ->execute();
 
-    $view = views_get_view('test_argument_date');
+    $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_3');
     // The first jan 2000 was still in the last week of the previous year.
     $this->executeView($view, array(52));
@@ -220,7 +221,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
       ->condition('id', 5)
       ->execute();
 
-    $view = views_get_view('test_argument_date');
+    $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_4');
     $this->executeView($view, array('2000'));
     $expected = array();
@@ -271,7 +272,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
       ->condition('id', 5)
       ->execute();
 
-    $view = views_get_view('test_argument_date');
+    $view = Views::getView('test_argument_date');
     $view->setDisplay('embed_5');
     $this->executeView($view, array('200001'));
     $expected = array();

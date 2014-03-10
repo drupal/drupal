@@ -7,6 +7,8 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\views\Views;
+
 /**
  * Tests the UI and functionality for the Custom boolean field handler options.
  *
@@ -53,7 +55,7 @@ class CustomBooleanTest extends UITestBase {
    */
   public function testCustomOption() {
     // Add the boolean field handler to the test view.
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     $view->displayHandlers->get('default')->overrideOption('fields', array(
@@ -101,7 +103,7 @@ class CustomBooleanTest extends UITestBase {
       // Save the view.
       $this->drupalPostForm('admin/structure/views/view/test_view', array(), 'Save');
 
-      $view = views_get_view('test_view');
+      $view = Views::getView('test_view');
       $output = $view->preview();
       $output = drupal_render($output);
 

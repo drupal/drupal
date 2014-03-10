@@ -11,6 +11,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * Tests for views default views.
@@ -189,7 +190,7 @@ class DefaultViewsTest extends ViewTestBase {
     );
     $this->drupalCreateNode($node);
 
-    $view = views_get_view('archive');
+    $view = Views::getView('archive');
     $view->setDisplay('page_1');
     $this->executeView($view);
     $columns = array('nid', 'created_year_month', 'num_records');

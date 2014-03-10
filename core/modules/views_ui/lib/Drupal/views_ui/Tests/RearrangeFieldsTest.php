@@ -7,6 +7,8 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\views\Views;
+
 /**
  * Tests the reordering of fields via AJAX.
  *
@@ -33,7 +35,7 @@ class RearrangeFieldsTest extends UITestBase {
    * Gets the fields from the View.
    */
   protected function getViewFields($view_name = 'test_view', $display_id = 'default') {
-    $view = views_get_view($view_name);
+    $view = Views::getView($view_name);
     $view->setDisplay($display_id);
     $fields = array();
     foreach ($view->displayHandlers->get('default')->getHandlers('field') as $field => $handler) {

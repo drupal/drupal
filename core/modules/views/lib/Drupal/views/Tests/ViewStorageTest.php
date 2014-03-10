@@ -13,6 +13,7 @@ use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\Plugin\views\display\DefaultDisplay;
 use Drupal\views\Plugin\views\display\Feed;
+use Drupal\views\Views;
 
 /**
  * Tests the functionality of View and ViewStorageController.
@@ -123,7 +124,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     }
 
     // Make sure that loaded default views get a UUID.
-    $view = views_get_view('test_view_storage');
+    $view = Views::getView('test_view_storage');
     $this->assertTrue($view->storage->uuid());
   }
 
@@ -312,7 +313,7 @@ class ViewStorageTest extends ViewUnitTestBase {
    * Tests the createDuplicate() View method.
    */
   public function testCreateDuplicate() {
-    $view = views_get_view('test_view_storage');
+    $view = Views::getView('test_view_storage');
     $copy = $view->storage->createDuplicate();
 
     $this->assertTrue($copy instanceof View, 'The copied object is a View.');

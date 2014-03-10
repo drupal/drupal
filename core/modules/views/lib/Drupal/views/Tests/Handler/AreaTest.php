@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Views;
+
 /**
  * Tests the abstract area handler.
  *
@@ -92,7 +94,7 @@ class AreaTest extends HandlerTestBase {
    * Tests the rendering of an area.
    */
   public function testRenderArea() {
-    $view = views_get_view('test_example_area');
+    $view = Views::getView('test_example_area');
     $view->initHandlers();
 
     // Insert a random string to the test area plugin and see whether it is
@@ -124,7 +126,7 @@ class AreaTest extends HandlerTestBase {
     $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
     $this->drupalLogin($admin_user);
 
-    $view = views_get_view('test_example_area');
+    $view = Views::getView('test_example_area');
     $view->initHandlers();
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_example_area/default/empty/test_example');
@@ -159,7 +161,7 @@ class AreaTest extends HandlerTestBase {
    * Tests overriding the view title using the area title handler.
    */
   public function testTitleArea() {
-    $view = views_get_view('frontpage');
+    $view = Views::getView('frontpage');
     $view->initDisplay('page_1');
 
     // Add the title area handler to the empty area.

@@ -11,6 +11,7 @@ namespace Drupal\views\Tests;
  * Tests basic functions from the Views module.
  */
 use Drupal\views\Plugin\views\filter\Standard;
+use Drupal\views\Views;
 use Drupal\Component\Utility\String;
 
 class ModuleTest extends ViewUnitTestBase {
@@ -163,46 +164,46 @@ class ModuleTest extends ViewUnitTestBase {
     // We can store this now, as we have enabled/disabled above.
     $all_views = $controller->loadMultiple();
 
-    // Test views_get_all_views().
-    $this->assertIdentical(array_keys($all_views), array_keys(views_get_all_views()), 'views_get_all_views works as expected.');
+    // Test Views::getAllViews().
+    $this->assertIdentical(array_keys($all_views), array_keys(Views::getAllViews()), 'Views::getAllViews works as expected.');
 
-    // Test views_get_enabled_views().
+    // Test Views::getEnabledViews().
     $expected_enabled = array_filter($all_views, function($view) {
       return views_view_is_enabled($view);
     });
-    $this->assertIdentical(array_keys($expected_enabled), array_keys(views_get_enabled_views()), 'Expected enabled views returned.');
+    $this->assertIdentical(array_keys($expected_enabled), array_keys(Views::getEnabledViews()), 'Expected enabled views returned.');
 
-    // Test views_get_disabled_views().
+    // Test Views::getDisabledViews().
     $expected_disabled = array_filter($all_views, function($view) {
       return views_view_is_disabled($view);
     });
-    $this->assertIdentical(array_keys($expected_disabled), array_keys(views_get_disabled_views()), 'Expected disabled views returned.');
+    $this->assertIdentical(array_keys($expected_disabled), array_keys(Views::getDisabledViews()), 'Expected disabled views returned.');
 
-    // Test views_get_views_as_options().
+    // Test Views::getViewsAsOptions().
     // Test the $views_only parameter.
-    $this->assertIdentical(array_keys($all_views), array_keys(views_get_views_as_options(TRUE)), 'Expected option keys for all views were returned.');
+    $this->assertIdentical(array_keys($all_views), array_keys(Views::getViewsAsOptions(TRUE)), 'Expected option keys for all views were returned.');
     $expected_options = array();
     foreach ($all_views as $id => $view) {
       $expected_options[$id] = $view->label();
     }
-    $this->assertIdentical($expected_options, views_get_views_as_options(TRUE), 'Expected options array was returned.');
+    $this->assertIdentical($expected_options, Views::getViewsAsOptions(TRUE), 'Expected options array was returned.');
 
     // Test the default.
-    $this->assertIdentical($this->formatViewOptions($all_views), views_get_views_as_options(), 'Expected options array for all views was returned.');
+    $this->assertIdentical($this->formatViewOptions($all_views), Views::getViewsAsOptions(), 'Expected options array for all views was returned.');
     // Test enabled views.
-    $this->assertIdentical($this->formatViewOptions($expected_enabled), views_get_views_as_options(FALSE, 'enabled'), 'Expected enabled options array was returned.');
+    $this->assertIdentical($this->formatViewOptions($expected_enabled), Views::getViewsAsOptions(FALSE, 'enabled'), 'Expected enabled options array was returned.');
     // Test disabled views.
-    $this->assertIdentical($this->formatViewOptions($expected_disabled), views_get_views_as_options(FALSE, 'disabled'), 'Expected disabled options array was returned.');
+    $this->assertIdentical($this->formatViewOptions($expected_disabled), Views::getViewsAsOptions(FALSE, 'disabled'), 'Expected disabled options array was returned.');
 
     // Test the sort parameter.
     $all_views_sorted = $all_views;
     ksort($all_views_sorted);
-    $this->assertIdentical(array_keys($all_views_sorted), array_keys(views_get_views_as_options(TRUE, 'all', NULL, FALSE, TRUE)), 'All view id keys returned in expected sort order');
+    $this->assertIdentical(array_keys($all_views_sorted), array_keys(Views::getViewsAsOptions(TRUE, 'all', NULL, FALSE, TRUE)), 'All view id keys returned in expected sort order');
 
     // Test $exclude_view parameter.
-    $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', 'archive')), 'View excluded from options based on name');
-    $this->assertFalse(array_key_exists('archive:default', views_get_views_as_options(FALSE, 'all', 'archive:default')), 'View display excluded from options based on name');
-    $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', $archive->getExecutable())), 'View excluded from options based on object');
+    $this->assertFalse(array_key_exists('archive', Views::getViewsAsOptions(TRUE, 'all', 'archive')), 'View excluded from options based on name');
+    $this->assertFalse(array_key_exists('archive:default', Views::getViewsAsOptions(FALSE, 'all', 'archive:default')), 'View display excluded from options based on name');
+    $this->assertFalse(array_key_exists('archive', Views::getViewsAsOptions(TRUE, 'all', $archive->getExecutable())), 'View excluded from options based on object');
 
     // Test the $opt_group parameter.
     $expected_opt_groups = array();
@@ -211,14 +212,14 @@ class ModuleTest extends ViewUnitTestBase {
           $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = t('@view : @display', array('@view' => $view->id(), '@display' => $display['id']));
       }
     }
-    $this->assertIdentical($expected_opt_groups, views_get_views_as_options(FALSE, 'all', NULL, TRUE), 'Expected option array for an option group returned.');
+    $this->assertIdentical($expected_opt_groups, Views::getViewsAsOptions(FALSE, 'all', NULL, TRUE), 'Expected option array for an option group returned.');
   }
 
   /**
    * Tests view enable and disable procedural wrapper functions.
    */
   function testStatusFunctions() {
-    $view = views_get_view('test_view_status')->storage;
+    $view = Views::getView('test_view_status')->storage;
 
     $this->assertFalse($view->status(), 'The view status is disabled.');
 
@@ -232,11 +233,11 @@ class ModuleTest extends ViewUnitTestBase {
   }
 
   /**
-   * Tests the views_fetch_plugin_names() function.
+   * Tests the \Drupal\views\Views::fetchPluginNames() method.
    */
   public function testViewsFetchPluginNames() {
     // All style plugins should be returned, as we have not specified a type.
-    $plugins = views_fetch_plugin_names('style');
+    $plugins = Views::fetchPluginNames('style');
     $definitions = $this->container->get('plugin.manager.views.style')->getDefinitions();
     $expected = array();
     foreach ($definitions as $id =>$definition) {
@@ -247,19 +248,19 @@ class ModuleTest extends ViewUnitTestBase {
 
     // Test using the 'test' style plugin type only returns the test_style and
     // mapping_test plugins.
-    $plugins = views_fetch_plugin_names('style', 'test');
+    $plugins = Views::fetchPluginNames('style', 'test');
     $this->assertIdentical(array_keys($plugins), array('mapping_test', 'test_style', 'test_template_style'));
 
     // Test a non existent style plugin type returns no plugins.
-    $plugins = views_fetch_plugin_names('style', $this->randomString());
+    $plugins = Views::fetchPluginNames('style', $this->randomString());
     $this->assertIdentical($plugins, array());
   }
 
   /**
-   * Tests the views_plugin_list() function.
+   * Tests the \Drupal\views\Views::pluginList() method.
    */
   public function testViewsPluginList() {
-    $plugin_list = views_plugin_list();
+    $plugin_list = Views::pluginList();
     // Only plugins used by 'test_view' should be in the plugin list.
     foreach (array('display:default', 'pager:none') as $key) {
       list($plugin_type, $plugin_id) = explode(':', $key);

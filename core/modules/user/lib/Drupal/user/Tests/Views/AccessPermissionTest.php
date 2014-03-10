@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests\Views;
 
 use Drupal\user\Plugin\views\access\Permission;
+use Drupal\views\Views;
 
 /**
  * Tests views perm access plugin.
@@ -35,7 +36,7 @@ class AccessPermissionTest extends AccessTestBase {
    * Tests perm access plugin.
    */
   function testAccessPerm() {
-    $view = views_get_view('test_access_perm');
+    $view = Views::getView('test_access_perm');
     $view->setDisplay();
 
     $access_plugin = $view->display_handler->getPlugin('access');

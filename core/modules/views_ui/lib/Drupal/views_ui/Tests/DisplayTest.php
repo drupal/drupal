@@ -62,7 +62,7 @@ class DisplayTest extends UITestBase {
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->drupalPostForm(NULL, array(), t('Save'));
 
-    $view = views_get_view($view['id']);
+    $view = Views::getView($view['id']);
     $displays = $view->storage->get('display');
     $this->assertEqual($displays['default']['position'], 0, 'Make sure the master display comes first.');
     $this->assertEqual($displays['block_1']['position'], 1, 'Make sure the block display comes before the page display.');
@@ -115,7 +115,7 @@ class DisplayTest extends UITestBase {
     \Drupal::config('views.settings')->set('ui.show.advanced_column', TRUE)->save();
 
     // Add a new data display to the view.
-    $view = views_get_view('test_display');
+    $view = Views::getView('test_display');
     $view->storage->addDisplay('display_no_area_test');
     $view->save();
 
@@ -205,7 +205,7 @@ class DisplayTest extends UITestBase {
     $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', array(':edit' => 'views-edit-view', ':status' => 'enabled'));
     $this->assertTrue($elements, 'The enabled class was found on the form wrapper');
 
-    $view = views_get_view($id);
+    $view = Views::getView($id);
     $view->storage->disable()->save();
 
     $this->drupalGet('admin/structure/views/view/' . $id);

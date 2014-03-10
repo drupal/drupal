@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -52,7 +53,7 @@ class StyleGridTest extends PluginTestBase {
    * Tests the grid style.
    */
   public function testGrid() {
-    $view = views_get_view('test_grid');
+    $view = Views::getView('test_grid');
     foreach (array('horizontal', 'vertical') as $alignment) {
       $this->assertGrid($view, $alignment, 5);
       $this->assertGrid($view, $alignment, 4);

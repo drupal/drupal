@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views_test_data\Plugin\views\query\QueryTest as QueryTestPlugin;
 
@@ -50,7 +51,7 @@ class QueryTest extends ViewUnitTestBase {
    * Tests the ViewExecutable::initQuery method.
    */
   public function _testInitQuery() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     $view->initQuery();
@@ -58,7 +59,7 @@ class QueryTest extends ViewUnitTestBase {
   }
 
   public function _testQueryExecute() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     $view->initQuery();
@@ -74,7 +75,7 @@ class QueryTest extends ViewUnitTestBase {
    * @see \Drupal\views\Plugin\views\query\QueryPluginBase
    */
   protected function queryMethodsTests() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     $view->initQuery();

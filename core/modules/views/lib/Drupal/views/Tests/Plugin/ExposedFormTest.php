@@ -127,7 +127,7 @@ class ExposedFormTest extends ViewTestBase {
    * Tests the exposed form markup.
    */
   public function testExposedFormRender() {
-    $view = views_get_view('test_exposed_form_buttons');
+    $view = Views::getView('test_exposed_form_buttons');
     $this->executeView($view);
     $exposed_form = $view->display_handler->getPlugin('exposed_form');
     $output = $exposed_form->renderExposedForm();

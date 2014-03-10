@@ -5,6 +5,7 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views_ui\ViewUI;
@@ -372,5 +373,5 @@ function views_ui_truncate($string, $length) {
  * Magic load function. Wrapper to load a view.
  */
 function views_ui_load($name) {
-  return views_get_view($name);
+  return Views::getView($name);
 }

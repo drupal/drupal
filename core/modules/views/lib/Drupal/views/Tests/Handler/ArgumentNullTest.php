@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\argument\Null handler.
@@ -38,7 +39,7 @@ class ArgumentNullTest extends ViewUnitTestBase {
 
   public function testAreaText() {
     // Test validation
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Add a null argument.

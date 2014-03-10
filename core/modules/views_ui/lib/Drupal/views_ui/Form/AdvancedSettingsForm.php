@@ -8,6 +8,7 @@
 namespace Drupal\views_ui\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\views\Views;
 
 /**
  * Form builder for the advanced admin settings page.
@@ -68,7 +69,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('no_javascript'),
     );
 
-    $options = views_fetch_plugin_names('display_extender');
+    $options = Views::fetchPluginNames('display_extender');
     if (!empty($options)) {
       $form['extenders'] = array(
         '#type' => 'details',

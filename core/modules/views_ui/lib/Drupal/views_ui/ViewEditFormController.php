@@ -13,6 +13,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\user\TempStoreFactory;
+use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -293,7 +294,7 @@ class ViewEditFormController extends ViewFormControllerBase {
 
     if (!empty($destination)) {
       // Find out the first display which has a changed path and redirect to this url.
-      $old_view = views_get_view($view->id());
+      $old_view = Views::getView($view->id());
       $old_view->initDisplay();
       foreach ($old_view->displayHandlers as $id => $display) {
         // Only check for displays with a path.
@@ -436,7 +437,7 @@ class ViewEditFormController extends ViewFormControllerBase {
           "#suffix" => '</li>',
         );
 
-        foreach (views_fetch_plugin_names('display', NULL, array($view->get('storage')->get('base_table'))) as $type => $label) {
+        foreach (Views::fetchPluginNames('display', NULL, array($view->get('storage')->get('base_table'))) as $type => $label) {
           if ($type == $display['display_plugin']) {
             continue;
           }
@@ -733,7 +734,7 @@ class ViewEditFormController extends ViewFormControllerBase {
     }
 
     // Buttons for adding a new display.
-    foreach (views_fetch_plugin_names('display', NULL, array($view->get('base_table'))) as $type => $label) {
+    foreach (Views::fetchPluginNames('display', NULL, array($view->get('base_table'))) as $type => $label) {
       $element['add_display'][$type] = array(
         '#type' => 'submit',
         '#value' => $this->t('Add !display', array('!display' => $label)),

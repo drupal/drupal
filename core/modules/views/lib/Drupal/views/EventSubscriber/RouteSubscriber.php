@@ -14,6 +14,7 @@ use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -187,10 +188,10 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * Returns all views/display combinations with routes.
    *
-   * @see views_get_applicable_views()
+   * @see \Drupal\views\Views::getApplicableViews()
    */
   protected function getApplicableViews() {
-    return views_get_applicable_views('uses_route');
+    return Views::getApplicableViews('uses_route');
   }
 
 }

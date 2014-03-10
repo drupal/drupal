@@ -7,6 +7,8 @@
 
 namespace Drupal\user\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the field username handler.
  *
@@ -32,7 +34,7 @@ class HandlerFieldUserNameTest extends UserTestBase {
   public function testUserName() {
     $this->drupalLogin($this->drupalCreateUser(array('access user profiles')));
 
-    $view = views_get_view('test_views_handler_field_user_name');
+    $view = Views::getView('test_views_handler_field_user_name');
     $this->executeView($view);
 
     $view->row_index = 0;

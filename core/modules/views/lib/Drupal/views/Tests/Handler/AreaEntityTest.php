@@ -89,7 +89,7 @@ class AreaEntityTest extends ViewTestBase {
       \Drupal::state()->set('entity_test_entity_access.view.' . $entity_test->id(), $i != 2);
     }
 
-    $view = views_get_view('test_entity_area');
+    $view = Views::getView('test_entity_area');
     $preview = $view->preview('default', array($entities[1]->id()));
     $this->drupalSetContent(drupal_render($preview));
 
@@ -102,7 +102,7 @@ class AreaEntityTest extends ViewTestBase {
     $this->assertTrue(strpos(trim((string) $result[0]), 'full') !== FALSE, 'The rendered entity appeared in the right view mode.');
 
     // Change the view mode of the area handler.
-    $view = views_get_view('test_entity_area');
+    $view = Views::getView('test_entity_area');
     $item = $view->getHandler('default', 'header', 'entity_entity_test');
     $item['view_mode'] = 'test';
     $view->setHandler('default', 'header', 'entity_entity_test', $item);

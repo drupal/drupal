@@ -6,6 +6,7 @@
  */
 namespace Drupal\node\Tests\Views;
 
+use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -58,7 +59,7 @@ class RevisionRelationships extends ViewTestBase {
     );
 
     // Here should be two rows.
-    $view_nid = views_get_view('test_node_revision_nid');
+    $view_nid = Views::getView('test_node_revision_nid');
     $this->executeView($view_nid, array($node->id()));
     $resultset_nid = array(
       array(
@@ -75,7 +76,7 @@ class RevisionRelationships extends ViewTestBase {
     $this->assertIdenticalResultset($view_nid, $resultset_nid, $column_map);
 
     // There should be only one row with active revision 2.
-    $view_vid = views_get_view('test_node_revision_vid');
+    $view_vid = Views::getView('test_node_revision_vid');
     $this->executeView($view_vid, array($node->id()));
     $resultset_vid = array(
       array(

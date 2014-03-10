@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the node_term_data relationship handler.
  */
@@ -28,7 +30,7 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
   }
 
   function testViewsHandlerRelationshipNodeTermData() {
-    $view = views_get_view('test_taxonomy_node_term_data');
+    $view = Views::getView('test_taxonomy_node_term_data');
     $this->executeView($view, array($this->term1->id(), $this->term2->id()));
     $resultset = array(
       array(

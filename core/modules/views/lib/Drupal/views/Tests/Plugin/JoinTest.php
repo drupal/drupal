@@ -9,6 +9,7 @@ namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views_test_data\Plugin\views\join\JoinTest as JoinTestPlugin;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
+use Drupal\views\Views;
 
 
 /**
@@ -54,7 +55,7 @@ class JoinTest extends RelationshipJoinTestBase {
   public function testExamplePlugin() {
 
     // Setup a simple join and test the result sql.
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->initDisplay();
     $view->initQuery();
 
@@ -85,7 +86,7 @@ class JoinTest extends RelationshipJoinTestBase {
   public function testBasePlugin() {
 
     // Setup a simple join and test the result sql.
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->initDisplay();
     $view->initQuery();
 

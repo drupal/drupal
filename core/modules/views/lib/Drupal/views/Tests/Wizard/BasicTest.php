@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Wizard;
 
 use Drupal\Component\Utility\String;
+use Drupal\views\Views;
 
 /**
  * Tests creating views with the wizard and viewing them on the listing page.
@@ -170,7 +171,7 @@ class BasicTest extends WizardTestBase {
     // Make sure the plugin types that should not have empty options don't have.
     // Test against all values is unit tested.
     // @see \Drupal\views\Tests\Plugin\DisplayUnitTest
-    $view = views_get_view($random_id);
+    $view = Views::getView($random_id);
     $displays = $view->storage->get('display');
 
     foreach ($displays as $display) {

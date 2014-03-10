@@ -8,6 +8,7 @@
 namespace Drupal\action\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the views bulk form test.
@@ -96,7 +97,7 @@ class BulkFormTest extends WebTestBase {
     $this->assertTrue($node->isPublished(), 'An unchecked node is still published.');
 
     // Set up to include just the sticky actions.
-    $view = views_get_view('test_bulk_form');
+    $view = Views::getView('test_bulk_form');
     $display = &$view->storage->getDisplay('default');
     $display['display_options']['fields']['node_bulk_form']['include_exclude'] = 'include';
     $display['display_options']['fields']['node_bulk_form']['selected_actions']['node_make_sticky_action'] = 'node_make_sticky_action';
@@ -110,7 +111,7 @@ class BulkFormTest extends WebTestBase {
     $this->assertOption('edit-action', 'node_make_unsticky_action');
 
     // Set up to exclude the sticky actions.
-    $view = views_get_view('test_bulk_form');
+    $view = Views::getView('test_bulk_form');
     $display = &$view->storage->getDisplay('default');
     $display['display_options']['fields']['node_bulk_form']['include_exclude'] = 'exclude';
     $view->save();
@@ -125,7 +126,7 @@ class BulkFormTest extends WebTestBase {
     $this->assertEqual('With selection', (string) $result[0]);
 
     // Setup up a different bulk form title.
-    $view = views_get_view('test_bulk_form');
+    $view = Views::getView('test_bulk_form');
     $display = &$view->storage->getDisplay('default');
     $display['display_options']['fields']['node_bulk_form']['action_title'] = 'Test title';
     $view->save();

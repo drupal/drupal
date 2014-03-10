@@ -9,6 +9,7 @@ namespace Drupal\node\Tests\Views;
 
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * Tests the default frontpage provided by views.
@@ -53,7 +54,7 @@ class FrontPageTest extends ViewTestBase {
       ->set('name', $site_name)
       ->save();
 
-    $view = views_get_view('frontpage');
+    $view = Views::getView('frontpage');
     $view->setDisplay('page_1');
     $this->executeView($view);
     $view->preview();

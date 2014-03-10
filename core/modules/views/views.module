@@ -62,7 +62,7 @@ function views_element_info() {
 function views_pre_render_view_element($element) {
   $element['#attributes']['class'][] = 'views-element-container';
 
-  $view = views_get_view($element['#name']);
+  $view = Views::getView($element['#name']);
   if ($view && $view->access($element['#display_id'])) {
     $element['view'] = $view->preview($element['#display_id'], $element['#arguments']);
   }
@@ -113,7 +113,7 @@ function views_theme($existing, $type, $theme, $path) {
     'template' => 'views-view-grouping',
   );
 
-  $plugins = views_get_plugin_definitions();
+  $plugins = Views::getPluginDefinitions();
   $module_handler = \Drupal::moduleHandler();
 
   // Register theme functions for all style plugins. It provides a basic auto
@@ -966,7 +966,7 @@ function views_embed_view($name, $display_id = 'default') {
   // Remove $name and $display_id from the arguments.
   unset($args[0], $args[1]);
 
-  $view = views_get_view($name);
+  $view = Views::getView($name);
   if (!$view || !$view->access($display_id)) {
     return;
   }
@@ -996,7 +996,7 @@ function views_get_view_result($name, $display_id = NULL) {
   // Remove $name and $display_id from the arguments.
   unset($args[0], $args[1]);
 
-  $view = views_get_view($name);
+  $view = Views::getView($name);
   if (is_object($view)) {
     if (is_array($args)) {
       $view->setArguments($args);

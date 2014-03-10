@@ -10,6 +10,7 @@ namespace Drupal\field\Tests\Views;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
  * Tests the field_field handler.
@@ -110,7 +111,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
   }
 
   public function _testSimpleFieldRender() {
-    $view = views_get_view('test_view_fieldapi');
+    $view = Views::getView('test_view_fieldapi');
     $this->prepareView($view);
     $this->executeView($view);
 
@@ -129,7 +130,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
    * Tests that fields with formatters runs as expected.
    */
   public function _testFormatterSimpleFieldRender() {
-    $view = views_get_view('test_view_fieldapi');
+    $view = Views::getView('test_view_fieldapi');
     $this->prepareView($view);
     $view->displayHandlers->get('default')->options['fields'][$this->fields[0]->getName()]['type'] = 'text_trimmed';
     $view->displayHandlers->get('default')->options['fields'][$this->fields[0]->getName()]['settings'] = array(
@@ -146,7 +147,7 @@ class HandlerFieldFieldTest extends FieldTestBase {
   }
 
   public function _testMultipleFieldRender() {
-    $view = views_get_view('test_view_fieldapi');
+    $view = Views::getView('test_view_fieldapi');
     $field_name = $this->fields[3]->getName();
 
     // Test delta limit.

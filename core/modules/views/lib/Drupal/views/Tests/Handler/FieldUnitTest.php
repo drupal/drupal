@@ -9,6 +9,7 @@ namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\Views;
 
 /**
  * Tests the generic field handler.
@@ -53,7 +54,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    * Tests that the render function is called.
    */
   public function testRender() {
-    $view = views_get_view('test_field_tokens');
+    $view = Views::getView('test_field_tokens');
     $this->executeView($view);
 
     $random_text = $this->randomName();
@@ -66,7 +67,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    */
   public function testQuery() {
     // Tests adding additional fields to the query.
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->initHandlers();
 
     $id_field = $view->field['id'];
@@ -142,7 +143,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    * Tests general rewriting of the output.
    */
   public function testRewrite() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->initHandlers();
     $this->executeView($view);
     $row = $view->result[0];
@@ -162,7 +163,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    * Tests the field tokens, row level and field level.
    */
   public function testFieldTokens() {
-    $view = views_get_view('test_field_tokens');
+    $view = Views::getView('test_field_tokens');
     $this->executeView($view);
     $name_field_0 = $view->field['name'];
     $name_field_1 = $view->field['name_1'];
@@ -207,7 +208,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    * Tests the exclude setting.
    */
   public function testExclude() {
-    $view = views_get_view('test_field_output');
+    $view = Views::getView('test_field_output');
     $view->initHandlers();
     // Hide the field and see whether it's rendered.
     $view->field['name']->options['exclude'] = TRUE;
@@ -242,7 +243,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    * This tests alters the result to get easier and less coupled results.
    */
   function _testHideIfEmpty() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->initDisplay();
     $this->executeView($view);
 
@@ -460,7 +461,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    * Tests the usage of the empty text.
    */
   function _testEmptyText() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->initDisplay();
     $this->executeView($view);
 
@@ -497,7 +498,7 @@ class FieldUnitTest extends ViewUnitTestBase {
    * Tests views_handler_field::isValueEmpty().
    */
   function testIsValueEmpty() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->initHandlers();
     $field = $view->field['name'];
 

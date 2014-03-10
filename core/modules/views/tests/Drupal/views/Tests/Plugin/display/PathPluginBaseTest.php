@@ -5,7 +5,7 @@
  * Contains \Drupal\views\Tests\Plugin\display\PathPluginBaseTest.
  */
 
-namespace Drupal\views\Tests\Plugin\display {
+namespace Drupal\views\Tests\Plugin\display;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
@@ -280,14 +280,4 @@ class PathPluginBaseTest extends UnitTestCase {
     return array($view, $view_entity, $access_plugin);
   }
 
-}
-
-}
-
-namespace {
-  if (!function_exists('views_get_enabled_display_extenders')) {
-    function views_get_enabled_display_extenders() {
-      return array();
-    }
-  }
 }

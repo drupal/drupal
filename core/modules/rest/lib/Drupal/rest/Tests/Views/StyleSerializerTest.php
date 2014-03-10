@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Tests\Views;
 
+use Drupal\views\Views;
 use Drupal\views\Tests\Plugin\PluginTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -67,7 +68,7 @@ class StyleSerializerTest extends PluginTestBase {
    */
   public function testSerializerResponses() {
     // Test the serialize callback.
-    $view = views_get_view('test_serializer_display_field');
+    $view = Views::getView('test_serializer_display_field');
     $view->initDisplay();
     $this->executeView($view);
 
@@ -104,7 +105,7 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Test the entity rows.
 
-    $view = views_get_view('test_serializer_display_entity');
+    $view = Views::getView('test_serializer_display_entity');
     $view->initDisplay();
     $this->executeView($view);
 
@@ -186,7 +187,7 @@ class StyleSerializerTest extends PluginTestBase {
     $this->drupalPostForm($row_options, array('row_options[field_options][name][alias]' => ''), t('Apply'));
     $this->drupalPostForm(NULL, array(), t('Save'));
 
-    $view = views_get_view('test_serializer_display_field');
+    $view = Views::getView('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
     $this->executeView($view);
 
@@ -221,7 +222,7 @@ class StyleSerializerTest extends PluginTestBase {
 
     $this->drupalPostForm(NULL, array(), t('Save'));
 
-    $view = views_get_view('test_serializer_display_field');
+    $view = Views::getView('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
     $this->executeView($view);
 
@@ -253,7 +254,7 @@ class StyleSerializerTest extends PluginTestBase {
     $this->drupalPostForm($row_options, array('row_options[field_options][created][raw_output]' => '1'), t('Apply'));
     $this->drupalPostForm(NULL, array(), t('Save'));
 
-    $view = views_get_view('test_serializer_display_field');
+    $view = Views::getView('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
     $this->executeView($view);
 
@@ -267,7 +268,7 @@ class StyleSerializerTest extends PluginTestBase {
    * Tests the preview output for json output.
    */
   public function testPreview() {
-    $view = views_get_view('test_serializer_display_entity');
+    $view = Views::getView('test_serializer_display_entity');
     $view->setDisplay('rest_export_1');
     $this->executeView($view);
 

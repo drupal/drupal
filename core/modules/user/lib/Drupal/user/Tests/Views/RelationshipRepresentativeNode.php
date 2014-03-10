@@ -7,6 +7,8 @@
 
 namespace Drupal\user\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the representative node relationship for users.
  */
@@ -31,7 +33,7 @@ class RelationshipRepresentativeNode extends UserTestBase {
    * Tests the relationship.
    */
   public function testRelationship() {
-    $view = views_get_view('test_groupwise_user');
+    $view = Views::getView('test_groupwise_user');
     $this->executeView($view);
     $map = array('node_users_nid' => 'nid', 'uid' => 'uid');
     $expected_result = array(

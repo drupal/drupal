@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the title area handler.
@@ -35,7 +36,7 @@ class AreaTitleTest extends ViewUnitTestBase {
    * Tests the title area handler.
    */
   public function testTitleText() {
-    $view = views_get_view('test_area_title');
+    $view = Views::getView('test_area_title');
 
     $view->setDisplay('default');
     $this->executeView($view);

@@ -7,6 +7,8 @@
 
 namespace Drupal\node\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the node_uid_revision handler.
  */
@@ -53,7 +55,7 @@ class FilterUidRevisionTest extends NodeTestBase {
     // or the main node.
     $this->drupalCreateNode(array('uid' => $no_author->id()));
 
-    $view = views_get_view('test_filter_node_uid_revision');
+    $view = Views::getView('test_filter_node_uid_revision');
     $view->initHandlers();
     $view->filter['uid_revision']->value = array($author->id());
 

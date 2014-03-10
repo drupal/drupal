@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
+
 /**
  * Tests the default/unformatted row style.
  */
@@ -31,7 +33,7 @@ class StyleUnformattedTest extends StyleTestBase {
    * Make sure that the default css classes works as expected.
    */
   function testDefaultRowClasses() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
     $output = $view->preview();
     $this->storeViewPreview(drupal_render($output));

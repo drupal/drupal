@@ -7,6 +7,8 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\views\Views;
+
 /**
  * Tests aggregate functionality of views, for example count.
  */
@@ -59,7 +61,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
   public function testAggregateCount() {
     $this->setupTestEntities();
 
-    $view = views_get_view('test_aggregate_count');
+    $view = Views::getView('test_aggregate_count');
     $this->executeView($view);
 
     $this->assertEqual(count($view->result), 2, 'Make sure the count of items is right.');
@@ -85,7 +87,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
   public function groupByTestHelper($aggregation_function, $values) {
     $this->setupTestEntities();
 
-    $view = views_get_view('test_group_by_count');
+    $view = Views::getView('test_group_by_count');
     $view->setDisplay();
     $view->displayHandlers->get('default')->options['fields']['id']['group_type'] = $aggregation_function;
     $this->executeView($view);
@@ -168,7 +170,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
       $this->storageController->create(array('name' => 'name1'))->save();
     }
 
-    $view = views_get_view('test_group_by_in_filters');
+    $view = Views::getView('test_group_by_in_filters');
     $this->executeView($view);
 
     $this->assertTrue(strpos($view->build_info['query'], 'GROUP BY'), 'Make sure that GROUP BY is in the query');

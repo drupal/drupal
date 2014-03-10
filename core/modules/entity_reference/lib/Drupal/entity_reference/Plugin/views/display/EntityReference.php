@@ -13,7 +13,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  * The plugin that handles an EntityReference display.
  *
  * "entity_reference_display" is a custom property, used with
- * views_get_applicable_views() to retrieve all views with a
+ * \Drupal\views\Views::getApplicableViews() to retrieve all views with a
  * 'Entity Reference' display.
  *
  * @ingroup views_display_plugins

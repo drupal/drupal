@@ -108,7 +108,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
    * Tests the initDisplay() and initHandlers() methods.
    */
   public function testInitMethods() {
-    $view = views_get_view('test_destroy');
+    $view = Views::getView('test_destroy');
     $view->initDisplay();
 
     $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'Make sure a reference to the current display handler is set.');
@@ -176,14 +176,14 @@ class ViewExecutableTest extends ViewUnitTestBase {
    * Tests the generation of the executable object.
    */
   public function testConstructing() {
-    views_get_view('test_destroy');
+    Views::getView('test_destroy');
   }
 
   /**
    * Tests the accessing of values on the object.
    */
   public function testProperties() {
-    $view = views_get_view('test_destroy');
+    $view = Views::getView('test_destroy');
     foreach ($this->executableProperties as $property) {
       $this->assertTrue(isset($view->{$property}));
     }
@@ -193,7 +193,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
    * Tests the display related methods and properties.
    */
   public function testDisplays() {
-    $view = views_get_view('test_executable_displays');
+    $view = Views::getView('test_executable_displays');
 
     // Tests Drupal\views\ViewExecutable::initDisplay().
     $view->initDisplay();
@@ -271,7 +271,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
    * Tests the setting/getting of properties.
    */
   public function testPropertyMethods() {
-    $view = views_get_view('test_executable_displays');
+    $view = Views::getView('test_executable_displays');
 
     // Test the setAjaxEnabled() method.
     $this->assertFalse($view->ajaxEnabled());
@@ -345,7 +345,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
    * Tests the deconstructor to be sure that necessary objects are removed.
    */
   public function testDestroy() {
-    $view = views_get_view('test_destroy');
+    $view = Views::getView('test_destroy');
 
     $view->preview();
     $view->destroy();
@@ -410,7 +410,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
    * Tests the validation of display handlers.
    */
   public function testValidate() {
-    $view = views_get_view('test_executable_displays');
+    $view = Views::getView('test_executable_displays');
     $view->setDisplay('page_1');
 
     $validate = $view->validate();

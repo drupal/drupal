@@ -7,6 +7,8 @@
 
 namespace Drupal\taxonomy\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the representative node relationship for terms.
  */
@@ -31,7 +33,7 @@ class RelationshipRepresentativeNode extends TaxonomyTestBase {
    * Tests the relationship.
    */
   public function testRelationship() {
-    $view = views_get_view('test_groupwise_term');
+    $view = Views::getView('test_groupwise_term');
     $this->executeView($view);
     $map = array('node_taxonomy_term_data_nid' => 'nid', 'tid' => 'tid');
     $expected_result = array(

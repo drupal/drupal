@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\field\Custom handler.
@@ -36,7 +37,7 @@ class FieldCustomTest extends ViewUnitTestBase {
   }
 
   public function testFieldCustom() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Alter the text of the field to a random string.

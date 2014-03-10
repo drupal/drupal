@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Entity;
 
 use Drupal\views\Tests\ViewTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the field plugin base integration with the entity system.
@@ -59,7 +60,7 @@ class FieldEntityTest extends ViewTestBase {
     ));
     $comment->save();
 
-    $view = views_get_view('test_field_get_entity');
+    $view = Views::getView('test_field_get_entity');
     $this->executeView($view);
     $row = $view->result[0];
 

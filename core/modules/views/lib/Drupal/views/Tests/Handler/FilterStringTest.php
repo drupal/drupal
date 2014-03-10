@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\String handler.
@@ -82,7 +83,7 @@ class FilterStringTest extends ViewUnitTestBase {
    * @return view
    */
   protected function getBasicPageView() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
 
     // In order to test exposed filters, we have to disable
     // the exposed forms cache.
@@ -93,7 +94,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringEqual() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -138,7 +139,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringNotEqual() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -202,7 +203,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringContains() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -249,7 +250,7 @@ class FilterStringTest extends ViewUnitTestBase {
 
 
   function testFilterStringWord() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -276,7 +277,7 @@ class FilterStringTest extends ViewUnitTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->column_map);
     $view->destroy();
 
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -342,7 +343,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringStarts() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -386,7 +387,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringNotStarts() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -444,7 +445,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringEnds() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -494,7 +495,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringNotEnds() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -546,7 +547,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringNot() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -600,7 +601,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringShorter() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -649,7 +650,7 @@ class FilterStringTest extends ViewUnitTestBase {
   }
 
   function testFilterStringLonger() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering
@@ -693,7 +694,7 @@ class FilterStringTest extends ViewUnitTestBase {
 
 
   function testFilterStringEmpty() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Change the filtering

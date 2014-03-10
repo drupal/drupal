@@ -11,6 +11,7 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
+use Drupal\views\Views;
 
 /**
  * Plugin implementation of the 'selection' entity_reference.
@@ -59,7 +60,7 @@ class ViewsSelection implements SelectionInterface {
   public static function settingsForm(FieldDefinitionInterface $field_definition) {
     $selection_handler_settings = $field_definition->getSetting('handler_settings') ?: array();
     $view_settings = !empty($selection_handler_settings['view']) ? $selection_handler_settings['view'] : array();
-    $displays = views_get_applicable_views('entity_reference_display');
+    $displays = Views::getApplicableViews('entity_reference_display');
     // Filter views that list the entity type we want, and group the separate
     // displays by view.
     $entity_type = \Drupal::entityManager()->getDefinition($field_definition->getSetting('target_type'));
@@ -134,7 +135,7 @@ class ViewsSelection implements SelectionInterface {
     $display_name = $handler_settings['view']['display_name'];
 
     // Check that the view is valid and the display still exists.
-    $this->view = views_get_view($view_name);
+    $this->view = Views::getView($view_name);
     if (!$this->view || !$this->view->access($display_name)) {
       drupal_set_message(t('The reference view %view_name used in the %field_name field cannot be found.', array('%view_name' => $view_name, '%field_name' => $this->fieldDefinition->getLabel())), 'warning');
       return FALSE;

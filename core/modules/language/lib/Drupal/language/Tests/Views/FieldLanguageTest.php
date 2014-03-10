@@ -8,6 +8,7 @@
 namespace Drupal\language\Tests\Views;
 
 use Drupal\Core\Language\Language;
+use Drupal\views\Views;
 
 /**
  * Tests the field language handler.
@@ -35,7 +36,7 @@ class FieldLanguageTest extends LanguageTestBase {
    * Tests the language field.
    */
   public function testField() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('fields', array(
       'langcode' => array(

@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 use Drupal\views\Tests\ViewTestData;
+use Drupal\views\Views;
 
 /**
  * Basic test for pluggable access.
@@ -62,7 +63,7 @@ class AccessTest extends PluginTestBase {
    * Tests none access plugin.
    */
   function testAccessNone() {
-    $view = views_get_view('test_access_none');
+    $view = Views::getView('test_access_none');
     $view->setDisplay();
 
     $this->assertTrue($view->display_handler->access($this->admin_user), 'Admin-Account should be able to access the view everytime');
@@ -80,7 +81,7 @@ class AccessTest extends PluginTestBase {
    * @see \Drupal\views_test\Plugin\views\access\StaticTest
    */
   function testStaticAccessPlugin() {
-    $view = views_get_view('test_access_static');
+    $view = Views::getView('test_access_static');
     $view->setDisplay();
 
     $access_plugin = $view->display_handler->getPlugin('access');

@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\argument_default\ArgumentDefaultTest as ArgumentDefaultTestPlugin;
 
 
@@ -49,7 +50,7 @@ class ArgumentDefaultTest extends PluginTestBase {
    * @see \Drupal\views_test_data\Plugin\views\argument_default\ArgumentDefaultTest
    */
   public function testArgumentDefaultPlugin() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
 
     // Add a new argument and set the test plugin for the argument_default.
     $options = array(
@@ -111,7 +112,7 @@ class ArgumentDefaultTest extends PluginTestBase {
    */
   function testArgumentDefaultFixed() {
     $random = $this->randomName();
-    $view = views_get_view('test_argument_default_fixed');
+    $view = Views::getView('test_argument_default_fixed');
     $view->setDisplay();
     $options = $view->display_handler->getOption('arguments');
     $options['null']['default_argument_options']['argument'] = $random;

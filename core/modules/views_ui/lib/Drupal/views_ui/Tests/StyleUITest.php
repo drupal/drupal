@@ -7,6 +7,8 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\views\Views;
+
 /**
  * Tests the UI of style plugins.
  *
@@ -58,7 +60,7 @@ class StyleUITest extends UITestBase {
     $this->drupalPostForm($view_edit_url, array(), t('Save'));
     $this->assertLink(t('Test style plugin'), 0, 'Make sure the test style plugin is shown in the UI');
 
-    $view = views_get_view($view_name);
+    $view = Views::getView($view_name);
     $view->initDisplay();
     $style = $view->display_handler->getOption('style');
     $this->assertEqual($style['type'], 'test_style', 'Make sure that the test_style got saved as used style plugin.');

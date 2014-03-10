@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\views\Views;
 use Drupal\views\Tests\ViewUnitTestBase;
 use Drupal\views\Tests\Plugin\RelationshipJoinTestBase;
 
@@ -50,7 +51,7 @@ class RelationshipTest extends RelationshipJoinTestBase {
     db_query("UPDATE {views_test_data} SET uid = 1 WHERE id = 1");
     db_query("UPDATE {views_test_data} SET uid = 2 WHERE id <> 1");
 
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     $view->displayHandlers->get('default')->overrideOption('relationships', array(

@@ -8,6 +8,7 @@
 namespace Drupal\views\Tests\Handler;
 
 use Drupal\views\Tests\ViewUnitTestBase;
+use Drupal\views\Views;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\InOperator handler.
@@ -49,7 +50,7 @@ class FilterInOperatorTest extends ViewUnitTestBase {
   }
 
   public function testFilterInOperatorSimple() {
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
     $view->setDisplay();
 
     // Add a in_operator ordering.
@@ -116,7 +117,7 @@ class FilterInOperatorTest extends ViewUnitTestBase {
 
   public function testFilterInOperatorGroupedExposedSimple() {
     $filters = $this->getGroupedExposedFilters();
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
 
     // Filter: Age, Operator: in, Value: 26, 30
     $filters['age']['group_info']['default_group'] = 1;
@@ -142,7 +143,7 @@ class FilterInOperatorTest extends ViewUnitTestBase {
 
   public function testFilterNotInOperatorGroupedExposedSimple() {
     $filters = $this->getGroupedExposedFilters();
-    $view = views_get_view('test_view');
+    $view = Views::getView('test_view');
 
     // Filter: Age, Operator: in, Value: 26, 30
     $filters['age']['group_info']['default_group'] = 2;

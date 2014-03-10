@@ -7,6 +7,8 @@
 
 namespace Drupal\user\Tests\Views;
 
+use Drupal\views\Views;
+
 /**
  * Tests the role field handler.
  *
@@ -46,7 +48,7 @@ class HandlerFieldRoleTest extends UserTestBase {
     $user->addRole($rolename_b);
     $user->save();
 
-    $view = views_get_view('test_views_handler_field_role');
+    $view = Views::getView('test_views_handler_field_role');
     $this->executeView($view);
     $view->row_index = 0;
     // The role field is populated during preRender.
