@@ -205,10 +205,6 @@ function install_state_defaults() {
     'profile_info' => array(),
     // An array of available installation profiles.
     'profiles' => array(),
-    // An array of server variables that will be substituted into the global
-    // $_SERVER array via drupal_override_server_variables(). Used by
-    // non-interactive installations only.
-    'server' => array(),
     // The server URL where the interface translation files can be downloaded.
     // Tokens in the pattern will be replaced by appropriate values for the
     // required translation file.
