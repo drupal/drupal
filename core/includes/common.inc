@@ -3203,10 +3203,6 @@ function _drupal_bootstrap_full($skip = FALSE) {
     return;
   }
 
-  // Initialize language (which can strip path prefix) prior to initializing
-  // current_path().
-  drupal_language_initialize();
-
   // Let all modules take action before the menu system handles the request.
   // We do not want this while running update.php.
   if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {

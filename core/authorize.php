@@ -71,9 +71,6 @@ $module_list['user'] = 'core/modules/user/user.module';
 \Drupal::moduleHandler()->load('system');
 \Drupal::moduleHandler()->load('user');
 
-// Initialize the language system.
-drupal_language_initialize();
-
 // Initialize the maintenance theme for this administrative script.
 drupal_maintenance_theme();
 

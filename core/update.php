@@ -370,9 +370,6 @@ if (is_null($op) && update_access_allowed()) {
   require_once __DIR__ . '/includes/install.inc';
   require_once DRUPAL_ROOT . '/core/modules/system/system.install';
 
-  // Set up $language, since the installer components require it.
-  drupal_language_initialize();
-
   // Set up theme system for the maintenance page.
   drupal_maintenance_theme();
 

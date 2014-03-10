@@ -372,8 +372,6 @@ function install_begin_request(&$install_state) {
   $container->get('string_translation')
     ->addTranslator($container->get('string_translator.file_translation'));
 
-  // Set up $language, so t() caller functions will still work.
-  drupal_language_initialize();
   // Add in installation language if present.
   if (isset($install_state['parameters']['langcode'])) {
     \Drupal::translation()->setDefaultLangcode($install_state['parameters']['langcode']);

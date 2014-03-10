@@ -33,9 +33,6 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
    * @see \Drupal\Core\Language\Language
    */
   function testDependencyInjectedNewLanguage() {
-    // Initialize the language system.
-    drupal_language_initialize();
-
     $expected = $this->languageManager->getDefaultLanguage();
     $result = $this->languageManager->getCurrentLanguage();
     foreach ($expected as $property => $value) {

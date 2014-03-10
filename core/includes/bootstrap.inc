@@ -1940,15 +1940,6 @@ function drupal_installation_attempted() {
 }
 
 /**
- * Initializes all the defined language types and sets the default langcode.
- */
-function drupal_language_initialize() {
-  $language_manager = \Drupal::languageManager();
-  $language_manager->init();
-  \Drupal::translation()->setDefaultLangcode($language_manager->getCurrentLanguage()->id);
-}
-
-/**
  * Returns the language object for a given language type.
  *
  * @see \Drupal\Core\Language\LanguageManager
