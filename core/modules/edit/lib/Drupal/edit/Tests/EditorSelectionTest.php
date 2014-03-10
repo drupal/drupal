@@ -111,6 +111,8 @@ class EditorSelectionTest extends EditTestBase {
   public function testTextWysiwyg() {
     // Enable edit_test module so that the 'wysiwyg' editor becomes available.
     $this->enableModules(array('edit_test'));
+    $this->editorManager = $this->container->get('plugin.manager.edit.editor');
+    $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
 
     $field_name = 'field_textarea';
     $this->createFieldWithInstance(

@@ -78,6 +78,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
     // Enable the Text Editor Test module, which has the Unicorn Editor and
     // clear the editor manager's cache so it is picked up.
     $this->enableModules(array('editor_test'));
+    $this->editorManager = $this->container->get('plugin.manager.editor');
     $this->editorManager->clearCachedDefinitions();
 
     // Case 2: a text editor available.

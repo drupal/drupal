@@ -17,9 +17,11 @@ class NodeTest extends RESTTestBase {
   /**
    * Modules to enable.
    *
+   * Ensure that the node resource works with comment module enabled.
+   *
    * @var array
    */
-  public static $modules = array('hal', 'rest');
+  public static $modules = array('hal', 'rest', 'comment');
 
   public static function getInfo() {
     return array(
@@ -49,8 +51,6 @@ class NodeTest extends RESTTestBase {
    * Performs various tests on nodes and their REST API.
    */
   public function testNodes() {
-    // Tests that the node resource works with comment module enabled.
-    $this->container->get('module_handler')->install(array('comment'));
     $this->enableNodeConfiguration('GET', 'view');
 
     $node = $this->entityCreate('node');
