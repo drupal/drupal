@@ -134,6 +134,10 @@ class MetadataGeneratorTest extends EditTestBase {
     // Enable edit_test module so that the WYSIWYG editor becomes available.
     $this->enableModules(array('edit_test'));
 
+    $this->editorManager = $this->container->get('plugin.manager.edit.editor');
+    $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
+    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
+
     // Create a rich text field.
     $field_name = 'field_rich';
     $field_label = 'Rich text field';

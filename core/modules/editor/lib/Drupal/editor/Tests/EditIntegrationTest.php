@@ -124,8 +124,8 @@ class EditIntegrationTest extends EditTestBase {
    * format compatibility.
    */
   public function testEditorSelection() {
-    $this->editorManager = new InPlaceEditorManager($this->container->get('container.namespaces'));
-    $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
+    $this->editorManager = $this->container->get('plugin.manager.edit.editor');
+    $this->editorSelector = $this->container->get('edit.editor.selector');
 
     // Create an entity with values for this text field.
     $this->entity = entity_create('entity_test');
@@ -151,9 +151,9 @@ class EditIntegrationTest extends EditTestBase {
    * Tests (custom) metadata when the formatted text editor is used.
    */
   public function testMetadata() {
-    $this->editorManager = new InPlaceEditorManager($this->container->get('container.namespaces'));
+    $this->editorManager = $this->container->get('plugin.manager.edit.editor');
     $this->accessChecker = new MockEditEntityFieldAccessCheck();
-    $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
+    $this->editorSelector = $this->container->get('edit.editor.selector');
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
 
     // Create an entity with values for the field.
