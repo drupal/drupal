@@ -796,26 +796,12 @@ function user_admin_paths() {
  *   A plain-text password, such as trimmed text from form values.
  * @return
  *   The user's uid on success, or FALSE on failure to authenticate.
+ *
+ * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
+ *   Use \Drupal\user\UserAuth::authenticate() instead.
  */
 function user_authenticate($name, $password) {
-  $uid = FALSE;
-  if (!empty($name) && !empty($password)) {
-    $account = user_load_by_name($name);
-    if ($account) {
-      $password_hasher = \Drupal::service('password');
-      if ($password_hasher->check($password, $account)) {
-        // Successful authentication.
-        $uid = $account->id();
-
-        // Update user to new password scheme if needed.
-        if ($password_hasher->userNeedsNewHash($account)) {
-          $account->setPassword($password);
-          $account->save();
-        }
-      }
-    }
-  }
-  return $uid;
+  return \Drupal::service('user.auth')->authenticate($name, $password);
 }
 
 /**
