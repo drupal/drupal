@@ -128,6 +128,34 @@ class DefaultPluginBagTest extends PluginBagTestBase {
   }
 
   /**
+   * Tests the addInstanceId() method.
+   */
+  public function testAddInstanceId() {
+    $this->setupPluginBag($this->exactly(4));
+    $expected = array(
+      'banana' => 'banana',
+      'cherry' => 'cherry',
+      'apple' => 'apple',
+    );
+    $this->defaultPluginBag->addInstanceId('apple');
+    $result = $this->defaultPluginBag->getInstanceIds();
+    $this->assertSame($expected, $result);
+    $this->assertSame($expected, array_intersect_key($result, $this->defaultPluginBag->getConfiguration()));
+
+    $expected = array(
+      'cherry' => 'cherry',
+      'apple' => 'apple',
+      'banana' => 'banana',
+    );
+    $this->defaultPluginBag->removeInstanceId('banana');
+    $this->defaultPluginBag->addInstanceId('banana', $this->config['banana']);
+
+    $result = $this->defaultPluginBag->getInstanceIds();
+    $this->assertSame($expected, $result);
+    $this->assertSame($expected, array_intersect_key($result, $this->defaultPluginBag->getConfiguration()));
+  }
+
+  /**
    * Tests the removeInstanceId() method.
    *
    * @see \Drupal\Core\Plugin\DefaultPluginBag::removeInstanceId()
@@ -173,27 +201,6 @@ class DefaultPluginBagTest extends PluginBagTestBase {
     $this->defaultPluginBag->getConfiguration();
     $this->defaultPluginBag->clear();
     $this->defaultPluginBag->getConfiguration();
-  }
-
-  /**
-   * Tests the setInstanceIds() method.
-   */
-  public function testSetInstanceIds() {
-    $this->setupPluginBag($this->any());
-    // Set the instance IDs in a different order than the original.
-    $this->defaultPluginBag->setInstanceIds(array(
-      'apple' => 'apple',
-      'cherry' => 'cherry',
-    ));
-
-    $expected = array(
-      'cherry' => 'cherry',
-      'apple' => 'apple',
-    );
-    $config = $this->defaultPluginBag->getConfiguration();
-    $instance_ids = $this->defaultPluginBag->getInstanceIds();
-    $this->assertSame($expected, $instance_ids);
-    $this->assertSame(array_keys($expected), array_keys($config));
   }
 
   /**

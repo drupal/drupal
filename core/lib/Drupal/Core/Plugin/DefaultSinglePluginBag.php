@@ -93,4 +93,14 @@ class DefaultSinglePluginBag extends PluginBag {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function addInstanceId($id, $configuration = NULL) {
+    parent::addInstanceId($id, $configuration);
+    if ($configuration !== NULL) {
+      $this->setConfiguration($configuration);
+    }
+  }
+
 }

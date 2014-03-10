@@ -139,15 +139,6 @@ class DefaultPluginBag extends PluginBag {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function setInstanceIds(array $instance_ids) {
-    parent::setInstanceIds($instance_ids);
-    // Ensure the new order matches the original order.
-    $this->instanceIDs = $this->originalOrder = array_intersect_assoc($this->originalOrder, $this->instanceIDs);
-  }
-
-  /**
    * Updates the configuration for a plugin instance.
    *
    * If there is no plugin instance yet, a new will be instantiated. Otherwise,
@@ -163,6 +154,19 @@ class DefaultPluginBag extends PluginBag {
     $instance = $this->get($instance_id);
     if ($instance instanceof ConfigurablePluginInterface) {
       $instance->setConfiguration($configuration);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addInstanceId($id, $configuration = NULL) {
+    parent::addInstanceId($id);
+    if ($configuration !== NULL) {
+      $this->setInstanceConfiguration($id, $configuration);
+    }
+    if (!isset($this->originalOrder[$id])) {
+      $this->originalOrder[$id] = $id;
     }
   }
 
