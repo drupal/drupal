@@ -66,8 +66,10 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
    *   The expected value of the property.
    * @param string $object_type
    *   The object's type, either 'uri' or 'literal'.
+   * @param string $datatype
+   *   The data type of the property.
    */
-  protected function assertFormatterRdfa($formatter, $property, $value, $object_type = 'literal') {
+  protected function assertFormatterRdfa($formatter, $property, $value, $object_type = 'literal', $datatype = '') {
     // The field formatter will be rendered inside the entity. Set the field
     // formatter in the entity display options before rendering the entity.
     entity_get_display('entity_test', 'entity_test', 'default')
@@ -76,11 +78,13 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
     $build = entity_view($this->entity, 'default');
     $output = drupal_render($build);
     $graph = new \EasyRdf_Graph($this->uri, $output, 'rdfa');
-
     $expected_value = array(
       'type' => $object_type,
       'value' => $value,
     );
+    if ($datatype) {
+      $expected_value['datatype'] = $datatype;
+    }
     $this->assertTrue($graph->hasProperty($this->uri, $property, $expected_value), "Formatter $formatter exposes data correctly for {$this->fieldType} fields.");
   }
 

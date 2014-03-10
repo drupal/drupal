@@ -116,17 +116,20 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
       }
 
       // Display the date using theme datetime.
-      // @todo How should RDFa attributes be added to this?
       $elements[$delta] = array(
         '#theme' => 'datetime',
         '#text' => $formatted_date,
         '#html' => FALSE,
         '#attributes' => array(
           'datetime' => $iso_date,
-          'property' => array('dc:date'),
-          'datatype' => 'xsd:dateTime',
         ),
       );
+      if (!empty($item->_attributes)) {
+        $elements[$delta]['#attributes'] += $item->_attributes;
+        // Unset field item attributes since they have been included in the
+        // formatter output and should not be rendered in the field template.
+        unset($item->_attributes);
+      }
     }
 
     return $elements;
