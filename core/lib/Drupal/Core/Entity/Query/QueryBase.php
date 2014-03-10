@@ -210,9 +210,7 @@ abstract class QueryBase implements QueryInterface {
    *   An object holding a group of conditions.
    */
   protected function conditionGroupFactory($conjunction = 'AND') {
-    // As the factory classes hardwire QueryBase::getClass, it needs to be
-    // hardwired here too.
-    $class = QueryBase::getClass($this->namespaces, 'Condition');
+    $class = static::getClass($this->namespaces, 'Condition');
     return new $class($conjunction, $this, $this->namespaces);
   }
 

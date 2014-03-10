@@ -311,7 +311,7 @@ class Query extends QueryBase implements QueryInterface {
    *   The object that adds tables and fields to the SQL query object.
    */
   public function getTables(SelectInterface $sql_query) {
-    $class = QueryBase::getClass($this->namespaces, 'Tables');
+    $class = static::getClass($this->namespaces, 'Tables');
     return new $class($sql_query);
   }
 
