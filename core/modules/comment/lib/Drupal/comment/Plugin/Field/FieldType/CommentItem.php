@@ -33,7 +33,7 @@ use Drupal\Core\Field\ConfigFieldItemBase;
  *   default_formatter = "comment_default"
  * )
  */
-class CommentItem extends ConfigFieldItemBase {
+class CommentItem extends ConfigFieldItemBase implements CommentItemInterface {
 
   /**
    * {@inheritdoc}
@@ -170,8 +170,9 @@ class CommentItem extends ConfigFieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    // There is always a value for this field, it is one of COMMENT_OPEN,
-    // COMMENT_CLOSED or COMMENT_HIDDEN.
+    // There is always a value for this field, it is one of
+    // CommentItemInterface::OPEN, CommentItemInterface::CLOSED or
+    // CommentItemInterface::HIDDEN.
     return FALSE;
   }
 

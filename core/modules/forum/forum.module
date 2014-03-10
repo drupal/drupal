@@ -5,6 +5,7 @@
  * Provides discussion forums.
  */
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\String;
 use Drupal\field\Field;
@@ -805,7 +806,7 @@ function template_preprocess_forum_icon(&$variables) {
     $variables['icon_title'] = $variables['new_posts'] ? t('New comments') : t('Normal topic');
   }
 
-  if ($variables['comment_mode'] == COMMENT_CLOSED || $variables['comment_mode'] == COMMENT_HIDDEN) {
+  if ($variables['comment_mode'] == CommentItemInterface::CLOSED || $variables['comment_mode'] == CommentItemInterface::HIDDEN) {
     $icon_status_class = 'closed';
     $variables['icon_title'] = t('Closed topic');
   }

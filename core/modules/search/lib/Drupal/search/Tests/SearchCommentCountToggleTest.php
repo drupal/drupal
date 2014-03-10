@@ -7,6 +7,8 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+
 /**
  * Tests that comment count display toggles properly on comment status of node
  *
@@ -89,9 +91,9 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Open');
 
     // Test comment count display for nodes with comment status set to Closed
-    $this->searchable_nodes['0 comments']->set('comment', COMMENT_CLOSED);
+    $this->searchable_nodes['0 comments']->set('comment', CommentItemInterface::CLOSED);
     $this->searchable_nodes['0 comments']->save();
-    $this->searchable_nodes['1 comment']->set('comment', COMMENT_CLOSED);
+    $this->searchable_nodes['1 comment']->set('comment', CommentItemInterface::CLOSED);
     $this->searchable_nodes['1 comment']->save();
 
     $this->drupalPostForm('', $edit, t('Search'));
@@ -99,9 +101,9 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Closed');
 
     // Test comment count display for nodes with comment status set to Hidden
-    $this->searchable_nodes['0 comments']->set('comment', COMMENT_HIDDEN);
+    $this->searchable_nodes['0 comments']->set('comment', CommentItemInterface::HIDDEN);
     $this->searchable_nodes['0 comments']->save();
-    $this->searchable_nodes['1 comment']->set('comment', COMMENT_HIDDEN);
+    $this->searchable_nodes['1 comment']->set('comment', CommentItemInterface::HIDDEN);
     $this->searchable_nodes['1 comment']->save();
 
     $this->drupalPostForm('', $edit, t('Search'));

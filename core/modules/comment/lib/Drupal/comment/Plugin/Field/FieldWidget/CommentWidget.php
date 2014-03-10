@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\Field\FieldWidget;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 
@@ -40,17 +41,17 @@ class CommentWidget extends WidgetBase {
       '#title_display' => 'invisible',
       '#default_value' => $status,
       '#options' => array(
-        COMMENT_OPEN => t('Open'),
-        COMMENT_CLOSED => t('Closed'),
-        COMMENT_HIDDEN => t('Hidden'),
+        CommentItemInterface::OPEN => t('Open'),
+        CommentItemInterface::CLOSED => t('Closed'),
+        CommentItemInterface::HIDDEN => t('Hidden'),
       ),
-      COMMENT_OPEN => array(
+      CommentItemInterface::OPEN => array(
         '#description' => t('Users with the "Post comments" permission can post comments.'),
       ),
-      COMMENT_CLOSED => array(
+      CommentItemInterface::CLOSED => array(
         '#description' => t('Users cannot post comments, but existing comments will be displayed.'),
       ),
-      COMMENT_HIDDEN => array(
+      CommentItemInterface::HIDDEN => array(
         '#description' => t('Comments are hidden from view.'),
       ),
     );
@@ -58,9 +59,9 @@ class CommentWidget extends WidgetBase {
     // sense, so don't even bother presenting it to the user unless this is the
     // default value widget on the field settings form.
     if ($element['#field_parents'] != array('default_value_input') && !$entity->get($field->getName())->comment_count) {
-      $element['status'][COMMENT_HIDDEN]['#access'] = FALSE;
+      $element['status'][CommentItemInterface::HIDDEN]['#access'] = FALSE;
       // Also adjust the description of the "closed" option.
-      $element['status'][COMMENT_CLOSED]['#description'] = t('Users cannot post comments.');
+      $element['status'][CommentItemInterface::CLOSED]['#description'] = t('Users cannot post comments.');
     }
     // If the advanced settings tabs-set is available (normally rendered in the
     // second column on wide-resolutions), place the field as a details element

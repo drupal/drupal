@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\Language;
 use Drupal\comment\CommentInterface;
 
@@ -68,7 +69,7 @@ class CommentLinksTest extends CommentTestBase {
       // test; there is only a difference between open and closed registration.
       'user_register'   => array(USER_REGISTER_VISITORS, USER_REGISTER_ADMINISTRATORS_ONLY),
       // @todo Complete test coverage for:
-      //'comments'        => array(COMMENT_OPEN, COMMENT_CLOSED, COMMENT_HIDDEN),
+      //'comments'        => array(CommentItemInterface::OPEN, CommentItemInterface::CLOSED, CommentInterface::_HIDDEN),
       //// COMMENT_ANONYMOUS_MUST_CONTACT is irrelevant for this test.
       //'contact '        => array(COMMENT_ANONYMOUS_MAY_CONTACT, COMMENT_ANONYMOUS_MAYNOT_CONTACT),
     );
@@ -95,7 +96,8 @@ class CommentLinksTest extends CommentTestBase {
    *       USER_REGISTER_VISITORS.
    *     - contact: COMMENT_ANONYMOUS_MAY_CONTACT or
    *       COMMENT_ANONYMOUS_MAYNOT_CONTACT.
-   *     - comments: COMMENT_OPEN, COMMENT_CLOSED, or COMMENT_HIDDEN.
+   *     - comments: CommentItemInterface::OPEN, CommentItemInterface::CLOSED or
+   *       CommentItemInterface::HIDDEN.
    *   - User permissions:
    *     These are granted or revoked for the user, according to the
    *     'authenticated' flag above. Pass 0 or 1 as parameter values. See
@@ -116,7 +118,7 @@ class CommentLinksTest extends CommentTestBase {
         'form' => COMMENT_FORM_BELOW,
         'user_register' => USER_REGISTER_VISITORS,
         'contact' => COMMENT_ANONYMOUS_MAY_CONTACT,
-        'comments' => COMMENT_OPEN,
+        'comments' => CommentItemInterface::OPEN,
         'access comments' => 0,
         'post comments' => 0,
         // Enabled by default, because it's irrelevant for this test.
@@ -191,9 +193,9 @@ class CommentLinksTest extends CommentTestBase {
       COMMENT_ANONYMOUS_MUST_CONTACT => 'required',
     );
     $t_comments = array(
-      COMMENT_OPEN => 'open',
-      COMMENT_CLOSED => 'closed',
-      COMMENT_HIDDEN => 'hidden',
+      CommentItemInterface::OPEN => 'open',
+      CommentItemInterface::CLOSED => 'closed',
+      CommentItemInterface::HIDDEN => 'hidden',
     );
     $verbose = $info;
     $verbose['form'] = $t_form[$info['form']];

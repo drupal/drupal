@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+
 /**
  * Tests fields on comments.
  */
@@ -58,10 +60,10 @@ class CommentFieldsTest extends CommentTestBase {
     $instances = $this->container->get('field.info')->getInstances('comment');
     $this->assertTrue(isset($instances['node__comment']['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
 
-    // Test adding a field that defaults to COMMENT_CLOSED.
-    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', COMMENT_CLOSED);
+    // Test adding a field that defaults to CommentItemInterface::CLOSED.
+    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED);
     $field = entity_load('field_instance_config', 'node.test_node_type.who_likes_ponies');
-    $this->assertEqual($field->default_value[0]['status'], COMMENT_CLOSED);
+    $this->assertEqual($field->default_value[0]['status'], CommentItemInterface::CLOSED);
   }
 
   /**

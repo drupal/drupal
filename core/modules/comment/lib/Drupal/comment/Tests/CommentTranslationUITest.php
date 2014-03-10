@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\content_translation\Tests\ContentTranslationUITest;
 
 /**
@@ -102,7 +103,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $node = $this->drupalCreateNode(array(
       'type' => $node_type,
       $field_name => array(
-        array('status' => COMMENT_OPEN)
+        array('status' => CommentItemInterface::OPEN)
       ),
     ));
     $values['entity_id'] = $node->id();

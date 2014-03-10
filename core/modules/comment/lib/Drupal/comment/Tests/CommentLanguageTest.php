@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -97,7 +98,7 @@ class CommentLanguageTest extends WebTestBase {
         'title[0][value]' => $title,
         'body[0][value]' => $this->randomName(),
         'langcode' => $node_langcode,
-        'comment[0][status]' => COMMENT_OPEN,
+        'comment[0][status]' => CommentItemInterface::OPEN,
       );
       $this->drupalPostForm("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);

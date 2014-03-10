@@ -7,6 +7,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -209,7 +210,7 @@ class CommentViewBuilder extends EntityViewBuilder {
 
     $container = \Drupal::getContainer();
 
-    if ($status == COMMENT_OPEN) {
+    if ($status == CommentItemInterface::OPEN) {
       if ($entity->access('delete')) {
         $links['comment-delete'] = array(
           'title' => t('Delete'),

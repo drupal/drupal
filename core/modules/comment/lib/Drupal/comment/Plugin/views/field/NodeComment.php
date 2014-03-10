@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -25,12 +26,12 @@ class NodeComment extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     switch ($value) {
-      case COMMENT_HIDDEN:
+      case CommentItemInterface::HIDDEN:
       default:
         return t('Hidden');
-      case COMMENT_CLOSED:
+      case CommentItemInterface::CLOSED:
         return t('Closed');
-      case COMMENT_OPEN:
+      case CommentItemInterface::OPEN:
         return t('Open');
     }
   }

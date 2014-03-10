@@ -236,7 +236,7 @@ abstract class WebTestBase extends TestBase {
    *       );
    *     @endcode
    *   - title: Random string.
-   *   - comment: COMMENT_OPEN.
+   *   - comment: CommentItemInterface::OPEN.
    *   - changed: REQUEST_TIME.
    *   - promote: NODE_NOT_PROMOTED.
    *   - log: Empty string.

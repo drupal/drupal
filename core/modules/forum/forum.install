@@ -5,8 +5,6 @@
  * Install, update, and uninstall functions for the Forum module.
  */
 
-use Drupal\Core\Language\Language;
-
 /**
  * Implements hook_install().
  */
@@ -83,7 +81,7 @@ function forum_install() {
     'include_deleted' => FALSE,
   ));
   if (empty($fields)) {
-    Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum', COMMENT_OPEN);
+    Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum');
   }
 }
 

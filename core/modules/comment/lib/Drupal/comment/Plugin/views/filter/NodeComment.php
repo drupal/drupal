@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\filter;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
@@ -20,9 +21,9 @@ class NodeComment extends InOperator {
 
   public function getValueOptions() {
     $this->value_options = array(
-      COMMENT_HIDDEN => t('Hidden'),
-      COMMENT_CLOSED => t('Closed'),
-      COMMENT_OPEN => t('Open'),
+      CommentItemInterface::HIDDEN => t('Hidden'),
+      CommentItemInterface::CLOSED => t('Closed'),
+      CommentItemInterface::OPEN => t('Open'),
     );
   }
 

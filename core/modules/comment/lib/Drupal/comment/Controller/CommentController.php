@@ -9,6 +9,7 @@ namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\FieldInfo;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -225,7 +226,7 @@ class CommentController extends ControllerBase {
     // The user is not just previewing a comment.
     if ($request->request->get('op') != $this->t('Preview')) {
       $status = $entity->{$field_name}->status;
-      if ($status != COMMENT_OPEN) {
+      if ($status != CommentItemInterface::OPEN) {
         drupal_set_message($this->t("This discussion is closed: you can't post new comments."), 'error');
         return $this->redirect($uri['route_name'], $uri['route_parameters']);
       }
@@ -252,7 +253,7 @@ class CommentController extends ControllerBase {
       elseif ($entity->access('view', $account)) {
         // We make sure the field value isn't set so we don't end up with a
         // redirect loop.
-        $entity->{$field_name}->status = COMMENT_HIDDEN;
+        $entity->{$field_name}->status = CommentItemInterface::HIDDEN;
         // Render array of the entity full view mode.
         $build['commented_entity'] = $this->entityManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, 'full');
         unset($build['commented_entity']['#cache']);
