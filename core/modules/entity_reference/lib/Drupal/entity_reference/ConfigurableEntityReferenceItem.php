@@ -8,7 +8,6 @@
 namespace Drupal\entity_reference;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Field\ConfigFieldItemInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Session\AccountInterface;
@@ -27,7 +26,7 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
  *
  * @see entity_reference_field_info_alter().
  */
-class ConfigurableEntityReferenceItem extends EntityReferenceItem implements ConfigFieldItemInterface, AllowedValuesInterface {
+class ConfigurableEntityReferenceItem extends EntityReferenceItem implements AllowedValuesInterface {
 
   /**
    * {@inheritdoc}

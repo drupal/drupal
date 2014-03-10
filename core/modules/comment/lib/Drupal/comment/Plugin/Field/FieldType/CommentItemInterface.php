@@ -7,12 +7,10 @@
 
 namespace Drupal\comment\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\ConfigFieldItemInterface;
-
 /**
  * Interface definition for Comment items.
  */
-interface CommentItemInterface extends ConfigFieldItemInterface {
+interface CommentItemInterface {
 
   /**
    * Comments for this entity are hidden.

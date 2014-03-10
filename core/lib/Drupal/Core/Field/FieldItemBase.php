@@ -226,4 +226,18 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
    */
   public function deleteRevision() { }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, array &$form_state, $has_data) {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function instanceSettingsForm(array $form, array &$form_state) {
+    return array();
+  }
+
 }

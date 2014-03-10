@@ -7,7 +7,7 @@
 
 namespace Drupal\text\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\PrepareCacheInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\DataDefinition;
 /**
  * Base class for 'text' configurable field types.
  */
-abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheInterface {
+abstract class TextItemBase extends FieldItemBase implements PrepareCacheInterface {
 
   /**
    * {@inheritdoc}

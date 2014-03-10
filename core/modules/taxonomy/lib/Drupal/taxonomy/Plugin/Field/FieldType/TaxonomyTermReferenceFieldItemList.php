@@ -7,12 +7,12 @@
 
 namespace Drupal\taxonomy\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\ConfigFieldItemList;
+use Drupal\Core\Field\FieldItemList;
 
 /**
  * Represents a configurable taxonomy_term_reference entity field item list.
  */
-class TaxonomyTermReferenceFieldItemList extends ConfigFieldItemList {
+class TaxonomyTermReferenceFieldItemList extends FieldItemList {
 
   /**
    * {@inheritdoc}

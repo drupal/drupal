@@ -11,7 +11,6 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Field\PrepareCacheInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldInstanceConfigInterface;
-use Drupal\Core\Field\ConfigFieldItemListInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class FieldableEntityStorageControllerBase extends EntityStorageControllerBase implements FieldableEntityStorageControllerInterface {
@@ -167,7 +166,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
           foreach ($entity->getTranslationLanguages() as $langcode => $language) {
             $translation = $entity->getTranslation($langcode);
             foreach ($translation as $field_name => $items) {
-              if ($items instanceof ConfigFieldItemListInterface && !$items->isEmpty()) {
+              if ($items->getFieldDefinition()->isConfigurable() && !$items->isEmpty()) {
                 foreach ($items as $delta => $item) {
                   // If the field item needs to prepare the cache data, call the
                   // corresponding method, otherwise use the values as cache

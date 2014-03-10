@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -514,6 +515,7 @@ class User extends ContentEntityBase implements UserInterface {
     // https://drupal.org/node/2044859.
     $fields['roles'] = FieldDefinition::create('string')
       ->setLabel(t('Roles'))
+      ->setCardinality(FieldDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setDescription(t('The roles the user has.'));
 
     return $fields;

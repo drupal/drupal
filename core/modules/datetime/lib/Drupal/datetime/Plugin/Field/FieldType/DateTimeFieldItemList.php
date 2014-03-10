@@ -8,12 +8,12 @@
 namespace Drupal\datetime\Plugin\Field\FieldType;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Field\ConfigFieldItemList;
+use Drupal\Core\Field\FieldItemList;
 
 /**
  * Represents a configurable entity datetime field.
  */
-class DateTimeFieldItemList extends ConfigFieldItemList {
+class DateTimeFieldItemList extends FieldItemList {
 
   /**
    * Defines the default value as now.

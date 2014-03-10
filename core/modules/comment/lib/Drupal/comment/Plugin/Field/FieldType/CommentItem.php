@@ -9,7 +9,7 @@ namespace Drupal\comment\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldItemBase;
 
 /**
  * Plugin implementation of the 'comment' field type.
@@ -33,7 +33,7 @@ use Drupal\Core\Field\ConfigFieldItemBase;
  *   default_formatter = "comment_default"
  * )
  */
-class CommentItem extends ConfigFieldItemBase implements CommentItemInterface {
+class CommentItem extends FieldItemBase implements CommentItemInterface {
 
   /**
    * {@inheritdoc}

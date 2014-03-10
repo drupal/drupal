@@ -9,7 +9,7 @@ namespace Drupal\field_test\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldItemBase;
 
 /**
  * Defines the 'shape_field' entity field item.
@@ -25,7 +25,7 @@ use Drupal\Core\Field\ConfigFieldItemBase;
  *   default_formatter = "field_test_default"
  * )
  */
-class ShapeItem extends ConfigFieldItemBase {
+class ShapeItem extends FieldItemBase {
 
   /**
    * {@inheritdoc}

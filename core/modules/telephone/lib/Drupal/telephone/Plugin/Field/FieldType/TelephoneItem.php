@@ -7,7 +7,7 @@
 
 namespace Drupal\telephone\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -22,7 +22,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_formatter = "string"
  * )
  */
-class TelephoneItem extends ConfigFieldItemBase {
+class TelephoneItem extends FieldItemBase {
 
   /**
    * {@inheritdoc}

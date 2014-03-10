@@ -10,7 +10,7 @@ namespace Drupal\datetime\Plugin\Field\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\PrepareCacheInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldItemBase;
 
 /**
  * Plugin implementation of the 'datetime' field type.
@@ -27,7 +27,7 @@ use Drupal\Core\Field\ConfigFieldItemBase;
  *   list_class = "\Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList"
  * )
  */
-class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface {
+class DateTimeItem extends FieldItemBase implements PrepareCacheInterface {
 
   /**
    * Value for the 'datetime_type' setting: store only a date.

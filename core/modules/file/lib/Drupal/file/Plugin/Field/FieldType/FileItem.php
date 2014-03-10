@@ -10,7 +10,6 @@ namespace Drupal\file\Plugin\Field\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\Field\ConfigFieldItemInterface;
 
 /**
  * Plugin implementation of the 'file' field type.
@@ -36,7 +35,7 @@ use Drupal\Core\Field\ConfigFieldItemInterface;
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList"
  * )
  */
-class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
+class FileItem extends EntityReferenceItem {
 
   /**
    * {@inheritdoc}

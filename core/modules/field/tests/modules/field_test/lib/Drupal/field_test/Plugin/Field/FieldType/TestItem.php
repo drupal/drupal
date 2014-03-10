@@ -10,7 +10,7 @@ namespace Drupal\field_test\Plugin\Field\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\PrepareCacheInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldItemBase;
 
 /**
  * Defines the 'test_field' entity field item.
@@ -32,7 +32,7 @@ use Drupal\Core\Field\ConfigFieldItemBase;
  *   default_formatter = "field_test_default"
  * )
  */
-class TestItem extends ConfigFieldItemBase implements PrepareCacheInterface {
+class TestItem extends FieldItemBase implements PrepareCacheInterface {
 
   /**
    * {@inheritdoc}

@@ -178,6 +178,22 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
   }
 
   /**
+   * Sets the maximum number of items allowed for the field.
+   *
+   * Possible values are positive integers or
+   * FieldDefinitionInterface::CARDINALITY_UNLIMITED.
+   *
+   * @param int $cardinality
+   *  The field cardinality.
+   *
+   * @return $this
+   */
+  public function setCardinality($cardinality) {
+    $this->definition['cardinality'] = $cardinality;
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function isMultiple() {

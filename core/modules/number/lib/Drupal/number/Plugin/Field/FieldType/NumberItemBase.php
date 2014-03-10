@@ -7,12 +7,12 @@
 
 namespace Drupal\number\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldItemBase;
 
 /**
  * Base class for 'number' configurable field types.
  */
-abstract class NumberItemBase extends ConfigFieldItemBase {
+abstract class NumberItemBase extends FieldItemBase {
 
   /**
    * {@inheritdoc}

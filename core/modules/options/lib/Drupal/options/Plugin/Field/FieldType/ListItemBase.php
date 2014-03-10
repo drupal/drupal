@@ -8,14 +8,14 @@
 namespace Drupal\options\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\ConfigFieldItemBase;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AllowedValuesInterface;
 
 /**
  * Plugin base class inherited by the options field types.
  */
-abstract class ListItemBase extends ConfigFieldItemBase implements AllowedValuesInterface {
+abstract class ListItemBase extends FieldItemBase implements AllowedValuesInterface {
 
   /**
    * {@inheritdoc}
