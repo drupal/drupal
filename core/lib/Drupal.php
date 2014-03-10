@@ -102,9 +102,11 @@ class Drupal {
    * Sets a new global container.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   A new container instance to replace the current.
+   *   A new container instance to replace the current. NULL may be passed by
+   *   testing frameworks to ensure that the global state of a previous
+   *   environment does not leak into a test.
    */
-  public static function setContainer(ContainerInterface $container) {
+  public static function setContainer(ContainerInterface $container = NULL) {
     static::$container = $container;
   }
 
