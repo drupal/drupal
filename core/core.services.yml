@@ -608,13 +608,9 @@ services:
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
     arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@config.factory', '@module_handler']
-  image.toolkit:
-    class: Drupal\Core\ImageToolkit\ImageToolkitInterface
-    factory_method: getDefaultToolkit
-    factory_service: image.toolkit.manager
   image.factory:
     class: Drupal\Core\Image\ImageFactory
-    arguments: ['@image.toolkit']
+    arguments: ['@image.toolkit.manager']
   breadcrumb:
     class: Drupal\Core\Breadcrumb\BreadcrumbManager
     arguments: ['@module_handler']

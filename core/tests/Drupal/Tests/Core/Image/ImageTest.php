@@ -138,26 +138,11 @@ class ImageTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Core\Image\Image::setResource().
+   * Tests \Drupal\Core\Image\Image::isExisting().
    */
-  public function testSetResource() {
-    $resource = fopen($this->image->getSource(), 'r');
-    $this->image->setResource($resource);
-    $this->assertEquals($this->image->getResource(), $resource);
-
-    // Force \Drupal\Core\Image\Image::hasResource() to return FALSE.
-    $this->image->setResource(FALSE);
-    $this->assertNotNull($this->image->getResource());
-  }
-
-  /**
-   * Tests \Drupal\Core\Image\Image::hasResource().
-   */
-  public function testHasResource() {
-    $this->assertFalse($this->image->hasResource());
-    $resource = fopen($this->image->getSource(), 'r');
-    $this->image->setResource($resource);
-    $this->assertTrue($this->image->hasResource());
+  public function testIsExisting() {
+    $this->assertTrue($this->image->isExisting());
+    $this->assertTrue(is_readable($this->image->getSource()));
   }
 
   /**

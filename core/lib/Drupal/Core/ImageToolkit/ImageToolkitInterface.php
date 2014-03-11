@@ -132,17 +132,6 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
   public function desaturate(ImageInterface $image);
 
   /**
-   * Creates an image resource from a file.
-   *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object. The $image->resource value will populated by this call.
-   *
-   * @return bool
-   *   TRUE or FALSE, based on success.
-   */
-  public function load(ImageInterface $image);
-
-  /**
    * Writes an image resource to a destination file.
    *
    * @param \Drupal\Core\Image\ImageInterface $image

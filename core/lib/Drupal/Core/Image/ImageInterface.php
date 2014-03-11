@@ -21,6 +21,14 @@ interface ImageInterface {
   public function isSupported();
 
   /**
+   * Checks if the image is existing.
+   *
+   * @return bool
+   *   TRUE if the image exists and is a valid image, FALSE otherwise.
+   */
+  public function isExisting();
+
+  /**
    * Returns the extension of the image file.
    *
    * @return string
@@ -90,33 +98,6 @@ interface ImageInterface {
   public function getMimeType();
 
   /**
-   * Sets the image file resource.
-   *
-   * @param resource $resource
-   *   The image file handle.
-   *
-   * @return self
-   *   Returns this image file.
-   */
-  public function setResource($resource);
-
-  /**
-   * Determines if this image file has a resource set.
-   *
-   * @return bool
-   *   TRUE if this image file has a resource set, FALSE otherwise.
-   */
-  public function hasResource();
-
-  /**
-   * Retrieves the image file resource.
-   *
-   * @return resource
-   *   The image file handle.
-   */
-  public function getResource();
-
-  /**
    * Sets the source path of the image file.
    *
    * @param string $source
@@ -134,6 +115,14 @@ interface ImageInterface {
    *   The source path of the image file.
    */
   public function getSource();
+
+  /**
+   * Returns the image toolkit used for this image file.
+   *
+   * @return string
+   *   The image toolkit.
+   */
+  public function getToolkit();
 
   /**
    * Returns the ID of the image toolkit used for this image file.

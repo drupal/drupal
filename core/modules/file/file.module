@@ -406,7 +406,7 @@ function file_validate_is_image(File $file) {
 
   $image = \Drupal::service('image.factory')->get($file->getFileUri());
   if (!$image->isSupported()) {
-    $toolkit = \Drupal::service('image.toolkit');
+    $toolkit = \Drupal::service('image.toolkit.manager')->getDefaultToolkit();
     $extensions = array();
     foreach ($toolkit->supportedTypes() as $image_type) {
       $extensions[] = Unicode::strtoupper(image_type_to_extension($image_type));
@@ -453,7 +453,7 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
       if ($image->getWidth() > $width || $image->getHeight() > $height) {
         // Try to resize the image to fit the dimensions.
         $image = $image_factory->get($file->getFileUri());
-        if ($image->getResource()) {
+        if ($image->isExisting()) {
           $image->scale($width, $height);
           $image->save();
           $file->filesize = $image->getFileSize();

@@ -34,13 +34,6 @@ class Image implements ImageInterface {
   protected $toolkit;
 
   /**
-   * An image file handle.
-   *
-   * @var resource
-   */
-  protected $resource;
-
-  /**
    * Height, in pixels.
    *
    * @var int
@@ -112,6 +105,14 @@ class Image implements ImageInterface {
   /**
    * {@inheritdoc}
    */
+  public function isExisting() {
+    $this->processInfo();
+    return $this->processed;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getExtension() {
     $this->processInfo();
     return $this->extension;
@@ -176,32 +177,6 @@ class Image implements ImageInterface {
   /**
    * {@inheritdoc}
    */
-  public function setResource($resource) {
-    $this->resource = $resource;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasResource() {
-    return (bool) $this->resource;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getResource() {
-    if (!$this->hasResource()) {
-      $this->processInfo();
-      $this->toolkit->load($this);
-    }
-    return $this->resource;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setSource($source) {
     $this->source = $source;
     return $this;
@@ -219,6 +194,14 @@ class Image implements ImageInterface {
    */
   public function getToolkitId() {
     return $this->toolkit->getPluginId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getToolkit() {
+    $this->processInfo();
+    return $this->toolkit;
   }
 
   /**
@@ -287,22 +270,30 @@ class Image implements ImageInterface {
    * image toolkit.
    *
    * This is a temporary solution to keep patches reviewable. The __call()
-   * method will be replaced in https://drupal.org/node/2073759 with a new
+   * method will be replaced in https://drupal.org/node/2110499 with a new
    * interface method ImageInterface::apply(). An image operation will be
    * performed as in the next example:
    * @code
    * $image = new Image($path, $toolkit);
    * $image->apply('scale', array('width' => 50, 'height' => 100));
    * @endcode
-   * Also in https://drupal.org/node/2073759 operation arguments sent to toolkit
+   * Also in https://drupal.org/node/2110499 operation arguments sent to toolkit
    * will be moved to a keyed array, unifying the interface of toolkit
    * operations.
    *
-   * @todo Drop this in https://drupal.org/node/2073759 in favor of new apply().
+   * @todo Drop this in https://drupal.org/node/2110499 in favor of new apply().
    */
   public function __call($method, $arguments) {
+    // @todo Temporary to avoid that legacy GD setResource(), getResource(),
+    //  hasResource() methods moved to GD toolkit in #2103621 get invoked
+    //  from this class anyway through the magic __call. Will be removed
+    //  through https://drupal.org/node/2110499, when call_user_func_array()
+    //  will be replaced by $this->toolkit->apply($name, $this, $arguments).
+    if (in_array($method, array('setResource', 'getResource', 'hasResource'))) {
+      throw new \BadMethodCallException();
+    }
     if (is_callable(array($this->toolkit, $method))) {
-      // @todo In https://drupal.org/node/2073759, call_user_func_array() will
+      // @todo In https://drupal.org/node/2110499, call_user_func_array() will
       //   be replaced by $this->toolkit->apply($name, $this, $arguments).
       array_unshift($arguments, $this);
       return call_user_func_array(array($this->toolkit, $method), $arguments);

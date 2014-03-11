@@ -22,6 +22,37 @@ use Drupal\Component\Utility\Image as ImageUtility;
 class GDToolkit extends ImageToolkitBase {
 
   /**
+   * A GD image resource.
+   *
+   * @var resource
+   */
+  protected $resource;
+
+  /**
+   * Sets the GD image resource.
+   *
+   * @param resource $resource
+   *   The GD image resource.
+   *
+   * @return self
+   *   Returns this toolkit object.
+   */
+  public function setResource($resource) {
+    $this->resource = $resource;
+    return $this;
+  }
+
+  /**
+   * Retrieves the GD image resource.
+   *
+   * @return resource
+   *   The GD image resource.
+   */
+  public function getResource() {
+    return $this->resource;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function settingsForm() {
@@ -55,16 +86,16 @@ class GDToolkit extends ImageToolkitBase {
     $width = (int) round($width);
     $height = (int) round($height);
 
-    $res = $this->createTmp($image, $width, $height);
+    $res = $this->createTmp($image->getType(), $width, $height);
 
-    if (!imagecopyresampled($res, $image->getResource(), 0, 0, 0, 0, $width, $height, $image->getWidth(), $image->getHeight())) {
+    if (!imagecopyresampled($res, $this->getResource(), 0, 0, 0, 0, $width, $height, $image->getWidth(), $image->getHeight())) {
       return FALSE;
     }
 
-    imagedestroy($image->getResource());
+    imagedestroy($this->getResource());
     // Update image object.
+    $this->setResource($res);
     $image
-      ->setResource($res)
       ->setWidth($width)
       ->setHeight($height);
     return TRUE;
@@ -86,39 +117,39 @@ class GDToolkit extends ImageToolkitBase {
       for ($i = 16; $i >= 0; $i -= 8) {
         $rgb[] = (($background >> $i) & 0xFF);
       }
-      $background = imagecolorallocatealpha($image->getResource(), $rgb[0], $rgb[1], $rgb[2], 0);
+      $background = imagecolorallocatealpha($this->getResource(), $rgb[0], $rgb[1], $rgb[2], 0);
     }
     // Set the background color as transparent if $background is NULL.
     else {
       // Get the current transparent color.
-      $background = imagecolortransparent($image->getResource());
+      $background = imagecolortransparent($this->getResource());
 
       // If no transparent colors, use white.
       if ($background == 0) {
-        $background = imagecolorallocatealpha($image->getResource(), 255, 255, 255, 0);
+        $background = imagecolorallocatealpha($this->getResource(), 255, 255, 255, 0);
       }
     }
 
     // Images are assigned a new color palette when rotating, removing any
     // transparency flags. For GIF images, keep a record of the transparent color.
     if ($image->getType() == IMAGETYPE_GIF) {
-      $transparent_index = imagecolortransparent($image->getResource());
+      $transparent_index = imagecolortransparent($this->getResource());
       if ($transparent_index != 0) {
-        $transparent_gif_color = imagecolorsforindex($image->getResource(), $transparent_index);
+        $transparent_gif_color = imagecolorsforindex($this->getResource(), $transparent_index);
       }
     }
 
-    $image->setResource(imagerotate($image->getResource(), 360 - $degrees, $background));
+    $this->setResource(imagerotate($this->getResource(), 360 - $degrees, $background));
 
     // GIFs need to reassign the transparent color after performing the rotate.
     if (isset($transparent_gif_color)) {
-      $background = imagecolorexactalpha($image->getResource(), $transparent_gif_color['red'], $transparent_gif_color['green'], $transparent_gif_color['blue'], $transparent_gif_color['alpha']);
-      imagecolortransparent($image->getResource(), $background);
+      $background = imagecolorexactalpha($this->getResource(), $transparent_gif_color['red'], $transparent_gif_color['green'], $transparent_gif_color['blue'], $transparent_gif_color['alpha']);
+      imagecolortransparent($this->getResource(), $background);
     }
 
     $image
-      ->setWidth(imagesx($image->getResource()))
-      ->setHeight(imagesy($image->getResource()));
+      ->setWidth(imagesx($this->getResource()))
+      ->setHeight(imagesy($this->getResource()));
     return TRUE;
   }
 
@@ -134,16 +165,16 @@ class GDToolkit extends ImageToolkitBase {
     $width = (int) round($width);
     $height = (int) round($height);
 
-    $res = $this->createTmp($image, $width, $height);
+    $res = $this->createTmp($image->getType(), $width, $height);
 
-    if (!imagecopyresampled($res, $image->getResource(), 0, 0, $x, $y, $width, $height, $width, $height)) {
+    if (!imagecopyresampled($res, $this->getResource(), 0, 0, $x, $y, $width, $height, $width, $height)) {
       return FALSE;
     }
 
     // Destroy the original image and return the modified image.
-    imagedestroy($image->getResource());
+    imagedestroy($this->getResource());
+    $this->setResource($res);
     $image
-      ->setResource($res)
       ->setWidth($width)
       ->setHeight($height);
     return TRUE;
@@ -159,7 +190,7 @@ class GDToolkit extends ImageToolkitBase {
       return FALSE;
     }
 
-    return imagefilter($image->getResource(), IMG_FILTER_GRAYSCALE);
+    return imagefilter($this->getResource(), IMG_FILTER_GRAYSCALE);
   }
 
   /**
@@ -199,21 +230,29 @@ class GDToolkit extends ImageToolkitBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Creates a resource from a file.
+   *
+   * @param string $source
+   *   String specifying the path of the image file.
+   * @param array $details
+   *   An array of image details.
+   *
+   * @return bool
+   *   TRUE or FALSE, based on success.
    */
-  public function load(ImageInterface $image) {
-    $function = 'imagecreatefrom' . image_type_to_extension($image->getType(), FALSE);
-    if (function_exists($function) && $resource = $function($image->getSource())) {
-      $image->setResource($resource);
+  protected function load($source, array $details) {
+    $function = 'imagecreatefrom' . image_type_to_extension($details['type'], FALSE);
+    if (function_exists($function) && $resource = $function($source)) {
+      $this->setResource($resource);
       if (!imageistruecolor($resource)) {
         // Convert indexed images to true color, so that filters work
         // correctly and don't result in unnecessary dither.
-        $new_image = $this->createTmp($image, $image->getWidth(), $image->getHeight());
-        imagecopy($new_image, $resource, 0, 0, 0, 0, $image->getWidth(), $image->getHeight());
+        $new_image = $this->createTmp($details['type'], $details['width'], $details['height']);
+        imagecopy($new_image, $resource, 0, 0, 0, 0, $details['width'], $details['height']);
         imagedestroy($resource);
-        $image->setResource($new_image);
+        $this->setResource($new_image);
       }
-      return (bool) $image->getResource();
+      return (bool) $this->getResource();
     }
 
     return FALSE;
@@ -241,15 +280,15 @@ class GDToolkit extends ImageToolkitBase {
       return FALSE;
     }
     if ($image->getType() == IMAGETYPE_JPEG) {
-      $success = $function($image->getResource(), $destination, \Drupal::config('system.image.gd')->get('jpeg_quality'));
+      $success = $function($this->getResource(), $destination, \Drupal::config('system.image.gd')->get('jpeg_quality'));
     }
     else {
       // Always save PNG images with full transparency.
       if ($image->getType() == IMAGETYPE_PNG) {
-        imagealphablending($image->getResource(), FALSE);
-        imagesavealpha($image->getResource(), TRUE);
+        imagealphablending($this->getResource(), FALSE);
+        imagesavealpha($this->getResource(), TRUE);
       }
-      $success = $function($image->getResource(), $destination);
+      $success = $function($this->getResource(), $destination);
     }
     // Move temporary local file to remote destination.
     if (isset($permanent_destination) && $success) {
@@ -265,7 +304,7 @@ class GDToolkit extends ImageToolkitBase {
     $details = FALSE;
     $data = getimagesize($image->getSource());
 
-    if (isset($data) && is_array($data)) {
+    if (isset($data) && is_array($data) && in_array($data[2], $this->supportedTypes())) {
       $details = array(
         'width'     => $data[0],
         'height'    => $data[1],
@@ -274,14 +313,18 @@ class GDToolkit extends ImageToolkitBase {
       );
     }
 
+    if ($details) {
+      $this->load($image->getSource(), $details);
+    }
     return $details;
   }
 
   /**
    * Creates a truecolor image preserving transparency from a provided image.
    *
-   * @param \Drupal\Core\Image\ImageInterface $image
-   *   An image object.
+   * @param int $type
+   *   An image type represented by a PHP IMAGETYPE_* constant (e.g.
+   *   IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
    * @param int $width
    *   The new width of the new image, in pixels.
    * @param int $height
@@ -290,16 +333,16 @@ class GDToolkit extends ImageToolkitBase {
    * @return resource
    *   A GD image handle.
    */
-  public function createTmp(ImageInterface $image, $width, $height) {
+  public function createTmp($type, $width, $height) {
     $res = imagecreatetruecolor($width, $height);
 
-    if ($image->getType() == IMAGETYPE_GIF) {
+    if ($type == IMAGETYPE_GIF) {
       // Grab transparent color index from image resource.
-      $transparent = imagecolortransparent($image->getResource());
+      $transparent = imagecolortransparent($this->getResource());
 
       if ($transparent >= 0) {
         // The original must have a transparent color, allocate to the new image.
-        $transparent_color = imagecolorsforindex($image->getResource(), $transparent);
+        $transparent_color = imagecolorsforindex($this->getResource(), $transparent);
         $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
 
         // Flood with our new transparent color.
@@ -307,7 +350,7 @@ class GDToolkit extends ImageToolkitBase {
         imagecolortransparent($res, $transparent);
       }
     }
-    elseif ($image->getType() == IMAGETYPE_PNG) {
+    elseif ($type == IMAGETYPE_PNG) {
       imagealphablending($res, FALSE);
       $transparency = imagecolorallocatealpha($res, 0, 0, 0, 127);
       imagefill($res, 0, 0, $transparency);

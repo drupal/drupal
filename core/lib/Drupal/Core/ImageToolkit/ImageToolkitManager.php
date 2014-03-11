@@ -48,12 +48,12 @@ class ImageToolkitManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets the default image toolkit.
+   * Gets the default image toolkit ID.
    *
-   * @return \Drupal\Core\ImageToolkit\ImageToolkitInterface
-   *   Object of the default toolkit, or FALSE on error.
+   * @return string|bool
+   *   ID of the default toolkit, or FALSE on error.
    */
-  public function getDefaultToolkit() {
+  public function getDefaultToolkitId() {
     $toolkit_id = $this->configFactory->get('system.image')->get('toolkit');
     $toolkits = $this->getAvailableToolkits();
 
@@ -64,14 +64,20 @@ class ImageToolkitManager extends DefaultPluginManager {
       $toolkit_id = key($toolkits);
     }
 
-    if ($toolkit_id) {
-      $toolkit = $this->createInstance($toolkit_id);
-    }
-    else {
-      $toolkit = FALSE;
-    }
+    return $toolkit_id;
+  }
 
-    return $toolkit;
+  /**
+   * Gets the default image toolkit.
+   *
+   * @return \Drupal\Core\ImageToolkit\ImageToolkitInterface
+   *   Object of the default toolkit, or FALSE on error.
+   */
+  public function getDefaultToolkit() {
+    if ($toolkit_id = $this->getDefaultToolkitId()) {
+      return $this->createInstance($toolkit_id);
+    }
+    return FALSE;
   }
 
   /**

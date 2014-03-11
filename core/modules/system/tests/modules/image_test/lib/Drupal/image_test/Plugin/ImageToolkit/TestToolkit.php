@@ -63,15 +63,26 @@ class TestToolkit extends ImageToolkitBase {
       );
     }
 
+    if ($details) {
+      $this->load($image->getSource(), $details);
+    }
     return $details;
   }
 
   /**
-   * {@inheritdoc}
+   * Creates a resource from a file.
+   *
+   * @param string $source
+   *   String specifying the path of the image file.
+   * @param array $details
+   *   An array of image details.
+   *
+   * @return bool
+   *   TRUE or FALSE, based on success.
    */
-  public function load(ImageInterface $image) {
-    $this->logCall('load', array($image));
-    return $image;
+  protected function load($source, array $details) {
+    $this->logCall('load', array($source, $details));
+    return TRUE;
   }
 
   /**

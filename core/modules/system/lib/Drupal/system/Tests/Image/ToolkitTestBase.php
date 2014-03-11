@@ -23,13 +23,6 @@ abstract class ToolkitTestBase extends WebTestBase {
   public static $modules = array('image_test');
 
   /**
-   * The image toolkit.
-   *
-   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
-   */
-  protected $toolkit;
-
-  /**
    * The URI for the file.
    *
    * @var string
@@ -45,10 +38,6 @@ abstract class ToolkitTestBase extends WebTestBase {
 
   function setUp() {
     parent::setUp();
-
-    // Use the image_test.module's test toolkit.
-    $manager = $this->container->get('image.toolkit.manager');
-    $this->toolkit = $manager->createInstance('test');
 
     // Pick a file for testing.
     $file = current($this->drupalGetTestFiles('image'));
@@ -69,9 +58,9 @@ abstract class ToolkitTestBase extends WebTestBase {
    */
   protected function getImage() {
     $image = $this->container->get('image.factory')
-      ->setToolkit($this->toolkit)
+      ->setToolkitId('test')
       ->get($this->file);
-    $image->getResource();
+    $this->assertTrue($image->isExisting(), 'Image was loaded.');
     return $image;
   }
 
