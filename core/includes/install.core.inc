@@ -684,7 +684,7 @@ function install_tasks($install_state) {
     // Load the profile install file, because it is not always loaded when
     // hook_install_tasks() is invoked (e.g. batch processing).
     $profile = $install_state['parameters']['profile'];
-    $profile_install_file = dirname($install_state['profiles'][$profile]->uri) . '/' . $profile . '.install';
+    $profile_install_file = $install_state['profiles'][$profile]->getPath() . '/' . $profile . '.install';
     if (file_exists($profile_install_file)) {
       include_once DRUPAL_ROOT . '/' . $profile_install_file;
     }
@@ -1256,19 +1256,19 @@ function _install_select_profile($profiles) {
   $request_params = \Drupal::request()->request;
   if (count($profiles) == 1) {
     $profile = array_pop($profiles);
-    return $profile->name;
+    return $profile->getName();
   }
   elseif ($request_params->has('profile') && ($profile = $request_params->get('profile')) && isset($profiles[$profile])) {
-    return $profiles[$profile]->name;
+    return $profiles[$profile]->getName();
   }
   // Check for a profile marked as "exclusive" and ensure that only one
   // profile is marked as such.
   $exclusive_profile = NULL;
   foreach ($profiles as $profile) {
-    $profile_info = install_profile_info($profile->name);
+    $profile_info = install_profile_info($profile->getName());
     if (!empty($profile_info['exclusive'])) {
       if (empty($exclusive_profile)) {
-        $exclusive_profile = $profile->name;
+        $exclusive_profile = $profile->getName();
       }
       else {
         // We found a second "exclusive" profile. There's no way to choose
@@ -1294,7 +1294,7 @@ function install_select_profile_form($form, &$form_state, $install_state) {
   $profiles = array();
   $names = array();
   foreach ($install_state['profiles'] as $profile) {
-    $details = install_profile_info($profile->name);
+    $details = install_profile_info($profile->getName());
     // Skip this extension if its type is not profile.
     if (!isset($details['type']) || $details['type'] != 'profile') {
       continue;
@@ -1304,12 +1304,12 @@ function install_select_profile_form($form, &$form_state, $install_state) {
     if ($details['hidden'] === TRUE) {
       continue;
     }
-    $profiles[$profile->name] = $details;
+    $profiles[$profile->getName()] = $details;
 
     // Determine the name of the profile; default to file name if defined name
     // is unspecified.
-    $name = isset($details['name']) ? $details['name'] : $profile->name;
-    $names[$profile->name] = $name;
+    $name = isset($details['name']) ? $details['name'] : $profile->getName();
+    $names[$profile->getName()] = $name;
   }
 
   // Display radio buttons alphabetically by human-readable name, but always

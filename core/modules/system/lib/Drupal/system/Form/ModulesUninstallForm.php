@@ -71,7 +71,7 @@ class ModulesUninstallForm extends FormBase {
     // Get a list of disabled, installed modules.
     $modules = system_rebuild_module_data();
     $uninstallable = array_filter($modules, function ($module) use ($modules) {
-      return empty($modules[$module->name]->info['required']) && drupal_get_installed_schema_version($module->name) > SCHEMA_UNINSTALLED;
+      return empty($modules[$module->getName()]->info['required']) && drupal_get_installed_schema_version($module->getName()) > SCHEMA_UNINSTALLED;
     });
 
     $form['modules'] = array();
@@ -89,12 +89,12 @@ class ModulesUninstallForm extends FormBase {
 
     $form['uninstall'] = array('#tree' => TRUE);
     foreach ($uninstallable as $module) {
-      $name = $module->info['name'] ?: $module->name;
-      $form['modules'][$module->name]['#module_name'] = $name;
-      $form['modules'][$module->name]['name']['#markup'] = $name;
-      $form['modules'][$module->name]['description']['#markup'] = $this->t($module->info['description']);
+      $name = $module->info['name'] ?: $module->getName();
+      $form['modules'][$module->getName()]['#module_name'] = $name;
+      $form['modules'][$module->getName()]['name']['#markup'] = $name;
+      $form['modules'][$module->getName()]['description']['#markup'] = $this->t($module->info['description']);
 
-      $form['uninstall'][$module->name] = array(
+      $form['uninstall'][$module->getName()] = array(
         '#type' => 'checkbox',
         '#title' => $this->t('Uninstall @module module', array('@module' => $name)),
         '#title_display' => 'invisible',
@@ -106,8 +106,8 @@ class ModulesUninstallForm extends FormBase {
       foreach (array_keys($module->required_by) as $dependent) {
         if ($dependent != $profile && drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED) {
           $name = isset($modules[$dependent]->info['name']) ? $modules[$dependent]->info['name'] : $dependent;
-          $form['modules'][$module->name]['#required_by'][] = $name;
-          $form['uninstall'][$module->name]['#disabled'] = TRUE;
+          $form['modules'][$module->getName()]['#required_by'][] = $name;
+          $form['uninstall'][$module->getName()]['#disabled'] = TRUE;
         }
       }
     }

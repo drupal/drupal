@@ -290,10 +290,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @param $module
    *   The name of the module.
    *
-   * @return \stdClass|bool
-   *   Returns a stdClass object if the module data is found containing at
-   *   least an uri property with the module path, for example
-   *   core/modules/user/user.module.
+   * @return \Drupal\Core\Extension\Extension|bool
+   *   Returns an Extension object if the module is found, FALSE otherwise.
    */
   protected function moduleData($module) {
     if (!$this->moduleData) {

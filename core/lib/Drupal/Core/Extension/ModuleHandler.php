@@ -145,11 +145,11 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function buildModuleDependencies(array $modules) {
     foreach ($modules as $module) {
-      $graph[$module->name]['edges'] = array();
+      $graph[$module->getName()]['edges'] = array();
       if (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
           $dependency_data = static::parseDependency($dependency);
-          $graph[$module->name]['edges'][$dependency_data['name']] = $dependency_data;
+          $graph[$module->getName()]['edges'][$dependency_data['name']] = $dependency_data;
         }
       }
     }
@@ -382,7 +382,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       if (isset($theme)) {
         $theme_keys = array();
         foreach ($base_theme_info as $base) {
-          $theme_keys[] = $base->name;
+          $theme_keys[] = $base->getName();
         }
         $theme_keys[] = $theme;
         foreach ($theme_keys as $theme_key) {
