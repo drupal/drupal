@@ -10,7 +10,7 @@ namespace Drupal\shortcut;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * Provides an interface defining a shortcut entity.
+ * Provides an interface defining a shortcut set entity.
  */
 interface ShortcutSetInterface extends ConfigEntityInterface {
 
