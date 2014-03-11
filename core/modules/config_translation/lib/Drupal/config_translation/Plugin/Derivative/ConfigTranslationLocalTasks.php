@@ -57,7 +57,7 @@ class ConfigTranslationLocalTasks extends DerivativeBase implements ContainerDer
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $mappers = $this->mapperManager->getMappers();
     foreach ($mappers as $plugin_id => $mapper) {
       /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */

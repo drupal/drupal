@@ -27,7 +27,7 @@ abstract class DerivativeBase implements DerivativeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinition($derivative_id, array $base_plugin_definition) {
+  public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     if (!empty($this->derivatives) && !empty($this->derivatives[$derivative_id])) {
       return $this->derivatives[$derivative_id];
     }
@@ -38,7 +38,7 @@ abstract class DerivativeBase implements DerivativeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     return $this->derivatives;
   }
 }

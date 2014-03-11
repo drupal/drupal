@@ -19,7 +19,7 @@ class DefaultWizardDeriver extends DerivativeBase {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $views_data = Views::viewsData();
     $base_tables = array_keys($views_data->fetchBaseTables());
     $this->derivatives = array();

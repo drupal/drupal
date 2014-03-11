@@ -47,7 +47,7 @@ class ConfigTranslationContextualLinks extends DerivativeBase implements Contain
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     // Create contextual links for all mappers.
     $mappers = $this->mapperManager->getMappers();
     foreach ($mappers as $plugin_id => $mapper) {

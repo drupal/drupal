@@ -59,7 +59,7 @@ class ViewsLocalTask extends DerivativeBase implements ContainerDerivativeInterf
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $this->derivatives = array();
 
     $view_route_names = $this->state->get('views.view_route_names');

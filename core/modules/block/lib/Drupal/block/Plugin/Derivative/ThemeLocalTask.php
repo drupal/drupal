@@ -58,7 +58,7 @@ class ThemeLocalTask extends DerivativeBase implements ContainerDerivativeInterf
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $default_theme = $this->config->get('default');
 
     foreach ($this->themeHandler->listInfo() as $theme_name => $theme) {

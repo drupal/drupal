@@ -19,7 +19,7 @@ class MockLayoutBlockDeriver implements DerivativeInterface {
   /**
    * Implements Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinition().
    */
-  public function getDerivativeDefinition($derivative_id, array $base_plugin_definition) {
+  public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     $derivatives = $this->getDerivativeDefinitions($base_plugin_definition);
     if (isset($derivatives[$derivative_id])) {
       return $derivatives[$derivative_id];
@@ -29,7 +29,7 @@ class MockLayoutBlockDeriver implements DerivativeInterface {
   /**
    * Implements Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinitions().
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     // This isn't strictly necessary, but it helps reduce clutter in
     // DerivativePluginTest::testDerivativeDecorator()'s $expected variable.
     // Since derivative definitions don't need further deriving, we remove this

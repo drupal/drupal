@@ -14,7 +14,7 @@ class ContainerDerivativeDiscoveryDecorator extends DerivativeDiscoveryDecorator
   /**
    * {@inheritdoc}
    */
-  protected function getDerivativeFetcher($base_plugin_id, array $base_definition) {
+  protected function getDerivativeFetcher($base_plugin_id, $base_definition) {
     if (!isset($this->derivativeFetchers[$base_plugin_id])) {
       $this->derivativeFetchers[$base_plugin_id] = FALSE;
       $class = $this->getDerivativeClass($base_definition);

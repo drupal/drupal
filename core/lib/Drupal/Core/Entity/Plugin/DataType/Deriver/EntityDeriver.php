@@ -63,7 +63,7 @@ class EntityDeriver implements ContainerDerivativeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinition($derivative_id, array $base_plugin_definition) {
+  public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     if (!empty($this->derivatives) && !empty($this->derivatives[$derivative_id])) {
       return $this->derivatives[$derivative_id];
     }
@@ -76,7 +76,7 @@ class EntityDeriver implements ContainerDerivativeInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     // Also keep the 'entity' defined as is.
     $this->derivatives[''] = $base_plugin_definition;
     // Add definitions for each entity type and bundle.

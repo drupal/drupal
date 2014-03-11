@@ -16,7 +16,7 @@ class SelectionBase extends DerivativeBase {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $supported_entities = array(
       'comment',
       'file',

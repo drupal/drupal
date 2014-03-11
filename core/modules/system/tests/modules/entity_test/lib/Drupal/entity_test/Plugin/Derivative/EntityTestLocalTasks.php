@@ -17,7 +17,7 @@ class EntityTestLocalTasks extends DerivativeBase {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $this->derivatives = array();
     $types = entity_test_entity_types();
 

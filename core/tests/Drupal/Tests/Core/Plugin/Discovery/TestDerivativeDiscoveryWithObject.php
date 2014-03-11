@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Plugin\Discovery\TestDiscovery.
+ * Contains \Drupal\Tests\Core\Plugin\Discovery\TestDerivativeDiscoveryWithObject.
  */
 
 namespace Drupal\Tests\Core\Plugin\Discovery;
@@ -10,12 +10,15 @@ namespace Drupal\Tests\Core\Plugin\Discovery;
 use Drupal\Component\Plugin\Derivative\DerivativeInterface;
 
 /**
- * Defines test derivative discovery.
+ * Defines test derivative discovery using an object..
  */
-class TestDerivativeDiscovery implements DerivativeInterface {
+class TestDerivativeDiscoveryWithObject implements DerivativeInterface {
 
   /**
    * {@inheritdoc}
+   * @param string $derivative_id
+   * @param array $base_plugin_definition
+   * @return array
    */
   public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     $definitions = $this->getDerivativeDefinitions($base_plugin_definition);
@@ -24,6 +27,8 @@ class TestDerivativeDiscovery implements DerivativeInterface {
 
   /**
    * {@inheritdoc}
+   * @param array $base_plugin_definition
+   * @return array
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $plugins = array();

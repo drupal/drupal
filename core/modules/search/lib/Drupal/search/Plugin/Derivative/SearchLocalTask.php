@@ -46,7 +46,7 @@ class SearchLocalTask extends DerivativeBase implements ContainerDerivativeInter
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $this->derivatives = array();
 
     if ($default = $this->searchPageRepository->getDefaultSearchPage()) {

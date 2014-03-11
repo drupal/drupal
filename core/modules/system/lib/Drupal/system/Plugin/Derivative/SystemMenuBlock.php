@@ -48,7 +48,7 @@ class SystemMenuBlock extends DerivativeBase implements ContainerDerivativeInter
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     foreach ($this->menuStorage->loadMultiple() as $menu => $entity) {
       $this->derivatives[$menu] = $base_plugin_definition;
       $this->derivatives[$menu]['admin_label'] = $entity->label();

@@ -79,7 +79,7 @@ class ViewsEntityArgumentValidator extends DerivativeBase implements ContainerDe
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $entity_types = $this->entityManager->getDefinitions();
     $this->derivatives = array();
     foreach ($entity_types as $entity_type_id => $entity_type) {

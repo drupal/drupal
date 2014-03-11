@@ -57,7 +57,7 @@ class ContentTranslationLocalTasks extends DerivativeBase implements ContainerDe
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     // Create tabs for all possible entity types.
     foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
       // Find the route name for the translation overview.

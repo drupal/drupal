@@ -52,7 +52,7 @@ class EntityDerivative implements ContainerDerivativeInterface {
   /**
    * Implements DerivativeInterface::getDerivativeDefinition().
    */
-  public function getDerivativeDefinition($derivative_id, array $base_plugin_definition) {
+  public function getDerivativeDefinition($derivative_id, $base_plugin_definition) {
     if (!isset($this->derivatives)) {
       $this->getDerivativeDefinitions($base_plugin_definition);
     }
@@ -64,7 +64,7 @@ class EntityDerivative implements ContainerDerivativeInterface {
   /**
    * Implements DerivativeInterface::getDerivativeDefinitions().
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     if (!isset($this->derivatives)) {
       // Add in the default plugin configuration and the resource type.
       foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {

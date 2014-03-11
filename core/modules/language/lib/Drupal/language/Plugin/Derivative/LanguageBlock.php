@@ -18,7 +18,7 @@ class LanguageBlock extends DerivativeBase {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $language_manager = \Drupal::languageManager();
 
     if ($language_manager instanceof ConfigurableLanguageManagerInterface) {

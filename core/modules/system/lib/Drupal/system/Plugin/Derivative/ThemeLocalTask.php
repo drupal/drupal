@@ -17,7 +17,7 @@ class ThemeLocalTask extends DerivativeBase {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     foreach (list_themes() as $theme_name => $theme) {
       if ($theme->status) {
         $this->derivatives[$theme_name] = $base_plugin_definition;

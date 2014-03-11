@@ -17,7 +17,7 @@ class CustomBlock extends DerivativeBase {
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions(array $base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_definition) {
     $custom_blocks = entity_load_multiple('custom_block');
     foreach ($custom_blocks as $custom_block) {
       $this->derivatives[$custom_block->uuid()] = $base_plugin_definition;
