@@ -603,10 +603,14 @@ class FormBuilder implements FormBuilderInterface {
         // Set a flag to indicate the the form has been processed and executed.
         $form_state['executed'] = TRUE;
 
-        // Redirect the form based on values in $form_state.
-        $redirect = $this->redirectForm($form_state);
-        if (is_object($redirect)) {
-          return $redirect;
+        // If no response has been set, process the form redirect.
+        if (!isset($form_state['response']) && $redirect = $this->redirectForm($form_state)) {
+          $form_state['response'] = $redirect;
+        }
+
+        // If there is a response was set, return it instead of continuing.
+        if (isset($form_state['response']) && $form_state['response'] instanceof Response) {
+          return $form_state['response'];
         }
       }
 

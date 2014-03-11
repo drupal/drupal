@@ -5,11 +5,8 @@
  * Mass import-export and batch import functionality for Gettext .po files.
  */
 
-use Drupal\Component\Gettext\PoStreamWriter;
 use Drupal\locale\Gettext;
-use Drupal\locale\PoDatabaseReader;
 use Drupal\Core\Language\Language;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Drupal\file\FileInterface;
 
 /**
@@ -146,135 +143,6 @@ function locale_translate_import_form_submit($form, &$form_state) {
 
   $form_state['redirect_route']['route_name'] = 'locale.translate_page';
   return;
-}
-
-/**
- * Form constructor for the Gettext translation files export form.
- *
- * @see locale_translate_export_form_submit()
- * @ingroup forms
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\locale\Form\LocaleForm::export().
- */
-function locale_translate_export_form($form, &$form_state) {
-  $languages = language_list();
-  $language_options = array();
-  foreach ($languages as $langcode => $language) {
-    if ($langcode != 'en' || locale_translate_english()) {
-      $language_options[$langcode] = $language->name;
-    }
-  }
-  $language_default = language_default();
-
-  if (empty($language_options)) {
-    $form['langcode'] = array(
-      '#type' => 'value',
-      '#value' => Language::LANGCODE_SYSTEM,
-    );
-    $form['langcode_text'] = array(
-      '#type' => 'item',
-      '#title' => t('Language'),
-      '#markup' => t('No language available. The export will only contain source strings.'),
-    );
-  }
-  else {
-    $form['langcode'] = array(
-      '#type' => 'select',
-      '#title' => t('Language'),
-      '#options' => $language_options,
-      '#default_value' => $language_default->id,
-      '#empty_option' => t('Source text only, no translations'),
-      '#empty_value' => Language::LANGCODE_SYSTEM,
-    );
-    $form['content_options'] = array(
-      '#type' => 'details',
-      '#title' => t('Export options'),
-      '#tree' => TRUE,
-      '#states' => array(
-        'invisible' => array(
-          ':input[name="langcode"]' => array('value' => Language::LANGCODE_SYSTEM),
-        ),
-      ),
-    );
-    $form['content_options']['not_customized'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Include non-customized translations'),
-      '#default_value' => TRUE,
-    );
-    $form['content_options']['customized'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Include customized translations'),
-      '#default_value' => TRUE,
-    );
-    $form['content_options']['not_translated'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Include untranslated text'),
-      '#default_value' => TRUE,
-    );
-  }
-
-  $form['actions'] = array(
-    '#type' => 'actions'
-  );
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Export')
-  );
-  return $form;
-}
-
-/**
- * Form submission handler for locale_translate_export_form().
- */
-function locale_translate_export_form_submit($form, &$form_state) {
-  // If template is required, language code is not given.
-  if ($form_state['values']['langcode'] != Language::LANGCODE_SYSTEM) {
-    $language = language_load($form_state['values']['langcode']);
-  }
-  else {
-    $language = NULL;
-  }
-  $content_options = isset($form_state['values']['content_options']) ? $form_state['values']['content_options'] : array();
-  $reader = new PoDatabaseReader();
-  $languageName = '';
-  if ($language != NULL) {
-    $reader->setLangcode($language->id);
-    $reader->setOptions($content_options);
-    $languages = language_list();
-    $languageName = isset($languages[$language->id]) ? $languages[$language->id]->name : '';
-    $filename = $language->id .'.po';
-  }
-  else {
-    // Template required.
-    $filename = 'drupal.pot';
-  }
-
-  $item = $reader->readItem();
-  if (!empty($item)) {
-    $uri = tempnam('temporary://', 'po_');
-    $header = $reader->getHeader();
-    $header->setProjectName(\Drupal::config('system.site')->get('name'));
-    $header->setLanguageName($languageName);
-
-    $writer = new PoStreamWriter;
-    $writer->setUri($uri);
-    $writer->setHeader($header);
-
-    $writer->open();
-    $writer->writeItem($item);
-    $writer->writeItems($reader);
-    $writer->close();
-
-    $response = new BinaryFileResponse($uri);
-    $response->setContentDisposition('attachment', $filename);
-    // @todo remove lines below once converted to new routing system.
-    $response->prepare(\Drupal::request())
-      ->send();
-  }
-  else {
-    drupal_set_message('Nothing to export.');
-  }
 }
 
 /**

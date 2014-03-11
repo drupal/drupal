@@ -189,15 +189,19 @@ abstract class FormTestBase extends UnitTestCase {
    *   The form object.
    * @param array $form_state
    *   An associative array containing the current state of the form.
+   * @param bool $programmed
+   *   Whether $form_state['programmed'] should be set to TRUE or not. If it is
+   *   not set to TRUE, you must provide additional data in $form_state for the
+   *   submission to take place.
    *
    * @return array
    *   The built form.
    */
-  protected function simulateFormSubmission($form_id, FormInterface $form_arg, array &$form_state) {
+  protected function simulateFormSubmission($form_id, FormInterface $form_arg, array &$form_state, $programmed = TRUE) {
     $form_state['build_info']['callback_object'] = $form_arg;
     $form_state['build_info']['args'] = array();
     $form_state['input']['op'] = 'Submit';
-    $form_state['programmed'] = TRUE;
+    $form_state['programmed'] = $programmed;
     $form_state['submitted'] = TRUE;
     return $this->formBuilder->buildForm($form_id, $form_state);
   }

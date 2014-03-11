@@ -32,7 +32,7 @@ locale.translate_import:
 locale.translate_export:
   path: '/admin/config/regional/translate/export'
   defaults:
-    _content: '\Drupal\locale\Form\LocaleForm::export'
+    _form: '\Drupal\locale\Form\ExportForm'
     _title: 'Export'
   requirements:
     _permission: 'translate interface'

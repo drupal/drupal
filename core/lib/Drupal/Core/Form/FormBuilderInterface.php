@@ -104,6 +104,12 @@ interface FormBuilderInterface extends FormErrorInterface {
    *     already set $form_state['rebuild'] to cause the form processing to
    *     bypass submit handlers and rebuild the form instead, even if there are
    *     no validation errors.
+   *   - response: Used when a form needs to return some kind of a
+   *     \Symfony\Component\HttpFoundation\Response object, e.g., a
+   *     \Symfony\Component\HttpFoundation\BinaryFileResponse when triggering a
+   *     file download. If you use the $form_state['redirect'] key, it will be
+   *     used to build a \Symfony\Component\HttpFoundation\RedirectResponse and
+   *     will populate this key.
    *   - redirect: Used to redirect the form on submission. It may either be a
    *     string containing the destination URL, or an array of arguments
    *     compatible with url(). See url() for complete information.
