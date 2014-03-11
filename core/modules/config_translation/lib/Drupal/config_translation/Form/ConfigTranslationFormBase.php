@@ -251,15 +251,16 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    * @param array|string $base_config_data
    *   Configuration object of base language, a string when done traversing
    *   the data building each sub-structure for the form.
-   * @param bool $collapsed
-   *   (optional) Flag to set collapsed state. Defaults to FALSE.
+   * @param bool $open
+   *   (optional) Whether or not the details element of the form should be open.
+   *   Defaults to TRUE.
    * @param string|null $base_key
    *   (optional) Base configuration key. Defaults to an empty string.
    *
    * @return array
    *   An associative array containing the structure of the form.
    */
-  protected function buildConfigForm(Element $schema, $config_data, $base_config_data, $collapsed = FALSE, $base_key = '') {
+  protected function buildConfigForm(Element $schema, $config_data, $base_config_data, $open = TRUE, $base_key = '') {
     $build = array();
     foreach ($schema as $key => $element) {
       // Make the specific element key, "$base_key.$key".
@@ -268,7 +269,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       if ($element instanceof Element) {
         // Build sub-structure and include it with a wrapper in the form
         // if there are any translatable elements there.
-        $sub_build = $this->buildConfigForm($element, $config_data[$key], $base_config_data[$key], TRUE, $element_key);
+        $sub_build = $this->buildConfigForm($element, $config_data[$key], $base_config_data[$key], FALSE, $element_key);
         if (!empty($sub_build)) {
           // For some configuration elements the same element structure can
           // repeat multiple times, (like views displays, filters, etc.).
@@ -293,7 +294,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
           $build[$key] = array(
             '#type' => 'details',
             '#title' => (!empty($title) ? (strip_tags($title) . ' ') : '') . $this->t($definition['label']),
-            '#open' => !$collapsed,
+            '#open' => $open,
           ) + $sub_build;
         }
       }
