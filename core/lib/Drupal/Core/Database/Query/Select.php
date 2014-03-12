@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Query\Select
+ * Contains \Drupal\Core\Database\Query\Select.
  */
 
 namespace Drupal\Core\Database\Query;
@@ -121,6 +121,18 @@ class Select extends Query implements SelectInterface {
    */
   protected $forUpdate = FALSE;
 
+  /**
+   * Constructs a Select object.
+   *
+   * @param string $table
+   *   The name of the table that is being queried.
+   * @param string $alias
+   *   The alias for the table.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Database connection object.
+   * @param array $options
+   *   Array of query options.
+   */
   public function __construct($table, $alias = NULL, Connection $connection, $options = array()) {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
@@ -130,45 +142,68 @@ class Select extends Query implements SelectInterface {
     $this->addJoin(NULL, $table, $alias);
   }
 
-  /* Implementations of Drupal\Core\Database\Query\AlterableInterface. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function addTag($tag) {
     $this->alterTags[$tag] = 1;
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasTag($tag) {
     return isset($this->alterTags[$tag]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasAllTags() {
     return !(boolean)array_diff(func_get_args(), array_keys($this->alterTags));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasAnyTag() {
     return (boolean)array_intersect(func_get_args(), array_keys($this->alterTags));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addMetaData($key, $object) {
     $this->alterMetaData[$key] = $object;
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getMetaData($key) {
     return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
   }
 
-  /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the WHERE clause. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function condition($field, $value = NULL, $operator = NULL) {
     $this->where->condition($field, $value, $operator);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &conditions() {
     return $this->where->conditions();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function arguments() {
     if (!$this->compiled()) {
       return NULL;
@@ -201,31 +236,49 @@ class Select extends Query implements SelectInterface {
     return $args;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function where($snippet, $args = array()) {
     $this->where->where($snippet, $args);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function isNull($field) {
     $this->where->isNull($field);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function isNotNull($field) {
     $this->where->isNotNull($field);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function exists(SelectInterface $select) {
     $this->where->exists($select);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function notExists(SelectInterface $select) {
     $this->where->notExists($select);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     $this->where->compile($connection, $queryPlaceholder);
     $this->having->compile($connection, $queryPlaceholder);
@@ -243,6 +296,9 @@ class Select extends Query implements SelectInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function compiled() {
     if (!$this->where->compiled() || !$this->having->compiled()) {
       return FALSE;
@@ -266,32 +322,68 @@ class Select extends Query implements SelectInterface {
     return TRUE;
   }
 
-  /* Implementations of Drupal\Core\Database\Query\ConditionInterface for the HAVING clause. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function havingCondition($field, $value = NULL, $operator = NULL) {
     $this->having->condition($field, $value, $operator);
     return $this;
   }
 
+  /**
+   * Gets a list of all conditions in the HAVING clause.
+   *
+   * This method returns by reference. That allows alter hooks to access the
+   * data structure directly and manipulate it before it gets compiled.
+   *
+   * @return array
+   *   An array of conditions.
+   *
+   * @see \Drupal\Core\Database\Query\ConditionInterface::conditions()
+   */
   public function &havingConditions() {
     return $this->having->conditions();
   }
 
+  /**
+   * Gets a list of all values to insert into the HAVING clause.
+   *
+   * @return array
+   *   An associative array of placeholders and values.
+   */
   public function havingArguments() {
     return $this->having->arguments();
   }
 
+  /**
+   * Adds an arbitrary HAVING clause to the query.
+   *
+   * @param $snippet
+   *   A portion of a HAVING clause as a prepared statement. It must use named
+   *   placeholders, not ? placeholders.
+   * @param $args
+   *   (optional) An associative array of arguments.
+   *
+   * @return $this
+   */
   public function having($snippet, $args = array()) {
     $this->having->where($snippet, $args);
     return $this;
   }
 
+  /**
+   * Compiles the HAVING clause for later retrieval.
+   *
+   * @param $connection
+   *   The database connection for which to compile the clause.
+   */
   public function havingCompile(Connection $connection) {
     $this->having->compile($connection, $this);
   }
 
-  /* Implementations of Drupal\Core\Database\Query\ExtendableInterface. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function extend($extender_name) {
     $override_class = $extender_name . '_' . $this->connection->driver();
     if (class_exists($override_class)) {
@@ -300,26 +392,61 @@ class Select extends Query implements SelectInterface {
     return new $extender_name($this, $this->connection);
   }
 
+  /**
+   * Sets a condition in the HAVING clause that the specified field be NULL.
+   *
+   * @param $field
+   *   The name of the field to check.
+   *
+   * @return $this
+   */
   public function havingIsNull($field) {
     $this->having->isNull($field);
     return $this;
   }
 
+  /**
+   * Sets a condition in the HAVING clause that the specified field be NOT NULL.
+   *
+   * @param $field
+   *   The name of the field to check.
+   *
+   * @return $this
+   */
   public function havingIsNotNull($field) {
     $this->having->isNotNull($field);
     return $this;
   }
 
+  /**
+   * Sets a HAVING condition that the specified subquery returns values.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $select
+   *   The subquery that must contain results.
+   *
+   * @return $this
+   */
   public function havingExists(SelectInterface $select) {
     $this->having->exists($select);
     return $this;
   }
 
+  /**
+   * Sets a HAVING condition that the specified subquery returns no values.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $select
+   *   The subquery that must contain results.
+   *
+   * @return $this
+   */
   public function havingNotExists(SelectInterface $select) {
     $this->having->notExists($select);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function forUpdate($set = TRUE) {
     if (isset($set)) {
       $this->forUpdate = $set;
@@ -327,32 +454,51 @@ class Select extends Query implements SelectInterface {
     return $this;
   }
 
-  /* Alter accessors to expose the query data to alter hooks. */
-
+  /**
+   * {@inheritdoc}
+   */
   public function &getFields() {
     return $this->fields;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getExpressions() {
     return $this->expressions;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getOrderBy() {
     return $this->order;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getGroupBy() {
     return $this->group;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getTables() {
     return $this->tables;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function &getUnion() {
     return $this->union;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
     if (!isset($queryPlaceholder)) {
       $queryPlaceholder = $this;
@@ -362,17 +508,14 @@ class Select extends Query implements SelectInterface {
   }
 
   /**
-   * Indicates if preExecute() has already been called on that object.
+   * {@inheritdoc}
    */
   public function isPrepared() {
     return $this->prepared;
   }
 
   /**
-   * Generic preparation and validation for a SELECT query.
-   *
-   * @return
-   *   TRUE if the validation was successful, FALSE if not.
+   * {@inheritdoc}
    */
   public function preExecute(SelectInterface $query = NULL) {
     // If no query object is passed in, use $this.
@@ -410,6 +553,9 @@ class Select extends Query implements SelectInterface {
     return $this->prepared;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     // If validation fails, simply return NULL.
     // Note that validation routines in preExecute() may throw exceptions instead.
@@ -421,11 +567,17 @@ class Select extends Query implements SelectInterface {
     return $this->connection->query((string) $this, $args, $this->queryOptions);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function distinct($distinct = TRUE) {
     $this->distinct = $distinct;
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addField($table_alias, $field, $alias = NULL) {
     // If no alias is specified, first try the field name itself.
     if (empty($alias)) {
@@ -454,8 +606,10 @@ class Select extends Query implements SelectInterface {
     return $alias;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fields($table_alias, array $fields = array()) {
-
     if ($fields) {
       foreach ($fields as $field) {
         // We don't care what alias was assigned.
@@ -470,6 +624,9 @@ class Select extends Query implements SelectInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addExpression($expression, $alias = NULL, $arguments = array()) {
     if (empty($alias)) {
       $alias = 'expression';
@@ -491,24 +648,38 @@ class Select extends Query implements SelectInterface {
     return $alias;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function join($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->addJoin('INNER', $table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->addJoin('INNER', $table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->addJoin('LEFT OUTER', $table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->addJoin('RIGHT OUTER', $table, $alias, $condition, $arguments);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = array()) {
-
     if (empty($alias)) {
       if ($table instanceof SelectInterface) {
         $alias = 'subquery';
@@ -540,6 +711,9 @@ class Select extends Query implements SelectInterface {
     return $alias;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function orderBy($field, $direction = 'ASC') {
     // Only allow ASC and DESC, default to ASC.
     $direction = strtoupper($direction) == 'DESC' ? 'DESC' : 'ASC';
@@ -547,17 +721,26 @@ class Select extends Query implements SelectInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function orderRandom() {
     $alias = $this->addExpression('RAND()', 'random_field');
     $this->orderBy($alias);
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function range($start = NULL, $length = NULL) {
     $this->range = func_num_args() ? array('start' => $start, 'length' => $length) : array();
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function union(SelectInterface $query, $type = '') {
     // Handle UNION aliasing.
     switch ($type) {
@@ -580,13 +763,16 @@ class Select extends Query implements SelectInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function groupBy($field) {
     $this->group[$field] = $field;
     return $this;
   }
 
   /**
-   * Implements SelectInterface::countQuery().
+   * {@inheritdoc}
    */
   public function countQuery() {
     $count = $this->prepareCountQuery();
@@ -660,6 +846,9 @@ class Select extends Query implements SelectInterface {
     return $count;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __toString() {
     // For convenience, we compile the query ourselves if the caller forgot
     // to do it. This allows constructs like "(string) $query" to work. When
@@ -779,6 +968,9 @@ class Select extends Query implements SelectInterface {
     return $query;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __clone() {
     // On cloning, also clone the dependent objects. However, we do not
     // want to clone the database connection object as that would duplicate the
