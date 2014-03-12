@@ -47,7 +47,6 @@ class DisplayTest extends UITestBase {
       'block[create]' => TRUE
     );
     $view = $this->randomView($view);
-    $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->clickLink(t('Reorder displays'));
     $this->assertTrue($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
