@@ -2,6 +2,9 @@ drupal.locale.admin:
   version: VERSION
   js:
     locale.admin.js: {}
+  css:
+    component:
+      css/locale.admin.css: {}
   dependencies:
     - core/jquery
     - core/drupal
