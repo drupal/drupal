@@ -129,6 +129,7 @@ Markup
 
 Migrate
 - Ben Dougherty 'benjy' https://drupal.org/user/1852732
+- Claudiu Cristea "claudiu.cristea"  https://drupal.org/user/56348
 - Mike Ryan 'mikeryan' http://drupal.org/user/4420
 
 Menu system
