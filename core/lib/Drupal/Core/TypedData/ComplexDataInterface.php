@@ -63,7 +63,7 @@ interface ComplexDataInterface extends \Traversable, TypedDataInterface  {
    * @param bool $include_computed
    *   If set to TRUE, computed properties are included. Defaults to FALSE.
    *
-   * @return array
+   * @return \Drupal\Core\TypedData\TypedDataInterface[]
    *   An array of property objects implementing the TypedDataInterface, keyed
    *   by property name.
    */

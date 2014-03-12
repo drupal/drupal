@@ -8,6 +8,7 @@
 namespace Drupal\system\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Core\Action\ActionBag;
@@ -131,7 +132,9 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
   /**
    * {@inheritdoc}
    */
-  public static function sort($a, $b) {
+  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
+    /** @var \Drupal\system\ActionConfigEntityInterface $a */
+    /** @var \Drupal\system\ActionConfigEntityInterface $b */
     $a_type = $a->getType();
     $b_type = $b->getType();
     if ($a_type != $b_type) {
