@@ -139,7 +139,7 @@ function tracker_page($account = NULL) {
   $page['tracker'] = array(
     '#rows' => $rows,
     '#header' => array(t('Type'), t('Title'), t('Author'), t('Replies'), t('Last updated')),
-    '#theme' => 'table',
+    '#type' => 'table',
     '#empty' => t('No content available.'),
   );
   $page['pager'] = array(

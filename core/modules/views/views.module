@@ -9,6 +9,7 @@
  * incoming page and block requests.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Language\Language;
@@ -54,6 +55,37 @@ function views_element_info() {
     '#arguments' => array(),
   );
   return $types;
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function views_views_pre_render($view) {
+  // If using AJAX, send identifying data about this view.
+  if ($view->ajaxEnabled() && empty($view->is_attachment) && empty($view->live_preview)) {
+    $settings = array(
+      'views' => array(
+        'ajax_path' => url('views/ajax'),
+        'ajaxViews' => array(
+          'views_dom_id:' . $view->dom_id => array(
+            'view_name' => $view->storage->id(),
+            'view_display_id' => $view->current_display,
+            'view_args' => String::checkPlain(implode('/', $view->args)),
+            'view_path' => String::checkPlain(current_path()),
+            'view_base_path' => $view->getPath(),
+            'view_dom_id' => $view->dom_id,
+            // To fit multiple views on a page, the programmer may have
+            // overridden the display's pager_element.
+            'pager_element' => isset($view->pager) ? $view->pager->getPagerId() : 0,
+          ),
+        ),
+      ),
+    );
+    $view->element['#attached']['js'][] = array('type' => 'setting', 'data' => $settings);
+    $view->element['#attached']['library'][] = 'views/views.ajax';
+  }
+
+  return $view;
 }
 
 /**
@@ -332,7 +364,8 @@ function views_preprocess_page(&$variables) {
       unset($class[$key]);
       $attributes['class'] = $class;
       $attributes['data-views-page-contextual-id'] = $variables['title_suffix']['contextual_links']['#id'];
-      drupal_add_library('views/views.contextual-links');
+      $attached['#attached']['library'][] = 'views/views.contextual-links';
+      drupal_render($attached);
     }
   }
 }

@@ -9,7 +9,7 @@ use Drupal\Component\Utility\UrlHelper;
  * @file
  * Functions to aid in the creation of sortable tables.
  *
- * All tables created when rendering a '#theme' => 'table' have the option of
+ * All tables created when rendering a '#type' => 'table' have the option of
  * having column headers that the user can click on to sort the table by that
  * column.
  */
@@ -33,7 +33,7 @@ function tablesort_init($header) {
  * @param $cell
  *   The cell to format.
  * @param $header
- *   An array of column headers in the format described in '#theme' => 'table'.
+ *   An array of column headers in the format described in '#type' => 'table'.
  * @param $ts
  *   The current table sort context as returned from tablesort_init().
  *
@@ -77,7 +77,7 @@ function tablesort_header($cell, $header, $ts) {
  * @param $cell
  *   The cell to format.
  * @param $header
- *   An array of column headers in the format described in '#theme' => 'table'.
+ *   An array of column headers in the format described in '#type' => 'table'.
  * @param $ts
  *   The current table sort context as returned from tablesort_init().
  * @param $i
@@ -113,7 +113,7 @@ function tablesort_get_query_parameters() {
  * Determines the current sort criterion.
  *
  * @param $headers
- *   An array of column headers in the format described in '#theme' => 'table'.
+ *   An array of column headers in the format described in '#type' => 'table'.
  *
  * @return
  *   An associative array describing the criterion, containing the keys:
@@ -150,7 +150,7 @@ function tablesort_get_order($headers) {
  * Determines the current sort direction.
  *
  * @param $headers
- *   An array of column headers in the format described in '#theme' => 'table'.
+ *   An array of column headers in the format described in '#type' => 'table'.
  *
  * @return
  *   The current sort direction ("asc" or "desc").

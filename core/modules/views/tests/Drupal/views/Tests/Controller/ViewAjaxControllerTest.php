@@ -58,7 +58,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory);
+    $this->viewAjaxController = new TestViewAjaxController($this->viewStorage, $this->executableFactory);
   }
 
   /**
@@ -280,6 +280,18 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
 }
 
+/**
+ * Overrides ViewAjaxController::drupalRender to protect the parent method.
+ */
+class TestViewAjaxController extends ViewAjaxController {
+
+  // @todo Remove once drupal_render is converted to autoloadable code.
+  protected function drupalRender(array $elements) {
+    return isset($elements['#markup']) ? $elements['#markup'] : '';
+  }
+
+}
+
 }
 
 namespace {
@@ -287,13 +299,6 @@ namespace {
   if (!function_exists('drupal_static')) {
     function &drupal_static($key) {
       return $key;
-    }
-  }
-
-  // @todo Remove once drupal_render is converted to autoloadable code.
-  if (!function_exists('drupal_render')) {
-    function drupal_render($array) {
-      return isset($array['#markup']) ? $array['#markup'] : '';
     }
   }
 

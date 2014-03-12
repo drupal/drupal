@@ -140,7 +140,7 @@ function theme_language_negotiation_configure_browser_form_table($variables) {
   );
 
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
     '#attributes' => array('id' => 'lang-neg-browser'),
@@ -292,7 +292,7 @@ function template_preprocess_language_content_settings_table(&$variables) {
     '#title' => $element['#title'],
     '#header' => $header,
     '#rows' => $rows,
-    '#theme' => 'table',
+    '#type' => 'table',
   );
 }
 

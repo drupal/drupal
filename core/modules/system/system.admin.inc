@@ -395,7 +395,7 @@ function theme_system_modules_details($variables) {
   }
 
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $form['#header'],
     '#rows' => $rows,
   );
@@ -459,7 +459,7 @@ function theme_system_modules_uninstall($variables) {
   }
 
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
     '#empty' => t('No modules are available to uninstall.'),

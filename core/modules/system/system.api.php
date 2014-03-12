@@ -360,7 +360,7 @@ function hook_library_info_alter(&$libraries, $module) {
  * @param string $name
  *   The name of the library.
  *
- * @see drupal_add_library()
+ * @see _drupal_add_library()
  */
 function hook_library_alter(array &$library, $name) {
   if ($name == 'core/jquery.ui.datepicker') {

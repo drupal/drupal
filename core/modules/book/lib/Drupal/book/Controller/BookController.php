@@ -89,7 +89,7 @@ class BookController implements ContainerInjectionInterface {
       $rows[] = $row;
     }
     return array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $headers,
       '#rows' => $rows,
       '#empty' => t('No books available.'),

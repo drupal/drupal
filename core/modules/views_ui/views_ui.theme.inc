@@ -195,7 +195,7 @@ function theme_views_ui_build_group_filter_form($variables) {
     $rows[] = array('data' => $data, 'id' => 'views-row-' . $group_id, 'class' => array('draggable'));
   }
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
     '#attributes' => array(
@@ -297,7 +297,7 @@ function theme_views_ui_rearrange_filter_form(&$variables) {
   if (!empty($ungroupable_rows)) {
     $header = array(t('Ungroupable filters'), t('Weight'), array('class' => array('views-hide-label'), 'data' => t('Group')), array('class' => array('views-hide-label'), 'data' => t('Remove')));
     $table = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $ungroupable_rows,
       '#attributes' => array(
@@ -317,7 +317,7 @@ function theme_views_ui_rearrange_filter_form(&$variables) {
 
   // Set up tabledrag so that the weights are changed when rows are dragged.
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#rows' => $rows,
     '#attributes' => array(
       'id' => 'views-rearrange-filters',

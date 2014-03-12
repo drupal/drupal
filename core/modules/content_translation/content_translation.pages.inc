@@ -136,7 +136,7 @@ function content_translation_overview(EntityInterface $entity) {
   $build['#entity'] = $entity;
 
   $build['content_translation_overview'] = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
   );

@@ -237,7 +237,7 @@ function field_ui_view_mode_delete(EntityViewModeInterface $view_mode) {
  */
 function theme_field_ui_table($variables) {
   $elements = $variables['elements'];
-  $table = array('#theme' => 'table');
+  $table = array('#type' => 'table');
 
   // Add table headers and attributes.
   foreach (array('#header', '#attributes') as $key) {

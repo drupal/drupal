@@ -283,7 +283,7 @@ function theme_update_report($variables) {
       ksort($rows[$type_name]);
       $output .= "\n<h3>" . $type_label . "</h3>\n";
       $table = array(
-        '#theme' => 'table',
+        '#type' => 'table',
         '#header' => $header,
         '#rows' => $rows[$type_name],
         '#attributes' => array(

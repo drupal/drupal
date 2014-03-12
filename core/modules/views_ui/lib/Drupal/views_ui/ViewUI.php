@@ -712,7 +712,7 @@ class ViewUI implements ViewStorageInterface {
     // Assemble the preview, the query info, and the query statistics in the
     // requested order.
     $table = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#prefix' => '<div class="views-query-info">',
       '#suffix' => '</div>',
     );

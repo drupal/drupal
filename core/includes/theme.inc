@@ -1416,6 +1416,24 @@ function drupal_pre_render_table(array $element) {
   // Take over $element['#id'] as HTML ID attribute, if not already set.
   element_set_attributes($element, array('id'));
 
+
+  // Add sticky headers, if applicable.
+  if (count($element['#header']) && $element['#sticky']) {
+    $element['#attached']['library'][] = 'core/drupal.tableheader';
+    // Add 'sticky-enabled' class to the table to identify it for JS.
+    // This is needed to target tables constructed by this function.
+    $element['#attributes']['class'][] = 'sticky-enabled';
+  }
+  // If the table has headers and it should react responsively to columns hidden
+  // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
+  // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
+  if (count($element['#header']) && $element['#responsive']) {
+    $element['#attached']['library'][] = 'core/drupal.tableresponsive';
+    // Add 'responsive-enabled' class to the table to identify it for JS.
+    // This is needed to target tables constructed by this function.
+    $element['#attributes']['class'][] = 'responsive-enabled';
+  }
+
   // If the custom #tabledrag is set and there is a HTML ID, add the table's
   // HTML ID to the options and attach the behavior.
   if (!empty($element['#tabledrag']) && isset($element['#attributes']['id'])) {
@@ -1522,23 +1540,6 @@ function theme_table($variables) {
   $sticky = $variables['sticky'];
   $responsive = $variables['responsive'];
   $empty = $variables['empty'];
-
-  // Add sticky headers, if applicable.
-  if (count($header) && $sticky) {
-    drupal_add_library('core/drupal.tableheader');
-    // Add 'sticky-enabled' class to the table to identify it for JS.
-    // This is needed to target tables constructed by this function.
-    $attributes['class'][] = 'sticky-enabled';
-  }
-  // If the table has headers and it should react responsively to columns hidden
-  // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
-  // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
-  if (count($header) && $responsive) {
-    drupal_add_library('core/drupal.tableresponsive');
-    // Add 'responsive-enabled' class to the table to identify it for JS.
-    // This is needed to target tables constructed by this function.
-    $attributes['class'][] = 'responsive-enabled';
-  }
 
   $output = '<table' . new Attribute($attributes) . ">\n";
 
@@ -1968,6 +1969,28 @@ function _template_preprocess_default_variables() {
 }
 
 /**
+ * #pre_render callback for the html element type.
+ *
+ * @param array $element
+ *   A structured array containing the html element type build properties.
+ *
+ * @see system_element_info()
+ */
+function drupal_pre_render_html(array $element) {
+  // Add favicon.
+  if (theme_get_setting('features.favicon')) {
+    $favicon = theme_get_setting('favicon.url');
+    $type = theme_get_setting('favicon.mimetype');
+    $element['#attached']['drupal_add_html_head_link'][][] = array(
+      'rel' => 'shortcut icon',
+      'href' => UrlHelper::stripDangerousProtocols($favicon),
+      'type' => $type,
+    );
+  }
+
+  return $element;
+}
+/**
  * Prepares variables for HTML document templates.
  *
  * Default template: html.html.twig.
@@ -2015,18 +2038,6 @@ function template_preprocess_html(&$variables) {
   $language_interface = \Drupal::service('language_manager')->getCurrentLanguage();
   $variables['html_attributes']['lang'] = $language_interface->id;
   $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
-
-  // Add favicon.
-  if (theme_get_setting('features.favicon')) {
-    $favicon = theme_get_setting('favicon.url');
-    $type = theme_get_setting('favicon.mimetype');
-    $build['#attached']['drupal_add_html_head_link'][][] = array(
-      'rel' => 'shortcut icon',
-      'href' => UrlHelper::stripDangerousProtocols($favicon),
-      'type' => $type,
-    );
-    drupal_render($build);
-  }
 
   $site_config = \Drupal::config('system.site');
   // Construct page title.
@@ -2087,8 +2098,6 @@ function template_preprocess_html(&$variables) {
   foreach ($elements as $name => $element) {
     drupal_add_html_head($element, $name);
   }
-
-  drupal_add_library('core/html5shiv', TRUE);
 
   $variables['page_top'][] = array('#markup' => $page->getBodyTop());
   $variables['page_bottom'][] = array('#markup' => $page->getBodyBottom());

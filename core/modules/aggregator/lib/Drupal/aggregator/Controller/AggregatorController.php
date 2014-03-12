@@ -174,7 +174,7 @@ class AggregatorController extends ControllerBase {
     }
     $build['feeds'] = array(
       '#prefix' => '<h3>' . $this->t('Feed overview') . '</h3>',
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => $this->urlGenerator()->generateFromPath('admin/config/services/aggregator/add/feed'))),

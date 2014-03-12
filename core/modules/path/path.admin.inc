@@ -89,7 +89,7 @@ function path_admin_overview($keys = NULL) {
   }
 
   $build['path_table'] = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
     '#empty' => t('No URL aliases available. <a href="@link">Add URL alias</a>.', array('@link' => url('admin/config/search/path/add'))),

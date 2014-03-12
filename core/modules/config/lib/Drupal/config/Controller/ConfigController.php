@@ -115,7 +115,7 @@ class ConfigController implements ContainerInjectionInterface {
     $build['#attached']['css'][] = drupal_get_path('module', 'system') . '/css/system.diff.css';
 
     $build['diff'] = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => array(
         array('data' => t('Old'), 'colspan' => '2'),
         array('data' => t('New'), 'colspan' => '2'),

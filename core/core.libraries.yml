@@ -280,7 +280,7 @@ html5shiv:
   remote: https://github.com/aFarkas/html5shiv
   version: 3.6.2
   js:
-    assets/vendor/html5shiv/html5.js: { weight: -22, browsers: { IE: 'lte IE 8', '!IE': false } }
+    assets/vendor/html5shiv/html5.js: { every_page: true, weight: -22, browsers: { IE: 'lte IE 8', '!IE': false } }
 
 jquery:
   remote: https://github.com/jquery/jquery

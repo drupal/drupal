@@ -298,7 +298,7 @@ function theme_locale_translate_edit_form_strings($variables) {
     );
   }
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
     '#empty' => t('No strings available.'),

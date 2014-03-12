@@ -898,7 +898,7 @@ function theme_node_search_admin($variables) {
     $rows[] = $row;
   }
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
   );

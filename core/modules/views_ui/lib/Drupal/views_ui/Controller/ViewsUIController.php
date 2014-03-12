@@ -98,7 +98,7 @@ class ViewsUIController extends ControllerBase {
     // Sort rows by field name.
     ksort($rows);
     $output = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => t('No fields have been used in views yet.'),
@@ -126,7 +126,7 @@ class ViewsUIController extends ControllerBase {
     // Sort rows by field name.
     ksort($rows);
     return array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => array(t('Type'), t('Name'), t('Provided by'), t('Used in')),
       '#rows' => $rows,
       '#empty' => t('There are no enabled views.'),

@@ -192,7 +192,7 @@ function theme_image_anchor($variables) {
   }
 
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => array(),
     '#rows' => $rows,
     '#attributes' => array('class' => array('image-anchor')),

@@ -1600,7 +1600,7 @@ function form_process_container($element, &$form_state) {
 function theme_tableselect($variables) {
   $element = $variables['element'];
   $table = array(
-    '#theme' => 'table',
+    '#type' => 'table',
   );
   $rows = array();
   $header = $element['#header'];

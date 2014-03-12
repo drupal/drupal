@@ -175,7 +175,7 @@ function node_revision_overview($node) {
   }
 
   $build['node_revisions_table'] = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#rows' => $rows,
     '#header' => $header,
     '#attached' => array (

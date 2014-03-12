@@ -124,7 +124,7 @@ class OpenDialogCommand implements CommandInterface {
    */
   public function render() {
     // Add the library for handling the dialog in the response.
-    drupal_add_library('core/drupal.dialog.ajax');
+    $this->drupalAttachLibrary('core/drupal.dialog.ajax');
 
     // For consistency ensure the modal option is set to TRUE or FALSE.
     $this->dialogOptions['modal'] = isset($this->dialogOptions['modal']) && $this->dialogOptions['modal'];
@@ -136,4 +136,19 @@ class OpenDialogCommand implements CommandInterface {
       'dialogOptions' => $this->dialogOptions,
     );
   }
+
+  /**
+   * Wraps drupal_render.
+   *
+   * @param string $name
+   *   The name of the library.
+   *
+   * @todo Remove once drupal_render is converted to autoloadable code.
+   * @see https://drupal.org/node/2171071
+   */
+  protected function drupalAttachLibrary($name) {
+    $attached['#attached']['library'][] = $name;
+    drupal_render($attached);
+  }
+
 }

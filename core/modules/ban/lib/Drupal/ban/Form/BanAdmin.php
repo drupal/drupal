@@ -90,7 +90,7 @@ class BanAdmin extends FormBase {
     );
 
     $form['ban_ip_banning_table'] = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No blocked IP addresses available.'),

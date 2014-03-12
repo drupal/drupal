@@ -172,7 +172,7 @@ class SimpletestResultsForm extends FormBase {
         $form['result']['summary']['#' . $assertion->status]++;
       }
       $form['result']['results'][$group]['table'] = array(
-        '#theme' => 'table',
+        '#type' => 'table',
         '#header' => $header,
         '#rows' => $rows,
       );

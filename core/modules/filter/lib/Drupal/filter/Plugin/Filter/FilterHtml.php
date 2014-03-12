@@ -152,7 +152,7 @@ class FilterHtml extends FilterBase {
       }
     }
     $table = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
     );
@@ -177,7 +177,7 @@ class FilterHtml extends FilterBase {
       );
     }
     $table = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
     );

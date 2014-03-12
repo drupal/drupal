@@ -136,7 +136,7 @@ class ConfigSync extends FormBase {
     $storage_comparer = new StorageComparer($this->sourceStorage, $this->targetStorage);
     if (empty($source_list) || !$storage_comparer->createChangelist()->hasChanges()) {
       $form['no_changes'] = array(
-        '#theme' => 'table',
+        '#type' => 'table',
         '#header' => array('Name', 'Operations'),
         '#rows' => array(),
         '#empty' => $this->t('There are no configuration changes.'),
@@ -182,7 +182,7 @@ class ConfigSync extends FormBase {
           break;
       }
       $form[$config_change_type]['list'] = array(
-        '#theme' => 'table',
+        '#type' => 'table',
         '#header' => array('Name', 'Operations'),
       );
 

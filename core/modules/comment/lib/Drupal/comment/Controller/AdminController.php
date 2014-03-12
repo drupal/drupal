@@ -174,7 +174,7 @@ class AdminController extends ControllerBase {
     }
 
     $build['overview'] = array(
-      '#theme' => 'table',
+      '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => $this->t('No comment forms available.'),

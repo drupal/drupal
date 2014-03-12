@@ -271,7 +271,7 @@ function theme_file_formatter_table($variables) {
   }
 
   $build = array(
-    '#theme' => 'table',
+    '#type' => 'table',
     '#header' => $header,
     '#rows' => $rows,
   );

@@ -2457,7 +2457,7 @@ function drupal_pre_render_scripts($elements) {
  *   FALSE if there were any missing library dependencies; TRUE if all library
  *   dependencies were met.
  *
- * @see drupal_add_library()
+ * @see _drupal_add_library()
  * @see _drupal_add_js()
  * @see _drupal_add_css()
  * @see drupal_render()
@@ -2473,7 +2473,7 @@ function drupal_process_attached($elements, $dependency_check = FALSE) {
   // Add the libraries first.
   $success = TRUE;
   foreach ($elements['#attached']['library'] as $library) {
-    if (drupal_add_library($library) === FALSE) {
+    if (_drupal_add_library($library) === FALSE) {
       $success = FALSE;
       // Exit if the dependency is missing.
       if ($dependency_check) {
@@ -2672,7 +2672,7 @@ function drupal_process_states(&$elements) {
  * @see drupal_get_library()
  * @see hook_library_info_alter()
  */
-function drupal_add_library($library_name, $every_page = NULL) {
+function _drupal_add_library($library_name, $every_page = NULL) {
   $added = &drupal_static(__FUNCTION__, array());
 
   list($extension, $name) = explode('/', $library_name, 2);
@@ -2731,7 +2731,7 @@ function drupal_add_library($library_name, $every_page = NULL) {
  *   or FALSE if it does not exist. If no $name was passed, an associative array
  *   of libraries registered by the module is returned (which may be empty).
  *
- * @see drupal_add_library()
+ * @see _drupal_add_library()
  * @see hook_library_info_alter()
  *
  * @todo The purpose of drupal_get_*() is completely different to other page
@@ -3894,6 +3894,12 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
     drupal_process_states($elements);
   }
 
+  // Add additional libraries, CSS, JavaScript and other custom
+  // attached data associated with this element.
+  if (!empty($elements['#attached'])) {
+    drupal_process_attached($elements);
+  }
+
   // Get the children of the element, sorted by weight.
   $children = Element::children($elements, TRUE);
 
@@ -3937,12 +3943,6 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   // #children to be a single string as #children.
   if (!$theme_is_implemented && isset($elements['#markup'])) {
     $elements['#children'] = $elements['#markup'] . $elements['#children'];
-  }
-
-  // Add additional libraries, CSS, JavaScript an other custom
-  // attached data associated with this element.
-  if (!empty($elements['#attached'])) {
-    drupal_process_attached($elements);
   }
 
   // Let the theme functions in #theme_wrappers add markup around the rendered
