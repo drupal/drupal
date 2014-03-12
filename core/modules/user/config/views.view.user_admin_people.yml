@@ -561,6 +561,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           text: Translate
+          optional: true
           plugin_id: content_translation_link
           provider: content_translation
         dropbutton:
