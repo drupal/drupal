@@ -553,6 +553,15 @@ class FormBuilder implements FormBuilderInterface {
       if (isset($form['#token']) && $form['#token'] === FALSE) {
         unset($form['#token']);
       }
+      // Form values for programmed form submissions typically do not include a
+      // value for the submit button. But without a triggering element, a
+      // potentially existing #limit_validation_errors property on the primary
+      // submit button is not taken account. Therefore, check whether there is
+      // exactly one submit button in the form, and if so, automatically use it
+      // as triggering_element.
+      if ($form_state['programmed'] && !isset($form_state['triggering_element']) && count($form_state['buttons']) == 1) {
+        $form_state['triggering_element'] = reset($form_state['buttons']);
+      }
       $this->validateForm($form_id, $form, $form_state);
 
       // drupal_html_id() maintains a cache of element IDs it has seen, so it
