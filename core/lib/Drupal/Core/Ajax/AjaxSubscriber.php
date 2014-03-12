@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Subscribes to the kernel request event to add the Ajax media type.
  *
- * @param \Symfont\Component\HttpKernel\Event\GetResponseEvent $event
+ * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
  *   The event to process.
  */
 class AjaxSubscriber implements EventSubscriberInterface {
