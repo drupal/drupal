@@ -116,9 +116,7 @@ function template_preprocess_admin_block_content(&$variables) {
 }
 
 /**
- * Prepares variables for administrative index page templates.
- *
- * Default template: admin-page.html.twig.
+ * Returns HTML for an administrative page.
  *
  * @param $variables
  *   An associative array containing:
@@ -129,24 +127,40 @@ function template_preprocess_admin_block_content(&$variables) {
  *
  * @ingroup themeable
  */
-function template_preprocess_admin_page(&$variables) {
-  $variables['system_compact_link'] = array(
-    '#theme' => 'system_compact_link',
-  );
-  $variables['containers'] = array();
+function theme_admin_page($variables) {
+  $blocks = $variables['blocks'];
+
   $stripe = 0;
-  foreach ($variables['blocks'] as $block) {
-    if (!empty($block['content']['#content'])) {
+  $container = array();
+
+  foreach ($blocks as $block) {
+    $admin_block = array(
+      '#theme' => 'admin_block',
+      '#block' => $block,
+    );
+    if ($block_output = drupal_render($admin_block)) {
       if (empty($block['position'])) {
-        // Perform automatic striping.
+        // perform automatic striping.
         $block['position'] = ++$stripe % 2 ? 'left' : 'right';
       }
-      $variables['containers'][$block['position']]['blocks'][] = array(
-        '#theme' => 'admin_block',
-        '#block' => $block,
-      );
+      if (!isset($container[$block['position']])) {
+        $container[$block['position']] = '';
+      }
+      $container[$block['position']] .= $block_output;
     }
   }
+
+  $system_compact_link = array('#theme' => 'system_compact_link');
+  $output = '<div class="admin clearfix">';
+  $output .= drupal_render($system_compact_link);
+
+  foreach ($container as $id => $data) {
+    $output .= '<div class="' . $id . ' clearfix">';
+    $output .= $data;
+    $output .= '</div>';
+  }
+  $output .= '</div>';
+  return $output;
 }
 
 /**
