@@ -928,17 +928,17 @@ function theme_get_setting($setting_name, $theme = NULL) {
       }
       foreach ($theme_keys as $theme_key) {
         if (!empty($themes[$theme_key]->info['settings'])) {
-          $cache[$theme]->mergeData($themes[$theme_key]->info['settings']);
+          $cache[$theme]->merge($themes[$theme_key]->info['settings']);
         }
       }
     }
 
     // Get the global settings from configuration.
-    $cache[$theme]->mergeData(\Drupal::config('system.theme.global')->get());
+    $cache[$theme]->merge(\Drupal::config('system.theme.global')->get());
 
     if ($theme) {
       // Get the saved theme-specific settings from the configuration system.
-      $cache[$theme]->mergeData(\Drupal::config($theme . '.settings')->get());
+      $cache[$theme]->merge(\Drupal::config($theme . '.settings')->get());
 
       // If the theme does not support a particular feature, override the global
       // setting and set the value to NULL.
