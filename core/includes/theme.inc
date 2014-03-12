@@ -2047,12 +2047,6 @@ function template_preprocess_html(&$variables) {
       'name' => String::checkPlain($site_config->get('name')),
     );
   }
-  elseif (drupal_get_title()) {
-    $head_title = array(
-      'title' => strip_tags(drupal_get_title()),
-      'name' => String::checkPlain($site_config->get('name')),
-    );
-  }
   // @todo Remove once views is not bypassing the view subscriber anymore.
   //   @see http://drupal.org/node/2068471
   elseif (drupal_is_front_page()) {
@@ -2133,6 +2127,7 @@ function template_preprocess_page(&$variables) {
 
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_messages'] = $variables['page']['#show_messages'];
+  $variables['title'] = $variables['page']['#title'];
 
   foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
     if (!isset($variables['page'][$region_key])) {
@@ -2161,13 +2156,6 @@ function template_preprocess_page(&$variables) {
   $variables['site_name']         = (theme_get_setting('features.name') ? String::checkPlain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
   $variables['tabs']              = menu_local_tabs();
-
-  if (isset($variables['page']['#title'])) {
-    $variables['title'] = $variables['page']['#title'];
-  }
-  else {
-    $variables['title'] = new RenderWrapper('drupal_get_title');
-  }
 
   // Pass the main menu and secondary menu to the template as render arrays.
   if (!empty($variables['main_menu'])) {
@@ -2353,12 +2341,6 @@ function template_preprocess_maintenance_page(&$variables) {
       'name' => String::checkPlain($site_config->get('name')),
     );
   }
-  elseif (drupal_get_title()) {
-    $head_title = array(
-      'title' => strip_tags(drupal_get_title()),
-      'name' => String::checkPlain($site_config->get('name')),
-    );
-  }
   else {
     $head_title = array('name' => String::checkPlain($site_name));
     if ($site_slogan) {
@@ -2418,9 +2400,6 @@ function template_preprocess_maintenance_page(&$variables) {
   // Allow the page to define a title.
   if (isset($variables['page']['#title'])) {
     $variables['title'] = $variables['page']['#title'];
-  }
-  if (!isset($variables['title'])) {
-    $variables['title'] = drupal_get_title();
   }
 }
 

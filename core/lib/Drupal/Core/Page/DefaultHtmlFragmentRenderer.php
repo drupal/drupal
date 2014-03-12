@@ -74,14 +74,6 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
    *   The modified page object.
    */
   public function preparePage(HtmlPage $page, &$page_array) {
-    // @todo Remove this one drupal_get_title() has been eliminated.
-    if (!$page->hasTitle()) {
-      $title = drupal_get_title();
-      // drupal_set_title() already ensured security, so not letting the
-      // title pass through would cause double escaping.
-      $page->setTitle($title, PASS_THROUGH);
-    }
-
     $page_array['#page'] = $page;
 
     // HTML element attributes.

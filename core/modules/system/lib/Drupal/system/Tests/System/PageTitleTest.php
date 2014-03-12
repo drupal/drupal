@@ -28,7 +28,7 @@ class PageTitleTest extends WebTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Page titles',
-      'description' => 'Tests correct handling or conversion by drupal_set_title() and drupal_get_title() and checks the correct escaping of site name and slogan.',
+      'description' => 'Tests correct escaping of page title, site name and slogan.',
       'group' => 'System'
     );
   }
@@ -43,32 +43,13 @@ class PageTitleTest extends WebTestBase {
 
     $this->content_user = $this->drupalCreateUser(array('create page content', 'access content', 'administer themes', 'administer site configuration'));
     $this->drupalLogin($this->content_user);
-    $this->saved_title = drupal_get_title();
   }
 
   /**
-   * Reset page title.
-   */
-  function tearDown() {
-    // Restore the page title.
-    drupal_set_title($this->saved_title, PASS_THROUGH);
-
-    parent::tearDown();
-  }
-
-  /**
-   * Tests the handling of HTML by drupal_set_title() and drupal_get_title()
+   * Tests the handling of HTML in node titles.
    */
   function testTitleTags() {
     $title = "string with <em>HTML</em>";
-    // drupal_set_title's $filter is Title::CHECK_PLAIN by default, so the title should be
-    // returned with check_plain().
-    drupal_set_title($title, Title::CHECK_PLAIN);
-    $this->assertTrue(strpos(drupal_get_title(), '<em>') === FALSE, 'Tags in title converted to entities when $output is Title::CHECK_PLAIN.');
-    // drupal_set_title's $filter is passed as PASS_THROUGH, so the title should be
-    // returned with HTML.
-    drupal_set_title($title, PASS_THROUGH);
-    $this->assertTrue(strpos(drupal_get_title(), '<em>') !== FALSE, 'Tags in title are not converted to entities when $output is PASS_THROUGH.');
     // Generate node content.
     $edit = array(
       'title[0][value]' => '!SimpleTest! ' . $title . $this->randomName(20),
@@ -82,6 +63,7 @@ class PageTitleTest extends WebTestBase {
     $this->drupalGet("node/" . $node->id());
     $this->assertText(check_plain($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
   }
+
   /**
    * Test if the title of the site is XSS proof.
    */
@@ -113,9 +95,10 @@ class PageTitleTest extends WebTestBase {
     $this->drupalGet('');
 
     // Test the title.
-    $this->assertNoRaw($title, 'Check for the unfiltered version of the title.');
-    // Adding </title> so we do not test the escaped version from drupal_set_title().
-    $this->assertRaw($title_filtered . '</title>', 'Check for the filtered version of the title.');
+    $this->assertNoRaw($title, 'Check for the lack of the unfiltered version of the title.');
+    // Add </title> to make sure we're checking the title tag, rather than the
+    // first 'heading' on the page.
+    $this->assertRaw($title_filtered . '</title>', 'Check for the filtered version of the title in a <title> tag.');
 
     // Test the slogan.
     $this->assertNoRaw($slogan, 'Check for the unfiltered version of the slogan.');

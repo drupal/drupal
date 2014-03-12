@@ -292,6 +292,7 @@ function system_element_info() {
   $types['page'] = array(
     '#show_messages' => TRUE,
     '#theme' => 'page',
+    '#title' => '',
   );
   // By default, we don't want Ajax commands being rendered in the context of an
   // HTML page, so we don't provide defaults for #theme or #theme_wrappers.

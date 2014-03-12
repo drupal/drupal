@@ -93,14 +93,7 @@ class DialogController {
     }
 
     $content = drupal_render($page_content);
-
-    // @todo Remove use of drupal_get_title() when
-    //  http://drupal.org/node/1871596 is in.
-    if (!$title = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT))) {
-      // @todo Remove use of drupal_get_title() when
-      //  http://drupal.org/node/1871596 is in.
-      $title = drupal_get_title();
-    }
+    $title = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
     $response = new AjaxResponse();
     // Fetch any modal options passed in from data-dialog-options.
     if (!($options = $request->request->get('dialogOptions'))) {

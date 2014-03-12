@@ -184,13 +184,6 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
- * Flag for drupal_set_title(); text has already been sanitized.
- *
- * @todo Move to the Title class.
- */
-const PASS_THROUGH = -1;
-
-/**
  * Regular expression to match PHP function names.
  *
  * @see http://php.net/manual/language.functions.php
@@ -1328,46 +1321,6 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
     }
   }
   return array();
-}
-
-/**
- * Gets the title of the current page.
- *
- * The title is displayed on the page and in the title bar.
- *
- * @return
- *   The current page's title.
- */
-function drupal_get_title() {
-  return drupal_set_title() ?: '';
-}
-
-/**
- * Sets the title of the current page.
- *
- * The title is displayed on the page and in the title bar.
- *
- * @param $title
- *   Optional string value to assign to the page title; or if set to NULL
- *   (default), leaves the current title unchanged.
- * @param $output
- *   Optional flag - normally should be left as Title::CHECK_PLAIN. Only set to
- *   PASS_THROUGH if you have already removed any possibly dangerous code
- *   from $title using a function like
- *   \Drupal\Component\Utility\String::checkPlain() or filter_xss(). With this
- *   flag the string will be passed through unchanged.
- *
- * @return
- *   The updated title of the current page.
- */
-function drupal_set_title($title = NULL, $output = Title::CHECK_PLAIN) {
-  $stored_title = &drupal_static(__FUNCTION__);
-
-  if (isset($title)) {
-    $stored_title = ($output == PASS_THROUGH) ? $title : String::checkPlain($title);
-  }
-
-  return $stored_title;
 }
 
 /**

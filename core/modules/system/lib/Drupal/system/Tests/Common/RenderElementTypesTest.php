@@ -161,21 +161,6 @@ class RenderElementTypesTest extends DrupalUnitTestBase {
     $html_attributes['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
     $site_config = \Drupal::config('system.site');
-    $site_name = $site_config->get('name');
-    $site_slogan = $site_config->get('slogan');
-    if ($title = drupal_get_title()) {
-      $head_title = array(
-        'title' => strip_tags($title),
-        'name' => String::checkPlain($site_config->get('name')),
-      );
-    }
-    else {
-      $head_title = array('name' => String::checkPlain($site_name));
-      if ($site_slogan) {
-        $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_slogan));
-      }
-    }
-    $head_title = implode(' | ', $head_title);
 
     // Add favicon.
     $favicon = theme_get_setting('favicon.url');
@@ -229,14 +214,14 @@ EOT;
     $placeholders = array(
       '!html_attributes' => $html_attributes->__toString(),
       '!head' => drupal_get_html_head(),
-      '!head_title' => $head_title,
+      '!head_title' => $site_config->get('name'),
       '!styles' => drupal_get_css($css),
       '!scripts' => drupal_get_js(),
       '!attributes.class' => 'maintenance-page in-maintenance no-sidebars',
       '!front_page' => url(),
       '!logo' => theme_get_setting('logo.url'),
       '!site_name' => $site_config->get('name'),
-      '!title' => $title ? '<h1>' . $title . '</h1>' : '',
+      '!title' => '',
       '!content' => '<span>foo</span>',
     );
 
@@ -244,6 +229,7 @@ EOT;
     drupal_static_reset();
 
     // Test basic string for maintenance page content.
+    // No page title is set, so it should default to the site name.
     $elements = array(
       array(
         'name' => "#theme 'maintenance_page' with content of <span>foo</span>",
@@ -262,6 +248,11 @@ EOT;
     drupal_static_reset();
     $elements[0]['name'] = "#theme 'maintenance_page' with content as a render array";
     $elements[0]['value']['#content'] = array('#markup' => '<span>foo</span>');
+    // Testing with a page title, which should be combined with the site name.
+    $title = t('A non-empty title');
+    $elements[0]['value']['#page']['#title'] = $title;
+    $elements[0]['placeholders']['!title'] = '<h1>' . $title . '</h1>';
+    $elements[0]['placeholders']['!head_title'] = strip_tags($title) . ' | ' . String::checkPlain($site_config->get('name'));
     $this->assertElements($elements);
   }
 

@@ -80,7 +80,7 @@ class HtmlControllerBase {
       $fragment->setTitle($page_content['#title'], Title::FILTER_XSS_ADMIN);
     }
     else if ($route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
-      $fragment->setTitle($this->titleResolver->getTitle($request, $route), PASS_THROUGH);
+      $fragment->setTitle($this->titleResolver->getTitle($request, $route), Title::PASS_THROUGH);
     }
 
     return $fragment;

@@ -103,8 +103,8 @@ class HtmlFragment implements CacheableInterface {
    *   Value to assign to the page title.
    * @param int $output
    *   (optional) normally should be left as Title::CHECK_PLAIN. Only set to
-   *   PASS_THROUGH if you have already removed any possibly dangerous code
-   *   from $title using a function like
+   *   Title::PASS_THROUGH if you have already removed any possibly dangerous
+   *   code from $title using a function like
    *   \Drupal\Component\Utility\String::checkPlain() or
    *   \Drupal\Component\Utility\Xss::filterAdmin(). With this flag the string
    *   will be passed through unchanged.

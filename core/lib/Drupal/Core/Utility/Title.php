@@ -22,4 +22,9 @@ class Title {
    */
   const FILTER_XSS_ADMIN = 1;
 
+  /**
+   * For controller titles, text has already been sanitized.
+   */
+  const PASS_THROUGH = -1;
+
 }
