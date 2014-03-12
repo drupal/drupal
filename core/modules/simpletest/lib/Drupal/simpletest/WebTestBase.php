@@ -237,7 +237,6 @@ abstract class WebTestBase extends TestBase {
    *     @endcode
    *   - title: Random string.
    *   - comment: CommentItemInterface::OPEN.
-   *   - changed: REQUEST_TIME.
    *   - promote: NODE_NOT_PROMOTED.
    *   - log: Empty string.
    *   - status: NODE_PUBLISHED.
@@ -256,7 +255,6 @@ abstract class WebTestBase extends TestBase {
     $settings += array(
       'body'      => array(array()),
       'title'     => $this->randomName(8),
-      'changed'   => REQUEST_TIME,
       'promote'   => NODE_NOT_PROMOTED,
       'revision'  => 1,
       'log'       => '',
