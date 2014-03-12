@@ -137,12 +137,10 @@ class SystemController extends ControllerBase {
           );
 
           if (!empty($block['content']['#content'])) {
-            $block['show'] = TRUE;
+            // Prepare for sorting as in function _menu_tree_check_access().
+            // The weight is offset so it is always positive, with a uniform 5-digits.
+            $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
           }
-
-          // Prepare for sorting as in function _menu_tree_check_access().
-          // The weight is offset so it is always positive, with a uniform 5-digits.
-          $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
         }
       }
     }

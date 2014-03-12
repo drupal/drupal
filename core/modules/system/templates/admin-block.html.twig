@@ -1,0 +1,26 @@
+{#
+/**
+ * @file
+ * Default theme implementation for an administrative block.
+ *
+ * Available variables:
+ * - block: An array of information about the block, including:
+ *   - show: A flag indicating if the block should be displayed.
+ *   - title: The block title.
+ *   - content: (optional) The content of the block.
+ *   - description: (optional) A description of the block.
+ *     (Description should only be output if content is not available).
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="admin-panel">
+  {% if block.title %}
+    <h3>{{ block.title }}</h3>
+  {% endif %}
+  {% if block.content %}
+    <div class="body">{{ block.content }}</div>
+  {% elseif block.description %}
+    <div class="description">{{ block.description }}</div>
+  {% endif %}
+</div>

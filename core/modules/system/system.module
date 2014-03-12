@@ -200,6 +200,7 @@ function system_theme() {
     'admin_block' => array(
       'variables' => array('block' => NULL),
       'file' => 'system.admin.inc',
+      'template' => 'admin-block',
     ),
     'admin_block_content' => array(
       'variables' => array('content' => NULL),
