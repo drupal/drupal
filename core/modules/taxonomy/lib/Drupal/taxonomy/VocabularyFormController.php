@@ -20,7 +20,12 @@ class VocabularyFormController extends EntityFormController {
    */
   public function form(array $form, array &$form_state) {
     $vocabulary = $this->entity;
-    $form['#title'] = $this->t('Edit vocabulary');
+    if ($vocabulary->isNew()) {
+      $form['#title'] = $this->t('Add vocabulary');
+    }
+    else {
+      $form['#title'] = $this->t('Edit vocabulary');
+    }
 
     $form['name'] = array(
       '#type' => 'textfield',
