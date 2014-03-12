@@ -1690,7 +1690,7 @@ function install_get_localization_release($version = \Drupal::VERSION) {
     }
   }
 
-  // All releases may a fallback to the previous major release (e.g., 8.1 falls
+  // All releases may fall back to the previous major release (e.g., 8.1 falls
   // back to 7.0, 8.x-dev falls back to 7.0). This will probably only be used
   // for early dev releases or languages with an inactive translation team.
   $alternatives[] = $info['major'] - 1 . '.0';
