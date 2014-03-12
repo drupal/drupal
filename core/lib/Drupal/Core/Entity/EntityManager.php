@@ -370,7 +370,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
       }
       else {
         // Rebuild the definitions and put it into the cache.
-        $bundle_field_definitions = $this->buildBuildFieldDefinitions($entity_type_id, $bundle, $base_field_definitions);
+        $bundle_field_definitions = $this->buildBundleFieldDefinitions($entity_type_id, $bundle, $base_field_definitions);
         $this->cache->set($cid, $bundle_field_definitions, Cache::PERMANENT, array('entity_types' => TRUE, 'entity_field_info' => TRUE));
       }
       // Field definitions consist of the bundle specific overrides and the
@@ -397,7 +397,7 @@ class EntityManager extends PluginManagerBase implements EntityManagerInterface 
    *   An array of bundle field definitions, keyed by field name. Does
    *   not include base fields.
    */
-  protected function buildBuildFieldDefinitions($entity_type_id, $bundle, array $base_field_definitions) {
+  protected function buildBundleFieldDefinitions($entity_type_id, $bundle, array $base_field_definitions) {
     $entity_type = $this->getDefinition($entity_type_id);
     $class = $entity_type->getClass();
 
