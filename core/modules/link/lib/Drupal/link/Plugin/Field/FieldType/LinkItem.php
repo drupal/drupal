@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\email\Plugin\Field\FieldType\LinkItem.
+ * Contains \Drupal\link\Plugin\Field\FieldType\LinkItem.
  */
 
 namespace Drupal\link\Plugin\Field\FieldType;
