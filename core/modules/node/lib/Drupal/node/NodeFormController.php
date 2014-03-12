@@ -114,7 +114,7 @@ class NodeFormController extends ContentEntityFormController {
         'class' => array('node-form-revision-information'),
       ),
       '#attached' => array(
-        'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+        'library' => array('node/drupal.node'),
       ),
       '#weight' => 20,
       '#optional' => TRUE,
@@ -152,8 +152,8 @@ class NodeFormController extends ContentEntityFormController {
         'class' => array('node-form-author'),
       ),
       '#attached' => array(
+        'library' => array('node/drupal.node'),
         'js' => array(
-          drupal_get_path('module', 'node') . '/node.js',
           array(
             'type' => 'setting',
             'data' => array('anonymous' => $user_config->get('anonymous')),
@@ -194,7 +194,7 @@ class NodeFormController extends ContentEntityFormController {
         'class' => array('node-form-options'),
       ),
       '#attached' => array(
-        'js' => array(drupal_get_path('module', 'node') . '/node.js'),
+        'library' => array('node/drupal.node'),
       ),
       '#weight' => 95,
       '#optional' => TRUE,
