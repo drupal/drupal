@@ -318,6 +318,19 @@ function entity_test_entity_test_insert($entity) {
 }
 
 /**
+ * Entity label callback.
+ *
+ * @param $entity
+ *   The entity object.
+ *
+ * @return
+ *   The label of the entity prefixed with "label callback".
+ */
+function entity_test_label_callback($entity) {
+  return 'label callback ' . $entity->name->value;
+}
+
+/**
  * Implements hook_entity_field_access().
  *
  * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()

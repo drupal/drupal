@@ -8,7 +8,6 @@
 namespace Drupal\search\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
@@ -214,7 +213,7 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
+  public static function sort($a, $b) {
     /** @var $a \Drupal\search\SearchPageInterface */
     /** @var $b \Drupal\search\SearchPageInterface */
     $a_status = (int) $a->status();

@@ -8,7 +8,6 @@
 namespace Drupal\entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
  * Base class for config entity types that hold settings for form and view modes.
@@ -61,9 +60,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
   /**
    * {@inheritdoc}
    */
-  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
-    /** @var \Drupal\entity\EntityDisplayModeInterface $a */
-    /** @var \Drupal\entity\EntityDisplayModeInterface $b */
+  public static function sort($a, $b) {
     // Sort by the type of entity the view mode is used for.
     $a_type = $a->getTargetType();
     $b_type = $b->getTargetType();

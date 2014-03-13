@@ -7,14 +7,13 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\DependencyInjection\DependencySerialization;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines a base entity class.
  */
-abstract class Entity extends DependencySerialization implements EntityInterface {
+abstract class Entity implements EntityInterface {
 
   /**
    * The language code of the entity's default language.
@@ -22,20 +21,6 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * @var string
    */
   public $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
-
-  /**
-   * The UUID generator.
-   *
-   * @var \Drupal\Component\Uuid\UuidInterface
-   */
-  protected $uuidGenerator;
 
   /**
    * The entity type.
@@ -76,39 +61,6 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   }
 
   /**
-   * Wraps language_load().
-   */
-  protected function languageLoad($langcode) {
-    return language_load($langcode);
-  }
-
-  /**
-   * Returns the entity manager.
-   *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected function entityManager() {
-    if (!$this->entityManager) {
-      $this->entityManager = \Drupal::entityManager();
-    }
-
-    return $this->entityManager;
-  }
-
-  /**
-   * Returns the UUID generator.
-   *
-   * @return \Drupal\Component\Uuid\UuidInterface
-   */
-  protected function uuidGenerator() {
-    if (!$this->uuidGenerator) {
-      $this->uuidGenerator = \Drupal::service('uuid');
-    }
-
-    return $this->uuidGenerator;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -134,8 +86,6 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    */
   public function enforceIsNew($value = TRUE) {
     $this->enforceIsNew = $value;
-
-    return $this;
   }
 
   /**
@@ -158,8 +108,9 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   public function label() {
     $label = NULL;
     $entity_type = $this->getEntityType();
-    if (($label_callback = $entity_type->getLabelCallback()) && is_callable($label_callback)) {
-      $label = call_user_func($label_callback, $this);
+    // @todo Convert to is_callable() and call_user_func().
+    if (($label_callback = $entity_type->getLabelCallback()) && function_exists($label_callback)) {
+      $label = $label_callback($this);
     }
     elseif (($label_key = $entity_type->getKey('label')) && isset($this->{$label_key})) {
       $label = $this->{$label_key};
@@ -187,7 +138,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
       $bundle = $this->bundle();
       // A bundle-specific callback takes precedence over the generic one for
       // the entity type.
-      $bundles = $this->entityManager()->getBundleInfo($this->getEntityTypeId());
+      $bundles = \Drupal::entityManager()->getBundleInfo($this->getEntityTypeId());
       if (isset($bundles[$bundle]['uri_callback'])) {
         $uri_callback = $bundles[$bundle]['uri_callback'];
       }
@@ -197,8 +148,9 @@ abstract class Entity extends DependencySerialization implements EntityInterface
 
       // Invoke the callback to get the URI. If there is no callback, use the
       // default URI format.
-      if (isset($uri_callback) && is_callable($uri_callback)) {
-        $uri = call_user_func($uri_callback, $this);
+      // @todo Convert to is_callable() and call_user_func().
+      if (isset($uri_callback) && function_exists($uri_callback)) {
+        $uri = $uri_callback($this);
       }
       else {
         return array();
@@ -295,13 +247,13 @@ abstract class Entity extends DependencySerialization implements EntityInterface
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL) {
+  public function access($operation = 'view', AccountInterface $account = NULL) {
     if ($operation == 'create') {
-      return $this->entityManager()
+      return \Drupal::entityManager()
         ->getAccessController($this->entityTypeId)
         ->createAccess($this->bundle(), $account);
     }
-    return $this->entityManager()
+    return \Drupal::entityManager()
       ->getAccessController($this->entityTypeId)
       ->access($this, $operation, Language::LANGCODE_DEFAULT, $account);
   }
@@ -310,7 +262,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * {@inheritdoc}
    */
   public function language() {
-    $language = $this->languageLoad($this->langcode);
+    $language = language_load($this->langcode);
     if (!$language) {
       // Make sure we return a proper language object.
       $language = new Language(array('id' => Language::LANGCODE_NOT_SPECIFIED));
@@ -322,7 +274,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * {@inheritdoc}
    */
   public function save() {
-    return $this->entityManager()->getStorageController($this->entityTypeId)->save($this);
+    return \Drupal::entityManager()->getStorageController($this->entityTypeId)->save($this);
   }
 
   /**
@@ -330,7 +282,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    */
   public function delete() {
     if (!$this->isNew()) {
-      $this->entityManager()->getStorageController($this->entityTypeId)->delete(array($this->id() => $this));
+      \Drupal::entityManager()->getStorageController($this->entityTypeId)->delete(array($this->id() => $this));
     }
   }
 
@@ -344,7 +296,8 @@ abstract class Entity extends DependencySerialization implements EntityInterface
 
     // Check if the entity type supports UUIDs and generate a new one if so.
     if ($entity_type->hasKey('uuid')) {
-      $duplicate->{$entity_type->getKey('uuid')} = $this->uuidGenerator()->generate();
+      // @todo Inject the UUID service into the Entity class once possible.
+      $duplicate->{$entity_type->getKey('uuid')} = \Drupal::service('uuid')->generate();
     }
     return $duplicate;
   }
@@ -353,7 +306,7 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * {@inheritdoc}
    */
   public function getEntityType() {
-    return $this->entityManager()->getDefinition($this->getEntityTypeId());
+    return \Drupal::entityManager()->getDefinition($this->getEntityTypeId());
   }
 
   /**
@@ -391,7 +344,6 @@ abstract class Entity extends DependencySerialization implements EntityInterface
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
-    /** @var self[] $entities */
     foreach ($entities as $entity) {
       $entity->onSaveOrDelete();
     }
@@ -423,8 +375,8 @@ abstract class Entity extends DependencySerialization implements EntityInterface
     }
 
     foreach ($referenced_entities as $entity_type => $entities) {
-      if ($this->entityManager()->hasController($entity_type, 'view_builder')) {
-        $this->entityManager()->getViewBuilder($entity_type)->resetCache($entities);
+      if (\Drupal::entityManager()->hasController($entity_type, 'view_builder')) {
+        \Drupal::entityManager()->getViewBuilder($entity_type)->resetCache($entities);
       }
     }
   }
@@ -440,6 +392,16 @@ abstract class Entity extends DependencySerialization implements EntityInterface
       $this->urlGenerator = \Drupal::urlGenerator();
     }
     return $this->urlGenerator;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep() {
+    // Don't serialize the url generator.
+    $this->urlGenerator = NULL;
+
+    return array_keys(get_object_vars($this));
   }
 
 }

@@ -199,7 +199,7 @@ function _block_get_renderable_region($list = array()) {
     $settings = $block->get('settings');
     if ($not_cacheable || in_array($settings['cache'], array(DRUPAL_NO_CACHE, DRUPAL_CACHE_CUSTOM))) {
       // Non-cached blocks get built immediately.
-      if ($block->access('view')) {
+      if ($block->access()) {
         $build[$key] = entity_view($block, 'block');
       }
     }
@@ -378,7 +378,7 @@ function block_load($entity_id) {
 function _block_get_renderable_block($element) {
   $block = $element['#block'];
   // Don't bother to build blocks that aren't accessible.
-  if ($element['#access'] = $block->access('view')) {
+  if ($element['#access'] = $block->access()) {
     $element += entity_view($block, 'block');
   }
   return $element;

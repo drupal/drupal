@@ -7,10 +7,9 @@
 
 namespace Drupal\Core\Config\Entity;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Entity;
-use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Config\ConfigDuplicateUUIDException;
 
 /**
  * Defines a base configuration entity class.
@@ -126,8 +125,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     }
 
     $this->{$property_name} = $value;
-
-    return $this;
   }
 
   /**
@@ -164,8 +161,6 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    */
   public function setSyncing($syncing) {
     $this->isSyncing = $syncing;
-
-    return $this;
   }
 
   /**
@@ -189,7 +184,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * Helper callback for uasort() to sort configuration entities by weight and label.
    */
-  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
+  public static function sort($a, $b) {
     $a_weight = isset($a->weight) ? $a->weight : 0;
     $b_weight = isset($b->weight) ? $b->weight : 0;
     if ($a_weight == $b_weight) {
@@ -236,14 +231,14 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
       ->execute();
     $matched_entity = reset($matching_entities);
     if (!empty($matched_entity) && ($matched_entity != $this->id())) {
-      throw new ConfigDuplicateUUIDException(String::format('Attempt to save a configuration entity %id with UUID %uuid when this UUID is already used for %matched', array('%id' => $this->id(), '%uuid' => $this->uuid(), '%matched' => $matched_entity)));
+      throw new ConfigDuplicateUUIDException(format_string('Attempt to save a configuration entity %id with UUID %uuid when this UUID is already used for %matched', array('%id' => $this->id(), '%uuid' => $this->uuid(), '%matched' => $matched_entity)));
     }
 
     if (!$this->isNew()) {
       $original = $storage_controller->loadUnchanged($this->id());
       // Ensure that the UUID cannot be changed for an existing entity.
       if ($original && ($original->uuid() != $this->uuid())) {
-        throw new ConfigDuplicateUUIDException(String::format('Attempt to save a configuration entity %id with UUID %uuid when this entity already exists with UUID %original_uuid', array('%id' => $this->id(), '%uuid' => $this->uuid(), '%original_uuid' => $original->uuid())));
+        throw new ConfigDuplicateUUIDException(format_string('Attempt to save a configuration entity %id with UUID %uuid when this entity already exists with UUID %original_uuid', array('%id' => $this->id(), '%uuid' => $this->uuid(), '%original_uuid' => $original->uuid())));
       }
     }
   }
