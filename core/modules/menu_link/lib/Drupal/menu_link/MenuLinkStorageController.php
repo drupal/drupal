@@ -166,7 +166,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
     // If plid == 0, there is nothing to update.
     if ($entity->plid) {
       // Check if at least one visible child exists in the table.
-      $query = \Drupal::entityQuery($this->entityTypeId);
+      $query = $this->getQuery();
       $query
         ->condition('menu_name', $entity->menu_name)
         ->condition('hidden', 0)
@@ -259,7 +259,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
    * {@inheritdoc}
    */
   public function countMenuLinks($menu_name) {
-    $query = \Drupal::entityQuery($this->entityTypeId);
+    $query = $this->getQuery();
     $query
       ->condition('menu_name', $menu_name)
       ->count();
@@ -275,7 +275,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       $parent = FALSE;
       $parent_path = substr($parent_path, 0, strrpos($parent_path, '/'));
 
-      $query = \Drupal::entityQuery($this->entityTypeId);
+      $query = $this->getQuery();
       $query
         ->condition('mlid', $entity->id(), '<>')
         ->condition('module', 'system')

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * A base entity storage controller class.
@@ -194,10 +195,17 @@ abstract class EntityStorageControllerBase extends EntityControllerBase implemen
    */
   public function loadByProperties(array $values = array()) {
     // Build a query to fetch the entity IDs.
-    $entity_query = \Drupal::entityQuery($this->entityTypeId);
+    $entity_query = $this->getQuery();
     $this->buildPropertyQuery($entity_query, $values);
     $result = $entity_query->execute();
     return $result ? $this->loadMultiple($result) : array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQuery($conjunction = 'AND') {
+    return \Drupal::entityQuery($this->getEntityTypeId(), $conjunction);
   }
 
 }

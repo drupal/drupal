@@ -155,6 +155,21 @@ interface EntityStorageControllerInterface {
   public function getQueryServicename();
 
   /**
+   * Returns an entity query instance.
+   *
+   * @param string $conjunction
+   *   (optional) The logical operator for the query, either:
+   *   - AND: all of the conditions on the query need to match.
+   *   - OR: at least one of the conditions on the query need to match.
+   *
+   * @return \Drupal\Core\Entity\Query\QueryInterface
+   *   The query instance.
+   *
+   * @see \Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServicename()
+   */
+  public function getQuery($conjunction = 'AND');
+
+  /**
    * Returns the entity type ID.
    *
    * @return string

@@ -31,20 +31,6 @@ interface ConfigStorageControllerInterface extends EntityStorageControllerInterf
   public function importCreate($name, Config $new_config, Config $old_config);
 
   /**
-   * Returns an entity query instance.
-   *
-   * @param string $conjunction
-   *   - AND: all of the conditions on the query need to match.
-   *   - OR: at least one of the conditions on the query need to match.
-   *
-   * @return \Drupal\Core\Entity\Query\QueryInterface
-   *   The query instance.
-   *
-   * @see \Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServicename()
-   */
-  public function getQuery($conjunction = 'AND');
-
-  /**
    * Updates configuration upon synchronizing configuration changes.
    *
    * This callback is invoked when configuration is synchronized between storages

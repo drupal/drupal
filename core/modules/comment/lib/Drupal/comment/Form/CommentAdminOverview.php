@@ -13,7 +13,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,13 +37,6 @@ class CommentAdminOverview extends FormBase {
   protected $commentStorage;
 
   /**
-   * The entity query service.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQuery;
-
-  /**
    * Date service object.
    *
    * @var \Drupal\Core\Datetime\Date
@@ -65,17 +57,14 @@ class CommentAdminOverview extends FormBase {
    *   The entity manager service.
    * @param \Drupal\comment\CommentStorageControllerInterface $comment_storage
    *   The comment storage.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query
-   *   The entity query service.
    * @param \Drupal\Core\Datetime\Date $date
    *   The date service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(EntityManager $entity_manager, CommentStorageControllerInterface $comment_storage, QueryFactory $entity_query, Date $date, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityManager $entity_manager, CommentStorageControllerInterface $comment_storage, Date $date, ModuleHandlerInterface $module_handler) {
     $this->entityManager = $entity_manager;
     $this->commentStorage = $comment_storage;
-    $this->entityQuery = $entity_query;
     $this->date = $date;
     $this->moduleHandler = $module_handler;
   }
@@ -87,7 +76,6 @@ class CommentAdminOverview extends FormBase {
     return new static(
       $container->get('entity.manager'),
       $container->get('entity.manager')->getStorageController('comment'),
-      $container->get('entity.query'),
       $container->get('date'),
       $container->get('module_handler')
     );
@@ -167,7 +155,7 @@ class CommentAdminOverview extends FormBase {
       ),
       'operations' => $this->t('Operations'),
     );
-    $cids = $this->entityQuery->get('comment')
+    $cids = $this->commentStorage->getQuery()
      ->condition('status', $status)
      ->tableSort($header)
      ->pager(50)

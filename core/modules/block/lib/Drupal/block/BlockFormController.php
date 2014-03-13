@@ -11,7 +11,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
@@ -37,13 +36,6 @@ class BlockFormController extends EntityFormController {
   protected $storageController;
 
   /**
-   * The entity query factory.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQueryFactory;
-
-  /**
    * The language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
@@ -62,16 +54,13 @@ class BlockFormController extends EntityFormController {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
-   *   The entity query factory.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, QueryFactory $entity_query_factory, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
     $this->storageController = $entity_manager->getStorageController('block');
-    $this->entityQueryFactory = $entity_query_factory;
     $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
   }
@@ -82,7 +71,6 @@ class BlockFormController extends EntityFormController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.manager'),
-      $container->get('entity.query'),
       $container->get('language_manager'),
       $container->get('config.factory')
     );
@@ -373,7 +361,7 @@ class BlockFormController extends EntityFormController {
     $suggestion = $block->getPlugin()->getMachineNameSuggestion();
 
     // Get all the blocks which starts with the suggested machine name.
-    $query = $this->entityQueryFactory->get('block');
+    $query = $this->storageController->getQuery();
     $query->condition('id', $suggestion, 'CONTAINS');
     $block_ids = $query->execute();
 

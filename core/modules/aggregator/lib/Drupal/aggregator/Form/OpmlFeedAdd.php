@@ -9,7 +9,6 @@ namespace Drupal\aggregator\Form;
 
 use Drupal\aggregator\FeedStorageControllerInterface;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Guzzle\Http\Exception\RequestException;
@@ -20,13 +19,6 @@ use Guzzle\Http\ClientInterface;
  * Imports feeds from OPML.
  */
 class OpmlFeedAdd extends FormBase {
-
-  /**
-   * The entity query factory object.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $queryFactory;
 
   /**
    * The feed storage.
@@ -45,15 +37,12 @@ class OpmlFeedAdd extends FormBase {
   /**
    * Constructs a database object.
    *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query object.
    * @param \Drupal\aggregator\FeedStorageControllerInterface $feed_storage
    *   The feed storage.
    * @param \Guzzle\Http\ClientInterface $http_client
    *   The Guzzle HTTP client.
    */
-  public function __construct(QueryFactory $query_factory, FeedStorageControllerInterface $feed_storage, ClientInterface $http_client) {
-    $this->queryFactory = $query_factory;
+  public function __construct(FeedStorageControllerInterface $feed_storage, ClientInterface $http_client) {
     $this->feedStorageController = $feed_storage;
     $this->httpClient = $http_client;
   }
@@ -63,7 +52,6 @@ class OpmlFeedAdd extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.query'),
       $container->get('entity.manager')->getStorageController('aggregator_feed'),
       $container->get('http_default_client')
     );
@@ -164,7 +152,7 @@ class OpmlFeedAdd extends FormBase {
       }
 
       // Check for duplicate titles or URLs.
-      $query = $this->queryFactory->get('aggregator_feed');
+      $query = $this->feedStorageController->getQuery();
       $condition = $query->orConditionGroup()
         ->condition('title', $feed['title'])
         ->condition('url', $feed['url']);

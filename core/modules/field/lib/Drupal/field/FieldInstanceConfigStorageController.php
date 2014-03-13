@@ -52,8 +52,6 @@ class FieldInstanceConfigStorageController extends ConfigStorageController {
    *   The config factory service.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The config storage service.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
-   *   The entity query factory.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
@@ -61,8 +59,8 @@ class FieldInstanceConfigStorageController extends ConfigStorageController {
    * @param \Drupal\Core\KeyValueStore\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, UuidInterface $uuid_service, EntityManagerInterface $entity_manager, StateInterface $state) {
-    parent::__construct($entity_type, $config_factory, $config_storage, $entity_query_factory, $uuid_service);
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, UuidInterface $uuid_service, EntityManagerInterface $entity_manager, StateInterface $state) {
+    parent::__construct($entity_type, $config_factory, $config_storage, $uuid_service);
     $this->entityManager = $entity_manager;
     $this->state = $state;
   }
@@ -75,7 +73,6 @@ class FieldInstanceConfigStorageController extends ConfigStorageController {
       $entity_type,
       $container->get('config.factory'),
       $container->get('config.storage'),
-      $container->get('entity.query'),
       $container->get('uuid'),
       $container->get('entity.manager'),
       $container->get('state')
