@@ -65,7 +65,7 @@ display:
     display_plugin: default
     display_title: Master
     id: default
-    position: {  }
+    position: 0
 label: test_groupwise
 langcode: und
 module: views
