@@ -340,87 +340,23 @@ function list_themes($refresh = FALSE) {
 }
 
 /**
- * Generates themed output.
+ * Generates themed output (internal use only).
  *
- * All requests for themed output must go through this function (however,
- * calling the _theme() function directly is very strongly discouraged - see
- * next paragraph). It examines the request and routes it to the appropriate
- * @link themeable theme function or template @endlink, by checking the theme
- * registry.
+ * _theme() is an internal function. Do not call this function directly as it
+ * will prevent the following items from working correctly:
+ * - Render caching.
+ * - JavaScript and CSS asset attachment.
+ * - Pre / post render hooks.
+ * - Defaults provided by hook_element_info(), including attached assets.
+ * Instead, build a render array with a #theme key, and either return the
+ * array (where possible) or call drupal_render() to convert it to HTML.
  *
- * Avoid calling this function directly. It is preferable to replace direct
- * calls to the _theme() function with calls to drupal_render() by passing a
- * render array with a #theme key to drupal_render(), which in turn calls
- * _theme().
- *
- * @section sec_theme_hooks Theme Hooks
- * Most commonly, the first argument to this function is the name of the theme
- * hook. For instance, to theme a taxonomy term, the theme hook name is
- * 'taxonomy_term'. Modules register theme hooks within a hook_theme()
- * implementation and provide a default implementation via a function named
- * theme_HOOK() (e.g., theme_taxonomy_term()) or via a template file named
- * according to the value of the 'template' key registered with the theme hook
- * (see hook_theme() for details). Default templates are implemented with the
- * Twig rendering engine and are named the same as the theme hook, with
- * underscores changed to hyphens, so for the 'taxonomy_term' theme hook, the
- * default template is 'taxonomy-term.html.twig'.
- *
- * @subsection sub_overriding_theme_hooks Overriding Theme Hooks
- * Themes may also register new theme hooks within a hook_theme()
- * implementation, but it is more common for themes to override default
- * implementations provided by modules than to register entirely new theme
- * hooks. Themes can override a default implementation by implementing a
- * function named THEME_HOOK() (for example, the 'bartik' theme overrides the
- * default implementation of the 'menu_tree' theme hook by implementing a
- * bartik_menu_tree() function), or by adding a template file within its folder
- * structure that follows the template naming structure used by the theme's
- * rendering engine (for example, since the Bartik theme uses the Twig rendering
- * engine, it overrides the default implementation of the 'page' theme hook by
- * containing a 'page.html.twig' file within its folder structure).
- *
- * @subsection sub_preprocess_templates Preprocessing for Template Files
- * If the implementation is a template file, several functions are called before
- * the template file is invoked to modify the $variables array. These make up
- * the "preprocessing" phase, and are executed (if they exist), in the following
- * order (note that in the following list, HOOK indicates the theme hook name,
- * MODULE indicates a module name, THEME indicates a theme name, and ENGINE
- * indicates a theme engine name):
- * - template_preprocess(&$variables, $hook): Creates a default set of variables
- *   for all theme hooks with template implementations.
- * - template_preprocess_HOOK(&$variables): Should be implemented by the module
- *   that registers the theme hook, to set up default variables.
- * - MODULE_preprocess(&$variables, $hook): hook_preprocess() is invoked on all
- *   implementing modules.
- * - MODULE_preprocess_HOOK(&$variables): hook_preprocess_HOOK() is invoked on
- *   all implementing modules, so that modules that didn't define the theme hook
- *   can alter the variables.
- * - ENGINE_engine_preprocess(&$variables, $hook): Allows the theme engine to
- *   set necessary variables for all theme hooks with template implementations.
- * - ENGINE_engine_preprocess_HOOK(&$variables): Allows the theme engine to set
- *   necessary variables for the particular theme hook.
- * - THEME_preprocess(&$variables, $hook): Allows the theme to set necessary
- *   variables for all theme hooks with template implementations.
- * - THEME_preprocess_HOOK(&$variables): Allows the theme to set necessary
- *   variables specific to the particular theme hook.
- *
- * @subsection sub_preprocess_theme_funcs Preprocessing for Theme Functions
- * If the implementation is a function, only the theme-hook-specific preprocess
- * functions (the ones ending in _HOOK) are called from the list above. This is
- * because theme hooks with function implementations need to be fast, and
- * calling the non-theme-hook-specific preprocess functions for them would incur
- * a noticeable performance penalty.
- *
- * @subsection sub_alternate_suggestions Suggesting Alternate Hooks
- * Alternate hooks can be suggested by implementing the hook-specific
- * hook_theme_suggestions_HOOK_alter() or the generic
- * hook_theme_suggestions_alter(). These alter hooks are used to manipulate an
- * array of suggested alternate theme hooks to use, in reverse order of
- * priority. _theme() will use the highest priority implementation that exists.
- * If none exists, _theme() will use the implementation for the theme hook it
- * was called with. These suggestions are similar to and are used for similar
- * reasons as calling _theme() with an array as the $hook parameter (see below).
- * The difference is whether the suggestions are determined by the code that
- * calls _theme() or by altering the suggestions via the suggestion alter hooks.
+ * All requests for themed output must go through this function, which is
+ * invoked as part of the @link theme_render drupal_render() process @endlink.
+ * The appropriate theme function is indicated by the #theme property
+ * of a renderable array. _theme() examines the request and routes it to the
+ * appropriate @link themeable theme function or template @endlink, by checking
+ * the theme registry.
  *
  * @param $hook
  *   The name of the theme hook to call. If the name contains a
