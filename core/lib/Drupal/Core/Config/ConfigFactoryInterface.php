@@ -191,4 +191,13 @@ interface ConfigFactoryInterface {
    */
   public function listAll($prefix = '');
 
+  /**
+   * Adds config factory override services.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryOverrideInterface $config_factory_override
+   *   The config factory override service to add. It is added at the end of the
+   *   priority list (lower priority relative to existing ones).
+   */
+  public function addOverride(ConfigFactoryOverrideInterface $config_factory_override);
+
 }

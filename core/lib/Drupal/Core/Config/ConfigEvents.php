@@ -35,13 +35,6 @@ final class ConfigEvents {
   const RENAME = 'config.rename';
 
   /**
-   * Name of event fired when collecting overrides for configuration objects.
-   *
-   * @see \Drupal\Core\Config\ConfigFactory::loadModuleOverrides().
-   */
-  const MODULE_OVERRIDES = 'config.module.overrides';
-
-  /**
    * Name of event fired when validating in the configuration import process.
    *
    * @see \Drupal\Core\Config\ConfigImporter::validate().

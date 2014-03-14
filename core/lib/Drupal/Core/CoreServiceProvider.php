@@ -8,6 +8,7 @@
 namespace Drupal\Core;
 
 use Drupal\Core\Cache\ListCacheBinsPass;
+use Drupal\Core\Config\ConfigFactoryOverridePass;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
@@ -78,6 +79,9 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     // Add the compiler pass that will process the tagged theme negotiator
     // service.
     $container->addCompilerPass(new ThemeNegotiatorPass());
+    // Add the compiler pass that will process the tagged config factory
+    // override services.
+    $container->addCompilerPass(new ConfigFactoryOverridePass());
     // Add the compiler pass that will process tagged authentication services.
     $container->addCompilerPass(new RegisterAuthenticationPass());
     // Register Twig extensions.
