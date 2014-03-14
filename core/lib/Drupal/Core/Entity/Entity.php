@@ -320,6 +320,9 @@ abstract class Entity implements EntityInterface {
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
     $this->onSaveOrDelete();
+    if ($update) {
+      $this->onUpdateBundleEntity();
+    }
   }
 
   /**
@@ -378,6 +381,21 @@ abstract class Entity implements EntityInterface {
       if (\Drupal::entityManager()->hasController($entity_type, 'view_builder')) {
         \Drupal::entityManager()->getViewBuilder($entity_type)->resetCache($entities);
       }
+    }
+  }
+
+  /**
+   * Acts on entities of which this entity is a bundle entity type.
+   */
+  protected function onUpdateBundleEntity() {
+    // If this entity is a bundle entity type of another entity type, and we're
+    // updating an existing entity, and that other entity type has a view
+    // builder class, then invalidate the render cache of entities for which
+    // this entity is a bundle.
+    $bundle_of = $this->getEntityType()->getBundleOf();
+    $entity_manager = \Drupal::entityManager();
+    if ($bundle_of !== FALSE && $entity_manager->hasController($bundle_of, 'view_builder')) {
+      $entity_manager->getViewBuilder($bundle_of)->resetCache();
     }
   }
 

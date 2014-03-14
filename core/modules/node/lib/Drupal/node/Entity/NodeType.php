@@ -188,9 +188,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
     else {
       // Invalidate the cache tag of the updated node type only.
       Cache::invalidateTags(array('node_type' => $this->id()));
-
-      // Invalidate the render cache for all nodes.
-      \Drupal::entityManager()->getViewBuilder('node')->resetCache();
     }
   }
 

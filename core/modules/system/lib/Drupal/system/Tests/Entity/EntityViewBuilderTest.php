@@ -48,7 +48,7 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Test that new entities (before they are saved for the first time) do not
     // generate a cache entry.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $this->assertFalse(isset($build['#cache']), 'The render array element of new (unsaved) entities is not cached.');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == array('tags'), 'The render array element of new (unsaved) entities is not cached, but does have cache tags set.');
 
     // Get a fully built entity view render array.
     $entity_test->save();
@@ -144,17 +144,17 @@ class EntityViewBuilderTest extends EntityUnitTestBase {
     // Test a view mode in default conditions: render caching is enabled for
     // the entity type and the view mode.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'full');
-    $this->assertTrue(isset($build['#cache']), 'A view mode with render cache enabled has the correct output.');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == array('tags', 'keys', 'granularity', 'bin') , 'A view mode with render cache enabled has the correct output (cache tags, keys, granularity and bin).');
 
     // Test that a view mode can opt out of render caching.
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test')->view($entity_test, 'test');
-    $this->assertFalse(isset($build['#cache']), 'A view mode with render cache disabled has the correct output.');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == array('tags'), 'A view mode with render cache disabled has the correct output (only cache tags).');
 
     // Test that an entity type can opt out of render caching completely.
     $entity_test_no_cache = $this->createTestEntity('entity_test_label');
     $entity_test_no_cache->save();
     $build = $this->container->get('entity.manager')->getViewBuilder('entity_test_label')->view($entity_test_no_cache, 'full');
-    $this->assertFalse(isset($build['#cache']), 'An entity type can opt out of render caching regardless of view mode configuration.');
+    $this->assertTrue(isset($build['#cache']) && array_keys($build['#cache']) == array('tags'), 'An entity type can opt out of render caching regardless of view mode configuration, but always has cache tags set.');
   }
 
   /**

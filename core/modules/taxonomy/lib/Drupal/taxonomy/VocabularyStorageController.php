@@ -16,12 +16,11 @@ use Drupal\Core\Config\Entity\ConfigStorageController;
 class VocabularyStorageController extends ConfigStorageController implements VocabularyStorageControllerInterface {
 
   /**
-   * Overrides Drupal\Core\Config\Entity\ConfigStorageController::resetCache().
+   * {@inheritdoc}
    */
   public function resetCache(array $ids = NULL) {
     drupal_static_reset('taxonomy_vocabulary_get_names');
     parent::resetCache($ids);
-    Cache::invalidateTags(array('content' => TRUE));
     entity_info_cache_clear();
   }
 

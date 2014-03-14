@@ -8,12 +8,40 @@
 namespace Drupal\entity_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\Query\QueryFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller routines for entity_test routes.
  */
 class EntityTestController extends ControllerBase {
+
+  /**
+   * The entity query factory.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryFactory
+   */
+  protected $entityQueryFactory;
+
+  /**
+   * Constructs a new EntityTestController.
+   *
+   * @param \Drupal\Core\Entity\Query\QueryFactory
+   *   The entity query factory.
+   */
+  public function __construct(QueryFactory $entity_query_factory) {
+    $this->entityQueryFactory = $entity_query_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.query')
+    );
+  }
 
   /**
    * Displays the 'Add new entity_test' form.
@@ -58,6 +86,39 @@ class EntityTestController extends ControllerBase {
    */
   public function testAdmin() {
     return '';
+  }
+
+  /**
+   * List entity_test entities referencing the given entity.
+   *
+   * @param string $entity_reference_field_name
+   *   The name of the entity_reference field to use in the query.
+   * @param string $referenced_entity_type
+   *   The type of the entity being referenced.
+   * @param int $referenced_entity_id
+   *   The ID of the entity being referenced.
+   *
+   * @return array
+   *   A renderable array.
+   */
+  public function listReferencingEntities($entity_reference_field_name, $referenced_entity_type, $referenced_entity_id) {
+    // Early return if the referenced entity does not exist (or is deleted).
+    $referenced_entity = $this->entityManager()
+      ->getStorageController($referenced_entity_type)
+      ->load($referenced_entity_id);
+    if ($referenced_entity === NULL) {
+      return array();
+    }
+
+    $query = $this->entityQueryFactory
+      ->get('entity_test')
+      ->condition($entity_reference_field_name . '.target_id', $referenced_entity_id);
+    $entities = $this->entityManager()
+      ->getStorageController('entity_test')
+      ->loadMultiple($query->execute());
+    return $this->entityManager()
+      ->getViewBuilder('entity_test')
+      ->viewMultiple($entities, 'full');
   }
 
 }

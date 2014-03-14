@@ -146,19 +146,21 @@ class EntityViewBuilder extends EntityControllerBase implements EntityController
       "#{$this->entityTypeId}" => $entity,
       '#view_mode' => $view_mode,
       '#langcode' => $langcode,
+      '#cache' => array(
+        'tags' =>  array(
+          $this->entityTypeId . '_view' => TRUE,
+          $this->entityTypeId => array($entity->id()),
+        ),
+      )
     );
 
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
     if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $entity->isDefaultRevision() && $this->entityType->isRenderCacheable()) {
-      $return['#cache'] = array(
+      $return['#cache'] += array(
         'keys' => array('entity_view', $this->entityTypeId, $entity->id(), $view_mode),
         'granularity' => DRUPAL_CACHE_PER_ROLE,
         'bin' => $this->cacheBin,
-        'tags' => array(
-          $this->entityTypeId . '_view' => TRUE,
-          $this->entityTypeId => array($entity->id()),
-        ),
       );
 
       if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
