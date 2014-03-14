@@ -8,6 +8,7 @@
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Config\FileStorage;
 
 /**
  * Tests installation of configuration objects in installation functionality.
@@ -96,4 +97,56 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
   }
 
+  /**
+   * Tests install profile config changes.
+   */
+  function testInstallProfileConfigOverwrite() {
+    $config_name = 'system.cron';
+    // The expected configuration from the system module.
+    $expected_original_data = array(
+      'threshold' => array(
+        'autorun' => 0,
+        'requirements_warning' => 172800,
+        'requirements_error' => 1209600,
+      ),
+    );
+    // The expected active configuration altered by the install profile.
+    $expected_profile_data = array(
+      'threshold' => array(
+        'autorun' => 0,
+        'requirements_warning' => 259200,
+        'requirements_error' => 1209600,
+      ),
+    );
+
+    // Verify that the original data matches. We have to read the module config
+    // file directly, because the install profile default system.cron.yml
+    // configuration file was used to create the active configuration.
+    $config_dir = drupal_get_path('module', 'system') . '/config';
+    $this->assertTrue(is_dir($config_dir));
+    $source_storage = new FileStorage($config_dir);
+    $data = $source_storage->read($config_name);
+    $this->assertIdentical($data, $expected_original_data);
+
+    // Verify that active configuration matches the expected data, which was
+    // created from the testing install profile's system.cron.yml file.
+    $config = \Drupal::config($config_name);
+    $this->assertIdentical($config->get(), $expected_profile_data);
+
+    // Turn on the test module, which will attempt to replace the
+    // configuration data. This attempt to replace the active configuration
+    // should be ignored.
+    \Drupal::moduleHandler()->install(array('config_override_test'));
+
+    // Verify that the test module has not been able to change the data.
+    $config = \Drupal::config($config_name);
+    $this->assertIdentical($config->get(), $expected_profile_data);
+
+    // Disable and uninstall the test module.
+    \Drupal::moduleHandler()->uninstall(array('config_override_test'));
+
+    // Verify that the data hasn't been altered by removing the test module.
+    $config = \Drupal::config($config_name);
+    $this->assertIdentical($config->get(), $expected_profile_data);
+  }
 }
