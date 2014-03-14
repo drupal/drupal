@@ -13,6 +13,18 @@ use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 
+/**
+ * Provides a base class for configuration objects with storage support.
+ *
+ * Encapsulates all capabilities needed for configuration handling for a
+ * specific configuration object, including storage and data type casting.
+ *
+ * The default implementation in \Drupal\Core\Config\Config adds support for
+ * runtime overrides. Extend from StorableConfigBase directly to manage
+ * configuration with a storage backend that does not support overrides.
+ *
+ * @see \Drupal\Core\Config\Config
+ */
 abstract class StorableConfigBase extends ConfigBase {
 
   /**

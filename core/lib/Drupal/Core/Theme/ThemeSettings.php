@@ -10,7 +10,13 @@ namespace Drupal\Core\Theme;
 use Drupal\Core\Config\ConfigBase;
 
 /**
- * Defines the default theme settings object.
+ * Provides a configuration API wrapper for runtime merged theme settings.
+ *
+ * Theme settings use configuration for base values but the runtime theme
+ * settings are calculated based on various site settings and are therefore
+ * not persisted.
+ *
+ * @see theme_get_setting()
  */
 class ThemeSettings extends ConfigBase {
 

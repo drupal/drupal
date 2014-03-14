@@ -11,6 +11,21 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use \Drupal\Core\DependencyInjection\DependencySerialization;
 
+/**
+ * Provides a base class for configuration objects with get/set support.
+ *
+ * Encapsulates all capabilities needed for runtime configuration handling for
+ * a specific configuration object.
+ *
+ * Extend directly from this class for non-storable configuration where the
+ * configuration API is desired but storage is not possible; for example, if
+ * the data is derived at runtime. For storable configuration, extend
+ * \Drupal\Core\Config\StorableConfigBase.
+ *
+ * @see \Drupal\Core\Config\StorableConfigBase
+ * @see \Drupal\Core\Config\Config
+ * @see \Drupal\Core\Theme\ThemeSettings
+ */
 abstract class ConfigBase extends DependencySerialization {
 
   /**
@@ -204,6 +219,8 @@ abstract class ConfigBase extends DependencySerialization {
    *   The configuration object.
    */
   public function merge(array $data_to_merge) {
-    return $this->setData(NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE));
+    // Preserve integer keys so that configuration keys are not changed.
+    $this->setData(NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE));
+    return $this;
   }
 }

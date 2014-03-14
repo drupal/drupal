@@ -18,8 +18,14 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines the default configuration object.
+ *
+ * Encapsulates all capabilities needed for configuration handling for a
+ * specific configuration object, including support for runtime overrides. The
+ * overrides are handled on top of the stored configuration so they are not
+ * saved back to storage.
  */
 class Config extends StorableConfigBase {
+
   /**
    * An event dispatcher instance to use for configuration events.
    *
@@ -274,111 +280,6 @@ class Config extends StorableConfigBase {
     $this->eventDispatcher->dispatch(ConfigEvents::DELETE, new ConfigCrudEvent($this));
     $this->originalData = $this->data;
     return $this;
-  }
-
-  /**
-   * Retrieves the storage used to load and save this configuration object.
-   *
-   * @return \Drupal\Core\Config\StorageInterface
-   *   The configuration storage object.
-   */
-  public function getStorage() {
-    return $this->storage;
-  }
-
-  /**
-   * Merges data into a configuration object.
-   *
-   * @param array $data_to_merge
-   *   An array containing data to merge.
-   *
-   * @return \Drupal\Core\Config\Config
-   *   The configuration object.
-   */
-  public function merge(array $data_to_merge) {
-    // Preserve integer keys so that configuration keys are not changed.
-    $this->setData(NestedArray::mergeDeepArray(array($this->data, $data_to_merge), TRUE));
-    return $this;
-  }
-
-  /**
-   * Gets the schema wrapper for the whole configuration object.
-   *
-   * The schema wrapper is dependent on the configuration name and the whole
-   * data structure, so if the name or the data changes in any way, the wrapper
-   * should be reset.
-   *
-   * @return \Drupal\Core\Config\Schema\Element
-   */
-  protected function getSchemaWrapper() {
-    if (!isset($this->schemaWrapper)) {
-      $definition = $this->typedConfigManager->getDefinition($this->name);
-      $this->schemaWrapper = $this->typedConfigManager->create($definition, $this->data);
-    }
-    return $this->schemaWrapper;
-  }
-
-  /**
-   * Casts the value to correct data type using the configuration schema.
-   *
-   * @param string $key
-   *   A string that maps to a key within the configuration data.
-   * @param string $value
-   *   Value to associate with the key.
-   *
-   * @return mixed
-   *   The value cast to the type indicated in the schema.
-   *
-   * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
-   *   Exception on unsupported/undefined data type deducted.
-   */
-  protected function castValue($key, $value) {
-    if ($value === NULL) {
-      $value = NULL;
-    }
-    elseif (is_scalar($value)) {
-      try {
-        $element = $this->getSchemaWrapper()->get($key);
-        if ($element instanceof PrimitiveInterface) {
-          // Special handling for integers and floats since the configuration
-          // system is primarily concerned with saving values from the Form API
-          // we have to special case the meaning of an empty string for numeric
-          // types. In PHP this would be casted to a 0 but for the purposes of
-          // configuration we need to treat this as a NULL.
-          if ($value === '' && ($element instanceof IntegerInterface || $element instanceof FloatInterface)) {
-            $value = NULL;
-          }
-          else {
-            $value = $element->getCastedValue();
-          }
-        }
-        else {
-          // Config only supports primitive data types. If the config schema
-          // does define a type $element will be an instance of
-          // \Drupal\Core\Config\Schema\Property. Convert it to string since it
-          // is the safest possible type.
-          $value = $element->getString();
-        }
-      }
-      catch (SchemaIncompleteException $e) {
-        // @todo throw an exception due to an incomplete schema.
-        // Fix as part of https://drupal.org/node/2183983.
-      }
-    }
-    else {
-      // Throw exception on any non-scalar or non-array value.
-      if (!is_array($value)) {
-        throw new UnsupportedDataTypeConfigException(String::format('Invalid data type for config element @name:@key', array(
-          '@name' => $this->getName(),
-          '@key' => $key,
-        )));
-      }
-      // Recurse into any nested keys.
-      foreach ($value as $nested_value_key => $nested_value) {
-        $value[$nested_value_key] = $this->castValue($key . '.' . $nested_value_key, $nested_value);
-      }
-    }
-    return $value;
   }
 
   /**
