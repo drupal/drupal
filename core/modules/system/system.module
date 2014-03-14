@@ -1425,10 +1425,11 @@ function _system_rebuild_module_data() {
   if ($profile && isset($modules[$profile])) {
     // The installation profile is required, if it's a valid module.
     $modules[$profile]->info['required'] = TRUE;
-    // Add a default distribution name if the profile did not provide one. This
-    // matches the default value used in install_profile_info().
-    if (!isset($modules[$profile]->info['distribution_name'])) {
-      $modules[$profile]->info['distribution_name'] = 'Drupal';
+    // Add a default distribution name if the profile did not provide one.
+    // @see install_profile_info()
+    // @see drupal_install_profile_distribution_name()
+    if (!isset($modules[$profile]->info['distribution']['name'])) {
+      $modules[$profile]->info['distribution']['name'] = 'Drupal';
     }
   }
 

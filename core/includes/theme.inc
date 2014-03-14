@@ -2360,7 +2360,11 @@ function template_preprocess_install_page(&$variables) {
   $variables['attributes']['class'][] = 'install-page';
   // Override the site name that is displayed on the page, since Drupal is
   // still in the process of being installed.
-  $variables['site_name'] = drupal_install_profile_distribution_name();
+  $distribution_name = String::checkPlain(drupal_install_profile_distribution_name());
+  $variables['site_name'] = $distribution_name;
+  $variables['head_title_array']['name'] = $distribution_name;
+
+  $variables['head_title'] = implode(' | ', $variables['head_title_array']);
 }
 
 /**

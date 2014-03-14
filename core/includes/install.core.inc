@@ -205,6 +205,8 @@ function install_state_defaults() {
     'profile_info' => array(),
     // An array of available installation profiles.
     'profiles' => array(),
+    // The name of the theme to use during installation.
+    'theme' => 'seven',
     // The server URL where the interface translation files can be downloaded.
     // Tokens in the pattern will be replaced by appropriate values for the
     // required translation file.
@@ -377,17 +379,6 @@ function install_begin_request(&$install_state) {
     \Drupal::translation()->setDefaultLangcode($install_state['parameters']['langcode']);
   }
 
-  $module_handler = \Drupal::moduleHandler();
-  if (!$module_handler->moduleExists('system')) {
-    // Override the module list with a minimal set of modules.
-    $module_handler->setModuleList(array('system' => 'core/modules/system/system.module'));
-  }
-  // After setting up a custom and finite module list in a custom low-level
-  // bootstrap like here, ensure to use ModuleHandler::loadAll() so that
-  // ModuleHandler::isLoaded() returns TRUE, since that is a condition being
-  // checked by other subsystems (e.g., the theme system).
-  $module_handler->loadAll();
-
   // Add list of all available profiles to the installation state.
   $listing = new ExtensionDiscovery();
   $listing->setProfileDirectories(array());
@@ -397,6 +388,30 @@ function install_begin_request(&$install_state) {
   foreach ($install_state['profiles'] as $name => $profile) {
     drupal_get_filename('profile', $name, $profile->uri);
   }
+
+  if ($profile = _install_select_profile($install_state)) {
+    $install_state['parameters']['profile'] = $profile;
+    install_load_profile($install_state);
+    if (isset($install_state['profile_info']['distribution']['install']['theme'])) {
+      $install_state['theme'] = $install_state['profile_info']['distribution']['install']['theme'];
+    }
+  }
+
+  // Override the module list with a minimal set of modules.
+  $module_handler = \Drupal::moduleHandler();
+  $module_list = $module_handler->getModuleList();
+  if (!$module_handler->moduleExists('system')) {
+    $module_list['system'] = 'core/modules/system/system.module';
+  }
+  if ($profile && !$module_handler->moduleExists($profile)) {
+    $module_list[$profile] = $install_state['profiles'][$profile]->uri;
+  }
+  $module_handler->setModuleList($module_list);
+  // After setting up a custom and finite module list in a custom low-level
+  // bootstrap like here, ensure to use ModuleHandler::loadAll() so that
+  // ModuleHandler::isLoaded() returns TRUE, since that is a condition being
+  // checked by other subsystems (e.g., the theme system).
+  $module_handler->loadAll();
 
   // Prepare for themed output. We need to run this at the beginning of the
   // page request to avoid a different theme accidentally getting set. (We also
@@ -639,7 +654,7 @@ function install_tasks($install_state) {
     ),
     'install_select_profile' => array(
       'display_name' => t('Choose profile'),
-      'display' => count($install_state['profiles']) != 1,
+      'display' => empty($install_state['profile_info']['distribution']['name']) && count($install_state['profiles']) != 1,
       'run' => INSTALL_TASK_RUN_IF_REACHED,
     ),
     'install_load_profile' => array(
@@ -664,7 +679,7 @@ function install_tasks($install_state) {
       'run' => INSTALL_TASK_RUN_IF_REACHED,
     ),
     'install_profile_modules' => array(
-      'display_name' => count($install_state['profiles']) == 1 ? t('Install site') : t('Installation profile'),
+      'display_name' => t('Install site'),
       'type' => 'batch',
     ),
     'install_import_translations' => array(
@@ -1220,7 +1235,7 @@ function install_select_profile(&$install_state) {
       throw new NoProfilesException(\Drupal::service('string_translation'));
     }
     // Try to automatically select a profile.
-    if ($profile = _install_select_profile($install_state['profiles'])) {
+    if ($profile = _install_select_profile($install_state)) {
       $install_state['parameters']['profile'] = $profile;
     }
     else {
@@ -1235,49 +1250,44 @@ function install_select_profile(&$install_state) {
 }
 
 /**
- * Selects an installation profile.
+ * Determines the installation profile to use in the installer.
  *
- * A profile will be selected if:
- * - Only one profile is available,
- * - A profile was submitted through \Drupal::request()->request,
- * - Exactly one of the profiles is marked as "exclusive".
- * If multiple profiles are marked as "exclusive" then no profile will be
- * selected.
+ * A profile will be selected in the following order of conditions:
  *
- * @param array $profiles
- *   An associative array of profiles with the machine-readable names as keys.
+ * 1. Only one profile is available.
+ * 2. A specific profile name is requested in installation parameters:
+ *    - for interactive installations via request query parameters.
+ *    - for non-interactive installations via install_drupal() settings.
+ * 3. A discovered profile that is a distribution.
+ *    If multiple profiles are distributions, then the first discovered profile
+ *    will be selected.
+ *
+ * @param array $install_state
+ *   The current installer state, containing a 'profiles' key, which is an
+ *   associative array of profiles with the machine-readable names as keys.
  *
  * @return
  *   The machine-readable name of the selected profile or NULL if no profile was
  *   selected.
  */
-function _install_select_profile($profiles) {
+function _install_select_profile(&$install_state) {
   // Don't need to choose profile if only one available.
-  $request_params = \Drupal::request()->request;
-  if (count($profiles) == 1) {
-    $profile = array_pop($profiles);
-    return $profile->getName();
+  if (count($install_state['profiles']) == 1) {
+    return key($install_state['profiles']);
   }
-  elseif ($request_params->has('profile') && ($profile = $request_params->get('profile')) && isset($profiles[$profile])) {
-    return $profiles[$profile]->getName();
-  }
-  // Check for a profile marked as "exclusive" and ensure that only one
-  // profile is marked as such.
-  $exclusive_profile = NULL;
-  foreach ($profiles as $profile) {
-    $profile_info = install_profile_info($profile->getName());
-    if (!empty($profile_info['exclusive'])) {
-      if (empty($exclusive_profile)) {
-        $exclusive_profile = $profile->getName();
-      }
-      else {
-        // We found a second "exclusive" profile. There's no way to choose
-        // between them, so we ignore the property.
-        return;
-      }
+  if (!empty($install_state['parameters']['profile'])) {
+    $profile = $install_state['parameters']['profile'];
+    if (isset($install_state['profiles'][$profile])) {
+      return $profile;
     }
   }
-  return $exclusive_profile;
+  // Check for a distribution profile.
+  foreach ($install_state['profiles'] as $profile) {
+    $profile_info = install_profile_info($profile->getName());
+    if (!empty($profile_info['distribution'])) {
+      return $profile->getName();
+    }
+  }
 }
 
 /**
@@ -1349,6 +1359,14 @@ function install_select_profile_form($form, &$form_state, $install_state) {
     '#button_type' => 'primary',
   );
   return $form;
+}
+
+/**
+ * Form submission handler for install_select_profile_form().
+ */
+function install_select_profile_form_submit($form, &$form_state) {
+  global $install_state;
+  $install_state['parameters']['profile'] = $form_state['values']['profile'];
 }
 
 /**
@@ -1755,7 +1773,7 @@ function install_load_profile(&$install_state) {
   $profile_file = $install_state['profiles'][$profile]->uri;
   if (file_exists($profile_file)) {
     include_once DRUPAL_ROOT . '/' . $profile_file;
-    $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], $install_state['parameters']['langcode']);
+    $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], isset($install_state['parameters']['langcode']) ? $install_state['parameters']['langcode'] : 'en');
   }
   else {
     throw new InstallerException(t('Sorry, the profile you have chosen cannot be loaded.'));

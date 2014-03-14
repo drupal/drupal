@@ -95,16 +95,19 @@ function drupal_load_updates() {
 function drupal_install_profile_distribution_name() {
   // During installation, the profile information is stored in the global
   // installation state (it might not be saved anywhere yet).
+  $info = array();
   if (drupal_installation_attempted()) {
     global $install_state;
-    return isset($install_state['profile_info']['distribution_name']) ? $install_state['profile_info']['distribution_name'] : 'Drupal';
+    if (isset($install_state['profile_info'])) {
+      $info = $install_state['profile_info'];
+    }
   }
   // At all other times, we load the profile via standard methods.
   else {
     $profile = drupal_get_profile();
     $info = system_get_info('module', $profile);
-    return $info['distribution_name'];
   }
+  return isset($info['distribution']['name']) ? $info['distribution']['name'] : 'Drupal';
 }
 
 /**
@@ -1046,15 +1049,19 @@ function drupal_check_module($module) {
  * Additional, less commonly-used information that can appear in a
  * profile.info.yml file but not in a normal Drupal module .info.yml file
  * includes:
- * - distribution_name: The name of the Drupal distribution that is being
- *   installed, to be shown throughout the installation process. Defaults to
- *   'Drupal'.
- * - exclusive: If the install profile is intended to be the only eligible
- *   choice in a distribution, setting exclusive = TRUE will auto-select it
- *   during installation, and the install profile selection screen will be
- *   skipped. If more than one profile is found where exclusive = TRUE then
- *   this property will have no effect and the profile selection screen will
- *   be shown as normal with all available profiles shown.
+ *
+ * - distribution: Existence of this key denotes that the installation profile
+ *   is intended to be the only eligible choice in a distribution and will be
+ *   auto-selected during installation, whereas the installation profile
+ *   selection screen will be skipped. If more than one distribution profile is
+ *   found then the first one discovered will be selected.
+ *   The following subproperties may be set:
+ *   - name: The name of the distribution that is being installed, to be shown
+ *     throughout the installation process. If omitted,
+ *     drupal_install_profile_distribution_name() defaults to 'Drupal'.
+ *   - install: Optional parameters to override the installer:
+ *     - theme: The machine name of a theme to use in the installer instead of
+ *       Drupal's default installer theme.
  *
  * Note that this function does an expensive file system scan to get info file
  * information for dependencies. If you only need information from the info
@@ -1084,7 +1091,6 @@ function install_profile_info($profile, $langcode = 'en') {
     $defaults = array(
       'dependencies' => array(),
       'description' => '',
-      'distribution_name' => 'Drupal',
       'version' => NULL,
       'hidden' => FALSE,
       'php' => DRUPAL_MINIMUM_PHP,
