@@ -703,8 +703,6 @@ function filter_xss_admin($string) {
  *   valid UTF-8.
  *
  * @see \Drupal\Component\Utility\Xss::filter()
- *
- * @ingroup sanitization
  */
 function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
   return Xss::filter($string, $allowed_tags);
