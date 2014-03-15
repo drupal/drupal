@@ -19,7 +19,11 @@ interface EntityFormBuilderInterface {
    *   The entity to be created or edited.
    * @param string $operation
    *   (optional) The operation identifying the form variation to be returned.
-   *   Defaults to 'default'.
+   *   Defaults to 'default'. This is typically used in routing:
+   *   @code
+   *   _entity_form: node.book_outline
+   *   @endcode
+   *   where "book_outline" is the value of $operation.
    * @param array $form_state
    *   (optional) An associative array containing the current state of the form.
    *   Use this to pass additional information to the form, such as the

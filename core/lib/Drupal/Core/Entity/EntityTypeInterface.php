@@ -229,6 +229,8 @@ interface EntityTypeInterface {
    *
    * @return string
    *   The class for this operation's form for this entity type.
+   *
+   * @see \Drupal\Core\Entity\EntityFormBuilderInterface
    */
   public function getFormClass($operation);
 
@@ -238,9 +240,12 @@ interface EntityTypeInterface {
    * @param string $operation
    *   The operation to use this form class for.
    * @param string $class
-   *   The form class to use for the operation.
+   *   The form class implementing
+   *   \Drupal\Core\Entity\EntityFormControllerInterface.
    *
    * @return static
+   *
+   * @see \Drupal\Core\Entity\EntityFormBuilderInterface
    */
   public function setFormClass($operation, $class);
 
