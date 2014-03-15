@@ -875,7 +875,7 @@ function hook_css_alter(&$css) {
  *
  * @see ajax_render()
  */
-function hook_ajax_render_alter($commands) {
+function hook_ajax_render_alter(&$commands) {
   // Inject any new status messages into the content area.
   $commands[] = ajax_command_prepend('#block-system-main .content', theme('status_messages'));
 }
