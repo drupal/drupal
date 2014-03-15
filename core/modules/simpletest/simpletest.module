@@ -448,6 +448,8 @@ function simpletest_test_get_all($module = NULL) {
     else {
       // Select all PSR-0 classes in the Tests namespace of all modules.
       $listing = new ExtensionDiscovery();
+      // Ensure that tests in all profiles are discovered.
+      $listing->setProfileDirectories(array());
       $all_data = $listing->scan('module', TRUE);
       // If module is set then we keep only that one module.
       if (isset($module)) {
@@ -549,6 +551,8 @@ function simpletest_classloader_register() {
   }
   else {
     $listing = new ExtensionDiscovery();
+    // Ensure that tests in all profiles are discovered.
+    $listing->setProfileDirectories(array());
     $extensions = array();
     foreach ($types as $type) {
       foreach ($listing->scan($type, TRUE) as $name => $file) {
