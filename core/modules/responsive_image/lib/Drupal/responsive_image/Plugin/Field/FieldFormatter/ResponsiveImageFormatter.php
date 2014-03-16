@@ -2,52 +2,52 @@
 
 /**
  * @file
- * Contains \Drupal\picture\Plugin\field\formatter\PictureFormatter.
+ * Contains \Drupal\responsive_image\Plugin\field\formatter\ResponsiveImageFormatter.
  */
 
-namespace Drupal\picture\Plugin\Field\FieldFormatter;
+namespace Drupal\responsive_image\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 
 /**
- * Plugin for picture formatter.
+ * Plugin for responsive image formatter.
  *
  * @FieldFormatter(
- *   id = "picture",
- *   label = @Translation("Picture"),
+ *   id = "responsive_image",
+ *   label = @Translation("Responsive image"),
  *   field_types = {
  *     "image",
  *   },
  *   settings = {
- *     "picture_mapping" = "",
+ *     "responsive_image_mapping" = "",
  *     "fallback_image_style" = "",
  *     "image_link" = "",
  *   }
  * )
  */
-class PictureFormatter extends ImageFormatterBase {
+class ResponsiveImageFormatter extends ImageFormatterBase {
 
   /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
-    $picture_options = array();
-    $picture_mappings = entity_load_multiple('picture_mapping');
-    if ($picture_mappings && !empty($picture_mappings)) {
-      foreach ($picture_mappings as $machine_name => $picture_mapping) {
-        if ($picture_mapping->hasMappings()) {
-          $picture_options[$machine_name] = $picture_mapping->label();
+    $responsive_image_options = array();
+    $responsive_image_mappings = entity_load_multiple('responsive_image_mapping');
+    if ($responsive_image_mappings && !empty($responsive_image_mappings)) {
+      foreach ($responsive_image_mappings as $machine_name => $responsive_image_mapping) {
+        if ($responsive_image_mapping->hasMappings()) {
+          $responsive_image_options[$machine_name] = $responsive_image_mapping->label();
         }
       }
     }
 
-    $elements['picture_mapping'] = array(
-      '#title' => t('Picture mapping'),
+    $elements['responsive_image_mapping'] = array(
+      '#title' => t('Responsive image mapping'),
       '#type' => 'select',
-      '#default_value' => $this->getSetting('picture_mapping'),
+      '#default_value' => $this->getSetting('responsive_image_mapping'),
       '#required' => TRUE,
-      '#options' => $picture_options,
+      '#options' => $responsive_image_options,
     );
 
     $image_styles = image_style_options(FALSE);
@@ -80,9 +80,9 @@ class PictureFormatter extends ImageFormatterBase {
   public function settingsSummary() {
     $summary = array();
 
-    $picture_mapping = entity_load('picture_mapping', $this->getSetting('picture_mapping'));
-    if ($picture_mapping) {
-      $summary[] = t('Picture mapping: @picture_mapping', array('@picture_mapping' => $picture_mapping->label()));
+    $responsive_image_mapping = entity_load('responsive_image_mapping', $this->getSetting('responsive_image_mapping'));
+    if ($responsive_image_mapping) {
+      $summary[] = t('Responsive image mapping: @responsive_image_mapping', array('@responsive_image_mapping' => $responsive_image_mapping->label()));
 
       $image_styles = image_style_options(FALSE);
       unset($image_styles['']);
@@ -103,7 +103,7 @@ class PictureFormatter extends ImageFormatterBase {
       }
     }
     else {
-      $summary[] = t('Select a picture mapping.');
+      $summary[] = t('Select a responsive image mapping.');
     }
 
     return $summary;
@@ -117,7 +117,7 @@ class PictureFormatter extends ImageFormatterBase {
     // Check if the formatter involves a link.
     if ($this->getSetting('image_link') == 'content') {
       $uri = $items->getEntity()->urlInfo();
-      // @todo Remove when theme_picture_formatter() has support for route name.
+      // @todo Remove when theme_responsive_image_formatter() has support for route name.
       $uri['path'] = $items->getEntity()->getSystemPath();
     }
     elseif ($this->getSetting('image_link') == 'file') {
@@ -127,15 +127,15 @@ class PictureFormatter extends ImageFormatterBase {
     $breakpoint_styles = array();
     $fallback_image_style = '';
 
-    $picture_mapping = entity_load('picture_mapping', $this->getSetting('picture_mapping'));
-    if ($picture_mapping) {
-      foreach ($picture_mapping->mappings as $breakpoint_name => $multipliers) {
+    $responsive_image_mapping = entity_load('responsive_image_mapping', $this->getSetting('responsive_image_mapping'));
+    if ($responsive_image_mapping) {
+      foreach ($responsive_image_mapping->mappings as $breakpoint_name => $multipliers) {
         // Make sure there are multipliers.
         if (!empty($multipliers)) {
           // Make sure that the breakpoint exists and is enabled.
           // @todo add the following when breakpoint->status is added again:
-          // $picture_mapping->breakpointGroup->breakpoints[$breakpoint_name]->status
-          $breakpoint = $picture_mapping->breakpointGroup->getBreakpointById($breakpoint_name);
+          // $responsive_image_mapping->breakpointGroup->breakpoints[$breakpoint_name]->status
+          $breakpoint = $responsive_image_mapping->breakpointGroup->getBreakpointById($breakpoint_name);
           if ($breakpoint) {
             // Determine the enabled multipliers.
             $multipliers = array_intersect_key($multipliers, $breakpoint->multipliers);
@@ -170,7 +170,7 @@ class PictureFormatter extends ImageFormatterBase {
         );
       }
       $elements[$delta] = array(
-        '#theme' => 'picture_formatter',
+        '#theme' => 'responsive_image_formatter',
         '#attached' => array('library' => array(
           'core/picturefill',
         )),

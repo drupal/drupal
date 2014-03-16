@@ -1,8 +1,8 @@
-# Schema for the configuration files of the Picture module.
+# Schema for the configuration files of the Responsive Image module.
 
-picture.mappings.*:
+responsive_image.mappings.*:
   type: mapping
-  label: 'Picture mapping'
+  label: 'Responsive image mapping'
   mapping:
     id:
       type: string
@@ -38,17 +38,17 @@ picture.mappings.*:
       type: string
       label: 'Default language'
 
-entity_view_display.field.picture:
+entity_view_display.field.responsive_image:
   type: entity_field_view_display_base
-  label: 'Picture list format settings'
+  label: 'Responsive image list format settings'
   mapping:
     settings:
       type: mapping
       label: 'Settings'
       mapping:
-        picture_mapping:
+        responsive_image_mapping:
           type: string
-          label: 'Picture mapping'
+          label: 'Responsive image mapping'
         fallback_image_style:
           type: string
           label: 'Fallback image style'

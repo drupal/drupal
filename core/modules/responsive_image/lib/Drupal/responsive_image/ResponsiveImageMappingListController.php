@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains Drupal\picture\PictureListController.
+ * Contains Drupal\responsive_image\ResponsiveImageListController.
  */
 
-namespace Drupal\picture;
+namespace Drupal\responsive_image;
 
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of Pictures.
+ * Provides a listing of responsive image mappings.
  */
-class PictureMappingListController extends ConfigEntityListController {
+class ResponsiveImageMappingListController extends ConfigEntityListController {
 
   /**
    * {@inheritdoc}

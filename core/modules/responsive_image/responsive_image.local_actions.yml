@@ -1,0 +1,5 @@
+responsive_image.mapping_page_add:
+  route_name: responsive_image.mapping_page_add
+  title: 'Add responsive image mapping'
+  appears_on:
+    - responsive_image.mapping_page

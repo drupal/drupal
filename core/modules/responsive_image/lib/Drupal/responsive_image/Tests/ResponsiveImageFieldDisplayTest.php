@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\picture\Tests\PictureFieldDisplayTest.
+ * Definition of Drupal\responsive_image\Tests\ResponsiveImageFieldDisplayTest.
  */
 
-namespace Drupal\picture\Tests;
+namespace Drupal\responsive_image\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\breakpoint\Entity\Breakpoint;
@@ -14,23 +14,23 @@ use Drupal\image\Tests\ImageFieldTestBase;
 /**
  * Test class to check that formatters and display settings are working.
  */
-class PictureFieldDisplayTest extends ImageFieldTestBase {
+class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('field_ui', 'picture');
+  public static $modules = array('field_ui', 'responsive_image');
 
   /**
    * Drupal\simpletest\WebTestBase\getInfo().
    */
   public static function getInfo() {
     return array(
-      'name' => 'Picture field display tests',
-      'description' => 'Test picture display formatter.',
-      'group' => 'Picture',
+      'name' => 'Responsive Image field display tests',
+      'description' => 'Test responsive image display formatter.',
+      'group' => 'Responsive Image',
     );
   }
 
@@ -42,7 +42,7 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
 
     // Create user.
     $this->admin_user = $this->drupalCreateUser(array(
-      'administer pictures',
+      'administer responsive image',
       'access content',
       'access administration pages',
       'administer site configuration',
@@ -81,39 +81,39 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     }
     $breakpoint_group->save();
 
-    // Add picture mapping.
-    $picture_mapping = entity_create('picture_mapping', array(
+    // Add responsive image mapping.
+    $responsive_image_mapping = entity_create('responsive_image_mapping', array(
       'id' => 'mapping_one',
       'label' => 'Mapping One',
       'breakpointGroup' => 'atestset',
     ));
-    $picture_mapping->save();
-    $picture_mapping->mappings['custom.user.small']['1x'] = 'thumbnail';
-    $picture_mapping->mappings['custom.user.medium']['1x'] = 'medium';
-    $picture_mapping->mappings['custom.user.large']['1x'] = 'large';
-    $picture_mapping->save();
+    $responsive_image_mapping->save();
+    $responsive_image_mapping->mappings['custom.user.small']['1x'] = 'thumbnail';
+    $responsive_image_mapping->mappings['custom.user.medium']['1x'] = 'medium';
+    $responsive_image_mapping->mappings['custom.user.large']['1x'] = 'large';
+    $responsive_image_mapping->save();
   }
 
   /**
-   * Test picture formatters on node display for public files.
+   * Test responsive image formatters on node display for public files.
    */
-  public function testPictureFieldFormattersPublic() {
-    $this->_testPictureFieldFormatters('public');
+  public function testResponsiveImageFieldFormattersPublic() {
+    $this->_testResponsiveImageFieldFormatters('public');
   }
 
   /**
-   * Test picture formatters on node display for private files.
+   * Test responsive image formatters on node display for private files.
    */
-  public function testPictureFieldFormattersPrivate() {
+  public function testResponsiveImageFieldFormattersPrivate() {
     // Remove access content permission from anonymous users.
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array('access content' => FALSE));
-    $this->_testPictureFieldFormatters('private');
+    $this->_testResponsiveImageFieldFormatters('private');
   }
 
   /**
-   * Test picture formatters on node display.
+   * Test responsive image formatters on node display.
    */
-  public function _testPictureFieldFormatters($scheme) {
+  public function _testResponsiveImageFieldFormatters($scheme) {
     $field_name = drupal_strtolower($this->randomName());
     $this->createImageField($field_name, 'article', array('uri_scheme' => $scheme));
     // Create a new node with an image attached.
@@ -132,10 +132,10 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     $default_output = drupal_render($image);
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
-    // Use the picture formatter linked to file formatter.
+    // Use the responsive image formatter linked to file formatter.
     $display_options = array(
-      'type' => 'picture',
-      'module' => 'picture',
+      'type' => 'responsive_image',
+      'module' => 'responsive_image',
       'settings' => array('image_link' => 'file'),
     );
     $display = entity_get_display('node', 'article', 'default');
@@ -168,8 +168,8 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
       $this->drupalLogin($this->admin_user);
     }
 
-    // Use the picture formatter with a picture mapping.
-    $display_options['settings']['picture_mapping'] = 'mapping_one';
+    // Use the responsive image formatter with a responsive image mapping.
+    $display_options['settings']['responsive_image_mapping'] = 'mapping_one';
     $display->setComponent($field_name, $display_options)
       ->save();
 

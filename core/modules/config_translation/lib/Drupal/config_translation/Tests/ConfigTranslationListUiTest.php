@@ -35,7 +35,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     'shortcut',
     'taxonomy',
     'image',
-    'picture',
+    'responsive_image',
     'toolbar',
   );
 
@@ -73,7 +73,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
       'administer account settings',
       'administer languages',
       'administer image styles',
-      'administer pictures',
+      'administer responsive image',
       'translate configuration',
     );
 
@@ -364,20 +364,20 @@ class ConfigTranslationListUiTest extends WebTestBase {
   }
 
   /**
-   * Tests the picture mapping listing for the translate operation.
+   * Tests the responsive image mapping listing for the translate operation.
    */
-  public function doPictureListTest() {
+  public function doResponsiveImageListTest() {
     $edit = array();
     $edit['label'] = $this->randomName();
     $edit['id'] = strtolower($edit['label']);
 
-    $this->drupalPostForm('admin/config/media/picturemapping/add', $edit, t('Save'));
-    $this->assertRaw(t('Picture mapping %label saved.', array('%label' => $edit['label'])));
+    $this->drupalPostForm('admin/config/media/responsive-image-mapping/add', $edit, t('Save'));
+    $this->assertRaw(t('Responsive image mapping %label saved.', array('%label' => $edit['label'])));
 
-    // Get the picture mapping listing.
-    $this->drupalGet('admin/config/media/picturemapping');
+    // Get the responsive image mapping listing.
+    $this->drupalGet('admin/config/media/responsive-image-mapping');
 
-    $translate_link = 'admin/config/media/picturemapping/' . $edit['id'] . '/translate';
+    $translate_link = 'admin/config/media/responsive-image-mapping/' . $edit['id'] . '/translate';
     // Test if the link to translate the style is on the page.
     $this->assertLinkByHref($translate_link);
 
@@ -474,7 +474,7 @@ class ConfigTranslationListUiTest extends WebTestBase {
     $this->doUserRoleListTest();
     $this->doLanguageListTest();
     $this->doImageStyleListTest();
-    $this->doPictureListTest();
+    $this->doResponsiveImageListTest();
     $this->doDateFormatListTest();
     $this->doFieldListTest();
 

@@ -1,0 +1,5 @@
+responsive_image.mapping_page_edit:
+  title: Edit
+  route_name: responsive_image.mapping_page_edit
+  base_route: responsive_image.mapping_page_edit
+  weight: -10

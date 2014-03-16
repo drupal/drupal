@@ -2,31 +2,31 @@
 
 /**
  * @file
- * Picture display formatter for image fields.
+ * Responsive image display formatter for image fields.
  */
 
-use Drupal\picture\Entity\PictureMapping;
+use Drupal\responsive_image\Entity\ResponsiveImageMapping;
 use \Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_help().
  */
-function picture_help($path, $arg) {
+function responsive_image_help($path, $arg) {
   $output = '';
   switch ($path) {
-    case 'admin/help#picture':
+    case 'admin/help#responsive_image':
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Picture module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag. For more information, see the <a href="!picture">online documentation for the Picture module</a>.', array( '!picture' => 'https://drupal.org/documentation/modules/picture')) . '</p>';
+      $output .= '<p>' . t('The Responsive Image module provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag. For more information, see the <a href="!responsive_image">online documentation for the Responsive Image module</a>.', array( '!responsive_image' => 'https://drupal.org/documentation/modules/responsive_image')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('Defining picture mappings') . '</dt>';
-      $output .= '<dd>' . t('By creating picture mappings you define the image styles that are being used to output images at certain breakpoints. On the <a href="!picture_mapping">Picture mappings</a> page, click <em>Add picture mapping</em> to create a new mapping. First chose a label and a breakpoint group and click Save. After that you can choose the image styles that will be used for each breakpoint. Image styles can be defined on the <a href="!image_styles">Image styles page</a> that is provided by the <a href="!image_help">Image module</a>. Breakpoints are defined in the configuration files of the theme. See the <a href="!breakpoint_help">help page of the Breakpoint module</a> for more information.', array('!picture_mapping' => \Drupal::url('picture.mapping_page'), '!image_styles' => \Drupal::url('image.style_list'),'!image_help' => \Drupal::url('help.page', array('name' => 'image')), '!breakpoint_help' => \Drupal::url('help.page', array('name' => 'breakpoint')))) . '</dd>';
-      $output .= '<dt>' . t('Using picture mappings in image fields') . '</dt>';
-      $output .= '<dd>' . t('After defining picture mappings, you can use them in the display settings for your image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Picture</em>, click the Edit icon and select one of the picture mappings that you have created. For general information on how to manage fields and their display see the <a href="!field_ui">help page of the Field UI module</a>. For information about entities see the <a href="!entity_help">help page of the Entity module</a>.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')),'!entity_help' => \Drupal::url('help.page', array('name' => 'entity')))) . '</dd>';
+      $output .= '<dt>' . t('Defining responsive image mappings') . '</dt>';
+      $output .= '<dd>' . t('By creating responsive image mappings you define the image styles that are being used to output images at certain breakpoints. On the <a href="!responsive_image_mapping">Responsive image mappings</a> page, click <em>Add responsive image mapping</em> to create a new mapping. First chose a label and a breakpoint group and click Save. After that you can choose the image styles that will be used for each breakpoint. Image styles can be defined on the <a href="!image_styles">Image styles page</a> that is provided by the <a href="!image_help">Image module</a>. Breakpoints are defined in the configuration files of the theme. See the <a href="!breakpoint_help">help page of the Breakpoint module</a> for more information.', array('!responsive_image_mapping' => \Drupal::url('responsive_image.mapping_page'), '!image_styles' => \Drupal::url('image.style_list'),'!image_help' => \Drupal::url('help.page', array('name' => 'image')), '!breakpoint_help' => \Drupal::url('help.page', array('name' => 'breakpoint')))) . '</dd>';
+      $output .= '<dt>' . t('Using responsive image mappings in Image fields') . '</dt>';
+      $output .= '<dd>' . t('After defining responsive image mappings, you can use them in the display settings for your Image fields, so that the site displays responsive images using the HTML5 picture tag. Open the Manage display page for the entity type (content type, taxonomy vocabulary, etc.) that the Image field is attached to. Choose the format <em>Responsive image</em>, click the Edit icon, and select one of the responsive image mappings that you have created. For general information on how to manage fields and their display see the <a href="!field_ui">help page of the Field UI module</a>. For information about entities see the <a href="!entity_help">help page of the Entity module</a>.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')),'!entity_help' => \Drupal::url('help.page', array('name' => 'entity')))) . '</dd>';
       $output .= '</dl>';
       break;
-    case 'admin/config/media/picturemapping':
-      $output .= '<p>' . t('A picture mapping associates an image style with each breakpoint defined by your theme.') . '</p>';
+    case 'admin/config/media/responsive-image-mapping':
+      $output .= '<p>' . t('A responsive image mapping associates an image style with each breakpoint defined by your theme.') . '</p>';
       break;
 
   }
@@ -36,24 +36,47 @@ function picture_help($path, $arg) {
 /**
  * Implements hook_permission().
  */
-function picture_permission() {
+function responsive_image_permission() {
   return array(
-    'administer pictures' => array(
-      'title' => t('Administer Pictures'),
-      'description' => t('Administer Pictures'),
+    'administer responsive image' => array(
+      'title' => t('Administer responsive images'),
     ),
   );
 }
 
 /**
+ * Implements hook_menu().
+ */
+function responsive_image_menu() {
+  $items = array();
+
+  $items['admin/config/media/responsive-image-mapping'] = array(
+    'title' => 'Responsive image mappings',
+    'description' => 'Manage responsive image mappings',
+    'weight' => 10,
+    'route_name' => 'responsive_image.mapping_page',
+  );
+  $items['admin/config/media/responsive-image-mapping/%responsive_image_mapping'] = array(
+    'title' => 'Edit responsive image mapping',
+    'route_name' => 'responsive_image.mapping_page_edit',
+  );
+  $items['admin/config/media/responsive-image-mapping/%responsive_image_mapping/duplicate'] = array(
+    'title' => 'Duplicate responsive image mapping',
+    'route_name' => 'responsive_image.mapping_page_duplicate',
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_menu_link_defaults().
  */
-function picture_menu_link_defaults() {
-  $links['picture.admin.config.picturemapping'] = array(
-    'link_title' => 'Picture Mappings',
-    'description' => 'Manage picture mappings',
+function responsive_image_menu_link_defaults() {
+  $links['responsive_image.admin.config.responsive_imagemapping'] = array(
+    'link_title' => 'Responsive image mappings',
+    'description' => 'Manage responsive image mappings',
     'weight' => 10,
-    'route_name' => 'picture.mapping_page',
+    'route_name' => 'responsive_image.mapping_page',
     'parent' => 'system.admin.config.media',
   );
 
@@ -61,12 +84,12 @@ function picture_menu_link_defaults() {
 }
 
 /**
- * Load one picture by its identifier.
+ * Load one responsive image by its identifier.
  *
  * @param int $id
- *   The id of the picture mapping to load.
+ *   The id of the responsive image mapping to load.
  *
- * @return \Drupal\picture\Picture
+ * @return \Drupal\responsive_image\ResponsiveImageMappingInterface
  *   The entity object, or NULL if there is no entity with the given id.
  *
  * @todo Needed for menu_callback
@@ -74,16 +97,16 @@ function picture_menu_link_defaults() {
  * @see http://drupal.org/node/1798214
  *
  */
-function picture_mapping_load($id) {
-  return entity_load('picture_mapping', $id);
+function responsive_image_mapping_load($id) {
+  return entity_load('responsive_image_mapping', $id);
 }
 
 /**
  * Implements hook_theme().
  */
-function picture_theme() {
+function responsive_image_theme() {
   return array(
-    'picture' => array(
+    'responsive_image' => array(
       'variables' => array(
         'style_name' => NULL,
         'uri' => NULL,
@@ -95,7 +118,7 @@ function picture_theme() {
         'breakpoints' => array(),
       ),
     ),
-    'picture_formatter' => array(
+    'responsive_image_formatter' => array(
       'variables' => array(
         'item' => NULL,
         'path' => NULL,
@@ -103,7 +126,7 @@ function picture_theme() {
         'breakpoints' => array(),
       ),
     ),
-    'picture_source' => array(
+    'responsive_image_source' => array(
       'variables' => array(
         'src' => NULL,
         'srcset' => NULL,
@@ -115,7 +138,7 @@ function picture_theme() {
 }
 
 /**
- * Returns HTML for a picture field formatter.
+ * Returns HTML for a responsive image field formatter.
  *
  * @param array $variables
  *   An associative array containing:
@@ -126,7 +149,7 @@ function picture_theme() {
  *
  * @ingroup themeable
  */
-function theme_picture_formatter($variables) {
+function theme_responsive_image_formatter($variables) {
   $item = $variables['item'];
   if (!isset($variables['breakpoints']) || empty($variables['breakpoints'])) {
     $image_formatter = array(
@@ -138,37 +161,37 @@ function theme_picture_formatter($variables) {
     return drupal_render($image_formatter);
   }
 
-  $picture = array(
-    '#theme' => 'picture',
+  $responsive_image = array(
+    '#theme' => 'responsive_image',
     '#width' => $item->width,
     '#height' => $item->height,
     '#style_name' => $variables['image_style'],
     '#breakpoints' => $variables['breakpoints'],
   );
   if (isset($item->uri)) {
-    $picture['#uri'] = $item->uri;
+    $responsive_image['#uri'] = $item->uri;
   }
   elseif ($entity = $item->entity) {
-    $picture['#uri'] = $entity->getFileUri();
-    $picture['#entity'] = $entity;
+    $responsive_image['#uri'] = $entity->getFileUri();
+    $responsive_image['#entity'] = $entity;
   }
-  $picture['#alt'] = $item->alt;
+  $responsive_image['#alt'] = $item->alt;
   if (drupal_strlen($item->title) != 0) {
-    $picture['#title'] = $item->title;
+    $responsive_image['#title'] = $item->title;
   }
   // @todo Add support for route names.
   if (isset($variables['path']['path'])) {
     $path = $variables['path']['path'];
     $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();
     $options['html'] = TRUE;
-    return l($picture, $path, $options);
+    return l($responsive_image, $path, $options);
   }
 
-  return drupal_render($picture);
+  return drupal_render($responsive_image);
 }
 
 /**
- * Returns HTML for a picture.
+ * Returns HTML for a responsive image.
  *
  * @param $variables
  *   An associative array containing:
@@ -181,7 +204,7 @@ function theme_picture_formatter($variables) {
  *
  * @ingroup themeable
  */
-function theme_picture($variables) {
+function theme_responsive_image($variables) {
   // Make sure that width and height are proper values
   // If they exists we'll output them
   // @see http://www.w3.org/community/respimg/2012/06/18/florians-compromise/
@@ -200,7 +223,7 @@ function theme_picture($variables) {
   // Fallback image, output as source with media query.
   $sources[] = array(
     'src' => entity_load('image_style', $variables['style_name'])->buildUrl($variables['uri']),
-    'dimensions' => picture_get_image_dimensions($variables),
+    'dimensions' => responsive_image_get_image_dimensions($variables),
   );
 
   // All breakpoints and multipliers.
@@ -219,7 +242,7 @@ function theme_picture($variables) {
       if (count($new_sources) == 1) {
         $sources[] = array(
           'src' => entity_load('image_style', $new_sources[0]['style_name'])->buildUrl($new_sources[0]['uri']),
-          'dimensions' => picture_get_image_dimensions($new_sources[0]),
+          'dimensions' => responsive_image_get_image_dimensions($new_sources[0]),
           'media' => $breakpoint->mediaQuery,
         );
       }
@@ -231,7 +254,7 @@ function theme_picture($variables) {
         }
         $sources[] = array(
           'srcset' => implode(', ', $srcset),
-          'dimensions' => picture_get_image_dimensions($new_sources[0]),
+          'dimensions' => responsive_image_get_image_dimensions($new_sources[0]),
           'media' => $breakpoint->mediaQuery,
         );
       }
@@ -249,18 +272,18 @@ function theme_picture($variables) {
 
     // Add source tags to the output.
     foreach ($sources as $source) {
-      $picture_source = array(
-        '#theme' => 'picture_source',
+      $responsive_image_source = array(
+        '#theme' => 'responsive_image_source',
         '#src' => $source['src'],
         '#dimensions' => $source['dimensions'],
       );
       if (isset($source['media'])) {
-        $picture_source['#media'] = $source['media'];
+        $responsive_image_source['#media'] = $source['media'];
       }
       if (isset($source['srcset'])) {
-        $picture_source['#srcset'] = $source['srcset'];
+        $responsive_image_source['#srcset'] = $source['srcset'];
       }
-      $output[] = drupal_render($picture_source);
+      $output[] = drupal_render($responsive_image_source);
     }
 
     // Output the fallback image.
@@ -295,7 +318,7 @@ function theme_picture($variables) {
  *
  * @ingroup themeable
  */
-function theme_picture_source($variables) {
+function theme_responsive_image_source($variables) {
   $output = array();
   if (isset($variables['media']) && !empty($variables['media'])) {
     if (!isset($variables['srcset'])) {
@@ -327,7 +350,7 @@ function theme_picture_source($variables) {
  *   Dimensions to be modified - an array with components width and height, in
  *   pixels.
  */
-function picture_get_image_dimensions($variables) {
+function responsive_image_get_image_dimensions($variables) {
   // Determine the dimensions of the styled image.
   $dimensions = array(
     'width' => $variables['width'],

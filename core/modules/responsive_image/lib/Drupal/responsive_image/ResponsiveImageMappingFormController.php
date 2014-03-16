@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains Drupal\picture\PictureFormController.
+ * Contains Drupal\responsive_image\ResponsiveImageFormController.
  */
 
-namespace Drupal\picture;
+namespace Drupal\responsive_image;
 
 use Drupal\Core\Entity\EntityFormController;
 
 /**
- * Form controller for the picture edit/add forms.
+ * Form controller for the responsive image edit/add forms.
  */
-class PictureMappingFormController extends EntityFormController {
+class ResponsiveImageMappingFormController extends EntityFormController {
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().
@@ -21,7 +21,7 @@ class PictureMappingFormController extends EntityFormController {
    *   A nested array form elements comprising the form.
    * @param array $form_state
    *   An associative array containing the current state of the form.
-   * @param \Drupal\picture\PictureMappingInterface $picture_mapping
+   * @param \Drupal\responsive_image\ResponsiveImageMappingInterface $responsive_image_mapping
    *   The entity being edited.
    *
    * @return array
@@ -29,33 +29,33 @@ class PictureMappingFormController extends EntityFormController {
    */
   public function form(array $form, array &$form_state) {
     if ($this->operation == 'duplicate') {
-      $form['#title'] = $this->t('<em>Duplicate picture mapping</em> @label', array('@label' => $this->entity->label()));
+      $form['#title'] = $this->t('<em>Duplicate responsive image mapping</em> @label', array('@label' => $this->entity->label()));
       $this->entity = $this->entity->createDuplicate();
     }
     if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('<em>Edit picture mapping</em> @label', array('@label' => $this->entity->label()));
+      $form['#title'] = $this->t('<em>Edit responsive image mapping</em> @label', array('@label' => $this->entity->label()));
     }
 
-    $picture_mapping = $this->entity;
+    $responsive_image_mapping = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
-      '#default_value' => $picture_mapping->label(),
+      '#default_value' => $responsive_image_mapping->label(),
       '#description' => $this->t("Example: 'Hero image' or 'Author image'."),
       '#required' => TRUE,
     );
     $form['id'] = array(
       '#type' => 'machine_name',
-      '#default_value' => $picture_mapping->id(),
+      '#default_value' => $responsive_image_mapping->id(),
       '#machine_name' => array(
-        'exists' => 'picture_mapping_load',
+        'exists' => 'responsive_image_mapping_load',
         'source' => array('label'),
       ),
-      '#disabled' => (bool) $picture_mapping->id() && $this->operation != 'duplicate',
+      '#disabled' => (bool) $responsive_image_mapping->id() && $this->operation != 'duplicate',
     );
 
-    if ((bool) $picture_mapping->id() && $this->operation != 'duplicate') {
+    if ((bool) $responsive_image_mapping->id() && $this->operation != 'duplicate') {
       $description = $this->t('Select a breakpoint group from the enabled themes.') . ' ' . $this->t("Warning: if you change the breakpoint group you lose all your selected mappings.");
     }
     else {
@@ -64,16 +64,16 @@ class PictureMappingFormController extends EntityFormController {
     $form['breakpointGroup'] = array(
       '#type' => 'select',
       '#title' => $this->t('Breakpoint group'),
-      '#default_value' => !empty($picture_mapping->breakpointGroup) ? $picture_mapping->breakpointGroup->id() : '',
+      '#default_value' => !empty($responsive_image_mapping->breakpointGroup) ? $responsive_image_mapping->breakpointGroup->id() : '',
       '#options' => breakpoint_group_select_options(),
       '#required' => TRUE,
       '#description' => $description,
     );
 
     $image_styles = image_style_options(TRUE);
-    foreach ($picture_mapping->mappings as $breakpoint_id => $mapping) {
+    foreach ($responsive_image_mapping->mappings as $breakpoint_id => $mapping) {
       foreach ($mapping as $multiplier => $image_style) {
-        $breakpoint = $picture_mapping->breakpointGroup->getBreakpointById($breakpoint_id);
+        $breakpoint = $responsive_image_mapping->breakpointGroup->getBreakpointById($breakpoint_id);
         $label = $multiplier . ' ' . $breakpoint->name . ' [' . $breakpoint->mediaQuery . ']';
         $form['mappings'][$breakpoint_id][$multiplier] = array(
           '#type' => 'select',
@@ -87,7 +87,7 @@ class PictureMappingFormController extends EntityFormController {
 
     $form['#tree'] = TRUE;
 
-    return parent::form($form, $form_state, $picture_mapping);
+    return parent::form($form, $form_state, $responsive_image_mapping);
   }
 
   /**
@@ -113,11 +113,11 @@ class PictureMappingFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::validate().
    */
   public function validate(array $form, array &$form_state) {
-    $picture_mapping = $this->entity;
+    $responsive_image_mapping = $this->entity;
 
     // Only validate on edit.
     if (isset($form_state['values']['mappings'])) {
-      $picture_mapping->mappings = $form_state['values']['mappings'];
+      $responsive_image_mapping->mappings = $form_state['values']['mappings'];
 
       // Check if another breakpoint group is selected.
       if ($form_state['values']['breakpointGroup'] != $form_state['complete_form']['breakpointGroup']['#default_value']) {
@@ -125,7 +125,7 @@ class PictureMappingFormController extends EntityFormController {
         unset($form_state['values']['mappings']);
       }
       // Make sure at least one mapping is defined.
-      elseif (!$picture_mapping->isNew() && !$picture_mapping->hasMappings()) {
+      elseif (!$responsive_image_mapping->isNew() && !$responsive_image_mapping->hasMappings()) {
         $this->setFormError('mappings', $form_state, $this->t('Please select at least one mapping.'));
       }
     }
@@ -135,24 +135,24 @@ class PictureMappingFormController extends EntityFormController {
    * Overrides Drupal\Core\Entity\EntityFormController::save().
    */
   public function save(array $form, array &$form_state) {
-    $picture_mapping = $this->entity;
-    $picture_mapping->save();
+    $responsive_image_mapping = $this->entity;
+    $responsive_image_mapping->save();
 
-    watchdog('picture', 'Picture mapping @label saved.', array('@label' => $picture_mapping->label()), WATCHDOG_NOTICE);
-    drupal_set_message($this->t('Picture mapping %label saved.', array('%label' => $picture_mapping->label())));
+    watchdog('responsive_image', 'Responsive image mapping @label saved.', array('@label' => $responsive_image_mapping->label()), WATCHDOG_NOTICE);
+    drupal_set_message($this->t('Responsive image mapping %label saved.', array('%label' => $responsive_image_mapping->label())));
 
     // Redirect to edit form after creating a new mapping or after selecting
     // another breakpoint group.
-    if (!$picture_mapping->hasMappings()) {
+    if (!$responsive_image_mapping->hasMappings()) {
       $form_state['redirect_route'] = array(
-        'route_name' => 'picture.mapping_page_edit',
+        'route_name' => 'responsive_image.mapping_page_edit',
         'route_parameters' => array(
-          'picture_mapping' => $picture_mapping->id(),
+          'responsive_image_mapping' => $responsive_image_mapping->id(),
         ),
       );
     }
     else {
-      $form_state['redirect_route']['route_name'] = 'picture.mapping_page';
+      $form_state['redirect_route']['route_name'] = 'responsive_image.mapping_page';
     }
   }
 

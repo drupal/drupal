@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\picture\Tests\PictureAdminUITest.
+ * Definition of Drupal\responsive_image\Tests\ResponsiveImageAdminUITest.
  */
 
-namespace Drupal\picture\Tests;
+namespace Drupal\responsive_image\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\breakpoint\Entity\Breakpoint;
@@ -13,23 +13,23 @@ use Drupal\breakpoint\Entity\Breakpoint;
 /**
  * Tests for breakpoint sets admin interface.
  */
-class PictureAdminUITest extends WebTestBase {
+class ResponsiveImageAdminUITest extends WebTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('picture');
+  public static $modules = array('responsive_image');
 
   /**
    * Drupal\simpletest\WebTestBase\getInfo().
    */
   public static function getInfo() {
     return array(
-      'name' => 'Picture administration functionality',
-      'description' => 'Thoroughly test the administrative interface of the picture module.',
-      'group' => 'Picture',
+      'name' => 'Responsive Image administration functionality',
+      'description' => 'Thoroughly test the administrative interface of the responsive image module.',
+      'group' => 'Responsive Image',
     );
   }
 
@@ -41,7 +41,7 @@ class PictureAdminUITest extends WebTestBase {
 
     // Create user.
     $this->admin_user = $this->drupalCreateUser(array(
-      'administer pictures',
+      'administer responsive image',
     ));
 
     $this->drupalLogin($this->admin_user);
@@ -74,15 +74,15 @@ class PictureAdminUITest extends WebTestBase {
   }
 
   /**
-   * Test picture administration functionality.
+   * Test responsive image administration functionality.
    */
-  public function testPictureAdmin() {
+  public function testResponsiveImageAdmin() {
     // We start without any default mappings.
-    $this->drupalGet('admin/config/media/picturemapping');
-    $this->assertText('There is no Picture mapping yet.');
+    $this->drupalGet('admin/config/media/responsive-image-mapping');
+    $this->assertText('There is no Responsive image mapping yet.');
 
-    // Add a new picture mapping, our breakpoint set should be selected.
-    $this->drupalGet('admin/config/media/picturemapping/add');
+    // Add a new responsive_image mapping, our breakpoint set should be selected.
+    $this->drupalGet('admin/config/media/responsive-image-mapping/add');
     $this->assertFieldByName('breakpointGroup', 'atestset');
 
     // Create a new group.
@@ -91,17 +91,17 @@ class PictureAdminUITest extends WebTestBase {
       'id' => 'mapping_one',
       'breakpointGroup' => 'atestset',
     );
-    $this->drupalPostForm('admin/config/media/picturemapping/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/media/responsive-image-mapping/add', $edit, t('Save'));
 
     // Check if the new group is created.
     $this->assertResponse(200);
-    $this->drupalGet('admin/config/media/picturemapping');
-    $this->assertNoText('There is no Picture mapping yet.');
+    $this->drupalGet('admin/config/media/responsive-image-mapping');
+    $this->assertNoText('There is no Responsive image mapping yet.');
     $this->assertText('Mapping One');
     $this->assertText('mapping_one');
 
     // Edit the group.
-    $this->drupalGet('admin/config/media/picturemapping/mapping_one');
+    $this->drupalGet('admin/config/media/responsive-image-mapping/mapping_one');
     $this->assertFieldByName('label', 'Mapping One');
     $this->assertFieldByName('breakpointGroup', 'atestset');
 
@@ -121,8 +121,8 @@ class PictureAdminUITest extends WebTestBase {
       'mappings[custom.user.medium][1x]' => 'medium',
       'mappings[custom.user.large][1x]' => 'large',
     );
-    $this->drupalPostForm('admin/config/media/picturemapping/mapping_one', $edit, t('Save'));
-    $this->drupalGet('admin/config/media/picturemapping/mapping_one');
+    $this->drupalPostForm('admin/config/media/responsive-image-mapping/mapping_one', $edit, t('Save'));
+    $this->drupalGet('admin/config/media/responsive-image-mapping/mapping_one');
     $this->assertFieldByName('mappings[custom.user.small][1x]', 'thumbnail');
     $this->assertFieldByName('mappings[custom.user.small][2x]', '');
     $this->assertFieldByName('mappings[custom.user.medium][1x]', 'medium');
@@ -131,10 +131,10 @@ class PictureAdminUITest extends WebTestBase {
     $this->assertFieldByName('mappings[custom.user.large][2x]', '');
 
     // Delete the mapping.
-    $this->drupalGet('admin/config/media/picturemapping/mapping_one/delete');
+    $this->drupalGet('admin/config/media/responsive-image-mapping/mapping_one/delete');
     $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->drupalGet('admin/config/media/picturemapping');
-    $this->assertText('There is no Picture mapping yet.');
+    $this->drupalGet('admin/config/media/responsive-image-mapping');
+    $this->assertText('There is no Responsive image mapping yet.');
   }
 
 }

@@ -353,15 +353,15 @@ Path module
 Phone module
 - Dave Reid 'davereid' http://drupal.org/user/53892
 
-Picture module
-- Peter Droogmans 'attiks' http://drupal.org/user/105002
-
 RDF module
 - Stéphane Corlosquet 'scor' http://drupal.org/user/52142
 
 REST module
 - Klaus Purer 'klausi' http://drupal.org/user/262198
 - Larry Garfield 'Crell' http://drupal.org/user/26398
+
+Responsive Image module
+- Peter Droogmans 'attiks' http://drupal.org/user/105002
 
 Search module
 - Jennifer Hodgdon 'jhodgdon' https://drupal.org/user/155601

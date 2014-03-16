@@ -2,67 +2,67 @@
 
 /**
  * @file
- * Definition of Drupal\picture\PictureMapping.
+ * Definition of Drupal\responsive_image\ResponsiveImageMapping.
  */
 
-namespace Drupal\picture\Entity;
+namespace Drupal\responsive_image\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\picture\PictureMappingInterface;
+use Drupal\responsive_image\ResponsiveImageMappingInterface;
 
 /**
- * Defines the Picture entity.
+ * Defines the responsive image mapping entity.
  *
  * @ConfigEntityType(
- *   id = "picture_mapping",
- *   label = @Translation("Picture mapping"),
+ *   id = "responsive_image_mapping",
+ *   label = @Translation("Responsive image mapping"),
  *   controllers = {
- *     "list" = "Drupal\picture\PictureMappingListController",
+ *     "list" = "Drupal\responsive_image\ResponsiveImageMappingListController",
  *     "form" = {
- *       "edit" = "Drupal\picture\PictureMappingFormController",
- *       "add" = "Drupal\picture\PictureMappingFormController",
- *       "delete" = "Drupal\picture\Form\PictureMappingDeleteForm",
- *       "duplicate" = "Drupal\picture\PictureMappingFormController"
+ *       "edit" = "Drupal\responsive_image\ResponsiveImageMappingFormController",
+ *       "add" = "Drupal\responsive_image\ResponsiveImageMappingFormController",
+ *       "delete" = "Drupal\responsive_image\Form\ResponsiveImageMappingDeleteForm",
+ *       "duplicate" = "Drupal\responsive_image\ResponsiveImageMappingFormController"
  *     }
  *   },
- *   list_path = "admin/config/media/picturemapping",
- *   admin_permission = "administer pictures",
+ *   list_path = "admin/config/media/responsive-image-mapping",
+ *   admin_permission = "administer responsive image",
  *   config_prefix = "mappings",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"
  *   },
  *   links = {
- *     "edit-form" = "picture.mapping_page_edit",
- *     "duplicate-form" = "picture.mapping_page_duplicate"
+ *     "edit-form" = "responsive_image.mapping_page_edit",
+ *     "duplicate-form" = "responsive_image.mapping_page_duplicate"
  *   }
  * )
  */
-class PictureMapping extends ConfigEntityBase implements PictureMappingInterface {
+class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImageMappingInterface {
 
   /**
-   * The picture ID (machine name).
+   * The responsive image ID (machine name).
    *
    * @var string
    */
   public $id;
 
   /**
-   * The picture label.
+   * The responsive image label.
    *
    * @var string
    */
   public $label;
 
   /**
-   * The picture mappings.
+   * The responsive image mappings.
    *
    * @var array
    */
   public $mappings = array();
 
   /**
-   * The picture breakpoint group.
+   * The responsive image breakpoint group.
    *
    * @var BreakpointGroup
    */
@@ -104,7 +104,7 @@ class PictureMapping extends ConfigEntityBase implements PictureMappingInterface
    * Implements \Drupal\Core\Entity\EntityInterface::createDuplicate().
    */
   public function createDuplicate() {
-    return entity_create('picture_mapping', array(
+    return entity_create('responsive_image_mapping', array(
       'id' => '',
       'label' => t('Clone of !label', array('!label' => check_plain($this->label()))),
       'mappings' => $this->mappings,
