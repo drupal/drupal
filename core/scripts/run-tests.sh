@@ -1,12 +1,17 @@
 <?php
+
 /**
  * @file
  * This script runs Drupal tests from command line.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
+use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\Timer;
+use Drupal\Core\Database\Database;
+use Drupal\Core\DrupalKernel;
+use Symfony\Component\HttpFoundation\Request;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31; // Red.
@@ -20,38 +25,26 @@ if ($args['help'] || $count == 0) {
   exit;
 }
 
+simpletest_script_init();
+simpletest_script_bootstrap();
+
 if ($args['execute-test']) {
-  // Masquerade as Apache for running tests.
-  simpletest_script_init("Apache");
+  simpletest_script_setup_database();
   simpletest_script_run_one_test($args['test-id'], $args['execute-test']);
-  // Sub-process script execution ends here.
-}
-else {
-  // Run administrative functions as CLI.
-  simpletest_script_init(NULL);
-}
-
-// Bootstrap to perform initial validation or other operations.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
-
-if (!\Drupal::moduleHandler()->moduleExists('simpletest')) {
-  simpletest_script_print_error("The Testing (simpletest) module must be installed before this script can run.");
+  // Sub-process exited already; this is just for clarity.
   exit;
 }
-simpletest_classloader_register();
-// We have to add a Request.
-$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
-$container = \Drupal::getContainer();
-$container->set('request', $request);
+
+simpletest_script_setup_database(TRUE);
 
 if ($args['clean']) {
-  // Clean up left-over times and directories.
+  // Clean up left-over tables and directories.
   simpletest_clean_environment();
   echo "\nEnvironment cleaned.\n";
 
   // Get the status messages and print them.
-  $messages = array_pop(drupal_get_messages('status'));
-  foreach ($messages as $text) {
+  $messages = drupal_get_messages('status');
+  foreach ($messages['status'] as $text) {
     echo " - " . $text . "\n";
   }
   exit;
@@ -123,10 +116,26 @@ All arguments are long options.
   --clean     Cleans up database tables or directories from previous, failed,
               tests and then exits (no tests are run).
 
-  --url       Immediately precedes a URL to set the host and path. You will
-              need this parameter if Drupal is in a subdirectory on your
-              localhost and you have not set \$base_url in settings.php. Tests
-              can be run under SSL by including https:// in the URL.
+  --url       The base URL of the root directory of this Drupal checkout; e.g.:
+                http://drupal.test/
+              Required unless the Drupal root directory maps exactly to:
+                http://localhost:80/
+              Use a https:// URL to force all tests to be run under SSL.
+
+  --sqlite    A pathname to use for the SQLite database of the test runner.
+              Required unless this script is executed with a working Drupal
+              installation that has Simpletest module installed.
+              A relative pathname is interpreted relative to the Drupal root
+              directory.
+              Note that ':memory:' cannot be used, because this script spawns
+              sub-processes. However, you may use e.g. '/tmpfs/test.sqlite'
+
+  --dburl     A URI denoting the database driver, credentials, server hostname,
+              and database name to use in tests. For example:
+                mysql://username:password@localhost/databasename#table_prefix
+              Only used if specified.
+              Required when running tests without a Drupal installation that
+              contains default database connection info in settings.php.
 
   --php       The absolute path to the PHP executable. Usually not needed.
 
@@ -185,7 +194,16 @@ sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --url http://example.com/ --all
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --url http://example.com/ --class "Drupal\block\Tests\BlockTest"
-\n
+
+Without a preinstalled Drupal site and enabled Simpletest module, specify a
+SQLite database pathname to create and the default database connection info to
+use in tests:
+
+sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
+  --sqlite /tmpfs/drupal/test.sqlite
+  --dburl mysql://username:password@localhost/database
+  --url http://example.com/ --all
+
 EOF;
 }
 
@@ -202,6 +220,8 @@ function simpletest_script_parse_args() {
     'list' => FALSE,
     'clean' => FALSE,
     'url' => '',
+    'sqlite' => NULL,
+    'dburl' => NULL,
     'php' => '',
     'concurrency' => 1,
     'all' => FALSE,
@@ -265,7 +285,7 @@ function simpletest_script_parse_args() {
 /**
  * Initialize script variables and perform general setup requirements.
  */
-function simpletest_script_init($server_software) {
+function simpletest_script_init() {
   global $args, $php;
 
   $host = 'localhost';
@@ -311,7 +331,7 @@ function simpletest_script_init($server_software) {
   $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
   $_SERVER['SERVER_ADDR'] = '127.0.0.1';
   $_SERVER['SERVER_PORT'] = $port;
-  $_SERVER['SERVER_SOFTWARE'] = $server_software;
+  $_SERVER['SERVER_SOFTWARE'] = NULL;
   $_SERVER['SERVER_NAME'] = 'localhost';
   $_SERVER['REQUEST_URI'] = $path .'/';
   $_SERVER['REQUEST_METHOD'] = 'GET';
@@ -329,6 +349,196 @@ function simpletest_script_init($server_software) {
 
   chdir(realpath(__DIR__ . '/../..'));
   require_once dirname(__DIR__) . '/includes/bootstrap.inc';
+}
+
+/**
+ * Bootstraps a minimal Drupal environment.
+ *
+ * @see install_begin_request()
+ */
+function simpletest_script_bootstrap() {
+  // Load legacy include files.
+  foreach (glob(DRUPAL_ROOT . '/core/includes/*.inc') as $include) {
+    require_once $include;
+  }
+
+  // Replace services with in-memory and null implementations.
+  $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\InstallerServiceProvider';
+
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  // Remove Drupal's error/exception handlers; they are designed for HTML
+  // and there is no storage nor a (watchdog) logger here.
+  restore_error_handler();
+  restore_exception_handler();
+
+  // In addition, ensure that PHP errors are not hidden away in logs.
+  ini_set('display_errors', TRUE);
+
+  // Ensure that required Settings exist.
+  if (!Settings::getSingleton()->getAll()) {
+    new Settings(array(
+      'hash_salt' => 'run-tests',
+    ));
+  }
+
+  $kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
+  $kernel->boot();
+
+  $request = Request::createFromGlobals();
+  $container = $kernel->getContainer();
+  $container->enterScope('request');
+  $container->set('request', $request, 'request');
+
+  $module_handler = $container->get('module_handler');
+  // @todo Remove System module. Only needed because \Drupal\Core\Datetime\Date
+  //   has a (needless) dependency on the 'date_format' entity, so calls to
+  //   format_date()/format_interval() cause a plugin not found exception.
+  $module_list['system'] = 'core/modules/system/system.module';
+  $module_list['simpletest'] = 'core/modules/simpletest/simpletest.module';
+  $module_handler->setModuleList($module_list);
+  $module_handler->loadAll();
+  $kernel->updateModules($module_list, $module_list);
+
+  simpletest_classloader_register();
+}
+
+/**
+ * Sets up database connection info for running tests.
+ *
+ * If this script is executed from within a real Drupal installation, then this
+ * function essentially performs nothing (unless the --sqlite or --dburl
+ * parameters were passed).
+ *
+ * Otherwise, there are three database connections of concern:
+ * - --sqlite: The test runner connection, providing access to Simpletest
+ *   database tables for recording test IDs and assertion results.
+ * - --dburl: A database connection that is used as base connection info for all
+ *   tests; i.e., every test will spawn from this connection. In case this
+ *   connection uses e.g. SQLite, then all tests will run against SQLite. This
+ *   is exposed as $databases['default']['default'] to Drupal.
+ * - The actual database connection used within a test. This is the same as
+ *   --dburl, but uses an additional database table prefix. This is
+ *   $databases['default']['default'] within a test environment. The original
+ *   connection is retained in
+ *   $databases['simpletest_original_default']['default'] and restored after
+ *   each test.
+ *
+ * @param bool $new
+ *   Whether this process is a run-tests.sh master process. If TRUE, the SQLite
+ *   database file specified by --sqlite (if any) is set up. Otherwise, database
+ *   connections are prepared only.
+ */
+function simpletest_script_setup_database($new = FALSE) {
+  global $args, $databases;
+
+  // If there is an existing Drupal installation that contains a database
+  // connection info in settings.php, then $databases['default']['default'] will
+  // hold the default database connection already. This connection is assumed to
+  // be valid, and this connection will be used in tests, so that they run
+  // against e.g. MySQL instead of SQLite.
+
+  // However, in case no Drupal installation exists, this default database
+  // connection can be set and/or overridden with the --dburl parameter.
+  if (!empty($args['dburl'])) {
+    // Remove a possibly existing default connection (from settings.php).
+    unset($databases['default']);
+    Database::removeConnection('default');
+
+    $info = parse_url($args['dburl']);
+    if (!isset($info['scheme'], $info['host'], $info['path'])) {
+      simpletest_script_print_error('Invalid --dburl. Minimum requirement: driver://host/database');
+      exit(1);
+    }
+    $info += array(
+      'user' => '',
+      'pass' => '',
+      'fragment' => '',
+    );
+    $databases['default']['default'] = array(
+      'driver' => $info['scheme'],
+      'username' => $info['user'],
+      'password' => $info['pass'],
+      'host' => $info['host'],
+      'database' => ltrim($info['path'], '/'),
+      'prefix' => array(
+        'default' => $info['fragment'],
+      ),
+    );
+  }
+  // Otherwise, ensure that database table prefix info is an array.
+  // @see https://drupal.org/node/2176621
+  elseif (isset($databases['default']['default'])) {
+    if (!is_array($databases['default']['default']['prefix'])) {
+      $databases['default']['default']['prefix'] = array(
+        'default' => $databases['default']['default']['prefix'],
+      );
+    }
+  }
+
+  // If there is no default database connection for tests, we cannot continue.
+  if (!isset($databases['default']['default'])) {
+    simpletest_script_print_error('Missing default database connection for tests. Use --dburl to specify one.');
+    exit(1);
+  }
+  Database::addConnectionInfo('default', 'default', $databases['default']['default']);
+
+  // If no --sqlite parameter has been passed, then Simpletest module is assumed
+  // to be installed, so the test runner database connection is the default
+  // database connection.
+  if (empty($args['sqlite'])) {
+    $sqlite = FALSE;
+    $databases['test-runner']['default'] = $databases['default']['default'];
+  }
+  // Otherwise, set up a SQLite connection for the test runner.
+  else {
+    if ($args['sqlite'][0] === '/') {
+      $sqlite = $args['sqlite'];
+    }
+    else {
+      $sqlite = DRUPAL_ROOT . '/' . $args['sqlite'];
+    }
+    $databases['test-runner']['default'] = array(
+      'driver' => 'sqlite',
+      'database' => $sqlite,
+      'prefix' => array(
+        'default' => '',
+      ),
+    );
+    // Create the test runner SQLite database, unless it exists already.
+    if ($new && !file_exists($sqlite)) {
+      if (!is_dir(dirname($sqlite))) {
+        mkdir(dirname($sqlite));
+      }
+      touch($sqlite);
+    }
+  }
+
+  // Add the test runner database connection.
+  Database::addConnectionInfo('test-runner', 'default', $databases['test-runner']['default']);
+
+  // Create the Simpletest schema.
+  try {
+    $schema = Database::getConnection('default', 'test-runner')->schema();
+  }
+  catch (\PDOException $e) {
+    simpletest_script_print_error($databases['test-runner']['default']['driver'] . ': ' . $e->getMessage());
+    exit(1);
+  }
+  if ($new && $sqlite) {
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'simpletest') . '/simpletest.install';
+    foreach (simpletest_schema() as $name => $table_spec) {
+      if ($schema->tableExists($name)) {
+        $schema->dropTable($name);
+      }
+      $schema->createTable($name, $table_spec);
+    }
+  }
+  // Verify that the Simpletest database schema exists by checking one table.
+  if (!$schema->tableExists('simpletest')) {
+    simpletest_script_print_error('Missing Simpletest database schema. Either install Simpletest module or use the --sqlite parameter.');
+    exit(1);
+  }
 }
 
 /**
@@ -373,7 +583,8 @@ function simpletest_script_execute_batch($test_classes) {
         break;
       }
 
-      $test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
+      $test_id = Database::getConnection('default', 'test-runner')
+        ->insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
       $test_ids[] = $test_id;
 
       $test_class = array_shift($test_classes);
@@ -471,11 +682,7 @@ function simpletest_script_run_phpunit($test_id, $class) {
   }
 
   foreach ($summaries as $class => $summary) {
-    $had_fails = $summary['#fail'] > 0;
-    $had_exceptions = $summary['#exception'] > 0;
-    $status = ($had_fails || $had_exceptions ? 'fail' : 'pass');
-    $info = call_user_func(array($class, 'getInfo'));
-    simpletest_script_print($info['name'] . ' ' . _simpletest_format_summary_line($summary) . "\n", simpletest_script_color_code($status));
+    simpletest_script_reporter_display_summary($class, $summary);
   }
 }
 
@@ -486,24 +693,12 @@ function simpletest_script_run_one_test($test_id, $test_class) {
   global $args;
 
   try {
-    // Bootstrap Drupal.
-    drupal_bootstrap(DRUPAL_BOOTSTRAP_CODE);
-    simpletest_classloader_register();
-    // We have to add a Request.
-    $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
-    $container = \Drupal::getContainer();
-    $container->set('request', $request);
-
     $test = new $test_class($test_id);
     $test->dieOnFail = (bool) $args['die-on-fail'];
     $test->verbose = (bool) $args['verbose'];
     $test->run();
-    $info = $test->getInfo();
 
-    $had_fails = (isset($test->results['#fail']) && $test->results['#fail'] > 0);
-    $had_exceptions = (isset($test->results['#exception']) && $test->results['#exception'] > 0);
-    $status = ($had_fails || $had_exceptions ? 'fail' : 'pass');
-    simpletest_script_print($info['name'] . ' ' . _simpletest_format_summary_line($test->results) . "\n", simpletest_script_color_code($status));
+    simpletest_script_reporter_display_summary($test_class, $test->results);
 
     // Finished, kill this runner.
     exit(0);
@@ -529,6 +724,12 @@ function simpletest_script_command($test_id, $test_class) {
 
   $command = escapeshellarg($php) . ' ' . escapeshellarg('./core/scripts/' . $args['script']);
   $command .= ' --url ' . escapeshellarg($args['url']);
+  if (!empty($args['sqlite'])) {
+    $command .= ' --sqlite ' . escapeshellarg($args['sqlite']);
+  }
+  if (!empty($args['dburl'])) {
+    $command .= ' --dburl ' . escapeshellarg($args['dburl']);
+  }
   $command .= ' --php ' . escapeshellarg($php);
   $command .= " --test-id $test_id";
   foreach (array('verbose', 'keep-results', 'color', 'die-on-fail') as $arg) {
@@ -597,17 +798,18 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
     // would also delete file directories of other tests that are potentially
     // running concurrently.
     file_unmanaged_delete_recursive($test_directory, array('Drupal\simpletest\TestBase', 'filePreDeleteCallback'));
-    $messages[] = "- Removed test files directory.";
+    $messages[] = "- Removed test site directory.";
   }
 
   // Clear out all database tables from the test.
+  $schema = Database::getConnection('default', 'default')->schema();
   $count = 0;
-  foreach (db_find_tables($db_prefix . '%') as $table) {
-    db_drop_table($table);
+  foreach ($schema->findTables($db_prefix . '%') as $table) {
+    $schema->dropTable($table);
     $count++;
   }
   if ($count) {
-    $messages[] = "- " . format_plural($count, 'Removed 1 leftover table.', 'Removed @count leftover tables.');
+    $messages[] = "- Removed $count leftover tables.";
   }
 
   if ($output) {
@@ -710,14 +912,13 @@ function simpletest_script_reporter_init() {
   else {
     echo "Tests to be run:\n";
     foreach ($test_list as $class_name) {
-      $info = call_user_func(array($class_name, 'getInfo'));
-      echo " - " . $info['name'] . ' (' . $class_name . ')' . "\n";
+      echo "  - $class_name\n";
     }
     echo "\n";
   }
 
   echo "Test run started:\n";
-  echo " " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
+  echo "  " . date('l, F j, Y - H:i', $_SERVER['REQUEST_TIME']) . "\n";
   Timer::start('run-tests');
   echo "\n";
 
@@ -727,12 +928,39 @@ function simpletest_script_reporter_init() {
 }
 
 /**
+ * Displays the assertion result summary for a single test class.
+ *
+ * @param string $class
+ *   The test class name that was run.
+ * @param array $results
+ *   The assertion results using #pass, #fail, #exception, #debug array keys.
+ */
+function simpletest_script_reporter_display_summary($class, $results) {
+  // Output all test results vertically aligned.
+  // Cut off the class name after 60 chars, and pad each group with 3 digits
+  // by default (more than 999 assertions are rare).
+  $output = vsprintf('%-60.60s %10s %9s %14s %12s', array(
+    $class,
+                                   $results['#pass']      . ' passes',
+    !$results['#fail']      ? '' : $results['#fail']      . ' fails',
+    !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
+    !$results['#debug']     ? '' : $results['#debug']     . ' messages',
+  ));
+
+  $status = ($results['#fail'] || $results['#exception'] ? 'fail' : 'pass');
+  simpletest_script_print($output . "\n", simpletest_script_color_code($status));
+}
+
+/**
  * Display jUnit XML test results.
  */
 function simpletest_script_reporter_write_xml_results() {
   global $args, $test_ids, $results_map;
 
-  $results = db_query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(':test_ids' => $test_ids));
+  $results = Database::getConnection('default', 'test-runner')
+    ->query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(
+      ':test_ids' => $test_ids,
+    ));
 
   $test_class = '';
   $xml_files = array();
@@ -817,7 +1045,10 @@ function simpletest_script_reporter_display_results() {
     echo "Detailed test results\n";
     echo "---------------------\n";
 
-    $results = db_query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(':test_ids' => $test_ids));
+    $results = Database::getConnection('default', 'test-runner')
+      ->query("SELECT * FROM {simpletest} WHERE test_id IN (:test_ids) ORDER BY test_class, message_id", array(
+        ':test_ids' => $test_ids,
+      ));
     $test_class = '';
     foreach ($results as $result) {
       if (isset($results_map[$result->status])) {

@@ -361,8 +361,16 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  *   that ran.
  */
 function simpletest_last_test_get($test_id) {
-  $last_prefix = db_query_range('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, array(':test_id' => $test_id))->fetchField();
-  $last_test_class = db_query_range('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, array(':test_id' => $test_id))->fetchField();
+  $last_prefix = TestBase::getDatabaseConnection()
+    ->queryRange('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', 0, 1, array(
+      ':test_id' => $test_id,
+    ))
+    ->fetchField();
+  $last_test_class = TestBase::getDatabaseConnection()
+    ->queryRange('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', 0, 1, array(
+      ':test_id' => $test_id,
+    ))
+    ->fetchField();
   return array($last_prefix, $last_test_class);
 }
 
@@ -696,22 +704,23 @@ function simpletest_clean_temporary_directories() {
  */
 function simpletest_clean_results_table($test_id = NULL) {
   if (\Drupal::config('simpletest.settings')->get('clear_results')) {
+    $connection = TestBase::getDatabaseConnection();
     if ($test_id) {
-      $count = db_query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
+      $count = $connection->query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
 
-      db_delete('simpletest')
+      $connection->delete('simpletest')
         ->condition('test_id', $test_id)
         ->execute();
-      db_delete('simpletest_test_id')
+      $connection->delete('simpletest_test_id')
         ->condition('test_id', $test_id)
         ->execute();
     }
     else {
-      $count = db_query('SELECT COUNT(test_id) FROM {simpletest_test_id}')->fetchField();
+      $count = $connection->query('SELECT COUNT(test_id) FROM {simpletest_test_id}')->fetchField();
 
       // Clear test results.
-      db_delete('simpletest')->execute();
-      db_delete('simpletest_test_id')->execute();
+      $connection->delete('simpletest')->execute();
+      $connection->delete('simpletest_test_id')->execute();
     }
 
     return $count;

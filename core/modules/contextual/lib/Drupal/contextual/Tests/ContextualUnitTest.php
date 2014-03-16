@@ -13,6 +13,14 @@ use Drupal\simpletest\DrupalUnitTestBase;
  * Tests _contextual_links_to_id() & _contextual_id_to_links().
  */
 class ContextualUnitTest extends DrupalUnitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('contextual');
+
   public static function getInfo() {
     return array(
       'name' => 'Conversion to and from "contextual id"s (for placeholders)',

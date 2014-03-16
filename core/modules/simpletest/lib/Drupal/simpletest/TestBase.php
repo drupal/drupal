@@ -371,13 +371,24 @@ abstract class TestBase {
    *   The database connection to use for inserting assertions.
    */
   public static function getDatabaseConnection() {
+    // Check whether there is a test runner connection.
+    // @see run-tests.sh
+    // @todo Convert Simpletest UI runner to create + use this connection, too.
     try {
-      $connection = Database::getConnection('default', 'simpletest_original_default');
+      $connection = Database::getConnection('default', 'test-runner');
     }
     catch (ConnectionNotDefinedException $e) {
-      // If the test was not set up, the simpletest_original_default
-      // connection does not exist.
-      $connection = Database::getConnection('default', 'default');
+      // Check whether there is a backup of the original default connection.
+      // @see TestBase::prepareEnvironment()
+      try {
+        $connection = Database::getConnection('default', 'simpletest_original_default');
+      }
+      catch (ConnectionNotDefinedException $e) {
+        // If TestBase::prepareEnvironment() or TestBase::restoreEnvironment()
+        // failed, the test-specific database connection does not exist
+        // yet/anymore, so fall back to the default of the (UI) test runner.
+        $connection = Database::getConnection('default', 'default');
+      }
     }
     return $connection;
   }
@@ -918,7 +929,7 @@ abstract class TestBase {
     // As soon as the database prefix is set, the test might start to execute.
     // All assertions as well as the SimpleTest batch operations are associated
     // with the testId, so the database prefix has to be associated with it.
-    $affected_rows = db_update('simpletest_test_id')
+    $affected_rows = self::getDatabaseConnection()->update('simpletest_test_id')
       ->fields(array('last_prefix' => $this->databasePrefix))
       ->condition('test_id', $this->testId)
       ->execute();
@@ -935,6 +946,13 @@ abstract class TestBase {
   private function changeDatabasePrefix() {
     if (empty($this->databasePrefix)) {
       $this->prepareDatabasePrefix();
+    }
+    // If the backup already exists, something went terribly wrong.
+    // This case is possible, because database connection info is a static
+    // global state construct on the Database class, which at least persists
+    // for all test methods executed in one PHP process.
+    if (Database::getConnectionInfo('simpletest_original_default')) {
+      throw new \RuntimeException("Bad Database connection state: 'simpletest_original_default' connection key already exists. Broken test?");
     }
 
     // Clone the current connection and replace the current prefix.
@@ -992,6 +1010,9 @@ abstract class TestBase {
     $this->originalSite = conf_path();
     $this->originalSettings = settings()->getAll();
     $this->originalConfig = $GLOBALS['config'];
+    // @todo Remove all remnants of $GLOBALS['conf'].
+    // @see https://drupal.org/node/2183323
+    $this->originalConf = isset($GLOBALS['conf']) ? $GLOBALS['conf'] : NULL;
 
     // Backup statics and globals.
     $this->originalContainer = clone \Drupal::getContainer();
@@ -1075,6 +1096,8 @@ abstract class TestBase {
 
     // Unset globals.
     unset($GLOBALS['config_directories']);
+    unset($GLOBALS['config']);
+    unset($GLOBALS['conf']);
     unset($GLOBALS['theme_key']);
     unset($GLOBALS['theme']);
 
@@ -1084,9 +1107,6 @@ abstract class TestBase {
 
     // Change the database prefix.
     $this->changeDatabasePrefix();
-
-    // Remove all configuration overrides.
-    $GLOBALS['config'] = array();
 
     // After preparing the environment and changing the database prefix, we are
     // in a valid test environment.
@@ -1214,6 +1234,7 @@ abstract class TestBase {
 
     // Restore original in-memory configuration.
     $GLOBALS['config'] = $this->originalConfig;
+    $GLOBALS['conf'] = $this->originalConf;
     new Settings($this->originalSettings);
 
     // Restore original statics and globals.
