@@ -1093,6 +1093,12 @@ abstract class TestBase {
     drupal_valid_test_ua($this->databasePrefix);
     conf_path(FALSE, TRUE);
 
+    // Reset settings.
+    new Settings(array(
+      // For performance, simply use the database prefix as hash salt.
+      'hash_salt' => $this->databasePrefix,
+    ));
+
     drupal_set_time_limit($this->timeLimit);
   }
 
