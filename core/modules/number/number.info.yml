@@ -1,8 +1,0 @@
-name: Number
-type: module
-description: 'Defines numeric field types.'
-package: Field types
-version: VERSION
-core: 8.x
-dependencies:
-  - field

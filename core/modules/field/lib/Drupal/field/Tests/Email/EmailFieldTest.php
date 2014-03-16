@@ -2,12 +2,11 @@
 
 /**
  * @file
- * Definition of Drupal\email\Tests\EmailFieldTest.
+ * Contains \Drupal\field\Tests\Email\EmailFieldTest.
  */
 
-namespace Drupal\email\Tests;
+namespace Drupal\field\Tests\Email;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -20,7 +19,7 @@ class EmailFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'entity_test', 'email', 'field_ui');
+  public static $modules = array('node', 'entity_test', 'field_ui');
 
   /**
    * A field to use in this test class.
@@ -115,4 +114,5 @@ class EmailFieldTest extends WebTestBase {
     $this->drupalSetContent(drupal_render($content));
     $this->assertLinkByHref('mailto:test@example.com');
   }
+
 }

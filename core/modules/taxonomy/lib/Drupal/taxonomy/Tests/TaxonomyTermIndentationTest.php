@@ -62,7 +62,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     // Move the second term back out to the root level.
     $edit = array(
       'terms[tid:' . $term2->id() . ':0][term][tid]' => 2,
-      'terms[tid:' . $term2->id() . ':0][term][parent]' => '',
+      'terms[tid:' . $term2->id() . ':0][term][parent]' => 0,
       'terms[tid:' . $term2->id() . ':0][term][depth]' => 0,
       'terms[tid:' . $term2->id() . ':0][weight]' => 1,
     );

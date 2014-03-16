@@ -17,8 +17,7 @@ use Drupal\Core\Field\WidgetBase;
  *   id = "string",
  *   label = @Translation("String field"),
  *   field_types = {
- *     "string",
- *     "email"
+ *     "string"
  *   },
  *   settings = {
  *     "size" = "60",

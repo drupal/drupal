@@ -83,7 +83,7 @@ class MetadataGeneratorTest extends EditTestBase {
     $field_2_name = 'field_nr';
     $field_2_label = 'Simple number field';
     $this->createFieldWithInstance(
-      $field_2_name, 'number_integer', 1, $field_2_label,
+      $field_2_name, 'integer', 1, $field_2_label,
       // Instance settings.
       array(),
       // Widget type & settings.

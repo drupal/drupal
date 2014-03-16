@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\number\Plugin\field\formatter\DefaultNumberFormatter.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\NumericFormatterBase.
  */
 
-namespace Drupal\number\Plugin\Field\FieldFormatter;
+namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
- * Parent plugin for decimal and integer formatters
+ * Parent plugin for decimal and integer formatters.
  */
-abstract class DefaultNumberFormatter extends FormatterBase {
+abstract class NumericFormatterBase extends FormatterBase {
 
   /**
    * {@inheritdoc}
@@ -94,4 +94,5 @@ abstract class DefaultNumberFormatter extends FormatterBase {
    *   The formatted number.
    */
   abstract protected function numberFormat($number);
+
 }

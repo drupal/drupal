@@ -2,26 +2,32 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\FloatItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\FloatItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * Defines the 'float' entity field type.
+ * Defines the 'float' field type.
  *
  * @FieldType(
  *   id = "float",
- *   label = @Translation("Float"),
- *   description = @Translation("An entity field containing an float value."),
- *   configurable = FALSE
+ *   label = @Translation("Number (float)"),
+ *   description = @Translation("This field stores a number in the database in a floating point format."),
+ *   instance_settings = {
+ *     "min" = "",
+ *     "max" = "",
+ *     "prefix" = "",
+ *     "suffix" = ""
+ *   },
+ *   default_widget = "number",
+ *   default_formatter = "number_decimal"
  * )
  */
-class FloatItem extends FieldItemBase {
+class FloatItem extends NumericItemBase {
 
   /**
    * {@inheritdoc}

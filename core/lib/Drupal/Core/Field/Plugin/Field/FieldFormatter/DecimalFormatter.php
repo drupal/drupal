@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\number\Plugin\field\formatter\NumberDecimalFormatter.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\DecimalFormatter.
  */
 
-namespace Drupal\number\Plugin\Field\FieldFormatter;
+namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 /**
  * Plugin implementation of the 'number_decimal' formatter.
@@ -18,8 +18,8 @@ namespace Drupal\number\Plugin\Field\FieldFormatter;
  *   id = "number_decimal",
  *   label = @Translation("Default"),
  *   field_types = {
- *     "number_decimal",
- *     "number_float"
+ *     "decimal",
+ *     "float"
  *   },
  *   settings = {
  *     "thousand_separator" = "",
@@ -29,7 +29,7 @@ namespace Drupal\number\Plugin\Field\FieldFormatter;
  *   }
  * )
  */
-class NumberDecimalFormatter extends DefaultNumberFormatter {
+class DecimalFormatter extends NumericFormatterBase {
 
   /**
    * {@inheritdoc}

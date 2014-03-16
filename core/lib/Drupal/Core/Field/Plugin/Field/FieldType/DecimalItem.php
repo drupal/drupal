@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\number\Plugin\Field\FieldType\DecimalItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\DecimalItem.
  */
 
-namespace Drupal\number\Plugin\Field\FieldType;
+namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * Plugin implementation of the 'number_decimal' field type.
+ * Defines the 'decimal' field type.
  *
  * @FieldType(
- *   id = "number_decimal",
+ *   id = "decimal",
  *   label = @Translation("Number (decimal)"),
  *   description = @Translation("This field stores a number in the database in a fixed decimal format."),
  *   settings = {
@@ -31,7 +31,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_formatter = "number_decimal"
  * )
  */
-class DecimalItem extends NumberItemBase {
+class DecimalItem extends NumericItemBase {
 
   /**
    * {@inheritdoc}
@@ -51,8 +51,8 @@ class DecimalItem extends NumberItemBase {
       'columns' => array(
         'value' => array(
           'type' => 'numeric',
-          'precision' => $field_definition->settings['precision'],
-          'scale' => $field_definition->settings['scale'],
+          'precision' => $field_definition->getSetting('precision'),
+          'scale' => $field_definition->getSetting('scale'),
           'not null' => FALSE
         )
       ),

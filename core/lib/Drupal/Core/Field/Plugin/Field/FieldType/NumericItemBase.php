@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\number\Plugin\Field\FieldType\NumberItemBase.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\NumericItemBase.
  */
 
-namespace Drupal\number\Plugin\Field\FieldType;
+namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
 
 /**
- * Base class for 'number' configurable field types.
+ * Base class for numeric configurable field types.
  */
-abstract class NumberItemBase extends FieldItemBase {
+abstract class NumericItemBase extends FieldItemBase {
 
   /**
    * {@inheritdoc}

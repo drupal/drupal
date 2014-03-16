@@ -26,7 +26,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'field_test', 'text', 'number', 'entity_test');
+  public static $modules = array('field', 'field_test', 'text', 'entity_test');
 
   /**
    * The name of the created field.
@@ -300,7 +300,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $field = entity_create('field_config', array(
       'name' => 'decimal52',
       'entity_type' => $entity_type,
-      'type' => 'number_decimal',
+      'type' => 'decimal',
       'settings' => array('precision' => 5, 'scale' => 2),
     ));
     $field->save();

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\email\Tests\EmailItemTest.
+ * Contains \Drupal\field\Tests\Email\EmailItemTest.
  */
 
-namespace Drupal\email\Tests;
+namespace Drupal\field\Tests\Email;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldItemInterface;

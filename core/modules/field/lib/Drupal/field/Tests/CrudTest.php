@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\CrudTest.
+ * Contains \Drupal\field\Tests\CrudTest.
  */
 
 namespace Drupal\field\Tests;
@@ -17,7 +17,7 @@ class CrudTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('number');
+  public static $modules = array();
 
   public static function getInfo() {
     return array(
@@ -364,13 +364,13 @@ class CrudTest extends FieldUnitTestBase {
     $field_definition = array(
       'name' => 'field_type',
       'entity_type' => 'entity_test',
-      'type' => 'number_decimal',
+      'type' => 'decimal',
     );
     $field = entity_create('field_config', $field_definition);
     $field->save();
 
     try {
-      $field->type = 'number_integer';
+      $field->type = 'integer';
       $field->save();
       $this->fail(t('Cannot update a field to a different type.'));
     }

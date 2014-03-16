@@ -75,7 +75,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
   /**
    * The field type.
    *
-   * Example: text, number_integer.
+   * Example: text, integer.
    *
    * @var string
    */

@@ -2,26 +2,32 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\Field\FieldType\IntegerItem.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldType\IntegerItem.
  */
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * Defines the 'integer' entity field type.
+ * Defines the 'integer' field type.
  *
  * @FieldType(
  *   id = "integer",
- *   label = @Translation("Integer"),
- *   description = @Translation("An entity field containing an integer value."),
- *   configurable = FALSE
+ *   label = @Translation("Number (integer)"),
+ *   description = @Translation("This field stores a number in the database as an integer."),
+ *   instance_settings = {
+ *     "min" = "",
+ *     "max" = "",
+ *     "prefix" = "",
+ *     "suffix" = ""
+ *   },
+ *   default_widget = "number",
+ *   default_formatter = "number_integer"
  * )
  */
-class IntegerItem extends FieldItemBase {
+class IntegerItem extends NumericItemBase {
 
   /**
    * {@inheritdoc}
@@ -41,7 +47,7 @@ class IntegerItem extends FieldItemBase {
       'columns' => array(
         'value' => array(
           'type' => 'int',
-          'not null' => TRUE,
+          'not null' => FALSE,
         ),
       ),
     );

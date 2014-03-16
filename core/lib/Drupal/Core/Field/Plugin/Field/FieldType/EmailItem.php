@@ -12,14 +12,13 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
- * Defines the 'email' entity field type.
+ * Defines the 'email' field type.
  *
  * @FieldType(
  *   id = "email",
  *   label = @Translation("E-mail"),
  *   description = @Translation("An entity field containing an e-mail value."),
- *   configurable = FALSE,
- *   default_widget = "string",
+ *   default_widget = "email_default",
  *   default_formatter = "string"
  * )
  */

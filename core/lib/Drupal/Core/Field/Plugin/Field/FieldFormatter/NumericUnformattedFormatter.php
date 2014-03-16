@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\number\Plugin\field\formatter\NumberUnformattedFormatter.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\NumericUnformattedFormatter.
  */
 
-namespace Drupal\number\Plugin\Field\FieldFormatter;
+namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -17,13 +17,13 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   id = "number_unformatted",
  *   label = @Translation("Unformatted"),
  *   field_types = {
- *     "number_integer",
- *     "number_decimal",
- *     "number_float"
+ *     "integer",
+ *     "decimal",
+ *     "float"
  *   }
  * )
  */
-class NumberUnformattedFormatter extends FormatterBase {
+class NumericUnformattedFormatter extends FormatterBase {
 
   /**
    * {@inheritdoc}

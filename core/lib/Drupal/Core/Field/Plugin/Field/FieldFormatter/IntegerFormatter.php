@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\number\Plugin\field\formatter\NumberIntegerFormatter.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\IntegerFormatter.
  */
 
-namespace Drupal\number\Plugin\Field\FieldFormatter;
+namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 /**
  * Plugin implementation of the 'number_integer' formatter.
@@ -18,7 +18,7 @@ namespace Drupal\number\Plugin\Field\FieldFormatter;
  *   id = "number_integer",
  *   label = @Translation("Default"),
  *   field_types = {
- *     "number_integer"
+ *     "integer"
  *   },
  *   settings = {
  *     "thousand_separator" = "",
@@ -26,7 +26,7 @@ namespace Drupal\number\Plugin\Field\FieldFormatter;
  *   }
  * )
  */
-class NumberIntegerFormatter extends DefaultNumberFormatter {
+class IntegerFormatter extends NumericFormatterBase {
 
   /**
    * {@inheritdoc}

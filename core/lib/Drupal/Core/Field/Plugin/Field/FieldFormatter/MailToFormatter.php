@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\email\Plugin\Field\FieldFormatter\MailToFormatter.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldFormatter\MailToFormatter.
  */
 
-namespace Drupal\email\Plugin\Field\FieldFormatter;
+namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\email\Plugin\Field\FieldWidget\EmailDefaultWidget.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\EmailDefaultWidget.
  */
 
-namespace Drupal\email\Plugin\Field\FieldWidget;
+namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;

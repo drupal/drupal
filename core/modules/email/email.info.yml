@@ -1,8 +1,0 @@
-name: E-mail
-type: module
-description: 'Defines a field type for e-mail addresses.'
-package: Field types
-version: VERSION
-core: 8.x
-dependencies:
-  - field

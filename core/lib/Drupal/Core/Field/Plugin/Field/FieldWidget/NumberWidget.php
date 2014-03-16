@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\number\Plugin\Field\FieldWidget\NumberWidget.
+ * Contains \Drupal\Core\Field\Plugin\Field\FieldWidget\NumberWidget.
  */
 
-namespace Drupal\number\Plugin\Field\FieldWidget;
+namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
@@ -18,9 +18,9 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *   id = "number",
  *   label = @Translation("Text field"),
  *   field_types = {
- *     "number_integer",
- *     "number_decimal",
- *     "number_float"
+ *     "integer",
+ *     "decimal",
+ *     "float"
  *   },
  *   settings = {
  *     "placeholder" = ""
@@ -74,11 +74,11 @@ class NumberWidget extends WidgetBase {
 
     // Set the step for floating point and decimal numbers.
     switch ($this->fieldDefinition->getType()) {
-      case 'number_decimal':
+      case 'decimal':
         $element['#step'] = pow(0.1, $field_settings['scale']);
         break;
 
-      case 'number_float':
+      case 'float':
         $element['#step'] = 'any';
         break;
     }

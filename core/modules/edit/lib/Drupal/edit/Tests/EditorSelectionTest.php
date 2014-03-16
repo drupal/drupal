@@ -153,7 +153,7 @@ class EditorSelectionTest extends EditTestBase {
   public function testNumber() {
     $field_name = 'field_nr';
     $this->createFieldWithInstance(
-      $field_name, 'number_integer', 1, 'Simple number field',
+      $field_name, 'integer', 1, 'Simple number field',
       // Instance settings.
       array(),
       // Widget type & settings.

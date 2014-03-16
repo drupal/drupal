@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\number\Tests\NumberItemTest.
+ * Contains \Drupal\field\Tests\Number\NumberItemTest.
  */
 
-namespace Drupal\number\Tests;
+namespace Drupal\field\Tests\Number;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -21,7 +21,7 @@ class NumberItemTest extends FieldUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('number');
+  public static $modules = array();
 
   public static function getInfo() {
     return array(
@@ -39,7 +39,7 @@ class NumberItemTest extends FieldUnitTestBase {
       entity_create('field_config', array(
         'name' => 'field_' . $type,
         'entity_type' => 'entity_test',
-        'type' => 'number_' . $type,
+        'type' => $type,
       ))->save();
       entity_create('field_instance_config', array(
         'entity_type' => 'entity_test',

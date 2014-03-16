@@ -115,3 +115,197 @@ entity_form_display.field.hidden:
       sequence:
         - type: string
 
+# Schema for the configuration files of the Email field type.
+
+field.email.settings:
+  type: sequence
+  label: 'E-mail settings'
+  sequence:
+    - type: string
+
+field.email.instance_settings:
+  type: sequence
+  label: 'E-mail settings'
+  sequence:
+    - type: string
+      label: 'Setting'
+
+field.email.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: email
+          label: 'Value'
+
+# Schema for configuration files of a numeric field types.
+
+field.integer.settings:
+  type: sequence
+  label: 'Integer settings'
+  sequence:
+    - type: string
+      label: 'setting'
+
+field.integer.instance_settings:
+  type: mapping
+  label: 'Integer'
+  mapping:
+    min:
+      type: integer
+      label: 'Minimum'
+    max:
+      type: integer
+      label: 'Maximum'
+    prefix:
+      type: string
+      label: 'Prefix'
+    suffix:
+      type: string
+      label: 'Suffix'
+
+field.integer.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default value'
+      mapping:
+        value:
+          type: integer
+          label: 'Value'
+
+field.decimal.settings:
+  type: mapping
+  label: 'Decimal settings'
+  mapping:
+    precision:
+      type: integer
+      label: 'Precision'
+    scale:
+      type: integer
+      label: 'Scale'
+
+field.decimal.instance_settings:
+  type: mapping
+  label: 'Decimal'
+  mapping:
+    min:
+      type: float
+      label: 'Minimum'
+    max:
+      type: float
+      label: 'Maximum'
+    prefix:
+      type: string
+      label: 'Prefix'
+    suffix:
+      type: string
+      label: 'Suffix'
+
+field.decimal.value:
+   type: sequence
+   label: 'Default value'
+   sequence:
+     - type: mapping
+       label: 'Default value'
+       mapping:
+         value:
+           type: float
+           label: 'Value'
+
+field.float.settings:
+  type: sequence
+  label: 'Float settings'
+  sequence:
+    - type: string
+      label: 'setting'
+
+field.float.instance_settings:
+  type: mapping
+  label: 'Float'
+  mapping:
+    min:
+      type: float
+      label: 'Minimum'
+    max:
+      type: float
+      label: 'Maximum'
+    prefix:
+      type: string
+      label: 'Prefix'
+    suffix:
+      type: string
+      label: 'Suffix'
+
+field.float.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default value'
+      mapping:
+        value:
+          type: float
+          label: 'Value'
+
+entity_view_display.field.number_decimal:
+  type: entity_field_view_display_base
+  label: 'Number decimal display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        thousand_separator:
+          type: string
+          label: 'Thousand marker'
+        decimal_separator:
+          type: string
+          label: 'Decimal marker'
+        scale:
+          type: integer
+          label: 'Scale'
+        prefix_suffix:
+          type: boolean
+          label: 'Display prefix and suffix.'
+
+entity_view_display.field.number_integer:
+  type: entity_field_view_display_base
+  label: 'Number interger display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        thousand_separator:
+          type: string
+          label: 'Thousand marker'
+        prefix_suffix:
+          type: boolean
+          label: 'Display prefix and suffix.'
+
+entity_view_display.field.number_unformatted:
+  type: entity_field_view_display_base
+  label: 'Number unformatted display format settings'
+  mapping:
+    settings:
+      type: sequence
+      label: 'Settings'
+      sequence:
+        - type: string
+
+entity_form_display.field.number:
+  type: entity_field_form_display_base
+  label: 'Number default display format settings'
+  mapping:
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        placeholder:
+          type: label
+          label: 'Placeholder'

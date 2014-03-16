@@ -22,7 +22,6 @@ dependencies:
   - help
   - image
   - menu
-  - number
   - options
   - path
   - taxonomy

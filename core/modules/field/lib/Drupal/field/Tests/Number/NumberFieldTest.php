@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\number\NumberFieldTest.
+ * Contains \Drupal\field\Tests\Number\NumberFieldTest.
  */
 
-namespace Drupal\number\Tests;
+namespace Drupal\field\Tests\Number;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests for number field types.
+ * Tests for numeric field types.
  */
 class NumberFieldTest extends WebTestBase {
 
@@ -19,7 +19,7 @@ class NumberFieldTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'entity_test', 'number', 'field_ui');
+  public static $modules = array('node', 'entity_test', 'field_ui');
 
   /**
    * A field to use in this class.
@@ -44,8 +44,8 @@ class NumberFieldTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
-      'name'  => 'Number field',
-      'description'  => 'Test the creation of number fields.',
+      'name'  => 'Numeric fields',
+      'description'  => 'Test the creation of numeric fields.',
       'group' => 'Field types'
     );
   }
@@ -58,7 +58,7 @@ class NumberFieldTest extends WebTestBase {
   }
 
   /**
-   * Test number_decimal field.
+   * Test decimal field.
    */
   function testNumberDecimalField() {
     // Create a field with settings to validate.
@@ -66,7 +66,7 @@ class NumberFieldTest extends WebTestBase {
     entity_create('field_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
-      'type' => 'number_decimal',
+      'type' => 'decimal',
       'settings' => array(
         'precision' => 8, 'scale' => 4, 'decimal_separator' => '.',
       )
@@ -147,7 +147,7 @@ class NumberFieldTest extends WebTestBase {
   }
 
   /**
-   * Test number_integer field.
+   * Test integer field.
    */
   function testNumberIntegerField() {
     $minimum = rand(-4000, -2000);
@@ -158,7 +158,7 @@ class NumberFieldTest extends WebTestBase {
     entity_create('field_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
-      'type' => 'number_integer',
+      'type' => 'integer',
     ))->save();
 
     entity_create('field_instance_config', array(
@@ -254,7 +254,7 @@ class NumberFieldTest extends WebTestBase {
   }
 
   /**
-  * Test number_float field.
+  * Test float field.
   */
   function testNumberFloatField() {
     // Create a field with settings to validate.
@@ -262,7 +262,7 @@ class NumberFieldTest extends WebTestBase {
     entity_create('field_config', array(
       'name' => $field_name,
       'entity_type' => 'entity_test',
-      'type' => 'number_float',
+      'type' => 'float',
     ))->save();
 
     entity_create('field_instance_config', array(
@@ -361,13 +361,13 @@ class NumberFieldTest extends WebTestBase {
     entity_create('field_config', array(
       'name' => $float_field,
       'entity_type' => 'node',
-      'type' => 'number_float',
+      'type' => 'float',
     ))->save();
 
     entity_create('field_config', array(
       'name' => $integer_field,
       'entity_type' => 'node',
-      'type' => 'number_integer',
+      'type' => 'integer',
     ))->save();
 
     entity_create('field_instance_config', array(
@@ -430,7 +430,7 @@ class NumberFieldTest extends WebTestBase {
     // Go to manage display page.
     $this->drupalGet("admin/structure/types/manage/$type/display");
 
-    // Configure number_decimal formatter for number_float_field
+    // Configure number_decimal formatter for the 'float' field type.
     $thousand_separator = $thousand_separators[array_rand($thousand_separators)];
     $decimal_separator = $decimal_separators[array_rand($decimal_separators)];
     $scale = rand(0, 10);
@@ -475,4 +475,5 @@ class NumberFieldTest extends WebTestBase {
     $integer_formatted = number_format($random_integer, 0, '', $thousand_separator);
     $this->assertRaw($integer_formatted, 'Random integer formatted');
   }
+
 }

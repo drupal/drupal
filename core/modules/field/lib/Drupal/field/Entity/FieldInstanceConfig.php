@@ -135,7 +135,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    *
    * This property is overlooked if the $default_value_function is non-empty.
    *
-   * Example for a number_integer field:
+   * Example for a integer field:
    * @code
    * array(
    *   array('value' => 1),
