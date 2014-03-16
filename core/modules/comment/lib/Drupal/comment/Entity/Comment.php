@@ -133,12 +133,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
         } while (!\Drupal::lock()->acquire($lock_name));
         $this->threadLock = $lock_name;
       }
-      if (is_null($this->getCreatedTime())) {
-        $this->setCreatedTime(REQUEST_TIME);
-      }
-      if (is_null($this->getChangedTime())) {
-        $this->set('changed', $this->getCreatedTime());
-      }
       // We test the value with '===' because we need to modify anonymous
       // users as well.
       if ($this->getOwnerId() === \Drupal::currentUser()->id() && \Drupal::currentUser()->isAuthenticated()) {
@@ -276,16 +270,13 @@ class Comment extends ContentEntityBase implements CommentInterface {
       ->setDescription(t("The comment author's hostname."))
       ->setSetting('max_length', 128);
 
-    // @todo Convert to a "created" field in https://drupal.org/node/2145103.
-    $fields['created'] = FieldDefinition::create('integer')
+    $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the comment was created.'));
 
-    // @todo Convert to a "changed" field in https://drupal.org/node/2145103.
-    $fields['changed'] = FieldDefinition::create('integer')
+    $fields['changed'] = FieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the comment was last edited.'))
-      ->setPropertyConstraints('value', array('EntityChanged' => array()));
+      ->setDescription(t('The time that the comment was last edited.'));
 
     $fields['status'] = FieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))

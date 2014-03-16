@@ -78,27 +78,6 @@ class Node extends ContentEntityBase implements NodeInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
-    parent::preCreate($storage_controller, $values);
-    // @todo Handle this through property defaults.
-    if (empty($values['created'])) {
-      $values['created'] = REQUEST_TIME;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
-    parent::preSave($storage_controller);
-
-    // Before saving the node, set changed and revision times.
-    $this->changed->value = REQUEST_TIME;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
     parent::preSaveRevision($storage_controller, $record);
 
@@ -410,16 +389,13 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the node is published.'));
 
-    // @todo Convert to a "created" field in https://drupal.org/node/2145103.
-    $fields['created'] = FieldDefinition::create('integer')
+    $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the node was created.'));
 
-    // @todo Convert to a "changed" field in https://drupal.org/node/2145103.
-    $fields['changed'] = FieldDefinition::create('integer')
+    $fields['changed'] = FieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the node was last edited.'))
-      ->setPropertyConstraints('value', array('EntityChanged' => array()));
+      ->setDescription(t('The time that the node was last edited.'));
 
     $fields['promote'] = FieldDefinition::create('boolean')
       ->setLabel(t('Promote'))
@@ -429,8 +405,7 @@ class Node extends ContentEntityBase implements NodeInterface {
       ->setLabel(t('Sticky'))
       ->setDescription(t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'));
 
-    // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
-    $fields['revision_timestamp'] = FieldDefinition::create('integer')
+    $fields['revision_timestamp'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Revision timestamp'))
       ->setDescription(t('The time that the current revision was created.'))
       ->setQueryable(FALSE);

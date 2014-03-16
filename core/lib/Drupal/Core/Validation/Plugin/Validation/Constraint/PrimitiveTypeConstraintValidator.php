@@ -54,10 +54,10 @@ class PrimitiveTypeConstraintValidator extends ConstraintValidator {
     }
     // @todo: Move those to separate constraint validators.
     try {
-      if ($typed_data instanceof DateTimeInterface && $typed_data->getDateTime()->hasErrors()) {
+      if ($typed_data instanceof DateTimeInterface && $typed_data->getDateTime() && $typed_data->getDateTime()->hasErrors()) {
         $valid = FALSE;
       }
-      if ($typed_data instanceof DurationInterface && !($typed_data->getDuration() instanceof \DateInterval)) {
+      if ($typed_data instanceof DurationInterface && $typed_data->getDuration() && !($typed_data->getDuration() instanceof \DateInterval)) {
         $valid = FALSE;
       }
     }

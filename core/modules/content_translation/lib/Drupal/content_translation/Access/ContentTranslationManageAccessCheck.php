@@ -45,7 +45,7 @@ class ContentTranslationManageAccessCheck implements AccessInterface {
     if ($entity = $request->attributes->get($entity_type)) {
       $route_requirements = $route->getRequirements();
       $operation = $route_requirements['_access_content_translation_manage'];
-      $controller = content_translation_controller($entity_type);
+      $controller = content_translation_controller($entity_type, $account);
 
       // Load translation.
       $translations = $entity->getTranslationLanguages();

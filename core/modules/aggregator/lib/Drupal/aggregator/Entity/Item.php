@@ -50,17 +50,6 @@ class Item extends ContentEntityBase implements ItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function postCreate(EntityStorageControllerInterface $storage_controller) {
-    parent::postCreate($storage_controller);
-
-    if ($this->getPostedTime() === NULL) {
-      $this->setPostedTime(REQUEST_TIME);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['iid'] = FieldDefinition::create('integer')
       ->setLabel(t('Aggregator item ID'))
@@ -93,8 +82,7 @@ class Item extends ContentEntityBase implements ItemInterface {
       ->setLabel(t('Description'))
       ->setDescription(t('The body of the feed item.'));
 
-    // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
-    $fields['timestamp'] = FieldDefinition::create('integer')
+    $fields['timestamp'] = FieldDefinition::create('created')
       ->setLabel(t('Posted timestamp'))
       ->setDescription(t('Posted date of the feed item, as a Unix timestamp.'));
 

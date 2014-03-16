@@ -17,7 +17,7 @@ use Drupal\Core\TypedData\Type\StringInterface;
  * @DataType(
  *   id = "email",
  *   label = @Translation("Email"),
- *   constraints = {"Email" = TRUE}
+ *   constraints = {"Email" = {}}
  * )
  */
 class Email extends String implements StringInterface {

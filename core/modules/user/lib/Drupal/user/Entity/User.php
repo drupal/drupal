@@ -73,9 +73,6 @@ class User extends ContentEntityBase implements UserInterface {
   static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
 
-    if (!isset($values['created'])) {
-      $values['created'] = REQUEST_TIME;
-    }
     // Users always have the authenticated user role.
     $values['roles'][] = DRUPAL_AUTHENTICATED_RID;
   }
@@ -489,19 +486,16 @@ class User extends ContentEntityBase implements UserInterface {
       ->setDescription(t('Whether the user is active (1) or blocked (0).'))
       ->setSetting('default_value', 1);
 
-    // @todo Convert to a "created" field in https://drupal.org/node/2145103.
-    $fields['created'] = FieldDefinition::create('integer')
+    $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the user was created.'));
 
-    // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
-    $fields['access'] = FieldDefinition::create('integer')
+    $fields['access'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Last access'))
       ->setDescription(t('The time that the user last accessed the site.'))
       ->setSetting('default_value', 0);
 
-    // @todo Convert to a "timestamp" field in https://drupal.org/node/2145103.
-    $fields['login'] = FieldDefinition::create('integer')
+    $fields['login'] = FieldDefinition::create('timestamp')
       ->setLabel(t('Last login'))
       ->setDescription(t('The time that the user last logged in.'))
       ->setSetting('default_value', 0);

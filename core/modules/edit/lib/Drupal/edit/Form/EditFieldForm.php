@@ -7,6 +7,7 @@
 
 namespace Drupal\edit\Form;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -226,17 +227,16 @@ class EditFieldForm extends FormBase {
   /**
    * Finds the field name for the field carrying the changed timestamp, if any.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity.
    *
    * @return string|null
    *   The name of the field found or NULL if not found.
    */
-  protected function getChangedFieldName(EntityInterface $entity) {
-    foreach ($entity as $field_name => $field) {
-      $constraints = $field->getItemDefinition()->getConstraints();
-      if (isset($constraints['ComplexData']['value']['EntityChanged'])) {
-        return $field_name;
+  protected function getChangedFieldName(ContentEntityInterface $entity) {
+    foreach ($entity->getFieldDefinitions() as $field) {
+      if ($field->getType() == 'changed') {
+        return $field->getName();
       }
     }
   }
