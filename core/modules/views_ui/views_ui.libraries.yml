@@ -11,6 +11,7 @@ views_ui.admin:
     - core/jquery.once
     - core/jquery.form
     - core/drupal.ajax
+    - core/drupal.dropbutton
     - views/views.ajax
 
 views_ui.listing:
