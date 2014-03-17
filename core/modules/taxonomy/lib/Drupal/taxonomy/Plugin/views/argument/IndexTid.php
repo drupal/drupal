@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\ManyToOne;
+use Drupal\Component\Utility\String;
 
 /**
  * Allow taxonomy term ID(s) as argument.
@@ -24,8 +25,8 @@ class IndexTid extends ManyToOne {
       ->fields('td', array('name'))
       ->condition('td.tid', $this->value)
       ->execute();
-    foreach ($result as $term) {
-      $titles[] = check_plain($term->name);
+    foreach ($result as $term_record) {
+      $titles[] = String::checkPlain($term_record->name);
     }
     return $titles;
   }

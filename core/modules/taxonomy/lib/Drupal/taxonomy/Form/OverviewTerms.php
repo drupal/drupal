@@ -212,7 +212,7 @@ class OverviewTerms extends FormBase {
       $form['terms'][$key]['term'] = array(
         '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
         '#type' => 'link',
-        '#title' => $term->label(),
+        '#title' => $term->getName(),
         '#route_name' => $uri['route_name'],
         '#route_parameters' => $uri['route_parameters'],
       );
@@ -249,7 +249,7 @@ class OverviewTerms extends FormBase {
         '#delta' => $delta,
         '#title' => $this->t('Weight for added term'),
         '#title_display' => 'invisible',
-        '#default_value' => $term->weight->value,
+        '#default_value' => $term->getWeight(),
         '#attributes' => array(
           'class' => array('term-weight'),
         ),
@@ -387,8 +387,8 @@ class OverviewTerms extends FormBase {
     $weight = 0;
     $term = $tree[0];
     while ($term->id() != $form['#first_tid']) {
-      if ($term->parents[0] == 0 && $term->weight->value != $weight) {
-        $term->weight->value = $weight;
+      if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
+        $term->setWeight($weight);
         $changed_terms[$term->id()] = $term;
       }
       $weight++;
@@ -402,15 +402,15 @@ class OverviewTerms extends FormBase {
       if (isset($form['terms'][$tid]['#term'])) {
         $term = $form['terms'][$tid]['#term'];
         // Give terms at the root level a weight in sequence with terms on previous pages.
-        if ($values['term']['parent'] == 0 && $term->weight->value != $weight) {
-          $term->weight->value = $weight;
+        if ($values['term']['parent'] == 0 && $term->getWeight() != $weight) {
+          $term->setWeight($weight);
           $changed_terms[$term->id()] = $term;
         }
         // Terms not at the root level can safely start from 0 because they're all on this page.
         elseif ($values['term']['parent'] > 0) {
           $level_weights[$values['term']['parent']] = isset($level_weights[$values['term']['parent']]) ? $level_weights[$values['term']['parent']] + 1 : 0;
-          if ($level_weights[$values['term']['parent']] != $term->weight->value) {
-            $term->weight->value = $level_weights[$values['term']['parent']];
+          if ($level_weights[$values['term']['parent']] != $term->getWeight()) {
+            $term->setWeight($level_weights[$values['term']['parent']]);
             $changed_terms[$term->id()] = $term;
           }
         }
@@ -427,9 +427,9 @@ class OverviewTerms extends FormBase {
     // Build a list of all terms that need to be updated on following pages.
     for ($weight; $weight < count($tree); $weight++) {
       $term = $tree[$weight];
-      if ($term->parents[0] == 0 && $term->weight->value != $weight) {
+      if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
         $term->parent->value = $term->parents[0];
-        $term->weight->value = $weight;
+        $term->setWeight($weight);
         $changed_terms[$term->id()] = $term;
       }
       $hierarchy = $term->parents[0] != 0 ? TAXONOMY_HIERARCHY_SINGLE : $hierarchy;

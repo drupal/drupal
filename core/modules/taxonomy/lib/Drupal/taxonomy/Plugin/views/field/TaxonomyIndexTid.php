@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Plugin\views\field;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\PrerenderList;
+use Drupal\Component\Utility\String;
 
 /**
  * Field handler to display all taxonomy terms of a node.
@@ -115,15 +116,15 @@ class TaxonomyIndexTid extends PrerenderList {
       }
       $result = $query->execute();
 
-      foreach ($result as $term) {
-        $this->items[$term->node_nid][$term->tid]['name'] = check_plain($term->name);
-        $this->items[$term->node_nid][$term->tid]['tid'] = $term->tid;
-        $this->items[$term->node_nid][$term->tid]['vocabulary_vid'] = $term->vid;
-        $this->items[$term->node_nid][$term->tid]['vocabulary'] = check_plain($vocabularies[$term->vid]->label());
+      foreach ($result as $term_record) {
+        $this->items[$term_record->node_nid][$term_record->tid]['name'] = String::checkPlain($term_record->name);
+        $this->items[$term_record->node_nid][$term_record->tid]['tid'] = $term_record->tid;
+        $this->items[$term_record->node_nid][$term_record->tid]['vocabulary_vid'] = $term_record->vid;
+        $this->items[$term_record->node_nid][$term_record->tid]['vocabulary'] = String::checkPlain($vocabularies[$term_record->vid]->label());
 
         if (!empty($this->options['link_to_taxonomy'])) {
-          $this->items[$term->node_nid][$term->tid]['make_link'] = TRUE;
-          $this->items[$term->node_nid][$term->tid]['path'] = 'taxonomy/term/' . $term->tid;
+          $this->items[$term_record->node_nid][$term_record->tid]['make_link'] = TRUE;
+          $this->items[$term_record->node_nid][$term_record->tid]['path'] = 'taxonomy/term/' . $term_record->tid;
         }
       }
     }

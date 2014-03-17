@@ -13,6 +13,7 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\VocabularyInterface;
+use Drupal\Component\Utility\String;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
@@ -377,7 +378,7 @@ function template_preprocess_taxonomy_term(&$variables) {
 
   $variables['url'] = $term->url();
   // We use name here because that is what appears in the UI.
-  $variables['name'] = check_plain($term->label());
+  $variables['name'] = String::checkPlain($term->getName());
   $variables['page'] = $variables['view_mode'] == 'full' && taxonomy_term_is_page($term);
 
   // Helpful $content variable for templates.
@@ -782,7 +783,7 @@ function taxonomy_field_widget_info_alter(&$info) {
  *   The term name to be used as the page title.
  */
 function taxonomy_term_title(Term $term) {
-  return $term->label();
+  return $term->getName();
 }
 
 /**

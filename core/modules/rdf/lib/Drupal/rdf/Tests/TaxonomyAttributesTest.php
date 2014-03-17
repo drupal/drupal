@@ -66,14 +66,14 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
     // Term label.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $term->label(),
+      'value' => $term->getName(),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($term_uri, 'http://www.w3.org/2000/01/rdf-schema#label', $expected_value), 'Term label found in RDF output (rdfs:label).');
     // Term label.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $term->label(),
+      'value' => $term->getName(),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($term_uri, 'http://www.w3.org/2004/02/skos/core#prefLabel', $expected_value), 'Term label found in RDF output (skos:prefLabel).');

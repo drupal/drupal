@@ -70,7 +70,7 @@ class RowEntityTest extends ViewUnitTestBase {
     $this->content = $view->preview();
     $this->content = drupal_render($this->content);
 
-    $this->assertText($term->label(), 'The rendered entity appears as row in the view.');
+    $this->assertText($term->getName(), 'The rendered entity appears as row in the view.');
 
     // Tests the available view mode options.
     $form = array();

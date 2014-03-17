@@ -196,8 +196,8 @@ class TermAutocompleteController implements ContainerInjectionInterface {
       $terms = $this->termStorage->loadMultiple(array_keys($tids));
       foreach ($terms as $term) {
         // Term names containing commas or quotes must be wrapped in quotes.
-        $name = Tags::encode($term->label());
-        $matches[] = array('value' => $prefix . $name, 'label' => String::checkPlain($term->label()));
+        $name = Tags::encode($term->getName());
+        $matches[] = array('value' => $prefix . $name, 'label' => String::checkPlain($term->getName()));
       }
       return $matches;
     }

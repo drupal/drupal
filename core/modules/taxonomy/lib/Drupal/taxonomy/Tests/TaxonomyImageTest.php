@@ -84,7 +84,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id()  . '/add', $edit, t('Save'));
     $terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $edit['name']));
     $term = reset($terms);
-    $this->assertText(t('Created new term @name.', array('@name' => $term->label())));
+    $this->assertText(t('Created new term @name.', array('@name' => $term->getName())));
 
     // Create a user that should have access to the file and one that doesn't.
     $access_user = $this->drupalCreateUser(array('access content'));

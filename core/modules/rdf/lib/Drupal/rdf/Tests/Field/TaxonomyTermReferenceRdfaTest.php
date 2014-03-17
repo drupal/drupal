@@ -103,7 +103,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
    * Tests the plain formatter.
    */
   public function testPlainFormatter() {
-    $this->assertFormatterRdfa('taxonomy_term_reference_plain', 'http://schema.org/about', $this->term->label(), 'literal');
+    $this->assertFormatterRdfa('taxonomy_term_reference_plain', 'http://schema.org/about', $this->term->getName(), 'literal');
   }
 
   /**

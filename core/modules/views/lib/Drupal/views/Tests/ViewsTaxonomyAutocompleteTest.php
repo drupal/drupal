@@ -80,7 +80,7 @@ class ViewsTaxonomyAutocompleteTest extends ViewTestBase {
     $this->assertIdentical(array(), $this->drupalGetJSON($base_autocomplete_path));
 
     // Test a with whole name term.
-    $label = $this->term1->label();
+    $label = $this->term1->getName();
     $expected = array(array(
       'value' => $label,
       'label' => String::checkPlain($label),

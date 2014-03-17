@@ -35,7 +35,7 @@ class TermBreadcrumbBuilder extends BreadcrumbBuilderBase {
     $breadcrumb = array();
     while ($parents = taxonomy_term_load_parents($term->id())) {
       $term = array_shift($parents);
-      $breadcrumb[] = $this->l($term->label(), 'taxonomy.term_page', array('taxonomy_term' => $term->id()));
+      $breadcrumb[] = $this->l($term->getName(), 'taxonomy.term_page', array('taxonomy_term' => $term->id()));
     }
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
     $breadcrumb = array_reverse($breadcrumb);

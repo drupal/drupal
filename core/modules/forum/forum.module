@@ -237,7 +237,7 @@ function forum_node_validate(EntityInterface $node, $form, &$form_state) {
           ->count()
           ->execute();
         if ($used && !empty($term->forum_container->value)) {
-          form_set_error('taxonomy_forums', $form_state, t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->label())));
+          form_set_error('taxonomy_forums', $form_state, t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', array('%forum' => $term->getName())));
         }
       }
     }

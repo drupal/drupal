@@ -385,7 +385,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $term->name = 'New name';
+    $term->setName('New name');
     $term->save();
 
     $this->assertHookMessageOrder(array(

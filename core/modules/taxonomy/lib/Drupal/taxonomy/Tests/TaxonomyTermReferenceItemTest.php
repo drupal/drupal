@@ -25,6 +25,13 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
    */
   public static $modules = array('taxonomy', 'options', 'text', 'filter');
 
+  /**
+   * The term entity.
+   *
+   * @var \Drupal\taxonomy\TermInterface
+   */
+  protected $term;
+
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy reference field item',
@@ -87,29 +94,29 @@ class TaxonomyTermReferenceItemTest extends FieldUnitTestBase {
     $this->assertTrue($entity->field_test_taxonomy instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_test_taxonomy[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_test_taxonomy->target_id, $this->term->id(), 'Field item contains the expected TID.');
-    $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $this->term->name->value, 'Field item entity contains the expected name.');
+    $this->assertEqual($entity->field_test_taxonomy->entity->getName(), $this->term->getName(), 'Field item entity contains the expected name.');
     $this->assertEqual($entity->field_test_taxonomy->entity->id(), $tid, 'Field item entity contains the expected ID.');
     $this->assertEqual($entity->field_test_taxonomy->entity->uuid(), $this->term->uuid(), 'Field item entity contains the expected UUID.');
 
     // Change the name of the term via the reference.
     $new_name = $this->randomName();
-    $entity->field_test_taxonomy->entity->name = $new_name;
+    $entity->field_test_taxonomy->entity->setName($new_name);
     $entity->field_test_taxonomy->entity->save();
     // Verify it is the correct name.
     $term = entity_load('taxonomy_term', $tid);
-    $this->assertEqual($term->name->value, $new_name, 'The name of the term was changed.');
+    $this->assertEqual($term->getName(), $new_name, 'The name of the term was changed.');
 
     // Make sure the computed term reflects updates to the term id.
     $term2 = entity_create('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vid' => $this->term->bundle(),
+      'vid' => $this->term->getVocabularyId(),
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     ));
     $term2->save();
 
     $entity->field_test_taxonomy->target_id = $term2->id();
     $this->assertEqual($entity->field_test_taxonomy->entity->id(), $term2->id(), 'Field item entity contains the new TID.');
-    $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $term2->name->value, 'Field item entity contains the new name.');
+    $this->assertEqual($entity->field_test_taxonomy->entity->getName(), $term2->getName(), 'Field item entity contains the new name.');
   }
 
 }

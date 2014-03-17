@@ -111,11 +111,11 @@ class TaxonomyIndexTid extends ManyToOne {
           ->fields('td')
           ->condition('td.tid', $this->value)
           ->execute();
-        foreach ($result as $term) {
+        foreach ($result as $term_record) {
           if ($default) {
             $default .= ', ';
           }
-          $default .= $term->name;
+          $default .= $term_record->name;
         }
       }
 
@@ -136,9 +136,9 @@ class TaxonomyIndexTid extends ManyToOne {
         $options = array();
 
         if ($tree) {
-          foreach ($tree as $term) {
+          foreach ($tree as $term_record) {
             $choice = new \stdClass();
-            $choice->option = array($term->tid => str_repeat('-', $term->depth) . $term->name);
+            $choice->option = array($term_record->tid => str_repeat('-', $term_record->depth) . $term_record->name);
             $options[] = $choice;
           }
         }
@@ -155,8 +155,8 @@ class TaxonomyIndexTid extends ManyToOne {
           $query->condition('td.vid', $vocabulary->id());
         }
         $result = $query->execute();
-        foreach ($result as $term) {
-          $options[$term->tid] = $term->name;
+        foreach ($result as $term_record) {
+          $options[$term_record->tid] = $term_record->name;
         }
       }
 
@@ -316,9 +316,9 @@ class TaxonomyIndexTid extends ManyToOne {
     $query->condition('td.vid', $this->options['vid']);
     $query->addTag('term_access');
     $result = $query->execute();
-    foreach ($result as $term) {
-      unset($missing[strtolower($term->name)]);
-      $tids[] = $term->tid;
+    foreach ($result as $term_record) {
+      unset($missing[strtolower($term_record->name)]);
+      $tids[] = $term_record->tid;
     }
 
     if ($missing && !empty($this->options['error_message'])) {
@@ -357,8 +357,8 @@ class TaxonomyIndexTid extends ManyToOne {
         ->fields('td')
         ->condition('td.tid', $this->value)
         ->execute();
-      foreach ($result as $term) {
-        $this->value_options[$term->tid] = $term->name;
+      foreach ($result as $term_record) {
+        $this->value_options[$term_record->tid] = $term_record->name;
       }
     }
     return parent::adminSummary();

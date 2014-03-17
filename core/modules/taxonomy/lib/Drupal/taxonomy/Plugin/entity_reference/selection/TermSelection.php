@@ -66,7 +66,7 @@ class TermSelection extends SelectionBase {
       if ($vocabulary = entity_load('taxonomy_vocabulary', $bundle)) {
         if ($terms = taxonomy_get_tree($vocabulary->id(), 0, NULL, TRUE)) {
           foreach ($terms as $term) {
-            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . String::checkPlain($term->label());
+            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . String::checkPlain($term->getName());
           }
         }
       }

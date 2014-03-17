@@ -67,7 +67,7 @@ class TaxonomyController extends ControllerBase {
    *   The term label.
    */
   public function termTitle(TermInterface $taxonomy_term) {
-    return Xss::filter($taxonomy_term->label());
+    return Xss::filter($taxonomy_term->getName());
   }
 
   /**

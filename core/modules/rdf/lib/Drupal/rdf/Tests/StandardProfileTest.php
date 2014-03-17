@@ -327,7 +327,7 @@ class StandardProfileTest extends WebTestBase {
     // Term name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $this->term->get('name')->value,
+      'value' => $this->term->getName(),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "Term name was found (schema:name) on term page.");
@@ -414,7 +414,7 @@ class StandardProfileTest extends WebTestBase {
     // Tag name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $this->term->get('name')->value,
+      'value' => $this->term->getName(),
       'lang' => 'en',
     );
     // @todo enable with https://drupal.org/node/2072791

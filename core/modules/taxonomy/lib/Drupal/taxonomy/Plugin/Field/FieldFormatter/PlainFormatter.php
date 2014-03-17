@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Component\Utility\String;
 
 /**
  * Plugin implementation of the 'taxonomy_term_reference_plain' formatter.
@@ -30,7 +31,7 @@ class PlainFormatter extends TaxonomyFormatterBase {
 
     foreach ($items as $delta => $item) {
       $elements[$delta] = array(
-        '#markup' => check_plain($item->entity->label()),
+        '#markup' => String::checkPlain($item->entity->label()),
       );
     }
 

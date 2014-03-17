@@ -105,8 +105,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $display = entity_get_display($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);
     $this->drupalSetContent(drupal_render($content));
-    $this->assertText($term1->label(), 'Term 1 name is displayed.');
-    $this->assertText($term2->label(), 'Term 2 name is displayed.');
+    $this->assertText($term1->getName(), 'Term 1 name is displayed.');
+    $this->assertText($term2->getName(), 'Term 2 name is displayed.');
 
     // Delete vocabulary 2.
     $this->vocabulary2->delete();
@@ -118,8 +118,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->drupalSetContent(drupal_render($content));
 
     // Term 1 should still be displayed; term 2 should not be.
-    $this->assertText($term1->label(), 'Term 1 name is displayed.');
-    $this->assertNoText($term2->label(), 'Term 2 name is not displayed.');
+    $this->assertText($term1->getName(), 'Term 1 name is displayed.');
+    $this->assertNoText($term2->getName(), 'Term 2 name is not displayed.');
 
     // Verify that field and instance settings are correct.
     $field = field_info_field('entity_test', $this->field_name);

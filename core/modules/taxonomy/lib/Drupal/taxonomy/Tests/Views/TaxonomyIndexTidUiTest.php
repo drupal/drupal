@@ -89,7 +89,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         $attributes = $option->attributes();
         $tid = (string) $attributes->value;
 
-        $this->assertEqual($prefix . $terms[$i][$j]->label(), (string) $option);
+        $this->assertEqual($prefix . $terms[$i][$j]->getName(), (string) $option);
         $this->assertEqual($terms[$i][$j]->id(), $tid);
       }
     }

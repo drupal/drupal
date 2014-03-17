@@ -536,7 +536,7 @@ function rdf_preprocess_taxonomy_term(&$variables) {
       'about' => url('taxonomy/term/' . $term->id()),
       'typeof' => $bundle_mapping['types'],
       'property' => $name_field_mapping['properties'],
-      'content' => $term->label(),
+      'content' => $term->getName(),
     ),
   );
   drupal_add_html_head($term_label_meta, 'rdf_term_label');

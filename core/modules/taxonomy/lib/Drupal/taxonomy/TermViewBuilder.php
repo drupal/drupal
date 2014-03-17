@@ -27,7 +27,7 @@ class TermViewBuilder extends EntityViewBuilder {
       // @todo Remove this when base fields are able to use formatters.
       // https://drupal.org/node/2144919
       $display = $displays[$entity->bundle()];
-      if (!empty($entity->description->value) && $display->getComponent('description')) {
+      if ($entity->getDescription() && $display->getComponent('description')) {
         $entity->content['description'] = array(
           '#markup' => $entity->description->processed,
           '#prefix' => '<div class="taxonomy-term-description">',

@@ -63,7 +63,7 @@ class LoadMultipleTest extends TaxonomyTestBase {
 
     // Create a single term and load it by name.
     $term = $this->createTerm($vocabulary);
-    $loaded_terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $term->name->value));
+    $loaded_terms = entity_load_multiple_by_properties('taxonomy_term', array('name' => $term->getName()));
     $this->assertEqual(count($loaded_terms), 1, 'One term was loaded.');
     $loaded_term = reset($loaded_terms);
     $this->assertEqual($term->id(), $loaded_term->id(), 'Term loaded by name successfully.');

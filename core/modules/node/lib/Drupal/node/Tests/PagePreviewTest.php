@@ -118,7 +118,7 @@ class PagePreviewTest extends NodeTestBase {
     $edit = array();
     $edit[$title_key] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
-    $edit[$term_key] = $this->term->label();
+    $edit[$term_key] = $this->term->getName();
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
@@ -150,12 +150,12 @@ class PagePreviewTest extends NodeTestBase {
     $edit = array();
     $newterm1 = $this->randomName(8);
     $newterm2 = $this->randomName(8);
-    $edit[$term_key] = $this->term->label() . ', ' . $newterm1 . ', ' . $newterm2;
+    $edit[$term_key] = $this->term->getName() . ', ' . $newterm1 . ', ' . $newterm2;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
     $this->assertRaw('>' . $newterm1 . '<', 'First new term displayed.');
     $this->assertRaw('>' . $newterm2 . '<', 'Second new term displayed.');
     // The first term should be displayed as link, the others not.
-    $this->assertLink($this->term->label());
+    $this->assertLink($this->term->getName());
     $this->assertNoLink($newterm1);
     $this->assertNoLink($newterm2);
 
@@ -170,7 +170,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertRaw('>' . $newterm1 . '<', 'First existing term displayed.');
     $this->assertRaw('>' . $newterm2 . '<', 'Second existing term displayed.');
     $this->assertRaw('>' . $newterm3 . '<', 'Third new term displayed.');
-    $this->assertNoText($this->term->label());
+    $this->assertNoText($this->term->getName());
     $this->assertLink($newterm1);
     $this->assertLink($newterm2);
     $this->assertNoLink($newterm3);

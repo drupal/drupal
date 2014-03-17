@@ -28,7 +28,7 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the term %title?', array('%title' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the term %title?', array('%title' => $this->entity->getName()));
   }
 
   /**
@@ -65,8 +65,8 @@ class TermDeleteForm extends ContentEntityConfirmFormBase {
     // @todo Move to storage controller http://drupal.org/node/1988712
     taxonomy_check_vocabulary_hierarchy($vocabulary, array('tid' => $this->entity->id()));
 
-    drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->label())));
-    watchdog('taxonomy', 'Deleted term %name.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
+    drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->getName())));
+    watchdog('taxonomy', 'Deleted term %name.', array('%name' => $this->entity->getName()), WATCHDOG_NOTICE);
     $form_state['redirect_route']['route_name'] = 'taxonomy.vocabulary_list';
     Cache::invalidateTags(array('content' => TRUE));
   }

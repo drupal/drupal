@@ -102,7 +102,7 @@ class RssTest extends TaxonomyTestBase {
     $this->drupalGet('rss.xml');
     $test_element = array(
       'key' => 'category',
-      'value' => $term1->name->value,
+      'value' => $term1->getName(),
       'attributes' => array(
         'domain' => url('taxonomy/term/' . $term1->id(), array('absolute' => TRUE)),
       ),

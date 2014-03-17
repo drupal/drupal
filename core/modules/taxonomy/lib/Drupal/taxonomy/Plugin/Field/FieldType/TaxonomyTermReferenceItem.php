@@ -77,7 +77,7 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements AllowedVa
         if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
           if ($terms = taxonomy_get_tree($vocabulary->id(), $tree['parent'], NULL, TRUE)) {
             foreach ($terms as $term) {
-              $options[$term->id()] = str_repeat('-', $term->depth) . $term->label();
+              $options[$term->id()] = str_repeat('-', $term->depth) . $term->getName();
             }
           }
         }
