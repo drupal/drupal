@@ -1,6 +1,0 @@
-<?php
-
-/**
- * @file
- * Test module which supplies a configuration entity owned by another module.
- */

@@ -27,9 +27,7 @@ function twig_extension() {
  * Implements hook_init().
  */
 function twig_init(Extension $theme) {
-  if (file_exists($theme->uri)) {
-    include_once DRUPAL_ROOT . '/' . $theme->uri;
-  }
+  $theme->load();
 }
 
 /**

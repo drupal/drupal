@@ -394,11 +394,11 @@ function simpletest_script_bootstrap() {
   // @todo Remove System module. Only needed because \Drupal\Core\Datetime\Date
   //   has a (needless) dependency on the 'date_format' entity, so calls to
   //   format_date()/format_interval() cause a plugin not found exception.
-  $module_list['system'] = 'core/modules/system/system.module';
-  $module_list['simpletest'] = 'core/modules/simpletest/simpletest.module';
-  $module_handler->setModuleList($module_list);
+  $module_handler->addModule('system', 'core/modules/system');
+  $module_handler->addModule('simpletest', 'core/modules/simpletest');
   $module_handler->loadAll();
-  $kernel->updateModules($module_list, $module_list);
+  $module_filenames = $module_handler->getModuleList();
+  $kernel->updateModules($module_filenames, $module_filenames);
 
   simpletest_classloader_register();
 }

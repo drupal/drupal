@@ -269,7 +269,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info);
     $this->assertEquals('seven', $info->getName());
     $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.info.yml', $info->getPathname());
-    $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.theme', $info->uri);
+    $this->assertEquals(DRUPAL_ROOT . '/core/themes/seven/seven.theme', $info->getExtensionPathname());
     $this->assertEquals(DRUPAL_ROOT . '/core/themes/engines/twig/twig.engine', $info->owner);
     $this->assertEquals('twig', $info->prefix);
 

@@ -552,9 +552,9 @@ function _drupal_request_initialize() {
  * configuration. For example, a module 'foo' may legally be located
  * in any of these three places:
  *
- * core/modules/foo/foo.module
- * modules/foo/foo.module
- * sites/example.com/modules/foo/foo.module
+ * core/modules/foo/foo.info.yml
+ * modules/foo/foo.info.yml
+ * sites/example.com/modules/foo/foo.info.yml
  *
  * Calling drupal_get_filename('module', 'foo') will give you one of
  * the above, depending on where the module is located.
@@ -594,7 +594,9 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // providers first.
     // Retrieve the current module list (derived from the service container).
     if ($type == 'module' && \Drupal::hasService('module_handler')) {
-      $files[$type] += \Drupal::moduleHandler()->getModuleList();
+      foreach (\Drupal::moduleHandler()->getModuleList() as $module_name => $module) {
+        $files[$type][$module_name] = $module->getPathname();
+      }
     }
     // If still unknown, retrieve the file list prepared in state by
     // system_rebuild_module_data() and system_rebuild_theme_data().
@@ -609,7 +611,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
         $listing->setProfileDirectories(array());
       }
       foreach ($listing->scan($original_type) as $extension_name => $file) {
-        $files[$type][$extension_name] = $file->uri;
+        $files[$type][$extension_name] = $file->getPathname();
       }
     }
   }

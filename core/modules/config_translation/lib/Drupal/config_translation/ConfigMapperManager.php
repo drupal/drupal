@@ -68,8 +68,8 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
 
     // Look at all themes and modules.
     $directories = array();
-    foreach ($module_handler->getModuleList() as $module => $filename) {
-      $directories[$module] = dirname($filename);
+    foreach ($module_handler->getModuleList() as $name => $module) {
+      $directories[$name] = $module->getPath();
     }
     foreach ($theme_handler->listInfo() as $theme) {
       $directories[$theme->getName()] = $theme->getPath();
