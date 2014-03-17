@@ -79,6 +79,9 @@ class UserPermissionsTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/config/people/accounts');
 
+    // Verify that the administration role is none by default.
+    $this->assertOptionSelected('edit-user-admin-role', '', 'Administration role defaults to none.');
+
     // Set the user's role to be the administrator role.
     $edit = array();
     $edit['user_admin_role'] = $this->rid;
