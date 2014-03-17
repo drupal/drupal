@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Tests\Access\EditEntityAccessCheckTest.
+ * Contains \Drupal\system\Tests\Controller\SystemControllerTest.
  */
 
-namespace Drupal\edit\Tests\Access;
+namespace Drupal\system\Tests\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Component\Utility\Json;
