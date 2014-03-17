@@ -748,7 +748,7 @@ function taxonomy_file_download_access($field, EntityInterface $entity, FileInte
 /**
  * Implodes a list of tags of a certain vocabulary into a string.
  *
- * @see drupal_explode_tags()
+ * @see \Drupal\Component\Utility\Tags::explode()
  */
 function taxonomy_implode_tags($tags, $vid = NULL) {
   $typed_tags = array();
@@ -794,7 +794,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
   // @see \Drupal\taxonomy\Plugin\Field\FieldWidget\TaxonomyAutocompleteWidget:massageFormValues()
   $typed_terms = array();
   if ($tags = $element['#value']) {
-    $typed_terms = drupal_explode_tags($tags);
+    $typed_terms = Tags::explode($tags);
   }
   form_set_value($element, $typed_terms, $form_state);
 }

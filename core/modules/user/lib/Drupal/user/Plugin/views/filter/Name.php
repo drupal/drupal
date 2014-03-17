@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Plugin\views\filter;
 
+use Drupal\Component\Utility\Tags;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
@@ -50,7 +51,7 @@ class Name extends InOperator {
   }
 
   protected function valueValidate($form, &$form_state) {
-    $values = drupal_explode_tags($form_state['values']['options']['value']);
+    $values = Tags::explode($form_state['values']['options']['value']);
     $uids = $this->validate_user_strings($form['value'], $form_state, $values);
 
     if ($uids) {
@@ -88,7 +89,7 @@ class Name extends InOperator {
       $input = $this->options['group_info']['group_items'][$input]['value'];
     }
 
-    $values = drupal_explode_tags($input);
+    $values = Tags::explode($input);
 
     if (!$this->options['is_grouped'] || ($this->options['is_grouped'] && ($input != 'All'))) {
       $uids = $this->validate_user_strings($form[$identifier], $form_state, $values);

@@ -170,7 +170,7 @@ class TermTest extends TaxonomyTestBase {
     $edit['body[0][value]'] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit[$instance->getName()] = drupal_implode_tags($terms);
+    $edit[$instance->getName()] = Tags::implode($terms);
 
     // Verify the placeholder is there.
     $this->drupalGet('node/add/article');

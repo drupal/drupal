@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference;
 
+use Drupal\Component\Utility\Tags;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,14 +82,14 @@ class EntityReferenceController extends ControllerBase {
 
     // Get the typed string, if exists from the URL.
     $items_typed = $request->query->get('q');
-    $items_typed = drupal_explode_tags($items_typed);
+    $items_typed = Tags::explode($items_typed);
     $last_item = drupal_strtolower(array_pop($items_typed));
 
     $prefix = '';
     // The user entered a comma-separated list of entity labels, so we generate
     // a prefix.
     if ($type == 'tags' && !empty($last_item)) {
-      $prefix = count($items_typed) ? drupal_implode_tags($items_typed) . ', ' : '';
+      $prefix = count($items_typed) ? Tags::implode($items_typed) . ', ' : '';
     }
 
     $matches = $this->entityReferenceAutocomplete->getMatches($instance->getField(), $instance, $entity_type, $entity_id, $prefix, $last_item);
