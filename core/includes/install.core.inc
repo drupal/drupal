@@ -386,7 +386,7 @@ function install_begin_request(&$install_state) {
 
   // Prime drupal_get_filename()'s static cache.
   foreach ($install_state['profiles'] as $name => $profile) {
-    drupal_get_filename('profile', $name, $profile->uri);
+    drupal_get_filename('profile', $name, $profile->getPathname());
   }
 
   if ($profile = _install_select_profile($install_state)) {
@@ -399,14 +399,12 @@ function install_begin_request(&$install_state) {
 
   // Override the module list with a minimal set of modules.
   $module_handler = \Drupal::moduleHandler();
-  $module_list = $module_handler->getModuleList();
   if (!$module_handler->moduleExists('system')) {
-    $module_list['system'] = 'core/modules/system/system.module';
+    $module_handler->addModule('system', 'core/modules/system');
   }
   if ($profile && !$module_handler->moduleExists($profile)) {
-    $module_list[$profile] = $install_state['profiles'][$profile]->uri;
+    $module_handler->addProfile($profile, $install_state['profiles'][$profile]->getPath());
   }
-  $module_handler->setModuleList($module_list);
   // After setting up a custom and finite module list in a custom low-level
   // bootstrap like here, ensure to use ModuleHandler::loadAll() so that
   // ModuleHandler::isLoaded() returns TRUE, since that is a condition being
@@ -734,9 +732,7 @@ function install_tasks($install_state) {
   // Allow the installation profile to modify the full list of tasks.
   if (!empty($install_state['parameters']['profile'])) {
     $profile = $install_state['parameters']['profile'];
-    $profile_file = $install_state['profiles'][$profile]->uri;
-    if (file_exists($profile_file)) {
-      include_once DRUPAL_ROOT . '/' .  $profile_file;
+    if ($install_state['profiles'][$profile]->load()) {
       $function = $install_state['parameters']['profile'] . '_install_tasks_alter';
       if (function_exists($function)) {
         $function($tasks, $install_state);
@@ -1765,19 +1761,12 @@ function _install_get_version_info($version) {
  *
  * @param $install_state
  *   An array of information about the current installation state. The loaded
- *   profile information will be added here, or an exception will be thrown if
- *   the profile cannot be loaded.
+ *   profile information will be added here.
  */
 function install_load_profile(&$install_state) {
   $profile = $install_state['parameters']['profile'];
-  $profile_file = $install_state['profiles'][$profile]->uri;
-  if (file_exists($profile_file)) {
-    include_once DRUPAL_ROOT . '/' . $profile_file;
-    $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], isset($install_state['parameters']['langcode']) ? $install_state['parameters']['langcode'] : 'en');
-  }
-  else {
-    throw new InstallerException(t('Sorry, the profile you have chosen cannot be loaded.'));
-  }
+  $install_state['profiles'][$profile]->load();
+  $install_state['profile_info'] = install_profile_info($profile, isset($install_state['parameters']['langcode']) ? $install_state['parameters']['langcode'] : 'en');
 }
 
 /**

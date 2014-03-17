@@ -35,17 +35,17 @@ class GetFilenameUnitTest extends UnitTestBase {
     // does not exist.
     $this->assertFalse(\Drupal::hasService('keyvalue'), 'The container has no keyvalue service.');
     // Retrieving the location of a module.
-    $this->assertIdentical(drupal_get_filename('module', 'xmlrpc'), 'core/modules/xmlrpc/xmlrpc.module');
+    $this->assertIdentical(drupal_get_filename('module', 'xmlrpc'), 'core/modules/xmlrpc/xmlrpc.info.yml');
 
     // Retrieving the location of a theme.
-    $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'core/themes/stark/stark.theme');
+    $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'core/themes/stark/stark.info.yml');
 
     // Retrieving the location of a theme engine.
-    $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'core/themes/engines/phptemplate/phptemplate.engine');
+    $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'core/themes/engines/phptemplate/phptemplate.info.yml');
 
     // Retrieving the location of a profile. Profiles are a special case with
     // a fixed location and naming.
-    $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'core/profiles/standard/standard.profile');
+    $this->assertIdentical(drupal_get_filename('profile', 'standard'), 'core/profiles/standard/standard.info.yml');
 
     // Searching for an item that does not exist returns NULL.
     $this->assertNull(drupal_get_filename('module', uniqid("", TRUE)), 'Searching for an item that does not exist returns NULL.');

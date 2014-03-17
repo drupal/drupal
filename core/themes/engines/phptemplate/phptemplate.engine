@@ -11,9 +11,7 @@ use Drupal\Core\Extension\Extension;
  * Implements hook_init().
  */
 function phptemplate_init(Extension $theme) {
-  if (file_exists($theme->uri)) {
-    include_once DRUPAL_ROOT . '/' . $theme->uri;
-  }
+  $theme->load();
 }
 
 /**

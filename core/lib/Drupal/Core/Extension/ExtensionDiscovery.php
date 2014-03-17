@@ -375,6 +375,9 @@ class ExtensionDiscovery {
       else {
         $filename = $name . '.' . $type;
       }
+      if (!file_exists(dirname($pathname) . '/' . $filename)) {
+        $filename = NULL;
+      }
 
       $extension = new Extension($type, $pathname, $filename);
       // Inject the existing RecursiveDirectoryIterator object to avoid

@@ -82,12 +82,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $newModuleList;
 
   /**
-   * An array of module data objects.
+   * List of available modules and installation profiles.
    *
-   * The data objects have the same data structure as returned by
-   * ExtensionDiscovery but only the uri property is used.
-   *
-   * @var array
+   * @var \Drupal\Core\Extension\Extension[]
    */
   protected $moduleData = array();
 
@@ -330,8 +327,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function updateModules(array $module_list, array $module_filenames = array()) {
     $this->newModuleList = $module_list;
-    foreach ($module_filenames as $module => $filename) {
-      $this->moduleData[$module] = (object) array('uri' => $filename);
+    foreach ($module_filenames as $name => $extension) {
+      $this->moduleData[$name] = $extension;
     }
     // If we haven't yet booted, we don't need to do anything: the new module
     // list will take effect when boot() is called. If we have already booted,
@@ -413,7 +410,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // from the container.
       $container_modules = $this->container->getParameter('container.modules');
       $namespaces_before = $this->classLoader->getPrefixes();
-      $this->registerNamespaces($this->getModuleNamespaces($container_modules));
+      $this->registerNamespaces($this->container->getParameter('container.namespaces'));
 
       // If 'container.modules' is wrong, the container must be rebuilt.
       if (!isset($this->moduleList)) {
@@ -501,7 +498,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container = $this->getContainerBuilder();
     $container->set('kernel', $this);
     $container->setParameter('container.service_providers', $this->serviceProviderClasses);
-    $container->setParameter('container.modules', $this->getModuleFileNames());
+    $container->setParameter('container.modules', $this->getModulesParameter());
 
     // Get a list of namespaces and put it onto the container.
     $namespaces = $this->getModuleNamespaces($this->getModuleFileNames());
@@ -665,13 +662,32 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
+   * Returns an array of Extension class parameters for all enabled modules.
+   *
+   * @return array
+   */
+  protected function getModulesParameter() {
+    $extensions = array();
+    foreach ($this->moduleList as $name => $weight) {
+      if ($data = $this->moduleData($name)) {
+        $extensions[$name] = array(
+          'type' => $data->getType(),
+          'pathname' => $data->getPathname(),
+          'filename' => $data->getExtensionFilename(),
+        );
+      }
+    }
+    return $extensions;
+  }
+
+  /**
    * Returns the file name for each enabled module.
    */
   protected function getModuleFileNames() {
     $filenames = array();
     foreach ($this->moduleList as $module => $weight) {
       if ($data = $this->moduleData($module)) {
-        $filenames[$module] = $data->uri;
+        $filenames[$module] = $data->getPathname();
       }
     }
     return $filenames;
