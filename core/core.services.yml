@@ -186,6 +186,8 @@ services:
   entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager', '@string_translation']
+    tags:
+      - { name: plugin_manager_cache_clear }
   entity.form_builder:
     class: Drupal\Core\Entity\EntityFormBuilder
     arguments: ['@entity.manager', '@form_builder']
@@ -213,6 +215,8 @@ services:
   plugin.manager.menu.contextual_link:
     class: Drupal\Core\Menu\ContextualLinkManager
     arguments: ['@controller_resolver', '@module_handler', '@cache.cache', '@language_manager', '@access_manager', '@current_user']
+  plugin.cache_clearer:
+    class: Drupal\Core\Plugin\CachedDiscoveryClearer
   request:
     class: Symfony\Component\HttpFoundation\Request
     synthetic: true
@@ -257,6 +261,8 @@ services:
     parent: default_plugin_manager
     calls:
       - [setValidationConstraintManager, ['@validation.constraint']]
+    tags:
+      - { name: plugin_manager_cache_clear }
   validation.constraint:
     class: Drupal\Core\Validation\ConstraintManager
     parent: default_plugin_manager

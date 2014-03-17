@@ -253,7 +253,7 @@ function comment_field_instance_config_update(FieldInstanceConfigInterface $inst
 function comment_field_config_delete(FieldConfigInterface $field) {
   if ($field->getType() == 'comment') {
     // Delete all fields and displays attached to the comment bundle.
-    entity_invoke_bundle_hook('delete', 'comment', $field->getName());
+    entity_invoke_bundle_hook('delete', 'comment', $field->entity_type . '__' . $field->getName());
   }
 }
 

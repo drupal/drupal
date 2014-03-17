@@ -622,11 +622,11 @@ class ModuleHandler implements ModuleHandlerInterface {
         // Allow modules to react prior to the installation of a module.
         $this->invokeAll('module_preinstall', array($module));
 
-        // Clear the entity info cache before importing new configuration.
-        entity_info_cache_clear();
-
         // Now install the module's schema if necessary.
         drupal_install_schema($module);
+
+        // Clear plugin manager caches.
+        \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
         // Set the schema version to the number of the last update provided by
         // the module, or the minimum core schema version.
@@ -748,8 +748,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       // its statically cached list.
       drupal_static_reset('system_rebuild_module_data');
 
-      // Clear the entity info cache.
-      entity_info_cache_clear();
+      \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
       // Update the kernel to exclude the uninstalled modules.
       \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
