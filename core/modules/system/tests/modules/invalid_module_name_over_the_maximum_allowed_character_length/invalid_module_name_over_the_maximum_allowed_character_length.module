@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @file
+ * Module with a module name over the maximum allowed number of characters.
+ *
+ * @see DRUPAL_MODULE_NAME_MAX_LENGTH
+ */

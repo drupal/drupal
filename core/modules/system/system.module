@@ -1478,7 +1478,7 @@ function system_rebuild_module_data() {
       $module->weight = isset($installed_modules[$name]) ? $installed_modules[$name] : 0;
       $module->status = (int) isset($installed_modules[$name]);
       $module->schema_version = SCHEMA_UNINSTALLED;
-      $files[$name] = $module->getPathname();
+      $files[$name] = $module->uri;
     }
     $modules = \Drupal::moduleHandler()->buildModuleDependencies($modules);
     $modules_cache = $modules;
@@ -1525,7 +1525,7 @@ function system_rebuild_theme_data() {
   $files = array();
   foreach ($themes as $name => $theme) {
     $theme->status = (int) isset($enabled_themes[$name]);
-    $files[$name] = $theme->getPathname();
+    $files[$name] = $theme->uri;
   }
   // Replace last known theme data state.
   // @todo Obsolete with proper installation status for themes.

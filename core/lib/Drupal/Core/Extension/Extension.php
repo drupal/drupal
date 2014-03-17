@@ -61,7 +61,7 @@ class Extension implements \Serializable {
    *
    * @todo Rename to $filename once external test dependencies are resolved.
    *
-   * @var string|null
+   * @var string
    */
   protected $_filename;
 
@@ -83,9 +83,9 @@ class Extension implements \Serializable {
    *   The relative path and filename of the extension's info file; e.g.,
    *   'core/modules/node/node.info.yml'.
    * @param string $filename
-   *   (optional) The filename of the main extension file; e.g., 'node.module'.
+   *   The filename of the main extension file; e.g., 'node.module'.
    */
-  public function __construct($type, $pathname, $filename = NULL) {
+  public function __construct($type, $pathname, $filename) {
     $this->type = $type;
     $this->pathname = $pathname;
     $this->_filename = $filename;
@@ -138,40 +138,6 @@ class Extension implements \Serializable {
    */
   public function getFilename() {
     return basename($this->pathname);
-  }
-
-  /**
-   * Returns the relative path of the main extension file, if any.
-   *
-   * @return string|null
-   */
-  public function getExtensionPathname() {
-    if ($this->_filename) {
-      return $this->getPath() . '/' . $this->_filename;
-    }
-  }
-
-  /**
-   * Returns the name of the main extension file, if any.
-   *
-   * @return string|null
-   */
-  public function getExtensionFilename() {
-    return $this->_filename;
-  }
-
-  /**
-   * Loads the main extension file, if any.
-   *
-   * @return bool
-   *   TRUE if this extension has a main extension file, FALSE otherwise.
-   */
-  public function load() {
-    if ($this->_filename) {
-      include_once DRUPAL_ROOT . '/' . $this->getPath() . '/' . $this->_filename;
-      return TRUE;
-    }
-    return FALSE;
   }
 
   /**

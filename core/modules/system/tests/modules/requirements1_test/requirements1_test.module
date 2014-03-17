@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * @file
+ * Tests that a module is not installed when it fails
+ * hook_requirements('install').
+ */

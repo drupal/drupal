@@ -65,8 +65,9 @@ $request = \Drupal::request();
 
 // We have to enable the user and system modules, even to check access and
 // display errors via the maintenance theme.
-\Drupal::moduleHandler()->addModule('system', 'core/modules/system');
-\Drupal::moduleHandler()->addModule('user', 'core/modules/user');
+$module_list['system'] = 'core/modules/system/system.module';
+$module_list['user'] = 'core/modules/user/user.module';
+\Drupal::moduleHandler()->setModuleList($module_list);
 \Drupal::moduleHandler()->load('system');
 \Drupal::moduleHandler()->load('user');
 

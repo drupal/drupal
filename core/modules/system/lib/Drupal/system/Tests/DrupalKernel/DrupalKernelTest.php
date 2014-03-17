@@ -114,11 +114,7 @@ class DrupalKernelTest extends DrupalUnitTestBase {
     $this->assertTrue($refClass->hasMethod('loadClass'), 'Container has a classloader');
     // Check that the location of the new module is registered.
     $modules = $container->getParameter('container.modules');
-    $this->assertEqual($modules['service_provider_test'], array(
-      'type' => 'module',
-      'pathname' => drupal_get_filename('module', 'service_provider_test'),
-      'filename' => NULL,
-    ));
+    $this->assertEqual($modules['service_provider_test'], drupal_get_filename('module', 'service_provider_test'));
   }
 
 }

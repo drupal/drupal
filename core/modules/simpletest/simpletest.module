@@ -564,7 +564,7 @@ function simpletest_classloader_register() {
     $extensions = array();
     foreach ($types as $type) {
       foreach ($listing->scan($type, TRUE) as $name => $file) {
-        $extensions[$type][$name] = $file->getPathname();
+        $extensions[$type][$name] = $file->uri;
       }
     }
     \Drupal::cache()->set($cid, $extensions);

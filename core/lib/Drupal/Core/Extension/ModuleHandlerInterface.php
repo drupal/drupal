@@ -49,42 +49,22 @@ interface ModuleHandlerInterface {
   public function reload();
 
   /**
-   * Returns the list of currently active modules.
+   * Returns a list of currently active modules.
    *
-   * @return \Drupal\Core\Extension\Extension[]
+   * @return array
    *   An associative array whose keys are the names of the modules and whose
-   *   values are Extension objects.
+   *   values are the module filenames.
    */
   public function getModuleList();
 
   /**
-   * Sets an explicit list of currently active modules.
+   * Explicitly sets the moduleList property to the passed in array of modules.
    *
-   * @param \Drupal\Core\Extension\Extension[] $module_list
+   * @param array $module_list
    *   An associative array whose keys are the names of the modules and whose
-   *   values are Extension objects.
+   *   values are the module filenames.
    */
   public function setModuleList(array $module_list = array());
-
-  /**
-   * Adds a module to the list of currently active modules.
-   *
-   * @param string $name
-   *   The module name; e.g., 'node'.
-   * @param string $path
-   *   The module path; e.g., 'core/modules/node'.
-   */
-  public function addModule($name, $path);
-
-  /**
-   * Adds an installation profile to the list of currently active modules.
-   *
-   * @param string $name
-   *   The profile name; e.g., 'standard'.
-   * @param string $path
-   *   The profile path; e.g., 'core/profiles/standard'.
-   */
-  public function addProfile($name, $path);
 
   /**
    * Determines which modules require and are required by each module.

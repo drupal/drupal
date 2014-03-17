@@ -263,9 +263,10 @@ function update_access_allowed() {
   // so we fall back on requiring that the user be logged in as user #1.
   try {
     $module_handler = \Drupal::moduleHandler();
-    $module_handler->addModule('user', 'core/modules/user');
-    $module_handler->reload();
     $module_filenames = $module_handler->getModuleList();
+    $module_filenames['user'] = 'core/modules/user/user.module';
+    $module_handler->setModuleList($module_filenames);
+    $module_handler->reload();
     \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
     return user_access('administer software updates');
   }

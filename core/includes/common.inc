@@ -4944,9 +4944,9 @@ function drupal_flush_all_caches() {
   // sufficient, since the list of enabled modules might have been adjusted
   // above due to changed code.
   $files = array();
-  foreach ($module_data as $name => $extension) {
-    if ($extension->status) {
-      $files[$name] = $extension;
+  foreach ($module_data as $module => $data) {
+    if (isset($data->uri) && $data->status) {
+      $files[$module] = $data->uri;
     }
   }
   \Drupal::service('kernel')->updateModules($module_handler->getModuleList(), $files);

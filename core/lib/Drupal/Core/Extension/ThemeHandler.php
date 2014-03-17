@@ -290,7 +290,7 @@ class ThemeHandler implements ThemeHandlerInterface {
       // Defaults to 'twig' (see $defaults above).
       $engine = $theme->info['engine'];
       if (isset($engines[$engine])) {
-        $theme->owner = $engines[$engine]->getExtensionPathname();
+        $theme->owner = $engines[$engine]->uri;
         $theme->prefix = $engines[$engine]->getName();
       }
 

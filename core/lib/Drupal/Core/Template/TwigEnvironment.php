@@ -40,8 +40,8 @@ class TwigEnvironment extends \Twig_Environment {
 
     // Set twig path namespace for themes and modules.
     $namespaces = array();
-    foreach ($module_handler->getModuleList() as $name => $extension) {
-      $namespaces[$name] = $extension->getPath();
+    foreach ($module_handler->getModuleList() as $name => $filename) {
+      $namespaces[$name] = dirname($filename);
     }
     foreach ($theme_handler->listInfo() as $name => $extension) {
       $namespaces[$name] = $extension->getPath();

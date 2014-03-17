@@ -30,7 +30,9 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * List of installed modules.
    *
-   * @var \Drupal\Core\Extension\Extension[]
+   * @var array
+   *   An associative array whose keys are the names of the modules and whose
+   *   values are the module filenames.
    */
   protected $moduleList;
 
@@ -67,17 +69,14 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @param array $module_list
    *   An associative array whose keys are the names of installed modules and
-   *   whose values are Extension class parameters. This is normally the
+   *   whose values are the module filenames. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
   public function __construct(array $module_list = array()) {
-    $this->moduleList = array();
-    foreach ($module_list as $name => $module) {
-      $this->moduleList[$name] = new Extension($module['type'], $module['pathname'], $module['filename']);
-    }
+    $this->moduleList = $module_list;
   }
 
   /**
@@ -89,7 +88,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     if (isset($this->moduleList[$name])) {
-      $this->moduleList[$name]->load();
+      $filename = $this->moduleList[$name];
+      include_once DRUPAL_ROOT . '/' . $filename;
       $this->loadedFiles[$name] = TRUE;
       return TRUE;
     }
@@ -101,8 +101,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function loadAll() {
     if (!$this->loaded) {
-      foreach ($this->moduleList as $name => $module) {
-        $this->load($name);
+      foreach ($this->moduleList as $module => $filename) {
+        $this->load($module);
       }
       $this->loaded = TRUE;
     }
@@ -137,37 +137,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     $this->moduleList = $module_list;
     // Reset the implementations, so a new call triggers a reloading of the
     // available hooks.
-    $this->resetImplementations();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addModule($name, $path) {
-    $this->add('module', $name, $path);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addProfile($name, $path) {
-    $this->add('profile', $name, $path);
-  }
-
-  /**
-   * Adds a module or profile to the list of currently active modules.
-   *
-   * @param string $type
-   *   The extension type; either 'module' or 'profile'.
-   * @param string $name
-   *   The module name; e.g., 'node'.
-   * @param string $path
-   *   The module path; e.g., 'core/modules/node'.
-   */
-  protected function add($type, $name, $path) {
-    $pathname = "$path/$name.info.yml";
-    $filename = file_exists("$path/$name.$type") ? "$name.$type" : NULL;
-    $this->moduleList[$name] = new Extension($type, $pathname, $filename);
     $this->resetImplementations();
   }
 
@@ -221,7 +190,7 @@ class ModuleHandler implements ModuleHandlerInterface {
 
     $name = $name ?: $module;
     if (isset($this->moduleList[$module])) {
-      $file = DRUPAL_ROOT . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
+      $file = DRUPAL_ROOT . '/' . dirname($this->moduleList[$module]) . "/$name.$type";
       if (is_file($file)) {
         require_once $file;
         return $file;
@@ -617,10 +586,7 @@ class ModuleHandler implements ModuleHandlerInterface {
             $module_filenames[$name] = $current_module_filenames[$name];
           }
           else {
-            $module_path = drupal_get_path('module', $name);
-            $pathname = "$module_path/$name.info.yml";
-            $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
-            $module_filenames[$name] = new Extension('module', $pathname, $filename);
+            $module_filenames[$name] = drupal_get_filename('module', $name);
           }
         }
 
@@ -852,8 +818,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function getModuleDirectories() {
     $dirs = array();
-    foreach ($this->getModuleList() as $name => $module) {
-      $dirs[$name] = DRUPAL_ROOT . '/' . $module->getPath();
+    foreach ($this->getModuleList() as $module => $filename) {
+      $dirs[$module] = DRUPAL_ROOT . '/' . dirname($filename);
     }
     return $dirs;
   }
