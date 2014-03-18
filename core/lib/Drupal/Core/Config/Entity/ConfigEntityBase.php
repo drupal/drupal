@@ -230,7 +230,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
       ->condition('uuid', $this->uuid())
       ->execute();
     $matched_entity = reset($matching_entities);
-    if (!empty($matched_entity) && ($matched_entity != $this->id())) {
+    if (!empty($matched_entity) && ($matched_entity != $this->id()) && $matched_entity != $this->getOriginalId()) {
       throw new ConfigDuplicateUUIDException(format_string('Attempt to save a configuration entity %id with UUID %uuid when this UUID is already used for %matched', array('%id' => $this->id(), '%uuid' => $this->uuid(), '%matched' => $matched_entity)));
     }
 

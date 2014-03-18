@@ -311,14 +311,6 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
       $entity->original = $this->load($id);
     }
 
-    if ($id !== $entity->id()) {
-      // Renaming a config object needs to cater for:
-      // - Storage controller needs to access the original object.
-      // - The object needs to be renamed/copied in ConfigFactory and reloaded.
-      // - All instances of the object need to be renamed.
-      $config = $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
-    }
-
     // Build an ID if none is set.
     if (!isset($entity->{$this->idKey})) {
       $entity->{$this->idKey} = $entity->id();
@@ -326,6 +318,14 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
 
     $entity->preSave($this);
     $this->invokeHook('presave', $entity);
+
+    if ($id !== $entity->id()) {
+      // Renaming a config object needs to cater for:
+      // - Storage controller needs to access the original object.
+      // - The object needs to be renamed/copied in ConfigFactory and reloaded.
+      // - All instances of the object need to be renamed.
+      $config = $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
+    }
 
     // Retrieve the desired properties and set them in config.
     foreach ($entity->getExportProperties() as $key => $value) {
