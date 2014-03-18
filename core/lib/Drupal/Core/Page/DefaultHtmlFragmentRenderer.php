@@ -48,15 +48,14 @@ class DefaultHtmlFragmentRenderer implements HtmlFragmentRendererInterface {
     // hook_page_build(). This adds the other regions to the page.
     $page_array = drupal_prepare_page($page_content);
 
-    // Collect cache tags for all the content in all the regions on the page.
-    $tags = drupal_render_collect_cache_tags($page_array);
-
     // Build the HtmlPage object.
-    $page = new HtmlPage('', array('tags' => $tags), $fragment->getTitle());
+    $page = new HtmlPage('', array(), $fragment->getTitle());
     $page = $this->preparePage($page, $page_array);
     $page->setBodyTop(drupal_render($page_array['page_top']));
     $page->setBodyBottom(drupal_render($page_array['page_bottom']));
     $page->setContent(drupal_render($page_array));
+    // Collect cache tags for all the content in all the regions on the page.
+    $page->setCacheTags($page_array['#cache']['tags']);
     $page->setStatusCode($status_code);
 
     return $page;

@@ -3990,6 +3990,12 @@ function drupal_render(&$elements, $is_recursive_call = FALSE) {
   $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
   $elements['#markup'] = $prefix . $elements['#children'] . $suffix;
 
+  // Collect all cache tags. This allows the caller of drupal_render() to also
+  // access the complete list of cache tags.
+  if (!$is_recursive_call || isset($elements['#cache'])) {
+    $elements['#cache']['tags'] = drupal_render_collect_cache_tags($elements);
+  }
+
   // Cache the processed element if #cache is set.
   if (isset($elements['#cache'])) {
     drupal_render_cache_set($elements['#markup'], $elements);
@@ -4196,10 +4202,14 @@ function drupal_render_cache_set(&$markup, array $elements) {
     $data['#post_render_cache'] = $elements['#post_render_cache'];
   }
 
+  // Persist cache tags associated with this element.
+  if (isset($elements['#cache']['tags'])) {
+    $data['#cache']['tags'] = $elements['#cache']['tags'];
+  }
+
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : Cache::PERMANENT;
-  $tags = drupal_render_collect_cache_tags($elements);
-  \Drupal::cache($bin)->set($cid, $data, $expire, $tags);
+  \Drupal::cache($bin)->set($cid, $data, $expire, $elements['#cache']['tags']);
 }
 
 /**

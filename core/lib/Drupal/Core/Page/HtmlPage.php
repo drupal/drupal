@@ -158,5 +158,15 @@ class HtmlPage extends HtmlFragment {
     return $this->statusCode;
   }
 
+  /**
+   * Sets the cache tags associated with this HTML page.
+   *
+   * @param array $cache_tags
+   *   The cache tags associated with this HTML page.
+   */
+  public function setCacheTags(array $cache_tags) {
+    $this->cache['tags'] = $cache_tags;
+  }
+
 }
 

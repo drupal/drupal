@@ -41,12 +41,25 @@ class SystemTestController extends ControllerBase {
   /**
    * Set cache tag on on the returned render array.
    */
-  function system_test_cache_tags_page() {
+  public function system_test_cache_tags_page() {
     $build['main'] = array(
-      '#markup' => 'Cache tags page example',
       '#cache' => array('tags' => array('system_test_cache_tags_page' => TRUE)),
+      '#pre_render' => array(
+        '\Drupal\system_test\Controller\SystemTestController::preRenderCacheTags',
+      ),
+      'message' => array(
+        '#markup' => 'Cache tags page example',
+      ),
     );
     return $build;
+  }
+
+  /**
+   * Sets a cache tag on an element to help test #pre_render and cache tags.
+   */
+  public static function preRenderCacheTags($elements) {
+    $elements['#cache']['tags']['pre_render'] = TRUE;
+    return $elements;
   }
 
   /**

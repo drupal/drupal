@@ -27,7 +27,6 @@ class AjaxTestForm implements FormInterface {
   public function buildForm(array $form, array &$form_state) {
 
     $form['#action'] = url('ajax-test/dialog');
-    $form['#cache'] = TRUE;
 
     $form['description'] = array(
       '#markup' => '<p>' . t("Ajax Form contents description.") . '</p>',

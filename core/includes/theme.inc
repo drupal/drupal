@@ -1967,14 +1967,6 @@ function template_preprocess_html(&$variables) {
     }
   }
 
-  // Initializes attributes which are specific to the html and body elements.
-  $variables['html_attributes'] = new Attribute;
-
-  // HTML element attributes.
-  $language_interface = \Drupal::service('language_manager')->getCurrentLanguage();
-  $variables['html_attributes']['lang'] = $language_interface->id;
-  $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
-
   $site_config = \Drupal::config('system.site');
   // Construct page title.
   if ($page->hasTitle()) {
