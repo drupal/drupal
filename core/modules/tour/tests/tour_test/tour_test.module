@@ -20,7 +20,7 @@ function tour_test_admin_paths() {
 /**
  * Implements hook_menu_link_defaults().
  */
-function hook_menu_link_defaults() {
+function tour_test_menu_link_defaults() {
   $links['tour_test.1'] = array(
     'route_name' => 'tour_test.1',
     'link_title' => 'Tour test 1'
