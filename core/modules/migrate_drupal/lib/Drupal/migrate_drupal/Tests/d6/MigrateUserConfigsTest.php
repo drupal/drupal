@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -28,16 +27,23 @@ class MigrateUserConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of user variables to user.mail.yml.
+   * {@inheritdoc}
    */
-  public function testUserMail() {
+  protected function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_user_mail');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6UserMail.php',
     );
     $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration, $this);
     $executable->import();
+  }
+
+  /**
+   * Tests migration of user variables to user.mail.yml.
+   */
+  public function testUserMail() {
     $config = \Drupal::config('user.mail');
     $this->assertIdentical($config->get('status_activated.subject'), 'Account details for !username at !site (approved)');
     $this->assertIdentical($config->get('status_activated.body'), "!username,\n\nYour account at !site has been activated.\n\nYou may now log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\nOnce you have set your own password, you will be able to log in to !login_uri in the future using:\n\nusername: !username\n");

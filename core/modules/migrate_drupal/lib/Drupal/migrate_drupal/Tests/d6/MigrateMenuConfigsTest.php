@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -35,16 +34,23 @@ class MigrateMenuConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of forum variables to forum.settings.yml.
+   * {@inheritdoc}
    */
-  public function testMenuSettings() {
+  public function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_menu_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6MenuSettings.php',
     );
     $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration, $this);
     $executable->import();
+  }
+
+  /**
+   * Tests migration of variables for the menu module.
+   */
+  public function testMenuSettings() {
     $config = \Drupal::config('menu.settings');
     $this->assertIdentical($config->get('main_links'), 'primary-links');
     $this->assertIdentical($config->get('secondary_links'), 'secondary-links');

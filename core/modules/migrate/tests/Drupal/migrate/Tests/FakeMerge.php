@@ -25,7 +25,7 @@ class FakeMerge extends Merge {
    * @param string $table
    *   The database table to merge into.
    */
-  function __construct(array &$database_contents, $table) {
+  public function __construct(array &$database_contents, $table) {
     $this->databaseContents = &$database_contents;
     $this->table = $table;
     $this->conditionTable = $table;

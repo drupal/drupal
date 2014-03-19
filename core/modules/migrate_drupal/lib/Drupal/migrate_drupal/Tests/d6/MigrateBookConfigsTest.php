@@ -35,9 +35,10 @@ class MigrateBookConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of book variables to book.settings.yml.
+   * {@inheritdoc}
    */
-  public function testBookSettings() {
+  public function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_book_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6BookSettings.php',
@@ -45,6 +46,12 @@ class MigrateBookConfigsTest extends MigrateDrupalTestBase {
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     $executable->import();
+  }
+
+  /**
+   * Tests migration of book variables to book.settings.yml.
+   */
+  public function testBookSettings() {
     $config = \Drupal::config('book.settings');
     $this->assertIdentical($config->get('child_type'), 'book');
     $this->assertIdentical($config->get('block.navigation.mode'), 'all pages');

@@ -43,12 +43,8 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   protected $executable;
 
-  protected $mapJoinable = FALSE;
-
   protected $migrationConfiguration = array(
     'id' => 'test',
-    'limit' => array('unit' => 'second', 'value' => 1),
-    'timeThreshold' => 0.9,
   );
 
   /**
@@ -72,6 +68,8 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->executable = new TestMigrateExecutable($this->migration, $this->message);
     $this->executable->setTranslationManager($this->getStringTranslationStub());
+    $this->executable->setTimeThreshold(0.1);
+    $this->executable->limit = array('unit' => 'second', 'value' => 1);
   }
 
   /**
@@ -111,6 +109,15 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $row->expects($this->once())
+      ->method('getSourceIdValues')
+      ->will($this->returnValue(array('id' => 'test')));
+
+    $this->idMap->expects($this->once())
+      ->method('lookupDestinationId')
+      ->with(array('id' => 'test'))
+      ->will($this->returnValue(array('test')));
+
     $source->expects($this->once())
       ->method('current')
       ->will($this->returnValue($row));
@@ -124,12 +131,62 @@ class MigrateExecutableTest extends MigrateTestCase {
     $destination = $this->getMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
     $destination->expects($this->once())
       ->method('import')
-      ->with($row)
+      ->with($row, array('test'))
       ->will($this->returnValue(array('id' => 'test')));
 
     $this->migration->expects($this->once())
       ->method('getDestinationPlugin')
       ->will($this->returnValue($destination));
+
+    $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
+
+    $this->assertSame(1, $this->executable->getSuccessesSinceFeedback());
+    $this->assertSame(1, $this->executable->getTotalSuccesses());
+    $this->assertSame(1, $this->executable->getTotalProcessed());
+    $this->assertSame(1, $this->executable->getProcessedSinceFeedback());
+  }
+
+  /**
+   * Tests the import method with a valid row.
+   */
+  public function testImportWithValidRowWithoutDestinationId() {
+    $source = $this->getMockSource();
+
+    $row = $this->getMockBuilder('Drupal\migrate\Row')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $row->expects($this->once())
+      ->method('getSourceIdValues')
+      ->will($this->returnValue(array('id' => 'test')));
+
+    $this->idMap->expects($this->once())
+      ->method('lookupDestinationId')
+      ->with(array('id' => 'test'))
+      ->will($this->returnValue(array('test')));
+
+    $source->expects($this->once())
+      ->method('current')
+      ->will($this->returnValue($row));
+
+    $this->executable->setSource($source);
+
+    $this->migration->expects($this->once())
+      ->method('getProcessPlugins')
+      ->will($this->returnValue(array()));
+
+    $destination = $this->getMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
+    $destination->expects($this->once())
+      ->method('import')
+      ->with($row, array('test'))
+      ->will($this->returnValue(TRUE));
+
+    $this->migration->expects($this->once())
+      ->method('getDestinationPlugin')
+      ->will($this->returnValue($destination));
+
+    $this->idMap->expects($this->never())
+      ->method('saveIdMapping');
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
 
@@ -166,7 +223,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     $destination = $this->getMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
     $destination->expects($this->once())
       ->method('import')
-      ->with($row)
+      ->with($row, array('test'))
       ->will($this->returnValue(array()));
 
     $this->migration->expects($this->once())
@@ -187,6 +244,11 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->idMap->expects($this->once())
       ->method('saveMessage');
+
+    $this->idMap->expects($this->once())
+      ->method('lookupDestinationId')
+      ->with(array('id' => 'test'))
+      ->will($this->returnValue(array('test')));
 
     $this->message->expects($this->once())
       ->method('display')
@@ -223,7 +285,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     $destination = $this->getMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
     $destination->expects($this->once())
       ->method('import')
-      ->with($row)
+      ->with($row, array('test'))
       ->will($this->throwException(new MigrateException($exception_message)));
 
     $this->migration->expects($this->once())
@@ -240,6 +302,11 @@ class MigrateExecutableTest extends MigrateTestCase {
     $this->message->expects($this->once())
       ->method('display')
       ->with($exception_message);
+
+    $this->idMap->expects($this->once())
+      ->method('lookupDestinationId')
+      ->with(array('id' => 'test'))
+      ->will($this->returnValue(array('test')));
 
     $this->assertSame(MigrationInterface::RESULT_COMPLETED, $this->executable->import());
   }
@@ -272,7 +339,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     $destination = $this->getMock('Drupal\migrate\Plugin\MigrateDestinationInterface');
     $destination->expects($this->once())
       ->method('import')
-      ->with($row)
+      ->with($row, array('test'))
       ->will($this->throwException(new \Exception($exception_message)));
 
     $this->migration->expects($this->once())
@@ -285,6 +352,11 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $this->idMap->expects($this->once())
       ->method('saveMessage');
+
+    $this->idMap->expects($this->once())
+      ->method('lookupDestinationId')
+      ->with(array('id' => 'test'))
+      ->will($this->returnValue(array('test')));
 
     $this->message->expects($this->once())
       ->method('display')
@@ -301,10 +373,10 @@ class MigrateExecutableTest extends MigrateTestCase {
     $this->executable->setTimeElapsed(1);
     $this->assertTrue($this->executable->timeOptionExceeded());
     // Assert time limit not exceeded.
-    $this->migration->set('limit', array('unit' => 'seconds', 'value' => (REQUEST_TIME - 3600)));
+    $this->executable->limit = array('unit' => 'seconds', 'value' => (REQUEST_TIME - 3600));
     $this->assertFalse($this->executable->timeOptionExceeded());
     // Assert no time limit.
-    $this->migration->set('limit', array());
+    $this->executable->limit = array();
     $this->assertFalse($this->executable->timeOptionExceeded());
   }
 
@@ -313,19 +385,19 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   public function testGetTimeLimit() {
     // Assert time limit has a unit of one second (test configuration default).
-    $limit = $this->migration->get('limit');
+    $limit = $this->executable->limit;
     $this->assertArrayHasKey('unit', $limit);
     $this->assertSame('second', $limit['unit']);
     $this->assertSame($limit['value'], $this->executable->getTimeLimit());
     // Assert time limit has a unit of multiple seconds.
-    $this->migration->set('limit', array('unit' => 'seconds', 'value' => 30));
-    $limit = $this->migration->get('limit');
+    $this->executable->limit = array('unit' => 'seconds', 'value' => 30);
+    $limit = $this->executable->limit;
     $this->assertArrayHasKey('unit', $limit);
     $this->assertSame('seconds', $limit['unit']);
     $this->assertSame($limit['value'], $this->executable->getTimeLimit());
     // Assert no time limit.
-    $this->migration->set('limit', array());
-    $limit = $this->migration->get('limit');
+    $this->executable->limit = array();
+    $limit = $this->executable->limit;
     $this->assertArrayNotHasKey('unit', $limit);
     $this->assertArrayNotHasKey('value', $limit);
     $this->assertNull($this->executable->getTimeLimit());

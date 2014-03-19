@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -35,16 +34,23 @@ class MigrateAggregatorConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of aggregator variables to aggregator.settings.yml.
+   * {@inheritdoc}
    */
-  public function testAggregatorSettings() {
+  public function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_aggregator_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6AggregatorSettings.php',
     );
     $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration, $this);
     $executable->import();
+  }
+
+  /**
+   * Tests migration of aggregator variables to aggregator.settings.yml.
+   */
+  public function testAggregatorSettings() {
     $config = \Drupal::config('aggregator.settings');
     $this->assertIdentical($config->get('fetcher'), 'aggregator');
     $this->assertIdentical($config->get('parser'), 'aggregator');
@@ -55,4 +61,5 @@ class MigrateAggregatorConfigsTest extends MigrateDrupalTestBase {
     $this->assertIdentical($config->get('source.list_max'), 3);
     $this->assertIdentical($config->get('source.category_selector'), 'checkboxes');
   }
+
 }

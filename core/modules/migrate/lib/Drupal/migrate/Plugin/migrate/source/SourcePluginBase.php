@@ -12,6 +12,9 @@ use Drupal\migrate\Entity\MigrationInterface;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 
+/**
+ * The base class for all source plugins.
+ */
 abstract class SourcePluginBase extends PluginBase implements MigrateSourceInterface  {
 
   /**
@@ -27,13 +30,16 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * {@inheritdoc}
    */
-  function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migration = $migration;
   }
 
-   /**
+  /**
+   * Get the module handler.
+   *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler.
    */
   protected function getModuleHandler() {
     if (!isset($this->moduleHandler)) {
@@ -46,9 +52,12 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $this->getModuleHandler()->invokeAll('migrate_prepare_row', array($row, $this, $this->migration));
-    $this->getModuleHandler()->invokeAll('migrate_ '. $this->migration->id() . '_prepare_row', array($row, $this, $this->migration));
-    return TRUE;
+    $result_hook = $this->getModuleHandler()->invokeAll('migrate_prepare_row', array($row, $this, $this->migration));
+    $result_named_hook = $this->getModuleHandler()->invokeAll('migrate_' . $this->migration->id() . '_prepare_row', array($row, $this, $this->migration));
+    // If any of the hooks returned false, we want to skip the row.
+    if (($result_hook && in_array(FALSE, $result_hook)) || ($result_named_hook && in_array(FALSE, $result_named_hook))) {
+      return FALSE;
+    }
   }
 
 }

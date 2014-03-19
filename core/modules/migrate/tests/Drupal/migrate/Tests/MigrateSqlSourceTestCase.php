@@ -6,6 +6,8 @@
  */
 
 namespace Drupal\migrate\Tests;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\migrate\Source;
 
 /**
  * Provides setup and helper methods for Migrate module source tests.
@@ -15,7 +17,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
   /**
    * The tested source plugin.
    *
-   * @var \Drupal\migrate\Plugin\migrate\source\d6\Drupal6SqlBase.
+   * @var \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase.
    */
   protected $source;
 
@@ -69,9 +71,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
    * {@inheritdoc}
    */
   protected function setUp() {
-    $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandlerInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $module_handler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $migration = $this->getMigration();
     $migration->expects($this->any())
@@ -82,6 +82,7 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     $plugin = new $plugin_class($this->migrationConfiguration['source'], $this->migrationConfiguration['source']['plugin'], array(), $migration);
     $plugin->setDatabase($this->getDatabase($this->databaseContents + array('test_map' => array())));
     $plugin->setModuleHandler($module_handler);
+    $plugin->setTranslationManager($this->getStringTranslationStub());
     $migration->expects($this->any())
       ->method('getSourcePlugin')
       ->will($this->returnValue($plugin));
@@ -94,6 +95,9 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     $this->source->setCache($cache);
   }
 
+  /**
+   * Test the source returns the same rows as expected.
+   */
   public function testRetrieval() {
     $this->queryResultTest($this->source, $this->expectedResults);
   }
@@ -118,4 +122,10 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     );
   }
 
+}
+
+class TestSource extends Source {
+  public function setCache(CacheBackendInterface $cache) {
+    $this->cache = $cache;
+  }
 }

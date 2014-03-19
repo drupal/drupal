@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -35,16 +34,23 @@ class MigrateActionConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of action variables to action.settings.yml.
+   * {@inheritdoc}
    */
-  public function testActionSettings() {
+  public function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_action_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6ActionSettings.php',
     );
     $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration, $this);
     $executable->import();
+  }
+
+  /**
+   * Tests migration of action variables to action.settings.yml.
+   */
+  public function testActionSettings() {
     $config = \Drupal::config('action.settings');
     $this->assertIdentical($config->get('recursion_limit'), 35);
   }

@@ -10,6 +10,7 @@ namespace Drupal\migrate\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\RequirementsInterface;
 
 /**
  * Defines the Migration entity.
@@ -22,12 +23,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  *   label = @Translation("Migration"),
  *   module = "migrate",
  *   controllers = {
- *     "list" = "Drupal\Core\Config\Entity\DraggableListController",
- *     "form" = {
- *       "add" = "Drupal\Core\Entity\EntityFormController",
- *       "edit" = "Drupal\Core\Entity\EntityFormController",
- *       "delete" = "Drupal\Core\Entity\EntityFormController"
- *     }
+ *     "storage" = "Drupal\migrate\MigrationStorageController"
  *   },
  *   entity_keys = {
  *     "id" = "id",
@@ -36,7 +32,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  *   }
  * )
  */
-class Migration extends ConfigEntityBase implements MigrationInterface {
+class Migration extends ConfigEntityBase implements MigrationInterface, RequirementsInterface {
 
   /**
    * The migration ID (machine name).
@@ -81,6 +77,13 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
    * @var array
    */
   public $process;
+
+  /**
+   * The cached process plugins.
+   *
+   * @var array
+   */
+  protected $processPlugins = array();
 
   /**
    * The destination configuration, with at least a 'plugin' key.
@@ -132,7 +135,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
    *
    * @var array
    */
-  public $destinationIds = array();
+  public $destinationIds = FALSE;
 
   /**
    * Information on the highwater mark.
@@ -162,16 +165,6 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
   public $sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
 
   /**
-   * The ratio of the memory limit at which an operation will be interrupted.
-   *
-   * Can be overridden by a Migration subclass if one would like to push the
-   * envelope. Defaults to 0.85.
-   *
-   * @var float
-   */
-  protected $memoryThreshold = 0.85;
-
-  /**
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected $highwaterStorage;
@@ -182,21 +175,18 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
   public $trackLastImported = FALSE;
 
   /**
-   * The ratio of the time limit at which an operation will be interrupted.
-   *
-   * Can be overridden by a Migration subclass if one would like to push the
-   * envelope. Defaults to 0.9.
-   *
-   * @var float
-   */
-  public $timeThreshold = 0.90;
-
-  /**
-   * The time limit when executing the migration.
+   * These migrations must be already executed before this migration can run.
    *
    * @var array
    */
-  public $limit = array();
+  protected $requirements = array();
+
+  /**
+   * These migrations, if ran at all, must be executed before this migration.
+   *
+   * @var array
+   */
+  public $dependencies = array();
 
   /**
    * {@inheritdoc}
@@ -215,23 +205,25 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
     if (!isset($process)) {
       $process = $this->process;
     }
-    $process_plugins = array();
-    foreach ($this->getProcessNormalized($process) as $property => $configurations) {
-      $process_plugins[$property] = array();
-      foreach ($configurations as $configuration) {
-        if (isset($configuration['source'])) {
-          $process_plugins[$property][] = \Drupal::service('plugin.manager.migrate.process')->createInstance('get', $configuration, $this);
-        }
-        // Get is already handled.
-        if ($configuration['plugin'] != 'get') {
-          $process_plugins[$property][] = \Drupal::service('plugin.manager.migrate.process')->createInstance($configuration['plugin'], $configuration, $this);
-        }
-        if (!$process_plugins[$property]) {
-          throw new MigrateException("Invalid process configuration for $property");
+    $index = serialize($process);
+    if (!isset($this->processPlugins[$index])) {
+      foreach ($this->getProcessNormalized($process) as $property => $configurations) {
+        $this->processPlugins[$index][$property] = array();
+        foreach ($configurations as $configuration) {
+          if (isset($configuration['source'])) {
+            $this->processPlugins[$index][$property][] = \Drupal::service('plugin.manager.migrate.process')->createInstance('get', $configuration, $this);
+          }
+          // Get is already handled.
+          if ($configuration['plugin'] != 'get') {
+            $this->processPlugins[$index][$property][] = \Drupal::service('plugin.manager.migrate.process')->createInstance($configuration['plugin'], $configuration, $this);
+          }
+          if (!$this->processPlugins[$index][$property]) {
+            throw new MigrateException("Invalid process configuration for $property");
+          }
         }
       }
     }
-    return $process_plugins;
+    return $this->processPlugins[$index];
   }
 
   /**
@@ -283,7 +275,10 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
   }
 
   /**
+   * Get the highwater storage object.
+   *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   *   The storage object.
    */
   protected function getHighWaterStorage() {
     if (!isset($this->highwaterStorage)) {
@@ -292,11 +287,56 @@ class Migration extends ConfigEntityBase implements MigrationInterface {
     return $this->highwaterStorage;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getHighwater() {
     return $this->getHighWaterStorage()->get($this->id());
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function saveHighwater($highwater) {
     $this->getHighWaterStorage()->set($this->id(), $highwater);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkRequirements() {
+    // Check whether the current migration source and destination plugin
+    // requirements are met or not.
+    try {
+      if ($this->getSourcePlugin() instanceof RequirementsInterface && !$this->getSourcePlugin()->checkRequirements()) {
+        return FALSE;
+      }
+      if ($this->getDestinationPlugin() instanceof RequirementsInterface && !$this->getDestinationPlugin()->checkRequirements()) {
+        return FALSE;
+      }
+
+      /** @var \Drupal\migrate\Entity\MigrationInterface[] $required_migrations */
+      $required_migrations = \Drupal::entityManager()->getStorageController('migration')->loadMultiple($this->requirements);
+      // Check if the dependencies are in good shape.
+      foreach ($required_migrations as $required_migration) {
+        // If the dependent source migration has no IDs then no mappings can
+        // be recorded thus it is impossible to see whether the migration ran.
+        if (!$required_migration->getSourcePlugin()->getIds()) {
+          return FALSE;
+        }
+
+        // If the dependent migration has not processed any record, it means the
+        // dependency requirements are not met.
+        if (!$required_migration->getIdMap()->processedCount()) {
+          return FALSE;
+        }
+      }
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
 }

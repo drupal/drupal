@@ -1,15 +1,6 @@
 id: d6_user_role
-sourceIds:
-  rid:
-    type: int
-    "not null": true
-    default: 0
-destinationIds:
-  id:
-    type: varchar
-    length: 255
 source:
-  plugin: drupal6_user_role
+  plugin: d6_user_role
 process:
   id:
     -
@@ -19,20 +10,13 @@ process:
       plugin: dedupe_entity
       entity_type: user_role
       field: id
-  label: name
-# permissions start as array(array('perm' => array('perm1', 'perm2'))), array('perm' => array('perm3', 'perm4')))
-  permissions:
-    # extract gets array('perm' => array('perm1', 'perm2')) first
     -
-      plugin: extract
-      source: permissions
-      index:
-        - perm
-    # the pipeline is now array(array('perm1', 'perm2'))
-    - plugin: flatten
-    # the pipeline is now array('perm1', 'perm2')
+      plugin: user_update_8002
+  label: name
+  permissions:
     -
       plugin: static_map
+      source: permissions
       bypass: true
       map:
         'use PHP for block visibility': 'use PHP for settings'
@@ -50,6 +34,6 @@ process:
     - plugin: system_update_7000
     - plugin: node_update_7008
     - plugin: flatten
+    - plugin: filter_format_permission
 destination:
-  plugin: entity
-  entity_type: user_role
+  plugin: entity:user_role

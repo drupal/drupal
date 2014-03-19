@@ -7,22 +7,17 @@
 
 namespace Drupal\migrate_drupal\Tests\Dump;
 
-use Drupal\Core\Database\Connection;
-
 /**
  * Database dump for testing statistics.settings.yml migration.
  */
-class Drupal6StatisticsSettings {
+class Drupal6StatisticsSettings extends Drupal6DumpBase {
 
   /**
-   * Sample database schema and values.
-   *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
+   * {@inheritdoc}
    */
-  public static function load(Connection $database) {
-    Drupal6DumpCommon::createVariable($database);
-    $database->insert('variable')->fields(array(
+  public function load() {
+    $this->createTable('variable');
+    $this->database->insert('variable')->fields(array(
       'name',
       'value',
     ))
@@ -35,7 +30,7 @@ class Drupal6StatisticsSettings {
       'value' => 'i:259200;',
     ))
     ->values(array(
-      'name' => 'statistics_count_content_view',
+      'name' => 'statistics_count_content_views',
       'value' => 'i:0;',
     ))
     ->values(array(

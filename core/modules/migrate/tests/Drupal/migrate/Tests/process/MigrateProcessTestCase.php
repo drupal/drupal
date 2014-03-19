@@ -26,7 +26,10 @@ abstract class MigrateProcessTestCase extends MigrateTestCase {
    */
   protected $migrateExecutable;
 
-  function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     $this->row = $this->getMockBuilder('Drupal\migrate\Row')
       ->disableOriginalConstructor()
       ->getMock();

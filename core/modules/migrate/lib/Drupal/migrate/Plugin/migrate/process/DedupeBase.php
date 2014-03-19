@@ -37,7 +37,11 @@ abstract class DedupeBase extends ProcessPluginBase {
   /**
    * This is a query checking the existence of some value.
    *
+   * @param mixed $value
+   *   The value to check.
+   *
    * @return bool
+   *   TRUE if the value exists.
    */
   abstract protected function exists($value);
 

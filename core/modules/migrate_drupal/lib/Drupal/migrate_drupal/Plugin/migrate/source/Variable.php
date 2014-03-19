@@ -5,7 +5,7 @@
  * Contains \Drupal\migrate\Plugin\migrate\source\d6\Variable.
  */
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\migrate\Entity\MigrationInterface;
 
@@ -15,9 +15,11 @@ use Drupal\migrate\Entity\MigrationInterface;
  * This source class always returns a single row and as such is not a good
  * example for any normal source class returning multiple rows.
  *
- * @PluginID("drupal6_variable")
+ * @MigrateSource(
+ *   id = "variable"
+ * )
  */
-class Variable extends Drupal6SqlBase {
+class Variable extends DrupalSqlBase {
 
   /**
    * The variable names to fetch.
@@ -29,13 +31,13 @@ class Variable extends Drupal6SqlBase {
   /**
    * {@inheritdoc}
    */
-  function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->variables = $this->configuration['variables'];
   }
 
   protected function runQuery() {
-    return new \ArrayIterator(array(array_map('unserialize', $this->query()->execute()->fetchAllKeyed())));
+    return new \ArrayIterator(array(array_map('unserialize', $this->prepareQuery()->execute()->fetchAllKeyed())));
   }
 
   public function count() {
@@ -52,10 +54,17 @@ class Variable extends Drupal6SqlBase {
   /**
    * {@inheritdoc}
    */
-  function query() {
+  public function query() {
     return $this->getDatabase()
       ->select('variable', 'v')
       ->fields('v', array('name', 'value'))
       ->condition('name', $this->variables, 'IN');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIds() {
+    return array();
   }
 }

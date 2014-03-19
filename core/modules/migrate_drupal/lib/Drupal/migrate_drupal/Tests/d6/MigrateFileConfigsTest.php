@@ -35,9 +35,10 @@ class MigrateFileConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of file variables to file.settings.yml.
+   * {@inheritdoc}
    */
-  public function testFileSettings() {
+  public function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_file_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6FileSettings.php',
@@ -45,6 +46,12 @@ class MigrateFileConfigsTest extends MigrateDrupalTestBase {
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     $executable->import();
+  }
+
+  /**
+   * Tests migration of file variables to file.settings.yml.
+   */
+  public function testFileSettings() {
     $config = \Drupal::config('file.settings');
     $this->assertIdentical($config->get('description.type'), 'textfield');
     $this->assertIdentical($config->get('description.length'), 128);

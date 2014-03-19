@@ -57,6 +57,27 @@ class Row {
   protected $frozen = FALSE;
 
   /**
+   * The raw destination properties.
+   *
+   * Unlike $destination which is set by using
+   * \Drupal\Component\Utility\NestedArray::setValue() this array contains
+   * the destination as setDestinationProperty was called.
+   *
+   * @var array
+   *   The raw destination.
+   *
+   * @see getRawDestination()
+   */
+  protected $rawDestination;
+
+  /**
+   * TRUE when this row is a stub.
+   *
+   * @var bool
+   */
+  protected $stub = FALSE;
+
+  /**
    * Constructs a \Drupal\Migrate\Row object.
    *
    * @param array $values
@@ -98,7 +119,7 @@ class Row {
    *   TRUE if the source has property; FALSE otherwise.
    */
   public function hasSourceProperty($property) {
-    return isset($this->source[$property]) || array_key_exists($property, $this->source);
+    return NestedArray::keyExists($this->source, explode('.', $property));
   }
 
   /**
@@ -111,8 +132,9 @@ class Row {
    *   The found returned property or NULL if not found.
    */
   public function getSourceProperty($property) {
-    if (isset($this->source[$property])) {
-      return $this->source[$property];
+    $return = NestedArray::getValue($this->source, explode('.', $property), $key_exists);
+    if ($key_exists) {
+      return $return;
     }
   }
 
@@ -143,7 +165,7 @@ class Row {
       throw new \Exception("The source is frozen and can't be changed any more");
     }
     else {
-      $this->source[$property] = $data;
+      NestedArray::setValue($this->source, explode('.', $property), $data, TRUE);
     }
   }
 
@@ -160,11 +182,11 @@ class Row {
    * @param array|string $property
    *   An array of properties on the destination.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if the destination property exists.
    */
   public function hasDestinationProperty($property) {
-    return NestedArray::keyExists($this->destination, explode(':', $property));
+    return NestedArray::keyExists($this->destination, explode('.', $property));
   }
 
   /**
@@ -176,7 +198,8 @@ class Row {
    *   The property value to set on the destination.
    */
   public function setDestinationProperty($property, $value) {
-    NestedArray::setValue($this->destination, explode(':', $property), $value, TRUE);
+    $this->rawDestination[$property] = $value;
+    NestedArray::setValue($this->destination, explode('.', $property), $value, TRUE);
   }
 
   /**
@@ -190,16 +213,32 @@ class Row {
   }
 
   /**
+   * Returns the raw destination. Rarely necessary.
+   *
+   * For example calling setDestination('foo:bar', 'baz') results in
+   * @code
+   * $this->destination['foo']['bar'] = 'baz';
+   * $this->rawDestination['foo.bar'] = 'baz';
+   * @encode
+   *
+   * @return array
+   *   The raw destination values.
+   */
+  public function getRawDestination() {
+    return $this->rawDestination;
+  }
+
+  /**
    * Returns the value of a destination property.
    *
-   * @param array|string $property
-   *   An array of properties on the destination.
+   * @param string $property
+   *   The name of a property on the destination.
    *
    * @return mixed
-   *  The destination value.
+   *   The destination value.
    */
   public function getDestinationProperty($property) {
-    return NestedArray::getValue($this->destination, explode(':', $property));
+    return NestedArray::getValue($this->destination, explode('.', $property));
   }
 
   /**
@@ -261,4 +300,20 @@ class Row {
     return $this->idMap['hash'];
   }
 
+  /**
+   * Flags and reports this row as a stub.
+   *
+   * @param bool|null $new_value
+   *   TRUE when the row is a stub. Omit to determine whether the row is a
+   *   stub.
+   *
+   * @return mixed
+   *   The current stub value.
+   */
+  public function stub($new_value = NULL) {
+    if (isset($new_value)) {
+      $this->stub = $new_value;
+    }
+    return $this->stub;
+  }
 }

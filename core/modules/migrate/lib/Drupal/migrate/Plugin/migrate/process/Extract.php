@@ -39,4 +39,3 @@ class Extract extends ProcessPluginBase {
   }
 
 }
-

@@ -49,6 +49,7 @@ class Iterator extends ProcessPluginBase {
    *   The migrate executable helper class.
    * @param \Drupal\migrate\Row $row
    *   The current row after processing.
+   *
    * @return mixed
    *   The transformed key.
    */

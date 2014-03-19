@@ -31,7 +31,7 @@ class ExtractTest extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $configuration['index'] = array('foo');
     $this->plugin = new Extract($configuration, 'map', array());
     parent::setUp();

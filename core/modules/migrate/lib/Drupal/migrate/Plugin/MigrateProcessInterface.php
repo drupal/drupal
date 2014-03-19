@@ -19,7 +19,7 @@ interface MigrateProcessInterface extends PluginInspectionInterface {
   /**
    * Performs the associated process.
    *
-   * @param $value
+   * @param mixed $value
    *   The value to be transformed.
    * @param \Drupal\migrate\MigrateExecutable $migrate_executable
    *   The migration in which this process is being executed.

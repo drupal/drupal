@@ -35,9 +35,10 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of aggregator variables to aggregator.settings.yml.
+   * {@inheritdoc}
    */
-  public function testContactSettings() {
+  public function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_contact_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6ContactSettings.php',
@@ -45,6 +46,12 @@ class MigrateContactConfigsTest extends MigrateDrupalTestBase {
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     $executable->import();
+  }
+
+  /**
+   * Tests migration of contact variables to contact.settings.yml.
+   */
+  public function testContactSettings() {
     $config = \Drupal::config('contact.settings');
     $this->assertIdentical($config->get('user_default_enabled'), true);
     $this->assertIdentical($config->get('flood.limit'), 3);

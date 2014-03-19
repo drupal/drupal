@@ -14,13 +14,6 @@ use Drupal\Tests\UnitTestCase;
  */
 abstract class MigrateTestCase extends UnitTestCase {
 
-  /**
-   * @TODO: does this need to be derived from the source/destination plugin?
-   *
-   * @var bool
-   */
-  protected $mapJoinable = TRUE;
-
   protected $migrationConfiguration = array();
 
   /**
@@ -32,13 +25,16 @@ abstract class MigrateTestCase extends UnitTestCase {
   protected function getMigration() {
     $this->idMap = $this->getMock('Drupal\migrate\Plugin\MigrateIdMapInterface');
 
-    if ($this->mapJoinable) {
-      $this->idMap->expects($this->once())
-        ->method('getQualifiedMapTableName')
-        ->will($this->returnValue('test_map'));
-    }
+    $this->idMap->expects($this->any())
+      ->method('getQualifiedMapTableName')
+      ->will($this->returnValue('test_map'));
 
-    $migration = $this->getMock('Drupal\migrate\Entity\MigrationInterface');
+    $migration = $this->getMockBuilder('Drupal\migrate\Entity\Migration')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $migration->expects($this->any())
+      ->method('checkRequirements')
+      ->will($this->returnValue(TRUE));
     $migration->expects($this->any())
       ->method('getIdMap')
       ->will($this->returnValue($this->idMap));
@@ -114,7 +110,7 @@ abstract class MigrateTestCase extends UnitTestCase {
   protected function retrievalAssertHelper($expected_value, $actual_value, $message) {
     if (is_array($expected_value)) {
       foreach ($expected_value as $k => $v) {
-        $this->retrievalAssertHelper($v, $actual_value[$k], $message . '['. $k . ']');
+        $this->retrievalAssertHelper($v, $actual_value[$k], $message . '[' . $k . ']');
       }
     }
     else {

@@ -10,10 +10,12 @@ namespace Drupal\migrate;
 interface MigrateMessageInterface {
 
   /**
-   * @param $message
-   * @param string $type
+   * Displays a migrate message.
    *
-   * @return mixed
+   * @param string $message
+   *   The message to display.
+   * @param string $type
+   *   The type of message, for example: status or warning.
    */
-  function display($message, $type = 'status');
+  public function display($message, $type = 'status');
 }

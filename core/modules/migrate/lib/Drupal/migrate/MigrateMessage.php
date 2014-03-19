@@ -13,15 +13,20 @@ namespace Drupal\migrate;
 class MigrateMessage implements MigrateMessageInterface {
 
   /**
-   * Displays a migrate message.
+   * The map between migrate status and watchdog severity.
    *
-   * @param string $message
-   *   The message to display.
-   * @param string $type
-   *   The type of message, for example: status or warning.
+   * @var array
    */
-  function display($message, $type = 'status') {
-    drupal_set_message($message, $type);
+  protected $map = array(
+    'status' => WATCHDOG_INFO,
+    'error' => WATCHDOG_ERROR,
+  );
+
+  /**
+   * {@inheritdoc}
+   */
+  public function display($message, $type = 'status') {
+    watchdog('migrate', $message, array(), isset($this->map[$type]) ? $this->map[$type] : WATCHDOG_NOTICE);
   }
 
 }

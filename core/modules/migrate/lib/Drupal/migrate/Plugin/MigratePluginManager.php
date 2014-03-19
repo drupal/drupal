@@ -8,11 +8,13 @@
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\MigrateException;
 
 /**
  * Manages migrate plugins.
@@ -25,7 +27,8 @@ class MigratePluginManager extends DefaultPluginManager {
    * Constructs a MigratePluginManager object.
    *
    * @param string $type
-   *   The type of the plugin: row, source, process, destination, entity_field, id_map.
+   *   The type of the plugin: row, source, process, destination, entity_field,
+   * id_map.
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
@@ -35,7 +38,7 @@ class MigratePluginManager extends DefaultPluginManager {
    *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   * @param $annotation
+   * @param string $annotation
    *   The annotation class name.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
@@ -54,9 +57,12 @@ class MigratePluginManager extends DefaultPluginManager {
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
     // If the plugin provides a factory method, pass the container to it.
     if (is_subclass_of($plugin_class, 'Drupal\Core\Plugin\ContainerFactoryPluginInterface')) {
-      return $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition, $migration);
+      $plugin = $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition, $migration);
     }
-    return new $plugin_class($configuration, $plugin_id, $plugin_definition, $migration);
+    else {
+      $plugin = new $plugin_class($configuration, $plugin_id, $plugin_definition, $migration);
+    }
+    return $plugin;
   }
 
 }

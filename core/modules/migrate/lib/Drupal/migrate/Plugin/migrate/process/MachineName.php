@@ -41,7 +41,10 @@ class MachineName extends ProcessPluginBase {
   }
 
   /**
+   * Get the transliteration object.
+   *
    * @return \Drupal\Core\Transliteration\PHPTransliteration
+   *   The transliteration object.
    */
   protected function getTransliteration() {
     if (!isset($this->transliteration)) {
@@ -51,4 +54,3 @@ class MachineName extends ProcessPluginBase {
   }
 
 }
-

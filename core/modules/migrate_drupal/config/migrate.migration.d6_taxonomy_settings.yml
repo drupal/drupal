@@ -1,6 +1,6 @@
 id: d6_taxonomy_settings
 source:
-  plugin: drupal6_variable
+  plugin: variable
   variables:
     - taxonomy_override_selector
     - taxonomy_terms_per_page_admin
@@ -8,5 +8,5 @@ process:
   override_selector: taxonomy_override_selector
   terms_per_page_admin: taxonomy_terms_per_page_admin
 destination:
-  plugin: d8_config
+  plugin: config
   config_name: taxonomy.settings

@@ -39,8 +39,14 @@ class StaticMap extends ProcessPluginBase {
     }
     $new_value = NestedArray::getValue($this->configuration['map'], $new_value, $key_exists);
     if (!$key_exists) {
+      if (isset($this->configuration['default_value'])) {
+        if (!empty($this->configuration['bypass'])) {
+          throw new MigrateException('Setting both default_value and bypass is invalid.');
+        }
+        return $this->configuration['default_value'];
+      }
       if (empty($this->configuration['bypass'])) {
-        throw new MigrateException('Lookup failed.');
+        throw new MigrateException(sprintf('Lookup of %s failed.', var_export($value, TRUE)));
       }
       else {
         return $value;
@@ -50,4 +56,3 @@ class StaticMap extends ProcessPluginBase {
   }
 
 }
-

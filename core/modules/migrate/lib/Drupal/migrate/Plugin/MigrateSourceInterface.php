@@ -23,11 +23,11 @@ interface MigrateSourceInterface extends \Countable, PluginInspectionInterface {
    */
   public function fields();
 
-
   /**
    * Returns the iterator that will yield the row arrays to be processed.
    *
    * @return \Iterator
+   *   The iterator object.
    *
    * @throws \Exception
    *   Cannot obtain a valid iterator.
@@ -38,6 +38,7 @@ interface MigrateSourceInterface extends \Countable, PluginInspectionInterface {
    * Add additional data to the row.
    *
    * @param \Drupal\Migrate\Row $row
+   *   The row object.
    *
    * @return bool
    *   FALSE if this row needs to be skipped.
@@ -45,4 +46,13 @@ interface MigrateSourceInterface extends \Countable, PluginInspectionInterface {
   public function prepareRow(Row $row);
 
   public function __toString();
+
+  /**
+   * Get the source ids.
+   *
+   * @return array
+   *   The source ids.
+   */
+  public function getIds();
+
 }

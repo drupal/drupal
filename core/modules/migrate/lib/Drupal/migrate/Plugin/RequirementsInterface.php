@@ -15,7 +15,7 @@ interface RequirementsInterface {
   /**
    * Checks if requirements for this plugin are OK.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if it is possible to use the plugin, FALSE if not.
    */
   public function checkRequirements();

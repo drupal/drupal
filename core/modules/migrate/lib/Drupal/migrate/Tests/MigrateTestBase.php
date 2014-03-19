@@ -9,10 +9,11 @@ namespace Drupal\migrate\Tests;
 
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Entity\MigrationInterface;
-use Drupal\migrate\Plugin\migrate\source\SqlBase;
+use Drupal\migrate\MigrateMessageInterface;
+use Drupal\migrate\Row;
 use Drupal\simpletest\WebTestBase;
 
-class MigrateTestBase extends WebTestBase {
+class MigrateTestBase extends WebTestBase implements MigrateMessageInterface {
 
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
@@ -21,29 +22,71 @@ class MigrateTestBase extends WebTestBase {
    */
   public $databaseDumpFiles = array();
 
+
+  /**
+   * TRUE to collect messages instead of displaying them.
+   *
+   * @var bool
+   */
+  protected $collectMessages = FALSE;
+
+  /**
+   * A two dimensional array of messages.
+   *
+   * The first key is the type of message, the second is just numeric. Values
+   * are the messages.
+   *
+   * @var array
+   */
+  protected $migrateMessages;
+
   public static $modules = array('migrate');
 
   /**
-   * @param MigrationInterface $migration
-   * @param array $files
-   *
-   * @return \Drupal\Core\Database\Connection
+   * {@inheritdoc}
    */
-  protected function prepare(MigrationInterface $migration, array $files = array()) {
-    $databasePrefix = 'm_';
+  protected function setUp() {
+    parent::setUp();
     $connection_info = Database::getConnectionInfo('default');
     foreach ($connection_info as $target => $value) {
       $connection_info[$target]['prefix'] = array(
-        'default' => $value['prefix']['default'] . $databasePrefix,
+        // Simpletest uses 7 character prefixes at most so this can't cause
+        // collisions.
+        'default' => $value['prefix']['default'] . '0',
       );
     }
-    $database = SqlBase::getDatabaseConnection($migration->id(), array('database' => $connection_info['default']));
-    foreach (array('source', 'destination', 'idMap') as $key) {
-      $configuration = $migration->get($key);
-      $configuration['database'] = $database;
-      $migration->set($key, $configuration);
-    }
+    Database::addConnectionInfo('migrate', 'default', $connection_info['default']);
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown() {
+    Database::removeConnection('migrate');
+    parent::tearDown();
+  }
+
+  /**
+   * Prepare the migration.
+   *
+   * @param \Drupal\migrate\Entity\MigrationInterface $migration
+   *   The migration object.
+   * @param array $files
+   *   An array of files.
+   */
+  protected function prepare(MigrationInterface $migration, array $files = array()) {
+    $this->loadDumps($files);
+  }
+
+  /**
+   * Load Drupal 6 database dumps to be used.
+   *
+   * @param array $files
+   *   An array of files.
+   * @param string $method
+   *   The name of the method in the dump class to use. Defaults to load.
+   */
+  protected function loadDumps($files, $method = 'load') {
     // Load the database from the portable PHP dump.
     // The files may be gzipped.
     foreach ($files as $file) {
@@ -53,8 +96,58 @@ class MigrateTestBase extends WebTestBase {
       }
       preg_match('/^namespace (.*);$/m', file_get_contents($file), $matches);
       $class = $matches[1] . '\\' . basename($file, '.php');
-      $class::load($database);
+      (new $class(Database::getConnection('default', 'migrate')))->$method();
     }
-    return $database;
   }
+
+  /**
+   * Prepare the id mappings.
+   *
+   * @param array $id_mappings
+   *   A list of id mappings keyed by migration ids. Each id mapping is a list
+   *   of two arrays, the first are source ids and the second are destination
+   *   ids.
+   */
+  protected function prepareIdMappings(array $id_mappings) {
+    /** @var \Drupal\migrate\Entity\MigrationInterface[] $migrations */
+    $migrations = entity_load_multiple('migration', array_keys($id_mappings));
+    foreach ($id_mappings as $migration_id => $data) {
+      $migration = $migrations[$migration_id];
+      $id_map = $migration->getIdMap();
+      $id_map->setMessage($this);
+      $source_ids = $migration->getSourcePlugin()->getIds();
+      foreach ($data as $id_mapping) {
+        $row = new Row(array_combine(array_keys($source_ids), $id_mapping[0]), $source_ids);
+        $id_map->saveIdMapping($row, $id_mapping[1]);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function display($message, $type = 'status') {
+    if ($this->collectMessages) {
+      $this->migrateMessages[$type][] = $message;
+    }
+    else {
+      $this->assert($type == 'status', $message, 'migrate');
+    }
+  }
+
+  /**
+   * Start collecting messages and erase previous messages.
+   */
+  public function startCollectingMessages() {
+    $this->collectMessages = TRUE;
+    $this->migrateMessages = array();
+  }
+
+  /**
+   * Stop collecting messages.
+   */
+  public function stopCollectingMessages() {
+    $this->collectMessages = FALSE;
+  }
+
 }

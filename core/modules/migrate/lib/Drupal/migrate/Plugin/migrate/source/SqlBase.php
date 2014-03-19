@@ -34,42 +34,54 @@ abstract class SqlBase extends SourcePluginBase {
   /**
    * {@inheritdoc}
    */
-  function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, MigrationInterface $migration) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
-    $this->mapJoinable = TRUE;
   }
 
   /**
-   * @return \Drupal\Core\Database\Connection
+   * Print the query string when the object is used a string.
+   *
+   * @return string
+   *   The query string.
    */
-  function __toString() {
+  public function __toString() {
     return (string) $this->query;
   }
 
   /**
+   * Get the database connection object.
+   *
    * @return \Drupal\Core\Database\Connection
+   *   The database connection.
    */
   public function getDatabase() {
-    if  (!isset($this->database)) {
-      $this->database = static::getDatabaseConnection($this->migration->id(), $this->configuration);
+    if (!isset($this->database)) {
+      $this->database = Database::getConnection('default', 'migrate');
     }
     return $this->database;
   }
 
-  public static function getDatabaseConnection($id, array $configuration) {
-    if (isset($configuration['database'])) {
-      $key = 'migrate_' . $id;
-      Database::addConnectionInfo($key, 'default', $configuration['database']);
-    }
-    else {
-      $key = 'default';
-    }
-    return Database::getConnection('default', $key);
-  }
-
+  /**
+   * Wrapper for database select.
+   */
   protected function select($table, $alias = NULL, array $options = array()) {
     $options['fetch'] = \PDO::FETCH_ASSOC;
     return $this->getDatabase()->select($table, $alias, $options);
+  }
+
+  /**
+   * A helper for adding tags and metadata to the query.
+   *
+   * @return \Drupal\Core\Database\Query\SelectInterface
+   *   The query with additional tags and metadata.
+   */
+  protected function prepareQuery() {
+    $this->query = clone $this->query();
+    $this->query->addTag('migrate');
+    $this->query->addTag('migrate_' . $this->migration->id());
+    $this->query->addMetaData('migration', $this->migration);
+
+    return $this->query;
   }
 
   /**
@@ -79,21 +91,12 @@ abstract class SqlBase extends SourcePluginBase {
    * we will take advantage of the PDO-based API to optimize the query up-front.
    */
   protected function runQuery() {
-    $this->query = clone $this->query();
-    $this->query->addTag('migrate');
-    $this->query->addTag('migrate_' . $this->migration->id());
-    $this->query->addMetaData('migration', $this->migration);
+    $this->prepareQuery();
     $highwaterProperty = $this->migration->get('highwaterProperty');
 
     // Get the key values, for potential use in joining to the map table, or
     // enforcing idlist.
     $keys = array();
-    foreach ($this->migration->get('sourceIds') as $field_name => $field_schema) {
-      if (isset($field_schema['alias'])) {
-        $field_name = $field_schema['alias'] . '.' . $field_name;
-      }
-      $keys[] = $field_name;
-    }
 
     // The rules for determining what conditions to add to the query are as
     // follows (applying first applicable rule)
@@ -113,13 +116,13 @@ abstract class SqlBase extends SourcePluginBase {
       //      OR above highwater).
       $conditions = $this->query->orConditionGroup();
       $condition_added = FALSE;
-      if ($this->mapJoinable) {
+      if ($this->getIds() && ($this->migration->getIdMap() instanceof \Drupal\migrate\Plugin\migrate\id_map\Sql)) {
         // Build the join to the map table. Because the source key could have
         // multiple fields, we need to build things up.
         $count = 1;
         $map_join = '';
         $delimiter = '';
-        foreach ($this->migration->get('sourceIds') as $field_name => $field_schema) {
+        foreach ($this->getIds() as $field_name => $field_schema) {
           if (isset($field_schema['alias'])) {
             $field_name = $field_schema['alias'] . '.' . $field_name;
           }
@@ -133,7 +136,7 @@ abstract class SqlBase extends SourcePluginBase {
         $condition_added = TRUE;
 
         // And as long as we have the map table, add its data to the row.
-        $n = count($this->migration->get('sourceIds'));
+        $n = count($this->getIds());
         for ($count = 1; $count <= $n; $count++) {
           $map_key = 'sourceid' . $count;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");
@@ -168,7 +171,7 @@ abstract class SqlBase extends SourcePluginBase {
   /**
    * @return \Drupal\Core\Database\Query\SelectInterface
    */
-  abstract function query();
+  abstract public function query();
 
   /**
    * {@inheritdoc}

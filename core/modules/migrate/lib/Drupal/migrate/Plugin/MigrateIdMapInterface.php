@@ -18,7 +18,7 @@ use Drupal\migrate\Row;
  * Migrate ID mappings maintain a relation between source ID and destination ID
  * for audit and rollback purposes.
  */
-interface MigrateIdMapInterface extends PluginInspectionInterface {
+interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
 
   /**
    * Codes reflecting the current status of a map row.
@@ -201,7 +201,7 @@ interface MigrateIdMapInterface extends PluginInspectionInterface {
    * Given a (possibly multi-field) source identifier value, return the
    * (possibly multi-field) destination identifier value it is mapped to.
    *
-   * @param array $destination_id_values
+   * @param array $source_id_values
    *   The source identifier values of the record.
    *
    * @return array
@@ -234,8 +234,9 @@ interface MigrateIdMapInterface extends PluginInspectionInterface {
   /**
    * Sets a specified record to be updated, if it exists.
    *
-   * @param $source_id_values
+   * @param array $source_id_values
    *   The source identifier values of the record.
    */
   public function setUpdate(array $source_id_values);
+
 }

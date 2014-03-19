@@ -18,30 +18,12 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
 
   /**
-   * Whether the map is joinable, initialized to FALSE.
-   *
-   * @var bool
-   */
-  protected $mapJoinable = FALSE;
-
-  /**
    * The migration configuration, initialized to set the ID and destination IDs.
    *
    * @var array
    */
   protected $migrationConfiguration = array(
     'id' => 'sql_idmap_test',
-    'sourceIds' => array(
-      'source_id_property' => array(
-        'type' => 'int',
-      ),
-    ),
-    'destinationIds' => array(
-      'destination_id_property' => array(
-        'type' => 'varchar',
-        'length' => 255,
-      ),
-    ),
   );
 
   /**
@@ -88,9 +70,15 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'not null' => FALSE,
       'description' => 'Hash of source row data, for detecting changes',
     );
-    $fields['sourceid1'] = $this->migrationConfiguration['sourceIds']['source_id_property'];
-    $fields['destid1'] = $this->migrationConfiguration['destinationIds']['destination_id_property'];
-    $fields['destid1']['not null'] = FALSE;
+    $fields['sourceid1'] = array(
+      'type' => 'int',
+      'not null' => TRUE,
+    );
+    $fields['destid1'] = array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+    );
     $map_table_schema = array(
       'description' => 'Mappings from source identifier value(s) to destination identifier value(s).',
       'fields' => $fields,
@@ -113,7 +101,10 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       'unsigned' => TRUE,
       'not null' => TRUE,
     );
-    $fields['sourceid1'] = $this->migrationConfiguration['sourceIds']['source_id_property'];
+    $fields['sourceid1'] = array(
+      'type' => 'int',
+      'not null' => TRUE,
+    );
     $fields['level'] = array(
       'type' => 'int',
       'unsigned' => TRUE,
@@ -199,7 +190,31 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $database->expects($this->any())
       ->method('schema')
       ->will($this->returnValue($schema));
-    new TestSqlIdMap($database, array(), 'sql', array(), $this->getMigration());
+    $migration = $this->getMigration();
+    $plugin = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
+    $plugin->expects($this->any())
+      ->method('getIds')
+      ->will($this->returnValue(array(
+      'source_id_property' => array(
+        'type' => 'integer',
+      ),
+    )));
+    $migration->expects($this->any())
+      ->method('getSourcePlugin')
+      ->will($this->returnValue($plugin));
+    $plugin = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
+    $plugin->expects($this->any())
+      ->method('getIds')
+      ->will($this->returnValue(array(
+      'destination_id_property' => array(
+        'type' => 'string',
+      ),
+    )));
+    $migration->expects($this->any())
+      ->method('getDestinationPlugin')
+      ->will($this->returnValue($plugin));
+    $map = new TestSqlIdMap($database, array(), 'sql', array(), $migration);
+    $map->getDatabase();
   }
 
 }

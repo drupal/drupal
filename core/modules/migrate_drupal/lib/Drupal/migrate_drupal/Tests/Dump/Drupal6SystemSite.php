@@ -7,22 +7,17 @@
 
 namespace Drupal\migrate_drupal\Tests\Dump;
 
-use Drupal\Core\Database\Connection;
-
 /**
  * Database dump for testing system.site.yml migration.
  */
-class Drupal6SystemSite {
+class Drupal6SystemSite extends Drupal6DumpBase {
 
   /**
-   * Sample database schema and values.
-   *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
+   * {@inheritdoc}
    */
-  public static function load(Connection $database) {
-    Drupal6DumpCommon::createVariable($database);
-    $database->insert('variable')->fields(array(
+  public function load() {
+    $this->createTable('variable');
+    $this->database->insert('variable')->fields(array(
       'name',
       'value',
     ))
@@ -36,7 +31,7 @@ class Drupal6SystemSite {
     ))
     ->values(array(
       'name' => 'site_slogan',
-      'value' => 's:13:"Migrate rocks";',
+      'value' => serialize('Migrate rocks'),
     ))
     ->values(array(
       'name' => 'site_frontpage',
@@ -44,7 +39,7 @@ class Drupal6SystemSite {
     ))
     ->values(array(
       'name' => 'site_403',
-      'value' => 's:4:"user";',
+      'value' => serialize('user'),
     ))
     ->values(array(
       'name' => 'site_404',
@@ -52,7 +47,7 @@ class Drupal6SystemSite {
     ))
     ->values(array(
       'name' => 'admin_compact_mode',
-      'value' => 'b:0;',
+      'value' => serialize(FALSE),
     ))
     ->execute();
   }

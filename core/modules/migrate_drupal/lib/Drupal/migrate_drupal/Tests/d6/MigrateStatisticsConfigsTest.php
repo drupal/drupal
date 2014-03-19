@@ -35,9 +35,10 @@ class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of statistics variables to statistics.settings.yml.
+   * {@inheritdoc}
    */
-  public function testStatisticsSettings() {
+  protected function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_statistics_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6StatisticsSettings.php',
@@ -45,10 +46,16 @@ class MigrateStatisticsConfigsTest extends MigrateDrupalTestBase {
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     $executable->import();
+  }
+
+  /**
+   * Tests migration of statistics variables to statistics.settings.yml.
+   */
+  public function testStatisticsSettings() {
     $config = \Drupal::config('statistics.settings');
     $this->assertIdentical($config->get('access_log.enable'), 0);
     $this->assertIdentical($config->get('access_log.max_lifetime'), 259200);
-    $this->assertIdentical($config->get('count_content_views'), NULL);
+    $this->assertIdentical($config->get('count_content_views'), 0);
     $this->assertIdentical($config->get('block.popular.top_day_limit'), 0);
     $this->assertIdentical($config->get('block.popular.top_all_limit'), 0);
     $this->assertIdentical($config->get('block.popular.top_recent_limit'), 0);

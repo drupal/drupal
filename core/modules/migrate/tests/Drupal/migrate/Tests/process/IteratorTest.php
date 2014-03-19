@@ -36,11 +36,6 @@ class IteratorTest extends MigrateTestCase {
   );
 
   /**
-   * @var bool
-   */
-  protected $mapJoinable = FALSE;
-
-  /**
    * {@inheritdoc}
    */
   public static function getInfo() {

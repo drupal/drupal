@@ -1,12 +1,12 @@
 id: d6_system_file
 source:
-  plugin: drupal6_variable
+  plugin: variable
   variables:
     - file_directory_path
     - file_directory_temp
 process:
-  'path:private': file_directory_path
-  'path:temporary': file_directory_temp
+  'path.private': file_directory_path
+  'path.temporary': file_directory_temp
 destination:
-  plugin: d8_config
+  plugin: config
   config_name: system.file

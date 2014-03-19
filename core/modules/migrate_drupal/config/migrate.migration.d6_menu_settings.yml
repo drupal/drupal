@@ -1,6 +1,6 @@
 id: d6_menu_settings
 source:
-    plugin: drupal6_variable
+    plugin: variable
     variables:
         - menu_primary_links_source
         - menu_secondary_links_source
@@ -10,5 +10,5 @@ process:
     secondary_links: menu_secondary_links_source
     override_parent_selector: menu_override_parent_selector
 destination:
-    plugin: d8_config
+    plugin: config
     config_name: menu.settings

@@ -21,10 +21,13 @@ use Drupal\migrate\Row;
  */
 class DefaultValue extends ProcessPluginBase {
 
- /**
+  /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutable $migrate_executable, Row $row, $destination_property) {
-    return isset($value) ? $value : $this->configuration['default_value'];
+    if (!empty($this->configuration['strict'])) {
+      return isset($value) ? $value : $this->configuration['default_value'];
+    }
+    return $value ?: $this->configuration['default_value'];
   }
 }

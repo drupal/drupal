@@ -7,29 +7,20 @@
 
 namespace Drupal\migrate_drupal\Tests\Dump;
 
-use Drupal\Core\Database\Connection;
-
 /**
  * Database dump for testing text.settings.yml migration.
  */
-class Drupal6TextSettings {
+class Drupal6TextSettings extends Drupal6DumpBase {
 
   /**
-   * Sample database schema and values.
-   *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
+   * {@inheritdoc}
    */
-  public static function load(Connection $database) {
-    Drupal6DumpCommon::createVariable($database);
-    $database->insert('variable')->fields(array(
-      'name',
-      'value',
-    ))
-    ->values(array(
-      'name' => 'teaser_length',
-      'value' => 'i:600;',
-    ))
-    ->execute();
+  public function load() {
+    $this->createTable('variable');
+    // This needs to be a merge to avoid conflicts with Drupal6NodeBodyInstance.
+    $this->database->merge('variable')
+      ->key(array('name' => 'teaser_length'))
+      ->fields(array('value' => 'i:456;'))
+      ->execute();
   }
 }

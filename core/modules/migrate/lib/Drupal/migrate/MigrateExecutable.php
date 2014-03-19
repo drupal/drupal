@@ -85,6 +85,27 @@ class MigrateExecutable {
   protected $maxExecTime;
 
   /**
+   * The ratio of the memory limit at which an operation will be interrupted.
+   *
+   * @var float
+   */
+  protected $memoryThreshold = 0.85;
+
+  /**
+   * The ratio of the time limit at which an operation will be interrupted.
+   *
+   * @var float
+   */
+  public $timeThreshold = 0.90;
+
+  /**
+   * The time limit when executing the migration.
+   *
+   * @var array
+   */
+  public $limit = array();
+
+  /**
    * The configuration values of the source.
    *
    * @var array
@@ -216,9 +237,14 @@ class MigrateExecutable {
    * Performs an import operation - migrate items from source to destination.
    */
   public function import() {
+    // Knock off migration if the requirements haven't been met.
+    if (!$this->migration->checkRequirements()) {
+      $this->message->display(
+        $this->t('Migration @id did not meet the requirements', array('@id' => $this->migration->id())), 'error');
+      return MigrationInterface::RESULT_FAILED;
+    }
     $return = MigrationInterface::RESULT_COMPLETED;
     $source = $this->getSource();
-    $destination = $this->migration->getDestinationPlugin();
     $id_map = $this->migration->getIdMap();
 
     try {
@@ -227,9 +253,11 @@ class MigrateExecutable {
     catch (\Exception $e) {
       $this->message->display(
         $this->t('Migration failed with source plugin exception: !e',
-          array('!e' => $e->getMessage())));
+          array('!e' => $e->getMessage())), 'error');
       return MigrationInterface::RESULT_FAILED;
     }
+
+    $destination = $this->migration->getDestinationPlugin();
 
     while ($source->valid()) {
       $row = $source->current();
@@ -250,11 +278,12 @@ class MigrateExecutable {
 
       if ($save) {
         try {
-          $destination_id_values = $destination->import($row);
-          // @todo Handle the successful but no ID case like config,
-          //   https://drupal.org/node/2160835.
+          $destination_id_values = $destination->import($row, $id_map->lookupDestinationId($this->sourceIdValues));
           if ($destination_id_values) {
-            $id_map->saveIdMapping($row, $destination_id_values, $this->sourceRowStatus, $this->rollbackAction);
+            // We do not save an idMap entry for config.
+            if ($destination_id_values !== TRUE) {
+              $id_map->saveIdMapping($row, $destination_id_values, $this->sourceRowStatus, $this->rollbackAction);
+            }
             $this->successesSinceFeedback++;
             $this->totalSuccesses++;
           }
@@ -270,7 +299,7 @@ class MigrateExecutable {
         catch (MigrateException $e) {
           $this->migration->getIdMap()->saveIdMapping($row, array(), $e->getStatus(), $this->rollbackAction);
           $this->saveMessage($e->getMessage(), $e->getLevel());
-          $this->message->display($e->getMessage());
+          $this->message->display($e->getMessage(), 'error');
         }
         catch (\Exception $e) {
           $this->migration->getIdMap()->saveIdMapping($row, array(), MigrateIdMapInterface::STATUS_FAILED, $this->rollbackAction);
@@ -299,7 +328,7 @@ class MigrateExecutable {
       catch (\Exception $e) {
         $this->message->display(
           $this->t('Migration failed with source plugin exception: !e',
-            array('!e' => $e->getMessage())));
+            array('!e' => $e->getMessage())), 'error');
         return MigrationInterface::RESULT_FAILED;
       }
     }
@@ -345,13 +374,27 @@ class MigrateExecutable {
           if (!is_array($value)) {
             throw new MigrateException(sprintf('Pipeline failed for destination %s: %s got instead of an array,', $destination, $value));
           }
+          $break = FALSE;
           foreach ($value as $scalar_value) {
-            $new_value[] = $plugin->transform($scalar_value, $this, $row, $destination);
+            try {
+              $new_value[] = $plugin->transform($scalar_value, $this, $row, $destination);
+            }
+            catch (MigrateSkipProcessException $e) {
+              $break = TRUE;
+            }
           }
           $value = $new_value;
+          if ($break) {
+            break;
+          }
         }
         else {
-          $value = $plugin->transform($value, $this, $row, $destination);
+          try {
+            $value = $plugin->transform($value, $this, $row, $destination);
+          }
+          catch (MigrateSkipProcessException $e) {
+            break;
+          }
           $multiple = $multiple || $plugin->multiple();
         }
       }
@@ -402,7 +445,7 @@ class MigrateExecutable {
    *   The time limit, NULL if no limit or if the units were not in seconds.
    */
   public function getTimeLimit() {
-    $limit = $this->migration->get('limit');
+    $limit = $this->limit;
     if (isset($limit['unit']) && isset($limit['value']) && ($limit['unit'] == 'seconds' || $limit['unit'] == 'second')) {
       return $limit['value'];
     }
@@ -488,7 +531,7 @@ class MigrateExecutable {
   protected function memoryExceeded() {
     $usage = $this->getMemoryUsage();
     $pct_memory = $usage / $this->memoryLimit;
-    if (!$threshold = $this->migration->get('memoryThreshold')) {
+    if (!$threshold = $this->memoryThreshold) {
       return FALSE;
     }
     if ($pct_memory > $threshold) {
@@ -570,7 +613,7 @@ class MigrateExecutable {
    *   TRUE if the threshold is exceeded, FALSE if not.
    */
   protected function maxExecTimeExceeded() {
-    return $this->maxExecTime && (($this->getTimeElapsed() / $this->maxExecTime) > $this->migration->get('timeThreshold'));
+    return $this->maxExecTime && (($this->getTimeElapsed() / $this->maxExecTime) > $this->timeThreshold);
   }
 
   /**
@@ -599,7 +642,7 @@ class MigrateExecutable {
     if ($save) {
       $this->saveMessage($message);
     }
-    $this->message->display($message);
+    $this->message->display($message, 'error');
   }
 
   /**

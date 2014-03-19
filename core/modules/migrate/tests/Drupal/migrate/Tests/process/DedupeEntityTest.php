@@ -40,7 +40,7 @@ class DedupeEntityTest extends MigrateProcessTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->entityQuery = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryInterface')
       ->disableOriginalConstructor()
       ->getMock();
@@ -107,7 +107,7 @@ class DedupeEntityTest extends MigrateProcessTestCase {
 }
 
 class TestDedupeEntity extends DedupeEntity {
-  function setEntityQuery(QueryInterface $entity_query) {
+  public function setEntityQuery(QueryInterface $entity_query) {
     $this->entityQuery = $entity_query;
   }
 }

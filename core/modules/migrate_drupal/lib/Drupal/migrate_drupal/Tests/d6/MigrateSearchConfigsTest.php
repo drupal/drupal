@@ -30,14 +30,15 @@ class MigrateSearchConfigsTest extends MigrateDrupalTestBase {
     return array(
       'name'  => 'Migrate variables to search.settings.yml',
       'description'  => 'Upgrade variables to search.settings.yml',
-      'group' => 'Migrate',
+      'group' => 'Migrate Drupal',
     );
   }
 
   /**
-   * Tests migration of search variables to search.settings.yml.
+   * {@inheritdoc}
    */
-  public function testSearchSettings() {
+  protected function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_search_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6SearchSettings.php',
@@ -45,6 +46,12 @@ class MigrateSearchConfigsTest extends MigrateDrupalTestBase {
     $this->prepare($migration, $dumps);
     $executable = new MigrateExecutable($migration, new MigrateMessage());
     $executable->import();
+  }
+
+  /**
+   * Tests migration of search variables to search.settings.yml.
+   */
+  public function testSearchSettings() {
     $config = \Drupal::config('search.settings');
     $this->assertIdentical($config->get('index.minimum_word_size'), 3);
     $this->assertIdentical($config->get('index.overlap_cjk'), TRUE);

@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -35,16 +34,23 @@ class MigrateUpdateConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of update variables to update.settings.yml.
+   * {@inheritdoc}
    */
-  public function testUpdateSettings() {
+  protected function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_update_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6UpdateSettings.php',
     );
     $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration, $this);
     $executable->import();
+  }
+
+  /**
+   * Tests migration of update variables to update.settings.yml.
+   */
+  public function testUpdateSettings() {
     $config = \Drupal::config('update.settings');
     $this->assertIdentical($config->get('fetch.max_attempts'), 2);
     $this->assertIdentical($config->get('fetch.url'), 'http://updates.drupal.org/release-history');

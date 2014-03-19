@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\migrate\Tests\D6VariableSourceTest.
+ * Contains \Drupal\migrate_drupal\Tests\source\VariableTest.
  */
 
-namespace Drupal\migrate_drupal\Tests;
+namespace Drupal\migrate_drupal\Tests\source;
 
 use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
 
@@ -13,26 +13,22 @@ use Drupal\migrate\Tests\MigrateSqlSourceTestCase;
  * @group migrate_drupal
  * @group Drupal
  */
-class D6VariableTest extends MigrateSqlSourceTestCase {
+class VariableTest extends MigrateSqlSourceTestCase {
 
-  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\d6\Variable';
+  const PLUGIN_CLASS = 'Drupal\migrate_drupal\Plugin\migrate\source\Variable';
 
   protected $migrationConfiguration = array(
     'id' => 'test',
     'highwaterProperty' => array('field' => 'test'),
     'idlist' => array(),
     'source' => array(
-      'plugin' => 'drupal6_variable',
+      'plugin' => 'd6_variable',
       'variables' => array(
         'foo',
         'bar',
       ),
     ),
-    'sourceIds' => array(),
-    'destinationIds' => array(),
   );
-
-  protected $mapJoinable = FALSE;
 
   protected $expectedResults = array(
     array(
@@ -53,25 +49,24 @@ class D6VariableTest extends MigrateSqlSourceTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'D6 variable source functionality',
-      'description' => 'Tests D6 variable source plugin.',
+      'name' => 'Variable source functionality',
+      'description' => 'Tests variable source plugin.',
       'group' => 'Migrate Drupal',
     );
   }
 
 }
 
-namespace Drupal\migrate_drupal\Tests\source\d6;
+namespace Drupal\migrate_drupal\Tests\source;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\migrate_drupal\Plugin\migrate\source\d6\Variable;
 
-class TestVariable extends Variable {
-  function setDatabase(Connection $database) {
+class TestVariable extends \Drupal\migrate_drupal\Plugin\migrate\source\Variable {
+  public function setDatabase(Connection $database) {
     $this->database = $database;
   }
-  function setModuleHandler(ModuleHandlerInterface $module_handler) {
+  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
   }
 }

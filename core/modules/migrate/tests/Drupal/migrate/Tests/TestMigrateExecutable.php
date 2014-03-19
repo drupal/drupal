@@ -109,7 +109,7 @@ class TestMigrateExecutable extends MigrateExecutable {
   /**
    * Allows access to protected processedSinceFeedback property.
    *
-   * @var int
+   * @return int
    *   The value of the protected property.
    */
   public function getProcessedSinceFeedback() {
@@ -219,6 +219,26 @@ class TestMigrateExecutable extends MigrateExecutable {
    */
   public function setMemoryLimit($memory_limit) {
     $this->memoryLimit = $memory_limit;
+  }
+
+  /**
+   * Sets the memory threshold.
+   *
+   * @param float $threshold
+   *   The new threshold.
+   */
+  public function setMemoryThreshold($threshold) {
+    $this->memoryThreshold = $threshold;
+  }
+
+  /**
+   * Sets the time threshold.
+   *
+   * @param float $threshold
+   *   The new threshold.
+   */
+  public function setTimeThreshold($threshold) {
+    $this->timeThreshold = $threshold;
   }
 
   /**

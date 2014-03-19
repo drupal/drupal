@@ -16,10 +16,12 @@ class ConditionResolver {
    * Match a row against a group of conditions.
    *
    * @param \Drupal\migrate\tests\DatabaseRowInterface $row
-   *
+   *   The database row object.
    * @param \Drupal\Core\Database\Query\Condition $condition_group
+   *   The condition group object.
    *
    * @return bool
+   *   TRUE if there is a match.
    */
   public static function matchGroup(DatabaseRowInterface $row, Condition $condition_group) {
     $conditions = $condition_group->conditions();
@@ -50,7 +52,6 @@ class ConditionResolver {
    *   TRUE if the condition matches.
    *
    * @throws \Exception
-   *
    */
   protected static function matchSingle(DatabaseRowInterface $row, array $condition) {
     $row_value = $row->getValue($condition['field']);

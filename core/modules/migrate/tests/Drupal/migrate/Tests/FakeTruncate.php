@@ -18,7 +18,7 @@ class FakeTruncate {
    * @param array $database_contents
    *   The database contents faked as an array. Each key is a table name, each
    *   value is a list of table rows.
-   * @param $table
+   * @param string $table
    *   The table to truncate.
    */
   public function __construct(array &$database_contents, $table) {

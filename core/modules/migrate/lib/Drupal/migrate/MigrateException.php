@@ -48,7 +48,7 @@ class MigrateException extends \Exception {
    *   The status of the item for the map table, a MigrateMap::STATUS_*
    *   constant.
    */
-  public function __construct($message = null, $code = 0, \Exception $previous = null, $level = MigrationInterface::MESSAGE_ERROR, $status = MigrateIdMapInterface::STATUS_FAILED) {
+  public function __construct($message = NULL, $code = 0, \Exception $previous = NULL, $level = MigrationInterface::MESSAGE_ERROR, $status = MigrateIdMapInterface::STATUS_FAILED) {
     $this->level = $level;
     $this->status = $status;
     parent::__construct($message);
@@ -58,6 +58,7 @@ class MigrateException extends \Exception {
    * Gets the level.
    *
    * @return int
+   *   An integer status code. @see Migration::MESSAGE_*
    */
   public function getLevel() {
     return $this->level;
@@ -67,6 +68,7 @@ class MigrateException extends \Exception {
    * Gets the status of the current item.
    *
    * @return int
+   *   An integer status code. @see MigrateMap::STATUS_*
    */
   public function getStatus() {
     return $this->status;

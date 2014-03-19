@@ -7,7 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\Tests\MigrateDrupalTestBase;
 
@@ -35,16 +34,23 @@ class MigrateForumConfigsTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Tests migration of forum variables to forum.settings.yml.
+   * {@inheritdoc}
    */
-  public function testForumSettings() {
+  public function setUp() {
+    parent::setUp();
     $migration = entity_load('migration', 'd6_forum_settings');
     $dumps = array(
       drupal_get_path('module', 'migrate_drupal') . '/lib/Drupal/migrate_drupal/Tests/Dump/Drupal6ForumSettings.php',
     );
     $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, new MigrateMessage());
+    $executable = new MigrateExecutable($migration, $this);
     $executable->import();
+  }
+
+  /**
+   * Tests migration of forum variables to forum.settings.yml.
+   */
+  public function testForumSettings() {
     $config = \Drupal::config('forum.settings');
     $this->assertIdentical($config->get('topics.hot_threshold'), 15);
     $this->assertIdentical($config->get('topics.page_limit'), 25);

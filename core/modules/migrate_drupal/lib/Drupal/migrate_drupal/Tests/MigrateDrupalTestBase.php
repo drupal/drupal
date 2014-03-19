@@ -11,5 +11,10 @@ use Drupal\migrate\Tests\MigrateTestBase;
 
 class MigrateDrupalTestBase extends MigrateTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
   public static $modules = array('migrate_drupal');
 }
