@@ -1667,8 +1667,8 @@ function menu_link_rebuild_defaults() {
         $children[$link['parent']][$machine_name] = $machine_name;
         $menu_link->parent = $link['parent'];
         if (empty($link['menu_name'])) {
-          // Unset the default menu name so it's populated from the parent.
-          unset($menu_link->menu_name);
+          // Reset the default menu name so it is populated from the parent.
+          $menu_link->menu_name = NULL;
         }
       }
       else {
