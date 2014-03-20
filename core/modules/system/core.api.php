@@ -164,7 +164,7 @@
  * Additional documentation paragraphs need to be written, and functions,
  * classes, and interfaces need to be added to this topic.
  *
- * See https://drupal.org/node/2133321
+ * See https://drupal.org/node/2133321 and https://drupal.org/node/303984
  * @}
  */
 
@@ -258,7 +258,7 @@
  * Additional documentation paragraphs need to be written, and functions,
  * classes, and interfaces need to be added to this topic.
  *
- * See https://drupal.org/simpletest
+ * See https://drupal.org/simpletest and https://drupal.org/phpunit
  * @}
  */
 
@@ -310,15 +310,24 @@
 /**
  * @defgroup best_practices Best practices for developers
  * @{
- * Overview of best practices for developers
+ * Overview of standards and best practices for developers
  *
- * @todo write this
+ * Ideally, all code that is included in Drupal Core and contributed modules,
+ * themes, and distributions will be secure, internationalized, maintainable,
+ * and efficient. In order to facilitate this, the Drupal community has
+ * developed a set of guidelines and standards for developers to follow. Most of
+ * these standards can be found under
+ * @link https://drupal.org/developing/best-practices Best practices on Drupal.org @endlink
  *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
- *
- * See https://drupal.org/developing/best-practices -- this should touch upon
- * (and link to more information on): internationalization, security, automated
- * tests, documentation.
+ * Standards and best practices that developers should be aware of include:
+ * - Security: https://drupal.org/writing-secure-code and the
+ *   @link sanitization Sanitization functions topic @endlink
+ * - Coding standards: https://drupal.org/coding-standards
+ *   and https://drupal.org/coding-standards/docs
+ * - Accessibility: https://drupal.org/node/1637990 (modules) and
+ *   https://drupal.org/node/464472 (themes)
+ * - Usability: https://drupal.org/ui-standards
+ * - Internationalization: @link i18n Internationalization topic @endlink
+ * - Automated testing: @link testing Automated tests topic @endlink
  * @}
  */
