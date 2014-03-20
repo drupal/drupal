@@ -187,22 +187,6 @@ class Extension implements \Serializable {
   }
 
   /**
-   * Sets an explicit SplFileInfo object for the extension's info file.
-   *
-   * Used by ExtensionDiscovery::scanDirectory() to avoid creating additional
-   * PHP resources.
-   *
-   * @param \SplFileInfo $fileinfo
-   *   A file info instance to set.
-   *
-   * @return $this
-   */
-  public function setSplFileInfo(\SplFileInfo $fileinfo) {
-    $this->splFileInfo = $fileinfo;
-    return $this;
-  }
-
-  /**
    * Implements Serializable::serialize().
    *
    * Serializes the Extension object in the most optimized way.

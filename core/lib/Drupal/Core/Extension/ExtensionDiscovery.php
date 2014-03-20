@@ -165,7 +165,7 @@ class ExtensionDiscovery {
     foreach ($files as $key => $file) {
       // If the extension does not belong to a profile, just apply the weight
       // of the originating directory.
-      if (strpos($file->getSubPath(), 'profiles') !== 0) {
+      if (strpos($file->subpath, 'profiles') !== 0) {
         $origins[$key] = $origin_weights[$file->origin];
         $profiles[$key] = NULL;
       }
@@ -380,10 +380,9 @@ class ExtensionDiscovery {
       }
 
       $extension = new Extension($type, $pathname, $filename);
-      // Inject the existing RecursiveDirectoryIterator object to avoid
-      // unnecessary creation of additional SplFileInfo resources.
-      $extension->setSplFileInfo($fileinfo);
+
       // Track the originating directory for sorting purposes.
+      $extension->subpath = $fileinfo->getSubPath();
       $extension->origin = $dir;
 
       $files[$type][$key] = $extension;
