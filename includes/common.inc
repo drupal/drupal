@@ -1426,7 +1426,6 @@ function filter_xss_admin($string) {
  *   valid UTF-8.
  *
  * @see drupal_validate_utf8()
- * @ingroup sanitization
  */
 function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
   // Only operate on valid UTF-8 strings. This is necessary to prevent cross
