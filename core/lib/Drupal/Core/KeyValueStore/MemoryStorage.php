@@ -20,6 +20,13 @@ class MemoryStorage extends StorageBase {
   protected $data = array();
 
   /**
+   * {@inheritdoc}
+   */
+  public function has($key) {
+    return array_key_exists($key, $this->data);
+  }
+
+  /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().
    */
   public function get($key, $default = NULL) {

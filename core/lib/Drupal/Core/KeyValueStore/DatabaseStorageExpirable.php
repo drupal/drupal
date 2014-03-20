@@ -57,6 +57,17 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function has($key) {
+    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key AND expire > :now', array(
+      ':collection' => $this->collection,
+      ':key' => $key,
+      ':now' => REQUEST_TIME,
+    ))->fetchField();
+  }
+
+  /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getMultiple().
    */
   public function getMultiple(array $keys) {

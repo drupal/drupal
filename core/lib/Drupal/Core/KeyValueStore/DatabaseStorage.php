@@ -47,6 +47,16 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function has($key) {
+    return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE collection = :collection AND name = :key', array(
+      ':collection' => $this->collection,
+      ':key' => $key,
+    ))->fetchField();
+  }
+
+  /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::getMultiple().
    */
   public function getMultiple(array $keys) {

@@ -21,6 +21,17 @@ interface KeyValueStoreInterface {
   public function getCollectionName();
 
   /**
+   * Returns whether a given key exists in the store.
+   *
+   * @param string $key
+   *   The key to check.
+   *
+   * @return bool
+   *   TRUE if the key exists, FALSE otherwise.
+   */
+  public function has($key);
+
+  /**
    * Returns the stored value for a given key.
    *
    * @param string $key

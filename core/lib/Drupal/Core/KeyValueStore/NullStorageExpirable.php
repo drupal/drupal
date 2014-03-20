@@ -34,6 +34,13 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function has($key) {
+    return FALSE;
+  }
+
+  /**
    * Implements Drupal\Core\KeyValueStore\KeyValueStoreInterface::get().
    */
   public function get($key, $default = NULL) {

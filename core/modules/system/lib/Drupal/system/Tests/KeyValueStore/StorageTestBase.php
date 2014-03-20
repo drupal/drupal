@@ -83,8 +83,10 @@ abstract class StorageTestBase extends UnitTestBase {
 
     // Verify that an item can be stored.
     $stores[0]->set('foo', $this->objects[0]);
+    $this->assertTrue($stores[0]->has('foo'));
     $this->assertIdenticalObject($this->objects[0], $stores[0]->get('foo'));
     // Verify that the other collection is not affected.
+    $this->assertFalse($stores[1]->has('foo'));
     $this->assertFalse($stores[1]->get('foo'));
 
     // Verify that an item can be updated.
@@ -100,9 +102,11 @@ abstract class StorageTestBase extends UnitTestBase {
 
     // Verify that an item can be deleted.
     $stores[0]->delete('foo');
+    $this->assertFalse($stores[0]->has('foo'));
     $this->assertFalse($stores[0]->get('foo'));
 
     // Verify that the other collection is not affected.
+    $this->assertTrue($stores[1]->has('foo'));
     $this->assertIdenticalObject($this->objects[2], $stores[1]->get('foo'));
     $stores[1]->delete('foo');
     $this->assertFalse($stores[1]->get('foo'));

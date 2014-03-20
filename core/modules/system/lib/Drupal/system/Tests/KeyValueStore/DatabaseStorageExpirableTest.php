@@ -141,7 +141,9 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
     $stores[0]->set('troubles', 'here to stay');
 
     // Only the non-expired item should be returned.
+    $this->assertFalse($stores[0]->has('yesterday'));
     $this->assertFalse($stores[0]->get('yesterday'));
+    $this->assertTrue($stores[0]->has('troubles'));
     $this->assertIdentical($stores[0]->get('troubles'), 'here to stay');
     $this->assertIdentical(count($stores[0]->getMultiple(array('yesterday', 'troubles'))), 1);
 
