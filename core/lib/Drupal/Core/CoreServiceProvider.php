@@ -113,9 +113,6 @@ class CoreServiceProvider implements ServiceProviderInterface  {
         // @todo Remove in followup issue
         // @see http://drupal.org/node/1712444.
         'autoescape' => FALSE,
-        // @todo Remove in followup issue
-        // @see http://drupal.org/node/1806538.
-        'strict_variables' => FALSE,
         'debug' => settings()->get('twig_debug', FALSE),
         'auto_reload' => settings()->get('twig_auto_reload', NULL),
       ))
