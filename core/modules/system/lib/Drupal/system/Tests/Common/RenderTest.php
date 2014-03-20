@@ -859,7 +859,7 @@ class RenderTest extends DrupalUnitTestBase {
    * element.
    */
   function testDrupalRenderChildElementRenderCachePlaceholder() {
-    $context = array('bar' => $this->randomString());
+    $context = array('bar' => $this->randomContextValue());
     $container = array(
       '#type' => 'container',
     );
