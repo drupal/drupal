@@ -34,7 +34,7 @@ interface AccessInterface {
    *
    * A checker should return this value to indicate that it wants to completely
    * block access, regardless of any other access checkers. Most checkers
-   * should prefer DENY.
+   * should prefer AccessInterface::DENY.
    */
   const KILL = 'KILL';
 
