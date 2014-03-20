@@ -282,7 +282,7 @@ function rdf_preprocess_node(&$variables) {
   $variables['attributes']['typeof'] = empty($bundle_mapping['types']) ? NULL : $bundle_mapping['types'];
 
   // Adds RDFa markup for the node title as metadata because wrapping the title
-  // with markup is not reliable and the title output is different depdending on
+  // with markup is not reliable and the title output is different depending on
   // the view mode (e.g. full vs. teaser).
   $title_mapping = $mapping->getPreparedFieldMapping('title');
   if ($title_mapping) {
