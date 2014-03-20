@@ -154,7 +154,8 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * Initializes the alter hook.
    *
    * @param string $alter_hook
-   *   Name of the alter hook.
+   *   Name of the alter hook; for example, to invoke
+   *   hook_mymodule_data_alter() pass in "mymodule_data".
    */
   protected function alterInfo($alter_hook) {
     $this->alterHook = $alter_hook;
