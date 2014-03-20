@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\serialization\Tests\Normalizer\ConfigNormalizerTest.
+ * Contains \Drupal\serialization\Tests\Normalizer\ConfigEntityNormalizerTest.
  */
 
 namespace Drupal\serialization\Tests\Normalizer;
