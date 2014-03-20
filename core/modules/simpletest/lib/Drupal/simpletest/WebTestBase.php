@@ -8,6 +8,7 @@
 namespace Drupal\simpletest;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Core\DrupalKernel;
@@ -1422,7 +1423,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function drupalGetJSON($path, array $options = array(), array $headers = array()) {
     $headers[] = 'Accept: application/json';
-    return drupal_json_decode($this->drupalGet($path, $options, $headers));
+    return Json::decode($this->drupalGet($path, $options, $headers));
   }
 
   /**
@@ -1430,7 +1431,7 @@ abstract class WebTestBase extends TestBase {
    */
   protected function drupalGetAJAX($path, array $options = array(), array $headers = array()) {
     $headers[] = 'Accept: application/vnd.drupal-ajax';
-    return drupal_json_decode($this->drupalGet($path, $options, $headers));
+    return Json::decode($this->drupalGet($path, $options, $headers));
   }
 
   /**
@@ -1703,7 +1704,7 @@ abstract class WebTestBase extends TestBase {
     }
 
     // Submit the POST request.
-    $return = drupal_json_decode($this->drupalPostForm(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id, $extra_post));
+    $return = Json::decode($this->drupalPostForm(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id, $extra_post));
 
     // Change the page content by applying the returned commands.
     if (!empty($ajax_settings) && !empty($return)) {
@@ -2583,7 +2584,7 @@ abstract class WebTestBase extends TestBase {
     $this->elements = FALSE;
     $this->drupalSettings = array();
     if (preg_match('/var drupalSettings = (.*?);$/m', $content, $matches)) {
-      $this->drupalSettings = drupal_json_decode($matches[1]);
+      $this->drupalSettings = Json::decode($matches[1]);
     }
   }
 

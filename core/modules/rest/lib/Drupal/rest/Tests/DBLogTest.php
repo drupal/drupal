@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
@@ -53,7 +54,7 @@ class DBLogTest extends RESTTestBase {
     $response = $this->httpRequest("dblog/$id", 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(200);
     $this->assertHeader('content-type', $this->defaultMimeType);
-    $log = drupal_json_decode($response);
+    $log = Json::decode($response);
     $this->assertEqual($log['wid'], $id, 'Log ID is correct.');
     $this->assertEqual($log['type'], 'rest_test', 'Type of log message is correct.');
     $this->assertEqual($log['message'], 'Test message', 'Log message text is correct.');
@@ -61,7 +62,7 @@ class DBLogTest extends RESTTestBase {
     // Request an unknown log entry.
     $response = $this->httpRequest("dblog/9999", 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(404);
-    $decoded = drupal_json_decode($response);
+    $decoded = Json::decode($response);
     $this->assertEqual($decoded['error'], 'Log entry with ID 9999 was not found', 'Response message is correct.');
   }
 }

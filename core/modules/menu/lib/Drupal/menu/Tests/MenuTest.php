@@ -7,6 +7,8 @@
 
 namespace Drupal\menu\Tests;
 
+use Drupal\Component\Utility\Json;
+
 /**
  * Defines a test class for testing menu and menu link functionality.
  */
@@ -474,7 +476,7 @@ class MenuTest extends MenuWebTestBase {
     $post = array('ids[0]' => $id);
     $response =  $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-page')));
     $this->assertResponse(200);
-    $json = drupal_json_decode($response);
+    $json = Json::decode($response);
     $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="menu-edit"><a href="' . base_path() . 'admin/structure/menu/manage/tools">Edit menu</a></li></ul>');
   }
 

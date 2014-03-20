@@ -7,6 +7,7 @@
 
 namespace Drupal\history\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -117,7 +118,7 @@ class HistoryTest extends WebTestBase {
     // Retrieve "last read" timestamp for test node, for the current user.
     $response = $this->getNodeReadTimestamps(array($nid));
     $this->assertResponse(200);
-    $json = drupal_json_decode($response);
+    $json = Json::decode($response);
     $this->assertIdentical(array(1 => 0), $json, 'The node has not yet been read.');
 
     // View the node.
@@ -130,13 +131,13 @@ class HistoryTest extends WebTestBase {
     // Simulate JavaScript: perform HTTP request to mark node as read.
     $response = $this->markNodeAsRead($nid);
     $this->assertResponse(200);
-    $timestamp = drupal_json_decode($response);
+    $timestamp = Json::decode($response);
     $this->assertTrue(is_numeric($timestamp), 'Node has been marked as read. Timestamp received.');
 
     // Retrieve "last read" timestamp for test node, for the current user.
     $response = $this->getNodeReadTimestamps(array($nid));
     $this->assertResponse(200);
-    $json = drupal_json_decode($response);
+    $json = Json::decode($response);
     $this->assertIdentical(array(1 => $timestamp), $json, 'The node has been read.');
 
     // Failing to specify node IDs for the first endpoint should return a 404.

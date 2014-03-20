@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
@@ -61,7 +62,7 @@ class DeleteTest extends RESTTestBase {
       // Try to delete an entity that does not exist.
       $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'DELETE');
       $this->assertResponse(404);
-      $decoded = drupal_json_decode($response);
+      $decoded = Json::decode($response);
       $this->assertEqual($decoded['error'], 'Entity with ID 9999 not found', 'Response message is correct.');
 
       // Try to delete an entity without proper permissions.

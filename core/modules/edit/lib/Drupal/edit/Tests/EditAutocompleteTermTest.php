@@ -7,6 +7,7 @@
 
 namespace Drupal\edit\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
@@ -142,7 +143,7 @@ class EditAutocompleteTermTest extends WebTestBase {
     $edit_uri = 'edit/form/node/'. $this->node->id() . '/' . $this->field_name . '/und/full';
     $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
     $response = $this->drupalPost($edit_uri, 'application/vnd.drupal-ajax', $post);
-    $ajax_commands = drupal_json_decode($response);
+    $ajax_commands = Json::decode($response);
 
     // Prepare form values for submission. drupalPostAJAX() is not suitable for
     // handling pages with JSON responses, so we need our own solution here.
@@ -161,7 +162,7 @@ class EditAutocompleteTermTest extends WebTestBase {
       // Submit field form and check response. Should render back all the terms.
       $response = $this->drupalPost($edit_uri, 'application/vnd.drupal-ajax', $post);
       $this->assertResponse(200);
-      $ajax_commands = drupal_json_decode($response);
+      $ajax_commands = Json::decode($response);
       $this->drupalSetContent($ajax_commands[0]['data']);
       $this->assertLink($this->term1->getName());
       $this->assertLink($this->term2->getName());
@@ -172,7 +173,7 @@ class EditAutocompleteTermTest extends WebTestBase {
       $edit_uri = 'edit/form/node/'. $this->node->id() . '/' . $this->field_name . '/und/full';
       $post = array('nocssjs' => 'true') + $this->getAjaxPageStatePostData();
       $response = $this->drupalPost($edit_uri, 'application/vnd.drupal-ajax', $post);
-      $ajax_commands = drupal_json_decode($response);
+      $ajax_commands = Json::decode($response);
 
       // The AjaxResponse's first command is an InsertCommand which contains
       // the form to edit the taxonomy term field, it should contain all three

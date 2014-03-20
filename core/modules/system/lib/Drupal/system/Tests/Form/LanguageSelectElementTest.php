@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Component\Utility\Json;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
 
@@ -89,7 +90,7 @@ class LanguageSelectElementTest extends WebTestBase {
     // field elements.
     $edit = array();
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $values = drupal_json_decode($this->drupalGetContent());
+    $values = Json::decode($this->drupalGetContent());
     $this->assertEqual($values['languages_all'], 'xx');
     $this->assertEqual($values['languages_configurable'], 'en');
     $this->assertEqual($values['languages_locked'], Language::LANGCODE_NOT_SPECIFIED);

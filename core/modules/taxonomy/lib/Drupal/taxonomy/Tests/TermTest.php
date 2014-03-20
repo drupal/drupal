@@ -263,7 +263,7 @@ class TermTest extends TaxonomyTestBase {
     $path = 'taxonomy/autocomplete/node/taxonomy_' . $this->vocabulary->id();
     // The result order is not guaranteed, so check each term separately.
     $result = $this->drupalGet($path, array('query' => array('q' => $input)));
-    $data = drupal_json_decode($result);
+    $data = Json::decode($result);
     $this->assertEqual($data[0]['label'], String::checkPlain($first_term->getName()), 'Autocomplete returned the first matching term');
     $this->assertEqual($data[1]['label'], String::checkPlain($second_term->getName()), 'Autocomplete returned the second matching term');
 

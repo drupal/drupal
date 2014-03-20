@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\String;
 
 use Drupal\views\Views;
@@ -188,7 +189,7 @@ class DisplayTest extends UITestBase {
     $post = array('ids[0]' => $id);
     $response = $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-display')));
     $this->assertResponse(200);
-    $json = drupal_json_decode($response);
+    $json = Json::decode($response);
     $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="views-uiedit"><a href="' . base_path() . 'admin/structure/views/view/test_display/edit/page_1">Edit view</a></li></ul>');
   }
 

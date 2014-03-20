@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
@@ -148,7 +149,7 @@ class UpdateTest extends RESTTestBase {
     $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat);
     $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $invalid_serialized, $this->defaultMimeType);
     $this->assertResponse(422);
-    $error = drupal_json_decode($response);
+    $error = Json::decode($response);
     $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nuuid.0.value: <em class=\"placeholder\">UUID</em>: may not be longer than 128 characters.\n");
 
     // Try to update an entity without proper permissions.

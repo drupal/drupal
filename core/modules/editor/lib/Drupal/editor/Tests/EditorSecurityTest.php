@@ -7,6 +7,7 @@
 
 namespace Drupal\editor\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 
@@ -387,7 +388,7 @@ class EditorSecurityTest extends WebTestBase {
         );
         $response = $this->drupalPost('editor/filter_xss/' . $format, 'application/json', $post);
         $this->assertResponse(200);
-        $json = drupal_json_decode($response);
+        $json = Json::decode($response);
         $this->assertIdentical($json, $expected_filtered_value, 'The value was correctly filtered for XSS attack vectors.');
       }
     }

@@ -7,6 +7,7 @@
 
 namespace Drupal\editor\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -113,7 +114,7 @@ class EditIntegrationLoadingTest extends WebTestBase {
 
     $response = $this->drupalPost('editor/' . 'node/1/body/und/full', 'application/vnd.drupal-ajax', array());
     $this->assertResponse(200);
-    $ajax_commands = drupal_json_decode($response);
+    $ajax_commands = Json::decode($response);
     $this->assertIdentical(1, count($ajax_commands), 'The untransformed text POST request results in one AJAX command.');
     $this->assertIdentical('editorGetUntransformedText', $ajax_commands[0]['command'], 'The first AJAX command is an editorGetUntransformedText command.');
     $this->assertIdentical('<p>Do you also love Drupal?</p><img src="druplicon.png" data-caption="Druplicon" />', $ajax_commands[0]['data'], 'The editorGetUntransformedText command contains the expected data.');

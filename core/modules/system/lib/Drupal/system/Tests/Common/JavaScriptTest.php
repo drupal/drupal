@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Common;
 
+use Drupal\Component\Utility\Json;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Component\Utility\Crypt;
 
@@ -242,7 +243,7 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $start = strpos($javascript, $startToken) + strlen($startToken);
     $end = strrpos($javascript, $endToken);
     $json  = drupal_substr($javascript, $start, $end - $start + 1);
-    $parsed_settings = drupal_json_decode($json);
+    $parsed_settings = Json::decode($json);
 
     // Test whether the two real world cases are handled correctly.
     $settings_two['moduleName']['thingiesOnPage']['id1'] = array();

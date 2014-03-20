@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Json;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -1008,7 +1009,7 @@ class RenderTest extends DrupalUnitTestBase {
     $start = strpos($html, $startToken) + strlen($startToken);
     $end = strrpos($html, $endToken);
     $json  = drupal_substr($html, $start, $end - $start + 1);
-    $parsed_settings = drupal_json_decode($json);
+    $parsed_settings = Json::decode($json);
     return $parsed_settings;
   }
 

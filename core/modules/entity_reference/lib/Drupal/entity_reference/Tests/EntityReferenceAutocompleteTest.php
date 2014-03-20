@@ -7,6 +7,7 @@
 
 namespace Drupal\entity_reference\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\Tags;
 use Drupal\entity_reference\EntityReferenceController;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
@@ -130,6 +131,6 @@ class EntityReferenceAutocompleteTest extends EntityUnitTestBase {
     $entity_reference_controller = EntityReferenceController::create($this->container);
     $result = $entity_reference_controller->handleAutocomplete($request, $type, $this->fieldName, $this->entityType, $this->bundle, 'NULL')->getContent();
 
-    return drupal_json_decode($result);
+    return Json::decode($result);
   }
 }

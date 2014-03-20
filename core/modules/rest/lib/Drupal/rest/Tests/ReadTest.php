@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Core\Language\Language;
 use Drupal\rest\Tests\RESTTestBase;
 
@@ -53,7 +54,7 @@ class ReadTest extends RESTTestBase {
       $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, $this->defaultMimeType);
       $this->assertResponse('200', 'HTTP response code is correct.');
       $this->assertHeader('content-type', $this->defaultMimeType);
-      $data = drupal_json_decode($response);
+      $data = Json::decode($response);
       // Only assert one example property here, other properties should be
       // checked in serialization tests.
       $this->assertEqual($data['uuid'][0]['value'], $entity->uuid(), 'Entity UUID is correct');
@@ -65,7 +66,7 @@ class ReadTest extends RESTTestBase {
       // Try to read an entity that does not exist.
       $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'GET', NULL, $this->defaultMimeType);
       $this->assertResponse(404);
-      $decoded = drupal_json_decode($response);
+      $decoded = Json::decode($response);
       $this->assertEqual($decoded['error'], 'Entity with ID 9999 not found', 'Response message is correct.');
 
       // Make sure that field level access works and that the according field is
@@ -77,7 +78,7 @@ class ReadTest extends RESTTestBase {
         $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, $this->defaultMimeType);
         $this->assertResponse(200);
         $this->assertHeader('content-type', $this->defaultMimeType);
-        $data = drupal_json_decode($response);
+        $data = Json::decode($response);
         $this->assertFalse(isset($data['field_test_text']), 'Field access protected field is not visible in the response.');
       }
 
@@ -85,14 +86,14 @@ class ReadTest extends RESTTestBase {
       $this->drupalLogout();
       $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, $this->defaultMimeType);
       $this->assertResponse(403);
-      $this->assertNull(drupal_json_decode($response), 'No valid JSON found.');
+      $this->assertNull(Json::decode($response), 'No valid JSON found.');
     }
     // Try to read a resource which is not REST API enabled.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     $response = $this->httpRequest('entity/user/' . $account->id(), 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(404);
-    $this->assertNull(drupal_json_decode($response), 'No valid JSON found.');
+    $this->assertNull(Json::decode($response), 'No valid JSON found.');
   }
 
   /**

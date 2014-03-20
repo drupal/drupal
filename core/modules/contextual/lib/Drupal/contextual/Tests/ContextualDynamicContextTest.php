@@ -7,6 +7,7 @@
 
 namespace Drupal\contextual\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Template\Attribute;
 
@@ -77,7 +78,7 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->assertRaw('No contextual ids specified.');
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertResponse(200);
-    $json = drupal_json_decode($response);
+    $json = Json::decode($response);
     $this->assertIdentical($json[$ids[0]], '<ul class="contextual-links"><li class="nodepage-edit"><a href="' . base_path() . 'node/1/edit">Edit</a></li></ul>');
     $this->assertIdentical($json[$ids[1]], '');
     $this->assertIdentical($json[$ids[2]], '<ul class="contextual-links"><li class="nodepage-edit"><a href="' . base_path() . 'node/3/edit">Edit</a></li></ul>');
@@ -94,7 +95,7 @@ class ContextualDynamicContextTest extends WebTestBase {
     $this->assertRaw('No contextual ids specified.');
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertResponse(200);
-    $json = drupal_json_decode($response);
+    $json = Json::decode($response);
     $this->assertIdentical($json[$ids[0]], '');
     $this->assertIdentical($json[$ids[1]], '');
     $this->assertIdentical($json[$ids[2]], '');

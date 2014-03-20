@@ -7,6 +7,8 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Component\Utility\Json;
+
 /**
  * Tests resource creation on user, node and test entities.
  */
@@ -105,7 +107,7 @@ class CreateTest extends RESTTestBase {
       $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat);
       $response = $this->httpRequest('entity/' . $entity_type, 'POST', $invalid_serialized, $this->defaultMimeType);
       $this->assertResponse(422);
-      $error = drupal_json_decode($response);
+      $error = Json::decode($response);
       $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nuuid.0.value: <em class=\"placeholder\">UUID</em>: may not be longer than 128 characters.\n");
 
       // Try to create an entity without proper permissions.

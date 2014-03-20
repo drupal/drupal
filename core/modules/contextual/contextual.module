@@ -5,6 +5,7 @@
  * Adds contextual links to perform actions related to elements on a page.
  */
 
+use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Template\Attribute;
 
@@ -240,7 +241,7 @@ function contextual_pre_render_links($element) {
 function contextual_contextual_links_view_alter(&$element, $items) {
   if (isset($element['#contextual_links']['contextual'])) {
     $encoded_links = $element['#contextual_links']['contextual']['metadata']['contextual-views-field-links'];
-    $element['#links'] = drupal_json_decode(rawurldecode($encoded_links));
+    $element['#links'] = Json::decode(rawurldecode($encoded_links));
   }
 }
 

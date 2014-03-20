@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Component\Utility\Json;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -44,14 +45,14 @@ class EmailTest extends WebTestBase {
 
     $edit = array();
     $edit['email_required'] = '  foo.bar@example.com ';
-    $values = drupal_json_decode($this->drupalPostForm('form-test/email', $edit, 'Submit'));
+    $values = Json::decode($this->drupalPostForm('form-test/email', $edit, 'Submit'));
     $this->assertIdentical($values['email'], '');
     $this->assertEqual($values['email_required'], 'foo.bar@example.com');
 
     $edit = array();
     $edit['email'] = 'foo@example.com';
     $edit['email_required'] = 'example@drupal.org';
-    $values = drupal_json_decode($this->drupalPostForm('form-test/email', $edit, 'Submit'));
+    $values = Json::decode($this->drupalPostForm('form-test/email', $edit, 'Submit'));
     $this->assertEqual($values['email'], 'foo@example.com');
     $this->assertEqual($values['email_required'], 'example@drupal.org');
   }

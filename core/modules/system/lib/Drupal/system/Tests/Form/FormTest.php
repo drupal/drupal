@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
@@ -273,7 +274,7 @@ class FormTest extends WebTestBase {
     $this->assertRaw(t('!name field is required.', array('!name' => 'required_checkbox')), 'A required checkbox is actually mandatory');
 
     // Now try to submit the form correctly.
-    $values = drupal_json_decode($this->drupalPostForm(NULL, array('required_checkbox' => 1), t('Submit')));
+    $values = Json::decode($this->drupalPostForm(NULL, array('required_checkbox' => 1), t('Submit')));
     $expected_values = array(
       'disabled_checkbox_on' => 'disabled_checkbox_on',
       'disabled_checkbox_off' => '',
@@ -327,7 +328,7 @@ class FormTest extends WebTestBase {
       'multiple_no_default_required[]' => 'three',
     );
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $values = drupal_json_decode($this->drupalGetContent());
+    $values = Json::decode($this->drupalGetContent());
 
     // Verify expected values.
     $expected = array(
@@ -507,7 +508,7 @@ class FormTest extends WebTestBase {
     // Submit the form with no input, as the browser does for disabled elements,
     // and fetch the $form_state['values'] that is passed to the submit handler.
     $this->drupalPostForm('form-test/disabled-elements', array(), t('Submit'));
-    $returned_values['normal'] = drupal_json_decode($this->content);
+    $returned_values['normal'] = Json::decode($this->content);
 
     // Do the same with input, as could happen if JavaScript un-disables an
     // element. drupalPostForm() emulates a browser by not submitting input for
@@ -529,7 +530,7 @@ class FormTest extends WebTestBase {
     )));
 
     $this->drupalPostForm(NULL, $edit, t('Submit'));
-    $returned_values['hijacked'] = drupal_json_decode($this->content);
+    $returned_values['hijacked'] = Json::decode($this->content);
 
     // Ensure that the returned values match the form's default values in both
     // cases.

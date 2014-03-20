@@ -7,6 +7,8 @@
 
 namespace Drupal\views_ui\Tests;
 
+use Drupal\Component\Utility\Json;
+
 /**
  * Tests the preview form in the UI.
  */
@@ -235,7 +237,7 @@ class PreviewTest extends UITestBase {
     );
     $url = $this->getAbsoluteUrl($url);
     $post = array('js' => 'true') + $this->getAjaxPageStatePostData();
-    $result = drupal_json_decode($this->drupalPost($url, 'application/vnd.drupal-ajax', $post));
+    $result = Json::decode($this->drupalPost($url, 'application/vnd.drupal-ajax', $post));
     if (!empty($result)) {
       $this->drupalProcessAjaxResponse($content, $result, $ajax_settings, $drupal_settings);
     }

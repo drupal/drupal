@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\Component\Utility\Json;
 use Drupal\Core\Language\Language;
 use Drupal\comment\CommentInterface;
 
@@ -116,7 +117,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $this->assertIdentical(1, count($this->xpath('//*[@data-history-node-field-name="comment"]')), 'data-history-node-field-name attribute is set to the correct value.');
     $response = $this->renderNewCommentsNodeLinks(array($this->node->id()));
     $this->assertResponse(200);
-    $json = drupal_json_decode($response);
+    $json = Json::decode($response);
     $expected = array($this->node->id() => array(
       'new_comment_count' => 1,
       'first_new_comment_link' => url('node/' . $this->node->id(), array('fragment' => 'new')),
