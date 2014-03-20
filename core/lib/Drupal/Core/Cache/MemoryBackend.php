@@ -15,6 +15,7 @@ namespace Drupal\Core\Cache;
  * Should be used for unit tests and specialist use-cases only, does not
  * store cached items between requests.
  *
+ * @ingroup cache
  */
 class MemoryBackend implements CacheBackendInterface {
 

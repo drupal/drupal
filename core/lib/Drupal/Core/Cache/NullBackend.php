@@ -17,6 +17,8 @@ namespace Drupal\Core\Cache;
  * operations would have a negative impact on performance.
  *
  * This also can be used for testing purposes.
+ *
+ * @ingroup cache
  */
 class NullBackend implements CacheBackendInterface {
 

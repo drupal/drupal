@@ -9,6 +9,8 @@ namespace Drupal\Core\Cache;
 
 /**
  * Helper methods for cache.
+ *
+ * @ingroup cache
  */
 class Cache {
 

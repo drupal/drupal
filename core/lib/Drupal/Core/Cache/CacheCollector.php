@@ -22,6 +22,8 @@ use Drupal\Core\Lock\LockBackendInterface;
  * CacheCollector->has() needs to correctly return (equivalent to
  * array_key_exists() vs. isset()). This should not be necessary in the majority
  * of cases.
+ *
+ * @ingroup cache
  */
 abstract class CacheCollector implements CacheCollectorInterface, DestructableInterface {
 

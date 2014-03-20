@@ -19,6 +19,8 @@ namespace Drupal\Core\Cache;
  * volatile backend but found in the persistent one will be propagated back up
  * to ensure fast retrieval on the next request. On cache sets and deletes, both
  * backends will be invoked to ensure consistency.
+ *
+ * @ingroup cache
  */
 
 class BackendChain implements CacheBackendInterface {

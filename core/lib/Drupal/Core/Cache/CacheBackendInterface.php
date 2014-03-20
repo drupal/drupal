@@ -14,60 +14,7 @@ namespace Drupal\Core\Cache;
  * Drupal\Core\Cache\DatabaseBackend provides the default implementation, which
  * can be consulted as an example.
  *
- * To make Drupal use your implementation for a certain cache bin, you have to
- * set a variable with the name of the cache bin as its key and the name of
- * your class as its value. For example, if your implementation of
- * Drupal\Core\Cache\CacheBackendInterface was called MyCustomCache, the
- * following line would make Drupal use it for the 'cache_page' bin:
- * @code
- *  $settings['cache_classes']['cache_page'] = 'MyCustomCache';
- * @endcode
- *
- * Additionally, you can register your cache implementation to be used by
- * default for all cache bins by setting the $settings['cache_classes'] variable and
- * changing the value of the 'cache' key to the name of your implementation of
- * the Drupal\Core\Cache\CacheBackendInterface, e.g.
- * @code
- *  $settings['cache_classes']['cache'] = 'MyCustomCache';
- * @endcode
- *
- * To implement a completely custom cache bin, use the same variable format:
- * @code
- *  $settings['cache_classes']['custom_bin'] = 'MyCustomCache';
- * @endcode
- * To access your custom cache bin, specify the name of the bin when storing
- * or retrieving cached data:
- * @code
- *  \Drupal::cache('custom_bin')->set($cid, $data, $expire);
- *  \Drupal::cache('custom_bin')->get($cid);
- * @endcode
- *
- * There are two ways to "remove" a cache item:
- * - Deletion (using delete(), deleteMultiple(), deleteTags() or deleteAll()):
- *   Permanently removes the item from the cache.
- * - Invalidation (using invalidate(), invalidateMultiple(), invalidateTags()
- *   or invalidateAll()): a "soft" delete that only marks the items as
- *   "invalid", meaning "not fresh" or "not fresh enough". Invalid items are
- *   not usually returned from the cache, so in most ways they behave as if they
- *   have been deleted. However, it is possible to retrieve the invalid entries,
- *   if they have not yet been permanently removed by the garbage collector, by
- *   passing TRUE as the second argument for get($cid, $allow_invalid).
- *
- * Cache items should be deleted if they are no longer considered useful. This
- * is relevant e.g. if the cache item contains references to data that has been
- * deleted. On the other hand, it may be relevant to just invalidate the item
- * if the cached data may be useful to some callers until the cache item has
- * been updated with fresh data. The fact that it was fresh a short while ago
- * may often be sufficient.
- *
- * Invalidation is particularly useful to protect against stampedes. Rather than
- * having multiple concurrent requests updating the same cache item when it
- * expires or is deleted, there can be one request updating the cache, while
- * the other requests can proceed using the stale value. As soon as the cache
- * item has been updated, all future requests will use the updated value.
- *
- * @see \Drupal::cache()
- * @see \Drupal\Core\Cache\DatabaseBackend
+ * @ingroup cache
  */
 interface CacheBackendInterface {
 

@@ -15,6 +15,8 @@ use Drupal\Core\Database\SchemaObjectExistsException;
  *
  * This is Drupal's default cache implementation. It uses the database to store
  * cached data. Each cache bin corresponds to a database table by the same name.
+ *
+ * @ingroup cache
  */
 class DatabaseBackend implements CacheBackendInterface {
 

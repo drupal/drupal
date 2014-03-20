@@ -225,6 +225,8 @@ class Drupal {
    *
    * @return \Drupal\Core\Cache\CacheBackendInterface
    *   The cache object associated with the specified bin.
+   *
+   * @ingroup cache
    */
   public static function cache($bin = 'cache') {
     return static::$container->get('cache.' . $bin);

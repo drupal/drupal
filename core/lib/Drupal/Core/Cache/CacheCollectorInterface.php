@@ -18,6 +18,8 @@ namespace Drupal\Core\Cache;
  * request, and memory usage from static caches of that same data.
  *
  * The default implementation is \Drupal\Core\Cache\CacheCollector.
+ *
+ * @ingroup cache
  */
 interface CacheCollectorInterface {
 

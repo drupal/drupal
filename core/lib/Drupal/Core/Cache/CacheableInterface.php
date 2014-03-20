@@ -8,6 +8,8 @@ namespace Drupal\Core\Cache;
 
 /**
  * Defines an interface for objects which are potentially cacheable.
+ *
+ * @ingroup cache
  */
 interface CacheableInterface {
 

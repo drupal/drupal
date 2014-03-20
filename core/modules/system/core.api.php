@@ -173,10 +173,142 @@
  * @{
  * Information about the Drupal Cache API
  *
- * @todo write this
+ * @section basics Basics
  *
- * Additional documentation paragraphs need to be written, and functions,
- * classes, and interfaces need to be added to this topic.
+ * Note: If not specified, all of the methods mentioned here belong to
+ * \Drupal\Core\Cache\CacheBackendInterface.
+ *
+ * The Cache API is used to store data that takes a long time to
+ * compute. Caching can be permanent, temporary, or valid for a certain
+ * timespan, and the cache can contain any type of data.
+ *
+ * To use the Cache API:
+ * - Request a cache object through \Drupal::cache() or by injecting a cache
+ *   service.
+ * - Define a Cache ID (cid) value for your data. A cid is a string, which must
+ *   contain enough information to uniquely identify the data. For example, if
+ *   your data contains translated strings, then your cid value must include the
+ *   current interface language.
+ * - Call the get() method to attempt a cache read, to see if the cache already
+ *   contains your data.
+ * - If your data is not already in the cache, compute it and add it to the
+ *   cache using the set() method. The third argument of set() can be used to
+ *   control the lifetime of your cache item.
+ *
+ * Example:
+ * @code
+ * $cache = \Drupal::cache();
+ * $cid = 'mymodule_example:' . \Drupal::languageManager()->getCurrentLanguage()->id();
+ *
+ * $data = NULL;
+ * if ($cache = \Drupal::cache()->get($cid)) {
+ *   $data = $cache->data;
+ * }
+ * else {
+ *   $data = my_module_complicated_calculation();
+ *   \Drupal::cache()->set($cid, $data);
+ * }
+ * @endcode
+ *
+ * @section bins Cache bins
+ *
+ * Cache storage is separated into "bins", each containing various cache items.
+ * Each bin can be configured separately; see @ref configuration.
+ *
+ * When you request a cache object, you can specify the bin name in your call to
+ * \Drupal::cache(). Alternatively, you can request a bin by getting service
+ * "cache.nameofbin" from the container. The default bin is called "cache", with
+ * service name "cache.cache".
+ *
+ * @todo: Document common cache bins in https://drupal.org/node/1194136
+ *
+ * A module can define a cache bin by defining a service in its
+ * modulename.services.yml file as follows (substituting the desired name for
+ * "nameofbin"):
+ * @code
+ * cache.nameofbin:
+ *   class: Drupal\Core\Cache\CacheBackendInterface
+ *   tags:
+ *     - { name: cache.bin }
+ *   factory_method: get
+ *   factory_service: cache_factory
+ *   arguments: [nameofbin]
+ * @endcode
+ *
+ * @section delete Deletion
+ *
+ * There are two ways to remove an item from the cache:
+ * - Deletion (using delete(), deleteMultiple() or deleteAll()) permanently
+ *   removes the item from the cache.
+ * - Invalidation (using invalidate(), invalidateMultiple() or invalidateAll())
+ *   is a "soft" delete that only marks items as "invalid", meaning "not fresh"
+ *   or "not fresh enough". Invalid items are not usually returned from the
+ *   cache, so in most ways they behave as if they have been deleted. However,
+ *   it is possible to retrieve invalid items, if they have not yet been
+ *   permanently removed by the garbage collector, by passing TRUE as the second
+ *   argument for get($cid, $allow_invalid).
+ *
+ * Use deletion if a cache item is no longer useful; for instance, if the item
+ * contains references to data that has been deleted. Use invalidation if the
+ * cached item may still be useful to some callers until it has been updated
+ * with fresh data. The fact that it was fresh a short while ago may often be
+ * sufficient.
+ *
+ * Invalidation is particularly useful to protect against stampedes. Rather than
+ * having multiple concurrent requests updating the same cache item when it
+ * expires or is deleted, there can be one request updating the cache, while the
+ * other requests can proceed using the stale value. As soon as the cache item
+ * has been updated, all future requests will use the updated value.
+ *
+ * @section tags Cache Tags
+ *
+ * The fourth argument of the set() method can be used to specify cache tags,
+ * which are used to identify what type of data is included in each cache. Each
+ * cache can have multiple tags, and each tag has a string key and a value. The
+ * value can be:
+ * - TRUE, to indicate that this type of data is present in the cache.
+ * - An array of values. For example, the "node" tag indicates that particular
+ *   nodes' data is present in the cache, so its value is an array of node IDs.
+ * Data that has been tagged can be deleted or invalidated as a group.
+ *
+ * Example:
+ * @code
+ * // A cache item with nodes, users, and some custom module data.
+ * $tags = array(
+ *   'my_custom_tag' => TRUE,
+ *   'node' => array(1, 3),
+ *   'user' => array(7),
+ * );
+ * \Drupal::cache()->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, $tags);
+ *
+ * // Delete or invalidate all caches with certain tags.
+ * \Drupal\Core\Cache\Cache::deleteTags(array('node' => array(1));
+ * \Drupal\Core\Cache\Cache::invalidateTags(array('user' => array(1)));
+ * @endcode
+ *
+ * @todo Update cache tag deletion in https://drupal.org/node/918538
+ *
+ * @todo Extend entity cache tags based on https://drupal.org/node/2217749
+ *
+ * @section configuration Configuration
+ *
+ * Each cache bin can be configured separately; for instance, each bin can use a
+ * different cache backend, such as APC or Memcache. The default backend stores
+ * the cached data in the Drupal database.
+ *
+ * In a settings.php file, you can override the class used for a particular
+ * cache bin. For example, if your implementation of
+ * \Drupal\Core\Cache\CacheBackendInterface was called MyCustomCache, the
+ * following line would make Drupal use it for the 'cache_page' bin:
+ * @code
+ *  $settings['cache_classes']['cache_page'] = 'Drupal\full\namespace\to\MyCustomCache';
+ * @endcode
+ *
+ * Additionally, you can register your cache implementation to be used by
+ * default for all cache bins with:
+ * @code
+ *  $settings['cache_classes']['cache'] = 'Drupal\full\namespace\to\MyCustomCache';
+ * @endcode
  *
  * @see https://drupal.org/node/1884796
  * @}
