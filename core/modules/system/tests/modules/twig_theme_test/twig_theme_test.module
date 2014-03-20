@@ -19,6 +19,10 @@ function twig_theme_test_theme($existing, $type, $theme, $path) {
     'variables' => array(),
     'template' => 'twig_namespace_test',
   );
+  $items['twig_raw_test'] = array(
+    'variables' => array('script' => ''),
+    'template' => 'twig-raw-test',
+  );
   return $items;
 }
 

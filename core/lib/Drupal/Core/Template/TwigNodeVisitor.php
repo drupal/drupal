@@ -47,10 +47,9 @@ class TwigNodeVisitor implements \Twig_NodeVisitorInterface {
   }
 
   /**
-   * Implements Twig_NodeVisitorInterface::getPriority().
+   * {@inheritdoc}
    */
   function getPriority() {
-    // We want to run before other NodeVisitors like Escape or Optimizer
-    return -1;
+    return 1;
   }
 }
