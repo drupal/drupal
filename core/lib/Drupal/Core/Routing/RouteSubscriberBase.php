@@ -25,8 +25,7 @@ abstract class RouteSubscriberBase implements EventSubscriberInterface {
    *   The provider these routes belong to. For dynamically added routes, the
    *   provider name will be 'dynamic_routes'.
    */
-  protected function alterRoutes(RouteCollection $collection, $provider) {
-  }
+  abstract protected function alterRoutes(RouteCollection $collection, $provider);
 
   /**
    * {@inheritdoc}

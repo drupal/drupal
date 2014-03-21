@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\RequestHelper;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Check if the current page is the front page.
@@ -131,54 +132,18 @@ function path_load($conditions) {
  * @return
  *   TRUE if the path is administrative, FALSE otherwise.
  *
- * @see path_get_admin_paths()
- * @see hook_admin_paths()
- * @see hook_admin_paths_alter()
+ * @deprecated Use \Drupal::service('router.admin_context')->isAdminRoute()
+ *   service instead.
  */
 function path_is_admin($path) {
-  $path_map = &drupal_static(__FUNCTION__);
-  if (!isset($path_map['admin'][$path])) {
-    $patterns = path_get_admin_paths();
-    $path_map['admin'][$path] = drupal_match_path($path, $patterns['admin']);
-    $path_map['non_admin'][$path] = drupal_match_path($path, $patterns['non_admin']);
+  try {
+    $parameters = \Drupal::service('router')->match('/' . $path);
+    $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
+    return \Drupal::service('router.admin_context')->isAdminRoute($route);
   }
-  return $path_map['admin'][$path] && !$path_map['non_admin'][$path];
-}
-
-/**
- * Gets a list of administrative and non-administrative paths.
- *
- * @return array
- *   An associative array containing the following keys:
- *   'admin': An array of administrative paths and regular expressions
- *            in a format suitable for drupal_match_path().
- *   'non_admin': An array of non-administrative paths and regular expressions.
- *
- * @see hook_admin_paths()
- * @see hook_admin_paths_alter()
- */
-function path_get_admin_paths() {
-  $patterns = &drupal_static(__FUNCTION__);
-  if (!isset($patterns)) {
-    $paths = \Drupal::moduleHandler()->invokeAll('admin_paths');
-    \Drupal::moduleHandler()->alter('admin_paths', $paths);
-    // Combine all admin paths into one array, and likewise for non-admin paths,
-    // for easier handling.
-    $patterns = array();
-    $patterns['admin'] = array();
-    $patterns['non_admin'] = array();
-    foreach ($paths as $path => $enabled) {
-      if ($enabled) {
-        $patterns['admin'][] = $path;
-      }
-      else {
-        $patterns['non_admin'][] = $path;
-      }
-    }
-    $patterns['admin'] = implode("\n", $patterns['admin']);
-    $patterns['non_admin'] = implode("\n", $patterns['non_admin']);
+  catch (ParamNotConvertedException $e) {
+    return FALSE;
   }
-  return $patterns;
 }
 
 /**

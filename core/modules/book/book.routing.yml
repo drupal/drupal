@@ -38,6 +38,8 @@ book.outline:
   requirements:
     _permission: 'administer book outlines'
     _entity_access: 'node.view'
+  options:
+    _node_operation_route: TRUE
 
 book.admin_edit:
   path: '/admin/structure/book/{node}'
@@ -56,6 +58,7 @@ book.remove:
     _title: 'Remove from outline'
   options:
     _access_mode: 'ALL'
+    _node_operation_route: TRUE
   requirements:
     _permission: 'administer book outlines'
     _entity_access: 'node.view'

@@ -248,19 +248,6 @@ function taxonomy_menu_link_defaults() {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function taxonomy_admin_paths() {
-  $paths = array(
-    'taxonomy/term/*/edit' => TRUE,
-    'taxonomy/term/*/delete' => TRUE,
-    'taxonomy/term/*/translations' => TRUE,
-    'taxonomy/term/*/translations/*' => TRUE,
-  );
-  return $paths;
-}
-
-/**
  * Checks and updates the hierarchy flag of a vocabulary.
  *
  * Checks the current parents of all terms in a vocabulary and updates the

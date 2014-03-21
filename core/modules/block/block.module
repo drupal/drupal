@@ -497,18 +497,6 @@ function block_menu_delete($menu) {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function block_admin_paths() {
-  $paths = array(
-    // Exclude the block demonstration page from admin treatment.
-    // This allows us to present this page in its true form, full page.
-    'admin/structure/block/demo/*' => FALSE,
-  );
-  return $paths;
-}
-
-/**
  * Implements hook_language_delete().
  *
  * Delete the potential block visibility settings of the deleted language.

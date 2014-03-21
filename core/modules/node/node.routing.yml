@@ -19,6 +19,8 @@ node.page_edit:
     _entity_form: 'node.edit'
   requirements:
     _entity_access: 'node.update'
+  options:
+    _node_operation_route: TRUE
 
 node.add_page:
   path: '/node/add'
@@ -27,6 +29,7 @@ node.add_page:
     _content: '\Drupal\node\Controller\NodeController::addPage'
   options:
     _access_mode: 'ANY'
+    _node_operation_route: TRUE
   requirements:
     _permission: 'administer content types'
     _node_add_access: 'node'
@@ -38,6 +41,8 @@ node.add:
     _title_callback: '\Drupal\node\Controller\NodeController::addPageTitle'
   requirements:
     _node_add_access: 'node:{node_type}'
+  options:
+    _node_operation_route: TRUE
 
 node.view:
   path: '/node/{node}'
@@ -53,6 +58,8 @@ node.delete_confirm:
     _entity_form: 'node.delete'
   requirements:
     _entity_access: 'node.delete'
+  options:
+    _node_operation_route: TRUE
 
 node.revision_overview:
   path: '/node/{node}/revisions'
@@ -61,6 +68,8 @@ node.revision_overview:
     _content: '\Drupal\node\Controller\NodeController::revisionOverview'
   requirements:
     _access_node_revision: 'view'
+  options:
+    _node_operation_route: TRUE
 
 node.revision_show:
   path: '/node/{node}/revisions/{node_revision}/view'
@@ -77,6 +86,8 @@ node.revision_revert_confirm:
     _title: 'Revert to earlier revision'
   requirements:
     _access_node_revision: 'update'
+  options:
+    _node_operation_route: TRUE
 
 node.revision_delete_confirm:
   path: '/node/{node}/revisions/{node_revision}/delete'
@@ -85,6 +96,8 @@ node.revision_delete_confirm:
     _title: 'Delete earlier revision'
   requirements:
     _access_node_revision: 'delete'
+  options:
+    _node_operation_route: TRUE
 
 node.overview_types:
   path: '/admin/structure/types'

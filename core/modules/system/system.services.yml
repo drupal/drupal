@@ -17,6 +17,10 @@ services:
     class: Drupal\system\PathProcessor\PathProcessorFiles
     tags:
       - { name: path_processor_inbound, priority: 200 }
+  system.admin_path.route_subscriber:
+    class: Drupal\system\EventSubscriber\AdminRouteSubscriber
+    tags:
+      - { name: event_subscriber }
   theme.negotiator.system.batch:
     class: Drupal\system\Theme\BatchNegotiator
     arguments: ['@batch.storage']

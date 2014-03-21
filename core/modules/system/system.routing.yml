@@ -283,6 +283,10 @@ system.php:
     _controller: 'Drupal\system\Controller\SystemInfoController::php'
   requirements:
     _permission: 'administer site configuration'
+  # This page should not be treated as administrative since it outputs its own
+  # content (outside of any administration theme).
+  options:
+    _admin_route: FALSE
 
 system.admin_index:
   path: '/admin/index'
@@ -388,6 +392,8 @@ system.batch_page.normal:
     _content: '\Drupal\system\Controller\BatchController::batchPage'
   requirements:
     _access: 'TRUE'
+  options:
+    _admin_route: TRUE
 
 system.batch_page.json:
   path: '/batch'
@@ -396,6 +402,8 @@ system.batch_page.json:
   requirements:
     _access: 'TRUE'
     _format: 'json'
+  options:
+    _admin_route: TRUE
 
 system.update:
   path: '/core/update.php'

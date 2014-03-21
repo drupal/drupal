@@ -74,6 +74,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     theme_enable(array('seven'));
     \Drupal::config('system.theme')->set('admin', 'seven')->save();
     $this->container->get('config.factory')->get('node.settings')->set('use_admin_theme', '1')->save();
+    $this->container->get('router.builder')->rebuild();
 
     $this->drupalLogin($this->root_user);
     $this->drupalGet('admin/config/system/cron');

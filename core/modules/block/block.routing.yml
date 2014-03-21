@@ -5,6 +5,8 @@ block.admin_demo:
   requirements:
     _access_theme: 'TRUE'
     _permission: 'administer blocks'
+  options:
+    _admin_route: FALSE
 
 block.admin_block_delete:
   path: '/admin/structure/block/manage/{block}/delete'

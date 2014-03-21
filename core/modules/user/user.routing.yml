@@ -151,6 +151,8 @@ user.edit:
   defaults:
     _entity_form: 'user.default'
     _title_callback: 'Drupal\user\Controller\UserController::userTitle'
+  options:
+    _admin_route: TRUE
   requirements:
     _entity_access: 'user.update'
 
@@ -159,6 +161,8 @@ user.cancel:
   defaults:
     _title: 'Cancel account'
     _entity_form: 'user.cancel'
+  options:
+    _admin_route: TRUE
   requirements:
     _entity_access: 'user.delete'
 

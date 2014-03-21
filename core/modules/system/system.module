@@ -1142,7 +1142,7 @@ function system_page_build(&$page) {
   // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
   $page['#attached']['library'][] = 'core/normalize';
   $page['#attached']['library'][] = 'system/base';
-  if (path_is_admin(current_path())) {
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     $page['#attached']['library'][] = 'system/admin';
   }
 
@@ -1968,21 +1968,6 @@ function theme_confirm_form($variables) {
  */
 function theme_system_config_form($variables) {
   return drupal_render_children($variables['form']);
-}
-
-/**
- * Implements hook_admin_paths().
- */
-function system_admin_paths() {
-  $paths = array(
-    'admin' => TRUE,
-    'admin/*' => TRUE,
-    'batch' => TRUE,
-    // This page should not be treated as administrative since it outputs its
-    // own content (outside of any administration theme).
-    'admin/reports/status/php' => FALSE,
-  );
-  return $paths;
 }
 
 /**

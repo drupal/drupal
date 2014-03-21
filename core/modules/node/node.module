@@ -237,26 +237,6 @@ function node_uri(NodeInterface $node) {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function node_admin_paths() {
-  if (\Drupal::config('node.settings')->get('use_admin_theme')) {
-    $paths = array(
-      'node/*/edit' => TRUE,
-      'node/*/delete' => TRUE,
-      'node/*/revisions' => TRUE,
-      'node/*/revisions/*/revert' => TRUE,
-      'node/*/revisions/*/delete' => TRUE,
-      'node/*/translations' => TRUE,
-      'node/*/translations/*' => TRUE,
-      'node/add' => TRUE,
-      'node/add/*' => TRUE,
-    );
-    return $paths;
-  }
-}
-
-/**
  * Gathers a listing of links to nodes.
  *
  * @param $result
@@ -1318,6 +1298,7 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
   \Drupal::config('node.settings')
     ->set('use_admin_theme', $form_state['values']['use_admin_theme'])
     ->save();
+  \Drupal::service('router.builder')->setRebuildNeeded();
 }
 
 /**

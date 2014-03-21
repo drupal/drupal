@@ -168,19 +168,6 @@ function book_menu_link_defaults() {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function book_admin_paths() {
-  if (\Drupal::config('node.settings')->get('use_admin_theme')) {
-    $paths = array(
-      'node/*/outline' => TRUE,
-      'node/*/outline/remove' => TRUE,
-    );
-    return $paths;
-  }
-}
-
-/**
  * Returns an array of all books.
  *
  * @todo Remove in favor of BookManager Service. http://drupal.org/node/1963894

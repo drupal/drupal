@@ -74,4 +74,6 @@ shortcut.overview:
     _title: 'Shortcuts'
   requirements:
     _access_shortcut_set_switch: 'TRUE'
+  options:
+    _admin_route: TRUE
 

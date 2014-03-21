@@ -170,17 +170,3 @@ function custom_block_add_body_field($block_type_id, $label = 'Block body') {
 
   return $instance;
 }
-
-/**
- * Implements hook_admin_paths().
- */
-function custom_block_admin_paths() {
-  $paths = array(
-    'block/add' => TRUE,
-    'block/add/*' => TRUE,
-    'block/*' => TRUE,
-    'block/*/delete' => TRUE,
-    'admin/structure/block/custom-blocks/*' => TRUE,
-  );
-  return $paths;
-}

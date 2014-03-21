@@ -27,7 +27,7 @@ services:
       - { name: event_subscriber }
   theme.negotiator.admin_theme:
     class: Drupal\user\Theme\AdminNegotiator
-    arguments: ['@current_user', '@config.factory', '@entity.manager']
+    arguments: ['@current_user', '@config.factory', '@entity.manager', '@router.admin_context']
     tags:
       - { name: theme_negotiator, priority: -40 }
   user.permissions_hash:

@@ -2127,8 +2127,8 @@ function _drupal_add_js($data = NULL, $options = NULL) {
           $current_path = current_path();
           $current_path_is_admin = FALSE;
           // The function path_is_admin() is not available on update.php pages.
-          if (!(defined('MAINTENANCE_MODE') && MAINTENANCE_MODE === 'update')) {
-            $current_path_is_admin = path_is_admin($current_path);
+          if (!(defined('MAINTENANCE_MODE'))) {
+            $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
           }
           $path = array(
             'basePath' => base_path(),

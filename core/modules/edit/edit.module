@@ -37,8 +37,7 @@ function edit_page_build(&$page) {
   }
 
   // In-place editing is only supported on the front-end.
-  $path = \Drupal::request()->attributes->get('_system_path');
-  if (path_is_admin($path)) {
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     return;
   }
 

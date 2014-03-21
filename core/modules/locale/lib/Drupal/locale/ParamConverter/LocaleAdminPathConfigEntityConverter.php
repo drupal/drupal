@@ -7,6 +7,7 @@
 
 namespace Drupal\locale\ParamConverter;
 
+use Drupal\Core\Routing\AdminContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -38,14 +39,28 @@ class LocaleAdminPathConfigEntityConverter extends EntityConverter {
   protected $configFactory;
 
   /**
+   * The route admin context to determine whether a route is an admin one.
+   *
+   * @var \Drupal\Core\Routing\AdminContext
+   */
+  protected $adminContext;
+
+  /**
    * Constructs a new EntityConverter.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entityManager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Drupal\Core\Routing\AdminContext $admin_context
+   *   The route admin context service.
+   *
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory) {
-    $this->configFactory = $config_factory;
+  public function __construct(EntityManagerInterface $entity_manager, ConfigFactoryInterface $config_factory, AdminContext $admin_context) {
     parent::__construct($entity_manager);
+
+    $this->configFactory = $config_factory;
+    $this->adminContext = $admin_context;
   }
 
   /**
@@ -73,9 +88,7 @@ class LocaleAdminPathConfigEntityConverter extends EntityConverter {
       $entity_type_id = substr($definition['type'], strlen('entity:'));
       $entity_type = $this->entityManager->getDefinition($entity_type_id);
       if ($entity_type->isSubclassOf('\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
-        // path_is_admin() needs the path without the leading slash.
-        $path = ltrim($route->getPath(), '/');
-        return path_is_admin($path);
+        return $this->adminContext->isAdminRoute($route);
       }
     }
     return FALSE;

@@ -276,6 +276,10 @@ services:
     class: Symfony\Component\Routing\RequestContext
     calls:
       - [fromRequest, ['@request']]
+  router.admin_context:
+    class: Drupal\Core\Routing\AdminContext
+    calls:
+      - [setRequest, ['@?request=']]
   router.route_provider:
     class: Drupal\Core\Routing\RouteProvider
     arguments: ['@database', '@router.builder']

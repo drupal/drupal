@@ -19,6 +19,8 @@ taxonomy.term_edit:
   defaults:
     _entity_form: 'taxonomy_term.default'
     _title: 'Edit term'
+  options:
+    _admin_route: TRUE
   requirements:
     _entity_access: 'taxonomy_term.update'
 
@@ -27,6 +29,8 @@ taxonomy.term_delete:
   defaults:
     _entity_form: 'taxonomy_term.delete'
     _title: 'Delete term'
+  options:
+    _admin_route: TRUE
   requirements:
     _entity_access: 'taxonomy_term.delete'
 

@@ -47,50 +47,6 @@ function hook_hook_info() {
 }
 
 /**
- * Define administrative paths.
- *
- * Modules may specify whether or not the routing paths they define are
- * to be considered administrative. Other modules may use this information to
- * display those pages differently.
- *
- * To change the administrative status of menu items defined in another module's
- * routing paths, modules should implement hook_admin_paths_alter().
- *
- * @return
- *   An associative array. For each item, the key is the path in question, in
- *   a format acceptable to drupal_match_path(). The value for each item should
- *   be TRUE (for paths considered administrative) or FALSE (for non-
- *   administrative paths).
- *
- * @see drupal_match_path()
- * @see hook_admin_paths_alter()
- */
-function hook_admin_paths() {
-  $paths = array(
-    'mymodule/*/add' => TRUE,
-    'mymodule/*/edit' => TRUE,
-  );
-  return $paths;
-}
-
-/**
- * Redefine administrative paths defined by other modules.
- *
- * @param $paths
- *   An associative array of administrative paths, as defined by implementations
- *   of hook_admin_paths().
- *
- * @see hook_admin_paths()
- */
-function hook_admin_paths_alter(&$paths) {
-  // Treat all user pages as administrative.
-  $paths['user'] = TRUE;
-  $paths['user/*'] = TRUE;
-  // Treat the forum topic node form as a non-administrative page.
-  $paths['node/add/forum'] = FALSE;
-}
-
-/**
  * Perform periodic actions.
  *
  * Modules that require some commands to be executed periodically can

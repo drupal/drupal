@@ -10,6 +10,8 @@ custom_block.add_page:
   defaults:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::add'
     _title: 'Add custom block'
+  options:
+    _admin_route: TRUE
   requirements:
     _permission: 'administer blocks'
 
@@ -18,6 +20,8 @@ custom_block.add_form:
   defaults:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::addForm'
     _title_callback: 'Drupal\custom_block\Controller\CustomBlockController::getAddFormTitle'
+  options:
+    _admin_route: TRUE
   requirements:
     _permission: 'administer blocks'
 
@@ -28,11 +32,15 @@ custom_block.type_delete:
     _title: 'Delete'
   requirements:
     _entity_access: 'custom_block_type.delete'
+  options:
+    _admin_route: TRUE
 
 custom_block.edit:
   path: '/block/{custom_block}'
   defaults:
     _entity_form: 'custom_block.edit'
+  options:
+    _admin_route: TRUE
   requirements:
     _entity_access: 'custom_block.update'
 
@@ -40,6 +48,8 @@ custom_block.delete:
   path: '/block/{custom_block}/delete'
   defaults:
     _entity_form: 'custom_block.delete'
+  options:
+    _admin_route: TRUE
   requirements:
     _entity_access: 'custom_block.delete'
 
