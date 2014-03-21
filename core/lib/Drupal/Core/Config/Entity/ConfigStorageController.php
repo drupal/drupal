@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   after the config_prefix in a config name forms the entity ID. Additional or
  *   custom suffixes are not possible.
  */
-class ConfigStorageController extends EntityStorageControllerBase implements ConfigStorageControllerInterface {
+class ConfigStorageController extends EntityStorageControllerBase implements ConfigStorageControllerInterface, ImportableEntityStorageInterface {
 
   /**
    * The UUID service.
