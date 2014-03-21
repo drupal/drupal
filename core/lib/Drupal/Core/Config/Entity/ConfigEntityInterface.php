@@ -15,24 +15,6 @@ use Drupal\Core\Entity\EntityInterface;
 interface ConfigEntityInterface extends EntityInterface {
 
   /**
-   * Returns the original ID.
-   *
-   * @return string|null
-   *   The original ID, if any.
-   */
-  public function getOriginalId();
-
-  /**
-   * Sets the original ID.
-   *
-   * @param string $id
-   *   The new ID to set as original ID.
-   *
-   * @return self
-   */
-  public function setOriginalId($id);
-
-  /**
    * Enables the configuration entity.
    *
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface

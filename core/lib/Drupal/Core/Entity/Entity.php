@@ -422,4 +422,20 @@ abstract class Entity implements EntityInterface {
     return array_keys(get_object_vars($this));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getOriginalId() {
+    // By default, entities do not support renames and do not have original IDs.
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOriginalId($id) {
+    // By default, entities do not support renames and do not have original IDs.
+    return $this;
+  }
+
 }

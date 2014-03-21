@@ -297,4 +297,24 @@ interface EntityInterface extends AccessibleInterface {
    */
   public function referencedEntities();
 
+  /**
+   * Returns the original ID.
+   *
+   * @return int|string|null
+   *   The original ID, if any. Entity types that do not support renames will
+   *   never have an original ID and will return NULL.
+   */
+  public function getOriginalId();
+
+  /**
+   * Sets the original ID.
+   *
+   * @param int|string|null $id
+   *   The new ID to set as original ID. If the entity supports renames, setting
+   *   NULL will prevent an update from being considered a rename.
+   *
+   * @return $this
+   */
+  public function setOriginalId($id);
+
 }

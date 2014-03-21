@@ -307,8 +307,7 @@ class ConfigStorageController extends EntityStorageControllerBase implements Con
     }
 
     if (!$config->isNew() && !isset($entity->original)) {
-      $this->resetCache(array($id));
-      $entity->original = $this->load($id);
+      $entity->original = $this->loadUnchanged($id);
     }
 
     // Build an ID if none is set.

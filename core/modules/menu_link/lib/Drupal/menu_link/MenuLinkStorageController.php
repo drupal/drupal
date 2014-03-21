@@ -52,7 +52,11 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
     try {
       // Load the stored entity, if any.
       if (!$entity->isNew() && !isset($entity->original)) {
-        $entity->original = entity_load_unchanged($this->entityTypeId, $entity->id());
+        $id = $entity->id();
+        if ($entity->getOriginalId() !== NULL) {
+          $id = $entity->getOriginalId();
+        }
+        $entity->original = $this->loadUnchanged($id);
       }
 
       if ($entity->isNew()) {
