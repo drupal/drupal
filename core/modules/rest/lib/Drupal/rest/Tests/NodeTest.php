@@ -55,8 +55,16 @@ class NodeTest extends RESTTestBase {
 
     $node = $this->entityCreate('node');
     $node->save();
-    $this->httpRequest('entity/node/' . $node->id(), 'GET', NULL, $this->defaultMimeType);
+    $this->httpRequest('node/' . $node->id(), 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse(200);
+    $this->assertHeader('Content-type', $this->defaultMimeType);
+
+    // Also check that JSON works and the routing system selects the correct
+    // REST route.
+    $this->enableService('entity:node', 'GET', 'json');
+    $this->httpRequest('node/' . $node->id(), 'GET', NULL, 'application/json');
+    $this->assertResponse(200);
+    $this->assertHeader('Content-type', 'application/json');
 
     // Check that a simple PATCH update to the node title works as expected.
     $this->enableNodeConfiguration('PATCH', 'update');
@@ -76,7 +84,7 @@ class NodeTest extends RESTTestBase {
       ),
     );
     $serialized = $this->container->get('serializer')->serialize($data, $this->defaultFormat);
-    $this->httpRequest('entity/node/' . $node->id(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->httpRequest('node/' . $node->id(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(204);
 
     // Reload the node from the DB and check if the title was correctly updated.

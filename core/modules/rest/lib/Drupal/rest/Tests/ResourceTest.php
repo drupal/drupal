@@ -64,7 +64,7 @@ class ResourceTest extends RESTTestBase {
     $this->rebuildCache();
 
     // Verify that accessing the resource returns 401.
-    $response = $this->httpRequest('entity/entity_test/' . $this->entity->id(), 'GET', NULL, $this->defaultMimeType);
+    $response = $this->httpRequest($this->entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse('404', 'HTTP response code is 404 when the resource does not define formats.');
     $this->curlClose();
   }
@@ -89,7 +89,7 @@ class ResourceTest extends RESTTestBase {
     $this->rebuildCache();
 
     // Verify that accessing the resource returns 401.
-    $response = $this->httpRequest('entity/entity_test/' . $this->entity->id(), 'GET', NULL, $this->defaultMimeType);
+    $response = $this->httpRequest($this->entity->getSystemPath(), 'GET', NULL, $this->defaultMimeType);
     $this->assertResponse('404', 'HTTP response code is 404 when the resource does not define authentication.');
     $this->curlClose();
   }

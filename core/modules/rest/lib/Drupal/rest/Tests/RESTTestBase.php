@@ -276,16 +276,22 @@ abstract class RESTTestBase extends WebTestBase {
   }
 
   /**
-   * Overrides WebTestBase::drupalLogin().
+   * {@inheritdoc}
+   *
+   * This method is overridden to deal with a cURL quirk: the usage of
+   * CURLOPT_CUSTOMREQUEST cannot be unset on the cURL handle, so we need to
+   * override it every time it is omitted.
    */
-  protected function drupalLogin(AccountInterface $user) {
-    if (isset($this->curlHandle)) {
-      // cURL quirk: when setting CURLOPT_CUSTOMREQUEST to anything other than
-      // POST in httpRequest() it has to be restored to POST here. Otherwise the
-      // POST request to login a user will not work.
-      curl_setopt($this->curlHandle, CURLOPT_CUSTOMREQUEST, 'POST');
+  protected function curlExec($curl_options, $redirect = FALSE) {
+    if (!isset($curl_options[CURLOPT_CUSTOMREQUEST])) {
+      if (!empty($curl_options[CURLOPT_HTTPGET])) {
+        $curl_options[CURLOPT_CUSTOMREQUEST] = 'GET';
+      }
+      if (!empty($curl_options[CURLOPT_POST])) {
+        $curl_options[CURLOPT_CUSTOMREQUEST] = 'POST';
+      }
     }
-    parent::drupalLogin($user);
+    return parent::curlExec($curl_options, $redirect);
   }
 
   /**
@@ -338,4 +344,5 @@ abstract class RESTTestBase extends WebTestBase {
     $id = end($url_parts);
     return entity_load($this->testEntityType, $id);
   }
+
 }

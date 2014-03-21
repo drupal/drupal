@@ -14,7 +14,6 @@ use Drupal\rest\ResourceResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Represents entities as resources.
@@ -23,7 +22,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   id = "entity",
  *   label = @Translation("Entity"),
  *   serialization_class = "Drupal\Core\Entity\Entity",
- *   derivative = "Drupal\rest\Plugin\Derivative\EntityDerivative"
+ *   derivative = "Drupal\rest\Plugin\Derivative\EntityDerivative",
+ *   uri_paths = {
+ *     "canonical" = "/entity/{entity_type}/{entity}",
+ *     "http://drupal.org/link-relations/create" = "/entity/{entity_type}"
+ *   }
  * )
  */
 class EntityResource extends ResourceBase {
@@ -31,36 +34,29 @@ class EntityResource extends ResourceBase {
   /**
    * Responds to entity GET requests.
    *
-   * @param mixed $id
-   *   The entity ID.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
    *
    * @return \Drupal\rest\ResourceResponse
-   *   The response containing the loaded entity.
+   *   The response containing the entity with its accessible fields.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function get($id) {
-    $definition = $this->getPluginDefinition();
-    $entity = entity_load($definition['entity_type'], $id);
-    if ($entity) {
-      if (!$entity->access('view')) {
-        throw new AccessDeniedHttpException();
-      }
-      foreach ($entity as $field_name => $field) {
-        if (!$field->access('view')) {
-          unset($entity->{$field_name});
-        }
-      }
-      return new ResourceResponse($entity);
+  public function get(EntityInterface $entity) {
+    if (!$entity->access('view')) {
+      throw new AccessDeniedHttpException();
     }
-    throw new NotFoundHttpException(t('Entity with ID @id not found', array('@id' => $id)));
+    foreach ($entity as $field_name => $field) {
+      if (!$field->access('view')) {
+        unset($entity->{$field_name});
+      }
+    }
+    return new ResourceResponse($entity);
   }
 
   /**
    * Responds to entity POST requests and saves the new entity.
    *
-   * @param mixed $id
-   *   Ignored. A new entity is created with a new ID.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
@@ -69,7 +65,7 @@ class EntityResource extends ResourceBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function post($id, EntityInterface $entity = NULL) {
+  public function post(EntityInterface $entity = NULL) {
     if ($entity == NULL) {
       throw new BadRequestHttpException(t('No entity content received.'));
     }
@@ -112,8 +108,8 @@ class EntityResource extends ResourceBase {
   /**
    * Responds to entity PATCH requests.
    *
-   * @param mixed $id
-   *   The entity ID.
+   * @param \Drupal\Core\Entity\EntityInterface $original_entity
+   *   The original entity object.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
@@ -122,23 +118,13 @@ class EntityResource extends ResourceBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function patch($id, EntityInterface $entity = NULL) {
+  public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
     if ($entity == NULL) {
       throw new BadRequestHttpException(t('No entity content received.'));
-    }
-
-    if (empty($id)) {
-      throw new NotFoundHttpException();
     }
     $definition = $this->getPluginDefinition();
     if ($entity->getEntityTypeId() != $definition['entity_type']) {
       throw new BadRequestHttpException(t('Invalid entity type'));
-    }
-    $original_entity = entity_load($definition['entity_type'], $id);
-    // We don't support creating entities with PATCH, so we throw an error if
-    // there is no existing entity.
-    if ($original_entity == FALSE) {
-      throw new NotFoundHttpException();
     }
     if (!$original_entity->access('update')) {
       throw new AccessDeniedHttpException();
@@ -174,33 +160,28 @@ class EntityResource extends ResourceBase {
   /**
    * Responds to entity DELETE requests.
    *
-   * @param mixed $id
-   *   The entity ID.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
    *
    * @return \Drupal\rest\ResourceResponse
    *   The HTTP response object.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function delete($id) {
-    $definition = $this->getPluginDefinition();
-    $entity = entity_load($definition['entity_type'], $id);
-    if ($entity) {
-      if (!$entity->access('delete')) {
-        throw new AccessDeniedHttpException();
-      }
-      try {
-        $entity->delete();
-        watchdog('rest', 'Deleted entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
-
-        // Delete responses have an empty body.
-        return new ResourceResponse(NULL, 204);
-      }
-      catch (EntityStorageException $e) {
-        throw new HttpException(500, t('Internal Server Error'), $e);
-      }
+  public function delete(EntityInterface $entity) {
+    if (!$entity->access('delete')) {
+      throw new AccessDeniedHttpException();
     }
-    throw new NotFoundHttpException(t('Entity with ID @id not found', array('@id' => $id)));
+    try {
+      $entity->delete();
+      watchdog('rest', 'Deleted entity %type with ID %id.', array('%type' => $entity->getEntityTypeId(), '%id' => $entity->id()));
+
+      // Delete responses have an empty body.
+      return new ResourceResponse(NULL, 204);
+    }
+    catch (EntityStorageException $e) {
+      throw new HttpException(500, t('Internal Server Error'), $e);
+    }
   }
 
   /**

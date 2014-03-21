@@ -180,6 +180,9 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
     // @todo Use the RequestHelper once https://drupal.org/node/2090293 is
     //   fixed.
     $request = Request::create($this->request->getBaseUrl() . '/' . $path);
+    // Performance optimization: set a short accept header to reduce overhead in
+    // AcceptHeaderMatcher when matching the request.
+    $request->headers->set('Accept', 'text/html');
     // Find the system path by resolving aliases, language prefix, etc.
     $processed = $this->pathProcessor->processInbound($path, $request);
     if (empty($processed) || !empty($exclude[$processed])) {

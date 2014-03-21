@@ -7,7 +7,6 @@
 
 namespace Drupal\rest\Tests;
 
-use Drupal\Component\Utility\Json;
 use Drupal\rest\Tests\RESTTestBase;
 
 /**
@@ -51,7 +50,7 @@ class DeleteTest extends RESTTestBase {
       $entity = $this->entityCreate($entity_type);
       $entity->save();
       // Delete it over the REST API.
-      $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'DELETE');
+      $response = $this->httpRequest($entity->getSystemPath(), 'DELETE');
       // Clear the static cache with entity_load(), otherwise we won't see the
       // update.
       $entity = entity_load($entity_type, $entity->id(), TRUE);
@@ -60,17 +59,16 @@ class DeleteTest extends RESTTestBase {
       $this->assertEqual($response, '', 'Response body is empty.');
 
       // Try to delete an entity that does not exist.
-      $response = $this->httpRequest('entity/' . $entity_type . '/9999', 'DELETE');
+      $response = $this->httpRequest($entity_type . '/9999', 'DELETE');
       $this->assertResponse(404);
-      $decoded = Json::decode($response);
-      $this->assertEqual($decoded['error'], 'Entity with ID 9999 not found', 'Response message is correct.');
+      $this->assertText('The requested page "/' . $entity_type . '/9999" could not be found.');
 
       // Try to delete an entity without proper permissions.
       $this->drupalLogout();
       // Re-save entity to the database.
       $entity = $this->entityCreate($entity_type);
       $entity->save();
-      $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'DELETE');
+      $this->httpRequest($entity->getSystemPath(), 'DELETE');
       $this->assertResponse(403);
       $this->assertNotIdentical(FALSE, entity_load($entity_type, $entity->id(), TRUE), 'The ' . $entity_type . ' entity is still in the database.');
     }

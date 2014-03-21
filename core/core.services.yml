@@ -352,8 +352,13 @@ services:
   password:
     class: Drupal\Core\Password\PhpassHashedPassword
     arguments: [16]
-  mime_type_matcher:
-    class: Drupal\Core\Routing\MimeTypeMatcher
+  accept_header_matcher:
+    class: Drupal\Core\Routing\AcceptHeaderMatcher
+    arguments: ['@content_negotiation']
+    tags:
+      - { name: route_filter }
+  content_type_header_matcher:
+    class: Drupal\Core\Routing\ContentTypeHeaderMatcher
     tags:
       - { name: route_filter }
   paramconverter_manager:
@@ -425,6 +430,10 @@ services:
       - { name: route_enhancer, priority: 10 }
   route_special_attributes_subscriber:
     class: Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  route_http_method_subscriber:
+    class: Drupal\Core\EventSubscriber\RouteMethodSubscriber
     tags:
       - { name: event_subscriber }
   controller.page:

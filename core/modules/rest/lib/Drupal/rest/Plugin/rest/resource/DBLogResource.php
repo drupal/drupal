@@ -17,7 +17,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @RestResource(
  *   id = "dblog",
- *   label = @Translation("Watchdog database log")
+ *   label = @Translation("Watchdog database log"),
+ *   uri_paths = {
+ *     "canonical" = "/dblog/{id}"
+ *   }
  * )
  */
 class DBLogResource extends ResourceBase {

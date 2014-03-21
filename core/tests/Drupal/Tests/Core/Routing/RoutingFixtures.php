@@ -144,6 +144,26 @@ class RoutingFixtures {
   }
 
   /**
+   * Returns a Content-type restricted set of routes for testing.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   */
+  public function contentRouteCollection() {
+    $collection = new RouteCollection();
+
+    $route = new Route('path/three');
+    $route->setRequirement('_method', 'POST');
+    $route->setRequirement('_content_type_format', 'json');
+    $collection->add('route_f', $route);
+
+    $route = new Route('path/three');
+    $route->setRequirement('_method', 'PATCH');
+    $route->setRequirement('_content_type_format', 'xml');
+    $collection->add('route_g', $route);
+    return $collection;
+  }
+
+  /**
    * Returns the table definition for the routing fixtures.
    *
    * @return array

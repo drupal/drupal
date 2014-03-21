@@ -78,13 +78,17 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
    */
   public function routes() {
     $collection = new RouteCollection();
-    $path_prefix = strtr($this->pluginId, ':', '/');
+
+    $definition = $this->getPluginDefinition();
+    $canonical_path = isset($definition['uri_paths']['canonical']) ? $definition['uri_paths']['canonical'] : '/' . strtr($this->pluginId, ':', '/') . '/{id}';
+    $create_path = isset($definition['uri_paths']['http://drupal.org/link-relations/create']) ? $definition['uri_paths']['http://drupal.org/link-relations/create'] : '/' . strtr($this->pluginId, ':', '/');
+
     $route_name = strtr($this->pluginId, ':', '.');
 
     $methods = $this->availableMethods();
     foreach ($methods as $method) {
       $lower_method = strtolower($method);
-      $route = new Route("/$path_prefix/{id}", array(
+      $route = new Route($canonical_path, array(
         '_controller' => 'Drupal\rest\RequestHandler::handle',
         // Pass the resource plugin ID along as default property.
         '_plugin' => $this->pluginId,
@@ -98,9 +102,17 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
 
       switch ($method) {
         case 'POST':
-          // POST routes do not require an ID in the URL path.
-          $route->setPattern("/$path_prefix");
-          $route->addDefaults(array('id' => NULL));
+          $route->setPattern($create_path);
+          // Restrict the incoming HTTP Content-type header to the known
+          // serialization formats.
+          $route->addRequirements(array('_content_type_format' => implode('|', $this->serializerFormats)));
+          $collection->add("$route_name.$method", $route);
+          break;
+
+        case 'PATCH':
+          // Restrict the incoming HTTP Content-type header to the known
+          // serialization formats.
+          $route->addRequirements(array('_content_type_format' => implode('|', $this->serializerFormats)));
           $collection->add("$route_name.$method", $route);
           break;
 
@@ -110,7 +122,6 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
           // HTTP Accept headers.
           foreach ($this->serializerFormats as $format_name) {
             // Expose one route per available format.
-            //$format_route = new Route($route->getPath(), $route->getDefaults(), $route->getRequirements());
             $format_route = clone $route;
             $format_route->addRequirements(array('_format' => $format_name));
             $collection->add("$route_name.$method.$format_name", $format_route);
