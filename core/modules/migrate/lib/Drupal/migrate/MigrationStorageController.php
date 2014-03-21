@@ -19,12 +19,12 @@ class MigrationStorageController extends ConfigStorageController implements Migr
    * {@inheritdoc}
    */
   public function buildDependencyMigration(array $migrations, array $dynamic_ids) {
-    // Dependencies defined in the migration storage controller can be soft
-    // dependencies: if a soft dependency does not run, the current migration
-    // is still OK to go. This is indicated by adding ": false" (without
-    // quotes) after the name of the dependency. Hard dependencies (default)
-    // are called requirements. Both hard and soft dependencies (if run at
-    // all) must run before the current one.
+    // Migration dependencies defined in the migration storage controller can be
+    // soft dependencies: if a soft dependency does not run, the current
+    // migration is still OK to go. This is indicated by adding ": false"
+    // (without quotes) after the name of the dependency. Hard dependencies
+    // (default) are called requirements. Both hard and soft dependencies (if
+    // run at all) must run before the current one.
     $dependency_graph = array();
     $requirement_graph = array();
     $different = FALSE;
@@ -33,8 +33,8 @@ class MigrationStorageController extends ConfigStorageController implements Migr
       $id = $migration->id();
       $requirements[$id] = array();
       $dependency_graph[$id]['edges'] = array();
-      if (isset($migration->dependencies) && is_array($migration->dependencies)) {
-        foreach ($migration->dependencies as $dependency) {
+      if (isset($migration->migration_dependencies) && is_array($migration->migration_dependencies)) {
+        foreach ($migration->migration_dependencies as $dependency) {
           if (is_string($dependency) && !isset($dynamic_ids[$dependency])) {
             $this->addDependency($requirement_graph, $id, $dependency, $dynamic_ids);
           }

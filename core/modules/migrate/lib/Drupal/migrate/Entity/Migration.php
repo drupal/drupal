@@ -186,7 +186,7 @@ class Migration extends ConfigEntityBase implements MigrationInterface, Requirem
    *
    * @var array
    */
-  public $dependencies = array();
+  public $migration_dependencies = array();
 
   /**
    * {@inheritdoc}
