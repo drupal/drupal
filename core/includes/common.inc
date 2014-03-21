@@ -4840,31 +4840,6 @@ function watchdog_severity_levels() {
   );
 }
 
-
-/**
- * Explodes a string of tags into an array.
- *
- * @see drupal_implode_tags()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\Tags::explode().
- */
-function drupal_explode_tags($tags) {
-  return Tags::explode($tags);
-}
-
-/**
- * Implodes an array of tags into a string.
- *
- * @see drupal_explode_tags()
- *
- * @deprecated in Drupal 8.x-dev, will be removed before Drupal 8.0.
- *   Use \Drupal\Component\Utility\Tags::implode().
- */
-function drupal_implode_tags($tags) {
-  return Tags::implode($tags);
-}
-
 /**
  * Flushes all persistent caches, resets all variables, and rebuilds all data structures.
  *
