@@ -15,7 +15,7 @@ class ResponsiveImageMappingDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the responsive image mapping %title?', array('%title' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the responsive image mapping %title?', array('%title' => $this->entity->label()));
   }
 
   /**
@@ -31,7 +31,7 @@ class ResponsiveImageMappingDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Delete');
+    return $this->t('Delete');
   }
 
   /**
@@ -39,7 +39,7 @@ class ResponsiveImageMappingDeleteForm extends EntityConfirmFormBase {
    */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
-    drupal_set_message(t('Responsive image mapping %label has been deleted.', array('%label' => $this->entity->label())));
+    drupal_set_message($this->t('Responsive image mapping %label has been deleted.', array('%label' => $this->entity->label())));
     watchdog('responsive_image', 'Responsive image mapping %label has been deleted.', array('%label' => $this->entity->label()), WATCHDOG_NOTICE);
     $form_state['redirect_route']['route_name'] = 'responsive_image.mapping_page';
   }
