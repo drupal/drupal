@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
+use Drupal\field\Field;
 use Drupal\field\FieldException;
 use Drupal\field\FieldInstanceConfigInterface;
 
@@ -235,7 +236,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     // 'uuid' entry is present too, so that leftover 'field_uuid' entries
     // present in config files imported as "default module config" are ignored.
     if (isset($values['field_uuid']) && isset($values['uuid'])) {
-      $field = field_info_field_by_id($values['field_uuid']);
+      $field = Field::fieldInfo()->getFieldById($values['field_uuid']);
       if (!$field) {
         throw new FieldException(format_string('Attempt to create an instance of unknown field @uuid', array('@uuid' => $values['field_uuid'])));
       }
@@ -245,7 +246,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     // easier DX on creation of new instances (either through programmatic
     // creation / or through import of default config files).
     elseif (isset($values['field_name']) && isset($values['entity_type'])) {
-      $field = field_info_field($values['entity_type'], $values['field_name']);
+      $field = Field::fieldInfo()->getField($values['entity_type'], $values['field_name']);
       if (!$field) {
         throw new FieldException(format_string('Attempt to create an instance of field @field_name that does not exist on entity type @entity_type.', array('@field_name' => $values['field_name'], '@entity_type' => $values['entity_type'])));
       }
@@ -304,6 +305,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       'default_value',
       'default_value_function',
       'settings',
+      'dependencies',
     );
     $properties = array();
     foreach ($names as $name) {
@@ -353,6 +355,20 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
       // Notify the entity storage controller.
       $entity_manager->getStorageController($this->entity_type)->onInstanceUpdate($this);
     }
+    if (!$this->isSyncing()) {
+      // Ensure the correct dependencies are present.
+      $this->calculateDependencies();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    // Manage dependencies.
+    $this->addDependency('entity', $this->field->getConfigDependencyName());
+    return $this->dependencies;
   }
 
   /**
@@ -409,7 +425,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     $fields_to_delete = array();
     foreach ($instances as $instance) {
       $field = $instance->getField();
-      if (!$instance->deleted && empty($instance->noFieldDelete) && count($field->getBundles()) == 0) {
+      if (!$instance->deleted && empty($instance->noFieldDelete) && !$instance->isUninstalling() && count($field->getBundles()) == 0) {
         // Key by field UUID to avoid deleting the same field twice.
         $fields_to_delete[$instance->field_uuid] = $field;
       }

@@ -79,8 +79,9 @@ class EntityCrudHookTest extends EntityUnitTestBase {
    */
   public function testBlockHooks() {
     $entity = entity_create('block', array(
-      'id' => 'stark.test_html',
+      'id' => 'stark_test_html',
       'plugin' => 'test_html',
+      'theme' => 'stark',
     ));
 
     $this->assertHookMessageOrder(array(
@@ -134,6 +135,10 @@ class EntityCrudHookTest extends EntityUnitTestBase {
   public function testCommentHooks() {
     $account = $this->createUser();
     $this->enableModules(array('entity', 'filter'));
+    entity_create('node_type', array(
+      'type' => 'article',
+      'name' => 'Article',
+    ))->save();
     $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment', CommentItemInterface::OPEN);
 
     $node = entity_create('node', array(

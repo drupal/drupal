@@ -25,6 +25,8 @@ class TestInstallStorage extends InstallStorage {
     if (!isset($this->folders)) {
       // @todo Refactor getComponentNames() to use the extension list directly.
       $listing = new ExtensionDiscovery();
+      // Test all profiles.
+      $listing->setProfileDirectories(array());
       $this->folders = $this->getComponentNames('profile', array_keys($listing->scan('profile')));
       $this->folders += $this->getComponentNames('module', array_keys($listing->scan('module')));
       $this->folders += $this->getComponentNames('theme', array_keys($listing->scan('theme')));

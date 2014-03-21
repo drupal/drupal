@@ -167,7 +167,10 @@ display:
       relationships: {  }
       arguments: {  }
 label: 'Who''s new'
-module: views
+module: user
 id: who_s_new
 tag: default
 langcode: en
+dependencies:
+  module:
+    - user

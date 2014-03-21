@@ -4,3 +4,6 @@ status: true
 langcode: en
 type: user
 plugin: user_unblock_user_action
+dependencies:
+  module:
+    - user

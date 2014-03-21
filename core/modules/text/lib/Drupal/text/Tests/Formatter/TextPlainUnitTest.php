@@ -64,7 +64,7 @@ class TextPlainUnitTest extends DrupalUnitTestBase {
       'text_processing' => FALSE,
     );
 
-    $this->formatter_type = 'text_plain';
+    $this->formatter_type = 'string';
     $this->formatter_settings = array();
 
     $this->field = entity_create('field_config', array(

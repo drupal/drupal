@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\breakpoint\BreakpointGroupInterface;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
  * Defines the BreakpointGroup entity.
@@ -91,7 +92,7 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
   /**
    * Overrides Drupal\config\ConfigEntityBase::__construct().
    */
-  public function __construct(array $values, $entity_type) {
+  public function __construct(array $values, $entity_type = 'breakpoint_group') {
     parent::__construct($values, $entity_type);
   }
 
@@ -207,6 +208,7 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
       'sourceType',
       'status',
       'langcode',
+      'dependencies',
     );
     $properties = array();
     foreach ($names as $name) {
@@ -214,4 +216,25 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
     }
     return $properties;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+
+    $this->dependencies = array();
+    if ($this->sourceType == Breakpoint::SOURCE_TYPE_MODULE) {
+      $this->addDependency('module', $this->source);
+    }
+    elseif ($this->sourceType == Breakpoint::SOURCE_TYPE_THEME) {
+      $this->addDependency('theme', $this->source);
+    }
+    $breakpoints = $this->getBreakpoints();
+    foreach ($breakpoints as $breakpoint) {
+      $this->addDependency('entity', $breakpoint->getConfigDependencyName());
+    }
+    return $this->dependencies;
+  }
+
 }

@@ -1050,3 +1050,6 @@ module: file
 id: files
 tag: default
 langcode: en
+dependencies:
+  module:
+    - file

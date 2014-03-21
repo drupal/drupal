@@ -199,6 +199,7 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
     $instance->save();
 
     // Create default and compact entity display.
+    entity_create('form_mode', array('id' =>  'entity_test.compact', 'targetEntityType' => 'entity_test'))->save();
     entity_create('entity_form_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

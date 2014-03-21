@@ -35,7 +35,7 @@ class ViewsTest extends UnitTestCase {
 
     $this->view = new View(array('id' => 'test_view'), 'view');
 
-    $view_storage_controller = $this->getMockBuilder('Drupal\views\ViewStorageController')
+    $view_storage_controller = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
       ->disableOriginalConstructor()
       ->getMock();
     $view_storage_controller->expects($this->once())

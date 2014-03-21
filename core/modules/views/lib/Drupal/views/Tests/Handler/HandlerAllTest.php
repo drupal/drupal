@@ -53,6 +53,7 @@ class HandlerAllTest extends HandlerTestBase {
    * Tests most of the handlers.
    */
   public function testHandlers() {
+    $this->drupalCreateContentType(array('type' => 'article'));
     $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     $object_types = array_keys(ViewExecutable::viewsHandlerTypes());

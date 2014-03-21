@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\views\ViewStorageController;
+use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\Page;
 use Drupal\views\Plugin\views\display\DefaultDisplay;
@@ -16,10 +16,10 @@ use Drupal\views\Plugin\views\display\Feed;
 use Drupal\views\Views;
 
 /**
- * Tests the functionality of View and ViewStorageController.
+ * Tests the functionality of View and ConfigStorageController.
  *
  * @see \Drupal\views\Entity\View
- * @see \Drupal\views\ViewStorageController
+ * @see \Drupal\Core\Config\Entity\ConfigStorageController
  */
 class ViewStorageTest extends ViewUnitTestBase {
 
@@ -50,7 +50,7 @@ class ViewStorageTest extends ViewUnitTestBase {
   /**
    * The configuration entity storage controller.
    *
-   * @var \Drupal\views\ViewStorageController
+   * @var \Drupal\Core\Config\Entity\ConfigStorageController
    */
   protected $controller;
 
@@ -79,9 +79,6 @@ class ViewStorageTest extends ViewUnitTestBase {
 
     // Confirm that an info array has been returned.
     $this->assertTrue($this->entityType instanceof EntityTypeInterface, 'The View info array is loaded.');
-
-    // Confirm we have the correct controller class.
-    $this->assertTrue($this->controller instanceof ViewStorageController, 'The correct controller is loaded.');
 
     // CRUD tests.
     $this->loadTests();

@@ -40,3 +40,8 @@ fieldMappings:
   field_tags:
     properties:
       - 'schema:about'
+dependencies:
+  entity:
+    - node.type.article
+  module:
+    - node

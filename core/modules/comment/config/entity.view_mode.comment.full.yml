@@ -3,3 +3,6 @@ label: 'Full comment'
 status: false
 cache: true
 targetEntityType: comment
+dependencies:
+  module:
+    - comment

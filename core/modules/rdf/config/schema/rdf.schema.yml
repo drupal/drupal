@@ -26,3 +26,6 @@ rdf.mapping.*.*:
       label: 'Field mappings'
       sequence:
         - type: rdf_field_mapping
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'

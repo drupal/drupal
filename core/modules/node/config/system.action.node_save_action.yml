@@ -4,3 +4,6 @@ status: true
 langcode: en
 type: node
 plugin: node_save_action
+dependencies:
+  module:
+    - node

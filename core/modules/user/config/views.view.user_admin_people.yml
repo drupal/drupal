@@ -952,7 +952,10 @@ display:
       defaults:
         show_admin_links: false
 label: People
-module: views
+module: user
 id: user_admin_people
 tag: default
 langcode: und
+dependencies:
+  module:
+    - user

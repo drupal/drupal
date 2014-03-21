@@ -13,3 +13,6 @@ translatable: '0'
 indexes:
   format:
     - format
+dependencies:
+  module:
+    - text

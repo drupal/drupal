@@ -20,3 +20,8 @@ visibility:
     types:
       article: '0'
       page: '0'
+dependencies:
+  module:
+    - user
+  theme:
+    - seven

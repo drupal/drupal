@@ -207,6 +207,7 @@ display:
           hide_alter_empty: true
           link_to_node: false
           comments: false
+          optional: true
           plugin_id: history_user_timestamp
           provider: history
         name:
@@ -462,7 +463,11 @@ display:
       link_url: admin/content
       block_category: 'Lists (Views)'
 label: 'Recent content'
-module: views
+module: node
 id: content_recent
 tag: default
 langcode: en
+dependencies:
+  module:
+    - node
+    - user

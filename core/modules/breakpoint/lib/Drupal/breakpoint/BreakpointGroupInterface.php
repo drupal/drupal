@@ -51,7 +51,7 @@ interface BreakpointGroupInterface extends ConfigEntityInterface {
   /**
    * Gets the array of breakpoints for the breakpoint group.
    *
-   * @return array
+   * @return \Drupal\breakpoint\Entity\BreakpointInterface[]
    *   The array of breakpoints for the breakpoint group.
    */
   public function getBreakpoints();
@@ -62,7 +62,7 @@ interface BreakpointGroupInterface extends ConfigEntityInterface {
    * @param string $id
    *   The breakpoint ID to get.
    *
-   * @return \Drupal\breakpoint\Entity\Breakpoint|boolean
+   * @return \Drupal\breakpoint\Entity\BreakpointInterface|boolean
    *   The breakpoint or FALSE if not in the Breakpoint group.
    */
   public function getBreakpointById($id);

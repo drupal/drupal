@@ -32,3 +32,6 @@ indexes:
     - target_id
 status: true
 langcode: und
+dependencies:
+  module:
+    - image

@@ -246,3 +246,7 @@ module: taxonomy
 id: taxonomy_term
 tag: default
 langcode: en
+dependencies:
+  module:
+    - node
+    - taxonomy

@@ -14,7 +14,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class EntityDisplayTest extends DrupalUnitTestBase {
 
-  public static $modules = array('entity', 'field', 'entity_test', 'user', 'text');
+  public static $modules = array('entity', 'field', 'entity_test', 'user', 'text', 'entity_test');
 
   public static function getInfo() {
     return array(
@@ -76,9 +76,12 @@ class EntityDisplayTest extends DrupalUnitTestBase {
 
     // Check that CreateCopy() creates a new component that can be correclty
     // saved.
+    entity_create('view_mode', array('id' => $display->targetEntityType . '.other_view_mode', 'targetEntityType' => $display->targetEntityType))->save();
     $new_display = $display->createCopy('other_view_mode');
     $new_display->save();
     $new_display = entity_load('entity_view_display', $new_display->id());
+    $dependencies = $new_display->calculateDependencies();
+    $this->assertEqual(array('entity' => array('entity.view_mode.entity_test.other_view_mode')), $dependencies);
     $this->assertEqual($new_display->targetEntityType, $display->targetEntityType);
     $this->assertEqual($new_display->bundle, $display->bundle);
     $this->assertEqual($new_display->mode, 'other_view_mode');
@@ -188,16 +191,10 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->assertEqual($formatter->getPluginId(), 'field_test_multiple');
     $this->assertFalse(isset($formatter->randomValue));
 
-    // Check that specifying an unknown formatter (e.g. case of a disabled
-    // module) gets stored as is in the display, but results in the default
-    // formatter being used.
-    $display->setComponent($field_name, array(
-      'type' => 'unknown_formatter',
-    ));
-    $options = $display->getComponent($field_name);
-    $this->assertEqual($options['type'], 'unknown_formatter');
-    $formatter = $display->getRenderer($field_name);
-    $this->assertEqual($formatter->getPluginId(), $default_formatter);
+    // Check that the display has dependencies on the field and the module that
+    // provides the formatter.
+    $dependencies = $display->calculateDependencies();
+    $this->assertEqual(array('entity' => array('field.instance.entity_test.entity_test.test_field'), 'module' => array('field_test')), $dependencies);
   }
 
   /**
@@ -287,6 +284,20 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $this->assertEqual('article_rename', $new_form_display->bundle);
     $this->assertEqual('node.article_rename.default', $new_form_display->id);
 
+    $expected_dependencies = array(
+      'entity' => array('field.instance.node.article_rename.body', 'node.type.article_rename'),
+      'module' => array('text')
+    );
+    // Check that the display has dependencies on the bundle, fields and the
+    // modules that provide the formatters.
+    $dependencies = $new_display->calculateDependencies();
+    $this->assertEqual($expected_dependencies, $dependencies);
+
+    // Check that the form display has dependencies on the bundle, fields and
+    // the modules that provide the formatters.
+    $dependencies = $new_form_display->calculateDependencies();
+    $this->assertEqual($expected_dependencies, $dependencies);
+
     // Delete the bundle.
     $type->delete();
     $display = entity_load('entity_view_display', 'node.article_rename.default');
@@ -317,6 +328,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $instance->save();
 
     // Create default and teaser entity display.
+    entity_create('view_mode', array('id' =>  'entity_test.teaser', 'targetEntityType' => 'entity_test'))->save();
     entity_create('entity_view_display', array(
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

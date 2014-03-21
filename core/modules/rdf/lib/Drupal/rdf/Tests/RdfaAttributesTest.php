@@ -135,9 +135,8 @@ class RdfaAttributesTest extends DrupalUnitTestBase {
    *   The data to pass into the datatype callback, if specified.
    */
   protected function _testAttributes($expected_attributes, $field_mapping, $data = NULL) {
-    $this->saveMapping($field_mapping);
-
     $mapping = rdf_get_mapping('node', 'article')
+      ->setFieldMapping('field_test', $field_mapping)
       ->getPreparedFieldMapping('field_test');
     $attributes = rdf_rdfa_attributes($mapping, $data);
     ksort($expected_attributes);
@@ -145,15 +144,4 @@ class RdfaAttributesTest extends DrupalUnitTestBase {
     $this->assertEqual($expected_attributes, $attributes);
   }
 
-  /**
-   * Helper function to save mapping using config system.
-   *
-   * @param array $field_mapping
-   *   The field mapping.
-   */
-  protected function saveMapping($field_mapping) {
-    rdf_get_mapping('node', 'article')
-      ->setFieldMapping('field_test', $field_mapping)
-      ->save();
-  }
 }

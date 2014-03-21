@@ -35,6 +35,7 @@ class NodeAccessPagerTest extends WebTestBase {
     parent::setUp();
 
     node_access_rebuild();
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
     $this->container->get('comment.manager')->addDefaultField('node', 'page');
     $this->web_user = $this->drupalCreateUser(array('access content', 'access comments', 'node test view'));
   }

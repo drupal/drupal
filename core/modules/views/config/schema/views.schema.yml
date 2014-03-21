@@ -117,3 +117,6 @@ views.view.*:
               label: 'Position'
             display_options:
               type: views.display.[%parent.display_plugin]
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'

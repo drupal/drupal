@@ -234,3 +234,6 @@ module: views
 id: comments_recent
 tag: default
 langcode: en
+dependencies:
+  module:
+    - comment

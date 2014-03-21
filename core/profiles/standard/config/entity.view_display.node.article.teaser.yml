@@ -22,3 +22,14 @@ content:
       image_style: medium
       image_link: content
     weight: -1
+dependencies:
+  entity:
+    - entity.view_mode.node.teaser
+    - field.instance.node.article.body
+    - field.instance.node.article.field_image
+    - field.instance.node.article.field_tags
+    - node.type.article
+  module:
+    - image
+    - taxonomy
+    - text

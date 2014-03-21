@@ -11,3 +11,6 @@ content:
       image_link: content
     weight: 0
 status: true
+dependencies:
+  module:
+    - image

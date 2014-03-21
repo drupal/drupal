@@ -12,3 +12,6 @@ translatable: false
 indexes:
   format:
     - format
+dependencies:
+  module:
+    - text

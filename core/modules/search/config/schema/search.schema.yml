@@ -94,3 +94,6 @@ search.page.*:
       label: 'Plugin'
     configuration:
       type: search.plugin.[%parent.plugin]
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'

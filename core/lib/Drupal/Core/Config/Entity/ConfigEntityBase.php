@@ -64,6 +64,20 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   private $isSyncing = FALSE;
 
   /**
+   * Whether the config is being deleted by the uninstall process.
+   *
+   * @var bool
+   */
+  private $isUninstalling = FALSE;
+
+  /**
+   * The configuration entity's dependencies.
+   *
+   * @var array
+   */
+  protected $dependencies = array();
+
+  /**
    * Overrides Entity::__construct().
    */
   public function __construct(array $values, $entity_type) {
@@ -173,6 +187,20 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
+  public function setUninstalling($uninstalling) {
+    $this->isUninstalling = $uninstalling;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isUninstalling() {
+    return $this->isUninstalling;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function createDuplicate() {
     $duplicate = parent::createDuplicate();
 
@@ -207,6 +235,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
       $name = $property->getName();
       $properties[$name] = $this->get($name);
     }
+    // Add protected dependencies property.
+    $properties['dependencies'] = $this->dependencies;
     return $properties;
   }
 
@@ -221,7 +251,8 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     if ($this instanceof EntityWithPluginBagInterface) {
       // Any changes to the plugin configuration must be saved to the entity's
       // copy as well.
-      $this->set($this->pluginConfigKey, $this->getPluginBag()->getConfiguration());
+      $plugin_bag = $this->getPluginBag();
+      $this->set($this->pluginConfigKey, $plugin_bag->getConfiguration());
     }
 
     // Ensure this entity's UUID does not exist with a different ID, regardless
@@ -241,6 +272,33 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
         throw new ConfigDuplicateUUIDException(format_string('Attempt to save a configuration entity %id with UUID %uuid when this entity already exists with UUID %original_uuid', array('%id' => $this->id(), '%uuid' => $this->uuid(), '%original_uuid' => $original->uuid())));
       }
     }
+    if (!$this->isSyncing()) {
+      // Ensure the correct dependencies are present. If the configuration is
+      // being written during a configuration synchronisation then there is no
+      // need to recalculate the dependencies.
+      $this->calculateDependencies();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    // Dependencies should be recalculated on every save. This ensures stale
+    // dependencies are never saved.
+    $this->dependencies = array();
+    // @todo When \Drupal\Core\Config\Entity\EntityWithPluginBagInterface moves
+    //   to a trait, switch to class_uses() instead.
+    if ($this instanceof EntityWithPluginBagInterface) {
+      // Configuration entities need to depend on the providers of any plugins
+      // that they store the configuration for.
+      $plugin_bag = $this->getPluginBag();
+      foreach($plugin_bag as $instance) {
+        $definition = $instance->getPluginDefinition();
+        $this->addDependency('module', $definition['provider']);
+      }
+    }
+    return $this->dependencies;
   }
 
   /**
@@ -262,6 +320,50 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
    */
   public function url($rel = 'edit-form', $options = array()) {
     return parent::url($rel, $options);
+  }
+
+  /**
+   * Creates a dependency.
+   *
+   * @param string $type
+   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
+   * @param string $name
+   *   If $type equals 'module' or 'theme' then it should be the name of the
+   *   module or theme. In the case of entity it should be the full
+   *   configuration object name.
+   *
+   * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getConfigDependencyName()
+   *
+   * @return $this
+   */
+  protected function addDependency($type, $name) {
+    // A config entity is always dependent on its provider. There is no need to
+    // explicitly declare the dependency. An explicit dependency on Core, which
+    // provides some plugins, is also not needed.
+    // @see \Drupal\Core\Config\Entity\ConfigEntityDependency::hasDependency()
+    if ($type == 'module' && ($name == $this->getEntityType()->getProvider() || $name == 'Core')) {
+      return $this;
+    }
+    if (empty($this->dependencies[$type])) {
+      $this->dependencies[$type] = array($name);
+      if (count($this->dependencies) > 1) {
+        // Ensure a consistent order of type keys.
+        ksort($this->dependencies);
+      }
+    }
+    elseif (!in_array($name, $this->dependencies[$type])) {
+      $this->dependencies[$type][] = $name;
+      // Ensure a consistent order of dependency names.
+      sort($this->dependencies[$type], SORT_FLAG_CASE);
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigDependencyName() {
+    return $this->getEntityType()->getConfigPrefix() . '.' . $this->id();
   }
 
 }

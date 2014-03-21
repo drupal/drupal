@@ -238,3 +238,6 @@ module: node
 id: frontpage
 tag: default
 langcode: en
+dependencies:
+  module:
+    - node

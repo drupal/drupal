@@ -131,7 +131,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
 
     // Enable the image module.
     $this->drupalPostForm('admin/modules', array('modules[Field types][image][enable]' => "1"), t('Save configuration'));
-    $this->resetAll();
+    $this->rebuildContainer();
 
     $string = $this->storage->findString(array('source' => 'Medium (220x220)', 'context' => '', 'type' => 'configuration'));
     $this->assertTrue($string, 'Configuration strings have been created upon installation.');

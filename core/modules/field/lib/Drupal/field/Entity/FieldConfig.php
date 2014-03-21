@@ -252,6 +252,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
       'cardinality',
       'translatable',
       'indexes',
+      'dependencies',
     );
     $properties = array();
     foreach ($names as $name) {
@@ -273,10 +274,14 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
     unset($this->schema);
 
     if ($this->isNew()) {
-      return $this->preSaveNew($storage_controller);
+      $this->preSaveNew($storage_controller);
     }
     else {
-      return $this->preSaveUpdated($storage_controller);
+      $this->preSaveUpdated($storage_controller);
+    }
+    if (!$this->isSyncing()) {
+      // Ensure the correct dependencies are present.
+      $this->calculateDependencies();
     }
   }
 
@@ -325,6 +330,16 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
 
     // Notify the entity storage controller.
     $entity_manager->getStorageController($this->entity_type)->onFieldCreate($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    // Ensure the field is dependent on the providing module.
+    $this->addDependency('module', $this->module);
+    return $this->dependencies;
   }
 
   /**
@@ -415,6 +430,7 @@ class FieldConfig extends ConfigEntityBase implements FieldConfigInterface {
         $deleted_fields[$field->uuid] = $config;
       }
     }
+
     $state->set('field.field.deleted', $deleted_fields);
   }
 

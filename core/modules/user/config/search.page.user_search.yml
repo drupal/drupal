@@ -5,3 +5,6 @@ langcode: en
 path: user
 plugin: user_search
 configuration: {  }
+dependencies:
+  module:
+    - user

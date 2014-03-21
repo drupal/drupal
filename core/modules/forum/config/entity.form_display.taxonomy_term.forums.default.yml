@@ -8,3 +8,6 @@ content:
     weight: -5
   description:
     weight: 0
+dependencies:
+  entity:
+    - taxonomy.vocabulary.forums

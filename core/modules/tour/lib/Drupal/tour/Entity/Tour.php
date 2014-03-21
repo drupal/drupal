@@ -8,6 +8,7 @@
 namespace Drupal\tour\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\tour\TipsBag;
 use Drupal\tour\TourInterface;
 
@@ -166,6 +167,21 @@ class Tour extends ConfigEntityBase implements TourInterface {
    */
   public function resetKeyedRoutes() {
     unset($this->keyedRoutes);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+
+    foreach($this->tipsBag as $instance) {
+      $definition = $instance->getPluginDefinition();
+      $this->addDependency('module', $definition['provider']);
+    }
+
+    $this->addDependency('module', $this->module);
+    return $this->dependencies;
   }
 
 }

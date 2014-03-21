@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\field\Field;
 
 /**
  * Provides a common base class for entity view and form displays.
@@ -143,6 +144,43 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public function preSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
     // Sort elements by weight before saving.
     uasort($this->content, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+    parent::preSave($storage_controller, $update);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $target_entity_type = \Drupal::entityManager()->getDefinition($this->targetEntityType);
+
+    $bundle_entity_type_id = $target_entity_type->getBundleEntityType();
+    if ($bundle_entity_type_id != 'bundle') {
+      // If the target entity type uses entities to manage its bundles then
+      // depend on the bundle entity.
+      $bundle_entity = \Drupal::entityManager()->getStorageController($bundle_entity_type_id)->load($this->bundle);
+      $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
+    }
+    // Create dependencies on both hidden and visible fields.
+    $fields = $this->content + $this->hidden;
+    foreach ($fields as $field_name => $component) {
+      $field_instance = Field::fieldInfo()->getInstance($this->targetEntityType, $this->bundle, $field_name);
+      if ($field_instance) {
+        $this->addDependency('entity', $field_instance->getConfigDependencyName());
+      }
+      // Create a dependency on the module that provides the formatter or
+      // widget.
+      if (isset($component['type'])) {
+        $definition = $this->pluginManager->getDefinition($component['type']);
+        $this->addDependency('module', $definition['provider']);
+      }
+    }
+    // Depend on configured modes.
+    if ($this->mode != 'default') {
+      $mode_entity = \Drupal::entityManager()->getStorageController($this->displayContext . '_mode')->load($target_entity_type->id() . '.' . $this->mode);
+      $this->addDependency('entity', $mode_entity->getConfigDependencyName());
+    }
+    return $this->dependencies;
   }
 
   /**
@@ -168,6 +206,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       'content',
       'hidden',
       'status',
+      'dependencies'
     );
     $properties = array();
     foreach ($names as $name) {

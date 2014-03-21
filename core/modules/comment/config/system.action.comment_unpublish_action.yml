@@ -4,3 +4,6 @@ status: true
 langcode: en
 type: comment
 plugin: comment_unpublish_action
+dependencies:
+  module:
+    - comment

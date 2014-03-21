@@ -136,3 +136,24 @@ route:
       sequence:
         - type: string
           label: 'Param'
+
+# Config dependencies.
+config_dependencies:
+  type: mapping
+  label: 'Configuration dependencies'
+  mapping:
+    entity:
+      type: sequence
+      label: 'Entity dependencies'
+      sequence:
+        - type: string
+    module:
+      type: sequence
+      label: 'Module dependencies'
+      sequence:
+        - type: string
+    theme:
+      type: sequence
+      label: 'Theme dependencies'
+      sequence:
+        - type: string

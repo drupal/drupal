@@ -53,7 +53,7 @@ class ViewPageControllerTest extends UnitTestCase {
   }
 
   protected function setUp() {
-    $this->storageController = $this->getMockBuilder('Drupal\views\ViewStorageController')
+    $this->storageController = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
       ->disableOriginalConstructor()
       ->getMock();
     $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')

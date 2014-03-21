@@ -87,3 +87,6 @@ tips:
     location: left
     attributes:
       data-id: views-display-extra-actions
+dependencies:
+  module:
+    - views_ui

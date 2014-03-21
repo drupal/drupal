@@ -3,3 +3,6 @@ label: Full
 status: false
 cache: true
 targetEntityType: entity_test
+dependencies:
+  module:
+    - entity_test

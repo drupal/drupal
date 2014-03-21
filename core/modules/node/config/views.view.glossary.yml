@@ -379,3 +379,7 @@ module: node
 id: glossary
 tag: default
 langcode: en
+dependencies:
+  module:
+    - node
+    - user

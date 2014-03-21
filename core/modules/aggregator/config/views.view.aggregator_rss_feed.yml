@@ -144,7 +144,10 @@ display:
       defaults:
         arguments: true
 label: 'Aggregator RSS feed'
-module: views
+module: aggregator
 id: aggregator_rss_feed
 tag: aggregator
 langcode: en
+dependencies:
+  module:
+    - aggregator

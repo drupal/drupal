@@ -3,3 +3,6 @@ label: 'Search index'
 status: false
 cache: true
 targetEntityType: node
+dependencies:
+  module:
+    - node

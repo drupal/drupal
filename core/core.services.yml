@@ -69,7 +69,7 @@ services:
     factory_method: getActive
   config.manager:
     class: Drupal\Core\Config\ConfigManager
-    arguments: ['@entity.manager', '@config.factory', '@config.typed', '@string_translation']
+    arguments: ['@entity.manager', '@config.factory', '@config.typed', '@string_translation', '@config.storage']
   config.storage:
     class: Drupal\Core\Config\CachedStorage
     arguments: ['@config.cachedstorage.storage', '@cache.config']

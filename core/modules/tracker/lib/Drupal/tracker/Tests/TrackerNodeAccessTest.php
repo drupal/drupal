@@ -33,6 +33,7 @@ class TrackerNodeAccessTest extends WebTestBase {
   public function setUp() {
     parent::setUp();
     node_access_rebuild();
+    $this->drupalCreateContentType(array('type' => 'page'));
     $this->container->get('comment.manager')->addDefaultField('node', 'page', 'comment', CommentItemInterface::OPEN);
     \Drupal::state()->set('node_access_test.private', TRUE);
   }

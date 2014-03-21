@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,6 +35,20 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
   protected $keyValueExpirable;
 
   /**
+   * The configuration manager.
+   *
+   * @var \Drupal\Core\Config\ConfigManagerInterface
+   */
+  protected $configManager;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * An array of modules to uninstall.
    *
    * @var array
@@ -46,10 +62,16 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
    *   The module handler.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
+   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   *   The configuration manager.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityManagerInterface $entity_manager) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
+    $this->configManager = $config_manager;
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -58,7 +80,9 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('keyvalue.expirable')->get('modules_uninstall')
+      $container->get('keyvalue.expirable')->get('modules_uninstall'),
+      $container->get('config.manager'),
+      $container->get('entity.manager')
     );
   }
 
@@ -120,6 +144,47 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
         return $data[$module]->info['name'];
       }, $this->modules),
     );
+
+    $form['entities'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Configuration deletions'),
+      '#description' => $this->t('The listed configuration will be deleted.'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#access' => FALSE,
+    );
+
+    // Get the dependent entities.
+    $entity_types = array();
+    $dependent_entities = $this->configManager->findConfigEntityDependentsAsEntities('module', $this->modules);
+    foreach ($dependent_entities as $entity) {
+      $entity_type_id = $entity->getEntityTypeId();
+      if (!isset($form['entities'][$entity_type_id])) {
+        $entity_type = $this->entityManager->getDefinition($entity_type_id);
+        // Store the ID and label to sort the entity types and entities later.
+        $label = $entity_type->getLabel();
+        $entity_types[$entity_type_id] = $label;
+        $form['entities'][$entity_type_id] = array(
+          '#theme' => 'item_list',
+          '#title' => $label,
+          '#items' => array(),
+        );
+      }
+      $form['entities'][$entity_type_id]['#items'][] = $entity->label();
+    }
+    if (!empty($dependent_entities)) {
+      $form['entities']['#access'] = TRUE;
+
+      // Add a weight key to the entity type sections.
+      asort($entity_types, SORT_FLAG_CASE);
+      $weight = 0;
+      foreach ($entity_types as $entity_type_id => $label) {
+        $form['entities'][$entity_type_id]['#weight'] = $weight;
+        // Sort the list of entity labels alphabetically.
+        sort($form['entities'][$entity_type_id]['#items'], SORT_FLAG_CASE);
+        $weight++;
+      }
+    }
 
     return parent::buildForm($form, $form_state);
   }

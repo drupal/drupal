@@ -78,6 +78,21 @@ class ResponsiveImageMapping extends ConfigEntityBase implements ResponsiveImage
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    if (isset($this->breakpointGroup)) {
+      // @todo Implement toArray() so we do not have reload the
+      //   entity since this property is changed in
+      //   \Drupal\responsive_image\Entity\ResponsiveImageMapping::save().
+      $breakpoint_group = \Drupal::entityManager()->getStorageController('breakpoint_group')->load($this->breakpointGroup);
+      $this->addDependency('entity', $breakpoint_group->getConfigDependencyName());
+    }
+    return $this->dependencies;
+  }
+
+  /**
    * Overrides Drupal\Core\Entity::save().
    */
   public function save() {

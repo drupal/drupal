@@ -149,6 +149,13 @@ class ViewUI implements ViewStorageInterface {
   private $isSyncing = FALSE;
 
   /**
+   * Whether the config is being deleted through the uninstall process.
+   *
+   * @var bool
+   */
+  private $isUninstalling = FALSE;
+
+  /**
    * Constructs a View UI object.
    *
    * @param \Drupal\views\ViewStorageInterface $storage
@@ -207,8 +214,22 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function setUninstalling($isUninstalling) {
+    $this->isUninstalling = $isUninstalling;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isSyncing() {
     return $this->isSyncing;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isUninstalling() {
+    return $this->isUninstalling;
   }
 
   /**
@@ -1177,6 +1198,18 @@ class ViewUI implements ViewStorageInterface {
    */
   public function hasLinkTemplate($key) {
     return $this->storage->hasLinkTemplate($key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigDependencyName() {
   }
 
 }

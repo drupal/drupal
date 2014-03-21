@@ -86,7 +86,7 @@ class RebuildTest extends WebTestBase {
     );
     entity_create('field_instance_config', $instance)->save();
     entity_get_form_display('node', 'page', 'default')
-      ->setComponent($field_name, array('type' => 'text_test'))
+      ->setComponent($field_name, array('type' => 'text_textfield'))
       ->save();
 
     // Log in a user who can create 'page' nodes.

@@ -149,7 +149,28 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }
+    if (!empty($this->dependencies)) {
+      // Add protected dependencies property if set.
+      $properties['dependencies'] = $this->dependencies;
+    }
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $entity_type = \Drupal::entityManager()->getDefinition($this->targetEntityType);
+    $this->addDependency('module', $entity_type->getProvider());
+    $bundle_entity_type_id = $entity_type->getBundleEntityType();
+    if ($bundle_entity_type_id != 'bundle') {
+      // If the target entity type uses entities to manage its bundles then
+      // depend on the bundle entity.
+      $bundle_entity = \Drupal::entityManager()->getStorageController($bundle_entity_type_id)->load($this->bundle);
+      $this->addDependency('entity', $bundle_entity->getConfigDependencyName());
+    }
+    return $this->dependencies;
   }
 
   /**

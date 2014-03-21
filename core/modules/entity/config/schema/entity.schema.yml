@@ -25,6 +25,9 @@ entity.view_mode.*.*:
     langcode:
       type: string
       label: 'Default language'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 entity.form_mode.*.*:
   type: mapping
@@ -51,6 +54,9 @@ entity.form_mode.*.*:
     langcode:
       type: string
       label: 'Default language'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 # Overview configuration information for view mode or form mode displays.
 entity.view_display.*.*.*:
@@ -86,6 +92,9 @@ entity.view_display.*.*.*:
       sequence:
         - type: boolean
           label: 'Value'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 # Overview configuration information for form mode displays.
 entity.form_display.*.*.*:
@@ -115,6 +124,9 @@ entity.form_display.*.*.*:
     status:
       type: boolean
       label: 'Enabled'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 # Default schema for entity display field with undefined type.
 entity_view_display.field.*:

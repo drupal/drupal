@@ -32,7 +32,7 @@ function entity_test_install() {
     ))->save();
 
     entity_get_form_display($entity_type, $entity_type, 'default')
-      ->setComponent('field_test_text', array('type' => 'text_text'))
+      ->setComponent('field_test_text', array('type' => 'text_textfield'))
       ->save();
   }
 }

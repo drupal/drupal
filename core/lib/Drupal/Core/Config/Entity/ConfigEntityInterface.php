@@ -92,6 +92,25 @@ interface ConfigEntityInterface extends EntityInterface {
   public function isSyncing();
 
   /**
+   * Returns whether this entity is being changed during the uninstall process.
+   *
+   * If you are writing code that responds to a change in this entity (insert,
+   * update, delete, presave, etc.), and your code would result in a
+   * configuration change (whether related to this configuration entity, another
+   * configuration entity, or non-entity configuration) or your code would
+   * result in a change to this entity itself, you need to check and see if this
+   * entity change is part of an uninstall process, and skip executing your code
+   * if that is the case.
+   *
+   * For example, \Drupal\language\Entity\Language::preDelete() prevents the API
+   * from deleting the default language. However during an uninstall of the
+   * language module it is expected that the default language should be deleted.
+   *
+   * @return bool
+   */
+  public function isUninstalling();
+
+  /**
    * Returns the value of a property.
    *
    * @param string $property_name
@@ -121,5 +140,21 @@ interface ConfigEntityInterface extends EntityInterface {
    *   An array of exportable properties and their values.
    */
   public function toArray();
+
+  /**
+   * Calculates dependencies and stores them in the dependency property.
+   *
+   * @return array
+   *   An array of dependencies grouped by type (module, theme, entity).
+   */
+  public function calculateDependencies();
+
+  /**
+   * Gets the configuration dependency name.
+   *
+   * @return string
+   *   The configuration dependency name.
+   */
+  public function getConfigDependencyName();
 
 }

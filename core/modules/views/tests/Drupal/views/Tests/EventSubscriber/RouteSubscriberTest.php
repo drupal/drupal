@@ -61,7 +61,7 @@ class RouteSubscriberTest extends UnitTestCase {
 
   protected function setUp() {
     $this->entityManager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-    $this->viewStorageController = $this->getMockBuilder('\Drupal\views\ViewStorageController')
+    $this->viewStorageController = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
       ->disableOriginalConstructor()
       ->getMock();
     $this->entityManager->expects($this->any())

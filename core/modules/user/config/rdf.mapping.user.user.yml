@@ -7,3 +7,6 @@ fieldMappings:
   name:
     properties:
       - 'schema:name'
+dependencies:
+  module:
+    - user

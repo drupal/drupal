@@ -101,7 +101,7 @@ class ViewsBlockTest extends UnitTestCase {
       ->with($this->view)
       ->will($this->returnValue($this->executable));
 
-    $this->storageController = $this->getMockBuilder('Drupal\views\ViewStorageController')
+    $this->storageController = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
       ->disableOriginalConstructor()
       ->getMock();
 

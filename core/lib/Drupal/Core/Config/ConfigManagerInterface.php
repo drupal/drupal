@@ -68,4 +68,35 @@ interface ConfigManagerInterface {
    */
   public function uninstall($type, $name);
 
+  /**
+   * Finds config entities that are dependent on extensions or entities.
+   *
+   * @param string $type
+   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
+   * @param array $names
+   *   The specific names to check. If $type equals 'module' or 'theme' then it
+   *   should be a list of module names or theme names. In the case of entity it
+   *   should be a list of full configuration object names.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityDependency[]
+   *   An array of configuration entity dependency objects.
+   */
+  public function findConfigEntityDependents($type, array $names);
+
+  /**
+   * Finds config entities that are dependent on extensions or entities.
+   *
+   * @param string $type
+   *   The type of dependency being checked. Either 'module', 'theme', 'entity'.
+   * @param array $names
+   *   The specific names to check. If $type equals 'module' or 'theme' then it
+   *   should be a list of module names or theme names. In the case of entity it
+   *   should be a list of full configuration object names.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
+   *   An array of dependencies as configuration entities.
+   */
+  public function findConfigEntityDependentsAsEntities($type, array $names);
+
+
 }

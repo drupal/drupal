@@ -34,11 +34,19 @@ class WizardTest extends WizardTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
+    // Add comment field to page node type.
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+  }
+
+  /**
    * Tests adding a view of comments.
    */
   public function testCommentWizard() {
-    // Add comment field to page node type.
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
     $view = array();
     $view['label'] = $this->randomName(16);
     $view['id'] = strtolower($this->randomName(16));

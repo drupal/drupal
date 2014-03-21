@@ -8,6 +8,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConfigInstaller implements ConfigInstallerInterface {
@@ -105,25 +106,43 @@ class ConfigInstaller implements ConfigInstallerInterface {
     }
 
     if (!empty($config_to_install)) {
+      // Order the configuration to install in the order of dependencies.
+      $data = $source_storage->readMultiple($config_to_install);
+      $dependency_manager = new ConfigDependencyManager();
+      $sorted_config = $dependency_manager
+        ->setData($data)
+        ->sortAll();
+
       $old_state = $this->configFactory->getOverrideState();
       $this->configFactory->setOverrideState(FALSE);
-      foreach ($config_to_install as $name) {
-        // Only import new config.
-        if ($this->activeStorage->exists($name)) {
-          continue;
-        }
 
+      // Remove configuration that already exists in the active storage.
+      $sorted_config = array_diff($sorted_config, $this->activeStorage->listAll());
+
+      foreach ($sorted_config as $name) {
         $new_config = new Config($name, $this->activeStorage, $this->eventDispatcher, $this->typedConfig);
-        $data = $source_storage->read($name);
-        if ($data !== FALSE) {
-          $new_config->setData($data);
+        if ($data[$name] !== FALSE) {
+          $new_config->setData($data[$name]);
         }
         if ($entity_type = $this->configManager->getEntityTypeIdByName($name)) {
-          $this->configManager
+          $entity_storage = $this->configManager
             ->getEntityManager()
-            ->getStorageController($entity_type)
-            ->create($new_config->get())
-            ->save();
+            ->getStorageController($entity_type);
+          // It is possible that secondary writes can occur during configuration
+          // creation. Updates of such configuration are allowed.
+          if ($this->activeStorage->exists($name)) {
+            $id = $entity_storage->getIDFromConfigName($name, $entity_storage->getEntityType()->getConfigPrefix());
+            $entity = $entity_storage->load($id);
+            foreach ($new_config->get() as $property => $value) {
+              $entity->set($property, $value);
+            }
+            $entity->save();
+          }
+          else {
+            $entity_storage
+              ->create($new_config->get())
+              ->save();
+          }
         }
         else {
           $new_config->save();
@@ -131,6 +150,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
       }
       $this->configFactory->setOverrideState($old_state);
     }
+    // Reset all the static caches and list caches.
+    $this->configFactory->reset();
   }
 
 }

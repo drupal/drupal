@@ -31,3 +31,8 @@ fieldMappings:
       callable: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'
       arguments:
         interaction_type: 'UserComments'
+dependencies:
+  entity:
+    - node.type.page
+  module:
+    - node

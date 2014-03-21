@@ -3,3 +3,6 @@ label: 'Taxonomy term page'
 status: false
 cache: true
 targetEntityType: taxonomy_term
+dependencies:
+  module:
+    - taxonomy

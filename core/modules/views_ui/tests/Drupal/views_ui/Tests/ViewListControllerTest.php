@@ -30,7 +30,7 @@ class ViewListControllerTest extends UnitTestCase {
    * @see \Drupal\views_ui\ViewListController::getDisplaysList().
    */
   public function testBuildRowEntityList() {
-    $storage_controller = $this->getMockBuilder('Drupal\views\ViewStorageController')
+    $storage_controller = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
       ->disableOriginalConstructor()
       ->getMock();
     $display_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')

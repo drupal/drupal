@@ -13,3 +13,8 @@ content:
 hidden:
   member_for: true
 status: true
+dependencies:
+  entity:
+    - entity.view_mode.user.compact
+  module:
+    - image

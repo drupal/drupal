@@ -3,3 +3,6 @@ label: Full
 status: false
 cache: true
 targetEntityType: custom_block
+dependencies:
+  module:
+    - custom_block

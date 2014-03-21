@@ -24,3 +24,6 @@ fieldMappings:
     properties:
       - 'schema:author'
     mapping_type: 'rel'
+dependencies:
+  module:
+    - comment

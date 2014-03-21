@@ -10,3 +10,8 @@ fieldMappings:
   description:
     properties:
       - 'schema:description'
+dependencies:
+  entity:
+    - taxonomy.vocabulary.tags
+  module:
+    - taxonomy

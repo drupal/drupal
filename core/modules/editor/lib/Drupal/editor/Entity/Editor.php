@@ -60,6 +60,11 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   protected $filterFormat;
 
   /**
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $editorPluginManager;
+
+  /**
    * {@inheritdoc}
    */
   public function id() {
@@ -72,8 +77,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
 
-    $manager = \Drupal::service('plugin.manager.editor');
-    $plugin = $manager->createInstance($this->editor);
+    $plugin = $this->editorPluginManager()->createInstance($this->editor);
 
     // Initialize settings, merging module-provided defaults.
     $default_settings = $plugin->getDefaultSettings();
@@ -85,11 +89,38 @@ class Editor extends ConfigEntityBase implements EditorInterface {
   /**
    * {@inheritdoc}
    */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    // Create a dependency on the associated FilterFormat.
+    $this->addDependency('entity', $this->getFilterFormat()->getConfigDependencyName());
+    // @todo use EntityWithPluginBagInterface so configuration between config
+    //   entity and dependency on provider is managed automatically.
+    $definition = $this->editorPluginManager()->createInstance($this->editor)->getPluginDefinition();
+    $this->addDependency('module', $definition['provider']);
+    return $this->dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFilterFormat() {
     if (!$this->filterFormat) {
       $this->filterFormat = \Drupal::entityManager()->getStorageController('filter_format')->load($this->format);
     }
     return $this->filterFormat;
+  }
+
+  /**
+   * Returns the editor plugin manager.
+   *
+   * @return \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected function editorPluginManager() {
+    if (!$this->editorPluginManager) {
+      $this->editorPluginManager = \Drupal::service('plugin.manager.editor');
+    }
+
+    return $this->editorPluginManager;
   }
 
 }

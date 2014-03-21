@@ -48,7 +48,7 @@ class MultiFormTest extends AjaxTestBase {
       'bundle' => 'page',
     ))->save();
     entity_get_form_display('node', 'page', 'default')
-      ->setComponent($field_name, array('type' => 'text_default'))
+      ->setComponent($field_name, array('type' => 'text_textfield'))
       ->save();
 
     // Login a user who can create 'page' nodes.

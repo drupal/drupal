@@ -2239,4 +2239,16 @@ class ViewExecutable extends DependencySerialization {
     return FALSE;
   }
 
+  /**
+   * Calculates dependencies for the view.
+   *
+   * @see \Drupal\views\Entity\View::calculateDependencies()
+   *
+   * @return array
+   *   An array of dependencies grouped by type (module, theme, entity).
+   */
+  public function calculateDependencies() {
+    return $this->storage->calculateDependencies();
+  }
+
 }

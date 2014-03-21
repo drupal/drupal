@@ -349,6 +349,7 @@ display:
           hide_alter_empty: true
           link_to_node: false
           comments: false
+          optional: true
           plugin_id: history_user_timestamp
           provider: history
       filters:
@@ -558,3 +559,7 @@ module: node
 id: content
 tag: default
 langcode: en
+dependencies:
+  module:
+    - node
+    - user

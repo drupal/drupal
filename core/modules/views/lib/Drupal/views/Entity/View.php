@@ -22,7 +22,6 @@ use Drupal\views\ViewExecutable;
  *   id = "view",
  *   label = @Translation("View"),
  *   controllers = {
- *     "storage" = "Drupal\views\ViewStorageController",
  *     "access" = "Drupal\views\ViewAccessController"
  *   },
  *   admin_permission = "administer views",
@@ -258,12 +257,46 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
       'tag',
       'uuid',
       'langcode',
+      'dependencies',
     );
     $properties = array();
     foreach ($names as $name) {
       $properties[$name] = $this->get($name);
     }
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+
+    // Ensure that the view is dependant on the module that implements the view.
+    $this->addDependency('module', $this->module);
+    // Ensure that the view is dependant on the module that provides the schema
+    // for the base table.
+    $schema = drupal_get_schema($this->base_table);
+    if ($this->module != $schema['module']) {
+      $this->addDependency('module', $schema['module']);
+    }
+
+    $handler_types = array();
+    foreach (ViewExecutable::viewsHandlerTypes() as $type) {
+      $handler_types[] = $type['plural'];
+    }
+    foreach ($this->get('display') as $display) {
+      foreach ($handler_types as $handler_type) {
+        if (!empty($display['display_options'][$handler_type])) {
+          foreach ($display['display_options'][$handler_type] as $handler) {
+            if (isset($handler['provider']) && empty($handler['optional'])) {
+              $this->addDependency('module', $handler['provider']);
+            }
+          }
+        }
+      }
+    }
+    return $this->dependencies;
   }
 
   /**

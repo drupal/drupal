@@ -18,3 +18,8 @@ visibility:
     roles: {  }
   node_type:
     types: {  }
+dependencies:
+  module:
+    - block_test
+  theme:
+    - stark

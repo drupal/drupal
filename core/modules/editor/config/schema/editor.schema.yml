@@ -44,3 +44,6 @@ editor.editor.*:
     langcode:
       type: string
       label: 'Default language'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'

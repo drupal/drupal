@@ -41,6 +41,7 @@ class HandlerTest extends ViewTestBase {
 
   protected function setUp() {
     parent::setUp();
+    $this->drupalCreateContentType(array('type' => 'page'));
     $this->container->get('comment.manager')->addDefaultField('node', 'page');
     $this->enableViewsTestModule();
   }

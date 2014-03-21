@@ -337,6 +337,9 @@ system.action.*:
       label: 'Plugin'
     configuration:
       type: action.configuration.[plugin]
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 system.file:
   type: mapping

@@ -39,6 +39,9 @@ breakpoint.breakpoint.*.*.*:
     status:
       type: boolean
       label: 'Enabled'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 breakpoint.breakpoint_group.*.*.*:
   type: mapping
@@ -74,3 +77,6 @@ breakpoint.breakpoint_group.*.*.*:
     status:
       type: boolean
       label: 'Enabled'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'

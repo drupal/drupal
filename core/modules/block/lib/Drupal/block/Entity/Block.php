@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\block\BlockPluginBag;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\EntityWithPluginBagInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
  * Defines a Block configuration entity class.
@@ -163,6 +164,15 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     }
     // Sort by label.
     return strcmp($a->label(), $b->label());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $this->addDependency('theme', $this->theme);
+    return $this->dependencies;
   }
 
 }

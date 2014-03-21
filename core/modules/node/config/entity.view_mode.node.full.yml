@@ -3,3 +3,6 @@ label: 'Full content'
 status: false
 cache: true
 targetEntityType: node
+dependencies:
+  module:
+    - node

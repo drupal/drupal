@@ -56,6 +56,9 @@ field.field.*.*:
           sequence:
             - type: string
               label: 'Column'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 field.instance.*.*.*:
   type: mapping
@@ -104,6 +107,9 @@ field.instance.*.*.*:
     field_type:
       type: string
       label: 'Field type'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
 
 entity_form_display.field.hidden:
   type: entity_field_form_display_base

@@ -193,6 +193,6 @@ abstract class ModuleTestBase extends WebTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertTrue($count > 0, format_string('watchdog table contains @count rows for @message', array('@count' => $count, '@message' => $message)));
+    $this->assertTrue($count > 0, format_string('watchdog table contains @count rows for @message', array('@count' => $count, '@message' => format_string($message, $variables))));
   }
 }

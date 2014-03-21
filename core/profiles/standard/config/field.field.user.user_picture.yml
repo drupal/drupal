@@ -32,3 +32,6 @@ translatable: false
 indexes:
   target_id:
     - target_id
+dependencies:
+  module:
+    - image

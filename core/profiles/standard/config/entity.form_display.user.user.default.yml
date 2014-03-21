@@ -10,3 +10,6 @@ content:
       preview_image_style: thumbnail
     weight: -1
 status: true
+dependencies:
+  module:
+    - image

@@ -41,3 +41,8 @@ image_upload:
     height: 0
 status: true
 langcode: en
+dependencies:
+  entity:
+    - filter.format.basic_html
+  module:
+    - ckeditor

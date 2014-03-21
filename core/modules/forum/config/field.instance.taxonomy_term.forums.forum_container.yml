@@ -13,3 +13,6 @@ default_value:
 default_value_function: ''
 settings: {  }
 field_type: list_boolean
+dependencies:
+  entity:
+    - field.field.forum.forum_container

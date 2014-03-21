@@ -40,6 +40,7 @@ abstract class CommentTestBase extends ViewTestBase {
     $this->account2 = $this->drupalCreateUser();
     $this->drupalLogin($this->account);
 
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => t('Basic page')));
     $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
     $this->node_user_posted = $this->drupalCreateNode();

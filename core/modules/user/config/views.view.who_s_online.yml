@@ -198,7 +198,10 @@ display:
       block_description: 'Who''s online'
       display_description: 'A list of users that are currently logged in.'
 label: 'Who''s online block'
-module: views
+module: user
 id: who_s_online
 tag: default
 langcode: en
+dependencies:
+  module:
+    - user

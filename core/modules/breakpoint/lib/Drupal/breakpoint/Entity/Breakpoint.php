@@ -14,6 +14,7 @@ use Drupal\breakpoint\InvalidBreakpointNameException;
 use Drupal\breakpoint\InvalidBreakpointSourceException;
 use Drupal\breakpoint\InvalidBreakpointSourceTypeException;
 use Drupal\breakpoint\InvalidBreakpointMediaQueryException;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
  * Defines the Breakpoint entity.
@@ -269,4 +270,20 @@ class Breakpoint extends ConfigEntityBase implements BreakpointInterface {
     }
     throw new InvalidBreakpointMediaQueryException('Media query is empty.');
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $this->dependencies = array();
+    if ($this->sourceType == static::SOURCE_TYPE_MODULE) {
+      $this->addDependency('module', $this->source);
+    }
+    elseif ($this->sourceType == static::SOURCE_TYPE_THEME) {
+      $this->addDependency('theme', $this->source);
+    }
+    return $this->dependencies;
+  }
+
 }

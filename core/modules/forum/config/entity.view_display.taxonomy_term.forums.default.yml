@@ -8,3 +8,6 @@ content:
     weight: 0
 hidden: {  }
 status: true
+dependencies:
+  entity:
+    - taxonomy.vocabulary.forums

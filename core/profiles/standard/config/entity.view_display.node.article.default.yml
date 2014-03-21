@@ -21,3 +21,14 @@ content:
       image_style: large
       image_link: ''
     weight: -1
+dependencies:
+  entity:
+    - field.instance.node.article.body
+    - field.instance.node.article.field_image
+    - field.instance.node.article.field_tags
+    - node.type.article
+  module:
+    - comment
+    - image
+    - taxonomy
+    - text

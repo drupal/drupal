@@ -2,25 +2,45 @@ id: node.article.default
 targetEntityType: node
 bundle: article
 mode: default
-status: true
 content:
+  title:
+    type: text_textfield
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
   body:
     type: text_textarea_with_summary
-    weight: 0
+    weight: 1
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
+  comment:
+    type: comment_default
+    weight: 2
+    settings: {  }
   field_tags:
     type: taxonomy_autocomplete
-    weight: -4
-    settings:
-      size: 60
-      autocomplete_route_name: taxonomy.autocomplete
-      placeholder: ''
+    weight: 3
+    settings: {  }
   field_image:
     type: image_image
+    weight: 4
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
-    weight: -1
+hidden: {  }
+status: true
+dependencies:
+  entity:
+    - field.instance.node.article.body
+    - field.instance.node.article.comment
+    - field.instance.node.article.field_image
+    - field.instance.node.article.field_tags
+    - node.type.article
+  module:
+    - comment
+    - image
+    - taxonomy
+    - text
