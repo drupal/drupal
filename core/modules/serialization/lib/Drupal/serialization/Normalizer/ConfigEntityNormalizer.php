@@ -23,7 +23,7 @@ class ConfigEntityNormalizer extends EntityNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = array()) {
-    return $object->getExportProperties();
+    return $object->toArray();
   }
 
 }

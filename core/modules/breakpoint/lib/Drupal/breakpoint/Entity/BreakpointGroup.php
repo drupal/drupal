@@ -196,7 +196,7 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
   /**
    * {@inheritdoc}
    */
-  public function getExportProperties() {
+  public function toArray() {
     $names = array(
       'id',
       'uuid',

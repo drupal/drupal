@@ -40,7 +40,7 @@ class ConfigEntityStorageControllerTest extends DrupalUnitTestBase {
     entity_create($entity_type, array('id' => $id))->save();
     $entity = entity_load($entity_type, $id);
 
-    $original_properties = $entity->getExportProperties();
+    $original_properties = $entity->toArray();
 
     // Override with a new UUID and try to save.
     $new_uuid = $this->container->get('uuid')->generate();
@@ -56,7 +56,7 @@ class ConfigEntityStorageControllerTest extends DrupalUnitTestBase {
 
     // Ensure that the config entity was not corrupted.
     $entity = entity_load('config_test', $entity->id(), TRUE);
-    $this->assertIdentical($entity->getExportProperties(), $original_properties);
+    $this->assertIdentical($entity->toArray(), $original_properties);
   }
 
 }

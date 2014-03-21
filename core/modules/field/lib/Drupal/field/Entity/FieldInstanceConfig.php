@@ -259,7 +259,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     $this->field = $field;
 
     // Discard the 'field_type' entry that is added in config records to ease
-    // schema generation. See getExportProperties().
+    // schema generation. See self::toArray().
     unset($values['field_type']);
 
     // Check required properties.
@@ -288,7 +288,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
   /**
    * {@inheritdoc}
    */
-  public function getExportProperties() {
+  public function toArray() {
     $names = array(
       'id',
       'uuid',
@@ -381,7 +381,7 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
     $deleted_instances = $state->get('field.instance.deleted') ?: array();
     foreach ($instances as $instance) {
       if (!$instance->deleted) {
-        $config = $instance->getExportProperties();
+        $config = $instance->toArray();
         $config['deleted'] = TRUE;
         $deleted_instances[$instance->uuid] = $config;
       }
@@ -619,16 +619,16 @@ class FieldInstanceConfig extends ConfigEntityBase implements FieldInstanceConfi
    * @todo Investigate in https://drupal.org/node/2074253.
    */
   public function __sleep() {
-    // Only serialize properties from getExportProperties().
-    return array_keys(array_intersect_key($this->getExportProperties(), get_object_vars($this)));
+    // Only serialize properties from self::toArray().
+    return array_keys(array_intersect_key($this->toArray(), get_object_vars($this)));
   }
 
   /**
    * Implements the magic __wakeup() method.
    */
   public function __wakeup() {
-    // Run the values from getExportProperties() through __construct().
-    $values = array_intersect_key($this->getExportProperties(), get_object_vars($this));
+    // Run the values from self::toArray() through __construct().
+    $values = array_intersect_key($this->toArray(), get_object_vars($this));
     $this->__construct($values);
   }
 

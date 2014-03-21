@@ -120,6 +120,6 @@ interface ConfigEntityInterface extends EntityInterface {
    * @return array
    *   An array of exportable properties and their values.
    */
-  public function getExportProperties();
+  public function toArray();
 
 }

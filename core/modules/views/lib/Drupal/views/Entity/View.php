@@ -242,9 +242,9 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::getExportProperties();
+   * {@inheritdoc}
    */
-  public function getExportProperties() {
+  public function toArray() {
     $names = array(
       'base_field',
       'base_table',

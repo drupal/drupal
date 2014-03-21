@@ -910,10 +910,10 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::getExportProperties().
+   * {@inheritdoc}
    */
-  public function getExportProperties() {
-    return $this->storage->getExportProperties();
+  public function toArray() {
+    return $this->storage->toArray();
   }
 
 

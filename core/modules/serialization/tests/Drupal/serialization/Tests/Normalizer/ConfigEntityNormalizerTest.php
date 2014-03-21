@@ -43,7 +43,7 @@ class ConfigEntityNormalizerTest extends UnitTestCase {
 
     $config_entity = $this->getMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
     $config_entity->expects($this->once())
-      ->method('getExportProperties')
+      ->method('toArray')
       ->will($this->returnValue($test_export_properties));
 
     $this->assertSame($test_export_properties, $normalizer->normalize($config_entity));

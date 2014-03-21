@@ -136,7 +136,7 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
   /**
    * {@inheritdoc}
    */
-  public function getExportProperties() {
+  public function toArray() {
     $names = array(
       'id',
       'uuid',

@@ -198,7 +198,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   /**
    * {@inheritdoc}
    */
-  public function getExportProperties() {
+  public function toArray() {
     // Configuration objects do not have a schema. Extract all key names from
     // class properties.
     $class_info = new \ReflectionClass($this);

@@ -144,7 +144,7 @@ EOD;
     $this->assertFieldByXPath('//select[@name="config_name"]//option[@selected="selected"]', t('Fallback date format'), 'The fallback date format config entity is selected when specified in the URL.');
 
     $fallback_date = \Drupal::entityManager()->getStorageController('date_format')->load('fallback');
-    $data = \Drupal::service('config.storage')->encode($fallback_date->getExportProperties());
+    $data = \Drupal::service('config.storage')->encode($fallback_date->toArray());
     $this->assertFieldByXPath('//textarea[@name="export"]', $data, 'The fallback date format config entity export code is displayed.');
   }
 
